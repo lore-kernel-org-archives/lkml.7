@@ -2,97 +2,90 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCB5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA20C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147AF20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7662084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I8isczBE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHW0mNQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDJBd2 (ORCPT
+        id S1726714AbfDJBrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:33:28 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:60982 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbfDJBd1 (ORCPT
+        Tue, 9 Apr 2019 21:47:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46287 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfDJBrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:33:27 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A1TBlj071627;
-        Wed, 10 Apr 2019 01:33:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=efDcI+eIByyCHzz2i/O4AhEn2Ewz8neL0793qaoZnG8=;
- b=I8isczBEz2kgTpSfQ6ClDhodXLRkMjqBP5s3eVwxA1hwP0tW1W73vpsXm8tSqlPeg//O
- RdkU8HjGR6YNcUmpbioqMEp9oT1sAi6v12WjYaOtg8gTgrbxd7H48bXRyg3oNZIOV2EQ
- 3GSxGylFXjX1jzxkVAh+7KbxV3OsR5zA7p02v7d16xAuST4WuHUfn+ebf4YhK+MYGiS8
- 3gJR9yG48p8EKad1eAL3f94jKKTuJN6yf4/XenY4W1UZkbOAukGNFW/KH+F+FtMX04lK
- krkyhCqIiwFvlZT9WV5NxZ3aW8kGUbiTb9I/bG4PzVsDjzTTH3Z3OrKsfIDhRAHxyle/ lQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2rphmegea4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 01:33:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A1XAoe148229;
-        Wed, 10 Apr 2019 01:33:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2rpkejkfbh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 01:33:15 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3A1XBCm015407;
-        Wed, 10 Apr 2019 01:33:14 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Apr 2019 18:33:11 -0700
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190409162749.7eb6656f@canb.auug.org.au>
-        <20190410112138.178aa7bd@canb.auug.org.au>
-Date:   Tue, 09 Apr 2019 21:33:09 -0400
-In-Reply-To: <20190410112138.178aa7bd@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 10 Apr 2019 11:21:38 +1000")
-Message-ID: <yq1tvf6myp6.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 9 Apr 2019 21:47:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q1so475321pgv.13
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K+cKbWneDaL7J/POBAq3ubf4NsXKHLrEQmV/5wOkRBY=;
+        b=MHW0mNQgaHmwWnLa40ahK5abHTZ02jNDmeOr8NOgAH7jh64wPT3rMp6vvABhnd4QwK
+         MlhL47TvM5PHQdnKx02fMvLmIiO75X5x1b6jFj4DeQZtc3TIu+eGR8r172TLzoCeN8ec
+         rkYxTiYEUvH5mqDsv8Pr6mJTJgWMnAuiB5lcY39nzCRcCib5v51Hha0LBicJE3HMI+bY
+         7VZ8qjwGYnMgX/Phyy7lDDeieL5swGzYvx67Y0rFyjt4vMmC7lUZg5xFsQ5Hg6ku4r6p
+         O/K727CDYawT5WY4lA2F/xx1HoGWwer6XsFxKlu22oL2syoGpsHpNHpKLx6XZugqL0jT
+         2ixw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K+cKbWneDaL7J/POBAq3ubf4NsXKHLrEQmV/5wOkRBY=;
+        b=bn1am/1clonwTg2dCyAalfZuQ0RTLxbS5mwEOf8kSTfmrDp9I4gOqYYcugZUVfuJGy
+         F5xkVGgqUzhAV+e6iby8HcwUbJNcx9i03tjhvJq25pkSWJ1JwnTZx7r75YOckX01g1Qk
+         rRlWWg3Xt78SrmDuWyfQgEDNG6zOWIxxO8jaP+I29b6ztgLmg4we2yR2u4I6WVGGxbcS
+         A28WTIu/RqM6hF0plrabwb8Xh3zzcbIHEO1qYOhpW0loYwN+fGJrdToAqqFg4q7m8dUM
+         WthSB0DbaXBHstZmaoi9bczXjE+gHzZl5e+P03IlkzcLVW3eLV6lQe4iTmGrSPXGwfqS
+         2UOw==
+X-Gm-Message-State: APjAAAX0GCUKJEiN4rYrFbYskHjyXIVYmcGYPi0Bs5IiBmXQhhHfXCZB
+        xh5zzvrRRXvGHSG42fb39yE=
+X-Google-Smtp-Source: APXvYqwd4/i5mIKUX9QhNXh5PRapfMAI/SjDmwXYOdCiUFAOChkYhodiD/P0hUiALUrpMdtTnKCekQ==
+X-Received: by 2002:aa7:920b:: with SMTP id 11mr40402154pfo.3.1554860829332;
+        Tue, 09 Apr 2019 18:47:09 -0700 (PDT)
+Received: from localhost ([175.223.11.210])
+        by smtp.gmail.com with ESMTPSA id q77sm26088869pfi.45.2019.04.09.18.47.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 18:47:08 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 10:47:05 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
+Message-ID: <20190410014705.GB26212@jagdpanzerIV>
+References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+ <20190402021419.GA617@jagdpanzerIV>
+ <20190402022840.et7sbiamxeutbw2q@shbuild888>
+ <20190402022900.GA2219@jagdpanzerIV>
+ <20190409134109.ounidzwphouqr3w2@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=774
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904100010
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904100010
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409134109.ounidzwphouqr3w2@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (04/09/19 15:41), Petr Mladek wrote:
+> I suggest to merge the two patches into one. It will
+> still be rather small and easier to review.
 
-Stephen,
+Agreed, was going to suggest the same.
 
->> I have reverted that commit for today.
->
-> This has now migrated to the scsi tree.
-
-I have a fix in my tree but I haven't pushed it yet.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+	-ss
