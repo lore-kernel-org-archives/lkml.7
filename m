@@ -2,116 +2,145 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3686C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F8C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E052077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937E02077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h6PyZat0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfDJRi2 (ORCPT
+        id S1729811AbfDJRjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:38:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:52864 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbfDJRi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:38:28 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 10:38:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
-   d="scan'208";a="141635121"
-Received: from jsakkine-mobl.ger.corp.intel.com (HELO localhost) ([10.251.87.38])
-  by orsmga003.jf.intel.com with ESMTP; 10 Apr 2019 10:38:20 -0700
-Date:   Wed, 10 Apr 2019 20:38:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com,
-        thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Message-ID: <20190410173318.GA9052@linux.intel.com>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
- <20190403181827.GB17006@linux.intel.com>
- <20190403182728.GA17451@linux.intel.com>
- <20190406153047.GF2935@sasha-vm>
- <20190410112927.GA6586@linux.intel.com>
- <20190410160432.GB11568@sasha-vm>
+        Wed, 10 Apr 2019 13:39:06 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:56930 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729786AbfDJRjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:39:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AHXqvJ073777;
+        Wed, 10 Apr 2019 17:39:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=r9d+4HJ1YhTsTNJNafCIeJauD4NOh20rQoicT9MoGWc=;
+ b=h6PyZat0Ncx+Z1/u3SnZ+QCmYMdXMQ+Twv4/YLrpLAZ4CtluC25b5oWzeDLx6UkYbGz6
+ XplJZHpun3veGev9u5smWhIEuKSBBhvNhrSziKNWTntiGkZ7hqJVddfQDvsOdCls0voy
+ DRVjkb0PPDEl8Q2UwJcEzzaO7Ficiu1GmmBBO3GjkjK8el2vekmmGTnRmz767sO93NXA
+ VNubyf16jo5LQXCPTohHcC0rF3Bp1PtYMrF+VXPVPLaj1w7EA5tv5NT/aEZ/yLqBuKVb
+ nRufNLIBm63MMFl66qf47nfjkK0WvmHPnNIYk+d8EVmcwy82SIQ6qVYStaEgY5Vi/D6U Vw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2rphmempsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 17:39:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AHcQwU004824;
+        Wed, 10 Apr 2019 17:38:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2rpj5bapkd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 17:38:59 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3AHcvcN005911;
+        Wed, 10 Apr 2019 17:38:59 GMT
+Received: from [192.168.2.8] (/106.39.148.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Apr 2019 10:38:57 -0700
+Subject: Re: [PATCH 1/1] blk-mq: do not splice ctx->rq_lists[type] to
+ hctx->dispatch if ctx is not mapped to hctx
+To:     axboe@kernel.dk
+References: <1554721973-32456-1-git-send-email-dongli.zhang@oracle.com>
+Cc:     ming.lei@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <f30ce403-3af1-3e55-e080-0ef0bb9d5c50@oracle.com>
+Date:   Thu, 11 Apr 2019 01:38:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410160432.GB11568@sasha-vm>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554721973-32456-1-git-send-email-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904100118
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904100117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 12:04:32PM -0400, Sasha Levin wrote:
-> On Wed, Apr 10, 2019 at 02:29:27PM +0300, Jarkko Sakkinen wrote:
-> > On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
-> > > On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
-> > > > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
-> > > > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
-> > > > > > This patch adds support for a software-only implementation of a TPM
-> > > > > > running in TEE.
-> > > > > >
-> > > > > > There is extensive documentation of the design here:
-> > > > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
-> > > > > >
-> > > > > > As well as reference code for the firmware available here:
-> > > > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
-> > > > > >
-> > > > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> > > > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > >
-> > > > > What is the context anyway? I mean tpm_crb already supports fTPM running
-> > > > > in TZ.
-> > > >
-> > > > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
-> > > > full concentration. I did search through the PDF for CRB and found
-> > > > zero hits.
-> > > 
-> > > The fTPM as described in that paper and implemented in practice does not
-> > > use the CRB interface, thus we can't use tpm_crb to interface with the
-> > > firmware TPM.
-> > 
-> > Obviously not but what is the reason of not implementing CRB but instead
-> > making yet another interface? I mean CRB supports SMC call.
-> > 
-> > For me this is taking steps back as to the early days when there was
-> > proprietary intefaces to TPM before TCG came along and stardized.
-> > 
-> > I'm sure that the TPM implementation itself could be reworked to
-> > inteface using CRB. It would also be good for ARM as a platform as now
-> > this new made up interface causes unwanted divergence. I thought that
-> > throwing ad hoc intefaces everywhere is something that ARM Linux
-> > community tries to reduce, not increase.
+Hi Jens,
+
+On 04/08/2019 07:12 PM, Dongli Zhang wrote:
+> When a cpu is offline, blk_mq_hctx_notify_dead() is called once for each
+> hctx for the offline cpu.
 > 
-> I'm not sure what the original reasons were for not using the CRB
-> interface. Note that the paper is from a few years ago, and
-> implementations of this fTPM existed before the paper, so it's very
-> possible that it just predates CRB.
+> While blk_mq_hctx_notify_dead() is used to splice all ctx->rq_lists[type]
+> to hctx->dispatch, it never checks whether the ctx is already mapped to the
+> hctx.
 > 
-> Either way, there is existing hardware that runs this TPM and I'm trying
-> to get it out of Microsoft's tree and get it upstream. There's not much
-> I could do about existing hardware at this point.
+> For example, on a VM (with nvme) of 4 cpu, to offline cpu 2 out of the
+> 4 cpu (0-3), blk_mq_hctx_notify_dead() is called once for each io queue
+> hctx:
+> 
+> 1st: blk_mq_ctx->cpu = 2 for blk_mq_hw_ctx->queue_num = 3
+> 2nd: blk_mq_ctx->cpu = 2 for blk_mq_hw_ctx->queue_num = 2
+> 3rd: blk_mq_ctx->cpu = 2 for blk_mq_hw_ctx->queue_num = 1
+> 4th: blk_mq_ctx->cpu = 2 for blk_mq_hw_ctx->queue_num = 0
+> 
+> Although blk_mq_ctx->cpu = 2 is only mapped to blk_mq_hw_ctx->queue_num = 2
+> in this case, its ctx->rq_lists[type] will however be moved to
+> blk_mq_hw_ctx->queue_num = 3 during the 1st call of
+> blk_mq_hctx_notify_dead().
+> 
+> This patch would return and go ahead to next call of
+> blk_mq_hctx_notify_dead() if ctx is not mapped to hctx.
+> 
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-OK, the 2nd paragraph kind of is enough reason to pull it. Thanks for
-elaborating this. Just wanted to get a clearer picture where this sits
-in the universe. I'll do detailed review as soon as I have time.
+Would you consider this one?
 
-I don't need to have the hardware as long as *someone* could give
-tested-by for this.
+In addition to Ming's Reviewed-by, there is another Reviewed-by from Keith as in
+below link.
 
-/Jarkko
+https://lore.kernel.org/linux-block/20190408153627.GF32498@localhost.localdomain/
+
+Thank you very much!
+
+Dongli Zhang
+
+> ---
+>  block/blk-mq.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index a935483..9612746 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2219,6 +2219,10 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
+>  	enum hctx_type type;
+>  
+>  	hctx = hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_dead);
+> +
+> +	if (!cpumask_test_cpu(cpu, hctx->cpumask))
+> +		return 0;
+> +
+>  	ctx = __blk_mq_get_ctx(hctx->queue, cpu);
+>  	type = hctx->type;
+>  
+> 
