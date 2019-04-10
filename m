@@ -2,102 +2,99 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A525320820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B0420820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfDJTOD (ORCPT
+        id S1726635AbfDJTTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:14:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53546 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbfDJTN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:13:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E7063086225;
-        Wed, 10 Apr 2019 19:13:59 +0000 (UTC)
-Received: from llong.com (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F2FD600CC;
-        Wed, 10 Apr 2019 19:13:57 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        Wed, 10 Apr 2019 15:19:35 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36790 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfDJTTf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 15:19:35 -0400
+Received: by mail-qt1-f196.google.com with SMTP id s15so4287938qtn.3;
+        Wed, 10 Apr 2019 12:19:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yg1CRWpDLdkT8DcNZ4/1Kt/Rhj0AKjem9XJsrZeWYb4=;
+        b=lauKN18AGDfCEExEDyPVOa6Uh3GT+LQZQj/aeAOz7VFiWFFaOL0w+MUEUCBJHzGgil
+         w/xQGaxhbSpedYNvNYUqkJomuVauywfUYmzsV0H4jqAOxB6mYU6kBaFMIK6m7QT+tU78
+         IJeNJe4AQa/hR5w5gHAgvH6tZu19NVa2RXXDOmVjhajGlbpg0cl/+uJAzn9+2WsGfCuS
+         AqCsmmvyJqsRTwIo4XflWg9WkFHZ5jsMLbZP3LrM2cItIZCNn0WaSdP/zq687cSQmMfN
+         SCVwL0isVUQdNVZRjtTA4dS8NFJDFCUXpR+i5RICbk5/Ft+NE2Tb01XnJa+yfEBOrQAY
+         yz2w==
+X-Gm-Message-State: APjAAAUFzi5zPHKeWxYsd92EddTdEVlxTtmeM2DbmhBChPNb6vgsAUhU
+        tYQrcPHQlnCPfmnsHMUkC3xiL2vjL9WS9wd9Yhk=
+X-Google-Smtp-Source: APXvYqziMS9Y6MH6ktb8d7CS4J0XVAajtu4pUUPQPiejmRWed2wG2wYZO8+c+KHJQJataW3FJ+L3UHv8L+Bm/YeJX5o=
+X-Received: by 2002:a0c:9dcb:: with SMTP id p11mr36568433qvf.28.1554923973662;
+ Wed, 10 Apr 2019 12:19:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+In-Reply-To: <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 10 Apr 2019 21:19:17 +0200
+Message-ID: <CAK8P3a30yY_1mPcUBxOYOkbFwoeCHbo5EHuWMN4fqKug9DiQDQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Aaron Lu <aaron.lu@intel.com>, Waiman Long <longman@redhat.com>
-Subject: [RFC PATCH 2/2] mm/memcontrol: Add a new MEMCG_SUBSET_HIGH event
-Date:   Wed, 10 Apr 2019 15:13:21 -0400
-Message-Id: <20190410191321.9527-3-longman@redhat.com>
-In-Reply-To: <20190410191321.9527-1-longman@redhat.com>
-References: <20190410191321.9527-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 10 Apr 2019 19:13:59 +0000 (UTC)
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new MEMCG_SUBSET_HIGH event is added to record the number of times
-subset.high value is exceeded.
+On Wed, Apr 10, 2019 at 5:09 PM Olof Johansson <olof@lixom.net> wrote:
+>
+> As far as format goes; there's clear precedent on cpio being used and
+> supported; we already have build time requirements on the userspace
+> tools with some options. Using tar would actually be a new dependency
+> even if it is a common tool to have installed. With a self-populating
+> FS, there's no new tool requirements on the runtime side either.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- include/linux/memcontrol.h | 1 +
- mm/memcontrol.c            | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+The decision between tar and cpio directly follows from whether the
+headers are uncompressed in kernel space or in user space:
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 1baf3e4a9eeb..4498db61507a 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -52,6 +52,7 @@ enum memcg_memory_event {
- 	MEMCG_LOW,
- 	MEMCG_HIGH,
- 	MEMCG_MAX,
-+	MEMCG_SUBSET_HIGH,
- 	MEMCG_OOM,
- 	MEMCG_OOM_KILL,
- 	MEMCG_SWAP_MAX,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 7e52adea60d9..feba8b9c55b3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2150,8 +2150,10 @@ static void reclaim_high(struct mem_cgroup *memcg,
- 	/*
- 	 * Try memory reclaim if subset_high is exceeded.
- 	 */
--	if (mtype && (memcg_page_state(memcg, mtype) > memcg->subset_high))
-+	if (mtype && (memcg_page_state(memcg, mtype) > memcg->subset_high)) {
-+		memcg_memory_event(memcg, MEMCG_SUBSET_HIGH);
- 		try_to_free_mem_cgroup_pages(memcg, nr_pages, gfp_mask, true);
-+	}
- 
- 	do {
- 		if (page_counter_read(&memcg->memory) <= memcg->high)
-@@ -5603,6 +5605,8 @@ static int memory_events_show(struct seq_file *m, void *v)
- 		   atomic_long_read(&memcg->memory_events[MEMCG_HIGH]));
- 	seq_printf(m, "max %lu\n",
- 		   atomic_long_read(&memcg->memory_events[MEMCG_MAX]));
-+	seq_printf(m, "subset_high %lu\n",
-+		   atomic_long_read(&memcg->memory_events[MEMCG_SUBSET_HIGH]));
- 	seq_printf(m, "oom %lu\n",
- 		   atomic_long_read(&memcg->memory_events[MEMCG_OOM]));
- 	seq_printf(m, "oom_kill %lu\n",
--- 
-2.18.1
+- we use cpio for initramfs because unpacking cpio in C code is
+  fairly simple, while unpacking tar is not (see the wikipedia page on tar).
+  If we were to unpack it from the kernel, the initramfs code could be
+  trivially reused.
+- nobody sane uses cpio in user space, since tar is already present
+  almost everywhere, while cpio is rather obscure in comparison.
 
+        Arnd
