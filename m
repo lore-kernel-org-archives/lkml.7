@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC38C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEC9C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B64E2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81992133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732487AbfDJNmX (ORCPT
+        id S1732032AbfDJNmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:42:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15443 "EHLO mga11.intel.com"
+        Wed, 10 Apr 2019 09:42:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23980 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731969AbfDJNhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732374AbfDJNhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:03 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="335520993"
+   d="scan'208";a="148069227"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id DC50D4E8; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id A2ABF3C3; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 10/36] thunderbolt: Configure lanes when switch is initialized
-Date:   Wed, 10 Apr 2019 16:36:27 +0300
-Message-Id: <20190410133653.88061-11-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 06/36] thunderbolt: Do not allocate switch if depth is greater than 6
+Date:   Wed, 10 Apr 2019 16:36:23 +0300
+Message-Id: <20190410133653.88061-7-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,210 +55,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thunderbolt 2 devices and beyond need to have additional bits set in
-link controller specific registers. This includes two bits in LC_SX_CTRL
-that tell the link controller which lane is connected and whether it is
-upstream facing or not.
+Maximum depth in Thunderbolt topology is 6 so make sure it is not
+possible to allocate switches that exceed the depth limit.
+
+While at it update tb_switch_alloc() to use upper/lower_32_bits()
+following tb_switch_alloc_safe_mode().
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/lc.c      | 114 ++++++++++++++++++++++++++++++++++
- drivers/thunderbolt/switch.c  |   9 +++
- drivers/thunderbolt/tb.h      |   2 +
- drivers/thunderbolt/tb_regs.h |  11 ++++
- 4 files changed, 136 insertions(+)
+ drivers/thunderbolt/icm.c    |  5 ++---
+ drivers/thunderbolt/switch.c | 18 ++++++++++++------
+ drivers/thunderbolt/tb.h     |  1 +
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-index 2134a55ed837..a5dddf176546 100644
---- a/drivers/thunderbolt/lc.c
-+++ b/drivers/thunderbolt/lc.c
-@@ -19,3 +19,117 @@ int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid)
- 		return -EINVAL;
- 	return tb_sw_read(sw, uuid, TB_CFG_SWITCH, sw->cap_lc + TB_LC_FUSE, 4);
- }
-+
-+static int read_lc_desc(struct tb_switch *sw, u32 *desc)
-+{
-+	if (!sw->cap_lc)
-+		return -EINVAL;
-+	return tb_sw_read(sw, desc, TB_CFG_SWITCH, sw->cap_lc + TB_LC_DESC, 1);
-+}
-+
-+static int find_port_lc_cap(struct tb_port *port)
-+{
-+	struct tb_switch *sw = port->sw;
-+	int start, phys, ret, size;
-+	u32 desc;
-+
-+	ret = read_lc_desc(sw, &desc);
-+	if (ret)
-+		return ret;
-+
-+	/* Start of port LC registers */
-+	start = (desc & TB_LC_DESC_SIZE_MASK) >> TB_LC_DESC_SIZE_SHIFT;
-+	size = (desc & TB_LC_DESC_PORT_SIZE_MASK) >> TB_LC_DESC_PORT_SIZE_SHIFT;
-+	phys = tb_phy_port_from_link(port->port);
-+
-+	return sw->cap_lc + start + phys * size;
-+}
-+
-+static int tb_lc_configure_lane(struct tb_port *port, bool configure)
-+{
-+	bool upstream = tb_is_upstream_port(port);
-+	struct tb_switch *sw = port->sw;
-+	u32 ctrl, lane;
-+	int cap, ret;
-+
-+	if (sw->generation < 2)
-+		return 0;
-+
-+	cap = find_port_lc_cap(port);
-+	if (cap < 0)
-+		return cap;
-+
-+	ret = tb_sw_read(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
-+	if (ret)
-+		return ret;
-+
-+	/* Resolve correct lane */
-+	if (port->port % 2)
-+		lane = TB_LC_SX_CTRL_L1C;
-+	else
-+		lane = TB_LC_SX_CTRL_L2C;
-+
-+	if (configure) {
-+		ctrl |= lane;
-+		if (upstream)
-+			ctrl |= TB_LC_SX_CTRL_UPSTREAM;
-+	} else {
-+		ctrl &= ~lane;
-+		if (upstream)
-+			ctrl &= ~TB_LC_SX_CTRL_UPSTREAM;
-+	}
-+
-+	return tb_sw_write(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
-+}
-+
-+/**
-+ * tb_lc_configure_link() - Let LC know about configured link
-+ * @sw: Switch that is being added
-+ *
-+ * Informs LC of both parent switch and @sw that there is established
-+ * link between the two.
-+ */
-+int tb_lc_configure_link(struct tb_switch *sw)
-+{
-+	struct tb_port *up, *down;
-+	int ret;
-+
-+	if (!sw->config.enabled || !tb_route(sw))
-+		return 0;
-+
-+	up = tb_upstream_port(sw);
-+	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
-+
-+	/* Configure parent link toward this switch */
-+	ret = tb_lc_configure_lane(down, true);
-+	if (ret)
-+		return ret;
-+
-+	/* Configure upstream link from this switch to the parent */
-+	ret = tb_lc_configure_lane(up, true);
-+	if (ret)
-+		tb_lc_configure_lane(down, false);
-+
-+	return ret;
-+}
-+
-+/**
-+ * tb_lc_unconfigure_link() - Let LC know about unconfigured link
-+ * @sw: Switch to unconfigure
-+ *
-+ * Informs LC of both parent switch and @sw that the link between the
-+ * two does not exist anymore.
-+ */
-+void tb_lc_unconfigure_link(struct tb_switch *sw)
-+{
-+	struct tb_port *up, *down;
-+
-+	if (sw->is_unplugged || !sw->config.enabled || !tb_route(sw))
-+		return;
-+
-+	up = tb_upstream_port(sw);
-+	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
-+
-+	tb_lc_configure_lane(up, false);
-+	tb_lc_configure_lane(down, false);
-+}
+diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+index 7c923e16a7d8..bec360eef6cf 100644
+--- a/drivers/thunderbolt/icm.c
++++ b/drivers/thunderbolt/icm.c
+@@ -42,7 +42,6 @@
+ #define ICM_TIMEOUT			5000	/* ms */
+ #define ICM_APPROVE_TIMEOUT		10000	/* ms */
+ #define ICM_MAX_LINK			4
+-#define ICM_MAX_DEPTH			6
+ 
+ /**
+  * struct icm - Internal connection manager private data
+@@ -714,7 +713,7 @@ icm_fr_device_disconnected(struct tb *tb, const struct icm_pkg_header *hdr)
+ 	depth = (pkg->link_info & ICM_LINK_INFO_DEPTH_MASK) >>
+ 		ICM_LINK_INFO_DEPTH_SHIFT;
+ 
+-	if (link > ICM_MAX_LINK || depth > ICM_MAX_DEPTH) {
++	if (link > ICM_MAX_LINK || depth > TB_SWITCH_MAX_DEPTH) {
+ 		tb_warn(tb, "invalid topology %u.%u, ignoring\n", link, depth);
+ 		return;
+ 	}
+@@ -744,7 +743,7 @@ icm_fr_xdomain_connected(struct tb *tb, const struct icm_pkg_header *hdr)
+ 	depth = (pkg->link_info & ICM_LINK_INFO_DEPTH_MASK) >>
+ 		ICM_LINK_INFO_DEPTH_SHIFT;
+ 
+-	if (link > ICM_MAX_LINK || depth > ICM_MAX_DEPTH) {
++	if (link > ICM_MAX_LINK || depth > TB_SWITCH_MAX_DEPTH) {
+ 		tb_warn(tb, "invalid topology %u.%u, ignoring\n", link, depth);
+ 		return;
+ 	}
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 63ff4c753d89..dd218dc4781b 100644
+index 7fa4ab076404..1e29c06947af 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -1276,6 +1276,10 @@ int tb_switch_configure(struct tb_switch *sw)
- 	if (ret)
- 		return ret;
- 
-+	ret = tb_lc_configure_link(sw);
-+	if (ret)
-+		return ret;
+@@ -1130,10 +1130,16 @@ static int tb_switch_get_generation(struct tb_switch *sw)
+ struct tb_switch *tb_switch_alloc(struct tb *tb, struct device *parent,
+ 				  u64 route)
+ {
+-	int i;
+-	int cap;
+ 	struct tb_switch *sw;
+-	int upstream_port = tb_cfg_get_upstream_port(tb->ctl, route);
++	int upstream_port;
++	int i, cap, depth;
 +
- 	return tb_plug_events_active(sw, true);
- }
- 
-@@ -1486,6 +1490,7 @@ void tb_switch_remove(struct tb_switch *sw)
- 
- 	if (!sw->is_unplugged)
- 		tb_plug_events_active(sw, false);
-+	tb_lc_unconfigure_link(sw);
- 
- 	tb_switch_nvm_remove(sw);
- 
-@@ -1545,6 +1550,10 @@ int tb_switch_resume(struct tb_switch *sw)
- 	if (err)
- 		return err;
- 
-+	err = tb_lc_configure_link(sw);
-+	if (err)
-+		return err;
++	/* Make sure we do not exceed maximum topology limit */
++	depth = tb_route_length(route);
++	if (depth > TB_SWITCH_MAX_DEPTH)
++		return NULL;
 +
- 	err = tb_plug_events_active(sw, true);
- 	if (err)
- 		return err;
++	upstream_port = tb_cfg_get_upstream_port(tb->ctl, route);
+ 	if (upstream_port < 0)
+ 		return NULL;
+ 
+@@ -1150,9 +1156,9 @@ struct tb_switch *tb_switch_alloc(struct tb *tb, struct device *parent,
+ 
+ 	/* configure switch */
+ 	sw->config.upstream_port_number = upstream_port;
+-	sw->config.depth = tb_route_length(route);
+-	sw->config.route_lo = route;
+-	sw->config.route_hi = route >> 32;
++	sw->config.depth = depth;
++	sw->config.route_hi = upper_32_bits(route);
++	sw->config.route_lo = lower_32_bits(route);
+ 	sw->config.enabled = 0;
+ 
+ 	/* initialize ports */
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index e52d39b25266..69e0534224d8 100644
+index f7b0c43c29a7..93c1ea21feeb 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -465,6 +465,8 @@ int tb_drom_read(struct tb_switch *sw);
- int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
+@@ -43,6 +43,7 @@ struct tb_switch_nvm {
+ };
  
- int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
-+int tb_lc_configure_link(struct tb_switch *sw);
-+void tb_lc_unconfigure_link(struct tb_switch *sw);
+ #define TB_SWITCH_KEY_SIZE		32
++#define TB_SWITCH_MAX_DEPTH		6
  
- static inline int tb_route_length(u64 route)
- {
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 4895ae9f0b40..e0f867dad5cf 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -238,6 +238,17 @@ struct tb_regs_hop {
- } __packed;
- 
- /* Common link controller registers */
-+#define TB_LC_DESC			0x02
-+#define TB_LC_DESC_SIZE_SHIFT		8
-+#define TB_LC_DESC_SIZE_MASK		GENMASK(15, 8)
-+#define TB_LC_DESC_PORT_SIZE_SHIFT	16
-+#define TB_LC_DESC_PORT_SIZE_MASK	GENMASK(27, 16)
- #define TB_LC_FUSE			0x03
- 
-+/* Link controller registers */
-+#define TB_LC_SX_CTRL			0x96
-+#define TB_LC_SX_CTRL_L1C		BIT(16)
-+#define TB_LC_SX_CTRL_L2C		BIT(20)
-+#define TB_LC_SX_CTRL_UPSTREAM		BIT(30)
-+
- #endif
+ /**
+  * struct tb_switch - a thunderbolt switch
 -- 
 2.20.1
 
