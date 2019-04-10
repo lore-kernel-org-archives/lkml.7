@@ -2,99 +2,111 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CC5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1F0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870A520645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1592083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qnu8P2jD"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="HAVP9Azw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbfDJMO3 (ORCPT
+        id S1730573AbfDJMTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:14:29 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40779 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfDJMO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:14:28 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a28so1645106lfo.7;
-        Wed, 10 Apr 2019 05:14:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ki6A3r9Nz0pMX8bgvM5FSU+hcyVOggm04GD+8XSOsls=;
-        b=qnu8P2jD0kFBC+v/xK4beP1OqULlzLnnz3eRYxJ8T9v9zx2qYRR1Re+1C+Y+zncMfa
-         4xzcds+R4s/ETFW907D6PddexmepgKMGr2euRiwgYBij+Wbm/oMw027LWeZhnJiLsJ06
-         8Yq35pq2vIg59uUV8qJjAWMovzu9kpgrl+Xmk595Ir0T4s4KIRrnXymF9FYIfqHqm+f0
-         cpudMcqfQ5RJVm9tbgkULZUhHsrjJqT99CA4idf9WEfjx2s2wLdxJ/ZcQsiRZbclVUXT
-         MPGwI0AhOCJ/J6jKBtFZuqlTApPHTO/rHCe51Pf8VnXRjFRHkxoACc8Gk3Lmo861snNL
-         t40Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ki6A3r9Nz0pMX8bgvM5FSU+hcyVOggm04GD+8XSOsls=;
-        b=WJ9rcYOiYLJrgO6qxPVFD+TmdUM1Gz4K3n3ScU2QKxZ7CyjJjS1/WewCqp2Ua2oUHL
-         8Ri/lKdBIqkZu+wN4gNqNYjVGUijJPt3ZrEFk+xSsEMZbZws0NlTHAqDClURJY/3M/gK
-         S9u3rEB9iRvrzstoezTTkkJIGXfxTrWx3nehoSaQm5NQhOnmyhm8hPeOf2oJw6dTwhRz
-         YOYLP2jpfePENmxnon5Rl6UZ1EHioGOPlwK16lFgZ5kOFvSLLEO3M1KzGs50XHhnMJzc
-         m7stcYeHuvP781egA0kw0hz4Pr0WO44zT0XjSga0J1gAHksXhJGgGXRbdiTrFs/uXs4R
-         KGlg==
-X-Gm-Message-State: APjAAAWcf9hQ0y5ZIl3Bjbz/Ws7fmjtQ7NAAscSfshLlDKPBSZZNGzVC
-        q2VQnZFMwFvCC66+2PlcGiR/PvIc3FLk0sAv1hs=
-X-Google-Smtp-Source: APXvYqxHzTQGftdYI9arntqzn4eBOFhZYy2jIcdsodOrTe4F1Agid7pNZzBX6ElrKXNbpXdpBCqNQ1ysnAhGON0OOdA=
-X-Received: by 2002:a19:ca02:: with SMTP id a2mr23384074lfg.88.1554898466242;
- Wed, 10 Apr 2019 05:14:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <1554885748-51260-1-git-send-email-root@localhost.localdomain>
-In-Reply-To: <1554885748-51260-1-git-send-email-root@localhost.localdomain>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 10 Apr 2019 09:14:20 -0300
-Message-ID: <CAOMZO5AHTj+tGSs-1eO2D0-fqqWhh3t_UgeLm+4s==uQtw4QqA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6-solox: fix cpu hang BUG
-To:     root <root@localhost.localdomain>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Wed, 10 Apr 2019 08:19:54 -0400
+Received: from mail-eopbgr150100.outbound.protection.outlook.com ([40.107.15.100]:6340
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727497AbfDJMTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:19:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wzIn9mo32GpnUbwp4vQ1zR6bHmaEGPetJzTiCB3uaQw=;
+ b=HAVP9Azwx5jAxXl43HcPMXFOr7av2Kx7yVr4hpgEIh5GzsR5Y4BBBKk5gvJKvDIWwzWeugj921LSiIXIsdPtJ7nD+TCcW4dof3bn9DuhicrLIfL/bB6oklvZ53axGuJvFMUGKJhlSfsVsctqyxbjknn/c8pdWRYpAMHUF5pwrzA=
+Received: from AM0PR07MB6019.eurprd07.prod.outlook.com (20.178.112.14) by
+ AM0PR07MB4420.eurprd07.prod.outlook.com (52.133.52.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.9; Wed, 10 Apr 2019 12:19:50 +0000
+Received: from AM0PR07MB6019.eurprd07.prod.outlook.com
+ ([fe80::8538:2f6b:1fad:e3e7]) by AM0PR07MB6019.eurprd07.prod.outlook.com
+ ([fe80::8538:2f6b:1fad:e3e7%2]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
+ 12:19:50 +0000
+From:   "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>
+CC:     "saiprakash.ranjan@codeaurora.org" <saiprakash.ranjan@codeaurora.org>,
+        Michal Simek <michal.simek@xilinx.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kay-Liu <liuk@cetca.net.cn>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] drivers: firmware: psci: add support for warm reset
+Thread-Topic: [PATCH v2] drivers: firmware: psci: add support for warm reset
+Thread-Index: AQHU6k5S07yjvmv7O0aTX3KVdclzwqYs6qoAgABojoCAB/0JgIAACeW2
+Date:   Wed, 10 Apr 2019 12:19:50 +0000
+Message-ID: <AM0PR07MB601905FDE62061AC5B0B6712F42E0@AM0PR07MB6019.eurprd07.prod.outlook.com>
+References: <20190403185123.15873-1-aaro.koskinen@iki.fi>
+ <39242b1d62b639f8fdc92029d737b5e0@codeaurora.org>
+ <20190405094242.GB17115@darkstar.musicnaut.iki.fi>,<20190410114211.GA31173@e107155-lin>
+In-Reply-To: <20190410114211.GA31173@e107155-lin>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aaro.koskinen@nokia.com; 
+x-originating-ip: [131.228.2.23]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bec30856-d8b7-4938-e853-08d6bdaed468
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR07MB4420;
+x-ms-traffictypediagnostic: AM0PR07MB4420:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR07MB4420D72FCEDB223AC468F0EFF42E0@AM0PR07MB4420.eurprd07.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(366004)(396003)(136003)(199004)(189003)(305945005)(7736002)(14454004)(6506007)(86362001)(11346002)(446003)(66066001)(68736007)(52536014)(74316002)(5660300002)(476003)(478600001)(81156014)(97736004)(486006)(2906002)(81166006)(105586002)(8676002)(966005)(76176011)(55016002)(8936002)(102836004)(99286004)(316002)(110136005)(71190400001)(71200400001)(3846002)(6116002)(4326008)(6246003)(9686003)(53936002)(256004)(25786009)(186003)(6436002)(229853002)(26005)(93886005)(33656002)(7696005)(6306002)(106356001)(4744005)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR07MB4420;H:AM0PR07MB6019.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZOYVshku3ZhTn4Iwv2wljHmotVy4idxNEG9glTSdY2d0MBKsoqH6uil55HnXxhg4qk4RlVYmQcRAPlSn11LH51YB/IwUAsZnyunhrvjbqC8W8Sxhu2QHYkBjV5ZowxEJvxvGVWZacep+brHDJXISktHr3VjCXX/dtumBhOW0ou3khq8YEpa6gWFDgldgpNRfyquYsQmwF/MDLVuvt9s7airEaTmhtfeuGCBbpweRbuyd7QaF6SxVUQJLgtWbtOiZuIRGSDGAnySUuPwz2ZJgzfHaAMsjVqamsJ1VaZP85OgK2kFVxCjCisZP0vx43CTiaGsZyi2I7vZtDUK8SK8JbZo3cwZ+nstvzv2lUXsSfOh6Nn2nTavlEZxZ/4kySQcBHVAVe8UXtII+PSaGTU7d9I9UANZpJF3K+LkPgdVzTEg=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bec30856-d8b7-4938-e853-08d6bdaed468
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 12:19:50.4108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB4420
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kay,
+Hi,
 
-On Wed, Apr 10, 2019 at 5:43 AM root <root@localhost.localdomain> wrote:
+From: Sudeep Holla [sudeep.holla@arm.com]:
+> On Fri, Apr 05, 2019 at 12:42:43PM +0300, Aaro Koskinen wrote:
+> > On Fri, Apr 05, 2019 at 08:58:30AM +0530, saiprakash.ranjan@codeaurora.=
+org wrote:
+> > > There is already a patch sent by Sudeep for this support.
+> > >
+> > > - https://lore.kernel.org/lkml/1525257003-8608-1-git-send-email-sudee=
+p.holla@arm.com/
+> >
+> > OK, I have missed that. Sudeep, are you planning to send a new version
+> > of this patch? Looks like the last was sent almost a year ago.
+> >
 >
-> From: Kay-Liu <liuk@cetca.net.cn>
->
-> The imx6-solox's enet clk config would cause CPU hang in a special
-> environment.The BUG was accepted by yoctoproject, they will process
-> platform related code,only submit dts part here.
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=13258
-> Add support for it.
+> Sure I can, if there's a requirement and someone can test it.
 
-You did a very good job in describing the issue in the bugzilla report.
+Yes, I use this feature.
 
-Please describe the issue and the proposed solution here in the commit log too.
-
-It can be a summary of what you added in the bugzilla entry.
-
-Thanks
+A.
