@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D514C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF01C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EDA2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749DF20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDJVPt (ORCPT
+        id S1726756AbfDJVQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:15:49 -0400
-Received: from gateway20.websitewelcome.com ([192.185.59.4]:46575 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbfDJVPs (ORCPT
+        Wed, 10 Apr 2019 17:16:37 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:21331 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726247AbfDJVQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:15:48 -0400
-X-Greylist: delayed 7806 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Apr 2019 17:15:47 EDT
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 1E4AD400D2813
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:15:47 -0500 (CDT)
+        Wed, 10 Apr 2019 17:16:36 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 322BC400CA730
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:16:35 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id EKZPh5ZXgYTGMEKZPhEERg; Wed, 10 Apr 2019 16:15:47 -0500
+        id EKaBh8g0adnCeEKaBhwg9x; Wed, 10 Apr 2019 16:16:35 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=43116 helo=[192.168.1.76])
+Received: from [189.250.139.70] (port=43130 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hEKZO-002AjI-LX; Wed, 10 Apr 2019 16:15:46 -0500
-Subject: Re: [PATCH] mtd: lpddr_cmds: Mark expected switch fall-through
+        id 1hEKaA-002BFn-NA; Wed, 10 Apr 2019 16:16:34 -0500
+Subject: Re: [PATCH] mtd: phram: Mark expected switch fall-throughs
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
+To:     Joern Engel <joern@lazybastard.org>,
+        David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Marek Vasut <marek.vasut@gmail.com>,
         Richard Weinberger <richard@nod.at>
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>
-References: <20190208181210.GA8388@embeddedor>
- <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
+References: <20190208180911.GA32525@embeddedor>
+ <a5b310a1-d0ba-689b-100a-14a8204761a8@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -88,12 +88,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <1a963008-9f8a-834f-8c87-5641b653e06d@embeddedor.com>
-Date:   Wed, 10 Apr 2019 16:15:45 -0500
+Message-ID: <321d287b-afeb-9832-b8d4-82f746c04aff@embeddedor.com>
+Date:   Wed, 10 Apr 2019 16:16:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
+In-Reply-To: <a5b310a1-d0ba-689b-100a-14a8204761a8@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -105,13 +105,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.139.70
 X-Source-L: No
-X-Exim-ID: 1hEKZO-002AjI-LX
+X-Exim-ID: 1hEKaA-002BFn-NA
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43116
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43130
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
+X-Email-Count: 25
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -127,7 +127,7 @@ Thanks
 --
 Gustavo
 
-On 3/20/19 3:17 PM, Gustavo A. R. Silva wrote:
+On 3/20/19 3:19 PM, Gustavo A. R. Silva wrote:
 > Hi all,
 > 
 > Friendly ping:
@@ -138,19 +138,25 @@ On 3/20/19 3:17 PM, Gustavo A. R. Silva wrote:
 > --
 > Gustavo
 > 
-> On 2/8/19 12:12 PM, Gustavo A. R. Silva wrote:
+> On 2/8/19 12:09 PM, Gustavo A. R. Silva wrote:
 >> In preparation to enabling -Wimplicit-fallthrough, mark switch
 >> cases where we are expecting to fall through.
 >>
 >> This patch fixes the following warnings:
 >>
->> drivers/mtd/lpddr/lpddr_cmds.c: In function ‘chip_ready’:
->> drivers/mtd/lpddr/lpddr_cmds.c:319:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (mode == FL_READY && chip->oldstate == FL_READY)
->>       ^
->> drivers/mtd/lpddr/lpddr_cmds.c:322:2: note: here
->>   default:
->>   ^~~~~~~
+>> drivers/mtd/devices/phram.c: In function ‘parse_num64’:
+>> drivers/mtd/devices/phram.c:149:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>      shift += 10;
+>>      ~~~~~~^~~~~
+>> drivers/mtd/devices/phram.c:150:4: note: here
+>>     case 'M':
+>>     ^~~~
+>> drivers/mtd/devices/phram.c:151:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>      shift += 10;
+>>      ~~~~~~^~~~~
+>> drivers/mtd/devices/phram.c:152:4: note: here
+>>     case 'k':
+>>     ^~~~
 >>
 >> Warning level 3 was used: -Wimplicit-fallthrough=3
 >>
@@ -159,19 +165,22 @@ On 3/20/19 3:17 PM, Gustavo A. R. Silva wrote:
 >>
 >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 >> ---
->>  drivers/mtd/lpddr/lpddr_cmds.c | 1 +
->>  1 file changed, 1 insertion(+)
+>>  drivers/mtd/devices/phram.c | 2 ++
+>>  1 file changed, 2 insertions(+)
 >>
->> diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmds.c
->> index b13557fe52bd..76a4c73e100e 100644
->> --- a/drivers/mtd/lpddr/lpddr_cmds.c
->> +++ b/drivers/mtd/lpddr/lpddr_cmds.c
->> @@ -318,6 +318,7 @@ static int chip_ready(struct map_info *map, struct flchip *chip, int mode)
->>  		/* Only if there's no operation suspended... */
->>  		if (mode == FL_READY && chip->oldstate == FL_READY)
->>  			return 0;
->> +		/* fall through */
->>  
->>  	default:
->>  sleep:
+>> diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+>> index 9ee04b5f9311..8a8627c30aed 100644
+>> --- a/drivers/mtd/devices/phram.c
+>> +++ b/drivers/mtd/devices/phram.c
+>> @@ -147,8 +147,10 @@ static int parse_num64(uint64_t *num64, char *token)
+>>  			switch (token[len - 2]) {
+>>  			case 'G':
+>>  				shift += 10;
+>> +				/* fall through */
+>>  			case 'M':
+>>  				shift += 10;
+>> +				/* fall through */
+>>  			case 'k':
+>>  				shift += 10;
+>>  				token[len - 2] = 0;
 >>
