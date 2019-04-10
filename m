@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B542C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F70C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B7620818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EA320820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554894850;
-	bh=PbNpDE18BK/FsJEn7WhyXWCt9ml8laALIZQkkqDaumc=;
+	s=default; t=1554894851;
+	bh=gwPcDCdOgXrh7PmYwpUY164QL6Bw/DuJro89o7KJlFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3eUbV4d5xWdQl+7hBKGzNhD7+fzW3U8I9plld3p7OaxaaiVtd33erTOpQBXzipPI
-	 vB4H4SPkZhqiGui5nQ3nnrQlWai2bEQPfJGZn8E9jVSYYZLfbaTX09HOjD99ioWXic
-	 mZYriHSVWgtF1BGPleCMGzB2r35sEG4fKhfPjBzo=
+	b=Kj83RbW9BWkBJ/EerJGS+DkwSlknFJNaroXG3u3OcE1u6xljpx+GRmFHLB9Tn7jYS
+	 OjF/mcQ5PwZVdyqEVAoj0ZB82hybR488axjDtOe8WzO5AmGO6erj1A2WfQpTL3dTnz
+	 IrNd1zjUbJ6FkfO8rquN/RvlKaaPX07+kCX1ppqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731573AbfDJLOJ (ORCPT
+        id S1731584AbfDJLOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:14:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44452 "EHLO
+        Wed, 10 Apr 2019 07:14:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44446 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731076AbfDJLMQ (ORCPT
+        with ESMTP id S1731059AbfDJLMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 07:12:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,18 +34,18 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aMyMq6+HpBeCrxOa6nGyZagjeADRq/dui+re74lmB8g=; b=RmCeCT1+75JYRO35+CDdWULnT3
-        Oeok7wFCc9H32oiARnXcYAoz2iGBkPzapWkHMeuiidNAdmyi4HiaGVxdEax5J3725HzWfhgmA32UP
-        eRyiP6DuglH+xP8o+ZtmmKXRMZIAoeOLo/yk3VFc1Pi2Z9BISoU/GVrRcGyaLNgvcOC81YnUfxDSx
-        p3+XSARBDJHmDj7xNiXZ4LXpl1qS4eTp06YdiXz3T7b0oo5fbA8tRAuIfqYHc9CcVzCmth5TeDLb5
-        Kh4M2m3kdEp4vGqZtRNm2bEu7ENpltUON/k0E6S/Kj0MpmrocgTIMFSTV5QZW8qdjSnWHfJOpwhhg
-        inTobMug==;
+        bh=Ez0sZsw0NBzlVZN3wsezYrVWYduvf6kqfB6JtA0kD9k=; b=mH8zlm7pkZTcVfqs3LN4fR5BaV
+        1Nf2dA6deqCKOsC/iVIcrs4PhoiQJ2b0huFtuMhLIie2naYQ9NUNOPc5JpwLch28dlITgdoQxo1AK
+        87TJZO/nNOEXnsVYnAoQbh+CSsSel4frYjWEeMIGqaVuKMGhMYnvlYtB5qH3YZxHfTGnhFyCYBI21
+        krL/SlA7b6ZAoE8aWDqjzZYiw7kfHzGLsGLctq2d/sAO04ubFwRrC3RWdIIuWQFfa31ogMTZj5215
+        VHmRHWHyITRKCaFUEnQ9/7bHWCzfh/5iEHssm0KASSkea5Y7Pxco5wGmXTLUidbeKJM3ixzREmdX3
+        nbLFjY1A==;
 Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEB9L-0006n4-Mi; Wed, 10 Apr 2019 11:12:15 +0000
+        id 1hEB9L-0006mw-K3; Wed, 10 Apr 2019 11:12:15 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hEB9J-0007TD-HT; Wed, 10 Apr 2019 08:12:13 -0300
+        id 1hEB9J-0007Sh-Bm; Wed, 10 Apr 2019 08:12:13 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH 13/21] docs: hwmon: ads1015: convert to ReST format
-Date:   Wed, 10 Apr 2019 08:12:03 -0300
-Message-Id: <035d94aab9cff675b38a69c2944780ff8a482337.1554893882.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 06/21] docs: hwmon: pc87360: convert to ReST format
+Date:   Wed, 10 Apr 2019 08:11:56 -0300
+Message-Id: <2f35108edc61184dfe117696e8e110c51477bc4e.1554893882.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1554893881.git.mchehab+samsung@kernel.org>
 References: <cover.1554893881.git.mchehab+samsung@kernel.org>
@@ -66,125 +66,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ads1015 to ReST format, in order to allow it to
+Convert pc87360 to ReST format, in order to allow it to
 be parsed by Sphinx.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/hwmon/ads1015 | 72 ++++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 29 deletions(-)
+ Documentation/hwmon/pc87360 | 38 +++++++++++++++++++++++++------------
+ 1 file changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads1015
-index 02d2a459385f..e0951c4e57bb 100644
---- a/Documentation/hwmon/ads1015
-+++ b/Documentation/hwmon/ads1015
-@@ -2,17 +2,25 @@ Kernel driver ads1015
+diff --git a/Documentation/hwmon/pc87360 b/Documentation/hwmon/pc87360
+index d5f5cf16ce59..4bad07bce54b 100644
+--- a/Documentation/hwmon/pc87360
++++ b/Documentation/hwmon/pc87360
+@@ -2,14 +2,19 @@ Kernel driver pc87360
  =====================
  
  Supported chips:
 +
-   * Texas Instruments ADS1015
+   * National Semiconductor PC87360, PC87363, PC87364, PC87365 and PC87366
 +
-     Prefix: 'ads1015'
--    Datasheet: Publicly available at the Texas Instruments website :
--               http://focus.ti.com/lit/ds/symlink/ads1015.pdf
+     Prefixes: 'pc87360', 'pc87363', 'pc87364', 'pc87365', 'pc87366'
 +
-+    Datasheet: Publicly available at the Texas Instruments website:
+     Addresses scanned: none, address read from Super I/O config space
 +
-+	       http://focus.ti.com/lit/ds/symlink/ads1015.pdf
-+
-   * Texas Instruments ADS1115
-+
-     Prefix: 'ads1115'
--    Datasheet: Publicly available at the Texas Instruments website :
--               http://focus.ti.com/lit/ds/symlink/ads1115.pdf
-+
-+    Datasheet: Publicly available at the Texas Instruments website:
-+
-+	       http://focus.ti.com/lit/ds/symlink/ads1115.pdf
+     Datasheets: No longer available
  
- Authors:
--        Dirk Eibach, Guntermann & Drunck GmbH <eibach@gdsys.de>
-+	Dirk Eibach, Guntermann & Drunck GmbH <eibach@gdsys.de>
+ Authors: Jean Delvare <jdelvare@suse.de>
  
- Description
- -----------
-@@ -24,14 +32,15 @@ This device is a 12/16-bit A-D converter with 4 inputs.
- The inputs can be used single ended or in certain differential combinations.
- 
- The inputs can be made available by 8 sysfs input files in0_input - in7_input:
--in0: Voltage over AIN0 and AIN1.
--in1: Voltage over AIN0 and AIN3.
--in2: Voltage over AIN1 and AIN3.
--in3: Voltage over AIN2 and AIN3.
--in4: Voltage over AIN0 and GND.
--in5: Voltage over AIN1 and GND.
--in6: Voltage over AIN2 and GND.
--in7: Voltage over AIN3 and GND.
+ Thanks to Sandeep Mehta, Tonko de Rooy and Daniel Ceregatti for testing.
 +
-+  - in0: Voltage over AIN0 and AIN1.
-+  - in1: Voltage over AIN0 and AIN3.
-+  - in2: Voltage over AIN1 and AIN3.
-+  - in3: Voltage over AIN2 and AIN3.
-+  - in4: Voltage over AIN0 and GND.
-+  - in5: Voltage over AIN1 and GND.
-+  - in6: Voltage over AIN2 and GND.
-+  - in7: Voltage over AIN3 and GND.
+ Thanks to Rudolf Marek for helping me investigate conversion issues.
  
- Which inputs are available can be configured using platform data or devicetree.
  
-@@ -42,29 +51,34 @@ Platform Data
+@@ -17,11 +22,13 @@ Module Parameters
+ -----------------
  
- In linux/platform_data/ads1015.h platform data is defined, channel_data contains
- configuration data for the used input combinations:
+ * init int
+-  Chip initialization level:
+-   0: None
+-  *1: Forcibly enable internal voltage and temperature channels, except in9
+-   2: Forcibly enable all voltage and temperature channels, except in9
+-   3: Forcibly enable all voltage and temperature channels, including in9
++    Chip initialization level:
 +
- - pga is the programmable gain amplifier (values are full scale)
--  0: +/- 6.144 V
--  1: +/- 4.096 V
--  2: +/- 2.048 V
--  3: +/- 1.024 V
--  4: +/- 0.512 V
--  5: +/- 0.256 V
-+
-+    - 0: +/- 6.144 V
-+    - 1: +/- 4.096 V
-+    - 2: +/- 2.048 V
-+    - 3: +/- 1.024 V
-+    - 4: +/- 0.512 V
-+    - 5: +/- 0.256 V
-+
- - data_rate in samples per second
--  0: 128
--  1: 250
--  2: 490
--  3: 920
--  4: 1600
--  5: 2400
--  6: 3300
++    - 0: None
++    - **1**: Forcibly enable internal voltage and temperature channels,
++      except in9
++    - 2: Forcibly enable all voltage and temperature channels, except in9
++    - 3: Forcibly enable all voltage and temperature channels, including in9
  
--Example:
--struct ads1015_platform_data data = {
-+    - 0: 128
-+    - 1: 250
-+    - 2: 490
-+    - 3: 920
-+    - 4: 1600
-+    - 5: 2400
-+    - 6: 3300
-+
-+Example::
-+
-+  struct ads1015_platform_data data = {
- 	.channel_data = {
- 		[2] = { .enabled = true, .pga = 1, .data_rate = 0 },
- 		[4] = { .enabled = true, .pga = 4, .data_rate = 5 },
- 	}
--};
-+  };
+ Note that this parameter has no effect for the PC87360, PC87363 and PC87364
+ chips.
+@@ -43,13 +50,15 @@ hardware monitoring chipsets, not only controlling and monitoring three fans,
+ but also monitoring eleven voltage inputs and two (PC87365) or up to four
+ (PC87366) temperatures.
  
- In this case only in2_input (FS +/- 4.096 V, 128 SPS) and in4_input
- (FS +/- 0.512 V, 2400 SPS) would be created.
++  =========== ======= ======= ======= ======= =====
+   Chip        #vin    #fan    #pwm    #temp   devid
+-
++  =========== ======= ======= ======= ======= =====
+   PC87360     -       2       2       -       0xE1
+   PC87363     -       2       2       -       0xE8
+   PC87364     -       3       3       -       0xE4
+   PC87365     11      3       3       2       0xE5
+   PC87366     11      3       3       3-4     0xE9
++  =========== ======= ======= ======= ======= =====
+ 
+ The driver assumes that no more than one chip is present, and one of the
+ standard Super I/O addresses is used (0x2E/0x2F or 0x4E/0x4F)
+@@ -68,18 +77,23 @@ have to care no more.
+ 
+ For reference, here are a few values about clock dividers:
+ 
+-                slowest         accuracy        highest
+-                measurable      around 3000     accurate
++    =========== =============== =============== ===========
++		slowest         accuracy        highest
++		measurable      around 3000     accurate
+     divider     speed (RPM)     RPM (RPM)       speed (RPM)
+-         1        1882              18           6928
+-         2         941              37           4898
+-         4         470              74           3464
+-         8         235             150           2449
++    =========== =============== =============== ===========
++	 1        1882              18           6928
++	 2         941              37           4898
++	 4         470              74           3464
++	 8         235             150           2449
++    =========== =============== =============== ===========
+ 
+ For the curious, here is how the values above were computed:
++
+  * slowest measurable speed: clock/(255*divider)
+  * accuracy around 3000 RPM: 3000^2/clock
+  * highest accurate speed: sqrt(clock*100)
++
+ The clock speed for the PC87360 family is 480 kHz. I arbitrarily chose 100
+ RPM as the lowest acceptable accuracy.
+ 
 -- 
 2.20.1
 
