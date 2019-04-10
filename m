@@ -2,274 +2,192 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0968FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BD4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F9A2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1E42084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyKP7sae"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFKEnCDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfDJRly (ORCPT
+        id S1729512AbfDJRnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:41:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33771 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbfDJRlv (ORCPT
+        Wed, 10 Apr 2019 13:43:55 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33732 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729318AbfDJRnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:41:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id h5so1925999pfo.0;
-        Wed, 10 Apr 2019 10:41:50 -0700 (PDT)
+        Wed, 10 Apr 2019 13:43:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id b6so2942421iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:43:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IX6rsLdEpGebKg029Di6gEZ0u7xtmx+ggMfmrU8lX0Y=;
-        b=jyKP7saexZIRnRWDZBTT4mT1TKkfjyLPMoIr23dexvqM9ZFrohmzOheSloqS08oXAR
-         NT+Qeb5qoWGoxMym1+5+7qHja+NyQYC0JQsg7lq8lukah18ZSa3W+McUM1nMetZV38or
-         EUm8yhB6oOni6YW6soox3Kvmn8e7Vb1ulOMfWi3hrBSYzRMkFtxg7altopjob1VqD3RV
-         vsuPw9YZOKpqoT+g29tdbnYnvVdL/haiEGCSDJxSxTAwHglyQA8J0GCfPqOLx6aZo6G2
-         TNseia8RVpgiYYeIrCON1CF/OTQVItRgZWK5Nl/bgL0jszyV4aECoPKAPndpvL672YaB
-         tBLg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IJF9H8q67MNeTsMwLMUcQ9q9YgSQzYtibBojtDcgcJY=;
+        b=TFKEnCDsHmcdPNRJU4IDGSEqV1YhPf3u9b+9A/qdCKkHRznqB43JNUXXmoPdUYjTvH
+         6ssW0XG+7VmUgSkklMSVGLej+IrS4UzD2RqxM/BLBcQcof6IcEac6bxGjC4v67IF2KDu
+         DW8NeKA3ZVueL66Vun2giV9rpckmdFwbblc8Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IX6rsLdEpGebKg029Di6gEZ0u7xtmx+ggMfmrU8lX0Y=;
-        b=JI8OER6MBUSpuA6C157DIEqcCgowS1MvDtKe3uIigC/fsUJJfhxFamnAtk1P1Dyx52
-         IibTBN7L68LKseX2CLIQiyW4cXaPDa71+M0iRKiq7WHM1o7DxbbEBQp6tXqlSgVEWBU0
-         JtsWJ5+hc9UexFoWYYjst4TmEPbM/Bl7s2SE1iv6yZopiBruG7Bbvm5Ll37wMJ3NFmRR
-         bHj43AyJp/5t1eoU4ifYo38cAmaIEWmwsgJjWoGrQFC2IOl2oYJX7uvdOOZfbEDKKVtJ
-         J7H9qWJ+A72iZXutp6uZyckcKjjmjoCV34ONTSuAJ6ARW53hEFcxc30Y6ALxbWoGe7or
-         0sTA==
-X-Gm-Message-State: APjAAAXbSmOJPxYVFF/gSt+QZAxL1qq23Yeyn8D5pqt1VYWwNkmExtpZ
-        7BZeq5Dtu0hUpRq80HZuozY=
-X-Google-Smtp-Source: APXvYqxCYIUjqgpxVqy8o8qenvop4ElyP4+gLkbM1IVz7lfKRec1uHsxLSVAs1ltcNNX6ZkaRGu2Ng==
-X-Received: by 2002:a65:6655:: with SMTP id z21mr7913954pgv.33.1554918110164;
-        Wed, 10 Apr 2019 10:41:50 -0700 (PDT)
-Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id a80sm76391284pfj.61.2019.04.10.10.41.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 10:41:49 -0700 (PDT)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     tiny.windzz@gmail.com, vireshk@kernel.org, nm@ti.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
-Date:   Wed, 10 Apr 2019 13:41:39 -0400
-Message-Id: <20190410174139.20012-3-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190410174139.20012-1-tiny.windzz@gmail.com>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IJF9H8q67MNeTsMwLMUcQ9q9YgSQzYtibBojtDcgcJY=;
+        b=ffRUfRWxjSTmaCeFrhj/3ziVQKUiOIWNxvnWYWUXP6R3q1qjobLAIHFqNuQrpNViSU
+         NN85MEBycPAMqI5dpdFSaqr6BPpVuhsPrMdNV48YaYKJiu4vqh/VVgBLIthRiaVk5U69
+         TEwJiYj4Nh6Mm8FJzlVhxQle/0r7HEJgBVzVrmg56xg1hYelb8aSnbky9ZYsNZUjkwML
+         znQQDIs12va0GTWAgpvQpl911VG7fOrKCp1a5yN9uutnRZLX8//9aP2Ih9GxlSEGRojD
+         iPgxGFYcZSuVU3+nocx2Ap6A6hVJ65onAJXYdwmPAYkV9IOX+0YSsOjfABTKWbJ+DtXk
+         2GIQ==
+X-Gm-Message-State: APjAAAUhZDS/gKuYTIRzTvUVVc8Roevuk+FVGHTn1zwH1XVHtgURenbC
+        hwZR8zcvfMLgyuhwT70OZtiqjw==
+X-Google-Smtp-Source: APXvYqzUBlZdAFnHHZKmp2MrsxTY213TX27id6S2rVzP8edTmE3c6VDMElMi1AT6KA+c7fJQhlWuYA==
+X-Received: by 2002:a6b:9189:: with SMTP id t131mr22582648iod.95.1554918234398;
+        Wed, 10 Apr 2019 10:43:54 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id j10sm1326459itj.32.2019.04.10.10.43.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 10 Apr 2019 10:43:53 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        derat@google.com, groeck@google.com, dtor@google.com,
+        sjg@chromium.org, alevkoy@google.com,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH] platform/chrome: wilco_ec: Add h1_gpio status to debugfs
+Date:   Wed, 10 Apr 2019 11:43:46 -0600
+Message-Id: <20190410174346.225490-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner Process Voltage Scaling Tables defines the voltage and
-frequency value based on the speedbin blown in the efuse combination.
-The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-provide the OPP framework with required information.
-This is used to determine the voltage and frequency value for each
-OPP of operating-points-v2 table when it is parsed by the OPP framework.
+As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
+tests, we need to ensure that the H1 chip is properly setting
+some GPIO lines. The h1_gpio attribute exposes the state
+of the lines:
+- ENTRY_TO_FACT_MODE in BIT(0)
+- SPI_CHROME_SEL in BIT(1)
 
-The "allwinner,cpu-operating-points-v2" DT extends the "operating-points-v2"
-with following parameters:
-- nvmem-cells (NVMEM area containig the speedbin information)
-- opp-microvolt-<name>: voltage in micro Volts.
-  At runtime, the platform can pick a <name> and matching
-  opp-microvolt-<name> property.
-			HW:		<name>:
-			sun50iw-h6      speed0 speed1 speed2
+There are two reasons that I am exposing this in debugfs,
+and not as a GPIO:
+1. This is only useful for testing, so end users shouldn't ever
+care about this. In fact, if it passes the tests, then the value of
+h1_gpio will always be 2, so it would be really uninteresting for users.
+2. This GPIO is not connected to, controlled by, or really even related
+to the AP. The GPIO runs between the EC and the H1 security chip.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Nick Crews <ncrews@chromium.org>
 ---
- .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 168 ++++++++++++++++++
- 1 file changed, 168 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+ drivers/platform/chrome/wilco_ec/debugfs.c | 66 +++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-new file mode 100644
-index 000000000000..9a1826724b47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-@@ -0,0 +1,168 @@
-+Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-+===================================
+diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+index 17c4c9068aaf..198c16476efc 100644
+--- a/drivers/platform/chrome/wilco_ec/debugfs.c
++++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright 2019 Google LLC
+  *
+- * There is only one attribute used for debugging, called raw.
++ * The raw attribute is very useful for EC debugging.
+  * You can write a hexadecimal sentence to raw, and that series of bytes
+  * will be sent to the EC. Then, you can read the bytes of response
+  * by reading from raw.
+@@ -30,6 +30,16 @@
+  * Note that the first 32 bytes of the received MBOX[] will be printed,
+  * even if some of the data is junk. It is up to you to know how many of
+  * the first bytes of data are the actual response.
++ *
++ * There is also another debugfs attribute, called h1_gpio.
++ * As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
++ * tests, we need to ensure that the H1 chip is properly setting
++ * some GPIO lines. The h1_gpio attribute exposes the state
++ * of the lines:
++ * - ENTRY_TO_FACT_MODE in BIT(0)
++ * - SPI_CHROME_SEL in BIT(1)
 +
-+For some SoCs, the CPU frequency subset and voltage value of each OPP
-+varies based on the silicon variant in use. Allwinner Process Voltage
-+Scaling Tables defines the voltage and frequency value based on the
-+speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-+reads the efuse value from the SoC to provide the OPP framework with
-+required information.
++ * Output will be "0\n", "1\n", "2\n", or "3\n".
+  */
+ 
+ #include <linux/ctype.h>
+@@ -189,6 +199,58 @@ static const struct file_operations fops_raw = {
+ 	.llseek = no_llseek,
+ };
+ 
++#define CMD_KB_CHROME		0x88
++#define SUB_CMD_H1_GPIO		0x0A
 +
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
++struct h1_gpio_status_request {
++	u8 cmd;		/* Always CMD_KB_CHROME */
++	u8 reserved;
++	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
++} __packed;
 +
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'allwinner,cpu-operating-points-v2'.
-+- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-+		efuse registers that has information about the
-+		speedbin that is used to select the right frequency/voltage
-+		value pair.
-+		Please refer the for nvmem-cells
-+		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-+		and also examples below.
++struct hi_gpio_status_response {
++	u8 status;	/* 0 if allowed */
++	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
++} __packed;
 +
-+In every OPP node:
-+- opp-microvolt-<name>: Voltage in micro Volts.
-+			At runtime, the platform can pick a <name> and
-+			matching opp-microvolt-<name> property.
-+			[See: opp.txt]
-+			HW:		<name>:
-+			sun50iw-h6	speed0 speed1 speed2
++static ssize_t h1_gpio_read(struct file *file, char __user *user_buf,
++			    size_t count, loff_t *ppos)
++{
++	struct h1_gpio_status_request rq;
++	struct hi_gpio_status_response rs;
++	struct wilco_ec_message msg;
++	char buf[3];
++	int ret;
 +
-+Example 1:
-+---------
++	rq.cmd = CMD_KB_CHROME;
++	rq.sub_cmd = SUB_CMD_H1_GPIO;
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	memset(&msg, 0, sizeof(msg));
++	msg.type = WILCO_EC_MSG_LEGACY;
++	msg.request_data = &rq;
++	msg.request_size = sizeof(rq);
++	msg.response_data = &rs;
++	msg.response_size = sizeof(rs);
++	ret = wilco_ec_mailbox(debug_info->ec, &msg);
++	if (ret < 0)
++		return ret;
++	if (rs.status)
++		return -EIO;
++	if (rs.val > 3)
++		return -EBADMSG;
 +
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
++	/* When rs.val <= 3, it's guaranteed to fit in buf after formatting */
++	sprintf(buf, "%d\n", rs.val);
 +
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <1>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
++	return simple_read_from_buffer(user_buf, count, ppos, buf, sizeof(buf));
++}
 +
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <2>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <3>;
-+			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+			operating-points-v2 = <&cpu_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+        };
-+
-+        cpu_opp_table: opp_table {
-+                compatible = "operating-points-v2-sunxi-cpu";
-+                nvmem-cells = <&speedbin_efuse>;
-+                opp-shared;
-+
-+                opp@480000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <480000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@720000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <720000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@816000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <816000000>;
-+
-+                        opp-microvolt-speed0 = <880000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@888000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <888000000>;
-+
-+                        opp-microvolt-speed0 = <940000>;
-+                        opp-microvolt-speed1 = <820000>;
-+                        opp-microvolt-speed2 = <800000>;
-+                };
-+
-+                opp@1080000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1080000000>;
-+
-+                        opp-microvolt-speed0 = <1060000>;
-+                        opp-microvolt-speed1 = <880000>;
-+                        opp-microvolt-speed2 = <840000>;
-+                };
-+
-+                opp@1320000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1320000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <940000>;
-+                        opp-microvolt-speed2 = <900000>;
-+                };
-+
-+                opp@1488000000 {
-+                        clock-latency-ns = <244144>; /* 8 32k periods */
-+                        opp-hz = /bits/ 64 <1488000000>;
-+
-+                        opp-microvolt-speed0 = <1160000>;
-+                        opp-microvolt-speed1 = <1000000>;
-+                        opp-microvolt-speed2 = <960000>;
-+                };
-+        };
-+....
-+soc {
-+....
-+	sid: sid@3006000 {
-+		compatible = "allwinner,sun50i-h6-sid";
-+		reg = <0x03006000 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		....
-+		speedbin_efuse: speed@1c {
-+			reg = <0x1c 4>;
-+		};
-+        };
++static const struct file_operations fops_h1_gpio = {
++	.owner = THIS_MODULE,
++	.read = h1_gpio_read,
++	.llseek = no_llseek,
 +};
++
+ /**
+  * wilco_ec_debugfs_probe() - Create the debugfs node
+  * @pdev: The platform device, probably created in core.c
+@@ -210,6 +272,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
+ 	if (!debug_info->dir)
+ 		return 0;
+ 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
++	debugfs_create_file("h1_gpio", 0444, debug_info->dir, NULL,
++			    &fops_h1_gpio);
+ 
+ 	return 0;
+ }
 -- 
-2.17.0
+2.20.1
 
