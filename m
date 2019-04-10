@@ -2,176 +2,251 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFCBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27793C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F1420857
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB08A217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554866261;
+	bh=1TZla5zsJoJ+Fk7s4RQax79cQhIzJ6KroNbI+HWS29o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XDDpc5KShxQqEa6Qeyb2M4pYdwyALduLUzw+4yrEmf9Z4GfuEaXeFTDujH2fo2VkF
+	 dPuzUXSwp2/asOh/9XjJEuRsEgvEZ+4F/ckFiq6cuVp7dLdFYfFmliqsGsq1d6Sz20
+	 Mlcnk639KMXnuRQqo/sQoNzF3+oJwzFm6sza38WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfDJC4a (ORCPT
+        id S1726836AbfDJDRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 22:56:30 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:63818 "EHLO mxhk.zte.com.cn"
+        Tue, 9 Apr 2019 23:17:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDJC4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 22:56:30 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 31F8080FB1C66DD05F02;
-        Wed, 10 Apr 2019 10:56:28 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x3A2uMPU009112;
-        Wed, 10 Apr 2019 10:56:22 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019041010564411-8110757 ;
-          Wed, 10 Apr 2019 10:56:44 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <John.Linn@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Markus Elfring <Markus.Elfring@web.de>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] net: xilinx: add a helper function for axienet_probe
-Date:   Wed, 10 Apr 2019 10:57:15 +0800
-Message-Id: <1554865035-8499-1-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-04-10 10:56:44,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-04-10 10:56:16,
-        Serialize complete at 2019-04-10 10:56:16
-X-MAIL: mse01.zte.com.cn x3A2uMPU009112
+        id S1726654AbfDJDRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 23:17:39 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FFD20830;
+        Wed, 10 Apr 2019 03:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554866257;
+        bh=1TZla5zsJoJ+Fk7s4RQax79cQhIzJ6KroNbI+HWS29o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cd4RAQOtwzQ5PoT3sGqUnAge//I834uXVYwGlXTYi3sb7PWEnFuE3NZr1NDVrm29Y
+         CY2AG2eA2bJZ4bNW3u7p050Wvja7UZtUVYkSNZUZIrcB0TIhbhP6q3DpdAIrfFxeKW
+         kdhlE6SKZT3P5Pz671MZj0NJwREmr+eQlY6AfZTE=
+Date:   Tue, 9 Apr 2019 20:17:35 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+Message-ID: <20190410031734.GB7140@sol.localdomain>
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com>
+ <20190320185719.GB180195@gmail.com>
+ <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+ <20190321175122.GA1587@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321175122.GA1587@sol.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "Find DMA Node, Map DMA Register, and Decode DMA IRQ" code snippets
-in axienet_probe() are independent. Tidy this function implementation
-a little up by factoring these calls out into a helper function.
+On Thu, Mar 21, 2019 at 10:51:22AM -0700, Eric Biggers wrote:
+> On Thu, Mar 21, 2019 at 10:45:31AM -0700, Kees Cook wrote:
+> > On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > >
+> > > On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
+> > > > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
+> > > > > When running the sha1-asm crypto selftest on arm with
+> > > > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
+> > > > >
+> > > > >     usercopy: Kernel memory overwrite attempt detected to spans
+> > > > > multiple pages (offset 0, size 42)!
+> > > > >     ------------[ cut here ]------------
+> > > > >     kernel BUG at mm/usercopy.c:102!
+> > > > >     Internal error: Oops - BUG: 0 [#1] SMP ARM
+> > > > >     Modules linked in:
+> > > > >     CPU: 0 PID: 35 Comm: cryptomgr_test Not tainted
+> > > > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+> > > > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+> > > > >     PC is at usercopy_abort+0x68/0x90
+> > > > >     LR is at usercopy_abort+0x68/0x90
+> > > > >     pc : [<c030fd60>]    lr : [<c030fd60>]    psr: 60000013
+> > > > >     sp : ea54bc60  ip : 00000010  fp : cccccccd
+> > > > >     r10: 00000000  r9 : c0e0ce04  r8 : ea54d009
+> > > > >     r7 : ea54d00a  r6 : 00000000  r5 : 0000002a  r4 : c09d1120
+> > > > >     r3 : dd6cd422  r2 : dd6cd422  r1 : 2abb4000  r0 : 0000005f
+> > > > >     Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+> > > > >     Control: 30c5387d  Table: 40003000  DAC: fffffffd
+> > > > >     Process cryptomgr_test (pid: 35, stack limit = 0x(ptrval))
+> > > > >     Stack: (0xea54bc60 to 0xea54c000)
+> > > > >     bc60: c09d1120 c09d1120 c09d1120 00000000 0000002a 0000002a
+> > > > > 00000000 c0310060
+> > > > >     bc80: 0000002a 00000000 000001c0 00000000 00000000 c0eb11e8
+> > > > > ea54cfe0 ea538c00
+> > > > >     bca0: 00000000 ea54cfe0 ebef73e0 0000002a ea538c20 ea54bd84
+> > > > > 0000003a c0427a30
+> > > > >     bcc0: ea54bdbc 00000000 00000000 c081cf70 eb074280 c081cf70
+> > > > > 0000002a c081cf80
+> > > > >     bce0: 0000000e c07da138 ea54bd0c 00000000 c084061c c04248e8
+> > > > > c0e0a408 eb074240
+> > > > >     bd00: eb074200 c04253c8 eb074280 ea550000 00000012 dd6cd422
+> > > > > ebef7480 eb074200
+> > > > >     bd20: ea54bd84 c081cf64 ea537200 00000002 00000000 00000014
+> > > > > c084061c c0428c38
+> > > > >     bd40: ea54bd84 ea54bdbc c081cd34 00000000 c0e4e4b4 ea538c40
+> > > > > 00000002 eabe4e80
+> > > > >     bd60: ea538c00 00000400 ea4f7a00 ea4f7a60 eb074240 00000060
+> > > > > 00000006 c09d544c
+> > > > >     bd80: 00000038 00000003 00000000 00000038 ea54bd7c 00000001
+> > > > > eb074200 00000000
+> > > > >     bda0: 00000000 dead4ead ffffffff ffffffff ea54bdb0 ea54bdb0
+> > > > > 00000000 c081cf70
+> > > > >     bdc0: c081ce68 c081ce78 ea4f7480 eb000780 00000dc0 eb000780
+> > > > > c0e4ee80 443e9884
+> > > > >     bde0: 6ed23b1c a14aaeba e52951f9 f17046e5 fefefefe fefefefe
+> > > > > fefefefe fefefefe
+> > > > >     be00: eb000780 c04292c4 c0e0a638 60000013 60000013 c0305298
+> > > > > ea4f7a00 c03062bc
+> > > > >     be20: eb000780 00000cc0 ea4f7a00 dd6cd422 00000cc0 ea538c00
+> > > > > 00000002 eabe4e40
+> > > > >     be40: ea537200 00000007 00000000 ea4f7a00 eb074200 c0429314
+> > > > > eb074200 ea538c00
+> > > > >     be60: ea4f7a00 0000000a eabe4e80 c084061c c08405fc 00000006
+> > > > > c04dace8 00000006
+> > > > >     be80: 00000000 c084065c ea537200 0000000e 00000400 eb04de08
+> > > > > ea4f71a8 c0429420
+> > > > >     bea0: 00000400 ea537200 0000000e ea537200 0000000e c0429374
+> > > > > 00000400 ffffffff
+> > > > >     bec0: 000000a2 c042a414 00000103 c0e0a408 00000000 c0e0a438
+> > > > > c0e5a2a0 c0e5a2a0
+> > > > >     bee0: 00000001 00000001 00000017 ffffe000 00000000 60000013
+> > > > > c0e5a2a0 c0269470
+> > > > >     bf00: c09c9ed0 ea54bf5c 00000103 00000000 00000000 c0e0a408
+> > > > > ea537280 0000000e
+> > > > >     bf20: 00000400 c0426500 00000000 eb04de08 ea4f71a8 c02694f4
+> > > > > c09c9ed0 ea54bf5c
+> > > > >     bf40: ea54bf28 c02699d0 ea54bf5c dd6cd422 ea537200 dd6cd422
+> > > > > c09c9ed0 ea537200
+> > > > >     bf60: ea4af1c0 ea54a000 ea537200 c0426500 00000000 eb04de08
+> > > > > ea4f71a8 c0426524
+> > > > >     bf80: ea4f7180 c023dcec ea54a000 ea4af1c0 c023dbb4 00000000
+> > > > > 00000000 00000000
+> > > > >     bfa0: 00000000 00000000 00000000 c02010d8 00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > > 00000000 00000000
+> > > > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
+> > > > > (__check_object_size+0x2d8/0x448)
+> > > > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
+> > > > > (build_test_sglist+0x268/0x2d8)
+> > > > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+> > > > > (test_hash_vec_cfg+0x110/0x694)
+> > > > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+> > > > > (__alg_test_hash+0x158/0x1b8)
+> > > > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+> > > > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+> > > > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+> > > > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+> > > > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+> > > > >     Exception stack(0xea54bfb0 to 0xea54bff8)
+> > > > >     bfa0:                                     00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > >     Code: e58de000 e98d0012 e1a0100c ebfd6712 (e7f001f2)
+> > > > >     ---[ end trace 190b3cf48e720f78 ]---
+> > > > >     BUG: sleeping function called from invalid context at
+> > > > > include/linux/percpu-rwsem.h:34
+> > > > >     in_atomic(): 0, irqs_disabled(): 128, pid: 35, name: cryptomgr_test
+> > > > >     CPU: 0 PID: 35 Comm: cryptomgr_test Tainted: G      D
+> > > > > 5.1.0-rc1-koelsch-01109-gbeb7d6376ecfbf07-dirty #397
+> > > > >     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+> > > > >     [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
+> > > > >     [<c020ae58>] (show_stack) from [<c07c3624>] (dump_stack+0x7c/0x9c)
+> > > > >     [<c07c3624>] (dump_stack) from [<c0242e14>] (___might_sleep+0xf4/0x158)
+> > > > >     [<c0242e14>] (___might_sleep) from [<c0230210>] (exit_signals+0x2c/0x258)
+> > > > >     [<c0230210>] (exit_signals) from [<c0223d6c>] (do_exit+0x114/0xa20)
+> > > > >     [<c0223d6c>] (do_exit) from [<c020b160>] (die+0x304/0x344)
+> > > > >     [<c020b160>] (die) from [<c020b388>] (do_undefinstr+0x80/0x190)
+> > > > >     [<c020b388>] (do_undefinstr) from [<c0201b24>] (__und_svc_finish+0x0/0x3c)
+> > > > >     Exception stack(0xea54bc10 to 0xea54bc58)
+> > > > >     bc00:                                     0000005f 2abb4000
+> > > > > dd6cd422 dd6cd422
+> > > > >     bc20: c09d1120 0000002a 00000000 ea54d00a ea54d009 c0e0ce04
+> > > > > 00000000 cccccccd
+> > > > >     bc40: 00000010 ea54bc60 c030fd60 c030fd60 60000013 ffffffff
+> > > > >     [<c0201b24>] (__und_svc_finish) from [<c030fd60>] (usercopy_abort+0x68/0x90)
+> > > > >     [<c030fd60>] (usercopy_abort) from [<c0310060>]
+> > > > > (__check_object_size+0x2d8/0x448)
+> > > > >     [<c0310060>] (__check_object_size) from [<c0427a30>]
+> > > > > (build_test_sglist+0x268/0x2d8)
+> > > > >     [<c0427a30>] (build_test_sglist) from [<c0428c38>]
+> > > > > (test_hash_vec_cfg+0x110/0x694)
+> > > > >     [<c0428c38>] (test_hash_vec_cfg) from [<c0429314>]
+> > > > > (__alg_test_hash+0x158/0x1b8)
+> > > > >     [<c0429314>] (__alg_test_hash) from [<c0429420>] (alg_test_hash+0xac/0xf4)
+> > > > >     [<c0429420>] (alg_test_hash) from [<c042a414>] (alg_test.part.4+0x264/0x2f8)
+> > > > >     [<c042a414>] (alg_test.part.4) from [<c0426524>] (cryptomgr_test+0x24/0x44)
+> > > > >     [<c0426524>] (cryptomgr_test) from [<c023dcec>] (kthread+0x138/0x150)
+> > > > >     [<c023dcec>] (kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+> > > > >     Exception stack(0xea54bfb0 to 0xea54bff8)
+> > > > >     bfa0:                                     00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfc0: 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > 00000000 00000000
+> > > > >     bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > >
+> > > >
+> > > > Well, this must happen with the new (in 5.1) crypto self-tests implementation
+> > > > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
+> > > > understand why hardened usercopy considers it a bug though, as there's no buffer
+> > > > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
+> > > > buffer that was allocated with __get_free_pages():
+> > > >
+> > > >       __get_free_pages(GFP_KERNEL, 1)
+> > > >
+> > > > ... where 1 means an order-1 allocation.
+> > > >
+> > > > If it copies to offset=4064 len=42, for example, then hardened usercopy
+> > > > considers it a bug even though the buffer is 8192 bytes long.  Why?
+> > > >
+> > > > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
+> > > > with ITER_KVEC.
+> > > >
+> > > > - Eric
+> > >
+> > > Kees, any thoughts on why hardened usercopy rejects copies spanning a page
+> > > boundary when they seem to be fine?
+> > 
+> > This is due to missing the compound page marking, if I remember
+> > correctly. However, I tend to leave the pagespan test disabled: it
+> > really isn't ready for production use -- there are a lot of missing
+> > annotations still.
+> > 
+> 
+> So do I need to add __GFP_COMP?  Is there any actual reason to do so?
+> Why does hardened usercopy check for it?
+> 
+> - Eric
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Reported-by: Markus Elfring <Markus.Elfring@web.de>
-Cc: Anirudha Sarangi <anirudh@xilinx.com>
-Cc: John Linn <John.Linn@xilinx.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Cc: netdev@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
-v2: Massaged changelog a bit
+Hi Kees, any answer to this question?
 
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 69 +++++++++++++++--------
- 1 file changed, 45 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 4041c75..2d15897 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1434,6 +1434,48 @@ static void axienet_dma_err_handler(unsigned long data)
- }
- 
- /**
-+ * axienet_dma_res_init - Initialize the DMA related resources of
-+ *                        the axienet local structure.
-+ * @lp: Pointer to axienet local structure
-+ *
-+ * Return: 0, on success
-+ *	    Non-zero error value on failure.
-+ *
-+ * This function find the DMA node via pdev, map the DMA registers,
-+ * and decode the DMA IRQs.
-+ */
-+static int axienet_dma_res_init(struct axienet_local *lp)
-+{
-+	struct resource dmares;
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_parse_phandle(lp->dev->of_node, "axistream-connected", 0);
-+	if (!np) {
-+		dev_err(lp->dev, "could not find DMA node\n");
-+		ret = -ENODEV;
-+		return ret;
-+	}
-+	ret = of_address_to_resource(np, 0, &dmares);
-+	if (ret) {
-+		dev_err(lp->dev, "unable to get DMA resource\n");
-+		goto put_node;
-+	}
-+	lp->dma_regs = devm_ioremap_resource(lp->dev, &dmares);
-+	if (IS_ERR(lp->dma_regs)) {
-+		dev_err(lp->dev, "could not map DMA regs\n");
-+		ret = PTR_ERR(lp->dma_regs);
-+		goto put_node;
-+	}
-+	lp->rx_irq = irq_of_parse_and_map(np, 1);
-+	lp->tx_irq = irq_of_parse_and_map(np, 0);
-+
-+put_node:
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+/**
-  * axienet_probe - Axi Ethernet probe function.
-  * @pdev:	Pointer to platform device structure.
-  *
-@@ -1448,11 +1490,10 @@ static void axienet_dma_err_handler(unsigned long data)
- static int axienet_probe(struct platform_device *pdev)
- {
- 	int ret;
--	struct device_node *np;
- 	struct axienet_local *lp;
- 	struct net_device *ndev;
- 	const void *mac_addr;
--	struct resource *ethres, dmares;
-+	struct resource *ethres;
- 	u32 value;
- 
- 	ndev = alloc_etherdev(sizeof(*lp));
-@@ -1565,29 +1606,9 @@ static int axienet_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	/* Find the DMA node, map the DMA registers, and decode the DMA IRQs */
--	np = of_parse_phandle(pdev->dev.of_node, "axistream-connected", 0);
--	if (!np) {
--		dev_err(&pdev->dev, "could not find DMA node\n");
--		ret = -ENODEV;
--		goto free_netdev;
--	}
--	ret = of_address_to_resource(np, 0, &dmares);
--	if (ret) {
--		dev_err(&pdev->dev, "unable to get DMA resource\n");
--		of_node_put(np);
--		goto free_netdev;
--	}
--	lp->dma_regs = devm_ioremap_resource(&pdev->dev, &dmares);
--	if (IS_ERR(lp->dma_regs)) {
--		dev_err(&pdev->dev, "could not map DMA regs\n");
--		ret = PTR_ERR(lp->dma_regs);
--		of_node_put(np);
-+	ret = axienet_dma_res_init(lp);
-+	if (ret)
- 		goto free_netdev;
--	}
--	lp->rx_irq = irq_of_parse_and_map(np, 1);
--	lp->tx_irq = irq_of_parse_and_map(np, 0);
--	of_node_put(np);
- 	if ((lp->rx_irq <= 0) || (lp->tx_irq <= 0)) {
- 		dev_err(&pdev->dev, "could not determine irqs\n");
- 		ret = -ENOMEM;
--- 
-2.9.5
-
+- Eric
