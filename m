@@ -2,123 +2,100 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1EFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48202082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373862082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554862855;
+	bh=f28MH2lJ5p3lrlUegVvu0keFjVwQ1/gHvgoKScPAJSs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vBXsQbiuIqOzcLbvn1UolFXNhRf43G2nv8AiHxg52QSFF2NvU0fVtcVXZRm3nHA0m
+	 /CXqpMMvChcEIhaINTeArH47rBSLYxpzDkkpMsKJBZUUzLfiRewJkKeRPIhUOikFX2
+	 5eL9EED8EtNagT4qcw8tMIL28H6oc4HTbnD9ebcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfDJCUe (ORCPT
+        id S1727272AbfDJCUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 22:20:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45017 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfDJCUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 22:20:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 19:20:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
-   d="scan'208";a="162912689"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2019 19:20:31 -0700
-Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
- <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
-Date:   Wed, 10 Apr 2019 10:20:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+        Tue, 9 Apr 2019 22:20:53 -0400
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:41924 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfDJCUx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 22:20:53 -0400
+Received: by mail-lj1-f173.google.com with SMTP id k8so575673lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 19:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pLSNy3bJVp7BVkl1lok4xvwCW7Pgx33X0n0klEhHpDY=;
+        b=R/yJ0NqvG2dizompCKzG3qNxsiQbuNUrBTTXiRnFNdf3JI8lEtwd1xtH/hDURLbE1p
+         V7ODjFobkMGn6g/4qihlqUe+K0HczVWL6o4Ok3UECfNv03El/Pug+ROR5m6kT7qt0gSH
+         iIv/8/0OJzKa7ZJKMxJ18a/bY5a1ry5OzHkZE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pLSNy3bJVp7BVkl1lok4xvwCW7Pgx33X0n0klEhHpDY=;
+        b=bN2jBunAJEE5220BcHiFrZmG8tFfOVWQsiAaPLu//Uo4IyEFLUBjV+k0CnPv9xvZy0
+         dm8BUHyoenHiVt43UTQRaBntsmHOf8DmCRwm+q24NuhDVW3Xvaer+uATPwosjYJIIHfL
+         TZgjKL1C3Q+iP/ZVNNgbZD6udvKGQZ+dukR7+Hhlq7b2Lef2eqo0wmk/9e9Up7RFGgsm
+         k7XOVFjXheH2qvDQ0TvpHFNMczyIreF7HzUemAzkh8AuN0WEdURth4aBnESbfIX6jJBD
+         Hu1smZmwShK4NEkNxYUyuRPnzFCDroYKcAHMGbIiaix4TkkLAI1pOId8D4D7olw1/oPH
+         yPEQ==
+X-Gm-Message-State: APjAAAU6jWWffxt9ACQUUOcoFtoBhb0DH/jDCnMw8YgadXmHC1GYUchs
+        3SsUnoY6nzRMtj6k+EIQjrshk73YiFg=
+X-Google-Smtp-Source: APXvYqwHaBux0nrmPOTI4Qh7OK1X4ZqDiYKXnXU1BItP/8A9mJZoBnZ773HbE8gB/qgsBafIyDOTfA==
+X-Received: by 2002:a2e:99d2:: with SMTP id l18mr20918526ljj.27.1554862850340;
+        Tue, 09 Apr 2019 19:20:50 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id u17sm7386911lfu.63.2019.04.09.19.20.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 19:20:49 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id r24so600541ljg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 19:20:49 -0700 (PDT)
+X-Received: by 2002:a2e:8108:: with SMTP id d8mr20942979ljg.57.1554862848913;
+ Tue, 09 Apr 2019 19:20:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190409184917.65062-1-briannorris@chromium.org>
+In-Reply-To: <20190409184917.65062-1-briannorris@chromium.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Apr 2019 16:20:33 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
+Message-ID: <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com>
+Subject: Re: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/10 9:58, Andy Lutomirski wrote:
-> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
->>
->> The architecture specific information of the running processes could
->> be useful to the userland. Add support to examine process architecture
->> specific information externally.
->>
->> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Andi Kleen <ak@linux.intel.com>
->> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->> Cc: Dave Hansen <dave.hansen@intel.com>
->> Cc: Arjan van de Ven <arjan@linux.intel.com>
->> Cc: Linux API <linux-api@vger.kernel.org>
->> Cc: Alexey Dobriyan <adobriyan@gmail.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  fs/proc/array.c         | 5 +++++
->>  include/linux/proc_fs.h | 2 ++
->>  2 files changed, 7 insertions(+)
->>
->> diff --git a/fs/proc/array.c b/fs/proc/array.c
->> index 2edbb657f859..331592a61718 100644
->> --- a/fs/proc/array.c
->> +++ b/fs/proc/array.c
->> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>  }
->>
->> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
->> +{
->> +}
-> 
-> This pointlessly bloats other architectures.  Do this instead in an
-> appropriate header:
-> 
-> #ifndef arch_proc_pid_status
-> static inline void arch_proc_pid_status(...)
-> {
-> }
-> #endif
-> 
+On Tue, Apr 9, 2019 at 8:49 AM Brian Norris <briannorris@chromium.org> wrote:
+>
+> Badly-designed systems might have (for example) active-high wake pins
+> that default to high (e.g., because of external pull ups) until they
+> have an active firmware which starts driving it low. This can cause an
+> interrupt storm in the time between request_irq() and disable_irq().
 
-I saw a bunch of similar weak functions, is it not acceptable?
+Why is the fix not to move the request_irq() down to below the proper
+initialization sequence?
 
-fs/proc$ grep weak *.c
-cpuinfo.c:__weak void arch_freq_prepare_all(void)
-meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
-vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
-vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
-vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
-vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
-vmcore.c:ssize_t __weak
+That's what drivers *should* do: initialize their hardware first,
+request interrupts only after that. Initializing the interrupt handler
+before the hw is actually up seems wrong..
 
-> Or add /proc/PID/x86_status, which sounds better in most respects to me.
-> 
-
-I didn't figure out how to make /proc/PID/x86_status invisible to other
-architectures in an appropriate way, do you have any suggestions?
-
-Thanks,
--Aubrey
+              Linus
