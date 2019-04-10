@@ -2,636 +2,197 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0B2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D9AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7478D2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554921691;
-	bh=abB4NBim94P734V6TpHNC3QF85PKc/RIcQQsFv9yODw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=niZ6076VaYXFXxhqUnX0E8TVoyMtD542amGJyK6aFl99H+3HfW6TtZqN1zZTJHVwd
-	 e0K/8fDTbhupQ4kb2Aqs1DlWEhBSqf3L2qe1EvAlBd3w3+13dmYedPw85APa7HWnrP
-	 Pa/o5+qDdnS6pyVEuShR4C+3cQs17LtfPXT+qGMI=
+	by mail.kernel.org (Postfix) with ESMTP id 729402084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731645AbfDJSla (ORCPT
+        id S1731659AbfDJSmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
+        Wed, 10 Apr 2019 14:42:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50574 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbfDJSl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:41:29 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728762AbfDJSmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:42:52 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3D82082A;
-        Wed, 10 Apr 2019 18:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554921687;
-        bh=abB4NBim94P734V6TpHNC3QF85PKc/RIcQQsFv9yODw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rCoO/KtcpK1qP7I0eWPait2O/wj78DS+4Ggzn6w9Wb2UD66Xs3NMyRCN0DllKShQr
-         aKdMwqOPtjA7uGfoOZlHkGilS7BRgQgfBogJlE6JqEU384GO125yyLGDQEVPAkg1bd
-         LtwL5r5Pj9EsznhGRSxZDF/lTAk0YtzGm1WQVd6U=
-Date:   Wed, 10 Apr 2019 13:41:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20190410184124.GF256045@google.com>
-References: <cover.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <4818f4dfa41bddc3968da4717c453897d4ad5717.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4818f4dfa41bddc3968da4717c453897d4ad5717.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id BF8F3CAA87;
+        Wed, 10 Apr 2019 18:42:51 +0000 (UTC)
+Received: from llong.com (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 464631001DD0;
+        Wed, 10 Apr 2019 18:42:48 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip v3 00/14] locking/rwsem: Rwsem rearchitecture part 2
+Date:   Wed, 10 Apr 2019 14:42:17 -0400
+Message-Id: <20190410184231.6748-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 10 Apr 2019 18:42:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 01:47:29PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per PCI firmware specification v3.2 ECN
-> (https://members.pcisig.com/wg/PCI-SIG/document/12614), when firmware
-> owns Downstream Port Containment (DPC), its expected to use the "Error
-> Disconnect Recover" (EDR) notification to alert OSPM of a DPC event and
-> if OS supports EDR, its expected to handle the software state invalidation
-> and port recovery in OS and let firmware know the recovery status via _OST
-> ACPI call.
-> 
-> Since EDR is a hybrid service, DPC service shall be enabled in OS even
-> if AER is not natively enabled in OS.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/Kconfig        |  10 +
->  drivers/pci/pcie/dpc.c          | 326 ++++++++++++++++++++++++++++++--
+ v3:
+  - Add 2 more patches in front to fix build and testing issues found.
+    Patch 1 can actually be merged on top of the patch "locking/rwsem:
+    Enhance DEBUG_RWSEMS_WARN_ON() macro" in part 1.
+  - Change the handoff patch (now patch 4) to set handoff bit immediately
+    after wakeup for RT writers. The timeout limit is also tightened to
+    4ms.
+  - There is no code changes in other patches other than resolving conflicts
+    with patches 1, 2 and 4.
 
-I'll be looking for Keith's reviewed-by for this eventually.
+ v2:
+  - Move the negative reader count checking patch (patch 12->10)
+    forward to before the merge owner to count patch as suggested by
+    Linus & expand the comment.
+  - Change the reader-owned rwsem spinning from count based to time
+    based to have better control of the max time allowed.
 
-It looks like this could be split into some smaller patches:
+This is part 2 of a 3-part (0/1/2) series to rearchitect the internal
+operation of rwsem.
 
-  - Add dpc_dev.native_dpc (hopefully we can find a less confusing name)
-  - Convert dpc_handler() to dpc_handler() + dpc_process_error()
-  - Add EDR support
+part 0: merged into tip
+part 1: https://lore.kernel.org/lkml/20190404174320.22416-1-longman@redhat.com/
 
->  drivers/pci/pcie/portdrv_core.c |   9 +-
->  3 files changed, 329 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 5cbdbca904ac..55f65d1cbc9e 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -142,3 +142,13 @@ config PCIE_PTM
->  
->  	  This is only useful if you have devices that support PTM, but it
->  	  is safe to enable even if you don't.
-> +
-> +config PCIE_EDR
-> +	bool "PCI Express Error Disconnect Recover support"
-> +	default n
-> +	depends on PCIE_DPC && ACPI
-> +	help
-> +	  This options adds Error Disconnect Recover support as specified
-> +	  in PCI firmware specification v3.2 Downstream Port Containment
-> +	  Related Enhancements ECN. Enable this if you want to support hybrid
-> +	  DPC model which uses both firmware and OS to implement DPC.
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 7b77754a82de..bdf4ca8a0acb 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -11,6 +11,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/init.h>
->  #include <linux/pci.h>
-> +#include <linux/acpi.h>
->  
->  #include "portdrv.h"
->  #include "../pci.h"
-> @@ -20,8 +21,23 @@ struct dpc_dev {
->  	u16			cap_pos;
->  	bool			rp_extensions;
->  	u8			rp_log_size;
-> +	bool			native_dpc;
+This patchset revamps the current rwsem-xadd implementation to make
+it saner and easier to work with. It also implements the following 3
+new features:
 
-This is going to be way too confusing with a "native_dpc" in both the
-struct pci_host_bridge and the struct dpc_dev.
+ 1) Waiter lock handoff
+ 2) Reader optimistic spinning
+ 3) Store write-lock owner in the atomic count (x86-64 only)
 
-> +	pci_ers_result_t	error_state;
-> +#ifdef CONFIG_ACPI
-> +	struct acpi_device	*adev;
-> +#endif
->  };
->  
-> +#ifdef CONFIG_ACPI
-> +
-> +#define EDR_PORT_ENABLE_DSM     0x0C
-> +#define EDR_PORT_LOCATE_DSM     0x0D
-> +
-> +static const guid_t pci_acpi_dsm_guid =
-> +		GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
-> +			  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
-> +#endif
-> +
->  static const char * const rp_pio_error_string[] = {
->  	"Configuration Request received UR Completion",	 /* Bit Position 0  */
->  	"Configuration Request received CA Completion",	 /* Bit Position 1  */
-> @@ -67,6 +83,9 @@ void pci_save_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	if (!dpc->native_dpc)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -88,6 +107,9 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	if (!dpc->native_dpc)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -224,10 +246,9 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
->  	return 1;
->  }
->  
-> -static irqreturn_t dpc_handler(int irq, void *context)
-> +static void dpc_process_error(struct dpc_dev *dpc)
->  {
->  	struct aer_err_info info;
-> -	struct dpc_dev *dpc = context;
->  	struct pci_dev *pdev = dpc->dev->port;
->  	struct device *dev = &dpc->dev->device;
->  	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
-> @@ -261,6 +282,13 @@ static irqreturn_t dpc_handler(int irq, void *context)
->  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
->  	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
-> +}
-> +
-> +static irqreturn_t dpc_handler(int irq, void *context)
-> +{
-> +	struct dpc_dev *dpc = context;
-> +
-> +	dpc_process_error(dpc);
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -283,6 +311,230 @@ static irqreturn_t dpc_irq(int irq, void *context)
->  	return IRQ_HANDLED;
->  }
->  
-> +void dpc_error_resume(struct pci_dev *dev)
+Waiter lock handoff is similar to the mechanism currently in the mutex
+code. This ensures that lock starvation won't happen.
 
-Looks like this should be static?
+Reader optimistic spinning enables readers to acquire the lock more
+quickly.  So workloads that use a mix of readers and writers should
+see an increase in performance as long as the reader critical sections
+are short.
 
-> +{
-> +	struct dpc_dev *dpc;
-> +
-> +	dpc = to_dpc_dev(dev);
-> +	if (!dpc)
-> +		return;
+Finally, storing the write-lock owner into the count will allow
+optimistic spinners to get to the lock holder's task structure more
+quickly and eliminating the timing gap where the write lock is acquired
+but the owner isn't known yet. This is important for RT tasks where
+spinning on a lock with an unknown owner is not allowed.
 
-I don't think it's possible for dpc to be NULL, is it?  Remove the
-test if not.
+Because of the fact that multiple readers can share the same lock,
+there is a natural preference for readers when measuring in term of
+locking throughput as more readers are likely to get into the locking
+fast path than the writers. With waiter lock handoff, we are not going
+to starve the writers.
 
-> +	dpc->error_state = PCI_ERS_RESULT_RECOVERED;
-> +}
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +/*
-> + * _DSM wrapper function to enable/disable DPC port.
-> + * @dpc   : DPC device structure
-> + * @enable: status of DPC port (0 or 1).
-> + *
-> + * returns 0 on success or errno on failure.
-> + */
-> +static int acpi_enable_dpc_port(struct dpc_dev *dpc, bool enable)
-> +{
-> +	union acpi_object *obj;
-> +	int status;
-> +	union acpi_object argv4;
-> +
-> +	/* Check whether EDR_PORT_ENABLE_DSM is supported in firmware */
-> +	status = acpi_check_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
-> +				1 << EDR_PORT_ENABLE_DSM);
+On a 8-socket 120-core 240-thread IvyBridge-EX system with 120 reader
+and writer locking threads, the min/mean/max locking operations done
+in a 5-second testing window before the patchset were:
 
-I don't think this acpi_check_dsm() is necessary, is it?  I expect
-acpi_evaluate_dsm() to fail nicely if there's no _DSM or it doesn't
-support the function.
+  120 readers, Iterations Min/Mean/Max = 399/400/401
+  120 writers, Iterations Min/Mean/Max = 400/33,389/211,359
 
-> +	if (!status)
-> +		return -ENOTSUPP;
-> +
-> +	argv4.type = ACPI_TYPE_INTEGER;
-> +	argv4.integer.value = enable;
-> +
-> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
-> +				EDR_PORT_ENABLE_DSM, &argv4);
-> +	if (!obj)
-> +		return -EIO;
-> +
-> +	if (obj->type == ACPI_TYPE_INTEGER && obj->integer.value == enable)
-> +		status = 0;
-> +	else
-> +		status = -EIO;
-> +
-> +	ACPI_FREE(obj);
-> +
-> +	return status;
-> +}
-> +
-> +/*
-> + * _DSM wrapper function to locate DPC port.
-> + * @dpc   : DPC device structure
-> + *
-> + * returns pci_dev or NULL.
-> + */
-> +static struct pci_dev *acpi_locate_dpc_port(struct dpc_dev *dpc)
-> +{
-> +	union acpi_object *obj;
-> +	int status;
-> +	u16 port;
-> +
-> +	/* Check whether EDR_PORT_LOCATE_DSM is supported in firmware */
-> +	status = acpi_check_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
-> +				1 << EDR_PORT_LOCATE_DSM);
+After the patchset, they became:
 
-Unnecessary?
+  120 readers, Iterations Min/Mean/Max = 584/10,266/26,609
+  120 writers, Iterations Min/Mean/Max = 22,080/29,016/38,728
 
-> +	if (!status)
-> +		return dpc->dev->port;
+So it was much fairer to readers. With less locking threads, the readers
+were preferred than writers.
 
-If you *do* need the acpi_check_dsm(), I would have expected to return
-NULL in this error case?
+Patch 1 fixes an testing issue with locking selftest introduced by the
+patch "locking/rwsem: Enhance DEBUG_RWSEMS_WARN_ON() macro" in part 1.
 
-> +
-> +
+Patch 2 makes owner a permanent member of the rw_semaphore structure and
+set it irrespective of CONFIG_RWSEM_SPIN_ON_OWNER.
 
-Extra blank line here.
+Patch 3 implements a new rwsem locking scheme similar to what qrwlock
+is current doing. Write lock is done by atomic_cmpxchg() while read
+lock is still being done by atomic_add().
 
-> +	obj = acpi_evaluate_dsm(dpc->adev->handle, &pci_acpi_dsm_guid, 1,
-> +				EDR_PORT_LOCATE_DSM, NULL);
-> +	if (!obj)
-> +		return NULL;
-> +
-> +	if (obj->type == ACPI_TYPE_INTEGER) {
-> +		/*
-> +		 * Firmware returns DPC port BDF details in following format:
-> +		 *	15:8 = bus
-> +		 *	7:3 = device
-> +		 *	2:0 = function
-> +		 */
-> +		port = obj->integer.value;
-> +		ACPI_FREE(obj);
-> +	} else {
-> +		ACPI_FREE(obj);
-> +		return NULL;
-> +	}
-> +
-> +	return pci_get_domain_bus_and_slot(0, PCI_BUS_NUM(port), port & 0xff);
-> +}
-> +
-> +/*
-> + * _OST wrapper function to let firmware know the status of EDR event.
-> + * @dpc   : DPC device structure.
-> + * @status: Status of EDR event.
-> + *
+Patch 4 implments lock handoff to prevent lock starvation.
 
-Spurious blank line in the comment.
+Patch 5 removes rwsem_wake() wakeup optimization as it doesn't work
+with lock handoff.
 
-> + */
-> +static int acpi_send_edr_status(struct dpc_dev *dpc,  u16 status)
-> +{
-> +	u32 ost_status;
-> +	struct pci_dev *pdev = dpc->dev->port;
-> +
-> +	dev_dbg(&pdev->dev, "Sending EDR status :%x\n", status);
-> +
-> +	ost_status =  PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +	ost_status = (ost_status << 16) | status;
-> +
-> +	if (!acpi_has_method(dpc->adev->handle, "_OST"))
-> +		return -ENOTSUPP;
+Patch 6 makes rwsem_spin_on_owner() returns owner state.
 
-This acpi_has_method() check is superfluous, isn't it?  I would expect
-acpi_evaluate_ost() to fail gracefully if there's no _OST.
+Patch 7 disallows RT tasks to spin on a rwsem with unknown owner.
 
-I do see several other instances of code of the form:
+Patch 8 makes reader wakeup to wake almost all the readers in the wait
+queue instead of just those in the front.
 
-  if (!acpi_has_method(handle, "XXXX"))
-    return false;
+Patch 9 enables reader to spin on a writer-owned rwsem.
 
-  status = acpi_evaluate_*(handle, "XXXX", ...);
+Patch 10 enables a writer to spin on a reader-owned rwsem for at most
+25us.
 
-But I think that's a pointless pattern.  I think we could just try to
-evaluate the method directly, since the evaluation will fail if the
-method doesn't exist:
+Patch 11 adds some new rwsem owner access helper functions.
 
-  status = acpi_evaluate_*(handle, "XXXX", ...);
+Patch 12 handles the case of too many readers by reserving the sign
+bit to designate that a reader lock attempt will fail and the locking
+reader will be put to sleep. This will ensure that we will not overflow
+the reader count.
 
-> +	status = acpi_evaluate_ost(dpc->adev->handle,
-> +				   ACPI_NOTIFY_DISCONNECT_RECOVER,
-> +				   ost_status, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Helper function used for disconnecting the child devices when EDR event is
-> + * received from firmware.
-> + */
-> +static void dpc_disconnect_devices(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *udev;
-> +	struct pci_bus *parent;
-> +	struct pci_dev *pdev, *temp;
-> +
-> +	dev_dbg(&dev->dev, "Disconnecting the child devices\n");
-> +
-> +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
-> +		udev = dev;
-> +	else
-> +		udev = dev->bus->self;
-> +
-> +	parent = udev->subordinate;
-> +	pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
-> +
-> +	pci_lock_rescan_remove();
-> +	pci_dev_get(dev);
-> +	list_for_each_entry_safe_reverse(pdev, temp, &parent->devices,
-> +					 bus_list) {
-> +		pci_stop_and_remove_bus_device(pdev);
-> +	}
-> +	pci_dev_put(dev);
-> +	pci_unlock_rescan_remove();
-> +}
-> +
-> +static void edr_handle_event(acpi_handle handle, u32 event, void *data)
-> +{
-> +	struct dpc_dev *dpc = (struct dpc_dev *) data;
-> +	struct pci_dev *pdev;
-> +	u16 status, cap;
-> +
-> +	if (event != ACPI_NOTIFY_DISCONNECT_RECOVER)
-> +		return;
-> +
-> +	if (!data) {
-> +		pr_err("Invalid EDR event\n");
+Patch 13 merges the write-lock owner task pointer into the count.
+Only 64-bit count has enough space to provide a reasonable number of
+bits for reader count. This is for x86-64 only for the time being.
 
-In what instance can "data" be NULL?  I think *never*, unless ACPI
-screwed up and lost the context you supplied to
-acpi_install_notify_handler().  In that case, we should do something
-more significant than print a message and just return.  I think we
-should just omit this test, and if ACPI screwed up, we'll take a null
-pointer dereference oops, we'll see exactly where, and we'll have a
-chance to fix the problem.
+Patch 14 eliminates redundant computation of the merged owner-count.
 
-> +		return;
-> +	}
-> +
-> +	dev_dbg(&dpc->dev->port->dev, "Valid EDR event received\n");
+With a locking microbenchmark running on 5.1 based kernel, the total
+locking rates (in kops/s) on a 8-socket IvyBridge-EX system with equal
+numbers of readers and writers (mixed) before and after this patchset
+were:
 
-Set "pdev" at declaration and use it in these printks.
+   # of Threads   Before Patch      After Patch
+   ------------   ------------      -----------
+        2            1,179             9,436
+        4            1,505             8,268
+        8              721             7,041
+       16              575             7,652
+       32               70             2,189
+       64               39               534
 
-> +
-> +	/*
-> +	 * Check if _DSM(0xD) is available, and if present locate the
-> +	 * port which issued EDR event.
-> +	 */
-> +	pdev = acpi_locate_dpc_port(dpc);
 
-Can this be done at probe-time instead of event-time?
+Waiman Long (14):
+  locking/rwsem: Prevent unneeded warning during locking selftest
+  locking/rwsem: Make owner available even if
+    !CONFIG_RWSEM_SPIN_ON_OWNER
+  locking/rwsem: Implement a new locking scheme
+  locking/rwsem: Implement lock handoff to prevent lock starvation
+  locking/rwsem: Remove rwsem_wake() wakeup optimization
+  locking/rwsem: Make rwsem_spin_on_owner() return owner state
+  locking/rwsem: Ensure an RT task will not spin on reader
+  locking/rwsem: Wake up almost all readers in wait queue
+  locking/rwsem: Enable readers spinning on writer
+  locking/rwsem: Enable time-based spinning on reader-owned rwsem
+  locking/rwsem: Add more rwsem owner access helpers
+  locking/rwsem: Guard against making count negative
+  locking/rwsem: Merge owner into count on x86-64
+  locking/rwsem: Remove redundant computation of writer lock word
 
-> +	if (!pdev) {
-> +		dev_err(&dpc->dev->port->dev, "No valid port found\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Get DPC priv data for given pdev
-> +	 */
-> +	dpc = to_dpc_dev(pdev);
-> +	dpc->error_state = PCI_ERS_RESULT_DISCONNECT;
-> +	pdev = dpc->dev->port;
+ include/linux/rwsem.h             |   6 +-
+ kernel/locking/lock_events_list.h |   4 +
+ kernel/locking/rwsem-xadd.c       | 640 +++++++++++++++++++-----------
+ kernel/locking/rwsem.c            |   3 +-
+ kernel/locking/rwsem.h            | 312 +++++++++++----
+ lib/Kconfig.debug                 |   8 +-
+ 6 files changed, 659 insertions(+), 314 deletions(-)
 
-It's quite confusing to reassign pdev here.  The comment about "Get
-DPC priv data for given pdev" is really superfluous since that much is
-obvious from the code.  What's *not* obvious is whether this "pdev =
-dpc->dev->port" changes anything and if so, why.
+-- 
+2.18.1
 
-> +	cap = dpc->cap_pos;
-> +
-> +	/*
-> +	 * Check if the port supports DPC:
-> +	 *
-> +	 * if port does not support DPC, then let firmware handle
-> +	 * the error recovery and OS is responsible for cleaning
-> +	 * up the child devices.
-> +	 *
-> +	 * if port supports DPC, then fall back to default error
-> +	 * recovery.
-
-Capitalize first letter of sentences.
-
-> +	 *
-> +	 */
-> +	if (cap) {
-> +		/* Check if there is a valid DPC trigger */
-> +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> +		if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-> +			dev_err(&pdev->dev, "Invalid DPC trigger\n");
-
-Include "status" value in the printk.
-
-> +			return;
-> +		}
-> +		dpc_process_error(dpc);
-> +	}
-> +
-> +	if (dpc->error_state == PCI_ERS_RESULT_RECOVERED) {
-> +		/*
-> +		 * Recovery is successful, so send
-> +		 * _OST(0xF, BDF << 16 | 0x80, "") to firmware.
-> +		 */
-> +		status = 0x80;
-> +	} else {
-> +		/*
-> +		 * Recovery is not successful, so disconnect child devices
-> +		 * and send _OST(0xF, BDF << 16 | 0x81, "") to firmware.
-> +		 */
-> +		dpc_disconnect_devices(pdev);
-> +		status = 0x81;
-> +	}
-> +
-> +	acpi_send_edr_status(dpc, status);
-> +}
-> +
-> +#endif
-> +
->  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
->  static int dpc_probe(struct pcie_device *dev)
->  {
-> @@ -291,9 +543,10 @@ static int dpc_probe(struct pcie_device *dev)
->  	struct device *device = &dev->device;
->  	int status;
->  	u16 ctl, cap;
-> -
-> -	if (pcie_aer_get_firmware_first(pdev))
-> -		return -ENOTSUPP;
-> +#ifdef CONFIG_ACPI
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	acpi_status astatus;
-> +#endif
->  
->  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
->  	if (!dpc)
-> @@ -302,16 +555,53 @@ static int dpc_probe(struct pcie_device *dev)
->  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
->  	dpc->dev = dev;
->  	set_service_data(dev, dpc);
-> +	dpc->error_state = PCI_ERS_RESULT_NONE;
-> +
-> +	if (!pcie_aer_get_firmware_first(pdev))
-> +		if (pci_aer_available() && dpc->cap_pos)
-> +			dpc->native_dpc = 1;
->  
-> -	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> -					   dpc_handler, IRQF_SHARED,
-> -					   "pcie-dpc", dpc);
-> -	if (status) {
-> -		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-> -			 status);
-> -		return status;
-> +	/*
-> +	 * If native support is not enabled and ACPI is not
-> +	 * enabled then return error.
-> +	 */
-> +	if (!dpc->native_dpc && !IS_ENABLED(CONFIG_APCI))
-> +		return -ENODEV;
-> +
-> +	if (dpc->native_dpc) {
-> +		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> +						   dpc_handler, IRQF_SHARED,
-> +						   "pcie-dpc", dpc);
-> +		if (status) {
-> +			dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-> +				 status);
-> +			return status;
-> +		}
->  	}
->  
-> +#ifdef CONFIG_ACPI
-> +	if (!dpc->native_dpc) {
-> +		if (!adev) {
-> +			dev_err(device, "No valid acpi device found\n");
-
-s/acpi/ACPI/ (in comments, printk, other English text)
-
-> +			return -ENODEV;
-> +		}
-> +
-> +		dpc->adev = adev;
-> +
-> +		/* Register ACPI notifier for EDR event */
-
-"Register handler for System events, one of which is the EDR event"?
-
-> +		astatus = acpi_install_notify_handler(adev->handle,
-> +						      ACPI_SYSTEM_NOTIFY,
-> +						      edr_handle_event,
-> +						      dpc);
-> +
-> +		if (ACPI_FAILURE(astatus)) {
-> +			dev_err(device, "Install notifier failed\n");
-
-Mention "ACPI notify handler" here.
-
-> +			return -EBUSY;
-> +		}
-> +
-> +		acpi_enable_dpc_port(dpc, true);
-> +	}
-> +#endif
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  
-> @@ -325,8 +615,12 @@ static int dpc_probe(struct pcie_device *dev)
->  		}
->  	}
->  
-> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> -	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> +	if (dpc->native_dpc) {
-> +		ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL |
-> +			PCI_EXP_DPC_CTL_INT_EN;
-> +		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
-> +				      ctl);
-> +	}
->  
->  	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
->  		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-> @@ -344,6 +638,9 @@ static void dpc_remove(struct pcie_device *dev)
->  	struct pci_dev *pdev = dev->port;
->  	u16 ctl;
->  
-> +	if (!dpc->native_dpc)
-> +		return;
-> +
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
->  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> @@ -356,6 +653,7 @@ static struct pcie_port_service_driver dpcdriver = {
->  	.probe		= dpc_probe,
->  	.remove		= dpc_remove,
->  	.reset_link	= dpc_reset_link,
-> +	.error_resume   = dpc_error_resume,
->  };
->  
->  int __init pcie_dpc_init(void)
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 865f12f4b314..050cbb7a5083 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -249,9 +249,14 @@ static int get_port_device_capability(struct pci_dev *dev)
->  		pcie_pme_interrupt_enable(dev, false);
->  	}
->  
-> +	/*
-> +	 * If EDR support is enabled in OS, then even if AER is not handled in
-> +	 * OS, DPC service can be enabled.
-> +	 */
->  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-> -	    (pcie_ports_native || host->native_dpc))
-> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-> +	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-> +	    (pcie_ports_native || host->native_dpc))))
-
-Holy cow, I think I'll have to schedule an hour sometime to figure
-out what's going on here :)
-
->  		services |= PCIE_PORT_SERVICE_DPC;
->  
->  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM || -- 2.20.1
-> 
