@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4498CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AEEC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0773C2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2F82083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TIFlTAYS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cLBg74KO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfDJLcD (ORCPT
+        id S1731435AbfDJLcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:32:03 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16698 "EHLO
+        Wed, 10 Apr 2019 07:32:05 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43265 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731316AbfDJLcB (ORCPT
+        by vger.kernel.org with ESMTP id S1729901AbfDJLcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 07:32:01 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ABLegm023346;
-        Wed, 10 Apr 2019 13:31:44 +0200
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ABVcRj029070;
+        Wed, 10 Apr 2019 13:31:48 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=0lDpJM31jNRsTsa3qFi2Gz7qprZdCQrj2PXabiYtqOc=;
- b=TIFlTAYSvC0yMJWCePIL8nZlTonQu0tqKbPpmqAQR2qwNYEissO1oQAD6T4ZY1DjCeq2
- weh4KsjGCn/P1jkGPoj1ZAaFkDrHmQfJHecC2QdbDmtKE/xEALvtN8Eh0Ttrt6bjl5vZ
- F4lxw3zRDiPylFx/IuewFRdu33uLkKHhuRIzEXh8/DWt5zWdKNRRhTJWx+rvzmSbMXx/
- YKv3nBCttQ7VcsIJiUki1s3xek7ZvZPQG4KFVLyp4bsiXWhtkYRXj6Rnj43dzYELn8Qr
- Smf6AgxbRl+A5tE7FrONR6zXJBDNypKMGrA5cMvfMMEvPEjqGbPjQ9k0xnmCu5AE+vQx vg== 
+ bh=hkVnuO8DxysDbebGBktia8PGgxQt2DWl9qtjFVU2LlY=;
+ b=cLBg74KOWHNhghQbe1Tx6O6pvNn3h+ITz4rcD3Wf5XSAQJI97tMaB4ZmhdSm/u6Kw20P
+ VM/Tg1lT7cFlQkzgnzdciE355frXndlRRSFSFb4Z9krfbq9uDVraZxkn54sr/NMuHvlo
+ yT7YirEt5FyoNBPs1wymJhqodKHQ5ItFQBDoha9bfiuKu17OIFyHyM7Erl0HFwydk+/z
+ IHOPYvS8hUtmSH4QPTdwC7+CEmeffNn1eeWZ4+KX9ZdlbQXZSsbhZa8dq2u0ws8m+Fwx
+ Q2hBbKsQRSW2Uz/MspES2lTQJeOARR5MsmsO6XlprE5QwrWNnaaH5wr7NZ8svxO7wRdZ jQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rprcp6j3u-1
+        by mx07-00178001.pphosted.com with ESMTP id 2rse788f57-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 10 Apr 2019 13:31:44 +0200
+        Wed, 10 Apr 2019 13:31:48 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F060234;
-        Wed, 10 Apr 2019 11:31:43 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A8B9B3F;
+        Wed, 10 Apr 2019 11:31:46 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B47B615BF;
-        Wed, 10 Apr 2019 11:31:43 +0000 (GMT)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Apr 2019 13:31:43
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 676EF15BF;
+        Wed, 10 Apr 2019 11:31:46 +0000 (GMT)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Apr 2019 13:31:46
  +0200
 From:   Alexandre Torgue <alexandre.torgue@st.com>
 To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -58,16 +58,16 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-gpio@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 2/5] pinctrl: stm32: introduce package support
-Date:   Wed, 10 Apr 2019 13:30:21 +0200
-Message-ID: <1554895824-25709-3-git-send-email-alexandre.torgue@st.com>
+Subject: [PATCH 5/5] ARM: dts: stm32: use dedicated files to manage stm32mp157 packages
+Date:   Wed, 10 Apr 2019 13:30:24 +0200
+Message-ID: <1554895824-25709-6-git-send-email-alexandre.torgue@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
  signatures=0
@@ -76,177 +76,461 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A same SoC can be available in several packages. Differences between
-packages are only the numbers of available balls. In order not to write
-a driver for each new package, same driver (ex: pinctrl-stm32mp157.c) will
-be used. This patch introduces the "package" property for each pin. So on a
-same driver, it will be possible to indicate on which package the pin is
-available. The package information will be got from the device tree.
+Four packages exist for stm32mp157 die. As ball-out is different between
+them, this patch covers those differences by creating dedicated pinctrl
+dtsi files. Each dtsi pinctrl package file describes the package ball-out
+through gpio-ranges.
+
+stm32mp157a-dk1 / dk2 boards embed a STM32MP_PKG_AC (TFBGA361 (12*12))
+package.
+
+stm32mp157c-ed1 / ev1 boards embed a STM32MP_PKG_AA (LFBGA448 (18*18))
+package.
 
 Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 0b9ff5a..0aebc31 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -95,6 +95,9 @@ struct stm32_pinctrl {
- 	struct regmap		*regmap;
- 	struct regmap_field	*irqmux[STM32_GPIO_PINS_PER_BANK];
- 	struct hwspinlock *hwlock;
-+	struct stm32_desc_pin *pins;
-+	u32 npins;
-+	u32 pkg;
- };
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 9104896..3b4cc3c 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -26,6 +26,7 @@
+ 				st,bank-name = "GPIOA";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 0 16>;
++				status = "disabled";
+ 			};
  
- static inline int stm32_gpio_pin(int gpio)
-@@ -358,8 +361,8 @@ static bool stm32_pctrl_is_function_valid(struct stm32_pinctrl *pctl,
- {
- 	int i;
+ 			gpiob: gpio@50003000 {
+@@ -38,6 +39,7 @@
+ 				st,bank-name = "GPIOB";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 16 16>;
++				status = "disabled";
+ 			};
  
--	for (i = 0; i < pctl->match_data->npins; i++) {
--		const struct stm32_desc_pin *pin = pctl->match_data->pins + i;
-+	for (i = 0; i < pctl->npins; i++) {
-+		const struct stm32_desc_pin *pin = pctl->pins + i;
- 		const struct stm32_desc_function *func = pin->functions;
+ 			gpioc: gpio@50004000 {
+@@ -50,6 +52,7 @@
+ 				st,bank-name = "GPIOC";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 32 16>;
++				status = "disabled";
+ 			};
  
- 		if (pin->pin.number != pin_num)
-@@ -1175,7 +1178,7 @@ static int stm32_pctrl_build_state(struct platform_device *pdev)
- 	struct stm32_pinctrl *pctl = platform_get_drvdata(pdev);
- 	int i;
+ 			gpiod: gpio@50005000 {
+@@ -62,6 +65,7 @@
+ 				st,bank-name = "GPIOD";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 48 16>;
++				status = "disabled";
+ 			};
  
--	pctl->ngroups = pctl->match_data->npins;
-+	pctl->ngroups = pctl->npins;
+ 			gpioe: gpio@50006000 {
+@@ -74,6 +78,7 @@
+ 				st,bank-name = "GPIOE";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 64 16>;
++				status = "disabled";
+ 			};
  
- 	/* Allocate groups */
- 	pctl->groups = devm_kcalloc(&pdev->dev, pctl->ngroups,
-@@ -1189,19 +1192,50 @@ static int stm32_pctrl_build_state(struct platform_device *pdev)
- 	if (!pctl->grp_names)
- 		return -ENOMEM;
+ 			gpiof: gpio@50007000 {
+@@ -86,6 +91,7 @@
+ 				st,bank-name = "GPIOF";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 80 16>;
++				status = "disabled";
+ 			};
  
--	for (i = 0; i < pctl->match_data->npins; i++) {
--		const struct stm32_desc_pin *pin = pctl->match_data->pins + i;
-+	for (i = 0; i < pctl->npins; i++) {
-+		const struct stm32_desc_pin *pin = pctl->pins + i;
- 		struct stm32_pinctrl_group *group = pctl->groups + i;
+ 			gpiog: gpio@50008000 {
+@@ -98,6 +104,7 @@
+ 				st,bank-name = "GPIOG";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 96 16>;
++				status = "disabled";
+ 			};
  
- 		group->name = pin->pin.name;
- 		group->pin = pin->pin.number;
--
- 		pctl->grp_names[i] = pin->pin.name;
- 	}
+ 			gpioh: gpio@50009000 {
+@@ -110,6 +117,7 @@
+ 				st,bank-name = "GPIOH";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 112 16>;
++				status = "disabled";
+ 			};
  
- 	return 0;
- }
+ 			gpioi: gpio@5000a000 {
+@@ -122,6 +130,7 @@
+ 				st,bank-name = "GPIOI";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 128 16>;
++				status = "disabled";
+ 			};
  
-+static int stm32_pctrl_create_pins_tab(struct stm32_pinctrl *pctl,
-+				       struct stm32_desc_pin *pins)
-+{
-+	const struct stm32_desc_pin *p;
-+	int i, nb_pins_available = 0;
+ 			gpioj: gpio@5000b000 {
+@@ -134,6 +143,7 @@
+ 				st,bank-name = "GPIOJ";
+ 				ngpios = <16>;
+ 				gpio-ranges = <&pinctrl 0 144 16>;
++				status = "disabled";
+ 			};
+ 
+ 			gpiok: gpio@5000c000 {
+@@ -146,6 +156,7 @@
+ 				st,bank-name = "GPIOK";
+ 				ngpios = <8>;
+ 				gpio-ranges = <&pinctrl 0 160 8>;
++				status = "disabled";
+ 			};
+ 
+ 			cec_pins_a: cec-0 {
+@@ -427,6 +438,7 @@
+ 				st,bank-ioport = <11>;
+ 				ngpios = <8>;
+ 				gpio-ranges = <&pinctrl_z 0 400 8>;
++				status = "disabled";
+ 			};
+ 
+ 			i2c4_pins_a: i2c4-0 {
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 1b1886d..8d60641 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -7,7 +7,7 @@
+ /dts-v1/;
+ 
+ #include "stm32mp157c.dtsi"
+-#include "stm32mp157-pinctrl.dtsi"
++#include "stm32mp157xac-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 9fd7943..6ed9d49 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -6,7 +6,7 @@
+ /dts-v1/;
+ 
+ #include "stm32mp157c.dtsi"
+-#include "stm32mp157-pinctrl.dtsi"
++#include "stm32mp157xaa-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
+new file mode 100644
+index 0000000..875adf5
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
++ * Author: Alexandre Torgue <alexandre.torgue@st.com>
++ */
 +
-+	for (i = 0; i < pctl->match_data->npins; i++) {
-+		p = pctl->match_data->pins + i;
-+		if (pctl->pkg && !(pctl->pkg & p->pkg))
-+			continue;
-+		pins->pin = p->pin;
-+		pins->functions = p->functions;
-+		pins++;
-+		nb_pins_available++;
-+	}
++#include "stm32mp157-pinctrl.dtsi"
++/ {
++	soc {
++		pinctrl: pin-controller@50002000 {
++			st,package = <STM32MP_PKG_AA>;
 +
-+	pctl->npins = nb_pins_available;
++			gpioa: gpio@50002000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 0 16>;
++			};
 +
-+	return 0;
-+}
++			gpiob: gpio@50003000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 16 16>;
++			};
 +
-+static void stm32_pctl_get_package(struct device_node *np,
-+				   struct stm32_pinctrl *pctl)
-+{
-+	if (of_property_read_u32(np, "st,package", &pctl->pkg)) {
-+		pctl->pkg = 0;
-+		dev_warn(pctl->dev, "No package detected, use default one\n");
-+	} else {
-+		dev_dbg(pctl->dev, "package detected: %x\n", pctl->pkg);
-+	}
-+}
++			gpioc: gpio@50004000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 32 16>;
++			};
 +
- int stm32_pctl_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-@@ -1241,6 +1275,19 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 
- 	pctl->dev = dev;
- 	pctl->match_data = match->data;
++			gpiod: gpio@50005000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 48 16>;
++			};
 +
-+	/*  get package information */
-+	stm32_pctl_get_package(np, pctl);
++			gpioe: gpio@50006000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 64 16>;
++			};
 +
-+	pctl->pins = devm_kcalloc(pctl->dev, pctl->match_data->npins,
-+				  sizeof(*pctl->pins), GFP_KERNEL);
-+	if (!pctl->pins)
-+		return -ENOMEM;
++			gpiof: gpio@50007000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 80 16>;
++			};
 +
-+	ret = stm32_pctrl_create_pins_tab(pctl, pctl->pins);
-+	if (ret)
-+		return ret;
++			gpiog: gpio@50008000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 96 16>;
++			};
 +
- 	ret = stm32_pctrl_build_state(pdev);
- 	if (ret) {
- 		dev_err(dev, "build state failed: %d\n", ret);
-@@ -1253,18 +1300,18 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
--	pins = devm_kcalloc(&pdev->dev, pctl->match_data->npins, sizeof(*pins),
-+	pins = devm_kcalloc(&pdev->dev, pctl->npins, sizeof(*pins),
- 			    GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
--	for (i = 0; i < pctl->match_data->npins; i++)
--		pins[i] = pctl->match_data->pins[i].pin;
-+	for (i = 0; i < pctl->npins; i++)
-+		pins[i] = pctl->pins[i].pin;
- 
- 	pctl->pctl_desc.name = dev_name(&pdev->dev);
- 	pctl->pctl_desc.owner = THIS_MODULE;
- 	pctl->pctl_desc.pins = pins;
--	pctl->pctl_desc.npins = pctl->match_data->npins;
-+	pctl->pctl_desc.npins = pctl->npins;
- 	pctl->pctl_desc.confops = &stm32_pconf_ops;
- 	pctl->pctl_desc.pctlops = &stm32_pctrl_ops;
- 	pctl->pctl_desc.pmxops = &stm32_pmx_ops;
-@@ -1305,4 +1352,3 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 
- 	return 0;
- }
--
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index 473a623..8acdf48 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -26,6 +26,7 @@ struct stm32_desc_function {
- struct stm32_desc_pin {
- 	struct pinctrl_pin_desc pin;
- 	const struct stm32_desc_function *functions;
-+	const unsigned int pkg;
- };
- 
- #define STM32_PIN(_pin, ...)					\
-@@ -35,6 +36,13 @@ struct stm32_desc_pin {
- 			__VA_ARGS__, { } },			\
- 	}
- 
-+#define STM32_PIN_PKG(_pin, _pkg, ...)					\
-+	{							\
-+		.pin = _pin,					\
-+		.pkg  = _pkg,				\
-+		.functions = (struct stm32_desc_function[]){	\
-+			__VA_ARGS__, { } },			\
-+	}
- #define STM32_FUNCTION(_num, _name)		\
- 	{							\
- 		.num = _num,					\
++			gpioh: gpio@50009000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 112 16>;
++			};
++
++			gpioi: gpio@5000a000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 128 16>;
++			};
++
++			gpioj: gpio@5000b000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 144 16>;
++			};
++
++			gpiok: gpio@5000c000 {
++				status = "okay";
++				ngpios = <8>;
++				gpio-ranges = <&pinctrl 0 160 8>;
++			};
++		};
++
++		pinctrl_z: pin-controller-z@54004000 {
++			st,package = <STM32MP_PKG_AA>;
++
++			gpioz: gpio@54004000 {
++				status = "okay";
++				ngpios = <8>;
++				gpio-ranges = <&pinctrl_z 0 400 8>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
+new file mode 100644
+index 0000000..961fa12
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
++ * Author: Alexandre Torgue <alexandre.torgue@st.com>
++ */
++
++#include "stm32mp157-pinctrl.dtsi"
++/ {
++	soc {
++		pinctrl: pin-controller@50002000 {
++			st,package = <STM32MP_PKG_AB>;
++
++			gpioa: gpio@50002000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 0 16>;
++			};
++
++			gpiob: gpio@50003000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 16 16>;
++			};
++
++			gpioc: gpio@50004000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 32 16>;
++			};
++
++			gpiod: gpio@50005000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 48 16>;
++			};
++
++			gpioe: gpio@50006000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 64 16>;
++			};
++
++			gpiof: gpio@50007000 {
++				status = "okay";
++				ngpios = <6>;
++				gpio-ranges = <&pinctrl 6 86 6>;
++			};
++
++			gpiog: gpio@50008000 {
++				status = "okay";
++				ngpios = <10>;
++				gpio-ranges = <&pinctrl 6 102 10>;
++			};
++
++			gpioh: gpio@50009000 {
++				status = "okay";
++				ngpios = <2>;
++				gpio-ranges = <&pinctrl 0 112 2>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
+new file mode 100644
+index 0000000..26600f1
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
++ * Author: Alexandre Torgue <alexandre.torgue@st.com>
++ */
++
++#include "stm32mp157-pinctrl.dtsi"
++/ {
++	soc {
++		pinctrl: pin-controller@50002000 {
++			st,package = <STM32MP_PKG_AC>;
++
++			gpioa: gpio@50002000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 0 16>;
++			};
++
++			gpiob: gpio@50003000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 16 16>;
++			};
++
++			gpioc: gpio@50004000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 32 16>;
++			};
++
++			gpiod: gpio@50005000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 48 16>;
++			};
++
++			gpioe: gpio@50006000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 64 16>;
++			};
++
++			gpiof: gpio@50007000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 80 16>;
++			};
++
++			gpiog: gpio@50008000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 96 16>;
++			};
++
++			gpioh: gpio@50009000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 112 16>;
++			};
++
++			gpioi: gpio@5000a000 {
++				status = "okay";
++				ngpios = <12>;
++				gpio-ranges = <&pinctrl 0 128 12>;
++			};
++		};
++
++		pinctrl_z: pin-controller-z@54004000 {
++			st,package = <STM32MP_PKG_AC>;
++
++			gpioz: gpio@54004000 {
++				status = "okay";
++				ngpios = <8>;
++				gpio-ranges = <&pinctrl_z 0 400 8>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
+new file mode 100644
+index 0000000..910113f
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
++ * Author: Alexandre Torgue <alexandre.torgue@st.com>
++ */
++
++#include "stm32mp157-pinctrl.dtsi"
++/ {
++	soc {
++		pinctrl: pin-controller@50002000 {
++			st,package = <STM32MP_PKG_AD>;
++
++			gpioa: gpio@50002000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 0 16>;
++			};
++
++			gpiob: gpio@50003000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 16 16>;
++			};
++
++			gpioc: gpio@50004000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 32 16>;
++			};
++
++			gpiod: gpio@50005000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 48 16>;
++			};
++
++			gpioe: gpio@50006000 {
++				status = "okay";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 64 16>;
++			};
++
++			gpiof: gpio@50007000 {
++				status = "okay";
++				ngpios = <6>;
++				gpio-ranges = <&pinctrl 6 86 6>;
++			};
++
++			gpiog: gpio@50008000 {
++				status = "okay";
++				ngpios = <10>;
++				gpio-ranges = <&pinctrl 6 102 10>;
++			};
++
++			gpioh: gpio@50009000 {
++				status = "okay";
++				ngpios = <2>;
++				gpio-ranges = <&pinctrl 0 112 2>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
 
