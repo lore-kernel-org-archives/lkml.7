@@ -6,44 +6,43 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF01C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0F2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749DF20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273A52082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfDJVQh (ORCPT
+        id S1726752AbfDJVQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:16:37 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:21331 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726247AbfDJVQg (ORCPT
+        Wed, 10 Apr 2019 17:16:53 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:31470 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbfDJVQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:16:36 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 322BC400CA730
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:16:35 -0500 (CDT)
+        Wed, 10 Apr 2019 17:16:53 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id CC9DE4F9DD
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:16:52 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id EKaBh8g0adnCeEKaBhwg9x; Wed, 10 Apr 2019 16:16:35 -0500
+        id EKaShpqHG90onEKaSh29FT; Wed, 10 Apr 2019 16:16:52 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=43130 helo=[192.168.1.76])
+Received: from [189.250.139.70] (port=43138 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hEKaA-002BFn-NA; Wed, 10 Apr 2019 16:16:34 -0500
-Subject: Re: [PATCH] mtd: phram: Mark expected switch fall-throughs
+        id 1hEKaS-002BOl-Bd; Wed, 10 Apr 2019 16:16:52 -0500
+Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Joern Engel <joern@lazybastard.org>,
-        David Woodhouse <dwmw2@infradead.org>,
+To:     David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Marek Vasut <marek.vasut@gmail.com>,
         Richard Weinberger <richard@nod.at>
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>
-References: <20190208180911.GA32525@embeddedor>
- <a5b310a1-d0ba-689b-100a-14a8204761a8@embeddedor.com>
+References: <20190208180202.GA16603@embeddedor>
+ <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -88,12 +87,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <321d287b-afeb-9832-b8d4-82f746c04aff@embeddedor.com>
-Date:   Wed, 10 Apr 2019 16:16:33 -0500
+Message-ID: <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com>
+Date:   Wed, 10 Apr 2019 16:16:51 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a5b310a1-d0ba-689b-100a-14a8204761a8@embeddedor.com>
+In-Reply-To: <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -105,13 +104,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.139.70
 X-Source-L: No
-X-Exim-ID: 1hEKaA-002BFn-NA
+X-Exim-ID: 1hEKaS-002BOl-Bd
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43130
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43138
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 25
+X-Email-Count: 33
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -127,7 +126,7 @@ Thanks
 --
 Gustavo
 
-On 3/20/19 3:19 PM, Gustavo A. R. Silva wrote:
+On 3/20/19 3:20 PM, Gustavo A. R. Silva wrote:
 > Hi all,
 > 
 > Friendly ping:
@@ -138,25 +137,38 @@ On 3/20/19 3:19 PM, Gustavo A. R. Silva wrote:
 > --
 > Gustavo
 > 
-> On 2/8/19 12:09 PM, Gustavo A. R. Silva wrote:
+> On 2/8/19 12:02 PM, Gustavo A. R. Silva wrote:
 >> In preparation to enabling -Wimplicit-fallthrough, mark switch
 >> cases where we are expecting to fall through.
 >>
 >> This patch fixes the following warnings:
 >>
->> drivers/mtd/devices/phram.c: In function ‘parse_num64’:
->> drivers/mtd/devices/phram.c:149:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>      shift += 10;
->>      ~~~~~~^~~~~
->> drivers/mtd/devices/phram.c:150:4: note: here
->>     case 'M':
->>     ^~~~
->> drivers/mtd/devices/phram.c:151:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>      shift += 10;
->>      ~~~~~~^~~~~
->> drivers/mtd/devices/phram.c:152:4: note: here
->>     case 'k':
->>     ^~~~
+>> drivers/mtd/chips/cfi_util.c: In function ‘cfi_build_cmd’:
+>> drivers/mtd/chips/cfi_util.c:110:10: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    onecmd |= (onecmd << (chip_mode * 32));
+>>    ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/mtd/chips/cfi_util.c:112:2: note: here
+>>   case 4:
+>>   ^~~~
+>> drivers/mtd/chips/cfi_util.c:113:10: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    onecmd |= (onecmd << (chip_mode * 16));
+>>    ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/mtd/chips/cfi_util.c:114:2: note: here
+>>   case 2:
+>>   ^~~~
+>> drivers/mtd/chips/cfi_util.c: In function ‘cfi_merge_status’:
+>> drivers/mtd/chips/cfi_util.c:163:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    res |= (onestat >> (chip_mode * 32));
+>>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/mtd/chips/cfi_util.c:165:2: note: here
+>>   case 4:
+>>   ^~~~
+>> drivers/mtd/chips/cfi_util.c:166:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    res |= (onestat >> (chip_mode * 16));
+>>    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/mtd/chips/cfi_util.c:167:2: note: here
+>>   case 2:
+>>   ^~~~
 >>
 >> Warning level 3 was used: -Wimplicit-fallthrough=3
 >>
@@ -165,22 +177,39 @@ On 3/20/19 3:19 PM, Gustavo A. R. Silva wrote:
 >>
 >> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 >> ---
->>  drivers/mtd/devices/phram.c | 2 ++
->>  1 file changed, 2 insertions(+)
+>>  drivers/mtd/chips/cfi_util.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
 >>
->> diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
->> index 9ee04b5f9311..8a8627c30aed 100644
->> --- a/drivers/mtd/devices/phram.c
->> +++ b/drivers/mtd/devices/phram.c
->> @@ -147,8 +147,10 @@ static int parse_num64(uint64_t *num64, char *token)
->>  			switch (token[len - 2]) {
->>  			case 'G':
->>  				shift += 10;
->> +				/* fall through */
->>  			case 'M':
->>  				shift += 10;
->> +				/* fall through */
->>  			case 'k':
->>  				shift += 10;
->>  				token[len - 2] = 0;
+>> diff --git a/drivers/mtd/chips/cfi_util.c b/drivers/mtd/chips/cfi_util.c
+>> index 6f16552cd59f..e3b266ee06af 100644
+>> --- a/drivers/mtd/chips/cfi_util.c
+>> +++ b/drivers/mtd/chips/cfi_util.c
+>> @@ -109,10 +109,13 @@ map_word cfi_build_cmd(u_long cmd, struct map_info *map, struct cfi_private *cfi
+>>  	case 8:
+>>  		onecmd |= (onecmd << (chip_mode * 32));
+>>  #endif
+>> +		/* fall through */
+>>  	case 4:
+>>  		onecmd |= (onecmd << (chip_mode * 16));
+>> +		/* fall through */
+>>  	case 2:
+>>  		onecmd |= (onecmd << (chip_mode * 8));
+>> +		/* fall through */
+>>  	case 1:
+>>  		;
+>>  	}
+>> @@ -162,10 +165,13 @@ unsigned long cfi_merge_status(map_word val, struct map_info *map,
+>>  	case 8:
+>>  		res |= (onestat >> (chip_mode * 32));
+>>  #endif
+>> +		/* fall through */
+>>  	case 4:
+>>  		res |= (onestat >> (chip_mode * 16));
+>> +		/* fall through */
+>>  	case 2:
+>>  		res |= (onestat >> (chip_mode * 8));
+>> +		/* fall through */
+>>  	case 1:
+>>  		;
+>>  	}
 >>
