@@ -6,35 +6,38 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05160C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C987C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE73D2229F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED82E21971
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfDJLJa (ORCPT
+        id S1731284AbfDJLJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:09:30 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58793 "EHLO
+        Wed, 10 Apr 2019 07:09:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58772 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730925AbfDJLFq (ORCPT
+        with ESMTP id S1730880AbfDJLFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:05:46 -0400
+        Wed, 10 Apr 2019 07:05:43 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB32-00055S-QE; Wed, 10 Apr 2019 13:05:44 +0200
-Message-Id: <20190410103644.853527514@linutronix.de>
+        id 1hEB2v-000533-IO; Wed, 10 Apr 2019 13:05:37 +0200
+Message-Id: <20190410103644.396788431@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:08 +0200
+Date:   Wed, 10 Apr 2019 12:28:03 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: [RFC patch 14/41] latency_top: Remove the ULONG_MAX stack trace
- hackery
+        Alexander Potapenko <glider@google.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [RFC patch 09/41] s390/stacktrace: Remove the pointless ULONG_MAX
+ marker
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,68 +46,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No architecture terminates the stack trace with ULONG_MAX anymore. The
-consumer terminates on the first zero entry or at the number of entries, so
-no functional change.
-
-Remove the cruft.
+Terminating the last trace entry with ULONG_MAX is a completely pointless
+exercise and none of the consumers can rely on it because it's
+inconsistently implemented across architectures. In fact quite some of the
+callers remove the entry and adjust stack_trace.nr_entries afterwards.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 ---
- fs/proc/base.c      |    3 +--
- kernel/latencytop.c |   12 ++++++------
- 2 files changed, 7 insertions(+), 8 deletions(-)
+ arch/s390/kernel/stacktrace.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -489,10 +489,9 @@ static int lstats_show_proc(struct seq_f
- 				   lr->count, lr->time, lr->max);
- 			for (q = 0; q < LT_BACKTRACEDEPTH; q++) {
- 				unsigned long bt = lr->backtrace[q];
-+
- 				if (!bt)
- 					break;
--				if (bt == ULONG_MAX)
--					break;
- 				seq_printf(m, " %ps", (void *)bt);
- 			}
- 			seq_putc(m, '\n');
---- a/kernel/latencytop.c
-+++ b/kernel/latencytop.c
-@@ -120,8 +120,8 @@ account_global_scheduler_latency(struct
- 				break;
- 			}
+--- a/arch/s390/kernel/stacktrace.c
++++ b/arch/s390/kernel/stacktrace.c
+@@ -45,8 +45,6 @@ void save_stack_trace(struct stack_trace
  
--			/* 0 and ULONG_MAX entries mean end of backtrace: */
--			if (record == 0 || record == ULONG_MAX)
-+			/* 0 entry marks end of backtrace: */
-+			if (!record)
- 				break;
- 		}
- 		if (same) {
-@@ -210,8 +210,8 @@ void __sched
- 				break;
- 			}
+ 	sp = current_stack_pointer();
+ 	dump_trace(save_address, trace, NULL, sp);
+-	if (trace->nr_entries < trace->max_entries)
+-		trace->entries[trace->nr_entries++] = ULONG_MAX;
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace);
  
--			/* 0 and ULONG_MAX entries mean end of backtrace: */
--			if (record == 0 || record == ULONG_MAX)
-+			/* 0 entry is end of backtrace */
-+			if (!record)
- 				break;
- 		}
- 		if (same) {
-@@ -252,10 +252,10 @@ static int lstats_show(struct seq_file *
- 				   lr->count, lr->time, lr->max);
- 			for (q = 0; q < LT_BACKTRACEDEPTH; q++) {
- 				unsigned long bt = lr->backtrace[q];
-+
- 				if (!bt)
- 					break;
--				if (bt == ULONG_MAX)
--					break;
-+
- 				seq_printf(m, " %ps", (void *)bt);
- 			}
- 			seq_puts(m, "\n");
+@@ -58,8 +56,6 @@ void save_stack_trace_tsk(struct task_st
+ 	if (tsk == current)
+ 		sp = current_stack_pointer();
+ 	dump_trace(save_address_nosched, trace, tsk, sp);
+-	if (trace->nr_entries < trace->max_entries)
+-		trace->entries[trace->nr_entries++] = ULONG_MAX;
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
+ 
+@@ -69,7 +65,5 @@ void save_stack_trace_regs(struct pt_reg
+ 
+ 	sp = kernel_stack_pointer(regs);
+ 	dump_trace(save_address, trace, NULL, sp);
+-	if (trace->nr_entries < trace->max_entries)
+-		trace->entries[trace->nr_entries++] = ULONG_MAX;
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_regs);
 
 
