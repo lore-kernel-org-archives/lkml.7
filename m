@@ -2,224 +2,142 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2BDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0743C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5128120830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlcStyX9"
+	by mail.kernel.org (Postfix) with ESMTP id C7FEE20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDJU2p (ORCPT
+        id S1726783AbfDJU2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:28:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39550 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfDJU2p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:28:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so3992075wmk.4;
-        Wed, 10 Apr 2019 13:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9Hmq52yvJQx/5jP7bZfxBWJsPaTflswfLZ+HbiCE+bo=;
-        b=KlcStyX9ZhwXzaTle/9oXOkD4p15X6cPxyyNJJseOrvcPohh1RXGudPtm1rGPjCogu
-         zWzqYzacKtruirLAbXhTfCVW89mCP8L/yX0N1j/dI0Ci1mG9+uJqHsEKTnaOfOqAC0R5
-         A4D9LwQW0VwNm7UpGAAvxfvaM0OObzcbY4kMj4aX+/WNgMxuCS9JpYyslRsRL5p9pP7Q
-         pdJyApxoJ42BIXqDfQQFzwBAHPLGR8TiddzJMqYACmIE3GZX8mlkvYSQwtMtSqRv5I5g
-         pMCqJir3yvK7othX1F9XavQOt017LIRxrg3nkGbWkmMHHey+iCR9+A41hMwAMWdrfM/n
-         ZXsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9Hmq52yvJQx/5jP7bZfxBWJsPaTflswfLZ+HbiCE+bo=;
-        b=TCQVEqGlMvfMFWN0n+96D1NYHT9cPOPwJAe6Oao+S0jylEKt40XO+1SZVeVXV1PmUr
-         420EcktZ/jt+FvbXEB75nB9eV8qToESVvcC0UF64IYZmSgLAetKMfuFZftIlaEefhCyJ
-         HewrD4oZ7hafRQjTN23sgJEF4QLgneByvaNuGQVcRSsGPoTa2DRnYKwOuzBI0cAAj3jU
-         aibQoLcA3A2XiaAMfbdwHngdZTEijMwK/tXdYjjLQZc15INh2dcavbF8XExlo8FFw6oX
-         EwiYKAHng1aCE0XADEL2I9St6/3818C+fV+v59F9vy4Xt4VvwX1yMZ+d0wubSEqOIJs8
-         4lHQ==
-X-Gm-Message-State: APjAAAU+B55SvgYahlMTMNo+UolpJCiv0H8FB8THVCgColyojO2d2WK1
-        lE6nxBADFO+kXbmJqOBxs1bfhIcRJ9g=
-X-Google-Smtp-Source: APXvYqyu64j4LIImPjf31lAHc5AJ6q6FkKL+783ny4u/0W7ByD6fQUziQXCzEO05QNy2GbZ5X0U8Og==
-X-Received: by 2002:a1c:1d49:: with SMTP id d70mr4159285wmd.36.1554928122475;
-        Wed, 10 Apr 2019 13:28:42 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id g13sm2511169wmh.11.2019.04.10.13.28.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 13:28:41 -0700 (PDT)
-Subject: [PATCH 04/11] platform/x86: asus-wmi: Add quirk to force DSTS WMI
- method detection
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
-Message-ID: <d8e0f65c-8c4e-7b60-93bd-3bf90e2da344@gmail.com>
-Date:   Wed, 10 Apr 2019 22:28:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 16:28:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:1221 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfDJU2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 16:28:48 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E9AAA883BC;
+        Wed, 10 Apr 2019 20:28:44 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 81CB25C3FD;
+        Wed, 10 Apr 2019 20:28:36 +0000 (UTC)
+Subject: Re: [PATCH-tip v3 04/14] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190410184231.6748-1-longman@redhat.com>
+ <20190410184231.6748-5-longman@redhat.com>
+ <20190410193844.GY4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
+ XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
+ jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
+ r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
+ CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
+ 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
+ VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
+ evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
+ Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
+ h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
+ bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
+ FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
+ oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
+ ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
+ fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
+ 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
+ rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
+ 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
+ 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
+ 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
+ QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
+ TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
+ Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
+ yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
+ lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
+ drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
+ M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
+ 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
+ MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
+ bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
+ qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
+ AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
+ 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
+ GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
+ jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
+ 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
+ 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
+ yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
+ 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
+ Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
+ wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
+ weim8xU=
+Organization: Red Hat
+Message-ID: <a2a5f3cc-eee1-8dc7-4f79-2a90182bd23f@redhat.com>
+Date:   Wed, 10 Apr 2019 16:28:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
+In-Reply-To: <20190410193844.GY4038@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 10 Apr 2019 20:28:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DSTS method detection fails, as nothing is returned if method is not
-defined in WMNB. As a result the control of keyboard backlight is not
-functional for TUF Gaming series laptops (at the time the only
-functionality of the driver on this model implemented with WMI methods).
+On 04/10/2019 03:38 PM, Peter Zijlstra wrote:
+> Hurph, I was still looking at v2.. I suppose I'll go stare at this
+> verison, I don't think you said there were many changes, right?
+>
+> This version seems to still suffer that HANDOFF issue I found on v2.
 
-Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
+It is mainly minor adjustments. I was trying to add two more patches.
+While at it, make some minor changes. I will address your concern in a
+separate mail later today.
 
-FX505GM:
-Method (WMNB, 3, Serialized)
-{ ...
-    If ((Local0 == 0x53545344))
-    {
-        ...
-        Return (Zero)
-    }
-    ...
-    // No return
-}
+>
+> On Wed, Apr 10, 2019 at 02:42:21PM -0400, Waiman Long wrote:
+>> Because of writer lock stealing, it is possible that a constant
+>> stream of incoming writers will cause a waiting writer or reader to
+>> wait indefinitely leading to lock starvation.
+>>
+>> The mutex code has a lock handoff mechanism to prevent lock starvation.
+>> This patch implements a similar lock handoff mechanism to disable
+>> lock stealing and force lock handoff to the first waiter in the queue
+>> after at least a 4ms waiting period unless it is a RT writer task which
+>> doesn't need to wait. The waiting period is used to avoid discouraging
+>> lock stealing too much to affect performance.
+>>
+>> A rwsem microbenchmark was run for 5 seconds on a 2-socket 40-core
+>> 80-thread Skylake system with a v5.1 based kernel and 240 write_lock
+>> threads with 5us sleep critical section.
+>>
+>> Before the patch, the min/mean/max numbers of locking operations for
+>> the locking threads were 1/7,792/173,696. After the patch, the figures
+>> became 5,842/6,542/7,458.  It can be seen that the rwsem became much
+>> more fair, though there was a drop of about 16% in the mean locking
+>> operations done which was a tradeoff of having better fairness.
+>>
+>> Making the waiter set the handoff bit right after the first wakeup can
+> What does 'right after the first wakeup' mean? If that the top-waiter
+> setting it if it fails to acquire the lock due to steals?
+Yes. It is after the first sleep.
 
-K54C:
-Method (WMNB, 3, Serialized)
-{ ...
-    If ((Local0 == 0x53545344))
-    {
-        ...
-        Return (0x02)
-    }
-    ...
-    Return (0xFFFFFFFE)
-}
-
-The non-existing method ASUS_WMI_METHODID_DSTS=0x53544344 (actually it is
-DCTS in little endian ASCII) is selected in asus->dsts.
-
-One way to fix this would be to call both for every known device ID until
-some answers - this would increase module load time.
-
-Another option is to check some device that is known to exist on every
-model - none known at the time.
-
-Last option, which is implemented, is to check for presence of the
-ASUS7000 device in ACPI tree (it is a dummy device), which is the
-condition used for loading the vendor driver for this model. This might
-not fix every affected model ever produced, but it likely does not
-introduce any regressions. The patch introduces a quirk that is enabled
-when ASUS7000 is found.
-
-Scope (_SB)
-{
-    Device (ATK)
-    {
-        Name (_HID, "ASUS7000")  // _HID: Hardware ID
-    }
-}
-
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c |  5 +++++
- drivers/platform/x86/asus-wmi.c    | 16 +++++++++++++---
- drivers/platform/x86/asus-wmi.h    |  5 +++++
- 3 files changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index b6f2ff95c3ed..cc5f0765a8d9 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -28,6 +28,7 @@
- #include <linux/fb.h>
- #include <linux/dmi.h>
- #include <linux/i8042.h>
-+#include <linux/acpi.h>
- 
- #include "asus-wmi.h"
- 
-@@ -434,6 +435,10 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- 		}
- 		pr_info("Using i8042 filter function for receiving events\n");
- 	}
-+
-+	if (acpi_dev_found("ASUS7000")) {
-+		driver->quirks->force_dsts = true;
-+	}
- }
- 
- static const struct key_entry asus_nb_wmi_keymap[] = {
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index cfccfc0b8c2f..58890d87d50c 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -24,7 +24,7 @@
-  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+#define PR KBUILD_MODNAME ": "
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -1885,11 +1885,21 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
- 	 * Note, on most Eeepc, there is no way to check if a method exist
- 	 * or note, while on notebooks, they returns 0xFFFFFFFE on failure,
- 	 * but once again, SPEC may probably be used for that kind of things.
-+	 *
-+	 * Additionally at least TUF Gaming series laptops return 0 for unknown
-+	 * methods, so the detection in this way is not possible and method must
-+	 * be forced. Likely the presence of ACPI device ASUS7000 indicates
-+	 * this.
- 	 */
--	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, 0, 0, NULL))
-+	if (asus->driver->quirks->force_dsts) {
-+		pr_info(PR "DSTS method forced\n");
-+		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
-+	} else if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
-+			0, 0, NULL)) {
- 		asus->dsts_id = ASUS_WMI_METHODID_DSTS;
--	else
-+	} else {
- 		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
-+	}
- 
- 	/* CWAP allow to define the behavior of the Fn+F2 key,
- 	 * this method doesn't seems to be present on Eee PCs */
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 6c1311f4b04d..94056da02fde 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -54,6 +54,11 @@ struct quirk_entry {
- 	 */
- 	int no_display_toggle;
- 	u32 xusb2pr;
-+	/**
-+	 * Force DSTS instead of DSCS and skip detection. Useful if WMNB
-+	 * returns nothing on unknown method call.
-+	 */
-+	bool force_dsts;
- 
- 	bool (*i8042_filter)(unsigned char data, unsigned char str,
- 			     struct serio *serio);
--- 
-2.17.1
-
+Cheers,
+Longman
