@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E869AC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F253BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C031521916
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB80218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfDJLGM (ORCPT
+        id S1731187AbfDJLGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:06:12 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58942 "EHLO
+        Wed, 10 Apr 2019 07:06:18 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58975 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbfDJLGK (ORCPT
+        with ESMTP id S1731125AbfDJLGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:10 -0400
+        Wed, 10 Apr 2019 07:06:15 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB3Q-0005Ce-67; Wed, 10 Apr 2019 13:06:08 +0200
-Message-Id: <20190410103646.311208785@linutronix.de>
+        id 1hEB3V-0005EJ-ML; Wed, 10 Apr 2019 13:06:13 +0200
+Message-Id: <20190410103646.667572056@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:24 +0200
+Date:   Wed, 10 Apr 2019 12:28:28 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>, dm-devel@redhat.com,
-        Mike Snitzer <snitzer@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>
-Subject: [RFC patch 30/41] dm bufio: Simplify stack trace retrieval
+        Alexander Potapenko <glider@google.com>
+Subject: [RFC patch 34/41] lockdep: Move stack trace logic into
+ check_prev_add()
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,61 +43,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace with an invocation of
-the storage array based interface.
+There is only one caller of check_prev_add() which hands in a zeroed struct
+stack trace and a function pointer to save_stack(). Inside check_prev_add()
+the stack_trace struct is checked for being empty, which is always
+true. Based on that one code path stores a stack trace which is unused. The
+comment there does not make sense either. It's all leftovers from
+historical lockdep code.
+
+Move the variable into check_prev_add() itself and cleanup the nonsensical
+checks and the pointless stack trace recording.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: dm-devel@redhat.com
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: Alasdair Kergon <agk@redhat.com>
 ---
- drivers/md/dm-bufio.c |   15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ kernel/locking/lockdep.c |   30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -150,7 +150,7 @@ struct dm_buffer {
- 	void (*end_io)(struct dm_buffer *, blk_status_t);
- #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
- #define MAX_STACK 10
--	struct stack_trace stack_trace;
-+	unsigned int stack_len;
- 	unsigned long stack_entries[MAX_STACK];
- #endif
- };
-@@ -232,11 +232,7 @@ static DEFINE_MUTEX(dm_bufio_clients_loc
- #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
- static void buffer_record_stack(struct dm_buffer *b)
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -2158,10 +2158,10 @@ check_deadlock(struct task_struct *curr,
+  */
+ static int
+ check_prev_add(struct task_struct *curr, struct held_lock *prev,
+-	       struct held_lock *next, int distance, struct stack_trace *trace,
+-	       int (*save)(struct stack_trace *trace))
++	       struct held_lock *next, int distance)
  {
--	b->stack_trace.nr_entries = 0;
--	b->stack_trace.max_entries = MAX_STACK;
--	b->stack_trace.entries = b->stack_entries;
--	b->stack_trace.skip = 2;
--	save_stack_trace(&b->stack_trace);
-+	b->stack_len = stack_trace_save(b->stack_entries, MAX_STACK, 2);
- }
- #endif
+ 	struct lock_list *uninitialized_var(target_entry);
++	struct stack_trace trace;
+ 	struct lock_list *entry;
+ 	struct lock_list this;
+ 	int ret;
+@@ -2196,17 +2196,8 @@ check_prev_add(struct task_struct *curr,
+ 	this.class = hlock_class(next);
+ 	this.parent = NULL;
+ 	ret = check_noncircular(&this, hlock_class(prev), &target_entry);
+-	if (unlikely(!ret)) {
+-		if (!trace->entries) {
+-			/*
+-			 * If @save fails here, the printing might trigger
+-			 * a WARN but because of the !nr_entries it should
+-			 * not do bad things.
+-			 */
+-			save(trace);
+-		}
++	if (unlikely(!ret))
+ 		return print_circular_bug(&this, target_entry, next, prev);
+-	}
+ 	else if (unlikely(ret < 0))
+ 		return print_bfs_bug(ret);
  
-@@ -438,7 +434,7 @@ static struct dm_buffer *alloc_buffer(st
- 	adjust_total_allocated(b->data_mode, (long)c->block_size);
+@@ -2253,7 +2244,7 @@ check_prev_add(struct task_struct *curr,
+ 		return print_bfs_bug(ret);
  
- #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
--	memset(&b->stack_trace, 0, sizeof(b->stack_trace));
-+	b->stack_len = 0;
- #endif
- 	return b;
- }
-@@ -1520,8 +1516,9 @@ static void drop_buffers(struct dm_bufio
- 			DMERR("leaked buffer %llx, hold count %u, list %d",
- 			      (unsigned long long)b->block, b->hold_count, i);
- #ifdef CONFIG_DM_DEBUG_BLOCK_STACK_TRACING
--			print_stack_trace(&b->stack_trace, 1);
--			b->hold_count = 0; /* mark unclaimed to avoid BUG_ON below */
-+			stack_trace_print(b->stack_entries, b->stack_len, 1);
-+			/* mark unclaimed to avoid BUG_ON below */
-+			b->hold_count = 0;
- #endif
- 		}
+ 
+-	if (!trace->entries && !save(trace))
++	if (!save_trace(&trace))
+ 		return 0;
+ 
+ 	/*
+@@ -2262,14 +2253,14 @@ check_prev_add(struct task_struct *curr,
+ 	 */
+ 	ret = add_lock_to_list(hlock_class(next), hlock_class(prev),
+ 			       &hlock_class(prev)->locks_after,
+-			       next->acquire_ip, distance, trace);
++			       next->acquire_ip, distance, &trace);
+ 
+ 	if (!ret)
+ 		return 0;
+ 
+ 	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
+ 			       &hlock_class(next)->locks_before,
+-			       next->acquire_ip, distance, trace);
++			       next->acquire_ip, distance, &trace);
+ 	if (!ret)
+ 		return 0;
+ 
+@@ -2287,12 +2278,6 @@ check_prevs_add(struct task_struct *curr
+ {
+ 	int depth = curr->lockdep_depth;
+ 	struct held_lock *hlock;
+-	struct stack_trace trace = {
+-		.nr_entries = 0,
+-		.max_entries = 0,
+-		.entries = NULL,
+-		.skip = 0,
+-	};
+ 
+ 	/*
+ 	 * Debugging checks.
+@@ -2318,7 +2303,8 @@ check_prevs_add(struct task_struct *curr
+ 		 * added:
+ 		 */
+ 		if (hlock->read != 2 && hlock->check) {
+-			int ret = check_prev_add(curr, hlock, next, distance, &trace, save_trace);
++			int ret = check_prev_add(curr, hlock, next, distance);
++
+ 			if (!ret)
+ 				return 0;
  
 
 
