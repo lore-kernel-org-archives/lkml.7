@@ -2,140 +2,204 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01AEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3205C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B198720830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sezm0A5a"
+	by mail.kernel.org (Postfix) with ESMTP id 9FC122084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:07:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731183AbfDJSFy (ORCPT
+        id S1731232AbfDJSHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:05:54 -0400
-Received: from mail.efficios.com ([167.114.142.138]:49208 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfDJSFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:05:54 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A51B81D5C66;
-        Wed, 10 Apr 2019 14:05:51 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id AEw5tMjQb9-3; Wed, 10 Apr 2019 14:05:51 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id F25BF1D5C5D;
-        Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com F25BF1D5C5D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554919551;
-        bh=1Go0NjDI9JsgjpqV3rlDBXvHzdSqeZpIYtv0Rjq2+7o=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Sezm0A5agPQipPzQvYV4gDtjAxbyFgBBGTT0vS9sSV+TMU5M1/VRQ/S8usfYqsFXn
-         hwbJ9h3E1weSd3ndc+bCi/70SWHmPregFHffUGXa3q6K3/dQaEYfv1it0kcvNlGtZE
-         6vtNIc/e9eA2sNaAd2DEwpPPbuUo+4H0EWUl3VoNsHH+jqFEhz2IyETVCHIqfxxrXD
-         /k8OMR7sb6TAXmat6EqJOQSDjKxCQ/ANFY2bwOjDTy7LVwPVXyGbthzU0134uadgzo
-         AY35gGdbW4t9bg+nRxJ1H35n9RD+c/vWF7hFhZXDO463Skh1NNSta9Gy68kCqfxv5w
-         g+jMa3xSpVHvA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id t9-Q9zoBEekN; Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id CEF781D5C50;
-        Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
-Date:   Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>, x86 <x86@kernel.org>
-Message-ID: <1829916645.3219.1554919550686.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190410175709.GW4038@hirez.programming.kicks-ass.net>
-References: <11513896.2624.1554838336494.JavaMail.zimbra@efficios.com> <913288111.2663.1554842622822.JavaMail.zimbra@efficios.com> <20190410065417.GU11158@hirez.programming.kicks-ass.net> <608558890.3157.1554911260089.JavaMail.zimbra@efficios.com> <20190410175709.GW4038@hirez.programming.kicks-ass.net>
-Subject: Re: rseq/x86: choosing rseq code signature
+        Wed, 10 Apr 2019 14:07:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33316 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727305AbfDJSHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:07:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 11:07:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
+   d="scan'208";a="314782771"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 11:07:07 -0700
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 877B05807A6;
+        Wed, 10 Apr 2019 11:07:07 -0700 (PDT)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v1 3/4] platform/x86: intel_pmc_ipc: Don't map non-used
+ optional resources
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com,
+        linux-kernel@vger.kernel.org
+References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+ <20190409112515.84725-3-andriy.shevchenko@linux.intel.com>
+From:   sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <2e160dfa-9c01-28e1-65e3-029cb29c9c62@linux.intel.com>
+Date:   Wed, 10 Apr 2019 11:05:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190409112515.84725-3-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/x86: choosing rseq code signature
-Thread-Index: qfsDH9FH3unER4Ra7fJWzhZ0y+Uuaw==
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 10, 2019, at 1:57 PM, Peter Zijlstra peterz@infradead.org wrote:
+Hi,
 
-> On Wed, Apr 10, 2019 at 11:47:40AM -0400, Mathieu Desnoyers wrote:
->> ----- On Apr 10, 2019, at 2:54 AM, Peter Zijlstra peterz@infradead.org wrote:
->> 
->> > On Tue, Apr 09, 2019 at 04:43:42PM -0400, Mathieu Desnoyers wrote:
->> >> +/*
->> >> + * RSEQ_SIG is used with the following privileged instructions, which trap in
->> >> user-space:
->> >> + * x86-32:    0f 01 3d 53 30 05 53      invlpg 0x53053053
->> >> + * x86-64:    0f 01 3d 53 30 05 53      invlpg 0x53053053(%rip)
->> >> + */
->> > 
->> > Right, and the alternative is: 0f b9 3d $SIG, which decodes to:
->> > 
->> >  UD1 $SIG(%rip),%edi
->> > 
->> > which will trap unconditionally. The only problem is that gas will not
->> > actually assemble it, but since we're .byte coding it, it doesn't
->> > matter.
->> > 
->> > UD1 is specified by both AMD and Intel to take a ModR/M, unlike UD0
->> > where they disagree on the ModR/M.
->> 
->> UD1 is even better from a code emulator perspective. It won't have to
->> try to emulate invlpg if it sees it.
-> 
-> Some emulators terminate on UD2, not aware of any special UD1 behaviour.
-> 
->> Byte coding UD1 as your example above gives the following objdump output,
->> is it expected ?
->> 
->> objdump --version
->> GNU objdump (GNU Binutils for Debian) 2.28
->> 
->> x86-32:
->> 
->>   14:	0f b9                	ud1
->>   16:	3d 53 30 05 53       	cmp    $0x53053053,%eax
->> 
->> x86-64:
->> 
->>    b:	0f b9                	ud1
->>    d:	3d 53 30 05 53       	cmp    $0x53053053,%eax
-> 
-> GNU objdump (GNU Binutils for Debian) 2.31.1
-> 
->     0f b9 3d 78 56 34 12    ud1    0x12345678(%rip),%edi
-> 
-> So I suppose your objdump is too old :/
+On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+> The intel_pmc_ipc driver has a placeholder for all possible resources
+> that may have been provided by ACPI. Since there are few optional ones,
+> the driver still uses them and binds to wrong ranges in resource tree:
+>
+>    # grep intel_punit_ipc /proc/iomem
+>    00000000-00000000 : intel_punit_ipc
+>      00000000-00000000 : intel_punit_ipc
+>        00000000-00000000 : intel_punit_ipc
+>          00000000-00000000 : intel_punit_ipc
+>
+> This leads to issues with resource management during inserting and
+> removing modules, such as intel_pmc_ipc itself, which can't be inserted
+> anymore after first removal.
+>
+> Count the actual resources provided and supply only them to the child device.
+>
+> This is a real fix of the commit 8cc7fb4a6523
+>
+>    ("intel_pmc_ipc: update acpi resource structure for Punit")
+>
+> that also fixes a symptoms described in the commit 6cc8cbbc8868
+>
+>    ("platform/x86: intel_punit_ipc: Fix resource ioremap warning")
+>
+> that is going to be reverted afterwards.
 
-Well at least it decodes _something_ which matches the overall instruction
-length of 7 bytes, which I think should be OK. So let's use ud1 unless anyone
-objects.
+Looks good to me.
 
-Thanks,
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Mathieu
-
+>
+> Reported-by: Junxiao Chang <junxiao.chang@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Qipeng Zha <qipeng.zha@intel.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   drivers/platform/x86/intel_pmc_ipc.c | 24 +++++++++++-------------
+>   1 file changed, 11 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 9007aa717586..55037ff258f8 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -131,6 +131,7 @@ static struct intel_pmc_ipc_dev {
+>   
+>   	/* punit */
+>   	struct platform_device *punit_dev;
+> +	unsigned int punit_res_count;
+>   
+>   	/* Telemetry */
+>   	resource_size_t telem_pmc_ssram_base;
+> @@ -682,7 +683,7 @@ static int ipc_create_punit_device(void)
+>   		.name = PUNIT_DEVICE_NAME,
+>   		.id = -1,
+>   		.res = punit_res_array,
+> -		.num_res = ARRAY_SIZE(punit_res_array),
+> +		.num_res = ipcdev.punit_res_count,
+>   		};
+>   
+>   	pdev = platform_device_register_full(&pdevinfo);
+> @@ -789,7 +790,7 @@ static int ipc_create_pmc_devices(void)
+>   
+>   static int ipc_plat_get_res(struct platform_device *pdev)
+>   {
+> -	struct resource *res, *punit_res;
+> +	struct resource *res, *punit_res = punit_res_array;
+>   	void __iomem *addr;
+>   	int size;
+>   
+> @@ -804,7 +805,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   	ipcdev.acpi_io_size = size;
+>   	dev_info(&pdev->dev, "io res: %pR\n", res);
+>   
+> -	punit_res = punit_res_array;
+> +	ipcdev.punit_res_count = 0;
+> +
+>   	/* This is index 0 to cover BIOS data register */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_BIOS_DATA_INDEX);
+> @@ -812,7 +814,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
+>   		return -ENXIO;
+>   	}
+> -	*punit_res = *res;
+> +	punit_res[ipcdev.punit_res_count++] = *res;
+>   	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+>   
+>   	/* This is index 1 to cover BIOS interface register */
+> @@ -822,42 +824,38 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
+>   		return -ENXIO;
+>   	}
+> -	*++punit_res = *res;
+> +	punit_res[ipcdev.punit_res_count++] = *res;
+>   	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+>   
+>   	/* This is index 2 to cover ISP data register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_ISP_DATA_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 3 to cover ISP interface register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_ISP_IFACE_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 4 to cover GTD data register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_GTD_DATA_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 5 to cover GTD interface register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_GTD_IFACE_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
+>   	}
+>   
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
