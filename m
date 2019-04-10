@@ -4,230 +4,187 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C420C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E7FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DE12077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306302077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tepLBedC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bSJRSo5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbfDJRf6 (ORCPT
+        id S1729605AbfDJRgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:35:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33438 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729526AbfDJRf5 (ORCPT
+        Wed, 10 Apr 2019 13:36:51 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:39061 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbfDJRgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:35:57 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j10so2720143otq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:35:56 -0700 (PDT)
+        Wed, 10 Apr 2019 13:36:50 -0400
+Received: by mail-it1-f196.google.com with SMTP id 139so4809508ita.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aK/+LA0Nx639SX2fouzq736GfOt0WRlJ/Dlq/XiIgls=;
-        b=tepLBedCNCt4Ruj+Dg1xnXz+f8l+XNHbYV5xT8CVAdbKeobEuGe05XC4DXzJbUjfzC
-         7X8QSU6Skh/Njl/rRvj5Jipf1gW5caPx42+ooiebzEADnFpbpeet8dugBTCxYG4Z73W4
-         5sq8YIFvMTwr6c/Xyh4NFfd6IjJ7G6LTqD6Xp3Hr+0TL2cwG3gQlv4hHmjJ+4a5gcAwK
-         tHz6MKyxvmk7pSp8CVk+sBfbk3qI2m03oXi6NvxJyFVmRzb1zcjm/JybXe3UbvsoHZeR
-         1h6FAOuXdZvvD2fXh/Y2mLSKWZxkS8CkysChiEMlCVM0BIitvpD6jgjVvVS2RSTwiN+l
-         0oxw==
+         :cc:content-transfer-encoding;
+        bh=fsdwxzllgm3TZiNS2RBUzUWgv7Kl8/L4XW2AecOXicU=;
+        b=bSJRSo5MsFgno1KgFsAA0YK3rrv031WHLUUGrO3xbQk7/2nDnoqhvqCJ15Ey02vmDN
+         Hxk/8IqQAkGzzQ3RlVdOSQn4H8INleO5W/ThQpK7vUqwbxb2+jCr7keiDXwFtAWpkfNg
+         4hD9j7FmHX7letmuEOZ4IDSOF/QivdG51ubmLFeGqbYbQ9clMSR1PhFfW/qE8KibK+8n
+         SoWGBelTt+/DKTHDgSuq1WRucP6zbuqnPF2e3eqSAq4rMjWweTMpOp4pCDSu6FCEESOu
+         cWqbWQeM5QscA0I5BMqRgU6XQnly8tSmYOXLaNcPtKQvF6my5Rx67jZ5R2MBRepNeR4B
+         dMEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aK/+LA0Nx639SX2fouzq736GfOt0WRlJ/Dlq/XiIgls=;
-        b=S1SaNLnJnf+79IU17CfCIcFR03iw+uhE3XKiynQrKMbxK999yafqzvx7bFPIJelilm
-         qkiEeoYYf8yXYD1bEhTryINgRMtvFkNeWUFiUQnDddNWlYYYaqwMKIU/VI1lfoRkGE16
-         BEkeTZOPXg0LbJgvqQEV4ys97hd63TAjqRn7kzwvWx9O/DXofxwBp0W7XoWIHDjDJHNT
-         /po+wlSZ/QcvtTEbKSn5nsPmP90X5kQ5vgeW+CjNQNC03CKS6QLxvqymNu9VR84I/ARy
-         nGkQHR8VUFYarp860MPV2a+BHik4s45Ox59AOy+uHgvxwzfir/14L+rNUtFIkDnIxWz+
-         GLuw==
-X-Gm-Message-State: APjAAAWrN8a6eC9UlguAAym4xbpci+aRYDWkja70ug/fhFiB9szo2zL/
-        RIBw1pFRyG+lQt/C91LRny+HfRn6YlpAjuXTm8GhdQ==
-X-Google-Smtp-Source: APXvYqzBUylBgzYaKzXa83MrYEkY0e1AhypoojhKr1P9ZJsL4r1e00nn0aERJtEDMw1dB2fDYgEOPWX8WtYPaWBOpeg=
-X-Received: by 2002:a9d:5509:: with SMTP id l9mr28848933oth.195.1554917755443;
- Wed, 10 Apr 2019 10:35:55 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fsdwxzllgm3TZiNS2RBUzUWgv7Kl8/L4XW2AecOXicU=;
+        b=uCQ5cgMXwfhzc6YWc7lpLZ7Lh+U2bSEfj8w1dqS+cJNwvk2ndyr0OoUYpkAZTE37ch
+         SeBTmt2VsNazOqmByE9o+Xq0ulS7l2Pz2QhNB+Ok1OHcUkMW5EV/XL3U+cLlg+kTF9JW
+         R1woCkppwmKnRzlicp49AfH3OvYBTgIqn9o2OkjiHHHJJ84Nzi6PjASK3O4m1XprgZHo
+         RULUSTNKjVbpSVdIMzZUQ81lvfVubu2zPwqj4NztQmILAnBIVXkhLNs23t1JrFLmFkh+
+         yaru3Q39zYTMPpibHjriRPHl3ZxYcoB967W39MltSDY3PyJ7K9zVW7ONYhvivsn8E58O
+         bciw==
+X-Gm-Message-State: APjAAAUebSJQQWgmkzD+GshDqWf7DPgFwjGlI+OXTA+bz5J+JZQMgo0P
+        247vclE8XhzmjbLU6nfNkqBpmcQqWB0yysF0bjPq9A==
+X-Google-Smtp-Source: APXvYqwcxj9ETT2fC97ngGmh7CcsBy2+YL6kB6AnKQJasNCbUVIV8fGBdWEIhNBMFR1OZOiEkz1I6DPnF3iTkLVIYjE=
+X-Received: by 2002:a24:7294:: with SMTP id x142mr4445023itc.7.1554917808975;
+ Wed, 10 Apr 2019 10:36:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com> <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
-In-Reply-To: <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 10 Apr 2019 10:35:44 -0700
-Message-ID: <CAKOZuetwNvm9XLk0d5DFdeObHS+2-7POhuVohS85bFV8Lr+05Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+ <CACdnJuumhkqTb4+1=QBiLmbW4xd3wW=MZu6Tj_KdaoTMhCN+Tg@mail.gmail.com>
+ <4ce5e057-0702-b0d5-7bb2-cea5b22e2efa@linux.ibm.com> <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
+ <2208f156-d441-3082-2f4c-8030c84ef788@linux.ibm.com> <CACdnJuu8OqMrSs0esOmf=ro9n00aYEQ-nikAh6v6sk+YAQw4cQ@mail.gmail.com>
+ <d79f47f8-9006-3a47-2bdc-58012cef5c7e@linux.ibm.com> <CACdnJuv_5A1_6CH1+Jn7SCrmW8Y6JuzsMmJoc1=_vn0nKdYMjQ@mail.gmail.com>
+ <28bfc0a7-9ae5-2c99-e472-ea53f856bafc@linux.ibm.com>
+In-Reply-To: <28bfc0a7-9ae5-2c99-e472-ea53f856bafc@linux.ibm.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 10 Apr 2019 10:36:36 -0700
+Message-ID: <CACdnJuvpUKiX5UgSOrzh+B9y68zKm+Bzu1c8KFJHd8diz=sm2Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+To:     Claudio Carvalho <cclaudio@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Peter Jones <pjones@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 9:35 AM Olof Johansson <olof@lixom.net> wrote:
-> There are lots of things where we provide suitable ways of doing
-> things to the user instead of making them come up with their own
-> handling of things. devtmpfs is a perfect example of this -- doing
-> things in userspace was perfectly possible but still a hassle in many
-> cases, and having the kernel do it for you when it already has the
-> data makes sense.
+(Cc:ing Peter Jones)
 
-devtmpfs is something that the kernel can do *better* than userspace.
-The userspace equivalent is error-prone. Unpacking an archive, on the
-other hand, is trivial. Does userspace really need the kernel's help
-to do tar xvf? Are we really so worried about userspace getting tar
-xvf wrong somehow that we should provide tar xvf in the kernel? The
-kernel should have a feature only if there's some particular reason to
-put that feature in the kernel instead of userspace. A smaller kernel
-is a better kernel, all things being equal.
+On Tue, Apr 9, 2019 at 3:55 PM Claudio Carvalho <cclaudio@linux.ibm.com> wr=
+ote:
+>
+>
+> On 4/5/19 7:19 PM, Matthew Garrett wrote:
+> > Based on our experience doing this in UEFI, that's insufficient - you
+> > want to be able to block individual binaries or leaf certificates
+> > without dropping trust in an intermediate certificate entirely.
+>
+>
+> We agree that a dbx would be useful for blacklisting particular kernels
+> signed with given certificate. However, we have been avoiding doing so fo=
+r
+> the initial release of secure boot on OpenPOWER. We don't have individual
+> firmware binaries in OpenPOWER. Kernels are currently the only concern fo=
+r
+> the OS secure boot certificates we're discussing here. Also, we have a ve=
+ry
+> limited keystore space in POWER9.
+>
+> Petitboot doesn't have standardized OS kernel verification at all right
+> now.  Having the capability even without dbx seems valuable.
 
-It's also worth noting that years and years ago, many proposals to do
-what udevd does (but in the kernel) failed to make it into the kernel.
+I don't see the benefit in attempting to maintain compatibility with
+existing tooling unless you're going to be *completely* compatible
+with existing tooling. That means supporting dbx and dbt.
 
-> I'd expect many users to still want to do this to tmpfs. Also, I
-> expect whatever userspace tools and programs that will consume this
-> data is likely to consume similar or more memory while running anyway.
-> So mounting + copying + unmounting on the heavily constrained systems
-> shouldn't be raising the high water mark on memory consumption.
+> >> The API is still a work in progress.  We are planning to publish a doc=
+ument
+> >> describing the current API and overall design shortly.
+> > Ok. How are the attributes interpreted by the API?
+>
+>
+> We support a subset of standard EFI variable attributes, and we only use
+> EFI variables that relate to secure boot. Our goal is not to implement
+> UEFI.  However, we do seek to be compatible with user space tooling and
+> reuse as much existing infrastructure as possible. We don=E2=80=99t suppo=
+rt the
+> following: EFI_VARIABLE_HARDWARE_ERROR_RECORD,
+> EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS and
+> EFI_VARIABLE_ENHANCED_AUTHENTICATED_ACCESS.
 
-Consider the embedded case: who's to say that the machine
-decompressing the header bundle is the machine that provides it? We
-can suck a compressed archive off the device without ever
-decompressing it. I know you that you proposed providing access to
-both a compressed cpio archive and a filesystem view of that archive,
-but in this scheme, the filesystem view is redundant. If someone wants
-a filesystem view of an archive, he can make one with FUSE without the
-kernel's help and in a general way.
+Ok. I think that's realistically fine.
 
-> > > If you absolutely need to export a file to userspace with the archive,
-> > > my suggestion is to do it through debugfs. That way the format isn't
-> > > in a /proc ABI that can't be changed in the future (debugfs isn't
-> > > required to be stable in the same way). This way we can change the
-> > > format carried in the kernel over time without changing the official
-> > > way we present the data to userspace (via a filesystem view).
-> > >
-> > > As far as format goes; there's clear precedent on cpio being used and
-> > > supported; we already have build time requirements on the userspace
-> > > tools with some options. Using tar would actually be a new dependency
-> > > even if it is a common tool to have installed. With a self-populating
-> > > FS, there's no new tool requirements on the runtime side either.
+>
 > >
-> > debugfs is going away for Android and is controversial in the fact
-> > that its functionality isn't guaranteed to be there (debugfs breakages
-> > aren't necessarily bugs AFAIK). So this isn't an option.
+> >> Perhaps the biggest departure is that the secure variables are stored =
+in
+> >> flash memory that is not lockable.  In order to protect the secure
+> >> variables, hashes of the flash regions where they're stored are writte=
+n to
+> >> TPM NVRAM indices.  The TPM NVRAM indices we use are write locked at
+> >> runtime.  The sysadmin enqueues update commands in flash.  During the =
+next
+> >> boot, the firmware verifies and processes the commands to update the
+> >> certificate store and accompanying integrity hashes in the TPM NVRAM
+> >> indices and write locks them.  Before certificates read from flash are
+> >> used, the certificate store is hashed and compared against the hashes
+> >> stored from the TPM.  The one exception is the PK. We store it in a TP=
+M
+> >> NVRAM index by itself rather than flash because updates to it must be
+> >> guaranteed to be atomic.
+> > What's the behaviour if multiple updates are enqueued? Does reading
+> > back show a mocked up updated variable or the original state?
 >
-> The argument that this needs to go into /proc because Android is
-> removing debugfs isn't a very strong one.
 >
-> And "debugfs breakages aren't bugs" is exactly why I'm suggesting to
-> do the non-supported export of the archive that way instead.
+> Our secure variable updates are only applied at boot time. If any one of
+> them fails, they all fail.
 
-Breaking this header bundle *should* be a bug though: tools will rely
-on it. It's not critical interface in the same way that, say, open(2)
-is, but the interface stability guarantee should nevertheless be
-stronger than what debugfs provides.
+So I do the following:
 
-> > > > We had close to 2-3 months of discussions now with various folks up until v5.
-> > > > I am about to post v6 which is in line with Masahiro Yamada's expecations. In
-> > > > that I will be dropping module building artifacts due to his module building
-> > > > concerns and only include the headers.
-> > >
-> > > I've found some of the old discussion and read up on it. I think it
-> > > was pretty quick at dismissing ideas for more robust implementations
-> > > ("it needs squashfs-tools"), and had some narrow viewpoints (exporting
-> > > a tarball is the least amount of kernel change, while adding
-> > > complexity at the system/usage side).
-> >
-> > Honestly, that's kind of unfair to be quoting just a few points like
-> > that. If I remember there were 100s of emails and many good view
-> > points were brought up by many people. We have done the diligence in
-> > the discussions of this over a period of time.
->
-> That wasn't captured with the patch submission, and having people go
-> find 100s of emails to figure out why your seemingly lacking solution
-> is the best one available is not how you motivate getting your code
-> into the kernel.
->
-> > > I'd also like to clarify: I'm not opposed to the general idea of
-> > > providing the needed headers with the kernel somehow. I just think
-> > > it's worth spending effort making sure an interface for it that we'll
-> > > need to live with forever is appropriately thought through and not
-> > > rushed in, especially since we're likely to get substantial
-> > > infrastructure on top of it quickly (eBPF and friends in particular).
-> >
-> > We have spent the time :) This seems like the best solution of all.
->
-> That should be documented.
->
-> > Greg KH and other maintainers are also supportive of it as can be seen
-> > in other threads.
->
-> I've found support for the desire to provide headers. If there's so
-> much support for this solution, the number of Acks to the patch should
-> have been higher.
->
-> > We can consider an alternate proposal if it is
-> > better, but I don't see any better one proposed at the moment.
->
-> Really?
+1) Boot
+2) Extend the contents of db
+3) Extend the contents of db again
+4) Read back the contents of db through efivarfs
+5) Reboot
+6) Read back the contents of db through efivarfs
 
-Joel's proposal is the simplest approach that solves the problem we're
-trying to solve. The model you're proposing adds a lot of complexity,
-and I'm not convinced that the complexity buys us anything.
+Is what I see in (4) and (6) the same? Does it contain the values form
+both extensions?
 
-> > - squashfs-tools requirement on the build really sucks
+> > I'm not really clear on the workflow here. Who's the administrator
+> > authority? When would they be updating the second level of keys? If
+> > there's no support for revocation, why would distributions need two
+> > levels of key in the system database rather than just distributing a
+> > single intermediate and signing their actual signing certs with that?
 >
-> Nah, this is a minor detail.
+>
+> In OpenPOWER systems, we enable our customers and business partners to
+> establish and manage the platform key certificate, which is the root of o=
+ur
+> key hierarchy. From there, through the KEK, they can delegate authority t=
+o
+> intermediate level organizations, e.g. distros or IT departments or
+> business operations. Those intermediate level organizations then manage t=
+he
+> code signing certificates in the DB. If this answer doesn=E2=80=99t addre=
+ss your
+> question, can you please rephrase?
 
-tar is ubiquitous. The squashfs tool isn't. Treating both dependencies
-the same way is a false equivalence.
-
-> > - cpio uncompressed to memory equally sucks because it consumes all
-> > the memory uncompressed instead of reclaimable pages
->
-> Only while mounted.
->
-> > - decompressing into tmpfs will suck for Android because we don't use
-> > disk-based swap and we run into the same cpio issue above. We use ZRAM
-> > for compressed swap.
->
-> See comments above about high water marks for memory consumption
-> likely not moving much.
->
-> > - debugfs is a non-option for Android
->
-> Not my problem.
-
-It's important to make interfaces that work for everyone. Robust eBPF
-use should be possible without debugfs.
+Why would the intermediate level organisations not just have entries
+in db? The main reason we don't do it this way in UEFI is because we
+need to support dbx, and if you're not supporting dbx I'm not sure I
+see the benefit.
