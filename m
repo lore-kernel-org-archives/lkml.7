@@ -2,124 +2,104 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59FCC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC00C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F372054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554897282;
-	bh=7CS7hxBo+3qBo8pjnPUYeymnFGd//psSAPhMZNrArOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFdRY/V1s2g0MFdpMmiCkb0tuUcWtCD1MIp6UpxGrw8Zii22FlflP/eiQrQyRKuck
-	 hYRGffEnJyqdNtiDRr1U3u+5z0jC50Fu9957SQQjxnXRVPksK53gv7ZLinfnFTmplb
-	 YovCdZnfsJfvVwVoq5DxlpN8kyVS1wc9GueM8SUo=
+	by mail.kernel.org (Postfix) with ESMTP id DF7B42084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmEwRpV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfDJLyl (ORCPT
+        id S1731596AbfDJLzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:54:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37768 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfDJLyl (ORCPT
+        Wed, 10 Apr 2019 07:55:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34057 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbfDJLzN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mKgJPzcG9B1p6WaSu4PfmZ6QERurEdmFkN9aB2wm1JY=; b=F72eV0/oUP9Wq8tMbJJa98rQA
-        pXmQq4XeQy7SQfH3kFSElAYET1ZG2J5gR2W6eyShP/xfSF2kgbhufKKho6mlAJCx531ZyXLpSJkGu
-        C+5gWz5ucZ5RAATSep7zE+tyXTBw3+MMs4Gcca2I+9ZkLSROxq9FkDXzCihUKhYU6uDp8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hEBoG-0008I2-F9; Wed, 10 Apr 2019 11:54:32 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 861871128ED3; Wed, 10 Apr 2019 12:54:31 +0100 (BST)
-Date:   Wed, 10 Apr 2019 12:54:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] spi: pxa2xx: add driver enabling message
-Message-ID: <20190410115431.GO6106@sirena.org.uk>
-References: <1554736964-6058-1-git-send-email-f.suligoi@asem.it>
- <20190410103250.GF6106@sirena.org.uk>
- <a7237e949bb643d5b49ccc5ae241bbb9@asem.it>
+        Wed, 10 Apr 2019 07:55:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j89so1843245ljb.1;
+        Wed, 10 Apr 2019 04:55:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Md20MqRw/qgfE7+0W6zS0ZMe2x1oQC5nYihLPJw4tj0=;
+        b=EmEwRpV96MDybt+mGUQAXNSNOUjVcxOmxPOrxWgbiN34rqnSn7pp82RKfiAUZnN+FT
+         v3goH3s0jSoIqQD2RGT7bnaGt6jMeTMbVGzOOqqqh7on1B2vUg2JqFLd6T18WZ1uzWFi
+         fKkUFoxsOGkdVgDJF2AzUPobIUc1UpRVgyFcBXfVYRVPmhD5uFYdxy/SKpOE20vOlKvK
+         CqQjj4xAuMjQjXd5tX2ihd3CXizLHUkIn/ULk3MIr/L5zyTZz9D9Q5UNFcIAYNNj4iMH
+         TokDxGy0R0ptS8nzBaJbXZ+8Hb6rbxb2vhjUkcdUNkA+/piRTKx7iVCfjQrRBXsOlfkX
+         BGpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Md20MqRw/qgfE7+0W6zS0ZMe2x1oQC5nYihLPJw4tj0=;
+        b=a+0D9PDGM7CYQn/fR8ZwT9VHLs2/aphkvC1BYEEsCjq2GECYWYjsz7Q86MVdGVsSQ4
+         sJM5u96i7eZfK4dc4PGVHhyu2t9P1o1GGLTJrgRdSBREMmitLYoft+rk+wMDUeeaA947
+         aD/pIrnZrScleKL+uv3Qe2ojyBSZP6l87jDkW3NvisIvSdNB2J5Yxko0/IYBdbDnmfDT
+         u7rtF7sECsFmgadK4yvEx9uLlde9yXbOzfzvXsIOUQAOjrQ2lcmeqE2yabo25grGBdZR
+         utcdp+99UUvk7HHmjOhsHy8QQd4aCb46BP+mBcQeDLSZUa+YksrtVwMSuZFzGzSUVcWI
+         Z9lg==
+X-Gm-Message-State: APjAAAUR+Pyl+C6yPMFP3SnUpwofRevYR5DWRsA5Qhv7Q+8FVMTWVpVp
+        wRLFfA+Mv//8Vbso9acNHOZvOvtQVCNaSfr6gdE=
+X-Google-Smtp-Source: APXvYqwUpvtWD0RHCAa36ubUPRuZmkqwVQjhXx1ru+Ld6YHzCTOJ5uSU8VpHtZDAL0KmY9/XYtKSX/RQqu+ZgrOvMww=
+X-Received: by 2002:a2e:7215:: with SMTP id n21mr24132359ljc.105.1554897311244;
+ Wed, 10 Apr 2019 04:55:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3snK74p7ddXn3Qrx"
-Content-Disposition: inline
-In-Reply-To: <a7237e949bb643d5b49ccc5ae241bbb9@asem.it>
-X-Cookie: teamwork, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190408175319.9106-1-robert.foss@collabora.com>
+ <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
+ <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com> <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
+ <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
+In-Reply-To: <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 10 Apr 2019 08:55:05 -0300
+Message-ID: <CAOMZO5Aj+NKOsa1zXfQqsSzqDJGOcza+1wGjdiEytvjAhsnOVQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
+To:     Robert Foss <robert.foss@collabora.com>
+Cc:     Gary Bisson <gary.bisson@boundarydevices.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Troy Kisky <troy.kisky@boundarydevices.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robert,
 
---3snK74p7ddXn3Qrx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 10, 2019 at 7:57 AM Robert Foss <robert.foss@collabora.com> wrote:
 
-On Wed, Apr 10, 2019 at 11:47:43AM +0000, Flavio Suligoi wrote:
+> # dmesg
+> imx-drm display-subsystem: failed to bind disp0 (ops imx_pd_ops): -517
+> imx-drm display-subsystem: master bind failed: -517
+>
+> This dmesg log is failing to bind disp0 at another point than what I
+> was seeing before, yet the result is the same. The connected HDMI
+> output is not brought online correctly.
 
-> You have right about to avoid too many boot messages,
-> but in this case, using an x86 machine and with
-> the spi-pxa2xx in DMA mode, so without the message:=20
+It seems that the ldb failure is due to the lvds backlight nodes not
+finding the PWM resource due to the PWM driver rename.
 
-> "no DMA channels available, using PIO",
+Please check if this patch fixes the problem on your case:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190410&id=728e096dd70889c2e80dd4153feee91afb1daf72
 
-> there is absolutely no indication about the existence
-> of the SPI master controller.
-
-It's totally fine to not have a boot print for the device, the best way
-to find devices if you need them is to look in sysfs anyway.
-
-> The second reason is about the DMA/PIO mode indication.=20
-> With the board I'm using, sometimes the spi-pxa2xx driver can't allocate
-> a DMA channel and works in PIO mode.
-
-> So, with the advice of Jarkko, I think that a valid solution could be:
-
-> 1) remove the "no DMA channels available, using PIO" message
-> 2) add a new message with the indications of:
-> 	- controller mode (slave or master)
-> 	- transfer mode (DMA or PIO)
-
-> What do you think about this?
-
-If the system is randomly failing to assign a DMA channel when it should
-then shouldn't we just fix that?  A print which is presumably intended
-to prompt the user to reboot to try to get things working doesn't seem
-like a good solution.
-
---3snK74p7ddXn3Qrx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyt2XYACgkQJNaLcl1U
-h9D4swf9FQN1Ra4YLunh8c9Ja8dvSdcqUjDUKfRd3Ja7N+6V7epHSWIHnYAOirf6
-UCPHczZoUJc8o5kNvW2191qGCCT6lmD4imvWsWVaO/LbpwJAgW7XEezV7nFQVSKV
-IEshtWiWDpUS1AMxBQAdmMFv4iKaeNddlJqn2bIhb0K2AXOsw8xy1DOyma/zP6XT
-T4hP/VO3Y5Jwn2hmGTz8hJaixRawaJ4R1ny2WC6xP+Mq20E7adpSe/R/ubRNP7A9
-TKajLyvFz1E8QTAud0BtBQusL+0E9rVqbE/l3YV2S0s6Ilo+hWxglmU4jjmdUVxh
-w+HyRCfALV2XF9KG06PyfzEONSoleg==
-=32Ct
------END PGP SIGNATURE-----
-
---3snK74p7ddXn3Qrx--
+imx-drm should also be fixed independently of this PWM rename change
+in my opinion.
