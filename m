@@ -2,170 +2,159 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BDDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8029C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A602064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D022064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554907953;
+	bh=g4osCrKq+22QLWsN69Fmuyv4USBLacWJISbR5jlUrTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Izr5jcXWDfLnpLdDp3vg5eeaiRyGvk+oPn3vf3pJe5eFtg4toT9ZvS/bcZNvfKKQ4
+	 pGXD4pR+V/KXUGBnscxdv6FYm9M8aC5X7O/l3bVSHqi+15xNGqUflgl+jpeLS09KGh
+	 lCam7KHUn9GgmJqVirBStvohrSLvz31MQKdUGS5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732826AbfDJOum (ORCPT
+        id S1732868AbfDJOwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:50:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50802 "EHLO gloria.sntech.de"
+        Wed, 10 Apr 2019 10:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728729AbfDJOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:50:42 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEEYZ-0002vv-PW; Wed, 10 Apr 2019 16:50:31 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
-Date:   Wed, 10 Apr 2019 16:50:30 +0200
-Message-ID: <7915415.Bhcl4jWJiJ@diego>
-In-Reply-To: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
-References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
+        id S1728729AbfDJOwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:52:31 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FB920820
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554907950;
+        bh=g4osCrKq+22QLWsN69Fmuyv4USBLacWJISbR5jlUrTA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Xgs/HTVYhoG6KrnGuRbI4c038u5UFoZ3iCC4T2xl7CW6LuqU7w+9SL3tTAXTUF3OP
+         r5InUbk0o7NUAh32vvX6d6HI6GtFyw3JUHw5RhJyW9KY4Vjqy/4XD0u0VPRIPmyq4u
+         JcAAIWofdYh3DJ/wmNDoJZmXck9D2KuxpXWe/1YY=
+Received: by mail-wm1-f53.google.com with SMTP id n25so2936213wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:52:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAX78c7gRQAUPY4qxvaMTnAfQoBBcpmtIrFJA6pP0d+4yeJJVJU4
+        5Q8VAzDR9Nr98wzyLt2wL3kNLubN2vdxRnjlCIDR5A==
+X-Google-Smtp-Source: APXvYqzvKQXbAeJwI/iVK740P1/LzXvKi03d8G3tFL6vNphZNoVaSBWVNZmjIrQzNxXowBE5dXqNN7m1570U5PZ3q1g=
+X-Received: by 2002:a1c:6c04:: with SMTP id h4mr3171069wmc.135.1554907948798;
+ Wed, 10 Apr 2019 07:52:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190408061358.21288-1-elena.reshetova@intel.com>
+ <20190408124940.hb4d2mvwue7aydjj@treble> <20190410082642.GA35032@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C48943@IRSMSX102.ger.corp.intel.com> <2236FBA76BA1254E88B949DDB74E612BA4C48B15@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C48B15@IRSMSX102.ger.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 10 Apr 2019 07:52:17 -0700
+X-Gmail-Original-Message-ID: <CALCETrWA8r6_zbfrYV-E-iykoEj-Fw=HeRQ5mAM4iSPrfU8jKw@mail.gmail.com>
+Message-ID: <CALCETrWA8r6_zbfrYV-E-iykoEj-Fw=HeRQ5mAM4iSPrfU8jKw@mail.gmail.com>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Wed, Apr 10, 2019 at 3:24 AM Reshetova, Elena
+<elena.reshetova@intel.com> wrote:
+>
+>
+> > > > On Mon, Apr 08, 2019 at 09:13:58AM +0300, Elena Reshetova wrote:
+> > > > > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> > > > > index 7bc105f47d21..38ddc213a5e9 100644
+> > > > > --- a/arch/x86/entry/common.c
+> > > > > +++ b/arch/x86/entry/common.c
+> > > > > @@ -35,6 +35,12 @@
+> > > > >  #define CREATE_TRACE_POINTS
+> > > > >  #include <trace/events/syscalls.h>
+> > > > >
+> > > > > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> > > > > +#include <linux/random.h>
+> > > > > +
+> > > > > +void *alloca(size_t size);
+> > > > > +#endif
+> > > > > +
+> > > > >  #ifdef CONFIG_CONTEXT_TRACKING
+> > > > >  /* Called on entry from user mode with IRQs off. */
+> > > > >  __visible inline void enter_from_user_mode(void)
+> > > > > @@ -273,6 +279,13 @@ __visible void do_syscall_64(unsigned long nr, struct
+> > > pt_regs *regs)
+> > > > >  {
+> > > > >         struct thread_info *ti;
+> > > > >
+> > > > > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> > > > > +       size_t offset = ((size_t)prandom_u32()) % 256;
+> > > > > +       char *ptr = alloca(offset);
+> > > > > +
+> > > > > +       asm volatile("":"=m"(*ptr));
+> > > > > +#endif
+> > > > > +
+> > > > >         enter_from_user_mode();
+> > > > >         local_irq_enable();
+> > > > >         ti = current_thread_info();
+> > > >
+> > > > Would it make sense to also do this for the compat syscalls
+> > > > (do_fast_syscall_32, do_int80_syscall_32)?
+> > >
+> > > Could someone please include the full patch, with justification and
+> > > performance impact analysis etc.? Can only find the code part of the
+> > > thread on lkml, which leaves out this context.
+> > >
+> >
+> > Sorry, this is very weird, I cannot find it either from lkml, but it was sent there
+> > to begin with (and as visible from reply-to headers).
+> >
+> > Do you want me to resent original version or with "do_fast_syscall_32,
+> > do_int80_syscall_32" additions (I am finishing testing them now).
+>
+> I will resend the original x86_64 now since this is the one I tested and
+> measured properly. The 32 bit changes seem to work fine inside my 32 bit VM,
+> but since I don't have any real 32 bit HW, I am hesitant to send them out without
+> real HW testing and measuring.
+>
+> This is the asm code for 32 bits (note it requires __builtin_alloca definition and not just alloca,
+> so I will change the 64 bit version to use it also):
+>
+> #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+>     size_t offset = ((size_t)prandom_u32()) % 256;
+> 0xc10025b6 call   0xc146f7d0 <prandom_u32>
+> 0xc10025bb movzbl %al,%eax
+>     char *ptr = __builtin_alloca(offset);
+> 0xc10025be add    $0x12,%eax
+> 0xc10025c1 and    $0x1fc,%eax
+> 0xc10025c6 sub    %eax,%esp
+> 0xc10025c8 lea    0x27(%esp),%eax
+> 0xc10025cc and    $0xfffffff0,%eax
+>
+> Also, the result is 47 different random offsets produced,
+> which is slightly better than 33 offsets for x86_64.
+>
 
-Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
-> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
-> monitor via DP cable. The actual monitor is therefore not known in advance.
-> This means, we don't have any panel information besides the EDID
-> data from the device itself.
+I would suggest that you macro-ify this thing:
 
-Just so I understand correctly, you have a real dp-connector wired to
-the Analogix dp-controller, and therefore want to connect actual
-monitors to it.
+#ifdef WHATEVER
+#define add_random_stack_offset() do { void *addr = ... } while (0)
+#else
+#define add_random_stack_offset() do {} while (0)
+#endif
 
-So the problem you're trying to work around is probably that the
-rockchip-driver of the analogix controller explictly expects a bridge
-to be present during probe, right?
-
-I think hacking up the panel-driver is not an ideal approach:
-(1) bridges/panels do expect to stay connected all the time
-    and are meant for devices with actual hard-wired displays with specific
-    power-sequence requirements
-(2) devicetree is expected to describe the real hardware, therefore the
-    dt should not describe one thing while the actual hardware is really
-    different
-
-So, I guess a more ideal approach could perhaps be to:
-(1) define a "dp-connector" devicetree binding, see
-    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-    for a similar one
-(2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
-    for that new compatible:
-	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-		//move bridge handling here
-	}
-
-    and modify both the rockchip-part and the generic analogix bridge code
-    to work with the connector declared instead of a panel?
-
-
-Heiko
-
-> The functionality for a 'simple-panel' has been remove a couple
-> of years ago with 81cf32b. This patch brings this feature back.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 9e8218f6a3f2..1f69283f3e4b 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
->  		backlight_update_status(p->backlight);
->  	}
->  
-> -	if (p->desc->delay.disable)
-> +	if (p->desc && p->desc->delay.disable)
->  		msleep(p->desc->delay.disable);
->  
->  	p->enabled = false;
-> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
->  
->  	regulator_disable(p->supply);
->  
-> -	if (p->desc->delay.unprepare)
-> +	if (p->desc && p->desc->delay.unprepare)
->  		msleep(p->desc->delay.unprepare);
->  
->  	p->prepared = false;
-> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
->  
->  	gpiod_set_value_cansleep(p->enable_gpio, 1);
->  
-> -	delay = p->desc->delay.prepare;
-> -	if (p->no_hpd)
-> -		delay += p->desc->delay.hpd_absent_delay;
-> -	if (delay)
-> -		msleep(delay);
-> +	if (p->desc) {
-> +		delay = p->desc->delay.prepare;
-> +		if (p->no_hpd)
-> +			delay += p->desc->delay.hpd_absent_delay;
-> +		if (delay)
-> +			msleep(delay);
-> +	}
->  
->  	p->prepared = true;
->  
-> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
->  	if (p->enabled)
->  		return 0;
->  
-> -	if (p->desc->delay.enable)
-> +	if (p->desc && p->desc->delay.enable)
->  		msleep(p->desc->delay.enable);
->  
->  	if (p->backlight) {
-> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
->  	struct panel_simple *p = to_panel_simple(panel);
->  	unsigned int i;
->  
-> +	if (!p->desc)
-> +		return 0;
-> +
->  	if (p->desc->num_timings < num_timings)
->  		num_timings = p->desc->num_timings;
->  
-> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
->  
->  static const struct of_device_id platform_of_match[] = {
->  	{
-> +		.compatible = "simple-panel",
-> +		.data = NULL,
-> +	}, {
->  		.compatible = "ampire,am-480272h3tmqw-t01h",
->  		.data = &ampire_am_480272h3tmqw_t01h,
->  	}, {
-> 
-
-
-
-
+since you'll end up with more than one call site.
