@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEA9C10F0E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4060CC282DA
 	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8746217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B30121841
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjhcLBKZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgULYnct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfDJA5e (ORCPT
+        id S1726911AbfDJA5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 20:57:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53474 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbfDJA51 (ORCPT
+        Tue, 9 Apr 2019 20:57:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43664 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfDJA53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 20:57:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q16so654802wmj.3;
-        Tue, 09 Apr 2019 17:57:26 -0700 (PDT)
+        Tue, 9 Apr 2019 20:57:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k17so771196wrx.10;
+        Tue, 09 Apr 2019 17:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2m0Vwcs+ZIuLsQ4pkrDqVEww3osjoTm+Yu8uuKiIOeo=;
-        b=MjhcLBKZ+/3TqQffZn3YjqnzrdPsmFAsXE4NLmwY3zNyJ0L4feDS9ePA+1R5pqY1Mq
-         LHm2yUtiDiv6TE6BtRaBKkk3V3aaNmKssXgyF4QnndYLakTj3co6mDJMxH7pKnUdhxVD
-         80aHxibZhd6W8YgrzdC1QNAkZpxcfRxDDqjryyHVXexOX5cEeqq+CTDfGq2ub4b3uo4P
-         EllhSf138VjpACGJwss9vKLQkTOxXP0J3EmlK6aFpkElgeIyl7V6Gc7jZZxAx0iWX/iB
-         uLqNj7u4in93mrxsL9wnbydRXDA0ic141ncmZGfAMo7Calj4s47kTcl7Kj7dSQzjEeP+
-         8djw==
+        bh=TSWC3NMcV3lLJbMzBocfQStrcRFVFF4vnY6b77qP7No=;
+        b=HgULYnctW1jqXY1WgR9zkVr3uIGXXNyk3oN4xBzVKMNdvCeugGNV74QxI95vgDv7ax
+         mBXfD4Uud9aje5FlIuMaKcJkKUE3aOu3mtAIQR9/TNPL3L0sLP/CSbqeY8Nw+mkDFhIm
+         OyJ8LQasIjgl60Iy2HQ8gzAAatUzPjMFuLL9Weo6V5YSLAnwKDEVR15aBl+qXjOecJwb
+         sxlu+Kw2lTvterndnLzYD3Imw03YmVNiTzWP6KoMjHqCdAMPYcKxL49IblsQGLK11xXk
+         f6mFPYQTDeHDXQk6yYjq/mj0QZcbTISPLfwlVtiwJijyNBojcTA5VGnFFsgAnihMkM65
+         GCog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2m0Vwcs+ZIuLsQ4pkrDqVEww3osjoTm+Yu8uuKiIOeo=;
-        b=t60RQBhu9sEla4vTo4ew3Jl0acQo6zBwHT2mDtZm5+hax4YxEUq0Ck0wrgMICE8+t6
-         pkpSUnfCAn03/OaFOKYi/oLNLhEA4EtrEY3ADE5urh6gQz2IKOicNWNcOfWU9zEci/Z5
-         LJ0ebiWKFbZuJXt6vk11oXnsaL9eHGNXxgVhak1HMyiYcUTnpw7mHAsOFkdI6VFD3Lj2
-         BNgklZUnVx2buupuPfkZQbFr61QhyQAY/0nsg1zPxCGecllmO6bPHqFb53CT10uJoPoX
-         95yO2BIJGSfmeJCjPMNMQJIQiqn2N/DoKyfP1r8wG+Yau/bws9OhPlIjG6K2nbMyxxof
-         /tZg==
-X-Gm-Message-State: APjAAAUiCf4LrG+j0e99TnSYlI+7X7699HJOw/NHQI9TunxGm8YJi+1Y
-        8HShipbNn2JouuDUeabsqL8=
-X-Google-Smtp-Source: APXvYqzAIw1ZphsPWLGJVHg7bcD1ZMcGWt/MokLpR4l6jx7OvqkvL05SGIr4+INFtJqX4dvyCZQ4CA==
-X-Received: by 2002:a1c:6342:: with SMTP id x63mr738217wmb.58.1554857845594;
-        Tue, 09 Apr 2019 17:57:25 -0700 (PDT)
+        bh=TSWC3NMcV3lLJbMzBocfQStrcRFVFF4vnY6b77qP7No=;
+        b=BwymzRe35W20Irk3YY4eJftjWrGGx8x/EBRxNA/19r/itR85K875UOX4nCueN3Ug6c
+         73PZekY8ZrIpqrZLgu1Q+cqH3x/c5CvvJCfa6WapBDWmR9QzmZFrcYLyVuD19giGRhhH
+         Ed6agquZF+zrN1zlRcAnGrfiWKRgHjWnh57Fjta4vj+NJlbKIDmUoEHq014AcsXi0Nr6
+         b2cb3sJjahnadGZa+s8bPndjaXET3toR186f/xShB/qBq/6Gl4LZo4cKetD8YI+CPCXD
+         bkZ8Bdd4ACH56/C8MSp2frMZF94cnReEdMvW0pTC4K27yuxLzGQEM7FDQM9KkW5wO6Qe
+         ck5A==
+X-Gm-Message-State: APjAAAXYmz4YyRvnjpS3kP+oNwtAjGJqEggSvfeHXhcYbkePu0y2C87d
+        rMnnikE1QM/sk0RlPFxr5Us=
+X-Google-Smtp-Source: APXvYqw2jDpvD+ZcDSghViLGL47sQgtYcVIcUp0/xNJimmkic/iV4fPIhPmQqhpSL6RlqumVuU7XoA==
+X-Received: by 2002:adf:e602:: with SMTP id p2mr5514394wrm.105.1554857847914;
+        Tue, 09 Apr 2019 17:57:27 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.24
+        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 17:57:24 -0700 (PDT)
+        Tue, 09 Apr 2019 17:57:27 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         georg.waibel@sensor-technik.de, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 net-next 05/22] net: dsa: Add more convenient functions for installing port VLANs
-Date:   Wed, 10 Apr 2019 03:56:43 +0300
-Message-Id: <20190410005700.31582-6-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 07/22] ether: Add dedicated Ethertype for pseudo-802.1Q DSA tagging
+Date:   Wed, 10 Apr 2019 03:56:45 +0300
+Message-Id: <20190410005700.31582-8-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190410005700.31582-1-olteanv@gmail.com>
 References: <20190410005700.31582-1-olteanv@gmail.com>
@@ -72,126 +71,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This hides the need to perform a two-phase transaction and construct a
-switchdev_obj_port_vlan struct.
+With the newly added DSA_TAG_PROTO_8021Q, switch devices that don't
+support a native insertion/extraction header on the CPU port may still
+enjoy the benefits of port isolation with a custom VLAN tag.
 
-Call graph (including a function that will be introduced in a follow-up
-patch) looks like this now (same for the *_vlan_del function):
-
-dsa_slave_vlan_rx_add_vid   dsa_port_setup_8021q_tagging
-            |                        |
-            |                        |
-            |          +-------------+
-            |          |
-            v          v
-           dsa_port_vid_add      dsa_slave_port_obj_add
-                  |                         |
-                  +-------+         +-------+
-                          |         |
-                          v         v
-                       dsa_port_vlan_add
+For this, they need to have a customizable TPID in hardware and a new
+Ethertype to distinguish between real 802.1Q traffic and the private
+tags used for port separation.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
 Changes in v2:
-Renamed __dsa_port_vlan_add to dsa_port_vid_add and not to
-dsa_port_vlan_add_trans, as suggested, because the corresponding _del function
-does not have a transactional phase and the naming is more uniform this way.
+New patch.
 
- net/dsa/dsa_priv.h |  2 ++
- net/dsa/port.c     | 31 +++++++++++++++++++++++++++++++
- net/dsa/slave.c    | 16 ++--------------
- 3 files changed, 35 insertions(+), 14 deletions(-)
+ include/uapi/linux/if_ether.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index 093b7d145eb1..4246523e3133 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -169,6 +169,8 @@ int dsa_port_vlan_add(struct dsa_port *dp,
- 		      struct switchdev_trans *trans);
- int dsa_port_vlan_del(struct dsa_port *dp,
- 		      const struct switchdev_obj_port_vlan *vlan);
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags);
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid);
- int dsa_port_link_register_of(struct dsa_port *dp);
- void dsa_port_link_unregister_of(struct dsa_port *dp);
+diff --git a/include/uapi/linux/if_ether.h b/include/uapi/linux/if_ether.h
+index 3a45b4ad71a3..3158ba672b72 100644
+--- a/include/uapi/linux/if_ether.h
++++ b/include/uapi/linux/if_ether.h
+@@ -109,6 +109,7 @@
+ #define ETH_P_QINQ2	0x9200		/* deprecated QinQ VLAN [ NOT AN OFFICIALLY REGISTERED ID ] */
+ #define ETH_P_QINQ3	0x9300		/* deprecated QinQ VLAN [ NOT AN OFFICIALLY REGISTERED ID ] */
+ #define ETH_P_EDSA	0xDADA		/* Ethertype DSA [ NOT AN OFFICIALLY REGISTERED ID ] */
++#define ETH_P_DSA_8021Q	0xDADB		/* Fake VLAN Header for DSA [ NOT AN OFFICIALLY REGISTERED ID ] */
+ #define ETH_P_IFE	0xED3E		/* ForCES inter-FE LFB type */
+ #define ETH_P_AF_IUCV   0xFBFB		/* IBM af_iucv [ NOT AN OFFICIALLY REGISTERED ID ] */
  
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index a86fe3be1261..19f3b91c648d 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -326,6 +326,37 @@ int dsa_port_vlan_del(struct dsa_port *dp,
- 	return 0;
- }
- 
-+int dsa_port_vid_add(struct dsa_port *dp, u16 vid, u16 flags)
-+{
-+	struct switchdev_obj_port_vlan vlan = {
-+		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
-+		.flags = flags,
-+		.vid_begin = vid,
-+		.vid_end = vid,
-+	};
-+	struct switchdev_trans trans;
-+	int err;
-+
-+	trans.ph_prepare = true;
-+	err = dsa_port_vlan_add(dp, &vlan, &trans);
-+	if (err == -EOPNOTSUPP)
-+		return 0;
-+
-+	trans.ph_prepare = false;
-+	return dsa_port_vlan_add(dp, &vlan, &trans);
-+}
-+
-+int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
-+{
-+	struct switchdev_obj_port_vlan vlan = {
-+		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
-+		.vid_begin = vid,
-+		.vid_end = vid,
-+	};
-+
-+	return dsa_port_vlan_del(dp, &vlan);
-+}
-+
- static struct phy_device *dsa_port_get_phy_device(struct dsa_port *dp)
- {
- 	struct device_node *phy_dn;
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 80be8e86c82d..d0905fd720b2 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -994,13 +994,6 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 				     u16 vid)
- {
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
--	struct switchdev_obj_port_vlan vlan = {
--		.vid_begin = vid,
--		.vid_end = vid,
--		/* This API only allows programming tagged, non-PVID VIDs */
--		.flags = 0,
--	};
--	struct switchdev_trans trans;
- 	struct bridge_vlan_info info;
- 	int ret;
- 
-@@ -1017,13 +1010,8 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 			return -EBUSY;
- 	}
- 
--	trans.ph_prepare = true;
--	ret = dsa_port_vlan_add(dp, &vlan, &trans);
--	if (ret == -EOPNOTSUPP)
--		return 0;
--
--	trans.ph_prepare = false;
--	return dsa_port_vlan_add(dp, &vlan, &trans);
-+	/* This API only allows programming tagged, non-PVID VIDs */
-+	return dsa_port_vid_add(dp, vid, 0);
- }
- 
- static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
 -- 
 2.17.1
 
