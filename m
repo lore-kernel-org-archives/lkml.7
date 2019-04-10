@@ -2,123 +2,101 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30D9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1FDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCA920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC149217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554937743;
-	bh=5kMn9Q2IlsLj3RyfZToYiqc1eTQJxy4xWKrdbuQ5UtU=;
+	s=default; t=1554937922;
+	bh=q6C6asliB+R3GiA6MRBIkiZPDalhAROlS4ZO33DglG0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F3ck+jPtvtc33QR0F5edPthj64U229Q9IpEljw/uCEwudWbDYMbtm+lSMwsR/4BHF
-	 ZnK3EVe1vwizCjPG2ypCoNKzKnP3MfB0A4piALKSRwqKEQ+J8mROdy4V8qikR47ECt
-	 RlcOL6QtjdDeT0CH73pvJJXFO60DkHwYLlEGdJcA=
+	b=IcBYW8MzZJNY6os+m5lo1fnW3u8Q0MHlqSM93T63DODT0LJIrBBnXFUprh4J5nc1z
+	 KPseXXBCQVzfiJ8L9fsfsHHYWTqvfDdIsD2DATKNZJGzy92BygMeWPGxykpWizl0Rg
+	 rNF8jNbV+wOluj388MA82f4xdk6ECnTEFvLNgWeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfDJXJB (ORCPT
+        id S1726686AbfDJXMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 19:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49446 "EHLO mail.kernel.org"
+        Wed, 10 Apr 2019 19:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfDJXI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 19:08:58 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1726026AbfDJXMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 19:12:00 -0400
+Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDB8420850;
-        Wed, 10 Apr 2019 23:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE1D20850;
+        Wed, 10 Apr 2019 23:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554937737;
-        bh=5kMn9Q2IlsLj3RyfZToYiqc1eTQJxy4xWKrdbuQ5UtU=;
+        s=default; t=1554937919;
+        bh=q6C6asliB+R3GiA6MRBIkiZPDalhAROlS4ZO33DglG0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hXArNhAhOvz5G15mQjTs6R1Qcgt7VxDj12gyNaDnxrpgTOpqLeiUs19f+jrTzek2N
-         rVwcZJkApWf+czA7BeKWoF0iqIDwrKos1bMbZybd1RCZCMiA2NzQJnI4cGUEIJtUhI
-         YEwKWJR0rNSdFHPQ+4g6oebfHDJgZg5iBVAvCPlA=
-Date:   Wed, 10 Apr 2019 18:08:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v2 2/2] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20190410230855.GN256045@google.com>
-References: <cover.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <4818f4dfa41bddc3968da4717c453897d4ad5717.1553027719.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190410184124.GF256045@google.com>
- <dc4e2bcf-44c9-1ffb-ab4f-75c04340b8dd@linux.intel.com>
+        b=f81Qq4iocQpcOMtiR/t0Rc4UGVCF32ESP7I2KWwf81yZwHCWE9mGd9sRVmo1c0Xlv
+         /y9pJUesNDA1OihDE32NMDVFKUK+ByAhVfv/WJT/nXo25R1ENmGuBxDC5/h8G4E99R
+         e406h9JxbuxcxrU7vgv31/fKl9m+ewipryJAmJtQ=
+Date:   Wed, 10 Apr 2019 16:11:58 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+Message-ID: <20190410231156.GB120258@gmail.com>
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com>
+ <20190320185719.GB180195@gmail.com>
+ <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+ <20190321175122.GA1587@sol.localdomain>
+ <20190410031734.GB7140@sol.localdomain>
+ <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
+ <20190410190729.GA120258@gmail.com>
+ <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dc4e2bcf-44c9-1ffb-ab4f-75c04340b8dd@linux.intel.com>
+In-Reply-To: <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 03:12:05PM -0700, sathyanarayanan kuppuswamy wrote:
-> On 4/10/19 11:41 AM, Bjorn Helgaas wrote:
-> > On Tue, Mar 19, 2019 at 01:47:29PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > 
-> > > As per PCI firmware specification v3.2 ECN
-> > > (https://members.pcisig.com/wg/PCI-SIG/document/12614), when firmware
-> > > owns Downstream Port Containment (DPC), its expected to use the "Error
-> > > Disconnect Recover" (EDR) notification to alert OSPM of a DPC event and
-> > > if OS supports EDR, its expected to handle the software state invalidation
-> > > and port recovery in OS and let firmware know the recovery status via _OST
-> > > ACPI call.
-> > > 
-> > > Since EDR is a hybrid service, DPC service shall be enabled in OS even
-> > > if AER is not natively enabled in OS.
+On Wed, Apr 10, 2019 at 02:57:46PM -0700, Kees Cook wrote:
+> On Wed, Apr 10, 2019 at 12:07 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> > That didn't answer my question.  My question is what is the purpose of this?  If
+> > there was actual buffer overflow when __GFP_COMP isn't specified that would make
+> > perfect sense, but AFAICS there isn't.  So why does hardened usercopy consider
+> > it broken when __GFP_COMP isn't specified?
+> 
+> The goal of CONFIG_HARDENED_USERCOPY_PAGESPAN was to detect copies
+> across page boundaries in memory allocated by the page allocator.
+> There appear to be enough cases of allocations that span pages but do
+> not mark them with __GFP_COMP, so this logic hasn't proven useful in
+> the real world (which is why no one should use the ..._PAGESPAN config
+> in production). I'd like to get the kernel to the point where hardened
+> usercopy can correctly do these checks (right now it's mainly only
+> useful at checking for overflows in slub and slab), but it'll take
+> time/focus for a while. No one has had time yet to track all of these
+> down and fix them. (I defer to Laura and Rik on the design of the
+> pagespan checks; they did the bulk of the work there.)
+> 
+> Does that help explain it, or am I still missing your question?
+> 
+> -- 
+> Kees Cook
 
-> > > +	bool			native_dpc;
-> > This is going to be way too confusing with a "native_dpc" in both the
-> > struct pci_host_bridge and the struct dpc_dev.
-> Any suggestions? what about native_mode ?
+You've explained *what* it does again, but not *why*.  *Why* do you want
+hardened usercopy to detect copies across page boundaries, when there is no
+actual buffer overflow?
 
-"native_mode" is different but doesn't contain any additional
-information.  I haven't worked out what this new symbol actually does;
-if it's related to EDR, maybe that could be incorporated somehow?
-
-> > > +		/* Register ACPI notifier for EDR event */
-> > "Register handler for System events, one of which is the EDR event"?
-> In our case, we only handle EDR event. So I just explicitly mentioned it.
-
-Right.  As a courtesy to the reader, I think it's worth making
-the comment match the code, i.e., you can't pass an event type to
-acpi_install_notify_handler(), so obviously the handler will be called
-for *all* System events.  By saying "one of which is the EDR event",
-you give the reader a hint that the handler will have to filter out
-the others.
-
-The reason I noticed this is because I read "Register notifier for EDR
-event" and wondered to myself "Hmmm, how does this work?  I don't see
-anything passed to acpi_install_notify_handler() that would identify
-an EDR event."
-
-> > > +	/*
-> > > +	 * If EDR support is enabled in OS, then even if AER is not handled in
-> > > +	 * OS, DPC service can be enabled.
-> > > +	 */
-> > >   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> > > -	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-> > > -	    (pcie_ports_native || host->native_dpc))
-> > > +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-> > > +	    (pci_aer_available() && services & PCIE_PORT_SERVICE_AER &&
-> > > +	    (pcie_ports_native || host->native_dpc))))
-> > Holy cow, I think I'll have to schedule an hour sometime to figure
-> > out what's going on here :)
-> Please check the previous patch in this series for details related to
-> host->native_dpc.
-
-Yeah, I'm just saying that conditional is starting to look pretty
-gnarly.  Possibly there's nothing to do about it.
-
-Bjorn
+- Eric
