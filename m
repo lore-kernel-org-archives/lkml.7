@@ -2,832 +2,128 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7B7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72619C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C772070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381742070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JduOUSEE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3YNKzuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbfDJSqm (ORCPT
+        id S1731913AbfDJSrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:46:42 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44307 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbfDJSql (ORCPT
+        Wed, 10 Apr 2019 14:47:48 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:56072 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfDJSrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:46:41 -0400
-Received: by mail-ua1-f66.google.com with SMTP id p13so1132010uaa.11
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:46:40 -0700 (PDT)
+        Wed, 10 Apr 2019 14:47:47 -0400
+Received: by mail-it1-f196.google.com with SMTP id y134so5208977itc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vBN0FfJJB39Zndtw1sjtwhIDraDs0ImOp1jUv8xq7jw=;
-        b=JduOUSEEUNCWSU9sk06UGPhCm2YsXnybFKcj/bDeqMRoy5KwIbhPDBCNS8f7Fs5P3C
-         O2PHwproN/lScGB1eHt5HwQVk+VtDhpHE00OTXSaQB7sWqBdasteBoaU8XO0uUP38ejg
-         M62iVeivt0DiRyGuJzn1fv0u2dhwTuh7umaWg=
+        bh=KmeZIPQTPn+lqE41RAFN7IhbVAjjmUvq4wno4Mr9aKA=;
+        b=n3YNKzuFsTz609VMBePA34i1+BTNDGUEAkNxtqrpGhuab4GGQOd7AUklkRnRTQqd3m
+         cbJPCRlzzzXkB8jMp93rLjc4itoj7012uYKHuEPV+oS/C8cz1Oe29vsl/OsAyisvfI61
+         4P1gAMfXU+ElgYgV/CdiOsTuXdrT4Dv7sZJ0suH4Pt1VAdTCgCXLVsH6ok+Pcdywc9lP
+         HA4J5ViqOW3vUzl1ndPbSV3AEC0P+pWwBnRoeCS4o2RrQotk1q49tFn0Wuc4bYx8HiEM
+         cusmy4UAhoDbzU5DEZ8tVvozjQZR7J1Wbr68IgczRwUwtK6X1gklukNBzk1SaAeYqUXt
+         EQDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vBN0FfJJB39Zndtw1sjtwhIDraDs0ImOp1jUv8xq7jw=;
-        b=tGYFaV4SavXW/JwVjxlN/xmtei0gj4AQkfXijAc7/DpBM5Si1wI4+cW+cJc13DWWFp
-         gpL9rl4SEsq6D6fNpaYdtCrYyXqaLkuFXSMPtaneDDnXweBKQa6vILivLkLYVNfLXmKf
-         zQQsIGF8fvhq5mimofFIq1GPrcTVgWeNTONKD9tM2bK4S/I7lWJSCDUV3ASRdb9hyg1E
-         pDFQb2IjZ2Ap8u/Q0bY2NcW4KCREr8paWnmWWGmJXlOU7yM/K6zhzsRLDnbsQxarDlye
-         UzAHnjzED/WGe/LiOLpfq2zY7aKr6dU1FHbB1UsU5llfLEPsrWG3sEnjtBDkxLc056vr
-         7+AQ==
-X-Gm-Message-State: APjAAAWb6JgZDN9SDZStLZS1ZyX7KRal/2o5wqoogg+HwRcPog5rG6t5
-        k3adv5bvoBkpnJI5UvqkwzO0DxpIdCQ=
-X-Google-Smtp-Source: APXvYqzeI5rdt1+qT/m2IercScFO4QG+2zfag/CzhlMMgYwpH+mKOaTJ4Fetb2X+F8ULs0bC6HZuSQ==
-X-Received: by 2002:ab0:61d3:: with SMTP id m19mr6755445uan.72.1554921999393;
-        Wed, 10 Apr 2019 11:46:39 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id u10sm17089972vku.34.2019.04.10.11.46.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 11:46:38 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id l17so1148286uar.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:46:38 -0700 (PDT)
-X-Received: by 2002:ab0:60cd:: with SMTP id g13mr23288297uam.85.1554921997763;
- Wed, 10 Apr 2019 11:46:37 -0700 (PDT)
+        bh=KmeZIPQTPn+lqE41RAFN7IhbVAjjmUvq4wno4Mr9aKA=;
+        b=Qu2r1203HChSXKtJaVXPxBjH4eoggBTwrNgQh4IwDw3qrdpMHJNCromWbAEOHdQWcp
+         gLYOtEz1q5akIG73EUtU85QCoeQkcPMfU6V7frLCM8/VodYdaw+JEbBI+u2UmRAhT3c/
+         aiyQIGiFlQdeeuWsqHjEDWmxPCACWN6iq8HAkYlcWwiRg6WWNdHXfniaYl0KOujBw7kw
+         h6fh81P/gwPOn/5MEA9M2Mt8GIItHI3v/1xLvhP45DgFWddRx4MnoBoQj1xoM9TYt2Ty
+         KuYL7Lenwf6GY2FGjzjS2wP0EIPMi7aDMokCporzeGyLjgHy/h0/6H5FyXdHd0i+kB5o
+         vq4g==
+X-Gm-Message-State: APjAAAXFgPbMQPdsrIhlftTi3WB6hbrruf+cNgWFjkQHA24WR7E90zc4
+        MCit+Hrh1/q40CczH8LfJ+bgLR646LkDzK8PSa4=
+X-Google-Smtp-Source: APXvYqy0rldCp9ePVYzACHdMGzl2vc6hxUan8+cCSSjsoqPGrEYCZFvZc+VRE8nLweK15+xlBOYdKxFKRF2qw+bsiQY=
+X-Received: by 2002:a24:b70b:: with SMTP id h11mr4424385itf.98.1554922066561;
+ Wed, 10 Apr 2019 11:47:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-3-mcroce@redhat.com>
-In-Reply-To: <20190408220925.13077-3-mcroce@redhat.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 11:46:25 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
-Message-ID: <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kernel: use sysctl shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
+References: <20190329064924.8728-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190329064924.8728-1-andrew.smirnov@gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 10 Apr 2019 13:47:34 -0500
+Message-ID: <CAHCN7xLKNO3+2pY4-S7=yPnxOF3mDCjTOUi4jVHufkhZuJNzAg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as
+ "ipg" clock to SDMA
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Angus Ainslie <angus@akkea.ca>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+On Fri, Mar 29, 2019 at 1:49 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
 >
-> Use the shared variables for range check, instead of declaring a local one
-> in every source file.
-
-I was expecting this to be a tree-wide change for all the cases found
-by patch 1's "git grep".
-
-Slight change to the grep for higher accuracy:
-
-$ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
-245
-
-Only 31 sources:
-$ git grep -E '\.extra[12].*&(zero|one|int_max)\b' | cut -d: -f1 |
-sort -u > /tmp/list.txt
-$ wc -l /tmp/list.txt
-31
-
-One thing I wonder about is if any of these cases depend on the extra
-variable being non-const (many of these are just "static int").
-
-$ egrep -H '\b(zero|one|int_max)\b.*=' $(cat /tmp/list.txt) | grep -v static
-
-Looks like none, so it'd be safe. How about doing this tree-wide for
-all 31 cases? (Coccinelle might be able to help.)
-
--Kees
-
+> Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+> clock to determine if it needs to configure the IP block as operating
+> at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+> clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
+> ratio is 1:1 which results in broken SDMA funtionality(this at least
+> breaks RAVE SP serdev driver on RDU2). Fix the code to specify
+> IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
+> clock ratio.
 >
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Thank you for this!  I the 5.1 kernel is the first revision to include
+the i.MX6 kit from Logic PD and I thought I messed something up, so I
+was off in a completely different direction trying to figure out why
+it was broken.  With your patch, my board works again!
+
+> Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
+Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
+
+> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  kernel/pid_namespace.c |   3 +-
->  kernel/sysctl.c        | 193 ++++++++++++++++++++---------------------
->  kernel/ucount.c        |   6 +-
->  3 files changed, 98 insertions(+), 104 deletions(-)
+>  arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index aa6e72fb7c08..ddbb51bc4968 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -290,14 +290,13 @@ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
->  }
->
->  extern int pid_max;
-> -static int zero = 0;
->  static struct ctl_table pid_ns_ctl_table[] = {
->         {
->                 .procname = "ns_last_pid",
->                 .maxlen = sizeof(int),
->                 .mode = 0666, /* permissions are checked in the handler */
->                 .proc_handler = pid_ns_ctl_handler,
-> -               .extra1 = &zero,
-> +               .extra1 = (void *)&sysctl_zero,
->                 .extra2 = &pid_max,
->         },
->         { }
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 553b19439714..d6f4b26951e1 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -123,9 +123,6 @@ static int sixty = 60;
->  #endif
->
->  static int __maybe_unused neg_one = -1;
-> -
-> -static int zero;
-> -static int __maybe_unused one = 1;
->  static int __maybe_unused two = 2;
->  static int __maybe_unused four = 4;
->  static unsigned long zero_ul;
-> @@ -388,8 +385,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = sysctl_schedstats,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif /* CONFIG_SCHEDSTATS */
->  #endif /* CONFIG_SMP */
-> @@ -421,7 +418,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "numa_balancing",
-> @@ -429,8 +426,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = sysctl_numa_balancing,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif /* CONFIG_NUMA_BALANCING */
->  #endif /* CONFIG_SCHED_DEBUG */
-> @@ -462,8 +459,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_CFS_BANDWIDTH
-> @@ -473,7 +470,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->         },
->  #endif
->  #if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
-> @@ -483,8 +480,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = sched_energy_aware_handler,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_PROVE_LOCKING
-> @@ -549,7 +546,7 @@ static struct ctl_table kern_table[] = {
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
->                 .extra1         = &neg_one,
-> -               .extra2         = &one,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_LATENCYTOP
-> @@ -683,8 +680,8 @@ static struct ctl_table kern_table[] = {
->                 .mode           = 0644,
->                 /* only handle a transition from default "0" to "1" */
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_one,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_MODULES
-> @@ -702,8 +699,8 @@ static struct ctl_table kern_table[] = {
->                 .mode           = 0644,
->                 /* only handle a transition from default "0" to "1" */
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_one,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_UEVENT_HELPER
-> @@ -862,7 +859,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &ten_thousand,
->         },
->         {
-> @@ -878,8 +875,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax_sysadmin,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "kptr_restrict",
-> @@ -887,7 +884,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax_sysadmin,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->  #endif
-> @@ -912,8 +909,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_watchdog,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "watchdog_thresh",
-> @@ -921,7 +918,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_watchdog_thresh,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &sixty,
->         },
->         {
-> @@ -930,8 +927,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = NMI_WATCHDOG_SYSCTL_PERM,
->                 .proc_handler   = proc_nmi_watchdog,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "watchdog_cpumask",
-> @@ -947,8 +944,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_soft_watchdog,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "softlockup_panic",
-> @@ -956,8 +953,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #ifdef CONFIG_SMP
->         {
-> @@ -966,8 +963,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif /* CONFIG_SMP */
->  #endif
-> @@ -978,8 +975,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #ifdef CONFIG_SMP
->         {
-> @@ -988,8 +985,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif /* CONFIG_SMP */
->  #endif
-> @@ -1102,8 +1099,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "hung_task_check_count",
-> @@ -1111,7 +1108,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "hung_task_timeout_secs",
-> @@ -1188,7 +1185,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_perf_event_sample_rate),
->                 .mode           = 0644,
->                 .proc_handler   = perf_proc_update_handler,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "perf_cpu_time_max_percent",
-> @@ -1196,7 +1193,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_perf_cpu_time_max_percent),
->                 .mode           = 0644,
->                 .proc_handler   = perf_cpu_time_max_percent_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->         {
-> @@ -1205,7 +1202,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_perf_event_max_stack),
->                 .mode           = 0644,
->                 .proc_handler   = perf_event_max_stack_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &six_hundred_forty_kb,
->         },
->         {
-> @@ -1214,7 +1211,7 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_perf_event_max_contexts_per_stack),
->                 .mode           = 0644,
->                 .proc_handler   = perf_event_max_stack_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_thousand,
->         },
->  #endif
-> @@ -1224,8 +1221,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
->         {
-> @@ -1234,8 +1231,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = timer_migration_handler,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_BPF_SYSCALL
-> @@ -1246,8 +1243,8 @@ static struct ctl_table kern_table[] = {
->                 .mode           = 0644,
->                 /* only handle a transition from default "0" to "1" */
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_one,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "bpf_stats_enabled",
-> @@ -1255,8 +1252,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_bpf_stats_enabled),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax_bpf_stats,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
-> @@ -1266,8 +1263,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(sysctl_panic_on_rcu_stall),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
-> @@ -1277,8 +1274,8 @@ static struct ctl_table kern_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0600,
->                 .proc_handler   = stack_erasing_sysctl,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->         { }
-> @@ -1291,7 +1288,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_overcommit_memory),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->         {
-> @@ -1300,7 +1297,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_panic_on_oom),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->         {
-> @@ -1337,7 +1334,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "dirty_background_ratio",
-> @@ -1345,7 +1342,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(dirty_background_ratio),
->                 .mode           = 0644,
->                 .proc_handler   = dirty_background_ratio_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->         {
-> @@ -1362,7 +1359,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(vm_dirty_ratio),
->                 .mode           = 0644,
->                 .proc_handler   = dirty_ratio_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->         {
-> @@ -1386,7 +1383,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(dirty_expire_interval),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "dirtytime_expire_seconds",
-> @@ -1394,7 +1391,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(dirtytime_expire_interval),
->                 .mode           = 0644,
->                 .proc_handler   = dirtytime_interval_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "swappiness",
-> @@ -1402,7 +1399,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(vm_swappiness),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->  #ifdef CONFIG_HUGETLB_PAGE
-> @@ -1427,8 +1424,8 @@ static struct ctl_table vm_table[] = {
->                 .maxlen                 = sizeof(int),
->                 .mode                   = 0644,
->                 .proc_handler   = sysctl_vm_numa_stat_handler,
-> -               .extra1                 = &zero,
-> -               .extra2                 = &one,
-> +               .extra1                 = (void *)&sysctl_zero,
-> +               .extra2                 = (void *)&sysctl_one,
->         },
->  #endif
->          {
-> @@ -1459,7 +1456,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = drop_caches_sysctl_handler,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->                 .extra2         = &four,
->         },
->  #ifdef CONFIG_COMPACTION
-> @@ -1485,8 +1482,8 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->
->  #endif /* CONFIG_COMPACTION */
-> @@ -1496,7 +1493,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(min_free_kbytes),
->                 .mode           = 0644,
->                 .proc_handler   = min_free_kbytes_sysctl_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "watermark_boost_factor",
-> @@ -1504,7 +1501,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(watermark_boost_factor),
->                 .mode           = 0644,
->                 .proc_handler   = watermark_boost_factor_sysctl_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "watermark_scale_factor",
-> @@ -1512,7 +1509,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(watermark_scale_factor),
->                 .mode           = 0644,
->                 .proc_handler   = watermark_scale_factor_sysctl_handler,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->                 .extra2         = &one_thousand,
->         },
->         {
-> @@ -1521,7 +1518,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(percpu_pagelist_fraction),
->                 .mode           = 0644,
->                 .proc_handler   = percpu_pagelist_fraction_sysctl_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #ifdef CONFIG_MMU
->         {
-> @@ -1530,7 +1527,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_max_map_count),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #else
->         {
-> @@ -1539,7 +1536,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_nr_trim_pages),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #endif
->         {
-> @@ -1555,7 +1552,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(block_dump),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "vfs_cache_pressure",
-> @@ -1563,7 +1560,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_vfs_cache_pressure),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
->         {
-> @@ -1572,7 +1569,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_legacy_va_layout),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #endif
->  #ifdef CONFIG_NUMA
-> @@ -1582,7 +1579,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(node_reclaim_mode),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->         {
->                 .procname       = "min_unmapped_ratio",
-> @@ -1590,7 +1587,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_min_unmapped_ratio),
->                 .mode           = 0644,
->                 .proc_handler   = sysctl_min_unmapped_ratio_sysctl_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->         {
-> @@ -1599,7 +1596,7 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_min_slab_ratio),
->                 .mode           = 0644,
->                 .proc_handler   = sysctl_min_slab_ratio_sysctl_handler,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &one_hundred,
->         },
->  #endif
-> @@ -1650,7 +1647,7 @@ static struct ctl_table vm_table[] = {
->  #endif
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->         },
->  #endif
->  #ifdef CONFIG_HIGHMEM
-> @@ -1660,8 +1657,8 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(vm_highmem_is_dirtyable),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->  #ifdef CONFIG_MEMORY_FAILURE
-> @@ -1671,8 +1668,8 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_memory_failure_early_kill),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "memory_failure_recovery",
-> @@ -1680,8 +1677,8 @@ static struct ctl_table vm_table[] = {
->                 .maxlen         = sizeof(sysctl_memory_failure_recovery),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->         {
-> @@ -1853,8 +1850,8 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0600,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "protected_hardlinks",
-> @@ -1862,8 +1859,8 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0600,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->         {
->                 .procname       = "protected_fifos",
-> @@ -1871,7 +1868,7 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0600,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->         {
-> @@ -1880,7 +1877,7 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0600,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->         {
-> @@ -1889,7 +1886,7 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax_coredump,
-> -               .extra1         = &zero,
-> +               .extra1         = (void *)&sysctl_zero,
->                 .extra2         = &two,
->         },
->  #if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
-> @@ -1926,7 +1923,7 @@ static struct ctl_table fs_table[] = {
->                 .maxlen         = sizeof(unsigned int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_dointvec_minmax,
-> -               .extra1         = &one,
-> +               .extra1         = (void *)&sysctl_one,
->         },
->         { }
->  };
-> @@ -1948,8 +1945,8 @@ static struct ctl_table debug_table[] = {
->                 .maxlen         = sizeof(int),
->                 .mode           = 0644,
->                 .proc_handler   = proc_kprobes_optimization_handler,
-> -               .extra1         = &zero,
-> -               .extra2         = &one,
-> +               .extra1         = (void *)&sysctl_zero,
-> +               .extra2         = (void *)&sysctl_one,
->         },
->  #endif
->         { }
-> diff --git a/kernel/ucount.c b/kernel/ucount.c
-> index f48d1b6376a4..ba7b8282d299 100644
-> --- a/kernel/ucount.c
-> +++ b/kernel/ucount.c
-> @@ -57,16 +57,14 @@ static struct ctl_table_root set_root = {
->         .permissions = set_permissions,
->  };
->
-> -static int zero = 0;
-> -static int int_max = INT_MAX;
->  #define UCOUNT_ENTRY(name)                             \
->         {                                               \
->                 .procname       = name,                 \
->                 .maxlen         = sizeof(int),          \
->                 .mode           = 0644,                 \
->                 .proc_handler   = proc_dointvec_minmax, \
-> -               .extra1         = &zero,                \
-> -               .extra2         = &int_max,             \
-> +               .extra1         = (void *)&sysctl_zero,         \
-> +               .extra2         = (void *)&sysctl_int_max,      \
->         }
->  static struct ctl_table user_table[] = {
->         UCOUNT_ENTRY("max_user_namespaces"),
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 9f9aa6e7ed0e..354feba077b2 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -949,7 +949,7 @@
+>                                 compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
+>                                 reg = <0x020ec000 0x4000>;
+>                                 interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+> -                               clocks = <&clks IMX6QDL_CLK_SDMA>,
+> +                               clocks = <&clks IMX6QDL_CLK_IPG>,
+>                                          <&clks IMX6QDL_CLK_SDMA>;
+>                                 clock-names = "ipg", "ahb";
+>                                 #dma-cells = <3>;
 > --
-> 2.21.0
+> 2.20.1
 >
-
-
--- 
-Kees Cook
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
