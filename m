@@ -2,287 +2,223 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60730C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E7E20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E8F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="xdCYnUc2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kRkY43id"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfDJQfC (ORCPT
+        id S1732643AbfDJQfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:35:02 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:38816 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731110AbfDJQfB (ORCPT
+        Wed, 10 Apr 2019 12:35:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37999 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731740AbfDJQfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:35:01 -0400
-Received: by mail-it1-f194.google.com with SMTP id f22so4473115ita.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:35:00 -0700 (PDT)
+        Wed, 10 Apr 2019 12:35:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f36so1758490plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:35:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8o2QjDqA2N9chLiZ8Y1fX+salfYIl3vwFvYlfLs0dVE=;
-        b=xdCYnUc2zePyVpPO0iUqj4mmHMPpXmFZHP1ofWdaBvBU4wSzDNVaLNdvCcqtZrsWGW
-         SWShMDp+HZuXIcnZHcCAvdP8bRkc+CsG2aVl1Q5KL8Xee20PSHlPDCeBMWcTnz5XJumu
-         GaVBtP7MYCHMByWk5bY0Ht75i+QsxkGQENE7PsqkLiXt6Lsz0tl6O9LAEhw73ia3HbrZ
-         DtPfx2Eh9yk2H+LBAnHO2hMAJn9AiTI4L+A+rP/E8NJItjRGCiAkqdoMTcO3DMCg2d5M
-         MMaevzMSUF6LIc7Rv1Et8un/jEsWxOEInWY7gBLk+SFdQtMs3qMjUAIacl807d+d972v
-         FLsg==
+        bh=DvkoIOHYmOjjYe/DVRnxS6aDlA+Kc2YrCvjKr2JO37s=;
+        b=kRkY43idbGpEqF3rB0mFL+JPjFVyr1TDFFtc9qQNHHLdpruN2CidZ8NsSoEQQPOtKF
+         2e+GsL/EF6zdlk3fp4KcFuA0Z1Ajx/HGaYZO5RI3PYi2xu36VZyjQVW1KzLruix2yxPk
+         3aOoP+6UQbuL9MLasCHK13NP8CN01s4FUMjyWUQngPUVG6jGRZgkpvxDylILERV/3IQh
+         wQl8VzkIjGUZFFnKpQRNAv9D+dj2jxZlwBZXrtW1EH46O8M6EeT1U2ZboiAg3VELdqOU
+         kj+aogE/n1fjuKfh8wr+m5ll1J0fmR54l0Gzsalo57fZm3H2f7gCAE4wEfVXO068tsCY
+         BkHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8o2QjDqA2N9chLiZ8Y1fX+salfYIl3vwFvYlfLs0dVE=;
-        b=jQstCn1o3h74OY4KyZdaeW8cJS0R/eOK1PSlGNvkNPN/Yv1Sr7/pncbgEI4xqdXD33
-         n0KLxUjfYTnlzF8J4GayPn72f0SYJ4zrL8mqx9sw8xDpLecHuso6MCJ05my1gLuv8iR+
-         1c6D02l0MxLoKJFvP4uQq4h02tSXFqF3bxzporpgJbmh7o7zD/jTOSsXmzPM28OYxe9j
-         +c+nhqBlxt+PmItdHkx/shW4Aq9DVKfLyy5rXQYSePG6NOPN7CmnkRh3bbeiFWMrcP9c
-         8c00GV+VDFMPWXMxIJNSPJksvRfGNc1QxEybIvdwbEjy56qJ/9zicGePE5VNXZqCGWlY
-         tneQ==
-X-Gm-Message-State: APjAAAXdhISu3crds7W4P3Rh2v2O8L2xgWo6RfAyFXeuSUvlRPIpykS9
-        TxhhiHMoV7WjGrKdXcct/MtRwKqa/twxfD0dj/AbaA==
-X-Google-Smtp-Source: APXvYqwAKim+46C3OTYMYWY8bVMSAM5aw2sQDOITOC2qn+p2niv8EzicVkKbhVZTuGVNeyCt3i5S7242gVoQpy3JzKM=
-X-Received: by 2002:a24:7c9:: with SMTP id f192mr4232680itf.97.1554914100370;
- Wed, 10 Apr 2019 09:35:00 -0700 (PDT)
+        bh=DvkoIOHYmOjjYe/DVRnxS6aDlA+Kc2YrCvjKr2JO37s=;
+        b=V3fXZsCfebJCGe+Qd0bepci+QEaz77Qfx44b3YeT84zXjS9bfYe9tmLD5NFtxohLRX
+         I3pM2qXEsFijuUi90wIJit04eLHdajT/NO2gZsKxedQZmPbFgFNDgFWMwjFAdYM0Wn+g
+         oc7K6DDKH9IJ5tLkIhGh2iQV93TX7PB392mG/WCBrmzwUSnMmY7qYOFK04tccILe4L7F
+         dcSfM+iqFddJWtz+3S/Yl5QWNGj/mniPTgCfX5ly4DjQAzm12itXoSE7bCW/mnd/NYDf
+         8jfF3jXJ5lFbCFit5dJ2YGNJCW/BbtgbCGLS5mHUfKisxDm2fhFs9v/3A4kFoFTYfn6R
+         wJ/w==
+X-Gm-Message-State: APjAAAXpFtwJ+PhYuhhclhexK9xs643zD3gCHZudCRaiFzW0u1baqx5r
+        8Qapbxw4tgAXFxVjl0zBMKmn84liwju/DPdjQ7wuww==
+X-Google-Smtp-Source: APXvYqx1uvjiGKIXmyVKCQs/UGt6qcu+3hcSvcSEaOo8ka1SRQr5KqUoLap5gCRovdtxcp7VEU5smMwH9brBFjuPZbk=
+X-Received: by 2002:a17:902:31a4:: with SMTP id x33mr45175197plb.24.1554914114047;
+ Wed, 10 Apr 2019 09:35:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
-In-Reply-To: <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Wed, 10 Apr 2019 09:34:49 -0700
-Message-ID: <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-12-arnd@arndb.de>
+ <20190410155513.1609f1a1@mschwideX1>
+In-Reply-To: <20190410155513.1609f1a1@mschwideX1>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 10 Apr 2019 09:35:02 -0700
+Message-ID: <CAKwvOdkgogaC9mmg1J4W3tXwCzfwP15NZNVUGvPeBqrDwx0wUg@mail.gmail.com>
+Subject: Re: [PATCH 12/12] [PROBABLY WRONG] s390: void '0' constraint in
+ inline assembly
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
+On Wed, Apr 10, 2019 at 6:55 AM Martin Schwidefsky
+<schwidefsky@de.ibm.com> wrote:
 >
-> On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
-> [snip]
-> > > > Wouldn't it be more convenient to provide it in a standardized format
-> > > > such that you won't have to take an additional step, and always have
-> > > > This is that form IMO.
-> > >
-> > > The location of the archive is fixed/known. If you are talking of the
-> > > location where the user decompresses it to, then they a;ready know where they
-> > > are decompressing to.
-> >
-> > The location _of_ the archive, sure. But the format of what is in the
-> > tarball, how it is versioned, and how to manage it will have to be
-> > done by every user.
-> >
-> > For any script that doesn't depend on some shared system state that
-> > wants to, say, build a eBPF program and load it, it would need to
-> > extract the tarball from scratch to make sure it is the current
-> > correct version of it.
-> >
-> > If that's required by all users, why not just present the data in a
-> > way that it can be used directly?
+> On Mon,  8 Apr 2019 23:26:25 +0200
+> Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> That is the part that is unclear from your proposal. If we present a
-> filesystem view, then I am assuming the data will have to be
-> decompressed first into memory. That means you are proposing use of
-> 30MB uncompressed memory. The whole archive has to be decompressed but
-> the whole archive if compressed with XZ for a maximum compression
-> ratio.
-
-Only while the filesystem is mounted. So you would do something like:
-
- - Mount filesystem
- - Build and load
- - Unmount
-
-The 30MB would only be used while the filesystem is mounted.
-
-Compared to:
- - Extract tarball
- - Build and load
- - Remove file tree from filesystem
-
-> > > > Having to copy and extract the tarball is the most awkward step, IMHO.
-> > > > I also find the waste of kernel memory for it to be an issue, but
-> > > > given that it can be built as a module I guess that's the obvious
-> > > > solution for those who care about memory consumption.
-> > >
-> > > Yes. We discussed in previous threads that for users who really want the
-> > > archive to be completely uncompressed and in-memory, can just load the
-> > > module, decompress into tmpfs, and unload the module. That is an extra step,
-> > > yes.
+> > clang does not understand the contraint "0" in the CALL_ON_STACK()
+> > macro:
 > >
-> > Most users will need to decompress it every time they use it anyway,
-> > especially if there's no versioned prefix in the tarball that they can
-> > use to key to a previously decompressed version with the exact same
-> > kernel version and config.
+> > ../arch/s390/mm/maccess.c:117:10: error: invalid input constraint '0' in asm
+> >                 return CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack,
+> >                        ^
+> > ../arch/s390/include/asm/processor.h:292:20: note: expanded from macro 'CALL_ON_STACK'
+> >                   [_fn] "X" (fn) CALL_FMT_##nr : CALL_CLOBBER_##nr);    \
+> >                                  ^
+> > <scratch space>:207:1: note: expanded from here
+> > CALL_FMT_3
+> > ^
+> > ../arch/s390/include/asm/processor.h:267:20: note: expanded from macro 'CALL_FMT_3'
+> >  #define CALL_FMT_3 CALL_FMT_2, "d" (r4)
+> >                    ^
+> > ../arch/s390/include/asm/processor.h:266:20: note: expanded from macro 'CALL_FMT_2'
+> >  #define CALL_FMT_2 CALL_FMT_1, "d" (r3)
+> >                    ^
+> > ../arch/s390/include/asm/processor.h:265:32: note: expanded from macro 'CALL_FMT_1'
+> >  #define CALL_FMT_1 CALL_FMT_0, "0" (r2)
+> >                                ^
 > >
-> > So, if you need to do that anyway, wouldn't it be easier if you just
-> > mounted a FS to get to it. If you're on a system where you can't use
-> > it in-place for resource reasons, you can copy it off and unmount it.
-> > No extra tools needed in userspace then at run/use time.
+> > I don't know what the correct fix here would be, changing it to "d" made
+> > it build, since clang does understand this one.
 > >
-> > Said filesystem could be populated by a compressed cpio archive since
-> > we already have code in the kernel to do this for initramfs, and could
-> > do so at mount time -- and at unmount time it'd be freed up.
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/s390/include/asm/processor.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+> > index 700c650ffd4f..84c59c99668a 100644
+> > --- a/arch/s390/include/asm/processor.h
+> > +++ b/arch/s390/include/asm/processor.h
+> > @@ -262,7 +262,7 @@ static __no_kasan_or_inline unsigned short stap(void)
+> >       register unsigned long r4 asm("6") = (unsigned long)(arg5)
+> >
+> >  #define CALL_FMT_0
+> > -#define CALL_FMT_1 CALL_FMT_0, "0" (r2)
+> > +#define CALL_FMT_1 CALL_FMT_0, "d" (r2)
+> >  #define CALL_FMT_2 CALL_FMT_1, "d" (r3)
+> >  #define CALL_FMT_3 CALL_FMT_2, "d" (r4)
+> >  #define CALL_FMT_4 CALL_FMT_3, "d" (r5)
 >
-> But still, decompressing to the filesystem in a scratch area may be
-> better than decompressing to RAM, for some users who have lesser RAM.
-> This patchset does not enforce a certain way of doing things and
-> leaves it to the user.
-
-There are lots of things where we provide suitable ways of doing
-things to the user instead of making them come up with their own
-handling of things. devtmpfs is a perfect example of this -- doing
-things in userspace was perfectly possible but still a hassle in many
-cases, and having the kernel do it for you when it already has the
-data makes sense.
-
-I'd expect many users to still want to do this to tmpfs. Also, I
-expect whatever userspace tools and programs that will consume this
-data is likely to consume similar or more memory while running anyway.
-So mounting + copying + unmounting on the heavily constrained systems
-shouldn't be raising the high water mark on memory consumption.
-
-> > If you absolutely need to export a file to userspace with the archive,
-> > my suggestion is to do it through debugfs. That way the format isn't
-> > in a /proc ABI that can't be changed in the future (debugfs isn't
-> > required to be stable in the same way). This way we can change the
-> > format carried in the kernel over time without changing the official
-> > way we present the data to userspace (via a filesystem view).
-> >
-> > As far as format goes; there's clear precedent on cpio being used and
-> > supported; we already have build time requirements on the userspace
-> > tools with some options. Using tar would actually be a new dependency
-> > even if it is a common tool to have installed. With a self-populating
-> > FS, there's no new tool requirements on the runtime side either.
+> This is (slightly) wrong. %r2 is used as the input register for the first argument
+> and the result value for the call. With your patch you force the compiler to load
+> the first argument in two registers. One solution would be to CALL_FMT1 as
 >
-> debugfs is going away for Android and is controversial in the fact
-> that its functionality isn't guaranteed to be there (debugfs breakages
-> aren't necessarily bugs AFAIK). So this isn't an option.
-
-The argument that this needs to go into /proc because Android is
-removing debugfs isn't a very strong one.
-
-And "debugfs breakages aren't bugs" is exactly why I'm suggesting to
-do the non-supported export of the archive that way instead.
-
-> > > We had close to 2-3 months of discussions now with various folks up until v5.
-> > > I am about to post v6 which is in line with Masahiro Yamada's expecations. In
-> > > that I will be dropping module building artifacts due to his module building
-> > > concerns and only include the headers.
-> >
-> > I've found some of the old discussion and read up on it. I think it
-> > was pretty quick at dismissing ideas for more robust implementations
-> > ("it needs squashfs-tools"), and had some narrow viewpoints (exporting
-> > a tarball is the least amount of kernel change, while adding
-> > complexity at the system/usage side).
+>         #define CALL_FMT1 CALL_FMT_0
 >
-> Honestly, that's kind of unfair to be quoting just a few points like
-> that. If I remember there were 100s of emails and many good view
-> points were brought up by many people. We have done the diligence in
-> the discussions of this over a period of time.
-
-That wasn't captured with the patch submission, and having people go
-find 100s of emails to figure out why your seemingly lacking solution
-is the best one available is not how you motivate getting your code
-into the kernel.
-
-> > I'd also like to clarify: I'm not opposed to the general idea of
-> > providing the needed headers with the kernel somehow. I just think
-> > it's worth spending effort making sure an interface for it that we'll
-> > need to live with forever is appropriately thought through and not
-> > rushed in, especially since we're likely to get substantial
-> > infrastructure on top of it quickly (eBPF and friends in particular).
+> It still is not optimal though as for CALL_FMT_0 the "+&d" (r2) indicates an
+> input but CALL_ARGS_0 does not initialize r2.
 >
-> We have spent the time :) This seems like the best solution of all.
+> I am thinking about the following patch to cover all cases:
+> --
+> From 91a4abbec91a9f26f84f7386f2c0f96de669b0eb Mon Sep 17 00:00:00 2001
+> From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Date: Wed, 10 Apr 2019 15:48:43 +0200
+> Subject: [PATCH] s390: fine-tune stack switch helper
 
-That should be documented.
+Thanks for the patch. Just some minor typos in the commit.
 
-> Greg KH and other maintainers are also supportive of it as can be seen
-> in other threads.
+>
+> The CALL_ON_STACK helper currently does not work with clang and for
+> calls without arguments it does not initialize r2 although the contraint
 
-I've found support for the desire to provide headers. If there's so
-much support for this solution, the number of Acks to the patch should
-have been higher.
+- calls without arguments it ...
++ calls without arguments.  It ...
 
-> We can consider an alternate proposal if it is
-> better, but I don't see any better one proposed at the moment.
+- although the contraint
++ although the constraint
 
-Really?
+`:set spell` in vim (I wonder if there's a way to set that when
+writing commit messages automatically)
 
-> - squashfs-tools requirement on the build really sucks
+> is "+&d". Rework the CALL_FMT_x and the CALL_ON_STACK macros to work
+> with clang and produce optimal code in all cases.
+>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> ---
+>  arch/s390/include/asm/processor.h | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+> index 81038ab357ce..0ee022247580 100644
+> --- a/arch/s390/include/asm/processor.h
+> +++ b/arch/s390/include/asm/processor.h
+> @@ -261,12 +261,12 @@ static __no_kasan_or_inline unsigned short stap(void)
+>         CALL_ARGS_4(arg1, arg2, arg3, arg4);                            \
+>         register unsigned long r4 asm("6") = (unsigned long)(arg5)
+>
+> -#define CALL_FMT_0
+> -#define CALL_FMT_1 CALL_FMT_0, "0" (r2)
+> -#define CALL_FMT_2 CALL_FMT_1, "d" (r3)
+> -#define CALL_FMT_3 CALL_FMT_2, "d" (r4)
+> -#define CALL_FMT_4 CALL_FMT_3, "d" (r5)
+> -#define CALL_FMT_5 CALL_FMT_4, "d" (r6)
+> +#define CALL_FMT_0 "=&d" (r2) :
+> +#define CALL_FMT_1 "+&d" (r2) :
+> +#define CALL_FMT_2 CALL_FMT_1 "d" (r3),
+> +#define CALL_FMT_3 CALL_FMT_2 "d" (r4),
+> +#define CALL_FMT_4 CALL_FMT_3 "d" (r5),
+> +#define CALL_FMT_5 CALL_FMT_4 "d" (r6),
+>
+>  #define CALL_CLOBBER_5 "0", "1", "14", "cc", "memory"
+>  #define CALL_CLOBBER_4 CALL_CLOBBER_5
+> @@ -286,10 +286,10 @@ static __no_kasan_or_inline unsigned short stap(void)
+>                 "       stg     %[_prev],%[_bc](15)\n"                  \
+>                 "       brasl   14,%[_fn]\n"                            \
+>                 "       la      15,0(%[_prev])\n"                       \
+> -               : "+&d" (r2), [_prev] "=&a" (prev)                      \
+> -               : [_stack] "a" (stack),                                 \
+> +               : [_prev] "=&a" (prev), CALL_FMT_##nr                   \
+> +                 [_stack] "a" (stack),                                 \
+>                   [_bc] "i" (offsetof(struct stack_frame, back_chain)), \
+> -                 [_fn] "X" (fn) CALL_FMT_##nr : CALL_CLOBBER_##nr);    \
+> +                 [_fn] "X" (fn) : CALL_CLOBBER_##nr);                  \
+>         r2;                                                             \
+>  })
+>
+> --
+> 2.16.4
+> --
+> blue skies,
+>    Martin.
+>
+> "Reality continues to ruin my life." - Calvin.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To post to this group, send email to clang-built-linux@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190410155513.1609f1a1%40mschwideX1.
+> For more options, visit https://groups.google.com/d/optout.
 
-Nah, this is a minor detail.
-
-> - cpio uncompressed to memory equally sucks because it consumes all
-> the memory uncompressed instead of reclaimable pages
-
-Only while mounted.
-
-> - decompressing into tmpfs will suck for Android because we don't use
-> disk-based swap and we run into the same cpio issue above. We use ZRAM
-> for compressed swap.
-
-See comments above about high water marks for memory consumption
-likely not moving much.
-
-> - debugfs is a non-option for Android
-
-Not my problem.
-
-> The tar+xz is trivially created without depending on squashfs-tools.
-
-It adds a new dependency on tar.
-
-> And xz provides the maximum compression ratio in our experiments.
-
-Sure.
-
-> Decompression time is a non-issue since trace tools are using it.
-
-Sure.
-
-> The filesystem view sounds using mount/unmount like a pony to me, but
-> it does not meet the requirements above. Let me know if I am missing
-> something.
-
-What requirements?
 
 
--Olof
+-- 
+Thanks,
+~Nick Desaulniers
