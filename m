@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CCCC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2599FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6632077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF1820850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfDJJO2 (ORCPT
+        id S1729838AbfDJJOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:14:28 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41700 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbfDJJO0 (ORCPT
+        Wed, 10 Apr 2019 05:14:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39690 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729254AbfDJJO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:14:26 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so1979720wrq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:14:25 -0700 (PDT)
+        Wed, 10 Apr 2019 05:14:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j9so2001763wrn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:14:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NezGnSbssck4iyTMRku9DxU13Rz1O8OQniwQrFvvePs=;
-        b=cqeEN1+rfYuESSFyYP73PoWzLZD3NLsn4NyoE54wjICjEHdy10VSk+giU+KTTIZPeQ
-         vUuedNn7fLGIkrctCC9v3doqGK5KmbzDVecaLutrmGQ7PcCvJC7PAYUv5JKRvuYVeEor
-         jkQnfgA5h11tVvlqNvXG6xwUH7zvfcUGfjRP1XFLZiPWtsDqE8FUK5/zaoU6PjfEnJp9
-         SJzwt7MesXoW+MeXPVeWyb952ZwydR/4h4R/aoT9roqQQuBmCVyteGRgPDjgplpLNtBa
-         Y+bGZn3M55+7eU8RkttHA6XkiA93xNZIMfeTpFUdZ8bL5Ue2lw3Ouc+nRdxUIrSyQr4i
-         XApA==
-X-Gm-Message-State: APjAAAULP4qhCZ040tkyApo4xQu9XpG0w++sdBDIK3t7olpJaSsP7iVb
-        k2nAuBFezpsnYlt8uOZtiIUiKg==
-X-Google-Smtp-Source: APXvYqw71eP9oJFeKGflOSNhkSXWj8hjNYsMNEO4vkQD5Na5rJn4VvPsDOg5yLmhzfHfAI+UiQsfUQ==
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr19519747wru.299.1554887664414;
-        Wed, 10 Apr 2019 02:14:24 -0700 (PDT)
+        bh=91FZXsMUKy4KvIrSk9BnqErH8Kv5lEKtrPu81U2bE/Q=;
+        b=khQfeqz2MNjLQoLfHdSDAubjWTHqhXldaArXxYg736INkFApYEnvDDOHatVyC1VwVD
+         vsIL8pT2HVTST4AiI8aG+8cQ14Wt+Pb+vAfQNCou4WCf2OsXBQdnFeKbhMFjYVgfgQ3e
+         zvYXbLr8WBVr5cYwowD37EYeGyR0kGjhAFBXJ+3SxUsKh+spfdh5MuNVV/YvY6xOWx83
+         i7+GrXmILfmB0+4tegJ6e2CDUMucnse3ccCJzZBv1g4dP2u9+AGcbG/grA6rTKMxEfHW
+         lzYU3VQBDW3jt4WsifqhT/NYMr+BA097Yta51Q3nMh7cckWjxpBSBdsgJfciMGS+UAjk
+         soXg==
+X-Gm-Message-State: APjAAAXZsr0gAt4fwtjzuhSa0yTU/niHUIeXv0NMxkXI2vB8VBqEGjPM
+        B+YmC+CpJLkIvpshdAoZ1Y7Yjg==
+X-Google-Smtp-Source: APXvYqwScsP46Bi1I79aoa9Hx5mRGkTSiMfqLlMV0/UIXWY6ck5l+WOxTfSlTx/bsoyOLXQAopID9g==
+X-Received: by 2002:adf:eb0b:: with SMTP id s11mr1041021wrn.140.1554887666174;
+        Wed, 10 Apr 2019 02:14:26 -0700 (PDT)
 Received: from localhost.localdomain.com ([2a02:8308:b13e:ee00:435d:e8f:90ca:755e])
-        by smtp.gmail.com with ESMTPSA id t24sm2305381wmi.10.2019.04.10.02.14.23
+        by smtp.gmail.com with ESMTPSA id t24sm2305381wmi.10.2019.04.10.02.14.24
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 02:14:23 -0700 (PDT)
+        Wed, 10 Apr 2019 02:14:25 -0700 (PDT)
 From:   Ondrej Mosnacek <omosnace@redhat.com>
 To:     linux-audit@redhat.com
 Cc:     Paul Moore <paul@paul-moore.com>,
@@ -51,9 +51,9 @@ Cc:     Paul Moore <paul@paul-moore.com>,
         John Stultz <john.stultz@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH ghak10 v8 1/2] timekeeping: Audit clock adjustments
-Date:   Wed, 10 Apr 2019 11:14:19 +0200
-Message-Id: <20190410091420.23987-2-omosnace@redhat.com>
+Subject: [PATCH ghak10 v8 2/2] ntp: Audit NTP parameters adjustment
+Date:   Wed, 10 Apr 2019 11:14:20 +0200
+Message-Id: <20190410091420.23987-3-omosnace@redhat.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410091420.23987-1-omosnace@redhat.com>
 References: <20190410091420.23987-1-omosnace@redhat.com>
@@ -64,134 +64,311 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Emit an audit record whenever the system clock is changed (i.e. shifted
-by a non-zero offset) by a syscall from userspace. The syscalls than can
-(at the time of writing) trigger such record are:
-  - settimeofday(2), stime(2), clock_settime(2) -- via
-    do_settimeofday64()
-  - adjtimex(2), clock_adjtime(2) -- via do_adjtimex()
+Emit an audit record every time selected NTP parameters are modified
+from userspace (via adjtimex(2) or clock_adjtime(2)). These parameters
+may be used to indirectly change system clock, and thus their
+modifications should be audited.
 
-The new records have type AUDIT_TIME_INJOFFSET and contain the following
-fields:
-  - sec -- the 'seconds' part of the offset
-  - nsec -- the 'nanoseconds' part of the offset
+Such events will now generate records of type AUDIT_TIME_ADJNTPVAL
+containing the following fields:
+  - op -- which value was adjusted:
+    - offset -- corresponding to the time_offset variable
+    - freq   -- corresponding to the time_freq variable
+    - status -- corresponding to the time_status variable
+    - adjust -- corresponding to the time_adjust variable
+    - tick   -- corresponding to the tick_usec variable
+    - tai    -- corresponding to the timekeeping's TAI offset
+  - old -- the old value
+  - new -- the new value
 
-Example record (time was shifted backwards by ~15.875 seconds):
+Example records:
 
-type=TIME_INJOFFSET msg=audit(1530616049.652:13): sec=-16 nsec=124887145
+type=TIME_ADJNTPVAL msg=audit(1530616044.507:7): op=status old=64 new=8256
+type=TIME_ADJNTPVAL msg=audit(1530616044.511:11): op=freq old=0 new=49180377088000
 
 The records of this type will be associated with the corresponding
 syscall records.
+
+An overview of parameter changes that can be done via do_adjtimex()
+(based on information from Miroslav Lichvar) and whether they are
+audited:
+  __timekeeping_set_tai_offset() -- sets the offset from the
+                                    International Atomic Time
+                                    (AUDITED)
+  NTP variables:
+    time_offset -- can adjust the clock by up to 0.5 seconds per call
+                   and also speed it up or slow down by up to about
+                   0.05% (43 seconds per day) (AUDITED)
+    time_freq -- can speed up or slow down by up to about 0.05%
+                 (AUDITED)
+    time_status -- can insert/delete leap seconds and it also enables/
+                   disables synchronization of the hardware real-time
+                   clock (AUDITED)
+    time_maxerror, time_esterror -- change error estimates used to
+                                    inform userspace applications
+                                    (NOT AUDITED)
+    time_constant -- controls the speed of the clock adjustments that
+                     are made when time_offset is set (NOT AUDITED)
+    time_adjust -- can temporarily speed up or slow down the clock by up
+                   to 0.05% (AUDITED)
+    tick_usec -- a more extreme version of time_freq; can speed up or
+                 slow down the clock by up to 10% (AUDITED)
 
 Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
 Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/audit.h      | 14 ++++++++++++++
+ include/linux/audit.h      | 61 ++++++++++++++++++++++++++++++++++++++
  include/uapi/linux/audit.h |  1 +
- kernel/auditsc.c           |  6 ++++++
- kernel/time/timekeeping.c  |  6 ++++++
- 4 files changed, 27 insertions(+)
+ kernel/auditsc.c           | 22 ++++++++++++++
+ kernel/time/ntp.c          | 22 ++++++++++++--
+ kernel/time/ntp_internal.h |  4 ++-
+ kernel/time/timekeeping.c  |  7 ++++-
+ 6 files changed, 112 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 1e69d9fe16da..2c62c0468888 100644
+index 2c62c0468888..43a23e28ba23 100644
 --- a/include/linux/audit.h
 +++ b/include/linux/audit.h
-@@ -365,6 +365,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
- extern void __audit_mmap_fd(int fd, int flags);
+@@ -86,6 +86,29 @@ struct audit_field {
+ 	u32				op;
+ };
+ 
++enum audit_ntp_type {
++	AUDIT_NTP_OFFSET,
++	AUDIT_NTP_FREQ,
++	AUDIT_NTP_STATUS,
++	AUDIT_NTP_TAI,
++	AUDIT_NTP_TICK,
++	AUDIT_NTP_ADJUST,
++
++	AUDIT_NTP_NVALS /* count */
++};
++
++#ifdef CONFIG_AUDITSYSCALL
++struct audit_ntp_val {
++	long long oldval, newval;
++};
++
++struct audit_ntp_data {
++	struct audit_ntp_val vals[AUDIT_NTP_NVALS];
++};
++#else
++struct audit_ntp_data {};
++#endif
++
+ extern int is_audit_feature_set(int which);
+ 
+ extern int __init audit_register_class(int class, unsigned *list);
+@@ -366,6 +389,7 @@ extern void __audit_mmap_fd(int fd, int flags);
  extern void __audit_log_kern_module(char *name);
  extern void __audit_fanotify(unsigned int response);
-+extern void __audit_tk_injoffset(struct timespec64 offset);
+ extern void __audit_tk_injoffset(struct timespec64 offset);
++extern void __audit_ntp_log(const struct audit_ntp_data *ad);
  
  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
  {
-@@ -467,6 +468,16 @@ static inline void audit_fanotify(unsigned int response)
- 		__audit_fanotify(response);
+@@ -478,6 +502,29 @@ static inline void audit_tk_injoffset(struct timespec64 offset)
+ 		__audit_tk_injoffset(offset);
  }
  
-+static inline void audit_tk_injoffset(struct timespec64 offset)
++static inline void audit_ntp_init(struct audit_ntp_data *ad)
 +{
-+	/* ignore no-op events */
-+	if (offset.tv_sec == 0 && offset.tv_nsec == 0)
-+		return;
++	memset(ad, 0, sizeof(*ad));
++}
 +
++static inline void audit_ntp_set_old(struct audit_ntp_data *ad,
++				     enum audit_ntp_type type, long long val)
++{
++	ad->vals[type].oldval = val;
++}
++
++static inline void audit_ntp_set_new(struct audit_ntp_data *ad,
++				     enum audit_ntp_type type, long long val)
++{
++	ad->vals[type].newval = val;
++}
++
++static inline void audit_ntp_log(const struct audit_ntp_data *ad)
++{
 +	if (!audit_dummy_context())
-+		__audit_tk_injoffset(offset);
++		__audit_ntp_log(ad);
 +}
 +
  extern int audit_n_rules;
  extern int audit_signals;
  #else /* CONFIG_AUDITSYSCALL */
-@@ -580,6 +591,9 @@ static inline void audit_log_kern_module(char *name)
- static inline void audit_fanotify(unsigned int response)
+@@ -594,6 +641,20 @@ static inline void audit_fanotify(unsigned int response)
+ static inline void audit_tk_injoffset(struct timespec64 offset)
  { }
  
-+static inline void audit_tk_injoffset(struct timespec64 offset)
++static inline void audit_ntp_init(struct audit_ntp_data *ad)
++{ }
++
++static inline void audit_ntp_set_old(struct audit_ntp_data *ad,
++				     enum audit_ntp_type type, long long val)
++{ }
++
++static inline void audit_ntp_set_new(struct audit_ntp_data *ad,
++				     enum audit_ntp_type type, long long val)
++{ }
++
++static inline void audit_ntp_log(const struct audit_ntp_data *ad)
 +{ }
 +
  static inline void audit_ptrace(struct task_struct *t)
  { }
  #define audit_n_rules 0
 diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index 3901c51c0b93..ab58d67baf4d 100644
+index ab58d67baf4d..a1280af20336 100644
 --- a/include/uapi/linux/audit.h
 +++ b/include/uapi/linux/audit.h
-@@ -114,6 +114,7 @@
- #define AUDIT_REPLACE		1329	/* Replace auditd if this packet unanswerd */
+@@ -115,6 +115,7 @@
  #define AUDIT_KERN_MODULE	1330	/* Kernel Module events */
  #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
-+#define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
+ #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
++#define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
  
  #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
  #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
 diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 51a2ceb3a1ca..80dfe0cdc636 100644
+index 80dfe0cdc636..17f92916a872 100644
 --- a/kernel/auditsc.c
 +++ b/kernel/auditsc.c
-@@ -2512,6 +2512,12 @@ void __audit_fanotify(unsigned int response)
- 		AUDIT_FANOTIFY,	"resp=%u", response);
+@@ -2518,6 +2518,28 @@ void __audit_tk_injoffset(struct timespec64 offset)
+ 		  "sec=%lli nsec=%li", (long long)offset.tv_sec, offset.tv_nsec);
  }
  
-+void __audit_tk_injoffset(struct timespec64 offset)
++static void audit_log_ntp_val(const struct audit_ntp_data *ad,
++			      const char *op, enum audit_ntp_type type)
 +{
-+	audit_log(audit_context(), GFP_KERNEL, AUDIT_TIME_INJOFFSET,
-+		  "sec=%lli nsec=%li", (long long)offset.tv_sec, offset.tv_nsec);
++	const struct audit_ntp_val *val = &ad->vals[type];
++
++	if (val->newval == val->oldval)
++		return;
++
++	audit_log(audit_context(), GFP_KERNEL, AUDIT_TIME_ADJNTPVAL,
++		  "op=%s old=%lli new=%lli", op, val->oldval, val->newval);
++}
++
++void __audit_ntp_log(const struct audit_ntp_data *ad)
++{
++	audit_log_ntp_val(ad, "offset",	AUDIT_NTP_OFFSET);
++	audit_log_ntp_val(ad, "freq",	AUDIT_NTP_FREQ);
++	audit_log_ntp_val(ad, "status",	AUDIT_NTP_STATUS);
++	audit_log_ntp_val(ad, "tai",	AUDIT_NTP_TAI);
++	audit_log_ntp_val(ad, "tick",	AUDIT_NTP_TICK);
++	audit_log_ntp_val(ad, "adjust",	AUDIT_NTP_ADJUST);
 +}
 +
  static void audit_log_task(struct audit_buffer *ab)
  {
  	kuid_t auid, uid;
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index f986e1918d12..3d24be4cd607 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -21,6 +21,7 @@
- #include <linux/stop_machine.h>
- #include <linux/pvclock_gtod.h>
- #include <linux/compiler.h>
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 92a90014a925..ac5555e25733 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -17,6 +17,7 @@
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/rtc.h>
 +#include <linux/audit.h>
  
- #include "tick-internal.h"
  #include "ntp_internal.h"
-@@ -1250,6 +1251,9 @@ out:
- 	/* signal hrtimers about time change */
- 	clock_was_set();
+ #include "timekeeping_internal.h"
+@@ -709,7 +710,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
+  * kernel time-keeping variables. used by xntpd.
+  */
+ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
+-		  s32 *time_tai)
++		  s32 *time_tai, struct audit_ntp_data *ad)
+ {
+ 	int result;
  
-+	if (!ret)
-+		audit_tk_injoffset(ts_delta);
+@@ -720,14 +721,29 @@ int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts,
+ 			/* adjtime() is independent from ntp_adjtime() */
+ 			time_adjust = txc->offset;
+ 			ntp_update_frequency();
 +
- 	return ret;
- }
- EXPORT_SYMBOL(do_settimeofday64);
-@@ -2322,6 +2326,8 @@ int do_adjtimex(struct __kernel_timex *txc)
- 		ret = timekeeping_inject_offset(&delta);
- 		if (ret)
- 			return ret;
++			audit_ntp_set_old(ad, AUDIT_NTP_ADJUST,	save_adjust);
++			audit_ntp_set_new(ad, AUDIT_NTP_ADJUST,	time_adjust);
+ 		}
+ 		txc->offset = save_adjust;
+ 	} else {
+-
+ 		/* If there are input parameters, then process them: */
+-		if (txc->modes)
++		if (txc->modes) {
++			audit_ntp_set_old(ad, AUDIT_NTP_OFFSET,	time_offset);
++			audit_ntp_set_old(ad, AUDIT_NTP_FREQ,	time_freq);
++			audit_ntp_set_old(ad, AUDIT_NTP_STATUS,	time_status);
++			audit_ntp_set_old(ad, AUDIT_NTP_TAI,	*time_tai);
++			audit_ntp_set_old(ad, AUDIT_NTP_TICK,	tick_usec);
 +
-+		audit_tk_injoffset(delta);
+ 			process_adjtimex_modes(txc, time_tai);
+ 
++			audit_ntp_set_new(ad, AUDIT_NTP_OFFSET,	time_offset);
++			audit_ntp_set_new(ad, AUDIT_NTP_FREQ,	time_freq);
++			audit_ntp_set_new(ad, AUDIT_NTP_STATUS,	time_status);
++			audit_ntp_set_new(ad, AUDIT_NTP_TAI,	*time_tai);
++			audit_ntp_set_new(ad, AUDIT_NTP_TICK,	tick_usec);
++		}
++
+ 		txc->offset = shift_right(time_offset * NTP_INTERVAL_FREQ,
+ 				  NTP_SCALE_SHIFT);
+ 		if (!(time_status & STA_NANO))
+diff --git a/kernel/time/ntp_internal.h b/kernel/time/ntp_internal.h
+index 40e6122e634e..908ecaa65fc3 100644
+--- a/kernel/time/ntp_internal.h
++++ b/kernel/time/ntp_internal.h
+@@ -8,6 +8,8 @@ extern void ntp_clear(void);
+ extern u64 ntp_tick_length(void);
+ extern ktime_t ntp_get_next_leap(void);
+ extern int second_overflow(time64_t secs);
+-extern int __do_adjtimex(struct __kernel_timex *txc, const struct timespec64 *ts, s32 *time_tai);
++extern int __do_adjtimex(struct __kernel_timex *txc,
++			 const struct timespec64 *ts,
++			 s32 *time_tai, struct audit_ntp_data *ad);
+ extern void __hardpps(const struct timespec64 *phase_ts, const struct timespec64 *raw_ts);
+ #endif /* _LINUX_NTP_INTERNAL_H */
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 3d24be4cd607..f366f2fdf1b0 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -2307,6 +2307,7 @@ static int timekeeping_validate_timex(const struct __kernel_timex *txc)
+ int do_adjtimex(struct __kernel_timex *txc)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
++	struct audit_ntp_data ad;
+ 	unsigned long flags;
+ 	struct timespec64 ts;
+ 	s32 orig_tai, tai;
+@@ -2330,13 +2331,15 @@ int do_adjtimex(struct __kernel_timex *txc)
+ 		audit_tk_injoffset(delta);
  	}
  
++	audit_ntp_init(&ad);
++
  	ktime_get_real_ts64(&ts);
+ 
+ 	raw_spin_lock_irqsave(&timekeeper_lock, flags);
+ 	write_seqcount_begin(&tk_core.seq);
+ 
+ 	orig_tai = tai = tk->tai_offset;
+-	ret = __do_adjtimex(txc, &ts, &tai);
++	ret = __do_adjtimex(txc, &ts, &tai, &ad);
+ 
+ 	if (tai != orig_tai) {
+ 		__timekeeping_set_tai_offset(tk, tai);
+@@ -2347,6 +2350,8 @@ int do_adjtimex(struct __kernel_timex *txc)
+ 	write_seqcount_end(&tk_core.seq);
+ 	raw_spin_unlock_irqrestore(&timekeeper_lock, flags);
+ 
++	audit_ntp_log(&ad);
++
+ 	/* Update the multiplier immediately if frequency was set directly */
+ 	if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
+ 		timekeeping_advance(TK_ADV_FREQ);
 -- 
 2.20.1
 
