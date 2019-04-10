@@ -2,172 +2,163 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE19C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB397C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F42A20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFC220820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="Tbvv2b8u"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="MlyV5Bcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfDJJxY (ORCPT
+        id S1730181AbfDJJxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:53:24 -0400
-Received: from ushosting.nmnhosting.com ([167.160.173.127]:44470 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729273AbfDJJxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:53:23 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id BA1FF2F28FBB;
-        Wed, 10 Apr 2019 05:53:17 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1554889998;
-        bh=HpSR4lU2fda1pmePQlDBV7zLl/nIo9BrQvOkc9aRnWQ=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=Tbvv2b8u9cg1pCHqI1CX7UizfhZiKPJTiQMQ0AUA1F3aa7YUWQiLGo6VoyBYVznqP
-         DFupL4pxymYD2M0wwe6SvE+dQ6V+B7MHLptm0oD8R4GqAHQ4eRZcTH0eZQKgAX3fpt
-         zqbvZOp6iVQZAqrPV3YZIHGZZYdyEAaUPofNJqyVrAZ1Cg1mgppDnCj7hzJ7Op5PvB
-         /9W75atdmUo45Z/+Ft1fIpa8ws37RpK7FgmBgtFAAJyLfw2UP9JRCReE3g1DtDiE52
-         rXdd/MBBdcpcvcyqb8IT/pkZ/gYbKS207/rMQnL9jwxQx/48U7golJBxN4h0SbGpVl
-         cTUI9Z7yUdKG6d3kgm2KIiEwYT4qru08YYAqfgGD9fVcX+wcYn+uNLsK8uLASNLjvV
-         ZnP/BMZXnhUcf9mtZL+HXCAvZUDqjeE8eK+XVB+J+5VQSnME03DNx0tdTu66Zgm4k/
-         y5/XNJkP1TCWynxqCWWUWik3ntSpLhGakIUEzbzPymTLwv1//xMFZldX/Dn+GQz2Vs
-         dDnj1CaVFVoIVXIk8NufEFaeqOHFcBiwoDAzU/u9z5czQLeXOPKV3QKgOvzCXptAf4
-         smQB5UkrW2KjUffkI2YcMUgoOWbSWNybMUzKnJvjDfZEyDlvTU3X60zfrq9xM4mc0/
-         nn4hTMgkVyJJQfN6Nr43knvE=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3A9r0EN096809
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 10 Apr 2019 19:53:01 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'David Laight'" <David.Laight@ACULAB.COM>,
-        "'Alastair D'Silva'" <alastair@au1.ibm.com>
-Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
-        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
-        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
-        "'David Airlie'" <airlied@linux.ie>,
-        "'Daniel Vetter'" <daniel@ffwll.ch>,
-        "'Karsten Keil'" <isdn@linux-pingi.de>,
-        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
-        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>,
-        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
-        "'Benson Leung'" <bleung@chromium.org>,
-        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
-        "'Petr Mladek'" <pmladek@suse.com>,
-        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
-        "'Steven Rostedt'" <rostedt@goodmis.org>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-5-alastair@au1.ibm.com> <1cd09186c67b4fa4bceb84faf835ff10@AcuMS.aculab.com>
-In-Reply-To: <1cd09186c67b4fa4bceb84faf835ff10@AcuMS.aculab.com>
-Subject: RE: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated by lines '|'
-Date:   Wed, 10 Apr 2019 19:52:58 +1000
-Message-ID: <051301d4ef83$34d2c710$9e785530$@d-silva.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
+        Wed, 10 Apr 2019 05:53:46 -0400
+Received: from mail-eopbgr680073.outbound.protection.outlook.com ([40.107.68.73]:22339
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729024AbfDJJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:53:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-synaptics-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xqKDdSpxXrG3Q0raLcuSlYfZ085ntoKGhIHQR77bk7I=;
+ b=MlyV5Bcfw1st2nJfhcofmwnYAHGwYwRt0oj+BaZvfW6kmcS1vwVZnV0WnokY1j+k1mVIlVjBg6cEPWwVnQQvYnefpqDP7HXP/DUwsrX9YeYlJQrTMwKMcj6kEHmhHlHmQwjIDDms1X56sC/70bhuoUWYwOJDwYfthuzmT+IcfzM=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3880.namprd03.prod.outlook.com (20.177.124.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.15; Wed, 10 Apr 2019 09:53:40 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b%2]) with mapi id 15.20.1771.016; Wed, 10 Apr 2019
+ 09:53:40 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     "RaghuramChary.Jallipalli@microchip.com" 
+        <RaghuramChary.Jallipalli@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: lan78xx: fix "enabled interrupts" warninig
+Thread-Topic: [PATCH] net: lan78xx: fix "enabled interrupts" warninig
+Thread-Index: AQHU7dHNU1pmmx19ukWi008Ht4Z+BqYx4peAgACJ84D//6iSAIABfFmAgAGQOQCAAAb8AA==
+Date:   Wed, 10 Apr 2019 09:53:40 +0000
+Message-ID: <20190410174538.5ebe1787@xhacker.debian>
+References: <20190408140301.3dcbccdd@xhacker.debian>
+        <BL0PR11MB33292EC33542F7D4FE5208469F2C0@BL0PR11MB3329.namprd11.prod.outlook.com>
+        <20190408155947.3efcb1eb@xhacker.debian>
+        <BL0PR11MB3329824981AAA87127C157C69F2C0@BL0PR11MB3329.namprd11.prod.outlook.com>
+        <20190409092753.39961390@xhacker.debian>
+        <BL0PR11MB3329C59EEA6073D8073D23ED9F2E0@BL0PR11MB3329.namprd11.prod.outlook.com>
+In-Reply-To: <BL0PR11MB3329C59EEA6073D8073D23ED9F2E0@BL0PR11MB3329.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYAPR01CA0094.jpnprd01.prod.outlook.com
+ (2603:1096:404:2c::34) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dad3aadb-567f-4c3f-8f1e-08d6bd9a68ae
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR03MB3880;
+x-ms-traffictypediagnostic: BYAPR03MB3880:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR03MB3880701166A0E6F017A11E57ED2E0@BYAPR03MB3880.namprd03.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(136003)(396003)(39860400002)(199004)(189003)(386003)(99286004)(316002)(6436002)(4326008)(186003)(93886005)(52116002)(26005)(68736007)(54906003)(6506007)(25786009)(53936002)(11346002)(6246003)(486006)(50226002)(76176011)(5660300002)(1076003)(2501003)(102836004)(110136005)(446003)(7416002)(305945005)(97736004)(229853002)(14454004)(2906002)(6116002)(72206003)(476003)(8936002)(7736002)(71200400001)(105586002)(966005)(66066001)(81166006)(478600001)(6486002)(106356001)(14444005)(81156014)(3846002)(256004)(8676002)(86362001)(9686003)(6512007)(71190400001)(6306002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3880;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RZWairOrWye5e2Kr/Gs8FTLmO9fHL11VxAJhxM4RsKVOOJIal2876a2VcQsjmBq4nSU3H1AsJqvWDE6QtdmTtT6vExmKHOa9sZ+5Rr8KI26LIGnA5iWBdcQBgrH90a/vwzJNXgLgb1er4M5LBwCaSXsBkxnTloNlZNpDxjLx2hQ1cZbpJZcnJm9Sw8Y0aZt+FDIUjAKrMqJla4l4wTAxKzh/aYcedcmb5nsLmGq0OWO7WAVE81ZHgXgBYD2McQ0xF9eKzQmMWPhH93Vd6QG+8sPMv8LNDYDrKl70T8n7aIC2xj9VDGKVft+ZNOeZU7Rc9CgokGxKQ+FGAtmm/Zy8yn6iGNmOykRgbaVzzi26NtidslXdXCIQCiisrzPfbx8Kj9/HFWEAr3+wYcJ5O1IKVAZ0ibpNZH98fmpD7TiPb54=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <02C17BC8AC08E84D878D863630B10416@namprd03.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AGYm3aUAX9F7fqjkUMc8A==
-Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Wed, 10 Apr 2019 19:53:12 +1000 (AEST)
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dad3aadb-567f-4c3f-8f1e-08d6bd9a68ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 09:53:40.2400
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3880
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Laight <David.Laight@ACULAB.COM>
-> Sent: Wednesday, 10 April 2019 6:45 PM
-> To: 'Alastair D'Silva' <alastair@au1.ibm.com>; alastair@d-silva.org
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>; Joonas Lahtinen
-> <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi =
-<rodrigo.vivi@intel.com>;
-> David Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; =
-Karsten Keil
-> <isdn@linux-pingi.de>; Jassi Brar <jassisinghbrar@gmail.com>; Tom =
-Lendacky
-> <thomas.lendacky@amd.com>; David S. Miller <davem@davemloft.net>;
-> Jose Abreu <Jose.Abreu@synopsys.com>; Kalle Valo
-> <kvalo@codeaurora.org>; Stanislaw Gruszka <sgruszka@redhat.com>;
-> Benson Leung <bleung@chromium.org>; Enric Balletbo i Serra
-> <enric.balletbo@collabora.com>; James E.J. Bottomley
-> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
-> <viro@zeniv.linux.org.uk>; Petr Mladek <pmladek@suse.com>; Sergey
-> Senozhatsky <sergey.senozhatsky@gmail.com>; Steven Rostedt
-> <rostedt@goodmis.org>; Andrew Morton <akpm@linux-foundation.org>;
-> intel-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; =
-linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
-> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
-> Subject: RE: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be
-> separated by lines '|'
->=20
-> From: Alastair D'Silva
-> > Sent: 10 April 2019 04:17
-> > With the wider display format, it can become hard to identify how =
-many
-> > bytes into the line you are looking at.
-> >
-> > The patch adds new flags to hex_dump_to_buffer() and
-> print_hex_dump()
-> > to print vertical lines to separate every N groups of bytes.
-> >
-> > eg.
-> > buf:00000000: 454d414e 43415053|4e495f45 00584544
-> NAMESPAC|E_INDEX.
-> > buf:00000010: 00000000 00000002|00000000 00000000  ........|........
->=20
-> Ugg, that is just horrid.
-> It is enough to add an extra space if you really need the columns to =
-be more
-> easily counted.
->
 
-I did consider that, but it would be a more invasive change, as the =
-buffer length required would differ based on the flags.
+On Wed, 10 Apr 2019 09:20:38 +0000 wrote:
+
+>=20
+> > > >
+> > > > The warning comes from calling generic_handle_irq() in usb tasklet =
 =20
-> I'm not even sure that is needed if you are printing 32bit words.
-> OTOH 32bit words makes 64bit values really stupid on LE systems.
-> Bytes with extra spaces every 4 bytes is the format I prefer even for =
-long
-> lines.
->=20
-> Oh, and if you are using hexdump() a lot you want a version that never =
-uses
-> snprintf().
->=20
-> 	David
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
-> MK1 1PT, UK Registration No: 1397386 (Wales)
->=20
->=20
-> ---
-> This email has been checked for viruses by AVG.
-> https://www.avg.com
+> > context. =20
+> > > > This is not correct.
+> > > >
+> > > > Per my understanding, if there's chained irq, we could introduce
+> > > > extra irqdomain. E.g
+> > > >
+> > > > GIC <--> another irqchip controller <--> HW device
+> > > > =20
+> > > Correct, IRQ domain is generally used in chained irq controllers.
+> > > Yes, We need to check why irq domain is used in the current driver.
+> > > =20
+> >
+> > It's introduced in the commit cc89c323a30e
+> > =20
+> Hi Jisheng,
 
+Hi,
 
+> I had spent some time to look into the history of commit. The reason for =
+having irq domain in driver is because of the unavailability of real hardwa=
+re interrupt, here we have USB interrupt pipe which is not actual interrupt=
+.
+> So changes were proposed to have pseudo phy interrupt and handlers in phy=
+ lib. But later it was suggested to implement linux interrupt controller in=
+ driver itself.
+
++ Andrew, Florian
+
+USB net is different with Andrew's case.
+
+there's no irq at all in usb net
+
+but in Andrew's case, interrupt is connected to a GPIO line. As is known
+GPIO can behave as irq chip.
+
+> You can see the archive here https://patchwork.ozlabs.org/patch/564511/
+
+Per my understanding, the purpose is to avoid phy_state_machine() poll
+phy_read_status() to monitor phy link. But as pointed out by Florian,
+phy_mac_interrupt() is intended for that purpose. And the poll should be
+fixed in phy. Since the email was sent in 2016, maybe the bug has been fixe=
+d.
+
+> I want to understand if there is any functionality impact with this warni=
+ng? Because I'm afraid if the current changes are removed we might hit some=
+ other issues (or older ones). We have to go through rigorous testing befor=
+e going ahead.
+
+Warning indicates there's something wrong in the code.
+
+IMHO phy_mac_interrupt() and PHY_IGNORE_INTERRUPT is the correct
+solution. If the phy_mac_interrupt() poll is fixed, I think maybe
+old issue which commit cc89c323a30e want to fix won't exist.
+
+Thanks
