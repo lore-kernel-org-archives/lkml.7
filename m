@@ -2,114 +2,109 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FCFC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D8EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A9F217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F78120830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qqHkI44P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5zH16cO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfDJEUv (ORCPT
+        id S1727017AbfDJE3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 00:20:51 -0400
-Received: from mail.efficios.com ([167.114.142.138]:47014 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfDJEUv (ORCPT
+        Wed, 10 Apr 2019 00:29:12 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43392 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfDJE3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 00:20:51 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id F0DE91D5E48;
-        Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 4lpnZ8M89aeY; Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 961FF1D5E42;
-        Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 961FF1D5E42
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554870049;
-        bh=TiAMzGmAJm0ScciKXOR3aomQUAKVtUVfBwsaVA/f1ow=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=qqHkI44PK7tt7oCUBZCws3kAbN9ztcuhXpvgiDax33jHM/M7X9KEjKPXFh0q2EZ5d
-         VU70iO6nBMoVxJNZk0EZzEnrFCPukW3efbqHZqBWL2f+FgaI2mEBEXY7WiSikC8EtR
-         SDLrrnHgxC81FYrqqTenQFVyV2hFBZta3dJDiAV81jr8fUR3qgYGg/wwmewS17zAgW
-         1bnajV1bMemphSQP8ALuf6yJwWf8sXSSxZeCGRgTqTy/OEHBChb7rYu8A+7Vd1sDpr
-         1FTvrv60UXBy69asoijS8B8by2Sy/HBwZfyudbVYYi5DthD05ZSIWcay2P4dQ12Z7I
-         xHlzsewg4ks3g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id oRQ38X3Twyhy; Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 792DC1D5E3C;
-        Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-Date:   Wed, 10 Apr 2019 00:20:49 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel-hardening <kernel-hardening@lists.openwall.com>,
-        kernel-team <kernel-team@android.com>, rcu <rcu@vger.kernel.org>
-Message-ID: <475423743.2834.1554870049461.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAJWu+orXgFkJpB8ww9kz_Nzmmj4qXjj2HtN_eDW3x+XPLbH0qw@mail.gmail.com>
-References: <20190410011418.76408-1-joel@joelfernandes.org> <20190410011418.76408-2-joel@joelfernandes.org> <20190409223820.511e3671@oasis.local.home> <20190410024103.GA104423@google.com> <20190409224826.308b12a4@oasis.local.home> <CAJWu+orXgFkJpB8ww9kz_Nzmmj4qXjj2HtN_eDW3x+XPLbH0qw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] module: Make srcu_struct ptr array as read-only
- post init
+        Wed, 10 Apr 2019 00:29:11 -0400
+Received: by mail-pl1-f195.google.com with SMTP id n8so560176plp.10;
+        Tue, 09 Apr 2019 21:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hg+vFG8Wc2AnyBt417MjCD1cA4puKAPw8Dp8WcpXUwY=;
+        b=d5zH16cOgagXTRWao1Drpafdr5F1jPtn68THcAdHmYphnhHH79uNFPAY2NdyJwx5+E
+         c1Iu6AMmt3ebhcifAkhbTrUKVs6Y6na26WReQL22HaC5JHKSRy9OaYU3+fsYXMZl9EE3
+         AZ+WB9LXKyHpuc5ScrufnXJNq0s2Eq1jJ4V6QtzAW7K7FrS+na0Ab6pT1hqsZiPexr/B
+         VyHePZRDiAi2SRZwkGGR4pD2zqtvoKlRcSkfiIY4s4MBc/HAD68MeAcsZxRNO3MBFIsV
+         vgsECk6ATQJYKcbbSIxiYwI1OFFeIKVZMZFHwKI8xa1od8EccsKNNwXELaQksrwpkSn5
+         rMEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hg+vFG8Wc2AnyBt417MjCD1cA4puKAPw8Dp8WcpXUwY=;
+        b=k/OFrtAFUBnmFSx/oSH4x9KTGajdY9UBMeuquGCuguCjuMMaVQvt4vVo3g0PmkIDml
+         Sv50kitr/XNtcOaiGOBQqt0pgMsbJ5jfJPwPpoPCeSHbszzw5JfO7ps7r1HtnrLcqVK8
+         BXdF566R6sbfkHjVM9IN2HNGZgWDsgpeLvsMvZn6zWEOjFzgD9v4Ew2mdC8L+if5Up++
+         TVnm+BWkXmsrvleGYNNpf1iyVh89BLFutyE93Ad6YdiLUgk1hvzVuYVdswBwgTPKpZeg
+         zO5fUpAbSn5v02D6ZCwgVB6fwmVOy9t4iJot+V12Xpi1O782in2uXUte9vLRiaIsDSHH
+         9wAA==
+X-Gm-Message-State: APjAAAXvVcHE5gT8J/B/yju1JMN6SkykmN8ckFMtY0eD7KX0Cxfcv8Yr
+        gv3Z0R6cLfvgbfJDkFMujZM=
+X-Google-Smtp-Source: APXvYqzTIZZiXzM02bx8TqtJKxpOHo+96RkG1lcMyQ+na5eSpfNRZeMjXs0lIfKgMzjDbuFr2Ssmxw==
+X-Received: by 2002:a17:902:a583:: with SMTP id az3mr41728742plb.205.1554870550774;
+        Tue, 09 Apr 2019 21:29:10 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id y23sm49258200pfn.25.2019.04.09.21.29.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 21:29:10 -0700 (PDT)
+Date:   Tue, 9 Apr 2019 21:29:07 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Viorel Suman <viorel.suman@nxp.com>
+Cc:     Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] ASoC: fsl_audmix: remove "model" attribute
+Message-ID: <20190410042906.GC3032@Asurada>
+References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
+ <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: module: Make srcu_struct ptr array as read-only post init
-Thread-Index: S1oZQGKExjQi6X7deCx2BAyn87KuYg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 9, 2019, at 11:38 PM, Joel Fernandes joelaf@google.com wrote:
-
-> On Tue, Apr 9, 2019 at 10:48 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->> On Tue, 9 Apr 2019 22:41:03 -0400
->> Joel Fernandes <joel@joelfernandes.org> wrote:
->>
->> > > Other than that, the two patches look fine to me.
->> >
->> > Could I add your Reviewed-by in the respin?
->>
->> You can add an Acked-by, as I haven't spent enough time to offer a
->> Reviewed-by tag. ;-)
->>
->> Maybe I'll get some time to vet it a bit more tomorrow, and then
->> upgrade the ack to a review.
->>
->> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
->>
+On Tue, Apr 09, 2019 at 11:27:39AM +0000, Viorel Suman wrote:
+> Use "of_device_id.data" to specify the machine driver
+> instead of "model" DTS attribute.
 > 
-> Thanks!
-> 
-> Also we could possibly consider adding the tracepoint ptrs array as
-> well to the list, which would be useful I think, if one were to over
-> write that array by accident (and the bpf tps related array too).
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
 
-Yes, please!
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-Thanks,
+> ---
+>  sound/soc/fsl/fsl_audmix.c | 43 +++++++++++++++++++++++--------------------
+>  1 file changed, 23 insertions(+), 20 deletions(-)
 
-Mathieu
+> +	priv->pdev = platform_device_register_data(&pdev->dev, mdrv, 0, NULL,
+> +						   0);
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Would you please send a separate patch to replace "pdev->dev"?
