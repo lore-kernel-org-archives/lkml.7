@@ -2,110 +2,102 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B50EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241F6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E2C2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZM2dYrF"
+	by mail.kernel.org (Postfix) with ESMTP id E78C72082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfDJUgZ (ORCPT
+        id S1726615AbfDJUkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:36:25 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39939 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfDJUgY (ORCPT
+        Wed, 10 Apr 2019 16:40:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38383 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDJUkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:36:24 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z24so4036949wmi.5;
-        Wed, 10 Apr 2019 13:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pGlr5Dlh1tSgxgSU4dDk/Ypsv74j1Q+Y8/FEbJrbcgg=;
-        b=PZM2dYrFi598aOf60gQg+zDRoJTpXvrT/0VOSz5WkInLLq0d9aCOwpk8aZoA/eMMbf
-         vyfKOeAcTBai9ij9BfiFsJiT3mFduMq1sLn85SJPcCBpLd/MpsXXpgVRFkpYq+URvqtu
-         cTQz3DxuK3ry0YtxVVkZQmUsny/yubKwYTVhDUHjyp6UH7OTMUGIWHwy0dY5Im+Y39qJ
-         W8iQZMGZ89VL1ozLoJZZUz8suHAJN5fZM1NzWbHJSYSiQel5tBOMLK0Qmqplk9wzLEIy
-         iqygP7q9MseN2/PIdpgjjgeZzD7rJp81LXmKt/n/S6S12V/4Gypeex0ZgVLPv9fij0Hz
-         PMuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pGlr5Dlh1tSgxgSU4dDk/Ypsv74j1Q+Y8/FEbJrbcgg=;
-        b=ayl7ncwXpq0aWgyIX7OMNB6ukMVUXU2BAWIROCnshMXH8HGDK6Esz8GTPnZgZo6NCF
-         jeV/T6jShbFlda795hl79871UuocHBSIxb2gJSI8pXf8dGTnlPtc71Dvd65/RGZD2bJc
-         5RXZ/TZcKjXed+bL6jPC9qqc9ISMvB/T0brI4D5b07prsF7UVCmMnrgRJ5EkDsYAwRPi
-         4yYyh38nsQQ/tdhh7bZe6wxTjDPQB6g7F2tYg0oDm0neep9a2qTQ3C1shO6lLE1CFX2e
-         UOpn96TISXxwVsm/gx1XZNsryj6J6uzxttl0U8qf9J71jpDbn8qllPhS43EOo/+sSXhx
-         G57A==
-X-Gm-Message-State: APjAAAU4QWyVMIxQmgc8BooWSER/TltfCV+RsB+KbwrR3V4Z+uU8aNYz
-        urMI44vLTBd/D2GU0o50cj69YSVRTL0=
-X-Google-Smtp-Source: APXvYqwG3BUw8uM1I53XMiF/TClXiQD++LP8AIEbCln84W42PMi5ZyHfvGnnhxD99S68x2yhMexN9Q==
-X-Received: by 2002:a05:600c:c4:: with SMTP id u4mr4248632wmm.80.1554928582643;
-        Wed, 10 Apr 2019 13:36:22 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id b204sm4974956wmh.29.2019.04.10.13.36.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 13:36:22 -0700 (PDT)
-Subject: [PATCH 11/11] platform/x86: asus-wmi: Do not disable keyboard
- backlight on unload
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
-Message-ID: <2b130755-87bb-b7a5-939b-4d0ebd69af68@gmail.com>
-Date:   Wed, 10 Apr 2019 22:36:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 16:40:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3AKeMqx925710
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Apr 2019 13:40:22 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3AKeLV6925706;
+        Wed, 10 Apr 2019 13:40:21 -0700
+Date:   Wed, 10 Apr 2019 13:40:21 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Rasmus Villemoes <tipbot@zytor.com>
+Message-ID: <tip-899cbdfa8d147c873fe4e66c38d2cca3c1ac6286@git.kernel.org>
+Cc:     bp@suse.de, tglx@linutronix.de, mingo@kernel.org,
+        linux@rasmusvillemoes.dk, keescook@chromium.org,
+        willy@infradead.org, hpa@zytor.com, linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, bp@suse.de, willy@infradead.org,
+          keescook@chromium.org, linux-kernel@vger.kernel.org,
+          hpa@zytor.com, linux@rasmusvillemoes.dk, mingo@kernel.org
+In-Reply-To: <20190405045711.30339-1-bp@alien8.de>
+References: <20190405045711.30339-1-bp@alien8.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/core] overflow.h: Add comment documenting __ab_c_size()
+Git-Commit-ID: 899cbdfa8d147c873fe4e66c38d2cca3c1ac6286
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The keyboard backlight is disabled when module is unloaded as it is
-exposed as LED device. Change this behavior to ignore setting 0 brightness
-when the ledclass device is unloading.
+Commit-ID:  899cbdfa8d147c873fe4e66c38d2cca3c1ac6286
+Gitweb:     https://git.kernel.org/tip/899cbdfa8d147c873fe4e66c38d2cca3c1ac6286
+Author:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+AuthorDate: Wed, 10 Apr 2019 22:27:25 +0200
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 10 Apr 2019 22:35:47 +0200
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+overflow.h: Add comment documenting __ab_c_size()
+
+__ab_c_size() is a somewhat opaque name. Document its purpose, and while
+at it, rename the parameters to actually match the abc naming.
+
+ [ bp: glued a complete patch from chunks on LKML. ]
+
+Reported-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Link: https://lkml.kernel.org/r/20190405045711.30339-1-bp@alien8.de
 ---
- drivers/platform/x86/asus-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/overflow.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 941c628945ac..a0ffdd99eae2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -475,6 +475,10 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
- static void kbd_led_set(struct led_classdev *led_cdev,
- 			enum led_brightness value)
- {
-+	/* Prevent disabling keyboard backlight on module unregister */
-+	if (led_cdev->flags & LED_UNREGISTERING)
-+		return;
-+
- 	do_kbd_led_set(led_cdev, value);
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 40b48e2133cb..6534a727cadb 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -278,11 +278,15 @@ static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
+ 	return bytes;
  }
  
--- 
-2.17.1
-
+-static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
++/*
++ * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for
++ * struct_size() below.
++ */
++static inline __must_check size_t __ab_c_size(size_t a, size_t b, size_t c)
+ {
+ 	size_t bytes;
+ 
+-	if (check_mul_overflow(n, size, &bytes))
++	if (check_mul_overflow(a, b, &bytes))
+ 		return SIZE_MAX;
+ 	if (check_add_overflow(bytes, c, &bytes))
+ 		return SIZE_MAX;
