@@ -2,113 +2,136 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB47C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C8EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE752084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554896586;
-	bh=6kJO4cNcx+emlPPuCJZ51VLFO/bLcA7lWBdrlY2iBhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YF0KcJbBHMzKCJ4FS3oS54kIb4VW02Q8wE1XEdu23oQUrb8WOWeOtlUelI0CpVAuO
-	 z8xoneG3m7HuX9N684Bn2Pbyb8x3nbKXYhyH2zmSbaSLBu8vBRFj8D5Pn5xD3Uu84s
-	 XgpOjqjHSF6iB4LDgjaa9qX/yvB/9JgWK5cDsWtY=
+	by mail.kernel.org (Postfix) with ESMTP id 2BCAF20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPBnVJQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbfDJLnE (ORCPT
+        id S1730680AbfDJLn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:43:04 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56168 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbfDJLnE (ORCPT
+        Wed, 10 Apr 2019 07:43:29 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35742 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfDJLn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:43:04 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so2238841wmf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 04:43:03 -0700 (PDT)
+        Wed, 10 Apr 2019 07:43:29 -0400
+Received: by mail-vs1-f66.google.com with SMTP id d8so1156915vsp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 04:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OFWBpIhkLdgnUSFIvPL6Xxu9vfy08O2kcjOvs5KEvFI=;
-        b=gCPSII2ka6w5GNubEC6YjGTIDvEjhR6jOYi7SiXdOjUPci8Cyrr807cD3wTciw7M42
-         UwEXXNHKnn2cvhGo9ybc9+ZPmfTsQYj/vFwRXKX1Ir4V0VS2WWdHiAvHWb/XR8guKS8E
-         PsAvErnL2V2dm05jDpA9k/LzyfImDbI83yJ6UGVSvC+sL9bEipc146v/UhXYgtmm8FgA
-         a1W/cx2kvJPDDKHkWlHjqADy38Y5lfCir4zpJRQqQUvYm9zx5DbRaisKlIbm5Ut/0PS4
-         MCOZ54cv4l1cZ0KsI0sC09pCO9Q91+O/CdHRUCUMv+33j6lj+wm7gNkl2Su5Ckkugrjw
-         fmMw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aAYEd6KIlvjuLTeXZCynXX4LjDCCkR80aveb3LlPP8M=;
+        b=CPBnVJQ+ynlDtlhw4BeSklCj+KEZG0cuxkLzfMv6Q0j66XIiiotRmmbkNLUAqIYZSH
+         Ly/ZXCR993lGYs/rWhH4B2DERdCAEgUQPh2sSQ1iqk5wW8go3zYxlixdbrfU9mcp8j7T
+         9/oPFuEs2SesJQEa4olmiOyP/Yzpr7yI5aF1cRDcWO50dCQrd6DqL7eq25KUc95R22tG
+         dOQ0fRa2/8jULKTumLe1omIOYYLlbH9T6PCJDL/lFmlbtJx/NU8MHPEa8wGppj0HKwQp
+         d3LYHCWlIhNyuXTqrrBxwLI+xcKDbCq2DICfEN1INi7yBzPsZaHUFRQNQ78kLTcB2o5r
+         NevQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OFWBpIhkLdgnUSFIvPL6Xxu9vfy08O2kcjOvs5KEvFI=;
-        b=YkSiA43eY4zCWd/1f8r0LZJb0AvjdpzBCB8aHkKism0JYbja+VgfxgcLvY4Ag1ce+/
-         eHaMoc9rPGDKbmp3qcHgpMKFDJXifFteQN2Q0FKKh1JdJ+7/9E5z7eKL3QjfJDEjI3ik
-         BWl3cO+xsMof8vSm/PJhddb+oOqM26lhEMz4WrSfeVSJEhvrDNrefcrbSkGeIrERyWz3
-         k344xMbiNz/5t1mKOmcq8K7til5tDeazI98HmBFgJULI+YFa/iyaDc/Avk3A9qcNvcv8
-         x4bMNfWePF4qpn68WDjS68dxc3DfcICeUebUmL8EvbD4G84DDX3FtjIVhgumsYyUsVCd
-         mMsA==
-X-Gm-Message-State: APjAAAVTqxyEuljwinyelVyUESC0gPqcYA3DQS3Jp7dzv/ZC8eeNdE3v
-        3fwM55XUe0sdtm5KcPypR64=
-X-Google-Smtp-Source: APXvYqwWxl7rC3fNrHsx97HbHCvTPZT+jq/DblKcsGWm10fpH8QNfBf56BmMI3uiCMyHxtTdT1Jf6w==
-X-Received: by 2002:a7b:c848:: with SMTP id c8mr2615512wml.110.1554896582741;
-        Wed, 10 Apr 2019 04:43:02 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id z13sm54820935wrw.36.2019.04.10.04.43.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 04:43:02 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 13:42:59 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Elena Reshetova <elena.reshetova@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     luto@kernel.org, linux-kernel@vger.kernel.org, luto@amacapital.net,
-        jpoimboe@redhat.com, keescook@chromium.org, jannh@google.com,
-        enrico.perla@intel.com, mingo@redhat.com, bp@alien8.de,
-        tglx@linutronix.de, peterz@infradead.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH 1/1] x86/entry/64: randomize kernel stack offset upon
- syscall
-Message-ID: <20190410114259.GB9293@gmail.com>
-References: <20190410112103.15170-1-elena.reshetova@intel.com>
- <20190410112103.15170-2-elena.reshetova@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aAYEd6KIlvjuLTeXZCynXX4LjDCCkR80aveb3LlPP8M=;
+        b=oTVqgPFuH5vFWNZO48Jl2qFfnDGBSnRXJ6hFw9HLr1888tm9JkbCuCZ1xKAxOl4d0A
+         RYcRSBi4bmiZeQsCXYYCPTtsoXIIwERGhGcVxxuOoOZXSzLV8bMyCXzctAICUXNgRuqm
+         iz6QtFT0V4D3MQeTYBwcRRFoIV2Ysf4pG4v3n/bSyo5jbDkL726U0P1ytQIl3a4L/XfI
+         ZgQKxitnVHU1dsFfSAMnYaX0AyWlidYNWdjsSJ7A0wE+/XrHouAaIkcktMCfu+4PCMMN
+         yDVja4aOJrqoo7IneJODSWSkA5OWoYM4lGd7GJLPda6uH9/b2h9gnRw8N9tS0o37+jWT
+         l5lg==
+X-Gm-Message-State: APjAAAUy+ElEqw68/72dSZR6jQE8Sy4YBf4yiiw/T73h8HaClNpYHCoC
+        UNqM9/DXx3Xb4GhwKXvxpRxKT48pm0J+qskBQ2sByQ==
+X-Google-Smtp-Source: APXvYqy9r3OIiLLt6826RD3Txamg5Ymfo8tKIHJur0Ek4YywcXuJ6iS7UJfmAPkMjqBNjHyr5fFswpNmU6mLLPFKRnA=
+X-Received: by 2002:a67:7c8a:: with SMTP id x132mr23276381vsc.172.1554896608462;
+ Wed, 10 Apr 2019 04:43:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410112103.15170-2-elena.reshetova@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190408143935.9062-1-paolo.valente@linaro.org>
+ <20190408143935.9062-2-paolo.valente@linaro.org> <20190408144925.GA23021@linux-x5ow.site>
+ <7B68DAA9-61D9-4AE0-9FA9-05C07C7FE408@linaro.org> <20190408150430.GB23021@linux-x5ow.site>
+ <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+In-Reply-To: <df1dfe5d-c763-91c2-4aca-25d4622c4820@kernel.dk>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 10 Apr 2019 13:42:52 +0200
+Message-ID: <CAPDyKFr+CKMRs7tCkVKDv-SV-8hPcGL8+cKjviymeiarao6V0w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Johannes Thumshirn <jthumshirn@suse.de>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "'Paolo Valente' via bfq-iosched" <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Angelo Ruocco <angeloruocco90@gmail.com>,
+        lennart@poettering.net, mkoutny@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 8 Apr 2019 at 17:05, Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 4/8/19 9:04 AM, Johannes Thumshirn wrote:
+> > [+Cc Michal ]
+> > On Mon, Apr 08, 2019 at 04:54:39PM +0200, Paolo Valente wrote:
+> >>
+> >>
+> >>> Il giorno 8 apr 2019, alle ore 16:49, Johannes Thumshirn <jthumshirn@suse.de> ha scritto:
+> >>>
+> >>> On Mon, Apr 08, 2019 at 04:39:35PM +0200, Paolo Valente wrote:
+> >>>> From: Angelo Ruocco <angeloruocco90@gmail.com>
+> >>>>
+> >>>> When bfq was merged into mainline, there were two I/O schedulers that
+> >>>> implemented the proportional-share policy: bfq for blk-mq and cfq for
+> >>>> legacy blk. bfq's interface files in the blkio/io controller have the
+> >>>> same names as cfq. But the cgroups interface doesn't allow two
+> >>>> entities to use the same name for their files, so for bfq we had to
+> >>>> prepend the "bfq" prefix to each of its files. However no legacy code
+> >>>> uses these modified file names. This naming also causes confusion, as,
+> >>>> e.g., in [1].
+> >>>>
+> >>>> Now cfq has gone with legacy blk, so there is no need any longer for
+> >>>> these prefixes in (the never used) bfq names. In view of this fact, this
+> >>>> commit removes these prefixes, thereby enabling legacy code to truly
+> >>>> use the proportional share policy in blk-mq.
+> >>>>
+> >>>> [1] https://github.com/systemd/systemd/issues/7057
+> >>>
+> >>> Hmm, but isn't this a user-space facing interface and thus some sort of ABI?
+> >>> Do you know what's using it and what breaks due to this conversion?
+> >>>
+> >>
+> >> Yep, but AFAIK, the problem is exactly the opposite: nobody uses these
+> >> names for the proportional-share policy, or wants to use these names.  I'm
+> >> CCing Lennart too, in case he has some improbable news on this.
+> >>
+> >> So the idea is to align names to what people expect, possibly before
+> >> more confusion arises.
+> >
+> > OK, crazy idea, not sure if Jens and Tejun will beat me for this, but
+> > symlinks?
+> >
+> > This way we can a) keep the old files and b) have them point to the new (a.k.a
+> > cfq style) files.
+>
+> I did consider that, and that would be doable. But honestly, I'm having a
+> hard time seeing what issue we are attempting to fix by doing this.
 
-* Elena Reshetova <elena.reshetova@intel.com> wrote:
+Jens, didn't we actually break userspace ABI when dropping the legacy
+block code and its I/O schedulers?
 
-> 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
->     base:                                        10000000 loops in 1.62224s = 162.22 nsec / loop
->     random_offset (prandom_u32() every syscall): 10000000 loops in 1.64660s = 166.26 nsec / loop
+So, to me, it seems like introducing symlinks as suggested above,
+would actually fix this "regression", wouldn't it?
 
-Stupid question, how did you manage to buil timing_test_64? Here it fails 
-with a bog standard gcc 7.3.0 x86-64 distro toolchain:
-
- dagon:~/luto-misc-tests.git> make timing_test_64
- g++ -m64 -o timing_test_64 -O2 -g -std=gnu++11 -pthread -Wall  timing_test.cc -lrt -ldl
- /usr/bin/ld: /tmp/cc8VRkuV.o: relocation R_X86_64_32S against `.text.startup' can not be used when making a PIE object; recompile with -fPIC
- /usr/bin/ld: final link failed: Nonrepresentable section on outputcollect2: error: ld returned 1 exit status
- Makefile:39: recipe for target 'timing_test_64' failed
-
-
-I'm using cb7f9f0592f8, which is like 1.5 years old - is this still the 
-latest and greatest:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/luto/misc-tests.git
-
-?
-
-Thanks,
-
-	Ingo
+Kind regards
+Uffe
