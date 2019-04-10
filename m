@@ -2,70 +2,96 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234FBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645AEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42CC20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380F320850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfDJGML (ORCPT
+        id S1727582AbfDJGN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:12:11 -0400
-Received: from verein.lst.de ([213.95.11.211]:55014 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfDJGML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:12:11 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 7047968B05; Wed, 10 Apr 2019 08:11:58 +0200 (CEST)
-Date:   Wed, 10 Apr 2019 08:11:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/21] dma-iommu: factor atomic pool allocations into
- helpers
-Message-ID: <20190410061157.GA5278@lst.de>
-References: <20190327080448.5500-1-hch@lst.de> <20190327080448.5500-13-hch@lst.de> <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com>
+        Wed, 10 Apr 2019 02:13:28 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:13794 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726661AbfDJGN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:13:27 -0400
+X-UUID: c6f1cf9406454bf8933101b90968ea70-20190410
+X-UUID: c6f1cf9406454bf8933101b90968ea70-20190410
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 325427869; Wed, 10 Apr 2019 14:13:10 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 10 Apr 2019 14:13:09 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 10 Apr 2019 14:13:08 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Kevin Hilman <khilman@baylibre.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Motoya Tanigawa <tanigawa.motoya@socionext.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: [v2 PATCH 1/4] phy: phy-mtk-tphy: get optional clock by devm_clk_get_optional()
+Date:   Wed, 10 Apr 2019 14:13:03 +0800
+Message-ID: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 06:59:32PM +0100, Robin Murphy wrote:
-> On 27/03/2019 08:04, Christoph Hellwig wrote:
->> This keeps the code together and will simplify compiling the code
->> out on architectures that are always dma coherent.
->
-> And this is where things take a turn in the direction I just can't get on 
-> with - I'm looking at the final result and the twisty maze of little 
-> disjoint helpers all overlapping each other in functionality is really 
-> difficult to follow. And I would *much* rather have things rely on 
-> compile-time constant optimisation than spend the future having to fix the 
-> #ifdefed parts for arm64 whenever x86-centric changes fail to test them.
+Use devm_clk_get_optional() to get optional clock
 
-Can you draft up a patch on top of my series to show me what you
-want?  I can take care of finishing it up and moving the changes
-into the right patches in the series.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2: no changes
+---
+ drivers/phy/mediatek/phy-mtk-tphy.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-> Conceptually, everything except the iommu_dma_alloc_remap() case is more or 
-> less just dma_direct_alloc() with an IOMMU mapping on top - if we could 
-> pass that an internal flag to say "don't fail or bounce because of masks" 
-> it seems like that approach could end up being quite a bit simpler (I did 
-> once have lofty plans to refactor the old arm64 code in such a way...)
+diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+index 5b6a470ca145..cb2ed3b25068 100644
+--- a/drivers/phy/mediatek/phy-mtk-tphy.c
++++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+@@ -1103,13 +1103,9 @@ static int mtk_tphy_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* it's deprecated, make it optional for backward compatibility */
+-	tphy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
+-	if (IS_ERR(tphy->u3phya_ref)) {
+-		if (PTR_ERR(tphy->u3phya_ref) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		tphy->u3phya_ref = NULL;
+-	}
++	tphy->u3phya_ref = devm_clk_get_optional(dev, "u3phya_ref");
++	if (IS_ERR(tphy->u3phya_ref))
++		return PTR_ERR(tphy->u3phya_ref);
+ 
+ 	tphy->src_ref_clk = U3P_REF_CLK;
+ 	tphy->src_coef = U3P_SLEW_RATE_COEF;
+-- 
+2.21.0
 
-I've been wanting to share more code between DMA direct and the iommu
-allocators.  But this series already is huge and has been pending
-far too long.  I'll eventually get to it..
