@@ -2,119 +2,132 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264F7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C649C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA67220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554910112;
-	bh=U03/qHpxJxs29IQh4joNjReOMEodLnWXIlYzGi2pCKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=opIssgv/7aV4L1jFln/kdXWPGAlXRAq4aqybn2vFpC01TdoifRNaNDvhg1Uf000OM
-	 pPlCX9DVqd+mEGmOIYeKj3a8pSyyxOfy33Wl/uxXRF51gQDMYUQQKY9ndg1inLaO7C
-	 1LOi4t047GThEh/X66Q/BwYGnTYT5GER6dxp7Fmo=
+	by mail.kernel.org (Postfix) with ESMTP id 73B1C2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfDJP2a (ORCPT
+        id S1729591AbfDJP2n convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:28:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53052 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfDJP2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:28:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1H3AikjRLKMjOzjKrOkFEgAgAKiYZ3fFdjiJpid7JNs=; b=Jsuze32TwYqVFXbNSI8Snlcud
-        xTKjCmn6pDDN4QetLB7PSxHVWfxmVAOyMhx2FAssRahuozpx4fr8MkpRisseeKxGpzdgr8vBBSpHF
-        qS9Knlgfpb8yCqKYgODTxuzNNLI3DKQJC6p7dbyi3NRr93TEh7eCeGQGmrXRAph48tSv0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hEF9B-0001K8-TO; Wed, 10 Apr 2019 15:28:21 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0171D1128ED3; Wed, 10 Apr 2019 16:28:20 +0100 (BST)
-Date:   Wed, 10 Apr 2019 16:28:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
-Message-ID: <20190410152820.GT6106@sirena.org.uk>
-References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
- <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
- <20190410125612.GR6106@sirena.org.uk>
- <6eeaf42f4d3f42c58546c429194213b8@asem.it>
+        Wed, 10 Apr 2019 11:28:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48328 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729318AbfDJP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:28:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 136CAC4EC4;
+        Wed, 10 Apr 2019 15:28:42 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3B115DA5B;
+        Wed, 10 Apr 2019 15:28:38 +0000 (UTC)
+Subject: Re: [PATCH-tip v2 02/12] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-3-longman@redhat.com>
+ <20190410150714.GK7905@worktop.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <402ba759-37ac-dc61-cd61-09e4ae63b65e@redhat.com>
+Date:   Wed, 10 Apr 2019 11:28:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wiiWofWi8Et/oezL"
-Content-Disposition: inline
-In-Reply-To: <6eeaf42f4d3f42c58546c429194213b8@asem.it>
-X-Cookie: teamwork, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190410150714.GK7905@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 10 Apr 2019 15:28:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/10/2019 11:07 AM, Peter Zijlstra wrote:
+> On Fri, Apr 05, 2019 at 03:21:05PM -0400, Waiman Long wrote:
+>> Because of writer lock stealing, it is possible that a constant
+>> stream of incoming writers will cause a waiting writer or reader to
+>> wait indefinitely leading to lock starvation.
+>>
+>> The mutex code has a lock handoff mechanism to prevent lock starvation.
+>> This patch implements a similar lock handoff mechanism to disable
+>> lock stealing and force lock handoff to the first waiter in the queue
+>> after at least a 5ms waiting period. The waiting period is used to
+>> avoid discouraging lock stealing too much to affect performance.
+> So the mutex code doesn't have that timeout, it foces the handoff if the
+> top waiter fails to acquire.
+>
+> I don't find the above sufficiently justifies the additional complexity.
+> What were the numbers with the simple scheme vs this etc..
 
---wiiWofWi8Et/oezL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When the handoff bit is set, it stops the lock from being acquired by
+anyone else until the front waiter is woken up, scheduled and take the
+lock. Doing that too frequently will impede the throughput when the
+rwsem is highly contended. I can ran some performance test to show the
+difference it can make.
 
-On Wed, Apr 10, 2019 at 02:05:38PM +0000, Flavio Suligoi wrote:
-> Hi Mark,
+I have also been thinking about having the front waiter set the handoff
+bit and then spin on owner so that it can acquire the lock immediately
+after it is freed. It will be a follow up patch.
 
-> > While this isn't going to hurt anything and might actually help so it's
-> > fine doesn't this also suggest that there's an issue with deferred probe
-> > going on as well?
+Cheers,
+Longman
 
-> I think that the problem could be related to how the DMA channel is reque=
-sted.
-> At the moment the function used are:
 
-> pxa2xx_spi_dma_setup --> dma_request_slave_channel_compat -->
-> --> __dma_request_slave_channel_compat --> dma_request_slave_channel -->
-> --> dma_request_chan
-
-> Actually the final function "dma_request_chan" return
-> the channel number or "-EPROBE_DEFER" if it's not ready.
-> But this information ("-EPROBE_DEFER") is lost in the penultimate functio=
-n=20
-> "dma_request_slave_channel", which return only the chann, if all is ok, or
-> NULL, in case of errors.
-> So the deferral mechanism is not used.
-
-Right, yes - that analysis seems correct.  The interfaces seem a bit
-weird here but fixing them looks like the most complete and robust fix.
-
---wiiWofWi8Et/oezL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyuC5QACgkQJNaLcl1U
-h9AzTQf/R/KL3VH0zEc0hVwvrBj1cDrGwBjBmXW9R97WwaXIq1RcLAJp9jazopLd
-siILLz9Fl/KtflQ3YgkgdyizttANuiXYEf0PSWMzeTkUXlaIcIrKYjrMPZtpvCZi
-crpQq730PNf3sbtH+AqNQl1Dgo2LO82hsNekA4irONWIKNRP6EUyccd5BtcbUdp3
-AQUEAd1EDYeOKFI8EHbY4GBHu9hN53Bak1CBmd5y3LsA9P5jfA7dsFkGILTTesII
-DqA0NiLQEcKppgE/IRaK+DmlWXnAk+KKVQOho+QWcQz/PvyrEg62r8c7GsRo2dFe
-C8YNkpxNhOcXxCPou5xpMwPjQNF46g==
-=TuEH
------END PGP SIGNATURE-----
-
---wiiWofWi8Et/oezL--
