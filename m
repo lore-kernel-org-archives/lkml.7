@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6350C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE8C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B42C20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1F920820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732379AbfDJNhD (ORCPT
+        id S1732402AbfDJNhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:37:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48802 "EHLO mga14.intel.com"
+        Wed, 10 Apr 2019 09:37:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23980 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731969AbfDJNg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:36:59 -0400
+        id S1732378AbfDJNhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:37:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:36:59 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="134566077"
+   d="scan'208";a="148069234"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2019 06:36:55 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5B95B73; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id 16C9056D; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 01/36] net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
-Date:   Wed, 10 Apr 2019 16:36:18 +0300
-Message-Id: <20190410133653.88061-2-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 14/36] thunderbolt: Rename tunnel_pci to tunnel
+Date:   Wed, 10 Apr 2019 16:36:31 +0300
+Message-Id: <20190410133653.88061-15-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,42 +55,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The XDomain protocol messages may start as soon as Thunderbolt control
-channel is started. This means that if the other host starts sending
-ThunderboltIP packets early enough they will be passed to the network
-driver which then gets confused because its resume hook is not called
-yet.
-
-Fix this by unregistering the ThunderboltIP protocol handler when
-suspending and registering it back on resume.
+In order to tunnel non-PCIe traffic as well rename tunnel_pci.[ch] to
+tunnel.[ch] to reflect this fact. No functional changes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: David S. Miller <davem@davemloft.net>
 ---
- drivers/net/thunderbolt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/thunderbolt/Makefile                   | 2 +-
+ drivers/thunderbolt/tb.c                       | 2 +-
+ drivers/thunderbolt/{tunnel_pci.c => tunnel.c} | 4 ++--
+ drivers/thunderbolt/{tunnel_pci.h => tunnel.h} | 6 +++---
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+ rename drivers/thunderbolt/{tunnel_pci.c => tunnel.c} (98%)
+ rename drivers/thunderbolt/{tunnel_pci.h => tunnel.h} (87%)
 
-diff --git a/drivers/net/thunderbolt.c b/drivers/net/thunderbolt.c
-index c48c3a1eb1f8..fcf31335a8b6 100644
---- a/drivers/net/thunderbolt.c
-+++ b/drivers/net/thunderbolt.c
-@@ -1282,6 +1282,7 @@ static int __maybe_unused tbnet_suspend(struct device *dev)
- 		tbnet_tear_down(net, true);
- 	}
+diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
+index 8531f15d3b3c..833bdee3cec7 100644
+--- a/drivers/thunderbolt/Makefile
++++ b/drivers/thunderbolt/Makefile
+@@ -1,3 +1,3 @@
+ obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
+-thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel_pci.o eeprom.o
++thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
+ thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index e71530d0af65..8de43a2ab205 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -12,7 +12,7 @@
  
-+	tb_unregister_protocol_handler(&net->handler);
- 	return 0;
- }
+ #include "tb.h"
+ #include "tb_regs.h"
+-#include "tunnel_pci.h"
++#include "tunnel.h"
  
-@@ -1290,6 +1291,8 @@ static int __maybe_unused tbnet_resume(struct device *dev)
- 	struct tb_service *svc = tb_to_service(dev);
- 	struct tbnet *net = tb_service_get_drvdata(svc);
+ /**
+  * struct tb_cm - Simple Thunderbolt connection manager
+diff --git a/drivers/thunderbolt/tunnel_pci.c b/drivers/thunderbolt/tunnel.c
+similarity index 98%
+rename from drivers/thunderbolt/tunnel_pci.c
+rename to drivers/thunderbolt/tunnel.c
+index 2de4edccbd6d..1e470564e99d 100644
+--- a/drivers/thunderbolt/tunnel_pci.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Thunderbolt Cactus Ridge driver - PCIe tunnel
++ * Thunderbolt Cactus Ridge driver - Tunneling support
+  *
+  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
+  */
+@@ -8,7 +8,7 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
  
-+	tb_register_protocol_handler(&net->handler);
-+
- 	netif_carrier_off(net->dev);
- 	if (netif_running(net->dev)) {
- 		netif_device_attach(net->dev);
+-#include "tunnel_pci.h"
++#include "tunnel.h"
+ #include "tb.h"
+ 
+ #define __TB_TUNNEL_PRINT(level, tunnel, fmt, arg...)                   \
+diff --git a/drivers/thunderbolt/tunnel_pci.h b/drivers/thunderbolt/tunnel.h
+similarity index 87%
+rename from drivers/thunderbolt/tunnel_pci.h
+rename to drivers/thunderbolt/tunnel.h
+index f9b65fa1fd4d..dff0f27d6ab5 100644
+--- a/drivers/thunderbolt/tunnel_pci.h
++++ b/drivers/thunderbolt/tunnel.h
+@@ -1,12 +1,12 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Thunderbolt Cactus Ridge driver - PCIe tunnel
++ * Thunderbolt Cactus Ridge driver - Tunneling support
+  *
+  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
+  */
+ 
+-#ifndef TB_PCI_H_
+-#define TB_PCI_H_
++#ifndef TB_TUNNEL_H_
++#define TB_TUNNEL_H_
+ 
+ #include "tb.h"
+ 
 -- 
 2.20.1
 
