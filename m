@@ -2,89 +2,96 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FE2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456ABC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAE12082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111B720850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tPINeHbr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6Mwh0aB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfDJWO4 (ORCPT
+        id S1726755AbfDJWPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:14:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43659 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfDJWO4 (ORCPT
+        Wed, 10 Apr 2019 18:15:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41724 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDJWPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:14:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z9so2352745pgu.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:14:55 -0700 (PDT)
+        Wed, 10 Apr 2019 18:15:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d1so2236937plj.8;
+        Wed, 10 Apr 2019 15:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Wg+iQil3DoY9mwTW1mfserS3u376EbXt0yARzUcfgdw=;
-        b=tPINeHbrEiszxSoR1taj3mpafE1NWS5DJ89QHSCklWKkcP2kLCHftDwO2UtHFSFNE4
-         OtGTXUthULRDybFp+ku6X0sQa0d178t50ANTUtV8PUAbv0a8mq2tKkf8Eb5JogSCUgFL
-         HxzBGHng2xubXdR5Q2aKKakGAxLdOC4FctnhEw22YjdyqiR5YFKgwgH/hMpcD5cz0l9i
-         eGhEcvmMNo9yBN2IbT8X2yAGNu+Nn0XqbWoWTcLUsPPJ4lSoJq9y3bAEhVd7Wv4Q85jr
-         UM9xiIqlv37vgizMVuaFAUHSXlDG/G3bFNvBKH7hB2cSDYwPpM2aSXO4YTFVLw4R0jIf
-         fgfQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/ME8UCRPhLKhI9XNsKa0H08evJ48xzJoLZLWFynyGu0=;
+        b=D6Mwh0aBjutAgUD2QUITwrHNkJkqtxoQ1HEleQv0XZQMhon+Mf9eCY7kuBrCiVkIW9
+         d7WK5cS1VPY2VkualAes2LtqGALrVEMtZq9K4SpLc6VzLRA4cSev3D+UfVYFNk4JoecU
+         RselPOb8n+nlbd2xvtvUcDkt1cBEf/msq5e59nunnu+y45VeXVKeUqeNXBhzAYBH9yXw
+         L07nCZpBmqcozHap682ruHaPhVuYG9P7VUNeMJlD0Uv4s3uxPsWNWn0z7zPf6huT+wAy
+         PtbmkozCoME3EA3SEPoCfyEiJzO0NbD2FUCp0CFhJt4m/AayqJ1scoo3NZQeUFhCsR3c
+         Q5Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wg+iQil3DoY9mwTW1mfserS3u376EbXt0yARzUcfgdw=;
-        b=Mb5z3bqke1QdZzfI0zXj811mqCJOJ1eK/phbAko4aE8o0F2yvxzSnIZ3mVrjY6Uw4R
-         s/zJrZk8W2sn4dObnLKrgU1zwKwwOBVuBVV+s2z9oV+pNfbGCn28i2D5RN7Z9XUZZ4KL
-         QY8zf8kdlB/Xf4XhHI4x1rObAgoZesD3nCloZSTggDSQt2VxK0gVBTv8JOdF4vaIhABW
-         CELp3y0qTf70UX1ZjW0bioxtdvjYCl1MwzIQjvLVEMiPEpnOPgV+IKpUHun71DuQaynI
-         lUKt1wkb9vqcQFKv+M9IXLgkFfEM4eVPDMrFKkCP+hoWue+OfdiIM1Ckj4PDyoxdNBoN
-         WvnA==
-X-Gm-Message-State: APjAAAUGGLTbHbKnPo8+VHENx0j8VV3pd/+jjaLNiLEyzCbwyYZ8X5B5
-        I78esZ/NfdhmnS66cMGN2BUwZw==
-X-Google-Smtp-Source: APXvYqzFap2u/I0lMbg2XZ2uTIfmLdmxN65OJmpxt1g9axofjTKjnjVdwjG6mYSjWp9XuWAKXlOjPg==
-X-Received: by 2002:a62:e80f:: with SMTP id c15mr45888215pfi.93.1554934495509;
-        Wed, 10 Apr 2019 15:14:55 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id c1sm52150997pfd.114.2019.04.10.15.14.53
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/ME8UCRPhLKhI9XNsKa0H08evJ48xzJoLZLWFynyGu0=;
+        b=fAOykvH+GsfYMCF3EyLk+xXtgcysNwmw4FtVfMNL/esF2aMVJQ2nghSzccUvpVJy0p
+         cPtjVFZAJIPsSrZ56rMEaWMYiU8/F0Qd/3YQyAr/ETQ/liNtBykRMGHyUWehwLUwQ/xR
+         wrT3jAeoyWZfvsMPc1aUjPP+GB3qwfVOnvjsYIm4jHhgw85LSDqvjpFM76fgCt3Wy6lC
+         w5eWJXGuQk+i+WR5nOsVKyOmiywBMljVXMEIzKoSS77sw7W00kIN5VS3S6wJ1O4HQ0aW
+         P4pQZOoN0UA1WjH5dL7FzLaCQ0NqUYi8pRvblV72yhnur2Yqzqe2WD93zGrTjVb7cxTN
+         EPfA==
+X-Gm-Message-State: APjAAAWfWG54PxN3zxdsDhZSAow09nHaLyIaelq45LFkMw3zly3XHZXZ
+        a3rd2ZXAqPD+oa1IqVOtxcA=
+X-Google-Smtp-Source: APXvYqzYBf7usmuy3j2uN6zwXsXbAXl42EVsECaWOC0ol2VHrVndnIQuGWYNvV0sm12TkGAAKyTQhw==
+X-Received: by 2002:a17:902:b602:: with SMTP id b2mr47138995pls.293.1554934516181;
+        Wed, 10 Apr 2019 15:15:16 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p2sm113952543pfi.73.2019.04.10.15.15.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:14:54 -0700 (PDT)
-Subject: Re: [PATCH] block: do not leak memory in bio_copy_user_iov()
-To:     jglisse@redhat.com, linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org
-References: <20190410202751.20712-1-jglisse@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e25d90b2-62ff-18bc-efe2-ef37c56bfa52@kernel.dk>
-Date:   Wed, 10 Apr 2019 16:14:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 15:15:15 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 15:15:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joe Perches <joe@perches.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 18/22] watchdog: mt7621_wdt: Use 'dev' instead of
+ dereferencing it repeatedly
+Message-ID: <20190410221513.GA28441@roeck-us.net>
+References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
+ <1554913683-25454-19-git-send-email-linux@roeck-us.net>
+ <e76117d45b1b1caff6bce8d28506e683694d6a79.camel@perches.com>
+ <20190410195409.GA29802@roeck-us.net>
+ <e735fb3399d9fadf75216ef5cb4a7f55d1f336f3.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20190410202751.20712-1-jglisse@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e735fb3399d9fadf75216ef5cb4a7f55d1f336f3.camel@perches.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 2:27 PM, jglisse@redhat.com wrote:
-> From: Jérôme Glisse <jglisse@redhat.com>
+Hi Joe,
+
+On Wed, Apr 10, 2019 at 03:10:09PM -0700, Joe Perches wrote:
+> On Wed, 2019-04-10 at 12:54 -0700, Guenter Roeck wrote:
+> > A checkpatch rule suggesting that multiple extension lines can be merged
+> > might be useful to help finding such situations. Just a thought.
 > 
-> When bio_add_pc_page() fails in bio_copy_user_iov() we should free
-> the page we just allocated otherwise we are leaking it.
+> You are welcome to try to write that one.
+> It's likely not a trivial task to make it sensible.
+> 
 
-Applied, thanks.
+No chance - if _you_ think it is difficult, it would be absolutely hopeless
+for me, and I am not going to touch it.
 
--- 
-Jens Axboe
-
+Cheers,
+Guenter
