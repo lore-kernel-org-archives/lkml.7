@@ -6,29 +6,29 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2765C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBE8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DDA2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466962084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfDJGiU (ORCPT
+        id S1728634AbfDJGi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:38:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41282 "EHLO mx1.redhat.com"
+        Wed, 10 Apr 2019 02:38:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58520 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbfDJGiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:38:20 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1728589AbfDJGiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:38:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A1055C04B94F;
-        Wed, 10 Apr 2019 06:38:19 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id DECC97DCE7;
+        Wed, 10 Apr 2019 06:38:20 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 375F818A81;
-        Wed, 10 Apr 2019 06:38:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60F8161993;
+        Wed, 10 Apr 2019 06:38:16 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3A15416E31; Wed, 10 Apr 2019 08:38:15 +0200 (CEST)
+        id 618711747B; Wed, 10 Apr 2019 08:38:15 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Gerd Hoffmann <kraxel@redhat.com>,
@@ -40,13 +40,13 @@ Cc:     Gerd Hoffmann <kraxel@redhat.com>,
         Sean Paul <sean@poorly.run>,
         virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
         QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/3] drm: switch drm_fb_memcpy_dstclip to accept __iomem dst
-Date:   Wed, 10 Apr 2019 08:38:13 +0200
-Message-Id: <20190410063815.17062-2-kraxel@redhat.com>
+Subject: [PATCH v2 2/3] drm: switch drm_fb_xrgb8888_to_rgb565_dstclip to accept __iomem dst
+Date:   Wed, 10 Apr 2019 08:38:14 +0200
+Message-Id: <20190410063815.17062-3-kraxel@redhat.com>
 In-Reply-To: <20190410063815.17062-1-kraxel@redhat.com>
 References: <20190410063815.17062-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 10 Apr 2019 06:38:19 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 10 Apr 2019 06:38:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,132 +56,195 @@ Not all archs have the __io_virt() macro, so cirrus can't simply convert
 pointers that way.  The drm format helpers have to use memcpy_toio()
 instead.
 
-This patch makes drm_fb_memcpy_dstclip() accept a __iomem dst pointer
-and use memcpy_toio() instead of memcpy().  With that separating out the
-memcpy loop into the drm_fb_memcpy_lines() helper isn't useful any more,
-so move the code back into the calling functins.
+This patch makes drm_fb_xrgb8888_to_rgb565_dstclip() accept a __iomem
+dst pointer and use memcpy_toio() instead of memcpy().  The helper
+function (drm_fb_xrgb8888_to_rgb565_line) has been changed to process
+a single scanline.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- include/drm/drm_format_helper.h     |  3 +-
- drivers/gpu/drm/cirrus/cirrus.c     |  2 +-
- drivers/gpu/drm/drm_format_helper.c | 45 +++++++++++++++--------------
- 3 files changed, 27 insertions(+), 23 deletions(-)
+ include/drm/drm_format_helper.h     |   2 +-
+ drivers/gpu/drm/cirrus/cirrus.c     |   2 +-
+ drivers/gpu/drm/drm_format_helper.c | 113 ++++++++++++++--------------
+ 3 files changed, 60 insertions(+), 57 deletions(-)
 
 diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
-index 6f84380757ee..bc2e1004e166 100644
+index bc2e1004e166..d1b8a9ea01b4 100644
 --- a/include/drm/drm_format_helper.h
 +++ b/include/drm/drm_format_helper.h
-@@ -15,7 +15,8 @@ struct drm_rect;
- 
- void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
- 		   struct drm_rect *clip);
--void drm_fb_memcpy_dstclip(void *dst, void *vaddr, struct drm_framebuffer *fb,
-+void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
-+			   struct drm_framebuffer *fb,
- 			   struct drm_rect *clip);
- void drm_fb_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
- 		   struct drm_rect *clip);
+@@ -23,7 +23,7 @@ void drm_fb_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+ void drm_fb_xrgb8888_to_rgb565(void *dst, void *vaddr,
+ 			       struct drm_framebuffer *fb,
+ 			       struct drm_rect *clip, bool swap);
+-void drm_fb_xrgb8888_to_rgb565_dstclip(void *dst, unsigned int dst_pitch,
++void drm_fb_xrgb8888_to_rgb565_dstclip(void __iomem *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+ 				       struct drm_rect *clip, bool swap);
+ void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
 diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
-index 5095b8ce52c2..0fc3aa31b5a4 100644
+index 0fc3aa31b5a4..ed2f2d8cfb6f 100644
 --- a/drivers/gpu/drm/cirrus/cirrus.c
 +++ b/drivers/gpu/drm/cirrus/cirrus.c
-@@ -307,7 +307,7 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
- 		return -ENOMEM;
- 
- 	if (cirrus->cpp == fb->format->cpp[0])
--		drm_fb_memcpy_dstclip(__io_virt(cirrus->vram),
-+		drm_fb_memcpy_dstclip(cirrus->vram,
+@@ -311,7 +311,7 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
  				      vmap, fb, rect);
  
  	else if (fb->format->cpp[0] == 4 && cirrus->cpp == 2)
+-		drm_fb_xrgb8888_to_rgb565_dstclip(__io_virt(cirrus->vram),
++		drm_fb_xrgb8888_to_rgb565_dstclip(cirrus->vram,
+ 						  cirrus->pitch,
+ 						  vmap, fb, rect, false);
+ 
 diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-index 00d716f14173..dace05638bc3 100644
+index dace05638bc3..c9521af4e90b 100644
 --- a/drivers/gpu/drm/drm_format_helper.c
 +++ b/drivers/gpu/drm/drm_format_helper.c
-@@ -10,23 +10,17 @@
+@@ -113,42 +113,22 @@ void drm_fb_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+ }
+ EXPORT_SYMBOL(drm_fb_swab16);
  
- #include <linux/module.h>
- #include <linux/slab.h>
-+#include <linux/io.h>
- 
- #include <drm/drm_format_helper.h>
- #include <drm/drm_framebuffer.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_rect.h>
- 
--static void drm_fb_memcpy_lines(void *dst, unsigned int dst_pitch,
--				void *src, unsigned int src_pitch,
--				unsigned int linelength, unsigned int lines)
-+static unsigned int clip_offset(struct drm_rect *clip,
-+				unsigned int pitch, unsigned int cpp)
+-static void drm_fb_xrgb8888_to_rgb565_lines(void *dst, unsigned int dst_pitch,
+-					    void *src, unsigned int src_pitch,
+-					    unsigned int src_linelength,
+-					    unsigned int lines,
+-					    bool swap)
++static void drm_fb_xrgb8888_to_rgb565_line(u16 *dbuf, u32 *sbuf,
++					   unsigned int pixels,
++					   bool swab)
  {
--	int line;
+-	unsigned int linepixels = src_linelength / sizeof(u32);
+-	unsigned int x, y;
+-	u32 *sbuf;
+-	u16 *dbuf, val16;
++	unsigned int x;
++	u16 val16;
+ 
+-	/*
+-	 * The cma memory is write-combined so reads are uncached.
+-	 * Speed up by fetching one line at a time.
+-	 */
+-	sbuf = kmalloc(src_linelength, GFP_KERNEL);
+-	if (!sbuf)
+-		return;
 -
--	for (line = 0; line < lines; line++) {
--		memcpy(dst, src, linelength);
+-	for (y = 0; y < lines; y++) {
+-		memcpy(sbuf, src, src_linelength);
+-		dbuf = dst;
+-		for (x = 0; x < linepixels; x++) {
+-			val16 = ((sbuf[x] & 0x00F80000) >> 8) |
+-				((sbuf[x] & 0x0000FC00) >> 5) |
+-				((sbuf[x] & 0x000000F8) >> 3);
+-			if (swap)
+-				*dbuf++ = swab16(val16);
+-			else
+-				*dbuf++ = val16;
+-		}
 -		src += src_pitch;
 -		dst += dst_pitch;
--	}
-+	return clip->y1 * pitch + clip->x1 * cpp;
++	for (x = 0; x < pixels; x++) {
++		val16 = ((sbuf[x] & 0x00F80000) >> 8) |
++			((sbuf[x] & 0x0000FC00) >> 5) |
++			((sbuf[x] & 0x000000F8) >> 3);
++		if (swab)
++			dbuf[x] = swab16(val16);
++		else
++			dbuf[x] = val16;
+ 	}
+-
+-	kfree(sbuf);
  }
  
  /**
-@@ -43,35 +37,44 @@ void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
- 		   struct drm_rect *clip)
+@@ -167,23 +147,37 @@ static void drm_fb_xrgb8888_to_rgb565_lines(void *dst, unsigned int dst_pitch,
+  */
+ void drm_fb_xrgb8888_to_rgb565(void *dst, void *vaddr,
+ 			       struct drm_framebuffer *fb,
+-			       struct drm_rect *clip, bool swap)
++			       struct drm_rect *clip, bool swab)
  {
- 	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
--	unsigned int offset = (clip->y1 * fb->pitches[0]) + (clip->x1 * cpp);
- 	size_t len = (clip->x2 - clip->x1) * cpp;
-+	unsigned int y, lines = clip->y2 - clip->y1;
+-	unsigned int src_offset = (clip->y1 * fb->pitches[0])
+-		+ (clip->x1 * sizeof(u32));
+-	size_t src_len = (clip->x2 - clip->x1) * sizeof(u32);
+-	size_t dst_len = (clip->x2 - clip->x1) * sizeof(u16);
++	size_t linepixels = clip->x2 - clip->x1;
++	size_t src_len = linepixels * sizeof(u32);
++	size_t dst_len = linepixels * sizeof(u16);
++	unsigned y, lines = clip->y2 - clip->y1;
++	void *sbuf;
  
--	drm_fb_memcpy_lines(dst, len,
--			    vaddr + offset, fb->pitches[0],
--			    len, clip->y2 - clip->y1);
-+	vaddr += clip_offset(clip, fb->pitches[0], cpp);
+-	drm_fb_xrgb8888_to_rgb565_lines(dst, dst_len,
+-					vaddr + src_offset, fb->pitches[0],
+-					src_len, clip->y2 - clip->y1,
+-					swap);
++	/*
++	 * The cma memory is write-combined so reads are uncached.
++	 * Speed up by fetching one line at a time.
++	 */
++	sbuf = kmalloc(src_len, GFP_KERNEL);
++	if (!sbuf)
++		return;
++
++	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
 +	for (y = 0; y < lines; y++) {
-+		memcpy(dst, vaddr, len);
++		memcpy(sbuf, vaddr, src_len);
++		drm_fb_xrgb8888_to_rgb565_line(dst, sbuf, linepixels, swab);
 +		vaddr += fb->pitches[0];
-+		dst += len;
++		dst += dst_len;
 +	}
++
++	kfree(sbuf);
  }
- EXPORT_SYMBOL(drm_fb_memcpy);
+ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
  
  /**
-  * drm_fb_memcpy_dstclip - Copy clip buffer
-- * @dst: Destination buffer
-+ * @dst: Destination buffer (iomem)
-  * @vaddr: Source buffer
+  * drm_fb_xrgb8888_to_rgb565_dstclip - Convert XRGB8888 to RGB565 clip buffer
+- * @dst: RGB565 destination buffer
++ * @dst: RGB565 destination buffer (iomem)
+  * @dst_pitch: destination buffer pitch
+  * @vaddr: XRGB8888 source buffer
   * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
+@@ -194,22 +188,31 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
+  * support XRGB8888.
   *
   * This function applies clipping on dst, i.e. the destination is a
 - * full framebuffer but only the clip rect content is copied over.
 + * full (iomem) framebuffer but only the clip rect content is copied over.
   */
--void drm_fb_memcpy_dstclip(void *dst, void *vaddr, struct drm_framebuffer *fb,
-+void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
-+			   struct drm_framebuffer *fb,
- 			   struct drm_rect *clip)
+-void drm_fb_xrgb8888_to_rgb565_dstclip(void *dst, unsigned int dst_pitch,
++void drm_fb_xrgb8888_to_rgb565_dstclip(void __iomem *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+-				       struct drm_rect *clip, bool swap)
++				       struct drm_rect *clip, bool swab)
  {
- 	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
--	unsigned int offset = (clip->y1 * fb->pitches[0]) + (clip->x1 * cpp);
-+	unsigned int offset = clip_offset(clip, fb->pitches[0], cpp);
- 	size_t len = (clip->x2 - clip->x1) * cpp;
-+	unsigned int y, lines = clip->y2 - clip->y1;
+-	unsigned int src_offset = (clip->y1 * fb->pitches[0])
+-		+ (clip->x1 * sizeof(u32));
+-	unsigned int dst_offset = (clip->y1 * dst_pitch)
+-		+ (clip->x1 * sizeof(u16));
+-	size_t src_len = (clip->x2 - clip->x1) * sizeof(u32);
++	size_t linepixels = clip->x2 - clip->x1;
++	size_t dst_len = linepixels * sizeof(u16);
++	unsigned y, lines = clip->y2 - clip->y1;
++	void *dbuf;
  
--	drm_fb_memcpy_lines(dst + offset, fb->pitches[0],
--			    vaddr + offset, fb->pitches[0],
--			    len, clip->y2 - clip->y1);
-+	vaddr += offset;
-+	dst += offset;
+-	drm_fb_xrgb8888_to_rgb565_lines(dst + dst_offset, dst_pitch,
+-					vaddr + src_offset, fb->pitches[0],
+-					src_len, clip->y2 - clip->y1,
+-					swap);
++	dbuf = kmalloc(dst_len, GFP_KERNEL);
++	if (!dbuf)
++		return;
++
++	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
++	dst += clip_offset(clip, dst_pitch, sizeof(u16));
 +	for (y = 0; y < lines; y++) {
-+		memcpy_toio(dst, vaddr, len);
++		drm_fb_xrgb8888_to_rgb565_line(dbuf, vaddr, linepixels, swab);
++		memcpy_toio(dst, dbuf, dst_len);
 +		vaddr += fb->pitches[0];
-+		dst += fb->pitches[0];
++		dst += dst_len;
 +	}
++
++	kfree(dbuf);
  }
- EXPORT_SYMBOL(drm_fb_memcpy_dstclip);
+ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565_dstclip);
  
 -- 
 2.18.1
