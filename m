@@ -2,113 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A0FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A39DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6E2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122B62070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmuuYEdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfDJUNt (ORCPT
+        id S1726656AbfDJUPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:13:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:45625 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfDJUNt (ORCPT
+        Wed, 10 Apr 2019 16:15:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36466 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDJUPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:13:49 -0400
-Received: from wuerfel.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N5VXu-1gpg003t0s-016zjP; Wed, 10 Apr 2019 22:13:31 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] s390: boot, purgatory: pass $(CLANG_FLAGS) where needed
-Date:   Wed, 10 Apr 2019 22:12:41 +0200
-Message-Id: <20190410201300.3528984-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190410201300.3528984-1-arnd@arndb.de>
-References: <20190410201300.3528984-1-arnd@arndb.de>
+        Wed, 10 Apr 2019 16:15:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y13so4456236wrd.3;
+        Wed, 10 Apr 2019 13:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hK9vGrAk24MGIuEya3ulbjyPd4hoU272JXR2LsCNHAw=;
+        b=WmuuYEduD9Ic6wTOl9z2WzbU8JZiOn3fSt7YbtKYfdjJJoooXerZMGAVHteUjpyYv5
+         VDPe3tijW6GKa5a886WARw5gshzy5NAzc2LVWQkxLDTc+jgfGRPceCMB4gPJoV1TyY7d
+         ekusHQhmRX+Bi9cnMzsaQWpt5F+xEsyDdOr196+BeDgpyW9DLchgJsfNbOEkAb7G+bEx
+         d/zRN7nSGyMXVtA1RoM4ApIKLvnS2sbWZF1KiOpdqSZ+N6uUAuHb0QGpXmkm4e2YlzmS
+         kxP8+EsuRR0HdkJ/V+RmE/Q4ZNU4sztSRQqlK8mS2VQFkMG3EbudtD7febTYU16zyJTx
+         ZhxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hK9vGrAk24MGIuEya3ulbjyPd4hoU272JXR2LsCNHAw=;
+        b=ET5l7eyIlv9yVfDyJXgBge/PKz9Qr7F3uXUpEawWW66KNfBPLDaQ/T1761We3U+uwu
+         f/5/3ayQVO3EonjZ59g9DZGdqKWCAuZVKxnAGs2j3wM99Mwut/G9qLwvt2zK2OwGuKO0
+         KzghSICIL8cZJ2eFyr5Bh6o3hWOnh2B67o7sgbZjxoJzUPDHcae7zEIbanvk7dAhV/fI
+         7fzoMYYrFFhFelifdCkoRLz94bQZzpriHd2h+Q+reiQRJ/4Odrxej5yM+aSnr0OYUBZ3
+         WnzziX97d2PllaaJwuH69iyybfJVvqdMCaAsOnW8end47ELqI5cFHsswOUg0bmP237pV
+         Y91A==
+X-Gm-Message-State: APjAAAVqUolf2g3LoCmeaRHcy0hZNVo4hOhiXW2Elo7+Do9HBvcSj4jU
+        2z1GDbpDLL6K51/ycgYY9o8=
+X-Google-Smtp-Source: APXvYqyRlowiYDuL6F4fg2IidY8yN3FTxNRrjW66mpLJFO2zPsEH6KfmwHD6Iq6t79advobG7FmClQ==
+X-Received: by 2002:adf:e78e:: with SMTP id n14mr5632166wrm.14.1554927323018;
+        Wed, 10 Apr 2019 13:15:23 -0700 (PDT)
+Received: from [192.168.1.2] (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
+        by smtp.gmail.com with ESMTPSA id v184sm6394881wma.6.2019.04.10.13.15.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 13:15:22 -0700 (PDT)
+Subject: Re: [PATCH v2 net-next 05/22] net: dsa: Add more convenient functions
+ for installing port VLANs
+To:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georg.waibel@sensor-technik.de
+References: <20190410005700.31582-1-olteanv@gmail.com>
+ <20190410005700.31582-6-olteanv@gmail.com>
+ <d9f4ec44-7cc6-0ffe-9d02-eb1b1b818340@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Message-ID: <86d31830-bd53-2800-932b-de610586a5fb@gmail.com>
+Date:   Wed, 10 Apr 2019 23:15:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4kHQTeoWEX/56QzZgzt6tTms3ph0CUQzW12FyBpIJ84Jni675FW
- mkF2HJNWcb3v4VnA4F4MbSMOq+NKxTPxXKT0vsTiAjes3gXvv+p8AQYf/Zj914inJsaBWow
- yREn8pFQ02wO0h47ZB1jQWXjQ4YpXpkJmiXvbdmO9MG44t7uPrGZy5XwomUCCXIAhfgw6dZ
- a1632lEmWnIptJ67ouu/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7aGoQfQ823Y=:jfhcrSH+xbvajbrWaPWoEY
- pXJIfaeXHxA9yJGCDGLzJ+826OU8w2sM4h6Ak9A3o+aTZa+t1l+vlr++jLbADMBmeVxAK5W/k
- biFpWKa6RyBLarlfct8txKj+tdFQfFx2OI4iFDD1Os0bEEHsM8tBCZQijaDel7++B79zXt5Et
- jxlB8Kfn87+CbQR0KVe2kabP/RflSAhOBSNhlSXN1CuChkSaa4dyt256WSBhreINVwRWMhF05
- J4fEhXDntkeNlNoNGUjtye9/IwBiIe3LkQzG2ZsfruiB2Q+lvQsiDaC478ETH1reFyFFBX2ZX
- x6mmWjThpacJxJmbqSiR6xXK8krFraKcJgZuCO2Zz/BE86X7r4YkZQnnhcvTN14X0YpBTz1Gg
- XmT+SwBtU6x2jEU75lA1TUvkBvit1Ahpimm/WgH37R99L/c6nj6BM3ED/cp3zgnx+3zQ6TXjd
- SAL8wy85c5o7vTl+9RdMYvkWeZqjOFIb6bTsGhpdzfHOsauBTH8M7pMK8UuRAqY+XoLQ7JN6D
- YW8JXdHoSx91sR+D40UodZ169kLNGYiOdFHm4AQmyfnGuSqwSiiMonavaaIwSBcD50b5h11tB
- 2cRUoh+bfcyCkKyM/gtr6UCnPBgnqAXgAe24YP9cNQHLbHvaXmaDEiN5ptg42A6QdXkB29AbP
- F+mmCBkbCNOU9JIF2pkX8WrExBYjtGl3sfT4JlAsHMZ7+Ml5tWedAjS4IyHvk+Ac2lg0fN+jm
- JqWdkW1OX/jkAI9tuANctyTMBn05n4PP1v9Q4g==
+In-Reply-To: <d9f4ec44-7cc6-0ffe-9d02-eb1b1b818340@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purgatory and boot Makefiles do not inherit the original cflags,
-so clang falls back to the default target architecture when building it,
-typically this would be x86 when cross-compiling.
+On 4/10/19 5:01 AM, Florian Fainelli wrote:
+> On 4/9/2019 5:56 PM, Vladimir Oltean wrote:
+>> This hides the need to perform a two-phase transaction and construct a
+>> switchdev_obj_port_vlan struct.
+>>
+>> Call graph (including a function that will be introduced in a follow-up
+>> patch) looks like this now (same for the *_vlan_del function):
+>>
+>> dsa_slave_vlan_rx_add_vid   dsa_port_setup_8021q_tagging
+>>              |                        |
+>>              |                        |
+>>              |          +-------------+
+>>              |          |
+>>              v          v
+>>             dsa_port_vid_add      dsa_slave_port_obj_add
+>>                    |                         |
+>>                    +-------+         +-------+
+>>                            |         |
+>>                            v         v
+>>                         dsa_port_vlan_add
+>>
+>> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+>> ---
+>> Changes in v2:
+>> Renamed __dsa_port_vlan_add to dsa_port_vid_add and not to
+>> dsa_port_vlan_add_trans, as suggested, because the corresponding _del function
+>> does not have a transactional phase and the naming is more uniform this way.
+> 
+> Thanks the name does look a lot better now.
+> 
+> [snip]
+> 
+>> +int dsa_port_vid_del(struct dsa_port *dp, u16 vid)
+>> +{
+>> +	struct switchdev_obj_port_vlan vlan = {
+>> +		.obj.id = SWITCHDEV_OBJ_ID_PORT_VLAN,
+>> +		.vid_begin = vid,
+>> +		.vid_end = vid,
+>> +	};
+> 
+> Any reasons why this function does not take a flags argument? Also, did
+> you intend to migrate dsa_slave_vlan_rx_kill_vid() to use this helper
+> for deleting a VLAN ID?
+> 
 
-Add $(CLANG_FLAGS) everywhere so we pass the correct --target=s390x-linux
-option when cross-compiling.
+Hi Florian,
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/s390/Makefile           | 5 +++--
- arch/s390/purgatory/Makefile | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+I don't think there's any semantics associated to deleting a VLAN with 
+flags. The br_switchdev_port_vlan_del() function doesn't set the flags 
+either.
+And as for the dsa_slave_vlan_rx_kill_vid(), it wasn't an oversight, I 
+just thought that the benefits weren't as great as in the case of *_add. 
+I do see that not doing it somewhat breaks the uniformity and makes the 
+commit message slightly inaccurate, so I can fix that up if you think 
+it's necessary.
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 9c079a506325..443990791099 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -17,12 +17,13 @@ KBUILD_CFLAGS_MODULE += -fPIC
- KBUILD_AFLAGS	+= -m64
- KBUILD_CFLAGS	+= -m64
- aflags_dwarf	:= -Wa,-gdwarf-2
--KBUILD_AFLAGS_DECOMPRESSOR := -m64 -D__ASSEMBLY__
-+KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
- KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
--KBUILD_CFLAGS_DECOMPRESSOR := -m64 -O2
-+KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
- KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
-+KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning,pointer-sign)
- KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index ce6a3f75065b..ecd0b3847fef 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -22,6 +22,7 @@ KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
- KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
- KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
- KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
-+KBUILD_CFLAGS += $(CLANG_FLAGS)
- KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
- KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
- 
--- 
-2.20.0
-
+Thanks,
+-Vladimir
