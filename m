@@ -2,193 +2,134 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F2CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4A20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlpkLDrr"
+	by mail.kernel.org (Postfix) with ESMTP id 0CDBF20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfDJAZb (ORCPT
+        id S1726907AbfDJA0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 20:25:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45847 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfDJAZa (ORCPT
+        Tue, 9 Apr 2019 20:26:06 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:37470 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfDJA0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 20:25:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so255169pfi.12;
-        Tue, 09 Apr 2019 17:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=3usq5KjeUgQiAoHSoX5yN+FzJN9TRjXsFOl3RQmWgzw=;
-        b=TlpkLDrrFEgwCc9S3ddKYGxOrdXAAzeIGnQ7OkRxXrlUcdxdCTH8mETt3dss13wPWK
-         ECEpW/V6yg7Xk7eIupqjG2hgSfLR2zUKe5agM4gCQbSmvRRfaZMPrxKPV9UgmdElmo7M
-         at1JOTWLvuEXA6yNbEDxBd4IIB4mEGRFdRGhUZ6WPQGHfLNqiXbpz8dHb+u4qrZGhnfL
-         ZNJTx1aTkwamECKH4xQVcwr2eXeyr4Tu2TWCcfNG8bEkF55efCuvP6o+5LYG24QdjpDv
-         580qMzqhZpJd5cZuDmSDaxArXA6LbCBBc46VCP/Dma4m+wLAYv4ogOcssasMVRcgcZwD
-         JLww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=3usq5KjeUgQiAoHSoX5yN+FzJN9TRjXsFOl3RQmWgzw=;
-        b=qaIkeo3GLu9afCQiqXUmKeTaRKX2omyxRj/xx9jPazAQMK2upN+wYwbS2RWgG8LCOm
-         2YeLkhGyEvDNjebuB7YwEEHSIrw/WTGpFRExLpEDNZWDDqcmRq2vTBZafEPeXrwbTIN0
-         LWDWJEBcu176yHX6OBC8kfqaGMbTjqdUsvChowphfO4olUly8aqG7KtWaysFuUoUY/uL
-         Vbo8zbFdOpIR7we9xBFdpE04+goEFkctSriVQJBa5AUdjKGcwCK0pNlfpFBRCc5rjwEo
-         lwsqlVpWpWwZZxiF5nsMQJ98epsf2kT3/auhcb1Q/heYLFmpujepBwc+COaPxu17tR3G
-         L4eQ==
-X-Gm-Message-State: APjAAAULfmk8eC9GbSUIcHu0lV/jme42ReZxatirkI06FL+decCvd6A9
-        nQ/MVZxKasqby/wAzRpJse2EcRWKbas=
-X-Google-Smtp-Source: APXvYqzMuLc7/0KEzpNjHRcfxAoNFPLejoKPoLoxqR/FIR3ra1DU2mMTC8SetXmAIRmF8jk5JIC4Vg==
-X-Received: by 2002:a65:51c9:: with SMTP id i9mr37939014pgq.187.1554855929571;
-        Tue, 09 Apr 2019 17:25:29 -0700 (PDT)
-Received: from localhost ([193.114.109.175])
-        by smtp.gmail.com with ESMTPSA id 17sm79301491pfw.65.2019.04.09.17.25.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 17:25:28 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:25:20 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 17/21] drivers: Remove explicit invocations of mmiowb()
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-References: <20190405135936.7266-1-will.deacon@arm.com>
-        <20190405135936.7266-18-will.deacon@arm.com>
-        <CAHk-=wj6ymuXDS1Azr4fFJC7Z77zOfN5vaKZjDzUA4izvULWXg@mail.gmail.com>
-        <1554798941.svmfd0sejb.astroid@bobo.none>
-        <20190409134616.GD2990@fuggles.cambridge.arm.com>
-In-Reply-To: <20190409134616.GD2990@fuggles.cambridge.arm.com>
+        Tue, 9 Apr 2019 20:26:06 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hE13z-0006Nk-FD; Tue, 09 Apr 2019 18:26:03 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hE13y-0005Fl-JI; Tue, 09 Apr 2019 18:26:03 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, omosnace@redhat.com,
+        eparis@parisplace.org, oleg@redhat.com
+References: <c7b092894ac6d611f8c5083e712da41e6685f94a.1554781852.git.rgb@redhat.com>
+        <20190409080138.745d18a1@ivy-bridge>
+        <20190409140259.n4t6rxb24eu3uzvp@madcap2.tricolour.ca>
+        <20190409173716.1a0308fb@ivy-bridge>
+        <20190409155728.dfp4qwseo6jxdmqr@madcap2.tricolour.ca>
+Date:   Tue, 09 Apr 2019 19:25:44 -0500
+In-Reply-To: <20190409155728.dfp4qwseo6jxdmqr@madcap2.tricolour.ca> (Richard
+        Guy Briggs's message of "Tue, 9 Apr 2019 11:57:28 -0400")
+Message-ID: <875zrmaepj.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1554855359.817ryayv8z.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-XM-SPF: eid=1hE13y-0005Fl-JI;;;mid=<875zrmaepj.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+2ZIHWLNdNII0fmfwQ5R+N+v3eGsk8n94=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH ghak111 V1] audit: deliver siginfo regarless of syscall
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon's on April 9, 2019 11:46 pm:
-> Hi Nick,
->=20
-> On Tue, Apr 09, 2019 at 07:00:52PM +1000, Nicholas Piggin wrote:
->> Linus Torvalds's on April 6, 2019 1:50 am:
->> > On Fri, Apr 5, 2019 at 4:01 AM Will Deacon <will.deacon@arm.com> wrote=
-:
->> >>
->> >> mmiowb() is now implied by spin_unlock() on architectures that requir=
-e
->> >> it, so there is no reason to call it from driver code. This patch was
->> >> generated using coccinelle:
->> >>
->> >>         @mmiowb@
->> >>         @@
->> >>         - mmiowb();
->> >=20
->> > So I love the patch series, and think we should just do it, but I do
->> > wonder if some of the drivers involved end up relying on memory
->> > ordering things (store_release -> load_aquire) and IO ordering rather
->> > than using locking...
->>=20
->> Hopefully the convention that smp_ prefix does not work for MMIO
->> ordering helps there. Drivers relying on that would be broken today
->> on powerpc, at least.
->>=20
->> > Wouldn't such use now be broken on ia64 SN platforms? Do we care?
->>=20
->> Hopefully not too much, what changed since last thread? :)
->>=20
->> > So it might be worth noting that a lot of the mmiowb()s here weren't
->> > paired with spin_unlock?
->>=20
->> I repeat myself, but the correct change is for ia64 to #define wmb to
->> mmiowb, then nothing is silently broken, nothing has to be noted, and=20
->> nobody has to care. The ia64/sn2 platform will run a little slower=20
->> that's all.
->=20
-> That's certainly something for the ia64 maintainers to consider, if they
-> care about this behaviour. I still have hope that we'll drop ia64 in the
-> near future :)
 
-Well we don't need to for this reason, at least. Wouldn't cost
-architecture independent code anything.
+Minor nit about the description of this patch (as I presume it will need
+to respun).
 
-I don't have much opinion about it, but Itaniums of course are still
-being sold and the latest chip released in 2017. The last Itanium
-Altix seems more than 10 years old though so it might be reasonable=20
-to remove sn2 (if it's causing a big headache).
+You are talking about audit signal information.  You are not talking
+about struct siginfo (aka siginfo_t).  The structure siginfo_t is part
+of posix and userspace ABI and is part of the stack frame for a
+delivered signal.
 
->=20
->> But deliberately breaking sn2 I guess is implicitly acknowledging the=20
->> same end result that I wanted, so fine.
->>=20
->> I think it might be an idea to remove all the mmiowb() that obviously
->> come before spin_unlock in one big patch, but then submit the rest=20
->> individually to driver maintainers. I could do that rather than ask
->> more work from Will, if he and you agree.
->=20
-> That's an option, I suppose, but I'd much rather just kill off mmiowb() i=
-n
-> one fell swoop and be done with it. I've added the following message to
-> the commit of the coccinelle patch so any breakage should be easily
-> rectified:
->=20
->  | NOTE: mmiowb() has only ever guaranteed ordering in conjunction with
->  | spin_unlock(). However, pairing each mmiowb() removal in this patch
->  | with the corresponding call to spin_unlock() is not at all trivial,
->  | so there is a small chance that this change may regress any drivers
->  | incorrectly relying on mmiowb() to order MMIO writes between CPUs usin=
-g
->  | lock-free synchronisation. If you've ended up bisecting to this commit=
-,
->  | you can reintroduce the mmiowb() calls using wmb() instead, which shou=
-ld
->  | restore the old behaviour on all architectures other than some esoteri=
-c
->  | ia64 systems.
->=20
-> That way we don't have to worry about the long tail of commits removing
-> undocumented, dangling barriers.
->=20
-> It's not like we're losing the information about where the mmiowb()s used=
- to
-> be, so it should be easy to address any fallout (but I'm not really expec=
-ting
-> anything significant, to be honest with you).
+The summary had me thinking you were messing with when siginfo is
+collected and delivered to userspace.
 
-Well if you feel strongly about it I don't object.
+Richard Guy Briggs <rgb@redhat.com> writes:
 
-Thanks,
-Nick
+> On 2019-04-09 17:37, Steve Grubb wrote:
+>> On Tue, 9 Apr 2019 10:02:59 -0400
+>> Richard Guy Briggs <rgb@redhat.com> wrote:
+>> 
+>> > On 2019-04-09 08:01, Steve Grubb wrote:
+>> > > On Mon,  8 Apr 2019 23:52:29 -0400 Richard Guy Briggs
+>> > > <rgb@redhat.com> wrote:  
+>> > > > When a process signals the audit daemon (shutdown, rotate, resume,
+>> > > > reconfig) but syscall auditing is not enabled, we still want to
+>> > > > know the identity of the process sending the signal to the audit
+>> > > > daemon.  
+>> > > 
+>> > > Why? If syscall auditing is disabled, then there is no requirement
+>> > > to provide anything. What is the real problem that you are seeing?  
+>> > 
+>> > Shutdown messages with -1 in them rather than the real values.
+>> 
+>> OK. We can fix that by patching auditd to see if auditing is enabled
+>> before requesting signal info. If auditing is disabled, the proper
+>> action is for the kernel to ignore any audit userspace messages except
+>> the configuration commands.
+>
+> If auditing is disabled in the kernel, none of this is trackable.  It is
+> for those as yet unsupported arches that can run audit enabled but
+> without auditsyscall support.
+>
+> Here's a current sample with CONFIG_AUDIT and ~CONFIG_AUDITSYSCALL
+> configured, note "auid=" and "pid=":
+>
+> 	killall -HUP auditd
+> 	type=DAEMON_CONFIG msg=audit(2019-04-09 11:37:04.508:3266) op=reconfigure state=changed auid=unset pid=-1 subj=? res=success
+>
+> 	killall -TERM auditd
+> 	type=DAEMON_END msg=audit(2019-04-09 11:51:50.441:5709) : op=terminate auid=unset pid=-1 subj=? res=success 
+> 	
+> and the same with the patch applied:
+>
+> 	killall -HUP auditd
+> 	type=DAEMON_CONFIG msg=audit(2019-04-09 11:42:40.851:8924) op=reconfigure state=changed auid=root pid=652 subj=? res=success
+>
+> 	killall -TERM auditd
+> 	type=DAEMON_END msg=audit(2019-04-09 11:51:50.441:5709) : op=terminate auid=root pid=652 subj=? res=success 
+>
+> The USR1 "rotate" and USR2 "resume" log messages need to be fixed in
+> userspace.
 
-=
+Hmm.  You mention -1 as beeing a problem.  You don't say if auid is a
+concern.
+
+It looks like all you care about is the sending processes pid.  That
+information is saved in the sending processes siginfo.  As such you may
+be able to remove some of the magic from the code by looking at the
+siginfo of the signal.
+
+Why it appears the kernel is logging when userspace receives a signal is
+beyond me so I don't know using siginfo makes sense.  I just figure I
+will toss it out there in case it shakes some ideas loose.
+
+Eric
