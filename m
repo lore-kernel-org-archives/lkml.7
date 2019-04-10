@@ -2,370 +2,111 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378A8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A473C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10B92075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554924272;
-	bh=tKkPzHX/Uihvot7AWIbU7M7ky7FtDC0nrHGnRjCOVyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1m8S3T/mNDH2BkEK48BGNBo0duEE54jCuIWDyyidPc7GyJxI03AhYQYa3z8avstJ
-	 fcazmAuLikPQHaMpzas6JV+LTEzjLIMlGIxhhsV30hjXXeO8rJR19d1YNS/B5Dw7Ig
-	 SBWX/xWPWNnQ98n7zrjmoqFLg8XqrsSs14szmenI=
+	by mail.kernel.org (Postfix) with ESMTP id 218182075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfDJTYb (ORCPT
+        id S1727104AbfDJTYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:24:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfDJTXL (ORCPT
+        Wed, 10 Apr 2019 15:24:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45803 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfDJTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:23:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/DoZqJ47XdGMH8UMjypS+5ERMfAgqAifsh9MIk2OSH4=; b=ssevDoi2+oUSF9PvaoM+/ux48B
-        o7qHRPrbzaUKNzfYncaggfZQKTVfXtu950loqa43U9zdMvjg7wXWMvGmSFcq1kdUT77VV6P+ljQI+
-        KXtYUJMGGi6tK7XuEu+ph4MTWlzhJTFrfPef3jdDBj5+RpLdRQTqExOTLRmLDpYTjEbgIU18Hqs4h
-        zME8QyE+tCbG/PPgCWA0NT4Ku3oiaL6IX34tMz+rPccIjOiZlU58FRRNWRl8yBY0MciA0GRbr0vh6
-        kcKKsfFWEH00ER+e84bzrsQF/Y7usESWaZ/ZaEZXMr5A/CpIIoe9gjJwoIffWxoYBeNeKcEySQpfH
-        Spk82tLQ==;
-Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEIoQ-0003RC-Mg; Wed, 10 Apr 2019 19:23:10 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hEIoJ-0000zC-1B; Wed, 10 Apr 2019 16:23:03 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH v2 12/21] docs: hwmon: asc7621: convert to ReST format
-Date:   Wed, 10 Apr 2019 16:22:49 -0300
-Message-Id: <916e894bbb62241635a0c8b8292e072e24526cd4.1554923967.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1554923967.git.mchehab+samsung@kernel.org>
-References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+        Wed, 10 Apr 2019 15:24:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y6so3166405ljd.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:24:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZtE6u2CmznELGPlCVTCwPsq3DHN6UfubwmUZHQ7hukE=;
+        b=Ug30KgNvcrO8NeW5kgNoXcpPn8vWVJG3EsQa04V4bdgPnPyAuKQ7Q+NAShdqrSfmid
+         YrU8bTNMUKdm7SSTVJWFZf5IJHginZFahV01Y0uYvGmUB7IlqWlFZuApjPP7ukolc300
+         d6U/NAaKAMon09b5zxfpCUNeiN9d+VYlsc3fkdEAIh4oTDFgAjaeLeyWJUlE3EAk1oBd
+         /eC54FMZVGwRTuMEpR74cmyDArYa7IwxlIJ03gi/9FhFj80Psx3/DqfJeLpkH9ajgsaL
+         9WaJwXhtfpnkKLdOHtwnUqQE6yoQn9SjEuJMIDut7XUguBAz3eoIT31icnQxELerg4ZV
+         +uGw==
+X-Gm-Message-State: APjAAAXoGB6C410/mtGNEjQHcL7gdlnzs7bVskmDTMwUImRbCZ6a1Fnk
+        h70aJWo5bShG7s8hyUzO9w6ODiofu/yHdw/Ib6oP4Q==
+X-Google-Smtp-Source: APXvYqzdv80NDTGtMIGMaQvkukaFVx5C4001Ihov26htNLdHQ5y8kBxHe9F+QYg4M4YdFSQY4qH2O4cw20fwJuItjBY=
+X-Received: by 2002:a2e:9649:: with SMTP id z9mr7319296ljh.92.1554924270348;
+ Wed, 10 Apr 2019 12:24:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-3-mcroce@redhat.com>
+ <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
+In-Reply-To: <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Wed, 10 Apr 2019 21:23:54 +0200
+Message-ID: <CAGnkfhwZEqX03H7PqsSTa=GVwZXX127hQO5YHzJasAEYtpLMZw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kernel: use sysctl shared variables for range check
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert asc7621 to ReST format, in order to allow it to
-be parsed by Sphinx.
+On Wed, Apr 10, 2019 at 8:46 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > Use the shared variables for range check, instead of declaring a local one
+> > in every source file.
+>
+> I was expecting this to be a tree-wide change for all the cases found
+> by patch 1's "git grep".
+>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/hwmon/asc7621 | 146 ++++++++++++++++++++++--------------
- 1 file changed, 88 insertions(+), 58 deletions(-)
+Hi Kees,
 
-diff --git a/Documentation/hwmon/asc7621 b/Documentation/hwmon/asc7621
-index 7287be7e1f21..b5a9fad0f172 100644
---- a/Documentation/hwmon/asc7621
-+++ b/Documentation/hwmon/asc7621
-@@ -1,10 +1,15 @@
-+=====================
- Kernel driver asc7621
--==================
-+=====================
- 
- Supported chips:
-+
-     Andigilog aSC7621 and aSC7621a
-+
-     Prefix: 'asc7621'
-+
-     Addresses scanned: I2C 0x2c, 0x2d, 0x2e
-+
-     Datasheet: http://www.fairview5.com/linux/asc7621/asc7621.pdf
- 
- Author:
-@@ -73,8 +78,10 @@ Finally, we have added a tach disable function that turns off the tach
- measurement system for individual tachs in order to save power. That is
- in register 75h.
- 
----
-+--------------------------------------------------------------------------
-+
- aSC7621 Product Description
-+===========================
- 
- The aSC7621 has a two wire digital interface compatible with SMBus 2.0.
- Using a 10-bit ADC, the aSC7621 measures the temperature of two remote diode
-@@ -102,6 +109,8 @@ System voltages of VCCP, 2.5V, 3.3V, 5.0V, and 12V motherboard power are
- monitored efficiently with internal scaling resistors.
- 
- Features
-+--------
-+
- - Supports PECI interface and monitors internal and remote thermal diodes
- - 2-wire, SMBus 2.0 compliant, serial interface
- - 10-bit ADC
-@@ -110,7 +119,7 @@ Features
- - Noise filtering of temperature reading for fan speed control
- - 0.25C digital temperature sensor resolution
- - 3 PWM fan speed control outputs for 2-, 3- or 4-wire fans and up to 4 fan
--	tachometer inputs
-+  tachometer inputs
- - Enhanced measured temperature to Temperature Zone assignment.
- - Provides high and low PWM frequency ranges
- - 3 GPIO pins for custom use
-@@ -123,17 +132,20 @@ Except where noted below, the sysfs entries created by this driver follow
- the standards defined in "sysfs-interface".
- 
- temp1_source
-+	=	===============================================
- 	0 	(default) peci_legacy = 0, Remote 1 Temperature
--			peci_legacy = 1, PECI Processor Temperature 0
-+		peci_legacy = 1, PECI Processor Temperature 0
- 	1 	Remote 1 Temperature
- 	2 	Remote 2 Temperature
- 	3 	Internal Temperature
- 	4 	PECI Processor Temperature 0
- 	5 	PECI Processor Temperature 1
- 	6 	PECI Processor Temperature 2
--	7  PECI Processor Temperature 3
-+	7	PECI Processor Temperature 3
-+	=	===============================================
- 
- temp2_source
-+	=	===============================================
- 	0 	(default) Internal Temperature
- 	1 	Remote 1 Temperature
- 	2 	Remote 2 Temperature
-@@ -142,8 +154,10 @@ temp2_source
- 	5 	PECI Processor Temperature 1
- 	6 	PECI Processor Temperature 2
- 	7 	PECI Processor Temperature 3
-+	=	===============================================
- 
- temp3_source
-+	=	===============================================
- 	0 	(default) Remote 2 Temperature
- 	1 	Remote 1 Temperature
- 	2 	Remote 2 Temperature
-@@ -152,10 +166,12 @@ temp3_source
- 	5 	PECI Processor Temperature 1
- 	6 	PECI Processor Temperature 2
- 	7 	PECI Processor Temperature 3
-+	=	===============================================
- 
- temp4_source
-+	=	===============================================
- 	0 	(default) peci_legacy = 0, PECI Processor Temperature 0
--			peci_legacy = 1, Remote 1 Temperature
-+		peci_legacy = 1, Remote 1 Temperature
- 	1 	Remote 1 Temperature
- 	2 	Remote 2 Temperature
- 	3 	Internal Temperature
-@@ -163,58 +179,65 @@ temp4_source
- 	5 	PECI Processor Temperature 1
- 	6 	PECI Processor Temperature 2
- 	7 	PECI Processor Temperature 3
-+	=	===============================================
- 
--temp[1-4]_smoothing_enable
--temp[1-4]_smoothing_time
-+temp[1-4]_smoothing_enable / temp[1-4]_smoothing_time
- 	Smooths spikes in temp readings caused by noise.
- 	Valid values in milliseconds are:
--	35000
--	17600
--	11800
--	 7000
--	 4400
--	 3000
--	 1600
--	  800
-+
-+	* 35000
-+	* 17600
-+	* 11800
-+	*  7000
-+	*  4400
-+	*  3000
-+	*  1600
-+	*   800
- 
- temp[1-4]_crit
- 	When the corresponding zone temperature reaches this value,
- 	ALL pwm outputs will got to 100%.
- 
--temp[5-8]_input
--temp[5-8]_enable
-+temp[5-8]_input / temp[5-8]_enable
- 	The aSC7621 can also read temperatures provided by the processor
- 	via the PECI bus.  Usually these are "core" temps and are relative
- 	to the point where the automatic thermal control circuit starts
- 	throttling.  This means that these are usually negative numbers.
- 
- pwm[1-3]_enable
-+	=============== ========================================================
- 	0		Fan off.
- 	1		Fan on manual control.
- 	2		Fan on automatic control and will run at the minimum pwm
--				if the temperature for the zone is below the minimum.
--	3		Fan on automatic control but will be off if the temperature
--				for the zone is below the minimum.
--	4-254	Ignored.
-+			if the temperature for the zone is below the minimum.
-+	3		Fan on automatic control but will be off if the
-+			temperature for the zone is below the minimum.
-+	4-254		Ignored.
- 	255		Fan on full.
-+	=============== ========================================================
- 
- pwm[1-3]_auto_channels
- 	Bitmap as described in sysctl-interface with the following
- 	exceptions...
-+
- 	Only the following combination of zones (and their corresponding masks)
- 	are valid:
--	1
--	2
--	3
--	2,3
--	1,2,3
--	4
--	1,2,3,4
- 
--	Special values:
--	0			Disabled.
--	16		Fan on manual control.
--	31		Fan on full.
-+	* 1
-+	* 2
-+	* 3
-+	* 2,3
-+	* 1,2,3
-+	* 4
-+	* 1,2,3,4
-+
-+	* Special values:
-+
-+	  ==		======================
-+	  0		Disabled.
-+	  16		Fan on manual control.
-+	  31		Fan on full.
-+	  ==		======================
- 
- 
- pwm[1-3]_invert
-@@ -226,22 +249,22 @@ pwm[1-3]_freq
- 	PWM frequency in Hz
- 	Valid values in Hz are:
- 
--	10
--	15
--	23
--	30  (default)
--	38
--	47
--	62
--	94
--	23000
--	24000
--	25000
--	26000
--	27000
--	28000
--	29000
--	30000
-+	* 10
-+	* 15
-+	* 23
-+	* 30  (default)
-+	* 38
-+	* 47
-+	* 62
-+	* 94
-+	* 23000
-+	* 24000
-+	* 25000
-+	* 26000
-+	* 27000
-+	* 28000
-+	* 29000
-+	* 30000
- 
- 	Setting any other value will be ignored.
- 
-@@ -251,17 +274,17 @@ peci_enable
- peci_avg
- 	Input filter average time.
- 
--	0 	0 Sec. (no Smoothing) (default)
--	1 	0.25 Sec.
--	2 	0.5 Sec.
--	3 	1.0 Sec.
--	4 	2.0 Sec.
--	5 	4.0 Sec.
--	6 	8.0 Sec.
--	7 	0.0 Sec.
-+	* 0 	0 Sec. (no Smoothing) (default)
-+	* 1 	0.25 Sec.
-+	* 2 	0.5 Sec.
-+	* 3 	1.0 Sec.
-+	* 4 	2.0 Sec.
-+	* 5 	4.0 Sec.
-+	* 6 	8.0 Sec.
-+	* 7 	0.0 Sec.
- 
- peci_legacy
--
-+	=	============================================
- 	0	Standard Mode (default)
- 		Remote Diode 1 reading is associated with
- 		Temperature Zone 1, PECI is associated with
-@@ -270,10 +293,12 @@ peci_legacy
- 	1	Legacy Mode
- 		PECI is associated with Temperature Zone 1,
- 		Remote Diode 1 is associated with Zone 4
-+	=	============================================
- 
- peci_diode
- 	Diode filter
- 
-+	=	====================
- 	0	0.25 Sec.
- 	1 	1.1 Sec.
- 	2 	2.4 Sec.  (default)
-@@ -282,15 +307,20 @@ peci_diode
- 	5 	6.8 Sec.
- 	6 	10.2 Sec.
- 	7 	16.4 Sec.
-+	=	====================
- 
- peci_4domain
- 	Four domain enable
- 
-+	=	===============================================
- 	0 	1 or 2 Domains for enabled processors (default)
- 	1 	3 or 4 Domains for enabled processors
-+	=	===============================================
- 
- peci_domain
- 	Domain
- 
-+	=	==================================================
- 	0 	Processor contains a single domain (0) 	 (default)
- 	1 	Processor contains two domains (0,1)
-+	=	==================================================
+I have already the whole patch ready, but I was frightened by the
+output of get_maintainer.pl, so I decided to split the patch into
+small pieces and send the first one.
+Patches for /proc/sys/net and drivers/ are pretty big, and can be
+merged after the 1/2 inclusion.
+
+> Slight change to the grep for higher accuracy:
+>
+> $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
+> 245
+>
+
+Right, my regexp wrongly matches also one_hundred, one_jiffy, etc.
+Anywqay, I did the changes by hand, so apart the commit message, the
+content should be safe.
+
+> Only 31 sources:
+> $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' | cut -d: -f1 |
+> sort -u > /tmp/list.txt
+> $ wc -l /tmp/list.txt
+> 31
+>
+> One thing I wonder about is if any of these cases depend on the extra
+> variable being non-const (many of these are just "static int").
+>
+> $ egrep -H '\b(zero|one|int_max)\b.*=' $(cat /tmp/list.txt) | grep -v static
+>
+> Looks like none, so it'd be safe. How about doing this tree-wide for
+> all 31 cases? (Coccinelle might be able to help.)
+>
+
+It could be true for other sysctl values like
+xpc_disengage_max_timelimit or fscache_op_wq, but it's very unlikely
+that someone writes, for example, 5 into a variable named "zero". If
+it does, it most likely a bug, so const is our friend.
+
+Regards,
 -- 
-2.20.1
-
+Matteo Croce
+per aspera ad upstream
