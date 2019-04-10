@@ -4,54 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC29BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E43C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9748E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9B52082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554899234;
-	bh=Tnnve3F7+qpUpDciIJOJSEkq5ly35RvXQXv825Ol13Y=;
+	s=default; t=1554899249;
+	bh=RA6/SHzjz8z6C21cTpCYocBnJLVM9fDU/n+BCdF2HQw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=BHAGw8on0QBtgAbAdquC5QTWfEmVDm3hvwvVUMrpZIyOkfWN2q2WoJQPivMmbeDHI
-	 F9dewgfZIpG1l2lB3/222CAwT26Z+pEXTGLt57wwKde/5pGFuEMAlxcqNGmT1S3L9G
-	 Q1Ro01ix4DtSl9OuN0+KYzSH2TkHZzjeIec0TSz8=
+	b=CrXiyZ5YFAkj0RjOMaVeI7e2BNoLFi+FbicJjyQlMr5IE4Io8GxR0tdkzJDRaOinw
+	 35Ro2MNMbZ1g0/HfLMmTjQBxRDbdBTlDYyj3/8HlNm0cgvMOCGs+wbuJ4eTs0HiV5w
+	 JGRYX0K0RSq5GUduaGnzFVQupbRkpO4qa8uMUTpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfDJM1N (ORCPT
+        id S1731948AbfDJM12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:27:13 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35638 "EHLO
+        Wed, 10 Apr 2019 08:27:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36476 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfDJM06 (ORCPT
+        with ESMTP id S1730686AbfDJM11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:26:58 -0400
+        Wed, 10 Apr 2019 08:27:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=qLRR6MocEvwWUyzxtvfDaOfugWuwqcsAx6MPwRM7T1w=; b=ryYxxr5cHH24
-        3e2rpKBajFoi/xkoy2mo8zxVYPV2vWXyGY871+/s6CSSYPmMvnrNqkjKZ34K3jJ/M+sAmyYvG8Y7M
-        YhM5FHh75YNYm/xpmtCIUEaEDSAGX7vP64LoxhHGVkRM7yQisH1sIDeTcO9FnCqWk5YTY6jM5tpJV
-        SlzFo=;
+        List-Archive; bh=Jun+MxAWDA+PfuCKzycFE1Y50IlZlcaC0rnqY1dziAk=; b=Jc9Kt/BP2BmY
+        WlKqyHqVSnZ2SAIp4MQ6FDEu3GI1mgUIF+xznjzqVbDMInixZ6rW53Gi7Ip6delkE/UQFENXRxQ03
+        qqmz1BzGn47uTNE5nsuGCXfLXHMNu9Q/ALLpbTngSTU9Rek0zkN/F5I+c0OHrjXAdz3P/vKT+PcWZ
+        5x1JM=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hECJc-00007V-3F; Wed, 10 Apr 2019 12:26:56 +0000
+        id 1hECJU-00006s-EU; Wed, 10 Apr 2019 12:26:48 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 7C4901128ED2; Wed, 10 Apr 2019 13:26:55 +0100 (BST)
+        id CBE451128ED2; Wed, 10 Apr 2019 13:26:47 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator" to the regulator tree
-In-Reply-To: 
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        broonie@kernel.org, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
+        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: stm32: sai: fix master clock management" to the asoc tree
+In-Reply-To:  <1554883716-10436-1-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190410122655.7C4901128ED2@debutante.sirena.org.uk>
-Date:   Wed, 10 Apr 2019 13:26:55 +0100 (BST)
+Message-Id: <20190410122647.CBE451128ED2@debutante.sirena.org.uk>
+Date:   Wed, 10 Apr 2019 13:26:47 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator
+   ASoC: stm32: sai: fix master clock management
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -84,75 +90,137 @@ to this mail.
 Thanks,
 Mark
 
-From 29e5cb657e2acdf902b0122ca58620ccd771f297 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 8 Apr 2019 20:09:33 +0800
-Subject: [PATCH] regulator: hi655x: Remove ctrl_mask field from struct
- hi655x_regulator
+From e37c2deafe7058cf7989c4c47bbf1140cc867d89 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Wed, 10 Apr 2019 10:08:36 +0200
+Subject: [PATCH] ASoC: stm32: sai: fix master clock management
 
-The rdev->desc->enable_mask setting is always the same as
-BIT(regulator->ctrl_mask), so just use rdev->desc->enable_mask instead.
+When master clock is used, master clock rate is set exclusively.
+Parent clocks of master clock cannot be changed after a call to
+clk_set_rate_exclusive(). So the parent clock of SAI kernel clock
+must be set before.
+Ensure also that exclusive rate operations are balanced
+in STM32 SAI driver.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/hi655x-regulator.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ sound/soc/stm/stm32_sai_sub.c | 64 +++++++++++++++++++++++++----------
+ 1 file changed, 47 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
-index 460ae70d8b04..6f6635daa026 100644
---- a/drivers/regulator/hi655x-regulator.c
-+++ b/drivers/regulator/hi655x-regulator.c
-@@ -28,7 +28,6 @@
- struct hi655x_regulator {
- 	unsigned int disable_reg;
- 	unsigned int status_reg;
--	unsigned int ctrl_mask;
- 	struct regulator_desc rdesc;
- };
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 83d8a7ac56f4..d7045aa520de 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -70,6 +70,7 @@
+ #define SAI_IEC60958_STATUS_BYTES	24
  
-@@ -77,22 +76,18 @@ enum hi655x_regulator_id {
- static int hi655x_is_enabled(struct regulator_dev *rdev)
+ #define SAI_MCLK_NAME_LEN		32
++#define SAI_RATE_11K			11025
+ 
+ /**
+  * struct stm32_sai_sub_data - private data of SAI sub block (block A or B)
+@@ -309,6 +310,25 @@ static int stm32_sai_set_clk_div(struct stm32_sai_sub_data *sai,
+ 	return ret;
+ }
+ 
++static int stm32_sai_set_parent_clock(struct stm32_sai_sub_data *sai,
++				      unsigned int rate)
++{
++	struct platform_device *pdev = sai->pdev;
++	struct clk *parent_clk = sai->pdata->clk_x8k;
++	int ret;
++
++	if (!(rate % SAI_RATE_11K))
++		parent_clk = sai->pdata->clk_x11k;
++
++	ret = clk_set_parent(sai->sai_ck, parent_clk);
++	if (ret)
++		dev_err(&pdev->dev, " Error %d setting sai_ck parent clock. %s",
++			ret, ret == -EBUSY ?
++			"Active stream rates conflict\n" : "\n");
++
++	return ret;
++}
++
+ static long stm32_sai_mclk_round_rate(struct clk_hw *hw, unsigned long rate,
+ 				      unsigned long *prate)
  {
- 	unsigned int value = 0;
--
- 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
+@@ -490,25 +510,29 @@ static int stm32_sai_set_sysclk(struct snd_soc_dai *cpu_dai,
+ 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
+ 	int ret;
  
- 	regmap_read(rdev->regmap, regulator->status_reg, &value);
--	return (value & BIT(regulator->ctrl_mask));
-+	return (value & rdev->desc->enable_mask);
- }
+-	if (dir == SND_SOC_CLOCK_OUT) {
++	if (dir == SND_SOC_CLOCK_OUT && sai->sai_mclk) {
+ 		ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
+ 					 SAI_XCR1_NODIV,
+ 					 (unsigned int)~SAI_XCR1_NODIV);
+ 		if (ret < 0)
+ 			return ret;
  
- static int hi655x_disable(struct regulator_dev *rdev)
- {
--	int ret = 0;
--
- 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
+-		dev_dbg(cpu_dai->dev, "SAI MCLK frequency is %uHz\n", freq);
+-		sai->mclk_rate = freq;
++		/* If master clock is used, set parent clock now */
++		ret = stm32_sai_set_parent_clock(sai, freq);
++		if (ret)
++			return ret;
  
--	ret = regmap_write(rdev->regmap, regulator->disable_reg,
--			   BIT(regulator->ctrl_mask));
--	return ret;
-+	return regmap_write(rdev->regmap, regulator->disable_reg,
-+			    rdev->desc->enable_mask);
- }
+-		if (sai->sai_mclk) {
+-			ret = clk_set_rate_exclusive(sai->sai_mclk,
+-						     sai->mclk_rate);
+-			if (ret) {
+-				dev_err(cpu_dai->dev,
+-					"Could not set mclk rate\n");
+-				return ret;
+-			}
++		ret = clk_set_rate_exclusive(sai->sai_mclk, freq);
++		if (ret) {
++			dev_err(cpu_dai->dev,
++				ret == -EBUSY ?
++				"Active streams have incompatible rates" :
++				"Could not set mclk rate\n");
++			return ret;
+ 		}
++
++		dev_dbg(cpu_dai->dev, "SAI MCLK frequency is %uHz\n", freq);
++		sai->mclk_rate = freq;
+ 	}
  
- static const struct regulator_ops hi655x_regulator_ops = {
-@@ -132,7 +127,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
- 	},                                                       \
- 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
- 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
--	.ctrl_mask = cmask,                                      \
- }
+ 	return 0;
+@@ -916,11 +940,13 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
+ 	int div = 0, cr1 = 0;
+ 	int sai_clk_rate, mclk_ratio, den;
+ 	unsigned int rate = params_rate(params);
++	int ret;
  
- #define HI655X_LDO_LINEAR(_ID, vreg, vmask, ereg, dreg,          \
-@@ -155,7 +149,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
- 	},                                                       \
- 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
- 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
--	.ctrl_mask = cmask,                                      \
- }
+-	if (!(rate % 11025))
+-		clk_set_parent(sai->sai_ck, sai->pdata->clk_x11k);
+-	else
+-		clk_set_parent(sai->sai_ck, sai->pdata->clk_x8k);
++	if (!sai->sai_mclk) {
++		ret = stm32_sai_set_parent_clock(sai, rate);
++		if (ret)
++			return ret;
++	}
+ 	sai_clk_rate = clk_get_rate(sai->sai_ck);
  
- static const struct hi655x_regulator regulators[] = {
+ 	if (STM_SAI_IS_F4(sai->pdata)) {
+@@ -1079,9 +1105,13 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
+ 	regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, SAI_XCR1_NODIV,
+ 			   SAI_XCR1_NODIV);
+ 
+-	clk_disable_unprepare(sai->sai_ck);
++	/* Release mclk rate only if rate was actually set */
++	if (sai->mclk_rate) {
++		clk_rate_exclusive_put(sai->sai_mclk);
++		sai->mclk_rate = 0;
++	}
+ 
+-	clk_rate_exclusive_put(sai->sai_mclk);
++	clk_disable_unprepare(sai->sai_ck);
+ 
+ 	spin_lock_irqsave(&sai->irq_lock, flags);
+ 	sai->substream = NULL;
 -- 
 2.20.1
 
