@@ -2,80 +2,129 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F01C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62A8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2D2206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C73C206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfDJIZF (ORCPT
+        id S1729574AbfDJIZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:25:05 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:35261 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729258AbfDJIZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:25:04 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09094457|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0532965-0.00602425-0.940679;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.EJJhwoT_1554884687;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EJJhwoT_1554884687)
-          by smtp.aliyun-inc.com(10.147.41.158);
-          Wed, 10 Apr 2019 16:24:48 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v3 1/3] perf: use hweight64 instead of hweight_long
-Date:   Wed, 10 Apr 2019 16:16:43 +0800
-Message-Id: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1554883878.git.han_mao@c-sky.com>
-References: <cover.1554883878.git.han_mao@c-sky.com>
-In-Reply-To: <cover.1554883878.git.han_mao@c-sky.com>
-References: <cover.1554883878.git.han_mao@c-sky.com>
+        Wed, 10 Apr 2019 04:25:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52422 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729258AbfDJIZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:25:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 30A60ABD4;
+        Wed, 10 Apr 2019 08:25:06 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1D74A1E429B; Wed, 10 Apr 2019 10:25:04 +0200 (CEST)
+Date:   Wed, 10 Apr 2019 10:25:04 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
+        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
+        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
+        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
+        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
+        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
+        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        kilobyte@angband.pl, yuval.shaia@oracle.com
+Subject: Re: [PATCH v5 4/6] dax: check synchronous mapping is supported
+Message-ID: <20190410082504.GF1426@quack2.suse.cz>
+References: <20190410040826.24371-1-pagupta@redhat.com>
+ <20190410040826.24371-5-pagupta@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410040826.24371-5-pagupta@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bits platform with more than 32 registers, the 64 bits mask is
-truncate to the lower 32 bits and the return value of hweight_long will
-always smaller than 32. When kernel outputs more than 32 registers, but
-the user perf program only counts 32, there will be a data mismatch
-result to overflow check fail.
+On Wed 10-04-19 09:38:24, Pankaj Gupta wrote:
+> This patch introduces 'daxdev_mapping_supported' helper
+> which checks if 'MAP_SYNC' is supported with filesystem
+> mapping. It also checks if corresponding dax_device is
+> synchronous. Virtio pmem device is asynchronous and
+> does not not support VM_SYNC. 
+> 
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+>  include/linux/dax.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index b896706a5ee9..4a2a60ffec86 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -38,6 +38,24 @@ void kill_dax(struct dax_device *dax_dev);
+>  void dax_write_cache(struct dax_device *dax_dev, bool wc);
+>  bool dax_write_cache_enabled(struct dax_device *dax_dev);
+>  bool dax_synchronous(struct dax_device *dax_dev);
+> +
+> +/*
+> + * Callers check if synchronous mapping is enabled for DAX file
+> + * and attached dax device is also synchronous.
+> + *
+> + * dax_synchronous function verifies if dax device is synchronous.
+> + * Currently, only virtio pmem device supports asynchronous device
+> + * flush.
+> + */
 
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Jiri Olsa <jolsa@redhat.com>
-CC: Namhyung Kim <namhyung@kernel.org>
+Thanks for the patch! I'd restructure this comment like:
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
----
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+/*
+ * Check if given mapping is supported by the file / underlying device.
+ */
+> +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+> +				struct dax_device *dax_dev)
+> +{
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7835e05..73c78be 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2322,7 +2322,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 		if (data->user_regs.abi) {
- 			u64 mask = evsel->attr.sample_regs_user;
- 
--			sz = hweight_long(mask) * sizeof(u64);
-+			sz = hweight64(mask) * sizeof(u64);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->user_regs.mask = mask;
- 			data->user_regs.regs = (u64 *)array;
+	/* Everyone supports non-sync mappings */
+> +	if (!(vma->vm_flags & VM_SYNC))
+> +		return true;
+	/* Sync mappings are supported only for files using DAX */
+> +	if (!IS_DAX(file_inode(vma->vm_file)))
+> +		return false;
+	/* Underlying device must support persisting through CPU instructions */
+> +	return dax_synchronous(dax_dev);
+> +}
+>  #else
+>  static inline struct dax_device *dax_get_by_host(const char *host)
+>  {
+> @@ -69,6 +87,11 @@ static inline bool dax_synchronous(struct dax_device *dax_dev)
+>  {
+>  	return true;
+>  }
+> +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
+> +				struct dax_device *dax_dev)
+> +{
+> +	return true;
+
+This looks wrong. Shouldn't it rather be:
+
+	return !(vma->flags & VM_SYNC);
+
+?
+
+								Honza
 -- 
-2.7.4
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
