@@ -2,153 +2,229 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB36C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245B6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3499F2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8A020830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R/lcHZcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbfDJMi2 (ORCPT
+        id S1732019AbfDJMkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:38:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34342 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728978AbfDJMi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:38:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BC1330832CC;
-        Wed, 10 Apr 2019 12:38:26 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A5D8F2C8F2;
-        Wed, 10 Apr 2019 12:38:24 +0000 (UTC)
-Subject: Re: [PATCH-tip v2 00/12] locking/rwsem: Rwsem rearchitecture part 2
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-References: <20190405192115.17416-1-longman@redhat.com>
- <20190410100054.GA115532@gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
- XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
- jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
- r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
- CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
- 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
- VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
- evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
- Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
- h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
- bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
- FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
- oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
- ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
- fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
- 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
- rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
- 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
- 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
- 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
- QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
- TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
- Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
- yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
- lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
- drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
- M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
- 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
- MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
- bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
- qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
- AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
- 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
- GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
- jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
- 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
- 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
- yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
- 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
- Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
- wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
- weim8xU=
-Organization: Red Hat
-Message-ID: <79179601-6161-3745-b658-ae4d62a8ea0a@redhat.com>
-Date:   Wed, 10 Apr 2019 08:38:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 10 Apr 2019 08:40:04 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52303 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729434AbfDJMkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:40:04 -0400
+Received: by mail-it1-f196.google.com with SMTP id x132so3102571itf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H7HycFV5eguHxueKTMnfEUqCK1L2jTgkP9kPDUvxAEw=;
+        b=R/lcHZcOfLx9DNPLCxwsYN4o0Bg8Gc0jtQhWAsmzMEW+XHTDuWPTFQQ7oxIC8aVZtr
+         Hr7J/go2re+mK4/+UBEYtmw/X9mgruHRWFwT9pOAI5/5dGhpXVxm+YVtJdi79TT0lNP/
+         yVAKV9sFBjHj4hnK7t0jrRnWsDqn5YLNShgcCAUyFH57SMplA+kI3Zew8Oyoa1zuq19m
+         Sowifkvt3lyDLUVchE8HVQJ2n3s1ivR595ZRs1u94IJC5DiHWW3TiGcc+4Q6g/iaNtq0
+         IM7TtkKIrzzoUjKhJHORJQ5Eh9v6cIlVxyL1jsWfUug7dSFDuRKz5egmEiaPcfABFeRr
+         RmNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H7HycFV5eguHxueKTMnfEUqCK1L2jTgkP9kPDUvxAEw=;
+        b=kUexReI5bbansrEUDHW3n92qt7jy2qcIqs/dclXP26nxiXyaGLwbc1gVTxNof9c2Hq
+         78pwMCr+CGEJ5fU7I2Awl4HQ2VLSdhB7IduTAxg/yODNc8w/s4vYMM0Z+CITDGEUdQLf
+         yzOlSQ+pdIOJ8MPwHg+9H/XVlJvrT3b9h15Afh+qZH339paNBKyfj3CB7TujLxSaMbUh
+         5gysx6v8KIqH5T7MTR8FNoqpROibRSgLGJB7b9LFqSY1Xl2uzB7qLqnm+mbzn8Xq5t1v
+         JlZpQ6wj+vSTpRjYJBXAXfqoCh3PAoeSK0LVKWAxIUoTxcOFuY0ooghUfIY3mUp8hjGJ
+         zFKw==
+X-Gm-Message-State: APjAAAWsaboanG3jaV5JzbmucySwvblS+K7xaCrkdTErYRbbCBR4pDs+
+        UhqTsZLhujDGRfCwzKGgBk2VD55lPheYt1bSLv9bdw==
+X-Google-Smtp-Source: APXvYqzadXyz32hZ5VZq+as+T0Xtn2sUtu8y4hoYgRuNR81erGIYEeu0PwcmxgKxAnMPKfJQ00P4WYLVX1wTjMnRdR8=
+X-Received: by 2002:a24:3d8f:: with SMTP id n137mr2870417itn.96.1554900002479;
+ Wed, 10 Apr 2019 05:40:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190410100054.GA115532@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 10 Apr 2019 12:38:26 +0000 (UTC)
+References: <00000000000051e9c2057d31a563@google.com> <00000000000036a4a9058619dff3@google.com>
+ <20190410002603.GS2217@ZenIV.linux.org.uk> <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
+ <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
+ <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
+ <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net> <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
+In-Reply-To: <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 10 Apr 2019 14:39:51 +0200
+Message-ID: <CACT4Y+ZukMzwkMGRekjQmBd1OWwNyPmL=CtPnJJCmUKF=4tw6Q@mail.gmail.com>
+Subject: Re: kernel BUG at fs/inode.c:LINE!
+To:     Ian Kent <raven@themaw.net>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 06:00 AM, Ingo Molnar wrote:
-> * Waiman Long <longman@redhat.com> wrote:
+On Wed, Apr 10, 2019 at 2:07 PM Ian Kent <raven@themaw.net> wrote:
 >
->>    # of Threads   Before Patch      After Patch
->>    ------------   ------------      -----------
->>         2            1,179             9,436
->>         4            1,505             8,268
->>         8              721             7,041
->>        16              575             7,652
->>        32               70             2,189
->>        64               39               534
->>
->> Waiman Long (12):
->>   locking/rwsem: Implement a new locking scheme
->>   locking/rwsem: Implement lock handoff to prevent lock starvation
->>   locking/rwsem: Remove rwsem_wake() wakeup optimization
->>   locking/rwsem: Make rwsem_spin_on_owner() return owner state
->>   locking/rwsem: Ensure an RT task will not spin on reader
->>   locking/rwsem: Wake up almost all readers in wait queue
->>   locking/rwsem: Enable readers spinning on writer
->>   locking/rwsem: Enable time-based spinning on reader-owned rwsem
->>   locking/rwsem: Add more rwsem owner access helpers
->>   locking/rwsem: Guard against making count negative
->>   locking/rwsem: Merge owner into count on x86-64
->>   locking/rwsem: Remove redundant computation of writer lock word
->>
->>  kernel/locking/lock_events_list.h |   4 +
->>  kernel/locking/rwsem-xadd.c       | 635 +++++++++++++++++++-----------
->>  kernel/locking/rwsem.c            |   3 +-
->>  kernel/locking/rwsem.h            | 290 +++++++++++---
->>  4 files changed, 647 insertions(+), 285 deletions(-)
-> Looks very nice!
+> On Wed, 2019-04-10 at 19:57 +0800, Ian Kent wrote:
+> > On Wed, 2019-04-10 at 13:40 +0200, Dmitry Vyukov wrote:
+> > > On Wed, Apr 10, 2019 at 12:35 PM Ian Kent <raven@themaw.net> wrote:
+> > > >
+> > > > On Wed, 2019-04-10 at 10:27 +0200, Dmitry Vyukov wrote:
+> > > > > On Wed, Apr 10, 2019 at 2:26 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 09, 2019 at 07:36:00AM -0700, syzbot wrote:
+> > > > > > > Bisection is inconclusive: the first bad commit could be any of:
+> > > > > >
+> > > > > > [snip the useless pile]
+> > > > > >
+> > > > > > > bisection log:
+> > > > > > > https://syzkaller.appspot.com/x/bisect.txt?x=15e1fc2b200000
+> > > > > > > start commit:   [unknown
+> > > > > > > git tree:       linux-next
+> > > > > > > dashboard link:
+> > > > > > > https://syzkaller.appspot.com/bug?extid=5399ed0832693e29f392
+> > > > > > > syz repro:
+> > > > > > > https://syzkaller.appspot.com/x/repro.syz?x=101032b3400000
+> > > > > > > C reproducer:
+> > > > > > > https://syzkaller.appspot.com/x/repro.c?x=16534063400000
+> > > > > > >
+> > > > > > > For information about bisection process see:
+> > > > > > > https://goo.gl/tpsmEJ#bisection
+> > > > > >
+> > > > > > If I'm not misreading the "crash report" there, it has injected an
+> > > > > > allocation
+> > > > > > failure in dentry allocation in d_make_root() from autofs_fill_super()
+> > > > > > (
+> > > > > >         root_inode = autofs_get_inode(s, S_IFDIR | 0755);
+> > > > > >         root = d_make_root(root_inode);
+> > > > > > ) which has triggered iput() on the inode passed to d_make_root() (as
+> > > > > > it
+> > > > > > ought
+> > > > > > to).  At which point it stepped into some BUG_ON() in fs/inode.c, but
+> > > > > > I've
+> > > > > > no idea which one it is - line numbers do not match anything in linux-
+> > > > > > next
+> > > > > > or in mainline.  Reported line 1566 is
+> > > > > >                 if (inode->i_nlink && (inode->i_state & I_DIRTY_TIME))
+> > > > > > {
+> > > > > > in all of them; as the matter of fact, the diff in fs/inode.c between
+> > > > > > -next and mainline is empty.
+> > > > > >
+> > > > > > There is a BUG_ON() several lines prior, and in 4.20 it used to be
+> > > > > > line
+> > > > > > 1566,
+> > > > > > so _probably_ that's what it is.  With that assumption, it's
+> > > > > >         BUG_ON(inode->i_state & I_CLEAR);
+> > > > > > IOW, we'd got I_CLEAR in the inode passed to d_make_root()
+> > > > > > there.  Which
+> > > > > > should not happen - the inode must have come from new_inode(), which
+> > > > > > gets it from new_inode_pseudo(), which zeroes ->i_state.  And I_CLEAR
+> > > > > > is set only in clear_inode().  For autofs inodes that can come only
+> > > > > > from autofs_evict_inode(), called as ->evict() from evict_inode().
+> > > > > > Which should never ever be called for inode with positive ->i_count...
+> > > > > >
+> > > > > > It might be memory corruption; it might be a dangling inode pointer
+> > > > > > somewhere, it might be something else.
+> > > > > >
+> > > > > > To get any further we really need a confirmation of the identity of
+> > > > > > triggered BUG_ON().
+> > > > > >
+> > > > > > As an aside, your "sample crash reports" would've been much more
+> > > > > > useful
+> > > > > > if
+> > > > > > they went with commit SHA1 in question, especially when they contain
+> > > > > > line
+> > > > > > numbers.
+> > > > >
+> > > > > Hi Al,
+> > > > >
+> > > > > This is the commit for matching lines:
+> > > > >
+> > > > > > HEAD commit:    d14b746c6c1c Add linux-next specific files for
+> > > > > > 20181214
+> > > >
+> > > > Are you sure?
+> > > > what does 20181214 mean?
+> > >
+> > > Yes, I just copy-pasted from the report. "d14b746c6c1c" is the commit
+> > > hash. "Add linux-next specific files for 20181214" is the commit
+> > > subject.
+> > >
+> > >
+> > > > Looking at current next code (and several branches) it doesn't
+> > > > appear the problem is possible?
+> > > >
+> > > > > > git tree:       linux-next
+> > > >
+> > > > But which branch is it really, master (which doesn't match the
+> > > > line numbers btw)?
+> > >
+> > > This is d14b746c6c1c commit hash. I don't know if there is a branch
+> > > with HEAD pointing to this commit or not, but it seems unimportant.
+> > > Tree+commit is the identity of code state.
+> > >
+> > >
+> > > > > fs/inode.c:1566 points to:
+> > > > >
+> > > > > void iput(struct inode *inode)
+> > > > > {
+> > > > >     ...
+> > > > >     BUG_ON(inode->i_state & I_CLEAR);
+> > > > >
+> > > > >
+> > > > > The dashboard page provides kernel git repository and commit for each
+> > > > > crash.
+> > > >
+> > > > Those links don't seem to make sense to me ...
+> > > >
+> > > > Help me out here!
+> > >
+> > > There is git repo name provided and commit hash. It's meant to be
+> > > self-explanatory. What exactly is unclear?
+> >
+> > I'm unable to find a branch matching the line numbers.
+> >
+> > Given that, on the face of it, the scenario is impossible I'm
+> > seeking clarification on what linux-next to look at for the
+> > sake of accuracy.
+> >
+> > So I'm wondering if this testing done using the master branch
+> > or one of the daily branches one would use to check for conflicts
+> > before posting?
 >
-> With both sets of patches applied they pass all x86 tests, but there's 
-> cross-build failures on powerpc32, sparc32 and UML:
+> Sorry those are tags not branches.
 >
->    kernel/locking/rwsem.h:333:34: error: 'struct rw_semaphore' has no member named 'owner'
+> On a newly updated linux-next I get:
+> [raven@pluto linux-next.git]$ git show d14b746c6c1c
+> fatal: ambiguous argument 'd14b746c6c1c': unknown revision or path not in the
+> working tree.
+> Use '--' to separate paths from revisions, like this:
+> 'git <command> [<revision>...] -- [<file>...]'
 >
-> Could you please send a delta patch against tip:WIP.locking/core, which 
-> is the work-in-progress tree? I'll backmerge the delta patch (and any 
-> other updates you might have meanwhil) to the one that introduces the 
-> breakage.
+> So I guess I'm confused ...
 >
-> Thanks,
->
-> 	Ingo
+> Are you sure some thing's not amiss somewhere here?
 
-Sure. I will look into that and fix failures.
+\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-Thanks,
-Longman
-
+> > I somehow have d14b746c6c1c locally, but if you don't have it you may
+> > need to fetch git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git
+> > with tags. That's linux-next specifics.
+>
+> Here it is:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next-history.git/commit/?id=d14b746c6c1c
