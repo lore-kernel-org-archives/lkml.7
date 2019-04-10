@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D6BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835CFC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C6420820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3CE20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbfDJNhS (ORCPT
+        id S1732503AbfDJNhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:37:18 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15443 "EHLO mga11.intel.com"
+        Wed, 10 Apr 2019 09:37:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23992 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732405AbfDJNhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732404AbfDJNhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:06 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="159929154"
+   d="scan'208";a="148069260"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2019 06:37:03 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Apr 2019 06:37:02 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9D0407B5; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
+        id 23ED3575; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 26/36] thunderbolt: Add support for Display Port tunnels
-Date:   Wed, 10 Apr 2019 16:36:43 +0300
-Message-Id: <20190410133653.88061-27-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 15/36] thunderbolt: Generalize tunnel creation functionality
+Date:   Wed, 10 Apr 2019 16:36:32 +0300
+Message-Id: <20190410133653.88061-16-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,834 +55,615 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Display Port tunnels are somewhat more complex than PCIe tunnels as it
-requires 3 tunnels (AUX Rx/Tx and Video). In addition we are not
-supposed to create the tunnels immediately when a DP OUT is enumerated.
-Instead we need to wait until we get hotplug event to that adapter port
-or check if the port has HPD set before tunnels can be established. This
-adds Display Port tunneling support to the software connection manager.
+To be able to tunnel non-PCIe traffic, separate tunnel functionality
+into generic and PCIe specific parts. Rename struct tb_pci_tunnel to
+tb_tunnel, and make it hold an array of paths instead of just two.
+Update all the tunneling functions to take this structure as parameter.
+
+We also move tb_pci_port_active() to switch.c (and rename it) where we
+will be keeping all port and switch related functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/switch.c  | 111 ++++++++++++++
- drivers/thunderbolt/tb.c      | 129 +++++++++++++---
- drivers/thunderbolt/tb.h      |  17 +++
- drivers/thunderbolt/tb_regs.h |  22 +++
- drivers/thunderbolt/tunnel.c  | 277 +++++++++++++++++++++++++++++++++-
- drivers/thunderbolt/tunnel.h  |  23 +++
- 6 files changed, 554 insertions(+), 25 deletions(-)
+ drivers/thunderbolt/switch.c  |  13 ++
+ drivers/thunderbolt/tb.c      |  30 ++--
+ drivers/thunderbolt/tb.h      |   2 +
+ drivers/thunderbolt/tb_regs.h |   4 +
+ drivers/thunderbolt/tunnel.c  | 298 ++++++++++++++++++++--------------
+ drivers/thunderbolt/tunnel.h  |  38 +++--
+ 6 files changed, 235 insertions(+), 150 deletions(-)
 
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 9462e6982061..1de1afa24182 100644
+index 9756e6279dc9..b132439618da 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -747,6 +747,10 @@ bool tb_port_is_enabled(struct tb_port *port)
- 	case TB_TYPE_PCIE_DOWN:
- 		return tb_pci_port_is_enabled(port);
+@@ -599,6 +599,19 @@ static int tb_init_port(struct tb_port *port)
  
-+	case TB_TYPE_DP_HDMI_IN:
-+	case TB_TYPE_DP_HDMI_OUT:
-+		return tb_dp_port_is_enabled(port);
-+
- 	default:
- 		return false;
- 	}
-@@ -779,6 +783,113 @@ int tb_pci_port_enable(struct tb_port *port, bool enable)
- 	return tb_port_write(port, &word, TB_CFG_PORT, port->cap_adap, 1);
  }
  
 +/**
-+ * tb_dp_port_hpd_is_active() - Is HPD already active
-+ * @port: DP out port to check
-+ *
-+ * Checks if the DP OUT adapter port has HDP bit already set.
++ * tb_pci_port_enable() - Enable PCIe adapter port
++ * @port: PCIe port to enable
++ * @enable: Enable/disable the PCIe adapter
 + */
-+int tb_dp_port_hpd_is_active(struct tb_port *port)
++int tb_pci_port_enable(struct tb_port *port, bool enable)
 +{
-+	u32 data;
-+	int ret;
-+
-+	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap + 2, 1);
-+	if (ret)
-+		return ret;
-+
-+	return !!(data & TB_DP_HDP);
-+}
-+
-+/**
-+ * tb_dp_port_hpd_clear() - Clear HPD from DP IN port
-+ * @port: Port to clear HPD
-+ *
-+ * If the DP IN port has HDP set, this function can be used to clear it.
-+ */
-+int tb_dp_port_hpd_clear(struct tb_port *port)
-+{
-+	u32 data;
-+	int ret;
-+
-+	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap + 3, 1);
-+	if (ret)
-+		return ret;
-+
-+	data |= TB_DP_HPDC;
-+	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap + 3, 1);
-+}
-+
-+/**
-+ * tb_dp_port_set_hops() - Set video/aux Hop IDs for DP port
-+ * @port: DP IN/OUT port to set hops
-+ * @video: Video Hop ID
-+ * @aux_tx: AUX TX Hop ID
-+ * @aux_rx: AUX RX Hop ID
-+ *
-+ * Programs specified Hop IDs for DP IN/OUT port.
-+ */
-+int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
-+			unsigned int aux_tx, unsigned int aux_rx)
-+{
-+	u32 data[2];
-+	int ret;
-+
-+	ret = tb_port_read(port, data, TB_CFG_PORT, port->cap_adap,
-+			   ARRAY_SIZE(data));
-+	if (ret)
-+		return ret;
-+
-+	data[0] &= ~TB_DP_VIDEO_HOPID_MASK;
-+	data[1] &= ~(TB_DP_AUX_RX_HOPID_MASK | TB_DP_AUX_TX_HOPID_MASK);
-+
-+	data[0] |= (video << TB_DP_VIDEO_HOPID_SHIFT) & TB_DP_VIDEO_HOPID_MASK;
-+	data[1] |= aux_tx & TB_DP_AUX_TX_HOPID_MASK;
-+	data[1] |= (aux_rx << TB_DP_AUX_RX_HOPID_SHIFT) & TB_DP_AUX_RX_HOPID_MASK;
-+
-+	return tb_port_write(port, data, TB_CFG_PORT, port->cap_adap,
-+			     ARRAY_SIZE(data));
-+}
-+
-+/**
-+ * tb_dp_port_is_enabled() - Is DP adapter port enabled
-+ * @port: DP adapter port to check
-+ */
-+bool tb_dp_port_is_enabled(struct tb_port *port)
-+{
-+	u32 data;
-+
-+	if (tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1))
-+		return false;
-+
-+	return !!(data & (TB_DP_VIDEO_EN | TB_DP_AUX_EN));
-+}
-+
-+/**
-+ * tb_dp_port_enable() - Enables/disables DP paths of a port
-+ * @port: DP IN/OUT port
-+ * @enable: Enable/disable DP path
-+ *
-+ * Once Hop IDs are programmed DP paths can be enabled or disabled by
-+ * calling this function.
-+ */
-+int tb_dp_port_enable(struct tb_port *port, bool enable)
-+{
-+	u32 data;
-+	int ret;
-+
-+	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_adap, 1);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		data |= TB_DP_VIDEO_EN | TB_DP_AUX_EN;
-+	else
-+		data &= ~(TB_DP_VIDEO_EN | TB_DP_AUX_EN);
-+
-+	return tb_port_write(port, &data, TB_CFG_PORT, port->cap_adap, 1);
++	u32 word = enable ? TB_PCI_EN : 0x0;
++	if (!port->cap_adap)
++		return -ENXIO;
++	return tb_port_write(port, &word, TB_CFG_PORT, port->cap_adap, 1);
 +}
 +
  /* switch utility functions */
  
  static void tb_dump_switch(struct tb *tb, struct tb_regs_switch_header *sw)
 diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index 903922a16d64..c5e96e7ac37a 100644
+index 8de43a2ab205..36dad0a00ac2 100644
 --- a/drivers/thunderbolt/tb.c
 +++ b/drivers/thunderbolt/tb.c
-@@ -28,6 +28,32 @@ struct tb_cm {
- 	bool hotplug_active;
- };
- 
-+struct tb_hotplug_event {
-+	struct work_struct work;
-+	struct tb *tb;
-+	u64 route;
-+	u8 port;
-+	bool unplug;
-+};
-+
-+static void tb_handle_hotplug(struct work_struct *work);
-+
-+static void tb_queue_hotplug(struct tb *tb, u64 route, u8 port, bool unplug)
-+{
-+	struct tb_hotplug_event *ev;
-+
-+	ev = kmalloc(sizeof(*ev), GFP_KERNEL);
-+	if (!ev)
-+		return;
-+
-+	ev->tb = tb;
-+	ev->route = route;
-+	ev->port = port;
-+	ev->unplug = unplug;
-+	INIT_WORK(&ev->work, tb_handle_hotplug);
-+	queue_work(tb->wq, &ev->work);
-+}
-+
- /* enumeration & hot plug handling */
- 
- static void tb_discover_tunnels(struct tb_switch *sw)
-@@ -42,6 +68,10 @@ static void tb_discover_tunnels(struct tb_switch *sw)
- 
- 		port = &sw->ports[i];
- 		switch (port->config.type) {
-+		case TB_TYPE_DP_HDMI_IN:
-+			tunnel = tb_tunnel_discover_dp(tb, port);
-+			break;
-+
- 		case TB_TYPE_PCIE_DOWN:
- 			tunnel = tb_tunnel_discover_pci(tb, port);
- 			break;
-@@ -50,16 +80,19 @@ static void tb_discover_tunnels(struct tb_switch *sw)
- 			break;
- 		}
- 
--		if (tunnel) {
-+		if (!tunnel)
-+			continue;
-+
-+		if (tb_tunnel_is_pci(tunnel)) {
- 			struct tb_switch *parent = tunnel->dst_port->sw;
- 
- 			while (parent != tunnel->src_port->sw) {
- 				parent->boot = true;
- 				parent = tb_switch_parent(parent);
- 			}
--
--			list_add_tail(&tunnel->list, &tcm->tunnel_list);
- 		}
-+
-+		list_add_tail(&tunnel->list, &tcm->tunnel_list);
- 	}
- 
- 	for (i = 1; i <= sw->config.max_port_number; i++) {
-@@ -91,6 +124,15 @@ static void tb_scan_port(struct tb_port *port)
- 
- 	if (tb_is_upstream_port(port))
- 		return;
-+
-+	if (tb_port_is_dpout(port) && tb_dp_port_hpd_is_active(port) == 1 &&
-+	    !tb_dp_port_is_enabled(port)) {
-+		tb_port_dbg(port, "DP adapter HPD set, queuing hotplug\n");
-+		tb_queue_hotplug(port->sw->tb, tb_route(port->sw), port->port,
-+				 false);
-+		return;
-+	}
-+
- 	if (port->config.type != TB_TYPE_PORT)
- 		return;
- 	if (port->dual_link_port && port->link_nr)
-@@ -139,6 +181,26 @@ static void tb_scan_port(struct tb_port *port)
- 	tb_scan_switch(sw);
- }
- 
-+static int tb_free_tunnel(struct tb *tb, enum tb_tunnel_type type,
-+			  struct tb_port *src_port, struct tb_port *dst_port)
-+{
-+	struct tb_cm *tcm = tb_priv(tb);
+@@ -91,14 +91,14 @@ static void tb_scan_port(struct tb_port *port)
+ static void tb_free_invalid_tunnels(struct tb *tb)
+ {
+ 	struct tb_cm *tcm = tb_priv(tb);
+-	struct tb_pci_tunnel *tunnel;
+-	struct tb_pci_tunnel *n;
 +	struct tb_tunnel *tunnel;
-+
-+	list_for_each_entry(tunnel, &tcm->tunnel_list, list) {
-+		if (tunnel->type == type &&
-+		    ((src_port && src_port == tunnel->src_port) ||
-+		     (dst_port && dst_port == tunnel->dst_port))) {
++	struct tb_tunnel *n;
+ 
+ 	list_for_each_entry_safe(tunnel, n, &tcm->tunnel_list, list) {
+-		if (tb_pci_is_invalid(tunnel)) {
+-			tb_pci_deactivate(tunnel);
++		if (tb_tunnel_is_invalid(tunnel)) {
 +			tb_tunnel_deactivate(tunnel);
-+			list_del(&tunnel->list);
+ 			list_del(&tunnel->list);
+-			tb_pci_free(tunnel);
 +			tb_tunnel_free(tunnel);
-+			return 0;
-+		}
-+	}
-+
-+	return -ENODEV;
-+}
-+
- /**
-  * tb_free_invalid_tunnels() - destroy tunnels of devices that have gone away
-  */
-@@ -257,6 +319,44 @@ static struct tb_port *tb_find_pcie_down(struct tb_switch *sw,
- 	return tb_find_unused_port(sw, TB_TYPE_PCIE_DOWN);
- }
- 
-+static int tb_tunnel_dp(struct tb *tb, struct tb_port *out)
-+{
-+	struct tb_cm *tcm = tb_priv(tb);
-+	struct tb_switch *sw = out->sw;
-+	struct tb_tunnel *tunnel;
-+	struct tb_port *in;
-+
-+	if (tb_port_is_enabled(out))
-+		return 0;
-+
-+	do {
-+		sw = tb_to_switch(sw->dev.parent);
-+		if (!sw)
-+			return 0;
-+		in = tb_find_unused_port(sw, TB_TYPE_DP_HDMI_IN);
-+	} while (!in);
-+
-+	tunnel = tb_tunnel_alloc_dp(tb, in, out);
-+	if (!tunnel) {
-+		tb_port_dbg(out, "DP tunnel allocation failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	if (tb_tunnel_activate(tunnel)) {
-+		tb_port_info(out, "DP tunnel activation failed, aborting\n");
-+		tb_tunnel_free(tunnel);
-+		return -EIO;
-+	}
-+
-+	list_add_tail(&tunnel->list, &tcm->tunnel_list);
-+	return 0;
-+}
-+
-+static void tb_teardown_dp(struct tb *tb, struct tb_port *out)
-+{
-+	tb_free_tunnel(tb, TB_TUNNEL_DP, NULL, out);
-+}
-+
- static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
- {
- 	struct tb_port *up, *down, *port;
-@@ -295,14 +395,6 @@ static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
- 
- /* hotplug handling */
- 
--struct tb_hotplug_event {
--	struct work_struct work;
--	struct tb *tb;
--	u64 route;
--	u8 port;
--	bool unplug;
--};
--
- /**
-  * tb_handle_hotplug() - handle hotplug event
-  *
-@@ -347,6 +439,8 @@ static void tb_handle_hotplug(struct work_struct *work)
- 			port->remote = NULL;
- 			if (port->dual_link_port)
- 				port->dual_link_port->remote = NULL;
-+		} else if (tb_port_is_dpout(port)) {
-+			tb_teardown_dp(tb, port);
- 		} else {
- 			tb_port_info(port,
- 				     "got unplug event for disconnected port, ignoring\n");
-@@ -360,6 +454,8 @@ static void tb_handle_hotplug(struct work_struct *work)
- 			tb_scan_port(port);
- 			if (!port->remote)
- 				tb_port_info(port, "hotplug: no switch found\n");
-+		} else if (tb_port_is_dpout(port)) {
-+			tb_tunnel_dp(tb, port);
  		}
  	}
- 
-@@ -379,7 +475,6 @@ static void tb_handle_event(struct tb *tb, enum tb_cfg_pkg_type type,
- 			    const void *buf, size_t size)
- {
- 	const struct cfg_event_pkg *pkg = buf;
--	struct tb_hotplug_event *ev;
- 	u64 route;
- 
- 	if (type != TB_CFG_PKG_EVENT) {
-@@ -395,15 +490,7 @@ static void tb_handle_event(struct tb *tb, enum tb_cfg_pkg_type type,
- 			pkg->port);
- 	}
- 
--	ev = kmalloc(sizeof(*ev), GFP_KERNEL);
--	if (!ev)
--		return;
--	INIT_WORK(&ev->work, tb_handle_hotplug);
--	ev->tb = tb;
--	ev->route = route;
--	ev->port = pkg->port;
--	ev->unplug = pkg->unplug;
--	queue_work(tb->wq, &ev->work);
-+	tb_queue_hotplug(tb, route, pkg->port, pkg->unplug);
  }
+@@ -178,7 +178,7 @@ static void tb_activate_pcie_devices(struct tb *tb)
+ 	struct tb_switch *sw;
+ 	struct tb_port *up_port;
+ 	struct tb_port *down_port;
+-	struct tb_pci_tunnel *tunnel;
++	struct tb_tunnel *tunnel;
+ 	struct tb_cm *tcm = tb_priv(tb);
  
+ 	/* scan for pcie devices at depth 1*/
+@@ -214,17 +214,17 @@ static void tb_activate_pcie_devices(struct tb *tb)
+ 				     "All PCIe down ports are occupied, aborting\n");
+ 			continue;
+ 		}
+-		tunnel = tb_pci_alloc(tb, up_port, down_port);
++		tunnel = tb_tunnel_alloc_pci(tb, up_port, down_port);
+ 		if (!tunnel) {
+ 			tb_port_info(up_port,
+ 				     "PCIe tunnel allocation failed, aborting\n");
+ 			continue;
+ 		}
+ 
+-		if (tb_pci_activate(tunnel)) {
++		if (tb_tunnel_activate(tunnel)) {
+ 			tb_port_info(up_port,
+ 				     "PCIe tunnel activation failed, aborting\n");
+-			tb_pci_free(tunnel);
++			tb_tunnel_free(tunnel);
+ 			continue;
+ 		}
+ 
+@@ -353,13 +353,13 @@ static void tb_handle_event(struct tb *tb, enum tb_cfg_pkg_type type,
  static void tb_stop(struct tb *tb)
+ {
+ 	struct tb_cm *tcm = tb_priv(tb);
+-	struct tb_pci_tunnel *tunnel;
+-	struct tb_pci_tunnel *n;
++	struct tb_tunnel *tunnel;
++	struct tb_tunnel *n;
+ 
+ 	/* tunnels are only present after everything has been initialized */
+ 	list_for_each_entry_safe(tunnel, n, &tcm->tunnel_list, list) {
+-		tb_pci_deactivate(tunnel);
+-		tb_pci_free(tunnel);
++		tb_tunnel_deactivate(tunnel);
++		tb_tunnel_free(tunnel);
+ 	}
+ 	tb_switch_remove(tb->root_switch);
+ 	tcm->hotplug_active = false; /* signal tb_handle_hotplug to quit */
+@@ -418,7 +418,7 @@ static int tb_suspend_noirq(struct tb *tb)
+ static int tb_resume_noirq(struct tb *tb)
+ {
+ 	struct tb_cm *tcm = tb_priv(tb);
+-	struct tb_pci_tunnel *tunnel, *n;
++	struct tb_tunnel *tunnel, *n;
+ 
+ 	tb_dbg(tb, "resuming...\n");
+ 
+@@ -429,7 +429,7 @@ static int tb_resume_noirq(struct tb *tb)
+ 	tb_free_invalid_tunnels(tb);
+ 	tb_free_unplugged_children(tb->root_switch);
+ 	list_for_each_entry_safe(tunnel, n, &tcm->tunnel_list, list)
+-		tb_pci_restart(tunnel);
++		tb_tunnel_restart(tunnel);
+ 	if (!list_empty(&tcm->tunnel_list)) {
+ 		/*
+ 		 * the pcie links need some time to get going.
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index e6040c9f68fa..56eed0bc3c2b 100644
+index b4d7c4d408bd..d1f8e9722f33 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -365,6 +365,16 @@ static inline bool tb_port_is_pcie_up(const struct tb_port *port)
- 	return port && port->config.type == TB_TYPE_PCIE_UP;
- }
+@@ -457,6 +457,8 @@ int tb_port_clear_counter(struct tb_port *port, int counter);
+ int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
+ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
  
-+static inline bool tb_port_is_dpin(const struct tb_port *port)
-+{
-+	return port && port->config.type == TB_TYPE_DP_HDMI_IN;
-+}
++int tb_pci_port_enable(struct tb_port *port, bool enable);
 +
-+static inline bool tb_port_is_dpout(const struct tb_port *port)
-+{
-+	return port && port->config.type == TB_TYPE_DP_HDMI_OUT;
-+}
-+
- static inline int tb_sw_read(struct tb_switch *sw, void *buffer,
- 			     enum tb_cfg_space space, u32 offset, u32 length)
- {
-@@ -581,6 +591,13 @@ bool tb_port_is_enabled(struct tb_port *port);
- bool tb_pci_port_is_enabled(struct tb_port *port);
- int tb_pci_port_enable(struct tb_port *port, bool enable);
- 
-+int tb_dp_port_hpd_is_active(struct tb_port *port);
-+int tb_dp_port_hpd_clear(struct tb_port *port);
-+int tb_dp_port_set_hops(struct tb_port *port, unsigned int video,
-+			unsigned int aux_tx, unsigned int aux_rx);
-+bool tb_dp_port_is_enabled(struct tb_port *port);
-+int tb_dp_port_enable(struct tb_port *port, bool enable);
-+
- struct tb_path *tb_path_discover(struct tb_port *src, int src_hopid,
- 				 struct tb_port *dst, int dst_hopid,
- 				 struct tb_port **last, const char *name);
+ struct tb_path *tb_path_alloc(struct tb *tb, int num_hops);
+ void tb_path_free(struct tb_path *path);
+ int tb_path_activate(struct tb_path *path);
 diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 74c0f4a5606d..3ce705184e2c 100644
+index 82ac4ec8757f..75e935acade5 100644
 --- a/drivers/thunderbolt/tb_regs.h
 +++ b/drivers/thunderbolt/tb_regs.h
-@@ -213,6 +213,28 @@ struct tb_regs_port_header {
+@@ -211,6 +211,10 @@ struct tb_regs_port_header {
  
- /* DWORD 4 */
- #define TB_PORT_NFC_CREDITS_MASK	GENMASK(19, 0)
-+#define TB_PORT_MAX_CREDITS_SHIFT	20
-+#define TB_PORT_MAX_CREDITS_MASK	GENMASK(26, 20)
+ } __packed;
+ 
++/* PCIe adapter registers */
 +
-+/* Display Port adapter registers */
++#define TB_PCI_EN			BIT(31)
 +
-+/* DWORD 0 */
-+#define TB_DP_VIDEO_HOPID_SHIFT		16
-+#define TB_DP_VIDEO_HOPID_MASK		GENMASK(26, 16)
-+#define TB_DP_AUX_EN			BIT(30)
-+#define TB_DP_VIDEO_EN			BIT(31)
-+/* DWORD 1 */
-+#define TB_DP_AUX_TX_HOPID_MASK		GENMASK(10, 0)
-+#define TB_DP_AUX_RX_HOPID_SHIFT	11
-+#define TB_DP_AUX_RX_HOPID_MASK		GENMASK(21, 11)
-+/* DWORD 2 */
-+#define TB_DP_HDP			BIT(6)
-+/* DWORD 3 */
-+#define TB_DP_HPDC			BIT(9)
-+/* DWORD 4 */
-+#define TB_DP_LOCAL_CAP			0x4
-+/* DWORD 5 */
-+#define TB_DP_REMOTE_CAP		0x5
- 
- /* PCIe adapter registers */
- 
+ /* Hop register from TB_CFG_HOPS. 8 byte per entry. */
+ struct tb_regs_hop {
+ 	/* DWORD 0 */
 diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
-index 71c712300326..21d3393c6e9c 100644
+index 1e470564e99d..20ce28276f7a 100644
 --- a/drivers/thunderbolt/tunnel.c
 +++ b/drivers/thunderbolt/tunnel.c
-@@ -18,14 +18,26 @@
- #define TB_PCI_PATH_DOWN		0
- #define TB_PCI_PATH_UP			1
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Thunderbolt Cactus Ridge driver - Tunneling support
++ * Thunderbolt driver - Tunneling support
+  *
+  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
++ * Copyright (C) 2019, Intel Corporation
+  */
  
-+/* DP adapters use HopID 8 for AUX and 9 for Video */
-+#define TB_DP_AUX_TX_HOPID		8
-+#define TB_DP_AUX_RX_HOPID		8
-+#define TB_DP_VIDEO_HOPID		9
-+
-+#define TB_DP_VIDEO_PATH_OUT		0
-+#define TB_DP_AUX_PATH_OUT		1
-+#define TB_DP_AUX_PATH_IN		2
-+
-+static const char * const tb_tunnel_names[] = { "PCI", "DP" };
+ #include <linux/slab.h>
+@@ -11,14 +12,17 @@
+ #include "tunnel.h"
+ #include "tb.h"
+ 
++#define TB_PCI_PATH_DOWN		0
++#define TB_PCI_PATH_UP			1
 +
  #define __TB_TUNNEL_PRINT(level, tunnel, fmt, arg...)                   \
  	do {                                                            \
- 		struct tb_tunnel *__tunnel = (tunnel);                  \
--		level(__tunnel->tb, "%llx:%x <-> %llx:%x (PCI): " fmt,  \
-+		level(__tunnel->tb, "%llx:%x <-> %llx:%x (%s): " fmt,   \
- 		      tb_route(__tunnel->src_port->sw),                 \
- 		      __tunnel->src_port->port,                         \
- 		      tb_route(__tunnel->dst_port->sw),                 \
- 		      __tunnel->dst_port->port,                         \
-+		      tb_tunnel_names[__tunnel->type],			\
+-		struct tb_pci_tunnel *__tunnel = (tunnel);              \
++		struct tb_tunnel *__tunnel = (tunnel);                  \
+ 		level(__tunnel->tb, "%llx:%x <-> %llx:%x (PCI): " fmt,  \
+-		      tb_route(__tunnel->down_port->sw),                \
+-		      __tunnel->down_port->port,                        \
+-		      tb_route(__tunnel->up_port->sw),                  \
+-		      __tunnel->up_port->port,                          \
++		      tb_route(__tunnel->src_port->sw),                 \
++		      __tunnel->src_port->port,                         \
++		      tb_route(__tunnel->dst_port->sw),                 \
++		      __tunnel->dst_port->port,                         \
  		      ## arg);                                          \
  	} while (0)
  
-@@ -38,7 +50,8 @@
- #define tb_tunnel_dbg(tunnel, fmt, arg...) \
- 	__TB_TUNNEL_PRINT(tb_dbg, tunnel, fmt, ##arg)
+@@ -29,6 +33,38 @@
+ #define tb_tunnel_info(tunnel, fmt, arg...) \
+ 	__TB_TUNNEL_PRINT(tb_info, tunnel, fmt, ##arg)
  
--static struct tb_tunnel *tb_tunnel_alloc(struct tb *tb, size_t npaths)
-+static struct tb_tunnel *tb_tunnel_alloc(struct tb *tb, size_t npaths,
-+					 enum tb_tunnel_type type)
- {
- 	struct tb_tunnel *tunnel;
- 
-@@ -55,6 +68,7 @@ static struct tb_tunnel *tb_tunnel_alloc(struct tb *tb, size_t npaths)
- 	INIT_LIST_HEAD(&tunnel->list);
- 	tunnel->tb = tb;
- 	tunnel->npaths = npaths;
-+	tunnel->type = type;
- 
- 	return tunnel;
- }
-@@ -104,7 +118,7 @@ struct tb_tunnel *tb_tunnel_discover_pci(struct tb *tb, struct tb_port *down)
- 	if (!tb_pci_port_is_enabled(down))
- 		return NULL;
- 
--	tunnel = tb_tunnel_alloc(tb, 2);
-+	tunnel = tb_tunnel_alloc(tb, 2, TB_TUNNEL_PCI);
- 	if (!tunnel)
- 		return NULL;
- 
-@@ -179,7 +193,7 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
- 	struct tb_tunnel *tunnel;
- 	struct tb_path *path;
- 
--	tunnel = tb_tunnel_alloc(tb, 2);
-+	tunnel = tb_tunnel_alloc(tb, 2, TB_TUNNEL_PCI);
- 	if (!tunnel)
- 		return NULL;
- 
-@@ -208,6 +222,255 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
- 	return tunnel;
- }
- 
-+static int tb_dp_xchg_caps(struct tb_tunnel *tunnel)
++static struct tb_tunnel *tb_tunnel_alloc(struct tb *tb, size_t npaths)
 +{
-+	struct tb_port *out = tunnel->dst_port;
-+	struct tb_port *in = tunnel->src_port;
-+	u32 in_dp_cap, out_dp_cap;
-+	int ret;
++	struct tb_tunnel *tunnel;
 +
-+	/*
-+	 * Copy DP_LOCAL_CAP register to DP_REMOTE_CAP register for
-+	 * newer generation hardware.
-+	 */
-+	if (in->sw->generation < 2 || out->sw->generation < 2)
-+		return 0;
++	tunnel = kzalloc(sizeof(*tunnel), GFP_KERNEL);
++	if (!tunnel)
++		return NULL;
 +
-+	/* Read both DP_LOCAL_CAP registers */
-+	ret = tb_port_read(in, &in_dp_cap, TB_CFG_PORT,
-+			   in->cap_adap + TB_DP_LOCAL_CAP, 1);
-+	if (ret)
-+		return ret;
-+
-+	ret = tb_port_read(out, &out_dp_cap, TB_CFG_PORT,
-+			   out->cap_adap + TB_DP_LOCAL_CAP, 1);
-+	if (ret)
-+		return ret;
-+
-+	/* Write IN local caps to OUT remote caps */
-+	ret = tb_port_write(out, &in_dp_cap, TB_CFG_PORT,
-+			    out->cap_adap + TB_DP_REMOTE_CAP, 1);
-+	if (ret)
-+		return ret;
-+
-+	return tb_port_write(in, &out_dp_cap, TB_CFG_PORT,
-+			     in->cap_adap + TB_DP_REMOTE_CAP, 1);
-+}
-+
-+static int tb_dp_activate(struct tb_tunnel *tunnel, bool active)
-+{
-+	int ret;
-+
-+	if (active) {
-+		struct tb_path **paths;
-+		int last;
-+
-+		paths = tunnel->paths;
-+		last = paths[TB_DP_VIDEO_PATH_OUT]->path_length - 1;
-+
-+		tb_dp_port_set_hops(tunnel->src_port,
-+			paths[TB_DP_VIDEO_PATH_OUT]->hops[0].in_hop_index,
-+			paths[TB_DP_AUX_PATH_OUT]->hops[0].in_hop_index,
-+			paths[TB_DP_AUX_PATH_IN]->hops[last].next_hop_index);
-+
-+		tb_dp_port_set_hops(tunnel->dst_port,
-+			paths[TB_DP_VIDEO_PATH_OUT]->hops[last].next_hop_index,
-+			paths[TB_DP_AUX_PATH_IN]->hops[0].in_hop_index,
-+			paths[TB_DP_AUX_PATH_OUT]->hops[last].next_hop_index);
-+	} else {
-+		tb_dp_port_hpd_clear(tunnel->src_port);
-+		tb_dp_port_set_hops(tunnel->src_port, 0, 0, 0);
-+		if (tb_port_is_dpout(tunnel->dst_port))
-+			tb_dp_port_set_hops(tunnel->dst_port, 0, 0, 0);
++	tunnel->paths = kcalloc(npaths, sizeof(tunnel->paths[0]), GFP_KERNEL);
++	if (!tunnel->paths) {
++		tb_tunnel_free(tunnel);
++		return NULL;
 +	}
 +
-+	ret = tb_dp_port_enable(tunnel->src_port, active);
-+	if (ret)
-+		return ret;
++	INIT_LIST_HEAD(&tunnel->list);
++	tunnel->tb = tb;
++	tunnel->npaths = npaths;
 +
-+	if (tb_port_is_dpout(tunnel->dst_port))
-+		return tb_dp_port_enable(tunnel->dst_port, active);
-+
-+	return 0;
++	return tunnel;
 +}
 +
-+static void tb_dp_init_aux_path(struct tb_path *path)
++static int tb_pci_activate(struct tb_tunnel *tunnel, bool activate)
 +{
++	int res;
++
++	res = tb_pci_port_enable(tunnel->src_port, activate);
++	if (res)
++		return res;
++
++	return tb_pci_port_enable(tunnel->dst_port, activate);
++}
++
+ static void tb_pci_init_path(struct tb_path *path)
+ {
+ 	path->egress_fc_enable = TB_PATH_SOURCE | TB_PATH_INTERNAL;
+@@ -42,7 +78,10 @@ static void tb_pci_init_path(struct tb_path *path)
+ }
+ 
+ /**
+- * tb_pci_alloc() - allocate a pci tunnel
++ * tb_tunnel_alloc_pci() - allocate a pci tunnel
++ * @tb: Pointer to the domain structure
++ * @up: PCIe upstream adapter port
++ * @down: PCIe downstream adapter port
+  *
+  * Allocate a PCI tunnel. The ports must be of type TB_TYPE_PCIE_UP and
+  * TB_TYPE_PCIE_DOWN.
+@@ -54,170 +93,185 @@ static void tb_pci_init_path(struct tb_path *path)
+  * my thunderbolt devices). Therefore at most ONE path per device may be
+  * activated.
+  *
+- * Return: Returns a tb_pci_tunnel on success or NULL on failure.
++ * Return: Returns a tb_tunnel on success or NULL on failure.
+  */
+-struct tb_pci_tunnel *tb_pci_alloc(struct tb *tb, struct tb_port *up,
+-				   struct tb_port *down)
++struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
++				      struct tb_port *down)
+ {
+-	struct tb_pci_tunnel *tunnel = kzalloc(sizeof(*tunnel), GFP_KERNEL);
++	struct tb_path *path_to_up;
++	struct tb_path *path_to_down;
++	struct tb_tunnel *tunnel;
++
++	tunnel = tb_tunnel_alloc(tb, 2);
+ 	if (!tunnel)
+-		goto err;
+-	tunnel->tb = tb;
+-	tunnel->down_port = down;
+-	tunnel->up_port = up;
+-	INIT_LIST_HEAD(&tunnel->list);
+-	tunnel->path_to_up = tb_path_alloc(up->sw->tb, 2);
+-	if (!tunnel->path_to_up)
+-		goto err;
+-	tunnel->path_to_down = tb_path_alloc(up->sw->tb, 2);
+-	if (!tunnel->path_to_down)
+-		goto err;
+-	tb_pci_init_path(tunnel->path_to_up);
+-	tb_pci_init_path(tunnel->path_to_down);
+-
+-	tunnel->path_to_up->hops[0].in_port = down;
+-	tunnel->path_to_up->hops[0].in_hop_index = 8;
+-	tunnel->path_to_up->hops[0].in_counter_index = -1;
+-	tunnel->path_to_up->hops[0].out_port = tb_upstream_port(up->sw)->remote;
+-	tunnel->path_to_up->hops[0].next_hop_index = 8;
+-
+-	tunnel->path_to_up->hops[1].in_port = tb_upstream_port(up->sw);
+-	tunnel->path_to_up->hops[1].in_hop_index = 8;
+-	tunnel->path_to_up->hops[1].in_counter_index = -1;
+-	tunnel->path_to_up->hops[1].out_port = up;
+-	tunnel->path_to_up->hops[1].next_hop_index = 8;
+-
+-	tunnel->path_to_down->hops[0].in_port = up;
+-	tunnel->path_to_down->hops[0].in_hop_index = 8;
+-	tunnel->path_to_down->hops[0].in_counter_index = -1;
+-	tunnel->path_to_down->hops[0].out_port = tb_upstream_port(up->sw);
+-	tunnel->path_to_down->hops[0].next_hop_index = 8;
+-
+-	tunnel->path_to_down->hops[1].in_port =
+-		tb_upstream_port(up->sw)->remote;
+-	tunnel->path_to_down->hops[1].in_hop_index = 8;
+-	tunnel->path_to_down->hops[1].in_counter_index = -1;
+-	tunnel->path_to_down->hops[1].out_port = down;
+-	tunnel->path_to_down->hops[1].next_hop_index = 8;
+-	return tunnel;
++		return NULL;
+ 
+-err:
+-	if (tunnel) {
+-		if (tunnel->path_to_down)
+-			tb_path_free(tunnel->path_to_down);
+-		if (tunnel->path_to_up)
+-			tb_path_free(tunnel->path_to_up);
+-		kfree(tunnel);
++	tunnel->activate = tb_pci_activate;
++	tunnel->src_port = down;
++	tunnel->dst_port = up;
++
++	path_to_up = tb_path_alloc(tb, 2);
++	if (!path_to_up) {
++		tb_tunnel_free(tunnel);
++		return NULL;
+ 	}
+-	return NULL;
++	tunnel->paths[TB_PCI_PATH_UP] = path_to_up;
++
++	path_to_down = tb_path_alloc(tb, 2);
++	if (!path_to_down) {
++		tb_tunnel_free(tunnel);
++		return NULL;
++	}
++	tunnel->paths[TB_PCI_PATH_DOWN] = path_to_down;
++
++	tb_pci_init_path(path_to_up);
++	tb_pci_init_path(path_to_down);
++
++	path_to_up->hops[0].in_port = down;
++	path_to_up->hops[0].in_hop_index = 8;
++	path_to_up->hops[0].in_counter_index = -1;
++	path_to_up->hops[0].out_port = tb_upstream_port(up->sw)->remote;
++	path_to_up->hops[0].next_hop_index = 8;
++
++	path_to_up->hops[1].in_port = tb_upstream_port(up->sw);
++	path_to_up->hops[1].in_hop_index = 8;
++	path_to_up->hops[1].in_counter_index = -1;
++	path_to_up->hops[1].out_port = up;
++	path_to_up->hops[1].next_hop_index = 8;
++
++	path_to_down->hops[0].in_port = up;
++	path_to_down->hops[0].in_hop_index = 8;
++	path_to_down->hops[0].in_counter_index = -1;
++	path_to_down->hops[0].out_port = tb_upstream_port(up->sw);
++	path_to_down->hops[0].next_hop_index = 8;
++
++	path_to_down->hops[1].in_port = tb_upstream_port(up->sw)->remote;
++	path_to_down->hops[1].in_hop_index = 8;
++	path_to_down->hops[1].in_counter_index = -1;
++	path_to_down->hops[1].out_port = down;
++	path_to_down->hops[1].next_hop_index = 8;
++
++	return tunnel;
+ }
+ 
+ /**
+- * tb_pci_free() - free a tunnel
++ * tb_tunnel_free() - free a tunnel
++ * @tunnel: Tunnel to be freed
+  *
+  * The tunnel must have been deactivated.
+  */
+-void tb_pci_free(struct tb_pci_tunnel *tunnel)
++void tb_tunnel_free(struct tb_tunnel *tunnel)
+ {
+-	if (tunnel->path_to_up->activated || tunnel->path_to_down->activated) {
+-		tb_tunnel_WARN(tunnel, "trying to free an activated tunnel\n");
 +	int i;
 +
-+	path->egress_fc_enable = TB_PATH_SOURCE | TB_PATH_INTERNAL;
-+	path->egress_shared_buffer = TB_PATH_NONE;
-+	path->ingress_fc_enable = TB_PATH_ALL;
-+	path->ingress_shared_buffer = TB_PATH_NONE;
-+	path->priority = 2;
-+	path->weight = 1;
-+
-+	for (i = 0; i < path->path_length; i++)
-+		path->hops[i].initial_credits = 1;
-+}
-+
-+static void tb_dp_init_video_path(struct tb_path *path, bool discover)
-+{
-+	u32 nfc_credits = path->hops[0].in_port->config.nfc_credits;
-+
-+	path->egress_fc_enable = TB_PATH_NONE;
-+	path->egress_shared_buffer = TB_PATH_NONE;
-+	path->ingress_fc_enable = TB_PATH_NONE;
-+	path->ingress_shared_buffer = TB_PATH_NONE;
-+	path->priority = 1;
-+	path->weight = 1;
-+
-+	if (discover) {
-+		path->nfc_credits = nfc_credits & TB_PORT_NFC_CREDITS_MASK;
-+	} else {
-+		u32 max_credits;
-+
-+		max_credits = (nfc_credits & TB_PORT_MAX_CREDITS_MASK) >>
-+			TB_PORT_MAX_CREDITS_SHIFT;
-+		/* Leave some credits for AUX path */
-+		path->nfc_credits = min(max_credits - 2, 12U);
-+	}
-+}
-+
-+/**
-+ * tb_tunnel_discover_dp() - Discover existing Display Port tunnels
-+ * @tb: Pointer to the domain structure
-+ * @in: DP in adapter
-+ *
-+ * If @in adapter is active, follows the tunnel to the DP out adapter
-+ * and back. Returns the discovered tunnel or %NULL if there was no
-+ * tunnel.
-+ *
-+ * Return: DP tunnel or %NULL if no tunnel found.
-+ */
-+struct tb_tunnel *tb_tunnel_discover_dp(struct tb *tb, struct tb_port *in)
-+{
-+	struct tb_tunnel *tunnel;
-+	struct tb_port *port;
-+	struct tb_path *path;
-+
-+	if (!tb_dp_port_is_enabled(in))
-+		return NULL;
-+
-+	tunnel = tb_tunnel_alloc(tb, 3, TB_TUNNEL_DP);
 +	if (!tunnel)
-+		return NULL;
+ 		return;
 +
-+	tunnel->init = tb_dp_xchg_caps;
-+	tunnel->activate = tb_dp_activate;
-+	tunnel->src_port = in;
-+
-+	path = tb_path_discover(in, TB_DP_VIDEO_HOPID, NULL, -1,
-+				&tunnel->dst_port, "Video");
-+	if (!path) {
-+		/* Just disable the DP IN port */
-+		tb_dp_port_enable(in, false);
-+		goto err_free;
-+	}
-+	tunnel->paths[TB_DP_VIDEO_PATH_OUT] = path;
-+	tb_dp_init_video_path(tunnel->paths[TB_DP_VIDEO_PATH_OUT], true);
-+
-+	path = tb_path_discover(in, TB_DP_AUX_TX_HOPID, NULL, -1, NULL, "AUX TX");
-+	if (!path)
-+		goto err_deactivate;
-+	tunnel->paths[TB_DP_AUX_PATH_OUT] = path;
-+	tb_dp_init_aux_path(tunnel->paths[TB_DP_AUX_PATH_OUT]);
-+
-+	path = tb_path_discover(tunnel->dst_port, -1, in, TB_DP_AUX_RX_HOPID,
-+				&port, "AUX RX");
-+	if (!path)
-+		goto err_deactivate;
-+	tunnel->paths[TB_DP_AUX_PATH_IN] = path;
-+	tb_dp_init_aux_path(tunnel->paths[TB_DP_AUX_PATH_IN]);
-+
-+	/* Validate that the tunnel is complete */
-+	if (!tb_port_is_dpout(tunnel->dst_port)) {
-+		tb_port_warn(in, "path does not end on a DP adapter, cleaning up\n");
-+		goto err_deactivate;
-+	}
-+
-+	if (!tb_dp_port_is_enabled(tunnel->dst_port))
-+		goto err_deactivate;
-+
-+	if (!tb_dp_port_hpd_is_active(tunnel->dst_port))
-+		goto err_deactivate;
-+
-+	if (port != tunnel->src_port) {
-+		tb_tunnel_warn(tunnel, "path is not complete, cleaning up\n");
-+		goto err_deactivate;
-+	}
-+
-+	tb_tunnel_dbg(tunnel, "discovered\n");
-+	return tunnel;
-+
-+err_deactivate:
-+	tb_tunnel_deactivate(tunnel);
-+err_free:
-+	tb_tunnel_free(tunnel);
-+
-+	return NULL;
-+}
-+
-+/**
-+ * tb_tunnel_alloc_dp() - allocate a Display Port tunnel
-+ * @tb: Pointer to the domain structure
-+ * @in: DP in adapter port
-+ * @out: DP out adapter port
-+ *
-+ * Allocates a tunnel between @in and @out that is capable of tunneling
-+ * Display Port traffic.
-+ *
-+ * Return: Returns a tb_tunnel on success or NULL on failure.
-+ */
-+struct tb_tunnel *tb_tunnel_alloc_dp(struct tb *tb, struct tb_port *in,
-+				     struct tb_port *out)
-+{
-+	struct tb_tunnel *tunnel;
-+	struct tb_path **paths;
-+	struct tb_path *path;
-+
-+	if (WARN_ON(!in->cap_adap || !out->cap_adap))
-+		return NULL;
-+
-+	tunnel = tb_tunnel_alloc(tb, 3, TB_TUNNEL_DP);
-+	if (!tunnel)
-+		return NULL;
-+
-+	tunnel->init = tb_dp_xchg_caps;
-+	tunnel->activate = tb_dp_activate;
-+	tunnel->src_port = in;
-+	tunnel->dst_port = out;
-+
-+	paths = tunnel->paths;
-+
-+	path = tb_path_alloc(tb, in, TB_DP_VIDEO_HOPID, out, TB_DP_VIDEO_HOPID,
-+			     1, "Video");
-+	if (!path)
-+		goto err_free;
-+	tb_dp_init_video_path(path, false);
-+	paths[TB_DP_VIDEO_PATH_OUT] = path;
-+
-+	path = tb_path_alloc(tb, in, TB_DP_AUX_TX_HOPID, out,
-+			     TB_DP_AUX_TX_HOPID, 1, "AUX TX");
-+	if (!path)
-+		goto err_free;
-+	tb_dp_init_aux_path(path);
-+	paths[TB_DP_AUX_PATH_OUT] = path;
-+
-+	path = tb_path_alloc(tb, out, TB_DP_AUX_RX_HOPID, in,
-+			     TB_DP_AUX_RX_HOPID, 1, "AUX RX");
-+	if (!path)
-+		goto err_free;
-+	tb_dp_init_aux_path(path);
-+	paths[TB_DP_AUX_PATH_IN] = path;
-+
-+	return tunnel;
-+
-+err_free:
-+	tb_tunnel_free(tunnel);
-+	return NULL;
-+}
-+
- /**
-  * tb_tunnel_free() - free a tunnel
-  * @tunnel: Tunnel to be freed
-@@ -278,6 +541,12 @@ int tb_tunnel_restart(struct tb_tunnel *tunnel)
- 		}
++	for (i = 0; i < tunnel->npaths; i++) {
++		if (tunnel->paths[i] && tunnel->paths[i]->activated) {
++			tb_tunnel_WARN(tunnel,
++				       "trying to free an activated tunnel\n");
++			return;
++		}
  	}
- 
-+	if (tunnel->init) {
-+		res = tunnel->init(tunnel);
-+		if (res)
-+			return res;
+-	tb_path_free(tunnel->path_to_up);
+-	tb_path_free(tunnel->path_to_down);
++
++	for (i = 0; i < tunnel->npaths; i++) {
++		if (tunnel->paths[i])
++			tb_path_free(tunnel->paths[i]);
 +	}
 +
- 	for (i = 0; i < tunnel->npaths; i++) {
- 		res = tb_path_activate(tunnel->paths[i]);
- 		if (res)
++	kfree(tunnel->paths);
+ 	kfree(tunnel);
+ }
+ 
+ /**
+- * tb_pci_is_invalid - check whether an activated path is still valid
++ * tb_tunnel_is_invalid - check whether an activated path is still valid
++ * @tunnel: Tunnel to check
+  */
+-bool tb_pci_is_invalid(struct tb_pci_tunnel *tunnel)
++bool tb_tunnel_is_invalid(struct tb_tunnel *tunnel)
+ {
+-	WARN_ON(!tunnel->path_to_up->activated);
+-	WARN_ON(!tunnel->path_to_down->activated);
++	int i;
+ 
+-	return tb_path_is_invalid(tunnel->path_to_up)
+-	       || tb_path_is_invalid(tunnel->path_to_down);
+-}
++	for (i = 0; i < tunnel->npaths; i++) {
++		WARN_ON(!tunnel->paths[i]->activated);
++		if (tb_path_is_invalid(tunnel->paths[i]))
++			return true;
++	}
+ 
+-/**
+- * tb_pci_port_active() - activate/deactivate PCI capability
+- *
+- * Return: Returns 0 on success or an error code on failure.
+- */
+-static int tb_pci_port_active(struct tb_port *port, bool active)
+-{
+-	u32 word = active ? 0x80000000 : 0x0;
+-	if (!port->cap_adap)
+-		return -ENXIO;
+-	return tb_port_write(port, &word, TB_CFG_PORT, port->cap_adap, 1);
++	return false;
+ }
+ 
+ /**
+- * tb_pci_restart() - activate a tunnel after a hardware reset
++ * tb_tunnel_restart() - activate a tunnel after a hardware reset
++ * @tunnel: Tunnel to restart
++ *
++ * Return: 0 on success and negative errno in case if failure
+  */
+-int tb_pci_restart(struct tb_pci_tunnel *tunnel)
++int tb_tunnel_restart(struct tb_tunnel *tunnel)
+ {
+-	int res;
+-	tunnel->path_to_up->activated = false;
+-	tunnel->path_to_down->activated = false;
++	int res, i;
+ 
+ 	tb_tunnel_info(tunnel, "activating\n");
+ 
+-	res = tb_path_activate(tunnel->path_to_up);
+-	if (res)
+-		goto err;
+-	res = tb_path_activate(tunnel->path_to_down);
+-	if (res)
+-		goto err;
++	for (i = 0; i < tunnel->npaths; i++) {
++		tunnel->paths[i]->activated = false;
++		res = tb_path_activate(tunnel->paths[i]);
++		if (res)
++			goto err;
++	}
+ 
+-	res = tb_pci_port_active(tunnel->down_port, true);
+-	if (res)
+-		goto err;
++	if (tunnel->activate) {
++		res = tunnel->activate(tunnel, true);
++		if (res)
++			goto err;
++	}
+ 
+-	res = tb_pci_port_active(tunnel->up_port, true);
+-	if (res)
+-		goto err;
+ 	return 0;
++
+ err:
+ 	tb_tunnel_warn(tunnel, "activation failed\n");
+-	tb_pci_deactivate(tunnel);
++	tb_tunnel_deactivate(tunnel);
+ 	return res;
+ }
+ 
+ /**
+- * tb_pci_activate() - activate a tunnel
++ * tb_tunnel_activate() - activate a tunnel
++ * @tunnel: Tunnel to activate
+  *
+  * Return: Returns 0 on success or an error code on failure.
+  */
+-int tb_pci_activate(struct tb_pci_tunnel *tunnel)
++int tb_tunnel_activate(struct tb_tunnel *tunnel)
+ {
+-	if (tunnel->path_to_up->activated || tunnel->path_to_down->activated) {
+-		tb_tunnel_WARN(tunnel,
+-			       "trying to activate an already activated tunnel\n");
+-		return -EINVAL;
+-	}
++	int i;
+ 
+-	return tb_pci_restart(tunnel);
+-}
++	tb_tunnel_info(tunnel, "activating\n");
+ 
++	for (i = 0; i < tunnel->npaths; i++) {
++		if (tunnel->paths[i]->activated) {
++			tb_tunnel_WARN(tunnel,
++				       "trying to activate an already activated tunnel\n");
++			return -EINVAL;
++		}
++	}
+ 
++	return tb_tunnel_restart(tunnel);
++}
+ 
+ /**
+- * tb_pci_deactivate() - deactivate a tunnel
++ * tb_tunnel_deactivate() - deactivate a tunnel
++ * @tunnel: Tunnel to deactivate
+  */
+-void tb_pci_deactivate(struct tb_pci_tunnel *tunnel)
++void tb_tunnel_deactivate(struct tb_tunnel *tunnel)
+ {
++	int i;
++
+ 	tb_tunnel_info(tunnel, "deactivating\n");
+-	/*
+-	 * TODO: enable reset by writing 0x04000000 to TB_CAP_PCIE + 1 on up
+-	 * port. Seems to have no effect?
+-	 */
+-	tb_pci_port_active(tunnel->up_port, false);
+-	tb_pci_port_active(tunnel->down_port, false);
+-	if (tunnel->path_to_down->activated)
+-		tb_path_deactivate(tunnel->path_to_down);
+-	if (tunnel->path_to_up->activated)
+-		tb_path_deactivate(tunnel->path_to_up);
+-}
+ 
++	if (tunnel->activate)
++		tunnel->activate(tunnel, false);
++
++	for (i = 0; i < tunnel->npaths; i++) {
++		if (tunnel->paths[i]->activated)
++			tb_path_deactivate(tunnel->paths[i]);
++	}
++}
 diff --git a/drivers/thunderbolt/tunnel.h b/drivers/thunderbolt/tunnel.h
-index 07bf587bed80..0373779f43ba 100644
+index dff0f27d6ab5..b4e992165e56 100644
 --- a/drivers/thunderbolt/tunnel.h
 +++ b/drivers/thunderbolt/tunnel.h
-@@ -11,6 +11,11 @@
+@@ -1,8 +1,9 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Thunderbolt Cactus Ridge driver - Tunneling support
++ * Thunderbolt driver - Tunneling support
+  *
+  * Copyright (c) 2014 Andreas Noever <andreas.noever@gmail.com>
++ * Copyright (C) 2019, Intel Corporation
+  */
+ 
+ #ifndef TB_TUNNEL_H_
+@@ -10,22 +11,33 @@
  
  #include "tb.h"
  
-+enum tb_tunnel_type {
-+	TB_TUNNEL_PCI,
-+	TB_TUNNEL_DP,
-+};
-+
- /**
-  * struct tb_tunnel - Tunnel between two ports
-  * @tb: Pointer to the domain
-@@ -19,8 +24,10 @@
-  *	      tunnels may be %NULL or null adapter port instead.
-  * @paths: All paths required by the tunnel
-  * @npaths: Number of paths in @paths
-+ * @init: Optional tunnel specific initialization
-  * @activate: Optional tunnel specific activation/deactivation
-  * @list: Tunnels are linked using this field
-+ * @type: Type of the tunnel
-  */
- struct tb_tunnel {
+-struct tb_pci_tunnel {
++/**
++ * struct tb_tunnel - Tunnel between two ports
++ * @tb: Pointer to the domain
++ * @src_port: Source port of the tunnel
++ * @dst_port: Destination port of the tunnel
++ * @paths: All paths required by the tunnel
++ * @npaths: Number of paths in @paths
++ * @activate: Optional tunnel specific activation/deactivation
++ * @list: Tunnels are linked using this field
++ */
++struct tb_tunnel {
  	struct tb *tb;
-@@ -28,18 +35,34 @@ struct tb_tunnel {
- 	struct tb_port *dst_port;
- 	struct tb_path **paths;
- 	size_t npaths;
-+	int (*init)(struct tb_tunnel *tunnel);
- 	int (*activate)(struct tb_tunnel *tunnel, bool activate);
+-	struct tb_port *up_port;
+-	struct tb_port *down_port;
+-	struct tb_path *path_to_up;
+-	struct tb_path *path_to_down;
++	struct tb_port *src_port;
++	struct tb_port *dst_port;
++	struct tb_path **paths;
++	size_t npaths;
++	int (*activate)(struct tb_tunnel *tunnel, bool activate);
  	struct list_head list;
-+	enum tb_tunnel_type type;
  };
  
- struct tb_tunnel *tb_tunnel_discover_pci(struct tb *tb, struct tb_port *down);
- struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
- 				      struct tb_port *down);
-+struct tb_tunnel *tb_tunnel_discover_dp(struct tb *tb, struct tb_port *in);
-+struct tb_tunnel *tb_tunnel_alloc_dp(struct tb *tb, struct tb_port *in,
-+				     struct tb_port *out);
-+
- void tb_tunnel_free(struct tb_tunnel *tunnel);
- int tb_tunnel_activate(struct tb_tunnel *tunnel);
- int tb_tunnel_restart(struct tb_tunnel *tunnel);
- void tb_tunnel_deactivate(struct tb_tunnel *tunnel);
- bool tb_tunnel_is_invalid(struct tb_tunnel *tunnel);
+-struct tb_pci_tunnel *tb_pci_alloc(struct tb *tb, struct tb_port *up,
+-				   struct tb_port *down);
+-void tb_pci_free(struct tb_pci_tunnel *tunnel);
+-int tb_pci_activate(struct tb_pci_tunnel *tunnel);
+-int tb_pci_restart(struct tb_pci_tunnel *tunnel);
+-void tb_pci_deactivate(struct tb_pci_tunnel *tunnel);
+-bool tb_pci_is_invalid(struct tb_pci_tunnel *tunnel);
++struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
++				      struct tb_port *down);
++void tb_tunnel_free(struct tb_tunnel *tunnel);
++int tb_tunnel_activate(struct tb_tunnel *tunnel);
++int tb_tunnel_restart(struct tb_tunnel *tunnel);
++void tb_tunnel_deactivate(struct tb_tunnel *tunnel);
++bool tb_tunnel_is_invalid(struct tb_tunnel *tunnel);
  
-+static inline bool tb_tunnel_is_pci(const struct tb_tunnel *tunnel)
-+{
-+	return tunnel->type == TB_TUNNEL_PCI;
-+}
-+
-+static inline bool tb_tunnel_is_dp(const struct tb_tunnel *tunnel)
-+{
-+	return tunnel->type == TB_TUNNEL_DP;
-+}
-+
  #endif
  
 -- 
