@@ -2,223 +2,250 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85C2C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD551C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAB920850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKB2j3b5"
+	by mail.kernel.org (Postfix) with ESMTP id 7DFCE20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfDJEGB (ORCPT
+        id S1727073AbfDJEI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 00:06:01 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44802 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfDJEGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 00:06:01 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i2so673623pgj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 21:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dZuWAIhjkWDyyN1kphT5RcL1YQnVirMG+cjxlhSmmsY=;
-        b=UKB2j3b5pIE5mz8LGr04zNi0Q4PNWchOuE+rKYeyEs/P+fZycaEOxz6NqjxnJCX2GV
-         2wvodQEhXUP9xzkktt6nGJjaTTjwJDqSkNtQvXpJZabiPb64fa2T7jG0jdQLAScxUAmC
-         pdgBhx7Ag6GoclKHOhxh5X13apEPEvzmi4pITvYlbkR1ygZP499EmAKOY0X8MDt2D512
-         onPH7w6EQ7xaWQT8HQQCg2xu9EoVVtVY3vOIlRfPIcy/g93CBSaf3Kva3/Xq7/rqRXAy
-         ZrNRekyXx7vHKzI7w4+mDNqRK/TlkAT09K9cBE/EgQL3MzI5olNaxAZHwHi/pqDwyIv0
-         j91Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dZuWAIhjkWDyyN1kphT5RcL1YQnVirMG+cjxlhSmmsY=;
-        b=keRJhl33qDtS3sjwneJd5N1YhWAw7AnNiBMAzvnT7zAPa14IzruUBahDpmg58K+dx2
-         jswX+yKyyeGP194HXWr4kHdlBKltqowkk4oDVAwP5pAYcNHlZkFfHoTQyHkqivHmRDzE
-         UIBQXbrkDQGqAzBL17iffxryTyZuOpuJohq90a98IiuA0WcRz7dRrGfZVwJdM0ZVfU4k
-         0ykpU14ouwRm1T7QmnGxFYuylmSBEynGIvQMT3r5RvZguaNeEyMGv7VvCvvXjmscVPYX
-         gEK9msiBG2qdMHqJowVfZSFVndF0wjW+7WVFk1WnDtqCzQSPbkUjPruxVTmP1Hz9ZC2j
-         d0gQ==
-X-Gm-Message-State: APjAAAXCRsB+TjCS5X2gkRhsLjIWhg/eci4BDfU5Xl8jM3okQ+jlpUuT
-        dfhdBfdqXmUWuIAaj4IRgmi3og==
-X-Google-Smtp-Source: APXvYqxDakN2RJUuM3fwaOYCQy7rCeGo9lwmIyj5Vwvi1ldeVqwM37WmtPMbVUJMzZPHH9iizTRuFQ==
-X-Received: by 2002:a63:87c1:: with SMTP id i184mr39074233pge.265.1554869160011;
-        Tue, 09 Apr 2019 21:06:00 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id u20sm30785523pfh.112.2019.04.09.21.05.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 21:05:58 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 09:35:56 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        jcrouse@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        evgreen@chromium.org, sibis@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: opp: Introduce opp-bw-MBs bindings
-Message-ID: <20190410040556.uwnhmhajcasic7hb@vireshk-i7>
-References: <20190313090010.20534-1-georgi.djakov@linaro.org>
- <20190313090010.20534-2-georgi.djakov@linaro.org>
- <20190314062312.vwyu3ryeyc6iv55h@vireshk-i7>
- <e462c932-4789-4f59-ad58-98c62266d977@linaro.org>
+        Wed, 10 Apr 2019 00:08:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41788 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725982AbfDJEIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 00:08:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 31F54301D217;
+        Wed, 10 Apr 2019 04:08:54 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (dhcp-10-65-161-59.pnq.redhat.com [10.65.161.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DDFA600D4;
+        Wed, 10 Apr 2019 04:08:30 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        kilobyte@angband.pl, yuval.shaia@oracle.com, pagupta@redhat.com
+Subject: [PATCH v5 0/6] virtio pmem driver 
+Date:   Wed, 10 Apr 2019 09:38:20 +0530
+Message-Id: <20190410040826.24371-1-pagupta@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e462c932-4789-4f59-ad58-98c62266d977@linaro.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 10 Apr 2019 04:08:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-04-19, 17:36, Georgi Djakov wrote:
-> Hi Viresh,
-> 
-> On 3/14/19 08:23, Viresh Kumar wrote:
-> > On 13-03-19, 11:00, Georgi Djakov wrote:
-> >> In addition to frequency and voltage, some devices may have bandwidth
-> >> requirements for their interconnect throughput - for example a CPU
-> >> or GPU may also need to increase or decrease their bandwidth to DDR
-> >> memory based on the current operating performance point.
-> >>
-> >> Extend the OPP tables with additional property to describe the bandwidth
-> >> needs of a device. The average and peak bandwidth values depend on the
-> >> hardware and its properties.
-> >>
-> >> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/opp/opp.txt | 45 +++++++++++++++++++
-> >>  1 file changed, 45 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> >> index 76b6c79604a5..fa598264615f 100644
-> >> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> >> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> >> @@ -129,6 +129,9 @@ Optional properties:
-> >>  - opp-microamp-<name>: Named opp-microamp property. Similar to
-> >>    opp-microvolt-<name> property, but for microamp instead.
-> >>  
-> >> +- opp-bw-MBs: The interconnect bandwidth is specified with an array containing
-> >> +  the two integer values for average and peak bandwidth in megabytes per second.
-> >> +
-> >>  - opp-level: A value representing the performance level of the device,
-> >>    expressed as a 32-bit integer.
-> >>  
-> >> @@ -546,3 +549,45 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
-> >>  		};
-> >>  	};
-> >>  };
-> >> +
-> >> +Example 7: opp-bw-MBs:
-> >> +(example: average and peak bandwidth values are defined for each OPP and the
-> >> +interconnect between CPU and DDR memory is scaled together with CPU frequency)
-> >> +
-> >> +/ {
-> >> +	cpus {
-> >> +		CPU0: cpu@0 {
-> >> +			compatible = "arm,cortex-a53", "arm,armv8";
-> >> +			...
-> >> +			operating-points-v2 = <&cpu_opp_table>;
-> >> +			/* path between the CPU and DDR memory */
-> >> +			interconnects = <&rpm_bimc MASTER_AMPSS_M0
-> >> +					&rpm_bimc SLAVE_EBI_CH0>;
-> > 
-> > Can we have multiple paths for a device ?
-> 
-> I suppose that this is also a possible scenario. Will propose something
-> to handle multiple paths too.
-> 
-> >> +		};
-> >> +	};
-> >> +
-> >> +	cpu_opp_table: cpu_opp_table {
-> >> +		compatible = "operating-points-v2";
-> >> +		opp-shared;
-> >> +
-> >> +		opp-200000000 {
-> >> +			opp-hz = /bits/ 64 <200000000>;
-> >> +			/* 457 MB/s average and 1525 MB/s peak bandwidth */
-> >> +			opp-bw-MBs = <457 1525>;
-> > 
-> > In that case fixing this to just 2 entries in the array is incorrect
-> > and we should take care of that in the bindings here.
-> 
-> We can encode the path name into the property (when there are multiple
-> paths). We already have opp-microamp-<name> and opp-microamp-<name>, so
-> we can follow the same practice.
-> 
-> For example:
-> 
-> CPU0: cpu@0 {
-> 	compatible = "arm,cortex-a53", "arm,armv8";
-> 	...
-> 	operating-points-v2 = <&cpu_opp_table>;
-> 	/* path between the CPU and DDR and path between CPU and L3 */
-> 	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
-> 			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
-> 	interconnect-names "cpu-mem", "cpu-l3";
-> };
-> 
-> cpu_opp_table: cpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
-> 		opp-bw-MBps-cpu-mem = <457 1525>;
-> 		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
-> 		opp-bw-MBps-cpu-l3 = <914 3050>;
-> 	};
-> };
+ This patch series has implementation for "virtio pmem". 
+ "virtio pmem" is fake persistent memory(nvdimm) in guest 
+ which allows to bypass the guest page cache. This also
+ implements a VIRTIO based asynchronous flush mechanism.  
+ 
+ Sharing guest kernel driver in this patchset with the 
+ changes suggested in v4. Tested with Qemu side device 
+ emulation [6] for virtio-pmem. 
 
-The -<name> property is different as only one of the value is ever used, i.e. we
-can have opp-microvolt-speed0/1/2/3 (4 different values/properties) and only
-opp-microvolt-speed1 will be used eventually and all others are discarded.
+ We have incorporated all the suggestions in V4. Documented 
+ the impact of possible page cache side channel attacks with 
+ suggested countermeasures.
+ 
+ Details of project idea for 'virtio pmem' flushing interface 
+ is shared [3] & [4].
 
-Also I am not sure if this will be actually required. We already have a list of
-interconnects above and the order of that can be taken as reference here. i.e.
+ Implementation is divided into two parts:
+ New virtio pmem guest driver and qemu code changes for new 
+ virtio pmem paravirtualized device.
 
-CPU0: cpu@0 {
-	compatible = "arm,cortex-a53", "arm,armv8";
-	...
-	operating-points-v2 = <&cpu_opp_table>;
-	/* path between the CPU and DDR and path between CPU and L3 */
-	interconnects = <&bimc MASTER_AMPSS_M0 &bimc SLAVE_EBI_CH0>,
-			<&bimc MASTER_AMPSS_M0 &bimc SLAVE_L3>;
-};
+1. Guest virtio-pmem kernel driver
+---------------------------------
+   - Reads persistent memory range from paravirt device and 
+     registers with 'nvdimm_bus'.  
+   - 'nvdimm/pmem' driver uses this information to allocate 
+     persistent memory region and setup filesystem operations 
+     to the allocated memory. 
+   - virtio pmem driver implements asynchronous flushing 
+     interface to flush from guest to host.
 
-cpu_opp_table: cpu_opp_table {
-	compatible = "operating-points-v2";
-	opp-shared;
+2. Qemu virtio-pmem device
+---------------------------------
+   - Creates virtio pmem device and exposes a memory range to 
+     KVM guest. 
+   - At host side this is file backed memory which acts as 
+     persistent memory. 
+   - Qemu side flush uses aio thread pool API's and virtio 
+     for asynchronous guest multi request handling. 
 
-	opp-200000000 {
-		opp-hz = /bits/ 64 <200000000>;
-		/* 457 MB/s average, 1525 MB/s peak bandwidth to DDR */
-		/* 914 MB/s average, 3050 MB/s peak bandwidth to L3 */
-		opp-bw-MBps = <457 1525>, <914 3050>;
-	};
-};
+   David Hildenbrand CCed also posted a modified version[7] of 
+   qemu virtio-pmem code based on updated Qemu memory device API. 
 
-I also strongly believe that "opp-bw-MBps" should be renamed in a way to make it
-independent of the OPPs. For example, we may have devices which also need to add
-their vote for the bandwidth but don't have an OPP table as they don't do DVFS.
-And the same property should be used by them directly as what we will have in
-the individual OPPs in the above example case.
+ Virtio-pmem security implications and countermeasures:
+ -----------------------------------------------------
 
-So maybe something like bw-MBps or something else.
+ In previous posting of kernel driver, there was discussion [9]
+ on possible implications of page cache side channel attacks with 
+ virtio pmem. After thorough analysis of details of known side 
+ channel attacks, below are the suggestions:
 
--- 
-viresh
+ - Depends entirely on how host backing image file is mapped 
+   into guest address space. 
+
+ - virtio-pmem device emulation, by default shared mapping is used
+   to map host backing file. It is recommended to use separate
+   backing file at host side for every guest. This will prevent
+   any possibility of executing common code from multiple guests
+   and any chance of inferring guest local data based based on 
+   execution time.
+
+ - If backing file is required to be shared among multiple guests 
+   it is recommended to don't support host page cache eviction 
+   commands from the guest driver. This will avoid any possibility
+   of inferring guest local data or host data from another guest. 
+
+ - Proposed device specification [8] for virtio-pmem device with 
+   details of possible security implications and suggested 
+   countermeasures for device emulation.
+
+ Virtio-pmem errors handling:
+ ----------------------------------------
+  Checked behaviour of virtio-pmem for below types of errors
+  Need suggestions on expected behaviour for handling these errors?
+
+  - Hardware Errors: Uncorrectable recoverable Errors: 
+  a] virtio-pmem: 
+    - As per current logic if error page belongs to Qemu process, 
+      host MCE handler isolates(hwpoison) that page and send SIGBUS. 
+      Qemu SIGBUS handler injects exception to KVM guest. 
+    - KVM guest then isolates the page and send SIGBUS to guest 
+      userspace process which has mapped the page. 
+  
+  b] Existing implementation for ACPI pmem driver: 
+    - Handles such errors with MCE notifier and creates a list 
+      of bad blocks. Read/direct access DAX operation return EIO 
+      if accessed memory page fall in bad block list.
+    - It also starts backgound scrubbing.  
+    - Similar functionality can be reused in virtio-pmem with MCE 
+      notifier but without scrubbing(no ACPI/ARS)? Need inputs to 
+      confirm if this behaviour is ok or needs any change?
+
+Changes from PATCH v4: [1]
+- Factor out MAP_SYNC supported functionality to a common helper
+				[Dave, Darrick, Jan]
+- Comment, indentation and virtqueue_kick failure handle - Yuval Shaia
+
+Changes from PATCH v3: [2]
+- Use generic dax_synchronous() helper to check for DAXDEV_SYNC 
+  flag - [Dan, Darrick, Jan]
+- Add 'is_nvdimm_async' function
+- Document page cache side channel attacks implications & 
+  countermeasures - [Dave Chinner, Michael]
+
+Changes from PATCH v2: 
+- Disable MAP_SYNC for ext4 & XFS filesystems - [Dan] 
+- Use name 'virtio pmem' in place of 'fake dax' 
+
+Changes from PATCH v1: 
+- 0-day build test for build dependency on libnvdimm 
+
+ Changes suggested by - [Dan Williams]
+- Split the driver into two parts virtio & pmem  
+- Move queuing of async block request to block layer
+- Add "sync" parameter in nvdimm_flush function
+- Use indirect call for nvdimm_flush
+- Don’t move declarations to common global header e.g nd.h
+- nvdimm_flush() return 0 or -EIO if it fails
+- Teach nsio_rw_bytes() that the flush can fail
+- Rename nvdimm_flush() to generic_nvdimm_flush()
+- Use 'nd_region->provider_data' for long dereferencing
+- Remove virtio_pmem_freeze/restore functions
+- Remove BSD license text with SPDX license text
+
+- Add might_sleep() in virtio_pmem_flush - [Luiz]
+- Make spin_lock_irqsave() narrow
+
+Changes from RFC v3
+- Rebase to latest upstream - Luiz
+- Call ndregion->flush in place of nvdimm_flush- Luiz
+- kmalloc return check - Luiz
+- virtqueue full handling - Stefan
+- Don't map entire virtio_pmem_req to device - Stefan
+- request leak, correct sizeof req- Stefan
+- Move declaration to virtio_pmem.c
+
+Changes from RFC v2:
+- Add flush function in the nd_region in place of switching
+  on a flag - Dan & Stefan
+- Add flush completion function with proper locking and wait
+  for host side flush completion - Stefan & Dan
+- Keep userspace API in uapi header file - Stefan, MST
+- Use LE fields & New device id - MST
+- Indentation & spacing suggestions - MST & Eric
+- Remove extra header files & add licensing - Stefan
+
+Changes from RFC v1:
+- Reuse existing 'pmem' code for registering persistent 
+  memory and other operations instead of creating an entirely 
+  new block driver.
+- Use VIRTIO driver to register memory information with 
+  nvdimm_bus and create region_type accordingly. 
+- Call VIRTIO flush from existing pmem driver.
+
+Pankaj Gupta (6):
+   libnvdimm: nd_region flush callback support
+   virtio-pmem: Add virtio-pmem guest driver
+   libnvdimm: add nd_region buffered dax_dev flag
+   dax: check synchronous mapping is supported
+   ext4: disable map_sync for virtio pmem
+   xfs: disable map_sync for virtio pmem
+
+[1] https://lkml.org/lkml/2019/4/3/394
+[2] https://lkml.org/lkml/2019/1/9/471
+[3] https://www.spinics.net/lists/kvm/msg149761.html
+[4] https://www.spinics.net/lists/kvm/msg153095.html  
+[5] https://lkml.org/lkml/2018/8/31/413
+[6] https://marc.info/?l=linux-kernel&m=153572228719237&w=2 
+[7] https://marc.info/?l=qemu-devel&m=153555721901824&w=2
+[8] https://lists.oasis-open.org/archives/virtio-dev/201903/msg00083.html
+[9] https://lkml.org/lkml/2019/1/9/1191
+
+ drivers/acpi/nfit/core.c         |    4 -
+ drivers/dax/bus.c                |    2 
+ drivers/dax/super.c              |   13 +++-
+ drivers/md/dm.c                  |    2 
+ drivers/nvdimm/claim.c           |    6 +
+ drivers/nvdimm/nd.h              |    1 
+ drivers/nvdimm/pmem.c            |   17 +++--
+ drivers/nvdimm/region_devs.c     |   45 +++++++++++++-
+ drivers/nvdimm/virtio_pmem.c     |   88 +++++++++++++++++++++++++++
+ drivers/virtio/Kconfig           |   10 +++
+ drivers/virtio/Makefile          |    1 
+ drivers/virtio/pmem.c            |  124 +++++++++++++++++++++++++++++++++++++++
+ fs/ext4/file.c                   |   11 +--
+ fs/xfs/xfs_file.c                |   10 +--
+ include/linux/dax.h              |   32 +++++++++-
+ include/linux/libnvdimm.h        |    9 ++
+ include/linux/virtio_pmem.h      |   60 ++++++++++++++++++
+ include/uapi/linux/virtio_ids.h  |    1 
+ include/uapi/linux/virtio_pmem.h |   10 +++
+ 19 files changed, 419 insertions(+), 27 deletions(-)
+
