@@ -2,184 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E46C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F951C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730C120830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DC620830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eULPZPSp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ChsrIjTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbfDJSbC (ORCPT
+        id S1731565AbfDJSbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:31:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34908 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfDJSbC (ORCPT
+        Wed, 10 Apr 2019 14:31:12 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:45466 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbfDJSbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:31:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so1934118plp.2;
-        Wed, 10 Apr 2019 11:31:01 -0700 (PDT)
+        Wed, 10 Apr 2019 14:31:11 -0400
+Received: by mail-vs1-f66.google.com with SMTP id o10so1933947vsp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:31:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K5q1mArmhnmzSt9XW4y9g5UDZy89Pu07LHO7UzmM7hs=;
-        b=eULPZPSpjnII+u3PFVRSx6rxl1Czmc5unltkENZqNMp+lgqVagkXcyFKics+dxjirF
-         iM9sIGJtpotImRPinHt2CxVcm0Bi/jw4LfhrPwgifwtGbPFCBn1avKSCB+PiXba46HRY
-         ZczpWAe10T8hm/ElC+ppc5iIzTUg5Jm3y3MEW9Ofz/neiWbEfBwv7Bo4lzGxro4WMlcv
-         kLjn4ioaFl+FLNjiekvdZoeqq7osWw8Q5HxWbMCIsXpDE+kQMYLYbf+ydiN+vGL2Yo7S
-         rQ77xiYyF3noAFOCLEo5uo7XKEqTwf+fq650B6maSpof6mZvRvAOels6hb5eBjb5WU7K
-         jgtQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HZrouuH6qDcbcN0Xir61EX//r5Pvf+jE6u/Bex0vtPA=;
+        b=ChsrIjTR2XUXY98NFeP4EYidlDto2ZP21YpmNICKQthef5L3chA1evffBlGc7f5Cpd
+         AVLdt06zVihsEe31IHJ9/S+3AZeljeUHUhTc1c2zEZwWOWJ77/kz5jXchKIL0j3RJt7Z
+         q8y86gbdDx/7EpkMgNN0PhF3sbVnMJ0w/ySFg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K5q1mArmhnmzSt9XW4y9g5UDZy89Pu07LHO7UzmM7hs=;
-        b=OaJNU/pZUoIu0oGt0yw7MR5gt+mS58snfY5nTcHAEc9mixZ/ux/ZouOeYJPDTZCatg
-         puiBz9DBdtAXdHNLcDkKMP9LHgqU6DzbNERCpfafYp3ySq2m5/LIYw7ylDAum/Kxrdpg
-         dnPKWt/Cv1/SBoASd+jGFfwvIiIfGZY3GTgNx5Taoe32aWBTd7K59Qn8i96d4IT8wwS1
-         6JwKb2XorBej14PjIgHgNalJ1TjC9qHfCxawy4LZipYtOvRAppRxkOufh3EkFzMKo64A
-         JDHM+24eoqQyF54WImwc2ckVyfwzs/yd+E4WEMjoyeDq8r+O8Cwax/z7WCIf7zXCpbDs
-         FyuQ==
-X-Gm-Message-State: APjAAAW0bB2cJdBtqaoPTo4abyhGnnw4FToDzn4oaeJGx1xZjpOtdld9
-        QadEdsJMdYnPNuRX+3L1dj4=
-X-Google-Smtp-Source: APXvYqzN0pLEns/L/firzlMgQrzOsEpX2Ug+7NYdaWjPHfUCzhXu/doxRCCR9RHiuEZemQet983QsQ==
-X-Received: by 2002:a17:902:7601:: with SMTP id k1mr7525234pll.35.1554921061075;
-        Wed, 10 Apr 2019 11:31:01 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q5sm3376159pff.97.2019.04.10.11.31.00
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HZrouuH6qDcbcN0Xir61EX//r5Pvf+jE6u/Bex0vtPA=;
+        b=DkwVKt3zIsglAR5jGoBDqs9ppXxCuaEuL5i6PpaWUt55JymKlnJRYPCxX66lkYLoar
+         42bd1tHFMfQ0Bt+nwRVONFf32+3ZjESPnkbcjL8nT2r0ISxEWweybFk1mfOnLtESXZEU
+         AAh/MQf7iNWs+rzXrlynskKelmJC8iPT2hxRtb1vitFPKrcebEuNkEjpF2jrTqJKsU2K
+         YaIHot7Y7qvu1Z4wuo4F48s4sBksUwUQkRkmqK+v1hscCBfx0vkKXO0P2Xz2gJOdxoGF
+         lSAjVF2apt/TVC0vpq4a185PP/npHLUGQfWYdz98quw3uCLaWJAc7aAMc54tqWspZlO/
+         MLsw==
+X-Gm-Message-State: APjAAAX0JOKT6W7t8pmFE1w98BkLRi3BgemxbfuoDk6RJ0iaM/AQhgRP
+        Ujac2lddBZB7ZaU4BeDH4rZaKbB2h/A=
+X-Google-Smtp-Source: APXvYqxTHz4s5hDeef2KxCkeqsMZtKLCJdaAWYGaT6YpenoTxloZId/ETx3CT7SpSguWd1kX+zo0hw==
+X-Received: by 2002:a67:6991:: with SMTP id e139mr25717826vsc.80.1554921069865;
+        Wed, 10 Apr 2019 11:31:09 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id e81sm17503356vkd.56.2019.04.10.11.31.08
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 11:31:00 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 11:30:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH 01/21] docs: hwmon: k10temp: convert to ReST format
-Message-ID: <20190410183059.GA20261@roeck-us.net>
-References: <cover.1554893881.git.mchehab+samsung@kernel.org>
- <9ed53a4f160d7cd4f7c05fb919196ac15ecb6d63.1554893882.git.mchehab+samsung@kernel.org>
+        Wed, 10 Apr 2019 11:31:09 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id f22so1943340vso.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:31:08 -0700 (PDT)
+X-Received: by 2002:a67:7816:: with SMTP id t22mr24108905vsc.115.1554921068268;
+ Wed, 10 Apr 2019 11:31:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ed53a4f160d7cd4f7c05fb919196ac15ecb6d63.1554893882.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
+ <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+ <20190321175122.GA1587@sol.localdomain> <20190410031734.GB7140@sol.localdomain>
+In-Reply-To: <20190410031734.GB7140@sol.localdomain>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 11:30:57 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
+Message-ID: <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 08:11:51AM -0300, Mauro Carvalho Chehab wrote:
-> Convert k10temp to ReST format, in order to allow it to
-> be parsed by Sphinx.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Tue, Apr 9, 2019 at 8:17 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Thu, Mar 21, 2019 at 10:51:22AM -0700, Eric Biggers wrote:
+> > On Thu, Mar 21, 2019 at 10:45:31AM -0700, Kees Cook wrote:
+> > > On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > >
+> > > > On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
+> > > > > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
+> > > > > > When running the sha1-asm crypto selftest on arm with
+> > > > > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
+> > > > > >
+> > > > > >     usercopy: Kernel memory overwrite attempt detected to spans
+> > > > > > multiple pages (offset 0, size 42)!
+> > > > >
+> > > > > Well, this must happen with the new (in 5.1) crypto self-tests implementation
+> > > > > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
+> > > > > understand why hardened usercopy considers it a bug though, as there's no buffer
+> > > > > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
+> > > > > buffer that was allocated with __get_free_pages():
+> > > > >
+> > > > >       __get_free_pages(GFP_KERNEL, 1)
+> > > > >
+> > > > > ... where 1 means an order-1 allocation.
+> > > > >
+> > > > > If it copies to offset=4064 len=42, for example, then hardened usercopy
+> > > > > considers it a bug even though the buffer is 8192 bytes long.  Why?
+> > > > >
+> > > > > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
+> > > > > with ITER_KVEC.
+> > > > >
+> > > > > - Eric
+> > > >
+> > > > Kees, any thoughts on why hardened usercopy rejects copies spanning a page
+> > > > boundary when they seem to be fine?
+> > >
+> > > This is due to missing the compound page marking, if I remember
+> > > correctly. However, I tend to leave the pagespan test disabled: it
+> > > really isn't ready for production use -- there are a lot of missing
+> > > annotations still.
+> > >
+> >
+> > So do I need to add __GFP_COMP?  Is there any actual reason to do so?
+> > Why does hardened usercopy check for it?
+> >
+> > - Eric
+>
+> Hi Kees, any answer to this question?
 
-The first Signed-off-by: is bad. This affects all patches in the series.
+Hi! Sorry, this got lost in my inbox. Yes, if you can add __GFP_COMP,
+that would fix this case. No one has had time lately to track down all
+these cases, but avoiding adding new ones would be wonderful. :)
 
-Guenter
+It's in there because it's a state I'd like to get to in the kernel,
+but it'll require a lot more work to get there.
 
-> ---
->  Documentation/hwmon/k10temp | 37 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/hwmon/k10temp b/Documentation/hwmon/k10temp
-> index 254d2f55345a..12a86ba17de9 100644
-> --- a/Documentation/hwmon/k10temp
-> +++ b/Documentation/hwmon/k10temp
-> @@ -2,42 +2,77 @@ Kernel driver k10temp
->  =====================
->  
->  Supported chips:
-> +
->  * AMD Family 10h processors:
-> +
->    Socket F: Quad-Core/Six-Core/Embedded Opteron (but see below)
-> +
->    Socket AM2+: Quad-Core Opteron, Phenom (II) X3/X4, Athlon X2 (but see below)
-> +
->    Socket AM3: Quad-Core Opteron, Athlon/Phenom II X2/X3/X4, Sempron II
-> +
->    Socket S1G3: Athlon II, Sempron, Turion II
-> +
->  * AMD Family 11h processors:
-> +
->    Socket S1G2: Athlon (X2), Sempron (X2), Turion X2 (Ultra)
-> +
->  * AMD Family 12h processors: "Llano" (E2/A4/A6/A8-Series)
-> +
->  * AMD Family 14h processors: "Brazos" (C/E/G/Z-Series)
-> +
->  * AMD Family 15h processors: "Bulldozer" (FX-Series), "Trinity", "Kaveri", "Carrizo"
-> +
->  * AMD Family 16h processors: "Kabini", "Mullins"
->  
->    Prefix: 'k10temp'
-> +
->    Addresses scanned: PCI space
-> +
->    Datasheets:
-> +
->    BIOS and Kernel Developer's Guide (BKDG) For AMD Family 10h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/31116.pdf
-> +
->    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 11h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/41256.pdf
-> +
->    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 12h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/41131.pdf
-> +
->    BIOS and Kernel Developer's Guide (BKDG) for AMD Family 14h Models 00h-0Fh Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/43170.pdf
-> +
->    Revision Guide for AMD Family 10h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/41322.pdf
-> +
->    Revision Guide for AMD Family 11h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/41788.pdf
-> +
->    Revision Guide for AMD Family 12h Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/44739.pdf
-> +
->    Revision Guide for AMD Family 14h Models 00h-0Fh Processors:
-> +
->      http://support.amd.com/us/Processor_TechDocs/47534.pdf
-> +
->    AMD Family 11h Processor Power and Thermal Data Sheet for Notebooks:
-> +
->      http://support.amd.com/us/Processor_TechDocs/43373.pdf
-> +
->    AMD Family 10h Server and Workstation Processor Power and Thermal Data Sheet:
-> +
->      http://support.amd.com/us/Processor_TechDocs/43374.pdf
-> +
->    AMD Family 10h Desktop Processor Power and Thermal Data Sheet:
-> +
->      http://support.amd.com/us/Processor_TechDocs/43375.pdf
->  
->  Author: Clemens Ladisch <clemens@ladisch.de>
-> @@ -60,7 +95,7 @@ are using an AM3 processor on an AM2+ mainboard, you can safely use the
->  
->  There is one temperature measurement value, available as temp1_input in
->  sysfs. It is measured in degrees Celsius with a resolution of 1/8th degree.
-> -Please note that it is defined as a relative value; to quote the AMD manual:
-> +Please note that it is defined as a relative value; to quote the AMD manual::
->  
->    Tctl is the processor temperature control value, used by the platform to
->    control cooling systems. Tctl is a non-physical temperature on an
+-- 
+Kees Cook
