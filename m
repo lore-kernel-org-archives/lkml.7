@@ -2,114 +2,162 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0639FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BABC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7FD20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF80217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfDJXhG (ORCPT
+        id S1726761AbfDJXmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 19:37:06 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:58629 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfDJXhG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 19:37:06 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3ANah5O015380
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 11 Apr 2019 08:36:43 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3ANagIs027706;
-        Thu, 11 Apr 2019 08:36:43 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3ANaPuq031742;
-        Thu, 11 Apr 2019 08:36:42 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.135] [10.38.151.135]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-4172004; Thu, 11 Apr 2019 08:34:53 +0900
-Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
- BPXC07GP.gisp.nec.co.jp ([10.38.151.135]) with mapi id 14.03.0319.002; Thu,
- 11 Apr 2019 08:34:52 +0900
-From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqA
-Date:   Wed, 10 Apr 2019 23:34:51 +0000
-Message-ID: <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
- <20190410171431.GE26580@zn.tnic>
-In-Reply-To: <20190410171431.GE26580@zn.tnic>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <42379DDBC7FCB549917A8ED9EFB6AABE@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Wed, 10 Apr 2019 19:42:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:15324 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfDJXmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 19:42:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 16:42:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,335,1549958400"; 
+   d="scan'208";a="134714856"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2019 16:42:00 -0700
+Date:   Wed, 10 Apr 2019 16:41:57 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     jglisse@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 7/8] mm/mmu_notifier: pass down vma and reasons why
+ mmu notifier is happening v2
+Message-ID: <20190410234124.GE22989@iweiny-DESK2.sc.intel.com>
+References: <20190326164747.24405-1-jglisse@redhat.com>
+ <20190326164747.24405-8-jglisse@redhat.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190326164747.24405-8-jglisse@redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8xMS8xOSAyOjE0IEFNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IE9uIE1vbiwgQXBy
-IDA4LCAyMDE5IGF0IDExOjEwOjE3UE0gKzAwMDAsIEp1bmljaGkgTm9tdXJhIHdyb3RlOg0KPj4g
-LSNpZmRlZiBDT05GSUdfRUZJDQo+PiAtCXVuc2lnbmVkIGxvbmcgc3lzdGFiLCBzeXN0YWJfdGFi
-bGVzLCBjb25maWdfdGFibGVzOw0KPj4gLQl1bnNpZ25lZCBpbnQgbnJfdGFibGVzOw0KPj4gK3N0
-YXRpYyB2b2lkIGVmaV9yZWFkX2Jvb3RfcGFyYW1zKHZvaWQpDQo+PiArew0KPj4gKwlzdHJ1Y3Qg
-ZWZpX3NldHVwX2RhdGEgKmVzZDsNCj4+ICAJc3RydWN0IGVmaV9pbmZvICplaTsNCj4+IC0JYm9v
-bCBlZmlfNjQ7DQo+PiAtCWludCBzaXplLCBpOw0KPj4gIAljaGFyICpzaWc7DQo+PiAgDQo+PiAr
-CWtleGVjX2VmaV9zZXR1cF9kYXRhID0gZWZpX2dldF9rZXhlY19zZXR1cF9kYXRhX2FkZHIoKTsN
-Cj4gDQo+IFdoeSBpcyB0aGF0IHdyaXR0ZW4gaGVyZSBhbmQgdGVzdGVkIGluIGFub3RoZXIgZnVu
-Y3Rpb24/IT8NCg0KQm90aCBlZmlfZ2V0X3JzZHBfYWRkcigpIGFuZCBrZXhlY19nZXRfcnNkcF9h
-ZGRyKCkgbmVlZCB0byBjaGVjaw0KdGhlIHJlc3VsdCBvZiBlZmlfZ2V0X2tleGVjX3NldHVwX2Rh
-dGFfYWRkcigpOyB0aGUgZm9ybWVyIHRvIGNoZWNrDQp3aGV0aGVyIHRvIGV4aXQgZWFybHksIHRo
-ZSBsYXR0ZXIgdG8gdXNlIHRoZSBhZGRyZXNzIG9mIHRoZSB0YWJsZXMuDQpJIHRob3VnaHQgaXQn
-cyBiZXR0ZXIgdG8gc3RvcmUgdGhlIHJlc3VsdCBpbnN0ZWFkIG9mIGNhbGxpbmcgdHdpY2UuDQoN
-Cj4+ICsNCj4+ICAJZWkgPSAmYm9vdF9wYXJhbXMtPmVmaV9pbmZvOw0KPj4gIAlzaWcgPSAoY2hh
-ciAqKSZlaS0+ZWZpX2xvYWRlcl9zaWduYXR1cmU7DQo+PiAgDQo+PiAgCWlmICghc3RybmNtcChz
-aWcsIEVGSTY0X0xPQURFUl9TSUdOQVRVUkUsIDQpKSB7DQo+PiAgCQllZmlfNjQgPSB0cnVlOw0K
-Pj4gKwkJZWZpX2Jvb3RlZCA9IHRydWU7DQo+IA0KPiBXaGF0IGlzIHRoYXQgdWdsaW5lc3MgZm9y
-PyBIYXZlIHlvdSBoZWFyZCBvZiBmdW5jdGlvbnMgcmV0dXJuaW5nIHZhbHVlcz8NCg0KU2FtZSBh
-cyBhYm92ZS4gSSBkaWRuJ3Qgd2FudCB0byBkbyBzaWduYXR1cmUgY2hlY2sgdHdpY2UsIGluDQpl
-ZmlfZ2V0X3JzZHBfYWRkcigpIGFuZCBrZXhlY19nZXRfcnNkcF9hZGRyKCkuDQpBbHNvLCB0aGUg
-c2lnbmF0dXJlIGNoZWNrIGhhcyAyIHJldHVybiB2YWx1ZXMsIHdoZXRoZXIgaXQgd2FzIDMyYml0
-DQpvciA2NGJpdCwgYW5kIHdoZXRoZXIgdGhlIHNpZ25hdHVyZSB3YXMgdmFsaWQgb3Igbm90Lg0K
-SSBjb3VsZCByZXR1cm4gb25lIG9mIHRoZW0gdmlhIHBvaW50ZXIgcGFzc2VkIHBhcmFtZXRlciBi
-dXQgSSB0aG91Z2h0DQppdCdzIGEgbGl0dGxlIGJpdCB1Z2x5LiAgT3IgSSBjb3VsZCBlbmNvZGUg
-dGhlbSBhcyBzb21ldGhpbmcgbGlrZQ0KRUZJX1NJR05BVFVSRV82NCwgRUZJX1NJR05BVFVSRV8z
-MiwgYW5kIEVGSV9TSUdOQVRVUkVfSU5WQUxJRC4NCkJ1dCBJJ20gbm90IHN1cmUgaXQncyBnb29k
-IHRvIGludHJvZHVjZSBzdWNoIGEgdGhpbmcganVzdCBmb3IgaGVyZS4NCg0KPj4gK3N0YXRpYyBh
-Y3BpX3BoeXNpY2FsX2FkZHJlc3MgZWZpX2dldF9yc2RwX2FkZHIodm9pZCkNCj4+ICt7DQo+PiAr
-I2lmZGVmIENPTkZJR19FRkkNCj4+ICsJdW5zaWduZWQgbG9uZyBjb25maWdfdGFibGVzOw0KPj4g
-Kwl1bnNpZ25lZCBpbnQgbnJfdGFibGVzOw0KPj4gKw0KPj4gKwllZmlfcmVhZF9ib290X3BhcmFt
-cygpOw0KPiANCj4gV2h5IGRvIHlvdSByZWFkIGJvb3QgcGFyYW1zIGhlcmU/DQo+IA0KPiBObywg
-bm8sIG5vLg0KPiANCj4gRmlyc3QgeW91IGRvDQo+IA0KPiAJZWZpX2dldF9yc2RwX2FkZHIoKQ0K
-PiANCj4gaWYgeW91IGNhbm5vdCBnZXQgYW4gYWRkcmVzcywgeW91DQoNCkJ1dCBlZmlfZ2V0X3Jz
-ZHBfYWRkcigpIG5lZWRzIHRvIGNoZWNrIHdoZXRoZXIgdGhlIGtlcm5lbCB3YXMNCmtleGVjIGJv
-b3RlZCB0byBhdm9pZCBhY2Nlc3NpbmcgaW52YWxpZCBFRkkgdGFibGUgYWRkcmVzcy4NCmVmaV9n
-ZXRfa2V4ZWNfc2V0dXBfZGF0YV9hZGRyKCkgaXMgdGhlIG9ubHkgbWV0aG9kIEkga25vdw0KdG8g
-Y2hlY2sgaWYgaXQgd2FzIGtleGVjLWJvb3RlZC4NCg0KPiAJLSBwYXJzZSBib290IHBhcmFtcw0K
-PiAJLSB0aGVuIHBhcnNlIEVGSSB0YWJsZXMgZnJvbSB0aGUgYWRkcmVzcyB0aGUga2V4ZWNlZCBr
-ZXJuZWwgcmVjZWl2ZWQNCj4gDQo+IE5vIGludGVybWl4aW5nIG9mIGNvZGUgcGF0aHMgYW5kIGFz
-c2lnbmluZyB2YXJpYWJsZXMgaW4gb25lIGZ1bmN0aW9uIGFuZA0KPiB1c2luZyB0aGVtIGluIGFu
-b3RoZXIuDQoNClllYWgsIEkgZG9uJ3QgbGlrZSB0aGF0LiBCdXQgaWYgd2UgYXJlIHRvIGhhbmRs
-ZSAzMmJpdCBFRkkgY2FzZSwNCmVmaV9nZXRfcnNkcF9hZGRyKCkgYW5kIGtleGVjX2dldF9yc2Rw
-X2FkZHIoKSBiZWNvbWUgZnVsbCBvZg0KZHVwbGljYXRpb24uDQoNCj4gWW91IHdlcmUgb24gdGhl
-IHJpZ2h0IHRyYWNrIHdpdGggdjMuLi4NCg0KLS0gDQpKdW4naWNoaSBOb211cmEsIE5FQyBDb3Jw
-b3JhdGlvbiAvIE5FQyBTb2x1dGlvbiBJbm5vdmF0b3JzLCBMdGQu
+On Tue, Mar 26, 2019 at 12:47:46PM -0400, Jerome Glisse wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
+> 
+> CPU page table update can happens for many reasons, not only as a result
+> of a syscall (munmap(), mprotect(), mremap(), madvise(), ...) but also
+> as a result of kernel activities (memory compression, reclaim, migration,
+> ...).
+> 
+> Users of mmu notifier API track changes to the CPU page table and take
+> specific action for them. While current API only provide range of virtual
+> address affected by the change, not why the changes is happening
+> 
+> This patch is just passing down the new informations by adding it to the
+> mmu_notifier_range structure.
+> 
+> Changes since v1:
+>     - Initialize flags field from mmu_notifier_range_init() arguments
+> 
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: Christian König <christian.koenig@amd.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Peter Xu <peterx@redhat.com>
+> Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Ross Zwisler <zwisler@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Christian Koenig <christian.koenig@amd.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: kvm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/mmu_notifier.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+> index 62f94cd85455..0379956fff23 100644
+> --- a/include/linux/mmu_notifier.h
+> +++ b/include/linux/mmu_notifier.h
+> @@ -58,10 +58,12 @@ struct mmu_notifier_mm {
+>  #define MMU_NOTIFIER_RANGE_BLOCKABLE (1 << 0)
+>  
+>  struct mmu_notifier_range {
+> +	struct vm_area_struct *vma;
+>  	struct mm_struct *mm;
+>  	unsigned long start;
+>  	unsigned long end;
+>  	unsigned flags;
+> +	enum mmu_notifier_event event;
+>  };
+>  
+>  struct mmu_notifier_ops {
+> @@ -363,10 +365,12 @@ static inline void mmu_notifier_range_init(struct mmu_notifier_range *range,
+>  					   unsigned long start,
+>  					   unsigned long end)
+>  {
+> +	range->vma = vma;
+> +	range->event = event;
+>  	range->mm = mm;
+>  	range->start = start;
+>  	range->end = end;
+> -	range->flags = 0;
+> +	range->flags = flags;
 
+Which of the "user patch sets" uses the new flags?
+
+I'm not seeing that user yet.  In general I don't see anything wrong with the
+series and I like the idea of telling drivers why the invalidate has fired.
+
+But is the flags a future feature?
+
+For the series:
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Ira
+
+>  }
+>  
+>  #define ptep_clear_flush_young_notify(__vma, __address, __ptep)		\
+> -- 
+> 2.20.1
+> 
