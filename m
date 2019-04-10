@@ -2,99 +2,107 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B0420820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB1D21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554924190;
+	bh=ImIrz8uOcrbyiT2MQ9I3Ny66PJUZOTDskAlnJVtUMro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=scNbHx+WitwKp0T5vPvXW2eyeQ0AznloNf/IWKMiiv4U3KvAhVO+yIQRZXCuC84Tw
+	 o9VlmLUH3KFDzhZmkpdYUr0qRm9p4RTiqu9W9UnpLeNi6Z9aTXQEDT4sXZfNICoZU5
+	 fElnYcq2V8atZc/O2jDEH3sG3Dg32dpMftq1P1Qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfDJTTf (ORCPT
+        id S1726706AbfDJTXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:19:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36790 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfDJTTf (ORCPT
+        Wed, 10 Apr 2019 15:23:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44000 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfDJTXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:19:35 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s15so4287938qtn.3;
-        Wed, 10 Apr 2019 12:19:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yg1CRWpDLdkT8DcNZ4/1Kt/Rhj0AKjem9XJsrZeWYb4=;
-        b=lauKN18AGDfCEExEDyPVOa6Uh3GT+LQZQj/aeAOz7VFiWFFaOL0w+MUEUCBJHzGgil
-         w/xQGaxhbSpedYNvNYUqkJomuVauywfUYmzsV0H4jqAOxB6mYU6kBaFMIK6m7QT+tU78
-         IJeNJe4AQa/hR5w5gHAgvH6tZu19NVa2RXXDOmVjhajGlbpg0cl/+uJAzn9+2WsGfCuS
-         AqCsmmvyJqsRTwIo4XflWg9WkFHZ5jsMLbZP3LrM2cItIZCNn0WaSdP/zq687cSQmMfN
-         SCVwL0isVUQdNVZRjtTA4dS8NFJDFCUXpR+i5RICbk5/Ft+NE2Tb01XnJa+yfEBOrQAY
-         yz2w==
-X-Gm-Message-State: APjAAAUFzi5zPHKeWxYsd92EddTdEVlxTtmeM2DbmhBChPNb6vgsAUhU
-        tYQrcPHQlnCPfmnsHMUkC3xiL2vjL9WS9wd9Yhk=
-X-Google-Smtp-Source: APXvYqziMS9Y6MH6ktb8d7CS4J0XVAajtu4pUUPQPiejmRWed2wG2wYZO8+c+KHJQJataW3FJ+L3UHv8L+Bm/YeJX5o=
-X-Received: by 2002:a0c:9dcb:: with SMTP id p11mr36568433qvf.28.1554923973662;
- Wed, 10 Apr 2019 12:19:33 -0700 (PDT)
+        Wed, 10 Apr 2019 15:23:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YulanG3i2WrJpx0xcGHlq1inbqZIAFZQdFGyn1cb8Dg=; b=Y5aV2L6s0WR/3J0tNglnGt96k7
+        WIu3ypdk2UW6ATlRH+27LSYVyflmmXEkhycbTQ0FuyGNhG7x79MU499hjHyGBZ5OEosS3ERQnl0ub
+        4DRp4iO6LoNNEGrHJOez+E+CBVfXSa5mc3XgC96BCAMox/SXXqTtrNf8/S9fhQL2gD4QXpRIwaldK
+        iFVDzwrEUBgWri6CKFd1rNjhcv+2WN5ieoghjmoNUra/Vrwfp3dCoSHag+KoB/MlKH+xOCVsZrT/L
+        BarQCHii8F1eyZs/yHnR+V7VVragEFne0n8u8sox7Nw4HH+RShZXL42N7o6SiznUspFwqpqizf17m
+        UhO8SjuA==;
+Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEIoM-0003R0-JI; Wed, 10 Apr 2019 19:23:06 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hEIoI-0000yc-PK; Wed, 10 Apr 2019 16:23:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Subject: [PATCH v2 03/21] docs: hwmon: menf21bmc: convert to ReST format
+Date:   Wed, 10 Apr 2019 16:22:40 -0300
+Message-Id: <e538f79075cbaaab78d5b398b659fcb4eacb6403.1554923967.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1554923967.git.mchehab+samsung@kernel.org>
+References: <cover.1554923967.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
-In-Reply-To: <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 10 Apr 2019 21:19:17 +0200
-Message-ID: <CAK8P3a30yY_1mPcUBxOYOkbFwoeCHbo5EHuWMN4fqKug9DiQDQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 5:09 PM Olof Johansson <olof@lixom.net> wrote:
->
-> As far as format goes; there's clear precedent on cpio being used and
-> supported; we already have build time requirements on the userspace
-> tools with some options. Using tar would actually be a new dependency
-> even if it is a common tool to have installed. With a self-populating
-> FS, there's no new tool requirements on the runtime side either.
+Convert menf21bmc to ReST format, in order to allow it to
+be parsed by Sphinx.
 
-The decision between tar and cpio directly follows from whether the
-headers are uncompressed in kernel space or in user space:
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/hwmon/menf21bmc | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- we use cpio for initramfs because unpacking cpio in C code is
-  fairly simple, while unpacking tar is not (see the wikipedia page on tar).
-  If we were to unpack it from the kernel, the initramfs code could be
-  trivially reused.
-- nobody sane uses cpio in user space, since tar is already present
-  almost everywhere, while cpio is rather obscure in comparison.
+diff --git a/Documentation/hwmon/menf21bmc b/Documentation/hwmon/menf21bmc
+index 2a273a065c5e..1f0c6b2235ab 100644
+--- a/Documentation/hwmon/menf21bmc
++++ b/Documentation/hwmon/menf21bmc
+@@ -2,8 +2,11 @@ Kernel driver menf21bmc_hwmon
+ =============================
+ 
+ Supported chips:
++
+ 	* MEN 14F021P00
++
+ 	  Prefix: 'menf21bmc_hwmon'
++
+ 	  Adresses scanned: -
+ 
+ Author: Andreas Werner <andreas.werner@men.de>
+@@ -34,6 +37,7 @@ Sysfs entries
+ The following attributes are supported. All attributes are read only
+ The Limits are read once by the driver.
+ 
++=============== ==========================
+ in0_input	+3.3V input voltage
+ in1_input	+5.0V input voltage
+ in2_input	+12.0V input voltage
+@@ -48,3 +52,4 @@ in1_label	"MON_5V"
+ in2_label	"MON_12V"
+ in3_label	"5V_STANDBY"
+ in4_label	"VBAT"
++=============== ==========================
+-- 
+2.20.1
 
-        Arnd
