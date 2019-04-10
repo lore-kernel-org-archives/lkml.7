@@ -2,208 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56456C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1994B2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0512075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0kIOolM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iALlTgCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfDJI1Q (ORCPT
+        id S1729569AbfDJI1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:27:16 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52564 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbfDJI1Q (ORCPT
+        Wed, 10 Apr 2019 04:27:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42561 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729045AbfDJI1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:27:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a184so1601571wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:27:14 -0700 (PDT)
+        Wed, 10 Apr 2019 04:27:34 -0400
+Received: by mail-io1-f66.google.com with SMTP id c4so1344955ioh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:27:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XX9dSz/AtUZ52Tp2kC2tWYDeGDmBEkI/+RsqbAt06sQ=;
-        b=G0kIOolMKYhh02MFYzgheBFwKwDXDSs9OqwbN4hvVkZQDMZgzfWji2bCQtJLh/Z/+u
-         A5Wk6eJ7Kf7LTeQ36bNYKHtjQN3BAMsGpnFSOYwKmtdPUrxfaa1d9u70tyY750KrLmo0
-         JTqa9XcElwSrBQYmLKzTfuvv3XVO+mRvWMU9nUH2tmJ5SiP15b8qUc86kFa73JXoerLF
-         2o//ls8QofjNHUDqmtTBjHS4bz46nL2zia2GPw7paMOOzKb32onW5/jEVjQ0zRm4HP5U
-         6yyicKdMElz8onp+I1tj4h1PdO6kx/mnq2ZA3g0z9F2TsVu88VZehxYxCA2ARB7AEc8v
-         12QA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+EFYUc6OUPUODQebjyQkW2NWaIS/QyigdZFbzREV9Z8=;
+        b=iALlTgCqIUSJWK/z1Qv6V1YWlow5lh/zf6YVgajh2cx1KHdDuu6BxUinHEezM7xjaL
+         Vd5+7q05wDwyAvNbN+6Qgqvkn/aBBlV5h0LLVhqtLJTwFU9exQeIcGM3GqzzazZ91hJn
+         DBcu0h5/GyU4x7Br/BEi5H+ovNrrfJirRggybWqDIQ0p/WxahgnYxxw8SYyaDW3vAyUT
+         oGhbETxQzYGgGKZHeUE+GX7zLk7UgXdCSuIT7GwhguUVuPA1gmgWqzPRbr1iCqgvbgnt
+         T/osAbJ4CaS1+SE5CXZBprTshnHFnAXJDEO3HTPf0Saek39zUK/HjmNOcB44ZdG9AZ1x
+         sVZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XX9dSz/AtUZ52Tp2kC2tWYDeGDmBEkI/+RsqbAt06sQ=;
-        b=TpmSn+P3ysPlFMdhCDvNdam4OrwoZ6BDYxW3D15TBUjtCMg8w/2+cpmpt1+tBlGixM
-         1iVi4IUFPaRFXPBDPoBMqj4rzLnBu5qkZ4c9nDG9PCtgip6FVQTNGHfFfokvdlVr7q+4
-         81AtBTi73GnZCzemKho4iAB/AWpCSE2qo7G3zg7MF1Wk//2Sm53NorJC9gCIoYASKRqc
-         kpThPzwDNgc9tkXJgKtLCWUyocM75PxW8Gv2oisu/+eeDvo6YJzITnkMrRG9WDQMHt1O
-         k4AmnMzSINBLMDH28erbt7vZstXeauN3re34T65FJ/14Z30t4n0lpmEutp1haUBoli61
-         By1w==
-X-Gm-Message-State: APjAAAXonxlWIsgQSaPNBylIXNptuf2B77hhkUJYW0DAW+vuSpKJF9Lg
-        E4MaElujsQKSj7soHEqL1yXTfg==
-X-Google-Smtp-Source: APXvYqwl5phlBjVWWmZZs+rryyYgJ9REQaM7/AuykfJIXLP0N4nKSqMOafroPMqy6/fe0HIyqZZOMA==
-X-Received: by 2002:a1c:7211:: with SMTP id n17mr1780519wmc.32.1554884833651;
-        Wed, 10 Apr 2019 01:27:13 -0700 (PDT)
-Received: from wifi-122_dhcprange-158.wifi.unimo.it ([155.185.122.158])
-        by smtp.gmail.com with ESMTPSA id y125sm2293921wmc.39.2019.04.10.01.27.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 01:27:12 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, Paolo Valente <paolo.valente@linaro.org>,
-        Dmitrii Tcvetkov <demfloro@demfloro.ru>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] block, bfq: fix use after free in bfq_bfqq_expire
-Date:   Wed, 10 Apr 2019 10:26:46 +0200
-Message-Id: <20190410082646.14221-1-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+EFYUc6OUPUODQebjyQkW2NWaIS/QyigdZFbzREV9Z8=;
+        b=ikjUYNz+G6iV9xwChN9CFFyTZmd0kAtAxbf5v2g97cpGD9zFnQz7bDPKSsUiF+hzYt
+         Upu5+wdLqnbRYfibwpsnGD3OCAF0O24TVKbUiVswqhf5dr95Kxlq2rVL4bXAL8x1LtrP
+         Eyq2J3HFESx765CCITeKCXUDLbO5kgYBgHFN3+nA9w+KiJU9uIxabTGNCQnDv7/IzrRS
+         TOVvzmD3GScd82w83RdZnpaun6jWfiapOCLK+yoUIxUezyZf4KrNK9zk47QmztTkM8Hy
+         2UB7Db+MrzPHBxRWipur6JXd8PTA+MswKwviVQDNQ7lL+FytqewUInlRmLn0KTMiNwMn
+         jG0g==
+X-Gm-Message-State: APjAAAUEM1oktBYLanJHUSVO8ZEuzjfjhcxKACD2hFONn5ohlkwpamfg
+        zveIN93yplHouRgIO4JYMaNn+IcjBGRiloTwfv9xoFSjo/ny6g==
+X-Google-Smtp-Source: APXvYqy5PdZFi5u+LVKRbdizOtKlB1BAkUcFr/hbtSagmQI75MejMmTfbIAjOM+wF2nslyi3JbNIj1qS0IGvAGyDAgA=
+X-Received: by 2002:a5e:d80e:: with SMTP id l14mr27121785iok.227.1554884852867;
+ Wed, 10 Apr 2019 01:27:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <00000000000051e9c2057d31a563@google.com> <00000000000036a4a9058619dff3@google.com>
+ <20190410002603.GS2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190410002603.GS2217@ZenIV.linux.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 10 Apr 2019 10:27:20 +0200
+Message-ID: <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
+Subject: Re: kernel BUG at fs/inode.c:LINE!
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Ian Kent <raven@themaw.net>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function bfq_bfqq_expire() invokes the function
-__bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
-If this happens, then no other instruction of bfq_bfqq_expire() must
-be executed, or a use-after-free will occur.
+On Wed, Apr 10, 2019 at 2:26 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Apr 09, 2019 at 07:36:00AM -0700, syzbot wrote:
+> > Bisection is inconclusive: the first bad commit could be any of:
+>
+> [snip the useless pile]
+>
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e1fc2b200000
+> > start commit:   [unknown
+> > git tree:       linux-next
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=5399ed0832693e29f392
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101032b3400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16534063400000
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> If I'm not misreading the "crash report" there, it has injected an allocation
+> failure in dentry allocation in d_make_root() from autofs_fill_super() (
+>         root_inode = autofs_get_inode(s, S_IFDIR | 0755);
+>         root = d_make_root(root_inode);
+> ) which has triggered iput() on the inode passed to d_make_root() (as it ought
+> to).  At which point it stepped into some BUG_ON() in fs/inode.c, but I've
+> no idea which one it is - line numbers do not match anything in linux-next
+> or in mainline.  Reported line 1566 is
+>                 if (inode->i_nlink && (inode->i_state & I_DIRTY_TIME)) {
+> in all of them; as the matter of fact, the diff in fs/inode.c between
+> -next and mainline is empty.
+>
+> There is a BUG_ON() several lines prior, and in 4.20 it used to be line 1566,
+> so _probably_ that's what it is.  With that assumption, it's
+>         BUG_ON(inode->i_state & I_CLEAR);
+> IOW, we'd got I_CLEAR in the inode passed to d_make_root() there.  Which
+> should not happen - the inode must have come from new_inode(), which
+> gets it from new_inode_pseudo(), which zeroes ->i_state.  And I_CLEAR
+> is set only in clear_inode().  For autofs inodes that can come only
+> from autofs_evict_inode(), called as ->evict() from evict_inode().
+> Which should never ever be called for inode with positive ->i_count...
+>
+> It might be memory corruption; it might be a dangling inode pointer
+> somewhere, it might be something else.
+>
+> To get any further we really need a confirmation of the identity of
+> triggered BUG_ON().
+>
+> As an aside, your "sample crash reports" would've been much more useful if
+> they went with commit SHA1 in question, especially when they contain line
+> numbers.
 
-Basing on the assumption that __bfq_bfqq_expire() invokes
-bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
-assumed to be freed if its refcounter is equal to one right before
-invoking __bfq_bfqq_expire().
+Hi Al,
 
-But, since commit 9dee8b3b057e1 ("block, bfq: fix queue removal from
-weights tree") this assumption is false. __bfq_bfqq_expire() may also
-invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e1, also
-the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
-may invoke bfq_put_queue() twice, and this is the actual case where
-the in-service queue may happen to be freed.
+This is the commit for matching lines:
 
-To address this issue, this commit moves the check on the refcounter
-of the queue right around the last bfq_put_queue() that may be invoked
-on the queue.
+> HEAD commit:    d14b746c6c1c Add linux-next specific files for 20181214
+> git tree:       linux-next
 
-Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-iosched.c | 15 +++++++--------
- block/bfq-iosched.h |  2 +-
- block/bfq-wf2q.c    | 17 +++++++++++++++--
- 3 files changed, 23 insertions(+), 11 deletions(-)
+fs/inode.c:1566 points to:
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index fac188dd78fa..30b88ec7ad26 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2822,7 +2822,7 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
- 	bfq_remove_request(q, rq);
- }
- 
--static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-+static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
- 	/*
- 	 * If this bfqq is shared between multiple processes, check
-@@ -2855,9 +2855,11 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- 	/*
- 	 * All in-service entities must have been properly deactivated
- 	 * or requeued before executing the next function, which
--	 * resets all in-service entites as no more in service.
-+	 * resets all in-service entites as no more in service. This
-+	 * may cause bfqq to be freed. If this happens, the next
-+	 * function returns true.
- 	 */
--	__bfq_bfqd_reset_in_service(bfqd);
-+	return __bfq_bfqd_reset_in_service(bfqd);
- }
- 
- /**
-@@ -3262,7 +3264,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	bool slow;
- 	unsigned long delta = 0;
- 	struct bfq_entity *entity = &bfqq->entity;
--	int ref;
- 
- 	/*
- 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
-@@ -3347,10 +3348,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	 * reason.
- 	 */
- 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
--	ref = bfqq->ref;
--	__bfq_bfqq_expire(bfqd, bfqq);
--
--	if (ref == 1) /* bfqq is gone, no more actions on it */
-+	if (__bfq_bfqq_expire(bfqd, bfqq))
-+		/* bfqq is gone, no more actions on it */
- 		return;
- 
- 	bfqq->injected_service = 0;
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 062e1c4787f4..86394e503ca9 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -995,7 +995,7 @@ bool __bfq_deactivate_entity(struct bfq_entity *entity,
- 			     bool ins_into_idle_tree);
- bool next_queue_may_preempt(struct bfq_data *bfqd);
- struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 			 bool ins_into_idle_tree, bool expiration);
- void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index a11bef75483d..ae4d000ac0af 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -1605,7 +1605,8 @@ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd)
- 	return bfqq;
- }
- 
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
-+/* returns true if the in-service queue gets freed */
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- {
- 	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
- 	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
-@@ -1629,8 +1630,20 @@ void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- 	 * service tree either, then release the service reference to
- 	 * the queue it represents (taken with bfq_get_entity).
- 	 */
--	if (!in_serv_entity->on_st)
-+	if (!in_serv_entity->on_st) {
-+		/*
-+		 * If no process is referencing in_serv_bfqq any
-+		 * longer, then the service reference may be the only
-+		 * reference to the queue. If this is the case, then
-+		 * bfqq gets freed here.
-+		 */
-+		int ref = in_serv_bfqq->ref;
- 		bfq_put_queue(in_serv_bfqq);
-+		if (ref == 1)
-+			return true;
-+	}
-+
-+	return false;
- }
- 
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
--- 
-2.20.1
+void iput(struct inode *inode)
+{
+    ...
+    BUG_ON(inode->i_state & I_CLEAR);
 
+
+The dashboard page provides kernel git repository and commit for each crash.
