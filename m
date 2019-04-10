@@ -2,134 +2,118 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C37C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075D3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDA02133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EA42133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SrSjbIyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfDJBVI (ORCPT
+        id S1726876AbfDJBVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:21:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24835 "EHLO mga18.intel.com"
+        Tue, 9 Apr 2019 21:21:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:55041 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfDJBVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:21:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 18:21:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
-   d="scan'208";a="141419860"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga003.jf.intel.com with ESMTP; 09 Apr 2019 18:21:06 -0700
-Date:   Tue, 9 Apr 2019 18:19:57 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 12/14] x86/watchdog/hardlockup/hpet: Determine if
- HPET timer caused NMI
-Message-ID: <20190410011957.GC10062@ranerica-svr.sc.intel.com>
-References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1551283518-18922-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <20190409112817.GT4038@hirez.programming.kicks-ass.net>
+        id S1726532AbfDJBVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:21:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44f5wN1T3wz9sTW;
+        Wed, 10 Apr 2019 11:21:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554859301;
+        bh=6/2hNvLOUauTgc08/B5+mizMfmGRpIuWIU+zAd90e8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SrSjbIyMSAQwKUe5Hfapu35jXML/tTJXPag+ZrDDt9xSpSpUOdPmeDz3VUpuOBk1c
+         x27nGKI+Az1vhs73jFrWEsOdwDqTP1/I/ihYNTyqG0TiLHTEUHFnZuXZbP8jDAibqX
+         a8b3J5KK5XDWBoX00y9dhEYPVu5qfs0qx0jv69UAPbavjU5dSfqufA27yyIplGOhBa
+         3k4B0YGLhoS1usRgsFR4YRLo/6yVE8/cbpj9H8ThCv5iCUgiAsxnSWul/GAC15SJ4d
+         UkDizo1SXY6U4PWVPdZ++/9af/qvHo/bJqxordiavXMXS0+1K+Mlw54Hk/CtqdeXGP
+         NxFDBqzr2dhUw==
+Date:   Wed, 10 Apr 2019 11:21:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+Message-ID: <20190410112138.178aa7bd@canb.auug.org.au>
+In-Reply-To: <20190409162749.7eb6656f@canb.auug.org.au>
+References: <20190409162749.7eb6656f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409112817.GT4038@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/YMm6ymw/H5cdz.xhM=FcdLi"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 01:28:17PM +0200, Peter Zijlstra wrote:
-> On Wed, Feb 27, 2019 at 08:05:16AM -0800, Ricardo Neri wrote:
-> > @@ -62,7 +67,18 @@ static inline void set_comparator(struct hpet_hld_data *hdata,
-> >  static void kick_timer(struct hpet_hld_data *hdata, bool force)
-> >  {
-> >  	bool kick_needed = force || !(hdata->flags & HPET_DEV_PERI_CAP);
-> > -	unsigned long new_compare, count;
-> > +	unsigned long tsc_curr, tsc_delta, new_compare, count;
-> > +
-> > +	/* Start obtaining the current TSC and HPET counts. */
-> > +	tsc_curr = rdtsc();
-> > +
-> > +	if (kick_needed)
-> > +		count = get_count();
-> > +
-> > +	tsc_delta = (unsigned long)watchdog_thresh * (unsigned long)tsc_khz
-> > +		    * 1000L;
-> > +	hdata->tsc_next = tsc_curr + tsc_delta;
-> > +	hdata->tsc_next_error = tsc_delta >> 6;
-> 
-> What do we need a per hld_data tsc_next_error for? It is basically a
-> global 'constant'.
-> 
+--Sig_/YMm6ymw/H5cdz.xhM=FcdLi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is true. I thought I'd keep all the needed variables in a single
-struct to make the code more readable. I guess, I did not achieve that
-goal. I'll put it as a static global variable.
+Hi all,
 
-> >  	/*
-> >  	 * Update the comparator in increments of watch_thresh seconds relative
-> > @@ -74,8 +90,6 @@ static void kick_timer(struct hpet_hld_data *hdata, bool force)
-> >  	 */
-> >  
-> >  	if (kick_needed) {
-> > -		count = get_count();
-> > -
-> >  		new_compare = count + watchdog_thresh * hdata->ticks_per_second;
-> >  
-> >  		set_comparator(hdata, new_compare);
-> > @@ -147,6 +161,14 @@ static void set_periodic(struct hpet_hld_data *hdata)
-> >   */
-> >  static bool is_hpet_wdt_interrupt(struct hpet_hld_data *hdata)
-> >  {
-> > +	if (smp_processor_id() == hdata->handling_cpu) {
-> > +		unsigned long tsc_curr;
-> 
-> TSC is u64
+On Tue, 9 Apr 2019 16:27:49 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> After merging the scsi-mkp tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+>=20
+> drivers/scsi/qla2xxx/tcm_qla2xxx.c: In function 'tcm_qla2xxx_init_lport':
+> drivers/scsi/qla2xxx/tcm_qla2xxx.c:1614:3: error: implicit declaration of=
+ function 'vzalloc'; did you mean 'kvzalloc'? [-Werror=3Dimplicit-function-=
+declaration]
+>    vzalloc(array_size(65536,
+>    ^~~~~~~
+>    kvzalloc
+> drivers/scsi/qla2xxx/tcm_qla2xxx.c:1613:26: warning: assignment to 'struc=
+t tcm_qla2xxx_fc_loopid *' from 'int' makes pointer from integer without a =
+cast [-Wint-conversion]
+>   lport->lport_loopid_map =3D
+>                           ^
+> drivers/scsi/qla2xxx/tcm_qla2xxx.c: In function 'tcm_qla2xxx_make_lport':
+> drivers/scsi/qla2xxx/tcm_qla2xxx.c:1677:2: error: implicit declaration of=
+ function 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-decl=
+aration]
+>   vfree(lport->lport_loopid_map);
+>   ^~~~~
+>   kvfree
+>=20
+> Caused by commit
+>=20
+>   523c106ad4b1 ("scsi: tcm_qla2xxx: Minimize #include directives")
+>=20
+> I have reverted that commit for today.
 
-In x86_64, isn't u64 an unsigned long? Do you mean to consider the
-32-bit case?
+This has now migrated to the scsi tree.
 
-> 
-> > +
-> > +		tsc_curr = rdtsc();
-> > +		if (abs(tsc_curr - hdata->tsc_next) < hdata->tsc_next_error)
-> > +			return true;
-> 
-> You can write that as:
-> 
-> 		(tsc_curr - hdata->tsc_next) + tsc_error < 2*tsc_error
-> 
-> which doesn't contain any branches what so ever.
-> 
+--=20
+Cheers,
+Stephen Rothwell
 
-Sure, I'll add this change.
+--Sig_/YMm6ymw/H5cdz.xhM=FcdLi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks and BR,
-Ricardo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytRSIACgkQAVBC80lX
+0Gx91Qf+Idg8Pb9uQjgxBCmoy4xSSwoBb0GBPLAP/lsrd8046RB7kKYfVEKl8Afw
+czePqWwhD60OfAaa503jraRGPAnlcyCTNwTF6s6egB15O1l9PV9Ma1TSOkyakr9V
+M0xbP5PnL9hFAgzcOsNhzSwa8DrhDtwKbYTqOclIi+oyVGGiHzNu29CdFlusp9fW
+zcHjOodxM7dmepKThK0cDnzdSylQ9ptFdSStn+Qklbvwp5ktehVcpzpZ9OetHCyj
+v1r38A67HDfsYbBF2kZK/FLAkRsB2Tj8R3h0avFbMzXJDg3Po7MFsDmS957Oy9W/
+XIpPiu7iakivgRBuK591d5aE9LbeLA==
+=YKcB
+-----END PGP SIGNATURE-----
+
+--Sig_/YMm6ymw/H5cdz.xhM=FcdLi--
