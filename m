@@ -2,164 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED30C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01AEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1541B20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B198720830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sezm0A5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfDJSEX (ORCPT
+        id S1731183AbfDJSFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:04:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:1100 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729176AbfDJSEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:04:23 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 11:04:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
-   d="scan'208";a="149739907"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 10 Apr 2019 11:04:21 -0700
-Date:   Wed, 10 Apr 2019 11:04:18 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Huang Shijie <sjhuang@iluvatar.ai>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm/gup.c: fix the wrong comments
-Message-ID: <20190410180417.GC22989@iweiny-DESK2.sc.intel.com>
-References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
- <20190408141313.GU22763@bombadil.infradead.org>
- <20190409010832.GA28081@hsj-Precision-5520>
- <20190409024929.GW22763@bombadil.infradead.org>
- <20190409030417.GA3324@hsj-Precision-5520>
- <20190409111905.GY22763@bombadil.infradead.org>
- <2807E5FD2F6FDA4886F6618EAC48510E79CA51BA@CRSMSX101.amr.corp.intel.com>
- <20190410012034.GB3640@hsj-Precision-5520>
+        Wed, 10 Apr 2019 14:05:54 -0400
+Received: from mail.efficios.com ([167.114.142.138]:49208 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfDJSFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:05:54 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A51B81D5C66;
+        Wed, 10 Apr 2019 14:05:51 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id AEw5tMjQb9-3; Wed, 10 Apr 2019 14:05:51 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id F25BF1D5C5D;
+        Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com F25BF1D5C5D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554919551;
+        bh=1Go0NjDI9JsgjpqV3rlDBXvHzdSqeZpIYtv0Rjq2+7o=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Sezm0A5agPQipPzQvYV4gDtjAxbyFgBBGTT0vS9sSV+TMU5M1/VRQ/S8usfYqsFXn
+         hwbJ9h3E1weSd3ndc+bCi/70SWHmPregFHffUGXa3q6K3/dQaEYfv1it0kcvNlGtZE
+         6vtNIc/e9eA2sNaAd2DEwpPPbuUo+4H0EWUl3VoNsHH+jqFEhz2IyETVCHIqfxxrXD
+         /k8OMR7sb6TAXmat6EqJOQSDjKxCQ/ANFY2bwOjDTy7LVwPVXyGbthzU0134uadgzo
+         AY35gGdbW4t9bg+nRxJ1H35n9RD+c/vWF7hFhZXDO463Skh1NNSta9Gy68kCqfxv5w
+         g+jMa3xSpVHvA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id t9-Q9zoBEekN; Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id CEF781D5C50;
+        Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
+Date:   Wed, 10 Apr 2019 14:05:50 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        carlos <carlos@redhat.com>, x86 <x86@kernel.org>
+Message-ID: <1829916645.3219.1554919550686.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190410175709.GW4038@hirez.programming.kicks-ass.net>
+References: <11513896.2624.1554838336494.JavaMail.zimbra@efficios.com> <913288111.2663.1554842622822.JavaMail.zimbra@efficios.com> <20190410065417.GU11158@hirez.programming.kicks-ass.net> <608558890.3157.1554911260089.JavaMail.zimbra@efficios.com> <20190410175709.GW4038@hirez.programming.kicks-ass.net>
+Subject: Re: rseq/x86: choosing rseq code signature
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410012034.GB3640@hsj-Precision-5520>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/x86: choosing rseq code signature
+Thread-Index: qfsDH9FH3unER4Ra7fJWzhZ0y+Uuaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 09:20:36AM +0800, Huang Shijie wrote:
-> On Tue, Apr 09, 2019 at 02:55:31PM +0000, Weiny, Ira wrote:
-> > > On Tue, Apr 09, 2019 at 11:04:18AM +0800, Huang Shijie wrote:
-> > > > On Mon, Apr 08, 2019 at 07:49:29PM -0700, Matthew Wilcox wrote:
-> > > > > On Tue, Apr 09, 2019 at 09:08:33AM +0800, Huang Shijie wrote:
-> > > > > > On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
-> > > > > > > On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
-> > > > > > > > The root cause is that sg_alloc_table_from_pages() requires
-> > > > > > > > the page order to keep the same as it used in the user space,
-> > > > > > > > but
-> > > > > > > > get_user_pages_fast() will mess it up.
-> > > > > > >
-> > > > > > > I don't understand how get_user_pages_fast() can return the
-> > > > > > > pages in a different order in the array from the order they appear in
-> > > userspace.
-> > > > > > > Can you explain?
-> > > > > > Please see the code in gup.c:
-> > > > > >
-> > > > > > 	int get_user_pages_fast(unsigned long start, int nr_pages,
-> > > > > > 				unsigned int gup_flags, struct page **pages)
-> > > > > > 	{
-> > > > > > 		.......
-> > > > > > 		if (gup_fast_permitted(start, nr_pages)) {
-> > > > > > 			local_irq_disable();
-> > > > > > 			gup_pgd_range(addr, end, gup_flags, pages, &nr);
-> > > // The @pages array maybe filled at the first time.
-> > > > >
-> > > > > Right ... but if it's not filled entirely, it will be filled
-> > > > > part-way, and then we stop.
-> > > > >
-> > > > > > 			local_irq_enable();
-> > > > > > 			ret = nr;
-> > > > > > 		}
-> > > > > > 		.......
-> > > > > > 		if (nr < nr_pages) {
-> > > > > > 			/* Try to get the remaining pages with
-> > > get_user_pages */
-> > > > > > 			start += nr << PAGE_SHIFT;
-> > > > > > 			pages += nr;                                                  // The
-> > > @pages is moved forward.
-> > > > >
-> > > > > Yes, to the point where gup_pgd_range() stopped.
-> > > > >
-> > > > > > 			if (gup_flags & FOLL_LONGTERM) {
-> > > > > > 				down_read(&current->mm->mmap_sem);
-> > > > > > 				ret = __gup_longterm_locked(current,
-> > > current->mm,      // The @pages maybe filled at the second time
-> > > > >
-> > > > > Right.
-> > > > >
-> > > > > > 				/*
-> > > > > > 				 * retain FAULT_FOLL_ALLOW_RETRY
-> > > optimization if
-> > > > > > 				 * possible
-> > > > > > 				 */
-> > > > > > 				ret = get_user_pages_unlocked(start,
-> > > nr_pages - nr,    // The @pages maybe filled at the second time.
-> > > > > > 							      pages, gup_flags);
-> > > > >
-> > > > > Yes.  But they'll be in the same order.
-> > > > >
-> > > > > > BTW, I do not know why we mess up the page order. It maybe used in
-> > > some special case.
-> > > > >
-> > > > > I'm not discounting the possibility that you've found a bug.
-> > > > > But documenting that a bug exists is not the solution; the solution
-> > > > > is fixing the bug.
-> > > > I do not think it is a bug :)
-> > > >
-> > > > If we use the get_user_pages_unlocked(), DMA is okay, such as:
-> > > >                      ....
-> > > > 		     get_user_pages_unlocked()
-> > > > 		     sg_alloc_table_from_pages()
-> > > > 	             .....
-> > > >
-> > > > I think the comment is not accurate enough. So just add more comments,
-> > > > and tell the driver users how to use the GUPs.
-> > > 
-> > > gup_fast() and gup_unlocked() should return the pages in the same order.
-> > > If they do not, then it is a bug.
-> > 
-> > Is there a reproducer for this?  Or do you have some debug output which shows this problem?
-> Is Matthew right?
-> 
->  " gup_fast() and gup_unlocked() should return the pages in the same order.
->  If they do not, then it is a bug."
+----- On Apr 10, 2019, at 1:57 PM, Peter Zijlstra peterz@infradead.org wrote:
 
-Yes I think he is...
+> On Wed, Apr 10, 2019 at 11:47:40AM -0400, Mathieu Desnoyers wrote:
+>> ----- On Apr 10, 2019, at 2:54 AM, Peter Zijlstra peterz@infradead.org wrote:
+>> 
+>> > On Tue, Apr 09, 2019 at 04:43:42PM -0400, Mathieu Desnoyers wrote:
+>> >> +/*
+>> >> + * RSEQ_SIG is used with the following privileged instructions, which trap in
+>> >> user-space:
+>> >> + * x86-32:    0f 01 3d 53 30 05 53      invlpg 0x53053053
+>> >> + * x86-64:    0f 01 3d 53 30 05 53      invlpg 0x53053053(%rip)
+>> >> + */
+>> > 
+>> > Right, and the alternative is: 0f b9 3d $SIG, which decodes to:
+>> > 
+>> >  UD1 $SIG(%rip),%edi
+>> > 
+>> > which will trap unconditionally. The only problem is that gas will not
+>> > actually assemble it, but since we're .byte coding it, it doesn't
+>> > matter.
+>> > 
+>> > UD1 is specified by both AMD and Intel to take a ModR/M, unlike UD0
+>> > where they disagree on the ModR/M.
+>> 
+>> UD1 is even better from a code emulator perspective. It won't have to
+>> try to emulate invlpg if it sees it.
+> 
+> Some emulators terminate on UD2, not aware of any special UD1 behaviour.
+> 
+>> Byte coding UD1 as your example above gives the following objdump output,
+>> is it expected ?
+>> 
+>> objdump --version
+>> GNU objdump (GNU Binutils for Debian) 2.28
+>> 
+>> x86-32:
+>> 
+>>   14:	0f b9                	ud1
+>>   16:	3d 53 30 05 53       	cmp    $0x53053053,%eax
+>> 
+>> x86-64:
+>> 
+>>    b:	0f b9                	ud1
+>>    d:	3d 53 30 05 53       	cmp    $0x53053053,%eax
+> 
+> GNU objdump (GNU Binutils for Debian) 2.31.1
+> 
+>     0f b9 3d 78 56 34 12    ud1    0x12345678(%rip),%edi
+> 
+> So I suppose your objdump is too old :/
 
-Ira
+Well at least it decodes _something_ which matches the overall instruction
+length of 7 bytes, which I think should be OK. So let's use ud1 unless anyone
+objects.
 
-> 
-> If Matthew is right,
-> I need more time to debug the DMA issue...
-> 	
-> 
-> Thanks
-> Huang Shijie
->  
-> 
-> > 
-> > Ira
-> > 
-> 
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
