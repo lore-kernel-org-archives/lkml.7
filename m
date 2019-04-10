@@ -2,76 +2,123 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F12C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15446C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2355520830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6AD20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jvVL7xp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfDJKgx (ORCPT
+        id S1730406AbfDJKhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:36:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51604 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726799AbfDJKgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:36:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E26A15AB;
-        Wed, 10 Apr 2019 03:36:53 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D73893F59C;
-        Wed, 10 Apr 2019 03:36:50 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 11:36:45 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
-        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-Message-ID: <20190410103642.gopsoixrpc4nfuxz@queper01-lin>
-References: <20190328101352.25657-1-quentin.perret@arm.com>
- <20190328101352.25657-4-quentin.perret@arm.com>
- <20190410054449.zwmemg7vza557gue@vireshk-i7>
- <20190410085702.nll6spd565oio3ds@queper01-lin>
- <20190410101423.3pl6yfhv2wnxuwgw@vireshk-i7>
+        Wed, 10 Apr 2019 06:37:32 -0400
+Received: from mail-eopbgr00052.outbound.protection.outlook.com ([40.107.0.52]:17066
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfDJKhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 06:37:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2V/zkhgtVorgv2fBqpM/7kGWvitxwIjl6pPRlIX1ZS0=;
+ b=jvVL7xp2BUwuJHXzOZ/uj1UYe0lxYmlQNAOCDB6KXCXnJrDMpXI1U/6Vpo961C+j1qoU1vmG09/L7o63vaWr/4IcO0HXN5MbjfHdM5dxH23Kn1QFJLtbkZRS7mtRIZw9DDk38uVPGs2k1yimalnYJ+mntkx/TuBhocGPH2OIIE8=
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
+ VI1PR04MB5549.eurprd04.prod.outlook.com (20.178.122.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Wed, 10 Apr 2019 10:37:28 +0000
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
+ 10:37:27 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+CC:     Viorel Suman <viorel.suman@nxp.com>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3 0/4] ASoC: fsl: audmix: remove "model" attribute and fix
+ ref leaks
+Thread-Topic: [PATCH v3 0/4] ASoC: fsl: audmix: remove "model" attribute and
+ fix ref leaks
+Thread-Index: AQHU74lkymub95Zy1EyaXekIZ9/Vuw==
+Date:   Wed, 10 Apr 2019 10:37:27 +0000
+Message-ID: <1554892629-17646-1-git-send-email-viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0085.eurprd08.prod.outlook.com
+ (2603:10a6:800:d3::11) To VI1PR04MB4704.eurprd04.prod.outlook.com
+ (2603:10a6:803:52::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85ae8b24-03ce-42d7-57ee-08d6bda086e8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB5549;
+x-ms-traffictypediagnostic: VI1PR04MB5549:
+x-microsoft-antispam-prvs: <VI1PR04MB554923A1E3601D1DC74EBFBB922E0@VI1PR04MB5549.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(396003)(366004)(39860400002)(199004)(189003)(105586002)(71190400001)(71200400001)(256004)(5660300002)(68736007)(106356001)(8676002)(81166006)(81156014)(508600001)(36756003)(66066001)(97736004)(102836004)(6506007)(486006)(25786009)(2616005)(50226002)(386003)(26005)(4326008)(186003)(14454004)(8936002)(6436002)(53936002)(7416002)(6486002)(2906002)(52116002)(6116002)(44832011)(54906003)(99286004)(3846002)(316002)(110136005)(86362001)(305945005)(4744005)(6512007)(7736002)(476003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5549;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VQTUquFelKUWoSDMRvG6g/h/z/R10ixQSZc94yXXX6jJ7J8YkBMK2GS8f/cLI17sguJ1Pk6MB3afRXOc8Tzres6MJNJyMQ+CQ31LWxQRll36De0jogawnBvnKWKdCibqZwZOqLVJYxbrsNDowb9AM80+8Bome7Upo4Ib4gj5kpwD4mSA4cjPfz9d8FPyEWeJacgJsaKHGZ7wU6lp5Moq3PONXz/YgbHGtnvq8NEUN4bXR7XUN80/XJhkljXf+xQqgFMJr8Mfpw36+cyNmqgWwyWl+keYYv5tnKe74Tg0DvXP59OmYJVddazHFGauVePG0WqqHNLaZ30jLJxhlU2nG/dUV/wSk0KDM0ySoRrLc6uHP8XAsFTlgnT3zOn0ANd2JvlOEDuEoJ1S8jXpiY0NF2+D3IVTlgraegEMi9KmHk8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410101423.3pl6yfhv2wnxuwgw@vireshk-i7>
-User-Agent: NeoMutt/20171215
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85ae8b24-03ce-42d7-57ee-08d6bda086e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 10:37:27.8527
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5549
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 10 Apr 2019 at 15:44:23 (+0530), Viresh Kumar wrote:
-> On 10-04-19, 09:57, Quentin Perret wrote:
-> > Hmm, indeed... I thought cpufreq_table_validate_and_sort() was actively
-> > sorting the table but it seems I was wrong.
-> > 
-> > But I _think_ in practice the freq table actually happens to be sorted
-> > for the upstream cpufreq drivers with the CPUFREQ_IS_COOLING_DEV flag
-> > set. Most of them use dev_pm_opp_init_cpufreq_table() which guarantees
-> > the table is sorted and qoriq-cpufreq explicitly sorts the table. But
-> > I'm not sure about qcom-cpufreq-hw ...
-> > 
-> > So, if the above is true, perhaps I could simply add a check to mandate
-> > that policy->freq_table_sorted != CPUFREQ_TABLE_SORTED_UNSORTED for
-> > cpu_cooling ? That shouldn't harm the existing users.
-> 
-> Right, I think most of the platforms will have it sorted anyway right now, but
-> you never know if one or two of them don't. Maybe just add the above conditional
-> and put out an error or WARN or something, so people know that something broke.
-
-Right, WARN + bail out should do it. I'll do the change in v2.
-
-Thanks !
-Quentin
+VGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0
+ZSByZW1vdmVkIGFzDQpyZXF1ZXN0ZWQgYnkgTmljb2xpbiBDaGVuLCBidXQgbG9va3MgbGlrZSAo
+djQpIHZlcnNpb24gb2YgREFJIGRyaXZlcg0KcmVhY2hlZCAiZm9yLW5leHQiIGJyYW5jaCAtIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nICJtb2RlbCIgYXR0cmlidXRlLg0KQXNzaWRlIG9mIHRoaXMgZml4
+IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZCBieQ0KSnVs
+aWEgTGF3YWxsLg0KDQpWaW9yZWwgU3VtYW4gKDQpOg0KICBBU29DOiBmc2xfYXVkbWl4OiByZW1v
+dmUgIm1vZGVsIiBhdHRyaWJ1dGUNCiAgZHQtYmluZGluZ3M6IGZzbCxhdWRtaXg6IHJlbW92ZSAi
+bW9kZWwiIGF0dHJpYnV0ZQ0KICBBU29DOiBpbXgtYXVkbWl4OiBmaXggb2JqZWN0IHJlZmVyZW5j
+ZSBsZWFrcyBpbiBwcm9iZQ0KICBBU29DOiBmc2xfYXVkbWl4OiBjYWNoZSBwZGV2LT5kZXYgcG9p
+bnRlcg0KDQpDaGFuZ2VzIHNpbmNlIFYxOg0KICBhKSBSZW1vdmVkICJtb2RlbCIgYXR0cmlidXRl
+IGZyb20gZHQtYmluZGluZ3MgZG9jdW1lbnRhdGlvbg0KICBiKSBBZHJlc3NlZCBEYW5pZWwncyBj
+b21tZW50cw0KDQpDaGFuZ2VzIHNpbmNlIFYyOg0KICBhKSBDYWNoZSBwZGV2LT5kZXYgcG9pbnRl
+ciBpbiBmc2xfYXVkbWl4IHByb2JlIGFzIHN1Z2dlc3RlZCBieSBOaWNvbGluDQoNCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsYXVkbWl4LnR4dCAgICAgICB8ICA0IC0tDQogc291
+bmQvc29jL2ZzbC9mc2xfYXVkbWl4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA2MSArKysr
+KysrKysrKystLS0tLS0tLS0tDQogc291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgNCArKw0KIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygr
+KSwgMzMgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
