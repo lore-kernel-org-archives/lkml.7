@@ -2,110 +2,84 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B31C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66CBC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A282084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70272133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfDJIqX (ORCPT
+        id S1729675AbfDJIr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:46:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47389 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfDJIqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:46:23 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3A8k59W699772
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 10 Apr 2019 01:46:05 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3A8k5Rt699769;
-        Wed, 10 Apr 2019 01:46:05 -0700
-Date:   Wed, 10 Apr 2019 01:46:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
-Message-ID: <tip-d8743230c9f4e92f370ecd2a90c680ddcede6ae5@git.kernel.org>
-Cc:     hpa@zytor.com, valentin.schneider@arm.com, peterz@infradead.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        torvalds@linux-foundation.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
-          torvalds@linux-foundation.org, valentin.schneider@arm.com,
-          hpa@zytor.com, tglx@linutronix.de, peterz@infradead.org
-In-Reply-To: <20190409173546.4747-3-valentin.schneider@arm.com>
-References: <20190409173546.4747-3-valentin.schneider@arm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/topology: Fix build_sched_groups() comment
-Git-Commit-ID: d8743230c9f4e92f370ecd2a90c680ddcede6ae5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 10 Apr 2019 04:47:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58230 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727184AbfDJIr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:47:26 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5F3DE242FB7AEE5EBCD9;
+        Wed, 10 Apr 2019 16:47:24 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
+ 16:47:17 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <stefan.popa@analog.com>,
+        <broonie@kernel.org>, <justinpopo6@gmail.com>,
+        <linus.walleij@linaro.org>, <Jonathan.Cameron@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] iio: adc: ti-ads7950: Fix build error without CONFIG_GPIOLIB
+Date:   Wed, 10 Apr 2019 16:45:58 +0800
+Message-ID: <20190410084558.35160-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d8743230c9f4e92f370ecd2a90c680ddcede6ae5
-Gitweb:     https://git.kernel.org/tip/d8743230c9f4e92f370ecd2a90c680ddcede6ae5
-Author:     Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate: Tue, 9 Apr 2019 18:35:46 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 10 Apr 2019 09:41:34 +0200
+From: YueHaibing <yuehaibing@huawei.com>
 
-sched/topology: Fix build_sched_groups() comment
+When building with CONFIG_GPIOLIB is not set
+gcc warns this:
 
-The comment was introduced (pre 2.6.12) by:
+drivers/iio/adc/ti-ads7950.c:75:19: error: field chip has incomplete type
+  struct gpio_chip chip;
+                   ^~~~
+drivers/iio/adc/ti-ads7950.c: In function ti_ads7950_set:
+drivers/iio/adc/ti-ads7950.c:409:32: error: implicit declaration of function gpiochip_get_data; did you mean acpi_get_data? [-Werror=implicit-function-declaration]
+  struct ti_ads7950_state *st = gpiochip_get_data(chip);
+                                ^~~~~~~~~~~~~~~~~
+                                acpi_get_data
 
-  8a7a2318dc07 ("[PATCH] sched: consolidate sched domains")
-
-and referred to sched_group->cpu_power. This was folded into
-sched_group->sched_group_power in
-
-  commit 9c3f75cbd144 ("sched: Break out cpu_power from the sched_group structure")
-
-The comment was then updated in:
-
-  ced549fa5fc1 ("sched: Remove remaining dubious usage of "power"")
-
-but should have replaced "sg->cpu_capacity" with
-"sg->sched_group_capacity". Do that now.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: morten.rasmussen@arm.com
-Cc: qais.yousef@arm.com
-Link: http://lkml.kernel.org/r/20190409173546.4747-3-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: c97dce792dc8 ("iio: adc: ti-ads7950: add GPIO support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- kernel/sched/topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/adc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 64bec54ded3e..90e1a870fb0d 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1087,8 +1087,8 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 846c7ac..f760269 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -968,7 +968,7 @@ config TI_ADS1015
  
- /*
-  * build_sched_groups will build a circular linked list of the groups
-- * covered by the given span, and will set each group's ->cpumask correctly,
-- * and ->cpu_capacity to 0.
-+ * covered by the given span, will set each group's ->cpumask correctly,
-+ * and will initialize their ->sgc.
-  *
-  * Assumes the sched_domain tree is fully constructed
-  */
+ config TI_ADS7950
+ 	tristate "Texas Instruments ADS7950 ADC driver"
+-	depends on SPI
++	depends on SPI && GPIOLIB
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+-- 
+2.7.4
+
+
