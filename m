@@ -2,178 +2,184 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF13C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A302CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FC62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646CB2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OoZ98ClQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E9gnJVUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732844AbfDJQ0o (ORCPT
+        id S2387808AbfDJQ1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:26:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38270 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732370AbfDJQ0o (ORCPT
+        Wed, 10 Apr 2019 12:27:01 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39797 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730614AbfDJQ1A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:26:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f36so1744243plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:26:43 -0700 (PDT)
+        Wed, 10 Apr 2019 12:27:00 -0400
+Received: by mail-ua1-f65.google.com with SMTP id d5so987043uan.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R9UbDO978zumdTH0GKIWnRhVTeRX13IbwklWJ8oTD7A=;
-        b=OoZ98ClQUQ5wbLtVGaHgYjLq5iluJjlyC23cS7+lAvkHdV8p664IXk7LmeEjj313pP
-         5B4p9wsKXKbKngXoX3mn7Kan6ndWhWZeJquOtp4VeVshNZV+OZd5/Z/d1WuljZvLHUH1
-         pZ509RuHt2NoI6vtHzQirWKVZ+KBkMjDkJNbkYiT3mg3VqjlNtSXU8oPjf2rPA1svznk
-         6sWs4uGef4RvJe1Kz95iByXytBG/HbFdHHKz6KKieXzX5+t9IeJKltm3Wlupb77M84tW
-         2FPY72lgGgLp8tuNAwi18SZfQqvEprTggCqdTShZI0GoFb/Vu4k8KDnT3MjC9shLNC6e
-         oSoQ==
+        bh=RGqWd5s2z6twzy3qMbCU3gfqqHA/VTihRqe1wZ4RTtA=;
+        b=E9gnJVUtMzsmf5rEACunC74b4NvUmMxRKKstD0MEOfGYfSWUcIWFiJSPJnbwfbjOFc
+         aD0o75AWKlg92da2NVPisryx8XdC4Vw9m04sdHyZOWMED4/lmbb2aoKxZO3LSjElsXW/
+         E4Z0lg6C2FfGLHAdisUsa8OiwULoAiSLtmSws=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R9UbDO978zumdTH0GKIWnRhVTeRX13IbwklWJ8oTD7A=;
-        b=T5a7Rn45SX6nGzGOzA9dJmTD6QgCJNdjHL1gsz+/ex/GqLa/H/eZOt93wL+qW5wxQS
-         R2XE4iSxxJI441t6a0cMH6ezja20IdHAHpm2g6KnJQczZxRBVY36+cvxPLfCwjBGSOF1
-         G6d8wN6bJMVzS5d77pprSz0K6KVsiCugEam7eOpx1rPf2f/6a251iVpYeNhMQYHcxNe6
-         VPA3ZX01ib+zrtoj1umvFJMkn5jGBUugLo3Si2r5rExnklr3jtYoN4yMoPSABHbAZHE/
-         wJPXQQkhcYI7EkyoEbrSsVtMw2B/FfRQ+NNgMqHVjfBSxZbZudFF+4UqsLz9NqN7mw/k
-         iy2A==
-X-Gm-Message-State: APjAAAUJl5bbz8YewiC78UZuSfESS27WoHoQ+tNvKHIFclOaRBhC6RL7
-        Lo/AQc4jb0carHHLluflxkEYAw8mSwEbMOWrXLjfyg==
-X-Google-Smtp-Source: APXvYqw0rpEKRS9jPgft8rFPq/hZ0/e/Bef/bdr+Z5oPUv68G9+FEmuGFw8cDk6sccLez3d2os5k3gw2IG8fU/Aw3W0=
-X-Received: by 2002:a17:902:7044:: with SMTP id h4mr1010553plt.274.1554913602274;
- Wed, 10 Apr 2019 09:26:42 -0700 (PDT)
+        bh=RGqWd5s2z6twzy3qMbCU3gfqqHA/VTihRqe1wZ4RTtA=;
+        b=nYfz/hfCtY5YrJTc6L87h2THREzWu8XAsmadEtfys0guAoMmrSraqdTgopcQY7ltGL
+         r0kVxGTn8kDK7NLkejCVjtzu4F100OockGDybjm52Ygcn+Wshwim0IheT0FjX2Myu/Fh
+         M0zIqevu8vttqZehfiEmRaHPnNurDaOmWBbt9ou4fXDy4t0pgqR4Oyy0G4LXR/qmbShQ
+         6IBrk6ev2rzjfSxvWv7x7isAroTcbpBfg0euAONVa7nH6Vq8ekf4vLEdHpmajx31A/Q3
+         Z/65qkDZ3ay19WDjinyXIx/l/FaY+AtTHDFxE9D2dZvOIATFUNJ81bzprGzCkwWTqNt0
+         qS8w==
+X-Gm-Message-State: APjAAAWK/3wZo68vhTGwqT1LaoTCOA6gWqi3qv0tBXQztsBWeajvP899
+        gtNw4vAKGr2n3L07q1b1krcX59Ee5WQ=
+X-Google-Smtp-Source: APXvYqynMhNncPp/uwx9BR/ACtWDnJSsaXU24QVvPfhbHwig/NKAUNwqZIVSR3lKQ11ewMcFSISSBA==
+X-Received: by 2002:ab0:70d4:: with SMTP id r20mr7119005ual.67.1554913618913;
+        Wed, 10 Apr 2019 09:26:58 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 2sm14376864vke.27.2019.04.10.09.26.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 09:26:57 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id c6so992011uan.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:26:56 -0700 (PDT)
+X-Received: by 2002:ab0:4eaa:: with SMTP id l42mr18185593uah.80.1554913615771;
+ Wed, 10 Apr 2019 09:26:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-2-arnd@arndb.de>
-In-Reply-To: <20190408212648.2407234-2-arnd@arndb.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 10 Apr 2019 09:26:30 -0700
-Message-ID: <CAKwvOdmRVK8t=CL5h0MXykm00R39e17dy8EkgFrLuhg1Yr0HJQ@mail.gmail.com>
-Subject: Re: [PATCH 02/12] s390: don't build vdso32 with clang
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190410011418.76408-1-joel@joelfernandes.org>
+In-Reply-To: <20190410011418.76408-1-joel@joelfernandes.org>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 09:26:44 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
+Message-ID: <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] module: Prepare for addition of new ro_after_init sections
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 2:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, Apr 9, 2019 at 6:14 PM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
 >
-> clang does not support 31 bit object files on s390, so skip
-> the 32-bit vdso here, and only build it when using gcc to compile
-> the kernel.
-
-What's the build failure?  Would you mind filing a bug against LLVM's
-issue tracker for it, please?
-
+> For the purposes of hardening modules by adding sections to
+> ro_after_init sections, prepare for addition of new ro_after_init
+> entries which we do in future patches. Create a table to which new
+> entries could be added later. This makes it less error prone and reduce
+> code duplication.
 >
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: paulmck@linux.vnet.ibm.com
+> Cc: rostedt@goodmis.org
+> Cc: mathieu.desnoyers@efficios.com
+> Cc: rcu@vger.kernel.org
+> Cc: kernel-hardening@lists.openwall.com
+> Cc: kernel-team@android.com
+> Suggested-by: keescook@chromium.org
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>
 > ---
->  arch/s390/Kconfig         |  3 +++
->  arch/s390/kernel/Makefile |  2 +-
->  arch/s390/kernel/vdso.c   | 10 +++++-----
->  3 files changed, 9 insertions(+), 6 deletions(-)
+>  kernel/module.c | 42 ++++++++++++++++++++++++------------------
+>  1 file changed, 24 insertions(+), 18 deletions(-)
 >
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index b6e3d0653002..8cd860cba4d1 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -388,6 +388,9 @@ config COMPAT
->           (and some other stuff like libraries and such) is needed for
->           executing 31 bit applications.  It is safe to say "Y".
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 524da609c884..f9221381d076 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3300,11 +3300,28 @@ static bool blacklisted(const char *module_name)
+>  }
+>  core_param(module_blacklist, module_blacklist, charp, 0400);
 >
-> +config COMPAT_VDSO
-> +       def_bool COMPAT && !CC_IS_CLANG
-> +
->  config SYSVIPC_COMPAT
->         def_bool y if COMPAT && SYSVIPC
->
-> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-> index 8a62c7f72e1b..1222db6d4ee9 100644
-> --- a/arch/s390/kernel/Makefile
-> +++ b/arch/s390/kernel/Makefile
-> @@ -86,7 +86,7 @@ obj-$(CONFIG_TRACEPOINTS)     += trace.o
->
->  # vdso
->  obj-y                          += vdso64/
-> -obj-$(CONFIG_COMPAT)           += vdso32/
-> +obj-$(CONFIG_COMPAT_VDSO)      += vdso32/
->
->  chkbss := head64.o early_nobss.o
->  include $(srctree)/arch/s390/scripts/Makefile.chkbss
-> diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
-> index e7920a68a12e..243d8b1185bf 100644
-> --- a/arch/s390/kernel/vdso.c
-> +++ b/arch/s390/kernel/vdso.c
-> @@ -29,7 +29,7 @@
->  #include <asm/vdso.h>
->  #include <asm/facility.h>
->
-> -#ifdef CONFIG_COMPAT
-> +#ifdef CONFIG_COMPAT_VDSO
->  extern char vdso32_start, vdso32_end;
->  static void *vdso32_kbase = &vdso32_start;
->  static unsigned int vdso32_pages;
-> @@ -55,7 +55,7 @@ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
->
->         vdso_pagelist = vdso64_pagelist;
->         vdso_pages = vdso64_pages;
-> -#ifdef CONFIG_COMPAT
-> +#ifdef CONFIG_COMPAT_VDSO
->         if (vma->vm_mm->context.compat_mm) {
->                 vdso_pagelist = vdso32_pagelist;
->                 vdso_pages = vdso32_pages;
-> @@ -76,7 +76,7 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
->         unsigned long vdso_pages;
->
->         vdso_pages = vdso64_pages;
-> -#ifdef CONFIG_COMPAT
-> +#ifdef CONFIG_COMPAT_VDSO
->         if (vma->vm_mm->context.compat_mm)
->                 vdso_pages = vdso32_pages;
->  #endif
-> @@ -223,7 +223,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
->                 return 0;
->
->         vdso_pages = vdso64_pages;
-> -#ifdef CONFIG_COMPAT
-> +#ifdef CONFIG_COMPAT_VDSO
->         mm->context.compat_mm = is_compat_task();
->         if (mm->context.compat_mm)
->                 vdso_pages = vdso32_pages;
-> @@ -280,7 +280,7 @@ static int __init vdso_init(void)
->         int i;
->
->         vdso_init_data(vdso_data);
-> -#ifdef CONFIG_COMPAT
-> +#ifdef CONFIG_COMPAT_VDSO
->         /* Calculate the size of the 32 bit vDSO */
->         vdso32_pages = ((&vdso32_end - &vdso32_start
->                          + PAGE_SIZE - 1) >> PAGE_SHIFT) + 1;
-> --
-> 2.20.0
->
+> +/*
+> + * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
+> + * layout_sections() can put it in the right place.
+> + * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
+> + */
+> +static char *ro_after_init_sections[] = {
 
+static const char * const ... Need to make sure the table and its
+strings can't be changed. :)
+
+> +       ".data..ro_after_init",
+> +
+> +       /*
+> +        * __jump_table structures are never modified, with the exception of
+> +        * entries that refer to code in the __init section, which are
+> +        * annotated as such at module load time.
+> +        */
+> +       "__jump_table",
+> +       NULL
+
+Since this table is known at build time, you don't need a NULL
+terminator, you can use ARRAY_SIZE() instead.
+
+> +};
+> +
+>  static struct module *layout_and_allocate(struct load_info *info, int flags)
+>  {
+>         struct module *mod;
+>         unsigned int ndx;
+> -       int err;
+> +       int err, i;
+>
+>         err = check_modinfo(info->mod, info, flags);
+>         if (err)
+> @@ -3319,23 +3336,12 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
+>         /* We will do a special allocation for per-cpu sections later. */
+>         info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
+>
+> -       /*
+> -        * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
+> -        * layout_sections() can put it in the right place.
+> -        * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
+> -        */
+> -       ndx = find_sec(info, ".data..ro_after_init");
+> -       if (ndx)
+> -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> -       /*
+> -        * Mark the __jump_table section as ro_after_init as well: these data
+> -        * structures are never modified, with the exception of entries that
+> -        * refer to code in the __init section, which are annotated as such
+> -        * at module load time.
+> -        */
+> -       ndx = find_sec(info, "__jump_table");
+> -       if (ndx)
+> -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> +       /* Set sh_flags for read-only after init sections */
+> +       for (i = 0; ro_after_init_sections[i]; i++) {
+
+i.e. for (i = 0; i < ARRAY_SIZE(ro_after_init_sections); i++)
+
+> +               ndx = find_sec(info, ro_after_init_sections[i]);
+> +               if (ndx)
+> +                       info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
+> +       }
+>
+>         /* Determine total sizes, and put offsets in sh_entsize.  For now
+>            this is done generically; there doesn't appear to be any
+
+Otherwise, yeah, looks good to me.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
