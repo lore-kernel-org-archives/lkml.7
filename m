@@ -2,110 +2,100 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F120C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3189C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30C22082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6402083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HsDX4JA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbfDJRJf (ORCPT
+        id S1729025AbfDJRNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:09:35 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.194]:33111 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726556AbfDJRJf (ORCPT
+        Wed, 10 Apr 2019 13:13:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43003 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728718AbfDJRNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:09:35 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 97DAD1DC71
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:09:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id EGj8hT3WG4FKpEGj8hxVpG; Wed, 10 Apr 2019 12:09:34 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=39966 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hEGip-004D1Y-M4; Wed, 10 Apr 2019 12:09:33 -0500
-Date:   Wed, 10 Apr 2019 12:09:14 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] genirq/devres: Use struct_size() in devm_kzalloc()
-Message-ID: <20190410170914.GA16161@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hEGip-004D1Y-M4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.139.70]:39966
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 10 Apr 2019 13:13:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so1927590pgh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Loqo+ptgBIvQDOyaYvUe0ENLtUskQ9SIaVhe8fwBwp4=;
+        b=HsDX4JA03d1+AsAao3WS+PUZr78vdmDtUUzkzxcSROPWrLn8Eb5FR6bTS7gfyX5Se6
+         RXHmdSe3i63QH2Uwlc9iWjE2Kb/d+LZwYbiOVxuKvA8EzwkNnof6CPlbrPFGibCBkFp7
+         hWnq88og4FTXpEaqx+7oGp51vE2yGyxdwHHhb5UruwL0+wyypViTL9hRTLxGBkBlBe5Z
+         5qT13he4my6y/dxSEoIJLSHUik1uC5kGXGYiTwTTRDvnF0GApKaxPmfeOIMK+mweN1/G
+         s+svurRAIhhqAOxphSjjmWi/Xc3BUERxrjVzN9O04aDqqGb7V3Bqxtvxuq7qAhEEzT5v
+         jJXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Loqo+ptgBIvQDOyaYvUe0ENLtUskQ9SIaVhe8fwBwp4=;
+        b=a4g1PV/LFo4yWKCfAo9xEqeLLk3WQ74RYeL8DSLzztaElp8X/8+FkWzVSqYqYY8Ga4
+         uOw/UcjlzyCSyuIQJDa2L+4/YEjSe0CtvzXdAAwKQSJvspabh7wDxQfW4hUD+TjEpEDs
+         ipnXNuKvVb5zGiNFOVhGcKeoL7r9//nK6HBYavw2e94YmnKfkFLC8RKH3Xcu/CvwNnrM
+         z6YAU6YU1DTEE9ssjs0HbplCVIR5wKjADle0UfujiQAJHlNhmcOG38zLeTVG8fHhsDYD
+         KleER5L/YCxTZ92X/dk75iQcB0H93Lxqs+gfZsJgYWkt2F0zzPEWrgjXHSfUQH/Hblw6
+         tkqg==
+X-Gm-Message-State: APjAAAVouHbrFgQFnA/GrY2aYRrdI/q3ccFxugE5y0zKJnq3jtpCEisC
+        V735/xo98Trr2sTric6ZwrjzWQ==
+X-Google-Smtp-Source: APXvYqy4kxmphmV7146MvOIJc2ridXyRqNiZXhX/zaBHLyntGjsvpeu6HO/0SDWusydyn5LL7KjkBw==
+X-Received: by 2002:aa7:85cc:: with SMTP id z12mr44427095pfn.142.1554916415354;
+        Wed, 10 Apr 2019 10:13:35 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id j62sm35138150pfg.6.2019.04.10.10.13.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 10:13:34 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 10:13:34 -0700 (PDT)
+X-Google-Original-Date: Wed, 10 Apr 2019 09:43:10 PDT (-0700)
+Subject:     Re: [PATCH 1/3] RISC-V: Add separate defconfig for 32bit systems
+In-Reply-To: <CAAhSdy1UZ3VZAa+Gtf0KQUY9Ebwm7p=qAB+Xv7HDAjfUYpFuAQ@mail.gmail.com>
+CC:     Anup Patel <Anup.Patel@wdc.com>, aou@eecs.berkeley.edu,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>, rppt@linux.ibm.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     anup@brainfault.org
+Message-ID: <mhng-291f78d2-5d90-4f44-8bbd-017264cd5be7@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Tue, 09 Apr 2019 23:09:03 PDT (-0700), anup@brainfault.org wrote:
+> On Tue, Apr 9, 2019 at 10:14 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>>
+>> On Tue, 12 Mar 2019 15:08:12 PDT (-0700), Anup Patel wrote:
+>> > This patch adds rv32_defconfig for 32bit systems. The only
+>> > difference between rv32_defconfig and defconfig is that
+>> > rv32_defconfig has  CONFIG_ARCH_RV32I=y.
+>>
+>> Thanks.  I think it makes sense to have this in 5.1 so I'm going to take it
+>> into the next RC.
+>
+> Thanks, Palmer.
+>
+> Can you consider "[PATCH v3] RISC-V: Fix Maximum Physical Memory 2GiB
+> option for 64bit systems" for 5.1?
+>
+> Refer, https://patchwork.kernel.org/patch/10886895/
+>
+> The above patch is also required for 64bit system with more than 128GiB memory
+> (i.e. server-class system).
+>
+> We can remove "Maximum Physical Memory 2GiB" option as separate patch.
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
-
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = devm_kzalloc(dev, size, GFP_KERNEL);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = devm_kzalloc(dev, struct_size(instance, entry, count), GFP_KERNEL);
-
-Notice that, in this case, variable sz is not necessary, hence it
-is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- kernel/irq/devres.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/kernel/irq/devres.c b/kernel/irq/devres.c
-index f808c6a97dcc..f6e5515ee077 100644
---- a/kernel/irq/devres.c
-+++ b/kernel/irq/devres.c
-@@ -220,9 +220,8 @@ devm_irq_alloc_generic_chip(struct device *dev, const char *name, int num_ct,
- 			    irq_flow_handler_t handler)
- {
- 	struct irq_chip_generic *gc;
--	unsigned long sz = sizeof(*gc) + num_ct * sizeof(struct irq_chip_type);
- 
--	gc = devm_kzalloc(dev, sz, GFP_KERNEL);
-+	gc = devm_kzalloc(dev, struct_size(gc, chip_types, num_ct), GFP_KERNEL);
- 	if (gc)
- 		irq_init_generic_chip(gc, name, num_ct,
- 				      irq_base, reg_base, handler);
--- 
-2.21.0
-
+Ya, that should go in.  It's on the branch, thanks for the reminder!
