@@ -7,79 +7,79 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6EAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBAAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7E120854
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835B020854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="JyPekxMl";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ULQ0LE4D"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="MRZOfUIg";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="HVGLIomS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfDJFQG (ORCPT
+        id S1727263AbfDJFQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 01:16:06 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:48008 "EHLO
+        Wed, 10 Apr 2019 01:16:00 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:48000 "EHLO
         mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726925AbfDJFP5 (ORCPT
+        by vger.kernel.org with ESMTP id S1725818AbfDJFP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 01:15:57 -0400
+        Wed, 10 Apr 2019 01:15:56 -0400
 Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3A5BaYc011870;
-        Tue, 9 Apr 2019 22:15:41 -0700
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3A5BoeI012390;
+        Tue, 9 Apr 2019 22:15:38 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=proofpoint;
- bh=xtLoXSnF7CxYZ6D9iQJNyKusO6MIK1J25Zbpwf17EWQ=;
- b=JyPekxMlL7PwAemkTRCoBK9ppxWUVD1RqozYml3whGzlIcBa7u7mvlMomPiD0yXnpmEb
- zBRMZOiGeAO56iypkql8uQ8soUNh7OKXJt5K8/TCslHlXSKsgn6wTgxBPu3EBL+VB6op
- WHWL4LavxjKv/3zO3qc2H/Lyui4DTfZseR8sw0ssvuw10oNGMkdqhhKEWnD4Z1qaITJx
- s/mrQFjuixFM2RaST/VYP9g9HRrf8IucS1eNhud74rmdx+WXLk+vJhaJLK0/CcNs36iB
- /VAvd4s7orcRX3Xy9xR9eiht1I2ltlyFJxWttLTsFiG2SfGuilC4IbNvK2QtBmLNgnbb XQ== 
+ bh=/I0nEkIIaoVKxvqbl4yh9nI9h88/QTHUgmihMIewjWQ=;
+ b=MRZOfUIgwL1eWyA1xl9GCl0gSppQueQX5YPEIlUUQSBu+oIO3JZN2ma2swl3MdSeIT9i
+ dBQPH1UItid0yBB4HdYI10rMANARHCuZ4stS8Z4ZpmLaNBzhcVxWXMJjKURfKN0PtX7F
+ +9psvDRW7Yo8YHortQ+QeqZD8JWz3dKw83voCYLHkAta709TTTr7RORA5Gs/FvjeQk9R
+ 1d26r20cxvh15qiUkM1GnmbyBGUEWbl9X48S+kG9xhaVrexiOUw9Rjni6V5CCxDTOzVr
+ PVNrOgq837OSAWXOrCnFZuvy2wcl50TocCSFUUnR1ZgKdWpRcV9LfupsNq6f4ji+JYYv kg== 
 Authentication-Results: cadence.com;
         spf=pass smtp.mailfrom=pawell@cadence.com
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2059.outbound.protection.outlook.com [104.47.37.59])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2rr9dfytdm-1
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2052.outbound.protection.outlook.com [104.47.42.52])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2rr9dfytcd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 09 Apr 2019 22:15:40 -0700
+        Tue, 09 Apr 2019 22:15:36 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xtLoXSnF7CxYZ6D9iQJNyKusO6MIK1J25Zbpwf17EWQ=;
- b=ULQ0LE4DbL7DCs0MIREUVNGBQreHmEWY8eLZ79UzJ2R/1T5n++wtluryzQxw4plGVLG0PY/wLNBqGO1A2QC45IfurxL8y2uRbqo+5zLDGKbQZa5TfADV5N5PtMLcaXuPInFU3atvfqyr0EceBlTS7zqAivQiYuUIoivNp9md6ks=
-Received: from CY1PR07CA0014.namprd07.prod.outlook.com
- (2a01:111:e400:c60a::24) by BYAPR07MB5909.namprd07.prod.outlook.com
- (2603:10b6:a03:131::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.19; Wed, 10 Apr
- 2019 05:15:34 +0000
-Received: from CO1NAM05FT014.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e50::202) by CY1PR07CA0014.outlook.office365.com
- (2a01:111:e400:c60a::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1792.14 via Frontend
- Transport; Wed, 10 Apr 2019 05:15:34 +0000
+ bh=/I0nEkIIaoVKxvqbl4yh9nI9h88/QTHUgmihMIewjWQ=;
+ b=HVGLIomS9csS+SZwmAJwyMrJmUl2w5GFGJ5EUela7Xq0+UANpCf2fEFRlVP2Ov6u6U1nZsJFy/zyp79WIXiY/1O/0vnQd78QoA5d1jsOYURPdeP+w4ll5bBOKNs8VsiOSewpNJGyeK0pYjjOdsKlSPCDK9V5jkPxF/rVEOkxP00=
+Received: from BN8PR07CA0023.namprd07.prod.outlook.com (2603:10b6:408:ac::36)
+ by DM6PR07MB5913.namprd07.prod.outlook.com (2603:10b6:5:181::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.21; Wed, 10 Apr
+ 2019 05:15:31 +0000
+Received: from BY2NAM05FT025.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::201) by BN8PR07CA0023.outlook.office365.com
+ (2603:10b6:408:ac::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.16 via Frontend
+ Transport; Wed, 10 Apr 2019 05:15:31 +0000
 Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
  cadence.com discourages use of 158.140.1.28 as permitted sender)
 Received: from sjmaillnx1.cadence.com (158.140.1.28) by
- CO1NAM05FT014.mail.protection.outlook.com (10.152.96.121) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1792.7 via Frontend Transport; Wed, 10 Apr 2019 05:15:33 +0000
+ BY2NAM05FT025.mail.protection.outlook.com (10.152.100.162) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.7 via Frontend Transport; Wed, 10 Apr 2019 05:15:30 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x3A5FQQC012370
+        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x3A5FQQ8012370
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 9 Apr 2019 22:15:33 -0700
+        Tue, 9 Apr 2019 22:15:30 -0700
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Wed, 10 Apr 2019 07:15:27 +0200
+ 15.0.1367.3; Wed, 10 Apr 2019 07:15:26 +0200
 Received: from lvlogina.cadence.com (10.165.176.102) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 10 Apr 2019 07:15:27 +0200
+ 15.0.1367.3 via Frontend Transport; Wed, 10 Apr 2019 07:15:26 +0200
 Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x3A5FR22017354;
-        Wed, 10 Apr 2019 06:15:27 +0100
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x3A5FQ2a017226;
+        Wed, 10 Apr 2019 06:15:26 +0100
 Received: (from pawell@localhost)
-        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x3A5FRou017352;
-        Wed, 10 Apr 2019 06:15:27 +0100
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x3A5FQCJ017216;
+        Wed, 10 Apr 2019 06:15:26 +0100
 From:   Pawel Laszczak <pawell@cadence.com>
 To:     <devicetree@vger.kernel.org>
 CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
@@ -90,9 +90,9 @@ CC:     <gregkh@linuxfoundation.org>, <felipe.balbi@linux.intel.com>,
         <nsekhar@ti.com>, <nm@ti.com>, <sureshp@cadence.com>,
         <peter.chen@nxp.com>, <kurahul@cadence.com>,
         Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v5 6/6] usb:cdns3 Fix for stuck packets in on-chip OUT buffer.
-Date:   Wed, 10 Apr 2019 06:15:02 +0100
-Message-ID: <1554873302-5624-7-git-send-email-pawell@cadence.com>
+Subject: [PATCH v5 2/6] usb:common Separated decoding functions from dwc3 driver.
+Date:   Wed, 10 Apr 2019 06:14:58 +0100
+Message-ID: <1554873302-5624-3-git-send-email-pawell@cadence.com>
 X-Mailer: git-send-email 1.7.11.2
 In-Reply-To: <1554873302-5624-1-git-send-email-pawell@cadence.com>
 References: <1554873302-5624-1-git-send-email-pawell@cadence.com>
@@ -100,23 +100,24 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(136003)(2980300002)(36092001)(189003)(199004)(305945005)(42186006)(76130400001)(446003)(16586007)(7636002)(2906002)(87636003)(51416003)(86362001)(8676002)(26826003)(5660300002)(30864003)(2351001)(6666004)(8936002)(50226002)(356004)(54906003)(48376002)(14444005)(4720700003)(486006)(246002)(107886003)(6916009)(105596002)(336012)(7416002)(11346002)(47776003)(478600001)(316002)(26005)(2616005)(426003)(186003)(476003)(126002)(36756003)(76176011)(50466002)(106466001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5909;H:sjmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(2980300002)(199004)(36092001)(189003)(2906002)(76176011)(11346002)(14444005)(476003)(2616005)(26005)(446003)(50226002)(7416002)(30864003)(186003)(51416003)(126002)(6666004)(486006)(76130400001)(336012)(426003)(86362001)(54906003)(6916009)(16586007)(36756003)(42186006)(48376002)(47776003)(50466002)(2351001)(356004)(316002)(4326008)(246002)(53386004)(5660300002)(966005)(26826003)(6306002)(478600001)(8936002)(87636003)(305945005)(7636002)(105596002)(4720700003)(107886003)(106466001)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR07MB5913;H:sjmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3582ef2a-84b7-4e65-fd99-08d6bd738f43
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328);SRVR:BYAPR07MB5909;
-X-MS-TrafficTypeDiagnostic: BYAPR07MB5909:
-X-Microsoft-Antispam-PRVS: <BYAPR07MB59095D95F0B08B1FA659C240DD2E0@BYAPR07MB5909.namprd07.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 5c4d1b3b-87c0-40ef-6790-08d6bd738d5e
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328);SRVR:DM6PR07MB5913;
+X-MS-TrafficTypeDiagnostic: DM6PR07MB5913:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <DM6PR07MB5913AD1A4C21B3853761B5F7DD2E0@DM6PR07MB5913.namprd07.prod.outlook.com>
 X-Forefront-PRVS: 00032065B2
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: bLBwQX3dz7NbqW5GNzJ6XnIM6H883csXZ2rGj8bKEe1hHnaysYlR8GVX/a8HLiPei2nTAUpH4C9yfmCCOH3g1jHOluIbOH4PmKwSSdwwC/GqpsysdNW8akGfN9gyLEixm/E8KwDJ1TBOO2buOjFoGA5cqS3qCB7BIgIJ5SQXbPQBpYSf9LLEgmxsBxvSbOxPMyU/UM1+q9SsLWfslwlH9e0bWVThXAtAYbZhmDPTbflSNksPeSJlGkBM+ZLcwG/sV1aWBBpkMw6bOwUzILfisnwcSIjVno6Cl+J0PWK05Ahd7O18PTfE7q9BL31p75OFI8DWVadfA/dP4ti8+bF9UDLNSSE4BbXf0yQuVth14bvSjToF3SrNu+YMmzt4vLVYH9kuW+p5U1v/hfSH64Bg226sdRzBrVEUT8Fysbr32/Q=
+X-Microsoft-Antispam-Message-Info: f98I3Olfs/+dxfovYyF3aSVTobtXCzLRrQYPvag+IdVyCDd1RH0lfT4b5nhwGjEvFZdQATG7mgInWQ7l4h6Y2M6PxSlTHB+29m8SSkqYVxxK37qzRZLmrQAkpvAN7ok+jkA0l6SZK3V3aY+G9H56UZf8MIHsN6GsvRZal0iuz4WxpaLR7OO6gWJ0nFVwZSTrpP6UDfGECjwHMjNk2muMY58EsZW+Y3joAemoEEFm4L8fCH5qqoyIbg+CL8eWVwql//TZ6DLhTBUH7R1Vr5QOvl9/zDqpynAAR8cb2b4DHJ8di78q4IgFmbK/v7cNHnTrpnvoTv64NTAwdpgSou/rcjgcMzbSxx+GDcKgNYc+gGuzQpA1vERd6qDpN6UCk5LSi3l56lLu0hLfe/IeN5LfMfGDKmLbfj28oBu8ucRi2gU=
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2019 05:15:33.7536
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2019 05:15:30.9446
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3582ef2a-84b7-4e65-fd99-08d6bd738f43
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c4d1b3b-87c0-40ef-6790-08d6bd738d5e
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5909
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB5913
 X-Proofpoint-SPF-Result: pass
 X-Proofpoint-SPF-Record: v=spf1 include:_spf.salesforce.com include:mktomail.com
  include:spf-0014ca01.pphosted.com include:spf.protection.outlook.com
@@ -124,7 +125,7 @@ X-Proofpoint-SPF-Record: v=spf1 include:_spf.salesforce.com include:mktomail.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0
  spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904100037
@@ -133,483 +134,635 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Controller for OUT endpoints has shared on-chip buffers for all incoming
-packets, including ep0out. It's FIFO buffer, so packets must be handled
-by DMA in correct order. If the first packet in the buffer will not be
-handled, then the following packets directed for other endpoints and
-functions will be blocked.
+Patch moves some decoding functions from driver/usb/dwc3/debug.h driver
+to driver/usb/common/debug.c file. These moved functions include:
+    dwc3_decode_get_status
+    dwc3_decode_set_clear_feature
+    dwc3_decode_set_address
+    dwc3_decode_get_set_descriptor
+    dwc3_decode_get_configuration
+    dwc3_decode_set_configuration
+    dwc3_decode_get_intf
+    dwc3_decode_set_intf
+    dwc3_decode_synch_frame
+    dwc3_decode_set_sel
+    dwc3_decode_set_isoch_delay
+    dwc3_decode_ctrl
 
-Additionally the packets directed to one endpoint can block entire on-chip
-buffers. In this case transfer to other endpoints also will blocked.
+These functions are used also in inroduced cdns3 driver.
 
-To resolve this issue after raising the descriptor missing interrupt
-driver prepares internal usb_request object and use it to arm DMA
-transfer.
-
-The problematic situation was observed in case when endpoint has
-been enabled but no usb_request were queued. Driver try detects
-such endpoints and will use this workaround only for these endpoint.
-
-Driver use limited number of buffer. This number can be set by macro
-CDNS_WA2_NUM_BUFFERS.
-
-Such blocking situation was observed on ACM gadget. For this function
-host send OUT data packet but ACM function is not prepared for
-this packet. It's cause that buffer placed in on chip memory block
-transfer to other endpoints.
-
-Issue has been fixed for DEV_VER_V2 version of controller.
+All functions prefixes were changed from dwc3 to usb.
+Also, function's parameters has been extended according to the name
+of fields in standard SETUP packet.
+Additionally, patch adds usb_decode_ctrl function to
+include/linux/usb/ch9.h file.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/cdns3/gadget.c | 316 ++++++++++++++++++++++++++++++++++++-
- drivers/usb/cdns3/gadget.h |   9 +-
- 2 files changed, 322 insertions(+), 3 deletions(-)
+ drivers/usb/common/Makefile |   2 +-
+ drivers/usb/common/debug.c  | 270 ++++++++++++++++++++++++++++++++++++
+ drivers/usb/dwc3/debug.h    | 249 ---------------------------------
+ drivers/usb/dwc3/trace.h    |   2 +-
+ include/linux/usb/ch9.h     |  25 ++++
+ 5 files changed, 297 insertions(+), 251 deletions(-)
+ create mode 100644 drivers/usb/common/debug.c
 
-diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
-index 71569c9cf264..be7bf12f700e 100644
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -28,6 +28,32 @@
-  *
-  * Issue has been fixed for DEV_VER_V2 version of controller.
-  *
-+ * Work around 2:
-+ * Controller for OUT endpoints has shared on-chip buffers for all incoming
-+ * packets, including ep0out. It's FIFO buffer, so packets must be handle by DMA
-+ * in correct order. If the first packet in the buffer will not be handled,
-+ * then the following packets directed for other endpoints and  functions
-+ * will be blocked.
-+ * Additionally the packets directed to one endpoint can block entire on-chip
-+ * buffers. In this case transfer to other endpoints also will blocked.
-+ *
-+ * To resolve this issue after raising the descriptor missing interrupt
-+ * driver prepares internal usb_request object and use it to arm DMA transfer.
-+ *
-+ * The problematic situation was observed in case when endpoint has been enabled
-+ * but no usb_request were queued. Driver try detects such endpoints and will
-+ * use this workaround only for these endpoint.
-+ *
-+ * Driver use limited number of buffer. This number can be set by macro
-+ * CDNS3_WA2_NUM_BUFFERS.
-+ *
-+ * Such blocking situation was observed on ACM gadget. For this function
-+ * host send OUT data packet but ACM function is not prepared for this packet.
-+ * It's cause that buffer placed in on chip memory block transfer to other
-+ * endpoints.
-+ *
-+ * Issue has been fixed for DEV_VER_V2 version of controller.
-+ *
-  */
+diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
+index fb4d5ef4165c..3d3d2962ea4b 100644
+--- a/drivers/usb/common/Makefile
++++ b/drivers/usb/common/Makefile
+@@ -4,7 +4,7 @@
+ #
  
- #include <linux/dma-mapping.h>
-@@ -87,6 +113,17 @@ struct cdns3_aligned_buf *cdns3_next_align_buf(struct list_head *list)
- 	return list_first_entry_or_null(list, struct cdns3_aligned_buf, list);
- }
+ obj-$(CONFIG_USB_COMMON)	  += usb-common.o
+-usb-common-y			  += common.o
++usb-common-y			  += common.o debug.o
+ usb-common-$(CONFIG_USB_LED_TRIG) += led.o
  
+ obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
+diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+new file mode 100644
+index 000000000000..3fdf116da909
+--- /dev/null
++++ b/drivers/usb/common/debug.c
+@@ -0,0 +1,270 @@
++// SPDX-License-Identifier: GPL-2.0
 +/**
-+ * cdns3_next_priv_request - returns next request from list
-+ * @list: list containing requests
++ * Common USB debugging functions
 + *
-+ * Returns request or NULL if no requests in list
++ * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
++ *
++ * Authors: Felipe Balbi <balbi@ti.com>,
++ *	    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 + */
-+struct cdns3_request *cdns3_next_priv_request(struct list_head *list)
++
++#ifndef __LINUX_USB_COMMON_DEBUG
++#define __LINUX_USB_COMMON_DEBUG
++
++#include <linux/usb/ch9.h>
++
++static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
++				  __u16 wLength, char *str, size_t size)
 +{
-+	return list_first_entry_or_null(list, struct cdns3_request, list);
++	switch (bRequestType & USB_RECIP_MASK) {
++	case USB_RECIP_INTERFACE:
++		snprintf(str, size,
++			 "Get Interface Status(Intf = %d, Length = %d)",
++			 wIndex, wLength);
++		break;
++	case USB_RECIP_ENDPOINT:
++		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
++			 wIndex & ~USB_DIR_IN,
++			 wIndex & USB_DIR_IN ? "in" : "out");
++		break;
++	}
 +}
 +
++static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
++					 __u16 wValue, __u16 wIndex,
++					 char *str, size_t size)
++{
++	switch (bRequestType & USB_RECIP_MASK) {
++	case USB_RECIP_DEVICE:
++		snprintf(str, size, "%s Device Feature(%s%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 ({char *s;
++				switch (wValue) {
++				case USB_DEVICE_SELF_POWERED:
++					s = "Self Powered";
++					break;
++				case USB_DEVICE_REMOTE_WAKEUP:
++					s = "Remote Wakeup";
++					break;
++				case USB_DEVICE_TEST_MODE:
++					s = "Test Mode";
++					break;
++				case USB_DEVICE_U1_ENABLE:
++					s = "U1 Enable";
++					break;
++				case USB_DEVICE_U2_ENABLE:
++					s = "U2 Enable";
++					break;
++				case USB_DEVICE_LTM_ENABLE:
++					s = "LTM Enable";
++					break;
++				default:
++					s = "UNKNOWN";
++				} s; }),
++			 wValue == USB_DEVICE_TEST_MODE ?
++			 ({ char *s;
++				switch (wIndex) {
++				case TEST_J:
++					s = ": TEST_J";
++					break;
++				case TEST_K:
++					s = ": TEST_K";
++					break;
++				case TEST_SE0_NAK:
++					s = ": TEST_SE0_NAK";
++					break;
++				case TEST_PACKET:
++					s = ": TEST_PACKET";
++					break;
++				case TEST_FORCE_EN:
++					s = ": TEST_FORCE_EN";
++					break;
++				default:
++					s = ": UNKNOWN";
++				} s; }) : "");
++		break;
++	case USB_RECIP_INTERFACE:
++		snprintf(str, size, "%s Interface Feature(%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 wValue == USB_INTRF_FUNC_SUSPEND ?
++			 "Function Suspend" : "UNKNOWN");
++		break;
++	case USB_RECIP_ENDPOINT:
++		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
++			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
++			 wValue == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
++			 wIndex & ~USB_DIR_IN,
++			 wIndex & USB_DIR_IN ? "in" : "out");
++		break;
++	}
++}
++
++static void usb_decode_set_address(__u16 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Address(Addr = %02x)", wValue);
++}
++
++static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
++					  __u16 wValue, __u16 wIndex,
++					  __u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
++		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
++		 ({ char *s;
++			switch (wValue >> 8) {
++			case USB_DT_DEVICE:
++				s = "Device";
++				break;
++			case USB_DT_CONFIG:
++				s = "Configuration";
++				break;
++			case USB_DT_STRING:
++				s = "String";
++				break;
++			case USB_DT_INTERFACE:
++				s = "Interface";
++				break;
++			case USB_DT_ENDPOINT:
++				s = "Endpoint";
++				break;
++			case USB_DT_DEVICE_QUALIFIER:
++				s = "Device Qualifier";
++				break;
++			case USB_DT_OTHER_SPEED_CONFIG:
++				s = "Other Speed Config";
++				break;
++			case USB_DT_INTERFACE_POWER:
++				s = "Interface Power";
++				break;
++			case USB_DT_OTG:
++				s = "OTG";
++				break;
++			case USB_DT_DEBUG:
++				s = "Debug";
++				break;
++			case USB_DT_INTERFACE_ASSOCIATION:
++				s = "Interface Association";
++				break;
++			case USB_DT_BOS:
++				s = "BOS";
++				break;
++			case USB_DT_DEVICE_CAPABILITY:
++				s = "Device Capability";
++				break;
++			case USB_DT_PIPE_USAGE:
++				s = "Pipe Usage";
++				break;
++			case USB_DT_SS_ENDPOINT_COMP:
++				s = "SS Endpoint Companion";
++				break;
++			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
++				s = "SSP Isochronous Endpoint Companion";
++				break;
++			default:
++				s = "UNKNOWN";
++				break;
++			} s; }), wValue & 0xff, wLength);
++}
++
++static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "Get Configuration(Length = %d)", wLength);
++}
++
++static void usb_decode_set_configuration(__u8 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Configuration(Config = %d)", wValue);
++}
++
++static void usb_decode_get_intf(__u16 wIndex, __u16 wLength, char *str,
++				size_t size)
++{
++	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)",
++		 wIndex, wLength);
++}
++
++static void usb_decode_set_intf(__u8 wValue, __u16 wIndex, char *str,
++				size_t size)
++{
++	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)",
++		 wIndex, wValue);
++}
++
++static void usb_decode_synch_frame(__u16 wIndex, __u16 wLength,
++				   char *str, size_t size)
++{
++	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)",
++		 wIndex, wLength);
++}
++
++static void usb_decode_set_sel(__u16 wLength, char *str, size_t size)
++{
++	snprintf(str, size, "Set SEL(Length = %d)", wLength);
++}
++
++static void usb_decode_set_isoch_delay(__u8 wValue, char *str, size_t size)
++{
++	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", wValue);
++}
++
++/**
++ * usb_decode_ctrl - returns a string representation of ctrl request
++ */
++const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
++			    __u8 bRequest, __u16 wValue, __u16 wIndex,
++			    __u16 wLength)
++{
++	switch (bRequest) {
++	case USB_REQ_GET_STATUS:
++		usb_decode_get_status(bRequestType, wIndex, wLength, str, size);
++		break;
++	case USB_REQ_CLEAR_FEATURE:
++	case USB_REQ_SET_FEATURE:
++		usb_decode_set_clear_feature(bRequestType, bRequest, wValue,
++					     wIndex, str, size);
++		break;
++	case USB_REQ_SET_ADDRESS:
++		usb_decode_set_address(wValue, str, size);
++		break;
++	case USB_REQ_GET_DESCRIPTOR:
++	case USB_REQ_SET_DESCRIPTOR:
++		usb_decode_get_set_descriptor(bRequestType, bRequest, wValue,
++					      wIndex, wLength, str, size);
++		break;
++	case USB_REQ_GET_CONFIGURATION:
++		usb_decode_get_configuration(wLength, str, size);
++		break;
++	case USB_REQ_SET_CONFIGURATION:
++		usb_decode_set_configuration(wValue, str, size);
++		break;
++	case USB_REQ_GET_INTERFACE:
++		usb_decode_get_intf(wIndex, wLength, str, size);
++		break;
++	case USB_REQ_SET_INTERFACE:
++		usb_decode_set_intf(wValue, wIndex, str, size);
++		break;
++	case USB_REQ_SYNCH_FRAME:
++		usb_decode_synch_frame(wIndex, wLength, str, size);
++		break;
++	case USB_REQ_SET_SEL:
++		usb_decode_set_sel(wLength, str, size);
++		break;
++	case USB_REQ_SET_ISOCH_DELAY:
++		usb_decode_set_isoch_delay(wValue, str, size);
++		break;
++	default:
++		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
++			 bRequestType, bRequest,
++			 (u8)(cpu_to_le16(wValue) & 0xff),
++			 (u8)(cpu_to_le16(wValue) >> 8),
++			 (u8)(cpu_to_le16(wIndex) & 0xff),
++			 (u8)(cpu_to_le16(wIndex) >> 8),
++			 (u8)(cpu_to_le16(wLength) & 0xff),
++			 (u8)(cpu_to_le16(wLength) >> 8));
++	}
++
++	return str;
++}
++EXPORT_SYMBOL_GPL(usb_decode_ctrl);
++
++#endif /* __LINUX_USB_COMMON_DEBUG */
+diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
+index 6ec4280fa40c..3cf84c0ba486 100644
+--- a/drivers/usb/dwc3/debug.h
++++ b/drivers/usb/dwc3/debug.h
+@@ -217,255 +217,6 @@ static inline const char *dwc3_gadget_event_string(char *str, size_t size,
+ 	return str;
+ }
+ 
+-static inline void dwc3_decode_get_status(__u8 t, __u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	switch (t & USB_RECIP_MASK) {
+-	case USB_RECIP_INTERFACE:
+-		snprintf(str, size, "Get Interface Status(Intf = %d, Length = %d)",
+-				i, l);
+-		break;
+-	case USB_RECIP_ENDPOINT:
+-		snprintf(str, size, "Get Endpoint Status(ep%d%s)",
+-			i & ~USB_DIR_IN,
+-			i & USB_DIR_IN ? "in" : "out");
+-		break;
+-	}
+-}
+-
+-static inline void dwc3_decode_set_clear_feature(__u8 t, __u8 b, __u16 v,
+-		__u16 i, char *str, size_t size)
+-{
+-	switch (t & USB_RECIP_MASK) {
+-	case USB_RECIP_DEVICE:
+-		snprintf(str, size, "%s Device Feature(%s%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			({char *s;
+-				switch (v) {
+-				case USB_DEVICE_SELF_POWERED:
+-					s = "Self Powered";
+-					break;
+-				case USB_DEVICE_REMOTE_WAKEUP:
+-					s = "Remote Wakeup";
+-					break;
+-				case USB_DEVICE_TEST_MODE:
+-					s = "Test Mode";
+-					break;
+-				case USB_DEVICE_U1_ENABLE:
+-					s = "U1 Enable";
+-					break;
+-				case USB_DEVICE_U2_ENABLE:
+-					s = "U2 Enable";
+-					break;
+-				case USB_DEVICE_LTM_ENABLE:
+-					s = "LTM Enable";
+-					break;
+-				default:
+-					s = "UNKNOWN";
+-				} s; }),
+-			v == USB_DEVICE_TEST_MODE ?
+-			({ char *s;
+-				switch (i) {
+-				case TEST_J:
+-					s = ": TEST_J";
+-					break;
+-				case TEST_K:
+-					s = ": TEST_K";
+-					break;
+-				case TEST_SE0_NAK:
+-					s = ": TEST_SE0_NAK";
+-					break;
+-				case TEST_PACKET:
+-					s = ": TEST_PACKET";
+-					break;
+-				case TEST_FORCE_EN:
+-					s = ": TEST_FORCE_EN";
+-					break;
+-				default:
+-					s = ": UNKNOWN";
+-				} s; }) : "");
+-		break;
+-	case USB_RECIP_INTERFACE:
+-		snprintf(str, size, "%s Interface Feature(%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			v == USB_INTRF_FUNC_SUSPEND ?
+-			"Function Suspend" : "UNKNOWN");
+-		break;
+-	case USB_RECIP_ENDPOINT:
+-		snprintf(str, size, "%s Endpoint Feature(%s ep%d%s)",
+-			b == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			v == USB_ENDPOINT_HALT ? "Halt" : "UNKNOWN",
+-			i & ~USB_DIR_IN,
+-			i & USB_DIR_IN ? "in" : "out");
+-		break;
+-	}
+-}
+-
+-static inline void dwc3_decode_set_address(__u16 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Address(Addr = %02x)", v);
+-}
+-
+-static inline void dwc3_decode_get_set_descriptor(__u8 t, __u8 b, __u16 v,
+-		__u16 i, __u16 l, char *str, size_t size)
+-{
+-	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
+-		b == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
+-		({ char *s;
+-			switch (v >> 8) {
+-			case USB_DT_DEVICE:
+-				s = "Device";
+-				break;
+-			case USB_DT_CONFIG:
+-				s = "Configuration";
+-				break;
+-			case USB_DT_STRING:
+-				s = "String";
+-				break;
+-			case USB_DT_INTERFACE:
+-				s = "Interface";
+-				break;
+-			case USB_DT_ENDPOINT:
+-				s = "Endpoint";
+-				break;
+-			case USB_DT_DEVICE_QUALIFIER:
+-				s = "Device Qualifier";
+-				break;
+-			case USB_DT_OTHER_SPEED_CONFIG:
+-				s = "Other Speed Config";
+-				break;
+-			case USB_DT_INTERFACE_POWER:
+-				s = "Interface Power";
+-				break;
+-			case USB_DT_OTG:
+-				s = "OTG";
+-				break;
+-			case USB_DT_DEBUG:
+-				s = "Debug";
+-				break;
+-			case USB_DT_INTERFACE_ASSOCIATION:
+-				s = "Interface Association";
+-				break;
+-			case USB_DT_BOS:
+-				s = "BOS";
+-				break;
+-			case USB_DT_DEVICE_CAPABILITY:
+-				s = "Device Capability";
+-				break;
+-			case USB_DT_PIPE_USAGE:
+-				s = "Pipe Usage";
+-				break;
+-			case USB_DT_SS_ENDPOINT_COMP:
+-				s = "SS Endpoint Companion";
+-				break;
+-			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
+-				s = "SSP Isochronous Endpoint Companion";
+-				break;
+-			default:
+-				s = "UNKNOWN";
+-				break;
+-			} s; }), v & 0xff, l);
+-}
+-
+-
+-static inline void dwc3_decode_get_configuration(__u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Get Configuration(Length = %d)", l);
+-}
+-
+-static inline void dwc3_decode_set_configuration(__u8 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Configuration(Config = %d)", v);
+-}
+-
+-static inline void dwc3_decode_get_intf(__u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Get Interface(Intf = %d, Length = %d)", i, l);
+-}
+-
+-static inline void dwc3_decode_set_intf(__u8 v, __u16 i, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Interface(Intf = %d, Alt.Setting = %d)", i, v);
+-}
+-
+-static inline void dwc3_decode_synch_frame(__u16 i, __u16 l, char *str,
+-		size_t size)
+-{
+-	snprintf(str, size, "Synch Frame(Endpoint = %d, Length = %d)", i, l);
+-}
+-
+-static inline void dwc3_decode_set_sel(__u16 l, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set SEL(Length = %d)", l);
+-}
+-
+-static inline void dwc3_decode_set_isoch_delay(__u8 v, char *str, size_t size)
+-{
+-	snprintf(str, size, "Set Isochronous Delay(Delay = %d ns)", v);
+-}
+-
+-/**
+- * dwc3_decode_ctrl - returns a string represetion of ctrl request
+- */
+-static inline const char *dwc3_decode_ctrl(char *str, size_t size,
+-		__u8 bRequestType, __u8 bRequest, __u16 wValue, __u16 wIndex,
+-		__u16 wLength)
+-{
+-	switch (bRequest) {
+-	case USB_REQ_GET_STATUS:
+-		dwc3_decode_get_status(bRequestType, wIndex, wLength, str,
+-				size);
+-		break;
+-	case USB_REQ_CLEAR_FEATURE:
+-	case USB_REQ_SET_FEATURE:
+-		dwc3_decode_set_clear_feature(bRequestType, bRequest, wValue,
+-				wIndex, str, size);
+-		break;
+-	case USB_REQ_SET_ADDRESS:
+-		dwc3_decode_set_address(wValue, str, size);
+-		break;
+-	case USB_REQ_GET_DESCRIPTOR:
+-	case USB_REQ_SET_DESCRIPTOR:
+-		dwc3_decode_get_set_descriptor(bRequestType, bRequest, wValue,
+-				wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_GET_CONFIGURATION:
+-		dwc3_decode_get_configuration(wLength, str, size);
+-		break;
+-	case USB_REQ_SET_CONFIGURATION:
+-		dwc3_decode_set_configuration(wValue, str, size);
+-		break;
+-	case USB_REQ_GET_INTERFACE:
+-		dwc3_decode_get_intf(wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_SET_INTERFACE:
+-		dwc3_decode_set_intf(wValue, wIndex, str, size);
+-		break;
+-	case USB_REQ_SYNCH_FRAME:
+-		dwc3_decode_synch_frame(wIndex, wLength, str, size);
+-		break;
+-	case USB_REQ_SET_SEL:
+-		dwc3_decode_set_sel(wLength, str, size);
+-		break;
+-	case USB_REQ_SET_ISOCH_DELAY:
+-		dwc3_decode_set_isoch_delay(wValue, str, size);
+-		break;
+-	default:
+-		snprintf(str, size, "%02x %02x %02x %02x %02x %02x %02x %02x",
+-			bRequestType, bRequest,
+-			cpu_to_le16(wValue) & 0xff,
+-			cpu_to_le16(wValue) >> 8,
+-			cpu_to_le16(wIndex) & 0xff,
+-			cpu_to_le16(wIndex) >> 8,
+-			cpu_to_le16(wLength) & 0xff,
+-			cpu_to_le16(wLength) >> 8);
+-	}
+-
+-	return str;
+-}
+-
  /**
-  * select_ep - selects endpoint
-  * @priv_dev:  extended gadget object
-@@ -324,6 +361,237 @@ static int cdns3_start_all_request(struct cdns3_device *priv_dev,
- 	return ret;
- }
- 
-+/*
-+ * WA2: Set flag for all not ISOC OUT endpoints. If this flag is set
-+ * driver try to detect whether endpoint need additional internal
-+ * buffer for unblocking on-chip FIFO buffer. This flag will be cleared
-+ * if before firet DESCMISS interrupt the DMA will be armed.
-+ */
-+#define cdns3_wa2_enable_detection(priv_dev, ep_priv, reg) do { \
-+	if (!priv_ep->dir && priv_ep->type != USB_ENDPOINT_XFER_ISOC) { \
-+		priv_ep->flags |= EP_QUIRK_EXTRA_BUF_DET; \
-+		(reg) |= EP_STS_EN_DESCMISEN; \
-+	} while(0)
-+
-+/**
-+ * cdns3_wa2_descmiss_copy_data copy data from internal requests to
-+ * request queued by class driver.
-+ * @priv_ep: extended endpoint object
-+ * @request: request object
-+ */
-+static void cdns3_wa2_descmiss_copy_data(struct cdns3_endpoint *priv_ep,
-+					 struct usb_request *request)
-+{
-+	struct usb_request *descmiss_req;
-+	struct cdns3_request *descmiss_priv_req;
-+
-+	while (!list_empty(&priv_ep->wa2_descmiss_req_list)) {
-+		int chunk_end;
-+		int length;
-+
-+		descmiss_priv_req =
-+			cdns3_next_priv_request(&priv_ep->wa2_descmiss_req_list);
-+		descmiss_req = &descmiss_priv_req->request;
-+
-+		/* driver can't touch pending request */
-+		if (descmiss_priv_req->flags & REQUEST_PENDING)
-+			break;
-+
-+		chunk_end = descmiss_priv_req->flags & REQUEST_INTERNAL_CH;
-+		length = request->actual + descmiss_req->actual;
-+
-+		if (length <= request->length) {
-+			memcpy(&((u8 *)request->buf)[request->actual],
-+			       descmiss_req->buf,
-+			       descmiss_req->actual);
-+			request->actual = length;
-+		} else {
-+			/* It should never occures */
-+			request->status = -ENOMEM;
-+		}
-+
-+		list_del_init(&descmiss_priv_req->list);
-+
-+		kfree(descmiss_req->buf);
-+		cdns3_gadget_ep_free_request(&priv_ep->endpoint, descmiss_req);
-+		--priv_ep->wa2_counter;
-+
-+		if (!chunk_end)
-+			break;
-+	}
-+}
-+
-+struct usb_request *cdns3_wa2_gadget_giveback(struct cdns3_device *priv_dev,
-+					      struct cdns3_endpoint *priv_ep,
-+					      struct cdns3_request *priv_req)
-+{
-+	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN &&
-+	    priv_req->flags & REQUEST_INTERNAL) {
-+		struct usb_request *req;
-+
-+		req = cdns3_next_request(&priv_ep->deferred_req_list);
-+
-+		priv_ep->descmis_req = NULL;
-+
-+		if (!req)
-+			return NULL;
-+
-+		cdns3_wa2_descmiss_copy_data(priv_ep, req);
-+		if (!(priv_ep->flags & EP_QUIRK_END_TRANSFER) &&
-+		    req->length != req->actual) {
-+			/* wait for next part of transfer */
-+			return NULL;
-+		}
-+
-+		if (req->status == -EINPROGRESS)
-+			req->status = 0;
-+
-+		list_del_init(&req->list);
-+		cdns3_start_all_request(priv_dev, priv_ep);
-+		return req;
-+	}
-+
-+	return &priv_req->request;
-+}
-+
-+int cdns3_wa2_gadget_ep_queue(struct cdns3_device *priv_dev,
-+			      struct cdns3_endpoint *priv_ep,
-+			      struct cdns3_request *priv_req)
-+{
-+	int deferred = 0;
-+	/*
-+	 * If transfer was queued before DESCMISS appear than we
-+	 * can disable handling of DESCMISS interrupt. Driver assumes that it
-+	 * can disable special treatment for this endpoint.
-+	 */
-+	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
-+		u32 reg;
-+
-+		cdns3_select_ep(priv_dev, priv_ep->num | priv_ep->dir);
-+		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
-+		reg = readl(&priv_dev->regs->ep_sts_en);
-+		reg &= ~EP_STS_EN_DESCMISEN;
-+		writel(reg, &priv_dev->regs->ep_sts_en);
-+	}
-+
-+	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
-+		u8 pending_empty = list_empty(&priv_ep->pending_req_list);
-+		u8 descmiss_empty = list_empty(&priv_ep->wa2_descmiss_req_list);
-+
-+		/*
-+		 *  DESCMISS transfer has been finished, so data will be
-+		 *  directly copied from internal allocated usb_request
-+		 *  objects.
-+		 */
-+		if (pending_empty && !descmiss_empty &&
-+		    !(priv_req->flags & REQUEST_INTERNAL)) {
-+			cdns3_wa2_descmiss_copy_data(priv_ep,
-+						     &priv_req->request);
-+			list_add_tail(&priv_req->request.list,
-+				      &priv_ep->pending_req_list);
-+			cdns3_gadget_giveback(priv_ep, priv_req,
-+					      priv_req->request.status);
-+			return deferred;
-+		}
-+
-+		/*
-+		 * Driver will wait for completion DESCMISS transfer,
-+		 * before starts new, not DESCMISS transfer.
-+		 */
-+		if (!pending_empty && !descmiss_empty)
-+			deferred = 1;
-+
-+		if (priv_req->flags & REQUEST_INTERNAL)
-+			list_add_tail(&priv_req->list,
-+				      &priv_ep->wa2_descmiss_req_list);
-+	}
-+
-+	return deferred;
-+}
-+
-+static void cdsn3_wa2_remove_old_request(struct cdns3_endpoint *priv_ep)
-+{
-+	struct cdns3_request *priv_req;
-+
-+	while (!list_empty(&priv_ep->wa2_descmiss_req_list)) {
-+		u8 chain;
-+
-+		priv_req = cdns3_next_priv_request(&priv_ep->wa2_descmiss_req_list);
-+		chain = !!(priv_req->flags & REQUEST_INTERNAL_CH);
-+
-+		kfree(priv_req->request.buf);
-+		cdns3_gadget_ep_free_request(&priv_ep->endpoint,
-+					     &priv_req->request);
-+		list_del_init(&priv_req->list);
-+		--priv_ep->wa2_counter;
-+
-+		if (!chain)
-+			break;
-+	}
-+}
-+
-+/**
-+ * cdns3_wa2_descmissing_packet - handles descriptor missing event.
-+ * @priv_dev: extended gadget object
-+ *
-+ * This function is used only for WA2. For more information see Work around 2
-+ * description.
-+ */
-+static void cdns3_wa2_descmissing_packet(struct cdns3_endpoint *priv_ep)
-+{
-+	struct cdns3_request *priv_req;
-+	struct usb_request *request;
-+
-+	if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET) {
-+		priv_ep->flags &= ~EP_QUIRK_EXTRA_BUF_DET;
-+		priv_ep->flags |= EP_QUIRK_EXTRA_BUF_EN;
-+	}
-+
-+	cdns3_dbg(priv_ep->cdns3_dev, "WA2: Description Missing detected\n");
-+
-+	if (priv_ep->wa2_counter >= CDNS3_WA2_NUM_BUFFERS)
-+		cdsn3_wa2_remove_old_request(priv_ep);
-+
-+	request = cdns3_gadget_ep_alloc_request(&priv_ep->endpoint,
-+						GFP_ATOMIC);
-+	if (!request)
-+		goto err;
-+
-+	priv_req = to_cdns3_request(request);
-+	priv_req->flags |= REQUEST_INTERNAL;
-+
-+	/* if this field is still assigned it indicate that transfer related
-+	 * with this request has not been finished yet. Driver in this
-+	 * case simply allocate next request and assign flag REQUEST_INTERNAL_CH
-+	 * flag to previous one. It will indicate that current request is
-+	 * part of the previous one.
-+	 */
-+	if (priv_ep->descmis_req)
-+		priv_ep->descmis_req->flags |= REQUEST_INTERNAL_CH;
-+
-+	priv_req->request.buf = kzalloc(CDNS3_DESCMIS_BUF_SIZE,
-+					GFP_ATOMIC);
-+	priv_ep->wa2_counter++;
-+
-+	if (!priv_req->request.buf) {
-+		cdns3_gadget_ep_free_request(&priv_ep->endpoint, request);
-+		goto err;
-+	}
-+
-+	priv_req->request.length = CDNS3_DESCMIS_BUF_SIZE;
-+	priv_ep->descmis_req = priv_req;
-+
-+	__cdns3_gadget_ep_queue(&priv_ep->endpoint,
-+				&priv_ep->descmis_req->request,
-+				GFP_ATOMIC);
-+
-+	return;
-+
-+err:
-+	dev_err(priv_ep->cdns3_dev->dev,
-+		"Failed: No sufficient memory for DESCMIS\n");
-+}
-+
- /**
-  * cdns3_gadget_giveback - call struct usb_request's ->complete callback
-  * @priv_ep: The endpoint to whom the request belongs to
-@@ -357,6 +625,13 @@ void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
- 	priv_req->flags &= ~(REQUEST_PENDING | REQUEST_UNALIGNED);
- 	trace_cdns3_gadget_giveback(priv_req);
- 
-+	if (priv_dev->dev_ver < DEV_VER_V2) {
-+		request = cdns3_wa2_gadget_giveback(priv_dev, priv_ep,
-+						    priv_req);
-+		if (!request)
-+			return;
-+	}
-+
- 	/* Start all not pending request */
- 	if (priv_ep->flags & EP_RING_FULL)
- 		cdns3_start_all_request(priv_dev, priv_ep);
-@@ -844,8 +1119,25 @@ static int cdns3_check_ep_interrupt_proceed(struct cdns3_endpoint *priv_ep)
- 			cdns3_rearm_transfer(priv_ep, priv_ep->wa1_set);
- 	}
- 
--	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP))
-+	if ((ep_sts_reg & EP_STS_IOC) || (ep_sts_reg & EP_STS_ISP)) {
-+		if (priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN) {
-+			if (ep_sts_reg & EP_STS_ISP)
-+				priv_ep->flags |= EP_QUIRK_END_TRANSFER;
-+			else
-+				priv_ep->flags &= ~EP_QUIRK_END_TRANSFER;
-+		}
-+
- 		cdns3_transfer_completed(priv_dev, priv_ep);
-+	}
-+
-+	/*
-+	 * WA2: this condition should only be meet when
-+	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_DET or
-+	 * priv_ep->flags & EP_QUIRK_EXTRA_BUF_EN.
-+	 * In other cases this interrupt will be disabled/
-+	 */
-+	if (ep_sts_reg & EP_STS_DESCMIS && priv_dev->dev_ver < DEV_VER_V2)
-+		cdns3_wa2_descmissing_packet(priv_ep);
- 
- 	return 0;
- }
-@@ -1344,12 +1636,16 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
- 	cdns3_set_register_bit(&priv_dev->regs->ep_ien,
- 			       BIT(cdns3_ep_addr_to_index(bEndpointAddress)));
- 
-+	if (priv_dev->dev_ver < DEV_VER_V2)
-+		cdns3_wa2_enable_detection(priv_dev, priv_ep, reg);
-+
- 	writel(reg, &priv_dev->regs->ep_sts_en);
- 
- 	cdns3_set_register_bit(&priv_dev->regs->ep_cfg, EP_CFG_ENABLE);
- 
- 	ep->desc = desc;
--	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL);
-+	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL |
-+			    EP_QUIRK_EXTRA_BUF_EN);
- 	priv_ep->flags |= EP_ENABLED | EP_UPDATE_EP_TRBADDR;
- 	priv_ep->wa1_set = 0;
- 	priv_ep->enqueue = 0;
-@@ -1374,6 +1670,7 @@ static int cdns3_gadget_ep_enable(struct usb_ep *ep,
- static int cdns3_gadget_ep_disable(struct usb_ep *ep)
- {
- 	struct cdns3_endpoint *priv_ep;
-+	struct cdns3_request *priv_req;
- 	struct cdns3_device *priv_dev;
- 	struct usb_request *request;
- 	unsigned long flags;
-@@ -1413,6 +1710,16 @@ static int cdns3_gadget_ep_disable(struct usb_ep *ep)
- 				      -ESHUTDOWN);
- 	}
- 
-+	while (!list_empty(&priv_ep->wa2_descmiss_req_list)) {
-+		priv_req = cdns3_next_priv_request(&priv_ep->wa2_descmiss_req_list);
-+
-+		kfree(priv_req->request.buf);
-+		cdns3_gadget_ep_free_request(&priv_ep->endpoint,
-+					     &priv_req->request);
-+		list_del_init(&priv_req->list);
-+		--priv_ep->wa2_counter;
-+	}
-+
- 	while (!list_empty(&priv_ep->deferred_req_list)) {
- 		request = cdns3_next_request(&priv_ep->deferred_req_list);
- 
-@@ -1453,6 +1760,10 @@ static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
- 	priv_req = to_cdns3_request(request);
- 	trace_cdns3_ep_queue(priv_req);
- 
-+	if (priv_dev->dev_ver < DEV_VER_V2)
-+		deferred = cdns3_wa2_gadget_ep_queue(priv_dev, priv_ep,
-+						     priv_req);
-+
- 	ret = cdns3_prepare_aligned_request_buf(priv_req);
- 	if (ret < 0)
- 		return ret;
-@@ -1894,6 +2205,7 @@ static int cdns3_init_eps(struct cdns3_device *priv_dev)
- 
- 		INIT_LIST_HEAD(&priv_ep->pending_req_list);
- 		INIT_LIST_HEAD(&priv_ep->deferred_req_list);
-+		INIT_LIST_HEAD(&priv_ep->wa2_descmiss_req_list);
- 	}
- 
- 	return 0;
-diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
-index 8a665bc07299..c3679c472483 100644
---- a/drivers/usb/cdns3/gadget.h
-+++ b/drivers/usb/cdns3/gadget.h
-@@ -1040,6 +1040,7 @@ struct cdns3_trb {
- #define CDNS3_EP_ISO_SS_BURST		3
- #define CDNS3_MAX_NUM_DESCMISS_BUF	32
- #define CDNS3_DESCMIS_BUF_SIZE		2048	/* Bytes */
-+#define CDNS3_WA2_NUM_BUFFERS		128
- /*-------------------------------------------------------------------------*/
- /* Used structs */
- 
-@@ -1050,6 +1051,7 @@ struct cdns3_device;
-  * @endpoint: usb endpoint
-  * @pending_req_list: list of requests queuing on transfer ring.
-  * @deferred_req_list: list of requests waiting for queuing on transfer ring.
-+ * @wa2_descmiss_req_list: list of requests internally allocated by driver.
-  * @trb_pool: transfer ring - array of transaction buffers
-  * @trb_pool_dma: dma address of transfer ring
-  * @cdns3_dev: device associated with this endpoint
-@@ -1074,6 +1076,8 @@ struct cdns3_endpoint {
- 	struct usb_ep		endpoint;
- 	struct list_head	pending_req_list;
- 	struct list_head	deferred_req_list;
-+	struct list_head	wa2_descmiss_req_list;
-+	int			wa2_counter;
- 
- 	struct cdns3_trb	*trb_pool;
- 	dma_addr_t		trb_pool_dma;
-@@ -1089,6 +1093,9 @@ struct cdns3_endpoint {
- #define EP_PENDING_REQUEST	BIT(5)
- #define EP_RING_FULL		BIT(6)
- #define EP_CLAIMED		BIT(7)
-+#define EP_QUIRK_EXTRA_BUF_DET	BIT(8)
-+#define EP_QUIRK_EXTRA_BUF_EN	BIT(9)
-+#define EP_QUIRK_END_TRANSFER	BIT(10)
- 
- 	u32			flags;
- 
-@@ -1141,7 +1148,7 @@ struct cdns3_aligned_buf {
-  * @aligned_buf: object holds information about aligned buffer associated whit
-  *               this endpoint
-  * @flags: flag specifying special usage of request
-- * @list: used by internally allocated request to add to descmiss_req_list.
-+ * @list: used by internally allocated request to add to wa2_descmiss_req_list.
+  * dwc3_ep_event_string - returns event name
+  * @event: then event code
+diff --git a/drivers/usb/dwc3/trace.h b/drivers/usb/dwc3/trace.h
+index 5d479c508cb5..32196b9bc45b 100644
+--- a/drivers/usb/dwc3/trace.h
++++ b/drivers/usb/dwc3/trace.h
+@@ -86,7 +86,7 @@ DECLARE_EVENT_CLASS(dwc3_log_ctrl,
+ 		__entry->wIndex = le16_to_cpu(ctrl->wIndex);
+ 		__entry->wLength = le16_to_cpu(ctrl->wLength);
+ 	),
+-	TP_printk("%s", dwc3_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
++	TP_printk("%s", usb_decode_ctrl(__get_str(str), DWC3_MSG_MAX,
+ 					__entry->bRequestType,
+ 					__entry->bRequest, __entry->wValue,
+ 					__entry->wIndex, __entry->wLength)
+diff --git a/include/linux/usb/ch9.h b/include/linux/usb/ch9.h
+index 523aa088f6ab..db21b11bec6e 100644
+--- a/include/linux/usb/ch9.h
++++ b/include/linux/usb/ch9.h
+@@ -62,4 +62,29 @@ extern enum usb_device_speed usb_get_maximum_speed(struct device *dev);
   */
- struct cdns3_request {
- 	struct usb_request		request;
+ extern const char *usb_state_string(enum usb_device_state state);
+ 
++/**
++ * usb_decode_ctrl - Returns human readable representation of control request.
++ * @str: buffer to return a human-readable representation of control request.
++ *       This buffer should have about 200 bytes.
++ * @size: size of str buffer.
++ * @bRequestType: matches the USB bmRequestType field
++ * @bRequest: matches the USB bRequest field
++ * @wValue: matches the USB wValue field (CPU byte order)
++ * @wIndex: matches the USB wIndex field (CPU byte order)
++ * @wLength: matches the USB wLength field (CPU byte order)
++ *
++ * Function returns decoded, formatted and human-readable description of
++ * control request packet.
++ *
++ * The usage scenario for this is for tracepoints, so function as a return
++ * use the same value as in parameters. This approach allows to use this
++ * function in TP_printk
++ *
++ * Important: wValue, wIndex, wLength parameters before invoking this function
++ * should be processed by le16_to_cpu macro.
++ */
++const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
++			    __u8 bRequest, __u16 wValue, __u16 wIndex,
++			    __u16 wLength);
++
+ #endif /* __LINUX_USB_CH9_H */
 -- 
 2.17.1
 
