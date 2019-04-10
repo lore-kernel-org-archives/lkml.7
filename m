@@ -2,210 +2,213 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BF7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F59FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C3C2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yb84ElHi"
+	by mail.kernel.org (Postfix) with ESMTP id CBFFF2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfDJIiq (ORCPT
+        id S1728743AbfDJIjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:38:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33106 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbfDJIip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:38:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q1so1901903wrp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BWd78AzbhQzEPASngzTuqEKi4n3YA2PuHkAQ/kL082I=;
-        b=Yb84ElHiAi3ngZek3tuF3xo9EzqvPtaKktmLhWE+2RswltKfl0bJVRpRAjD3SHs8JN
-         s/vaYMkFYP8CS7yMcR8TRLOxFRWD80DZbLSYtSPaWrCdkfZTGXWeuXG9I7vXJGxlWo/G
-         iqymBJDbHlejFcEDTMOcJpYgh+dodSYGEk/R9iZhpX/P+YshbxcogGiIk/ARodvCPqUc
-         zNG8Ser0pYit3dJLYpI/9tm5HYx5LZBDksBE7V5hne3HWRXcin97r1NUsORxYvp7uvL6
-         MtDvdEr4fY5yAAmbovi5m9XN8JMMY+beFmkKttBpT0fX8SU5n+mQQwo0d7z/UqJPOJZ/
-         Fkbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BWd78AzbhQzEPASngzTuqEKi4n3YA2PuHkAQ/kL082I=;
-        b=lh06ftDrPgGEw8UePTvkD3YeqCh0fG9gzMLjrJFh6uFoQqjfwmG8qX/fKar4Zldsz+
-         fDoPV+1wkdoL2DXT7+IqGhWjrD38LHtuLSp2Ob7GDWCuX0itX9HDupxgYvzzH+SUZdtd
-         m2vuxe8mwj1wkiZroTmIU7QLtuIpy1YkZgmdq1yfiG6dmql/PvrKQsF7dwfKaUiTiW1w
-         eM6UM3qJpP4dphzbZJwfMBEpsIqzRbuiiU8hwWQIFP52C8KddStNUu0BeT03ACEl4uMC
-         lLVFXyLy0o0xJyDizK5z9yfPPpGEd3gnMG0rGsh/u09z0zdP5IoQr8OPp2xdSkGGiw+5
-         VGtw==
-X-Gm-Message-State: APjAAAV0V1fWjcLd9l2BI5FYiyA3UPfLBASICLJ6MxtSs6j8hqiSy2Iy
-        vPGI+yhlvEjlg8pEzl90az9i5A==
-X-Google-Smtp-Source: APXvYqzQWE9XG3hV0/IUzBfYlLZQRDQsJZPCCVb3mRDjYCN1SW0ugVGqSZ26/bOs8Dxy3XIoMO6R4Q==
-X-Received: by 2002:a5d:6706:: with SMTP id o6mr27983111wru.36.1554885523267;
-        Wed, 10 Apr 2019 01:38:43 -0700 (PDT)
-Received: from wifi-122_dhcprange-158.wifi.unimo.it ([155.185.122.158])
-        by smtp.gmail.com with ESMTPSA id s10sm1859936wmh.0.2019.04.10.01.38.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 01:38:42 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, Paolo Valente <paolo.valente@linaro.org>,
-        Dmitrii Tcvetkov <demfloro@demfloro.ru>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH BUGFIX V2] block, bfq: fix use after free in bfq_bfqq_expire
-Date:   Wed, 10 Apr 2019 10:38:33 +0200
-Message-Id: <20190410083833.14462-1-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Apr 2019 04:39:05 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50046 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbfDJIjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:39:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F615A78;
+        Wed, 10 Apr 2019 01:39:04 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 715303F718;
+        Wed, 10 Apr 2019 01:39:02 -0700 (PDT)
+Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
+ backed by THP
+To:     yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org
+Cc:     kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        zhengxiang9@huawei.com, andrew.murray@arm.com,
+        wanghaibin.wang@huawei.com
+References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
+ <2ea55b9c-09da-c3d0-3616-aa6be85b5a46@huawei.com>
+ <a9c084fb-0c84-e632-a192-b361773a0bc8@arm.com>
+ <44ffad26-a407-4603-0bb6-145f7290adbe@huawei.com>
+ <730c25b4-dbc5-8d8b-514c-4ed8641701ce@arm.com>
+ <1b398e29-e2d5-2a58-b4ca-c72979a170d8@huawei.com>
+ <520e277c-f096-a84b-8405-636b19e4cc46@arm.com>
+ <8bf8e863-93f5-ab44-c0aa-1ad23f91a016@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <2df077f2-cb2c-0cb3-5c37-520956832f87@arm.com>
+Date:   Wed, 10 Apr 2019 09:39:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <8bf8e863-93f5-ab44-c0aa-1ad23f91a016@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function bfq_bfqq_expire() invokes the function
-__bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
-If this happens, then no other instruction of bfq_bfqq_expire() must
-be executed, or a use-after-free will occur.
 
-Basing on the assumption that __bfq_bfqq_expire() invokes
-bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
-assumed to be freed if its refcounter is equal to one right before
-invoking __bfq_bfqq_expire().
 
-But, since commit 9dee8b3b057e ("block, bfq: fix queue removal from
-weights tree") this assumption is false. __bfq_bfqq_expire() may also
-invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e
-("block, bfq: fix queue removal from weights tree"), also
-the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
-may invoke bfq_put_queue() twice, and this is the actual case where
-the in-service queue may happen to be freed.
+On 10/04/2019 03:20, Zenghui Yu wrote:
+> 
+> On 2019/4/9 22:59, Suzuki K Poulose wrote:
+>> Hi Zenghui
+>>
+>> On 04/09/2019 09:05 AM, Zenghui Yu wrote:
+>>>
+>>>
+>>> On 2019/4/9 2:40, Suzuki K Poulose wrote:
+>>>> Hi Zenhui,
+>>>>
+>>>> On 04/08/2019 04:11 PM, Zenghui Yu wrote:
+>>>>> Hi Suzuki,
+>>>>>
+>>>>> Thanks for the reply.
+>>>>>
+>>>>
+>>>> ...
+>>>>
+>>>>>>> Hi Suzuki,
+>>>>>>>
+>>>>>>> Why not making use of fault_supports_stage2_huge_mapping()?  Let
+>>>>>>> it do
+>>>>>>> some checks for us.
+>>>>>>>
+>>>>>>> fault_supports_stage2_huge_mapping() was intended to do a *two-step*
+>>>>>>> check to tell us that can we create stage2 huge block mappings,
+>>>>>>> and this
+>>>>>>> check is both for hugetlbfs and THP.  With commit
+>>>>>>> a80868f398554842b14,
+>>>>>>> we pass PAGE_SIZE as "map_size" for normal size pages (which
+>>>>>>> turned out
+>>>>>>> to be almost meaningless), and unfortunately the THP check no longer
+>>>>>>> works.
+>>>>>>
+>>>>>> Thats correct.
+>>>>>>
+>>>>>>>
+>>>>>>> So we want to rework *THP* check process.  Your patch fixes the first
+>>>>>>> checking-step, but the second is still missed, am I wrong?
+>>>>>>
+>>>>>> It fixes the step explicitly for the THP by making sure that the
+>>>>>> GPA and
+>>>>>> the HVA are aligned to the map size.
+>>>>>
+>>>>> Yes, I understand how your patch had fixed the issue.  But what I'm
+>>>>> really concerned about here is the *second* checking-step in
+>>>>> fault_supports_stage2_huge_mapping().
+>>>>>
+>>>>> We have to check if we are mapping a non-block aligned or non-block
+>>>>> sized memslot, if so, we can not create block mappings for the
+>>>>> beginning
+>>>>> and end of this memslot.  This is what the second part of
+>>>>> fault_supports_stage2_huge_mapping() had done.
+>>>>>
+>>>>> I haven't seen this checking-step in your patch, did I miss something?
+>>>>>
+>>>>
+>>>> I see.
+>>>>
+>>>>>> I don't think this calls for a VM_BUG_ON(). It is simply a case where
+>>>>>> the GPA is not aligned to HVA, but for normal VMA that could be
+>>>>>> made THP.
+>>>>>>
+>>>>>> We had this VM_BUG_ON(), which would have never hit because we would
+>>>>>> have set force_pte if they were not aligned.
+>>>>>
+>>>>> Yes, I agree.
+>>>>>
+>>>>>>>> +        /* Skip memslots with unaligned IPA and user address */
+>>>>>>>> +        if ((gfn & mask) != (pfn & mask))
+>>>>>>>> +            return false;
+>>>>>>>>            if (pfn & mask) {
+>>>>>>>>                *ipap &= PMD_MASK;
+>>>>>>>>                kvm_release_pfn_clean(pfn);
+>>>>>>>>
+>>>>>>>
+>>>>>>> ---8>---
+>>>>>>>
+>>>>>>> Rework fault_supports_stage2_huge_mapping(), let it check THP again.
+>>>>>>>
+>>>>>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>>>>>> ---
+>>>>>>>    virt/kvm/arm/mmu.c | 11 ++++++++++-
+>>>>>>>    1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>>>>>> index 27c9583..5e1b258 100644
+>>>>>>> --- a/virt/kvm/arm/mmu.c
+>>>>>>> +++ b/virt/kvm/arm/mmu.c
+>>>>>>> @@ -1632,6 +1632,15 @@ static bool
+>>>>>>> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
+>>>>>>>        uaddr_end = uaddr_start + size;
+>>>>>>>
+>>>>>>>        /*
+>>>>>>> +     * If the memslot is _not_ backed by hugetlbfs, then check if it
+>>>>>>> +     * can be backed by transparent hugepages.
+>>>>>>> +     *
+>>>>>>> +     * Currently only PMD_SIZE THPs are supported, revisit it later.
+>>>>>>> +     */
+>>>>>>> +    if (map_size == PAGE_SIZE)
+>>>>>>> +        map_size = PMD_SIZE;
+>>>>>>> +
+>>>>>>
+>>>>>> This looks hackish. What is we support PUD_SIZE huge page in the
+>>>>>> future
+>>>>>> ?
+>>>>>
+>>>>> Yes, this might make the code a little difficult to understand. But by
+>>>>> doing so, we follow the same logic before commit a80868f398554842b14,
+>>>>> that said, we do the two-step checking for normal size pages in
+>>>>> fault_supports_stage2_huge_mapping(), to decide if we can create THP
+>>>>> mappings for these pages.
+>>>>>
+>>>>> As for PUD_SIZE THPs, to be honest, I have no idea now :(
+>>>>
+>>>> How about the following diff ?
+>>>>
+>>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>>> index 97b5417..98e5cec 100644
+>>>> --- a/virt/kvm/arm/mmu.c
+>>>> +++ b/virt/kvm/arm/mmu.c
+>>>> @@ -1791,7 +1791,8 @@ static int user_mem_abort(struct kvm_vcpu
+>>>> *vcpu, phys_addr_t fault_ipa,
+>>>>             * currently supported. This code will need to be
+>>>>             * updated to support other THP sizes.
+>>>>             */
+>>>> -        if (transparent_hugepage_adjust(&pfn, &fault_ipa))
+>>>> +        if (fault_supports_stage2_huge_mappings(memslot, hva,
+>>>> PMD_SIZE) &&
+>>>> +            transparent_hugepage_adjust(&pfn, &fault_ipa))
+>>>>                vma_pagesize = PMD_SIZE;
+>>>>        }
+>>>
+>>> I think this is good enough for the issue.
+>>>
+>>> (One minor concern: With this change, it seems that we no longer need
+>>> "force_pte" and can just use "logging_active" instead. But this is not
+>>> much related to what we're fixing.)
+>>
+>> I would still leave the force_pte there to avoid checking for a THP case
+>> in a situation where we forced to PTE level mapping on a hugepage backed
+>> VMA. It would serve to avoid another check.
+> 
+> Hi Suzuki,
+> 
+> Yes, I agree, thanks.
 
-To address this issue, this commit moves the check on the refcounter
-of the queue right around the last bfq_put_queue() that may be invoked
-on the queue.
+Cool, I have a patch to fix this properly and two other patches to clean up
+and unify the way we handle the THP backed hugepages. Will send them out after
+a bit of testing, later today.
 
-Fixes: 9dee8b3b057e ("block, bfq: fix queue removal from weights tree")
-Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
----
- block/bfq-iosched.c | 15 +++++++--------
- block/bfq-iosched.h |  2 +-
- block/bfq-wf2q.c    | 17 +++++++++++++++--
- 3 files changed, 23 insertions(+), 11 deletions(-)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index fac188dd78fa..dfb8cb0af13a 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2822,7 +2822,7 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
- 	bfq_remove_request(q, rq);
- }
- 
--static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-+static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
- 	/*
- 	 * If this bfqq is shared between multiple processes, check
-@@ -2855,9 +2855,11 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- 	/*
- 	 * All in-service entities must have been properly deactivated
- 	 * or requeued before executing the next function, which
--	 * resets all in-service entites as no more in service.
-+	 * resets all in-service entities as no more in service. This
-+	 * may cause bfqq to be freed. If this happens, the next
-+	 * function returns true.
- 	 */
--	__bfq_bfqd_reset_in_service(bfqd);
-+	return __bfq_bfqd_reset_in_service(bfqd);
- }
- 
- /**
-@@ -3262,7 +3264,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	bool slow;
- 	unsigned long delta = 0;
- 	struct bfq_entity *entity = &bfqq->entity;
--	int ref;
- 
- 	/*
- 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
-@@ -3347,10 +3348,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
- 	 * reason.
- 	 */
- 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
--	ref = bfqq->ref;
--	__bfq_bfqq_expire(bfqd, bfqq);
--
--	if (ref == 1) /* bfqq is gone, no more actions on it */
-+	if (__bfq_bfqq_expire(bfqd, bfqq))
-+		/* bfqq is gone, no more actions on it */
- 		return;
- 
- 	bfqq->injected_service = 0;
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 062e1c4787f4..86394e503ca9 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -995,7 +995,7 @@ bool __bfq_deactivate_entity(struct bfq_entity *entity,
- 			     bool ins_into_idle_tree);
- bool next_queue_may_preempt(struct bfq_data *bfqd);
- struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 			 bool ins_into_idle_tree, bool expiration);
- void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index a11bef75483d..ae4d000ac0af 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -1605,7 +1605,8 @@ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd)
- 	return bfqq;
- }
- 
--void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
-+/* returns true if the in-service queue gets freed */
-+bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- {
- 	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
- 	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
-@@ -1629,8 +1630,20 @@ void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
- 	 * service tree either, then release the service reference to
- 	 * the queue it represents (taken with bfq_get_entity).
- 	 */
--	if (!in_serv_entity->on_st)
-+	if (!in_serv_entity->on_st) {
-+		/*
-+		 * If no process is referencing in_serv_bfqq any
-+		 * longer, then the service reference may be the only
-+		 * reference to the queue. If this is the case, then
-+		 * bfqq gets freed here.
-+		 */
-+		int ref = in_serv_bfqq->ref;
- 		bfq_put_queue(in_serv_bfqq);
-+		if (ref == 1)
-+			return true;
-+	}
-+
-+	return false;
- }
- 
- void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
--- 
-2.20.1
-
+Cheers
+Suzuki
