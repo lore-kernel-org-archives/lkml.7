@@ -2,196 +2,219 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40010C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E732C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0382082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D232C2082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XILQgtaD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m96R2/og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfDJWHX (ORCPT
+        id S1726636AbfDJWIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:07:23 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:39712 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDJWHW (ORCPT
+        Wed, 10 Apr 2019 18:08:09 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:41462 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDJWIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:07:22 -0400
-Received: by mail-it1-f196.google.com with SMTP id 139so6158880ita.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:07:22 -0700 (PDT)
+        Wed, 10 Apr 2019 18:08:09 -0400
+Received: by mail-vk1-f194.google.com with SMTP id d15so930082vka.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t8FysnlMUpmL4hHlzvOFrNctpm/LUPXwoq+FgvOXRqo=;
-        b=XILQgtaDVNLn10Z3Aelam+w9wWZCH3gXAiw2rxm7gk1eercwQJEqDGAvOVoOCFzn4s
-         X8+Z5oL9rqpCvyUIB3/jmiHBYD/rXNp5LDKxg+O8DAmWZs4HsC5VnqHpVXnWbfG3y12L
-         W4qlc/IIj2dbpvkZcTEPIpjJkt0Y4k7exVKRo=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dZUME/eqLvdUZEtRyIFBAWIEyUsBbr1es25my7b+d2c=;
+        b=m96R2/ogyjqbkhuFyibhS0kP4qM9WoDBUC4AuMcnCCuIlWmdRCvLyvEbKoEaFIPd8X
+         ZGgBtFuVuKPt+hbhJ4xaXf2vQ0vt9yg9Yh5hTvD6KJindqFw4Z6vAEhtULTp7yrt8ZYv
+         16WS9qjGABKc68v7qVhcnIL6j0fWXHAhEPpig=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t8FysnlMUpmL4hHlzvOFrNctpm/LUPXwoq+FgvOXRqo=;
-        b=Y9vtX6EVEYmPiu6EYz0VEmsx/VlKoKVLgI7OoK++yAMEZrTwFnRAX5rv1DqIygB6mA
-         Hjc4+kRqlPxdzlqS9dF9E0NUYThTX5zgXddv77VkinPAbbPBzOdXERHHkO7PETvNiELf
-         gqy3b8pN0AlG/T0R22LcRODrkTh6oezJMfZOkBLAVAs7BxuUqpIR8eNihEvvJMj2dYs2
-         0NsWesmhlbZm0Di4Wx4cRSKwhLFLl3nyTk4kp0Y36ZdZsF2MqYABb3zNCj+TRcytGSnz
-         fRCwGNYr0ZpoIlgyS9VTZpibWRg0zIIhJ0uU3opnNCJUvnfxAfUYSbeXFOjq2gaR4GQX
-         ySdg==
-X-Gm-Message-State: APjAAAVdNKxyHZBNWz2tVBkKiqFLE6nGUEZs+fqb+i54bW/SMXO8fNzs
-        W2pLrTatylBOnPeE+kNhNC81uQ==
-X-Google-Smtp-Source: APXvYqwuyYHHhFM5DUXnwyJ6ge/IdIgpuQjw1VamxVpMVUSvGdRM9KcUjIySR8OjC34/Dv1Da1Sjzg==
-X-Received: by 2002:a24:10c2:: with SMTP id 185mr5405199ity.52.1554934041689;
-        Wed, 10 Apr 2019 15:07:21 -0700 (PDT)
-Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
-        by smtp.gmail.com with ESMTPSA id y17sm3040426ita.2.2019.04.10.15.07.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Apr 2019 15:07:21 -0700 (PDT)
-From:   Nick Crews <ncrews@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com,
-        sjg@chromium.org, alevkoy@chromium.org, keithshort@chromium.org,
-        Nick Crews <ncrews@chromium.org>
-Subject: [PATCH v3] platform/chrome: wilco_ec: Add h1_gpio status to debugfs
-Date:   Wed, 10 Apr 2019 16:07:04 -0600
-Message-Id: <20190410220703.51627-1-ncrews@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dZUME/eqLvdUZEtRyIFBAWIEyUsBbr1es25my7b+d2c=;
+        b=q+IZFOxrtjJThmzevqL8+DHRyuxirwXtBxgpCPnWW2utFKwCmC25aBorwfF9JrLvp2
+         KWBTXXwKhFLkzOs9DV2/5GsTJuqBJs2smQxrltXJ8bCGlklzqUwieQ3kuP6okt8TM/nf
+         3eV9SOYVw+Yh7KjmtnU332qqvt6Nqq8XXt/H8hPBxQkm1y7zjkxSZvkOdTbsoZqT6zBt
+         xK8CrBL4FMCmh506eXDBFfRsI4C9wU6rRF7NZo8toCW7o6WvZZcVyFRwZzkv0/xoKbVh
+         gKXs5ZPDOJqtYTTpBBi2E0Xoc8SLvcJMK1EEla/BYbP8eQRdjIzHMb+UFKdtjZK20kki
+         uBQQ==
+X-Gm-Message-State: APjAAAUPYqhLiPFY4Nk7x++8mBlwkQckQ2Sbei8OW4GfbqcX3IMaexEd
+        D6H53kD4dIIp9OnXuPt72ILWzMse15Y=
+X-Google-Smtp-Source: APXvYqw+KQwgl+yEcUqto6ISQiihuX9fhFeZN4QM/C+iJ+lEpFL9Pyd4a49tze+eaX4MVf/tQ7v7zA==
+X-Received: by 2002:a1f:bcf:: with SMTP id 198mr15138078vkl.35.1554934086217;
+        Wed, 10 Apr 2019 15:08:06 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id r3sm2215227vkr.18.2019.04.10.15.08.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 15:08:04 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id a190so2326782vsd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:08:04 -0700 (PDT)
+X-Received: by 2002:a67:76c7:: with SMTP id r190mr26791774vsc.196.1554934084084;
+ Wed, 10 Apr 2019 15:08:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190410212627.29514-1-okaya@kernel.org> <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
+ <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org> <1603884360.3426.1554933853589.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1603884360.3426.1554933853589.JavaMail.zimbra@efficios.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 15:07:53 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+UN5ozXibFrv0OT9CftSOssCorJOu=w0Y349GV-RTZnA@mail.gmail.com>
+Message-ID: <CAGXu5j+UN5ozXibFrv0OT9CftSOssCorJOu=w0Y349GV-RTZnA@mail.gmail.com>
+Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Sinan Kaya <Okaya@kernel.org>, Kees Cook <keescook@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>, gor <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
-tests, we need to ensure that the H1 chip is properly setting
-some GPIO lines. The h1_gpio attribute exposes the state
-of the lines:
-- ENTRY_TO_FACT_MODE in BIT(0)
-- SPI_CHROME_SEL in BIT(1)
+On Wed, Apr 10, 2019 at 3:04 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> ----- On Apr 10, 2019, at 5:53 PM, Sinan Kaya Okaya@kernel.org wrote:
+>
+> > On 4/10/2019 5:45 PM, Kees Cook wrote:
+> >> On Wed, Apr 10, 2019 at 2:26 PM Sinan Kaya <okaya@kernel.org> wrote:
+> >>>
+> >>> We can't seem to have a kernel with CONFIG_EXPERT set but
+> >>> CONFIG_DEBUG_KERNEL unset these days.
+> >>>
+> >>> While some of the features under the CONFIG_EXPERT require
+> >>> CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
+> >>>
+> >>> The meaning of CONFIG_EXPERT and CONFIG_DEBUG_KERNEL has been
+> >>> mixed here.
+> >>
+> >> I don't agree: the point of EXPERT is to show _everything_, which
+> >> means DEBUG_KERNEL should be selected to show those options as well. I
+> >> think this is fine as-is. What is the problem you want to solve?
+> >>
+> >> I think of it as low (nothing selected) medium (DEBUG_KERNEL) and high
+> >> (EXPERT and DEBUG_KERNEL). So EXPERT enables DEBUG_KERNEL too.
+> >>
+> >
+> > Sure, let's see if there is a better option.
+> >
+> > I don't want any of the debug features in my kernel but still
+> > need all the expert features. My kernel is considered a production
+> > kernel. I don't really want to ship all the good debug enables.
+> >
+> > On the other hand, I need the features under CONFIG_EXPERT to have
+> > a functional system.
+> >
+> > Let's take "multiple users" as an example.
+> >
+> > What's the point of having a kernel without multiple users? :)
+> >
+> > I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
+> > as none of the features except KALLSYMS depend on it. If there was
+> > a compile time dependency, I'd say move it to the things that need
+> > it as this patch suggests.
+> >
+> > P.S. I found a circular dependency now. I can respin the patch based
+> > on feedback.
+>
+> I think part of the issue here is that a few .c/.S files use CONFIG_DEBUG_KERNEL
+> as #ifdef directly, which I'm not sure was meant to be. For instance:
+>
+> arch/powerpc/kernel/sysfs.c:
+>
+> #ifdef CONFIG_DEBUG_KERNEL
+> SYSFS_SPRSETUP(hid0, SPRN_HID0);
+> SYSFS_SPRSETUP(hid1, SPRN_HID1);
+> SYSFS_SPRSETUP(hid4, SPRN_HID4);
+> SYSFS_SPRSETUP(hid5, SPRN_HID5);
+> SYSFS_SPRSETUP(ima0, SPRN_PA6T_IMA0);
+> SYSFS_SPRSETUP(ima1, SPRN_PA6T_IMA1);
+> SYSFS_SPRSETUP(ima2, SPRN_PA6T_IMA2);
+> SYSFS_SPRSETUP(ima3, SPRN_PA6T_IMA3);
+> SYSFS_SPRSETUP(ima4, SPRN_PA6T_IMA4);
+> SYSFS_SPRSETUP(ima5, SPRN_PA6T_IMA5);
+> SYSFS_SPRSETUP(ima6, SPRN_PA6T_IMA6);
+> SYSFS_SPRSETUP(ima7, SPRN_PA6T_IMA7);
+> SYSFS_SPRSETUP(ima8, SPRN_PA6T_IMA8);
+> SYSFS_SPRSETUP(ima9, SPRN_PA6T_IMA9);
+> SYSFS_SPRSETUP(imaat, SPRN_PA6T_IMAAT);
+> SYSFS_SPRSETUP(btcr, SPRN_PA6T_BTCR);
+> SYSFS_SPRSETUP(pccr, SPRN_PA6T_PCCR);
+> SYSFS_SPRSETUP(rpccr, SPRN_PA6T_RPCCR);
+> SYSFS_SPRSETUP(der, SPRN_PA6T_DER);
+> SYSFS_SPRSETUP(mer, SPRN_PA6T_MER);
+> SYSFS_SPRSETUP(ber, SPRN_PA6T_BER);
+> SYSFS_SPRSETUP(ier, SPRN_PA6T_IER);
+> SYSFS_SPRSETUP(sier, SPRN_PA6T_SIER);
+> SYSFS_SPRSETUP(siar, SPRN_PA6T_SIAR);
+> SYSFS_SPRSETUP(tsr0, SPRN_PA6T_TSR0);
+> SYSFS_SPRSETUP(tsr1, SPRN_PA6T_TSR1);
+> SYSFS_SPRSETUP(tsr2, SPRN_PA6T_TSR2);
+> SYSFS_SPRSETUP(tsr3, SPRN_PA6T_TSR3);
+> #endif /* CONFIG_DEBUG_KERNEL */
+>
+>
+> arch/mips/kernel/setup.c:
+>
+> #if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
+>                 /*
+>                  * This information is necessary when debugging the kernel
+>                  * But is a security vulnerability otherwise!
+>                  */
+>                 show_kernel_relocation(KERN_INFO);
+> #endif
 
-There are two reasons that I am exposing this in debugfs,
-and not as a GPIO:
-1. This is only useful for testing, so end users shouldn't ever
-care about this. In fact, if it passes the tests, then the value of
-h1_gpio will always be 2, so it would be really uninteresting for users.
-2. This GPIO is not connected to, controlled by, or really even related
-to the AP. The GPIO runs between the EC and the H1 security chip.
+This one is unfortunate for sure. :P
 
-Changes in v3:
-- Fix documentation to correspond with formatting change in v2.
-Changes in v2:
-- Zero out the unused fields in the request.
-- Format result as "%02x\n" instead of as a decimal.
+> net/netfilter/core.c:
+>
+> static void hooks_validate(const struct nf_hook_entries *hooks)
+> {
+> #ifdef CONFIG_DEBUG_KERNEL
+>         struct nf_hook_ops **orig_ops;
+>         int prio = INT_MIN;
+>         size_t i = 0;
+>
+>         orig_ops = nf_hook_entries_get_hook_ops(hooks);
+>
+>         for (i = 0; i < hooks->num_hook_entries; i++) {
+>                 if (orig_ops[i] == &dummy_ops)
+>                         continue;
+>
+>                 WARN_ON(orig_ops[i]->priority < prio);
+>
+>                 if (orig_ops[i]->priority > prio)
+>                         prio = orig_ops[i]->priority;
+>         }
+> #endif
+> }
 
-Signed-off-by: Nick Crews <ncrews@chromium.org>
----
- drivers/platform/chrome/wilco_ec/debugfs.c | 64 +++++++++++++++++++++-
- 1 file changed, 63 insertions(+), 1 deletion(-)
+This seems best to just always enable, neither caller appears to be fast-path.
 
-diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
-index 17c4c9068aaf..1b93243c8954 100644
---- a/drivers/platform/chrome/wilco_ec/debugfs.c
-+++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright 2019 Google LLC
-  *
-- * There is only one attribute used for debugging, called raw.
-+ * The raw attribute is very useful for EC debugging.
-  * You can write a hexadecimal sentence to raw, and that series of bytes
-  * will be sent to the EC. Then, you can read the bytes of response
-  * by reading from raw.
-@@ -30,6 +30,16 @@
-  * Note that the first 32 bytes of the received MBOX[] will be printed,
-  * even if some of the data is junk. It is up to you to know how many of
-  * the first bytes of data are the actual response.
-+ *
-+ * There is also another debugfs attribute, called h1_gpio.
-+ * As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
-+ * tests, we need to ensure that the H1 chip is properly setting
-+ * some GPIO lines. The h1_gpio attribute exposes the state
-+ * of the lines:
-+ * - ENTRY_TO_FACT_MODE in BIT(0)
-+ * - SPI_CHROME_SEL in BIT(1)
-+
-+ * Output will formatted with "%02x\n".
-  */
- 
- #include <linux/ctype.h>
-@@ -189,6 +199,56 @@ static const struct file_operations fops_raw = {
- 	.llseek = no_llseek,
- };
- 
-+#define CMD_KB_CHROME		0x88
-+#define SUB_CMD_H1_GPIO		0x0A
-+
-+struct h1_gpio_status_request {
-+	u8 cmd;		/* Always CMD_KB_CHROME */
-+	u8 reserved;
-+	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
-+} __packed;
-+
-+struct hi_gpio_status_response {
-+	u8 status;	/* 0 if allowed */
-+	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
-+} __packed;
-+
-+static ssize_t h1_gpio_read(struct file *file, char __user *user_buf,
-+			    size_t count, loff_t *ppos)
-+{
-+	struct h1_gpio_status_request rq;
-+	struct hi_gpio_status_response rs;
-+	struct wilco_ec_message msg;
-+	char buf[4];
-+	int ret;
-+
-+	memset(&rq, 0, sizeof(rq));
-+	rq.cmd = CMD_KB_CHROME;
-+	rq.sub_cmd = SUB_CMD_H1_GPIO;
-+
-+	memset(&msg, 0, sizeof(msg));
-+	msg.type = WILCO_EC_MSG_LEGACY;
-+	msg.request_data = &rq;
-+	msg.request_size = sizeof(rq);
-+	msg.response_data = &rs;
-+	msg.response_size = sizeof(rs);
-+	ret = wilco_ec_mailbox(debug_info->ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+	if (rs.status)
-+		return -EIO;
-+
-+	sprintf(buf, "%02x\n", rs.val);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, sizeof(buf));
-+}
-+
-+static const struct file_operations fops_h1_gpio = {
-+	.owner = THIS_MODULE,
-+	.read = h1_gpio_read,
-+	.llseek = no_llseek,
-+};
-+
- /**
-  * wilco_ec_debugfs_probe() - Create the debugfs node
-  * @pdev: The platform device, probably created in core.c
-@@ -210,6 +270,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
- 	if (!debug_info->dir)
- 		return 0;
- 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
-+	debugfs_create_file("h1_gpio", 0444, debug_info->dir, NULL,
-+			    &fops_h1_gpio);
- 
- 	return 0;
- }
+>
+> and also:
+> arch/xtensa/kernel/smp.c
+> arch/xtensa/kernel/entry.S
+>
+> I was under the impression that config DEBUG_KERNEL was only making a
+> "group" of menu entries visible without any direct impact on the code,
+> but it does not appear to be the case for a few exceptions. Perhaps this
+> is the actual issue ? (and lack of documentation of this Kconfig entry)
+
+Yeah, that's certainly not how it was intended. But under EXPERT, I
+think there is still an argument to made that it's the right thing to
+do.
+
 -- 
-2.20.1
-
+Kees Cook
