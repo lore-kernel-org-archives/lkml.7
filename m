@@ -2,172 +2,109 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504E6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943E7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3452082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0C02075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 03:43:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554867818;
+	bh=pwYW5LDpYufYVBWlHVyuyKFi32Ot9rugHxniUv/K4bE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TwCcx6Tmo3irFjJLjkZIK2jL4YTourP4k1eKsjxVNK9qhplOb/2UWEoeUQTTg1vUh
+	 osHwMdHvrbLeBVXiv/qP5Hf16Vix07rz275aOPSjwcRzLcEvzoRaAyNrN2y6BR1ap8
+	 s1orZHWaJULUh6o7lat0duZTZRGkK60b4VAksbcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfDJDkG (ORCPT
+        id S1727178AbfDJDnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 23:40:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59471 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfDJDkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 23:40:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 20:40:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
-   d="scan'208";a="162925140"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2019 20:39:58 -0700
-Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
- <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
- <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
- <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
- <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
-Date:   Wed, 10 Apr 2019 11:39:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+        Tue, 9 Apr 2019 23:43:37 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32970 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfDJDng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 23:43:36 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f23so740328ljc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 20:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W2TY6+WDFY0M+O7zE/xS5KsETwIiGHgXd+XLHr+An+E=;
+        b=DLU/vV5jjcXtx8wcFNtEF351Eqm+MTzENyAlOX8192y7r1PtpqynGUInvU1h4FklWQ
+         +TlavDjtW31ZEW5ekepXPUI3FNy5e5vdnCI+QabNoFC07tK5Adcqy6UVRiEa95oQLv7K
+         kdihWXxYUqabZkH+dlthFq/OAeynYwN6suYNQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W2TY6+WDFY0M+O7zE/xS5KsETwIiGHgXd+XLHr+An+E=;
+        b=NsO4w81Ck8cWC4iBZ5Gr6tHT9DmGiX0PR6n60N5oQgAkC8eCCsoCfYGal2IQEiBko5
+         VrMifMiintw2MFsxjITdnhUy3YhW2ExqW61DbEmYQWxo8mxPjqEVl5jsPEk8MttNKr0R
+         5kXxdya9tX6OxgnWAX9k1iySrAA5yLOer9xd0Ksn3+r7YfzX6GbAQDDBnYnibxKX3hXP
+         wiE441nevp9NWLbCc3HT0fn204gkV+WIzO9QtixMoS1ubUUTTsctfW0OboHPaYq9+eab
+         rovc71eOjuV4/1qwmHEqaBw8VGX9ees9RfYHHEGvEDQ33ok7+2x33XtWEsx/UPG2Pn1F
+         n0gw==
+X-Gm-Message-State: APjAAAXBDBRmK/lNNM15quvsSthBSUbXGygYCOEx6Jvqu6gusv6OSXos
+        hiD8gOL+TECA31RDw3LEsGk8R1B5v+k=
+X-Google-Smtp-Source: APXvYqxUTkvW+HkEzAqawx/fq0smYM3dfWjLOfurB1hyJ+BUbacOvTQW4k8EM127oW1ln8fF1ZiPEA==
+X-Received: by 2002:a2e:9812:: with SMTP id a18mr18600633ljj.146.1554867813275;
+        Tue, 09 Apr 2019 20:43:33 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id n2sm6793258lfe.71.2019.04.09.20.43.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 20:43:32 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id f23so740279ljc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 20:43:31 -0700 (PDT)
+X-Received: by 2002:a2e:9597:: with SMTP id w23mr15716867ljh.111.1554867811666;
+ Tue, 09 Apr 2019 20:43:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190409184917.65062-1-briannorris@chromium.org>
+ <CAHk-=wg6_i9WcqiGu4kg97yAg1du26RpXdxd=uEjo4yXjotdiQ@mail.gmail.com> <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com>
+In-Reply-To: <CA+ASDXMptGi2H+E77xRJQEryWgEeqWYb8Xn=XxkK8Tio8RBkMw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 9 Apr 2019 17:43:15 -1000
+X-Gmail-Original-Message-ID: <CAHk-=whL3UEnKTpmr0bqL_6cW8cOn8mSCFAjAtpCfeMVq7Serw@mail.gmail.com>
+Message-ID: <CAHk-=whL3UEnKTpmr0bqL_6cW8cOn8mSCFAjAtpCfeMVq7Serw@mail.gmail.com>
+Subject: Re: [PULL -- 5.1 REGRESSION] Bluetooth: btusb: request wake pin with NOAUTOEN
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/10 10:36, Li, Aubrey wrote:
-> On 2019/4/10 10:25, Andy Lutomirski wrote:
->> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>
->>> On 2019/4/10 9:58, Andy Lutomirski wrote:
->>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
->>>>>
->>>>> The architecture specific information of the running processes could
->>>>> be useful to the userland. Add support to examine process architecture
->>>>> specific information externally.
->>>>>
->>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>> Cc: Andi Kleen <ak@linux.intel.com>
->>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
->>>>> Cc: Linux API <linux-api@vger.kernel.org>
->>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
->>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>> ---
->>>>>  fs/proc/array.c         | 5 +++++
->>>>>  include/linux/proc_fs.h | 2 ++
->>>>>  2 files changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
->>>>> index 2edbb657f859..331592a61718 100644
->>>>> --- a/fs/proc/array.c
->>>>> +++ b/fs/proc/array.c
->>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>>>>  }
->>>>>
->>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
->>>>> +{
->>>>> +}
->>>>
->>>> This pointlessly bloats other architectures.  Do this instead in an
->>>> appropriate header:
->>>>
->>>> #ifndef arch_proc_pid_status
->>>> static inline void arch_proc_pid_status(...)
->>>> {
->>>> }
->>>> #endif
->>>>
->>>
->>> I saw a bunch of similar weak functions, is it not acceptable?
->>>
->>> fs/proc$ grep weak *.c
->>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
->>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
->>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
->>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
->>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
->>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
->>> vmcore.c:ssize_t __weak
->>
->> I think they're acceptable, but I don't personally like them.
->>
-> 
-> okay, let me try to see if I can refine it in an appropriate way.
+On Tue, Apr 9, 2019 at 5:26 PM Brian Norris <briannorris@chromium.org> wrote:
+>
+> So, I think the problem is still potentially present no matter when we
+> request the IRQ. The "uninitialized" state of the hardware (or,
+> firmware) just exposes the issue extremely clearly.
 
-Hi Andy,
+Well, I think that as long as you don't request the irq, and it's not
+shared with anything else, the bogus state of the irq line simply
+doesn't matter. So the NOAUTOEN shouldn't matter if the irq is
+requested properly late.
 
-Is this what you want? 
+Either it's edge-triggered and you'll get one possibly spurious
+interrupt for an old issue, or it's level-triggered and setting up the
+hw should bring the irq line inactive and you'll be ok.
 
-Thanks,
--Aubrey
+But I've applied your patch for now simply because it seems to be a
+smaller change.
 
-====================================================================
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 2bb3a648fc12..82d77d3aefff 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -990,5 +990,8 @@ enum l1tf_mitigations {
- };
- 
- extern enum l1tf_mitigations l1tf_mitigation;
-+/* Add support for architecture specific output in /proc/pid/status */
-+void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
-+#define arch_proc_pid_status arch_proc_pid_status
- 
- #endif /* _ASM_X86_PROCESSOR_H */
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 2edbb657f859..fd65a6ba2864 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
- 	seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
- }
- 
-+/* Add support for architecture specific output in /proc/pid/status */
-+#ifndef arch_proc_pid_status
-+#define arch_proc_pid_status(m, task)
-+#endif
-+
- int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
- 			struct pid *pid, struct task_struct *task)
- {
-@@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
- 	task_cpus_allowed(m, task);
- 	cpuset_task_status_allowed(m, task);
- 	task_context_switch_counts(m, task);
-+	arch_proc_pid_status(m, task);
- 	return 0;
- }
- 
+But I think you should look into whether it can be fixed by just
+requesting the irq once the hardware is really up (which may indeed be
+as late as open time).
+
+                   Linus
