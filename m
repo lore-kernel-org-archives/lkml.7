@@ -2,110 +2,146 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE81DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA18C2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C172084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:09:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvpMFoxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfDJFHY (ORCPT
+        id S1727226AbfDJFJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 01:07:24 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19538 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbfDJFHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 01:07:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 22:07:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="222112098"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by orsmga001.jf.intel.com with ESMTP; 09 Apr 2019 22:07:19 -0700
-Message-ID: <9b16b5c5379eb6b5352de26e56b8064a6b6f1aa7.camel@linux.intel.com>
-Subject: Re: [PATCH v6 12/20] kvm/vmx: Emulate MSR TEST_CTL
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Date:   Wed, 10 Apr 2019 13:03:59 +0800
-In-Reply-To: <20190408174805.GJ25880@linux.intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
-         <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
-         <alpine.DEB.2.21.1904051400230.1802@nanos.tec.linutronix.de>
-         <423f329a8e194d799c6c41470266a04a9f90bc84.camel@linux.intel.com>
-         <20190408174805.GJ25880@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 10 Apr 2019 01:09:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33254 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbfDJFJT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 01:09:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h5so702056pfo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 22:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=arJuKT1IB3LhHaw7J/lCue0zeOVqB2nkZiD+gzxGIAw=;
+        b=QvpMFoxJijiL2w3S8sgu7RZ1WMFdrKrXag1SLtQYM9H5jVD7wKzruJt2M+2z5VLz0t
+         kSah8hhAnopanrCk7QqkKVYpceEZk4xk/Zhx1wh+QJBm5lhwYcDKqUlRyC7BhZO0vAbl
+         +Qxj/tWZd1jJSJNXL1kvlR3fE7E3h5Tx1ARa4FFcWvy7eZFsgfMAogw5aq7itbyt+Nlp
+         rFsJrnOPj2KsCzeRtehTo+IaUhYKTln/3MC6DJ4P+dZFXxHcmTKt94N9TRqON0gkq4Yg
+         2Y9n1i6CSnoa5AoCaKV7U4/siUHQSKuon0sbHsBU32gxN02gxpqQ04YIopoiyzAnJhlG
+         3e3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=arJuKT1IB3LhHaw7J/lCue0zeOVqB2nkZiD+gzxGIAw=;
+        b=gF7Xxzb0rV94uhRHrMgcB8uJnMBcT+ik0aa/hmcqg6Sdnff06tPv/wRPczn/S+SbI/
+         1l5toCB2tQlXPPwCsccot1SMr7MrS0wuxo4dA72zZI5lmTobLiVM/iw3g4n7YYrpQ37P
+         DXjfZqIU9ycd110OX7ctxKl0S6LgQguip8IufhEIrJ9wT9Fj9QS+Slrib+fxcFrNdlM/
+         +NHYcWbbY7L6Bq5lUYCLoY+3ixRRWUxtxwJBX6vJG3YQPzgHbIdHteVzzNVqOZsSFrNk
+         aEmN/A7D8PKzK6HxCqdQGQctZ1TVKUVlnpO+arbFga36ql5SBNn4ojXghxiVxLioesmq
+         iI4w==
+X-Gm-Message-State: APjAAAUvW3+ZDojWWV8QlSv0ErEpkF0oPf/LPIjnfhmjYcM95HPt515+
+        uEbz4N0kd/IrGuwYDT6R5zI=
+X-Google-Smtp-Source: APXvYqwEuF/8LDb46f6GUnM6X4X+UVFuaVsXtfpsoSlKKyDNMqSoT1TEK+55+JwhJPIrVI55HUZFyA==
+X-Received: by 2002:a63:6983:: with SMTP id e125mr37030583pgc.370.1554872958255;
+        Tue, 09 Apr 2019 22:09:18 -0700 (PDT)
+Received: from localhost.localdomain ([61.83.141.141])
+        by smtp.gmail.com with ESMTPSA id i3sm50446980pfa.90.2019.04.09.22.09.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 22:09:17 -0700 (PDT)
+From:   Sidong Yang <realwakka@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sidong Yang <realwakka@gmail.com>, sophie.matter@web.de,
+        Valentin.Vidic@CARNet.hr, simon@nikanor.nu,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: pi433: add dependency to PA0,1,2 setting for output power level
+Date:   Wed, 10 Apr 2019 05:09:06 +0000
+Message-Id: <20190410050906.12607-1-realwakka@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-08 at 10:48 -0700, Sean Christopherson wrote:
-> On Mon, Apr 08, 2019 at 05:54:25PM +0800, Xiaoyao Li wrote:
-> > On Fri, 2019-04-05 at 14:30 +0200, Thomas Gleixner wrote:
-> > > On Wed, 3 Apr 2019, Fenghua Yu wrote:
-> > > > @@ -1663,6 +1663,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu,
-> > > > struct
-> > > > msr_data *msr_info)
-> > > >  	u32 index;
-> > > >  
-> > > >  	switch (msr_info->index) {
-> > > > +	case MSR_TEST_CTL:
-> > > > +		if (!msr_info->host_initiated &&
-> > > > +		    !(vcpu->arch.core_capability &
-> > > > CORE_CAP_SPLIT_LOCK_DETECT))
-> > > 
-> > > Errm? If the MSR_TEST_CTL is exposed to the guest via CPUID then the
-> > > rdmsr() in the guest is not supposed to fail just because
-> > > CORE_CAP_SPLIT_LOCK_DETECT is not set.
-> > 
-> > you're right.
-> > 
-> > > vmx->msr_test_ctl holds the proper value, which is either 0 or
-> > > CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported.
-> > > 
-> > > So the chek needs to be guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY).
-> > 
-> > I don't think so. There is no dependecy between
-> > guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) and MSR_TEST_CTL.
-> > guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) only indicates that guest has
-> > MSR
-> > CORE_CAPABILITY.
-> > 
-> > Due to the fact that MSR_TEST_CTL is emulated with vmx->msr_test_ctl. I
-> > think it
-> > 's ok to always let userspace or guest to read MSR_TEST_CTL, it just returns
-> > the
-> > emulated value. Like you said, " vmx->msr_test_ctl holds the proper value,
-> > which
-> > is either 0 or CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported."
-> 
-> Assuming the next version implements "vmx->msr_test_ctl_mask", KVM should
-> inject #GP if the guest attempts RDMSR(MSR_TEST_CTL) and the mask is zero.
-> It stands to reason that a kernel can only reasonably assume the MSR exists
-> if the (virtual) CPU supports at least one feature enabled via MSR_TEST_CTL.
+When setting output power level called, the power level should be
+checked by power amplifier level register and high power option. There
+was todo about it. Add some variables for checking power level range.
+The values that used for checking high power or minimum power are from
+rf69 datasheets. The maximum power level is always same regardless of
+mode.
 
-It makes sense to me. Thanks for your reminder.
-Will apply it in next version.
+Signed-off-by: Sidong Yang <realwakka@gmail.com>
+---
+ drivers/staging/pi433/rf69.c | 45 ++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 39 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/pi433/rf69.c b/drivers/staging/pi433/rf69.c
+index 340ffa7ccf18..4cd16257f0aa 100644
+--- a/drivers/staging/pi433/rf69.c
++++ b/drivers/staging/pi433/rf69.c
+@@ -349,18 +349,51 @@ int rf69_disable_amplifier(struct spi_device *spi, u8 amplifier_mask)
+ 
+ int rf69_set_output_power_level(struct spi_device *spi, u8 power_level)
+ {
+-	// TODO: Dependency to PA0,1,2 setting
+-	power_level += 18;
++	u8 pa_level, ocp, test_pa1, test_pa2;
++	bool pa0, pa1, pa2, high_power;
++	u8 min_power_level;
++
++	// check register pa_level
++	pa_level = rf69_read_reg(spi, REG_PALEVEL);
++	pa0 = pa_level & MASK_PALEVEL_PA0;
++	pa1 = pa_level & MASK_PALEVEL_PA1;
++	pa2 = pa_level & MASK_PALEVEL_PA2;
++
++	// check high power mode
++	ocp = rf69_read_reg(spi, REG_OCP);
++	test_pa1 = rf69_read_reg(spi, REG_TESTPA1);
++	test_pa2 = rf69_read_reg(spi, REG_TESTPA2);
++	high_power = (ocp == 0x0f) && (test_pa1 == 0x5d) && (test_pa2 == 0x7c);
++
++	if (pa0 && !pa1 && !pa2) {
++		power_level += 18;
++		min_power_level = 0;
++	} else if (!pa0 && pa1 && !pa2) {
++		power_level += 18;
++		min_power_level = 16;
++	} else if (!pa0 && pa1 && pa2) {
++		if (high_power)
++			power_level += 11;
++		else
++			power_level += 14;
++		min_power_level = 16;
++	} else {
++		goto failed;
++	}
+ 
+ 	// check input value
+-	if (power_level > 0x1f) {
+-		dev_dbg(&spi->dev, "set: illegal input param");
+-		return -EINVAL;
+-	}
++	if (power_level > 0x1f)
++		goto failed;
++
++	if (power_level < min_power_level)
++		goto failed;
+ 
+ 	// write value
+ 	return rf69_read_mod_write(spi, REG_PALEVEL, MASK_PALEVEL_OUTPUT_POWER,
+ 				   power_level);
++failed:
++	dev_dbg(&spi->dev, "set: illegal input param");
++	return -EINVAL;
+ }
+ 
+ int rf69_set_pa_ramp(struct spi_device *spi, enum pa_ramp pa_ramp)
+-- 
+2.11.0
 
