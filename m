@@ -2,141 +2,206 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E9FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B81C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE292083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF062133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KewiMEBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfDJJ1a (ORCPT
+        id S1729879AbfDJJ1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:27:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50612 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbfDJJ12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:27:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA994374;
-        Wed, 10 Apr 2019 02:27:27 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8687C3F68F;
-        Wed, 10 Apr 2019 02:27:26 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:27:23 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, Dietmar.Eggemann@arm.com,
-        morten.rasmussen@arm.com
-Subject: Re: [PATCH 1/2] sched/topology: build_sched_groups: Skip duplicate
- group rewrites
-Message-ID: <20190410092723.d4j4ctccogprtptg@e107158-lin.cambridge.arm.com>
-References: <20190409173546.4747-1-valentin.schneider@arm.com>
- <20190409173546.4747-2-valentin.schneider@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190409173546.4747-2-valentin.schneider@arm.com>
-User-Agent: NeoMutt/20171215
+        Wed, 10 Apr 2019 05:27:38 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:39711 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbfDJJ1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:27:37 -0400
+Received: by mail-yb1-f201.google.com with SMTP id u125so1296076ybf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:27:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=IqFv1AQJLSe0cAEqxckv6f9Un/Y2FytgRM8jbJdiFxM=;
+        b=KewiMEBQSX61LVb7I4tp711G8sYPbtpUD50rarh2a74g3F76fa6Dbkusvsz4bLyhVA
+         q1ZPe9hqA+PFqc3j5pkxNu+Q7bdGG5HKOOKGWSabO6xtU1U+JKZDlUSZ2w3//l8KY8KJ
+         OLsV9yCnBwrQMk4hDFL9bfzis4ezJPA9ZuTei93t9j/Als0Ln1c5bMrUPNW5on8TDgpc
+         7EE9Iov2+XrU9Vuyc5CjhlPBDGlU4UcdcLt+e7C6QndDdToHLA3XfHQ4/K4b+f63aVjT
+         mMLPjOhfOTJw/XLSAbAmZBriX84zBBmm/d23DREjnfIKOsw2IjguTzOfmOou+2N5CMIQ
+         Gwhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=IqFv1AQJLSe0cAEqxckv6f9Un/Y2FytgRM8jbJdiFxM=;
+        b=gYIcoVHKE0i9iOxWvEnu6GPoA8H+8iXAlj1tvsDCWw9rM6REuNtbVc9xarETZNmaq8
+         /1xgd5JyecHMCaUaSAXszOTqoN5o41QHTA7u/1Q4A9F6QEaUZiB8tcKfRdRt4aEeeVo5
+         BtKZRCZ+DYsv4qCPH3VR3cKDmiHkaAO1np7WpHtoBYx7a5SaqLwFQ5KtHVO4oKsQgZRX
+         9WSNbdttF+0wpi2IZSnZzGh9q4jMQrvJFJk0czfujA1eyQk5KFZuY9j2A7VYPqwCyL9Q
+         +SuyncgNdA3wbZsnCc5CssyUi0TpuLHJ3Q3iyLJw+GkAh1xagCaPxa8Y9SR1KeI4GWMj
+         oeqw==
+X-Gm-Message-State: APjAAAXRFALF/Eg0aIHVin0ovqVgsseJFr5mXv22C38pYmzhM4oPKXeb
+        sbtcXL3Mwgt4hspLPV5ovsbl3CBv7zccjbZmQig=
+X-Google-Smtp-Source: APXvYqzVvGiIYrMtb9PgdSAjZ8CisL0CYTNnE1PxVSm/4e5HC7brN3Wh893+8t6EKJc64QQ71G6aQ2ZxjOYrstUI/No=
+X-Received: by 2002:a25:40c4:: with SMTP id n187mr6216423yba.16.1554888456456;
+ Wed, 10 Apr 2019 02:27:36 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 17:27:30 +0800
+Message-Id: <20190410092730.72358-1-huangrandall@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v4] f2fs: fix to avoid accessing xattr across the boundary
+From:   Randall Huang <huangrandall@google.com>
+To:     jaegeuk@kernel.org, yuchao0@huawei.com,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Cc:     huangrandall@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/19 18:35, Valentin Schneider wrote:
-> While staring at build_sched_domains(), I realized that get_group()
-> does several duplicate (thus useless) writes.
-> 
-> If you take the Arm Juno r0 (LITTLEs = [0, 3, 4, 5], bigs = [1, 2]), the
-> sched_group build flow would look like this:
-> 
-> ('MC[cpu]->sg' means 'per_cpu_ptr(&tl->data->sg, cpu)' with 'tl == MC')
-> 
-> build_sched_groups(MC[CPU0]->sd, CPU0)
->   get_group(0) -> MC[CPU0]->sg
->   get_group(3) -> MC[CPU3]->sg
->   get_group(4) -> MC[CPU4]->sg
->   get_group(5) -> MC[CPU5]->sg
-> 
-> build_sched_groups(DIE[CPU0]->sd, CPU0)
->   get_group(0) -> DIE[CPU0]->sg
->   get_group(1) -> DIE[CPU1]->sg <-----------------+
-> 						  |
-> build_sched_groups(MC[CPU1]->sd, CPU1)            |
->   get_group(1) -> MC[CPU1]->sg                    |
->   get_group(2) -> MC[CPU2]->sg                    |
-> 						  |
-> build_sched_groups(DIE[CPU1]->sd, CPU1)           ^
->   get_group(1) -> DIE[CPU1]->sg  } We've set up these two up here!
->   get_group(3) -> DIE[CPU0]->sg  }
-> 
-> From this point on, we will only use sched_groups that have been
-> previously visited & initialized. The only new operation will
-> be which group pointer we affect to sd->groups.
-> 
-> On the Juno r0 we get 32 get_group() calls, every single one of them
-> writing to a sched_group->cpumask. However, all of the data structures
-> we need are set up after 8 visits (see above).
-> 
-> Return early from get_group() if we've already visited (and thus
-> initialized) the sched_group we're looking at. Overlapping domains
-> are not affected as they do not use build_sched_groups().
-> 
-> Tested on a Juno and a 2 * (Xeon E5-2690) system.
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
-> FWIW I initially checked the refs for both sg && sg->sgc, but figured if
-> they weren't both 0 or > 1 then something must have gone wrong, so I
-> threw in a WARN_ON().
-> ---
->  kernel/sched/topology.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 64bec54ded3e..6c0b7326f66e 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1059,6 +1059,7 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
->  	struct sched_domain *sd = *per_cpu_ptr(sdd->sd, cpu);
->  	struct sched_domain *child = sd->child;
->  	struct sched_group *sg;
-> +	bool already_visited;
->  
->  	if (child)
->  		cpu = cpumask_first(sched_domain_span(child));
-> @@ -1066,9 +1067,14 @@ static struct sched_group *get_group(int cpu, struct sd_data *sdd)
->  	sg = *per_cpu_ptr(sdd->sg, cpu);
->  	sg->sgc = *per_cpu_ptr(sdd->sgc, cpu);
->  
-> -	/* For claim_allocations: */
-> -	atomic_inc(&sg->ref);
-> -	atomic_inc(&sg->sgc->ref);
-> +	/* Increase refcounts for claim_allocations: */
-> +	already_visited = atomic_inc_return(&sg->ref) > 1;
-> +	/* sgc visits should follow a similar trend as sg */
-> +	WARN_ON(already_visited != (atomic_inc_return(&sg->sgc->ref) > 1));
+When we traverse xattr entries via __find_xattr(),
+if the raw filesystem content is faked or any hardware failure occurs,
+out-of-bound error can be detected by KASAN.
+Fix the issue by introducing boundary check.
 
-NIT: I think it would be better to not have any side effect of calling
-WARN_ON(). Ie: do the atomic_inc_return() outside the WARN_ON() condition.
-Having two bool already_visited_sg and already_visited_sgc will make the code
-more readable too.
+[   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
+[   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
+[   38.402935] c7   1827 Call trace:
+[   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
+[   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
+[   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
+[   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
+[   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
+[   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
+[   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
+[   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
+[   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
+[   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
+[   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
+[   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
+[   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
+[   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
+[   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
+[   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
+[   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
+[   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
+[   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
+[   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
+[   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
+[   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
 
-Thanks
+Bug: 126558260
 
---
-Qais Yousef
+Signed-off-by: Randall Huang <huangrandall@google.com>
+---
+v2:
+* return EFAULT if OOB error is detected
 
-> +
-> +	/* If we have already visited that group, it's already initialized. */
-> +	if (already_visited)
-> +		return sg;
->  
->  	if (child) {
->  		cpumask_copy(sched_group_span(sg), sched_domain_span(child));
-> --
-> 2.20.1
-> 
+v3:
+* fix typo in setxattr()
+
+v4:
+* change boundry definition
+---
+ fs/f2fs/xattr.c | 34 +++++++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
+
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index 848a785abe25..a1cf53c727b2 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -202,12 +202,18 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
+ 	return handler;
+ }
+ 
+-static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
+-					size_t len, const char *name)
++static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
++				void *last_base_addr, int index,
++				size_t len, const char *name)
+ {
+ 	struct f2fs_xattr_entry *entry;
+ 
+ 	list_for_each_xattr(entry, base_addr) {
++		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
++			(void *)XATTR_NEXT_ENTRY(entry) +
++			sizeof(__u32) > last_base_addr)
++			return NULL;
++
+ 		if (entry->e_name_index != index)
+ 			continue;
+ 		if (entry->e_name_len != len)
+@@ -298,6 +304,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 				void **base_addr, int *base_size)
+ {
+ 	void *cur_addr, *txattr_addr, *last_addr = NULL;
++	void *last_txattr_addr = NULL;
+ 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
+ 	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
+ 	unsigned int inline_size = inline_xattr_size(inode);
+@@ -311,6 +318,9 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	if (!txattr_addr)
+ 		return -ENOMEM;
+ 
++	last_txattr_addr = (void *)txattr_addr + inline_size + size +
++				XATTR_PADDING_SIZE - 1;
++
+ 	/* read from inline xattr */
+ 	if (inline_size) {
+ 		err = read_inline_xattr(inode, ipage, txattr_addr);
+@@ -337,7 +347,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+ 	else
+ 		cur_addr = txattr_addr;
+ 
+-	*xe = __find_xattr(cur_addr, index, len, name);
++	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
++	if (!*xe) {
++		err = -EFAULT;
++		goto out;
++	}
+ check:
+ 	if (IS_XATTR_LAST_ENTRY(*xe)) {
+ 		err = -ENODATA;
+@@ -581,10 +595,15 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 			struct page *ipage, int flags)
+ {
+ 	struct f2fs_xattr_entry *here, *last;
+-	void *base_addr;
++	void *base_addr, *last_base_addr = NULL;
+ 	int found, newsize;
+ 	size_t len;
+ 	__u32 new_hsize;
++	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
++	unsigned int xattr_nid_size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
++	unsigned int inline_size = inline_xattr_size(inode);
++	unsigned int max_size = inline_size + xattr_nid_size +
++				 XATTR_PADDING_SIZE;
+ 	int error = 0;
+ 
+ 	if (name == NULL)
+@@ -604,9 +623,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+ 	error = read_all_xattrs(inode, ipage, &base_addr);
+ 	if (error)
+ 		return error;
++	last_base_addr = (void *)base_addr + max_size - 1;
+ 
+ 	/* find entry with wanted name. */
+-	here = __find_xattr(base_addr, index, len, name);
++	here = __find_xattr(base_addr, last_base_addr, index, len, name);
++	if (!here) {
++		error = -EFAULT;
++		goto exit;
++	}
+ 
+ 	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
+ 
+-- 
+2.21.0.392.gf8f6787159e-goog
+
