@@ -2,128 +2,119 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17307C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49811C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E339920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5FA20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554912277;
+	bh=4jYoZK+WAn/0HTad9YcD/I5hOYHYXCPL8X7Srb5aF14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PzE0Q+f4QGrtzX6JevS7TlRE3fP0BNO6gxlwrzbzBKh8kp3Zi068Bhq+kBuugycwA
+	 hisgbz4TeXU/2zOnCv+tqijAru+dYP5HPZYSyQ2XYSgGXuDP+FbcE9W7S1DIc3KKWt
+	 StPW+NxZ5DdVfAr96qkxDe9SwQE/KI1j7J8Cm194=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387621AbfDJQEO (ORCPT
+        id S2387634AbfDJQEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:04:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38962 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727340AbfDJQEO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:04:14 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AG0a8k073993
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:04:13 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsj1unh1t-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:04:12 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 10 Apr 2019 17:04:02 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 10 Apr 2019 17:03:59 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3AG3wSE32899204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 16:03:58 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6FDD5205F;
-        Wed, 10 Apr 2019 16:03:58 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.148])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 63F4252050;
-        Wed, 10 Apr 2019 16:03:58 +0000 (GMT)
-Date:   Wed, 10 Apr 2019 18:03:57 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/12] s390: avoid __builtin_return_address(n) on clang
-In-Reply-To: <20190408212648.2407234-10-arnd@arndb.de>
-References: <20190408212648.2407234-1-arnd@arndb.de>
-        <20190408212648.2407234-10-arnd@arndb.de>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 10 Apr 2019 12:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727340AbfDJQEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 12:04:35 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8852A206DF;
+        Wed, 10 Apr 2019 16:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554912274;
+        bh=4jYoZK+WAn/0HTad9YcD/I5hOYHYXCPL8X7Srb5aF14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J0NTC1kYgbvQKdZipvVdhuA6Vb+44aGzxumpd3/QPRbY1wjJv63VeAu+Pwz2ZVE4M
+         gE1NNf/aSFxag7kM93SDEbqGVnk96SC1GeSWD7EP93OBxnA7UUugslnls28lWhSJsV
+         7sz5WE8Al2I4kLQ9KzJtd6TcCX9f4q+FacoMgLtM=
+Date:   Wed, 10 Apr 2019 12:04:32 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com,
+        thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
+Message-ID: <20190410160432.GB11568@sasha-vm>
+References: <20190402193316.15144-1-sashal@kernel.org>
+ <20190402193316.15144-2-sashal@kernel.org>
+ <20190403181827.GB17006@linux.intel.com>
+ <20190403182728.GA17451@linux.intel.com>
+ <20190406153047.GF2935@sasha-vm>
+ <20190410112927.GA6586@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041016-4275-0000-0000-00000326683A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041016-4276-0000-0000-0000383585B4
-Message-Id: <20190410180357.3290d24f@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904100111
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190410112927.GA6586@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  8 Apr 2019 23:26:23 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+On Wed, Apr 10, 2019 at 02:29:27PM +0300, Jarkko Sakkinen wrote:
+>On Sat, Apr 06, 2019 at 11:30:47AM -0400, Sasha Levin wrote:
+>> On Wed, Apr 03, 2019 at 09:27:28PM +0300, Jarkko Sakkinen wrote:
+>> > On Wed, Apr 03, 2019 at 09:18:27PM +0300, Jarkko Sakkinen wrote:
+>> > > On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
+>> > > > This patch adds support for a software-only implementation of a TPM
+>> > > > running in TEE.
+>> > > >
+>> > > > There is extensive documentation of the design here:
+>> > > > https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
+>> > > >
+>> > > > As well as reference code for the firmware available here:
+>> > > > https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
+>> > > >
+>> > > > Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+>> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > >
+>> > > What is the context anyway? I mean tpm_crb already supports fTPM running
+>> > > in TZ.
+>> >
+>> > Might take 2-3 weeks before I have time to go through ftpm1.pdf with
+>> > full concentration. I did search through the PDF for CRB and found
+>> > zero hits.
+>>
+>> The fTPM as described in that paper and implemented in practice does not
+>> use the CRB interface, thus we can't use tpm_crb to interface with the
+>> firmware TPM.
+>
+>Obviously not but what is the reason of not implementing CRB but instead
+>making yet another interface? I mean CRB supports SMC call.
+>
+>For me this is taking steps back as to the early days when there was
+>proprietary intefaces to TPM before TCG came along and stardized.
+>
+>I'm sure that the TPM implementation itself could be reworked to
+>inteface using CRB. It would also be good for ARM as a platform as now
+>this new made up interface causes unwanted divergence. I thought that
+>throwing ad hoc intefaces everywhere is something that ARM Linux
+>community tries to reduce, not increase.
 
-> llvm on s390 has problems with __builtin_return_address(n), with n>0,
-> this results in a somewhat cryptic error message:
-> 
-> fatal error: error in backend: Unsupported stack frame traversal count
-> 
-> To work around it, use the direct return address directly. This
-> is probably not ideal here, but gets things to compile and should
-> only lead to inferior reporting, not to misbehavior of the generated
-> code.
-> 
-> Link: https://bugs.llvm.org/show_bug.cgi?id=41424
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/s390/include/asm/ftrace.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-> index 5a3c95b11952..7923c63946fb 100644
-> --- a/arch/s390/include/asm/ftrace.h
-> +++ b/arch/s390/include/asm/ftrace.h
-> @@ -13,7 +13,12 @@
-> 
->  #ifndef __ASSEMBLY__
-> 
-> +#ifdef CONFIG_CC_IS_CLANG
-> +/* https://bugs.llvm.org/show_bug.cgi?id=41424 */
-> +#define ftrace_return_address(n) __builtin_return_address(0)
-> +#else
->  #define ftrace_return_address(n) __builtin_return_address(n)
-> +#endif
-> 
->  void _mcount(void);
->  void ftrace_caller(void);
+I'm not sure what the original reasons were for not using the CRB
+interface. Note that the paper is from a few years ago, and
+implementations of this fTPM existed before the paper, so it's very
+possible that it just predates CRB.
 
-I can say I like this one. If the compiler can not do __builtin_return_address(n)
-it feels wrong to just use __builtin_return_address(0).
+Either way, there is existing hardware that runs this TPM and I'm trying
+to get it out of Microsoft's tree and get it upstream. There's not much
+I could do about existing hardware at this point.
 
--- 
-blue skies,
-   Martin.
 
-"Reality continues to ruin my life." - Calvin.
-
+--
+Thanks,
+Sasha
