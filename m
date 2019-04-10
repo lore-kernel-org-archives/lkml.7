@@ -2,122 +2,123 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3BC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691D2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA1F2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1AD2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554876896;
+	bh=TN1K9RGR1+wWzPP2736/+TBkHP7znLpQbK7GxgFpGks=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m5Zq1JNRExi8TaG2+LiqzWjVwcvITM6GTPt25a4geRiPRsMKDW4vWAMUu5EprCC+Z
+	 gEu6doAU4kxZMfepf38vtgTvuz2MCxY0MCVwMAYZxb5ga4SNYoxTynlKAZDJO+wike
+	 zbyHlIOI3xtZRy/Pv4d5eehlOlvJij0vcXNK+o60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfDJGNg (ORCPT
+        id S1727841AbfDJGOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:13:36 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:11983 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726230AbfDJGN3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:13:29 -0400
-X-UUID: 0cf77139607a445b83c138a92dbd324b-20190410
-X-UUID: 0cf77139607a445b83c138a92dbd324b-20190410
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 600075048; Wed, 10 Apr 2019 14:13:13 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 10 Apr 2019 14:13:12 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 10 Apr 2019 14:13:10 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Kevin Hilman <khilman@baylibre.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Motoya Tanigawa <tanigawa.motoya@socionext.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [v2 PATCH 3/4] phy: socionext: get optional clock by devm_clk_get_optional()
-Date:   Wed, 10 Apr 2019 14:13:05 +0800
-Message-ID: <f3d8f2f8d2c7bbcb88e813a647c798aa5d42543a.1554874961.git.chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
-References: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
+        Wed, 10 Apr 2019 02:14:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfDJGOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:14:54 -0400
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14AA520850;
+        Wed, 10 Apr 2019 06:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554876893;
+        bh=TN1K9RGR1+wWzPP2736/+TBkHP7znLpQbK7GxgFpGks=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gNZqCeqqrvJSghMJGR7vt7B3VbOhCGUC6fv+TcmN3fXosVh0Ql0fzu+YfH2ieuPsO
+         VCYFultffNkFFwtIkViRjzzIfVy4k8S/P9nu01NrsxTBHygSHwOtRYH6+jnNMCLWd2
+         G6oXQ6oCkbhVk1UZ0U3XFvRQfmGFmtB/+3AM31V8=
+From:   guoren@kernel.org
+To:     arnd@arndb.de, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>
+Subject: [PATCH V2] csky: Add perf_arch_fetch_caller_regs support
+Date:   Wed, 10 Apr 2019 14:12:05 +0800
+Message-Id: <1554876725-30455-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_clk_get_optional() to get optional clock
+From: Mao Han <han_mao@c-sky.com>
 
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
-v2: add Reviewed-by Kunihiko Hayashi
----
- drivers/phy/socionext/phy-uniphier-usb3hs.c | 10 +++-------
- drivers/phy/socionext/phy-uniphier-usb3ss.c | 10 +++-------
- 2 files changed, 6 insertions(+), 14 deletions(-)
+In trace events as tracepoints context are not able to
+be retrieve with task_pt_regs. Without arch caller regs
+support the pt_regs context will be all zero, perf can
+not parsing the callchain and resolving the symbols
+correctly, some time will even get into deadlock
+while handling the page fault, eg:
 
-diff --git a/drivers/phy/socionext/phy-uniphier-usb3hs.c b/drivers/phy/socionext/phy-uniphier-usb3hs.c
-index b1b048be6166..50f379fc4e06 100644
---- a/drivers/phy/socionext/phy-uniphier-usb3hs.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
-@@ -335,13 +335,9 @@ static int uniphier_u3hsphy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk_parent))
- 		return PTR_ERR(priv->clk_parent);
+perf kmem —page record ls
+
+Changelog
+ - Add test case cmd in comment
+ - Use regs_fp(regs) which is defined in abi/regdef.h
+
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Signed-off-by: Guo Ren <guoren@kernel.org>
+---
+ arch/csky/abiv1/inc/abi/regdef.h   | 1 +
+ arch/csky/abiv2/inc/abi/regdef.h   | 1 +
+ arch/csky/include/asm/perf_event.h | 8 ++++++++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/arch/csky/abiv1/inc/abi/regdef.h b/arch/csky/abiv1/inc/abi/regdef.h
+index 729b1c3..104707f 100644
+--- a/arch/csky/abiv1/inc/abi/regdef.h
++++ b/arch/csky/abiv1/inc/abi/regdef.h
+@@ -6,6 +6,7 @@
  
--	priv->clk_ext = devm_clk_get(dev, "phy-ext");
--	if (IS_ERR(priv->clk_ext)) {
--		if (PTR_ERR(priv->clk_ext) == -ENOENT)
--			priv->clk_ext = NULL;
--		else
--			return PTR_ERR(priv->clk_ext);
--	}
-+	priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
-+	if (IS_ERR(priv->clk_ext))
-+		return PTR_ERR(priv->clk_ext);
+ #define syscallid	r1
+ #define regs_syscallid(regs) regs->regs[9]
++#define regs_fp(regs) regs->regs[2]
  
- 	priv->rst = devm_reset_control_get_shared(dev, "phy");
- 	if (IS_ERR(priv->rst))
-diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-index 4be95679c7d8..ec231e40ef2a 100644
---- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
-@@ -238,13 +238,9 @@ static int uniphier_u3ssphy_probe(struct platform_device *pdev)
- 		if (IS_ERR(priv->clk))
- 			return PTR_ERR(priv->clk);
+ /*
+  * PSR format:
+diff --git a/arch/csky/abiv2/inc/abi/regdef.h b/arch/csky/abiv2/inc/abi/regdef.h
+index 77cb178..d7328bb 100644
+--- a/arch/csky/abiv2/inc/abi/regdef.h
++++ b/arch/csky/abiv2/inc/abi/regdef.h
+@@ -6,6 +6,7 @@
  
--		priv->clk_ext = devm_clk_get(dev, "phy-ext");
--		if (IS_ERR(priv->clk_ext)) {
--			if (PTR_ERR(priv->clk_ext) == -ENOENT)
--				priv->clk_ext = NULL;
--			else
--				return PTR_ERR(priv->clk_ext);
--		}
-+		priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
-+		if (IS_ERR(priv->clk_ext))
-+			return PTR_ERR(priv->clk_ext);
+ #define syscallid	r7
+ #define regs_syscallid(regs) regs->regs[3]
++#define regs_fp(regs) regs->regs[4]
  
- 		priv->rst = devm_reset_control_get_shared(dev, "phy");
- 		if (IS_ERR(priv->rst))
+ /*
+  * PSR format:
+diff --git a/arch/csky/include/asm/perf_event.h b/arch/csky/include/asm/perf_event.h
+index ea81931..572093e 100644
+--- a/arch/csky/include/asm/perf_event.h
++++ b/arch/csky/include/asm/perf_event.h
+@@ -4,4 +4,12 @@
+ #ifndef __ASM_CSKY_PERF_EVENT_H
+ #define __ASM_CSKY_PERF_EVENT_H
+ 
++#include <abi/regdef.h>
++
++#define perf_arch_fetch_caller_regs(regs, __ip) { \
++	(regs)->pc = (__ip); \
++	regs_fp(regs) = (unsigned long) __builtin_frame_address(0); \
++	asm volatile("mov %0, sp\n":"=r"((regs)->usp)); \
++}
++
+ #endif /* __ASM_PERF_EVENT_ELF_H */
 -- 
-2.21.0
+2.7.4
 
