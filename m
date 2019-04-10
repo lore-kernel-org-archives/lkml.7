@@ -2,238 +2,327 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0239C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1833BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6089220830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="P1y+OQAE"
+	by mail.kernel.org (Postfix) with ESMTP id D40352133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfDJKci (ORCPT
+        id S1730487AbfDJKcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:32:38 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:40114 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727057AbfDJKch (ORCPT
+        Wed, 10 Apr 2019 06:32:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37813 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728543AbfDJKcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:32:37 -0400
-Received: from [85.158.142.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id 05/17-24742-F36CDAC5; Wed, 10 Apr 2019 10:32:31 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJJsWRWlGSWpSXmKPExsWSoc9grmt3bG2
-  Mwf6Jeha3p55ksmhevJ7N4s3x6UwWXat3sljs+7iOyeLyrjlsFouWtTJbPFl4hsmBw2PBplKP
-  eScDPfbPXcPu8X7fVTaPnd8b2D0+b5ILYItizcxLyq9IYM2Y2d7CXPDdpWJGw1rWBsYWly5GL
-  g4WgfXMEodOX2QFcYQEpjFJHH+5jAnCecwocWj6CeYuRk4ONgELicknHrCBJEQE1jNK7L63lh
-  nEYRb4zCjRvaAFyOHgEBawlZj8qBKkQUTATmLnijlsEHa0xL2vO1hAbBYBVYlN926DxXkFEiU
-  mfFnKDrHtFZPEza1vwLZxAjXv+3AazGYUkJX40rgazGYWEJe49WQ+E4gtISAgsWTPeWYIW1Ti
-  5eN/rBD1qRInm24wQsR1JM5efwJlK0nMm3sEypaVuDS/G8r2lTh3agXYMxICdxgl3j3pYINp7
-  jl8lwXCtpBY0t0KZUtJnLh4lBXCLpA4vPIFVFxG4senXWwQg5azSUz9Pglsg5BAssSHuWfZIY
-  rkJFb1PmSBKLrALPH47k7GCYxas5B8NwsYkswCmhLrd+lDhBUlpnQ/ZJ8FDjFBiZMzn7AsYGR
-  ZxWiRVJSZnlGSm5iZo2toYKBraGisa6prbKyXWKWbpJdaqpucmldSlAiU1EssL9YrrsxNzknR
-  y0st2cQITGophayKOxjnLE8/xCjJwaQkyvthxdoYIb6k/JTKjMTijPii0pzU4kOMMhwcShK8Z
-  /YA5QSLUtNTK9Iyc4DpFSYtwcGjJMI74QhQmre4IDG3ODMdInWK0ZLjwKKHc5k5Zs58DiTfHg
-  SSQix5+XmpUuK8YsAkLiQA0pBRmgc3DpYDLjHKSgnzMjIwMAjxFKQW5WaWoMq/YhTnYFQS5v0
-  PspYnM68EbusroIOYgA6aorMa5KCSRISUVAMjq4NefNv8FAnjK1EhB7+Fhj40/9LiElsdXbf4
-  klHBa7s5V8XuB12w3vO87cVbrVvyB3Zu4TzqdXb/EUcLq4reN2s4ShRL0x4ozpl95ZBL+Uam/
-  N+3flqefqyZUGzZf6p4wYaWtV8lw19ovQ1TPrCp1WjVrqu29VpzDBWupeT/nZLQEdLid7hOia
-  U4I9FQi7moOBEAlQ7EBvwDAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-8.tower-239.messagelabs.com!1554892350!4020206!1
-X-Originating-IP: [104.47.0.55]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 29822 invoked from network); 10 Apr 2019 10:32:30 -0000
-Received: from mail-he1eur01lp2055.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.55)
-  by server-8.tower-239.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 10 Apr 2019 10:32:30 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DsDsByKxS+5pOn5TyfAQo0lEAA3uLkMP710siGKpcec=;
- b=P1y+OQAEtEtsrM50xkYnotjSJ3RZEoxJCHa7SfSX5vdmvsuVyK5HJXq5HKP9uAxM0HOUaX7N6iQkN+TIicfL6w7CVA9wfNcJfctSNL0r5o3MVJ1DhLr79YbnIEwaLm7xlz9aQJWZaSJWjeKVxB79z3Gvm/siFs7b4Z/ByDZlJ2U=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1075.EURPRD10.PROD.OUTLOOK.COM (10.169.154.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.14; Wed, 10 Apr 2019 10:32:28 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4c34:5c5d:78d9:750a]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4c34:5c5d:78d9:750a%7]) with mapi id 15.20.1771.021; Wed, 10 Apr 2019
- 10:32:28 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kyle Tso <kyletso@google.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     Guenter Roeck <linux@roeck-us.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] usb: typec: tcpm: collision avoidance
-Thread-Topic: [PATCH v2] usb: typec: tcpm: collision avoidance
-Thread-Index: AQHU4KspeY0Mu675x0axAclkvdJ7hKYsH+OAgAGJhQCABMDhgIABfVoAgAABNYCAABpfAIABSWkQ
-Date:   Wed, 10 Apr 2019 10:32:28 +0000
-Message-ID: <AM5PR1001MB099440C3AA6DA6BA2AB0F2AE802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190322121745.159768-1-kyletso@google.com>
- <20190404141345.GF21319@kuha.fi.intel.com>
- <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net>
- <CAGZ6i=2zKLhS4By8Xanc863G+jSxPYg8SLU-UHkY94r5MiEYag@mail.gmail.com>
- <20190409130230.GC20058@kuha.fi.intel.com>
- <20190409130649.GD20058@kuha.fi.intel.com>
- <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com>
-In-Reply-To: <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 611a658d-9ed1-498a-4fdb-08d6bd9fd4a6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:AM5PR1001MB1075;
-x-ms-traffictypediagnostic: AM5PR1001MB1075:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM5PR1001MB107501946F1498E5F1931992A72E0@AM5PR1001MB1075.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(366004)(136003)(51234002)(189003)(199004)(2906002)(6116002)(476003)(8936002)(26005)(486006)(186003)(11346002)(6436002)(3846002)(14444005)(229853002)(5024004)(256004)(446003)(68736007)(105586002)(81156014)(7696005)(71200400001)(25786009)(6246003)(53936002)(9686003)(110136005)(71190400001)(99286004)(316002)(106356001)(55016002)(966005)(76176011)(81166006)(54906003)(14454004)(6306002)(102836004)(8676002)(53546011)(55236004)(5660300002)(478600001)(6506007)(45080400002)(72206003)(33656002)(4326008)(97736004)(305945005)(7736002)(52536014)(66066001)(86362001)(93886005)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1075;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MDq1jvOOx1WDNynaSayDZlY6dpg0RRdb48NotxeQ6FuLGZACJ29MC/tjsAhq8E+AGjJHcsMHjryGswNtJUfkjM/saqspFQ+xT8co5DiMLgXyvRKDY07r7nTQEQC7ms0ePgk2kiFJiGNgnCj1WcAF5Mq+5RF+NGW4UulbXuvSVp+IOB6bVFPW/HVgtO/IjrtCkelZmaEtyQ84z8eWGVymFIs09hujABi6J3ahetJXo+e7D0GBwBYyMaviJ2IcQeA6KMwhFWh9/zWMqH2cHAlKpiunja/CzeS8WpOwST8aZNAJyTumeendjSQ6uVd66EilXm+4Azxkc/gglEfivYrAqrmBbvzmE1PNOJD0uyYIZJvDojVdfGI6TyihAp1HPHNnwkY0E+mQl7yDYmIWzo1mqKKKdoOy5YqKFOCaXxAxId4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 10 Apr 2019 06:32:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v14so1998980wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 03:32:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/BNROZrm6PZ5befuy2aIvA2u9RjxCk2yKpMYJ0B9w1Y=;
+        b=hYt7Dt41JLf5xPI1sh9NCy3/XqJaFQfFSfwAuWT47JRfZaBy2dCmD7not2YhcZU0Hf
+         8EBkM1dtiF1MOpuw7ZpcY8HWV95EFMzWKIgK4lUedv+7RqhmsqRDWsxQm1iYqNOjkDUS
+         UZjFziPILOO5nVhao9IlH+q7lZX+5HWX+9p0Tc1Q6svxJu+jZh0+TvG9Kk0+28ljUFl3
+         CPRzXgTaifMklfJ9vTUFrmEcbwWlthLh8bHfEYWR6Dzhh8nwkp9ngrQOobdwcu0wYL82
+         dNY/elGjSLf3In4/oz2ZZl+Iz4Z6f0If8OqI6eS/VsOZHIc4IRKI5Z6lFb2i2W0ueyFN
+         TPEA==
+X-Gm-Message-State: APjAAAXSQhxHU8xmunnzET2cS15CHIWbtui75norr0yAZHfA992kvbMF
+        wYzaI4tNfsiujbf9aBbvB8/uWXlsuR0=
+X-Google-Smtp-Source: APXvYqy2ZJgXpCcG6Yj/wrzTYBWrg0p8FmxWkr3YZLt7ROGXQjsRSqGnXbxyeQs/iEOoLfZIHze2LA==
+X-Received: by 2002:a1c:2d45:: with SMTP id t66mr2345579wmt.106.1554892370675;
+        Wed, 10 Apr 2019 03:32:50 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 61sm118578760wre.50.2019.04.10.03.32.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 03:32:50 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] selftests: kvm: add a selftest for SMM
+In-Reply-To: <c315341a-aa8f-c52f-e02d-8104ba5c0051@redhat.com>
+References: <574cf4f1-28d8-a03f-68f2-df9ef2c725ae@redhat.com> <20190410093833.13853-1-vkuznets@redhat.com> <c315341a-aa8f-c52f-e02d-8104ba5c0051@redhat.com>
+Date:   Wed, 10 Apr 2019 12:32:49 +0200
+Message-ID: <87mukygnfy.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 611a658d-9ed1-498a-4fdb-08d6bd9fd4a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 10:32:28.3111
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1075
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDkgQXByaWwgMjAxOSAxNTo0MSwgSGFucyBkZSBHb2VkZSB3cm90ZToNCg0KPiBIaSwNCj4g
-DQo+IE9uIDA5LTA0LTE5IDE1OjA2LCBIZWlra2kgS3JvZ2VydXMgd3JvdGU6DQo+ID4gT24gVHVl
-LCBBcHIgMDksIDIwMTkgYXQgMDQ6MDI6MzBQTSArMDMwMCwgSGVpa2tpIEtyb2dlcnVzIHdyb3Rl
-Og0KPiA+PiArSGFucw0KPiA+Pg0KPiA+PiBPbiBNb24sIEFwciAwOCwgMjAxOSBhdCAxMDoxNzoz
-NVBNICswODAwLCBLeWxlIFRzbyB3cm90ZToNCj4gPj4+IE9uIEZyaSwgQXByIDUsIDIwMTkgYXQg
-OTo0MiBQTSBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IHdyb3RlOg0KPiA+Pj4+
-DQo+ID4+Pj4gT24gNC80LzE5IDc6MTMgQU0sIEhlaWtraSBLcm9nZXJ1cyB3cm90ZToNCj4gPj4+
-Pj4gSGksDQo+ID4+Pj4+DQo+ID4+Pj4+IE9uIEZyaSwgTWFyIDIyLCAyMDE5IGF0IDA4OjE3OjQ1
-UE0gKzA4MDAsIEt5bGUgVHNvIHdyb3RlOg0KPiA+Pj4+Pj4gVGhpcyBwYXRjaCBwcm92aWRlcyB0
-aGUgaW1wbGVtZW50YXRpb24gb2YgQ29sbGlzaW9uIEF2b2lkYW5jZQ0KPiA+Pj4+Pj4gaW50cm9k
-dWNlZCBpbiBQRDMuMC4gVGhlIHN0YXJ0IG9mIGVhY2ggQXRvbWljIE1lc3NhZ2UgU2VxdWVuY2UN
-Cj4gPj4+Pj4+IChBTVMpIGluaXRpYXRlZCBieSB0aGUgcG9ydCB3aWxsIGJlIGRlbmllZCBpZiB0
-aGUgY3VycmVudCBBTVMgaXMNCj4gPj4+Pj4+IG5vdCBpbnRlcnJ1cHRpYmxlLiBUaGUgU291cmNl
-IHBvcnQgd2lsbCBzZXQgdGhlIENDIHRvIFNpbmtUeE5HIGlmDQo+ID4+Pj4+PiBpdCBpcyBnb2lu
-ZyB0byBpbml0aWF0ZSBhbiBBTVMsIGFuZCBTaW5rVHhPayBvdGhlcndpc2UuDQo+ID4+Pj4+PiBN
-ZWFud2hpbGUsIGFueSBBTVMgaW5pdGlhdGVkIGJ5IGEgU2luayBwb3J0IHdpbGwgYmUgZGVuaWVk
-IGluDQo+ID4+Pj4+PiBUQ1BNIGlmIHRoZSBwb3J0IHBhcnRuZXIgKFNvdXJjZSkgc2V0cyBTaW5r
-VHhORyBleGNlcHQgZm9yIEhBUkRfUkVTRVQNCj4gYW5kIFNPRlRfUkVTRVQuDQo+ID4+Pj4+DQo+
-ID4+Pj4+IEkgdGVzdGVkIHRoaXMgd2l0aCBteSBHREJXaW4gd2hpY2ggaGFzIGZ1c2IzMDIuIFdo
-ZW4gSSBwbHVnLWluDQo+ID4+Pj4+IERpc3BsYXlQb3J0IGFkYXB0ZXIsIHRoZSBwYXJ0bmVyIGRl
-dmljZSBuZXZlciBnZXRzIHJlZ2lzdGVyZWQsIGFuZA0KPiA+Pj4+PiBJIHNlZSBzdGVhZHkgZmxv
-dyBvZiB3YXJuaW5ncyBmcm9tIGZ1c2IzMDI6DQo+ID4+Pj4+DQo+ID4+Pj4NCj4gPj4+PiBGV0lX
-LCBJIG1hZGUgbXVsdGlwbGUgYXR0ZW1wdHMgdG8gcmV2aWV3IHRoZSBwYXRjaC4gRWFjaCB0aW1l
-IEkgZ2V0DQo+ID4+Pj4gc3R1Y2sgYWZ0ZXIgYSB3aGlsZSBhbmQgbm90aWNlIHRoYXQgSSBkb24n
-dCB1bmRlcnN0YW5kIHdoYXQgaXMgZ29pbmcgb24uDQo+ID4+Pj4NCj4gPj4+PiBNYXliZSB0aGUg
-c3RhdGUgbWFjaGluZSBuZWVkcyBhIGNvbXBsZXRlIG92ZXJoYXVsLiBJdCBzZWVtcyB0byBoYXZl
-DQo+ID4+Pj4gcmVhY2hlZCBhIHBvaW50IHdoZXJlIGl0IGlzIGdldHRpbmcgdG9vIGNvbXBsZXgg
-dG8gdW5kZXJzdGFuZCB3aGF0IGlzIGdvaW5nDQo+IG9uLg0KPiA+Pj4+DQo+ID4+Pj4+IFsgIDY5
-My4zOTExNzZdIFZjb25uIGlzIG9uIGR1cmluZyB0b2dnbGUgc3RhcnQgWyAgNjkzLjM5MTI1MF0N
-Cj4gPj4+Pj4gV0FSTklORzogQ1BVOiAyIFBJRDogMzAgYXQgZHJpdmVycy91c2IvdHlwZWMvdGNw
-bS9mdXNiMzAyLmM6NTYyDQo+ID4+Pj4+IGZ1c2IzMDJfc2V0X3RvZ2dsaW5nKzB4MTI5LzB4MTMw
-IFtmdXNiMzAyXSBbICA2OTMuNDAwMjkzXSBNb2R1bGVzDQo+IGxpbmtlZCBpbjogaW50ZWxfeGhj
-aV91c2Jfcm9sZV9zd2l0Y2ggZnVzYjMwMiB0Y3BtIHJvbGVzIHBpM3VzYjMwNTMyIGk5MTUgdHlw
-ZWMNCj4gaW50ZWxfZ3R0IGludGVsX2NodF9pbnQzM2ZlDQo+ID4+Pj4+IFsgIDY5My40MDYzMDld
-IENQVTogMiBQSUQ6IDMwIENvbW06IGt3b3JrZXIvdTg6MSBUYWludGVkOiBHICAgICAgICBXDQo+
-IDUuMS4wLXJjMy1oZWlra2krICMxNw0KPiA+Pj4+PiBbICA2OTMuNDA4NDM0XSBjaHRfd2NvdmVf
-cHdyc3JjIGNodF93Y292ZV9wd3JzcmM6IENvdWxkIG5vdCBkZXRlY3QNCj4gPj4+Pj4gY2hhcmdl
-ciB0eXBlIFsgIDY5My40MTIyNzhdIEhhcmR3YXJlIG5hbWU6IERlZmF1bHQgc3RyaW5nIERlZmF1
-bHQNCj4gPj4+Pj4gc3RyaW5nL0RlZmF1bHQgc3RyaW5nLCBCSU9TIDUuMTEgMDUvMjUvMjAxNyBb
-ICA2OTMuNDEyMjgzXQ0KPiA+Pj4+PiBXb3JrcXVldWU6IGkyYy1mdXNiMzAyIHRjcG1fc3RhdGVf
-bWFjaGluZV93b3JrIFt0Y3BtXSBbDQo+ID4+Pj4+IDY5My40MjQyNTZdIFJJUDogMDAxMDpmdXNi
-MzAyX3NldF90b2dnbGluZysweDEyOS8weDEzMCBbZnVzYjMwMl0gWw0KPiA+Pj4+PiA2OTMuNDI3
-MjM0XSBDb2RlOiA4OSBkZiBlOCBkYSBlZiBmZiBmZiA4NSBjMCA3OCBjNiBjNiA4MyBiMCAwMSAw
-MA0KPiA+Pj4+PiAwMCAwMCBlYiBiNyBiOSAwMiAwMCAwMCAwMCBlOSA0OCBmZiBmZiBmZiA0OCBj
-NyBjNyAyMCBlOCAyMSBhMCBlOA0KPiA+Pj4+PiA4ZSAwYyBlNCBlMCA8MGY+IDBiIGU5IDU4IGZm
-IGZmIGZmIDQxIDU1IDRjIDhkIDZmIGU4IDQxIDU0IDQxIDg5DQo+ID4+Pj4+IGY0IDU1IDUzIDQ4
-IDhkIFsgIDY5My40MzYyMDRdIFJTUDogMDAwMDpmZmZmYzkwMDAwNzZiZDkwIEVGTEFHUzoNCj4g
-Pj4+Pj4gMDAwMTAyODYgWyAgNjkzLjQzOTE3NF0gUkFYOiAwMDAwMDAwMDAwMDAwMDAwIFJCWDoN
-Cj4gPj4+Pj4gZmZmZjg4ODE3ODA4MDAyOCBSQ1g6IDAwMDAwMDAwMDAwMDAwMDAgWyAgNjkzLjQ0
-MjE1N10gUkRYOg0KPiA+Pj4+PiAwMDAwMDAwMDAwMDAwMDFmIFJTSTogZmZmZmZmZmY4MjU5MDUx
-ZiBSREk6IGZmZmZmZmZmODI1OTA5MWYgWw0KPiA+Pj4+PiA2OTMuNDQ1MTMwXSBSQlA6IDAwMDAw
-MDAwMDAwMDAwMDMgUjA4OiBmZmZmZmZmZjgyNTkwNTAwIFIwOToNCj4gPj4+Pj4gMDAwMDAwMDAw
-MDAyMDJjMCBbICA2OTMuNDQ4MTAwXSBSMTA6IDAwMDAwMTBjYjI0YTNkMTggUjExOg0KPiA+Pj4+
-PiAwMDAwMDAwMDAwMDAwMDFlIFIxMjogZmZmZjg4ODE3ODA4MDFiMCBbICA2OTMuNDUxMDg2XSBS
-MTM6DQo+IGZmZmZmZmZmYTAyMWU0ZTUgUjE0OiAwMDAwMDAwMDAwMDAwMDAzIFIxNTogZmZmZjg4
-ODE3ODA4MDA0MCBbICA2OTMuNDU0MDYwXSBGUzoNCj4gMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBH
-UzpmZmZmODg4MTdiYjAwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAgWw0KPiA2OTMu
-NDYwMDA5XSBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMz
-IFsgIDY5My40NjI5ODRdIENSMjoNCj4gMDAwMDAwMDBmN2ZiNzRhMCBDUjM6IDAwMDAwMDAwMDIw
-MGQwMDAgQ1I0OiAwMDAwMDAwMDAwMTAwNmUwIFsgIDY5My40NjU5NjldDQo+IENhbGwgVHJhY2U6
-DQo+ID4+Pj4+IFsgIDY5My40Njg5MzddICB0Y3BtX3NldF9jYysweGI5LzB4MTcwIFtmdXNiMzAy
-XSBbICA2OTMuNDcxODk0XQ0KPiA+Pj4+PiB0Y3BtX2Ftc19zdGFydCsweDFiOC8weDJhMCBbdGNw
-bV0NCj4gPj4+Pg0KPiA+Pj4+IHRjcG1fYW1zX3N0YXJ0KCkgc2V0cyBUWVBFQ19DQ19SUF8xXzUg
-dW5jb25kaXRpb25hbGx5LCBubyBtYXR0ZXINCj4gPj4+PiB3aGF0LiBUaGlzIGNhdXNlcyB0aGUg
-ZnVzYjMwMiBjb2RlIHRvIHN0YXJ0IHRvZ2dsaW5nLiBBcyBzdWNoLCBpdA0KPiA+Pj4+IG1heSB3
-ZWxsIGF0dGVtcHQgdG8gc3RhcnQgdG9nZ2xpbmcgaW4gdGhlIHdyb25nIHN0YXRlLg0KPiA+Pj4+
-DQo+ID4+Pj4gR3VlbnRlcg0KPiA+Pj4+DQo+ID4+Pg0KPiA+Pj4gSSByZWFkIHRoZSBmdXNiMzAy
-IHNwZWMgYnV0IGZhaWxlZCB0byBmaW5kIHRoZSBzdGF0ZW1lbnQgdGhhdCBzYXlzDQo+ID4+PiBp
-dCBzaG91bGQgInNldCB0b2dnbGluZyIgd2hlbiBDQyBzd2l0Y2hlcyBhbW9uZyBkZWZhdWx0L21l
-ZGl1bS9oaWdoLg0KPiA+Pj4NCj4gPj4+IHF1b3QgZnJvbSBmdXNiMzAyIHNwZWM6DQo+ID4+PiAi
-VGhlIEZVU0IzMDIgYWxsb3dzIHRoZSBob3N0IHNvZnR3YXJlIHRvIGNoYW5nZSB0aGUgY2hhcmdp
-bmcgY3VycmVudA0KPiA+Pj4gY2FwYWJpbGl0aWVzIG9mIHRoZSBwb3J0IHRocm91Z2ggdGhlIEhP
-U1RfQ1VSIGNvbnRyb2wgYml0cy4gSWYgdGhlDQo+ID4+PiBIT1NUX0NVUiBiaXRzIGFyZSBjaGFu
-Z2VkIHByaW9yIHRvIGF0dGFjaCwgdGhlIEZVU0IzMDIgYXV0b21hdGljYWxseQ0KPiA+Pj4gaW5k
-aWNhdGVzIHRoZSBwcm9ncmFtbWVkIGN1cnJlbnQgY2FwYWJpbGl0eSB3aGVuIGEgZGV2aWNlIGlz
-IGF0dGFjaGVkLg0KPiA+Pj4gSWYgdGhlIGN1cnJlbnQgY2FwYWJpbGl0aWVzIGFyZSBjaGFuZ2Vk
-IGFmdGVyIGEgZGV2aWNlIGlzIGF0dGFjaGVkLA0KPiA+Pj4gdGhlIEZVU0IzMDIgaW1tZWRpYXRl
-bHkgY2hhbmdlcyB0aGUgQ0MgbGluZSB0byB0aGUgcHJvZ3JhbW1lZA0KPiA+Pj4gY2FwYWJpbGl0
-eS4iDQo+ID4+Pg0KPiA+Pj4gSXMgaXQgcG9zc2libGUgdG8gc2tpcCBmdXNiMzAyX3NldF90b2dn
-bGluZygpIEAgbGluZSM2NTggaWYNCj4gPj4+IHRjcG1fc2V0X2NjKCkgaXMgY2FsbGVkIGluIG9y
-ZGVyIHRvIHN3aXRjaCB0aGUgY2MgYW1vbmcNCj4gPj4+IGRlZmF1bHQvbWVkaXVtL2hpZ2ggb2Yg
-UnAgPw0KPiA+DQo+ID4gSGFucywgeW91IGludHJvZHVjZWQgdGhhdCBpbiBjb21taXQgZGFmODFk
-MDEzN2E5YyAoInVzYjogdHlwZWM6DQo+ID4gZnVzYjMwMjogUmVmYWN0b3IgLyBzaW1wbGlmeSB0
-Y3BtX3NldF9jYygpIiksIHNvIGNvdWxkIHlvdSB0YWtlIGEgbG9vaw0KPiA+IGF0IHRoaXMuDQo+
-IA0KPiBJIGRvIG5vdCBiZWxpZXZlIHRoYXQgdGhhdCBjb21taXQgaW50cm9kdWNlcyB0aGUgZnVz
-YjMwMl9zZXRfdG9nZ2xpbmcoKSBhcyB0aGUNCj4gc3ViamVjdCBvZiB0aGUgY29tbWl0IHNheXMg
-aXQganVzdCByZWZhY3RvcnMgdGhpbmdzLCB0aGUgc2V0X3RvZ2dsaW5nIGNhbGwgd2FzDQo+IGlu
-dHJvZHVjZWQgYnk6DQo+IA0KPiBjb21taXQgZWEzYjRkNTUyM2JjOCgidXNiOiB0eXBlYzogZnVz
-YjMwMjogUmVzb2x2ZSBmaXhlZCBwb3dlciByb2xlIGNvbnRyYWN0DQo+IHNldHVwIikNCj4gDQo+
-IEJlZm9yZSB0aGF0Og0KPiANCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvZHJpdmVycy91DQo+IHNiL3R5cGVj
-L3RjcG0vZnVzYjMwMi5jP2lkPTQwMzI2ZTg1N2M1N2EwMDk1ZDNmOWQ3MmMxNGNiMTNhZWY0Y2E1
-NjQNCj4gDQo+IHRjcG1fc2V0X2NjIGFjdHVhbGx5IHR1cm5lZCB0b2dnbGluZyBvZmYgaW4gYWxs
-IGNhc2VzLg0KPiANCj4gSSd2ZSBubyBkb3VidCB0aGF0IEFkYW0gd2FzIHNlZWluZyBhIHJlYWwg
-cHJvYmxlbSwgYnV0IEkndmUgZG91YnRlZCBpZiB0aGlzIHdhcw0KPiB0aGUgcmlnaHQgZml4IGJl
-Zm9yZS4gSSBldmVuIGhhZCBpdCByZXZlcnRlZCBpbiBteSB0cmVlIGZvciBhIHdoaWxlLCBidXQg
-c2luY2UgaW4gbXkNCj4gdXNlLWNhc2VzIHNvIGZhciBpdCBoYXMgbm90IGNhdXNlZCBhbnkgcHJv
-YmxlbXMgSSd2ZSBub3QgbG9va2VkIGludG8gaXQgZnVydGhlci4NCg0KRnJvbSBteSByZWNvbGxl
-Y3Rpb24sIHRoYXQgd2FzIHRoZSBvbmx5IHdheSB0byBnZW5lcmF0ZSB0aGUgbmVjZXNzYXJ5IGV2
-ZW50IGZyb20NCmZ1c2IzMDIgdG8gaW5kaWNhdGUgYSBjb25uZWN0aW9uLCB3aGVuIHRoZSBkZXZp
-Y2Ugd2FzIGluIGEgZml4ZWQgcm9sZSBzdGF0ZQ0KKGkuZS4gb25seSBzb3VyY2Ugb3Igb25seSBz
-aW5rKS4gV2l0aG91dCBpdCB0aGUgZHJpdmVyIGRvZXNuJ3Qgd29yayBpbiB0aGVzZQ0Kc2NlbmFy
-aW9zIGFzIHRoZXJlJ3Mgbm8gVE9HRE9ORSBldmVudCBnZW5lcmF0ZWQgYnkgZnVzYjMwMiwgc28g
-bm8gZXZlbnR1YWwgY2FsbA0KdG8gJ3RjcG1fY2NfY2hhbmdlKCknIHRvIHRlbGwgVENQTSB0aGF0
-IHNvbWV0aGluZyBoYXMgaGFwcGVuZWQgYW5kIG1vdmUgb24gdGhlDQpzdGF0ZSBtYWNoaW5lLiBO
-b3QgYWxsIGRldmljZXMgd2lsbCBiZSBEUlAgc28gd2UgaGF2ZSB0byBhY2NvdW50IGZvciB0aGlz
-Lg0KDQo+IA0KPiBJbiB0aGUgbWVhbiB0aW1lIHRoZSBjb2RlIGhhcyBjaGFuZ2VkIHF1aXRlIGEg
-Yml0IHRob3VnaCwgc28gbWFraW5nDQo+IHRjcG1fc2V0X2NjKCkgYmVoYXZlIGFzIGl0IGRpZCBi
-ZWZvcmUsIHNlZToNCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
-bC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvZHJpdmVycy91DQo+IHNiL3R5cGVjL3RjcG0v
-ZnVzYjMwMi5jP2lkPTQwMzI2ZTg1N2M1N2EwMDk1ZDNmOWQ3MmMxNGNiMTNhZWY0Y2E1NjQNCj4g
-DQo+IFdpbGwgcmVxdWlyZSB3cml0aW5nIHNvbWV0aGluZyBmcm9tIHNjcmF0Y2ggYmFzZWQgb24g
-dGhlIG5ldyBjb2RlIHdoaWNoDQo+IG1pbWlja3MgdGhlIGJlaGF2aW91ciBvZiB0aGUgb2xkIGNv
-ZGU7IGFuZCB0aGVuIHdlIGFsc28gbmVlZCB0byBmaXggQWRhbSdzDQo+IHByb2JsZW0gb24gdG9w
-Lg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IEhhbnMNCg==
+Paolo Bonzini <pbonzini@redhat.com> writes:
+
+> On 10/04/19 11:38, Vitaly Kuznetsov wrote:
+>> Early RFC, based on state_test.
+>> 
+>> Add a simplistic test for SMM. Currently it fails with
+>> "Unexpected result from KVM_SET_NESTED_STATE" even when a patch fixing
+>> rsm after VMXON is added. There's likey some other issue in nested
+>> save/restore when SMM os on.
+>> 
+>> The test implements its own sync between the guest and the host as using
+>> our ucall library seems to be too cumbersome: SMI handler is happening in
+>> real-address mode.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  tools/testing/selftests/kvm/Makefile          |   1 +
+>>  .../selftests/kvm/include/x86_64/processor.h  |  27 +++
+>>  tools/testing/selftests/kvm/x86_64/smm_test.c | 159 ++++++++++++++++++
+>>  3 files changed, 187 insertions(+)
+>>  create mode 100644 tools/testing/selftests/kvm/x86_64/smm_test.c
+>> 
+>> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+>> index 3c1f4bdf9000..257955593cdf 100644
+>> --- a/tools/testing/selftests/kvm/Makefile
+>> +++ b/tools/testing/selftests/kvm/Makefile
+>> @@ -17,6 +17,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/state_test
+>>  TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
+>>  TEST_GEN_PROGS_x86_64 += x86_64/hyperv_cpuid
+>>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_close_while_nested_test
+>> +TEST_GEN_PROGS_x86_64 += x86_64/smm_test
+>>  TEST_GEN_PROGS_x86_64 += dirty_log_test
+>>  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>>  
+>> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+>> index e2884c2b81ff..6063d5b2f356 100644
+>> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+>> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+>> @@ -778,6 +778,33 @@ void vcpu_set_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index,
+>>  #define MSR_IA32_APICBASE_ENABLE	(1<<11)
+>>  #define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
+>>  
+>> +#define APIC_BASE_MSR	0x800
+>> +#define X2APIC_ENABLE	(1UL << 10)
+>> +#define	APIC_ICR	0x300
+>> +#define		APIC_DEST_SELF		0x40000
+>> +#define		APIC_DEST_ALLINC	0x80000
+>> +#define		APIC_DEST_ALLBUT	0xC0000
+>> +#define		APIC_ICR_RR_MASK	0x30000
+>> +#define		APIC_ICR_RR_INVALID	0x00000
+>> +#define		APIC_ICR_RR_INPROG	0x10000
+>> +#define		APIC_ICR_RR_VALID	0x20000
+>> +#define		APIC_INT_LEVELTRIG	0x08000
+>> +#define		APIC_INT_ASSERT		0x04000
+>> +#define		APIC_ICR_BUSY		0x01000
+>> +#define		APIC_DEST_LOGICAL	0x00800
+>> +#define		APIC_DEST_PHYSICAL	0x00000
+>> +#define		APIC_DM_FIXED		0x00000
+>> +#define		APIC_DM_FIXED_MASK	0x00700
+>> +#define		APIC_DM_LOWEST		0x00100
+>> +#define		APIC_DM_SMI		0x00200
+>> +#define		APIC_DM_REMRD		0x00300
+>> +#define		APIC_DM_NMI		0x00400
+>> +#define		APIC_DM_INIT		0x00500
+>> +#define		APIC_DM_STARTUP		0x00600
+>> +#define		APIC_DM_EXTINT		0x00700
+>> +#define		APIC_VECTOR_MASK	0x000FF
+>> +#define	APIC_ICR2	0x310
+>> +
+>>  #define MSR_IA32_TSCDEADLINE		0x000006e0
+>>  
+>>  #define MSR_IA32_UCODE_WRITE		0x00000079
+>> diff --git a/tools/testing/selftests/kvm/x86_64/smm_test.c b/tools/testing/selftests/kvm/x86_64/smm_test.c
+>> new file mode 100644
+>> index 000000000000..3452b592588a
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/x86_64/smm_test.c
+>> @@ -0,0 +1,159 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2018, Red Hat, Inc.
+>> + *
+>> + * Tests for SMM.
+>> + */
+>> +#define _GNU_SOURCE /* for program_invocation_short_name */
+>> +#include <fcntl.h>
+>> +#include <stdio.h>
+>> +#include <stdlib.h>
+>> +#include <stdint.h>
+>> +#include <string.h>
+>> +#include <sys/ioctl.h>
+>> +
+>> +#include "test_util.h"
+>> +
+>> +#include "kvm_util.h"
+>> +
+>> +#include "vmx.h"
+>> +
+>> +#define VCPU_ID	      1
+>> +
+>> +#define PAGE_SIZE  4096
+>> +
+>> +#define SMRAM_SIZE (16 * PAGE_SIZE)
+>> +#define SMRAM_GPA 0x1000000
+>> +#define SMRAM_STAGE 0xfe
+>> +
+>> +#define STR(x) #x
+>> +#define XSTR(s) STR(s)
+>> +
+>> +#define SYNC_PORT 0xe
+>> +#define DONE 0xff
+>> +
+>> +/*
+>> + * This is compiled as normal 64-bit code, however, SMI handler is executed
+>> + * in real-address mode. To stay simple we're limiting ourselves to a mode
+>> + * independent subset of asm here.
+>> + * SMI handler always report back fixed stage SMRAM_STAGE.
+>> + */
+>> +void smi_handler(void)
+>> +{
+>> +	asm volatile("mov $" XSTR(SMRAM_STAGE) ", %al \n"
+>> +		     "in $" XSTR(SYNC_PORT) ", %al \n"
+>> +		     "rsm \n");
+>> +}
+>> +/* This should change if the code above changes in length */
+>> +#define SMI_HANDLER_SIZE 6
+>
+> Here I had similar code but I just wrote hex instead. :)
+>
+
+I enjoyed playing the game "find the right instruction" so we don't need
+to have a separate .s file. It seems we're good with the 3-instruction
+stub.
+
+
+>> +
+>> +void sync_with_host(uint64_t phase)
+>> +{
+>> +	asm volatile("in $" XSTR(SYNC_PORT)", %%al \n"
+>> +		     : : "a" (phase));
+>> +}
+>> +
+>> +void self_smi(void)
+>> +{
+>> +	wrmsr(APIC_BASE_MSR + (APIC_ICR >> 4),
+>> +	      APIC_DEST_SELF | APIC_INT_ASSERT | APIC_DM_SMI);
+>> +}
+>> +
+>> +void guest_code(struct vmx_pages *vmx_pages)
+>> +{
+>> +	uint64_t apicbase = rdmsr(MSR_IA32_APICBASE);
+>> +
+>> +	sync_with_host(1);
+>> +
+>> +	wrmsr(MSR_IA32_APICBASE, apicbase | X2APIC_ENABLE);
+>> +
+>> +	sync_with_host(2);
+>> +
+>> +	self_smi();
+>> +
+>> +	sync_with_host(4);
+>> +
+>> +	if (vmx_pages) {
+>> +		GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
+>> +
+>> +		sync_with_host(5);
+>> +
+>> +		self_smi();
+>> +
+>> +		sync_with_host(7);
+>> +	}
+>> +
+>> +	sync_with_host(DONE);
+>> +}
+>> +
+>> +int main(int argc, char *argv[])
+>> +{
+>> +	struct vmx_pages *vmx_pages = NULL;
+>> +	vm_vaddr_t vmx_pages_gva = 0;
+>> +
+>> +	struct kvm_regs regs;
+>> +	struct kvm_vm *vm;
+>> +	struct kvm_run *run;
+>> +	struct kvm_x86_state *state;
+>> +	int stage, stage_reported;
+>> +
+>> +	/* Create VM */
+>> +	vm = vm_create_default(VCPU_ID, 0, guest_code);
+>> +
+>> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+>> +
+>> +	run = vcpu_state(vm, VCPU_ID);
+>> +
+>> +	vcpu_regs_get(vm, VCPU_ID, &regs);
+>
+> Unused?
+>
+
+Yes, probably a leftover from state_test
+
+>> +
+>> +	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, SMRAM_GPA,
+>> +				    1 << 16 | 1, SMRAM_SIZE/PAGE_SIZE, 0);
+>
+> Better add a vm_phy_pages_alloc here.
+>
+> I'll debug the remaining failure and post it again.
+
+Thanks!
+
+>
+> Paolo
+>
+>> +	memset(addr_gpa2hva(vm, SMRAM_GPA), 0x0, SMRAM_SIZE);
+>> +	memcpy(addr_gpa2hva(vm, SMRAM_GPA) + 0x8000, smi_handler,
+>> +	       SMI_HANDLER_SIZE);
+>> +
+>> +	vcpu_set_msr(vm, VCPU_ID, MSR_IA32_SMBASE, SMRAM_GPA);
+>> +
+>> +	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
+>> +		vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
+>> +		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+>> +	} else {
+>> +		printf("will skip SMM test with VMX enabled\n");
+>> +		vcpu_args_set(vm, VCPU_ID, 1, 0);
+>> +	}
+>> +
+>> +	for (stage = 1;; stage++) {
+>> +		_vcpu_run(vm, VCPU_ID);
+>> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+>> +			    "Stage %d: unexpected exit reason: %u (%s),\n",
+>> +			    stage, run->exit_reason,
+>> +			    exit_reason_str(run->exit_reason));
+>> +
+>> +		memset(&regs, 0, sizeof(regs));
+>> +		vcpu_regs_get(vm, VCPU_ID, &regs);
+>> +
+>> +		stage_reported = regs.rax & 0xff;
+>> +
+>> +		if (stage_reported == DONE)
+>> +			goto done;
+>> +
+>> +		TEST_ASSERT(stage_reported == stage ||
+>> +			    stage_reported == SMRAM_STAGE,
+>> +			    "Unexpected stage: #%x, got %x",
+>> +			    stage, stage_reported);
+>> +
+>> +		/* This piece of code needs sharing with state_test/evmcs_test */
+>> +		state = vcpu_save_state(vm, VCPU_ID);
+>> +		kvm_vm_release(vm);
+>> +		kvm_vm_restart(vm, O_RDWR);
+>> +		vm_vcpu_add(vm, VCPU_ID, 0, 0);
+>> +		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+>> +		vcpu_load_state(vm, VCPU_ID, state);
+>> +		run = vcpu_state(vm, VCPU_ID);
+>> +		free(state);
+>> +	}
+>> +
+>> +done:
+>> +	kvm_vm_free(vm);
+>> +}
+>> 
+>
+
+-- 
+Vitaly
