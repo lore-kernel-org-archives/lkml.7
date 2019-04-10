@@ -2,206 +2,200 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B81C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B3AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF062133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094262083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KewiMEBQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d4hvGje3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UVmemI1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfDJJ1i (ORCPT
+        id S1729898AbfDJJ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:27:38 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:39711 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbfDJJ1h (ORCPT
+        Wed, 10 Apr 2019 05:28:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33672 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727583AbfDJJ2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:27:37 -0400
-Received: by mail-yb1-f201.google.com with SMTP id u125so1296076ybf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=IqFv1AQJLSe0cAEqxckv6f9Un/Y2FytgRM8jbJdiFxM=;
-        b=KewiMEBQSX61LVb7I4tp711G8sYPbtpUD50rarh2a74g3F76fa6Dbkusvsz4bLyhVA
-         q1ZPe9hqA+PFqc3j5pkxNu+Q7bdGG5HKOOKGWSabO6xtU1U+JKZDlUSZ2w3//l8KY8KJ
-         OLsV9yCnBwrQMk4hDFL9bfzis4ezJPA9ZuTei93t9j/Als0Ln1c5bMrUPNW5on8TDgpc
-         7EE9Iov2+XrU9Vuyc5CjhlPBDGlU4UcdcLt+e7C6QndDdToHLA3XfHQ4/K4b+f63aVjT
-         mMLPjOhfOTJw/XLSAbAmZBriX84zBBmm/d23DREjnfIKOsw2IjguTzOfmOou+2N5CMIQ
-         Gwhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=IqFv1AQJLSe0cAEqxckv6f9Un/Y2FytgRM8jbJdiFxM=;
-        b=gYIcoVHKE0i9iOxWvEnu6GPoA8H+8iXAlj1tvsDCWw9rM6REuNtbVc9xarETZNmaq8
-         /1xgd5JyecHMCaUaSAXszOTqoN5o41QHTA7u/1Q4A9F6QEaUZiB8tcKfRdRt4aEeeVo5
-         BtKZRCZ+DYsv4qCPH3VR3cKDmiHkaAO1np7WpHtoBYx7a5SaqLwFQ5KtHVO4oKsQgZRX
-         9WSNbdttF+0wpi2IZSnZzGh9q4jMQrvJFJk0czfujA1eyQk5KFZuY9j2A7VYPqwCyL9Q
-         +SuyncgNdA3wbZsnCc5CssyUi0TpuLHJ3Q3iyLJw+GkAh1xagCaPxa8Y9SR1KeI4GWMj
-         oeqw==
-X-Gm-Message-State: APjAAAXRFALF/Eg0aIHVin0ovqVgsseJFr5mXv22C38pYmzhM4oPKXeb
-        sbtcXL3Mwgt4hspLPV5ovsbl3CBv7zccjbZmQig=
-X-Google-Smtp-Source: APXvYqzVvGiIYrMtb9PgdSAjZ8CisL0CYTNnE1PxVSm/4e5HC7brN3Wh893+8t6EKJc64QQ71G6aQ2ZxjOYrstUI/No=
-X-Received: by 2002:a25:40c4:: with SMTP id n187mr6216423yba.16.1554888456456;
- Wed, 10 Apr 2019 02:27:36 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:27:30 +0800
-Message-Id: <20190410092730.72358-1-huangrandall@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v4] f2fs: fix to avoid accessing xattr across the boundary
-From:   Randall Huang <huangrandall@google.com>
-To:     jaegeuk@kernel.org, yuchao0@huawei.com,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Cc:     huangrandall@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 10 Apr 2019 05:28:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0E69360FF3; Wed, 10 Apr 2019 09:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554888484;
+        bh=iDxB1nyDECSqWjnngbEZI2x6uq5t781WRASfh4Q/YbA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d4hvGje3kah5HjyHPGvXjpTdaAsawRQxUgdX2NwqtKeaZBPQnOW71N762HUO/Hgcc
+         koE4TFzEgRHj84wrMDDitylmv5zj2JBezoBhWyshjXeAW1vbZVNYbv785YIfmS8LJ1
+         jcJcBvNQM9HcPQRExwp4CsdkYcEULv7U+BLQM+uA=
+Received: from rocky-HP-EliteBook-8460p.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5590460EA5;
+        Wed, 10 Apr 2019 09:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554888481;
+        bh=iDxB1nyDECSqWjnngbEZI2x6uq5t781WRASfh4Q/YbA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UVmemI1ng7AraZCaHG09ba/TNI5eLBnr5N0GqwHFhRJGqJUr3A+zCwj3Xu2c9Eeay
+         qS4mjcHXfyeAPN1QXS1wePbC++rppKeUAAGrncl8BGXsvtuei60VxUumI4dS0GXvET
+         ER3CZwyJXtfwmBGGZ22H75a1zBimRnuYuO5adUu4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5590460EA5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
+        johan.hedberg@gmail.com, thierry.escande@linaro.org
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v3 1/2] Bluetooth: hci_qca: Load customized NVM based on the device property
+Date:   Wed, 10 Apr 2019 17:27:31 +0800
+Message-Id: <1554888451-17518-1-git-send-email-rjliao@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1554368908-22017-1-git-send-email-rjliao@codeaurora.org>
+References: <1554368908-22017-1-git-send-email-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we traverse xattr entries via __find_xattr(),
-if the raw filesystem content is faked or any hardware failure occurs,
-out-of-bound error can be detected by KASAN.
-Fix the issue by introducing boundary check.
+QCA BTSOC NVM is a customized firmware file and different vendors may
+want to have different BTSOC configuration (e.g. Configure SCO over PCM
+or I2S, Setting Tx power, etc.) via this file. This patch will allow
+vendors to download different NVM firmware file by reading a device
+property "firmware-name".
 
-[   38.402878] c7   1827 BUG: KASAN: slab-out-of-bounds in f2fs_getxattr+0x518/0x68c
-[   38.402891] c7   1827 Read of size 4 at addr ffffffc0b6fb35dc by task
-[   38.402935] c7   1827 Call trace:
-[   38.402952] c7   1827 [<ffffff900809003c>] dump_backtrace+0x0/0x6bc
-[   38.402966] c7   1827 [<ffffff9008090030>] show_stack+0x20/0x2c
-[   38.402981] c7   1827 [<ffffff900871ab10>] dump_stack+0xfc/0x140
-[   38.402995] c7   1827 [<ffffff9008325c40>] print_address_description+0x80/0x2d8
-[   38.403009] c7   1827 [<ffffff900832629c>] kasan_report_error+0x198/0x1fc
-[   38.403022] c7   1827 [<ffffff9008326104>] kasan_report_error+0x0/0x1fc
-[   38.403037] c7   1827 [<ffffff9008325000>] __asan_load4+0x1b0/0x1b8
-[   38.403051] c7   1827 [<ffffff90085fcc44>] f2fs_getxattr+0x518/0x68c
-[   38.403066] c7   1827 [<ffffff90085fc508>] f2fs_xattr_generic_get+0xb0/0xd0
-[   38.403080] c7   1827 [<ffffff9008395708>] __vfs_getxattr+0x1f4/0x1fc
-[   38.403096] c7   1827 [<ffffff9008621bd0>] inode_doinit_with_dentry+0x360/0x938
-[   38.403109] c7   1827 [<ffffff900862d6cc>] selinux_d_instantiate+0x2c/0x38
-[   38.403123] c7   1827 [<ffffff900861b018>] security_d_instantiate+0x68/0x98
-[   38.403136] c7   1827 [<ffffff9008377db8>] d_splice_alias+0x58/0x348
-[   38.403149] c7   1827 [<ffffff900858d16c>] f2fs_lookup+0x608/0x774
-[   38.403163] c7   1827 [<ffffff900835eacc>] lookup_slow+0x1e0/0x2cc
-[   38.403177] c7   1827 [<ffffff9008367fe0>] walk_component+0x160/0x520
-[   38.403190] c7   1827 [<ffffff9008369ef4>] path_lookupat+0x110/0x2b4
-[   38.403203] c7   1827 [<ffffff900835dd38>] filename_lookup+0x1d8/0x3a8
-[   38.403216] c7   1827 [<ffffff900835eeb0>] user_path_at_empty+0x54/0x68
-[   38.403229] c7   1827 [<ffffff9008395f44>] SyS_getxattr+0xb4/0x18c
-[   38.403241] c7   1827 [<ffffff9008084200>] el0_svc_naked+0x34/0x38
-
-Bug: 126558260
-
-Signed-off-by: Randall Huang <huangrandall@google.com>
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 ---
-v2:
-* return EFAULT if OOB error is detected
-
-v3:
-* fix typo in setxattr()
-
-v4:
-* change boundry definition
+Changes in v3:
+  * added firmware-name instead of nvm-postfix to specify full firmware name
 ---
- fs/f2fs/xattr.c | 34 +++++++++++++++++++++++++++++-----
- 1 file changed, 29 insertions(+), 5 deletions(-)
+ drivers/bluetooth/btqca.c   | 14 ++++++++++----
+ drivers/bluetooth/btqca.h   |  6 ++++--
+ drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
+ 3 files changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index 848a785abe25..a1cf53c727b2 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -202,12 +202,18 @@ static inline const struct xattr_handler *f2fs_xattr_handler(int index)
- 	return handler;
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 6122685..645a893 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+ EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
+ 
+ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-		   enum qca_btsoc_type soc_type, u32 soc_ver)
++		   enum qca_btsoc_type soc_type, u32 soc_ver,
++		   const char *firmware_name)
+ {
+ 	struct rome_config config;
+ 	int err;
+@@ -368,9 +369,14 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 	if (soc_type == QCA_WCN3990)
+ 		snprintf(config.fwname, sizeof(config.fwname),
+ 			 "qca/crnv%02x.bin", rom_ver);
+-	else
+-		snprintf(config.fwname, sizeof(config.fwname),
+-			 "qca/nvm_%08x.bin", soc_ver);
++	else {
++		if (firmware_name)
++			snprintf(config.fwname, sizeof(config.fwname),
++				 "qca/%s", firmware_name);
++		else
++			snprintf(config.fwname, sizeof(config.fwname),
++				 "qca/nvm_%08x.bin", soc_ver);
++	}
+ 
+ 	err = qca_download_firmware(hdev, &config);
+ 	if (err < 0) {
+diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+index 6fdc25d..41dc806 100644
+--- a/drivers/bluetooth/btqca.h
++++ b/drivers/bluetooth/btqca.h
+@@ -139,7 +139,8 @@ enum qca_btsoc_type {
+ 
+ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-		   enum qca_btsoc_type soc_type, u32 soc_ver);
++		   enum qca_btsoc_type soc_type, u32 soc_ver,
++		   const char *firmware_name);
+ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+ int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+ #else
+@@ -150,7 +151,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
  }
  
--static struct f2fs_xattr_entry *__find_xattr(void *base_addr, int index,
--					size_t len, const char *name)
-+static struct f2fs_xattr_entry *__find_xattr(void *base_addr,
-+				void *last_base_addr, int index,
-+				size_t len, const char *name)
+ static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+-				 enum qca_btsoc_type soc_type, u32 soc_ver)
++				 enum qca_btsoc_type soc_type, u32 soc_ver,
++				 const char *firmware_name)
  {
- 	struct f2fs_xattr_entry *entry;
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 4ea995d..9b8d4d7 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -168,6 +168,7 @@ struct qca_serdev {
+ 	struct qca_power *bt_power;
+ 	u32 init_speed;
+ 	u32 oper_speed;
++	const char *firmware_name;
+ };
  
- 	list_for_each_xattr(entry, base_addr) {
-+		if ((void *)(entry) + sizeof(__u32) > last_base_addr ||
-+			(void *)XATTR_NEXT_ENTRY(entry) +
-+			sizeof(__u32) > last_base_addr)
-+			return NULL;
+ static int qca_power_setup(struct hci_uart *hu, bool on);
+@@ -189,6 +190,17 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
+ 	return soc_type;
+ }
+ 
++static const char *qca_get_firmware_name(struct hci_uart *hu)
++{
++	if (hu->serdev) {
++		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
 +
- 		if (entry->e_name_index != index)
- 			continue;
- 		if (entry->e_name_len != len)
-@@ -298,6 +304,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 				void **base_addr, int *base_size)
- {
- 	void *cur_addr, *txattr_addr, *last_addr = NULL;
-+	void *last_txattr_addr = NULL;
- 	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
- 	unsigned int size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
- 	unsigned int inline_size = inline_xattr_size(inode);
-@@ -311,6 +318,9 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 	if (!txattr_addr)
- 		return -ENOMEM;
- 
-+	last_txattr_addr = (void *)txattr_addr + inline_size + size +
-+				XATTR_PADDING_SIZE - 1;
++		return qsd->firmware_name;
++	} else {
++		return NULL;
++	}
++}
 +
- 	/* read from inline xattr */
- 	if (inline_size) {
- 		err = read_inline_xattr(inode, ipage, txattr_addr);
-@@ -337,7 +347,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
- 	else
- 		cur_addr = txattr_addr;
- 
--	*xe = __find_xattr(cur_addr, index, len, name);
-+	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
-+	if (!*xe) {
-+		err = -EFAULT;
-+		goto out;
-+	}
- check:
- 	if (IS_XATTR_LAST_ENTRY(*xe)) {
- 		err = -ENODATA;
-@@ -581,10 +595,15 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 			struct page *ipage, int flags)
+ static void __serial_clock_on(struct tty_struct *tty)
  {
- 	struct f2fs_xattr_entry *here, *last;
--	void *base_addr;
-+	void *base_addr, *last_base_addr = NULL;
- 	int found, newsize;
- 	size_t len;
- 	__u32 new_hsize;
-+	nid_t xnid = F2FS_I(inode)->i_xattr_nid;
-+	unsigned int xattr_nid_size = xnid ? VALID_XATTR_BLOCK_SIZE : 0;
-+	unsigned int inline_size = inline_xattr_size(inode);
-+	unsigned int max_size = inline_size + xattr_nid_size +
-+				 XATTR_PADDING_SIZE;
- 	int error = 0;
+ 	/* TODO: Some chipset requires to enable UART clock on client
+@@ -1191,6 +1203,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	struct qca_data *qca = hu->priv;
+ 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
++	const char *firmware_name = qca_get_firmware_name(hu);
+ 	int ret;
+ 	int soc_ver = 0;
  
- 	if (name == NULL)
-@@ -604,9 +623,14 @@ static int __f2fs_setxattr(struct inode *inode, int index,
- 	error = read_all_xattrs(inode, ipage, &base_addr);
- 	if (error)
- 		return error;
-+	last_base_addr = (void *)base_addr + max_size - 1;
+@@ -1241,7 +1254,8 @@ static int qca_setup(struct hci_uart *hu)
  
- 	/* find entry with wanted name. */
--	here = __find_xattr(base_addr, index, len, name);
-+	here = __find_xattr(base_addr, last_base_addr, index, len, name);
-+	if (!here) {
-+		error = -EFAULT;
-+		goto exit;
-+	}
+ 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
+ 	/* Setup patch / NVM configurations */
+-	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
++	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
++			firmware_name);
+ 	if (!ret) {
+ 		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+ 		qca_debugfs_init(hdev);
+@@ -1462,6 +1476,9 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 			return PTR_ERR(qcadev->bt_en);
+ 		}
  
- 	found = IS_XATTR_LAST_ENTRY(here) ? 0 : 1;
- 
++		device_property_read_string(&serdev->dev, "firmware-name",
++					 &qcadev->firmware_name);
++
+ 		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+ 		if (IS_ERR(qcadev->susclk)) {
+ 			dev_err(&serdev->dev, "failed to acquire clk\n");
 -- 
-2.21.0.392.gf8f6787159e-goog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
