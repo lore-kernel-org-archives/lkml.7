@@ -2,94 +2,173 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4339CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9676C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1025A206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F81206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="kijR5+Zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfDJITq (ORCPT
+        id S1729503AbfDJIUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:19:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:37536 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729289AbfDJITq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:19:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 01:19:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="314636676"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 01:19:44 -0700
-Subject: Re: [RFC PATCH v3 4/4] x86: Add hypercall for acrn_guest
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
- <1554711131-21514-5-git-send-email-yakui.zhao@intel.com>
- <20190408151010.GI15689@zn.tnic>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <400e6c10-10c1-df8a-dcad-4a59c9d6ff9c@intel.com>
-Date:   Wed, 10 Apr 2019 16:17:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Wed, 10 Apr 2019 04:20:54 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:47074 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729258AbfDJIUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:20:54 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id DDFEE5C01BA;
+        Wed, 10 Apr 2019 10:20:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1554884450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LGU5Mf78Q51K9AUAz/zUoPEq/b0Hg+YD3blaiJIp3iU=;
+        b=kijR5+Zzvs67p+PhsuaQ27KYvR8UdVYFOtfgblH1Qo27lru91Pg+xxsl0poBct62i2G0cn
+        BnB5YAp/gVMlDfxbkMwGQT8m3sixUyJiIJIlb8fnE0EBjY4wFFhDyFDVAzP4FWD/Tbr1jR
+        eMMpcbCuMxFj1Ffujxa+kGSzKW77S5g=
 MIME-Version: 1.0
-In-Reply-To: <20190408151010.GI15689@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Date:   Wed, 10 Apr 2019 10:20:50 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     =?UTF-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@mansr.com>
+Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
+        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        tony@atomide.com, marc.w.gonzalez@free.fr, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch
+ argument
+In-Reply-To: <yw1xk1g3xt4o.fsf@mansr.com>
+References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+ <yw1xk1g3xt4o.fsf@mansr.com>
+Message-ID: <f4d81089f70edf8ba24c410ccfc3025e@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09.04.2019 14:25, Måns Rullgård wrote:
+> Stefan Agner <stefan@agner.ch> writes:
+> 
+>> The LLVM Target parser currently does not allow to specify the security
+>> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
+>> to use Clang with LLVM's integrated assembler, this leads to build
+>> errors such as this:
+>>   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
+>>
+>> Use ".arch_extension sec" to enable the security extension in a more
+>> portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
+>> multi-platform kernel is being built.
+>>
+>> Note that this is technically not exactly the same as the old code
+>> checked for availabilty of the security extension by calling as-instr.
+>> However, there are already other sites which use ".arch_extension sec"
+>> unconditionally, hence de-facto we need an assembler capable of
+>> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
+>> arch extension "sec" is available since binutils 2.21 according to
+>> its documentation [1].
+>>
+>> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
+>> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> Acked-by: Mans Rullgard <mans@mansr.com>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>> Changes since v1:
+>> - Explicitly specify assembler architecture as armv7-a to avoid
+>>   build issues when bulding v6/v7 multi arch kernel.
+>>
+>>  arch/arm/mach-bcm/Makefile         | 3 ---
+>>  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
+>>  arch/arm/mach-exynos/Makefile      | 4 ----
+>>  arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
+>>  arch/arm/mach-exynos/sleep.S       | 3 ++-
+>>  arch/arm/mach-highbank/Makefile    | 3 ---
+>>  arch/arm/mach-highbank/smc.S       | 3 ++-
+>>  arch/arm/mach-keystone/Makefile    | 3 ---
+>>  arch/arm/mach-keystone/smc.S       | 1 +
+>>  arch/arm/mach-omap2/Makefile       | 8 --------
+>>  arch/arm/mach-omap2/omap-headsmp.S | 2 ++
+>>  arch/arm/mach-omap2/omap-smc.S     | 3 ++-
+>>  arch/arm/mach-omap2/sleep33xx.S    | 1 +
+>>  arch/arm/mach-omap2/sleep34xx.S    | 2 ++
+>>  arch/arm/mach-omap2/sleep43xx.S    | 2 ++
+>>  arch/arm/mach-omap2/sleep44xx.S    | 2 ++
+>>  arch/arm/mach-tango/Makefile       | 3 ---
+>>  arch/arm/mach-tango/smc.S          | 1 +
+>>  18 files changed, 19 insertions(+), 30 deletions(-)
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+>> index a55a7ecf146a..541e850a736c 100644
+>> --- a/arch/arm/mach-bcm/bcm_kona_smc.c
+>> +++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+>> @@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
+>>  		__asmeq("%2", "r4")
+>>  		__asmeq("%3", "r5")
+>>  		__asmeq("%4", "r6")
+>> -#ifdef REQUIRES_SEC
+>>  		".arch_extension sec\n"
+>> -#endif
+>>  		"	smc    #0\n"
+>>  		: "=r" (ip), "=r" (r0)
+>>  		: "r" (r4), "r" (r5), "r" (r6)
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
+>> index d15de8179fab..ec03dc499270 100644
+>> --- a/arch/arm/mach-keystone/smc.S
+>> +++ b/arch/arm/mach-keystone/smc.S
+>> @@ -21,6 +21,7 @@
+>>   *
+>>   * Return: Non zero value on failure
+>>   */
+>> +	.arch_extension sec
+>>  ENTRY(keystone_cpu_smc)
+>>  	stmfd   sp!, {r4-r11, lr}
+>>  	smc	#0
+> 
+> [...]
+> 
+>> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
+>> index 361a8dc89804..cf2d21e5226c 100644
+>> --- a/arch/arm/mach-tango/smc.S
+>> +++ b/arch/arm/mach-tango/smc.S
+>> @@ -1,6 +1,7 @@
+>>  /* SPDX-License-Identifier: GPL-2.0 */
+>>  #include <linux/linkage.h>
+>>
+>> +	.arch_extension sec
+>>  ENTRY(tango_smc)
+>>  	push	{lr}
+>>  	mov	ip, r1
 
+Actually, mach-tango uses dsb and needs the .arch directive. Will fix in
+v3.
 
-On 2019年04月08日 23:10, Borislav Petkov wrote:
-> On Mon, Apr 08, 2019 at 04:12:11PM +0800, Zhao Yakui wrote:
->> When acrn_hypervisor is detected, the hypercall is needed so that the
->> acrn guest can query/config some settings. For example: it can be used
->> to query the resources in hypervisor and manage the CPU/memory/device/
->> interrupt for Guest system.
-> 
-> Good example.
-> 
-> What is "Guest system" and why is capitalized? Do you mean "the guest
-> operating system" or simply "the guest"?
-
-it means the "guest operating system".
-It will be changed to "guest operating system".
+--
+Stefan
 
 > 
->> So the hypercall is added so that the kernel can communicate with the
-> 
-> "So add the hypercall so that..."
-> 
->> low-level acrn-hypervisor.
-> 
-> Is it acrn_hypervisor or acrn-hypervisor or the ACRN hypervisor or ...?
-> 
-> Unify the naming pls.
-
-Sure. They will be unified to "ACRN hypervisor" in next version.
-
-> 
->> On x86 it is implemented by using vmacll when
-> 
-> During last review Thomas said:
-> 
-> "is implemented with the VMCALL instruction"
-> 
-> You still have it wrong. Which makes me think you haven't even gone over
-> *all* review comments as this is the second missed review comment in a
-> 4-patches set.
-> 
-> So I'm going to stop reviewing here and won't look at your patches until
-> you incorporate *all* review comments from all people.
-> 
+> Is there some reason these three don't need the .arch directive?
