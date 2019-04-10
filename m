@@ -2,84 +2,98 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EAAC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227D9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DA52083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FC320830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbfDJNLQ (ORCPT
+        id S1731629AbfDJNMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:11:16 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727277AbfDJNLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:11:15 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2EB64FAA5A17F98C34F8;
-        Wed, 10 Apr 2019 21:11:10 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
- 21:11:01 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <paul.burton@mips.com>, <bbrezillon@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] mtd: nand: Fix build error while CONFIG_MTD_NAND_ECC_SW_BCH is set to module
-Date:   Wed, 10 Apr 2019 21:07:47 +0800
-Message-ID: <20190410130747.35692-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 10 Apr 2019 09:12:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43032 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729013AbfDJNMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:12:31 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DAF913084248;
+        Wed, 10 Apr 2019 13:12:30 +0000 (UTC)
+Received: from localhost (ovpn-117-202.ams2.redhat.com [10.36.117.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E773F5D961;
+        Wed, 10 Apr 2019 13:12:26 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 14:12:25 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, mst@redhat.com, jasowang@redhat.com,
+        axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] virtio-blk: limit number of hw queues by nr_cpu_ids
+Message-ID: <20190410131225.GA8210@stefanha-x1.localdomain>
+References: <1553682995-5682-1-git-send-email-dongli.zhang@oracle.com>
+ <1553682995-5682-2-git-send-email-dongli.zhang@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Disposition: inline
+In-Reply-To: <1553682995-5682-2-git-send-email-dongli.zhang@oracle.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 10 Apr 2019 13:12:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
 
-Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
-is set to module:
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
-(.text+0xef6): undefined reference to `nand_bch_free'
-drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
-nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
-nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
-nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
+On Wed, Mar 27, 2019 at 06:36:34PM +0800, Dongli Zhang wrote:
+> When tag_set->nr_maps is 1, the block layer limits the number of hw queues
+> by nr_cpu_ids. No matter how many hw queues are used by virtio-blk, as it
+> has (tag_set->nr_maps =3D=3D 1), it can use at most nr_cpu_ids hw queues.
+>=20
+> In addition, specifically for pci scenario, when the 'num-queues' specifi=
+ed
+> by qemu is more than maxcpus, virtio-blk would not be able to allocate mo=
+re
+> than maxcpus vectors in order to have a vector for each queue. As a resul=
+t,
+> it falls back into MSI-X with one vector for config and one shared for
+> queues.
+>=20
+> Considering above reasons, this patch limits the number of hw queues used
+> by virtio-blk by nr_cpu_ids.
+>=20
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  drivers/block/virtio_blk.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
-because MTD_RAW_NAND need it while linked.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support"
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/mtd/nand/raw/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 615d738..0500c42 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
- if MTD_RAW_NAND
- 
- config MTD_NAND_ECC_SW_BCH
--	tristate "Support software BCH ECC"
-+	bool "Support software BCH ECC"
- 	select BCH
- 	default n
- 	help
--- 
-2.7.4
+-----BEGIN PGP SIGNATURE-----
 
+iQEcBAEBAgAGBQJcreu5AAoJEJykq7OBq3PIv1QH/3Xfhaaouf6EN6cUvjc1C8S5
+zptX9W26vBX9yhTbAcJTDQ8ETXOri7HIE0e6fGMPUPc5TQQlShnC74b7d8aUqFS2
+lxl08VctShlE+vB3YVP5K6FOZ82sHszI+uZde/rTt+2+wZqcOqNz0rzi5H+GwZRQ
+QwC3c/Juo/wdG48aWliZrQDApazeKf/2YY+LBqj43Wk7F+X5X65SEiuQkY2xzp0t
+VFLrAGxycRpiL0JBTnXf4VtmP+vox26KmLtccRVZktcgckHuexe05nMGFVhy30aB
+PkQCu7gUEV9AC6kNT4fO6GML6EPHNWnrGRg4qbgZ0htLuQpDTUYonrOR3q3cDkc=
+=TWiv
+-----END PGP SIGNATURE-----
 
+--LQksG6bCIzRHxTLp--
