@@ -2,39 +2,39 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1CFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25417C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90CE2196F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCBF2196F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfDJLIo (ORCPT
+        id S1731039AbfDJLF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:08:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58881 "EHLO
+        Wed, 10 Apr 2019 07:05:59 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58840 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731034AbfDJLGA (ORCPT
+        with ESMTP id S1728813AbfDJLFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:00 -0400
+        Wed, 10 Apr 2019 07:05:53 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB3G-00059b-0M; Wed, 10 Apr 2019 13:05:58 +0200
-Message-Id: <20190410103645.774527030@linutronix.de>
+        id 1hEB39-00057a-FC; Wed, 10 Apr 2019 13:05:51 +0200
+Message-Id: <20190410103645.315084160@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:18 +0200
+Date:   Wed, 10 Apr 2019 12:28:13 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org
-Subject: [RFC patch 24/41] mm/kmemleak: Simplify stacktrace handling
+        Alexander Potapenko <glider@google.com>
+Subject: [RFC patch 19/41] lib/stackdepot: Provide functions which operate on
+ plain storage arrays
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,70 +43,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
+The struct stack_trace indirection in the stack depot functions is a truly
+pointless excercise which requires horrible code at the callsites.
+
+Provide interfaces based on plain storage arrays.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org
 ---
- mm/kmemleak.c |   24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+ include/linux/stackdepot.h |    4 ++
+ lib/stackdepot.c           |   66 ++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 51 insertions(+), 19 deletions(-)
 
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -410,11 +410,6 @@ static void print_unreferenced(struct se
+--- a/include/linux/stackdepot.h
++++ b/include/linux/stackdepot.h
+@@ -26,7 +26,11 @@ typedef u32 depot_stack_handle_t;
+ struct stack_trace;
+ 
+ depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t flags);
++depot_stack_handle_t stack_depot_save(unsigned long *entries,
++				      unsigned int nr_entries, gfp_t gfp_flags);
+ 
+ void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace);
++unsigned int stack_depot_fetch(depot_stack_handle_t handle,
++			       unsigned long **entries);
+ 
+ #endif
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -194,40 +194,56 @@ static inline struct stack_record *find_
+ 	return NULL;
+ }
+ 
+-void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
++/**
++ * stack_depot_fetch - Fetch stack entries from a depot
++ *
++ * @entries:		Pointer to store the entries address
++ */
++unsigned int stack_depot_fetch(depot_stack_handle_t handle,
++			       unsigned long **entries)
+ {
+ 	union handle_parts parts = { .handle = handle };
+ 	void *slab = stack_slabs[parts.slabindex];
+ 	size_t offset = parts.offset << STACK_ALLOC_ALIGN;
+ 	struct stack_record *stack = slab + offset;
+ 
+-	trace->nr_entries = trace->max_entries = stack->size;
+-	trace->entries = stack->entries;
+-	trace->skip = 0;
++	*entries = stack->entries;
++	return stack->size;
++}
++EXPORT_SYMBOL_GPL(stack_depot_fetch);
++
++void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *trace)
++{
++	unsigned int nent = stack_depot_fetch(handle, &trace->entries);
++
++	trace->max_entries = trace->nr_entries = nent;
+ }
+ EXPORT_SYMBOL_GPL(depot_fetch_stack);
+ 
+ /**
+- * depot_save_stack - save stack in a stack depot.
+- * @trace - the stacktrace to save.
+- * @alloc_flags - flags for allocating additional memory if required.
++ * stack_depot_save - Save a stack trace from an array
+  *
+- * Returns the handle of the stack struct stored in depot.
++ * @entries:		Pointer to storage array
++ * @nr_entries:		Size of the storage array
++ * @alloc_flags:	Allocation gfp flags
++ *
++ * Returns the handle of the stack struct stored in depot
   */
- static void dump_object_info(struct kmemleak_object *object)
+-depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
+-				    gfp_t alloc_flags)
++depot_stack_handle_t stack_depot_save(unsigned long *entries,
++				      unsigned int nr_entries,
++				      gfp_t alloc_flags)
  {
--	struct stack_trace trace;
--
--	trace.nr_entries = object->trace_len;
--	trace.entries = object->trace;
--
- 	pr_notice("Object 0x%08lx (size %zu):\n",
- 		  object->pointer, object->size);
- 	pr_notice("  comm \"%s\", pid %d, jiffies %lu\n",
-@@ -424,7 +419,7 @@ static void dump_object_info(struct kmem
- 	pr_notice("  flags = 0x%x\n", object->flags);
- 	pr_notice("  checksum = %u\n", object->checksum);
- 	pr_notice("  backtrace:\n");
--	print_stack_trace(&trace, 4);
-+	stack_trace_print(object->trace, object->trace_len, 4);
+-	u32 hash;
+-	depot_stack_handle_t retval = 0;
+ 	struct stack_record *found = NULL, **bucket;
+-	unsigned long flags;
++	depot_stack_handle_t retval = 0;
+ 	struct page *page = NULL;
+ 	void *prealloc = NULL;
++	unsigned long flags;
++	u32 hash;
+ 
+-	if (unlikely(trace->nr_entries == 0))
++	if (unlikely(nr_entries == 0))
+ 		goto fast_exit;
+ 
+-	hash = hash_stack(trace->entries, trace->nr_entries);
++	hash = hash_stack(entries, nr_entries);
+ 	bucket = &stack_table[hash & STACK_HASH_MASK];
+ 
+ 	/*
+@@ -235,8 +251,8 @@ depot_stack_handle_t depot_save_stack(st
+ 	 * The smp_load_acquire() here pairs with smp_store_release() to
+ 	 * |bucket| below.
+ 	 */
+-	found = find_stack(smp_load_acquire(bucket), trace->entries,
+-			   trace->nr_entries, hash);
++	found = find_stack(smp_load_acquire(bucket), entries,
++			   nr_entries, hash);
+ 	if (found)
+ 		goto exit;
+ 
+@@ -264,10 +280,10 @@ depot_stack_handle_t depot_save_stack(st
+ 
+ 	spin_lock_irqsave(&depot_lock, flags);
+ 
+-	found = find_stack(*bucket, trace->entries, trace->nr_entries, hash);
++	found = find_stack(*bucket, entries, nr_entries, hash);
+ 	if (!found) {
+ 		struct stack_record *new =
+-			depot_alloc_stack(trace->entries, trace->nr_entries,
++			depot_alloc_stack(entries, nr_entries,
+ 					  hash, &prealloc, alloc_flags);
+ 		if (new) {
+ 			new->next = *bucket;
+@@ -297,4 +313,16 @@ depot_stack_handle_t depot_save_stack(st
+ fast_exit:
+ 	return retval;
  }
- 
- /*
-@@ -553,15 +548,7 @@ static struct kmemleak_object *find_and_
-  */
- static int __save_stack_trace(unsigned long *trace)
- {
--	struct stack_trace stack_trace;
--
--	stack_trace.max_entries = MAX_TRACE;
--	stack_trace.nr_entries = 0;
--	stack_trace.entries = trace;
--	stack_trace.skip = 2;
--	save_stack_trace(&stack_trace);
--
--	return stack_trace.nr_entries;
-+	return stack_trace_save(trace, MAX_TRACE, 2);
- }
- 
- /*
-@@ -2019,13 +2006,8 @@ early_param("kmemleak", kmemleak_boot_co
- 
- static void __init print_log_trace(struct early_log *log)
- {
--	struct stack_trace trace;
--
--	trace.nr_entries = log->trace_len;
--	trace.entries = log->trace;
--
- 	pr_notice("Early log backtrace:\n");
--	print_stack_trace(&trace, 2);
-+	stack_trace_print(log->trace, log->trace_len, 2);
- }
- 
- /*
++EXPORT_SYMBOL_GPL(stack_depot_save);
++
++/**
++ * depot_save_stack - save stack in a stack depot.
++ * @trace - the stacktrace to save.
++ * @alloc_flags - flags for allocating additional memory if required.
++ */
++depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
++				      gfp_t alloc_flags)
++{
++	return stack_depot_save(trace->entries, trace->nr_entries, alloc_flags);
++}
+ EXPORT_SYMBOL_GPL(depot_save_stack);
 
 
