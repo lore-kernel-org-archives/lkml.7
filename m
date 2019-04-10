@@ -2,130 +2,161 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B80C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DFA20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9vk8EAm"
+	by mail.kernel.org (Postfix) with ESMTP id 426E420850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfDJTyN (ORCPT
+        id S1726716AbfDJTyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:54:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43973 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfDJTyM (ORCPT
+        Wed, 10 Apr 2019 15:54:25 -0400
+Received: from gateway20.websitewelcome.com ([192.185.63.14]:32143 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725982AbfDJTyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:54:12 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z9so2158632pgu.10;
-        Wed, 10 Apr 2019 12:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8RnvvGONpc1znN6tehKhO4srMrP2MiULHwMPLq6oZTE=;
-        b=N9vk8EAmD7Lq+Rmyo9UfsJtulMoudjAc9zcmCkwKRu51lIX3pBludaGgbGZmgg+2bJ
-         2fwBWiz2JP1d9dn19m6kxjv76TVXpL2byYF0AjBh5oWlDz4p6xtB0iB2GGE1f8EIZOFJ
-         S+xeTL7FYZvHkzWP3U5i03bm3a5+eCLI4cuTiQllBKqz6smT6VcQ8K3G0s2zudxa5d4e
-         lJLtqkEQWgrr47s7E+MvUd4r+xIDtejv9fnKek5XAYgdiCpc/UyoLBGSae+hP6b42kxk
-         i17dwBca6hRYdX4JTCvlGLSJZUBwvbuphsTFPKZXh/jqEwtblSyiRDXytJAms3b1KEc4
-         mA8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8RnvvGONpc1znN6tehKhO4srMrP2MiULHwMPLq6oZTE=;
-        b=KS2JsOa0BD8E9y0TgrIBWgmAr6+N5g28cwDPrrFStlxpBV8NLV3kAZSM+TCHgRlbzh
-         Ys5MRUd/m1b0yazgXBS5dOXAGOQBB5f5v2ifo9X2qfeyUJw4oNW3Dh7NVNHHdKK4mxch
-         3HjMsTqZH5RRRU+326hMVGfvR48mhoQGWcwH4LvuqEiNbBOFdEQkr76XS4ZipDjXf7YJ
-         UZcd5YZw+KmHAjuHgwr4dsOEl/Ki0ilsXkCyz8myyDRI8glNhc2bE213fM9HqGHFVCmw
-         TkZIRZQGsoVkrQf6z0eJ37586ZiBXWMQfThpHpmZyp82dC6XTtI8M6glBcsGS+F2jR0y
-         7qkg==
-X-Gm-Message-State: APjAAAX7jbnImE5eiGVOAhjT3MWWKACFXO0WZdOhCksmw2JIMK7y/AoI
-        6gYbPQXFQicCZuiv1o5lM74=
-X-Google-Smtp-Source: APXvYqweur5wRpapP3bRtRMnxyIZKEWEmQwZkPIDfxoHJol76UL5wwcDVaJKLVUj9huSUteYoNjXoQ==
-X-Received: by 2002:a63:2b4c:: with SMTP id r73mr43673385pgr.181.1554926051864;
-        Wed, 10 Apr 2019 12:54:11 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 143sm71833340pge.50.2019.04.10.12.54.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 12:54:10 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 12:54:09 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joe Perches <joe@perches.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 18/22] watchdog: mt7621_wdt: Use 'dev' instead of
- dereferencing it repeatedly
-Message-ID: <20190410195409.GA29802@roeck-us.net>
-References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
- <1554913683-25454-19-git-send-email-linux@roeck-us.net>
- <e76117d45b1b1caff6bce8d28506e683694d6a79.camel@perches.com>
+        Wed, 10 Apr 2019 15:54:25 -0400
+X-Greylist: delayed 1497 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Apr 2019 15:54:24 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id A90CC400D3D6B
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:05:40 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id EIXUhKiCJ2PzOEIXUhuKls; Wed, 10 Apr 2019 14:05:40 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.139.70] (port=40224 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hEIXU-000y1S-Bw; Wed, 10 Apr 2019 14:05:40 -0500
+Subject: Re: [PATCH] sparc: use struct_size() in kzalloc()
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190108161356.GA23617@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <b26b5a26-4a6b-1df8-bdda-4b5e14950970@embeddedor.com>
+Date:   Wed, 10 Apr 2019 14:05:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e76117d45b1b1caff6bce8d28506e683694d6a79.camel@perches.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190108161356.GA23617@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.139.70
+X-Source-L: No
+X-Exim-ID: 1hEIXU-000y1S-Bw
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:40224
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:46:24AM -0700, Joe Perches wrote:
-> On Wed, 2019-04-10 at 09:27 -0700, Guenter Roeck wrote:
-> > Introduce local variable 'struct device *dev' and use it instead of
-> > dereferencing it repeatedly.
-> > 
-> > The conversion was done automatically with coccinelle using the
-> > following semantic patches. The semantic patches and the scripts
-> > used to generate this commit log are available at
-> > https://github.com/groeck/coccinelle-patches
+Hi Dave,
+
+I wonder if you can take this.
+
+Thanks
+--
+Gustavo
+
+On 1/8/19 10:13 AM, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding the
+> size of a structure that has a zero-sized array at the end, along with memory
+> for some number of elements for that array. For example:
 > 
-> Interesting collection.  It would be useful to specify which
-> particular script generated or enabled this patch.
+> struct foo {
+>     int stuff;
+>     void *entry[];
+> };
 > 
-
-It is pdev-addvar.cocci, rule 'new'. deref.cocci wasn't used for the
-watchdog patches. The script to apply the various rules is watchdog/make.sh.
-
-Pointing to the actual scripts used is a good idea. I'll see if I can add
-this for subsequent series. After all, the commit log is also auto-generated,
-so this should be straightforward.
-
-> Just scanning briefly, it might have been this one:
-> https://github.com/groeck/coccinelle-patches/blob/master/common/deref.cocci
-> But it looks like some manual bit might have been required too.
-
-Not for this one. There were a couple of situations where I had to manually
-split long lines to avoid checkpatch warnings, and I manually updated a few
-of the commit logs, but not in this patch.
-
+> instance = kzalloc(sizeof(struct foo) + sizeof(void *) * count, GFP_KERNEL);
 > 
-> And trivially:
+> Instead of leaving these open-coded and prone to type mistakes, we can now
+> use the new struct_size() helper:
 > 
-> > diff --git a/drivers/watchdog/mt7621_wdt.c b/drivers/watchdog/mt7621_wdt.c
-> []
-> > @@ -133,18 +133,19 @@ static struct watchdog_device mt7621_wdt_dev = {
-> []
-> >  	watchdog_init_timeout(&mt7621_wdt_dev, mt7621_wdt_dev.max_timeout,
-> > -			      &pdev->dev);
-> > +			      dev);
+> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
 > 
-> This could be on one line.
+> This code was detected with the help of Coccinelle.
 > 
-Coccinelle isn't perfect. The rule doesn't modify the entire argument list,
-only the last argument, so coccinelle missed that it could have merged the
-two lines into one.
-
-A checkpatch rule suggesting that multiple extension lines can be merged
-might be useful to help finding such situations. Just a thought.
-
-Thanks,
-Guenter
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  arch/sparc/kernel/cpumap.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/sparc/kernel/cpumap.c b/arch/sparc/kernel/cpumap.c
+> index d1d52822603d..1cb62bfeaa1f 100644
+> --- a/arch/sparc/kernel/cpumap.c
+> +++ b/arch/sparc/kernel/cpumap.c
+> @@ -194,8 +194,7 @@ static struct cpuinfo_tree *build_cpuinfo_tree(void)
+>  
+>  	n = enumerate_cpuinfo_nodes(tmp_level);
+>  
+> -	new_tree = kzalloc(sizeof(struct cpuinfo_tree) +
+> -	                   (sizeof(struct cpuinfo_node) * n), GFP_ATOMIC);
+> +	new_tree = kzalloc(struct_size(new_tree, nodes, n), GFP_ATOMIC);
+>  	if (!new_tree)
+>  		return NULL;
+>  
+> 
