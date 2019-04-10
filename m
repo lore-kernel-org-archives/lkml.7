@@ -2,144 +2,119 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CCBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0FCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862EA2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZ4AnJwP"
+	by mail.kernel.org (Postfix) with ESMTP id 37CF12063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbfDJRwE (ORCPT
+        id S1730499AbfDJRxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:52:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44367 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730408AbfDJRwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:52:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g12so1851033pll.11;
-        Wed, 10 Apr 2019 10:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=q6vMYeKcOVpG8+cf+myp9kRl+55Hdk3n7iRz3oEomxg=;
-        b=lZ4AnJwPqrYpOXLlwsXmye9Kjw/QTaGGTQ/SWt2WSeIvfUQDZb/Q8CDjLQT5u3TdHN
-         gaFzj7fu35Ey5SRWMyNjhDcBoSx4i6Df5SWSxKtN3VdETKeXD2V4eNpQqT8dqGAnuTA/
-         Tj0bX62zHSlnJqSHzoL6HCIdTjNkwSQXKPInwT6MjwbXdNnwrLs68KOjiFOJSkX9mt8B
-         ORZOOXyBN7LJug/nFbKYGEzLDO/yumS1IvZR7tm+Ei4sFd3OsRGnbrYsez5tYehDbDS9
-         2mUrt4l0eOHv/BHQRu/blXBG8+XDBk5aow7ehJhYcl4stAPbgamnWRbmZsyWUQnEClvc
-         9eBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=q6vMYeKcOVpG8+cf+myp9kRl+55Hdk3n7iRz3oEomxg=;
-        b=lEHwVTSf9YVeGdHomN035Yp1u0Q9zXooaNfhGYT3NVuzzgYU7wVFPLK9a3CFTWbvnz
-         SDqYyNfRqzD+DCeSK3XOUz47+ZI9CKmVNFlB6QAomjUR/raYc6Y6sosbeaS8i3wsHzSy
-         +a4n38YUGPbpTMknRxT+KDLTFNvAzcHYGSGm6JaQMghOg1ArN190SUJXV1TcWdDOy2H0
-         xZtCckAvBX4FxWhmAAQw+s3roANLm62Xxce7TbgbQuGRtSnMK6pWEPEKHZvcT0XCdBuV
-         x16+LGPjgjYArdMEWAI+V1Z6GfdUpeyrXANUQ8y6Y4ss/HToFSJGGNGZ4DDlcGCLI8Ew
-         mLAA==
-X-Gm-Message-State: APjAAAU/sh5XqlAbtYJP8X78+7EUqPFK5pDS8FTrjcKGRPeJAth3hasu
-        kRVU5R8BNraFKFhlAqGqPhNgz42W
-X-Google-Smtp-Source: APXvYqyYAr070mCEgCOdEwxn0JzLGuhE+1VYlxcSGQxthBDZLWuUHTQzOcPFDnSLhPxUXDPeeV46/A==
-X-Received: by 2002:a17:902:e704:: with SMTP id co4mr4527330plb.30.1554918722850;
-        Wed, 10 Apr 2019 10:52:02 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id a12sm41223688pgq.21.2019.04.10.10.52.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 10:52:02 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:51:57 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Viorel Suman <viorel.suman@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "viorel.suman@gmail.com" <viorel.suman@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Julia.Lawall@lip6.fr" <Julia.Lawall@lip6.fr>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH v2 1/3] ASoC: fsl_audmix: remove "model"
- attribute
-Message-ID: <20190410175156.GA24002@Asurada-Nvidia.nvidia.com>
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
- <1554809242-27475-2-git-send-email-viorel.suman@nxp.com>
- <20190410042906.GC3032@Asurada>
- <1554892497.14997.13.camel@nxp.com>
+        Wed, 10 Apr 2019 13:53:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42916 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730408AbfDJRxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:53:08 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 88D57C0B615A;
+        Wed, 10 Apr 2019 17:53:08 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1448561995;
+        Wed, 10 Apr 2019 17:53:06 +0000 (UTC)
+Subject: Re: [PATCH-tip v2 06/12] locking/rwsem: Wake up almost all readers in
+ wait queue
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-7-longman@redhat.com>
+ <20190410165013.njy5bg32pxq6syyr@linux-r8p5>
+ <114e3bc3-3b66-4a50-d422-6a477d85fa72@redhat.com>
+ <20190410172254.ivgcgehjhqgwjtda@linux-r8p5>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <f5facb9a-59ce-d59e-9e7d-4c167cf0ca32@redhat.com>
+Date:   Wed, 10 Apr 2019 13:53:06 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1554892497.14997.13.camel@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190410172254.ivgcgehjhqgwjtda@linux-r8p5>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 10 Apr 2019 17:53:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 10:34:57AM +0000, Viorel Suman wrote:
-> Hi Nicolin,
-> 
-> On Ma, 2019-04-09 at 21:29 -0700, Nicolin Chen wrote:
-> > WARNING: This email was created outside of NXP. DO NOT CLICK links or
-> > attachments unless you recognize the sender and know the content is
-> > safe.
-> > 
-> > 
-> > 
-> > On Tue, Apr 09, 2019 at 11:27:39AM +0000, Viorel Suman wrote:
-> > > 
-> > > Use "of_device_id.data" to specify the machine driver
-> > > instead of "model" DTS attribute.
-> > > 
-> > > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> > Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > 
-> > > 
-> > > ---
-> > >  sound/soc/fsl/fsl_audmix.c | 43 +++++++++++++++++++++++-----------
-> > > ---------
-> > >  1 file changed, 23 insertions(+), 20 deletions(-)
-> > > 
-> > > +     priv->pdev = platform_device_register_data(&pdev->dev, mdrv,
-> > > 0, NULL,
-> > > +                                                0);
-> > Would you please send a separate patch to replace "pdev->dev"?
-> 
-> Thank you for review. Yes, will send V3.
+On 04/10/2019 01:22 PM, Davidlohr Bueso wrote:
+> On Wed, 10 Apr 2019, Waiman Long wrote:
+>> There are 2 major reasons why there is a limit.
+>>
+>> 1) It will be unfair to the task that needs to spend so much of its own
+>> CPU time to wake up too many readers.
+>
+> This has never been a problem before.
+>
 
-Ah...when I said that, I was literally saying that you should
-send a separate patch individually, not resend the series.
+In real workloads, you seldom have more than a couple dozens of readers
+waiting in the queue.
 
-Now I see you sent v3/v4 almost at the same time as "Applied"
-mails from Mark. And I am totally confused which version got
-applied....
-
-Please rebase your local tree and find out which version got
-applied and then send the diff with a separate patch.
-
-Thanks
-Nicolin
+Cheers,
+Longman
