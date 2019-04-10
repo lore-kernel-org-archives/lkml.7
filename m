@@ -6,45 +6,44 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47FAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D514C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3AE2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EDA2082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfDJVPX (ORCPT
+        id S1726748AbfDJVPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:15:23 -0400
-Received: from gateway30.websitewelcome.com ([192.185.148.2]:15354 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbfDJVPW (ORCPT
+        Wed, 10 Apr 2019 17:15:49 -0400
+Received: from gateway20.websitewelcome.com ([192.185.59.4]:46575 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbfDJVPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:15:22 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id A1C2116570
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:15:21 -0500 (CDT)
+        Wed, 10 Apr 2019 17:15:48 -0400
+X-Greylist: delayed 7806 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Apr 2019 17:15:47 EDT
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 1E4AD400D2813
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:15:47 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id EKYzh8eordnCeEKYzhweyo; Wed, 10 Apr 2019 16:15:21 -0500
+        id EKZPh5ZXgYTGMEKZPhEERg; Wed, 10 Apr 2019 16:15:47 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=43110 helo=[192.168.1.76])
+Received: from [189.250.139.70] (port=43116 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hEKYy-002ATJ-Re; Wed, 10 Apr 2019 16:15:20 -0500
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Mark expected switch fall-throughs
+        id 1hEKZO-002AjI-LX; Wed, 10 Apr 2019 16:15:46 -0500
+Subject: Re: [PATCH] mtd: lpddr_cmds: Mark expected switch fall-through
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Tokunori Ikegami <ikegami.t@gmail.com>,
-        'David Woodhouse' <dwmw2@infradead.org>,
-        'Brian Norris' <computersforpeace@gmail.com>,
-        'Boris Brezillon' <bbrezillon@kernel.org>,
-        'Marek Vasut' <marek.vasut@gmail.com>,
-        'Richard Weinberger' <richard@nod.at>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>
-References: <20190208180615.GA24601@embeddedor>
- <000001d4c051$9f66deb0$de349c10$@gmail.com>
- <807d4551-ec5e-5d99-2087-e72a2dcdf931@embeddedor.com>
+References: <20190208181210.GA8388@embeddedor>
+ <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
  mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
@@ -89,12 +88,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <4e83c8d7-8d21-10ae-3cf4-5fbaa7b98cf4@embeddedor.com>
-Date:   Wed, 10 Apr 2019 16:15:19 -0500
+Message-ID: <1a963008-9f8a-834f-8c87-5641b653e06d@embeddedor.com>
+Date:   Wed, 10 Apr 2019 16:15:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <807d4551-ec5e-5d99-2087-e72a2dcdf931@embeddedor.com>
+In-Reply-To: <c7b425ea-b5fd-6620-bead-10f8f4984ce1@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -106,13 +105,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.139.70
 X-Source-L: No
-X-Exim-ID: 1hEKYy-002ATJ-Re
+X-Exim-ID: 1hEKZO-002AjI-LX
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43110
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:43116
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
+X-Email-Count: 16
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -128,7 +127,7 @@ Thanks
 --
 Gustavo
 
-On 3/20/19 3:16 PM, Gustavo A. R. Silva wrote:
+On 3/20/19 3:17 PM, Gustavo A. R. Silva wrote:
 > Hi all,
 > 
 > Friendly ping:
@@ -139,78 +138,40 @@ On 3/20/19 3:16 PM, Gustavo A. R. Silva wrote:
 > --
 > Gustavo
 > 
-> On 2/9/19 2:29 AM, Tokunori Ikegami wrote:
->> Reviewed-by: Tokunori Ikegami <ikegami.t@gmail.com>
+> On 2/8/19 12:12 PM, Gustavo A. R. Silva wrote:
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
 >>
->>> -----Original Message-----
->>> From: linux-mtd [mailto:linux-mtd-bounces@lists.infradead.org] On Behalf
->>> Of Gustavo A. R. Silva
->>> Sent: Saturday, February 9, 2019 3:06 AM
->>> To: David Woodhouse; Brian Norris; Boris Brezillon; Marek Vasut; Richard
->>> Weinberger
->>> Cc: linux-mtd@lists.infradead.org; linux-kernel@vger.kernel.org; Gustavo
->>> A. R. Silva
->>> Subject: [PATCH] mtd: cfi_cmdset_0002: Mark expected switch fall-throughs
->>>
->>> In preparation to enabling -Wimplicit-fallthrough, mark switch
->>> cases where we are expecting to fall through.
->>>
->>> This patch fixes the following warnings:
->>>
->>> drivers/mtd/chips/cfi_cmdset_0002.c: In function ‘get_chip’:
->>> drivers/mtd/chips/cfi_cmdset_0002.c:870:6: warning: this statement may
->>> fall through [-Wimplicit-fallthrough=]
->>>    if (mode == FL_READY && chip->oldstate == FL_READY)
->>>       ^
->>> drivers/mtd/chips/cfi_cmdset_0002.c:873:2: note: here
->>>   default:
->>>   ^~~~~~~
->>> drivers/mtd/chips/cfi_cmdset_0002.c: In function ‘cfi_amdstd_sync’:
->>> drivers/mtd/chips/cfi_cmdset_0002.c:2745:16: warning: this statement may
->>> fall through [-Wimplicit-fallthrough=]
->>>     chip->state = FL_SYNCING;
->>>     ~~~~~~~~~~~~^~~~~~~~~~~~
->>> drivers/mtd/chips/cfi_cmdset_0002.c:2750:3: note: here
->>>    case FL_SYNCING:
->>>    ^~~~
->>>
->>> Warning level 3 was used: -Wimplicit-fallthrough=3
->>>
->>> This patch is part of the ongoing efforts to enabling
->>> -Wimplicit-fallthrough.
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>> ---
->>>  drivers/mtd/chips/cfi_cmdset_0002.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c
->>> b/drivers/mtd/chips/cfi_cmdset_0002.c
->>> index 72428b6bfc47..0b0a1874d3bf 100644
->>> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
->>> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
->>> @@ -869,6 +869,7 @@ static int get_chip(struct map_info *map, struct flchip
->>> *chip, unsigned long adr
->>>  		/* Only if there's no operation suspended... */
->>>  		if (mode == FL_READY && chip->oldstate == FL_READY)
->>>  			return 0;
->>> +		/* fall through */
->>>
->>>  	default:
->>>  	sleep:
->>> @@ -2747,6 +2748,7 @@ static void cfi_amdstd_sync (struct mtd_info *mtd)
->>>  			 * as the whole point is that nobody can do anything
->>>  			 * with the chip now anyway.
->>>  			 */
->>> +			/* fall through */
->>>  		case FL_SYNCING:
->>>  			mutex_unlock(&chip->mutex);
->>>  			break;
->>> --
->>> 2.20.1
->>>
->>>
->>> ______________________________________________________
->>> Linux MTD discussion mailing list
->>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+>> This patch fixes the following warnings:
+>>
+>> drivers/mtd/lpddr/lpddr_cmds.c: In function ‘chip_ready’:
+>> drivers/mtd/lpddr/lpddr_cmds.c:319:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    if (mode == FL_READY && chip->oldstate == FL_READY)
+>>       ^
+>> drivers/mtd/lpddr/lpddr_cmds.c:322:2: note: here
+>>   default:
+>>   ^~~~~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> This patch is part of the ongoing efforts to enabling
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/mtd/lpddr/lpddr_cmds.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmds.c
+>> index b13557fe52bd..76a4c73e100e 100644
+>> --- a/drivers/mtd/lpddr/lpddr_cmds.c
+>> +++ b/drivers/mtd/lpddr/lpddr_cmds.c
+>> @@ -318,6 +318,7 @@ static int chip_ready(struct map_info *map, struct flchip *chip, int mode)
+>>  		/* Only if there's no operation suspended... */
+>>  		if (mode == FL_READY && chip->oldstate == FL_READY)
+>>  			return 0;
+>> +		/* fall through */
+>>  
+>>  	default:
+>>  sleep:
 >>
