@@ -2,131 +2,121 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F23C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C57C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC36C20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554923256;
-	bh=l5kx7M5yIhwXZKbmcPL7AM62Ycxqpjj9uZJIKXIkFXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EM19VWDM1NWp22C18OmFuqHNwdfucbrWbGTzX8jN+jcG+GeSHlIYSNDF1qb7m5jtw
-	 1bWKN+FZPzAPkOMEmeEOieFssHWLdykaMN61SINr42PE8meYkSSxo8fFfyS7DhqXFs
-	 BSJMxKYfkuoCCM/Opy/il5/WZvgMEIGTP+yB7eoA=
+	by mail.kernel.org (Postfix) with ESMTP id EF0C52082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfDJTHe (ORCPT
+        id S1726794AbfDJTIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfDJTHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:07:34 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39952082E;
-        Wed, 10 Apr 2019 19:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554923253;
-        bh=l5kx7M5yIhwXZKbmcPL7AM62Ycxqpjj9uZJIKXIkFXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lpbMvmzoK4obAkSjUiVj+EJaYr0Z2YfkhiR34D1ICsugEYR1EAhNnz5I7CbWuJcfg
-         ZZdcdlhzwAO3/43bU/AoqBZhciueBKrBKPr0zqNY1P3zcqN738Rj7zmls3BBsZ9YLF
-         /5/0OdnzKiGCKE1wYY1814YukGtRhezkGyeOjNpc=
-Date:   Wed, 10 Apr 2019 12:07:31 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-Message-ID: <20190410190729.GA120258@gmail.com>
-References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
- <20190319170911.GB202956@gmail.com>
- <20190320185719.GB180195@gmail.com>
- <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
- <20190321175122.GA1587@sol.localdomain>
- <20190410031734.GB7140@sol.localdomain>
- <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
+        Wed, 10 Apr 2019 15:08:14 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44606 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfDJTIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 15:08:13 -0400
+Received: by mail-qk1-f193.google.com with SMTP id y5so1915536qkc.11;
+        Wed, 10 Apr 2019 12:08:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qnbLwH6iGLNRvl8vt0nxZoX+YWDkW7NPpWgoHprpoZE=;
+        b=nbg6cD295rAqKq3caEgXuNBtl3cjzOeVWQ5eX8azWIkPPa3Ojl7WZktP80FPqVNU9I
+         z3Ik1OL2aIHajgy39QTxYrqBO5WVVN1tp6HvtQrSi9vlxMjZX+K+FUlXJKy66Zr7kaa9
+         8zVJib7i43KZiboVZuuVnykaljnx+QEMdbjwUpX9gcriDtoIBlCrniNz0vWDUk4WYi6n
+         Ff9j4fgtifXKp9Iessk4chPG8ChMy/oBtIxXtm6acvkzn0eB+Uy/HyGrUaWllESueBRO
+         M88/MW2v/DVI0G8RcPhCujSSUuZBdRTWihCflgVgJmRA0XUr1IuLJTRnl9i+OqNfqGFd
+         YQXw==
+X-Gm-Message-State: APjAAAWFEZrOu/aDjP2y7hCpuWrQ2Phk2TYihHNzJgJyu1CxckpRf+rc
+        Nc8nSJ6zAumJ6HpxU5Gl3jliHFDOfoL8KuFf2tX6DGz2
+X-Google-Smtp-Source: APXvYqwiQi6U1diI4xJ8WJoABWo9ZNP0w49+tGL0zMWpy1t6XpPvSC+4i9QBF2GxE4f18i7I+UEs0xiYdTzjEcsfiag=
+X-Received: by 2002:a05:620a:148d:: with SMTP id w13mr36134612qkj.6.1554923292709;
+ Wed, 10 Apr 2019 12:08:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190408212648.2407234-1-arnd@arndb.de> <20190408212648.2407234-10-arnd@arndb.de>
+ <20190410180357.3290d24f@mschwideX1> <20190410121421.1414e179@gandalf.local.home>
+In-Reply-To: <20190410121421.1414e179@gandalf.local.home>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 10 Apr 2019 21:07:56 +0200
+Message-ID: <CAK8P3a2n+nEcaNrATQVO8NSGzfrMP5n+SrvjpTYcH4ikCN5LGg@mail.gmail.com>
+Subject: Re: [PATCH 10/12] s390: avoid __builtin_return_address(n) on clang
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:30:57AM -0700, Kees Cook wrote:
-> On Tue, Apr 9, 2019 at 8:17 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Thu, Mar 21, 2019 at 10:51:22AM -0700, Eric Biggers wrote:
-> > > On Thu, Mar 21, 2019 at 10:45:31AM -0700, Kees Cook wrote:
-> > > > On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
-> > > > > > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
-> > > > > > > When running the sha1-asm crypto selftest on arm with
-> > > > > > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
-> > > > > > >
-> > > > > > >     usercopy: Kernel memory overwrite attempt detected to spans
-> > > > > > > multiple pages (offset 0, size 42)!
-> > > > > >
-> > > > > > Well, this must happen with the new (in 5.1) crypto self-tests implementation
-> > > > > > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
-> > > > > > understand why hardened usercopy considers it a bug though, as there's no buffer
-> > > > > > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
-> > > > > > buffer that was allocated with __get_free_pages():
-> > > > > >
-> > > > > >       __get_free_pages(GFP_KERNEL, 1)
-> > > > > >
-> > > > > > ... where 1 means an order-1 allocation.
-> > > > > >
-> > > > > > If it copies to offset=4064 len=42, for example, then hardened usercopy
-> > > > > > considers it a bug even though the buffer is 8192 bytes long.  Why?
-> > > > > >
-> > > > > > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
-> > > > > > with ITER_KVEC.
-> > > > > >
-> > > > > > - Eric
-> > > > >
-> > > > > Kees, any thoughts on why hardened usercopy rejects copies spanning a page
-> > > > > boundary when they seem to be fine?
-> > > >
-> > > > This is due to missing the compound page marking, if I remember
-> > > > correctly. However, I tend to leave the pagespan test disabled: it
-> > > > really isn't ready for production use -- there are a lot of missing
-> > > > annotations still.
-> > > >
+On Wed, Apr 10, 2019 at 6:14 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Wed, 10 Apr 2019 18:03:57 +0200 Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
+>
+> > > --- a/arch/s390/include/asm/ftrace.h
+> > > +++ b/arch/s390/include/asm/ftrace.h
+> > > @@ -13,7 +13,12 @@
 > > >
-> > > So do I need to add __GFP_COMP?  Is there any actual reason to do so?
-> > > Why does hardened usercopy check for it?
+> > >  #ifndef __ASSEMBLY__
 > > >
-> > > - Eric
+> > > +#ifdef CONFIG_CC_IS_CLANG
+> > > +/* https://bugs.llvm.org/show_bug.cgi?id=41424 */
+> > > +#define ftrace_return_address(n) __builtin_return_address(0)
+> > > +#else
+> > >  #define ftrace_return_address(n) __builtin_return_address(n)
+> > > +#endif
+> > >
+> > >  void _mcount(void);
+> > >  void ftrace_caller(void);
 > >
-> > Hi Kees, any answer to this question?
-> 
-> Hi! Sorry, this got lost in my inbox. Yes, if you can add __GFP_COMP,
-> that would fix this case. No one has had time lately to track down all
-> these cases, but avoiding adding new ones would be wonderful. :)
-> 
-> It's in there because it's a state I'd like to get to in the kernel,
-> but it'll require a lot more work to get there.
-> 
+> > I can say I like this one. If the compiler can not do __builtin_return_address(n)
+> > it feels wrong to just use __builtin_return_address(0).
+>
+> I agree. The proper return value is 0UL, see include/linux/ftrace.h
+>
+> /* Archs may use other ways for ADDR1 and beyond */
+> #ifndef ftrace_return_address
+> # ifdef CONFIG_FRAME_POINTER
+> #  define ftrace_return_address(n) __builtin_return_address(n)
+> # else
+> #  define ftrace_return_address(n) 0UL
+> # endif
+> #endif
+>
+> This is why we treat zero differently:
+>
+> #define CALLER_ADDR0 ((unsigned long)ftrace_return_address0)
+> #define CALLER_ADDR1 ((unsigned long)ftrace_return_address(1))
+> #define CALLER_ADDR2 ((unsigned long)ftrace_return_address(2))
+> #define CALLER_ADDR3 ((unsigned long)ftrace_return_address(3))
+> #define CALLER_ADDR4 ((unsigned long)ftrace_return_address(4))
+> #define CALLER_ADDR5 ((unsigned long)ftrace_return_address(5))
+> #define CALLER_ADDR6 ((unsigned long)ftrace_return_address(6))
 
-That didn't answer my question.  My question is what is the purpose of this?  If
-there was actual buffer overflow when __GFP_COMP isn't specified that would make
-perfect sense, but AFAICS there isn't.  So why does hardened usercopy consider
-it broken when __GFP_COMP isn't specified?
+Right, got it.
 
-- Eric
+Martin, do you want me to send a replacement patch, or can you
+commit the patch with
+
+#ifdef CONFIG_CC_IS_CLANG
+/* https://bugs.llvm.org/show_bug.cgi?id=41424 */
+#define ftrace_return_address(n) 0UL
+#else
+#define ftrace_return_address(n) __builtin_return_address(n)
+#endif
+
+instead?
+
+    Arnd
