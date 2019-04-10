@@ -2,142 +2,266 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA46C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2812083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="dJBwE/0d"
+	by mail.kernel.org (Postfix) with ESMTP id CBD442083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfDJMWl (ORCPT
+        id S1731842AbfDJMYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:22:41 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45680 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730681AbfDJMWk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:22:40 -0400
-Received: by mail-ed1-f65.google.com with SMTP id o26so1814889edv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=gIpH8nukPXLUgFESkQN+PXva8bA2gsMJOsACXEGLiUo=;
-        b=dJBwE/0d68SqNDVwq7bVDdeee7smFtR33tDwJkfWXm02BTk9FG616XWhzQ0LWljXZY
-         OzBojerw/zVkt/1/aR5EdQUP0U4RlpzRlccwWETTtDCq0fqr7ljQ4GJFKpCBq3cLWl+P
-         edGTcYsaN3SFpXa7L03z00pr9wlOhG9mRmYIMRiTkzEJP0BdhSkZlbPoRj/aw+XsoscA
-         a382WWycaLLZyDW5izqkZs+oxOVBYMFNwWEjGAee3dlL14boAzwrH7fTDcZNn/RWmE0T
-         xJqklLapC6W/scT5oqD6pxYxd1cyUp88KN0ywd/MNLGcSwgES8LxgZtvBXhPqzv9PJdr
-         kj1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=gIpH8nukPXLUgFESkQN+PXva8bA2gsMJOsACXEGLiUo=;
-        b=iOfIZoohQyWPd6v6PLe1E9XAklEEP/fhRokB4hyfH4kXsQGcEsYZamWD0gJFnawxiH
-         uRMNZiEfH9uBitnh3WxzEtT/fGd6pFphcP2GWYafVyVAXOCZHeFLkvXBA/CXGE0SjvWs
-         GXsXGpsiDYXBjW/OKtg09acEY2yQd2vDiAJ9bGcMA1XUD6nUV+80XUuVPJczQMkpKOW6
-         40wsU+qELoQUwZxeoemcna/PagWqg2/u/Ca159IypD7PWbeV0vxabY+G4iB0XN5DkzRU
-         6XRra131T2TEXmRtDNyYJ8zJdjnFXDKZhPaKWGaH8fGAFPw0VwtALDMimi0uC2Np3jzb
-         0Q6w==
-X-Gm-Message-State: APjAAAVqCW55sZ5rL/FvmoUvTbE1rGr+NYBBTb6bOX1Y5QtI2CbvTsfG
-        CBUzeRTnUmghP9hjgJcrp84siQ==
-X-Google-Smtp-Source: APXvYqwzBowlOD6IkSvmk2rM350kHZzKKBDz5EjL3Hr1jp6DjTwXaQaEgb71fx4ksV97BhcTddMG0Q==
-X-Received: by 2002:a50:fe03:: with SMTP id f3mr27351881edt.57.1554898958587;
-        Wed, 10 Apr 2019 05:22:38 -0700 (PDT)
-Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id c4sm2149621edl.63.2019.04.10.05.22.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 05:22:37 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <5D5705F7-C0D7-4303-82A2-965320560220@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] lightnvm: pblk: fix crash in pblk_end_partial_read due to
- multipage bvecs
-Date:   Wed, 10 Apr 2019 14:22:36 +0200
-In-Reply-To: <20190408073308.3082-1-hans@owltronix.com>
-Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        "Konopko, Igor J" <igor.j.konopko@intel.com>,
-        Klaus Birkelund Jensen <klaus.jensen@cnexlabs.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>
-To:     Hans Holmberg <hans@owltronix.com>
-References: <20190408073308.3082-1-hans@owltronix.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 10 Apr 2019 08:24:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41416 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730726AbfDJMYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:24:52 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 627DB307D972;
+        Wed, 10 Apr 2019 12:24:51 +0000 (UTC)
+Received: from gondolin (ovpn-204-33.brq.redhat.com [10.40.204.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9704616939;
+        Wed, 10 Apr 2019 12:24:30 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 14:24:26 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
+        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
+        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
+        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
+        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
+        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
+        david@redhat.com, david@fromorbit.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        kilobyte@angband.pl, yuval.shaia@oracle.com
+Subject: Re: [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
+Message-ID: <20190410142426.5bf0d9a4.cohuck@redhat.com>
+In-Reply-To: <20190410040826.24371-3-pagupta@redhat.com>
+References: <20190410040826.24371-1-pagupta@redhat.com>
+        <20190410040826.24371-3-pagupta@redhat.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 10 Apr 2019 12:24:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 10 Apr 2019 09:38:22 +0530
+Pankaj Gupta <pagupta@redhat.com> wrote:
 
---Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
-
-> On 8 Apr 2019, at 09.33, hans@owltronix.com wrote:
+> This patch adds virtio-pmem driver for KVM guest.
 > 
-> From: Hans Holmberg <hans.holmberg@cnexlabs.com>
+> Guest reads the persistent memory range information from
+> Qemu over VIRTIO and registers it on nvdimm_bus. It also
+> creates a nd_region object with the persistent memory
+> range information so that existing 'nvdimm/pmem' driver
+> can reserve this into system memory map. This way
+> 'virtio-pmem' driver uses existing functionality of pmem
+> driver to register persistent memory compatible for DAX
+> capable filesystems.
 > 
-> Ever since '07173c3ec276 ("block: enable multipage bvecs")' we
-> need to handle bios with multipage bvecs in pblk.
+> This also provides function to perform guest flush over
+> VIRTIO from 'pmem' driver when userspace performs flush
+> on DAX memory range.
 > 
-> Currently, a multipage bvec results in a crash[1].
-> Fix this by using bvec iterators in stead of direct bvec indexing.
-> 
-> Also add a dcache flush, for the same reasons as in:
-> '6e6e811d747b ("block: Add missing flush_dcache_page() call")'
-> 
-> [1] https://github.com/OpenChannelSSD/linux/issues/61
-> 
-> Reported-by: Klaus Jensen <klaus.jensen@cnexlabs.com>
-> Signed-off-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 > ---
+>  drivers/nvdimm/virtio_pmem.c     |  88 ++++++++++++++++++++++
+>  drivers/virtio/Kconfig           |  10 +++
+>  drivers/virtio/Makefile          |   1 +
+>  drivers/virtio/pmem.c            | 124 +++++++++++++++++++++++++++++++
+>  include/linux/virtio_pmem.h      |  60 +++++++++++++++
+>  include/uapi/linux/virtio_ids.h  |   1 +
+>  include/uapi/linux/virtio_pmem.h |  10 +++
+>  7 files changed, 294 insertions(+)
+>  create mode 100644 drivers/nvdimm/virtio_pmem.c
+>  create mode 100644 drivers/virtio/pmem.c
+>  create mode 100644 include/linux/virtio_pmem.h
+>  create mode 100644 include/uapi/linux/virtio_pmem.h
 > 
-> It ain't pretty, but let's fix the breakage while waiting for Igor's
-> partial read cleanup to be ready.
-> 
+(...)
+> diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
+> new file mode 100644
+> index 000000000000..cc9de9589d56
+> --- /dev/null
+> +++ b/drivers/virtio/pmem.c
+> @@ -0,0 +1,124 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * virtio_pmem.c: Virtio pmem Driver
+> + *
+> + * Discovers persistent memory range information
+> + * from host and registers the virtual pmem device
+> + * with libnvdimm core.
+> + */
+> +#include <linux/virtio_pmem.h>
+> +#include <../../drivers/nvdimm/nd.h>
+> +
+> +static struct virtio_device_id id_table[] = {
+> +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
+> +	{ 0 },
+> +};
+> +
+> + /* Initialize virt queue */
+> +static int init_vq(struct virtio_pmem *vpmem)
 
-I would prefer to have the real fix, but it is good to have this fixed for
-5.2. Can we agree on a revert if Igor sends the patch within the 5.2
-window?
+IMHO, you don't gain much by splitting off this function...
 
-Javier
+> +{
+> +	struct virtqueue *vq;
+> +
+> +	/* single vq */
+> +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
+> +				host_ack, "flush_queue");
+> +	if (IS_ERR(vq))
+> +		return PTR_ERR(vq);
 
---Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+I'm personally not a fan of chained assignments... I think I'd just
+drop the 'vq' variable and operate on vpmem->req_vq directly.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +	spin_lock_init(&vpmem->pmem_lock);
+> +	INIT_LIST_HEAD(&vpmem->req_list);
+> +
+> +	return 0;
+> +};
+> +
+> +static int virtio_pmem_probe(struct virtio_device *vdev)
+> +{
+> +	int err = 0;
+> +	struct resource res;
+> +	struct virtio_pmem *vpmem;
+> +	struct nvdimm_bus *nvdimm_bus;
+> +	struct nd_region_desc ndr_desc = {};
+> +	int nid = dev_to_node(&vdev->dev);
+> +	struct nd_region *nd_region;
+> +
+> +	if (!vdev->config->get) {
+> +		dev_err(&vdev->dev, "%s failure: config disabled\n",
 
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlyt4AwACgkQPEYBfS0l
-eOAz/g/9Fmx5T2IMaMjvJPhKDA3gejav6rTdHc7tRxL7uXiZ85wVFrgQDaTKkup0
-ysVroXUUztk9KpSxrajZxYpFgWdsTM4BUQZtIXVIx3soKifOZbSdwOcHUIs2TVCo
-WO88W7s1eVUR8qb1e4EEWAQ4GCEGtRfXoxFgFwY0p2RNEieVo9UnY1dy1V5yXwXp
-JhpySwbKRG0XVrNUTOQTEmnUnK+Jz1nmSm0IurrajW5V78I8KWWIPQryVmIngSv6
-kSfx4LOBrMXuUWU97i5FvfwIKpVOH4+jFhHI+9tO+ySQQZQ1oBep0IdVXzcSI1x1
-auTkZNdQAWXUkjHR4yL9FZS5WabqMEhIvv99fU1K4BcuW7i3/tYieg0OS/B3z7LZ
-ShbI4G36RWVKkPq8/cqqW8/eE0LwuthzyZlt7/wBSzknGSLB6JWLIxu7G7ZmegkS
-6G4ay+Bohi/bX+/g1wGeJI9TA1VV+qtZnWN+Dz79zNoWJm8abd94/E7EEiXPk7do
-RrBPP/TCy4BPG/i7cPKAa/aP/LwtgOBMkap43KHrDhuRdZLjEGOa1Z6pmGljrQ98
-Qm8luiUgpPM7hbUWb9XQVnYCb6+v/bkX3dAQLQlRRFjGTKpGsJvm/UJ1FleHkAEk
-JRJrWtYJPRpCsjNsu53AIt9sGcEexqrlJq4Y48ICLl7P4x2oAJg=
-=kcp3
------END PGP SIGNATURE-----
+Maybe s/config disabled/config access disabled/ ? That seems to be the
+more common message.
 
---Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD--
+> +			__func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
+> +					GFP_KERNEL);
+
+Here, the vpmem variable makes sense for convenience, but I'm again not
+a fan of the chaining :)
+
+> +	if (!vpmem) {
+> +		err = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+> +	vpmem->vdev = vdev;
+> +	err = init_vq(vpmem);
+> +	if (err)
+> +		goto out_err;
+> +
+> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +			start, &vpmem->start);
+> +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> +			size, &vpmem->size);
+> +
+> +	res.start = vpmem->start;
+> +	res.end   = vpmem->start + vpmem->size-1;
+> +	vpmem->nd_desc.provider_name = "virtio-pmem";
+> +	vpmem->nd_desc.module = THIS_MODULE;
+> +
+> +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+> +						&vpmem->nd_desc);
+
+And here :)
+
+> +	if (!nvdimm_bus)
+> +		goto out_vq;
+> +
+> +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
+> +
+> +	ndr_desc.res = &res;
+> +	ndr_desc.numa_node = nid;
+> +	ndr_desc.flush = virtio_pmem_flush;
+> +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+> +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+> +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
+> +	nd_region->provider_data =  dev_to_virtio
+> +					(nd_region->dev.parent->parent);
+
+Isn't it clear that this parent chain will always end up at &vdev->dev?
+Maybe simply set ->provider_data to vdev directly? (Does it need to
+grab a reference count of the device, BTW?)
+
+> +
+> +	if (!nd_region)
+> +		goto out_nd;
+
+Probably better to do this check before you access nd_region's
+members :)
+
+> +
+> +	return 0;
+> +out_nd:
+> +	err = -ENXIO;
+> +	nvdimm_bus_unregister(nvdimm_bus);
+> +out_vq:
+> +	vdev->config->del_vqs(vdev);
+> +out_err:
+> +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
+> +	return err;
+> +}
+> +
+> +static void virtio_pmem_remove(struct virtio_device *vdev)
+> +{
+> +	struct virtio_pmem *vpmem = vdev->priv;
+> +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+> +
+> +	nvdimm_bus_unregister(nvdimm_bus);
+
+I haven't followed this around the nvdimm code, but is the nd_region
+you created during probe cleaned up automatically, or would you need to
+do something here?
+
+> +	vdev->config->del_vqs(vdev);
+> +	vdev->config->reset(vdev);
+> +	kfree(vpmem);
+
+You allocated vpmem via devm_kzalloc; isn't it freed automatically on
+remove?
+
+> +}
+> +
+> +static struct virtio_driver virtio_pmem_driver = {
+> +	.driver.name		= KBUILD_MODNAME,
+> +	.driver.owner		= THIS_MODULE,
+> +	.id_table		= id_table,
+> +	.probe			= virtio_pmem_probe,
+> +	.remove			= virtio_pmem_remove,
+> +};
+> +
+> +module_virtio_driver(virtio_pmem_driver);
+> +MODULE_DEVICE_TABLE(virtio, id_table);
+> +MODULE_DESCRIPTION("Virtio pmem driver");
+> +MODULE_LICENSE("GPL");
+
+Only looked at this from the general virtio driver angle; seems fine
+apart from some easy-to-fix issues and some personal style preference
+things.
