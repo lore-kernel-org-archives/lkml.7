@@ -2,232 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5BBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402E1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAE62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF34520850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OsP7Cut6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HAIn7Ykg";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ROEYuH8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDJWNN (ORCPT
+        id S1726680AbfDJWNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:13:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42663 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDJWNN (ORCPT
+        Wed, 10 Apr 2019 18:13:19 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:10323 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDJWNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:13:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w25so2282478pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:13:12 -0700 (PDT)
+        Wed, 10 Apr 2019 18:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1554934396; x=1586470396;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=B6nwwFzTD+jXCEqs+0Rr5QhRysxJTVt+R0z07xGKrWI=;
+  b=HAIn7YkgzTtl/mnsOtB7P81vj+64h4+UTD50ZoM/BHOmv/HGWBw5kGVH
+   zWNmiQKwFbP9ilQwCL+kOek7071EyA3VxTj54LwhS1KEYmkl6B+GECmoF
+   bQaYCYyZJLn7w2KY+H7VRmrM7NtyWTbeaWBajD5ctZq1SXwnR/0Dse6pb
+   NvJGFSPrgQrjD+yyGxYAj3Kn5Efbe27nfZaHyM3MqFptQK+3SEZQxYzjX
+   84qvHoKq6fYL1Sd+qAsS02qAHyqOFZFGZfR+YHQKio4rEcjRLgClRZzmd
+   80YVNODTKOMLgj8jkOjCXS/8ZpLb+MlQ6gPY8m0Eyt/6A2q731TIghRV2
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,334,1549900800"; 
+   d="scan'208";a="211273874"
+Received: from mail-sn1nam02lp2051.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.51])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Apr 2019 06:13:15 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AH2uWeWDVR1mKb5UAk5tRyEUAJH8N7Eurp9zoekYiQU=;
-        b=OsP7Cut6FInUipEpueQhoM9lNib/w8hk1yiqRF+1mc/dd2bmRMfLOEw2SXAQL57PXG
-         3mmzQXAH8wUAVCzsP5BpP1BWMv/bfuxWx7RpDYmNe9++bWSyqEEtH3+zGuBhyCurjs6a
-         Xhvt2IsFoVl2XQMkjc+D/RUWrW2QMgE4Hue90=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AH2uWeWDVR1mKb5UAk5tRyEUAJH8N7Eurp9zoekYiQU=;
-        b=l8flFC/AtIWOcTR1/im8uW7bO/jn6+ywVA4Cz7yfzYAvBTf20kQYZKTRytYi+AQYpT
-         dY3EDyNRMkYLnKJra8Z2qnKy3ENn3G5f4pESwuUknCTrkuSwSj6j7Q4fbnL02S+10+Jn
-         cVzU4zhSTVPhDoMFC4m3t9jGXZqY5oEbpgY1ziudUDLHy1ssFpuWdsshquICZjdMyFdt
-         t487BXm2wPsxU4RzYj44bMIm9fXrslmotQhqYhafAQSfxpbGOvrTeA1qNKKQNdo1izgQ
-         oFyQv6f7z2jBbCqlgofngx8YVjaawqwqsNdJ+9eNS9R3V+ez8SYodIfBMmtOP6oZA0yG
-         OC0A==
-X-Gm-Message-State: APjAAAXbTQuovce1rUu7jhKUQPuKJmx1gDw0PEQNr+LcodrcxHjXauDM
-        HVe5Rch6SC5pssBPRq8FgUFuxQ==
-X-Google-Smtp-Source: APXvYqyI8bCAO2UYjcTV3MDBFvmsCYKpD6+GnngdyzBL/hybJjO2DHEYI0+ypyL7BZHSxQga3nyg4g==
-X-Received: by 2002:a63:6fc1:: with SMTP id k184mr42588592pgc.239.1554934392261;
-        Wed, 10 Apr 2019 15:13:12 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m16sm92042429pfi.29.2019.04.10.15.13.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:13:11 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
-        linux-wireless@vger.kernel.org, mka@chromium.org,
-        ryandcase@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        stable@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to fix suspend/resume
-Date:   Wed, 10 Apr 2019 15:12:37 -0700
-Message-Id: <20190410221237.160856-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1nL1tJpMdTtw/EQndqCRq3fS6ojGNO51OXUqs2kK+X8=;
+ b=ROEYuH8AqW7DVhQWhnLqiLqfyk5TQDgZN/xgWQjJxcNtP8xEdKTKHeXMq3a0fMo6t2dQ6i0JwWUqv33H5u/UjDk5oCzsYpXgXrch1a31AwDHYUB/hZHS9f6Y6iVW+5lDP8HrBpXC8Mq9FYW19n0geezXgjIGhRhB7hKkyQUWa34=
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
+ SN6PR04MB4960.namprd04.prod.outlook.com (52.135.114.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.15; Wed, 10 Apr 2019 22:13:14 +0000
+Received: from SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c95e:c178:8d66:3703]) by SN6PR04MB4527.namprd04.prod.outlook.com
+ ([fe80::c95e:c178:8d66:3703%3]) with mapi id 15.20.1771.019; Wed, 10 Apr 2019
+ 22:13:14 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     "jglisse@redhat.com" <jglisse@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] block: do not leak memory in bio_copy_user_iov()
+Thread-Topic: [PATCH] block: do not leak memory in bio_copy_user_iov()
+Thread-Index: AQHU79v0dlXVpXNXG0+W9MpU00wO9Q==
+Date:   Wed, 10 Apr 2019 22:13:14 +0000
+Message-ID: <SN6PR04MB4527191E2EC151609B6F1B23862E0@SN6PR04MB4527.namprd04.prod.outlook.com>
+References: <20190410202751.20712-1-jglisse@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1939ad45-0d75-4606-1050-08d6be01ba46
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4960;
+x-ms-traffictypediagnostic: SN6PR04MB4960:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB4960E2B5E4FF03B8283D6CC6862E0@SN6PR04MB4960.namprd04.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(39860400002)(366004)(136003)(346002)(189003)(199004)(66574012)(33656002)(256004)(99286004)(14444005)(4326008)(71190400001)(6436002)(52536014)(68736007)(106356001)(5660300002)(53936002)(105586002)(25786009)(9686003)(110136005)(316002)(54906003)(6246003)(55016002)(71200400001)(6116002)(66066001)(2501003)(14454004)(2906002)(229853002)(26005)(8676002)(4744005)(81156014)(86362001)(3846002)(81166006)(186003)(446003)(486006)(8936002)(476003)(478600001)(7696005)(97736004)(72206003)(6506007)(305945005)(76176011)(7736002)(102836004)(74316002)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4960;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: p5ZTLPsLQans5DO6C3XXIUPTCP7ynVgfANmJhib/rdR+CCn9+CSOWIF1LUs8caczduWCBbz0RyXB9vRijeR/GIpxlyJXZP00d7C0Qb2R6hQncCfgpW+M9GlnVg6xC2IjCPxPKPhl88IfpJBOW17ySpP+t8quNJK51EUp5+YNxH/vUS1rZL3Das3LaxoUJlKu2idJlUNxwR9icvm3dFFMtLhhEqTtN1bdxzvWLw6MPSt61n2AiVjCjqA3qUaD/2WNwO9h1TmIrnblSJBNcduLB/j/4XEZAIc6ckm7WOh3GCZ8++N9h+HBJpIz8elQx2zt2pjtQerivXBlfDYppMoopTZkLyGYrbjg5lHFsCN4CPMD88Etb5TzvSW515Sq6HcqvZZkAyfS6IC64DZnN38gfLGhTTwDlht2dQqKQCp33tY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1939ad45-0d75-4606-1050-08d6be01ba46
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 22:13:14.7621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4960
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Processing SDIO interrupts while dw_mmc is suspended (or partly
-suspended) seems like a bad idea.  We really don't want to be
-processing them until we've gotten ourselves fully powered up.
-
-You might be wondering how it's even possible to become suspended when
-an SDIO interrupt is active.  As can be seen in
-dw_mci_enable_sdio_irq(), we explicitly keep dw_mmc out of runtime
-suspend when the SDIO interrupt is enabled.  ...but even though we
-stop normal runtime suspend transitions when SDIO interrupts are
-enabled, the dw_mci_runtime_suspend() can still get called for a full
-system suspend.
-
-Let's handle all this by explicitly masking SDIO interrupts in the
-suspend call and unmasking them later in the resume call.  To do this
-cleanly I'll keep track of whether the client requested that SDIO
-interrupts be enabled so that we can reliably restore them regardless
-of whether we're masking them for one reason or another.
-
-Without this fix it can be seen that rk3288-veyron Chromebooks with
-Marvell WiFi would sometimes fail to resume WiFi even after picking my
-recent mwifiex patch [1].  Specifically you'd see messages like this:
-  mwifiex_sdio mmc1:0001:1: Firmware wakeup failed
-  mwifiex_sdio mmc1:0001:1: PREP_CMD: FW in reset state
-
-...and tracing through the resume code in the failing cases showed
-that we were processing a SDIO interrupt really early in the resume
-call.
-
-NOTE: downstream in Chrome OS 3.14 and 3.18 kernels (both of which
-support the Marvell SDIO WiFi card) we had a patch ("CHROMIUM: sdio:
-Defer SDIO interrupt handling until after resume") [2].  Presumably
-this is the same problem that was solved by that patch.
-
-[1] https://lkml.kernel.org/r/20190404040106.40519-1-dianders@chromium.org
-[2] https://crrev.com/c/230765
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I didn't put any "Fixes" tag here, but presumably this could be
-backported to whichever kernels folks found it useful for.  I have at
-least confirmed that kernels v4.14 and v4.19 (as well as v5.1-rc2)
-show the problem.  It is very easy to pick this to v4.19 and it
-definitely fixes the problem there.
-
-I haven't spent the time to pick this to 4.14 myself, but presumably
-it wouldn't be too hard to backport this as far as v4.13 since that
-contains commit 32dba73772f8 ("mmc: dw_mmc: Convert to use
-MMC_CAP2_SDIO_IRQ_NOTHREAD for SDIO IRQs").  Prior to that it might
-make sense for anyone experiencing this problem to just pick the old
-CHROMIUM patch to fix them.
-
- drivers/mmc/host/dw_mmc.c | 24 ++++++++++++++++++++----
- drivers/mmc/host/dw_mmc.h |  3 +++
- 2 files changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 80dc2fd6576c..432f6e3ddd43 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1664,7 +1664,8 @@ static void dw_mci_init_card(struct mmc_host *mmc, struct mmc_card *card)
- 	}
- }
- 
--static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
-+static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, bool enb,
-+				     bool client_requested)
- {
- 	struct dw_mci *host = slot->host;
- 	unsigned long irqflags;
-@@ -1672,6 +1673,17 @@ static void __dw_mci_enable_sdio_irq(struct dw_mci_slot *slot, int enb)
- 
- 	spin_lock_irqsave(&host->irq_lock, irqflags);
- 
-+	/*
-+	 * If this was requested by the client save the request.  If this
-+	 * wasn't required by the client then logically AND it with the
-+	 * client request since we want to disable if either the client
-+	 * disabled OR we have some other reason to disable.
-+	 */
-+	if (client_requested)
-+		host->client_sdio_enb = enb;
-+	else if (!host->client_sdio_enb)
-+		enb = 0;
-+
- 	/* Enable/disable Slot Specific SDIO interrupt */
- 	int_mask = mci_readl(host, INTMASK);
- 	if (enb)
-@@ -1688,7 +1700,7 @@ static void dw_mci_enable_sdio_irq(struct mmc_host *mmc, int enb)
- 	struct dw_mci_slot *slot = mmc_priv(mmc);
- 	struct dw_mci *host = slot->host;
- 
--	__dw_mci_enable_sdio_irq(slot, enb);
-+	__dw_mci_enable_sdio_irq(slot, enb, true);
- 
- 	/* Avoid runtime suspending the device when SDIO IRQ is enabled */
- 	if (enb)
-@@ -1701,7 +1713,7 @@ static void dw_mci_ack_sdio_irq(struct mmc_host *mmc)
- {
- 	struct dw_mci_slot *slot = mmc_priv(mmc);
- 
--	__dw_mci_enable_sdio_irq(slot, 1);
-+	__dw_mci_enable_sdio_irq(slot, true, false);
- }
- 
- static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
-@@ -2734,7 +2746,7 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
- 		if (pending & SDMMC_INT_SDIO(slot->sdio_id)) {
- 			mci_writel(host, RINTSTS,
- 				   SDMMC_INT_SDIO(slot->sdio_id));
--			__dw_mci_enable_sdio_irq(slot, 0);
-+			__dw_mci_enable_sdio_irq(slot, false, false);
- 			sdio_signal_irq(slot->mmc);
- 		}
- 
-@@ -3424,6 +3436,8 @@ int dw_mci_runtime_suspend(struct device *dev)
- {
- 	struct dw_mci *host = dev_get_drvdata(dev);
- 
-+	__dw_mci_enable_sdio_irq(host->slot, false, false);
-+
- 	if (host->use_dma && host->dma_ops->exit)
- 		host->dma_ops->exit(host);
- 
-@@ -3490,6 +3504,8 @@ int dw_mci_runtime_resume(struct device *dev)
- 	/* Now that slots are all setup, we can enable card detect */
- 	dw_mci_enable_cd(host);
- 
-+	__dw_mci_enable_sdio_irq(host->slot, true, false);
-+
- 	return 0;
- 
- err:
-diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-index 46e9f8ec5398..dfbace0f5043 100644
---- a/drivers/mmc/host/dw_mmc.h
-+++ b/drivers/mmc/host/dw_mmc.h
-@@ -127,6 +127,7 @@ struct dw_mci_dma_slave {
-  * @cmd11_timer: Timer for SD3.0 voltage switch over scheme.
-  * @cto_timer: Timer for broken command transfer over scheme.
-  * @dto_timer: Timer for broken data transfer over scheme.
-+ * @client_sdio_enb: The value last passed to enable_sdio_irq.
-  *
-  * Locking
-  * =======
-@@ -234,6 +235,8 @@ struct dw_mci {
- 	struct timer_list       cmd11_timer;
- 	struct timer_list       cto_timer;
- 	struct timer_list       dto_timer;
-+
-+	bool			client_sdio_enb;
- };
- 
- /* DMA ops for Internal/External DMAC interface */
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Looks good.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
+On 04/10/2019 01:28 PM, jglisse@redhat.com wrote:=0A=
+> From: J=E9r=F4me Glisse <jglisse@redhat.com>=0A=
+>=0A=
+> When bio_add_pc_page() fails in bio_copy_user_iov() we should free=0A=
+> the page we just allocated otherwise we are leaking it.=0A=
+>=0A=
+> Signed-off-by: J=E9r=F4me Glisse <jglisse@redhat.com>=0A=
+> Cc: Jens Axboe <axboe@kernel.dk>=0A=
+> Cc: linux-block@vger.kernel.org=0A=
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>=0A=
+> Cc: stable@vger.kernel.org=0A=
+> ---=0A=
+>   block/bio.c | 5 ++++-=0A=
+>   1 file changed, 4 insertions(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/block/bio.c b/block/bio.c=0A=
+> index b64cedc7f87c..716510ecd7ff 100644=0A=
+> --- a/block/bio.c=0A=
+> +++ b/block/bio.c=0A=
+> @@ -1298,8 +1298,11 @@ struct bio *bio_copy_user_iov(struct request_queue=
+ *q,=0A=
+>   			}=0A=
+>   		}=0A=
+>=0A=
+> -		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)=0A=
+> +		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {=0A=
+> +			if (!map_data)=0A=
+> +				__free_page(page);=0A=
+>   			break;=0A=
+> +		}=0A=
+>=0A=
+>   		len -=3D bytes;=0A=
+>   		offset =3D 0;=0A=
+>=0A=
+=0A=
