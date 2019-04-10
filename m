@@ -2,95 +2,115 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34D3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C81EC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F7F20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554896622;
-	bh=YljnnGXjWdOAccMOUJq4AnuHSmHn6csOpXmxpGl8p6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yBmtFWf4ZxKtZSAlJIXr6bs0I7Pw/J9O5iEaSNQSTs987A/+FyZZ89VGqWKgSKCjB
-	 yWd47Vba3KAhHEbDTIkWuMVFKKzuaXZNub+PZ1aDj0TfXcqfJ8Z89EbR5caG0EjMgR
-	 XAMN47KOpJ3Gr4DHWUugTP2JkEzhd8nKUeuxU4Pc=
+	by mail.kernel.org (Postfix) with ESMTP id 6443A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbfDJLnl (ORCPT
+        id S1730370AbfDJLrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:43:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47482 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbfDJLni (ORCPT
+        Wed, 10 Apr 2019 07:47:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45222 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727153AbfDJLrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:43:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SntIsH+w7p+mNCiyrspdAtG2gh9RiEpPh/ZY9F4c1Jw=; b=T0p2+y7sCpSYYPoAbYeZry2EK
-        ygU3rUCyUs4PqB2ToVucOOMTqv3nZMHgcbWMATG+YeEjW0k8UB3D0chZmYkt51eD8Ya2tFuio90DK
-        ocUOG7PLPwXLFMk/t4IWJYr8jej6p3Okgr69jWkPzSudGAhIgBDejDEIYGHv+9qBgIVz4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hEBd2-0008G7-SG; Wed, 10 Apr 2019 11:42:56 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 46C991128ED3; Wed, 10 Apr 2019 12:42:56 +0100 (BST)
-Date:   Wed, 10 Apr 2019 12:42:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Brian Austin <brian.austin@cirrus.com>,
-        Paul Handrigan <Paul.Handrigan@cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sound: cs43130: fix a NULL pointer dereference
-Message-ID: <20190410114256.GN6106@sirena.org.uk>
-References: <20190315035120.25913-1-kjlu@umn.edu>
+        Wed, 10 Apr 2019 07:47:00 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ABUol4010363
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:46:58 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rsfbesjy0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:46:58 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Wed, 10 Apr 2019 12:46:56 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Apr 2019 12:46:50 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3ABkn5J47710432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 11:46:49 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55DE84C040;
+        Wed, 10 Apr 2019 11:46:49 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D7E74C044;
+        Wed, 10 Apr 2019 11:46:48 +0000 (GMT)
+Received: from dyn-9-152-212-73.boeblingen.de.ibm.com (unknown [9.152.212.73])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 10 Apr 2019 11:46:48 +0000 (GMT)
+Date:   Wed, 10 Apr 2019 13:46:48 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH v5 4/6] s390/pci: add support for generic boot option
+ iommu.dma_mode
+In-Reply-To: <20190409125308.18304-5-thunder.leizhen@huawei.com>
+References: <20190409125308.18304-1-thunder.leizhen@huawei.com> <20190409125308.18304-5-thunder.leizhen@huawei.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v541l457l4DThMFo"
-Content-Disposition: inline
-In-Reply-To: <20190315035120.25913-1-kjlu@umn.edu>
-X-Cookie: teamwork, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19041011-0028-0000-0000-0000035F4B8B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041011-0029-0000-0000-0000241E6DB2
+Message-Id: <alpine.LFD.2.21.1904101346060.1774@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=752 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904100083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 9 Apr 2019, Zhen Lei wrote:
+> s390_iommu=strict is equivalent to iommu.dma_mode=strict.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
---v541l457l4DThMFo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Sebastian Ott <sebott@linux.ibm.com>
 
-On Thu, Mar 14, 2019 at 10:51:20PM -0500, Kangjie Lu wrote:
-> In case create_singlethread_workqueue fails, the fix returns
-> -ENOMEM to avoid potential NULL pointer dereference.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---v541l457l4DThMFo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyt1r8ACgkQJNaLcl1U
-h9CeYQf/aYGE0HNsqPGPQ626dW6VPCc+lT4dA/WjxpXpnG2IV9DWJOPw5UC8fdzP
-AlsOdyaxtt7oJkDqAl+mLfkfE9/dniCEmIqGJgfxTN7p0ztIxW1tYuFNwtb+0ULv
-QyQMA9b43cFGiMjunrgW8pEir9wiANgDm6fCl0ezP56R//V91I9EFOXKHEBrOo/z
-Jr8CmKv/Y8u7i1dJbdzXQAS07oqGhiUKePUmv5Pns8LcogNa0GrK/ztYFokU41gr
-oywnMium81E5XmVf5ug4cE/Y4f1aGXQJZpdDTXw71jnlTVSwE9MU8vubsaKReNbT
-1MpGpkmLJtIQz8AE3pHwtivrOqypJQ==
-=8xzx
------END PGP SIGNATURE-----
-
---v541l457l4DThMFo--
