@@ -6,173 +6,117 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE9DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34519C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659A820674
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077A7206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfDJHyF (ORCPT
+        id S1728679AbfDJHzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 03:54:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41800 "EHLO mx1.redhat.com"
+        Wed, 10 Apr 2019 03:55:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39234 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbfDJHyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 03:54:04 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7CCA6C002965;
-        Wed, 10 Apr 2019 07:54:03 +0000 (UTC)
-Received: from [10.72.12.186] (ovpn-12-186.pek2.redhat.com [10.72.12.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2125419C72;
-        Wed, 10 Apr 2019 07:53:53 +0000 (UTC)
-Subject: Re: [PATCH net] vhost: flush dcache page when logging dirty pages
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>
-References: <20190409041647.21269-1-jasowang@redhat.com>
- <20190409085607-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b635592f-a2c5-5687-e634-6fcd4f5a1e36@redhat.com>
-Date:   Wed, 10 Apr 2019 15:53:52 +0800
+        id S1726667AbfDJHzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 03:55:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 00:55:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="160335374"
+Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Apr 2019 00:55:30 -0700
+Subject: Re: [PATCH 1/1] spi: pxa2xx: add driver enabling message
+To:     Flavio Suligoi <f.suligoi@asem.it>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1554736964-6058-1-git-send-email-f.suligoi@asem.it>
+ <51e9e073-625d-f5c0-6b2e-410f6ddb6346@linux.intel.com>
+ <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <2c853342-f937-30e6-ce6f-010e06f7376c@linux.intel.com>
+Date:   Wed, 10 Apr 2019 10:55:29 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190409085607-mutt-send-email-mst@kernel.org>
+In-Reply-To: <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 10 Apr 2019 07:54:04 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/4/9 下午9:14, Michael S. Tsirkin wrote:
-> On Tue, Apr 09, 2019 at 12:16:47PM +0800, Jason Wang wrote:
->> We set dirty bit through setting up kmaps and access them through
->> kernel virtual address, this may result alias in virtually tagged
->> caches that require a dcache flush afterwards.
+On 4/9/19 5:11 PM, Flavio Suligoi wrote:
+> Hi Jarkko,
+> 
+>> Hi
 >>
->> Cc: Christoph Hellwig <hch@infradead.org>
->> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-> This is like saying "everyone with vhost needs this".
-> In practice only might affect some architectures.
+>> On 4/8/19 6:22 PM, Flavio Suligoi wrote:
+>>> Add an info message for the PXA2xx device driver start-up,
+>>> with the indication of the transfer mode used (DMA or GPIO).
+>>>
+>>> This info is useful to individuate the timing when
+>>> the module starts.
+>>>
+>>> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+>>> ---
+>>>    drivers/spi/spi-pxa2xx.c | 3 +++
+>>>    1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+>>> index f7068cc..d449501 100644
+>>> --- a/drivers/spi/spi-pxa2xx.c
+>>> +++ b/drivers/spi/spi-pxa2xx.c
+>>> @@ -1826,6 +1826,9 @@ static int pxa2xx_spi_probe(struct platform_device
+>> *pdev)
+>>>    		goto out_error_clock_enabled;
+>>>    	}
+>>>
+>>> +	dev_info(dev, "PXA2xx SPI master controller (%s mode)\n",
+>>> +		 platform_info->enable_dma ? "DMA" : "PIO");
+>>> +
+>>>    	return status;
+>>>
+>> Would this look better if moved before devm_spi_register_controller()
+>> call?
+> 
+> Ok, so in case of SPI registering failure, we have two messages, as:
+> 
+> pxa2xx-spi 80860F0E:00: PXA2xx SPI master controller (DMA mode)
+> pxa2xx-spi 80860F0E:00: problem registering spi controller
+> 
+> Do you think that it is more explicative?
+> 
+I think yes and it should not cause confusion since the error message is 
+the last one.
 
+I was thinking the successful registration case when DMA is not 
+available. First there is a warning, followed by a debug message from 
+SPI core (if CONFIG_SPI_DEBUG) and then info message.
 
-For the archs that does need dcache flushing, the function is just a nop.
+[    9.506895] pxa2xx-spi pxa2xx-spi.13: no DMA channels available, 
+using PIO
+[    9.516770] pxa2xx-spi pxa2xx-spi.13: registered master spi2
+[    9.518527] pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller 
+(PIO mode)
 
+Actually this info message doesn't necessarily tell will the driver end 
+up using DMA for transfers. See pxa2xx_spi_can_dma() and 
+pxa2xx_spi_transfer_one().
 
-> Which ones?
+How about replacing "no DMA channels available, using PIO" and have 
+instead single info message telling is the DMA available or does the 
+driver use PIO only?
 
-
-There're more than 10 archs that have ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 
-defined, just cc some maintainers of some more influenced ones.
-
-
-> You want to Cc the relevant maintainers
-> who understand this...
->
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> I am not sure this is a good idea.
-> The region in question is supposed to be accessed
-> by userspace at the same time, through atomic operations.
->
-> How do we know userspace didn't access it just before?
-
-
-get_user_pages() will do both flush_annon_page() to make sure the 
-userspace write is visible to kernel.
-
-
->
-> Is that an issue at all given we use
-> atomics for access? Documentation/core-api/cachetlb.rst does
-> not mention atomics.
-> Which architectures are affected?
-> Assuming atomics actually do need a flush, then don't we need
-> a flush in the other direction too? How are atomics
-> supposed to work at all?
-
-
-It's the issue of visibility, atomic operation is just one of the 
-possible operations. If we can finally makes the write visible to each 
-other, there will be no issue.
-
-It looks to me we could still end up alias if userspace is accessing the 
-dirty log between get_user_pages_fast() and flush_dcache_page(). But the 
-flush_dcache_page() can guarantee what kernel wrote is visible to 
-userspace finally though some bits cleared by userspace might still 
-there. We may end up with more dirty pages noticed by userspace which 
-should be harmless.
-
-
->
->
-> I really think we need new APIs along the lines of
-> set_bit_to_user.
-
-
-Can we simply do:
-
-get_user()
-
-set bit
-
-put_user()
-
-instead?
-
-
->
->> ---
->>   drivers/vhost/vhost.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index 351af88231ad..34a1cedbc5ba 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -1711,6 +1711,7 @@ static int set_bit_to_user(int nr, void __user *addr)
->>   	base = kmap_atomic(page);
->>   	set_bit(bit, base);
->>   	kunmap_atomic(base);
->> +	flush_dcache_page(page);
->>   	set_page_dirty_lock(page);
->>   	put_page(page);
->>   	return 0;
-> Ignoring the question of whether this actually helps, I doubt
-> flush_dcache_page is appropriate here.  Pls take a look at
-> Documentation/core-api/cachetlb.rst as well as the actual
-> implementation.
->
-> I think you meant flush_kernel_dcache_page, and IIUC it must happen
-> before kunmap, not after (which you still have the va locked).
-
-
-Looks like you're right.
-
-Thanks
-
-
->
->> -- 
->> 2.19.1
+-- 
+Jarkko
