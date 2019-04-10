@@ -2,296 +2,270 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B55C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3888C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7372075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554924312;
-	bh=9c24dSyO9Q21DG4ptyac73kxHymTOwXbn68HtQlORTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7z/uSkXrBbP6KR4oKGwsNq9rZ2401HK4+Nmg+ZMvSWgn6hojDLKPPsiIu+93OhS+
-	 LVic4u/O6W15Gr8eYI8mSFU2b22HfiFBk4HmqY76zV0zXn800yKIcWwAvHPzW5ZKB4
-	 ySe5HCimBSDznsdjJRjqjfHo2X4wS2NpEu2rfS2w=
+	by mail.kernel.org (Postfix) with ESMTP id 5FF58206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cs+GnZgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfDJTZK (ORCPT
+        id S1726615AbfDJTeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:25:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44008 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfDJTXH (ORCPT
+        Wed, 10 Apr 2019 15:34:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33175 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDJTeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:23:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Yr6flntSohMfDY8JmTkJqWByC2k/5EEKrm+kjxu+UOk=; b=P12VqYhK2ZPIWYtiC5Blxq6sBt
-        95JIIJnq7No1K9cF+DO805CtejVTfSy9yy8NMLbX/bb4LpdXxU5UQCpk65+l/gXCwYJOmtCr2frBi
-        w0BZ5+JOerKQ6v/RCNnlybDJ4Dxz8/NgpRiovxJpw9p9Upcrbhk61OFhnymQs9Wd7j1q1gWfxgnE7
-        AWA05jbsVfwDSZ5VcoNv0fBmypVt8JuvQiFfE01uufC0wJsJK/QWLua3gVBIUBYky6JbEb4vDoDSN
-        xg2VOCsb2lvIEGK39XGeO4CDNv3WzFw/F9h9W4aDFLlmUu2S1/hBCGZ6fyFRUG9h8Y/2rbFL7pQNk
-        6opyngog==;
-Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEIoM-0003R2-K0; Wed, 10 Apr 2019 19:23:06 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hEIoJ-0000zW-5L; Wed, 10 Apr 2019 16:23:03 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH v2 17/21] docs: hwmon: k8temp, w83793: convert to ReST format
-Date:   Wed, 10 Apr 2019 16:22:54 -0300
-Message-Id: <8657404c1bc52e957402b30f271ef5f857bf1cf0.1554923967.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1554923967.git.mchehab+samsung@kernel.org>
-References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+        Wed, 10 Apr 2019 15:34:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k19so2163519pgh.0;
+        Wed, 10 Apr 2019 12:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RoRP91eqHmZA4ZU0TjZar6G0XQR8yG8No49gQ9v2qAA=;
+        b=cs+GnZgAADrH/zJIturFnqmsguNJrAVRTHQZvmYl6HECAMPlaKD0UA6K+MyNzQYf3w
+         PUIMc1uKis5re+V2+FqEedB6P9+ne7EWbplBbw6XNrZHxzzkvow0XZlYC1DNTjWiTYy3
+         ItdRAa04tnfXw4RyktPTvPEsTjWKofFb9cw+sPzCkHF51rXl1BzwYzFVK1drgM+MUHnG
+         oz489z9RdaPf/RICLu1WLIYKvv9BewvQfpVl2R8SR7jZ7D2S+sJpBzdz8GtIBTjUH0Vv
+         tQSeNNtTC13O4oxFb/nMLaQODYtP7lTfGrK+1NG4VL6eMm5HPi9NJ54yDawmnGpcwxUt
+         Ilng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RoRP91eqHmZA4ZU0TjZar6G0XQR8yG8No49gQ9v2qAA=;
+        b=Mdgfb5t17W+5CQfRZPeFmqdZyYoclrlQlglXbYAsOgOfd2bpX7hDpGdSFhBerDM1lz
+         qkE2ZP8dLQUng33psFO8uU4/DERwD5cYpzT3qqcY8ojzJ5bklG1mgJifp5qMNTph1q15
+         t5MfTDzQ5f8EmxjbjkiLMPWUTQKnNpzRs2/PIrnhDXevKVNpJi1dRKA8JU5dklfSdc4T
+         laFAHGS9rvsVwMvx6GbTHgOGluyDA5wdBv5NuvO2quHIaqcz1wcOThYQ/uRsrVDxfOYg
+         KpZ/9WtsVp6ahDEPAhnO5bEFZ2wmZPbWiQgcNJohopHNctUPLnIoR/icm9RmMsmh8MxX
+         OWbQ==
+X-Gm-Message-State: APjAAAX+N+tsrgXTOMKMHSqxKR4nNkujdvKE2P9Q1GmYOf1UAOO0BR1f
+        zpqA+FPgPopP+GMK/jpFguY=
+X-Google-Smtp-Source: APXvYqw0XG2ZI6CL0aEPtoEmDzpr5neLpTGYMEs5bguF/r9G2ny6RJoTh8p2S21Yqa52QEf9vzxMiw==
+X-Received: by 2002:a63:84c7:: with SMTP id k190mr42006660pgd.255.1554924861335;
+        Wed, 10 Apr 2019 12:34:21 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l10sm33988536pfc.46.2019.04.10.12.34.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 12:34:19 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 12:34:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash
+ bucket.
+Message-ID: <20190410193418.GA32402@roeck-us.net>
+References: <155416000985.9540.14182958463813560577.stgit@noble.brown>
+ <155416006521.9540.5662092375167065834.stgit@noble.brown>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155416006521.9540.5662092375167065834.stgit@noble.brown>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert k8temp and w83793 to ReST format, in order to allow them
-to be parsed by Sphinx.
+Hi,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+On Tue, Apr 02, 2019 at 10:07:45AM +1100, NeilBrown wrote:
+> This patch changes rhashtables to use a bit_spin_lock on BIT(1) of the
+> bucket pointer to lock the hash chain for that bucket.
+> 
+> The benefits of a bit spin_lock are:
+>  - no need to allocate a separate array of locks.
+>  - no need to have a configuration option to guide the
+>    choice of the size of this array
+>  - locking cost is often a single test-and-set in a cache line
+>    that will have to be loaded anyway.  When inserting at, or removing
+>    from, the head of the chain, the unlock is free - writing the new
+>    address in the bucket head implicitly clears the lock bit.
+>    For __rhashtable_insert_fast() we ensure this always happens
+>    when adding a new key.
+>  - even when lockings costs 2 updates (lock and unlock), they are
+>    in a cacheline that needs to be read anyway.
+> 
+> The cost of using a bit spin_lock is a little bit of code complexity,
+> which I think is quite manageable.
+> 
+> Bit spin_locks are sometimes inappropriate because they are not fair -
+> if multiple CPUs repeatedly contend of the same lock, one CPU can
+> easily be starved.  This is not a credible situation with rhashtable.
+> Multiple CPUs may want to repeatedly add or remove objects, but they
+> will typically do so at different buckets, so they will attempt to
+> acquire different locks.
+> 
+> As we have more bit-locks than we previously had spinlocks (by at
+> least a factor of two) we can expect slightly less contention to
+> go with the slightly better cache behavior and reduced memory
+> consumption.
+> 
+> To enhance type checking, a new struct is introduced to represent the
+>   pointer plus lock-bit
+> that is stored in the bucket-table.  This is "struct rhash_lock_head"
+> and is empty.  A pointer to this needs to be cast to either an
+> unsigned lock, or a "struct rhash_head *" to be useful.
+> Variables of this type are most often called "bkt".
+> 
+> Previously "pprev" would sometimes point to a bucket, and sometimes a
+> ->next pointer in an rhash_head.  As these are now different types,
+> pprev is NULL when it would have pointed to the bucket. In that case,
+> 'blk' is used, together with correct locking protocol.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.com>
+
+This patch causes my qemu q800 boot test to crash reliably.
+
+Starting network: Unable to handle kernel access at virtual address (ptrval)
+Oops: 00000000
+Modules linked in:
+PC: [<00248b90>] sk_filter_trim_cap+0x56/0x158
+SR: 2000  SP: (ptrval)  a2: 07a30aa0
+d0: 07836300    d1: 0783666c    d2: 00000001    d3: 0025c192
+d4: 0025a636    d5: 00248b3a    a0: 078363fe    a1: 60000000
+Process ip (pid: 66, task=(ptrval))
+Frame format=7 eff addr=6000000c ssw=0505 faddr=6000000c
+wb 1 stat/addr/data: 0000 00000000 00000000
+wb 2 stat/addr/data: 0000 00000000 00000000
+wb 3 stat/addr/data: 0000 6000000c 00000000
+push data: 00000000 00000000 00000000 00000000
+Stack from 07a5bdec:
+        07a5be5c 0025c192 0025a636 00248b3a 00000000 ef9febc8 078363fe 0787a2d0
+        0783645c 07a5be5c 0025c192 0025a636 00248b3a 0787a2d0 07a2c000 0025c470
+        078363fe 0787a2d0 00000001 00000000 00000000 07a5be98 07a17500 00000000
+        0787a2d0 07a2c000 07a5bef8 07a5beac 7fffffff 0025c7e2 07a2c000 0787a2d0
+        00000000 00000000 00000000 0000000c ef9feb14 ef9feb14 00000000 0031a52e
+        07a5bef8 07a5bf28 0000000c 0781eba0 00000000 00000042 00000000 00000000
+Call Trace: [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<0025c470>] netlink_unicast+0x170/0x1be
+ [<0025c7e2>] netlink_sendmsg+0x288/0x2b2
+ [<0021a5be>] sock_sendmsg+0x1c/0x44
+ [<0021b8a6>] __sys_sendto+0xac/0xd2
+ [<00100000>] ext4_read_block_bitmap_nowait+0x4d4/0x4ec
+ [<00100000>] ext4_read_block_bitmap_nowait+0x4d4/0x4ec
+ [<00219906>] sock_alloc_file+0x50/0x80
+ [<000b7a1c>] fd_install+0x12/0x18
+ [<0021b1cc>] __sys_socket+0x7e/0x9c
+ [<0021b8ea>] sys_sendto+0x1e/0x24
+ [<00002a40>] syscall+0x8/0xc
+ [<0000c004>] ATANTBL+0x618/0x800
+Code: 4a89 6604 4280 60ea 2c2b 000c 2748 000c <2869> 000c 082c 0003 0002 6728 4878 0014 7620 4873 3800 486e ffec 4eb9 002e 5b88
+Disabling lock debugging due to kernel taint
+Unable to handle kernel NULL pointer dereference at virtual address (ptrval)
+Oops: 00000000
+Modules linked in:
+PC: [<0025bf9c>] netlink_release+0x284/0x446
+SR: 2000  SP: (ptrval)  a2: 07a30aa0
+d0: 00000780    d1: 00000780    d2: 07a2c26e    d3: 0001a0ba
+d4: 07406160    d5: 000000ac    a0: 078094ac    a1: 00000780
+Process ip (pid: 66, task=(ptrval))
+Frame format=7 eff addr=00000780 ssw=0505 faddr=00000780
+wb 1 stat/addr/data: 0000 00000000 00000000
+wb 2 stat/addr/data: 0000 00000000 00000000
+wb 3 stat/addr/data: 0000 00000780 00000000
+push data: 00000000 00000000 00000000 00000000
+Stack from 07a5bc2c:
+        00000000 078126a0 0741fe00 07a39208 00000001 ef9febc8 07406160 0740617c
+        00000000 00000000 002e8ca6 074061e8 07a5bcf4 00219830 07406160 00000008
+        07a39200 0740617c 002198a2 07406160 0740617c 000a3996 0740617c 07a39200
+        003deb54 07a39480 002e863c 000000b4 07a30aa0 002e7446 0002934a 07a39200
+        600000ff 00033e44 07a30aa0 0790f330 00018f34 07a30aa0 6000000c 0025c192
+        0025a636 00248b3a 00000001 ef9febc8 07a5bd84 00037986 0783645c 0790f368
+Call Trace: [<002e8ca6>] __down_write+0xe/0x12
+ [<00219830>] __sock_release+0x34/0x98
+ [<002198a2>] sock_close+0xe/0x14
+ [<000a3996>] __fput+0xc4/0x16a
+ [<002e863c>] down_read+0x0/0x6
+ [<002e7446>] _cond_resched+0x0/0x2a
+ [<0002934a>] task_work_run+0x66/0x7c
+ [<00033e44>] up_read+0x0/0x6
+ [<00018f34>] do_exit+0x2a2/0x724
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<00037986>] printk+0x0/0x18
+ [<00004fd4>] die_if_kernel+0x52/0x56
+ [<00005d64>] send_fault_sig+0x74/0x86
+ [<00005094>] buserr_c+0xbc/0x518
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<00002944>] buserr+0x20/0x28
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<0025c192>] netlink_attachskb+0x0/0x138
+ [<0025a636>] __netlink_lookup.isra.3+0x0/0xbc
+ [<00248b3a>] sk_filter_trim_cap+0x0/0x158
+ [<0025c470>] netlink_unicast+0x170/0x1be
+ [<0025c7e2>] netlink_sendmsg+0x288/0x2b2
+ [<0021a5be>] sock_sendmsg+0x1c/0x44
+ [<0021b8a6>] __sys_sendto+0xac/0xd2
+ [<00100000>] ext4_read_block_bitmap_nowait+0x4d4/0x4ec
+ [<00100000>] ext4_read_block_bitmap_nowait+0x4d4/0x4ec
+ [<00219906>] sock_alloc_file+0x50/0x80
+ [<000b7a1c>] fd_install+0x12/0x18
+ [<0021b1cc>] __sys_socket+0x7e/0x9c
+ [<0021b8ea>] sys_sendto+0x1e/0x24
+ [<00002a40>] syscall+0x8/0xc
+ [<0000c004>] ATANTBL+0x618/0x800
+Code: 41f5 5800 6000 fe34 b082 670a 2200 2240 <2011> 6000 fe48 202b 026e 43f9 0001 a0ba 4a81 677a 2041 2080 4878 0200 2f3c 0025
+Kernel panic - not syncing: Aiee, killing interrupt handler!
+---[ end Kernel panic - not syncing: Aiee, killing interrupt handler! ]---
+qemu-system-m68k: terminating on signal 15 from pid 19836 (/bin/bash)
+
+Bisect log is attached. Obviously I have no idea if this is an issue with qemu
+or with the code. qemu is from git@github.com:vivier/qemu-m68k.git, branch
+m68k/q800-dev.
+
+Guenter
+
 ---
- Documentation/hwmon/k8temp |  17 +++--
- Documentation/hwmon/w83793 | 123 ++++++++++++++++++++-----------------
- 2 files changed, 77 insertions(+), 63 deletions(-)
-
-diff --git a/Documentation/hwmon/k8temp b/Documentation/hwmon/k8temp
-index 716dc24c7237..72da12aa17e5 100644
---- a/Documentation/hwmon/k8temp
-+++ b/Documentation/hwmon/k8temp
-@@ -2,12 +2,17 @@ Kernel driver k8temp
- ====================
- 
- Supported chips:
-+
-   * AMD Athlon64/FX or Opteron CPUs
-+
-     Prefix: 'k8temp'
-+
-     Addresses scanned: PCI space
-+
-     Datasheet: http://support.amd.com/us/Processor_TechDocs/32559.pdf
- 
- Author: Rudolf Marek
-+
- Contact: Rudolf Marek <r.marek@assembler.cz>
- 
- Description
-@@ -27,10 +32,12 @@ implemented sensors.
- 
- Mapping of /sys files is as follows:
- 
--temp1_input - temperature of Core 0 and "place" 0
--temp2_input - temperature of Core 0 and "place" 1
--temp3_input - temperature of Core 1 and "place" 0
--temp4_input - temperature of Core 1 and "place" 1
-+============= ===================================
-+temp1_input   temperature of Core 0 and "place" 0
-+temp2_input   temperature of Core 0 and "place" 1
-+temp3_input   temperature of Core 1 and "place" 0
-+temp4_input   temperature of Core 1 and "place" 1
-+============= ===================================
- 
- Temperatures are measured in degrees Celsius and measurement resolution is
- 1 degree C. It is expected that future CPU will have better resolution. The
-@@ -48,7 +55,7 @@ computed temperature called TControl, which must be lower than TControlMax.
- 
- The relationship is following:
- 
--temp1_input - TjOffset*2 < TControlMax,
-+	temp1_input - TjOffset*2 < TControlMax,
- 
- TjOffset is not yet exported by the driver, TControlMax is usually
- 70 degrees C. The rule of the thumb -> CPU temperature should not cross
-diff --git a/Documentation/hwmon/w83793 b/Documentation/hwmon/w83793
-index 6cc5f639b721..83bb40c48645 100644
---- a/Documentation/hwmon/w83793
-+++ b/Documentation/hwmon/w83793
-@@ -2,29 +2,34 @@ Kernel driver w83793
- ====================
- 
- Supported chips:
-+
-   * Winbond W83793G/W83793R
-+
-     Prefix: 'w83793'
-+
-     Addresses scanned: I2C 0x2c - 0x2f
-+
-     Datasheet: Still not published
- 
- Authors:
--    Yuan Mu (Winbond Electronics)
--    Rudolf Marek <r.marek@assembler.cz>
-+    - Yuan Mu (Winbond Electronics)
-+    - Rudolf Marek <r.marek@assembler.cz>
- 
- 
- Module parameters
- -----------------
- 
- * reset int
--  (default 0)
--  This parameter is not recommended, it will lose motherboard specific
--  settings. Use 'reset=1' to reset the chip when loading this module.
-+    (default 0)
-+
-+    This parameter is not recommended, it will lose motherboard specific
-+    settings. Use 'reset=1' to reset the chip when loading this module.
- 
- * force_subclients=bus,caddr,saddr1,saddr2
--  This is used to force the i2c addresses for subclients of
--  a certain chip. Typical usage is `force_subclients=0,0x2f,0x4a,0x4b'
--  to force the subclients of chip 0x2f on bus 0 to i2c addresses
--  0x4a and 0x4b.
-+    This is used to force the i2c addresses for subclients of
-+    a certain chip. Typical usage is `force_subclients=0,0x2f,0x4a,0x4b`
-+    to force the subclients of chip 0x2f on bus 0 to i2c addresses
-+    0x4a and 0x4b.
- 
- 
- Description
-@@ -33,70 +38,72 @@ Description
- This driver implements support for Winbond W83793G/W83793R chips.
- 
- * Exported features
--  This driver exports 10 voltage sensors, up to 12 fan tachometer inputs,
--  6 remote temperatures, up to 8 sets of PWM fan controls, SmartFan
--  (automatic fan speed control) on all temperature/PWM combinations, 2
--  sets of 6-pin CPU VID input.
-+    This driver exports 10 voltage sensors, up to 12 fan tachometer inputs,
-+    6 remote temperatures, up to 8 sets of PWM fan controls, SmartFan
-+    (automatic fan speed control) on all temperature/PWM combinations, 2
-+    sets of 6-pin CPU VID input.
- 
- * Sensor resolutions
--  If your motherboard maker used the reference design, the resolution of
--  voltage0-2 is 2mV, resolution of voltage3/4/5 is 16mV, 8mV for voltage6,
--  24mV for voltage7/8. Temp1-4 have a 0.25 degree Celsius resolution,
--  temp5-6 have a 1 degree Celsiis resolution.
-+    If your motherboard maker used the reference design, the resolution of
-+    voltage0-2 is 2mV, resolution of voltage3/4/5 is 16mV, 8mV for voltage6,
-+    24mV for voltage7/8. Temp1-4 have a 0.25 degree Celsius resolution,
-+    temp5-6 have a 1 degree Celsiis resolution.
- 
- * Temperature sensor types
--  Temp1-4 have 2 possible types. It can be read from (and written to)
--  temp[1-4]_type.
--  - If the value is 3, it starts monitoring using a remote termal diode
--    (default).
--  - If the value is 6, it starts monitoring using the temperature sensor
--    in Intel CPU and get result by PECI.
--  Temp5-6 can be connected to external thermistors (value of
--  temp[5-6]_type is 4).
-+    Temp1-4 have 2 possible types. It can be read from (and written to)
-+    temp[1-4]_type.
-+
-+    - If the value is 3, it starts monitoring using a remote termal diode
-+      (default).
-+    - If the value is 6, it starts monitoring using the temperature sensor
-+      in Intel CPU and get result by PECI.
-+
-+    Temp5-6 can be connected to external thermistors (value of
-+    temp[5-6]_type is 4).
- 
- * Alarm mechanism
--  For voltage sensors, an alarm triggers if the measured value is below
--  the low voltage limit or over the high voltage limit.
--  For temperature sensors, an alarm triggers if the measured value goes
--  above the high temperature limit, and wears off only after the measured
--  value drops below the hysteresis value.
--  For fan sensors, an alarm triggers if the measured value is below the
--  low speed limit.
-+    For voltage sensors, an alarm triggers if the measured value is below
-+    the low voltage limit or over the high voltage limit.
-+    For temperature sensors, an alarm triggers if the measured value goes
-+    above the high temperature limit, and wears off only after the measured
-+    value drops below the hysteresis value.
-+    For fan sensors, an alarm triggers if the measured value is below the
-+    low speed limit.
- 
- * SmartFan/PWM control
--  If you want to set a pwm fan to manual mode, you just need to make sure it
--  is not controlled by any temp channel, for example, you want to set fan1
--  to manual mode, you need to check the value of temp[1-6]_fan_map, make
--  sure bit 0 is cleared in the 6 values. And then set the pwm1 value to
--  control the fan.
-+    If you want to set a pwm fan to manual mode, you just need to make sure it
-+    is not controlled by any temp channel, for example, you want to set fan1
-+    to manual mode, you need to check the value of temp[1-6]_fan_map, make
-+    sure bit 0 is cleared in the 6 values. And then set the pwm1 value to
-+    control the fan.
- 
--  Each temperature channel can control all the 8 PWM outputs (by setting the
--  corresponding bit in tempX_fan_map), you can set the temperature channel
--  mode using temp[1-6]_pwm_enable, 2 is Thermal Cruise mode and 3
--  is the SmartFanII mode. Temperature channels will try to speed up or
--  slow down all controlled fans, this means one fan can receive different
--  PWM value requests from different temperature channels, but the chip
--  will always pick the safest (max) PWM value for each fan.
-+    Each temperature channel can control all the 8 PWM outputs (by setting the
-+    corresponding bit in tempX_fan_map), you can set the temperature channel
-+    mode using temp[1-6]_pwm_enable, 2 is Thermal Cruise mode and 3
-+    is the SmartFanII mode. Temperature channels will try to speed up or
-+    slow down all controlled fans, this means one fan can receive different
-+    PWM value requests from different temperature channels, but the chip
-+    will always pick the safest (max) PWM value for each fan.
- 
--  In Thermal Cruise mode, the chip attempts to keep the temperature at a
--  predefined value, within a tolerance margin. So if tempX_input >
--  thermal_cruiseX + toleranceX, the chip will increase the PWM value,
--  if tempX_input < thermal_cruiseX - toleranceX, the chip will decrease
--  the PWM value. If the temperature is within the tolerance range, the PWM
--  value is left unchanged.
-+    In Thermal Cruise mode, the chip attempts to keep the temperature at a
-+    predefined value, within a tolerance margin. So if tempX_input >
-+    thermal_cruiseX + toleranceX, the chip will increase the PWM value,
-+    if tempX_input < thermal_cruiseX - toleranceX, the chip will decrease
-+    the PWM value. If the temperature is within the tolerance range, the PWM
-+    value is left unchanged.
- 
--  SmartFanII works differently, you have to define up to 7 PWM, temperature
--  trip points, defining a PWM/temperature curve which the chip will follow.
--  While not fundamentally different from the Thermal Cruise mode, the
--  implementation is quite different, giving you a finer-grained control.
-+    SmartFanII works differently, you have to define up to 7 PWM, temperature
-+    trip points, defining a PWM/temperature curve which the chip will follow.
-+    While not fundamentally different from the Thermal Cruise mode, the
-+    implementation is quite different, giving you a finer-grained control.
- 
- * Chassis
--  If the case open alarm triggers, it will stay in this state unless cleared
--  by writing 0 to the sysfs file "intrusion0_alarm".
-+    If the case open alarm triggers, it will stay in this state unless cleared
-+    by writing 0 to the sysfs file "intrusion0_alarm".
- 
- * VID and VRM
--  The VRM version is detected automatically, don't modify the it unless you
--  *do* know the cpu VRM version and it's not properly detected.
-+    The VRM version is detected automatically, don't modify the it unless you
-+    *do* know the cpu VRM version and it's not properly detected.
- 
- 
- Notes
--- 
-2.20.1
+# bad: [87b81df1a63d6791359a475241fa9d2f96fa30be] Add linux-next specific files for 20190410
+# good: [15ade5d2e7775667cf191cf2f94327a4889f8b9d] Linux 5.1-rc4
+git bisect start 'HEAD' 'v5.1-rc4'
+# bad: [35a1393e49d19d625d0270fcdf409fad743263cd] Merge remote-tracking branch 'crypto/master'
+git bisect bad 35a1393e49d19d625d0270fcdf409fad743263cd
+# good: [d1472e6a10485eb679eec89324ab165533af0be1] Merge remote-tracking branch 'hid/for-next'
+git bisect good d1472e6a10485eb679eec89324ab165533af0be1
+# bad: [0c9381d9bcfbd7dbc26b6e5f296e90d6396ea4db] Merge branch 'netdevsim-small-spring-cleanup'
+git bisect bad 0c9381d9bcfbd7dbc26b6e5f296e90d6396ea4db
+# good: [356d71e00d278d865f8c7f68adebd6ce4698a7e2] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+git bisect good 356d71e00d278d865f8c7f68adebd6ce4698a7e2
+# good: [fe1ec0bdfba4e7bfe6db81a1e4ac74beb36691e8] ehea: remove set but not used variables 'epa' and 'cq_handle_ref'
+git bisect good fe1ec0bdfba4e7bfe6db81a1e4ac74beb36691e8
+# bad: [ed514fc5615d7688b7c227a76863e98a92fb0d54] cxgb4: Don't return EAGAIN when TCAM is full.
+git bisect bad ed514fc5615d7688b7c227a76863e98a92fb0d54
+# good: [7090425104dbd87959bd424e9bd5a8711fde0986] net: phy: add amlogic g12a mdio mux support
+git bisect good 7090425104dbd87959bd424e9bd5a8711fde0986
+# good: [059477830022e1886f55a9641702461c249fa864] net: hsr: fix placement of logical operator in a multi-line statement
+git bisect good 059477830022e1886f55a9641702461c249fa864
+# good: [7a41c294c1463100fdc82a356e22e36bbaa6b0f9] rhashtable: use cmpxchg() in nested_table_alloc()
+git bisect good 7a41c294c1463100fdc82a356e22e36bbaa6b0f9
+# bad: [9186c90bbb9525f46eddb590be26c749b5b1def7] Merge branch 'rhashtable-bitlocks'
+git bisect bad 9186c90bbb9525f46eddb590be26c749b5b1def7
+# bad: [8f0db018006a421956965e1149234c4e8db718ee] rhashtable: use bit_spin_locks to protect hash bucket.
+git bisect bad 8f0db018006a421956965e1149234c4e8db718ee
+# good: [ff302db965b57c141297911ea647d36d11fedfbe] rhashtable: allow rht_bucket_var to return NULL.
+git bisect good ff302db965b57c141297911ea647d36d11fedfbe
+# first bad commit: [8f0db018006a421956965e1149234c4e8db718ee] rhashtable: use bit_spin_locks to protect hash bucket.
 
