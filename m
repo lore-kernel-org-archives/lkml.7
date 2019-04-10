@@ -2,60 +2,287 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4C2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F67206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E7E20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="xdCYnUc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfDJQdk (ORCPT
+        id S1732375AbfDJQfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:33:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:57724 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbfDJQdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:33:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9807FA78;
-        Wed, 10 Apr 2019 09:33:39 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D50D3F59C;
-        Wed, 10 Apr 2019 09:33:37 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:33:35 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: vexpress: Constify regulator_ops
-Message-ID: <20190410163335.GH3952@e107155-lin>
-References: <20190410161937.17224-1-axel.lin@ingics.com>
+        Wed, 10 Apr 2019 12:35:02 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:38816 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731110AbfDJQfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 12:35:01 -0400
+Received: by mail-it1-f194.google.com with SMTP id f22so4473115ita.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8o2QjDqA2N9chLiZ8Y1fX+salfYIl3vwFvYlfLs0dVE=;
+        b=xdCYnUc2zePyVpPO0iUqj4mmHMPpXmFZHP1ofWdaBvBU4wSzDNVaLNdvCcqtZrsWGW
+         SWShMDp+HZuXIcnZHcCAvdP8bRkc+CsG2aVl1Q5KL8Xee20PSHlPDCeBMWcTnz5XJumu
+         GaVBtP7MYCHMByWk5bY0Ht75i+QsxkGQENE7PsqkLiXt6Lsz0tl6O9LAEhw73ia3HbrZ
+         DtPfx2Eh9yk2H+LBAnHO2hMAJn9AiTI4L+A+rP/E8NJItjRGCiAkqdoMTcO3DMCg2d5M
+         MMaevzMSUF6LIc7Rv1Et8un/jEsWxOEInWY7gBLk+SFdQtMs3qMjUAIacl807d+d972v
+         FLsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8o2QjDqA2N9chLiZ8Y1fX+salfYIl3vwFvYlfLs0dVE=;
+        b=jQstCn1o3h74OY4KyZdaeW8cJS0R/eOK1PSlGNvkNPN/Yv1Sr7/pncbgEI4xqdXD33
+         n0KLxUjfYTnlzF8J4GayPn72f0SYJ4zrL8mqx9sw8xDpLecHuso6MCJ05my1gLuv8iR+
+         1c6D02l0MxLoKJFvP4uQq4h02tSXFqF3bxzporpgJbmh7o7zD/jTOSsXmzPM28OYxe9j
+         +c+nhqBlxt+PmItdHkx/shW4Aq9DVKfLyy5rXQYSePG6NOPN7CmnkRh3bbeiFWMrcP9c
+         8c00GV+VDFMPWXMxIJNSPJksvRfGNc1QxEybIvdwbEjy56qJ/9zicGePE5VNXZqCGWlY
+         tneQ==
+X-Gm-Message-State: APjAAAXdhISu3crds7W4P3Rh2v2O8L2xgWo6RfAyFXeuSUvlRPIpykS9
+        TxhhiHMoV7WjGrKdXcct/MtRwKqa/twxfD0dj/AbaA==
+X-Google-Smtp-Source: APXvYqwAKim+46C3OTYMYWY8bVMSAM5aw2sQDOITOC2qn+p2niv8EzicVkKbhVZTuGVNeyCt3i5S7242gVoQpy3JzKM=
+X-Received: by 2002:a24:7c9:: with SMTP id f192mr4232680itf.97.1554914100370;
+ Wed, 10 Apr 2019 09:35:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410161937.17224-1-axel.lin@ingics.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+ <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+In-Reply-To: <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Wed, 10 Apr 2019 09:34:49 -0700
+Message-ID: <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 12:19:37AM +0800, Axel Lin wrote:
-> vexpress_regulator_ops_ro and vexpress_regulator_ops are never changed,
-> make them const.
-> 
+On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
+>
+> On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
+> [snip]
+> > > > Wouldn't it be more convenient to provide it in a standardized format
+> > > > such that you won't have to take an additional step, and always have
+> > > > This is that form IMO.
+> > >
+> > > The location of the archive is fixed/known. If you are talking of the
+> > > location where the user decompresses it to, then they a;ready know where they
+> > > are decompressing to.
+> >
+> > The location _of_ the archive, sure. But the format of what is in the
+> > tarball, how it is versioned, and how to manage it will have to be
+> > done by every user.
+> >
+> > For any script that doesn't depend on some shared system state that
+> > wants to, say, build a eBPF program and load it, it would need to
+> > extract the tarball from scratch to make sure it is the current
+> > correct version of it.
+> >
+> > If that's required by all users, why not just present the data in a
+> > way that it can be used directly?
+>
+> That is the part that is unclear from your proposal. If we present a
+> filesystem view, then I am assuming the data will have to be
+> decompressed first into memory. That means you are proposing use of
+> 30MB uncompressed memory. The whole archive has to be decompressed but
+> the whole archive if compressed with XZ for a maximum compression
+> ratio.
 
-Assuming Mark will pick up this as usual,
+Only while the filesystem is mounted. So you would do something like:
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+ - Mount filesystem
+ - Build and load
+ - Unmount
 
---
-Regards,
-Sudeep
+The 30MB would only be used while the filesystem is mounted.
+
+Compared to:
+ - Extract tarball
+ - Build and load
+ - Remove file tree from filesystem
+
+> > > > Having to copy and extract the tarball is the most awkward step, IMHO.
+> > > > I also find the waste of kernel memory for it to be an issue, but
+> > > > given that it can be built as a module I guess that's the obvious
+> > > > solution for those who care about memory consumption.
+> > >
+> > > Yes. We discussed in previous threads that for users who really want the
+> > > archive to be completely uncompressed and in-memory, can just load the
+> > > module, decompress into tmpfs, and unload the module. That is an extra step,
+> > > yes.
+> >
+> > Most users will need to decompress it every time they use it anyway,
+> > especially if there's no versioned prefix in the tarball that they can
+> > use to key to a previously decompressed version with the exact same
+> > kernel version and config.
+> >
+> > So, if you need to do that anyway, wouldn't it be easier if you just
+> > mounted a FS to get to it. If you're on a system where you can't use
+> > it in-place for resource reasons, you can copy it off and unmount it.
+> > No extra tools needed in userspace then at run/use time.
+> >
+> > Said filesystem could be populated by a compressed cpio archive since
+> > we already have code in the kernel to do this for initramfs, and could
+> > do so at mount time -- and at unmount time it'd be freed up.
+>
+> But still, decompressing to the filesystem in a scratch area may be
+> better than decompressing to RAM, for some users who have lesser RAM.
+> This patchset does not enforce a certain way of doing things and
+> leaves it to the user.
+
+There are lots of things where we provide suitable ways of doing
+things to the user instead of making them come up with their own
+handling of things. devtmpfs is a perfect example of this -- doing
+things in userspace was perfectly possible but still a hassle in many
+cases, and having the kernel do it for you when it already has the
+data makes sense.
+
+I'd expect many users to still want to do this to tmpfs. Also, I
+expect whatever userspace tools and programs that will consume this
+data is likely to consume similar or more memory while running anyway.
+So mounting + copying + unmounting on the heavily constrained systems
+shouldn't be raising the high water mark on memory consumption.
+
+> > If you absolutely need to export a file to userspace with the archive,
+> > my suggestion is to do it through debugfs. That way the format isn't
+> > in a /proc ABI that can't be changed in the future (debugfs isn't
+> > required to be stable in the same way). This way we can change the
+> > format carried in the kernel over time without changing the official
+> > way we present the data to userspace (via a filesystem view).
+> >
+> > As far as format goes; there's clear precedent on cpio being used and
+> > supported; we already have build time requirements on the userspace
+> > tools with some options. Using tar would actually be a new dependency
+> > even if it is a common tool to have installed. With a self-populating
+> > FS, there's no new tool requirements on the runtime side either.
+>
+> debugfs is going away for Android and is controversial in the fact
+> that its functionality isn't guaranteed to be there (debugfs breakages
+> aren't necessarily bugs AFAIK). So this isn't an option.
+
+The argument that this needs to go into /proc because Android is
+removing debugfs isn't a very strong one.
+
+And "debugfs breakages aren't bugs" is exactly why I'm suggesting to
+do the non-supported export of the archive that way instead.
+
+> > > We had close to 2-3 months of discussions now with various folks up until v5.
+> > > I am about to post v6 which is in line with Masahiro Yamada's expecations. In
+> > > that I will be dropping module building artifacts due to his module building
+> > > concerns and only include the headers.
+> >
+> > I've found some of the old discussion and read up on it. I think it
+> > was pretty quick at dismissing ideas for more robust implementations
+> > ("it needs squashfs-tools"), and had some narrow viewpoints (exporting
+> > a tarball is the least amount of kernel change, while adding
+> > complexity at the system/usage side).
+>
+> Honestly, that's kind of unfair to be quoting just a few points like
+> that. If I remember there were 100s of emails and many good view
+> points were brought up by many people. We have done the diligence in
+> the discussions of this over a period of time.
+
+That wasn't captured with the patch submission, and having people go
+find 100s of emails to figure out why your seemingly lacking solution
+is the best one available is not how you motivate getting your code
+into the kernel.
+
+> > I'd also like to clarify: I'm not opposed to the general idea of
+> > providing the needed headers with the kernel somehow. I just think
+> > it's worth spending effort making sure an interface for it that we'll
+> > need to live with forever is appropriately thought through and not
+> > rushed in, especially since we're likely to get substantial
+> > infrastructure on top of it quickly (eBPF and friends in particular).
+>
+> We have spent the time :) This seems like the best solution of all.
+
+That should be documented.
+
+> Greg KH and other maintainers are also supportive of it as can be seen
+> in other threads.
+
+I've found support for the desire to provide headers. If there's so
+much support for this solution, the number of Acks to the patch should
+have been higher.
+
+> We can consider an alternate proposal if it is
+> better, but I don't see any better one proposed at the moment.
+
+Really?
+
+> - squashfs-tools requirement on the build really sucks
+
+Nah, this is a minor detail.
+
+> - cpio uncompressed to memory equally sucks because it consumes all
+> the memory uncompressed instead of reclaimable pages
+
+Only while mounted.
+
+> - decompressing into tmpfs will suck for Android because we don't use
+> disk-based swap and we run into the same cpio issue above. We use ZRAM
+> for compressed swap.
+
+See comments above about high water marks for memory consumption
+likely not moving much.
+
+> - debugfs is a non-option for Android
+
+Not my problem.
+
+> The tar+xz is trivially created without depending on squashfs-tools.
+
+It adds a new dependency on tar.
+
+> And xz provides the maximum compression ratio in our experiments.
+
+Sure.
+
+> Decompression time is a non-issue since trace tools are using it.
+
+Sure.
+
+> The filesystem view sounds using mount/unmount like a pony to me, but
+> it does not meet the requirements above. Let me know if I am missing
+> something.
+
+What requirements?
+
+
+-Olof
