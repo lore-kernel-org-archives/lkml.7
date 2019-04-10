@@ -2,51 +2,73 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A3AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCE3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF1B20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C331E20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:34:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lmjoIghn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfDJWan (ORCPT
+        id S1726717AbfDJWeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:30:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39592 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfDJWan (ORCPT
+        Wed, 10 Apr 2019 18:34:31 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:33294 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfDJWea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:30:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z9so3035001lfh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:30:42 -0700 (PDT)
+        Wed, 10 Apr 2019 18:34:30 -0400
+Received: by mail-vs1-f67.google.com with SMTP id a190so2360336vsd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/d+/Smh+ztTKnhe7lRqmlhlKS4kJ9d0Yz1XzvP1SVsI=;
+        b=lmjoIghnhFGVRmeW7FlGNwb+HYAG+0AXZxYzMM1eWAwIUi32/pVnH8w3L/tAoULcbR
+         OTOo7y9qzxhwrWmLexdTslLY0L/NaAhLwae4S/sD/o6FJGVgR28RKAOHfgWorVCcJtFV
+         60Z7Daj1NnQdcjpzkqhB4Sv2pENweuYx6muCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jgFRy3xnUP6NIgxErvxJfk2xMZ8wlFlp/Oi4ioPIets=;
-        b=RAXXm4oQzgVWP/9aV8L+QOhQm8n4NrdC+tBbEQFpl0J+2Ko1clMd8zbsJXVCpHdcDb
-         7YngCtdp18M7cc4aXYQVFHEg5LGRQ3gUvoYngSkTDiKnVf2vD4o6JKDN7sR1eC8YfuwA
-         8EaaNNyPZy/yZdMfuanXLi5xEmEQfWXOjB2OEk9n2bwHO4Q8iHSgSqhaCq/lMbsHXej+
-         3jI2tKFZjkMA+5hnONXwCH/F+exg8k7A8Z53lBQADWPUP9zxjSB+TewaHr9XvRcPq18S
-         ksoHbqTCKnC6f3SNCI4Hy3APV+V5alPQpLKhEk7qhZ4ggdfHRl4Uj60IgAc2M+azGh/K
-         KV5Q==
-X-Gm-Message-State: APjAAAX3Ml4XwnPe5RQy6aPeaUfVNiL0neeXSAlc2pmhXCbOm96j8oif
-        tpfCkSj7bYwhcRH4LaZeGWkBF+AB5X6G8JUdPWpVkA==
-X-Google-Smtp-Source: APXvYqx6/CJ/NTPyyMHaRFYubdEk8/EbrcDQ7QZfFKYOJ+2bNS0PkdENZCM8QhfNcTykmnEfUoKLbB/+Hy5c2QAnayk=
-X-Received: by 2002:ac2:4551:: with SMTP id j17mr13958827lfm.141.1554935441257;
- Wed, 10 Apr 2019 15:30:41 -0700 (PDT)
+        bh=/d+/Smh+ztTKnhe7lRqmlhlKS4kJ9d0Yz1XzvP1SVsI=;
+        b=WdchU5PHCQFk9CBRxyz2eMueOHE6pTOkJIvupRwMIP6rRQm962IQtrXj+ARqyxb1VN
+         VdPysV4lCQ2XotzthLYjMBpanQ11Gi5Iu0QO5R5METKAdfyKFbrX+AR3wyc15Akox1pp
+         WO8Zw7lJrRZlOI6Zumpf28pmFqBqzm8xN3tcFfjRhyGV55QItlGOtN7FSyDsf8yOPEu2
+         iyCRcd1LBnOO15VzhH5UVLPsusCExOwa7OzcrhAJDefLJ1pyb05mqwNTx7N10Sn339hy
+         d1h89qkEg+LdnVeqIFvLyqcr+kKU6sv0bNpGJTKpaCE7lda6oqC0gz/R4beAbIw1GD+R
+         lOvQ==
+X-Gm-Message-State: APjAAAUpY1yKZjDZM4MVR3dTIUJIZkHJrfF+fihxUD3NL/d9h6g2FYOb
+        WHTWlvhzWbrACZM7q0F0FJ4dpX2M1+Q=
+X-Google-Smtp-Source: APXvYqx1wgvv8IYc4ReITG/pnA6Z22RYlV+9R9FRLF5zlJyZJQVun8pJw6WQQMdgapBpMRONke25KQ==
+X-Received: by 2002:a67:d38f:: with SMTP id b15mr25636195vsj.154.1554935669220;
+        Wed, 10 Apr 2019 15:34:29 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id d134sm16743006vkf.6.2019.04.10.15.34.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 15:34:28 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id v7so1342812uak.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:34:28 -0700 (PDT)
+X-Received: by 2002:ab0:60cd:: with SMTP id g13mr24036899uam.85.1554935667664;
+ Wed, 10 Apr 2019 15:34:27 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-3-mcroce@redhat.com>
  <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
- <CAGnkfhwZEqX03H7PqsSTa=GVwZXX127hQO5YHzJasAEYtpLMZw@mail.gmail.com> <CAGXu5j+0sAc2fHTuYwYTLoHPDbnfxYuAEJ+tRfgc2Z5DDqp9Jg@mail.gmail.com>
-In-Reply-To: <CAGXu5j+0sAc2fHTuYwYTLoHPDbnfxYuAEJ+tRfgc2Z5DDqp9Jg@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 11 Apr 2019 00:30:05 +0200
-Message-ID: <CAGnkfhxPZJXmnPJ+k8nGPCBNeDBM_=rN+kEea-Uyq0zfCt0MXg@mail.gmail.com>
+ <CAGnkfhwZEqX03H7PqsSTa=GVwZXX127hQO5YHzJasAEYtpLMZw@mail.gmail.com>
+ <CAGXu5j+0sAc2fHTuYwYTLoHPDbnfxYuAEJ+tRfgc2Z5DDqp9Jg@mail.gmail.com> <CAGnkfhxPZJXmnPJ+k8nGPCBNeDBM_=rN+kEea-Uyq0zfCt0MXg@mail.gmail.com>
+In-Reply-To: <CAGnkfhxPZJXmnPJ+k8nGPCBNeDBM_=rN+kEea-Uyq0zfCt0MXg@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 15:34:16 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKf8ezMOxMn3P8DW+0GQrdkmno8_qxgQtxBD98cP3MRKA@mail.gmail.com>
+Message-ID: <CAGXu5jKf8ezMOxMn3P8DW+0GQrdkmno8_qxgQtxBD98cP3MRKA@mail.gmail.com>
 Subject: Re: [PATCH 2/2] kernel: use sysctl shared variables for range check
-To:     Kees Cook <keescook@chromium.org>
+To:     Matteo Croce <mcroce@redhat.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
@@ -58,89 +80,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:51 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Apr 10, 2019 at 3:30 PM Matteo Croce <mcroce@redhat.com> wrote:
 >
-> On Wed, Apr 10, 2019 at 12:24 PM Matteo Croce <mcroce@redhat.com> wrote:
+> On Wed, Apr 10, 2019 at 11:51 PM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > On Wed, Apr 10, 2019 at 8:46 PM Kees Cook <keescook@chromium.org> wrote:
+> > On Wed, Apr 10, 2019 at 12:24 PM Matteo Croce <mcroce@redhat.com> wrote:
 > > >
-> > > On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+> > > On Wed, Apr 10, 2019 at 8:46 PM Kees Cook <keescook@chromium.org> wrote:
 > > > >
-> > > > Use the shared variables for range check, instead of declaring a local one
-> > > > in every source file.
+> > > > On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
+> > > > >
+> > > > > Use the shared variables for range check, instead of declaring a local one
+> > > > > in every source file.
+> > > >
+> > > > I was expecting this to be a tree-wide change for all the cases found
+> > > > by patch 1's "git grep".
+> > > >
 > > >
-> > > I was expecting this to be a tree-wide change for all the cases found
-> > > by patch 1's "git grep".
+> > > Hi Kees,
 > > >
+> > > I have already the whole patch ready, but I was frightened by the
+> > > output of get_maintainer.pl, so I decided to split the patch into
+> > > small pieces and send the first one.
 > >
-> > Hi Kees,
+> > Heh, sounds fine. Normally the big tree-wide changes go via Linus just
+> > before cutting rc1 (or rc2). This is "only" 31 source files, though,
+> > so maybe akpm wants to take these instead? Andrew, how do you feel
+> > about that?
 > >
-> > I have already the whole patch ready, but I was frightened by the
-> > output of get_maintainer.pl, so I decided to split the patch into
-> > small pieces and send the first one.
 >
-> Heh, sounds fine. Normally the big tree-wide changes go via Linus just
-> before cutting rc1 (or rc2). This is "only" 31 source files, though,
-> so maybe akpm wants to take these instead? Andrew, how do you feel
-> about that?
+> FYI, this are the stats from my local repo, just to let you the size
+> of a series with all the changes in it:
 >
+> $ git --no-pager log --stat --oneline linus/master
+>  2 files changed, 4 insertions(+), 9 deletions(-)
+>  2 files changed, 7 insertions(+), 14 deletions(-)
+>  6 files changed, 15 insertions(+), 30 deletions(-)
+>  1 file changed, 16 insertions(+), 19 deletions(-)
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>  3 files changed, 15 insertions(+), 20 deletions(-)
+>  12 files changed, 93 insertions(+), 116 deletions(-)
+>  3 files changed, 98 insertions(+), 104 deletions(-)
+>  2 files changed, 9 insertions(+)
 
-FYI, this are the stats from my local repo, just to let you the size
-of a series with all the changes in it:
+Tiny! :) Seriously, though, I think this should be fine to take
+directly to Linus after patch 1 lands, or see if akpm wants to carry
+it directly.
 
-$ git --no-pager log --stat --oneline linus/master
-acebb1f752e9 x86: use sysctl shared variables for range check
- arch/x86/entry/vdso/vdso32-setup.c | 7 ++-----
- arch/x86/kernel/itmt.c             | 6 ++----
- 2 files changed, 4 insertions(+), 9 deletions(-)
-6731f419f46d s390: use sysctl shared variables for range check
- arch/s390/appldata/appldata_base.c | 15 +++++----------
- arch/s390/kernel/topology.c        |  6 ++----
- 2 files changed, 7 insertions(+), 14 deletions(-)
-1189495100c6 drivers: use sysctl shared variables for range check
- drivers/base/firmware_loader/fallback_table.c | 11 ++++-------
- drivers/gpu/drm/i915/i915_perf.c              |  8 +++-----
- drivers/hv/vmbus_drv.c                        |  6 ++----
- drivers/s390/char/sclp_async.c                |  7 ++-----
- drivers/tty/tty_ldisc.c                       |  6 ++----
- drivers/xen/balloon.c                         |  7 ++-----
- 6 files changed, 15 insertions(+), 30 deletions(-)
-bada6ce1f240 ipc: use sysctl shared variables for range check
- ipc/ipc_sysctl.c | 35 ++++++++++++++++-------------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
-1faa590d64c5 inotify: use sysctl shared variables for range check
- fs/notify/inotify/inotify_user.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-ad4254677a52 security: use sysctl shared variables for range check
- security/keys/sysctl.c     | 26 ++++++++++++--------------
- security/loadpin/loadpin.c |  6 ++----
- security/yama/yama_lsm.c   |  3 +--
- 3 files changed, 15 insertions(+), 20 deletions(-)
-3d2211ab8c7c net: use sysctl shared variables for range check
- net/core/neighbour.c            | 20 ++++++-------
- net/core/sysctl_net_core.c      | 34 ++++++++++------------
- net/dccp/sysctl.c               | 16 +++++-----
- net/ipv4/sysctl_net_ipv4.c      | 58 ++++++++++++++++++-------------------
- net/ipv6/addrconf.c             |  6 ++--
- net/ipv6/route.c                |  7 ++---
- net/ipv6/sysctl_net_ipv6.c      |  8 ++---
- net/mpls/af_mpls.c              | 10 +++----
- net/netfilter/ipvs/ip_vs_ctl.c  |  3 +-
- net/rxrpc/sysctl.c              |  9 +++---
- net/sctp/sysctl.c               | 35 ++++++++++------------
- net/sunrpc/xprtrdma/transport.c |  3 +-
- 12 files changed, 93 insertions(+), 116 deletions(-)
-f20fd0e406ec kernel: use sysctl shared variables for range check
- kernel/pid_namespace.c |   3 +-
- kernel/sysctl.c        | 193 ++++++++++++++++++++++-----------------------
- kernel/ucount.c        |   6 +-
- 3 files changed, 98 insertions(+), 104 deletions(-)
-05fc54289d17 proc/sysctl: add shared variables for range check
- fs/proc/proc_sysctl.c  | 5 +++++
- include/linux/sysctl.h | 4 ++++
- 2 files changed, 9 insertions(+)
-
-
---
-Matteo Croce
-per aspera ad upstream
+-- 
+Kees Cook
