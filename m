@@ -2,215 +2,297 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A754C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1881FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0897C20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJtgUynG"
+	by mail.kernel.org (Postfix) with ESMTP id D6FDE20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfDJPvF (ORCPT
+        id S2387483AbfDJPvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 10 Apr 2019 11:51:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59398 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbfDJPvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 11:51:05 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41633 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731183AbfDJPvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:51:04 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w30so3409878qta.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 08:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I8SE0hQdgATafth9AsqVC7r1ns9guNMUwC2veAj2keA=;
-        b=kJtgUynGAHE1JRUInC+YKxM3RWQ9GSYDP6Y3rVu6lzNNJpj74oZMigmJktVSwyHNjB
-         nMn14W6udtj6pvGHZ52Ry+xWMSpuNWtB0/oxozJfRiX4m6fAkwZgIEhQuWZLtQfJPCgG
-         4PE/JZr9FenVRSb3+B7dUX3YhsLlKUiP5fFAVrVYdhjq9LR38MN3InHEeXbxF2orffUn
-         53zoCs2ELvlKxspkOwWV8etCU1BuIdVoo7790dV6Ey74nNFvgk5stpKRsm4aEDZ/bprF
-         TQFam94sMoiN78g739ntjrH0zuBQqDtpoXJXV8IN3vVT19fwP7tORCAQ9fsqWwejJEOr
-         gDXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I8SE0hQdgATafth9AsqVC7r1ns9guNMUwC2veAj2keA=;
-        b=RXZeEx4jFbO/6qC2Z+ZUSwUGJ8XpqPMPxFcdn6x9REpoS/jSey1XApjDpXiapiR/nC
-         IeR66zU7SXOARarzoWKDkdpDSZtgrHAZjEwkyIRH/ZwEqn5/4pEs2DzGAx2lG9N4xldp
-         7INLzEoAGmT1wkfPiB4MD3gOB3tYXvh0gV5gB+cH+xQBbmxf0HykkOZQd0C7AjpELsbS
-         +iHF0vfYNCvJF6F1lhO7pQYpkYWDyVbrp/LJGCYYjmqvJfESy//Hd1Lo2SLcp/CJBjFB
-         Px3ibhqnBN9lY8DjZk5PLAJRMAzR2b7wKrSrz0c5lzWFaCSnDcsTcjaUIqt08w6H2TzS
-         u88Q==
-X-Gm-Message-State: APjAAAX9aZXT9AIS/afRmMknFnjBmOGIlE5GtUwhK67xOH9m+Tx2lNJ7
-        6Umx2BtZg83MaW419A7tcy/obamUdBLNlMYVG4p8SAz/zhU=
-X-Google-Smtp-Source: APXvYqxrxnzD5OxUw/1vC9do17GmEXhvmxvbyYwJA01fgTqEyu4e+DlxDg1gE6Zi9BfO2FTohQPvkNGazJsv6DV/wO8=
-X-Received: by 2002:a0c:b018:: with SMTP id k24mr35721367qvc.218.1554911462775;
- Wed, 10 Apr 2019 08:51:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
-In-Reply-To: <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Wed, 10 Apr 2019 11:50:51 -0400
-Message-ID: <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6062E3157112;
+        Wed, 10 Apr 2019 15:51:04 +0000 (UTC)
+Received: from jlaw-desktop.bos.redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1841105D202;
+        Wed, 10 Apr 2019 15:51:02 +0000 (UTC)
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Cc:     Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v3 0/9] klp-convert livepatch build tooling
+Date:   Wed, 10 Apr 2019 11:50:49 -0400
+Message-Id: <20190410155058.9437-1-joe.lawrence@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 10 Apr 2019 15:51:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
-[snip]
-> > > Wouldn't it be more convenient to provide it in a standardized format
-> > > such that you won't have to take an additional step, and always have
-> > > This is that form IMO.
-> >
-> > The location of the archive is fixed/known. If you are talking of the
-> > location where the user decompresses it to, then they a;ready know where they
-> > are decompressing to.
->
-> The location _of_ the archive, sure. But the format of what is in the
-> tarball, how it is versioned, and how to manage it will have to be
-> done by every user.
->
-> For any script that doesn't depend on some shared system state that
-> wants to, say, build a eBPF program and load it, it would need to
-> extract the tarball from scratch to make sure it is the current
-> correct version of it.
->
-> If that's required by all users, why not just present the data in a
-> way that it can be used directly?
+Hi folks,
 
-That is the part that is unclear from your proposal. If we present a
-filesystem view, then I am assuming the data will have to be
-decompressed first into memory. That means you are proposing use of
-30MB uncompressed memory. The whole archive has to be decompressed but
-the whole archive if compressed with XZ for a maximum compression
-ratio.
+This is the third installment of the klp-convert tool for generating and
+processing livepatch symbols for livepatch module builds.  For those
+following along at home, archive links to previous versions:
 
-> > > Having to copy and extract the tarball is the most awkward step, IMHO.
-> > > I also find the waste of kernel memory for it to be an issue, but
-> > > given that it can be built as a module I guess that's the obvious
-> > > solution for those who care about memory consumption.
-> >
-> > Yes. We discussed in previous threads that for users who really want the
-> > archive to be completely uncompressed and in-memory, can just load the
-> > module, decompress into tmpfs, and unload the module. That is an extra step,
-> > yes.
->
-> Most users will need to decompress it every time they use it anyway,
-> especially if there's no versioned prefix in the tarball that they can
-> use to key to a previously decompressed version with the exact same
-> kernel version and config.
->
-> So, if you need to do that anyway, wouldn't it be easier if you just
-> mounted a FS to get to it. If you're on a system where you can't use
-> it in-place for resource reasons, you can copy it off and unmount it.
-> No extra tools needed in userspace then at run/use time.
->
-> Said filesystem could be populated by a compressed cpio archive since
-> we already have code in the kernel to do this for initramfs, and could
-> do so at mount time -- and at unmount time it'd be freed up.
+RFC:
+  https://lore.kernel.org/lkml/cover.1477578530.git.jpoimboe@redhat.com/
+v2:
+  https://lore.kernel.org/lkml/f52d29f7-7d1b-ad3d-050b-a9fa8878faf2@redhat.com/
 
-But still, decompressing to the filesystem in a scratch area may be
-better than decompressing to RAM, for some users who have lesser RAM.
-This patchset does not enforce a certain way of doing things and
-leaves it to the user.
+(Note that I don't see v2 archived at lore, but that is a link to the
+most recent subthread that lore did catch.)
 
-> If you absolutely need to export a file to userspace with the archive,
-> my suggestion is to do it through debugfs. That way the format isn't
-> in a /proc ABI that can't be changed in the future (debugfs isn't
-> required to be stable in the same way). This way we can change the
-> format carried in the kernel over time without changing the official
-> way we present the data to userspace (via a filesystem view).
->
-> As far as format goes; there's clear precedent on cpio being used and
-> supported; we already have build time requirements on the userspace
-> tools with some options. Using tar would actually be a new dependency
-> even if it is a common tool to have installed. With a self-populating
-> FS, there's no new tool requirements on the runtime side either.
 
-debugfs is going away for Android and is controversial in the fact
-that its functionality isn't guaranteed to be there (debugfs breakages
-aren't necessarily bugs AFAIK). So this isn't an option.
+Livepatches may use symbols which are not contained in its own scope,
+and, because of that, may end up compiled with relocations that will
+only be resolved during module load. Yet, when the referenced symbols are
+not exported, solving this relocation requires information on the object
+that holds the symbol (either vmlinux or modules) and its position inside
+the object, as an object may contain multiple symbols with the same name.
+Providing such information must be done accordingly to what is specified
+in Documentation/livepatch/module-elf-format.txt.
 
-> > We had close to 2-3 months of discussions now with various folks up until v5.
-> > I am about to post v6 which is in line with Masahiro Yamada's expecations. In
-> > that I will be dropping module building artifacts due to his module building
-> > concerns and only include the headers.
->
-> I've found some of the old discussion and read up on it. I think it
-> was pretty quick at dismissing ideas for more robust implementations
-> ("it needs squashfs-tools"), and had some narrow viewpoints (exporting
-> a tarball is the least amount of kernel change, while adding
-> complexity at the system/usage side).
+Currently, there is no trivial way to embed the required information as
+requested in the final livepatch elf object. klp-convert solves this
+problem in two different forms: (i) by relying on a symbol map, which is
+built during kernel compilation, to automatically infer the relocation
+targeted symbol, and, when such inference is not possible (ii) by using
+annotations in the elf object to convert the relocation accordingly to
+the specification, enabling it to be handled by the livepatch loader.
 
-Honestly, that's kind of unfair to be quoting just a few points like
-that. If I remember there were 100s of emails and many good view
-points were brought up by many people. We have done the diligence in
-the discussions of this over a period of time.
+Given the above, add support for symbol mapping in the form of
+Symbols.list file; add klp-convert tool; integrate klp-convert tool into
+kbuild; make livepatch modules discernible during kernel compilation
+pipeline; add data-structure and macros to enable users to annotate
+livepatch source code; make modpost stage compatible with livepatches;
+update livepatch-sample and update documentation.
 
-> I'd also like to clarify: I'm not opposed to the general idea of
-> providing the needed headers with the kernel somehow. I just think
-> it's worth spending effort making sure an interface for it that we'll
-> need to live with forever is appropriately thought through and not
-> rushed in, especially since we're likely to get substantial
-> infrastructure on top of it quickly (eBPF and friends in particular).
+The patch was tested under three use-cases:
 
-We have spent the time :) This seems like the best solution of all.
-Greg KH and other maintainers are also supportive of it as can be seen
-in other threads. We can consider an alternate proposal if it is
-better, but I don't see any better one proposed at the moment.
+use-case 1: There is a relocation in the lp that can be automatically
+resolved by klp-convert.  For example. see the saved_command_line
+variable in lib/livepatch/test_klp_convert2.c.
 
-- squashfs-tools requirement on the build really sucks
-- cpio uncompressed to memory equally sucks because it consumes all
-the memory uncompressed instead of reclaimable pages
-- decompressing into tmpfs will suck for Android because we don't use
-disk-based swap and we run into the same cpio issue above. We use ZRAM
-for compressed swap.
-- debugfs is a non-option for Android
+use-case 2: There is a relocation in the lp that cannot be automatically
+resolved, as the name of the respective symbol appears in multiple
+objects. The livepatch contains an annotation to enable a correct
+relocation.  See the KLP_MODULE_RELOC / KLP_SYMPOS annotation sections
+in lib/livepatch/test_klp_convert{1,2}.c.
 
-The tar+xz is trivially created without depending on squashfs-tools.
-And xz provides the maximum compression ratio in our experiments.
-Decompression time is a non-issue since trace tools are using it.
+use-case 3: There is a relocation in the lp that cannot be automatically
+resolved similarly as 2, but no annotation was provided in the
+livepatch, triggering an error during compilation.  Reproducible by
+removing the KLP_MODULE_RELOC / KLP_SYMPOS annotation sections in
+lib/livepatch/test_klp_convert{1,2}.c.
 
-The filesystem view sounds using mount/unmount like a pony to me, but
-it does not meet the requirements above. Let me know if I am missing
-something.
 
-thanks,
- - Joel
+Branches
+--------
+
+Since I spent some time tinkering with v2 and accumulated a bunch of
+fixes, I collected them up and am posting this new version.  For review
+purposes, I posted two branches up to github:
+
+  1 - an expanded branch that with changes separate from the original
+  https://github.com/joe-lawrence/linux/commits/klp-convert-v3-expanded
+
+  2 - a squashed branch of (1) that comprises v3:
+  https://github.com/joe-lawrence/linux/commits/klp-convert-v3
+
+Non-trivial commits in the expanded branch have some extra commentary
+and details for debugging in the commit message that were dropped when
+squashing into their respective parent commits.
+
+
+TODO
+----
+
+There are a few outstanding items that I came across while reviewing v2,
+but as changes started accumulating, it made sense to defer those to a
+later version.  I'll reply to this thread individual topics to start
+discussion sub-threads for those.
+
+
+Changelogs
+----------
+
+The commit changelogs were getting long, so I've moved them here for
+posterity and review purposes:
+
+livepatch: Create and include UAPI headers
+  v2:
+  - jmoreira: split up and changelog
+  v3:
+  - joe: convert to SPDX license tags
+
+kbuild: Support for Symbols.list creation
+  v3:
+  - jmoreira: adjust for multiobject livepatch
+  - joe: add klpclean to PHONY
+  - joe: align KLP prefix
+
+livepatch: Add klp-convert tool
+  v2:
+  - khlebnikov: use HOSTLOADLIBES_ instead of HOSTLDFLAGS: -lelf must be
+    at the end
+  - jmoreira: add support to automatic relocation conversion in
+    klp-convert.c, changelog
+  v3:
+  - joe: convert to SPDX license tags
+  - jmoreira: add rela symbol name to WARNs
+  - jmoreira: ignore relocations to .TOC and symbols with index 0
+  - joe: separate and fix valid_sympos() sympos=0 and sympos=1..n checks
+  - joe: fix symbol use-after-frees
+  - joe: fix remaining valgrind leak complaints (non-error paths only)
+  - joe: checkpatch nits
+  
+livepatch: Add klp-convert annotation helpers
+  v2:
+  - jmoreira: split up: move KLP_MODULE_RELOC from previous patch to
+    here, add KLP_SYMPOS, move macros from include/uapi/livepatch.h to
+    include/linux/livepatch.h
+  v3:
+  - joe: suggested by jpoimboe, KLP_MODULE_RELOC macro should 4-byte
+    align klp_module_reloc structures
+
+modpost: Integrate klp-convert
+  v2:
+  - khlebnikov: save cmd_ld_ko_o into .module.cmd, if_changed_rule
+    doesn't do that.f
+  - khlebnikov: fix bashisms for debian where /bin/sh is a symlink to
+    /bin/dash
+  - khlebnikov: rename rule_link_module to rule_ld_ko_o, otherwise
+    arg-check inside if_changed_rule compares cmd_link_module and
+    cmd_ld_ko_o.
+  - khlebnikov: check modinfo -F livepatch only if CONFIG_LIVEPATCH is
+    true.
+  - mbenes: remove modinfo call. LIVEPATCH_ in Makefile
+  - jmoreira: split up: move the .livepatch file-based scheme for
+    identifying livepatches to a previous patch, as it was required for
+    correctly building Symbols.list there.
+  v3:
+  - joe: adjust rule_ld_ko_o to call echo-cmd
+  - joe: rebase for v5.1
+  - joe: align KLP prefix
+
+modpost: Add modinfo flag to livepatch modules
+  v2:
+  - jmoreira: fix modpost.c (add_livepatch_flag) to update module
+    structure with livepatch flag and prevent modpost from breaking due to
+    unresolved symbols
+  v3:
+  - joe: adjust modpost.c::get_modinfo() call for v5.0 version
+
+livepatch: Add sample livepatch module
+  v3:
+  - joe: update all in-tree livepatches with LIVEPATCH_* modinfo flag
+
+documentation: Update on livepatch elf format
+  v2:
+  - jmoreira: update module to use KLP_SYMPOS
+  - jmoreira: Comments on symbol resolution scheme
+  - jmoreira: Update Makefile
+  - jmoreira: Remove MODULE_INFO statement
+  - jmoreira: Changelog
+  v3:
+  - joe: rebase for v5.1
+  - joe: code shuffle to better match original source file
+
+livepatch/selftests: add klp-convert
+  v3:
+  - joe: clarify sympos=0 and sympos=1..n
+
+
+And now the usual git cover-letter boilerplate...
+
+Joao Moreira (2):
+  kbuild: Support for Symbols.list creation
+  documentation: Update on livepatch elf format
+
+Joe Lawrence (1):
+  livepatch/selftests: add klp-convert
+
+Josh Poimboeuf (5):
+  livepatch: Create and include UAPI headers
+  livepatch: Add klp-convert tool
+  livepatch: Add klp-convert annotation helpers
+  modpost: Integrate klp-convert
+  livepatch: Add sample livepatch module
+
+Miroslav Benes (1):
+  modpost: Add modinfo flag to livepatch modules
+
+ .gitignore                                    |   1 +
+ Documentation/livepatch/livepatch.txt         |   3 +
+ Documentation/livepatch/module-elf-format.txt |  50 +-
+ MAINTAINERS                                   |   2 +
+ Makefile                                      |  30 +-
+ include/linux/livepatch.h                     |  13 +
+ include/uapi/linux/livepatch.h                |  22 +
+ kernel/livepatch/core.c                       |   4 +-
+ lib/livepatch/Makefile                        |  15 +
+ lib/livepatch/test_klp_atomic_replace.c       |   1 -
+ lib/livepatch/test_klp_callbacks_demo.c       |   1 -
+ lib/livepatch/test_klp_callbacks_demo2.c      |   1 -
+ lib/livepatch/test_klp_convert1.c             | 106 +++
+ lib/livepatch/test_klp_convert2.c             | 103 +++
+ lib/livepatch/test_klp_convert_mod_a.c        |  25 +
+ lib/livepatch/test_klp_convert_mod_b.c        |  13 +
+ lib/livepatch/test_klp_livepatch.c            |   1 -
+ samples/livepatch/Makefile                    |   7 +
+ .../livepatch/livepatch-annotated-sample.c    | 102 +++
+ samples/livepatch/livepatch-sample.c          |   1 -
+ scripts/Kbuild.include                        |   4 +-
+ scripts/Makefile                              |   1 +
+ scripts/Makefile.build                        |   7 +
+ scripts/Makefile.modpost                      |  24 +-
+ scripts/livepatch/.gitignore                  |   1 +
+ scripts/livepatch/Makefile                    |   7 +
+ scripts/livepatch/elf.c                       | 753 ++++++++++++++++++
+ scripts/livepatch/elf.h                       |  72 ++
+ scripts/livepatch/klp-convert.c               | 692 ++++++++++++++++
+ scripts/livepatch/klp-convert.h               |  39 +
+ scripts/livepatch/list.h                      | 391 +++++++++
+ scripts/mod/modpost.c                         |  82 +-
+ scripts/mod/modpost.h                         |   1 +
+ .../selftests/livepatch/test-livepatch.sh     |  64 ++
+ 34 files changed, 2616 insertions(+), 23 deletions(-)
+ create mode 100644 include/uapi/linux/livepatch.h
+ create mode 100644 lib/livepatch/test_klp_convert1.c
+ create mode 100644 lib/livepatch/test_klp_convert2.c
+ create mode 100644 lib/livepatch/test_klp_convert_mod_a.c
+ create mode 100644 lib/livepatch/test_klp_convert_mod_b.c
+ create mode 100644 samples/livepatch/livepatch-annotated-sample.c
+ create mode 100644 scripts/livepatch/.gitignore
+ create mode 100644 scripts/livepatch/Makefile
+ create mode 100644 scripts/livepatch/elf.c
+ create mode 100644 scripts/livepatch/elf.h
+ create mode 100644 scripts/livepatch/klp-convert.c
+ create mode 100644 scripts/livepatch/klp-convert.h
+ create mode 100644 scripts/livepatch/list.h
+
+-- 
+2.20.1
