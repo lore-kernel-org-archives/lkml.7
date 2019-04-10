@@ -2,138 +2,137 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3033FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DE9C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F139220830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A7120830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LXkahYLK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ti2Me5wx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfDJJz3 (ORCPT
+        id S1730302AbfDJJzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:55:29 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40375 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730265AbfDJJz2 (ORCPT
+        Wed, 10 Apr 2019 05:55:33 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35952 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730273AbfDJJza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:55:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q66so1502554ljq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 02:55:27 -0700 (PDT)
+        Wed, 10 Apr 2019 05:55:30 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h18so1871765wml.1;
+        Wed, 10 Apr 2019 02:55:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=IdJSlX082YGa+o2RjrcHVg2ClWPcfT2dSVotJi56VHg=;
-        b=LXkahYLKzcDWcov3EhmrnSqF7l0ZXLldbNSWy+3WOKivzEWNVsDEMAc/w1fGAJ0d+S
-         jU+gZtakF/P20vRD0HTjJydZ0aodQzLjGq1sxd7k7PMNOCTsAYwSdIMuxElevBFQbOsE
-         oelE3y3dezV9zqaCi//YyPIEGhlmkX6pCoER0fRz9WRyqRXOToansJreNKndeL0vud5f
-         MtXOSNFAk98IV0gHyxqzBdceik6Fls+cTt+p7vAbsGxieUdDdkJRRuH0YIjLomA8qS9F
-         B1UBFGwoqaeC9YQZFqO0vnTdET8iiYBdIq6ceOmemhmAz+LCCRV1JpTdrL+YS8+RjKWS
-         Lvww==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=7i5SlzB6pHh66J0GYb7kkJCIFl3+YonnZRmzOlo+++w=;
+        b=ti2Me5wxoKo25HKKQwB+dF65zRsFaErnPpgfV8rresaxjyK3P1Q06Dv49Fu4NEk90J
+         VGvAamRYEIuycfzyKC/YgmAc/zXBsLcLUGeo6L6qSH4AdOdwGyxQrkrKj/WbR8Wx7E7g
+         o5BakOOj6hPlohLdT1/cphUIb77KnUpj5ihBQvTt64FZEuoC0LQwoUPfGs9b4zXx24jI
+         2kFu88kwRKyHFXb6ShzHWuO1KquBOWNNonHt/Ae4rrEjbRsnNtbO9VbwlvAo9mS7L+aH
+         KowL9K6mmjFdyO6CefDOniHogyX6szoO/czKh1gWoGahoonV9JmPk21zcOvhqsnreyrn
+         sW9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IdJSlX082YGa+o2RjrcHVg2ClWPcfT2dSVotJi56VHg=;
-        b=BGGly5QjQV6FYuGufINsCMFj5f7nquiPhSQQCq0FMFwU/tJ4F7/hhPEEy+wOB+mUOu
-         NMLZ0jyMWj/OKS5BWkT+9I7txD23A0ZZukRa+Oi9gKwy0UrEkqAdk4qwhDd3lchRnI6i
-         BTiQELgobIXFf+12ph94KDi6FofIY9qVbxHTfBQl/Xh2jg8xaQXZYFwWCkU0k1l5pbH3
-         rq+ubMZjLeg2q8k2nCXLgidvOK98hzt2CH58YsdC/dRw0ALX77IZ5VJ6nrZ0ikRJgakJ
-         GU2pOVJanX5lRDlGoIFtucJjwOaALYP8k1cek0Fsv9bkbcaQmvIRhLP2Rj8PCvjh8+q9
-         BlKw==
-X-Gm-Message-State: APjAAAXcco00GuUXeoVSWm3Oq2gVK8lJj4EVy0w52oexADS0HFKgrJxo
-        V42eULSIBjD64Ognu9hm7XlFig==
-X-Google-Smtp-Source: APXvYqwk7081QudqCuERp6RleVPoGeEKggtgjEdb4dksKdX/YeywMTxgd+NhOrUbEYXQ2jg1bnL9HA==
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr16508925ljg.136.1554890126771;
-        Wed, 10 Apr 2019 02:55:26 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id h3sm113941lfe.87.2019.04.10.02.55.25
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=7i5SlzB6pHh66J0GYb7kkJCIFl3+YonnZRmzOlo+++w=;
+        b=meengXjU6cGLSnVo0wN7oxwyNAlGvxCDOhnqOI+N2Ut3E+gUVdXgIO7y9S9H4+HGwW
+         7HjUDsEIwA/uC+JCF8M/sauiCrqkzLWhBB/V5sT8i6x45ZHCw5x0B4TwnCRIyAYpH1cb
+         ToBV9CpfSPqrEtVKypExXHVvk39/d/yNPzSUnKLKGOsdMCRI1OyN/pLQnpUWjAKoEGrd
+         x0FtLfIekRxWaW2b495x5bXBU7ffPPvd2/UQ6q/E+dWoc0q9k9LyjUZIU8urCdM9l1Yr
+         lc+WaJJXzc3QIxKM4tquORURjrQyFgAPlnxdkGwWjFL1Vf9ZjjvzknpPp1QjbbX+VdRK
+         z7qQ==
+X-Gm-Message-State: APjAAAUDpFj4SpeiP0m5oM5MaMcwWEiGif78OMZmybcG2nUkWrrXkScm
+        lulW/CFrXcXslgKznk+NqRjULOAU
+X-Google-Smtp-Source: APXvYqxbTEigNqveRBFvSAsWST9oBqt2HCxb37Br90t7NTuEwc7Ve7JXRYKOtV7RHvY6k+ANRLAm6w==
+X-Received: by 2002:a7b:ce84:: with SMTP id q4mr2220645wmj.41.1554890127964;
+        Wed, 10 Apr 2019 02:55:27 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id x192sm2293103wmf.48.2019.04.10.02.55.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 02:55:26 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH] PM / core: Propagate dev->power.wakeup_path when no callbacks
-Date:   Wed, 10 Apr 2019 11:55:16 +0200
-Message-Id: <20190410095516.6170-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Apr 2019 02:55:27 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: x86: optimize check for valid PAT value
+Date:   Wed, 10 Apr 2019 11:55:26 +0200
+Message-Id: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dev->power.direct_complete flag may become set in device_prepare() in
-case the device don't have any PM callbacks (dev->power.no_pm_callbacks is
-set). This leads to a broken behaviour, when there is child having wakeup
-enabled and relies on its parent to be used in the wakeup path.
+This check will soon be done on every nested vmentry and vmexit,
+"parallelize" it using bitwise operations.
 
-More precisely, when the direct complete path becomes selected for the
-child in __device_suspend(), the propagation of the dev->power.wakeup_path
-becomes skipped as well.
-
-Let's address this problem, by checking if the device is a part the wakeup
-path or has wakeup enabled, then prevent the direct complete path from
-being used.
-
-Reported-by: Loic Pallardy <loic.pallardy@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
+ arch/x86/kvm/mtrr.c    | 10 +---------
+ arch/x86/kvm/vmx/vmx.c |  2 +-
+ arch/x86/kvm/x86.h     |  8 ++++++++
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-More background:
-
-This problem was reported by Loic Pallardy, offlist, while he was working
-on enabling wakeup for a tty serial console driver.
-
-When I looked more closely, I noticed that uart_suspend_port() calls
-device_may_wakeup() for the tty child devices, and then also the used serial
-driver check its device (parent) for device_may_wakeup(). To me this looks like
-workarounds to fix a behaviour that really should be dealt with from the PM
-core, no matter of whether the child have PM callbacks assigned or not.
-
-In other words, it seems like the serial driver(s) should be checking the
-wakeup_path flag for the parent, solely, instead.
-
-I haven't digested further behaviours for other subsystem, but recently
-reviewed a patch for a gpio driver [1], that seems to be suffering from the
-similar problems.
-
-Kind regards
-Ulf Hansson
-
-[1]
-https://lkml.org/lkml/2019/4/4/1283
-
----
- drivers/base/power/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 41eba82ee7b9..f9cfdeee8288 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1747,6 +1747,10 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
- 	if (dev->power.syscore)
- 		goto Complete;
+diff --git a/arch/x86/kvm/mtrr.c b/arch/x86/kvm/mtrr.c
+index e9ea2d45ae66..9f72cc427158 100644
+--- a/arch/x86/kvm/mtrr.c
++++ b/arch/x86/kvm/mtrr.c
+@@ -48,11 +48,6 @@ static bool msr_mtrr_valid(unsigned msr)
+ 	return false;
+ }
  
-+	/* Avoid direct_complete, to let wakeup_path being propagated. */
-+	if (device_may_wakeup(dev) || dev->power.wakeup_path)
-+		dev->power.direct_complete = false;
+-static bool valid_pat_type(unsigned t)
+-{
+-	return t < 8 && (1 << t) & 0xf3; /* 0, 1, 4, 5, 6, 7 */
+-}
+-
+ static bool valid_mtrr_type(unsigned t)
+ {
+ 	return t < 8 && (1 << t) & 0x73; /* 0, 1, 4, 5, 6 */
+@@ -67,10 +62,7 @@ bool kvm_mtrr_valid(struct kvm_vcpu *vcpu, u32 msr, u64 data)
+ 		return false;
+ 
+ 	if (msr == MSR_IA32_CR_PAT) {
+-		for (i = 0; i < 8; i++)
+-			if (!valid_pat_type((data >> (i * 8)) & 0xff))
+-				return false;
+-		return true;
++		return kvm_pat_valid(data);
+ 	} else if (msr == MSR_MTRRdefType) {
+ 		if (data & ~0xcff)
+ 			return false;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b6c533afbf27..b74679732cfc 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1891,7 +1891,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		break;
+ 	case MSR_IA32_CR_PAT:
+ 		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
+-			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
++			if (!kvm_pat_valid(data))
+ 				return 1;
+ 			vmcs_write64(GUEST_IA32_PAT, data);
+ 			vcpu->arch.pat = data;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 28406aa1136d..7bc7ac9d2a44 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -347,4 +347,12 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+ 	__this_cpu_write(current_vcpu, NULL);
+ }
+ 
++static inline bool kvm_pat_valid(u64 data)
++{
++	if (data & 0xF8F8F8F8F8F8F8F8)
++		return false;
++	/* 0, 1, 4, 5, 6, 7 are valid values.  */
++	return (data | ((data & 0x0202020202020202) << 1)) == data;
++}
 +
- 	if (dev->power.direct_complete) {
- 		if (pm_runtime_status_suspended(dev)) {
- 			pm_runtime_disable(dev);
+ #endif
 -- 
-2.17.1
+1.8.3.1
 
