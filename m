@@ -2,102 +2,96 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92EFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD63C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9282C20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LkWOhOCv"
+	by mail.kernel.org (Postfix) with ESMTP id F41D920820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfDJNYW (ORCPT
+        id S1731802AbfDJN2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:24:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40128 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731747AbfDJNYV (ORCPT
+        Wed, 10 Apr 2019 09:28:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42265 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfDJN2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:24:21 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ADOAIa107592;
-        Wed, 10 Apr 2019 08:24:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554902650;
-        bh=larqf0mDqVH+GSj3LbAF3qebUH8ZD3C5S8B1KqJQI3g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LkWOhOCvahgL+/F1U15pFd28ogfbwyb+Vr4OBsGblZPdiEu8lLHTHPG4VfoD5+p9t
-         c4dcl88/KLeuqqBdzsJIs6jO40xWIy/OXgpssqVczkAlBRXYuw5QLLLFrZYp6hHM9K
-         Km4RGutdaPq+E+QpkDJP9xHF/Lbf/RE3K9kkTn/w=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ADOA94066066
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Apr 2019 08:24:10 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
- Apr 2019 08:24:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 10 Apr 2019 08:24:10 -0500
-Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ADO9F3084655;
-        Wed, 10 Apr 2019 08:24:10 -0500
-Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
-To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190319172651.10012-1-dmurphy@ti.com>
- <3ce79402-00f1-d7e6-955e-1ad7eb00d0de@ti.com>
- <c05a6a22-c162-518d-683a-18731bd67e38@grandegger.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <9f33353d-c82f-a117-17de-9b57693bef27@ti.com>
-Date:   Wed, 10 Apr 2019 08:24:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 09:28:19 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3ADSA5I788544
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 10 Apr 2019 06:28:10 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3ADSADS788541;
+        Wed, 10 Apr 2019 06:28:10 -0700
+Date:   Wed, 10 Apr 2019 06:28:10 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andrei Vagin <tipbot@zytor.com>
+Message-ID: <tip-07d7e12091f4ab869cc6a4bb276399057e73b0b3@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        mojha@codeaurora.org, hpa@zytor.com, mingo@kernel.org,
+        john.stultz@linaro.org, avagin@gmail.com, sboyd@kernel.org
+Reply-To: avagin@gmail.com, john.stultz@linaro.org, mingo@kernel.org,
+          sboyd@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, mojha@codeaurora.org
+In-Reply-To: <20190408041542.26338-1-avagin@gmail.com>
+References: <20190408041542.26338-1-avagin@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/urgent] alarmtimer: Return correct remaining time
+Git-Commit-ID: 07d7e12091f4ab869cc6a4bb276399057e73b0b3
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <c05a6a22-c162-518d-683a-18731bd67e38@grandegger.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+Commit-ID:  07d7e12091f4ab869cc6a4bb276399057e73b0b3
+Gitweb:     https://git.kernel.org/tip/07d7e12091f4ab869cc6a4bb276399057e73b0b3
+Author:     Andrei Vagin <avagin@gmail.com>
+AuthorDate: Sun, 7 Apr 2019 21:15:42 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 10 Apr 2019 15:23:26 +0200
 
-On 4/2/19 7:17 AM, Wolfgang Grandegger wrote:
-> Hello Dan,
->
-> Am 02.04.19 um 14:03 schrieb Dan Murphy:
->> Wolfgang
->>
->> On 3/19/19 12:26 PM, Dan Murphy wrote:
->>> Create a m_can platform framework that peripheral
->>> devices can register to and use common code and register sets.
->>> The peripheral devices may provide read/write and configuration
->>> support of the IP.
->>>
->>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>
->> Wondering if this will be going into 5.1 PR?
-> it's Marc who is doing the upstreaming ... and maybe a final review as well.
+alarmtimer: Return correct remaining time
 
-Don't know if the original message went through.
+To calculate a remaining time, it's required to subtract the current time
+from the expiration time. In alarm_timer_remaining() the arguments of
+ktime_sub are swapped.
 
-But wondering if this will make it into v5.2
+Fixes: d653d8457c76 ("alarmtimer: Implement remaining callback")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190408041542.26338-1-avagin@gmail.com
 
-Dan
+---
+ kernel/time/alarmtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Wolfgang.
-
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 2c97e8c2d29f..0519a8805aab 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -594,7 +594,7 @@ static ktime_t alarm_timer_remaining(struct k_itimer *timr, ktime_t now)
+ {
+ 	struct alarm *alarm = &timr->it.alarm.alarmtimer;
+ 
+-	return ktime_sub(now, alarm->node.expires);
++	return ktime_sub(alarm->node.expires, now);
+ }
+ 
+ /**
