@@ -2,88 +2,150 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DF9C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5EBC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C9720830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554914713;
-	bh=UNbQ8KAilo6jAPYgs/PtUDri4Ui/TV6dz5DwlBUrtP8=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=zjiDzAFdZumfQbWEKx7E12kuzuxaljrdL9C0AzDHdmZg173Ewh++gZAxqltBIYc0z
-	 l8oZfsiqM7EYedyy6I84sijmO9FziCqHSCbToseRUU9TWmN2Bl+QDxjixDRQRvq0M6
-	 d7i77clGoTXOOrc/Fzhk9XNj3MO+Zcw++8FVsPbU=
+	by mail.kernel.org (Postfix) with ESMTP id 9308E206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbfDJQpM (ORCPT
+        id S2387983AbfDJQqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfDJQpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:45:12 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14008206B6;
-        Wed, 10 Apr 2019 16:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554914711;
-        bh=UNbQ8KAilo6jAPYgs/PtUDri4Ui/TV6dz5DwlBUrtP8=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=Ox42K1kd5MNawbGFUkre3dwpIUIQFYYt2C7sSHyc2BuF2JOeqv7gVMdiTTxIuAXG+
-         9TF7IIh8qAchN9m1q54hgd3UcGDZyacGe9+HKFQnT90zsVCPFXw4n+ybmyg9cjVLqm
-         OLGWHkKb0FIlPZ+5bF0JFgZ6SzZnOwhj8MHa27XE=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 10 Apr 2019 12:46:18 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36423 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387808AbfDJQqR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 12:46:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so3680367qtn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:46:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wTZgbHHgkuc02Ro6e9QqtN7TkTJsuUpWH/R1Yu8H+2c=;
+        b=KdHprQD0e6Pmuf0IxQtzqiIldIhp7+aA96neNlOjaQoJgzTanh2n/MEUBtogRMogm5
+         kilIwRnsiOvia0d8c+CY8IBf6Fn+QK8Ebh8JABWpLt/ouqVmvT43F9hJLdsT2FyvpoXq
+         hWzNwXRZ9WcImxkR59dDnka1p8FbU4akN7bMGheUBp7DHH/ezzpYV80K/YtBzqsO6MU9
+         cgsgyAuRS5TDP255SOhKyMZKLWogcWZ9epkQ4CLj13NXbNlkwYHrqUkByrnEbRshS5Bz
+         OeAhbCbBWxicoNGC/hbhkn9imR/ZtV70Y/rdENbyLCALx8NkmBbipluKXRvhyFkh84Ic
+         6HoA==
+X-Gm-Message-State: APjAAAXxU+onccyENHHZqE2UoHaJKO1qC6arf72jpT2xaCMFIU32W7Bz
+        pJqKvC0s933MgJe3TJ90QsLcmg==
+X-Google-Smtp-Source: APXvYqzo2oB9aEeCxQF7UkVfHE1VMd09kGpmcV7fL9Txo0VqCS7eRqZuS9unOq1Egz2WPuNxoQfPtw==
+X-Received: by 2002:a0c:d167:: with SMTP id c36mr26941640qvh.1.1554914776715;
+        Wed, 10 Apr 2019 09:46:16 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id h24sm24983836qte.50.2019.04.10.09.46.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 09:46:15 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 12:46:12 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Pankaj Gupta <pagupta@redhat.com>, jack@suse.cz,
+        kvm@vger.kernel.org, david@redhat.com, jasowang@redhat.com,
+        david@fromorbit.com, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
+Subject: Re: [Qemu-devel] [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
+Message-ID: <20190410124114-mutt-send-email-mst@kernel.org>
+References: <20190410040826.24371-1-pagupta@redhat.com>
+ <20190410040826.24371-3-pagupta@redhat.com>
+ <20190410091216-mutt-send-email-mst@kernel.org>
+ <127904196.20807948.1554904981681.JavaMail.zimbra@redhat.com>
+ <20190410163139.4a04175e.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190409085717.d24c636fuzpoxume@shell.armlinux.org.uk>
-References: <20190404215344.6330-1-sboyd@kernel.org> <20190404215344.6330-2-sboyd@kernel.org> <b3a3052056b787bde94178ed371417359a941f2d.camel@fi.rohmeurope.com> <155449664462.20095.10904772826291270300@swboyd.mtv.corp.google.com> <20190408104941.GB17594@localhost.localdomain> <155474280295.20095.182612336816713159@swboyd.mtv.corp.google.com> <20190408222106.ect7nwjsklzhmdwj@shell.armlinux.org.uk> <4e63d42b27bc5bdf7d991c00f9105ba96a34dc8a.camel@fi.rohmeurope.com> <20190409085717.d24c636fuzpoxume@shell.armlinux.org.uk>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/7] clkdev: Hold clocks_mutex while iterating clocks list
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "jhugo@codeaurora.org" <jhugo@codeaurora.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "jbrunet@baylibre.com" <jbrunet@baylibre.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Message-ID: <155491471024.20095.7879335266054730921@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 10 Apr 2019 09:45:10 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410163139.4a04175e.cohuck@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Russell King - ARM Linux admin (2019-04-09 01:57:17)
-> On Tue, Apr 09, 2019 at 05:31:48AM +0000, Vaittinen, Matti wrote:
-> > On Mon, 2019-04-08 at 23:21 +0100, Russell King - ARM Linux admin
-> > wrote:
-> > > On Mon, Apr 08, 2019 at 10:00:02AM -0700, Stephen Boyd wrote:
-> > > > >=20
-> > > >=20
-> > > > Sure. I was thinking along the same lines after you asked.
-> > >=20
-> > > This is rubbish.  The reason clk_find() doesn't take the lock is that
-> > > you _need_ to hold the lock while you dereference the clk_lookup
-> > > data.
-> >=20
-> > I think we all agreed on this already. Stephen pointed out that the
-> > current user(s) of clk_find() do _not_ dereference the pointer.
->=20
-> Which is actually another incorrect statement - clk_get_sys()
-> dereferences it, but Stephen's patch does rearrange the code there.
->=20
+On Wed, Apr 10, 2019 at 04:31:39PM +0200, Cornelia Huck wrote:
+> On Wed, 10 Apr 2019 10:03:01 -0400 (EDT)
+> Pankaj Gupta <pagupta@redhat.com> wrote:
+> 
+> > > 
+> > > On Wed, Apr 10, 2019 at 09:38:22AM +0530, Pankaj Gupta wrote:  
+> > > > This patch adds virtio-pmem driver for KVM guest.
+> > > > 
+> > > > Guest reads the persistent memory range information from
+> > > > Qemu over VIRTIO and registers it on nvdimm_bus. It also
+> > > > creates a nd_region object with the persistent memory
+> > > > range information so that existing 'nvdimm/pmem' driver
+> > > > can reserve this into system memory map. This way
+> > > > 'virtio-pmem' driver uses existing functionality of pmem
+> > > > driver to register persistent memory compatible for DAX
+> > > > capable filesystems.
+> > > > 
+> > > > This also provides function to perform guest flush over
+> > > > VIRTIO from 'pmem' driver when userspace performs flush
+> > > > on DAX memory range.
+> > > > 
+> > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> 
+> > > > diff --git a/include/uapi/linux/virtio_ids.h
+> > > > b/include/uapi/linux/virtio_ids.h
+> > > > index 6d5c3b2d4f4d..346389565ac1 100644
+> > > > --- a/include/uapi/linux/virtio_ids.h
+> > > > +++ b/include/uapi/linux/virtio_ids.h
+> > > > @@ -43,5 +43,6 @@
+> > > >  #define VIRTIO_ID_INPUT        18 /* virtio input */
+> > > >  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
+> > > >  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
+> > > > +#define VIRTIO_ID_PMEM         25 /* virtio pmem */
+> > > >  
+> > > >  #endif /* _LINUX_VIRTIO_IDS_H */  
+> > > 
+> > > Didn't Paolo point out someone is using 25 for audio?  
+> > 
+> > 
+> > Sorry! I did not notice this.
+> > 
+> > > 
+> > > Please, reserve an ID with the Virtio TC before using it.  
+> > 
+> > I thought I requested[1] ID 25.
+> > 
+> > [1] https://github.com/oasis-tcs/virtio-spec/issues/38
+> > [2] https://lists.oasis-open.org/archives/virtio-dev/201805/threads.html
+> > 
+> > In that case I will send request for next available ID i.e 26?
+> 
+> Have the folks using this for audio sent a reservation request as well?
+> If not, I'd say the first requester should get the id...
 
-I've split this patch into two. One to fix the locking of the new
-clk_find() user and the other to introduce a clk_find_hw() API that lets
-me use it later on in this series. I'll resend the series with this
-update.
+No but I think they ship their's already. No one ships pmem
+so it's less pain for everyone if we just skip 25.
 
+> (And yes, we need to be quicker with voting on/applying id
+> reservations :/)
+
+We can't vote on what was not proposed for a vote.
+At the moment that responsibility is with the commented
+once discussion on the comment has taken place.
+
+I think what's missing is a description of the process
+in the README. Want to write it up and post it?
+
+-- 
+MST
