@@ -2,97 +2,156 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3879CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1ABC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073A020820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554900986;
-	bh=0qcpQ2GGG9kn3wYUVYvjk/0EKVBvavKaRKoEcrHoHjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LrJ98qSD720FqZtbCTZGWv6Yxjigqvdw+GtV8MAYvZ6rGb30dlTEIyBUUNSvHANuM
-	 RQXwIAl1uSd1GGa6k9Q8hIalTHP43Jr2iTscnKlF6L7xYFvuL5uJkSugNyX4aafpLi
-	 nvvAz/ohzKw73HAHw3EyvIGNHSD/y2U4iC6bR3/c=
+	by mail.kernel.org (Postfix) with ESMTP id 851CD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yj7BLUf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbfDJM4Y (ORCPT
+        id S1732245AbfDJM5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:56:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56788 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbfDJM4X (ORCPT
+        Wed, 10 Apr 2019 08:57:35 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45439 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728875AbfDJM5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:56:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0qcpQ2GGG9kn3wYUVYvjk/0EKVBvavKaRKoEcrHoHjo=; b=wISZ7igI6K78l4KTnUrntsxeX
-        6l5mqdpgjfSYmuoymshDjPTzUqCA/MkBU4T6jRAgo9MtdcDBbpmcunM/AhkPqN8N6sk6E1Q8AJh8w
-        LRPEmCBMuovEwkQbM+/+J7e89IA/LBP26dX5t329xbs6Dxb4LBSO+a/ONqnmFiNZkBLog=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hEClx-0000QK-G5; Wed, 10 Apr 2019 12:56:13 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 467801128ED3; Wed, 10 Apr 2019 13:56:12 +0100 (BST)
-Date:   Wed, 10 Apr 2019 13:56:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
-Message-ID: <20190410125612.GR6106@sirena.org.uk>
-References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
- <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
+        Wed, 10 Apr 2019 08:57:34 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o26so1911979edv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dZx0o2O6bRo9EgKQQOxxMtLh9VWY2maG+dgyRyhxfWI=;
+        b=Yj7BLUf6pdR67dCM5HlIoA9eB18XipwdFmYFjTiKpPNpqN57eEJCHBSlkFPnMFxHPA
+         4NsO6QIHqzWVPhyndQwKmvqVouEp36lcMe7kDmNQy1LG1OBviig25sdMuy/wxKB1/ouk
+         dnmwY6cMSA+boNeuXFtOuJYSK+Y1mejpBWb5AAEvBEz5t6XwwBTb6cDzF9AsEdvvYxlu
+         fzJ1kPxxrfInxiMkGHdbmltj/UvpNTf4aPeDAzHxuOhbFffvrWJeH225CC+kfiLsMK8o
+         vkqZ2yjx+3L8/1IyGBeGnqHnnKwz7WNRBi0HXKeEAapBCpV+QI+OVbeKANF6JiJCWSNZ
+         rm/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dZx0o2O6bRo9EgKQQOxxMtLh9VWY2maG+dgyRyhxfWI=;
+        b=nqrO6nUCRx72X+9AtlBJciD/8TVOt36+WVC/WpCdCUt3qmxdOHfPh1EDfTRLl9l5yK
+         DD3o3C8mavCZfBUq1MIHSGaqviA5v08/z15FMFcKkh0lX8B2NczxAbPvBrtnTaKBL1hU
+         DVZlkCED2lPFI8TTu6YgPOy77kLeW6lhhouEyXbAVdx8fvEJvMSY8LOaOHiomHnADMJJ
+         sIbkP+H0hRXjsu4TyXto5YW0+MZ0aj1kfxY4d1UXfS35d3E7nOx6PEy4A6AnLtc7oYtc
+         ExMscsc+F7LZEs71/0cHDBkfVoVJlynWn9KaUb5kWfqziUwKZ+ODJMokpZvwW+fbBIJK
+         SL3g==
+X-Gm-Message-State: APjAAAWsNsEXk8lCYBJbEg/2cWLu/9fwR+WJjxahqSPcIZB41SPZQXVF
+        iUTIeZFmf069V3kcC/Hufv+17tFwSRZB4TO7rp7HfW5n13A=
+X-Google-Smtp-Source: APXvYqxokPdGqlXWMlAYkAGLWWwRHfPAfwO6Ozr6LfZUYdNA36mYT0W2YBQLYuD8G0PIOjAU/RqpSNlWEOaoAFI+PpA=
+X-Received: by 2002:a05:6402:12d5:: with SMTP id k21mr12604733edx.75.1554901053253;
+ Wed, 10 Apr 2019 05:57:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PPxI8paQBs33t8dK"
-Content-Disposition: inline
-In-Reply-To: <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
-X-Cookie: teamwork, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1551362220-99351-1-git-send-email-lipengcheng8@huawei.com>
+In-Reply-To: <1551362220-99351-1-git-send-email-lipengcheng8@huawei.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 10 Apr 2019 15:57:21 +0300
+Message-ID: <CAEnQRZDWHkWqL=v7PiuiW6-Ke+c0wZrEJ+SeTirdNnTzYdOgeg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] sound: Add hikey960 i2s audio driver
+To:     Pengcheng Li <lipengcheng8@huawei.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, john.stultz@linaro.org,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        suzhuangluan@hisilicon.com, kongfei@hisilicon.com,
+        liyuequan@hisilicon.com, cash.qianli@hisilicon.com,
+        huangli295@hisilicon.com, hantanglei@huawei.com,
+        wangyoulin1@hisilicon.com, ninggaoyu@hisilicon.com,
+        xuwei5@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Pengcheng,
 
---PPxI8paQBs33t8dK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Make sure you run ./scripts/checkpatch.pl --strict yourpatchfile.patch
 
-On Wed, Apr 10, 2019 at 02:51:36PM +0200, Flavio Suligoi wrote:
-> With dw_dmac, sometimes the request of a DMA channel fails because
-> the DMA driver is not ready, so an explicit dependency request
-> is necessary.
+On Thu, Feb 28, 2019 at 4:15 PM Pengcheng Li <lipengcheng8@huawei.com> wrote:
+>
+> From: Youlin Wang <wangyoulin1@hisilicon.com>
+>
+> Add i2s driver for hisi3660 soc found on the hikey960 board.
+> Add conpile line in make file.
+> Technical support by Guangke Ji.
 
-While this isn't going to hurt anything and might actually help so it's
-fine doesn't this also suggest that there's an issue with deferred probe
-going on as well?
+Care to add here some documentation pointers to I2S IP on the SOC?
 
---PPxI8paQBs33t8dK
-Content-Type: application/pgp-signature; name="signature.asc"
+> diff --git a/sound/soc/hisilicon/Kconfig b/sound/soc/hisilicon/Kconfig
+> index 4356d5a..b023ef9 100644
+> --- a/sound/soc/hisilicon/Kconfig
+> +++ b/sound/soc/hisilicon/Kconfig
+> @@ -1,5 +1,11 @@
+>  config SND_I2S_HI6210_I2S
+> -       tristate "Hisilicon I2S controller"
+> +       tristate "Hisilicon Hi6210 I2S controller"
+> +       select SND_SOC_GENERIC_DMAENGINE_PCM
+> +       help
+> +         Hisilicon I2S
 
------BEGIN PGP SIGNATURE-----
+Can you enahance the help text? Something like "I2S controller driver
+for hisi3600 SoC"
+<snip>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyt5+sACgkQJNaLcl1U
-h9BN8Qf+M8pv+qvn+ML2aGV0KTB3Eifgjqx1GoYtmxwT6D/Qph4QE8YjFoBeIBBQ
-gS73KJSjgLkRmqDTe7WHqxcqDAJIkry4MeeSPAAzfxInkaMih10aGTCNRsLZu7YT
-1rysutG7WmictAhA2oxCrDOOayQgUM8dTTCpEsBAXyIGcavHVnjLgNJp4DEHSsZC
-HaIOgTnzdbFdXYv/nBDp32uhVsYEmCiYJ+PEx6RY5HKpHauu+1S3qsZ5ccWuNKxp
-I9jdvvjxTHA/IfR9fBZQZnj5uW8qxN7QHRAdEkV0P55KUrISQlHMdKqTT6nWXg2n
-1HdFhz+hDYAVg3xb5DhsHPUIR+1Wog==
-=LXu7
------END PGP SIGNATURE-----
+> + * Copyright (c) 2001-2021, Huawei Tech. Co., Ltd.
 
---PPxI8paQBs33t8dK--
+2021? :) IANAL but this looks strange :).
+
+> +struct hi3660_i2s {
+> +       struct device *dev;
+> +       struct reset_control *rc;
+> +       int clocks;
+> +       struct regulator *regu_asp;
+> +       struct pinctrl *pctrl;
+> +       struct pinctrl_state *pin_default;
+> +       struct pinctrl_state *pin_idle;
+> +       struct clk *asp_subsys_clk;
+> +       struct snd_soc_dai_driver dai;
+> +       void __iomem *base;
+> +       void __iomem *base_syscon;
+> +       phys_addr_t base_phys;
+> +       struct snd_dmaengine_dai_dma_data dma_data[2];
+> +       spinlock_t lock;
+
+What is this lock used for? Please add some docs.
+
+> +       int rate;
+> +       int format;
+> +       int bits;
+> +       int channels;
+> +       u32 master;
+> +       u32 status;
+> +};
+> +
+> +static void update_bits(struct hi3660_i2s *i2s, u32 ofs, u32 reset, u32 set)
+> +{
+> +       u32 val = readl(i2s->base + ofs) & ~reset;
+> +
+> +       writel(val | set, i2s->base + ofs);
+> +}
+> +
+> +static void update_bits_syscon(struct hi3660_i2s *i2s,
+> +                       u32 ofs, u32 reset, u32 set)
+> +{
+> +       u32 val = readl(i2s->base_syscon + ofs) & ~reset;
+> +
+> +       writel(val | set, i2s->base_syscon + ofs);
+> +}
+
+Look at the snd_soc_component_update_bits. You can make these two
+functions following the same
+pattern for parameters.
