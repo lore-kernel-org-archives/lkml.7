@@ -2,107 +2,201 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52796C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A641BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB9720820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653D32133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhHe0wFa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A78QDjEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732638AbfDJNi5 (ORCPT
+        id S1732615AbfDJNis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:38:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34170 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731712AbfDJNiy (ORCPT
+        Wed, 10 Apr 2019 09:38:48 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60270 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730232AbfDJNip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:38:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y6so1474923plt.1;
-        Wed, 10 Apr 2019 06:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3+JdCobsNiuvhStXURSUWsE466w9N2kR66KtnO8B6oA=;
-        b=bhHe0wFafijtfCcpgMrL1xmkfkfiYVQACKM+kOccifatfZAeklSTvzL4ZiSTpdvdDc
-         kxmYtwfgvFTQUo3XJdIw6CxpV5pLPpR5nFz5g5XeTTMnOGrDJ1xhTw6uPRwXY+D/9HLi
-         xYV4t8nvbwp2y3O5uiO6OYEp/2cpkKtVUdtg3V2+ISUz6ZOJOYdI9UuZkzktqNj2uUF5
-         spHIn1/iTTKhdATMm+uKfiBYSPlK30IQ1TFOcgr0EQ46ZaHwUBMKlUzeyEOf8RwYRsZA
-         3RVewaal6m9qoDP4aDTpvV1YC6txjz1o7++MThQmetqhNzr/H+qWLnXk5ozZ0N+mas1f
-         OQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3+JdCobsNiuvhStXURSUWsE466w9N2kR66KtnO8B6oA=;
-        b=RmFML5ToqxPVCChS/9Yp245zFm2iYrpjAp0Kiv56W7X2uVUKHWAgW1NecbF8QF/xXD
-         saVWLb3cA8yC3ekPUmI0NU1hg40NuVb5t3C5ct1qsu/4DscHw2/kc7zQIrZf9CgCAhsI
-         IfyjPt+xc+k/ESzZmJXxB5hjWpRg7nbAcz2wwEz8qFP1fdy1hghoQYK9W0N+6xntbSrA
-         Ro9OJ3HRFMi8BWPyb//ai9pgE7kHfWitE4vtbNho/UvQMJZVDmyEQxn7WKlFvhf9K7Hn
-         zWceshZe2PPx5sv0izbGMdxxNJkaI8MKe1dBvdxbFTGxgu9sX27Jtzg2hARwxcBfbfjR
-         3mTQ==
-X-Gm-Message-State: APjAAAVu3QPJ3+BAykZk0Pa9m6s593uDNVoKDX8j2BgnU2jz2npOgxiX
-        ieWx76nWzFC/J2yKZHkEL9u5Smas
-X-Google-Smtp-Source: APXvYqy0y3Z1xXD0E+bwKdrB1G5G2VqDGL8Rmp0xdcFwMwmJDvcoXOBDlKzOdeHAU73maTmR2ap5ng==
-X-Received: by 2002:a17:902:7883:: with SMTP id q3mr43996539pll.60.1554903532981;
-        Wed, 10 Apr 2019 06:38:52 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d187sm41355514pgc.43.2019.04.10.06.38.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 06:38:52 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: wdat_wdt: fix get_timeleft call for wdat_wdt
-To:     Bryan Tan <bryantan@vmware.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190410124813.86892-1-bryantan@vmware.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <eae7116e-ead0-dafe-d552-411da83211a7@roeck-us.net>
-Date:   Wed, 10 Apr 2019 06:38:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 09:38:45 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcZ0q093691;
+        Wed, 10 Apr 2019 08:38:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554903515;
+        bh=CXOfACYF2h3NkkE5VWP6/qONcbAbrB4lUM8bP3B7HwU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=A78QDjEoLKzONfMkxJ/crLas+vp2TmZ7y9Cd07R//foBsoLIuQFTkMfGgIbDjz9Dd
+         T/hh5f0v2x9ZoP/CTPwoSLwiWnJ319uv9maKn41//X8SHEoszFR5+w0hAZa6WMgL8u
+         /FgjcHWisY0vqFEAnlEeBdaMyelJx3YyuwpLegZY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ADcZJN031584
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 Apr 2019 08:38:35 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
+ Apr 2019 08:38:34 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 10 Apr 2019 08:38:35 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ADcY6u120922;
+        Wed, 10 Apr 2019 08:38:35 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <lee.jones@linaro.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 3/6] mfd: ti-lmu: Add LM36274 support to the ti-lmu
+Date:   Wed, 10 Apr 2019 08:38:30 -0500
+Message-ID: <20190410133833.28859-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190410133833.28859-1-dmurphy@ti.com>
+References: <20190410133833.28859-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20190410124813.86892-1-bryantan@vmware.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 5:49 AM, Bryan Tan wrote:
-> The get_timeleft call for wdat_wdt was using ACPI_WDAT_GET_COUNTDOWN
-> when running an action on the device, which would return the configured
-> countdown, instead of ACPI_WDAT_GET_CURRENT_COUNTDOWN, which returns the
-> time left before the watchdog will fire. This change corrects that.
-> 
-> Signed-off-by: Bryan Tan <bryantan@vmware.com>
+Add the LM36274 register support to the ti-lmu MFD driver.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-> ---
->   drivers/watchdog/wdat_wdt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
-> index 56ad196..387892f 100644
-> --- a/drivers/watchdog/wdat_wdt.c
-> +++ b/drivers/watchdog/wdat_wdt.c
-> @@ -287,7 +287,7 @@ static unsigned int wdat_wdt_get_timeleft(struct watchdog_device *wdd)
->   	struct wdat_wdt *wdat = to_wdat_wdt(wdd);
->   	u32 periods = 0;
->   
-> -	wdat_wdt_run_action(wdat, ACPI_WDAT_GET_COUNTDOWN, 0, &periods);
-> +	wdat_wdt_run_action(wdat, ACPI_WDAT_GET_CURRENT_COUNTDOWN, 0, &periods);
->   	return periods * wdat->period / 1000;
->   }
->   
-> 
+v2 - No changes - https://lore.kernel.org/patchwork/patch/1058780/
+
+ drivers/mfd/Kconfig                 |  5 ++---
+ drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
+ include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
+ include/linux/mfd/ti-lmu.h          |  4 ++++
+ 4 files changed, 43 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index fcae244229b3..5606411038bb 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1311,9 +1311,8 @@ config MFD_TI_LMU
+ 	select REGMAP_I2C
+ 	help
+ 	  Say yes here to enable support for TI LMU chips.
+-
+-	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
+-	  It consists of backlight, LED and regulator driver.
++	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and
++	  LM36274.  It consists of backlight, LED and regulator driver.
+ 	  It provides consistent device controls for lighting functions.
+ 
+ config MFD_OMAP_USB_HOST
+diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
+index 89b1c5b584af..691ab9dd6236 100644
+--- a/drivers/mfd/ti-lmu.c
++++ b/drivers/mfd/ti-lmu.c
+@@ -111,6 +111,17 @@ static const struct mfd_cell lm3695_devices[] = {
+ 	},
+ };
+ 
++static const struct mfd_cell lm36274_devices[] = {
++	LM363X_REGULATOR(LM36274_BOOST),
++	LM363X_REGULATOR(LM36274_LDO_POS),
++	LM363X_REGULATOR(LM36274_LDO_NEG),
++	{
++		.name          = "lm36274-leds",
++		.id            = LM36274,
++		.of_compatible = "ti,lm36274-backlight",
++	},
++};
++
+ #define TI_LMU_DATA(chip, max_reg)		\
+ static const struct ti_lmu_data chip##_data =	\
+ {						\
+@@ -123,6 +134,7 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
+ TI_LMU_DATA(lm3632, LM3632_MAX_REG);
+ TI_LMU_DATA(lm3633, LM3633_MAX_REG);
+ TI_LMU_DATA(lm3695, LM3695_MAX_REG);
++TI_LMU_DATA(lm36274, LM36274_MAX_REG);
+ 
+ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+@@ -191,6 +203,7 @@ static const struct of_device_id ti_lmu_of_match[] = {
+ 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
+ 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
+ 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
++	{ .compatible = "ti,lm36274", .data = &lm36274_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
+@@ -200,6 +213,7 @@ static const struct i2c_device_id ti_lmu_ids[] = {
+ 	{ "lm3632", LM3632 },
+ 	{ "lm3633", LM3633 },
+ 	{ "lm3695", LM3695 },
++	{ "lm36274", LM36274 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
+diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
+index 76998b01764b..076d8dea38fd 100644
+--- a/include/linux/mfd/ti-lmu-register.h
++++ b/include/linux/mfd/ti-lmu-register.h
+@@ -189,4 +189,27 @@
+ #define LM3695_REG_BRT_MSB			0x14
+ 
+ #define LM3695_MAX_REG				0x14
++
++/* LM36274 */
++#define LM36274_REG_REV				0x01
++#define LM36274_REG_BL_CFG_1			0x02
++#define LM36274_REG_BL_CFG_2			0x03
++#define LM36274_REG_BRT_LSB			0x04
++#define LM36274_REG_BRT_MSB			0x05
++#define LM36274_REG_BL_EN			0x08
++
++#define LM36274_REG_BIAS_CONFIG_1		0x09
++#define LM36274_EXT_EN_MASK			BIT(0)
++#define LM36274_EN_VNEG_MASK			BIT(1)
++#define LM36274_EN_VPOS_MASK			BIT(2)
++
++#define LM36274_REG_BIAS_CONFIG_2		0x0a
++#define LM36274_REG_BIAS_CONFIG_3		0x0b
++#define LM36274_REG_VOUT_BOOST			0x0c
++#define LM36274_REG_VOUT_POS			0x0d
++#define LM36274_REG_VOUT_NEG			0x0e
++#define LM36274_VOUT_MASK			0x3F
++
++#define LM36274_MAX_REG				0x13
++
+ #endif
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index 54e9d272e81c..0957598c7d41 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -26,6 +26,7 @@ enum ti_lmu_id {
+ 	LM3632,
+ 	LM3633,
+ 	LM3695,
++	LM36274,
+ 	LMU_MAX_ID,
+ };
+ 
+@@ -67,6 +68,9 @@ enum lm363x_regulator_id {
+ 	LM3632_BOOST,		/* Boost output */
+ 	LM3632_LDO_POS,		/* Positive display bias output */
+ 	LM3632_LDO_NEG,		/* Negative display bias output */
++	LM36274_BOOST,		/* Boost output */
++	LM36274_LDO_POS,	/* Positive display bias output */
++	LM36274_LDO_NEG,	/* Negative display bias output */
+ };
+ 
+ /**
+-- 
+2.21.0.5.gaeb582a983
 
