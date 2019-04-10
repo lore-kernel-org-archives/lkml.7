@@ -2,91 +2,105 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC50C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E708AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D512077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:17:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="j7Wuoud1"
+	by mail.kernel.org (Postfix) with ESMTP id BF9802077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfDJSRV (ORCPT
+        id S1730818AbfDJSSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:17:21 -0400
-Received: from mail-pg1-f182.google.com ([209.85.215.182]:35574 "EHLO
-        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729205AbfDJSRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:17:20 -0400
-Received: by mail-pg1-f182.google.com with SMTP id g8so2046947pgf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 11:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BfbaaiXHZN6UJr+RjXOEU+oiazV3hLAf19xreHTSUe8=;
-        b=j7Wuoud1m5nSUcRDLWuzK67TYk8bTttA8o1bgZG/Bf7HN0U2IQqTgDgzXCU+3bV1VJ
-         93mbvAH7i2AN0fuNU4ivPeU9k2blSToQtTphs8Gxhfgs3XcAjOymSKJVlXsV/R+FFkXp
-         JFWDKcdchk6nweaI9slGE70BDctyvRnCkdwe7/CxxVThxmSL5lVYlNYB/8VoxRxMPz30
-         MFFTgS4quUp9Z8vUZ0XrHLY+Klc56VDQSm1LspU3Kbgwr4Vn84PDMiHJumSiCXjBMg/n
-         zZYzvL71/pCsxKsQ/VaRvB0U+RwM96XLLqOaO55HnJjT0qZ3UQY/YWnb35wfux0sT1Ko
-         l9ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BfbaaiXHZN6UJr+RjXOEU+oiazV3hLAf19xreHTSUe8=;
-        b=aeuGulv/5IH+gwoTbgYfMDReAx2SGYZpmuqYtXM4lZN+B3GO6YUgE5nKWbcIpO8FCB
-         Y1FRRCUg6jck3EI/Kft36EAXjNtaQ6FsMeSLWNa0BoO3P9UfRaJOJXPsF2ylm1t3hJqO
-         erU5hW36B1RWVhotjXGWMuerklezqNuAuPscHkkN+Sk5SEOUXLrgnxjTe/gNpnVKJFKI
-         EwegjWfc3xGWQgoWKTaGMVB39rf9OxGZdu6TR8G4vQCAjosqzZptJA5cozfrKz0n166J
-         iBv4KqlXush5jlvwETYRP9H8XVACzKa8lWt3UjodEK1jQwP6qWw5eAbNr/+DOCTz9gWa
-         gcrQ==
-X-Gm-Message-State: APjAAAWgph8Mn9NoFj85KL+3VLf+IAA+U0eHm1/1azOYpUVXRzKEoKTG
-        x2hfvs9L03SFvPSMd2OHNOXsyXiom9gYUw==
-X-Google-Smtp-Source: APXvYqxJkgZeqQSsr+COLbo4Mx/FUgwtHBqzUV1OBtqOeY71a480mKPTc02RzbByfV2NKZLvl35VjQ==
-X-Received: by 2002:a63:4f52:: with SMTP id p18mr41972003pgl.333.1554920239816;
-        Wed, 10 Apr 2019 11:17:19 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id b26sm69307872pgn.4.2019.04.10.11.17.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 11:17:18 -0700 (PDT)
-Subject: Re: [GIT PULL] lightnvm: pblk: fix crash in pblk_end_partial_read due
- to multipage bvecs
-To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>
-References: <20190410175643.11000-1-mb@lightnvm.io>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <09b7919d-2ae3-eded-0abb-472c7f642c4d@kernel.dk>
-Date:   Wed, 10 Apr 2019 12:17:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 14:18:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56858 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727305AbfDJSSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:18:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 02D9A308624B;
+        Wed, 10 Apr 2019 18:18:41 +0000 (UTC)
+Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B7E019C6F;
+        Wed, 10 Apr 2019 18:18:39 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 14:18:37 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Cc:     Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 4/9] livepatch: Add klp-convert annotation helpers
+Message-ID: <20190410181837.GA13083@redhat.com>
+References: <20190410155058.9437-1-joe.lawrence@redhat.com>
+ <20190410155058.9437-5-joe.lawrence@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190410175643.11000-1-mb@lightnvm.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410155058.9437-5-joe.lawrence@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 10 Apr 2019 18:18:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 11:56 AM, Matias Bjørling wrote:
-> From: Hans Holmberg <hans.holmberg@cnexlabs.com>
+On Wed, Apr 10, 2019 at 11:50:53AM -0400, Joe Lawrence wrote:
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
 > 
-> The introduction of multipage bio vectors broke pblk's partial read
-> logic due to it not being prepared for multipage bio vectors.
+> Define macros KLP_MODULE_RELOC and KLP_SYMPOS in
+> include/linux/livepatch.h to improve user-friendliness of the
+> livepatch annotation process.
 > 
-> Use bio vector iterators instead of direct bio vector indexing.
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  include/linux/livepatch.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 16b48e8b29a2..947cfc2d1980 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -236,6 +236,18 @@ void *klp_shadow_get_or_alloc(void *obj, unsigned long id,
+>  void klp_shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor);
+>  void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
+>  
+> +/* Used to annotate symbol relocations in livepatches */
+> +#define KLP_MODULE_RELOC(obj)						\
+> +	struct klp_module_reloc						\
+> +	__attribute__((__section__(".klp.module_relocs." #obj)))	\
+> +	__attribute__((aligned (4)))
+> +
+> +#define KLP_SYMPOS(symbol, pos)						\
+> +	{								\
+> +		.sym = &symbol,						\
+> +		.sympos = pos,						\
+> +	},
+        ^^
+nit: if we dropped the trailing array comma delimiter from KLP_SYMPOS
+macro, the invocations would look more intuitively like an array.  For
+example:
 
-Applied, thanks.
+  KLP_MODULE_RELOC(test_klp_convert_mod) test_klp_convert_mod_relocs_a[] = {
+  	KLP_SYMPOS(driver_name, 0),
+  	KLP_SYMPOS(homonym_string, 2),
+  	KLP_SYMPOS(get_homonym_string, 2),
+  };
 
--- 
-Jens Axboe
+But I could not figure out a good regex to reference if other such
+kernel preprocessor macros include or exclude the delimiter.  Are there
+reasons to include it?
 
+-- Joe
