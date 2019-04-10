@@ -2,191 +2,156 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD7C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4638AC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C48B2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C94A2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dDcJMViz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlOoMja4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfDJRsF (ORCPT
+        id S1730345AbfDJRtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:48:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34084 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbfDJRsE (ORCPT
+        Wed, 10 Apr 2019 13:49:52 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38647 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729935AbfDJRtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:48:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b3so1935780pfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:48:03 -0700 (PDT)
+        Wed, 10 Apr 2019 13:49:51 -0400
+Received: by mail-it1-f193.google.com with SMTP id f22so4888606ita.3;
+        Wed, 10 Apr 2019 10:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sbutHiCZ8mGxfyY9QSUioqjtpuKW2Q5N9kWxngYGrGQ=;
-        b=dDcJMVizqpsIxP1GaENl0R/3F7wvMJlKcWI+khcgfVdfGkqvLa3RfggN5bN1CsnMh/
-         kJpy17p0XXe6vbOB8d9d6eyDwmIAWBLfM7I0SXPx/pdf40lEkCKCkiWn5pYGqHv3DiXS
-         QMVJU5qVKOrKTeQPRze2Hi8xB9JvFOyoorVDg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a4HGuR9gtKZMdV4ZW4brHmMzJmgAueXVt96dFJJECmM=;
+        b=hlOoMja4HkpWsgaGaPbuAm7CyzLPWcLNqOJq6JGew5o1gmr2Xfl83qUIr+7YKQiwQ4
+         4Q21nNC691ter4Rqq6bWYvJYOWMVGSWG2d5nQX0s+H0izH/W964570HgDYqpJO8XPAln
+         mEDP+6/8lSgqfZKNX+H7iOQVtgDJKDv57Tf7ktoDWr1ZOi0uoshF2bpDr61sOmZzDDei
+         zdNFCGvQBfJED69BV/O6mOl48DWbWVNz0mBhZdUQUMdeyDDFWDsOHSGcf8eH50fVoTIk
+         +ODeh8ca05hm2bClNB+tbVF8uIGlB3oUgXUFvjcBU3ESl79hJyPqZq5SUQIHBPPKhrF+
+         N+HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sbutHiCZ8mGxfyY9QSUioqjtpuKW2Q5N9kWxngYGrGQ=;
-        b=m/Zve18UbkyKqc1K2sGW5Fx68f6WJTV2e+oDKXwJ2OgV3fim4205IlIvvVgLubG0pp
-         5htQr8qd/J+CyLr8jtBeZK9e2IYgr0ebixyZFbOfoCx0j6k3TuUb1TjHFq/mkvxDh8JG
-         Usu7AS46sH54sSB0E0fbZRtUe1BNZajbhv6YpzoreZ6bpSx1LHYkAYFXZUysTqy8rOTY
-         QR9FogvyeA82HiY+q8Qgg7/wztqsncc4RME06wytrkvaXmmZIMYSlYnNiAUASS7tqqYN
-         hqZGYR9pK7MMPNHAXVGW8GV1crZf8phmK9zeObeCtXB0exQ3y5wGoUmw3QsM/5jycH9s
-         IgTg==
-X-Gm-Message-State: APjAAAX9eWtGh6/3yPkfT0u0GDK51PckcX62ooG0GlElb+V4EGUDro/S
-        EPaA7uYwOKZwu/ZMdus5A2M5HZ8n8OM=
-X-Google-Smtp-Source: APXvYqxpsrtFwPwC2NMCBJeO4o6A92ulkAQ1biyJqNy6WYgouj9AdzvPIpyrg/tsadDPOXi+vTXCSA==
-X-Received: by 2002:a63:e845:: with SMTP id a5mr43320973pgk.246.1554918483038;
-        Wed, 10 Apr 2019 10:48:03 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y20sm32535485pfe.188.2019.04.10.10.48.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 10:48:02 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 13:48:00 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH 1/2] module: Prepare for addition of new ro_after_init
- sections
-Message-ID: <20190410174800.GA259061@google.com>
-References: <20190410011418.76408-1-joel@joelfernandes.org>
- <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a4HGuR9gtKZMdV4ZW4brHmMzJmgAueXVt96dFJJECmM=;
+        b=BmNh1qoyqQwDVn9qwUdhWpciImx44tCbOhYUPOge3w1cYOgtlbcA9ARR40dAAuSBFp
+         2VcBCQa3GgVj1gi7WeynwB3fHGM5SVib7RUlFGDjfAF0vPEZm0P38GYvy9EshypJ5DRi
+         jE1rkhQtQeBLR6tnAj3LoQKEUHVnfqrQEWs++Ua12JZycXqjsGth9ouOnMcx1vbpL3+6
+         606aaIQQyb9Ty+3b0qz5Pe2Iu0i81uKHAuztp3rPQO3Gbj68a/g+4LpXUWwmg+lNKeY5
+         BCP9aehIdXFUUm8aD7qyXsr1PIqNAj5jvkDL/8fu/221ErTCe2cjFQB0QpLK4hmi8lX/
+         c4SA==
+X-Gm-Message-State: APjAAAXfbfWqQImDfvSi5E+Ok0C0t8M6mU0u45r+Wj2lIDR2mFB+rLLS
+        hgGKbeNNYodGBRCc2rXWrXxAIuqJJ5G940+CyzQ=
+X-Google-Smtp-Source: APXvYqwngouX3i/1jzPpqK9jd1mwRddiCjnWAnM2Ms5Lf+TcD6pzCyeqJFvaLVRgoLsGlAdbSlfCxnQGXQJq+xAjr7M=
+X-Received: by 2002:a24:9b8b:: with SMTP id o133mr4593001itd.74.1554918590660;
+ Wed, 10 Apr 2019 10:49:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKs6Ag2L+GYEVYAzPky1pLntZt-Tc5ki-pqjVoyCWgxxg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190409172558.18778-1-tiny.windzz@gmail.com> <20190409172558.18778-3-tiny.windzz@gmail.com>
+ <20190410145659.62nl4o2jvkuggmpe@flea>
+In-Reply-To: <20190410145659.62nl4o2jvkuggmpe@flea>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 11 Apr 2019 01:49:39 +0800
+Message-ID: <CAEExFWu60DZ2xY7qxpjGFq3f_u2G4p7y-wqmsj0HR7CQy24r7w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document operating-points-v2-sunxi-cpu
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 09:26:44AM -0700, Kees Cook wrote:
-> On Tue, Apr 9, 2019 at 6:14 PM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
+On Wed, Apr 10, 2019 at 10:57 PM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Apr 09, 2019 at 01:25:58PM -0400, Yangtao Li wrote:
+> > Allwinner Process Voltage Scaling Tables defines the voltage and
+> > frequency value  based on the speedbin blown in the efuse combination.
+> > The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> > provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each
+> > OPP of operating-points-v2 table when it is parsed by the OPP framework.
 > >
-> > For the purposes of hardening modules by adding sections to
-> > ro_after_init sections, prepare for addition of new ro_after_init
-> > entries which we do in future patches. Create a table to which new
-> > entries could be added later. This makes it less error prone and reduce
-> > code duplication.
+> > The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
+> > with following parameters:
+> > - nvmem-cells (NVMEM area containig the speedbin information)
+> > - opp-microvolt-<name>: voltage in micro Volts.
+> >   At runtime, the platform can pick a <name> and matching
+> >   opp-microvolt-<name> property
 > >
-> > Cc: paulmck@linux.vnet.ibm.com
-> > Cc: rostedt@goodmis.org
-> > Cc: mathieu.desnoyers@efficios.com
-> > Cc: rcu@vger.kernel.org
-> > Cc: kernel-hardening@lists.openwall.com
-> > Cc: kernel-team@android.com
-> > Suggested-by: keescook@chromium.org
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 > > ---
-> >  kernel/module.c | 42 ++++++++++++++++++++++++------------------
-> >  1 file changed, 24 insertions(+), 18 deletions(-)
+> >  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
+> >  1 file changed, 166 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
 > >
-> > diff --git a/kernel/module.c b/kernel/module.c
-> > index 524da609c884..f9221381d076 100644
-> > --- a/kernel/module.c
-> > +++ b/kernel/module.c
-> > @@ -3300,11 +3300,28 @@ static bool blacklisted(const char *module_name)
-> >  }
-> >  core_param(module_blacklist, module_blacklist, charp, 0400);
-> >
-> > +/*
-> > + * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
-> > + * layout_sections() can put it in the right place.
-> > + * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
-> > + */
-> > +static char *ro_after_init_sections[] = {
-> 
-> static const char * const ... Need to make sure the table and its
-> strings can't be changed. :)
-
-Will fix :)
-
-> > +       ".data..ro_after_init",
+> > diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > new file mode 100644
+> > index 000000000000..c81a2075b974
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> > @@ -0,0 +1,166 @@
+> > +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> > +===================================
 > > +
-> > +       /*
-> > +        * __jump_table structures are never modified, with the exception of
-> > +        * entries that refer to code in the __init section, which are
-> > +        * annotated as such at module load time.
-> > +        */
-> > +       "__jump_table",
-> > +       NULL
-> 
-> Since this table is known at build time, you don't need a NULL
-> terminator, you can use ARRAY_SIZE() instead.
-
-Ok, sounds good. You are absolutely right.
-
-> > +};
+> > +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> > +varies based on the silicon variant in use. Allwinner Process Voltage
+> > +Scaling Tables defines the voltage and frequency value  based on the
+> > +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
+> > +reads the efuse value from the SoC to provide the OPP framework with
+> > +required information.
 > > +
-> >  static struct module *layout_and_allocate(struct load_info *info, int flags)
-> >  {
-> >         struct module *mod;
-> >         unsigned int ndx;
-> > -       int err;
-> > +       int err, i;
-> >
-> >         err = check_modinfo(info->mod, info, flags);
-> >         if (err)
-> > @@ -3319,23 +3336,12 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
-> >         /* We will do a special allocation for per-cpu sections later. */
-> >         info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
-> >
-> > -       /*
-> > -        * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
-> > -        * layout_sections() can put it in the right place.
-> > -        * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
-> > -        */
-> > -       ndx = find_sec(info, ".data..ro_after_init");
-> > -       if (ndx)
-> > -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-> > -       /*
-> > -        * Mark the __jump_table section as ro_after_init as well: these data
-> > -        * structures are never modified, with the exception of entries that
-> > -        * refer to code in the __init section, which are annotated as such
-> > -        * at module load time.
-> > -        */
-> > -       ndx = find_sec(info, "__jump_table");
-> > -       if (ndx)
-> > -               info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-> > +       /* Set sh_flags for read-only after init sections */
-> > +       for (i = 0; ro_after_init_sections[i]; i++) {
-> 
-> i.e. for (i = 0; i < ARRAY_SIZE(ro_after_init_sections); i++)
+> > +Required properties:
+> > +--------------------
+> > +In 'cpus' nodes:
+> > +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> > +
+> > +In 'operating-points-v2' table:
+> > +- compatible: Should be
+> > +     - 'operating-points-v2-sunxi-cpu'.
+>
+> Vendor-specific compatibles should have the vendor mentionned.
+>
+> Also, even though the H6 is the only SoC so far that has needed this,
+> we can't really assume that it will be the only SoC to use it, or that
+> it will always behave like that.
+There is no doubt that many platforms need this.
+>
+> So having something like allwinner,sun50i-h6-operating-points would be
+> great.
+allwinner,cpu-operating-points-v2 Maybe better?
+>
+> > +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> > +             efuse registers that has information about the
+> > +             speedbin that is used to select the right frequency/voltage
+> > +             value pair.
+> > +             Please refer the for nvmem-cells
+> > +             bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+> > +             and also examples below.
+> > +
+> > +In every OPP node:
+> > +- opp-microvolt-<name>: Voltage in micro Volts.
+> > +                     At runtime, the platform can pick a <name> and
+> > +                     matching opp-microvolt-<name> property.
+> > +                     [See: opp.txt]
+>
+> You need to document the valid names here.
+OK.
 
-Yep.
-
-> > +               ndx = find_sec(info, ro_after_init_sections[i]);
-> > +               if (ndx)
-> > +                       info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
-> > +       }
-> >
-> >         /* Determine total sizes, and put offsets in sh_entsize.  For now
-> >            this is done generically; there doesn't appear to be any
-> 
-> Otherwise, yeah, looks good to me.
-
-Thanks, if you are Ok with it, I will add your Reviewed-by tag as well.
-
- - Joel
-
+Cheers,
+Yangtao
