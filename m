@@ -2,121 +2,202 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF1AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0CAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACDA2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="arrJ0gtn"
+	by mail.kernel.org (Postfix) with ESMTP id 346D02083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfDJJXU (ORCPT
+        id S1729482AbfDJJ0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:23:20 -0400
-Received: from mail-eopbgr40096.outbound.protection.outlook.com ([40.107.4.96]:23810
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729367AbfDJJXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:23:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yrs3Ge3ptc84V0fG1G9YEJl4Ar5Wu9P26wXtRaXgbjo=;
- b=arrJ0gtnO/qBqfEX1huI1Qp8TAKv0q1X5zAsU/tWl0cR9IooqhkmgTqiD54i41eWcXH3DQksROKSjLPGvuIL/q7n9QaD9aCfw3EQiRnZrYg3s8E9FqBLsE7LyHiw69lRLyEdj/QqVSGMSWz/LPfO8+eFXVGp1/EY/lG7Ptye8Ng=
-Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com (10.168.188.7) by
- HE1PR0701MB2604.eurprd07.prod.outlook.com (10.168.187.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.11; Wed, 10 Apr 2019 09:23:15 +0000
-Received: from HE1PR0701MB2652.eurprd07.prod.outlook.com
- ([fe80::1449:d020:a36f:a8a3]) by HE1PR0701MB2652.eurprd07.prod.outlook.com
- ([fe80::1449:d020:a36f:a8a3%6]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
- 09:23:15 +0000
-From:   "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] modpost: make KBUILD_MODPOST_WARN also configurable for
-Thread-Topic: [PATCH v2] modpost: make KBUILD_MODPOST_WARN also configurable
- for
-Thread-Index: AdTvfB/gjVQwJ0l9SOGmgdISIvt+nw==
-Date:   Wed, 10 Apr 2019 09:23:15 +0000
-Message-ID: <HE1PR0701MB2652D08633C7322BDEABDACBFA2E0@HE1PR0701MB2652.eurprd07.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=wladislav.wiebe@nokia.com; 
-x-originating-ip: [131.228.32.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e64ee84c-a58a-482c-d1b0-08d6bd962929
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR0701MB2604;
-x-ms-traffictypediagnostic: HE1PR0701MB2604:
-x-microsoft-antispam-prvs: <HE1PR0701MB26046972B9DD4E6F28138C33FA2E0@HE1PR0701MB2604.eurprd07.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(136003)(39860400002)(189003)(199004)(105586002)(86362001)(478600001)(14454004)(9686003)(106356001)(2501003)(71190400001)(74316002)(256004)(53936002)(55016002)(2201001)(14444005)(71200400001)(3846002)(5660300002)(52536014)(6116002)(2906002)(25786009)(4326008)(305945005)(7736002)(7696005)(8676002)(81156014)(33656002)(110136005)(99286004)(102836004)(97736004)(6506007)(316002)(26005)(68736007)(476003)(486006)(186003)(66066001)(6436002)(8936002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0701MB2604;H:HE1PR0701MB2652.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mrAt/pHfYqndRPjeimgKZh4eZj4FThV8rwbjulBnvwF1NhnJNzPevMGayff6c2nCcc+hB62W5MalVyTRjldPq3+I7/aIq5ZqR5lGmwFxHTDOURUk6HAY9OE3nl7vQGCCgm12ynTolm7VnGYW6SJ49LAewwZdXV4YkP62FK27RmyqE1pA5FIVdN2WdrN3/4EomDB007enfEBwN9ubj1j/i8q73wQst8or/dlcJ0eEZfy/XrsKCMYmmcbTtSrRPyDcQ2nQ4srcz5kz9R1S7WLgGSfyl53Ja/tOuogZKKXPFO5h3W23a5msPW2qbN8z5wCvZY+3Webwb92L1VTzjZOfaIa3JDL2Woc+DCNe5t656PCX7bbgo5rghqAyhT9HYAsQyGr59YvRZaUOZ1EnIKCOvZQNBMjjCtj/8kMAppKhm5w=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Apr 2019 05:26:55 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:44597 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728057AbfDJJ0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:26:54 -0400
+Received: from [IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f] ([IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id E9VKhpJTfUjKfE9VLhgvVa; Wed, 10 Apr 2019 11:26:51 +0200
+Subject: Re: [PATCH v2 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?UTF-8?B?VGlmZmFueSBMaW4gKOael+aFp+ePiik=?= 
+        <tiffany.lin@mediatek.com>,
+        =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= 
+        <andrew-ct.chen@mediatek.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dave.stevenson@raspberrypi.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+References: <20181022144901.113852-1-tfiga@chromium.org>
+ <20181022144901.113852-2-tfiga@chromium.org>
+ <cf0fc2fc-72c6-dbca-68f7-a349879a3a14@xs4all.nl>
+ <CAAFQd5AORjMjHdavdr3zM13BnyFnKnEb-0aKNjvwbB_xJEnxgQ@mail.gmail.com>
+ <9b7c1385-d482-6e92-2222-2daa835dbc91@xs4all.nl>
+ <CAAFQd5DwjLt8UeDohzrMausaLGnOStvrmp5p7frYbG1hbGjx3Q@mail.gmail.com>
+ <CAAFQd5BPJv3cbJOWrziEjz_yE32DhfZv9vb-pG1Ltx-KS2=PQg@mail.gmail.com>
+ <3ea3bf5bf9904ce877142c41f595207752172d27.camel@ndufresne.ca>
+ <CAAFQd5C_OD=bvAxG0B_G+T6bnWddPHuiVZApj_8_+4xpMjH9+g@mail.gmail.com>
+ <c145fbf21301d03bdfdd8bf6613f0f68576e66be.camel@ndufresne.ca>
+ <CAAFQd5D4AP+xj_EkcsB84UqxCLBBEGComqGaMCm2zHSMnpqOKw@mail.gmail.com>
+ <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <d5e1a68d-c4e7-2645-1cd4-e55d87839f6f@xs4all.nl>
+Date:   Wed, 10 Apr 2019 11:26:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e64ee84c-a58a-482c-d1b0-08d6bd962929
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 09:23:15.0952
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0701MB2604
+In-Reply-To: <CAAFQd5AfmoUNbd5qwNmj+X80T-B49M-kUCLzGSOirg3o5WPPzA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfDeU0zDfkemf/qdbHKs4iu3pROOjV6w0nWqG+Khuu2DfKffEeNTqWWhUitXefAfbtQBu4yk9iQjDne+yPI+UdJGrk7N3uGq0zONmzZ5x3aHSqUjAION4
+ DZqSIpYcBGB/a8AFiVwZu2PT+AUZk3uk15/Fh2rLQKmnmP2rzq7QViuf8iruvth8rRldj8KWBC7uDCCSMZf2xxxV2EDFilH+mzVPp8Z/eMDqaJXVlXMv8hW/
+ yy6Dwzx/5x/5/nNAczgjA47qpjSn431HIsYfhUOI7bWoGKz3nBeVq3prqi53XW6RuAa4g49ZzDv7LU3lY8jRNUqIV9deyHa3nkkMc7iBdfUapY84thFdolpI
+ Yse2x1hYb9ieWBfDd1p83Q5YFJZ69ohFxecaQ0BKS6IvyRxNKavi0K2xY/BmVu1jryjNlknNjHAZpMweMrlkA9WprTiR/CtrZCtf0DcTlS5SQx9nEhKcjVJ+
+ CfDP0hZ0KumgFsZkVdQZFnH0su90Yx22pqw9/QoYcGo84JJzd6jpqmUTu0VGUf2rItcdVu/YXeDKu/Q7gcfFSDXZs/1LYVAtic58b7huA8JagNCVF58EoG0Q
+ NmqilnS4QoCHpScE1JtyjRuwa5BKT2L1O/ZclVdcScdu3eHOtH+6emCIe9+1jyQvO5ISI4k9eiqoudya47u3AGLw+Yd7cvMDfDkuQIw2VH9uosxl3kK1K8u/
+ yHlJXMt8khqxq07W6tpykMeiDkv2psdErdwYq3Vpb+IwV4sfVSTFIHxQjHVBKhBZnJBWsEIQcyPqS/7CVHz92N3ukxa+j+ARsd4N0PCsltdKDQW4xcw6pI80
+ hC40NL0kbY12aSTWyUropaJdDFvD3HiEs2NMPE/iWfvfc+BgPyCj58WFvg8bi0EyD25nNr5Ls/027FqnbF5tlhc+KUyb3S7XSh8iGywk6IZnPVbIVLYrC1+l
+ U/LEchwtokYCfK2BIi1gU66D71/76ocD3YAPxuPHmzKjJevB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ea837f1c0503 ("kbuild: make modpost processing configurable")
-was intended to give KBUILD_MODPOST_WARN flexibility to be configurable.
-Right now KBUILD_MODPOST_WARN gets just ignored when KBUILD_EXTMOD is
-set which happens per default when building modules out of the tree.
+On 4/9/19 11:47 AM, Tomasz Figa wrote:
+> On Wed, Feb 6, 2019 at 2:35 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>>
+>> On Wed, Jan 30, 2019 at 1:02 PM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>>
+>>> Le vendredi 25 janvier 2019 à 12:27 +0900, Tomasz Figa a écrit :
+>>>> On Fri, Jan 25, 2019 at 4:55 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>>>> Le jeudi 24 janvier 2019 à 18:06 +0900, Tomasz Figa a écrit :
+>>>>>>> Actually I just realized the last point might not even be achievable
+>>>>>>> for some of the decoders (s5p-mfc, mtk-vcodec), as they don't report
+>>>>>>> which frame originates from which bitstream buffer and the driver just
+>>>>>>> picks the most recently consumed OUTPUT buffer to copy the timestamp
+>>>>>>> from. (s5p-mfc actually "forgets" to set the timestamp in some cases
+>>>>>>> too...)
+>>>>>>>
+>>>>>>> I need to think a bit more about this.
+>>>>>>
+>>>>>> Actually I misread the code. Both s5p-mfc and mtk-vcodec seem to
+>>>>>> correctly match the buffers.
+>>>>>
+>>>>> Ok good, since otherwise it would have been a regression in MFC driver.
+>>>>> This timestamp passing thing could in theory be made optional though,
+>>>>> it lives under some COPY_TIMESTAMP kind of flag. What that means though
+>>>>> is that a driver without such a capability would need to signal dropped
+>>>>> frames using some other mean.
+>>>>>
+>>>>> In userspace, the main use is to match the produced frame against a
+>>>>> userspace specific list of frames. At least this seems to be the case
+>>>>> in Gst and Chromium, since the userspace list contains a superset of
+>>>>> the metadata found in the v4l2_buffer.
+>>>>>
+>>>>> Now, using the produced timestamp, userspace can deduce frame that the
+>>>>> driver should have produced but didn't (could be a deadline case codec,
+>>>>> or simply the frames where corrupted). It's quite normal for a codec to
+>>>>> just keep parsing until it finally find something it can decode.
+>>>>>
+>>>>> That's at least one way to do it, but there is other possible
+>>>>> mechanism. The sequence number could be used, or even producing buffers
+>>>>> with the ERROR flag set. What matters is just to give userspace a way
+>>>>> to clear these frames, which would simply grow userspace memory usage
+>>>>> over time.
+>>>>
+>>>> Is it just me or we were missing some consistent error handling then?
+>>>>
+>>>> I feel like the drivers should definitely return the bitstream buffers
+>>>> with the ERROR flag, if there is a decode failure of data in the
+>>>> buffer. Still, that could become more complicated if there is more
+>>>> than 1 frame in that piece of bitstream, but only 1 frame is corrupted
+>>>> (or whatever).
+>>>
+>>> I agree, but it might be more difficult then it looks (even FFMPEG does
+>>> not do that). I believe the code that is processing the bitstream in
+>>> stateful codecs is mostly unrelated from the code actually doing the
+>>> decoding. So what might happen is that the decoding part will never
+>>> actually allocate a buffer for the skipped / corrupted part of the
+>>> bitstream. Also, the notion of a skipped frame is not always evident in
+>>> when parsing H264 or HEVC NALs. There is still a full page of text just
+>>> to explain how to detect that start of a new frame.
+>>
+>> Right. I don't think we can guarantee that we can always correlate the
+>> errors with exact buffers and so I phrased the paragraph about errors
+>> in v3 in a bit more conservative way:
+>>
+>> See the snapshot hosted by Hans (thanks!):
+>> https://hverkuil.home.xs4all.nl/codec-api/uapi/v4l/dev-decoder.html#decoding
+>>
+>>>
+>>> Yet, it would be interesting to study the firmwares we have and see
+>>> what they provide that would help making decode errors more explicit.
+>>>
+>>
+>> Agreed.
+>>
+>>>>
+>>>> Another case is when the bitstream, even if corrupted, is still enough
+>>>> to produce some output. My intuition tells me that such CAPTURE buffer
+>>>> should be then returned with the ERROR flag. That wouldn't still be
+>>>> enough for any more sophisticated userspace error concealment, but
+>>>> could still let the userspace know to perhaps drop the frame.
+>>>
+>>> You mean if a frame was concealed (typically the frame was decoded from
+>>> a closed by reference instead of the expected reference). That is
+>>> something signalled by FFPEG. We should document this possibility. I
+>>> actually have something implemented in GStreamer. Basically if we have
+>>> the ERROR flag with a payload size smaller then expected, I drop the
+>>> frame and produce a drop event message, while if I have a frame with
+>>> ERROR flag but of the right payload size, I assume it is corrupted, and
+>>> simply flag it as corrupted, leaving to the application the decision to
+>>> display it or not. This is a case that used to happen with some UVC
+>>> cameras (though some have been fixed, and the UVC camera should drop
+>>> smaller payload size buffers now).
+>>
+>> I think it's a behavior that makes the most sense indeed.
+>>
+>> Technically one could also consider the case of 0 < bytesused <
+>> sizeimage, which could mean that only a part of the frame is in the
+>> buffer. An application could try to blend it with previous frame using
+>> some concealing algorithms. I haven't seen an app that could do such
+>> thing, though.
+> 
+> Actually some interesting thought on this. I don't think the existing
+> drivers would return any CAPTURE buffers on errors right now, but just
+> return the OUTPUT buffer that failed to be decoded. Should we change
+> this so that always one CAPTURE buffer with the ERROR flag is
+> returned, to signal the application that a frame was potentially
+> dropped?
 
-This change gives the opportunity to define module build behaving also
-in case of out of tree builds and default will become exit on error.
-Errors which can be detected by the build should be trapped out of the box
-there, unless somebody wants to notice broken stuff later at runtime.
+It's what vicodec does. Since device_run is called with both an OUTPUT
+and a CAPTURE buffer it would make sense to return both buffers with the
+ERROR flag if decoding (or encoding for that matter) fails.
 
-As this patch changes the default behaving from warning to error,
-users can consider to fix it for external module builds by:
-- providing module symbol table via KBUILD_EXTRA_SYMBOLS for
-  modules which are dependent
-- OR getting old behaving back by passing KBUILD_MODPOST_WARN to the build
+But I would also be fine if this is seen as driver specific. Since an
+OUTPUT buffer can decode to multiple CAPTURE buffers it may not be
+all that useful in practice.
 
-Signed-off-by: Wladislav Wiebe <wladislav.wiebe@nokia.com>
----
- scripts/Makefile.modpost | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
 
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 6b7f354f189a..fec6ec2ffa47 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -78,7 +78,7 @@ modpost =3D scripts/mod/modpost                    \
-  $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))=
-) \
-  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
-  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
-- $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w)
-+ $(if $(KBUILD_MODPOST_WARN),-w)
-=20
- MODPOST_OPT=3D$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
-=20
---=20
-2.19.2
+	Hans
