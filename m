@@ -2,75 +2,131 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9079EC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F23C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9CB2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:05:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VgQDqn51"
+	by mail.kernel.org (Postfix) with ESMTP id EC36C20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554923256;
+	bh=l5kx7M5yIhwXZKbmcPL7AM62Ycxqpjj9uZJIKXIkFXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EM19VWDM1NWp22C18OmFuqHNwdfucbrWbGTzX8jN+jcG+GeSHlIYSNDF1qb7m5jtw
+	 1bWKN+FZPzAPkOMEmeEOieFssHWLdykaMN61SINr42PE8meYkSSxo8fFfyS7DhqXFs
+	 BSJMxKYfkuoCCM/Opy/il5/WZvgMEIGTP+yB7eoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDJTFG (ORCPT
+        id S1726773AbfDJTHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:05:06 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55644 "EHLO mail.skyhub.de"
+        Wed, 10 Apr 2019 15:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbfDJTFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:05:05 -0400
-Received: from zn.tnic (p200300EC2F0CAE0088EC372D30EF1627.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:88ec:372d:30ef:1627])
+        id S1726753AbfDJTHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 15:07:34 -0400
+Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 42CE21EC03A0;
-        Wed, 10 Apr 2019 21:05:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554923104;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CviuCDVo3FiHNRAlNLWZRhOH2BwQ6pdfhdwt4tuFJEM=;
-        b=VgQDqn51cCi/ZhDIrV9dNMvDDhkejMB10XujSEZVJRTnGitiaL5pJ1+bBWZn18XNgveccd
-        uc7yrbfoqODcZYWF5ydRYuCIUQeL2mwnMHRe3KHZMKMN8jeWAFOk1cQ0yBKMyQp5hSVaLf
-        rscgVLCwiJKefOrkec6rBlLbtTL0y7s=
-Date:   Wed, 10 Apr 2019 21:04:56 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thor Thayer <thor.thayer@linux.intel.com>
-Cc:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, james.morse@arm.com,
-        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCHv3 0/3] Update Stratix10 EDAC Bindings
-Message-ID: <20190410190456.GH26580@zn.tnic>
-References: <1554388597-28019-1-git-send-email-thor.thayer@linux.intel.com>
- <fa5b2837-9cb0-517c-c491-9b5d3ae0a3a5@linux.intel.com>
- <20190409201323.GD6150@zn.tnic>
- <f843024e-5f06-a566-7ab4-5c3e03e6ed3f@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D39952082E;
+        Wed, 10 Apr 2019 19:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554923253;
+        bh=l5kx7M5yIhwXZKbmcPL7AM62Ycxqpjj9uZJIKXIkFXk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lpbMvmzoK4obAkSjUiVj+EJaYr0Z2YfkhiR34D1ICsugEYR1EAhNnz5I7CbWuJcfg
+         ZZdcdlhzwAO3/43bU/AoqBZhciueBKrBKPr0zqNY1P3zcqN738Rj7zmls3BBsZ9YLF
+         /5/0OdnzKiGCKE1wYY1814YukGtRhezkGyeOjNpc=
+Date:   Wed, 10 Apr 2019 12:07:31 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+Message-ID: <20190410190729.GA120258@gmail.com>
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com>
+ <20190320185719.GB180195@gmail.com>
+ <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+ <20190321175122.GA1587@sol.localdomain>
+ <20190410031734.GB7140@sol.localdomain>
+ <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f843024e-5f06-a566-7ab4-5c3e03e6ed3f@linux.intel.com>
+In-Reply-To: <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 05:32:07PM -0500, Thor Thayer wrote:
-> I have ACKs on patches 1 & 3. Patch 2 has a Reviewed-by from Rob Herring
-> which was sufficient in the past.
+On Wed, Apr 10, 2019 at 11:30:57AM -0700, Kees Cook wrote:
+> On Tue, Apr 9, 2019 at 8:17 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > On Thu, Mar 21, 2019 at 10:51:22AM -0700, Eric Biggers wrote:
+> > > On Thu, Mar 21, 2019 at 10:45:31AM -0700, Kees Cook wrote:
+> > > > On Wed, Mar 20, 2019 at 11:57 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > > >
+> > > > > On Tue, Mar 19, 2019 at 10:09:13AM -0700, Eric Biggers wrote:
+> > > > > > On Tue, Mar 19, 2019 at 12:54:23PM +0100, Geert Uytterhoeven wrote:
+> > > > > > > When running the sha1-asm crypto selftest on arm with
+> > > > > > > CONFIG_HARDENED_USERCOPY_PAGESPAN=y:
+> > > > > > >
+> > > > > > >     usercopy: Kernel memory overwrite attempt detected to spans
+> > > > > > > multiple pages (offset 0, size 42)!
+> > > > > >
+> > > > > > Well, this must happen with the new (in 5.1) crypto self-tests implementation
+> > > > > > for any crypto algorithm when CONFIG_HARDENED_USERCOPY_PAGESPAN=y.  I don't
+> > > > > > understand why hardened usercopy considers it a bug though, as there's no buffer
+> > > > > > overflow.  The crypto tests use copy_from_iter() to copy data into a 2-page
+> > > > > > buffer that was allocated with __get_free_pages():
+> > > > > >
+> > > > > >       __get_free_pages(GFP_KERNEL, 1)
+> > > > > >
+> > > > > > ... where 1 means an order-1 allocation.
+> > > > > >
+> > > > > > If it copies to offset=4064 len=42, for example, then hardened usercopy
+> > > > > > considers it a bug even though the buffer is 8192 bytes long.  Why?
+> > > > > >
+> > > > > > It isn't actually copying anything to/from userspace, BTW; it's using iov_iter
+> > > > > > with ITER_KVEC.
+> > > > > >
+> > > > > > - Eric
+> > > > >
+> > > > > Kees, any thoughts on why hardened usercopy rejects copies spanning a page
+> > > > > boundary when they seem to be fine?
+> > > >
+> > > > This is due to missing the compound page marking, if I remember
+> > > > correctly. However, I tend to leave the pagespan test disabled: it
+> > > > really isn't ready for production use -- there are a lot of missing
+> > > > annotations still.
+> > > >
+> > >
+> > > So do I need to add __GFP_COMP?  Is there any actual reason to do so?
+> > > Why does hardened usercopy check for it?
+> > >
+> > > - Eric
+> >
+> > Hi Kees, any answer to this question?
+> 
+> Hi! Sorry, this got lost in my inbox. Yes, if you can add __GFP_COMP,
+> that would fix this case. No one has had time lately to track down all
+> these cases, but avoiding adding new ones would be wonderful. :)
+> 
+> It's in there because it's a state I'd like to get to in the kernel,
+> but it'll require a lot more work to get there.
+> 
 
-Sorry about that - I missed those because I looked only at the diffstat
-and decided this series is not for me :)
+That didn't answer my question.  My question is what is the purpose of this?  If
+there was actual buffer overflow when __GFP_COMP isn't specified that would make
+perfect sense, but AFAICS there isn't.  So why does hardened usercopy consider
+it broken when __GFP_COMP isn't specified?
 
-Anyway, all three applied now.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+- Eric
