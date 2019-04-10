@@ -6,155 +6,182 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE439C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEBCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9473020854
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EFC2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbfDJPDc (ORCPT
+        id S1733046AbfDJPDx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:03:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6146 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732868AbfDJPDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:03:32 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B695923EF05517F57531;
-        Wed, 10 Apr 2019 23:03:29 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
- 23:03:26 +0800
-Subject: Re: [PATCH] mtd: nand: Fix build error while
- CONFIG_MTD_NAND_ECC_SW_BCH is set to module
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-References: <20190410130747.35692-1-yuehaibing@huawei.com>
- <20190410153920.68267a1a@collabora.com>
- <20190410155856.655122c8@collabora.com>
- <8b020124-4008-6081-c04c-eaefb7875878@huawei.com>
- <20190410162927.17ea678b@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <paul.burton@mips.com>, <bbrezillon@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <41165c39-da0c-0f15-87f9-4fb588b77dcc@huawei.com>
-Date:   Wed, 10 Apr 2019 23:03:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190410162927.17ea678b@collabora.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Wed, 10 Apr 2019 11:03:53 -0400
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:50836 "EHLO
+        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732949AbfDJPDw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:03:52 -0400
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:59554 helo=[10.2.146.249])
+        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <christoph.muellner@theobroma-systems.com>)
+        id 1hEElN-0003tI-NQ; Wed, 10 Apr 2019 17:03:45 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
+From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
+        <christoph.muellner@theobroma-systems.com>
+In-Reply-To: <7915415.Bhcl4jWJiJ@diego>
+Date:   Wed, 10 Apr 2019 17:03:44 +0200
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C2630261-AECD-4357-911F-B0E01E74C74A@theobroma-systems.com>
+References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
+ <7915415.Bhcl4jWJiJ@diego>
+To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/10 22:29, Boris Brezillon wrote:
-> On Wed, 10 Apr 2019 22:22:16 +0800
-> YueHaibing <yuehaibing@huawei.com> wrote:
-> 
->> On 2019/4/10 21:58, Boris Brezillon wrote:
->>> On Wed, 10 Apr 2019 15:39:28 +0200
->>> Boris Brezillon <boris.brezillon@collabora.com> wrote:
->>>   
->>>> On Wed, 10 Apr 2019 21:07:47 +0800
->>>> Yue Haibing <yuehaibing@huawei.com> wrote:
->>>>  
->>>>> From: YueHaibing <yuehaibing@huawei.com>
->>>>>
->>>>> Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
->>>>> is set to module:
->>>>>
->>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
->>>>> (.text+0xef6): undefined reference to `nand_bch_free'
->>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
->>>>> nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
->>>>> nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
->>>>> nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
->>>>>
->>>>> CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
->>>>> because MTD_RAW_NAND need it while linked.
->>>>>
->>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>> Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support"    
->>>>
->>>> Nope, it's not this one that introduced the regression.
->>>>
->>>>
->>>>  
->>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>> ---
->>>>>  drivers/mtd/nand/raw/Kconfig | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
->>>>> index 615d738..0500c42 100644
->>>>> --- a/drivers/mtd/nand/raw/Kconfig
->>>>> +++ b/drivers/mtd/nand/raw/Kconfig
->>>>> @@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
->>>>>  if MTD_RAW_NAND
->>>>>  
->>>>>  config MTD_NAND_ECC_SW_BCH
->>>>> -	tristate "Support software BCH ECC"
->>>>> +	bool "Support software BCH ECC"
->>>>>  	select BCH
->>>>>  	default n
->>>>>  	help    
->>>>
->>>> Should be fixed with the following diff squashed into:
->>>>
->>>> 51ef1d0b2095 ("mtd: nand: Clarify Kconfig entry for software BCH ECC algorithm")
->>>>  
->>>> --->8---    
->>>> diff --git a/include/linux/mtd/nand_bch.h b/include/linux/mtd/nand_bch.h
->>>> index b8106651f807..06ce2b655c13 100644
->>>> --- a/include/linux/mtd/nand_bch.h
->>>> +++ b/include/linux/mtd/nand_bch.h
->>>> @@ -15,7 +15,7 @@ struct mtd_info;
->>>>  struct nand_chip;
->>>>  struct nand_bch_control;
->>>>  
->>>> -#if defined(CONFIG_MTD_NAND_ECC_BCH)
->>>> +#if defined(CONFIG_MTD_NAND_ECC_SW_BCH)
->>>>  
->>>>  static inline int mtd_nand_has_bch(void) { return 1; }
->>>>  
->>>> @@ -39,7 +39,7 @@ struct nand_bch_control *nand_bch_init(struct mtd_info *mtd);
->>>>   */
->>>>  void nand_bch_free(struct nand_bch_control *nbc);
->>>>  
->>>> -#else /* !CONFIG_MTD_NAND_ECC_BCH */
->>>> +#else /* !CONFIG_MTD_NAND_ECC_SW_BCH */
->>>>  
->>>>  static inline int mtd_nand_has_bch(void) { return 0; }
->>>>  
->>>> @@ -64,6 +64,6 @@ static inline struct nand_bch_control *nand_bch_init(struct mtd_info *mtd)
->>>>  
->>>>  static inline void nand_bch_free(struct nand_bch_control *nbc) {}
->>>>  
->>>> -#endif /* CONFIG_MTD_NAND_ECC_BCH */
->>>> +#endif /* CONFIG_MTD_NAND_ECC_SW_BCH */
->>>>  
->>>>  #endif /* __MTD_NAND_BCH_H__ */  
->>>
->>> Sorry, I didn't look at the right branch, this part of the code was
->>> correct, but we still have a problem to express the RAW_NAND(y) ->
->>> SW_BCH(y) dependency.  
->>
->> It seems this dependency is not always need,
->>
->> case MTD_RAW_NAND set to y works well while CONFIG_MTD_NAND_ECC_SW_BCH is not set.
-> 
-> Yes, I know, but forcing nand_bch to a be a boolean is not the right
-> solution either, hence my suggestion to use 'imply'.
+Hi Heiko,
 
-Got it, Thanks, will send v2 as your suggestion.
+> On 10.04.2019, at 16:50, Heiko Stübner <heiko@sntech.de> wrote:
+> 
+> Hi Christoph,
+> 
+> Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
+>> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
+>> monitor via DP cable. The actual monitor is therefore not known in advance.
+>> This means, we don't have any panel information besides the EDID
+>> data from the device itself.
+> 
+> Just so I understand correctly, you have a real dp-connector wired to
+> the Analogix dp-controller, and therefore want to connect actual
+> monitors to it.
+> 
+> So the problem you're trying to work around is probably that the
+> rockchip-driver of the analogix controller explictly expects a bridge
+> to be present during probe, right?
+> 
+> I think hacking up the panel-driver is not an ideal approach:
+> (1) bridges/panels do expect to stay connected all the time
+>    and are meant for devices with actual hard-wired displays with specific
+>    power-sequence requirements
+> (2) devicetree is expected to describe the real hardware, therefore the
+>    dt should not describe one thing while the actual hardware is really
+>    different
+> 
+> So, I guess a more ideal approach could perhaps be to:
+> (1) define a "dp-connector" devicetree binding, see
+>    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+>    for a similar one
+> (2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
+>    for that new compatible:
+> 	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> 		//move bridge handling here
+> 	}
+> 
+>    and modify both the rockchip-part and the generic analogix bridge code
+>    to work with the connector declared instead of a panel?
+
+Thank's for you input on this.
+
+Modelling the connector instead of the panel is indeed a better approach,
+since we can then also react to connect/disconnect events (after probe).
+
+Thanks,
+Christoph
 
 > 
-> .
+>> The functionality for a 'simple-panel' has been remove a couple
+>> of years ago with 81cf32b. This patch brings this feature back.
+>> 
+>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>> ---
+>> drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
+>> 1 file changed, 16 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+>> index 9e8218f6a3f2..1f69283f3e4b 100644
+>> --- a/drivers/gpu/drm/panel/panel-simple.c
+>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+>> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
+>> 		backlight_update_status(p->backlight);
+>> 	}
+>> 
+>> -	if (p->desc->delay.disable)
+>> +	if (p->desc && p->desc->delay.disable)
+>> 		msleep(p->desc->delay.disable);
+>> 
+>> 	p->enabled = false;
+>> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
+>> 
+>> 	regulator_disable(p->supply);
+>> 
+>> -	if (p->desc->delay.unprepare)
+>> +	if (p->desc && p->desc->delay.unprepare)
+>> 		msleep(p->desc->delay.unprepare);
+>> 
+>> 	p->prepared = false;
+>> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
+>> 
+>> 	gpiod_set_value_cansleep(p->enable_gpio, 1);
+>> 
+>> -	delay = p->desc->delay.prepare;
+>> -	if (p->no_hpd)
+>> -		delay += p->desc->delay.hpd_absent_delay;
+>> -	if (delay)
+>> -		msleep(delay);
+>> +	if (p->desc) {
+>> +		delay = p->desc->delay.prepare;
+>> +		if (p->no_hpd)
+>> +			delay += p->desc->delay.hpd_absent_delay;
+>> +		if (delay)
+>> +			msleep(delay);
+>> +	}
+>> 
+>> 	p->prepared = true;
+>> 
+>> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
+>> 	if (p->enabled)
+>> 		return 0;
+>> 
+>> -	if (p->desc->delay.enable)
+>> +	if (p->desc && p->desc->delay.enable)
+>> 		msleep(p->desc->delay.enable);
+>> 
+>> 	if (p->backlight) {
+>> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
+>> 	struct panel_simple *p = to_panel_simple(panel);
+>> 	unsigned int i;
+>> 
+>> +	if (!p->desc)
+>> +		return 0;
+>> +
+>> 	if (p->desc->num_timings < num_timings)
+>> 		num_timings = p->desc->num_timings;
+>> 
+>> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
+>> 
+>> static const struct of_device_id platform_of_match[] = {
+>> 	{
+>> +		.compatible = "simple-panel",
+>> +		.data = NULL,
+>> +	}, {
+>> 		.compatible = "ampire,am-480272h3tmqw-t01h",
+>> 		.data = &ampire_am_480272h3tmqw_t01h,
+>> 	}, {
+>> 
+> 
+> 
+> 
 > 
 
