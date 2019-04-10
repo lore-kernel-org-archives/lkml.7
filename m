@@ -2,132 +2,243 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52D1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9096A2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="GlWlZuhQ"
+	by mail.kernel.org (Postfix) with ESMTP id DE9F92083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbfDJLe6 (ORCPT
+        id S1731276AbfDJLfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:34:58 -0400
-Received: from mail-eopbgr720045.outbound.protection.outlook.com ([40.107.72.45]:63072
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727206AbfDJLe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:34:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aDazmL4jxGhMFKxVIN1BH2viyngjgUTetdMEllbTPKU=;
- b=GlWlZuhQGSWJpF75TLLVtzZ9WpfnjGcG++6XdTKEa32nis00u55pshiyM9oFHm8eLhhec1lpzHidfUGZZy54WClpsfPAm0o+FMoJBmy19z1+pSQucFp0l/7tbJ2lgJbyY70WC/FlDPQtLR/GflK49pBl2c2ku41CuevhP9carrY=
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com (10.168.206.9) by
- MWHPR02MB3360.namprd02.prod.outlook.com (10.164.187.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Wed, 10 Apr 2019 11:34:54 +0000
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::905a:a5f3:8d41:431e]) by MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::905a:a5f3:8d41:431e%6]) with mapi id 15.20.1792.016; Wed, 10 Apr 2019
- 11:34:54 +0000
-From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-Subject: RE: [LINUX PATCH v2] spi: spi-mem: Fix build error without
- CONFIG_SPI_MEM
-Thread-Topic: [LINUX PATCH v2] spi: spi-mem: Fix build error without
- CONFIG_SPI_MEM
-Thread-Index: AQHU72CQokUgK4c5p0uN3jcGhVB6d6Y1MkAAgAAHvTA=
-Date:   Wed, 10 Apr 2019 11:34:54 +0000
-Message-ID: <MWHPR02MB26238A8F658DED8B3B32A5CAAF2E0@MWHPR02MB2623.namprd02.prod.outlook.com>
-References: <1554875085-25350-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190410103106.GE6106@sirena.org.uk>
-In-Reply-To: <20190410103106.GE6106@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nagasure@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ac4cbf6-13d0-4cff-1719-08d6bda88d9f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR02MB3360;
-x-ms-traffictypediagnostic: MWHPR02MB3360:
-x-microsoft-antispam-prvs: <MWHPR02MB3360B5DE7B602AB09F349860AF2E0@MWHPR02MB3360.namprd02.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(346002)(396003)(376002)(136003)(13464003)(199004)(189003)(8676002)(68736007)(76176011)(3846002)(26005)(7736002)(5660300002)(14454004)(74316002)(305945005)(102836004)(86362001)(478600001)(6246003)(4326008)(186003)(81156014)(54906003)(81166006)(9686003)(8936002)(6506007)(53936002)(53546011)(446003)(97736004)(99286004)(486006)(316002)(11346002)(476003)(55016002)(7696005)(71200400001)(71190400001)(256004)(52536014)(33656002)(6116002)(25786009)(6916009)(6436002)(229853002)(105586002)(14444005)(106356001)(66066001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB3360;H:MWHPR02MB2623.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YYIkbgm+vr6ADzsgwn+uIVycBRmQ4U2dx8SJXhUBAMmRRM2Iwlb9UZeTvwcXbIioLvn/rHxZqd2rllrO9ryDuEK08MDvt0m8A3EdSEWlWCCg5kBxzUsEqG1WNai1NNYT/JpETQInsFrU6Xg49xE8J+rO3d8M/+hQ3MqkKKfQUsst+xseGFzFZIukRlznCx3xiLOq0xdU5MqqWV9ir7Q5GAlTBwBTnffs7yVM+HHFTvUyPbTdyIbEITj14Vow54uV7zuyGer3ECHlikQRiicjcVFqEpHmKJZG1JhUNGxYN446C3iK1+oMD2n+iOx+sDfw/4ZXv3nDwDqBc3Z4Kw2Cl0XPaKZ+Ns+Gf2RAjRW5cMPvDpVERyVfyc3Y1YAzF7Iwx31ULfVXU3kKdLhCK7lfyjD+Q1G2EweMn6gWQua9Ct4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 10 Apr 2019 07:35:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:52918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727206AbfDJLfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 07:35:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7529080D;
+        Wed, 10 Apr 2019 04:35:04 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CDF43F68F;
+        Wed, 10 Apr 2019 04:35:04 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 73CED68240B; Wed, 10 Apr 2019 12:35:02 +0100 (BST)
+Date:   Wed, 10 Apr 2019 12:35:02 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com,
+        skomatineni@nvidia.com, krzk@kernel.org, heiko@sntech.de,
+        horms+renesas@verge.net.au, olof@lixom.net,
+        maxime.ripard@bootlin.com, andy.gross@linaro.org,
+        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
+        enric.balletbo@collabora.com, ezequiel@collabora.com,
+        stefan.wahren@i2se.com, marc.w.gonzalez@free.fr,
+        l.stach@pengutronix.de, tpiepho@impinj.com,
+        hayashi.kunihiko@socionext.com, yue.wang@amlogic.com,
+        shawn.lin@rock-chips.com, xiaowei.bao@nxp.com,
+        devicetree@vger.kernel.org, mmaddireddy@nvidia.com,
+        kthota@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
+Message-ID: <20190410113502.GD15144@e110455-lin.cambridge.arm.com>
+References: <20190402183110.GE141706@google.com>
+ <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
+ <20190403173641.GI141706@google.com>
+ <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+ <20190405185842.GC26522@google.com>
+ <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
+ <20190409132604.GA256045@google.com>
+ <a414b42c-ce10-e2db-55f0-9428cfd23e68@nvidia.com>
+ <20190410081448.GC15144@e110455-lin.cambridge.arm.com>
+ <31385c64-86b9-ebe3-99e3-6d156b66fb6a@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac4cbf6-13d0-4cff-1719-08d6bda88d9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 11:34:54.5611
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3360
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <31385c64-86b9-ebe3-99e3-6d156b66fb6a@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Wed, Apr 10, 2019 at 03:23:39PM +0530, Vidya Sagar wrote:
+> On 4/10/2019 1:44 PM, Liviu Dudau wrote:
+> > On Wed, Apr 10, 2019 at 11:40:40AM +0530, Vidya Sagar wrote:
+> > > On 4/9/2019 6:56 PM, Bjorn Helgaas wrote:
+> > > > On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
+> > > > > On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
+> > > > > > On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
+> > > > > > > On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
+> > > > > > > > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
+> > > > > > > > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
+> > > > > > > > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
+> > > > > > > > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
+> > > > > > > > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
+> > > > > > > > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
+> > > > > > > > > > > > > present in Tegra194 SoC.
+> > > > > > > > > > 
+> > > > > > > > > >        - Why does this chip require pcie_pme_disable_msi()?  The only other
+> > > > > > > > > >          use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
+> > > > > > > > > >          ("PCI PM: Make it possible to force using INTx for PCIe PME
+> > > > > > > > > >          signaling").
+> > > > > > > > > 
+> > > > > > > > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
+> > > > 
+> > > > > > There's something wrong here.  Either the question of how PME is
+> > > > > > signaled is generic and the spec provides a way for the OS to discover
+> > > > > > that method, or it's part of the device-specific architecture that
+> > > > > > each host bridge driver has to know about its device.  If the former,
+> > > > > > we need to make the PCI core smart enough to figure it out.  If the
+> > > > > > latter, we need a better interface than this ad hoc
+> > > > > > pcie_pme_disable_msi() thing.  But if it is truly the latter, your
+> > > > > > current code is sufficient and we can refine it over time.
+> > > > > 
+> > > > > In case of Tegra194, it is the latter case.
+> > > > 
+> > > > This isn't a Tegra194 question; it's a question of whether this
+> > > > behavior is covered by the PCIe spec.
+> > > AFAIU the spec and what I heard from Nvidia hardware folks is that spec doesn't
+> > > explicitly talk about this and it was a design choice made by Nvidia hardware
+> > > folks to route these interrupts through legacy line instead of MSI line.
+> > > 
+> > > > 
+> > > > > > What I suspect should happen eventually is the DWC driver should call
+> > > > > > devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
+> > > > > > That would require a little reorganization of the DWC data structures,
+> > > > > > but it would be good to be more consistent.
+> > > > > > 
+> > > > > > For now, I think stashing the pointer in pcie_port or dw_pcie would be
+> > > > > > OK.  I'm not 100% clear on the difference, but it looks like either
+> > > > > > should be common across all the DWC drivers, which is what we want.
+> > > > > 
+> > > > > Since dw_pcie is common for both root port and end point mode structures,
+> > > > > I think it makes sense to keep the pointer in pcie_port as this structure
+> > > > > is specific to root port mode of operation.
+> > > > > I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
+> > > > > used in the beginning itself to be inline with non-DWC implementations.
+> > > > > But, I'll take it up later (after I'm done with upstreaming current series)
+> > > > 
+> > > > Fair enough.
+> > > > 
+> > > > > > > .remove() internally calls pm_runtime_put_sync() API which calls
+> > > > > > > .runtime_suspend(). I made a new patch to add a host_deinit() call
+> > > > > > > which make all these calls. Since host_init() is called from inside
+> > > > > > > .runtime_resume() of this driver, to be in sync, I'm now calling
+> > > > > > > host_deinit() from inside .runtime_suspend() API.
+> > > > > > 
+> > > > > > I think this is wrong.  pci_stop_root_bus() will detach all the
+> > > > > > drivers from all the devices.  We don't want to do that if we're
+> > > > > > merely runtime suspending the host bridge, do we?
+> > > > > 
+> > > > > In the current driver, the scenarios in which .runtime_suspend() is called
+> > > > > are
+> > > > > a) during .remove() call and
+> > > > 
+> > > > It makes sense that you should call pci_stop_root_bus() during
+> > > > .remove(), i.e., when the host controller driver is being removed,
+> > > > because the PCI bus will no longer be accessible.  I think you should
+> > > > call it *directly* from tegra_pcie_dw_remove() because that will match
+> > > > what other drivers do.
+> > > > 
+> > > > > b) when there is no endpoint found and controller would be shutdown
+> > > > > In both cases, it is required to stop the root bus and remove all devices,
+> > > > > so, instead of having same call present in respective paths, I kept them
+> > > > > in .runtime_suspend() itself to avoid code duplication.
+> > > > 
+> > > > I don't understand this part.  We should be able to runtime suspend
+> > > > the host controller without detaching drivers for child devices.
+> > > > 
+> > > > If you shutdown the controller completely and detach the *host
+> > > > controller driver*, sure, it makes sense to detach drivers from child
+> > > > devices.  But that would be handled by the host controller .remove()
+> > > > method, not by the runtime suspend method.
+> > > I think it is time I give some background about why I chose to implement
+> > > .runtime_suspend() and .runtime_resume() APIs in the first place. We wanted to
+> > > powerdown PCIe controller if there is no link up (i.e. slot is open and no endpoint
+> > > devices are connected). We want to achieve this without returning a failure in
+> > > .probe() call. Given PCIe IP power partitioning is handled by generic power domain
+> > > framework, power partition gets unpowergated before .probe() gets called and gets
+> > > powergated either when a failure is returned in .probe() or when pm_runtime_put_sync()
+> > > is called. So, I chose to call pm_runtime_put_sync() in no-link-up scenario and chose
+> > > to implement .runtime_suspend() to handle all the cleanup work before PCIe partition
+> > > getting powergated. In fact, to match this, I'm doing all the PCIe IP bring up
+> > > activity in .runtime_resume() implementation which gets invoked by pm_runtime_get_sync()
+> > > which in turn is called in .probe() path. In fact the very dw_pcie_host_init() itself
+> > > is called from .runtime_resume() implementation. So, it is because of these reasons that
+> > > I called pci_stop_root_bus() and pci_remove_root_bus() as part of .runtime_suspend()
+> > > implementation as pm_runtime_put_sync() is called from both .remove() and also during
+> > > no-link-up scenario. Please do let me know if there is a better way to do this.
+> > 
+> > I think you're missing the case where .runtime_suspend() is called when
+> > there are no *active* devices on the bus, i.e. everyone is dormant. It
+> > doesn't mean that you need to remove them from the bus and re-probe them
+> > back on .runtime_resume(). Most of the drivers for PCI devices don't
+> > expect to be removed during idle, as they will configure the hardware to
+> > be in a "quick wake" state (see PCIe Dx power states).
+> > 
+> > You should probe and configure the bus during .probe() and remove and
+> > detach all drivers during .remove(). For .runtime_suspend() all you need
+> > to do is put the host controller in low power mode if it has one, or
+> > stop all clocks that are not required for responding to devices waking
+> > up from PCIe Dx state. For .runtime_resume() you then restore the
+> > clocks, without re-scanning the bus.
+> Since this is a host controller driver and the device as such is sitting on platform
+> bus instead of PCIe bus, is it still the case that .runtime_suspend() and
+> .runtime_resume() of this driver get called when devices on PCIe bus are idle?
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Wednesday, April 10, 2019 4:01 PM
-> To: Naga Sureshkumar Relli <nagasure@xilinx.com>
-> Cc: yuehaibing@huawei.com; vigneshr@ti.com; linux-kernel@vger.kernel.org;=
- linux-
-> spi@vger.kernel.org; Michal Simek <michals@xilinx.com>; nagasuresh12@gmai=
-l.com
-> Subject: Re: [LINUX PATCH v2] spi: spi-mem: Fix build error without CONFI=
-G_SPI_MEM
->=20
-> On Wed, Apr 10, 2019 at 11:14:45AM +0530, Naga Sureshkumar Relli wrote:
-> > When building with CONFIG_SPI_MEM is not set gc warns this:
-> >
-> > drivers/spi/spi-zynq-qspi.o: In function `zynq_qspi_supports_op':
-> > spi-zynq-qspi.c:(.text+0x1da): undefined reference to `spi_mem_default_=
-supports_op'
-> >
-> > Fixes: 67dca5e580f1 ("spi: spi-mem: Add support for Zynq QSPI
-> > controller")
-> >
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > Signed-off-by: Naga Sureshkumar Relli
-> > <naga.sureshkumar.relli@xilinx.com>
->=20
-> Why is there a signed off by for YueHaibing here?  Did they write the pat=
-ch (in which case the
-> authorship is incorrect)?
-Yes, YueHaibing has wrote this patch.
-I will update the Author name.
+The functions will be called when the device is determined to be idle,
+i.e. when there are no PM references being held by other drivers.
 
->=20
-> You've also got an extra blank line between the Fixes and the rest of the=
- tags which is unusual
-> and might confuse some tools.
-Ok I will remove that extra line.
+Think of it the other way: even if the device is sitting on the platform
+bus for configuration reasons, you don't want to turn it off when the
+PCIe bus needs to be active, right?
 
-Thanks,
-Naga Sureshkumar Relli
 
+> 
+> Having asked that, I start to feel what I'm doing as part of .runtime_suspend() and
+> .runtime_resume() doesn't really justify these API names. Since I know where I'm
+> calling pm_runtime_get/put_sync() APIs (which eventually call .runtime_resume/suspend())
+> I should probably move the content of these APIs before calling pm_runtime_get/put_sync().
+> Do you agree with that?
+
+Yeah, I think you are right. Also, I believe there are pm_runtime_get()
+calls in the pci framework as well, you need to audit the code, I
+haven't looked at it in a while.
+
+Best regards,
+Liviu
+
+> 
+> > 
+> > Best regards,
+> > Liviu
+> > 
+> > 
+> > > 
+> > > > 
+> > > > Bjorn
+> > > > 
+> > > 
+> > 
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
