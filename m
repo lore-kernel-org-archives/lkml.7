@@ -2,195 +2,77 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D31BC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22759C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195392082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BBz++SQN"
+	by mail.kernel.org (Postfix) with ESMTP id EB5322082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfDJVTP (ORCPT
+        id S1726588AbfDJVWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:19:15 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41912 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfDJVTP (ORCPT
+        Wed, 10 Apr 2019 17:22:45 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:54300 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfDJVWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:19:15 -0400
-Received: by mail-ed1-f66.google.com with SMTP id u2so3309841eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AQdyv44o0lMaGsIrdTDQzwqqE/OiS9gGi6TMQRjBRUk=;
-        b=BBz++SQNUnZ0EGaXv4WmfJwoV7K/q4gb20DYijx0E4QvVwiLqXutESPb3Ow0rwQPT+
-         y83bZHxSDBJBC/6naNdskwdrAhezX/R/P2BRl4/GfFnyH8LKG3qPLLs2lmsRv7WFuTi/
-         4InjpR97BfMbnYHoJOT65Os1iAiF2mF6nrznE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AQdyv44o0lMaGsIrdTDQzwqqE/OiS9gGi6TMQRjBRUk=;
-        b=bURH/vUoY0vMfyir6rqyzLHas8vwiAibL/DsVvJwfVQ/veX2eJdOVnrN9CASCFva44
-         O/5oDDrjF3A5fmv7a2emnjQ5ZxPKLYoLudDZOv2+qmM75zykDf8YmQi/pUonbL8jB2GQ
-         XcdO7Z5UtR5mWDaHHeBQPSlYx8lNhDVTcuNpi/k8btkxynBehDHwRzK6KsEMQtZA/Gs7
-         xCrj0M+QpwpjT3BbihTHrfc349a9WHULrdCd2scNZ58JwkGq6UMxft8H3VrbcQhEKXpq
-         Qw0iDSsJoKpSRTGdYLpDiJEuzSL8l+qaosLvtYcLMYBe6k/eYF9J+5evN50YLGcNJkU6
-         ItVA==
-X-Gm-Message-State: APjAAAX8CvqTZ8/xs1U0R0mOId9Fo9kk+O+sYmMNRy5eitFsu49iBkDw
-        aL3K39A3+PkpP3jULVfa8jfOwQ==
-X-Google-Smtp-Source: APXvYqxmxbjAr0yR/fINJ8z9PReCj5P+gnlxUeV2+d03yA/QHe0tF8fo2LBpOX+laf65HLYgwvA2wQ==
-X-Received: by 2002:a17:906:1856:: with SMTP id w22mr24951377eje.130.1554931153448;
-        Wed, 10 Apr 2019 14:19:13 -0700 (PDT)
-Received: from prevas-ravi.prevas.se (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id d14sm1539386edj.57.2019.04.10.14.19.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 14:19:10 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] bitops.h: sanitize rotate primitives
-Date:   Wed, 10 Apr 2019 23:19:06 +0200
-Message-Id: <20190410211906.2190-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Apr 2019 17:22:45 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id B730A80DBA;
+        Wed, 10 Apr 2019 23:22:41 +0200 (CEST)
+Date:   Wed, 10 Apr 2019 23:22:40 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH] drm/bochs: use simple display pipe
+Message-ID: <20190410212240.GA31691@ravnborg.org>
+References: <20190410074828.10296-1-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410074828.10296-1-kraxel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=UpRNyd4B c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=R4mCt31-z0I4RcOTawAA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ror32 implementation (word >> shift) | (word << (32 - shift) has
-undefined behaviour if shift is outside the [1, 31] range. Similarly
-for the 64 bit variants. Most callers pass a compile-time
-constant (naturally in that range), but there's an UBSAN report that
-these may actually be called with a shift count of 0.
+Hi Gerd.
 
-Instead of special-casing that, we can make them DTRT for all values
-of shift while also avoiding UB. For some reason, this was already
-partly done for rol32 (which was well-defined for [0, 31]). gcc 8
-recognizes these patterns as rotates, so for example
+>  
+>  #include <drm/drm_gem.h>
+>  
+> @@ -69,9 +70,8 @@ struct bochs_device {
+>  	struct edid *edid;
+>  
+>  	/* drm */
+> -	struct drm_device  *dev;
+> -	struct drm_crtc crtc;
+> -	struct drm_encoder encoder;
+> +	struct drm_device *dev;
+> +	struct drm_simple_display_pipe pipe;
+>  	struct drm_connector connector;
 
-__u32 rol32(__u32 word, unsigned int shift)
-{
-	return (word << (shift & 31)) | (word >> ((-shift) & 31));
-}
+Have you considered to embed drm_device in the bochs_device struct?
+This is the new way to do it.
 
-compiles to
+This should likely be a follow-up patch...
 
-0000000000000020 <rol32>:
-  20:   89 f8                   mov    %edi,%eax
-  22:   89 f1                   mov    %esi,%ecx
-  24:   d3 c0                   rol    %cl,%eax
-  26:   c3                      retq
+Rest of the patch looked good.
+Did not do a proper review but you can add my:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Older compilers unfortunately do not do as well, but this only affects
-the small minority of users that don't pass constants.
-
-Due to integer promotions, ro[lr]8 were already well-defined for
-shifts in [0, 8], and ro[lr]16 were mostly well-defined for shifts in
-[0, 16] (only mostly - u16 gets promoted to _signed_ int, so if bit 15
-is set, word << 16 is undefined). For consistency, update those as
-well.
-
-Reported-by: Ido Schimmel <idosch@mellanox.com>
-Cc: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- include/linux/bitops.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 602af23b98c7..cf074bce3eb3 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -60,7 +60,7 @@ static __always_inline unsigned long hweight_long(unsigned long w)
-  */
- static inline __u64 rol64(__u64 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (64 - shift));
-+	return (word << (shift & 63)) | (word >> ((-shift) & 63));
- }
- 
- /**
-@@ -70,7 +70,7 @@ static inline __u64 rol64(__u64 word, unsigned int shift)
-  */
- static inline __u64 ror64(__u64 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (64 - shift));
-+	return (word >> (shift & 63)) | (word << ((-shift) & 63));
- }
- 
- /**
-@@ -80,7 +80,7 @@ static inline __u64 ror64(__u64 word, unsigned int shift)
-  */
- static inline __u32 rol32(__u32 word, unsigned int shift)
- {
--	return (word << shift) | (word >> ((-shift) & 31));
-+	return (word << (shift & 31)) | (word >> ((-shift) & 31));
- }
- 
- /**
-@@ -90,7 +90,7 @@ static inline __u32 rol32(__u32 word, unsigned int shift)
-  */
- static inline __u32 ror32(__u32 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (32 - shift));
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
- }
- 
- /**
-@@ -100,7 +100,7 @@ static inline __u32 ror32(__u32 word, unsigned int shift)
-  */
- static inline __u16 rol16(__u16 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (16 - shift));
-+	return (word << (shift & 15)) | (word >> ((-shift) & 15));
- }
- 
- /**
-@@ -110,7 +110,7 @@ static inline __u16 rol16(__u16 word, unsigned int shift)
-  */
- static inline __u16 ror16(__u16 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (16 - shift));
-+	return (word >> (shift & 15)) | (word << ((-shift) & 15));
- }
- 
- /**
-@@ -120,7 +120,7 @@ static inline __u16 ror16(__u16 word, unsigned int shift)
-  */
- static inline __u8 rol8(__u8 word, unsigned int shift)
- {
--	return (word << shift) | (word >> (8 - shift));
-+	return (word << (shift & 7)) | (word >> ((-shift) & 7));
- }
- 
- /**
-@@ -130,7 +130,7 @@ static inline __u8 rol8(__u8 word, unsigned int shift)
-  */
- static inline __u8 ror8(__u8 word, unsigned int shift)
- {
--	return (word >> shift) | (word << (8 - shift));
-+	return (word >> (shift & 7)) | (word << ((-shift) & 7));
- }
- 
- /**
--- 
-2.20.1
-
+	Sam
