@@ -2,242 +2,354 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED1FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826F9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB52D20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YEv1382i"
+	by mail.kernel.org (Postfix) with ESMTP id 4402120850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbfDJNkH (ORCPT
+        id S1731747AbfDJNkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:40:07 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:41604 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbfDJNkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:40:05 -0400
-Received: by mail-vk1-f195.google.com with SMTP id d15so559992vka.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sn5HKSW/EV0nlOWbnLpY+Fd+1g+qo5O/g3DXMlwf0kM=;
-        b=YEv1382inFweWm+G1U0lRVzwb0YoC4DLOxCoav3toO/5oYQ+/OdjsPWvH+lO+f0mzR
-         0LKLYPNvrhAdHoGz+CpEpBJ8fFbhiXlmAiKK1bxCud9pmcGrrf995TgpBNME2CKv9OeV
-         mUf2EIkGDWYlo1obEiwz5d+DlAnJprrahYWfTdbEvc2yuuwLL8t9+fMw7fkzPMSuW8AU
-         zc+NfUBtGwWu0H1SCDOisEUj2RJyYZDef4iOf84SA8kbMbgT3lfZTc7gnH4lMagXVZo2
-         lohi1J/fcYI4aSWJdn2gqiMT4u+9qmUI/Hj7Zlhp58DJY2DBm+5eA99+BhSmaNnDds5T
-         5d0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sn5HKSW/EV0nlOWbnLpY+Fd+1g+qo5O/g3DXMlwf0kM=;
-        b=EM0eoQ3xRku7iFpGDdYAkqcOqcO8mMbQ/MFvv6GGi9FFaBTpCIdmfg19aDPHiI4tuZ
-         g/rLlTCrkAv4OklPZAYJoaGO0mhWZig4TmG6dalP4HrDt9uBrC+qX09h3hgV4aQZzAOX
-         aYPoEE5JhK/zBx997L9weEQSRgEKPNCvDSN7pQ1yVGZVgBOGdDgBAiqvGHiLffb8kdmo
-         aBZIY5+O1LhSauvQvWQnFbZgFOIQpjz0kHLDR65vJFSj2bwGxhRlsyCgXIIRpUXYsgQ/
-         zTBvJeY1fdkUS7gYqblJF9baXLfY9eoQa5+pmjrVtBCNzZZmltfQSiHyl96iGm3+k+t+
-         IXog==
-X-Gm-Message-State: APjAAAWfvTMzt+yLF25KCa/2cEqArn6YjOJJi3pnzQ3zIWza8842A4aK
-        GpWJX7KyvcYGgEpXT2N1viOoiGi4ZyfivCfVozG5sw==
-X-Google-Smtp-Source: APXvYqwKYXTlLzULVgtEN6lJ98Uu8rjpyuD00ssrtJFjSDAEv1GKhxUHHjfyUyg8SjDkahgooR5BHqcfTCJ7+ycFbDY=
-X-Received: by 2002:a1f:aa93:: with SMTP id t141mr22915246vke.64.1554903603791;
- Wed, 10 Apr 2019 06:40:03 -0700 (PDT)
+        Wed, 10 Apr 2019 09:40:20 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36687 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732417AbfDJNhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:37:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="314707267"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 06:37:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id CD031AE7; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v4 30/36] thunderbolt: Add support for DMA tunnels
+Date:   Wed, 10 Apr 2019 16:36:47 +0300
+Message-Id: <20190410133653.88061-31-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
+References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <20190410102754.387743324@linutronix.de> <20190410103645.315084160@linutronix.de>
-In-Reply-To: <20190410103645.315084160@linutronix.de>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Wed, 10 Apr 2019 15:39:52 +0200
-Message-ID: <CAG_fn=U5vWCCRbCTABCa5GqBrkeT0gQyyUnUgSQ5wJhSuNw94A@mail.gmail.com>
-Subject: Re: [RFC patch 19/41] lib/stackdepot: Provide functions which operate
- on plain storage arrays
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 1:05 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The struct stack_trace indirection in the stack depot functions is a trul=
-y
-> pointless excercise which requires horrible code at the callsites.
->
-> Provide interfaces based on plain storage arrays.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Alexander Potapenko <glider@google.com>
-> ---
->  include/linux/stackdepot.h |    4 ++
->  lib/stackdepot.c           |   66 ++++++++++++++++++++++++++++++++------=
--------
->  2 files changed, 51 insertions(+), 19 deletions(-)
->
-> --- a/include/linux/stackdepot.h
-> +++ b/include/linux/stackdepot.h
-> @@ -26,7 +26,11 @@ typedef u32 depot_stack_handle_t;
->  struct stack_trace;
->
->  depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t f=
-lags);
-> +depot_stack_handle_t stack_depot_save(unsigned long *entries,
-> +                                     unsigned int nr_entries, gfp_t gfp_=
-flags);
->
->  void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *=
-trace);
-> +unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-> +                              unsigned long **entries);
->
->  #endif
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -194,40 +194,56 @@ static inline struct stack_record *find_
->         return NULL;
->  }
->
-> -void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *=
-trace)
-> +/**
-> + * stack_depot_fetch - Fetch stack entries from a depot
-> + *
-> + * @entries:           Pointer to store the entries address
-> + */
-> +unsigned int stack_depot_fetch(depot_stack_handle_t handle,
-> +                              unsigned long **entries)
->  {
->         union handle_parts parts =3D { .handle =3D handle };
->         void *slab =3D stack_slabs[parts.slabindex];
->         size_t offset =3D parts.offset << STACK_ALLOC_ALIGN;
->         struct stack_record *stack =3D slab + offset;
->
-> -       trace->nr_entries =3D trace->max_entries =3D stack->size;
-> -       trace->entries =3D stack->entries;
-> -       trace->skip =3D 0;
-> +       *entries =3D stack->entries;
-> +       return stack->size;
-> +}
-> +EXPORT_SYMBOL_GPL(stack_depot_fetch);
-> +
-> +void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *=
-trace)
-> +{
-> +       unsigned int nent =3D stack_depot_fetch(handle, &trace->entries);
-> +
-> +       trace->max_entries =3D trace->nr_entries =3D nent;
->  }
->  EXPORT_SYMBOL_GPL(depot_fetch_stack);
->
->  /**
-> - * depot_save_stack - save stack in a stack depot.
-> - * @trace - the stacktrace to save.
-> - * @alloc_flags - flags for allocating additional memory if required.
-> + * stack_depot_save - Save a stack trace from an array
->   *
-> - * Returns the handle of the stack struct stored in depot.
-> + * @entries:           Pointer to storage array
-> + * @nr_entries:                Size of the storage array
-> + * @alloc_flags:       Allocation gfp flags
-> + *
-> + * Returns the handle of the stack struct stored in depot
->   */
-> -depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
-> -                                   gfp_t alloc_flags)
-> +depot_stack_handle_t stack_depot_save(unsigned long *entries,
-> +                                     unsigned int nr_entries,
-> +                                     gfp_t alloc_flags)
->  {
-> -       u32 hash;
-> -       depot_stack_handle_t retval =3D 0;
->         struct stack_record *found =3D NULL, **bucket;
-> -       unsigned long flags;
-> +       depot_stack_handle_t retval =3D 0;
->         struct page *page =3D NULL;
->         void *prealloc =3D NULL;
-> +       unsigned long flags;
-> +       u32 hash;
->
-> -       if (unlikely(trace->nr_entries =3D=3D 0))
-> +       if (unlikely(nr_entries =3D=3D 0))
->                 goto fast_exit;
->
-> -       hash =3D hash_stack(trace->entries, trace->nr_entries);
-> +       hash =3D hash_stack(entries, nr_entries);
->         bucket =3D &stack_table[hash & STACK_HASH_MASK];
->
->         /*
-> @@ -235,8 +251,8 @@ depot_stack_handle_t depot_save_stack(st
->          * The smp_load_acquire() here pairs with smp_store_release() to
->          * |bucket| below.
->          */
-> -       found =3D find_stack(smp_load_acquire(bucket), trace->entries,
-> -                          trace->nr_entries, hash);
-> +       found =3D find_stack(smp_load_acquire(bucket), entries,
-> +                          nr_entries, hash);
->         if (found)
->                 goto exit;
->
-> @@ -264,10 +280,10 @@ depot_stack_handle_t depot_save_stack(st
->
->         spin_lock_irqsave(&depot_lock, flags);
->
-> -       found =3D find_stack(*bucket, trace->entries, trace->nr_entries, =
-hash);
-> +       found =3D find_stack(*bucket, entries, nr_entries, hash);
->         if (!found) {
->                 struct stack_record *new =3D
-> -                       depot_alloc_stack(trace->entries, trace->nr_entri=
-es,
-> +                       depot_alloc_stack(entries, nr_entries,
->                                           hash, &prealloc, alloc_flags);
->                 if (new) {
->                         new->next =3D *bucket;
-> @@ -297,4 +313,16 @@ depot_stack_handle_t depot_save_stack(st
->  fast_exit:
->         return retval;
->  }
-> +EXPORT_SYMBOL_GPL(stack_depot_save);
-> +
-> +/**
-> + * depot_save_stack - save stack in a stack depot.
-> + * @trace - the stacktrace to save.
-> + * @alloc_flags - flags for allocating additional memory if required.
-> + */
-> +depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
-> +                                     gfp_t alloc_flags)
-> +{
-> +       return stack_depot_save(trace->entries, trace->nr_entries, alloc_=
-flags);
-> +}
->  EXPORT_SYMBOL_GPL(depot_save_stack);
->
->
+In addition to PCIe and Display Port tunnels it is also possible to
+create tunnels that forward DMA traffic from the host interface adapter
+(NHI) to a NULL port that is connected to another domain through a
+Thunderbolt cable. These tunnels can be used to carry software messages
+such as networking packets.
 
+To support this we introduce another tunnel type (TB_TUNNEL_DMA) that
+supports paths from NHI to NULL port and back.
 
---=20
-Alexander Potapenko
-Software Engineer
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/thunderbolt/path.c    | 22 +++++++--
+ drivers/thunderbolt/switch.c  | 22 +++++++++
+ drivers/thunderbolt/tb.h      |  4 ++
+ drivers/thunderbolt/tb_regs.h |  3 ++
+ drivers/thunderbolt/tunnel.c  | 93 ++++++++++++++++++++++++++++++++++-
+ drivers/thunderbolt/tunnel.h  | 10 ++++
+ 6 files changed, 149 insertions(+), 5 deletions(-)
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
+index 3fc92881a197..e4c22f53ef4d 100644
+--- a/drivers/thunderbolt/path.c
++++ b/drivers/thunderbolt/path.c
+@@ -341,7 +341,8 @@ static void __tb_path_deallocate_nfc(struct tb_path *path, int first_hop)
+ 	}
+ }
+ 
+-static int __tb_path_deactivate_hop(struct tb_port *port, int hop_index)
++static int __tb_path_deactivate_hop(struct tb_port *port, int hop_index,
++				    bool clear_fc)
+ {
+ 	struct tb_regs_hop hop;
+ 	ktime_t timeout;
+@@ -369,8 +370,20 @@ static int __tb_path_deactivate_hop(struct tb_port *port, int hop_index)
+ 		if (ret)
+ 			return ret;
+ 
+-		if (!hop.pending)
++		if (!hop.pending) {
++			if (clear_fc) {
++				/* Clear flow control */
++				hop.ingress_fc = 0;
++				hop.egress_fc = 0;
++				hop.ingress_shared_buffer = 0;
++				hop.egress_shared_buffer = 0;
++
++				return tb_port_write(port, &hop, TB_CFG_HOPS,
++						     2 * hop_index, 2);
++			}
++
+ 			return 0;
++		}
+ 
+ 		usleep_range(10, 20);
+ 	} while (ktime_before(ktime_get(), timeout));
+@@ -384,7 +397,8 @@ static void __tb_path_deactivate_hops(struct tb_path *path, int first_hop)
+ 
+ 	for (i = first_hop; i < path->path_length; i++) {
+ 		res = __tb_path_deactivate_hop(path->hops[i].in_port,
+-					       path->hops[i].in_hop_index);
++					       path->hops[i].in_hop_index,
++					       path->clear_fc);
+ 		if (res && res != -ENODEV)
+ 			tb_port_warn(path->hops[i].in_port,
+ 				     "hop deactivation failed for hop %d, index %d\n",
+@@ -459,7 +473,7 @@ int tb_path_activate(struct tb_path *path)
+ 
+ 		/* If it is left active deactivate it first */
+ 		__tb_path_deactivate_hop(path->hops[i].in_port,
+-				path->hops[i].in_hop_index);
++				path->hops[i].in_hop_index, path->clear_fc);
+ 
+ 		/* dword 0 */
+ 		hop.next_hop = path->hops[i].next_hop_index;
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 1de1afa24182..ecf53d986a5c 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -555,6 +555,28 @@ int tb_port_add_nfc_credits(struct tb_port *port, int credits)
+ 			     TB_CFG_PORT, 4, 1);
+ }
+ 
++/**
++ * tb_port_set_initial_credits() - Set initial port link credits allocated
++ * @port: Port to set the initial credits
++ * @credits: Number of credits to to allocate
++ *
++ * Set initial credits value to be used for ingress shared buffering.
++ */
++int tb_port_set_initial_credits(struct tb_port *port, u32 credits)
++{
++	u32 data;
++	int ret;
++
++	ret = tb_port_read(port, &data, TB_CFG_PORT, 5, 1);
++	if (ret)
++		return ret;
++
++	data &= ~TB_PORT_LCA_MASK;
++	data |= (credits << TB_PORT_LCA_SHIFT) & TB_PORT_LCA_MASK;
++
++	return tb_port_write(port, &data, TB_CFG_PORT, 5, 1);
++}
++
+ /**
+  * tb_port_clear_counter() - clear a counter in TB_CFG_COUNTER
+  *
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 89b5d18f6035..119a00837992 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -207,6 +207,8 @@ enum tb_path_port {
+  * @weight: Weight of the path inside the priority group
+  * @drop_packages: Drop packages from queue tail or head
+  * @activated: Is the path active
++ * @clear_fc: Clear all flow control from the path config space entries
++ *	      when deactivating this path
+  * @hops: Path hops
+  * @path_length: How many hops the path uses
+  *
+@@ -227,6 +229,7 @@ struct tb_path {
+ 	int weight:4;
+ 	bool drop_packages;
+ 	bool activated;
++	bool clear_fc;
+ 	struct tb_path_hop *hops;
+ 	int path_length;
+ };
+@@ -583,6 +586,7 @@ static inline bool tb_switch_is_fr(const struct tb_switch *sw)
+ 
+ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
+ int tb_port_add_nfc_credits(struct tb_port *port, int credits);
++int tb_port_set_initial_credits(struct tb_port *port, u32 credits);
+ int tb_port_clear_counter(struct tb_port *port, int counter);
+ int tb_port_alloc_in_hopid(struct tb_port *port, int hopid, int max_hopid);
+ void tb_port_release_in_hopid(struct tb_port *port, int hopid);
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index 3ce705184e2c..deb9d4a977b9 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -215,6 +215,9 @@ struct tb_regs_port_header {
+ #define TB_PORT_NFC_CREDITS_MASK	GENMASK(19, 0)
+ #define TB_PORT_MAX_CREDITS_SHIFT	20
+ #define TB_PORT_MAX_CREDITS_MASK	GENMASK(26, 20)
++/* DWORD 5 */
++#define TB_PORT_LCA_SHIFT		22
++#define TB_PORT_LCA_MASK		GENMASK(28, 22)
+ 
+ /* Display Port adapter registers */
+ 
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 0bc6639c6e74..9f9b26b12d0a 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -27,7 +27,10 @@
+ #define TB_DP_AUX_PATH_OUT		1
+ #define TB_DP_AUX_PATH_IN		2
+ 
+-static const char * const tb_tunnel_names[] = { "PCI", "DP" };
++#define TB_DMA_PATH_OUT			0
++#define TB_DMA_PATH_IN			1
++
++static const char * const tb_tunnel_names[] = { "PCI", "DP", "DMA" };
+ 
+ #define __TB_TUNNEL_PRINT(level, tunnel, fmt, arg...)                   \
+ 	do {                                                            \
+@@ -471,6 +474,94 @@ struct tb_tunnel *tb_tunnel_alloc_dp(struct tb *tb, struct tb_port *in,
+ 	return NULL;
+ }
+ 
++static u32 tb_dma_credits(struct tb_port *nhi)
++{
++	u32 max_credits;
++
++	max_credits = (nhi->config.nfc_credits & TB_PORT_MAX_CREDITS_MASK) >>
++		TB_PORT_MAX_CREDITS_SHIFT;
++	return min(max_credits, 13U);
++}
++
++static int tb_dma_activate(struct tb_tunnel *tunnel, bool active)
++{
++	struct tb_port *nhi = tunnel->src_port;
++	u32 credits;
++
++	credits = active ? tb_dma_credits(nhi) : 0;
++	return tb_port_set_initial_credits(nhi, credits);
++}
++
++static void tb_dma_init_path(struct tb_path *path, unsigned int isb,
++			     unsigned int efc, u32 credits)
++{
++	int i;
++
++	path->egress_fc_enable = efc;
++	path->ingress_fc_enable = TB_PATH_ALL;
++	path->egress_shared_buffer = TB_PATH_NONE;
++	path->ingress_shared_buffer = isb;
++	path->priority = 5;
++	path->weight = 1;
++	path->clear_fc = true;
++
++	for (i = 0; i < path->path_length; i++)
++		path->hops[i].initial_credits = credits;
++}
++
++/**
++ * tb_tunnel_alloc_dma() - allocate a DMA tunnel
++ * @tb: Pointer to the domain structure
++ * @nhi: Host controller port
++ * @dst: Destination null port which the other domain is connected to
++ * @transmit_ring: NHI ring number used to send packets towards the
++ *		   other domain
++ * @transmit_path: HopID used for transmitting packets
++ * @receive_ring: NHI ring number used to receive packets from the
++ *		  other domain
++ * @reveive_path: HopID used for receiving packets
++ *
++ * Return: Returns a tb_tunnel on success or NULL on failure.
++ */
++struct tb_tunnel *tb_tunnel_alloc_dma(struct tb *tb, struct tb_port *nhi,
++				      struct tb_port *dst, int transmit_ring,
++				      int transmit_path, int receive_ring,
++				      int receive_path)
++{
++	struct tb_tunnel *tunnel;
++	struct tb_path *path;
++	u32 credits;
++
++	tunnel = tb_tunnel_alloc(tb, 2, TB_TUNNEL_DMA);
++	if (!tunnel)
++		return NULL;
++
++	tunnel->activate = tb_dma_activate;
++	tunnel->src_port = nhi;
++	tunnel->dst_port = dst;
++
++	credits = tb_dma_credits(nhi);
++
++	path = tb_path_alloc(tb, dst, receive_path, nhi, receive_ring, 0, "DMA RX");
++	if (!path) {
++		tb_tunnel_free(tunnel);
++		return NULL;
++	}
++	tb_dma_init_path(path, TB_PATH_NONE, TB_PATH_SOURCE | TB_PATH_INTERNAL,
++			 credits);
++	tunnel->paths[TB_DMA_PATH_IN] = path;
++
++	path = tb_path_alloc(tb, nhi, transmit_ring, dst, transmit_path, 0, "DMA TX");
++	if (!path) {
++		tb_tunnel_free(tunnel);
++		return NULL;
++	}
++	tb_dma_init_path(path, TB_PATH_SOURCE, TB_PATH_ALL, credits);
++	tunnel->paths[TB_DMA_PATH_OUT] = path;
++
++	return tunnel;
++}
++
+ /**
+  * tb_tunnel_free() - free a tunnel
+  * @tunnel: Tunnel to be freed
+diff --git a/drivers/thunderbolt/tunnel.h b/drivers/thunderbolt/tunnel.h
+index 0373779f43ba..c68bbcd3a62c 100644
+--- a/drivers/thunderbolt/tunnel.h
++++ b/drivers/thunderbolt/tunnel.h
+@@ -14,6 +14,7 @@
+ enum tb_tunnel_type {
+ 	TB_TUNNEL_PCI,
+ 	TB_TUNNEL_DP,
++	TB_TUNNEL_DMA,
+ };
+ 
+ /**
+@@ -47,6 +48,10 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+ struct tb_tunnel *tb_tunnel_discover_dp(struct tb *tb, struct tb_port *in);
+ struct tb_tunnel *tb_tunnel_alloc_dp(struct tb *tb, struct tb_port *in,
+ 				     struct tb_port *out);
++struct tb_tunnel *tb_tunnel_alloc_dma(struct tb *tb, struct tb_port *nhi,
++				      struct tb_port *dst, int transmit_ring,
++				      int transmit_path, int receive_ring,
++				      int receive_path);
+ 
+ void tb_tunnel_free(struct tb_tunnel *tunnel);
+ int tb_tunnel_activate(struct tb_tunnel *tunnel);
+@@ -64,5 +69,10 @@ static inline bool tb_tunnel_is_dp(const struct tb_tunnel *tunnel)
+ 	return tunnel->type == TB_TUNNEL_DP;
+ }
+ 
++static inline bool tb_tunnel_is_dma(const struct tb_tunnel *tunnel)
++{
++	return tunnel->type == TB_TUNNEL_DMA;
++}
++
+ #endif
+ 
+-- 
+2.20.1
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
