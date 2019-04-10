@@ -2,93 +2,95 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F5BC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED6FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B83B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Iq5j8cXf"
+	by mail.kernel.org (Postfix) with ESMTP id 90004206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbfDJR7R (ORCPT
+        id S1731090AbfDJSCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:59:17 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41934 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfDJR7R (ORCPT
+        Wed, 10 Apr 2019 14:02:11 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40800 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728749AbfDJSCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:59:17 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v7so2550637oie.8;
-        Wed, 10 Apr 2019 10:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tzr3rEdrvu7VkWFExmY/yj5g2tkhcJNdoL9bLb2rWmc=;
-        b=Iq5j8cXfjQYpFcTlrEyKBE0/Fd0H+FfPBdggiMagMblnQ0n55PGceiQM52IAfvJCtT
-         7E/t27C1eiASs4KR0C27VubsWktMmfnYohL6KXuLZgWjjeYuAABQ576odJyyZ70DRrG5
-         hX+jVpZo4AYBz852WcAZvsS60C2U1+1yDtKhuk9nAILjvzkUf1eP1jO0RN+sK98YXkKV
-         qL7z5nHKdAMjXVHvoSUdrGJKrHbARSt8lvFUPK04ZCAWZYeq7/2trrCZ68j7aSAMqfiN
-         r5cWcHhhY9/71wkFtDiaFBCYfKXBQmbwmeXmjHAX9n7cTHw+P20lGel36JoRD1NWokeM
-         H4aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tzr3rEdrvu7VkWFExmY/yj5g2tkhcJNdoL9bLb2rWmc=;
-        b=jEOW1TeWUZgI0cfmnFxTBrrAE8cnvwAPFZ2aGOcLZQRadG8O9/HnNCcHXyfrzlNzTI
-         CPZbtJRwi0cNBXbwqBVPjvJpLTyOZllm3rSfll9y8Qnq9ilKGNlnbWageh68Mh2LInof
-         Z8Lf1j4ENqyGSHXAbTj4cUmAkXmImr0NZgXRj4KQuLCC9u5xJy+6RBzFj3ayVQRV3aqW
-         /ziuj8cMwC46cIwxY8rEnIXfmXW3uoMlh6K7Wv05NBgrBDl1qmAs1nPTs1/FpZjVqnoq
-         ynUUClPCtR5frqFoOf0euUicTYYNuTnNTTMCMmASQXsSHnM7w6OK3h4cbOnt0aiexObF
-         b6jQ==
-X-Gm-Message-State: APjAAAVzZGFiGmP+aRrTj9dAkBFFD0UcMPaGMPL5PEEC9ygserqXw+8N
-        uJqPaeFIIiD2isBX7uhLaE9OyeTrlykpZuMA0wY=
-X-Google-Smtp-Source: APXvYqzHil5sGmhkf3rF0VnxRnRsbiC7CjXpbHcut3ueXny08klgusL5vpDGa3bWeLIzK3D8FsDzSXIypOpPz8pw5ko=
-X-Received: by 2002:aca:ecd1:: with SMTP id k200mr3544573oih.15.1554919156366;
- Wed, 10 Apr 2019 10:59:16 -0700 (PDT)
+        Wed, 10 Apr 2019 14:02:10 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hEHXp-0008Fj-1d; Wed, 10 Apr 2019 18:01:57 +0000
+Date:   Wed, 10 Apr 2019 19:01:57 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     James Morris <jmorris@namei.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, pakki001@umn.edu,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] security: inode: fix a missing check for
+ securityfs_create_file
+Message-ID: <20190410180156.GZ2217@ZenIV.linux.org.uk>
+References: <alpine.LRH.2.21.1903160608080.2905@namei.org>
+ <20190315210025.17832-1-kjlu@umn.edu>
+ <alpine.LRH.2.21.1904110334380.25754@namei.org>
 MIME-Version: 1.0
-References: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
- <9f04a619e8a2cc44f5b1fe299a08f237f069d56d.1554874961.git.chunfeng.yun@mediatek.com>
-In-Reply-To: <9f04a619e8a2cc44f5b1fe299a08f237f069d56d.1554874961.git.chunfeng.yun@mediatek.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 10 Apr 2019 19:59:05 +0200
-Message-ID: <CAFBinCBoQ6C7MrtwSctDgFPpXnaRVKm490piGOFmN2i2PV3GOQ@mail.gmail.com>
-Subject: Re: [v2 PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by devm_clk_get_optional()
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Motoya Tanigawa <tanigawa.motoya@socionext.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.21.1904110334380.25754@namei.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 8:13 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
->
-> Use devm_clk_get_optional() to get optional clock
->
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-now also:
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-(on my Khadas VIM by manually adjusting meson-gxl.dtsi and dropping
-the clocks in usb2_phy0 and usb2_phy1)
+On Thu, Apr 11, 2019 at 03:34:43AM +1000, James Morris wrote:
+> On Fri, 15 Mar 2019, Kangjie Lu wrote:
+> 
+> > securityfs_create_file  may fail. The fix checks its status and
+> > returns the error code upstream if it fails.
+> > 
+> > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> > 
+> 
+> Applied to
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-general
+> 
+> > ---
+> > Return the exact error code upstream.
+> > ---
+> >  security/inode.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/security/inode.c b/security/inode.c
+> > index b7772a9b315e..667f8b15027d 100644
+> > --- a/security/inode.c
+> > +++ b/security/inode.c
+> > @@ -339,6 +339,11 @@ static int __init securityfs_init(void)
+> >  #ifdef CONFIG_SECURITY
+> >  	lsm_dentry = securityfs_create_file("lsm", 0444, NULL, NULL,
+> >  						&lsm_ops);
+> > +	if (IS_ERR(lsm_dentry)) {
+> > +		unregister_filesystem(&fs_type);
+> > +		sysfs_remove_mount_point(kernel_kobj, "security");
+> > +		return PTR_ERR(lsm_dentry);
+> > +	}
+
+Rather bad way to do it - generally, register_filesystem() should be
+the last thing done by initialization.  Any modular code that
+does unregister_filesystem() on failure exit is flat-out broken;
+here it's not instantly FUBAR, but it's a bloody bad example.
+
+What's more, why not let simple_fill_super() do it?  Just
+static int fill_super(struct super_block *sb, void *data, int silent)
+{
+        static const struct tree_descr files[] = {
+#ifdef CONFIG_SECURITY
+		{"lsm", &lsm_ops, 0444},
+#endif
+		{""}
+	};
+
+and to hell with that call of securityfs_create_file() and all its
+failure handling...
