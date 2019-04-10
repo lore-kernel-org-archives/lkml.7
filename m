@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B9EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9509C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10310217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A99620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 00:58:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FX/rCSPm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsNCqSR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfDJA55 (ORCPT
+        id S1727156AbfDJA6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 20:57:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40199 "EHLO
+        Tue, 9 Apr 2019 20:58:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38627 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfDJA5s (ORCPT
+        with ESMTP id S1726967AbfDJA5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 20:57:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z24so650166wmi.5;
-        Tue, 09 Apr 2019 17:57:47 -0700 (PDT)
+        Tue, 9 Apr 2019 20:57:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w15so659535wmc.3;
+        Tue, 09 Apr 2019 17:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E//VdZKilzQL6n2wexZY4a/h0DP2YFKtTZZSXDrFjpo=;
-        b=FX/rCSPmmckwU4jPQPgcniNhEpgppdqb67fI1IkTtLKIjfrqOnIfSTHam3aR9eAJPq
-         JXL/k71Y2V+x2cF6jvC5yPuT1VeOprotT3gKJlj7PtCDFUiwhbj1JtjF028ZH6eLlhmk
-         7j0lUd0x1C4a8YZSChTMy/0eloqibCdnjTsomxu+z5odSfhQGzFyJq4G2EkFrS80PdbE
-         jHH3/lSbBUjLllK0oGWMmzPXOYgi+19j82D8cKXUHkhVnfbr9OgSe/iTKorTVjw3ZzPT
-         KLs03oHWrpkML7KakOMveaPU1KZfkghL8gJ9Xg8k3Pg6tByoJ4KOi5Icpmsn9t+25qh5
-         ZipQ==
+        bh=TdjwEC5UZ5nLwnsGRtDKPuSdGfH49FK0iMI1xBTTo2k=;
+        b=SsNCqSR3zpIzrZ/IQ15gOo42eyrXeOohizgKiGbjBLcymufUnaBhLXnZbNppWzDClk
+         ErbEzKxGWOtSA8TsYQRwU+lQq5t8R1EDl89as0pFR1AnZHA1wbdSDEelr6sOivssTnxA
+         Jdf+LAZB68Wd3CoTPeAVYryduj8qH52/2d5FQOQpSidH+I/ZkJo2qVGzVAzlDg/5pDZh
+         GHbXlUFu9EylZLhuYVKlht/aAhsLE2eDAnTmHxTo31IJJWvnMbI3FaNDlC1N1LoTgl//
+         OWH4QiPUwEF+o8sf0sw8KztvkWsSSYvjMdcliRxnhzqo0NkC96R7ipOWWtEYiw1LnuVu
+         dFEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=E//VdZKilzQL6n2wexZY4a/h0DP2YFKtTZZSXDrFjpo=;
-        b=Mo+mu6c2QhAyhvNuk4hYnqFgyDjBPazFACHPQDJ6+MRnGfMDRRLSC5L05ajnIx5Qg2
-         B8dNcyY4QtcF3NgRY6CLWLnVL3Krkj2hhDRnEv6BNT5eLE0vWOMwyqJJGSvNt3eyIZac
-         fMOxwdsJU5GutJm8IIG3XDrEsbIonQiVjUtr+5CRfPo+She4YIE0fjf39nvcqiHHJ5im
-         ikWWBiOni9K7VcgTJdrQZprT2y8xv3O12DhbXP3RkarkWp8lGpiyTLg1Hjfyp+MWPx02
-         4Af7rlvSfwgtAx6ljZVJuIfNGVpkuyAZ0NtMsxT9sHk6TYNSbNtX8U4lPZ9AZDnYe6HY
-         wKfQ==
-X-Gm-Message-State: APjAAAUUxcYICB39QlKqVGFLUZ4pXSDzoZZmlvXp0YDHqykIhezsjW3I
-        V4+dWbwAIeBHYcirwAL08oCvOOBbMWM=
-X-Google-Smtp-Source: APXvYqxQqt80oTbgp+51VJLXeKwTk8Ah99k2+Xlzkwy/xy7R9SIZk6CrXWVOh39CtPlyiF2152xypg==
-X-Received: by 2002:a1c:cfcb:: with SMTP id f194mr664180wmg.51.1554857866577;
-        Tue, 09 Apr 2019 17:57:46 -0700 (PDT)
+        bh=TdjwEC5UZ5nLwnsGRtDKPuSdGfH49FK0iMI1xBTTo2k=;
+        b=VpfAVlwVg2/28r9fRlUTrkz8dnA0K/J4Ei+w7XZQICvZypOEV6sD2lr2Y5eu0j9NbT
+         4/YwoU8TiOLSOnfxaZAHBMnWOIxWRp7TCTaVo6JADl8Xj/DPBH/g5CB1EwH3AQbHaoh7
+         z1bxx/uldj4Wk3DDu00oCNTc3zVKvcqATO78GJssfrBCk+mp9MkHSaMQ7FPMrhsFyVE1
+         VAZY68LvsOx97H1O1KRfU3WayvWW44b5Xn3tjO8ITp/+R8uWXQp/DPcf220syYFaKu6Y
+         XSx2f9EnT8beX3LHK95ciDxb3MdT4lftslADzgUcFtSXk5+uZb2gKRQYEzudWB3TdT7c
+         Bsyg==
+X-Gm-Message-State: APjAAAVbgw033wPK367XV8yVjMi2YLt3NUG9CMIVbJcR1lNY2p/tBcst
+        kmL1aZUfY3uP1fs+KLthp70=
+X-Google-Smtp-Source: APXvYqxhJdkhD37qebbRd0CQl3qkl2+Cqztp9KSAPzd+AwIcrMsOUGpfVNLT3sUYKex+yyQDE9uYdQ==
+X-Received: by 2002:a1c:6a0d:: with SMTP id f13mr736454wmc.76.1554857862958;
+        Tue, 09 Apr 2019 17:57:42 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.45
+        by smtp.gmail.com with ESMTPSA id s16sm27448683wrw.58.2019.04.09.17.57.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 17:57:46 -0700 (PDT)
+        Tue, 09 Apr 2019 17:57:42 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         georg.waibel@sensor-technik.de, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 net-next 22/22] dt-bindings: net: dsa: Add documentation for NXP SJA1105 driver
-Date:   Wed, 10 Apr 2019 03:57:00 +0300
-Message-Id: <20190410005700.31582-23-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 19/22] net: dsa: sja1105: Prevent PHY jabbering during switch reset
+Date:   Wed, 10 Apr 2019 03:56:57 +0300
+Message-Id: <20190410005700.31582-20-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190410005700.31582-1-olteanv@gmail.com>
 References: <20190410005700.31582-1-olteanv@gmail.com>
@@ -71,180 +71,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Resetting the switch at runtime is currently done while changing the
+vlan_filtering setting (due to the required TPID change).
+
+But reset is asynchronous with packet egress, and the switch core will
+not wait for egress to finish before carrying on with the reset
+operation.
+
+As a result, a connected PHY such as the BCM5464 would see an
+unterminated Ethernet frame and start to jabber (repeat the last seen
+Ethernet symbols - jabber is by definition an oversized Ethernet frame
+with bad FCS). This behavior is strange in itself, but it also causes
+the MACs of some link partners (such as the FRDM-LS1012A) to completely
+lock up.
+
+So as a remedy for this situation, when switch reset is required, simply
+inhibit Tx on all ports, and wait for the necessary time for the
+eventual one frame left in the egress queue (not even the Tx inhibit
+command is instantaneous) to be flushed.
+
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v2:
-Renamed sja1105,phy-mode to sja1105,role-phy and similarly for mac.
-Clarified the switch situation with RGMII delays.
+Patch is new.
 
- .../devicetree/bindings/net/dsa/sja1105.txt   | 157 ++++++++++++++++++
- 1 file changed, 157 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/sja1105.txt
+ drivers/net/dsa/sja1105/sja1105.h     |  1 +
+ drivers/net/dsa/sja1105/sja1105_spi.c | 37 +++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/sja1105.txt b/Documentation/devicetree/bindings/net/dsa/sja1105.txt
-new file mode 100644
-index 000000000000..529401cf01ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/sja1105.txt
-@@ -0,0 +1,157 @@
-+NXP SJA1105 switch driver
-+=========================
+diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+index 3c16b991032c..9cea23ba2806 100644
+--- a/drivers/net/dsa/sja1105/sja1105.h
++++ b/drivers/net/dsa/sja1105/sja1105.h
+@@ -33,6 +33,7 @@ struct sja1105_regs {
+ 	u64 device_id;
+ 	u64 prod_id;
+ 	u64 status;
++	u64 port_control;
+ 	u64 rgu;
+ 	u64 config;
+ 	u64 rmii_pll1;
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index e4ef4d8048b2..aada5eeb4f49 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -10,6 +10,7 @@
+ #define SIZE_SPI_MSG_HEADER	4
+ #define SIZE_SPI_MSG_MAXLEN	(64 * 4)
+ #define SPI_TRANSFER_SIZE_MAX	(SIZE_SPI_MSG_HEADER + SIZE_SPI_MSG_MAXLEN)
++#define SIZE_PORT_CTRL		4
+ 
+ static int sja1105_spi_transfer(const struct sja1105_private *priv,
+ 				const void *tx, void *rx, int size)
+@@ -278,6 +279,25 @@ static int sja1105_cold_reset(const struct sja1105_private *priv)
+ 	return priv->info->reset_cmd(priv, &reset);
+ }
+ 
++static int sja1105_inhibit_tx(const struct sja1105_private *priv,
++			      const unsigned long *port_bitmap)
++{
++	const struct sja1105_regs *regs = priv->info->regs;
++	u64 inhibit_cmd;
++	int port, rc;
 +
-+Required properties:
++	rc = sja1105_spi_send_int(priv, SPI_READ, regs->port_control,
++				  &inhibit_cmd, SIZE_PORT_CTRL);
++	if (rc < 0)
++		return rc;
 +
-+- compatible:
-+	Must be one of:
-+	- "nxp,sja1105e"
-+	- "nxp,sja1105t"
-+	- "nxp,sja1105p"
-+	- "nxp,sja1105q"
-+	- "nxp,sja1105r"
-+	- "nxp,sja1105s"
++	for_each_set_bit(port, port_bitmap, SJA1105_NUM_PORTS)
++		inhibit_cmd |= BIT(port);
 +
-+	Although the device ID could be detected at runtime, explicit bindings
-+	are required in order to be able to statically check their validity.
-+	For example, SGMII can only be specified on port 4 of R and S devices,
-+	and the non-SGMII devices, while pin-compatible, are not equal in terms
-+	of support for RGMII internal delays (supported on P/Q/R/S, but not on
-+	E/T).
++	return sja1105_spi_send_int(priv, SPI_WRITE, regs->port_control,
++				    &inhibit_cmd, SIZE_PORT_CTRL);
++}
 +
-+Optional properties:
-+
-+- sja1105,role-mac:
-+- sja1105,role-phy:
-+	Boolean properties that can be assigned under each port node. By
-+	default (unless otherwise specified) a port is configured as MAC if it
-+	is driving a PHY (phy-handle is present) or as PHY if it is PHY-less
-+	(fixed-link specified, presumably because it is connected to a MAC).
-+	The effect of this property (in either its implicit or explicit form)
-+	is:
-+	- In the case of MII or RMII it specifies whether the SJA1105 port is a
-+	  clock source or sink for this interface (not applicable for RGMII
-+	  where there is a Tx and an Rx clock).
-+	- In the case of RGMII it affects the behavior regarding internal
-+	  delays:
-+	  1. If sja1105,role-mac is specified, and the phy-mode property is one
-+	     of "rgmii-id", "rgmii-txid" or "rgmii-rxid", then the entity
-+	     designated to apply the delay/clock skew necessary for RGMII
-+	     is the PHY. The SJA1105 MAC does not apply any internal delays.
-+	  2. If sja1105,role-phy is specified, and the phy-mode property is one
-+	     of the above, the designated entity to apply the internal delays
-+	     is the SJA1105 MAC (if hardware-supported). This is only supported
-+	     by the second-generation (P/Q/R/S) hardware. On a first-generation
-+	     E or T device, it is an error to specify an RGMII phy-mode other
-+	     than "rgmii" for a port that is in fixed-link mode. In that case,
-+	     the clock skew must either be added by the MAC at the other end of
-+	     the fixed-link, or by PCB serpentine traces on the board.
-+	These properties are required, for example, in the case where SJA1105
-+	ports are at both ends of a MII/RMII PHY-less setup. One end would need
-+	to have sja1105,role-mac, while the other sja1105,role-phy.
-+
-+See Documentation/devicetree/bindings/net/dsa/dsa.txt for the list of standard
-+DSA required and optional properties.
-+
-+Other observations
-+------------------
-+
-+The SJA1105 SPI interface requires a CS-to-CLK time (t2 in UM10944) of at least
-+one half of t_CLK. At an SPI frequency of 1MHz, this means a minimum
-+cs_sck_delay of 500ns. Ensuring that this SPI timing requirement is observed
-+depends on the SPI bus master driver.
-+
-+Example
-+-------
-+
-+Ethernet switch connected via SPI to the host, CPU port wired to enet2:
-+
-+arch/arm/boot/dts/ls1021a-tsn.dts:
-+
-+/* SPI controller of the LS1021 */
-+&dspi0 {
-+	sja1105@1 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nxp,sja1105";
-+		spi-max-frequency = <4000000>;
-+		fsl,spi-cs-sck-delay = <1000>;
-+		fsl,spi-sck-cs-delay = <1000>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				/* ETH5 written on chassis */
-+				label = "swp5";
-+				phy-handle = <&rgmii_phy6>;
-+				phy-mode = "rgmii";
-+				reg = <0>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@1 {
-+				/* ETH2 written on chassis */
-+				label = "swp2";
-+				phy-handle = <&rgmii_phy3>;
-+				phy-mode = "rgmii";
-+				reg = <1>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@2 {
-+				/* ETH3 written on chassis */
-+				label = "swp3";
-+				phy-handle = <&rgmii_phy4>;
-+				phy-mode = "rgmii";
-+				reg = <2>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@3 {
-+				/* ETH4 written on chassis */
-+				phy-handle = <&rgmii_phy5>;
-+				label = "swp4";
-+				phy-mode = "rgmii";
-+				reg = <3>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@4 {
-+				/* Internal port connected to eth2 */
-+				ethernet = <&enet2>;
-+				phy-mode = "rgmii";
-+				reg = <4>;
-+				/* Implicit "sja1105,role-phy;" */
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+/* MDIO controller of the LS1021 */
-+&mdio0 {
-+	/* BCM5464 */
-+	rgmii_phy3: ethernet-phy@3 {
-+		reg = <0x3>;
-+	};
-+	rgmii_phy4: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+	rgmii_phy5: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+	rgmii_phy6: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+};
-+
-+/* Ethernet master port of the LS1021 */
-+&enet2 {
-+	phy-connection-type = "rgmii";
-+	status = "ok";
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
+ struct sja1105_status {
+ 	u64 configs;
+ 	u64 crcchkl;
+@@ -366,6 +386,7 @@ static_config_buf_prepare_for_upload(struct sja1105_private *priv,
+ int sja1105_static_config_upload(struct sja1105_private *priv)
+ {
+ #define RETRIES 10
++	unsigned long port_bitmap = GENMASK_ULL(SJA1105_NUM_PORTS - 1, 0);
+ 	struct sja1105_static_config *config = &priv->static_config;
+ 	const struct sja1105_regs *regs = priv->info->regs;
+ 	struct device *dev = &priv->spidev->dev;
+@@ -384,6 +405,20 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+ 		dev_err(dev, "Invalid config, cannot upload\n");
+ 		return -EINVAL;
+ 	}
++	/* Prevent PHY jabbering during switch reset by inhibiting
++	 * Tx on all ports and waiting for current packet to drain.
++	 * Otherwise, the PHY will see an unterminated Ethernet packet.
++	 */
++	rc = sja1105_inhibit_tx(priv, &port_bitmap);
++	if (rc < 0) {
++		dev_err(dev, "Failed to inhibit Tx on ports\n");
++		return -ENXIO;
++	}
++	/* Wait for an eventual egress packet to finish transmission
++	 * (reach IFG). It is guaranteed that a second one will not
++	 * follow, and that switch cold reset is thus safe
++	 */
++	udelay(1000);
+ 	do {
+ 		/* Put the SJA1105 in programming mode */
+ 		rc = sja1105_cold_reset(priv);
+@@ -449,6 +484,7 @@ struct sja1105_regs sja1105et_regs = {
+ 	.device_id = 0x0,
+ 	.prod_id = 0x100BC3,
+ 	.status = 0x1,
++	.port_control = 0x11,
+ 	.config = 0x020000,
+ 	.rgu = 0x100440,
+ 	.pad_mii_tx = {0x100800, 0x100802, 0x100804, 0x100806, 0x100808},
+@@ -473,6 +509,7 @@ struct sja1105_regs sja1105pqrs_regs = {
+ 	.device_id = 0x0,
+ 	.prod_id = 0x100BC3,
+ 	.status = 0x1,
++	.port_control = 0x12,
+ 	.config = 0x020000,
+ 	.rgu = 0x100440,
+ 	.pad_mii_tx = {0x100800, 0x100802, 0x100804, 0x100806, 0x100808},
 -- 
 2.17.1
 
