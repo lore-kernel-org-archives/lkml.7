@@ -2,127 +2,138 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43126C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754B3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E88720850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2402063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="g46iFH89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbfDJRyU (ORCPT
+        id S1730710AbfDJRzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:54:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59406 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730281AbfDJRyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:54:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00201C049598;
-        Wed, 10 Apr 2019 17:54:19 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ACA595D961;
-        Wed, 10 Apr 2019 17:54:17 +0000 (UTC)
-Subject: Re: [PATCH-tip v2 06/12] locking/rwsem: Wake up almost all readers in
- wait queue
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-References: <20190405192115.17416-1-longman@redhat.com>
- <20190405192115.17416-7-longman@redhat.com>
- <20190410165013.njy5bg32pxq6syyr@linux-r8p5>
- <114e3bc3-3b66-4a50-d422-6a477d85fa72@redhat.com>
- <20190410172254.ivgcgehjhqgwjtda@linux-r8p5>
- <20190410173142.dt5uldtgt4brhtjj@linux-r8p5>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <f86d7fd1-3813-94fa-290d-79ad36b3e72c@redhat.com>
-Date:   Wed, 10 Apr 2019 13:54:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 10 Apr 2019 13:55:11 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43199 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729571AbfDJRzL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:55:11 -0400
+Received: by mail-ot1-f66.google.com with SMTP id u15so2728845otq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=za2E/pLJgKbwiV1dsXtjcDsjWlrh7jaWMTWufoDKu5o=;
+        b=g46iFH89Et3jdAxwN3daHsdlaI1+zHIcOv5/gHFIApHJYqE8yvgRmyHw0Xm9H9cHCg
+         IbwNLoYGu7QZ4nov9UfQpYh0y3WNWrStUed2N8aEI+IfeQqjVQKRMuMPbD6nUYfKDe3l
+         hHVmaeD7BTnuqlv5g4BM7uFKJGPu9DQxFhsqVExKE2tN2OqMZv/GmMpPer7lq7oV7lLM
+         nwAa07MYGs45q9tdLFFzNTJQtSy9jlmVb5G3smCrW7uPw+YMSiqI87FIc9B9Lus+KptW
+         N0al/hgirxv4udjxdPowSfRRu0zMzs0t3MGfWPPnRdKgE9/PNVfW3MNBiBi3OQS1bH6Y
+         7CmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=za2E/pLJgKbwiV1dsXtjcDsjWlrh7jaWMTWufoDKu5o=;
+        b=pl9uqIM2Nysp0l/MAUKv/On+eUMvEQOzGZi+AL3DevBmrkqgFXdkUn45PnbzsvpRGZ
+         6UthMo9+hkflqMu+DrcpRsMRXYvsL+lXkwgKUXAu9BeL6Wh3C5YflhFCYeycy8VJnUJq
+         mgh2wCnd5M593Mr6Yspd0JInR4xxyPUO2ndub6l6RmLZkzD2w9U/bcKF3+dnQvzCEh4X
+         N9x0mx92x72xi6sy6LNfWp682o6IMqHEf3LzFX1LjZP+Y2DIlDQWvJw4BbKMm1saXlhq
+         xEe9XjRzGvLVrAEJyf1xcL+WdxNwyffTu+93fJOXkrMKO8EENl078WcWUHku/MkShQKN
+         nXsg==
+X-Gm-Message-State: APjAAAULAauigWuyAqV07VSN4SDaKXtPojibfw3I7ZYOeYkvRjEKHpg+
+        +VPZRqqjkJwCELnH8ClnNXPTK3fB8XlnAovZRxw=
+X-Google-Smtp-Source: APXvYqxJCvj+hExhPZ1nr7IT/D4Y0kcPlZk34EZsNBEpynW+ggppXtmmAwRzG91Zbd7EtMxeZ2qI4kfNxCokVL3UhpI=
+X-Received: by 2002:a9d:6e88:: with SMTP id a8mr2804549otr.117.1554918910311;
+ Wed, 10 Apr 2019 10:55:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190410173142.dt5uldtgt4brhtjj@linux-r8p5>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 10 Apr 2019 17:54:19 +0000 (UTC)
+References: <CAFBinCBOX8HyY-UocsVQvsnTr4XWXyE9oU+f2xhO1=JU0i_9ow@mail.gmail.com>
+ <20190321214401.GC19508@bombadil.infradead.org> <CAFBinCA6oK5UhDAt9kva5qRisxr2gxMF26AMK8vC4b1DN5RXrw@mail.gmail.com>
+ <5cad2529-8776-687e-58d0-4fb9e2ec59b1@amlogic.com> <CAFBinCA=0XSSVmzfTgb4eSiVFr=XRHqLOVFGyK0++XRty6VjnQ@mail.gmail.com>
+ <32799846-b8f0-758f-32eb-a9ce435e0b79@amlogic.com> <CAFBinCDHmuNZxuDf3pe2ij6m8aX2fho7L+B9ZMaMOo28tPZ62Q@mail.gmail.com>
+ <79b81748-8508-414f-c08a-c99cb4ae4b2a@amlogic.com> <CAFBinCCSkVGp_iWKf=o=7UGuDUWxyLPGdrqGy_P-HPuEJiU1zQ@mail.gmail.com>
+ <8cb108ff-7a72-6db4-660d-33880fcee08a@amlogic.com>
+In-Reply-To: <8cb108ff-7a72-6db4-660d-33880fcee08a@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 10 Apr 2019 19:54:59 +0200
+Message-ID: <CAFBinCD4cRGbC=cFYEGVAHOtBSvrgNbCSfDWe3To0KCE5+ceVw@mail.gmail.com>
+Subject: Re: 32-bit Amlogic (ARM) SoC: kernel BUG in kfree()
+To:     Liang Yang <liang.yang@amlogic.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, mhocko@suse.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        rppt@linux.ibm.com, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org,
+        akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 01:31 PM, Davidlohr Bueso wrote:
-> On Wed, 10 Apr 2019, Bueso wrote:
->
->> On Wed, 10 Apr 2019, Waiman Long wrote:
->>> 2) I want to avoid the extreme case that there are more than 32k
->>> readers
->>> in the wait queue and make the count overflow.
->>
->> But in this case the readers are already on the queue.
->
-> Never mind this.
->
-> But the limit could still be enlarged just to prevent overflows in the
-> case
-> where there are only readers.
+Hi Liang,
 
-The limit is kind of arbitrary. We can certainly increase it if 256 is
-seemed too low.
+On Wed, Apr 10, 2019 at 1:08 PM Liang Yang <liang.yang@amlogic.com> wrote:
+>
+> Hi Martin,
+>
+> On 2019/4/5 12:30, Martin Blumenstingl wrote:
+> > Hi Liang,
+> >
+> > On Fri, Mar 29, 2019 at 8:44 AM Liang Yang <liang.yang@amlogic.com> wrote:
+> >>
+> >> Hi Martin,
+> >>
+> >> On 2019/3/29 2:03, Martin Blumenstingl wrote:
+> >>> Hi Liang,
+> >> [......]
+> >>>> I don't think it is caused by a different NAND type, but i have followed
+> >>>> the some test on my GXL platform. we can see the result from the
+> >>>> attachment. By the way, i don't find any information about this on meson
+> >>>> NFC datasheet, so i will ask our VLSI.
+> >>>> Martin, May you reproduce it with the new patch on meson8b platform ? I
+> >>>> need a more clear and easier compared log like gxl.txt. Thanks.
+> >>> your gxl.txt is great, finally I can also compare my own results with
+> >>> something that works for you!
+> >>> in my results (see attachment) the "DATA_IN  [256 B, force 8-bit]"
+> >>> instructions result in a different info buffer output.
+> >>> does this make any sense to you?
+> >>>
+> >> I have asked our VLSI designer for explanation or simulation result by
+> >> an e-mail. Thanks.
+> > do you have any update on this?
+> Sorry. I haven't got reply from VLSI designer yet. We tried to improve
+> priority yesterday, but i still can't estimate the time. There is no
+> document or change list showing the difference between m8/b and gxl/axg
+> serial chips. Now it seems that we can't use command NFC_CMD_N2M on nand
+> initialization for m8/b chips and use *read byte from NFC fifo register*
+> instead.
+thank you for the status update!
 
-Cheers,
-Longman
+I am trying to understand your suggestion not to use NFC_CMD_N2M:
+the documentation (public S922X datasheet from Hardkernel: [0]) states
+that P_NAND_BUF (NFC_REG_BUF in the meson_nand driver) can hold up to
+four bytes of data. is this the "read byte from NFC FIFO register" you
+mentioned?
 
+Before I spend time changing the code to use the FIFO register I would
+like to wait for an answer from your VLSI designer.
+Setting the "correct" info buffer length for NFC_CMD_N2M on the 32-bit
+SoCs seems like an easier solution compared to switching to the FIFO
+register. Keeping NFC_CMD_N2M on the 32-bit SoCs also allows us to
+have only one code-path for 32 and 64 bit SoCs, meaning we don't have
+to maintain two separate code-paths for basically the same
+functionality (assuming that NFC_CMD_N2M is not completely broken on
+the 32-bit SoCs, we just don't know how to use it yet).
+
+
+Regards
+Martin
+
+
+[0] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
