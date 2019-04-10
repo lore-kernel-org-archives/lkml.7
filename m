@@ -2,107 +2,160 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BD8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E666C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5676D206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=foreca.com header.i=@foreca.com header.b="IOjE0o+c"
+	by mail.kernel.org (Postfix) with ESMTP id 19AEB206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfDJKUU (ORCPT
+        id S1730442AbfDJKWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:20:20 -0400
-Received: from mail-wr1-f100.google.com ([209.85.221.100]:33672 "EHLO
-        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbfDJKUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:20:19 -0400
-Received: by mail-wr1-f100.google.com with SMTP id q1so2294825wrp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 03:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foreca.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=vI7ruPzpUPREcaOqSaDKx5BAPKGyNixmHz5zVAr3Sf8=;
-        b=IOjE0o+ceSAIkYociAOManH3puI7rMgMPkkGDYLpwFDaC0GyT3GBfCoUzoyabnWyXu
-         YSTnYpJtcrCPxSdW3yLm28HMQxEuHPYEXuz+LUWA6KOMWqCZ3gdnu1qIPJ64OccBfjwl
-         6sduuClhbt5McHr7Y+PC4CKCg3WuAfVEOEx0c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vI7ruPzpUPREcaOqSaDKx5BAPKGyNixmHz5zVAr3Sf8=;
-        b=pkM/a7j/GJZkcEwiPrcrNP+Gn+AFfW4kjUhMjNm5Lhmq3VkMNMZ56jDOhYnVS1ZW6W
-         HzZQMqgABJ3xKeXztT6o5e8WYx72ZbgViPjeoOe4U41K9pbr4IdzcKAm/+DKX0JQehk7
-         H65y7WV7Vr5BkRbYjXPc730RoiNu8VC/5upy3P70yEztOvGkk0dbXWfWSCmaW0SvtJPj
-         AIa0Yh/dnMYC2mo2z6FZepLQbN+2ZiGrw5eSpjGI9eUjtaRHkI/BKH71wy9uV4IUCqzg
-         xQgpqEoQkqsi3IsVkUAJPHQ+Ol+01tLzUAfZi+UczQuEIGtZBrOBAdj4XsMdFlxkBSXN
-         HaTQ==
-X-Gm-Message-State: APjAAAXzQH/O2kNl2491gFLqhdziGr2J/ssKbKlNp0cYvkMSMrinVodd
-        vfpeEZYb8mVt1zJgIBxf2hvOXoGLfPhfMQpsRGKGbVOsQmh6BQ==
-X-Google-Smtp-Source: APXvYqzBO39YNBE+QzyoJuwJn6zuw8+xvSPoSUKOeuY4F7i4xO16Ld3EGtazbQiBrZ760/BQmzothFItO2rG
-X-Received: by 2002:adf:dbce:: with SMTP id e14mr27277330wrj.249.1554891617325;
-        Wed, 10 Apr 2019 03:20:17 -0700 (PDT)
-Received: from juhisz240.foreca.com ([62.209.167.158])
-        by smtp-relay.gmail.com with ESMTP id u16sm726155wri.12.2019.04.10.03.20.16;
-        Wed, 10 Apr 2019 03:20:17 -0700 (PDT)
-X-Relaying-Domain: foreca.com
-From:   Juha-Matti Tilli <juha-matti.tilli@foreca.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     juha-matti.tilli@foreca.com, Eric Dumazet <edumazet@google.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Murphy Zhou <xzhou@redhat.com>,
-        Yongcheng Yang <yoyang@redhat.com>,
-        Jianhong Yin <jiyin@redhat.com>
-Subject: [PATCH] net: add big honking pfmemalloc OOM warning
-Date:   Wed, 10 Apr 2019 13:19:47 +0300
-Message-Id: <20190410101947.8603-1-juha-matti.tilli@foreca.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Apr 2019 06:22:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35502 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729002AbfDJKWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 06:22:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 03:22:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="163012491"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 10 Apr 2019 03:22:40 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 10 Apr 2019 13:22:39 +0300
+Date:   Wed, 10 Apr 2019 13:22:39 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [v3 PATCH 4/6] usb: roles: add API to get usb_role_switch by node
+Message-ID: <20190410102239.GG20058@kuha.fi.intel.com>
+References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554257354-7440-5-git-send-email-chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A system administrator is not notified (except via an obscure SNMP
-counter that most sysadmins don't know to look for) if packets are
-dropped due to out-of-memory condition when SKBs use pfmemalloc
-reserves. This can for example lead to NFS connections hanging on
-high-volume systems.
+On Wed, Apr 03, 2019 at 10:09:12AM +0800, Chunfeng Yun wrote:
+> Add fwnode_usb_role_switch_get() to make easier to get
+> usb_role_switch by fwnode which register it.
+> It's useful when there is not device_connection registered
+> between two drivers and only knows the fwnode which register
+> usb_role_switch.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v3 changes:
+>   1. use fwnodes instead of node suggested by Andy
+>   2. rebuild the API suggested by Heikki
+> 
+> v2 no changes
+> ---
+>  drivers/usb/roles/class.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/usb/role.h  |  2 ++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..5ecb57f8960b 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  #include <linux/slab.h>
+>  
+>  static struct class *role_class;
+> @@ -135,6 +136,36 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_role_switch_get);
+>  
+> +static int __switch_match_fwnode(struct device *dev, const void *fwnode)
+> +{
+> +	return dev_fwnode(dev->parent) == (const struct fwnode_handle *)fwnode;
+> +}
 
-Implement a ratelimited big honking out of memory warning that directs
-the sysadmin to bump up vm.min_free_kbytes in case this problem happens.
-Our experience shows that with default vm.min_free_kbytes (90112, or
-about 90 megabytes), NFS connections hang approximately once per day,
-whereas with 901120 (default multiplied by 10) NFS connections never
-hang.
+I don't think this is actually needed. Why not just assign the
+parent's fwnode for the mux as well?
 
-Signed-off-by: Juha-Matti Tilli <juha-matti.tilli@foreca.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Rafael Aquini <aquini@redhat.com>
-Cc: Murphy Zhou <xzhou@redhat.com>
-Cc: Yongcheng Yang <yoyang@redhat.com>
-Cc: Jianhong Yin <jiyin@redhat.com>
----
- net/core/filter.c | 2 ++
- 1 file changed, 2 insertions(+)
+I'll add an example to the patch 6/6 in this series.
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index fc92ebc4e200..7d8ef239b9af 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -99,6 +99,8 @@ int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap)
- 	 * helping free memory
- 	 */
- 	if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
-+		printk_ratelimited(KERN_WARNING
-+				   "dropped packet due to out-of-memory condition, please bump up vm.min_free_kbytes\n");
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
- 		return -ENOMEM;
- 	}
+> +/**
+> + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
+> + * @fwnode: The fwnode that register USB role switch
+> + *
+> + * Finds and returns role switch registered by @fwnode. The reference count
+> + * for the found switch is incremented.
+> + */
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> +{
+> +	struct usb_role_switch *sw;
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(role_class, NULL, fwnode,
+> +				__switch_match_fwnode);
+
+So here you can then reuse switch_fwnode_match():
+
+	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
+
+> +	if (!dev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	sw = to_role_switch(dev);
+> +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> +
+> +	return sw;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+> +
+>  /**
+>   * usb_role_switch_put - Release handle to a switch
+>   * @sw: USB Role Switch
+> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+> index c05ffa6abda9..d21cd55d9e45 100644
+> --- a/include/linux/usb/role.h
+> +++ b/include/linux/usb/role.h
+> @@ -46,6 +46,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+>  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+>  struct usb_role_switch *usb_role_switch_get(struct device *dev);
+>  void usb_role_switch_put(struct usb_role_switch *sw);
+> +struct usb_role_switch *
+> +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+>  
+>  struct usb_role_switch *
+>  usb_role_switch_register(struct device *parent,
+> -- 
+> 2.20.1
+
+thanks,
+
 -- 
-2.17.1
-
+heikki
