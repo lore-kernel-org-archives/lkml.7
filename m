@@ -2,52 +2,63 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF3DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FEDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C99A20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="NfXujEP7"
+	by mail.kernel.org (Postfix) with ESMTP id 1723E20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbfDJPt6 (ORCPT
+        id S2387461AbfDJPuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:49:58 -0400
-Received: from a9-34.smtp-out.amazonses.com ([54.240.9.34]:56520 "EHLO
-        a9-34.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728826AbfDJPt6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554911397;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=0XwwQPRGaw7KgTDhnUmgjcd43E3sjloMv0Xkja5uBiE=;
-        b=NfXujEP7h7+awlKKkWFlPto3lUIHLNPSEeH2fpwtFZJcm19WAbmiVRddnWr/diGu
-        yC1Gt9xkJAb1CccRjBG/XUMEfA3vxkczeUiODt/eDSJdm3J+TP7iNelFVdGYmF9IGei
-        M1M7ccKjDXShc0ywiZsxsnfUx0pfoTPzdYkNiO8U=
-Date:   Wed, 10 Apr 2019 15:49:57 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [External] Re: Basics : Memory Configuration
-In-Reply-To: <SG2PR02MB30989B644196598CEDDD5337E82E0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Message-ID: <0100016a07f105bf-7e1f2eda-fffe-4418-9b7e-9f6572e08633-000000@email.amazonses.com>
-References: <SG2PR02MB3098925678D8D40B683E10E2E82D0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<0100016a02d5038e-2e436033-7726-4d2a-b29d-d3dbc4c66637-000000@email.amazonses.com> <SG2PR02MB30989B644196598CEDDD5337E82E0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 10 Apr 2019 11:50:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:57094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728826AbfDJPuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:50:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03759374;
+        Wed, 10 Apr 2019 08:50:04 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 166D33F59C;
+        Wed, 10 Apr 2019 08:50:02 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 16:50:00 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: arm_scmi: Fix leak in scmi_mailbox_check
+Message-ID: <20190410155000.GD3952@e107155-lin>
+References: <20190325173722.49414-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.10-54.240.9.34
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325173722.49414-1-steven.price@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please respond to my comments in the way that everyone else communicates
-here. I cannot distinguish what you said from what I said before.
+On Mon, Mar 25, 2019 at 05:37:22PM +0000, Steven Price wrote:
+> of_parse_phandle_with_args() requires the caller to call of_node_put() on
+> the returned args->np pointer. Otherwise the reference count will remain
+> incremented.
+>
+
+Good find and thanks for the fix.
+
+> However, in this case, since we don't actually use the returned pointer,
+> we can simply pass in NULL.
+>
+> Fixes: aa4f886f3893f ("firmware: arm_scmi: add basic driver infrastructure for SCMI")
+> Signed-off-by: Steven Price <steven.price@arm.com>
+
+Applied.
+
+--
+Regards,
+Sudeep
