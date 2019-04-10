@@ -2,77 +2,96 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22759C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5322082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22F82082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDJVWp (ORCPT
+        id S1726599AbfDJVZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:22:45 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:54300 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfDJVWp (ORCPT
+        Wed, 10 Apr 2019 17:25:15 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:32832 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfDJVZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:22:45 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B730A80DBA;
-        Wed, 10 Apr 2019 23:22:41 +0200 (CEST)
-Date:   Wed, 10 Apr 2019 23:22:40 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH] drm/bochs: use simple display pipe
-Message-ID: <20190410212240.GA31691@ravnborg.org>
-References: <20190410074828.10296-1-kraxel@redhat.com>
+        Wed, 10 Apr 2019 17:25:15 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hEKiM-0004hb-1D; Wed, 10 Apr 2019 23:25:02 +0200
+Date:   Wed, 10 Apr 2019 23:25:02 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 12/27] x86/pkru: Provide .*_pkru_ins() functions
+Message-ID: <20190410212501.jglzib2qcygjnmxc@linutronix.de>
+References: <20190403164156.19645-1-bigeasy@linutronix.de>
+ <20190403164156.19645-13-bigeasy@linutronix.de>
+ <20190410163615.GB26580@zn.tnic>
+ <20190410165241.GD26580@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190410074828.10296-1-kraxel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=UpRNyd4B c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=R4mCt31-z0I4RcOTawAA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <20190410165241.GD26580@zn.tnic>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerd.
-
+On 2019-04-10 18:52:41 [+0200], Borislav Petkov wrote:
+> On Wed, Apr 10, 2019 at 06:36:15PM +0200, Borislav Petkov wrote:
+> > Well, this is going in the wrong direction. The proper thing to do would
+> > be to have:
+> > 
+> > rdpkru()
+> > wrpkru()
+> > 
+> > which only do the inline asm with the respective opcodes. Just like
+> > rdtsc(), clflush(), etc.
+> 
+> IOW, like this:
+> 
+> ---
+> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+> index 2779ace16d23..e2948ce1376c 100644
+> --- a/arch/x86/include/asm/pgtable.h
+> +++ b/arch/x86/include/asm/pgtable.h
+> @@ -127,14 +127,14 @@ static inline int pte_dirty(pte_t pte)
+>  static inline u32 read_pkru(void)
+>  {
+>  	if (boot_cpu_has(X86_FEATURE_OSPKE))
+> -		return __read_pkru();
+> +		return rdpkru();
+>  	return 0;
+>  }
 >  
->  #include <drm/drm_gem.h>
+>  static inline void write_pkru(u32 pkru)
+>  {
+>  	if (boot_cpu_has(X86_FEATURE_OSPKE))
+> -		__write_pkru(pkru);
+> +		wrpkru(pkru);
+
+I think if this is a simple
+
+   's@__write_pkru_ins@wrpkru@g'
+   's@__read_pkru_ins@rdpkru@g'
+
+then it should work just fine and match what Dave asked for.
+
+>  }
 >  
-> @@ -69,9 +70,8 @@ struct bochs_device {
->  	struct edid *edid;
->  
->  	/* drm */
-> -	struct drm_device  *dev;
-> -	struct drm_crtc crtc;
-> -	struct drm_encoder encoder;
-> +	struct drm_device *dev;
-> +	struct drm_simple_display_pipe pipe;
->  	struct drm_connector connector;
+>  static inline int pte_young(pte_t pte)
 
-Have you considered to embed drm_device in the bochs_device struct?
-This is the new way to do it.
-
-This should likely be a follow-up patch...
-
-Rest of the patch looked good.
-Did not do a proper review but you can add my:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-	Sam
+Sebastian
