@@ -2,133 +2,115 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C27C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF87C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99D320850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF7620850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F0XoHP8u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBdoOy6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfDJOQe (ORCPT
+        id S1732610AbfDJOSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:16:34 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:42908 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbfDJOQe (ORCPT
+        Wed, 10 Apr 2019 10:18:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34849 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731287AbfDJOSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:16:34 -0400
-Received: by mail-yb1-f196.google.com with SMTP id l124so863817ybf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:16:33 -0700 (PDT)
+        Wed, 10 Apr 2019 10:18:23 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u21so1993653lfu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 07:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t8ABffEdZGV5cihLZzSHe2fhMN6ofhtObW3edkrWfCs=;
-        b=F0XoHP8usrEVkRqi/39Q5G7p1Znhdzs54MQuTynfelohW8v07Lvor7o0OFxpPdsaxI
-         0QomlGzN85H47lfms4oFdvxrzaB7VgL/67pa4iaTJenTZZ7fJU5k5tXJNKis7AVlAO/i
-         +n4ET2R6ywH9/I2tkRLxZ8HS0g0ca+rZu3+9jyHleEfyyX0oCOZ2jWojccTgcoQBP490
-         vhHm+qQcT3Fd7qVjbo1Mr2C4GSH7wDeEZV4QxjBnOuqOaX+vHLKx7jBVgJDscyVBeae6
-         WnenZJ1MR9RdSJ+PV8iLsKrPoF/bDO2KDmFPmhKPnnVXKhtUtoaK9Hq5u+0xy4ZUeaYY
-         Gcxg==
+        bh=tvIi4gBRIzauHyn+/17L1Jg3co02CCis5UuW49+Fkic=;
+        b=TBdoOy6gIftbr3TE+ENeS5qPHiRQkHm/3QsV/yTkaxzEbkqemBfL5lPRCNf5TScIhc
+         W5DZKehOkc3DdI+yQLJOM8tH/gjIjaCOCWyZH9lY0hCbKzWN79qZstIj6z0EuQntb/X4
+         t0QNQSi3uXvZQwWu7Z12kij5JSm3Mf2yfOzvPvBQyICRPE1zm0EB6Ca2RtoTTqUf6TzG
+         IOg2QBuNokxscI8Sww7WR0DRrFtMR6H1P1J8sLCYXakTgGsuS7nESonenwNmBaZTLj0j
+         B0+KzguUe5NwrJyRIP3h6fo9Adxa5Zh9L68zegYtEIGuFGKKnmVqJwA3EfyeN8BsQK3i
+         UCYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t8ABffEdZGV5cihLZzSHe2fhMN6ofhtObW3edkrWfCs=;
-        b=V8/NO9YoRvpUz9K5sw7bwos1OV52YDNlZBSH8DW3e9klt2yzo3NiW7R21N4d3DQJR/
-         zrWFHSOmChEfnrdZ1ORJDm/X03qto5jR6XWB3gwLU2K4DAKE3wezVVOEBT/Tr8675ceK
-         ShBgodoucnbKt6MLOxKizLbhOiV5SeLrB+0eawuaLt3Sk3ST92fm9nmtgA5yYSTtzNPD
-         q2Xx4HBn0s0UWiJbKKwalr21CR1Y8d0kJ25FgMXoWc8pwNBSGo69uxHhrVecnZrwoiXe
-         HsypUcSRnvN9kaLNr5HT7xrP60AGohFmW12tkKZdv5RT5s6/Yh8dG6dt2hbYFXxqNC+n
-         Meag==
-X-Gm-Message-State: APjAAAVSqgivViJeZGKjhCcsagQMRYlWizaz3K7C9ptJmuX0PvQPLMdG
-        SM727n4dVb7u4y3c+4AwyeZ5SwJtyrszHbczijNbZA==
-X-Google-Smtp-Source: APXvYqw2DPEt+HE29JBOXuQMLkC+u5ybFpqsKLj+gBHmwUrzVapCEb2SOpluQyjI/41bNTG7oGeRoF4axJPwE0/temQ=
-X-Received: by 2002:a25:1a8b:: with SMTP id a133mr21702120yba.428.1554905792918;
- Wed, 10 Apr 2019 07:16:32 -0700 (PDT)
+        bh=tvIi4gBRIzauHyn+/17L1Jg3co02CCis5UuW49+Fkic=;
+        b=lHC0gGWOzQ19wUNIvCida4tlWTgvgOzEXkv7MBdSxEinb7OQj6KVUCcBvpaxu9rpnn
+         1t8SrkaIWCOYlc8Phu8ZGekNKYrnXRofB/bfXsHvK+8R75zdUm0gCcfXnbw9qzPx//tl
+         QIWrQqPIkHkMpobXlDz2toV3KIylxaDFjbPptMT5RA4xqI0I+sdpiYYYH4iCbYp/PIRQ
+         TX48SyvZkjBpJ/eqSQ44HMHvBDgtcBL49W/iTbz2gW5X0BpZSFwq/sxHaVjiyKmo3Dt7
+         kVXXswzdMOYjDUeIuSdKMzjhCAkOUMwB2DCYevs3+jkiwL+Cl3JCU6UE4PFJYbnwpzht
+         VswA==
+X-Gm-Message-State: APjAAAXmj956lQRrjWNrgluIsp5/rrfjq3y8pO6EFeOymCJNq4NNUWfP
+        USCBJhL242GOIbAYqF31VClwHueP21Z6DG2Xmzw=
+X-Google-Smtp-Source: APXvYqw88wMSj8rTsg8RCbo1xF01Ov5nexXLU9YTy7mJt2WOf0kxlnnqCtnCCrEAe/w7qOmsCpY/aS7L5woitGZ/ZEw=
+X-Received: by 2002:ac2:44a6:: with SMTP id c6mr23602158lfm.31.1554905901715;
+ Wed, 10 Apr 2019 07:18:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410101947.8603-1-juha-matti.tilli@foreca.com>
-In-Reply-To: <20190410101947.8603-1-juha-matti.tilli@foreca.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 10 Apr 2019 07:16:21 -0700
-Message-ID: <CANn89iK9DcDi68WQn0z2R65L1fQpa88nUnpe_di1OWGhhoqAQw@mail.gmail.com>
-Subject: Re: [PATCH] net: add big honking pfmemalloc OOM warning
-To:     Juha-Matti Tilli <juha-matti.tilli@foreca.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Murphy Zhou <xzhou@redhat.com>,
-        Yongcheng Yang <yoyang@redhat.com>,
-        Jianhong Yin <jiyin@redhat.com>
+References: <20190218165620.383905466@infradead.org> <20190218173514.667598558@infradead.org>
+ <20190402064612.GA46500@aaronlu> <20190402082812.GJ12232@hirez.programming.kicks-ass.net>
+ <20190405145530.GA453@aaronlu> <460ce6fb-6a40-4a72-47e8-cf9c7c409bef@linux.intel.com>
+ <20190410043633.GA67532@aaronlu>
+In-Reply-To: <20190410043633.GA67532@aaronlu>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Wed, 10 Apr 2019 22:18:10 +0800
+Message-ID: <CAERHkrsKMm7f2auaQwY5=rodQr5T0kbOo2N1DCUCQcuUOpsEMg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 13/16] sched: Add core wide task selection and scheduling.
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 3:20 AM Juha-Matti Tilli
-<juha-matti.tilli@foreca.com> wrote:
+On Wed, Apr 10, 2019 at 12:36 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
 >
-> A system administrator is not notified (except via an obscure SNMP
-> counter that most sysadmins don't know to look for) if packets are
-> dropped due to out-of-memory condition when SKBs use pfmemalloc
-> reserves. This can for example lead to NFS connections hanging on
-> high-volume systems.
+> On Tue, Apr 09, 2019 at 11:09:45AM -0700, Tim Chen wrote:
+> > Now that we have accumulated quite a number of different fixes to your orginal
+> > posted patches.  Would you like to post a v2 of the core scheduler with the fixes?
 >
-> Implement a ratelimited big honking out of memory warning that directs
-> the sysadmin to bump up vm.min_free_kbytes in case this problem happens.
-> Our experience shows that with default vm.min_free_kbytes (90112, or
-> about 90 megabytes), NFS connections hang approximately once per day,
-> whereas with 901120 (default multiplied by 10) NFS connections never
-> hang.
+> One more question I'm not sure: should a task with cookie=0, i.e. tasks
+> that are untagged, be allowed to scheduled on the the same core with
+> another tagged task?
 >
-
-If NFS sessions hang, then there is a bug to eventually root cause and fix.
-
-Just telling the user : Increase the limit is the same thing than admitting :
-
-Our limit system or TCP or NFS stacks are broken and unable to
-recover, so lets disable the limit system and work around a more
-serious bug.
-
-Maybe the bug is in a NIC driver, please share more details before
-adding yet another noisy signal in syslog
-
-SNMP counters are per netns, and more useful in the modern computing
-era,  where a host is shared by many different containers.
-
-
-
+> The current patch seems to disagree on this, e.g. in pick_task(),
+> if max is already chosen but max->core_cookie == 0, then we didn't care
+> about cookie and simply use class_pick for the other cpu. This means we
+> could schedule two tasks with different cookies(one is zero and the
+> other can be tagged).
 >
-> Signed-off-by: Juha-Matti Tilli <juha-matti.tilli@foreca.com>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Rafael Aquini <aquini@redhat.com>
-> Cc: Murphy Zhou <xzhou@redhat.com>
-> Cc: Yongcheng Yang <yoyang@redhat.com>
-> Cc: Jianhong Yin <jiyin@redhat.com>
-> ---
->  net/core/filter.c | 2 ++
->  1 file changed, 2 insertions(+)
+> But then sched_core_find() only allow idle task to match with any tagged
+> tasks(we didn't place untagged tasks to the core tree of course :-).
 >
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index fc92ebc4e200..7d8ef239b9af 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -99,6 +99,8 @@ int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap)
->          * helping free memory
->          */
->         if (skb_pfmemalloc(skb) && !sock_flag(sk, SOCK_MEMALLOC)) {
-> +               printk_ratelimited(KERN_WARNING
-> +                                  "dropped packet due to out-of-memory condition, please bump up vm.min_free_kbytes\n");
->                 NET_INC_STATS(sock_net(sk), LINUX_MIB_PFMEMALLOCDROP);
->                 return -ENOMEM;
->         }
-> --
-> 2.17.1
->
+> Thoughts? Do I understand this correctly? If so, I think we probably
+> want to make this clear before v2. I personally feel, we shouldn't allow
+> untagged tasks(like kernel threads) to match with tagged tasks.
+
+Does it make sense if we take untagged tasks as hypervisor, and different
+cookie tasks as different VMs? Isolation is done between VMs, not between
+VM and hypervisor.
+
+Did you see anything harmful if an untagged task and a tagged task
+run simultaneously on the same core?
+
+Thanks,
+-Aubrey
