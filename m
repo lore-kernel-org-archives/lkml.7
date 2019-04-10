@@ -2,152 +2,234 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C310C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C93BC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60622075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0700B2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwpOHuZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfDJIbV (ORCPT
+        id S1729543AbfDJIeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:31:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42574 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbfDJIbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:31:21 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 424F27F6B0;
-        Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09AAF108BEF7;
-        Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9C8ED1803385;
-        Wed, 10 Apr 2019 08:31:19 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 04:31:19 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
-        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
-        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
-        aarcange@redhat.com, david@redhat.com, david@fromorbit.com,
-        cohuck@redhat.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        pbonzini@redhat.com, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>
-Message-ID: <299038321.20701113.1554885079188.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190410082504.GF1426@quack2.suse.cz>
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-5-pagupta@redhat.com> <20190410082504.GF1426@quack2.suse.cz>
-Subject: Re: [PATCH v5 4/6] dax: check synchronous mapping is supported
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.16.19, 10.4.195.8]
-Thread-Topic: check synchronous mapping is supported
-Thread-Index: 3OuZRphtFQExf6N3zq0ZSCMeImf/pQ==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 10 Apr 2019 08:31:20 +0000 (UTC)
+        Wed, 10 Apr 2019 04:34:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53238 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbfDJIeK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:34:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a184so1624959wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ocQ8ZmjwxYDlNiqsufM16tseomaIpCCwBDwnnqQxhJw=;
+        b=RwpOHuZFirorVM4uP+BSae7Er2ScAt/E5GRjfsCnw8bemuUh/1YLBcnKKuAoMmH+86
+         OzI97YOw9dEQD5Mg1Pbzog72/XY6uKau7L5RBM6Iuu68GY3ofcgV4Q/PghPdIvNGlJB4
+         NH8N8QxeREg7afBykRhLBIOaHQ0+Sf3k/j73tgR0ju64iYtbgc77bb2F23iO2U5WWpdW
+         PN3JvB3Jm09xXsxrArkRhB8unRwUL+Lf10dQEdR1vpop0gcIyCOmrTeQ4Z9fpikvql80
+         e7uAJpjiPt9uMP86/cgAbALdGir0H5sNxQ9W+KTG2W4qTsvBed3hFdoZK43alY+nv33T
+         VuVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ocQ8ZmjwxYDlNiqsufM16tseomaIpCCwBDwnnqQxhJw=;
+        b=PcLwhvetkz3OFGYpGkl+EfM5FIf91CuYN4pqEFEEU3PJIEYM98vrAd2LCheoThQszQ
+         KeiG2kBwG+N/fsIxdQLiBnYsRgiz0b8WBmhLeogRjDHSIgGnSd/PsSX2PwzZJjwiL9CB
+         yGTbJO9DIP/1TsfEyATEeBHuRmG/lpy9WJ+EX5SV3AaOL+SJNYiGtFhVCOWs2XaHYopD
+         hYi10v802S5Arq91r5a5jkRWr4uKw+QZ6pBY/PJzjJpavdzxJZ+rX6TPihZi+5V66G0+
+         Mt3aoXXXPlJcG7m4G1He+f3U8TA45r24sXI8Xb5HGhZIjYe/EfZTeq0XNwagVIiyOnII
+         kCVQ==
+X-Gm-Message-State: APjAAAVMPUGCHPFVsxihOJvV2F8vobkolFfULOXAfD96n9odliRpxIGy
+        A5JLvieFPZI0AXngACYbhTy8fw==
+X-Google-Smtp-Source: APXvYqwpGhjdje337l0cWub3TlLIzkmNyMwWktyOph9EnsKhV3tAuPcxHnmg797JIOvQ612HB0/qRA==
+X-Received: by 2002:a1c:55c3:: with SMTP id j186mr1920593wmb.127.1554885247726;
+        Wed, 10 Apr 2019 01:34:07 -0700 (PDT)
+Received: from wifi-122_dhcprange-158.wifi.unimo.it ([155.185.122.158])
+        by smtp.gmail.com with ESMTPSA id m17sm26002793wrx.3.2019.04.10.01.34.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 01:34:07 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH] block, bfq: fix use after free in bfq_bfqq_expire
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190410082646.14221-1-paolo.valente@linaro.org>
+Date:   Wed, 10 Apr 2019 10:34:03 +0200
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        'Paolo Valente' via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Dmitrii Tcvetkov <demfloro@demfloro.ru>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ED596CEA-6C73-403C-9DC8-44933EE1D567@linaro.org>
+References: <20190410082646.14221-1-paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch causes some checkpatch complain, sorry. Sending a V2 right =
+away.
 
-> > This patch introduces 'daxdev_mapping_supported' helper
-> > which checks if 'MAP_SYNC' is supported with filesystem
-> > mapping. It also checks if corresponding dax_device is
-> > synchronous. Virtio pmem device is asynchronous and
-> > does not not support VM_SYNC.
-> > 
-> > Suggested-by: Jan Kara <jack@suse.cz>
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  include/linux/dax.h | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/include/linux/dax.h b/include/linux/dax.h
-> > index b896706a5ee9..4a2a60ffec86 100644
-> > --- a/include/linux/dax.h
-> > +++ b/include/linux/dax.h
-> > @@ -38,6 +38,24 @@ void kill_dax(struct dax_device *dax_dev);
-> >  void dax_write_cache(struct dax_device *dax_dev, bool wc);
-> >  bool dax_write_cache_enabled(struct dax_device *dax_dev);
-> >  bool dax_synchronous(struct dax_device *dax_dev);
-> > +
-> > +/*
-> > + * Callers check if synchronous mapping is enabled for DAX file
-> > + * and attached dax device is also synchronous.
-> > + *
-> > + * dax_synchronous function verifies if dax device is synchronous.
-> > + * Currently, only virtio pmem device supports asynchronous device
-> > + * flush.
-> > + */
-> 
-> Thanks for the patch! I'd restructure this comment like:
-> 
-> /*
->  * Check if given mapping is supported by the file / underlying device.
->  */
+Paolo
 
-Sure.
+> Il giorno 10 apr 2019, alle ore 10:26, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+> The function bfq_bfqq_expire() invokes the function
+> __bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
+> If this happens, then no other instruction of bfq_bfqq_expire() must
+> be executed, or a use-after-free will occur.
+>=20
+> Basing on the assumption that __bfq_bfqq_expire() invokes
+> bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
+> assumed to be freed if its refcounter is equal to one right before
+> invoking __bfq_bfqq_expire().
+>=20
+> But, since commit 9dee8b3b057e1 ("block, bfq: fix queue removal from
+> weights tree") this assumption is false. __bfq_bfqq_expire() may also
+> invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e1, also
+> the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
+> may invoke bfq_put_queue() twice, and this is the actual case where
+> the in-service queue may happen to be freed.
+>=20
+> To address this issue, this commit moves the check on the refcounter
+> of the queue right around the last bfq_put_queue() that may be invoked
+> on the queue.
+>=20
+> Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+> Reported-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+> ---
+> block/bfq-iosched.c | 15 +++++++--------
+> block/bfq-iosched.h |  2 +-
+> block/bfq-wf2q.c    | 17 +++++++++++++++--
+> 3 files changed, 23 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index fac188dd78fa..30b88ec7ad26 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -2822,7 +2822,7 @@ static void bfq_dispatch_remove(struct =
+request_queue *q, struct request *rq)
+> 	bfq_remove_request(q, rq);
+> }
+>=20
+> -static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue =
+*bfqq)
+> +static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue =
+*bfqq)
+> {
+> 	/*
+> 	 * If this bfqq is shared between multiple processes, check
+> @@ -2855,9 +2855,11 @@ static void __bfq_bfqq_expire(struct bfq_data =
+*bfqd, struct bfq_queue *bfqq)
+> 	/*
+> 	 * All in-service entities must have been properly deactivated
+> 	 * or requeued before executing the next function, which
+> -	 * resets all in-service entites as no more in service.
+> +	 * resets all in-service entites as no more in service. This
+> +	 * may cause bfqq to be freed. If this happens, the next
+> +	 * function returns true.
+> 	 */
+> -	__bfq_bfqd_reset_in_service(bfqd);
+> +	return __bfq_bfqd_reset_in_service(bfqd);
+> }
+>=20
+> /**
+> @@ -3262,7 +3264,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+> 	bool slow;
+> 	unsigned long delta =3D 0;
+> 	struct bfq_entity *entity =3D &bfqq->entity;
+> -	int ref;
+>=20
+> 	/*
+> 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
+> @@ -3347,10 +3348,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+> 	 * reason.
+> 	 */
+> 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
+> -	ref =3D bfqq->ref;
+> -	__bfq_bfqq_expire(bfqd, bfqq);
+> -
+> -	if (ref =3D=3D 1) /* bfqq is gone, no more actions on it */
+> +	if (__bfq_bfqq_expire(bfqd, bfqq))
+> +		/* bfqq is gone, no more actions on it */
+> 		return;
+>=20
+> 	bfqq->injected_service =3D 0;
+> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+> index 062e1c4787f4..86394e503ca9 100644
+> --- a/block/bfq-iosched.h
+> +++ b/block/bfq-iosched.h
+> @@ -995,7 +995,7 @@ bool __bfq_deactivate_entity(struct bfq_entity =
+*entity,
+> 			     bool ins_into_idle_tree);
+> bool next_queue_may_preempt(struct bfq_data *bfqd);
+> struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
+> -void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
+> +bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
+> void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue =
+*bfqq,
+> 			 bool ins_into_idle_tree, bool expiration);
+> void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+> index a11bef75483d..ae4d000ac0af 100644
+> --- a/block/bfq-wf2q.c
+> +++ b/block/bfq-wf2q.c
+> @@ -1605,7 +1605,8 @@ struct bfq_queue *bfq_get_next_queue(struct =
+bfq_data *bfqd)
+> 	return bfqq;
+> }
+>=20
+> -void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+> +/* returns true if the in-service queue gets freed */
+> +bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+> {
+> 	struct bfq_queue *in_serv_bfqq =3D bfqd->in_service_queue;
+> 	struct bfq_entity *in_serv_entity =3D &in_serv_bfqq->entity;
+> @@ -1629,8 +1630,20 @@ void __bfq_bfqd_reset_in_service(struct =
+bfq_data *bfqd)
+> 	 * service tree either, then release the service reference to
+> 	 * the queue it represents (taken with bfq_get_entity).
+> 	 */
+> -	if (!in_serv_entity->on_st)
+> +	if (!in_serv_entity->on_st) {
+> +		/*
+> +		 * If no process is referencing in_serv_bfqq any
+> +		 * longer, then the service reference may be the only
+> +		 * reference to the queue. If this is the case, then
+> +		 * bfqq gets freed here.
+> +		 */
+> +		int ref =3D in_serv_bfqq->ref;
+> 		bfq_put_queue(in_serv_bfqq);
+> +		if (ref =3D=3D 1)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> }
+>=20
+> void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue =
+*bfqq,
+> --=20
+> 2.20.1
+>=20
 
-> > +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-> > +				struct dax_device *dax_dev)
-> > +{
-> 
-> 	/* Everyone supports non-sync mappings */
-> > +	if (!(vma->vm_flags & VM_SYNC))
-> > +		return true;
-> 	/* Sync mappings are supported only for files using DAX */
-> > +	if (!IS_DAX(file_inode(vma->vm_file)))
-> > +		return false;
-> 	/* Underlying device must support persisting through CPU instructions */
-> > +	return dax_synchronous(dax_dev);
-> > +}
-> >  #else
-> >  static inline struct dax_device *dax_get_by_host(const char *host)
-> >  {
-> > @@ -69,6 +87,11 @@ static inline bool dax_synchronous(struct dax_device
-> > *dax_dev)
-> >  {
-> >  	return true;
-> >  }
-> > +static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-> > +				struct dax_device *dax_dev)
-> > +{
-> > +	return true;
-> 
-> This looks wrong. Shouldn't it rather be:
-> 
-> 	return !(vma->flags & VM_SYNC);
-> 
-> ?
-
-Right. I will correct this.
-
-Thanks,
-Pankaj
-
-> 
-> 								Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-> 
