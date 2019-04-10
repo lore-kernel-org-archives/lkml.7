@@ -2,114 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA09C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D68DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB80720830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554904008;
-	bh=2nswS69CDtp9fvAuz8uZGuDaTGzpUSj3n/3joypwHMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e3rWI84qRN5VFDfqVnQB6liV/K4hkKQuWlkFRtyL+r/pGT9c1nPqabMdMHCsdTBRZ
-	 RRezEBzo54LeREzJ6NefPqZ2rlw4MDz4WS7SeTuHhdc87KixJfmfDaR7GQ6NRaKyUt
-	 Mthh5t+NvJRhHGBJMXckl9yaGPWUU3FVbHpfnNBs=
+	by mail.kernel.org (Postfix) with ESMTP id 5D73D20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9QaUd7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfDJNqr (ORCPT
+        id S1731851AbfDJNrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:46:47 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41638 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbfDJNqr (ORCPT
+        Wed, 10 Apr 2019 09:47:39 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:35853 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbfDJNrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:46:47 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v7so1779907oie.8;
-        Wed, 10 Apr 2019 06:46:46 -0700 (PDT)
+        Wed, 10 Apr 2019 09:47:39 -0400
+Received: by mail-ua1-f68.google.com with SMTP id k32so791958uae.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zQQOrgESGDCkEyrIM71xSzHfX8ZEuYbZibrK3lIv7i8=;
+        b=F9QaUd7neKHbxseTkVzKegwJs/tU/hugwDn1aiLgnXVphYCY+GceIM4ZyYNceOouUs
+         5Gmaz/0gRqFKLhDS4Ev0TEinnFid9qVy44F9flqMTliwsnaQeVuvIGFoDeGvvfG3C4P2
+         zexc4jy6oQU3UWkgEwfg9/pNKw4fdtsnoYMtqpIymusA6FHd/q12inlwsVDb6RGBZfIL
+         caF0O93WMNDKZqoAUe/Q5JZvP5OPUGjiZaqOlI/FtJA4qbHZg5BRrY+5MVt0iLDiPTp7
+         5LmfruLcknIkWjWRw4BrR6Erx62ECjL+uVCQGeR4GChxI6Uua3eDzFWMWM8kUzksra71
+         SrAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7e9AYwPzT58yoRTV+jXQpTmddagPMp1FA3EKEqM6BvY=;
-        b=r+QbEPsRRtmfWqEZO3F+VyKPwxw6t3tgOx1FMUMDLfhGtSlJ0pHMr53t6XVp89x4Js
-         RineKpz2VFfaVxve9sfdCZFxf2Ez25kRoInQ0zMm+5b2aW+Ww4lpHoQuXZRmB2PxxlOx
-         quVAEVd5qJNbUeC5hZA3c2nYcZEqq61OdGKiNfT0MPBCFbq5GdlLFWWxRiTi2Wkdphsk
-         CB/NLUz62suHERZU5aiTXbhnA/J5XQ6Rdpf4NJr+Coo58+3HOfP/ny70mpFTiJZzoEU1
-         uT1tmj35nYqm0mCL3wG5hshUGUU5ct+xrRjoanwSUb8Nd6aKc64NqfEKdmkHsHuhhTCa
-         DvWw==
-X-Gm-Message-State: APjAAAX0ot72fo57bitg1t9/GTeH2rbRpfCywPFNSDfDgHpArbm8llpy
-        aSE7J4b6H0JyTEhluq4pHw==
-X-Google-Smtp-Source: APXvYqx8hh0xzLjkmrMLGFY1VvjmXmk7wFgdT5tmYJuozIFtf+N8aZWkxQd9TrXLpEoiTgTA7u18qw==
-X-Received: by 2002:aca:47d2:: with SMTP id u201mr2603795oia.130.1554904005956;
-        Wed, 10 Apr 2019 06:46:45 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f97sm13988899otf.5.2019.04.10.06.46.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 06:46:45 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 08:46:44 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Andy Gross <andy.gross@linaro.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH RESEND V11 1/4] dt-bindings: fsl: scu: add thermal binding
-Message-ID: <20190410134644.GA7399@bogus>
-References: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zQQOrgESGDCkEyrIM71xSzHfX8ZEuYbZibrK3lIv7i8=;
+        b=SGphcnrp6rHkN5K7b9wwFKN4C/Z2s8VpPIg8cFaqaYzDg3Xet1weu+gCYL410oywbh
+         IAL/k5CylJNuSG0WnW8FCp3NQ+3wwaTM0du+grjwrfWpkTYq9ixw/ZCKMXp9Pt1fEZK8
+         iEndZOF88ylESNJkybYB3TAgx4w85atPPJNzPLcRFZ45spuhSdBVwjHdfmtMLzTvhvBJ
+         wuUM5Usb2ZKl7zPUPlfhDIQWy9NIsMPaPLQg3INR2vsA7tofti98wIO4FFAuwWLdczyu
+         ZqOdvS+Srn68QEqn3JkPQpk7ySTQj/YIiZgYzqZyghJ7ta5KoYTDXJlWahRLyfWHIYSW
+         PT4g==
+X-Gm-Message-State: APjAAAU1baHLPg5YWlJk0tEjBKNZUO6NMjfhyLRnLNbexxlj8sWc7tRt
+        y/4twpQq4brHqU3C/BGNOWP2UPnylOZatzIJL30SNeHkHz8=
+X-Google-Smtp-Source: APXvYqx6rmKTlAdG3lUDpiRVJ7to6JQCFZkxpN4lSbXlHXBDJbFOqkcG5pK/Sz08ZMkiqv1PM0ws2nJeIMhqJE6UHOc=
+X-Received: by 2002:ab0:1d82:: with SMTP id l2mr23247938uak.120.1554904058043;
+ Wed, 10 Apr 2019 06:47:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554881866-26333-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190410102754.387743324@linutronix.de> <20190410103646.221275815@linutronix.de>
+In-Reply-To: <20190410103646.221275815@linutronix.de>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Wed, 10 Apr 2019 15:47:26 +0200
+Message-ID: <CAG_fn=WaiTn9J6wS=1XsJWuorbRCg18Oe0PMAiHx9heb04v=ig@mail.gmail.com>
+Subject: Re: [RFC patch 29/41] btrfs: ref-verify: Simplify stack trace retrieval
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 07:43:04AM +0000, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and thermal sensors etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get temperature from thermal sensors, this patch adds
-> binding doc for i.MX system controller thermal driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Wed, Apr 10, 2019 at 1:06 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Replace the indirection through struct stack_trace with an invocation of
+> the storage array based interface.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: David Sterba <dsterba@suse.com>
+> Cc: Chris Mason <clm@fb.com>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Cc: linux-btrfs@vger.kernel.org
 > ---
-> Changes since V10:
-> 	- remove property "imx,sensor-resource-id".
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  fs/btrfs/ref-verify.c |   15 ++-------------
+>  1 file changed, 2 insertions(+), 13 deletions(-)
+>
+> --- a/fs/btrfs/ref-verify.c
+> +++ b/fs/btrfs/ref-verify.c
+> @@ -205,28 +205,17 @@ static struct root_entry *lookup_root_en
+>  #ifdef CONFIG_STACKTRACE
+>  static void __save_stack_trace(struct ref_action *ra)
+>  {
+> -       struct stack_trace stack_trace;
+> -
+> -       stack_trace.max_entries =3D MAX_TRACE;
+> -       stack_trace.nr_entries =3D 0;
+> -       stack_trace.entries =3D ra->trace;
+> -       stack_trace.skip =3D 2;
+> -       save_stack_trace(&stack_trace);
+> -       ra->trace_len =3D stack_trace.nr_entries;
+> +       ra->trace_len =3D stack_trace_save(ra->trace, MAX_TRACE, 2);
+Now that stack_trace.skip is gone, it's unclear what this "2" stands for.
+Maybe add an inline comment saying it's skipnr?
+(This is probably valid for all other stack_trace_save() callsites)
+>  }
+>
+>  static void __print_stack_trace(struct btrfs_fs_info *fs_info,
+>                                 struct ref_action *ra)
+>  {
+> -       struct stack_trace trace;
+> -
+>         if (ra->trace_len =3D=3D 0) {
+>                 btrfs_err(fs_info, "  ref-verify: no stacktrace");
+>                 return;
+>         }
+> -       trace.nr_entries =3D ra->trace_len;
+> -       trace.entries =3D ra->trace;
+> -       print_stack_trace(&trace, 2);
+> +       stack_trace_print(ra->trace, ra->trace_len, 2);
+>  }
+>  #else
+>  static void inline __save_stack_trace(struct ref_action *ra)
+>
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
