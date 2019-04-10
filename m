@@ -4,69 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D68DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51C1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D73D20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F84820830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9QaUd7n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GcTUnz9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbfDJNrj (ORCPT
+        id S1731370AbfDJNuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:47:39 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:35853 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbfDJNrj (ORCPT
+        Wed, 10 Apr 2019 09:50:01 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44269 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728553AbfDJNuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:47:39 -0400
-Received: by mail-ua1-f68.google.com with SMTP id k32so791958uae.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:47:38 -0700 (PDT)
+        Wed, 10 Apr 2019 09:50:01 -0400
+Received: by mail-vk1-f193.google.com with SMTP id q189so564611vkq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zQQOrgESGDCkEyrIM71xSzHfX8ZEuYbZibrK3lIv7i8=;
-        b=F9QaUd7neKHbxseTkVzKegwJs/tU/hugwDn1aiLgnXVphYCY+GceIM4ZyYNceOouUs
-         5Gmaz/0gRqFKLhDS4Ev0TEinnFid9qVy44F9flqMTliwsnaQeVuvIGFoDeGvvfG3C4P2
-         zexc4jy6oQU3UWkgEwfg9/pNKw4fdtsnoYMtqpIymusA6FHd/q12inlwsVDb6RGBZfIL
-         caF0O93WMNDKZqoAUe/Q5JZvP5OPUGjiZaqOlI/FtJA4qbHZg5BRrY+5MVt0iLDiPTp7
-         5LmfruLcknIkWjWRw4BrR6Erx62ECjL+uVCQGeR4GChxI6Uua3eDzFWMWM8kUzksra71
-         SrAw==
+        bh=3/W7xviLZD4965MFFPe/ULcmZWMQnJA82fl70a5meCw=;
+        b=GcTUnz9xZ4jlR0mziPMHMCPyYjEsgFQ23lhwxCfiku1AqXOgLalio/532ls+6j4kI7
+         skoWjsH6+OdZ+t+jJJ+ixX6pUZn1cLxz1nDUAXK9J9gBaubc168GOFUFp6wiNU5nVw+u
+         P8fvnezT8+ZSX7VoFzB/kP/mnicsinEktsniwy0SG9nChq3/u/oiRGo+xEbE3o3msDUa
+         /+IvvuvtMChL8fGiQWmfQK2P8mArbSl3p5nrWyzo1LyWMQCM358Vlmyih8aEw9rgA9J5
+         noyXsvaGJlK03d9iEa5cCxPjwqWNgRVoFN6zI0ZRjvYpFWmd+fibd5FWww109l8NlAci
+         qb6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zQQOrgESGDCkEyrIM71xSzHfX8ZEuYbZibrK3lIv7i8=;
-        b=SGphcnrp6rHkN5K7b9wwFKN4C/Z2s8VpPIg8cFaqaYzDg3Xet1weu+gCYL410oywbh
-         IAL/k5CylJNuSG0WnW8FCp3NQ+3wwaTM0du+grjwrfWpkTYq9ixw/ZCKMXp9Pt1fEZK8
-         iEndZOF88ylESNJkybYB3TAgx4w85atPPJNzPLcRFZ45spuhSdBVwjHdfmtMLzTvhvBJ
-         wuUM5Usb2ZKl7zPUPlfhDIQWy9NIsMPaPLQg3INR2vsA7tofti98wIO4FFAuwWLdczyu
-         ZqOdvS+Srn68QEqn3JkPQpk7ySTQj/YIiZgYzqZyghJ7ta5KoYTDXJlWahRLyfWHIYSW
-         PT4g==
-X-Gm-Message-State: APjAAAU1baHLPg5YWlJk0tEjBKNZUO6NMjfhyLRnLNbexxlj8sWc7tRt
-        y/4twpQq4brHqU3C/BGNOWP2UPnylOZatzIJL30SNeHkHz8=
-X-Google-Smtp-Source: APXvYqx6rmKTlAdG3lUDpiRVJ7to6JQCFZkxpN4lSbXlHXBDJbFOqkcG5pK/Sz08ZMkiqv1PM0ws2nJeIMhqJE6UHOc=
-X-Received: by 2002:ab0:1d82:: with SMTP id l2mr23247938uak.120.1554904058043;
- Wed, 10 Apr 2019 06:47:38 -0700 (PDT)
+        bh=3/W7xviLZD4965MFFPe/ULcmZWMQnJA82fl70a5meCw=;
+        b=m80rzE0Irkm3cs2GXO/mJCQkF72gBmQbUdfH4UOVtHiAnG0iRGBhUxaWUWrjw3WZ8a
+         50buFgB7b8ADjaQB8uECSACzSv2ZcQ8bvh8yelYTUK9qt8aWLonkYUGk4BfXhS/BJgkm
+         FN8Kw9C4MwNexTQeILImr9PNGAFWfAqxvOD0K7EVwGnlHJ1iuOFqfrh33Ta3KHH2fKyZ
+         4MMoi+xYxCVLVuHxmOzYfSdsYAQUILPYsq9a0byRscSXgTIgjEHNVW7V49FXIIVuYWif
+         7xz7JPtvQEKBZkzmDNmqnH8vtmi7l3DzCjrUYn27ZgE3DdpyvV4omgpbVH+WH34t/YRp
+         8v2Q==
+X-Gm-Message-State: APjAAAXbPiKq9NYwI8pBnL+8/wkiFL2Bd47M/yiPs8KXkWIumsNP5WA2
+        ynAsO7LNKjJeKf823bjt34NRbBO+LtHhwbaM+XymILIoeMI=
+X-Google-Smtp-Source: APXvYqwCaa0zmZGCCa/A1a9R/LBX3hsxT10Xt3XEk7G0+4YKHkL8bwg6kkrn42HB+McPtCsdq4Tj6NErVTUwvxWLYLc=
+X-Received: by 2002:a1f:bf4b:: with SMTP id p72mr23769555vkf.77.1554904199690;
+ Wed, 10 Apr 2019 06:49:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410102754.387743324@linutronix.de> <20190410103646.221275815@linutronix.de>
-In-Reply-To: <20190410103646.221275815@linutronix.de>
+References: <20190410102754.387743324@linutronix.de> <20190410103647.294241460@linutronix.de>
+In-Reply-To: <20190410103647.294241460@linutronix.de>
 From:   Alexander Potapenko <glider@google.com>
-Date:   Wed, 10 Apr 2019 15:47:26 +0200
-Message-ID: <CAG_fn=WaiTn9J6wS=1XsJWuorbRCg18Oe0PMAiHx9heb04v=ig@mail.gmail.com>
-Subject: Re: [RFC patch 29/41] btrfs: ref-verify: Simplify stack trace retrieval
+Date:   Wed, 10 Apr 2019 15:49:48 +0200
+Message-ID: <CAG_fn=UbO3iMPe+CRF2GjenKT60264rktvSLK--eMbsfPuYCAw@mail.gmail.com>
+Subject: Re: [RFC patch 41/41] lib/stackdepot: Remove obsolete functions
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
+        Alexander Potapenko <glider@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,54 +74,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Apr 10, 2019 at 1:06 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Replace the indirection through struct stack_trace with an invocation of
-> the storage array based interface.
+> No more users of the struct stack_trace based interfaces.
 >
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: David Sterba <dsterba@suse.com>
-> Cc: Chris Mason <clm@fb.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: linux-btrfs@vger.kernel.org
+Acked-by: Alexander Potapenko <glider@google.com>
 > ---
->  fs/btrfs/ref-verify.c |   15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
+>  include/linux/stackdepot.h |    4 ----
+>  lib/stackdepot.c           |   20 --------------------
+>  2 files changed, 24 deletions(-)
 >
-> --- a/fs/btrfs/ref-verify.c
-> +++ b/fs/btrfs/ref-verify.c
-> @@ -205,28 +205,17 @@ static struct root_entry *lookup_root_en
->  #ifdef CONFIG_STACKTRACE
->  static void __save_stack_trace(struct ref_action *ra)
->  {
-> -       struct stack_trace stack_trace;
-> -
-> -       stack_trace.max_entries =3D MAX_TRACE;
-> -       stack_trace.nr_entries =3D 0;
-> -       stack_trace.entries =3D ra->trace;
-> -       stack_trace.skip =3D 2;
-> -       save_stack_trace(&stack_trace);
-> -       ra->trace_len =3D stack_trace.nr_entries;
-> +       ra->trace_len =3D stack_trace_save(ra->trace, MAX_TRACE, 2);
-Now that stack_trace.skip is gone, it's unclear what this "2" stands for.
-Maybe add an inline comment saying it's skipnr?
-(This is probably valid for all other stack_trace_save() callsites)
->  }
+> --- a/include/linux/stackdepot.h
+> +++ b/include/linux/stackdepot.h
+> @@ -23,13 +23,9 @@
 >
->  static void __print_stack_trace(struct btrfs_fs_info *fs_info,
->                                 struct ref_action *ra)
->  {
-> -       struct stack_trace trace;
+>  typedef u32 depot_stack_handle_t;
+>
+> -struct stack_trace;
 > -
->         if (ra->trace_len =3D=3D 0) {
->                 btrfs_err(fs_info, "  ref-verify: no stacktrace");
->                 return;
->         }
-> -       trace.nr_entries =3D ra->trace_len;
-> -       trace.entries =3D ra->trace;
-> -       print_stack_trace(&trace, 2);
-> +       stack_trace_print(ra->trace, ra->trace_len, 2);
+> -depot_stack_handle_t depot_save_stack(struct stack_trace *trace, gfp_t f=
+lags);
+>  depot_stack_handle_t stack_depot_save(unsigned long *entries,
+>                                       unsigned int nr_entries, gfp_t gfp_=
+flags);
+>
+> -void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *=
+trace);
+>  unsigned int stack_depot_fetch(depot_stack_handle_t handle,
+>                                unsigned long **entries);
+>
+> --- a/lib/stackdepot.c
+> +++ b/lib/stackdepot.c
+> @@ -212,14 +212,6 @@ unsigned int stack_depot_fetch(depot_sta
 >  }
->  #else
->  static void inline __save_stack_trace(struct ref_action *ra)
+>  EXPORT_SYMBOL_GPL(stack_depot_fetch);
+>
+> -void depot_fetch_stack(depot_stack_handle_t handle, struct stack_trace *=
+trace)
+> -{
+> -       unsigned int nent =3D stack_depot_fetch(handle, &trace->entries);
+> -
+> -       trace->max_entries =3D trace->nr_entries =3D nent;
+> -}
+> -EXPORT_SYMBOL_GPL(depot_fetch_stack);
+> -
+>  /**
+>   * stack_depot_save - Save a stack trace from an array
+>   *
+> @@ -314,15 +306,3 @@ depot_stack_handle_t stack_depot_save(un
+>         return retval;
+>  }
+>  EXPORT_SYMBOL_GPL(stack_depot_save);
+> -
+> -/**
+> - * depot_save_stack - save stack in a stack depot.
+> - * @trace - the stacktrace to save.
+> - * @alloc_flags - flags for allocating additional memory if required.
+> - */
+> -depot_stack_handle_t depot_save_stack(struct stack_trace *trace,
+> -                                     gfp_t alloc_flags)
+> -{
+> -       return stack_depot_save(trace->entries, trace->nr_entries, alloc_=
+flags);
+> -}
+> -EXPORT_SYMBOL_GPL(depot_save_stack);
 >
 >
 
