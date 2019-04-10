@@ -2,136 +2,97 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93268C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A032FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCFB2133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554905404;
-	bh=Sl0RLrbnJrqDJYXcHbmdi5KA+YY75FjXOFc9bsfM5k8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nd872rrJaX2jALrZkYyXSEpDPR4/zqfFcwwiDHhsFD3M/C5YKL4ZLfSXfr+tpSHCP
-	 TXqVvCWwXk2gN5lWiITZ20f2uNrR/Rz2p9rnuVZ9W5ZLrcFFKB1Rln7gvsZ97sogPc
-	 0vM5+n7nPaOGfPq6W49RWUfEQlCNbUrQitegbBeQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6E2FA20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VTjcw8ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732589AbfDJOKD (ORCPT
+        id S1732610AbfDJOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:10:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37421 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbfDJOKD (ORCPT
+        Wed, 10 Apr 2019 10:10:19 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13362 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730195AbfDJOKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:10:03 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c16so2041119otn.4;
-        Wed, 10 Apr 2019 07:10:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9GecMz2KPIeESiZKPs22diHS55qIWq05bHgPCBS/UHs=;
-        b=arCblmzO7LXpyoM41FLr8knMFnxJJh3mnHwFzTQVl1OkjNik8x5/aviD7QZK+tJBMW
-         ysd+M7bSjC3FYyb978mL0rcoRPxOBwphDt2+s2r/ilGCrjGYM+Ls0lz5kpkKzsZA22SC
-         w54NdcJ8o7jS6PzIzWcUrBMaoAR0zU+NlOxzVCSzdkKlgJZadAPU/3ER2GakDkWjUwZo
-         Xc9L293OjxqKSkuMcSNTGjI/nHvdHOsozkeyDJlKQzE0I1NhBhyMwlqhkze0tVzR0rbG
-         pGBojuDZCw478N1JgXcvnOJ2YAM8Sx5VjGMjfafi6V6e4YaaRqveV8aC/twUk2unujT0
-         UL1Q==
-X-Gm-Message-State: APjAAAUOkpAvP4ekeWLhhdR3r6rppssKVLJPwICRgzfkwG8aWyx43h8j
-        kyHNLSCmO5G64862Boc/pA==
-X-Google-Smtp-Source: APXvYqxmDthSZ2TajMpXLpsmnUF0niYt4PWGNk1VCmf2itaQ81zGlHn9+bOAZkErl/A2sVaaTLiR6g==
-X-Received: by 2002:a9d:32f5:: with SMTP id u108mr28426804otb.153.1554905401984;
-        Wed, 10 Apr 2019 07:10:01 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h26sm12681838oih.22.2019.04.10.07.10.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 07:10:01 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 09:10:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Talel Shenhar <talel@amazon.com>
-Cc:     edubezval@gmail.com, dwmw@amazon.co.uk, jonnyc@amazon.com,
-        rui.zhang@intel.com, hhhawa@amazon.com, ronenk@amazon.com,
-        hanochu@amazon.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: thermal: al-thermal: Add binding
- documentation
-Message-ID: <20190410141000.GA19197@bogus>
-References: <1554373016-1442-1-git-send-email-talel@amazon.com>
- <1554373016-1442-2-git-send-email-talel@amazon.com>
+        Wed, 10 Apr 2019 10:10:19 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AE63YV026878;
+        Wed, 10 Apr 2019 16:10:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
+ : from : message-id : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=Gfk+0Sx6HSuhi07b3scMEGQqXsv6BB+RNtOMTePDgdQ=;
+ b=VTjcw8ftoiyz31rxHSiyhN6WDm5LYV+CPaKWt5aLLMul9dVPwNX+5A9UDpIi+AlUktmZ
+ j9rxyhxsEiJAg6YPCMPbn3Fpffo/1tEXTqVx02eVtWKAMUYkOKXQiG0QQca80zzQOqDX
+ boN0ApI7gLlDHTydaSDyOcAgydLFjnsw1chs4Vf+XfbLkpQqFdho0Jf+y0JMHbdDQZbJ
+ /Lc8meW1xIlHECkw2jG3JxJJUHiTl6//wqF3RgtqNKlN7gAA/wWE/RQRRMRjYUFWwYHo
+ 6601Fr2T8Mxq2XnYpgziQQXOUvM5TFL03MiZBnBtHt/DnO7/IiGGy7aWdaRUd0+IrcZf YA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rprcfgcff-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 10 Apr 2019 16:10:09 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2F52231;
+        Wed, 10 Apr 2019 14:10:09 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0495523FA;
+        Wed, 10 Apr 2019 14:10:09 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.45) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Apr
+ 2019 16:10:08 +0200
+Subject: Re: [PATCH v1 0/2] add cec pins muxing
+To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>
+References: <1553863315-6652-1-git-send-email-yannick.fertre@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <88623d7b-1258-2c2b-d3ad-ab0069ca2a9d@st.com>
+Date:   Wed, 10 Apr 2019 16:08:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554373016-1442-2-git-send-email-talel@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553863315-6652-1-git-send-email-yannick.fertre@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 01:16:55PM +0300, Talel Shenhar wrote:
-> Add thermal binding documentation for Amazon's Annapurna Labs Thermal
-> Sensor.
+Hi Yannick
+
+On 3/29/19 1:41 PM, Yannick Fertré wrote:
+> Add cec pins muxing
 > 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  .../bindings/thermal/amazon,al-thermal.txt         | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+> Yannick Fertré (2):
+>    ARM: dts: stm32: add cec pins muxing on stm32mp157
+>    ARM: dts: stm32: add sleep pinctrl for cec on stm32mp157c
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-> new file mode 100644
-> index 0000000..af8cf18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
-> @@ -0,0 +1,33 @@
-> +Amazon's Annapurna Labs Thermal Sensor
-> +
-> +Simple thermal device that allows temperature reading by a single MMIO
-> +transaction.
-> +
-> +Required properties:
-> +- compatible: "amazon,al-thermal".
-> +- reg: The physical base address and length of the sensor's registers.
-> +- #thermal-sensor-cells: Must be 1. See ./thermal.txt for a description.
-> +
-> +Example:
-> +	thermal: thermal {
-> +		compatible = "amazon,al-thermal";
-> +		reg = <0x0 0x05002860 0x0 0x1>;
-> +		#thermal-sensor-cells = <0x1>;
-> +	};
-> +
-> +	thermal-zones {
-> +		thermal_z0 {
-
-thermal-z0 {
-
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&thermal 0>;
-> +			trips {
-> +				thermalz0_crit {
-
-critical {
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +					temperature = <105000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +		};
-> +	};
-> +
-> -- 
-> 2.7.4
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
 > 
+
+Series applied on stm32-next. Note that I squashed the both patches
+as they deal only with pins muxing group definition.
+
+Regards
+Alex
