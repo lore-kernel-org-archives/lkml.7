@@ -2,97 +2,204 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293ECC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F921C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA7C2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599BF2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="03zhtP3h"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UlXDiDDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfDJGJR (ORCPT
+        id S1727504AbfDJGK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:09:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34489 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfDJGJR (ORCPT
+        Wed, 10 Apr 2019 02:10:58 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3336 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbfDJGK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:09:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p10so1394777wrq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 23:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NA0KH+84Yze/o0gKU4OJJ1enqUC1AklFzqfQAGl58rs=;
-        b=03zhtP3hjGilRQUkBcV1cNKSgX7z2b5GRHf1ymBh/GZlNqm5s2d+DrUV8UKkVC/gXR
-         PaCLH1oZEfRhwXZeeU5YRiGnbI2kZKGoQ4xOERU2HkgDgMVhzc/Mex5eh1cTkXD1hwWn
-         h9GL4PYVxzAxC+TeTiWbBEYHNRKPGQySw+fKF+u9vNnN/CUGFa8PaRfvhv+CmvbBO3Jr
-         vaBWZaMFKUAAkoXBeaaWGH9C/6uXfV5VhnZNqL11WR+SaZ7MC4xd4kD9ReLRxFgt1FOb
-         VmlEywxpHr1XxM7LM6vvCiHwqgwKWaN3JnLU4hCS14Ct/P8hDhepmuKb3mTEi3Q11qVT
-         VEYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NA0KH+84Yze/o0gKU4OJJ1enqUC1AklFzqfQAGl58rs=;
-        b=Yo/IkzcXIoUQawl3S5umH6GsWcBVETN03/ngls0BhfgOxyH9Vo0RP3xnGDRtpqApNF
-         MMl4xQiW3Vcu5uTlYyxVhnLv3BOMPMO+zSMDILarZo0qo7Yfp1M1ph+Ui8VQk5nttsfd
-         afPumRFeyfksc7xjEiqEvmFkN1a0NrXx6/UEySyI2K0zpPsGewA3kYWTNlJikswmx0N7
-         zi+wPi+UZckrdGwBvc4JqiggDaSOgShJIqNrAE2fc1Uv0x/u8mvFO6dvC8/Qfwy+IDYo
-         2JTkA8EBN4yK6xXDY56PxiOfDI8+ImWXhH1Tz+49bLMcBkRLxfc9vAe9TV/6ntdDu5eH
-         V1OA==
-X-Gm-Message-State: APjAAAXcI+d9BtTqwo2QjDUJaHi6wSOnlOnXdtJEkyq6uPdFbkYs9Bok
-        YBNhpVnKumHRiHFFRBA8/k0qQpN1RX7ZGmdHOKH/3w==
-X-Google-Smtp-Source: APXvYqwGsVM+lp4TTutXtH2uxGhqQuhFdsD+/tvxC3JYLlOvD13BeFR7y/2cQJcno8YdIZdoNpSM/QAGK99XEXzYIIg=
-X-Received: by 2002:adf:f110:: with SMTP id r16mr24701189wro.153.1554876555377;
- Tue, 09 Apr 2019 23:09:15 -0700 (PDT)
+        Wed, 10 Apr 2019 02:10:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cad88df0002>; Tue, 09 Apr 2019 23:10:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Apr 2019 23:10:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Apr 2019 23:10:55 -0700
+Received: from [10.24.47.181] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Apr
+ 2019 06:10:43 +0000
+Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
+        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
+        <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
+        <devicetree@vger.kernel.org>, <mmaddireddy@nvidia.com>,
+        <kthota@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
+ <20190329203159.GG24180@google.com>
+ <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
+ <20190402183110.GE141706@google.com>
+ <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
+ <20190403173641.GI141706@google.com>
+ <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
+ <20190405185842.GC26522@google.com>
+ <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
+ <20190409132604.GA256045@google.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <a414b42c-ce10-e2db-55f0-9428cfd23e68@nvidia.com>
+Date:   Wed, 10 Apr 2019 11:40:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190312220752.128141-2-anup.patel@wdc.com> <mhng-02f905c7-fb28-4997-9769-2cb88c581881@palmer-si-x1c4>
-In-Reply-To: <mhng-02f905c7-fb28-4997-9769-2cb88c581881@palmer-si-x1c4>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 10 Apr 2019 11:39:03 +0530
-Message-ID: <CAAhSdy1UZ3VZAa+Gtf0KQUY9Ebwm7p=qAB+Xv7HDAjfUYpFuAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] RISC-V: Add separate defconfig for 32bit systems
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190409132604.GA256045@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554876640; bh=XP5pBaAzq9ceuDVxSs3r6ZAnlMLHTJVkOLBlgo77z7o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UlXDiDDBMhWq2TWyoaZ8R+NTy5qZL6UD/l2nVF185kZM1jhudocKUNFkcJoW67n0G
+         5An6PhPQeDMynKsesGDzqoKfRd29idTmuztikN8+ixwPelF1afpq18Q2xnv5ME9A1i
+         LlTT5yNZriSjqvh8KnFbO/0Fe2taeu2yd+XvyX+xhXhq0G1Y7HhyiNEwMgjNWHnTPy
+         Lzb8h9aMm3AZHktSQuJV+/B6KU143gCrNzdsNecp/WFaoNZ4M1teAbihf5/pbgwMfw
+         Dxf+f5MQxJAfPtG1a59Y9YaV/yuA0IwvE5Y7wWWZrk+NId4KJeGRKoVvoRZlepjDRp
+         FQ3+C3aRFH85Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 10:14 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> On Tue, 12 Mar 2019 15:08:12 PDT (-0700), Anup Patel wrote:
-> > This patch adds rv32_defconfig for 32bit systems. The only
-> > difference between rv32_defconfig and defconfig is that
-> > rv32_defconfig has  CONFIG_ARCH_RV32I=y.
->
-> Thanks.  I think it makes sense to have this in 5.1 so I'm going to take it
-> into the next RC.
+On 4/9/2019 6:56 PM, Bjorn Helgaas wrote:
+> On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
+>> On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
+>>> On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
+>>>> On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
+>>>>> On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
+>>>>>> On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
+>>>>>>> On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
+>>>>>>>> On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
+>>>>>>>>> On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
+>>>>>>>>>> Add support for Synopsys DesignWare core IP based PCIe host controller
+>>>>>>>>>> present in Tegra194 SoC.
+>>>>>>>
+>>>>>>>       - Why does this chip require pcie_pme_disable_msi()?  The only other
+>>>>>>>         use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
+>>>>>>>         ("PCI PM: Make it possible to force using INTx for PCIe PME
+>>>>>>>         signaling").
+>>>>>>
+>>>>>> Because Tegra194 doesn't support raising PME interrupts through MSI line.
+> 
+>>> There's something wrong here.  Either the question of how PME is
+>>> signaled is generic and the spec provides a way for the OS to discover
+>>> that method, or it's part of the device-specific architecture that
+>>> each host bridge driver has to know about its device.  If the former,
+>>> we need to make the PCI core smart enough to figure it out.  If the
+>>> latter, we need a better interface than this ad hoc
+>>> pcie_pme_disable_msi() thing.  But if it is truly the latter, your
+>>> current code is sufficient and we can refine it over time.
+>>
+>> In case of Tegra194, it is the latter case.
+> 
+> This isn't a Tegra194 question; it's a question of whether this
+> behavior is covered by the PCIe spec.
+AFAIU the spec and what I heard from Nvidia hardware folks is that spec doesn't
+explicitly talk about this and it was a design choice made by Nvidia hardware
+folks to route these interrupts through legacy line instead of MSI line.
 
-Thanks, Palmer.
+> 
+>>> What I suspect should happen eventually is the DWC driver should call
+>>> devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
+>>> That would require a little reorganization of the DWC data structures,
+>>> but it would be good to be more consistent.
+>>>
+>>> For now, I think stashing the pointer in pcie_port or dw_pcie would be
+>>> OK.  I'm not 100% clear on the difference, but it looks like either
+>>> should be common across all the DWC drivers, which is what we want.
+>>
+>> Since dw_pcie is common for both root port and end point mode structures,
+>> I think it makes sense to keep the pointer in pcie_port as this structure
+>> is specific to root port mode of operation.
+>> I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
+>> used in the beginning itself to be inline with non-DWC implementations.
+>> But, I'll take it up later (after I'm done with upstreaming current series)
+> 
+> Fair enough.
+> 
+>>>> .remove() internally calls pm_runtime_put_sync() API which calls
+>>>> .runtime_suspend(). I made a new patch to add a host_deinit() call
+>>>> which make all these calls. Since host_init() is called from inside
+>>>> .runtime_resume() of this driver, to be in sync, I'm now calling
+>>>> host_deinit() from inside .runtime_suspend() API.
+>>>
+>>> I think this is wrong.  pci_stop_root_bus() will detach all the
+>>> drivers from all the devices.  We don't want to do that if we're
+>>> merely runtime suspending the host bridge, do we?
+>>
+>> In the current driver, the scenarios in which .runtime_suspend() is called
+>> are
+>> a) during .remove() call and
+> 
+> It makes sense that you should call pci_stop_root_bus() during
+> .remove(), i.e., when the host controller driver is being removed,
+> because the PCI bus will no longer be accessible.  I think you should
+> call it *directly* from tegra_pcie_dw_remove() because that will match
+> what other drivers do.
+> 
+>> b) when there is no endpoint found and controller would be shutdown
+>> In both cases, it is required to stop the root bus and remove all devices,
+>> so, instead of having same call present in respective paths, I kept them
+>> in .runtime_suspend() itself to avoid code duplication.
+> 
+> I don't understand this part.  We should be able to runtime suspend
+> the host controller without detaching drivers for child devices.
+> 
+> If you shutdown the controller completely and detach the *host
+> controller driver*, sure, it makes sense to detach drivers from child
+> devices.  But that would be handled by the host controller .remove()
+> method, not by the runtime suspend method.
+I think it is time I give some background about why I chose to implement
+.runtime_suspend() and .runtime_resume() APIs in the first place. We wanted to
+powerdown PCIe controller if there is no link up (i.e. slot is open and no endpoint
+devices are connected). We want to achieve this without returning a failure in
+.probe() call. Given PCIe IP power partitioning is handled by generic power domain
+framework, power partition gets unpowergated before .probe() gets called and gets
+powergated either when a failure is returned in .probe() or when pm_runtime_put_sync()
+is called. So, I chose to call pm_runtime_put_sync() in no-link-up scenario and chose
+to implement .runtime_suspend() to handle all the cleanup work before PCIe partition
+getting powergated. In fact, to match this, I'm doing all the PCIe IP bring up
+activity in .runtime_resume() implementation which gets invoked by pm_runtime_get_sync()
+which in turn is called in .probe() path. In fact the very dw_pcie_host_init() itself
+is called from .runtime_resume() implementation. So, it is because of these reasons that
+I called pci_stop_root_bus() and pci_remove_root_bus() as part of .runtime_suspend()
+implementation as pm_runtime_put_sync() is called from both .remove() and also during
+no-link-up scenario. Please do let me know if there is a better way to do this.
 
-Can you consider "[PATCH v3] RISC-V: Fix Maximum Physical Memory 2GiB
-option for 64bit systems" for 5.1?
+> 
+> Bjorn
+> 
 
-Refer, https://patchwork.kernel.org/patch/10886895/
-
-The above patch is also required for 64bit system with more than 128GiB memory
-(i.e. server-class system).
-
-We can remove "Maximum Physical Memory 2GiB" option as separate patch.
-
-Regards,
-Anup
