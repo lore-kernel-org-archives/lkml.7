@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC29BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2E0217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9748E217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554899228;
-	bh=ZAJqOrDhBHBp83a/oJE9iIyECieC5irdn0mW/fjHwh4=;
+	s=default; t=1554899234;
+	bh=Tnnve3F7+qpUpDciIJOJSEkq5ly35RvXQXv825Ol13Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2eOP6UDnetee0icA5IRskZrWSyBZ5usDng/Wj3HWqSoxzzM0ZCeT5VTjVd7KOeb/l
-	 hnBPurZ9aLsGIkjofe+5JnestbFG+HesSiHaUMGLxE6DSmQ2y+MR/ZDJLl5WdDigQ9
-	 k4Oerf1/fFDNmV0M81iIO7I1IJWWCW/FZiRBZwAU=
+	b=BHAGw8on0QBtgAbAdquC5QTWfEmVDm3hvwvVUMrpZIyOkfWN2q2WoJQPivMmbeDHI
+	 F9dewgfZIpG1l2lB3/222CAwT26Z+pEXTGLt57wwKde/5pGFuEMAlxcqNGmT1S3L9G
+	 Q1Ro01ix4DtSl9OuN0+KYzSH2TkHZzjeIec0TSz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfDJM1H (ORCPT
+        id S1731938AbfDJM1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:27:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35852 "EHLO
+        Wed, 10 Apr 2019 08:27:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35638 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731914AbfDJM1F (ORCPT
+        with ESMTP id S1728762AbfDJM06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:27:05 -0400
+        Wed, 10 Apr 2019 08:26:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VAMvmJICjKWKfT17guS1YUpoidbalsLoC4YaYWsnKEs=; b=o/dAI5G6nQwk
-        dnh5IG4dJ1bJEJsWSKAcSvNmQtsv2/dYPGu2gtB+pBjDeFLmyLWaWEi2gSyJO8bIqep8etbZNV1ds
-        AGs37XvEhxHj+1GqZbD2cox1nUTDkHXhOfKZq23QZBXF0HGeOWK5Ze+fIfuQEuw2uClR3ItEV43iI
-        lMxHU=;
+        List-Archive; bh=qLRR6MocEvwWUyzxtvfDaOfugWuwqcsAx6MPwRM7T1w=; b=ryYxxr5cHH24
+        3e2rpKBajFoi/xkoy2mo8zxVYPV2vWXyGY871+/s6CSSYPmMvnrNqkjKZ34K3jJ/M+sAmyYvG8Y7M
+        YhM5FHh75YNYm/xpmtCIUEaEDSAGX7vP64LoxhHGVkRM7yQisH1sIDeTcO9FnCqWk5YTY6jM5tpJV
+        SlzFo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hECJf-00007o-Rt; Wed, 10 Apr 2019 12:26:59 +0000
+        id 1hECJc-00007V-3F; Wed, 10 Apr 2019 12:26:56 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 3635D1128ED2; Wed, 10 Apr 2019 13:26:59 +0100 (BST)
+        id 7C4901128ED2; Wed, 10 Apr 2019 13:26:55 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        naga.sureshkumar.relli@xilinx.com
-Subject: Applied "spi: spi-mem: Fix build error without CONFIG_SPI_MEM" to the spi tree
-In-Reply-To:  <20190408143949.10688-1-yuehaibing@huawei.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190410122659.3635D1128ED2@debutante.sirena.org.uk>
-Date:   Wed, 10 Apr 2019 13:26:59 +0100 (BST)
+Message-Id: <20190410122655.7C4901128ED2@debutante.sirena.org.uk>
+Date:   Wed, 10 Apr 2019 13:26:55 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +59,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-mem: Fix build error without CONFIG_SPI_MEM
+   regulator: hi655x: Remove ctrl_mask field from struct hi655x_regulator
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,63 +84,75 @@ to this mail.
 Thanks,
 Mark
 
-From 0e530e4eba5e9003af83c6afda833c64c7fcae08 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Mon, 8 Apr 2019 22:39:49 +0800
-Subject: [PATCH] spi: spi-mem: Fix build error without CONFIG_SPI_MEM
+From 29e5cb657e2acdf902b0122ca58620ccd771f297 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Mon, 8 Apr 2019 20:09:33 +0800
+Subject: [PATCH] regulator: hi655x: Remove ctrl_mask field from struct
+ hi655x_regulator
 
-When building with CONFIG_SPI_MEM is not set
-gc warns this:
+The rdev->desc->enable_mask setting is always the same as
+BIT(regulator->ctrl_mask), so just use rdev->desc->enable_mask instead.
 
-drivers/spi/spi-zynq-qspi.o: In function `zynq_qspi_supports_op':
-spi-zynq-qspi.c:(.text+0x1da): undefined reference to `spi_mem_default_supports_op'
-
-Fixes: 67dca5e580f1 ("spi: spi-mem: Add support for Zynq QSPI controller")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- include/linux/spi/spi-mem.h | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/regulator/hi655x-regulator.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-index c845cd6e22ba..1941b845aa15 100644
---- a/include/linux/spi/spi-mem.h
-+++ b/include/linux/spi/spi-mem.h
-@@ -295,6 +295,10 @@ int spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
- void spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
- 					  const struct spi_mem_op *op,
- 					  struct sg_table *sg);
-+
-+bool spi_mem_default_supports_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op);
-+
- #else
- static inline int
- spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
-@@ -310,6 +314,13 @@ spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
- 				     struct sg_table *sg)
+diff --git a/drivers/regulator/hi655x-regulator.c b/drivers/regulator/hi655x-regulator.c
+index 460ae70d8b04..6f6635daa026 100644
+--- a/drivers/regulator/hi655x-regulator.c
++++ b/drivers/regulator/hi655x-regulator.c
+@@ -28,7 +28,6 @@
+ struct hi655x_regulator {
+ 	unsigned int disable_reg;
+ 	unsigned int status_reg;
+-	unsigned int ctrl_mask;
+ 	struct regulator_desc rdesc;
+ };
+ 
+@@ -77,22 +76,18 @@ enum hi655x_regulator_id {
+ static int hi655x_is_enabled(struct regulator_dev *rdev)
  {
- }
-+
-+bool spi_mem_default_supports_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	return false;
-+}
-+
- #endif /* CONFIG_SPI_MEM */
- 
- int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op);
-@@ -341,9 +352,6 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
- 
- void spi_mem_driver_unregister(struct spi_mem_driver *drv);
- 
--bool spi_mem_default_supports_op(struct spi_mem *mem,
--				 const struct spi_mem_op *op);
+ 	unsigned int value = 0;
 -
- #define spi_mem_driver_register(__drv)                                  \
- 	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
+ 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
  
+ 	regmap_read(rdev->regmap, regulator->status_reg, &value);
+-	return (value & BIT(regulator->ctrl_mask));
++	return (value & rdev->desc->enable_mask);
+ }
+ 
+ static int hi655x_disable(struct regulator_dev *rdev)
+ {
+-	int ret = 0;
+-
+ 	struct hi655x_regulator *regulator = rdev_get_drvdata(rdev);
+ 
+-	ret = regmap_write(rdev->regmap, regulator->disable_reg,
+-			   BIT(regulator->ctrl_mask));
+-	return ret;
++	return regmap_write(rdev->regmap, regulator->disable_reg,
++			    rdev->desc->enable_mask);
+ }
+ 
+ static const struct regulator_ops hi655x_regulator_ops = {
+@@ -132,7 +127,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	},                                                       \
+ 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
+ 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
+-	.ctrl_mask = cmask,                                      \
+ }
+ 
+ #define HI655X_LDO_LINEAR(_ID, vreg, vmask, ereg, dreg,          \
+@@ -155,7 +149,6 @@ static const struct regulator_ops hi655x_ldo_linear_ops = {
+ 	},                                                       \
+ 	.disable_reg = HI655X_BUS_ADDR(dreg),                    \
+ 	.status_reg = HI655X_BUS_ADDR(sreg),                     \
+-	.ctrl_mask = cmask,                                      \
+ }
+ 
+ static const struct hi655x_regulator regulators[] = {
 -- 
 2.20.1
 
