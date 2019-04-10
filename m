@@ -2,151 +2,159 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B880DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7098EC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B242133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373DB2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bzVa0hQq"
+	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="wgOguPYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfDJBR7 (ORCPT
+        id S1726808AbfDJBS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:17:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33587 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDJBR7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:17:59 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t16so321752plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LRe7y/AmJSwRL6mJ4EhTLWkHwjbyqszlgX6hCqpGIpA=;
-        b=bzVa0hQqSZZ09BDV9/CL4c0IOihjw3kM/nQ7sstg7B6YFJ5f/Q/MfaysxocEws1SJ5
-         Fg89TSmGZarqjHZgjqJNNZ6G7lOyD/9LPzjofKvB/zY2bjDAeqo1NQYCsXNeVubdkQLg
-         JOplujQg1A0aeGEtyl23gOWwY4Kd2TE9DyTaA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LRe7y/AmJSwRL6mJ4EhTLWkHwjbyqszlgX6hCqpGIpA=;
-        b=o/sRGlaR/gg4xgZGdSThGQJm8S1/lxQR3K+NaupTanhVkBWaKQBgZ7K1Z+Elts7EUw
-         0FqBLdpHOxkTlGRZGW2A/8WMYPeurUJDy45INEGdLMKjZ4M+MEhzZvF5surxNrP59tMC
-         gXgAgVo5ucQAZHEAyt5r/1IrRHtZ4bCkeaBS3KAVrXxvLGn40Jr3el8jjKhUdqY15AHD
-         hw84KdbxAnBqPOZhp7KIvCgQnAsOKWhO2xCmnPROrR9KGZDLPUoOBnSuJg8o14RaXO77
-         ehvxeXrLRrM/pJU6VG50r1yzIpf3TlLpIqtjbO/UykOmsIV549pHPE+BSz4KpCQ5KwMD
-         A2Kw==
-X-Gm-Message-State: APjAAAU/6FFqEr/waHi4LftY9Hk68RjMtqr9uIisTu/cjOg/mmvtSrId
-        nAttWmWqHSnTHSqzNhDEd0ZYYkDwEuQ=
-X-Google-Smtp-Source: APXvYqzKxY8fL4oKhyL+821YIinILRxuyPjKXmgDRrcRV16KQ5xcR2wmZp5miEv0WSpZgZeTsDvk0g==
-X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr1695508pls.302.1554859077978;
-        Tue, 09 Apr 2019 18:17:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id k79sm16509465pfj.28.2019.04.09.18.17.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Apr 2019 18:17:57 -0700 (PDT)
-Date:   Tue, 9 Apr 2019 21:17:56 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     paulmck@linux.vnet.ibm.com, keescook@chromium.org,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        mathieu.desnoyers@efficios.com, rcu@vger.kernel.org,
-        rostedt@goodmis.org
-Subject: Re: [PATCH 2/2] module: Make srcu_struct ptr array as read-only post
- init
-Message-ID: <20190410011756.GA78239@google.com>
-References: <20190410011418.76408-1-joel@joelfernandes.org>
- <20190410011418.76408-2-joel@joelfernandes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Tue, 9 Apr 2019 21:18:56 -0400
+Received: from owa.iluvatar.ai ([103.91.158.24]:5254 "EHLO smg.iluvatar.ai"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726532AbfDJBS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:18:56 -0400
+X-AuditID: 0a650161-78bff700000078a3-d7-5cad447c2cf4
+Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
+        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id FA.C4.30883.C744DAC5; Wed, 10 Apr 2019 09:18:52 +0800 (HKT)
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190410011418.76408-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
+        c=relaxed/relaxed; t=1554859132; h=from:subject:to:date:message-id;
+        bh=KzP1OXRAGGZZzLvdoLhRN33zXcievyZzFh84tg/kl7U=;
+        b=wgOguPYq8mgGYZrxtMGfvsh8vCfDqyl+hENTlfsEjlf96vyXuLw1HiWeL/f1dZncxoi1dCf5Ftj
+        jvoyONwMI3qeM2zmsq0ynXnIsutGhSGZz/zsDRkn9GD1pUJMNMCvrX/jhzVK27GohQSaPZ8dzvjxd
+        8pTVvvblEhZGyBjQ734=
+Received: from hsj-Precision-5520 (10.101.199.253) by
+ S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Wed, 10 Apr 2019 09:18:51 +0800
+Date:   Wed, 10 Apr 2019 09:18:50 +0800
+From:   Huang Shijie <sjhuang@iluvatar.ai>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Matthew Wilcox <willy@infradead.org>, <akpm@linux-foundation.org>,
+        <william.kucharski@oracle.com>, <palmer@sifive.com>,
+        <axboe@kernel.dk>, <keescook@chromium.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mm/gup.c: fix the wrong comments
+Message-ID: <20190410011850.GA3640@hsj-Precision-5520>
+References: <20190408023746.16916-1-sjhuang@iluvatar.ai>
+ <20190408141313.GU22763@bombadil.infradead.org>
+ <20190409010832.GA28081@hsj-Precision-5520>
+ <20190409202316.GA22989@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <20190409202316.GA22989@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.101.199.253]
+X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
+ S-10-101-1-102.iluvatar.local (10.101.1.102)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXClcqYplvjsjbG4MY9BYs569ewWay+289m
+        sf/pcxaLM925Fpd3zWGzuLfmP6vF5gkLgMTiLiaL3z/msDlwesxuuMjisXmFlsfiPS+ZPC6f
+        LfXY9GkSu8eJGb9ZPD4+vcXican5OrvH501yAZxRXDYpqTmZZalF+nYJXBk/vneyF7wRr3gx
+        9SVbA+N0wS5GTg4JAROJCSdXsYPYQgInGCV6P/CA2MwCOhILdn9i62LkALKlJZb/4+hi5OJg
+        EXjLJNHz7QwTiCMk8B2o/utvZpAiFgFVifanQSC9bAIaEnNP3GUGsUUElCVO/7vKBlLPLPCA
+        UWLP2SOMIAlhAUuJdd3HwBbzCphJbPxxD2roWUaJ1f1nGSESghInZz5hAbE5Bewl3m+5DDZV
+        FGjqgW3HmUAWCwkoSLxYqQXxjJLEkr2zmCDsQonvL++yTGAUnoXkn1kI/8xCsmABI/MqRv7i
+        3HS9zJzSssSSxCK9xMxNjJCoStzBeKPzpd4hRgEORiUe3oDpa2KEWBPLiitzDzFKcDArifB+
+        fAMU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzls20SRGSCA9sSQ1OzW1ILUIJsvEwSnVwGTwv3L7
+        m68z/klWW9qp/Jg+/++OKzHH4thb18vP3Fu6IiahVnHurWCh4i1cDyJEpsTslkxoOxqatkZ5
+        X0Cgv2KiVOprZr4/VZU3jSd+ED5y0EPqvm/z/FiPk/Kn+2WKORYll4mbH7wgUXzorQRz9NFw
+        JZG3ouWODM9m17gET9q2+KYnf+FXdv7Zyy3nptlzstaVej0qm/t0zqIfv9ju6F86/ZfdcLFX
+        0clMgbf88Ts/3hPpNFz02Vx929lZ7kGS8s9PzvH29L8+++7VT+dk3VZGff+xQt9QseRyxp79
+        YldZTX7qffxkylsVdGrJWgudzFk2bB86Gpd8+ze5v/HY9g3bdgbsaHFUlebr/P1TvFOJpTgj
+        0VCLuag4EQDQREnjJwMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 09:14:18PM -0400, Joel Fernandes (Google) wrote:
-> Since commit title ("srcu: Allocate per-CPU data for DEFINE_SRCU() in
-> modules"), modules that call DEFINE_{STATIC,}SRCU will have a new array
-> of srcu_struct pointers which is used by srcu code to initialize and
-> clean up these structures.
+On Tue, Apr 09, 2019 at 01:23:16PM -0700, Ira Weiny wrote:
+> On Tue, Apr 09, 2019 at 09:08:33AM +0800, Huang Shijie wrote:
+> > On Mon, Apr 08, 2019 at 07:13:13AM -0700, Matthew Wilcox wrote:
+> > > On Mon, Apr 08, 2019 at 10:37:45AM +0800, Huang Shijie wrote:
+> > > > When CONFIG_HAVE_GENERIC_GUP is defined, the kernel will use its own
+> > > > get_user_pages_fast().
+> > > > 
+> > > > In the following scenario, we will may meet the bug in the DMA case:
+> > > > 	    .....................
+> > > > 	    get_user_pages_fast(start,,, pages);
+> > > > 	        ......
+> > > > 	    sg_alloc_table_from_pages(, pages, ...);
+> > > > 	    .....................
+> > > > 
+> > > > The root cause is that sg_alloc_table_from_pages() requires the
+> > > > page order to keep the same as it used in the user space, but
+> > > > get_user_pages_fast() will mess it up.
+> > > 
+> > > I don't understand how get_user_pages_fast() can return the pages in a
+> > > different order in the array from the order they appear in userspace.
+> > > Can you explain?
+> > Please see the code in gup.c:
+> > 
+> > 	int get_user_pages_fast(unsigned long start, int nr_pages,
+> > 				unsigned int gup_flags, struct page **pages)
+> > 	{
+> > 		.......
+> > 		if (gup_fast_permitted(start, nr_pages)) {
+> > 			local_irq_disable();
+> > 			gup_pgd_range(addr, end, gup_flags, pages, &nr);               // The @pages array maybe filled at the first time.
+> > 			local_irq_enable();
+> > 			ret = nr;
+> > 		}
+> > 		.......
+> > 		if (nr < nr_pages) {
+> > 			/* Try to get the remaining pages with get_user_pages */
+> > 			start += nr << PAGE_SHIFT;
+> > 			pages += nr;                                                  // The @pages is moved forward.
+> > 
+> > 			if (gup_flags & FOLL_LONGTERM) {
+> > 				down_read(&current->mm->mmap_sem);
+> > 				ret = __gup_longterm_locked(current, current->mm,      // The @pages maybe filled at the second time
+> >
 > 
-> There is no reason for this array of pointers to be writable, and can
-> cause security or other hidden bugs. Mark these are read-only after the
-> module init has completed.
-> 
-> Suggested-by: paulmck@linux.vnet.ibm.com
-> Suggested-by: keescook@chromium.org
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-Just wanted to mention, that I tested that the srcu_struct_ptrs array is not
-writeable any more after init, but doing the following after
-module_enable_ro() :
-
-@@ -3513,6 +3523,14 @@ static noinline int do_init_module(struct module *mod)
-        rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
- #endif
-        module_enable_ro(mod, true);
-+
-+       if (mod->srcu_struct_ptrs) {
-+               // Check if SRCU Access is possible
-+               char x = *(char *)mod->srcu_struct_ptrs;
-+               *(char *)mod->srcu_struct_ptrs = 0;
-+               *(char *)mod->srcu_struct_ptrs = x;
-+       }
-+
-        mod_tree_remove_init(mod);
-        disable_ro_nx(&mod->init_layout);
-        module_arch_freeing_init(mod);
+> Neither this nor the get_user_pages_unlocked is filling the pages a second
+The get_user_pages_unlocked() will call the handle_mm_fault which will allocate a
+new page for the empty PTE, and save the new page into the @pages array.
 
 
-thanks,
+> time.  It is adding to the page array having moved start and the page array
+> forward.
 
- - Joel
+Yes. This will mess up the page order.
+
+I will read the code again to check if I am wrong :)
 
 > 
-> ---
->  kernel/module.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> Are you doing a FOLL_LONGTERM GUP?  Or are you in the else clause below when
+> you get this bug?
+I do not use FOLL_LONGTERM, I just use the FOLL_WRITE.
+
+So it seems it runs into the else clause below.
+
+Thanks
+Huang Shijie
+
 > 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index f9221381d076..ed1f2612aebc 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3301,7 +3301,7 @@ static bool blacklisted(const char *module_name)
->  core_param(module_blacklist, module_blacklist, charp, 0400);
->  
->  /*
-> - * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
-> + * These are section names marked with SHF_RO_AFTER_INIT so that
->   * layout_sections() can put it in the right place.
->   * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
->   */
-> @@ -3314,6 +3314,13 @@ static char *ro_after_init_sections[] = {
->  	 * annotated as such at module load time.
->  	 */
->  	"__jump_table",
-> +
-> +	/*
-> +	 * Used for SRCU structures which need to be initialized/cleaned up
-> +	 * by the SRCU notifiers
-> +	 */
-> +	"___srcu_struct_ptrs",
-> +
->  	NULL
->  };
->  
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
+> Ira
 > 
+> > 							    start, nr_pages - nr,
+> > 							    pages, NULL, gup_flags);
+> > 				up_read(&current->mm->mmap_sem);
+> > 			} else {
+> > 				/*
+> > 				 * retain FAULT_FOLL_ALLOW_RETRY optimization if
+> > 				 * possible
+> > 				 */
+> > 				ret = get_user_pages_unlocked(start, nr_pages - nr,    // The @pages maybe filled at the second time.
+> > 							      pages, gup_flags);
+> > 			}
+> > 		}
+> > 
+> > 
