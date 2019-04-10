@@ -2,141 +2,105 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7B1C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4BFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF1020820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wh3HKIg/"
+	by mail.kernel.org (Postfix) with ESMTP id 12BFE20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732173AbfDJMyg (ORCPT
+        id S1732200AbfDJMyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:54:36 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42202 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731604AbfDJMyg (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:54:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id p20so2620284qtc.9
-        for <Linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=24LWhJMbWpfKCl9NIAeUFQBWfDLHnGzUp+8TuqZDdkg=;
-        b=Wh3HKIg/Qmh1AFsSrMdo7bO6maHDep/KnKA/Lsi2lHlSMy3y2WPzzRoZ7n1DPYW1Bg
-         o5eq0rYXwlOSKfhbPYA2vN5+m6pn3jV3Y5Stx3atLDvTA9bgSPmcrqRPtcCuIl6+Evs2
-         GRHuLxbfBo3ryiwyMFzHHjAytdx2iD6WU77TQiNdIvhicqwuGAyttl3eIpHOA8DzGVpM
-         8QslApmXuT6Fxxhn8J/Q7d+s9laOjpD/FEdGjebNiblsSriWLY43xuJy1UJmZn2KGhOh
-         kwzA8+6susduXTwif0jQLefmM05PtoRTX6SOTJd4zuObJ2ANs/uDD061faIUyfT8R+Jh
-         9SZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=24LWhJMbWpfKCl9NIAeUFQBWfDLHnGzUp+8TuqZDdkg=;
-        b=nsVpGpBFJM88n2UlpJnAC34EWIV4f7ZwpjmtnETY3zVxoJp/eRmhk9pQLxpoCDOifJ
-         WkFHbgNbbxK/L/qlmdla3WJ13Zy/tfX9uhc0OWLRTLLLcmENZ3SqqPl3XuwBofT5TL2l
-         Jiqftzs7cdlRZMCcXEfnflUmM8xS+FpIDWhkSXCtVz3Z6CCb3ZgJaFOiYHTMLYTYJWsu
-         OD9gQNCWJ9hQ4dVEQ42G/OuUNObc/dPz4FNu6sywP5uhDIA6Zo7v+fDCKHHQX2amoPCn
-         AsW7IijcaJmAM/sTK9YRb2zRxySSGZMjNW8Eggh1nfY5D3bq9MZvzLdlqCPl5YAy+6Mx
-         48nw==
-X-Gm-Message-State: APjAAAW3XhPSd9ysElVca9Jpua8IV8Pnl/W8RNRNbdPcLwwNYX1wcbgL
-        EsiyvM4bOPEjwig9FK9AyRI=
-X-Google-Smtp-Source: APXvYqyDiHyA0SF1y/d1j9z+Flu+xqWFQwmMob+kXWciTQjdPImKGGdLsgxJN7CkbM+KtwsCYq6Grg==
-X-Received: by 2002:aed:3427:: with SMTP id w36mr35631630qtd.54.1554900875357;
-        Wed, 10 Apr 2019 05:54:35 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id i33sm21447634qtb.64.2019.04.10.05.54.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 05:54:34 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 033E64039C; Wed, 10 Apr 2019 09:54:31 -0300 (-03)
-Date:   Wed, 10 Apr 2019 09:54:31 -0300
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v3 1/4] perf: Add a 'percore' event qualifier
-Message-ID: <20190410125431.GC13888@kernel.org>
-References: <1552985816-20915-1-git-send-email-yao.jin@linux.intel.com>
- <1552985816-20915-2-git-send-email-yao.jin@linux.intel.com>
- <20190410123641.GA13888@kernel.org>
+        Wed, 10 Apr 2019 08:54:45 -0400
+Received: from smtp.asem.it ([151.1.184.197]:61682 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732186AbfDJMym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:54:42 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003804505.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:54:36 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 10
+ Apr 2019 14:54:35 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Wed, 10 Apr 2019 14:54:35 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 1/2] spi: pxa2xx: fix SCR (divisor) calculation
+Date:   Wed, 10 Apr 2019 14:51:35 +0200
+Message-ID: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410123641.GA13888@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0201.5CADE78C.0048,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 10, 2019 at 09:36:41AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Mar 19, 2019 at 04:56:53PM +0800, Jin Yao escreveu:
-> > Add a 'percore' event qualifier, like cpu/event=0,umask=0x3,percore=1/,
-> > that sums up the event counts for both hardware threads in a core.
-> > 
-> > We can already do this with --per-core, but it's often useful to do
-> > this together with other metrics that are collected per hardware thread.
-> > So we need to support this per-core counting on a event level.
-> > 
-> > This can be implemented in only the user tool, no kernel support needed.
-> > 
-> >  v3:
-> >  ---
-> >  Simplify the code according to Jiri's comments.
-> >  Before:
-> >    "return term->val.percore ? true : false;"
-> >  Now:
-> >    "return term->val.percore;"
-> > 
-> >  v2:
-> >  ---
-> >  Change the qualifier name from 'coresum' to 'percore' according to
-> >  comments from Jiri and Andi.
-> 
-> I'm applying this, but please, don't forget to, when adding a new
-> qualifier, to update the documentation... I'm doing this for you this
-> time.
+Calculate the divisor for the SCR (Serial Clock Rate), avoiding
+that the SSP transmission rate can be greater than the device rate.
 
-The first patch didn't apply with 'git am', I did it manually, and added
-the patch below
+When the division between the SSP clock and the device rate generates
+a reminder, we have to increment by one the divisor.
+In this way the resulting SSP clock will never be greater than the
+device SPI max frequency.
 
-But then the second doesn't apply to my perf/core branch as well, please
-refresh and resend a v4, thanks.
+For example, with:
 
-- Arnaldo
+ - ssp_clk  = 50 MHz
+ - dev freq = 15 MHz
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 138fb6e94b3c..18ed1b0fceb3 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -199,6 +199,18 @@ also be supplied. For example:
+without this patch the SSP clock will be greater than 15 MHz:
+
+ - 25 MHz for PXA25x_SSP and CE4100_SSP
+ - 16,56 MHz for the others
+
+Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
+so the max rate of the SPI device clock is respected.
+
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+---
+ drivers/spi/spi-pxa2xx.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index f7068cc..c9560a1 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -884,10 +884,15 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
  
-   perf stat -C 0 -e 'hv_gpci/dtbp_ptitc,phys_processor_idx=0x2/' ...
+ 	rate = min_t(int, ssp_clk, rate);
  
-+EVENT QUALIFIERS:
-+
-+It is also possible to add extra qualifiers to an event:
-+
-+percore:
-+
-+Sums up the event counts for all hardware threads in a core, e.g.:
-+
-+
-+  perf stat -e cpu/event=0,umask=0x3,percore=1/
-+
-+
- EVENT GROUPS
- ------------
++	/*
++	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
++	 * that the SSP transmission rate can be greater than the device rate
++	 */
+ 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
+-		return (ssp_clk / (2 * rate) - 1) & 0xff;
++		return (ssp_clk / (2 * rate) - 1 +
++			(ssp_clk % (2 * rate) ? 1 : 0)) & 0xff;
+ 	else
+-		return (ssp_clk / rate - 1) & 0xfff;
++		return (ssp_clk / rate - 1 + (ssp_clk % rate ? 1 : 0)) & 0xfff;
+ }
  
+ static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
+-- 
+2.7.4
+
