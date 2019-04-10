@@ -2,76 +2,97 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59625C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2732F2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC9F2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfDJI2H (ORCPT
+        id S1729575AbfDJI3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:28:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52896 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729045AbfDJI2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:28:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B171CAC97;
-        Wed, 10 Apr 2019 08:28:04 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 288631E429B; Wed, 10 Apr 2019 10:28:04 +0200 (CEST)
-Date:   Wed, 10 Apr 2019 10:28:04 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        kilobyte@angband.pl, yuval.shaia@oracle.com
-Subject: Re: [PATCH v5 3/6] libnvdimm: add dax_dev sync flag
-Message-ID: <20190410082804.GG1426@quack2.suse.cz>
-References: <20190410040826.24371-1-pagupta@redhat.com>
- <20190410040826.24371-4-pagupta@redhat.com>
+        Wed, 10 Apr 2019 04:29:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52479 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729045AbfDJI3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:29:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 01:29:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="160344024"
+Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Apr 2019 01:29:31 -0700
+Subject: Re: [PATCH 1/1] spi: pxa2xx: add driver enabling message
+To:     Flavio Suligoi <f.suligoi@asem.it>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1554736964-6058-1-git-send-email-f.suligoi@asem.it>
+ <51e9e073-625d-f5c0-6b2e-410f6ddb6346@linux.intel.com>
+ <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
+ <2c853342-f937-30e6-ce6f-010e06f7376c@linux.intel.com>
+ <2a8b7e65d1334a5491b8bc9e9a96a685@asem.it>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <400467d8-19d6-1796-5fa9-cb5b37d61792@linux.intel.com>
+Date:   Wed, 10 Apr 2019 11:29:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410040826.24371-4-pagupta@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2a8b7e65d1334a5491b8bc9e9a96a685@asem.it>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 10-04-19 09:38:23, Pankaj Gupta wrote:
-> @@ -64,6 +65,10 @@ static inline bool dax_write_cache_enabled(struct dax_device *dax_dev)
->  {
->  	return false;
->  }
-> +static inline bool dax_synchronous(struct dax_device *dax_dev)
-> +{
-> +	return true;
-> +}
+On 4/10/19 11:13 AM, Flavio Suligoi wrote:
+>> [    9.506895] pxa2xx-spi pxa2xx-spi.13: no DMA channels available,
+>> using PIO
+>> [    9.516770] pxa2xx-spi pxa2xx-spi.13: registered master spi2
+>> [    9.518527] pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller
+>> (PIO mode)
+> 
+> I have added this message because, using an x86 machine, the message:
+> 
+> "pxa2xx-spi pxa2xx-spi.13: registered master spi2"
+> 
+> doesn't appear in the kernel messages!
+> 
+Yeah, it needs CONFIG_SPI_DEBUG.
 
-Is there a need to define dax_synchronous() for !CONFIG_DAX? Because that
-property of dax device is pretty much undefined and I don't see anything
-needing to call it for !CONFIG_DAX...
+>> Actually this info message doesn't necessarily tell will the driver end
+>> up using DMA for transfers. See pxa2xx_spi_can_dma() and
+>> pxa2xx_spi_transfer_one().
+>>
+>> How about replacing "no DMA channels available, using PIO" and have
+>> instead single info message telling is the DMA available or does the
+>> driver use PIO only?
+> 
+> Ok, it's a good idea, to avoid to many similar messages.
+> So I can simply remove the:
+> 
+> "no DMA channels available, using PIO"
+> 
+> and leave only the new:
+> 
+> " pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller (PIO mode)"
+> 
+Yes, something like that.
 
-								Honza
+Now I remember, please also take into account driver is dual role since 
+commit ec93cb6f827b ("spi: pxa2xx: Add slave mode support").
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jarkko
