@@ -2,102 +2,110 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930CEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9EEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D352064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 04:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gmBhFcDC"
+	by mail.kernel.org (Postfix) with ESMTP id CA18C2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 05:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfDJE5i (ORCPT
+        id S1727340AbfDJFHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 00:57:38 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38983 "EHLO ozlabs.org"
+        Wed, 10 Apr 2019 01:07:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19538 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbfDJE5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 00:57:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44fBjW1gNJz9s70;
-        Wed, 10 Apr 2019 14:57:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554872255;
-        bh=Btrdz7i7x5EOKLR+Lg27ae02lPlFzwufJT+E8BqDjZY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gmBhFcDCw4iiQBt8UbvmcdVqJwm6iiG5ce2x1uhxBGKUGTke7ztrOgqXxR/Nvsa6N
-         6WyqbpfbpAjGUobjrAj9BVUaTnL07M59dQyRneZXFj1J6WP3WWnXh9WrXcp3V0Jckq
-         vCNB1Ta6OVcoGUirWCNw9mF1/u7M63+cOLVi660Ow0UmrsDW+jzRJOVqPm1NyCor3y
-         tDxdgEUYkqy+GeYSOb0/Uy/X4a768MLDxf8QjD+7Omi2u29KfdWi2Q61XwksR+gfLe
-         IOJGJKWk1Z1Q2kBHgY6hN4dSP9oy/P16sOHJqEprhw6XVrBu+Uq9OocfE/iRwn9hKa
-         T+eShoVsAGirQ==
-Date:   Wed, 10 Apr 2019 14:57:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
-Message-ID: <20190410145734.150e881c@canb.auug.org.au>
-In-Reply-To: <1554869059.3208.0.camel@HansenPartnership.com>
-References: <20190409162749.7eb6656f@canb.auug.org.au>
-        <20190410112138.178aa7bd@canb.auug.org.au>
-        <yq1tvf6myp6.fsf@oracle.com>
-        <1554869059.3208.0.camel@HansenPartnership.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Wbmrv9PJSc+XgRhNyovFeHs"; protocol="application/pgp-signature"
+        id S1726826AbfDJFHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 01:07:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 22:07:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="222112098"
+Received: from lxy-dell.sh.intel.com ([10.239.159.145])
+  by orsmga001.jf.intel.com with ESMTP; 09 Apr 2019 22:07:19 -0700
+Message-ID: <9b16b5c5379eb6b5352de26e56b8064a6b6f1aa7.camel@linux.intel.com>
+Subject: Re: [PATCH v6 12/20] kvm/vmx: Emulate MSR TEST_CTL
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+Date:   Wed, 10 Apr 2019 13:03:59 +0800
+In-Reply-To: <20190408174805.GJ25880@linux.intel.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+         <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
+         <alpine.DEB.2.21.1904051400230.1802@nanos.tec.linutronix.de>
+         <423f329a8e194d799c6c41470266a04a9f90bc84.camel@linux.intel.com>
+         <20190408174805.GJ25880@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Wbmrv9PJSc+XgRhNyovFeHs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2019-04-08 at 10:48 -0700, Sean Christopherson wrote:
+> On Mon, Apr 08, 2019 at 05:54:25PM +0800, Xiaoyao Li wrote:
+> > On Fri, 2019-04-05 at 14:30 +0200, Thomas Gleixner wrote:
+> > > On Wed, 3 Apr 2019, Fenghua Yu wrote:
+> > > > @@ -1663,6 +1663,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu,
+> > > > struct
+> > > > msr_data *msr_info)
+> > > >  	u32 index;
+> > > >  
+> > > >  	switch (msr_info->index) {
+> > > > +	case MSR_TEST_CTL:
+> > > > +		if (!msr_info->host_initiated &&
+> > > > +		    !(vcpu->arch.core_capability &
+> > > > CORE_CAP_SPLIT_LOCK_DETECT))
+> > > 
+> > > Errm? If the MSR_TEST_CTL is exposed to the guest via CPUID then the
+> > > rdmsr() in the guest is not supposed to fail just because
+> > > CORE_CAP_SPLIT_LOCK_DETECT is not set.
+> > 
+> > you're right.
+> > 
+> > > vmx->msr_test_ctl holds the proper value, which is either 0 or
+> > > CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported.
+> > > 
+> > > So the chek needs to be guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY).
+> > 
+> > I don't think so. There is no dependecy between
+> > guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) and MSR_TEST_CTL.
+> > guest_cpuid_has(X86_FEATURE_CORE_CAPABILITY) only indicates that guest has
+> > MSR
+> > CORE_CAPABILITY.
+> > 
+> > Due to the fact that MSR_TEST_CTL is emulated with vmx->msr_test_ctl. I
+> > think it
+> > 's ok to always let userspace or guest to read MSR_TEST_CTL, it just returns
+> > the
+> > emulated value. Like you said, " vmx->msr_test_ctl holds the proper value,
+> > which
+> > is either 0 or CORE_CAP_SPLIT_LOCK_DETECT until more bits are supported."
+> 
+> Assuming the next version implements "vmx->msr_test_ctl_mask", KVM should
+> inject #GP if the guest attempts RDMSR(MSR_TEST_CTL) and the mask is zero.
+> It stands to reason that a kernel can only reasonably assume the MSR exists
+> if the (virtual) CPU supports at least one feature enabled via MSR_TEST_CTL.
 
-Hi all,
+It makes sense to me. Thanks for your reminder.
+Will apply it in next version.
 
-On Wed, 10 Apr 2019 06:04:19 +0200 James Bottomley <James.Bottomley@HansenP=
-artnership.com> wrote:
->
-> On Tue, 2019-04-09 at 21:33 -0400, Martin K. Petersen wrote:
-> >  =20
-> > > > I have reverted that commit for today. =20
-> > >=20
-> > > This has now migrated to the scsi tree. =20
-> >=20
-> > I have a fix in my tree but I haven't pushed it yet. =20
->=20
-> It's upstream in both trees now.
-
-Thanks, it'll be in -next tomorrow.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Wbmrv9PJSc+XgRhNyovFeHs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlytd74ACgkQAVBC80lX
-0GwAxQf9G/Oe1vx4RmBGQbAqqUzUf9qqKv56OZYl2ZlDh8RUkobpvr4IhSDcRpiQ
-IYIGdZpmIhMkJY8J5775ZHl0VOazURYYoF2QfHCR4OUaj0HIrDinHHvk8a0XX/7C
-Gxs46pST9T4OnZ8NvdBpw71zZRVRtQefJBBSZCYsQuy8kIwt7+4YGciUMWFEX4Yn
-g+Kp8LCB7g3Oh4JzMQT2sj5SlP6kS01ysKS5qJFhMMn3jFH0iNZw8u8fek/pnwwu
-F5klR+nqHBHdK45c/vYT1efwrfHPTZnOaaAyb7H4yGPYdClCHoRlhJRJvROg8jtz
-sJm69uav7e3I9EOaq/KdvNWltzxwVQ==
-=g+UW
------END PGP SIGNATURE-----
-
---Sig_/Wbmrv9PJSc+XgRhNyovFeHs--
