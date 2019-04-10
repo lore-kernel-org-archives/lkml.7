@@ -2,136 +2,125 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE89C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F396C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DAC21971
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234612229F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="uBLHSD1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbfDJLG0 (ORCPT
+        id S1731251AbfDJLGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:06:26 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59023 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731196AbfDJLGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:22 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hEB3b-0005G1-R2; Wed, 10 Apr 2019 13:06:20 +0200
-Message-Id: <20190410103647.119410023@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:33 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: [RFC patch 39/41] tracing: Simplify stack trace retrieval
-References: <20190410102754.387743324@linutronix.de>
+        Wed, 10 Apr 2019 07:06:42 -0400
+Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:38887
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728023AbfDJLGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 07:06:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y5f2w9UFRHiqTy21J+gzbOFMYTMeBlm8F1XkTlG5hWg=;
+ b=uBLHSD1NKUxkjkK+/XE5tA3SwsjXIMTHWZe4eXgXfUYs8ADmeZAj08N1VkrHarDAw+SsF0CYlObfECJheA9BrpdoM0Jfh2sQW6G1356m6nnUu5AGQCBH3RW0wTvQrCenS0JU0/aymqi2NckhEdEKrvRDnNr/rufX/DZc/7fPHW8=
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
+ VI1PR04MB4574.eurprd04.prod.outlook.com (20.177.55.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.19; Wed, 10 Apr 2019 11:06:35 +0000
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1792.009; Wed, 10 Apr 2019
+ 11:06:35 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+CC:     Viorel Suman <viorel.suman@nxp.com>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v4 0/4] ASoC: fsl: audmix: remove "model" attribute and fix
+ ref leaks
+Thread-Topic: [PATCH v4 0/4] ASoC: fsl: audmix: remove "model" attribute and
+ fix ref leaks
+Thread-Index: AQHU74123FrfUXOzMUu+P8l2xCD0EA==
+Date:   Wed, 10 Apr 2019 11:06:35 +0000
+Message-ID: <1554894380-25153-1-git-send-email-viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0195.eurprd08.prod.outlook.com
+ (2603:10a6:800:d2::25) To VI1PR04MB4704.eurprd04.prod.outlook.com
+ (2603:10a6:803:52::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9175e285-98d6-452e-1f40-08d6bda49870
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4574;
+x-ms-traffictypediagnostic: VI1PR04MB4574:
+x-microsoft-antispam-prvs: <VI1PR04MB4574A830C9E860BEAD33BE26922E0@VI1PR04MB4574.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(376002)(136003)(346002)(189003)(199004)(386003)(6486002)(4744005)(71190400001)(6506007)(97736004)(486006)(256004)(186003)(7416002)(26005)(102836004)(2616005)(36756003)(99286004)(476003)(44832011)(68736007)(110136005)(86362001)(316002)(71200400001)(54906003)(66066001)(53936002)(508600001)(3846002)(106356001)(6116002)(105586002)(2906002)(6436002)(8936002)(50226002)(81166006)(5660300002)(7736002)(305945005)(6512007)(8676002)(4326008)(81156014)(14454004)(52116002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4574;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: suxaTH6q9Q6c00myw9V49hQALW5kq020KEf7ix849jJXEAW9a/JKQltw4saRW1gdeR9nkzqJDvt5B9e+bZ/HBHf5RKqxu6tL7iV4hraUizx4orv86JwV1G9jM8hITfZj0v77zarz2LXrPVs6k/IOIiq+jdxtV3bo6u+L5kQJiTBOHAtZxBMjL4xb7n64Fts8QpPbpaf3UONASrRvqpJILfPKBNrAW3FksFBmSVLT6dcLcUPJ4mBlbDRiiDMTTDk/KSYXGoblBgPEqMYFxx/JLME49SzineTt0i+z/XOpKbJO1859m5EZS4O4oFwYqP+5YG7QLA1AqKa7LuMyyWLKQ+5UgfnHbOHPZwW6XaANR/3gVn4OkozorJ7Y+TDyFd5FhsD7L5kiXei61rKSzkQPJeuTPMzRnoKoTO8kmtUQPoI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9175e285-98d6-452e-1f40-08d6bda49870
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 11:06:35.2187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace by using the storage
-array based interfaces.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
----
- kernel/trace/trace.c |   34 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 25 deletions(-)
-
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2776,20 +2776,16 @@ static void __ftrace_trace_stack(struct
- 	struct ring_buffer_event *event;
- 	struct ftrace_stack *fstack;
- 	struct stack_entry *entry;
--	struct stack_trace trace;
--	int size = FTRACE_KSTACK_ENTRIES;
-+	unsigned int size, nent;
- 	int stackidx;
- 
--	trace.nr_entries	= 0;
--	trace.skip		= skip;
--
- 	/*
- 	 * Add one, for this function and the call to save_stack_trace()
- 	 * If regs is set, then these functions will not be in the way.
- 	 */
- #ifndef CONFIG_UNWINDER_ORC
- 	if (!regs)
--		trace.skip++;
-+		skip++;
- #endif
- 
- 	/*
-@@ -2816,28 +2812,22 @@ static void __ftrace_trace_stack(struct
- 	barrier();
- 
- 	fstack = this_cpu_ptr(ftrace_stacks.stacks) + (stackidx - 1);
--	trace.entries		= fstack->calls;
--	trace.max_entries	= FTRACE_KSTACK_ENTRIES;
-+	nent = ARRAY_SIZE(fstack->calls);
- 
- 	if (regs)
--		save_stack_trace_regs(regs, &trace);
-+		nent = stack_trace_save_regs(regs, fstack->calls, nent, skip);
- 	else
--		save_stack_trace(&trace);
--
--	if (trace.nr_entries > size)
--		size = trace.nr_entries;
--
--	size *= sizeof(unsigned long);
-+		nent = stack_trace_save(fstack->calls, nent, skip);
- 
-+	size = nent * sizeof(unsigned long);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
- 					    sizeof(*entry) + size, flags, pc);
- 	if (!event)
- 		goto out;
- 	entry = ring_buffer_event_data(event);
- 
--	memcpy(&entry->caller, trace.entries, size);
--
--	entry->size = trace.nr_entries;
-+	memcpy(&entry->caller, fstack->calls, size);
-+	entry->size = nent;
- 
- 	if (!call_filter_check_discard(call, entry, buffer, event))
- 		__buffer_unlock_commit(buffer, event);
-@@ -2916,7 +2906,6 @@ ftrace_trace_userstack(struct ring_buffe
- 	struct trace_event_call *call = &event_user_stack;
- 	struct ring_buffer_event *event;
- 	struct userstack_entry *entry;
--	struct stack_trace trace;
- 
- 	if (!(global_trace.trace_flags & TRACE_ITER_USERSTACKTRACE))
- 		return;
-@@ -2947,12 +2936,7 @@ ftrace_trace_userstack(struct ring_buffe
- 	entry->tgid		= current->tgid;
- 	memset(&entry->caller, 0, sizeof(entry->caller));
- 
--	trace.nr_entries	= 0;
--	trace.max_entries	= FTRACE_STACK_ENTRIES;
--	trace.skip		= 0;
--	trace.entries		= entry->caller;
--
--	save_stack_trace_user(&trace);
-+	stack_trace_save_user(entry->caller, FTRACE_STACK_ENTRIES, 0);
- 	if (!call_filter_check_discard(call, entry, buffer, event))
- 		__buffer_unlock_commit(buffer, event);
- 
-
-
+VGhlIGxhdGVzdCBhdWRtaXggcGF0Y2gtc2V0ICh2NSkgaGFkIHRoZSAibW9kZWwiIGF0dHJpYnV0
+ZSByZW1vdmVkIGFzDQpyZXF1ZXN0ZWQgYnkgTmljb2xpbiBDaGVuLCBidXQgbG9va3MgbGlrZSAo
+djQpIHZlcnNpb24gb2YgREFJIGRyaXZlcg0KcmVhY2hlZCAiZm9yLW5leHQiIGJyYW5jaCAtIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nICJtb2RlbCIgYXR0cmlidXRlLg0KQXNzaWRlIG9mIHRoaXMgZml4
+IG9iamVjdCByZWZlcmVuY2UgbGVha3MgaW4gbWFjaGluZSBwcm9iZSByZXBvcnRlZCBieQ0KSnVs
+aWEgTGF3YWxsLg0KDQpWaW9yZWwgU3VtYW4gKDQpOg0KICBBU29DOiBmc2xfYXVkbWl4OiByZW1v
+dmUgIm1vZGVsIiBhdHRyaWJ1dGUNCiAgQVNvQzogZnNsX2F1ZG1peDogcmVtb3ZlICJtb2RlbCIg
+YXR0cmlidXRlIGZyb20gRFQgZG9jdW1lbnQNCiAgQVNvQzogaW14LWF1ZG1peDogZml4IG9iamVj
+dCByZWZlcmVuY2UgbGVha3MgaW4gcHJvYmUNCiAgQVNvQzogZnNsX2F1ZG1peDogY2FjaGUgcGRl
+di0+ZGV2IHBvaW50ZXINCg0KQ2hhbmdlcyBzaW5jZSBWMToNCiAgYSkgUmVtb3ZlZCAibW9kZWwi
+IGF0dHJpYnV0ZSBmcm9tIGR0LWJpbmRpbmdzIGRvY3VtZW50YXRpb24NCiAgYikgQWRyZXNzZWQg
+RGFuaWVsJ3MgY29tbWVudHMNCg0KQ2hhbmdlcyBzaW5jZSBWMjoNCiAgYSkgQ2FjaGUgcGRldi0+
+ZGV2IHBvaW50ZXIgaW4gZnNsX2F1ZG1peCBwcm9iZSBhcyBzdWdnZXN0ZWQgYnkgTmljb2xpbg0K
+DQpDaGFuZ2VzIHNpbmNlIFYzOg0KICBhKSBVc2Ugc3ViamVjdCBsaW5lcyBtYXRjaGluZyB0aGUg
+c3R5bGUgZm9yIHRoZSBzdWJzeXN0ZW0uDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3Vu
+ZC9mc2wsYXVkbWl4LnR4dCAgICAgICB8ICA0IC0tDQogc291bmQvc29jL2ZzbC9mc2xfYXVkbWl4
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA2MCArKysrKysrKysrKy0tLS0tLS0tLS0tDQog
+c291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNCAr
+Kw0KIDMgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzMgZGVsZXRpb25zKC0pDQoN
+Ci0tIA0KMi43LjQNCg0K
