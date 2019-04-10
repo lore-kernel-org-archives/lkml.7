@@ -2,128 +2,110 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE0CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2351C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE0F2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjESDrfL"
+	by mail.kernel.org (Postfix) with ESMTP id 7106E2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 02:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfDJCcQ (ORCPT
+        id S1727171AbfDJCcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 22:32:16 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35497 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfDJCcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 22:32:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:51914 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfDJCcP (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
         Tue, 9 Apr 2019 22:32:15 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so418636plp.2;
-        Tue, 09 Apr 2019 19:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DSm60fsRvigZ9rO9v9GaStHi5ZcMD+nYH04YGyKBRU0=;
-        b=fjESDrfL/POOG9UqFWuFRcxAKL0/LNLBZjmpbvCmJaBFkiRaJQuFHi/WWdPIBaUCBp
-         oqBobw8ztH7yVJZw8kKSc7f8otXSgM7xKMVvvVKBLgcfshZHPzCJhkvQdTAFDFWREV/Q
-         ToQOSvl+QbC//HEf2cj+u+Y3sk/KHJnc/mYYFVRrVtgX4n3B9Ox3RcnJWozk7nuIRKv4
-         PDSpX5SGQco+nZhdUaKo3UprRRoV+2O/fYO+uaEjIwaOUf52BgNsD6keJEquyTrOuelJ
-         Uhl3r/3/n1MAk+p3uRja4ztVajwqKiqUH1a/+BrXb+VK8M6ruWlEwZH7XQL5Zt7lZRJC
-         EHMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DSm60fsRvigZ9rO9v9GaStHi5ZcMD+nYH04YGyKBRU0=;
-        b=SKftmbWwMzO8UjkZ5y8LOviXpfrhfAhzFD3OzlRud5Og9RxM5mV1nK0Ri2SeBcCwUv
-         nzQaLqU/l8OzxJFB1QPJ2Wb32zln+a5eSFqZHgPUjdWxLR2YdbWFdsEFZ3jIWsW69sJZ
-         KuWA+N+ghrBQYHzEewA5u+e/st7HdKJKFxe7/4q+RidymAlntZnFYQW7ijh+kFKOhjzu
-         kraW4EXDV/TVEYyU4S2FHqVxfcJYZLNoAVcEVgQVpcDYM4CB2KhlAgkEucr0iX5XaTz4
-         VphJ6jog45ygeq1xCDATKZAMSmhTi8THmSwwWJkdZjSuyXUsAXBhbePrpTMaxQ473OZQ
-         gRYw==
-X-Gm-Message-State: APjAAAVJFzWfCSKLLskTjBXo1uYeJZkgiRJeCqCoMe3Tt+5FCOXOLYLc
-        tdx37yVqQrdWeO2D/vtEU78vz8I5b3A=
-X-Google-Smtp-Source: APXvYqzt2rHkRsTxseTLrXBuCEh9uIGSiGoPqukgo8bPGqZTvVhOLHWGcZN8O7jaS+xWyyJ8PzGx5w==
-X-Received: by 2002:a17:902:8643:: with SMTP id y3mr40171141plt.187.1554863534670;
-        Tue, 09 Apr 2019 19:32:14 -0700 (PDT)
-Received: from shadowsocks.asia-east1-b.c.nth-highlander-219506.internal. (191.202.194.35.bc.googleusercontent.com. [35.194.202.191])
-        by smtp.gmail.com with ESMTPSA id u7sm36720689pgp.26.2019.04.09.19.32.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Apr 2019 19:32:13 -0700 (PDT)
-From:   Huang Rui <huangruippp@gmail.com>
-X-Google-Original-From: Huang Rui <huangruiPPP@gmail.com>
-To:     davem@davemloft.net
-Cc:     ast@kernel.org, daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, jiri@mellanox.com,
-        ecree@solarflare.com, idosch@mellanox.com, petrm@mellanox.com,
-        alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
-        lirongqing@baidu.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, roopa@cumulusnetworks.com,
-        nikolay@cumulusnetworks.com, bridge@lists.linux-foundation.org,
-        huangruiPPP@gmail.com
-Subject: [PATCH] net:bridge:always disable auto-tuning when the user specified MTU
-Date:   Wed, 10 Apr 2019 02:32:08 +0000
-Message-Id: <20190410023208.25435-1-huangruiPPP@gmail.com>
-X-Mailer: git-send-email 2.11.0
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 19:32:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
+   d="scan'208";a="162914179"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.62]) ([10.239.196.62])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2019 19:32:12 -0700
+Subject: Re: [PATCH v3 0/4] perf: Support a new 'percore' event qualifier
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1552985816-20915-1-git-send-email-yao.jin@linux.intel.com>
+ <20190319102025.GA20602@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <56d48bbb-456d-b62f-bda8-a6e84b1632f9@linux.intel.com>
+Date:   Wed, 10 Apr 2019 10:32:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190319102025.GA20602@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For example.
-My purpose is to create a bridge br0 and join eth0 into br0.
-if we use this following way, the auto-tuning flag will not be disabled.
+Hi Arnaldo,
 
-If eth0's mtu is 1200
-step 1.brctl addbr br0
-step 2.brctl addif br0 eth0
-step 3.ifconfig br0 mtu 1200
-step 4.ifconfig eth0 mtu 1500
+Can this patch be accepted?
 
-Result:
-br0's MTU: 1500, eth0's MTU: 1500
+Thanks
+Jin Yao
 
-Expected:
-br0's MTU: 1200, eth0's MTU: 1500
-
-I have specified br0's MTU,  but auto-min policy works. So the MTU is
-not the result what we expected.
-As expected, if i have specified bridge's MTU, it will set the flag:
-BROPT_MTU_SET_BY_USER in net_bridge_opts disabled and auto-min/max
-policy will not work.But in this case, because the dev_set_mtu return
-early, the BROPT_MTU_SET_BY_USER flag will not be disabled and
-auto-min/max policy will still work.
-
-Signed-off-by: Huang Rui <huangruiPPP@gmail.com>
----
- net/core/dev.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2b67f2aa59dd..ba410d76bb49 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7670,8 +7670,12 @@ int dev_set_mtu_ext(struct net_device *dev, int new_mtu,
- {
- 	int err, orig_mtu;
- 
--	if (new_mtu == dev->mtu)
--		return 0;
-+	if (new_mtu == dev->mtu) {
-+		if (dev->priv_flags & IFF_EBRIDGE)
-+			return __dev_set_mtu(dev, new_mtu);
-+		else
-+			return 0;
-+	}
- 
- 	/* MTU must be positive, and in range */
- 	if (new_mtu < 0 || new_mtu < dev->min_mtu) {
--- 
-2.11.0
-
+On 3/19/2019 6:20 PM, Jiri Olsa wrote:
+> On Tue, Mar 19, 2019 at 04:56:52PM +0800, Jin Yao wrote:
+>> The 'percore' event qualifier which sums up the event counts for both
+>> hardware threads in a core. For example,
+>>
+>> perf stat -e cpu/event=0,umask=0x3,percore=1/,cpu/event=0,umask=0x3/
+>>
+>> In this example, we count the event 'ref-cycles' per-core and per-CPU in
+>> one perf stat command-line.
+>>
+>> We can already support per-core counting with --per-core, but it's
+>> often useful to do this together with other metrics that are collected
+>> per CPU (per hardware thread). So this patch series supports this
+>> per-core counting on a event level.
+>>
+>>   v3:
+>>   ---
+>>   Simplify the patch: "perf: Add a 'percore' event qualifier"
+>>   Other patches don't have changes.
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> thanks,
+> jirka
+> 
+>>
+>>   v2:
+>>   ---
+>>   1. Change 'coresum' to 'percore'.
+>>   2. Move the aggregate counts printing to a seperate patch.
+>>
+>> Jin Yao (4):
+>>    perf: Add a 'percore' event qualifier
+>>    perf stat: Factor out aggregate counts printing
+>>    perf stat: Support 'percore' event qualifier
+>>    perf test: Add a simple test for term 'percore'
+>>
+>>   tools/perf/Documentation/perf-stat.txt |   4 ++
+>>   tools/perf/builtin-stat.c              |  21 +++++++
+>>   tools/perf/tests/parse-events.c        |  10 ++-
+>>   tools/perf/util/evsel.c                |   2 +
+>>   tools/perf/util/evsel.h                |   3 +
+>>   tools/perf/util/parse-events.c         |  27 +++++++++
+>>   tools/perf/util/parse-events.h         |   1 +
+>>   tools/perf/util/parse-events.l         |   1 +
+>>   tools/perf/util/stat-display.c         | 108 ++++++++++++++++++++++++---------
+>>   tools/perf/util/stat.c                 |   8 ++-
+>>   10 files changed, 151 insertions(+), 34 deletions(-)
+>>
+>> -- 
+>> 2.7.4
+>>
