@@ -2,106 +2,117 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF92AC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DACC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2252133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130CF2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sl2qd3Jf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tp/JGGxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfDJLby (ORCPT
+        id S1731353AbfDJLb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:31:54 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38866 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727206AbfDJLby (ORCPT
+        Wed, 10 Apr 2019 07:31:59 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46686 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727206AbfDJLb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:31:54 -0400
-Received: by mail-it1-f196.google.com with SMTP id f22so2743862ita.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 04:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fvn/7zFnF3HAnTBufLjHdB464PsWTUouxpzbMSb1H2g=;
-        b=sl2qd3Jf3qmCvfIH/SLL8F3Jdiy1HR05kNdYcy8+mkI+eYuoGCyBXZ8jKlU2/ZvX3v
-         j5BPcckdL8liLVmp0hb/d0qL/hnSN6a6y+emyi8hPCvPKkHhKBRTvguhIRJl7ukEj/TD
-         AfIcEewOPg9RWGcp4deatK1YePDRlkk/ZrBo1QfsYvxHp3K1LvJps037mMeV6TFfYgDk
-         7l+xa/X4JrKtOPDWSlTmFVfynoyr96WEJi+70PYVdKLUvQi9/vrXKCLZ+kJzm1IJOhVa
-         a73mdwUY31qMvU1zriLqta/Q+Nb8TmzUDN6AL2UrUwnlmd4O99l17yGfkUnUcH4VBuZR
-         Ufgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fvn/7zFnF3HAnTBufLjHdB464PsWTUouxpzbMSb1H2g=;
-        b=hI51E6TkXqKLhENJiuu3jGnjB/lET4AbgNj8xiuu+obsxdZbHpWGqFk6gOLCQ44JAC
-         JIcXtyNpXvlt4KcS+Aj7EDioJZv0isDHSdrv601+exrD6NfQUzfESr4oivN00/jp8yEf
-         mm19TJfe65keFo3gAoDZtOwf4qmDTWnMowAsm/ZGbRXn95jKo7hFDe461OFCfaxbGt5Y
-         C4RtSIlMWbrcx3l72ldzh0o+2tWDFZgNTek3VSvmPoYChC1+cOv7py8GCj5q7/ggKnhC
-         gCDfiF+yBqZc3gIftI2FL+CU9ACc/OuIvRRceUYV5QId3lQRBu7Y8dEeH3B+xtpOEg+l
-         WdlQ==
-X-Gm-Message-State: APjAAAUwRR+CO6cXTDDPnFPpVK2O7YVDAsqgwSHRME34mShc5jUJOTGx
-        451+Ua8DRl30azdCj0q5cOf/rjdXMKybL5Q3YVQVhGgrlkk=
-X-Google-Smtp-Source: APXvYqx+/T8WY03v9xLmT+TvaJRfgwlIvB0PUC6j88bxk0iWtwftMluJ5tPLM6WK/fA+GPicKD1rsJwSBv8R4E8L55w=
-X-Received: by 2002:a24:3d8f:: with SMTP id n137mr2634250itn.96.1554895912971;
- Wed, 10 Apr 2019 04:31:52 -0700 (PDT)
+        Wed, 10 Apr 2019 07:31:59 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ABMB3P011442;
+        Wed, 10 Apr 2019 13:31:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=iXJ27yRW7mkwOiFyqhG7XtrIqvyiAEPYXp3jsHoxd3g=;
+ b=tp/JGGxXDsXHHb6PaF6c9QhPvHe0Qzo4uOiHHFSjz1sLTme7BQYlHVDaTiCEhvam6Vhp
+ yono0/C/++w/rYNA3lK15MQGxdsoz7pLjvmYeHeXP73cTX4w6TMa373Rn1+GC0PtSosy
+ ce4g1CNjEOkJaU0rjehA/gox4udyKQuwH3PYTxdL1z0JnUfAC3JPVr4MrTBEOrQzCoiV
+ lm219xOijGrqmiDs2/cQl9Y8d9lyf71+1z237gadj5r7zNPE9ZEt7Oy5MxYzYOdQIY+F
+ E6nMDK6srykbwZ7WAChLlBKJ7Rqeji6qQ3McrDoc6DpTooeMBPTI7vz3THuSd1n+vwaI lg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rpr7wqsfw-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 10 Apr 2019 13:31:44 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 248EE3A;
+        Wed, 10 Apr 2019 11:31:43 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0104115BB;
+        Wed, 10 Apr 2019 11:31:42 +0000 (GMT)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Apr 2019 13:31:42
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <arnd@arndb.de>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 1/5] dt-bindings: pinctrl: stm32: add new entry for package information
+Date:   Wed, 10 Apr 2019 13:30:20 +0200
+Message-ID: <1554895824-25709-2-git-send-email-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
+References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
 MIME-Version: 1.0
-References: <20190410102754.387743324@linutronix.de> <20190410103644.750219625@linutronix.de>
-In-Reply-To: <20190410103644.750219625@linutronix.de>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 10 Apr 2019 13:31:41 +0200
-Message-ID: <CACT4Y+YO45bfyCaeaLP-xAVDOjSE8xnbXpv-Dz7t3W7C5jPd6Q@mail.gmail.com>
-Subject: Re: [RFC patch 13/41] mm/kasan: Remove the ULONG_MAX stack trace hackery
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 1:05 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> No architecture terminates the stack trace with ULONG_MAX anymore. Remove
-> the cruft.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: kasan-dev@googlegroups.com
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: linux-mm@kvack.org
-> ---
->  mm/kasan/common.c |    3 ---
->  1 file changed, 3 deletions(-)
->
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -74,9 +74,6 @@ static inline depot_stack_handle_t save_
->
->         save_stack_trace(&trace);
->         filter_irq_stacks(&trace);
-> -       if (trace.nr_entries != 0 &&
-> -           trace.entries[trace.nr_entries-1] == ULONG_MAX)
-> -               trace.nr_entries--;
->
->         return depot_save_stack(&trace, flags);
->  }
+Add "st,package" entry. Possibles values are:
+-STM32MP_PKG_AA for LFBGA448 (18*18) package
+-STM32MP_PKG_AB for LFBGA354 (16*16) package
+-STM32MP_PKG_AC for TFBGA361 (12*12) package
+-STM32MP_PKG_AD for TFBGA257 (10*10) package
 
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index 48df30a..0016925 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -57,6 +57,8 @@ Optional properties:
+  - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+    used to select GPIOs as interrupts).
+  - hwlocks: reference to a phandle of a hardware spinlock provider node.
++ - st,package: Indicates the SOC package used.
++   More details in include/dt-bindings/pinctrl/stm32-pinfunc.h
+ 
+ Example 1:
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+index b5a2174..e6fb8ad 100644
+--- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
++++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+@@ -32,5 +32,11 @@
+ 
+ #define STM32_PINMUX(port, line, mode) (((PIN_NO(port, line)) << 8) | (mode))
+ 
++/*  package information */
++#define STM32MP_PKG_AA	0x1
++#define STM32MP_PKG_AB	0x2
++#define STM32MP_PKG_AC	0x4
++#define STM32MP_PKG_AD	0x8
++
+ #endif /* _DT_BINDINGS_STM32_PINFUNC_H */
+ 
+-- 
+2.7.4
+
