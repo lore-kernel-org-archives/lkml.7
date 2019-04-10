@@ -2,218 +2,144 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C072C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3941CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18ABD2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2E02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfDJRDe (ORCPT
+        id S1728859AbfDJRIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:03:34 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55154 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbfDJRDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:03:34 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 10 Apr 2019 13:08:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38856 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728819AbfDJRIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:08:32 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 56C922610F4;
-        Wed, 10 Apr 2019 18:03:31 +0100 (BST)
-Date:   Wed, 10 Apr 2019 19:03:28 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>, <richard@nod.at>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <paul.burton@mips.com>, <bbrezillon@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH] mtd: nand: Fix build error while
- CONFIG_MTD_NAND_ECC_SW_BCH is set to module
-Message-ID: <20190410190328.433a954f@collabora.com>
-In-Reply-To: <20190410181843.489a4e33@xps13>
-References: <20190410130747.35692-1-yuehaibing@huawei.com>
-        <20190410153920.68267a1a@collabora.com>
-        <20190410155856.655122c8@collabora.com>
-        <8b020124-4008-6081-c04c-eaefb7875878@huawei.com>
-        <20190410162927.17ea678b@collabora.com>
-        <41165c39-da0c-0f15-87f9-4fb588b77dcc@huawei.com>
-        <20190410181843.489a4e33@xps13>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9BDF58666F;
+        Wed, 10 Apr 2019 17:08:31 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ED5210694E8;
+        Wed, 10 Apr 2019 17:08:28 +0000 (UTC)
+Subject: Re: [PATCH-tip v2 06/12] locking/rwsem: Wake up almost all readers in
+ wait queue
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-7-longman@redhat.com>
+ <20190410165013.njy5bg32pxq6syyr@linux-r8p5>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <114e3bc3-3b66-4a50-d422-6a477d85fa72@redhat.com>
+Date:   Wed, 10 Apr 2019 13:08:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190410165013.njy5bg32pxq6syyr@linux-r8p5>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 10 Apr 2019 17:08:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019 18:18:43 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On 04/10/2019 12:50 PM, Davidlohr Bueso wrote:
+> On Fri, 05 Apr 2019, Waiman Long wrote:
+>
+>> When the front of the wait queue is a reader, other readers
+>> immediately following the first reader will also be woken up at the
+>> same time. However, if there is a writer in between. Those readers
+>> behind the writer will not be woken up.
+>>
+>> Because of optimistic spinning, the lock acquisition order is not FIFO
+>> anyway. The lock handoff mechanism will ensure that lock starvation
+>> will not happen.
+>>
+>> Assuming that the lock hold times of the other readers still in the
+>> queue will be about the same as the readers that are being woken up,
+>> there is really not much additional cost other than the additional
+>> latency due to the wakeup of additional tasks by the waker. Therefore
+>> all the readers up to a maximum of 256 in the queue are woken up when
+>> the first waiter is a reader to improve reader throughput.
+>
+> Before we stopped waking readers when a writer was encountered but
+> would otherwise wakeup _all_ readers. I don't understand why you want
+> to limit this to MAX_READERS_WAKEUP, otherwise I agree it's nice to
+> skip the writer and continue waking readers in the queue (with the
+> handoff
+> guarantees obviously).
+>
+> Would it not be better to do the MAX_READERS_WAKEUP limit only when
+> a writer is found?
+>
+> Thanks,
+> Davidlohr
 
-> Hi YueHaibing,
-> 
-> YueHaibing <yuehaibing@huawei.com> wrote on Wed, 10 Apr 2019 23:03:24
-> +0800:
-> 
-> > On 2019/4/10 22:29, Boris Brezillon wrote:  
-> > > On Wed, 10 Apr 2019 22:22:16 +0800
-> > > YueHaibing <yuehaibing@huawei.com> wrote:
-> > >     
-> > >> On 2019/4/10 21:58, Boris Brezillon wrote:    
-> > >>> On Wed, 10 Apr 2019 15:39:28 +0200
-> > >>> Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > >>>       
-> > >>>> On Wed, 10 Apr 2019 21:07:47 +0800
-> > >>>> Yue Haibing <yuehaibing@huawei.com> wrote:
-> > >>>>      
-> > >>>>> From: YueHaibing <yuehaibing@huawei.com>
-> > >>>>>
-> > >>>>> Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
-> > >>>>> is set to module:
-> > >>>>>
-> > >>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
-> > >>>>> (.text+0xef6): undefined reference to `nand_bch_free'
-> > >>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
-> > >>>>> nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
-> > >>>>> nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
-> > >>>>> nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
-> > >>>>>
-> > >>>>> CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
-> > >>>>> because MTD_RAW_NAND need it while linked.
-> > >>>>>
-> > >>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
-> > >>>>> Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support"        
-> > >>>>
-> > >>>> Nope, it's not this one that introduced the regression.
-> > >>>>
-> > >>>>
-> > >>>>      
-> > >>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > >>>>> ---
-> > >>>>>  drivers/mtd/nand/raw/Kconfig | 2 +-
-> > >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>>>>
-> > >>>>> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-> > >>>>> index 615d738..0500c42 100644
-> > >>>>> --- a/drivers/mtd/nand/raw/Kconfig
-> > >>>>> +++ b/drivers/mtd/nand/raw/Kconfig
-> > >>>>> @@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
-> > >>>>>  if MTD_RAW_NAND
-> > >>>>>  
-> > >>>>>  config MTD_NAND_ECC_SW_BCH
-> > >>>>> -	tristate "Support software BCH ECC"
-> > >>>>> +	bool "Support software BCH ECC"
-> > >>>>>  	select BCH
-> > >>>>>  	default n
-> > >>>>>  	help        
-> > >>>>
-> > >>>> Should be fixed with the following diff squashed into:
-> > >>>>
-> > >>>> 51ef1d0b2095 ("mtd: nand: Clarify Kconfig entry for software BCH ECC algorithm")
-> > >>>>      
-> > >>>> --->8---        
-> > >>>> diff --git a/include/linux/mtd/nand_bch.h b/include/linux/mtd/nand_bch.h
-> > >>>> index b8106651f807..06ce2b655c13 100644
-> > >>>> --- a/include/linux/mtd/nand_bch.h
-> > >>>> +++ b/include/linux/mtd/nand_bch.h
-> > >>>> @@ -15,7 +15,7 @@ struct mtd_info;
-> > >>>>  struct nand_chip;
-> > >>>>  struct nand_bch_control;
-> > >>>>  
-> > >>>> -#if defined(CONFIG_MTD_NAND_ECC_BCH)
-> > >>>> +#if defined(CONFIG_MTD_NAND_ECC_SW_BCH)
-> > >>>>  
-> > >>>>  static inline int mtd_nand_has_bch(void) { return 1; }
-> > >>>>  
-> > >>>> @@ -39,7 +39,7 @@ struct nand_bch_control *nand_bch_init(struct mtd_info *mtd);
-> > >>>>   */
-> > >>>>  void nand_bch_free(struct nand_bch_control *nbc);
-> > >>>>  
-> > >>>> -#else /* !CONFIG_MTD_NAND_ECC_BCH */
-> > >>>> +#else /* !CONFIG_MTD_NAND_ECC_SW_BCH */
-> > >>>>  
-> > >>>>  static inline int mtd_nand_has_bch(void) { return 0; }
-> > >>>>  
-> > >>>> @@ -64,6 +64,6 @@ static inline struct nand_bch_control *nand_bch_init(struct mtd_info *mtd)
-> > >>>>  
-> > >>>>  static inline void nand_bch_free(struct nand_bch_control *nbc) {}
-> > >>>>  
-> > >>>> -#endif /* CONFIG_MTD_NAND_ECC_BCH */
-> > >>>> +#endif /* CONFIG_MTD_NAND_ECC_SW_BCH */
-> > >>>>  
-> > >>>>  #endif /* __MTD_NAND_BCH_H__ */      
-> > >>>
-> > >>> Sorry, I didn't look at the right branch, this part of the code was
-> > >>> correct, but we still have a problem to express the RAW_NAND(y) ->
-> > >>> SW_BCH(y) dependency.      
-> > >>
-> > >> It seems this dependency is not always need,
-> > >>
-> > >> case MTD_RAW_NAND set to y works well while CONFIG_MTD_NAND_ECC_SW_BCH is not set.    
-> > > 
-> > > Yes, I know, but forcing nand_bch to a be a boolean is not the right
-> > > solution either, hence my suggestion to use 'imply'.    
-> 
-> Why exactly? SW BCH is going to be converted to the generic ECC engine
-> abstraction and IIRC you told me that it would not be problematic to
-> turn it into a boolean?
+There are 2 major reasons why there is a limit.
 
-Yes, I told you we should turn it into a boolean and embed the code in
-the nandcore.o object which can itself be linked as a module or embedded
-in the kernel image (see above for a version adapted for nand.o). That's
-not exactly what Yue proposed.
+1) It will be unfair to the task that needs to spend so much of its own
+CPU time to wake up too many readers.
+2) I want to avoid the extreme case that there are more than 32k readers
+in the wait queue and make the count overflow.
 
---->8---
-diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
-index 7fcdaf6c279d..f9258d666846 100644
---- a/drivers/mtd/devices/Kconfig
-+++ b/drivers/mtd/devices/Kconfig
-@@ -207,7 +207,7 @@ comment "Disk-On-Chip Device Drivers"
- config MTD_DOCG3
-        tristate "M-Systems Disk-On-Chip G3"
-        select BCH
--       select BCH_CONST_PARAMS if !CONFIG_MTD_NAND_ECC_SW_BCH
-+       select BCH_CONST_PARAMS if !MTD_NAND_ECC_SW_BCH
-        select BITREVERSE
-        help
-          This provides an MTD device driver for the M-Systems DiskOnChip
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 615d738be411..0500c42f31cb 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
- if MTD_RAW_NAND
- 
- config MTD_NAND_ECC_SW_BCH
--       tristate "Support software BCH ECC"
-+       bool "Support software BCH ECC"
-        select BCH
-        default n
-        help
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 8bc6faaa3bc7..d644185fa18d 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -2,7 +2,6 @@
- 
- obj-$(CONFIG_MTD_RAW_NAND)             += nand.o
- obj-$(CONFIG_MTD_NAND_ECC_SW_HAMMING)  += nand_ecc.o
--obj-$(CONFIG_MTD_NAND_ECC_SW_BCH)      += nand_bch.o
- obj-$(CONFIG_MTD_SM_COMMON)            += sm_common.o
- 
- obj-$(CONFIG_MTD_NAND_CAFE)            += cafe_nand.o
-@@ -68,3 +67,5 @@ nand-objs += nand_macronix.o
- nand-objs += nand_micron.o
- nand-objs += nand_samsung.o
- nand-objs += nand_toshiba.o
-+nand-objs-$(CONFIG_MTD_NAND_ECC_SW_BCH)        += nand_bch.o
-+nand-objs += $(nand-objs-y)
-
+Cheers,
+Longman
 
