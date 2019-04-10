@@ -2,115 +2,155 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7ADC10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24F521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554861538;
-	bh=7YTbpC+S42wTWvYFjOYL0o3r7vaXsMlP2T4iWgEMSnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bCvG9b/shT4RDbYhZID+JrYIYuStNc7GapV9xKO21m/MsMjDLZFviGDTjZoormbUG
-	 ltoLi1hJV9xWhOlJ07aaEYrImKnR4p0zWMNYIs7wn6Vq0PQeGpMrcdbmqlZ2o4IGuj
-	 vq7Kp7k6IPQOEVzrULKTHBmtZbxxwpKkuSssC20I=
+	by mail.kernel.org (Postfix) with ESMTP id B5EB82133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9ZHe7CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfDJB64 (ORCPT
+        id S1727042AbfDJB7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDJB64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:58:56 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF786218FC
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554861535;
-        bh=7YTbpC+S42wTWvYFjOYL0o3r7vaXsMlP2T4iWgEMSnw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PPLYDAOFhSkrlqOBSb/hLiEFHaW1D2dh1azUH/p736Ufu2ni35KQ42ZYfcTsM6U41
-         K6LyCBr7BQBRj/B5iDF8APEUmhQYKTqldpGVmaGfIBhzMmHEw9lqLaMV1JtQ6Cn4JR
-         PchDaRNtBZ/28KtfS1bsD9g7I+czTJnyAjlypLlQ=
-Received: by mail-wm1-f52.google.com with SMTP id r186so3605118wmf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:58:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAVicTU5H9sqpUStQj8zuwMJ1bDJt9uJxcYmTp+edMKqpJV45fgB
-        UVp0bMwBD72lqHi8vlLydhl02AEsUnpRjtih6nDkTA==
-X-Google-Smtp-Source: APXvYqy5adWmgC4rqeQvXKMy0S118HQDOricYPdsLLDmXtiDy9qOlFfzCwYaG9RsD83tV7hjxWP0TMIBvauKFuoyDno=
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr841728wme.4.1554861533515;
- Tue, 09 Apr 2019 18:58:53 -0700 (PDT)
+        Tue, 9 Apr 2019 21:59:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42081 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfDJB7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:59:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p6so503296pgh.9
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 18:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qcB6LnB60ML4/2Pcs78woj+0IUIN/pAyB7fDcOrYfGA=;
+        b=A9ZHe7CKzJtKlv79Kfsm7xK1dKcurx1dfYwmb+8yvjTtiIJkFhtZTq9rfmakSPb4Jn
+         yWeolc2LL9HjoMrweR5OXf8fHzU+gIIEvDB5QYSbiMter++XZQyDkh4jUosvdbAW7LPw
+         IVeu6evQMK7xcbLR/ohXU4RqOuADpy0Bqc0Vo8Bthb0xH3mYlg3WKUhQHxnVMkLsg+lj
+         0eDmKox5ZORIBMmfXZoDEfxSS6amJMNo8y7tPJGoscL28y3WVwkUsniNhAwSdU/G8FYw
+         IkG672dlpo+LuNP8BZRHkwQzgrIz/mp3mhSIDWXzM+Y5Q73n55EIKwskEpoVnRm7Q/LG
+         g9iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qcB6LnB60ML4/2Pcs78woj+0IUIN/pAyB7fDcOrYfGA=;
+        b=dU6OpJcObSRkkZ5Um6zUhS/q0/UTm/8QurUgoX1WyadSCM5DI5GfrN9Psbhufbk6A1
+         FoCpItsG+BrHTtMg2JG7NOv2IAgTtWFTDRGZLm1KFMPotIOjE1dLPQYNda49Bz2A2j/K
+         t7kJmHXzncet8hLZGHr40t1fXqhbby8TQcN5VhEKoXwlRTJgJflc4CZf/VlTEOWmAeQu
+         KYxOy3DslNIq0sz0icXWduTRmVKd9z27MtIxwCv7p16c1KEZRdF3TN+RfNT9dexggTe7
+         f8X3phP4gDSvFjW5jHJrvdlvN3Mkwkv6JwPXpSo1/k37bEzA4Jpq0400i+OTDPzu4NX8
+         BinQ==
+X-Gm-Message-State: APjAAAU7BvNEqIzmiY9DBvZpdbZp3wQrcUVe6tQGela2rerm7t/MuRBe
+        yzO3A4SCKhIGP70OwEkRM48=
+X-Google-Smtp-Source: APXvYqzYtzYjqOK9gCc809xfmAZ+56mQdZp7WKo01ROc+cwlD+oHgEj2txQ9+gcGsGaebOrzQK5GIQ==
+X-Received: by 2002:a62:1a0d:: with SMTP id a13mr41047998pfa.198.1554861571351;
+        Tue, 09 Apr 2019 18:59:31 -0700 (PDT)
+Received: from localhost ([175.223.11.210])
+        by smtp.gmail.com with ESMTPSA id l26sm52114352pfb.20.2019.04.09.18.59.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 09 Apr 2019 18:59:30 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 10:59:26 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 2/2] panic: Enable to print out all printk msg in buffer
+Message-ID: <20190410015926.GC26212@jagdpanzerIV>
+References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+ <1554115684-26846-2-git-send-email-feng.tang@intel.com>
+ <20190409141430.w2fulp7jnnthojrc@pathway.suse.cz>
 MIME-Version: 1.0
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
-In-Reply-To: <20190410015326.24500-1-aubrey.li@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 9 Apr 2019 18:58:41 -0700
-X-Gmail-Original-Message-ID: <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
-Message-ID: <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
-Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Aubrey Li <aubrey.li@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409141430.w2fulp7jnnthojrc@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
->
-> The architecture specific information of the running processes could
-> be useful to the userland. Add support to examine process architecture
-> specific information externally.
->
-> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@intel.com>
-> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> Cc: Linux API <linux-api@vger.kernel.org>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  fs/proc/array.c         | 5 +++++
->  include/linux/proc_fs.h | 2 ++
->  2 files changed, 7 insertions(+)
->
-> diff --git a/fs/proc/array.c b/fs/proc/array.c
-> index 2edbb657f859..331592a61718 100644
-> --- a/fs/proc/array.c
-> +++ b/fs/proc/array.c
-> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->  }
->
-> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
-> +{
-> +}
+On (04/09/19 16:14), Petr Mladek wrote:
+> We should:
+> 
+>    + Flush the latest messages before we replay the log.
 
-This pointlessly bloats other architectures.  Do this instead in an
-appropriate header:
+Do you mean the pending messages? When we replay the log we also should
+print "header line" and panic-cpu backtrace. So we will print panic-cpu
+oops twice
 
-#ifndef arch_proc_pid_status
-static inline void arch_proc_pid_status(...)
-{
-}
-#endif
+	// from panic-cpu flush_on_panic
+	[header]
+	backtrace
+	[end of header]
 
-Or add /proc/PID/x86_status, which sounds better in most respects to me.
+        // from console_replay
+	then all logbuf messages
+	and then the same header/backtrace one more time
+
+	[header]
+	backtrace]
+	[end of backtrace]
+
+Is there any particular reason to flush pending messages before
+we play the buffer? Replaying the logbuf can take some time, so
+my guess would be that you want to print panic-cpu backtrace as
+soon as possible. Is there something else?
+
+[..]
+> Then I would update cosole_unlock() with something like:
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 02ca827b8fac..14ef4e2431e7 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2386,21 +2386,32 @@ void console_unlock(void)
+>  
+>  	for (;;) {
+>  		struct printk_log *msg;
+> +		int reset_idx = 0;
+>  		size_t ext_len = 0;
+> -		size_t len;
+> +		size_t len = 0;
+>  
+>  		printk_safe_enter_irqsave(flags);
+>  		raw_spin_lock(&logbuf_lock);
+> +
+>  		if (console_seq < log_first_seq) {
+>  			len = sprintf(text,
+>  				      "** %llu printk messages dropped **\n",
+>  				      log_first_seq - console_seq);
+>  
+>  			/* messages are gone, move to first one */
+> +			reset_idx = 1;
+> +		}
+> +
+> +		if (console_replay) {
+> +			len += sprintf(text + len,
+> +				       "Replaying the entire log:\n");
+> +			reset_idx = 1;
+> +			console_replay = 0;
+> +		}
+> +
+> +		if (reset_idx) {
+>  			console_seq = log_first_seq;
+>  			console_idx = log_first_idx;
+> -		} else {
+> -			len = 0;
+>  		}
+
+The printing loop becomes a bit complex with one more state, I should
+say; but can do. We handle exclusive consoles there, dropped messages,
+panic reset. But I see what you are trying to do.
+
+	-ss
