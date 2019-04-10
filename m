@@ -2,191 +2,146 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0334C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF40C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AEE20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A0320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbfDJO4o (ORCPT
+        id S1732971AbfDJO5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:56:44 -0400
-Received: from foss.arm.com ([217.140.101.70]:56178 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732883AbfDJO4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:56:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FA2D374;
-        Wed, 10 Apr 2019 07:56:43 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11813F557;
-        Wed, 10 Apr 2019 07:56:39 -0700 (PDT)
-Subject: Re: [PATCH v8 00/20] Convert x86 & arm64 to use generic page walk
-To:     linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190403141627.11664-1-steven.price@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <4e804c87-1788-8903-ccc9-55953aa6da36@arm.com>
-Date:   Wed, 10 Apr 2019 15:56:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 10 Apr 2019 10:57:06 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43955 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732883AbfDJO5F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:57:05 -0400
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 1316310001A;
+        Wed, 10 Apr 2019 14:56:59 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 16:56:59 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document
+ operating-points-v2-sunxi-cpu
+Message-ID: <20190410145659.62nl4o2jvkuggmpe@flea>
+References: <20190409172558.18778-1-tiny.windzz@gmail.com>
+ <20190409172558.18778-3-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190403141627.11664-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6yay5myzwekec5cw"
+Content-Disposition: inline
+In-Reply-To: <20190409172558.18778-3-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-Gentle ping: who can take this? Is there anything blocking this series?
+--6yay5myzwekec5cw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
+On Tue, Apr 09, 2019 at 01:25:58PM -0400, Yangtao Li wrote:
+> Allwinner Process Voltage Scaling Tables defines the voltage and
+> frequency value  based on the speedbin blown in the efuse combination.
+> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
+> provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each
+> OPP of operating-points-v2 table when it is parsed by the OPP framework.
+>
+> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
+> with following parameters:
+> - nvmem-cells (NVMEM area containig the speedbin information)
+> - opp-microvolt-<name>: voltage in micro Volts.
+>   At runtime, the platform can pick a <name> and matching
+>   opp-microvolt-<name> property
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+>
+> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> new file mode 100644
+> index 000000000000..c81a2075b974
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> @@ -0,0 +1,166 @@
+> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
+> +===================================
+> +
+> +For some SoCs, the CPU frequency subset and voltage value of each OPP
+> +varies based on the silicon variant in use. Allwinner Process Voltage
+> +Scaling Tables defines the voltage and frequency value  based on the
+> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
+> +reads the efuse value from the SoC to provide the OPP framework with
+> +required information.
+> +
+> +Required properties:
+> +--------------------
+> +In 'cpus' nodes:
+> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+> +
+> +In 'operating-points-v2' table:
+> +- compatible: Should be
+> +	- 'operating-points-v2-sunxi-cpu'.
 
-Steve
+Vendor-specific compatibles should have the vendor mentionned.
 
-On 03/04/2019 15:16, Steven Price wrote:
-> Most architectures current have a debugfs file for dumping the kernel
-> page tables. Currently each architecture has to implement custom
-> functions for walking the page tables because the generic
-> walk_page_range() function is unable to walk the page tables used by the
-> kernel.
-> 
-> This series extends the capabilities of walk_page_range() so that it can
-> deal with the page tables of the kernel (which have no VMAs and can
-> contain larger huge pages than exist for user space). x86 and arm64 are
-> then converted to make use of walk_page_range() removing the custom page
-> table walkers.
-> 
-> To enable a generic page table walker to walk the unusual mappings of
-> the kernel we need to implement a set of functions which let us know
-> when the walker has reached the leaf entry. Since arm, powerpc, s390,
-> sparc and x86 all have p?d_large macros lets standardise on that and
-> implement those that are missing.
-> 
-> Potentially future changes could unify the implementations of the
-> debugfs walkers further, moving the common functionality into common
-> code. This would require a common way of handling the effective
-> permissions (currently implemented only for x86) along with a per-arch
-> way of formatting the page table information for debugfs. One
-> immediate benefit would be getting the KASAN speed up optimisation in
-> arm64 (and other arches) which is currently only implemented for x86.
-> 
-> Also available as a git tree:
-> git://linux-arm.org/linux-sp.git walk_page_range/v8
-> 
-> Changes since v7:
-> https://lore.kernel.org/lkml/20190328152104.23106-1-steven.price@arm.com/T/
->  * Updated commit message in patch 2 to clarify that we rely on the page
->    tables being walked to be the same page size/depth as the kernel's
->    (since this confused me earlier today).
-> 
-> Changes since v6:
-> https://lore.kernel.org/lkml/20190326162624.20736-1-steven.price@arm.com/T/
->  * Split the changes for powerpc. pmd_large() is now added in patch 4
->    patch, and pmd_is_leaf() removed in patch 5.
-> 
-> Changes since v5:
-> https://lore.kernel.org/lkml/20190321141953.31960-1-steven.price@arm.com/T/
->  * Updated comment for struct mm_walk based on Mike Rapoport's
->    suggestion
-> 
-> Changes since v4:
-> https://lore.kernel.org/lkml/20190306155031.4291-1-steven.price@arm.com/T/
->  * Correctly force result to a boolean in p?d_large for powerpc.
->  * Added Acked-bys
->  * Rebased onto v5.1-rc1
-> 
-> Changes since v3:
-> https://lore.kernel.org/lkml/20190227170608.27963-1-steven.price@arm.com/T/
->  * Restored the generic macros, only implement p?d_large() for
->    architectures that have support for large pages. This also means
->    adding dummy #defines for architectures that define p?d_large as
->    static inline to avoid picking up the generic macro.
->  * Drop the 'depth' argument from pte_hole
->  * Because we no longer have the depth for holes, we also drop support
->    in x86 for showing missing pages in debugfs. See discussion below:
->    https://lore.kernel.org/lkml/26df02dd-c54e-ea91-bdd1-0a4aad3a30ac@arm.com/
->  * mips: only define p?d_large when _PAGE_HUGE is defined.
-> 
-> Changes since v2:
-> https://lore.kernel.org/lkml/20190221113502.54153-1-steven.price@arm.com/T/
->  * Rather than attemping to provide generic macros, actually implement
->    p?d_large() for each architecture.
-> 
-> Changes since v1:
-> https://lore.kernel.org/lkml/20190215170235.23360-1-steven.price@arm.com/T/
->  * Added p4d_large() macro
->  * Comments to explain p?d_large() macro semantics
->  * Expanded comment for pte_hole() callback to explain mapping between
->    depth and P?D
->  * Handle folded page tables at all levels, so depth from pte_hole()
->    ignores folding at any level (see real_depth() function in
->    mm/pagewalk.c)
-> 
-> Steven Price (20):
->   arc: mm: Add p?d_large() definitions
->   arm64: mm: Add p?d_large() definitions
->   mips: mm: Add p?d_large() definitions
->   powerpc: mm: Add p?d_large() definitions
->   KVM: PPC: Book3S HV: Remove pmd_is_leaf()
->   riscv: mm: Add p?d_large() definitions
->   s390: mm: Add p?d_large() definitions
->   sparc: mm: Add p?d_large() definitions
->   x86: mm: Add p?d_large() definitions
->   mm: Add generic p?d_large() macros
->   mm: pagewalk: Add p4d_entry() and pgd_entry()
->   mm: pagewalk: Allow walking without vma
->   mm: pagewalk: Add test_p?d callbacks
->   arm64: mm: Convert mm/dump.c to use walk_page_range()
->   x86: mm: Don't display pages which aren't present in debugfs
->   x86: mm: Point to struct seq_file from struct pg_state
->   x86: mm+efi: Convert ptdump_walk_pgd_level() to take a mm_struct
->   x86: mm: Convert ptdump_walk_pgd_level_debugfs() to take an mm_struct
->   x86: mm: Convert ptdump_walk_pgd_level_core() to take an mm_struct
->   x86: mm: Convert dump_pagetables to use walk_page_range
-> 
->  arch/arc/include/asm/pgtable.h               |   1 +
->  arch/arm64/include/asm/pgtable.h             |   2 +
->  arch/arm64/mm/dump.c                         | 117 +++----
->  arch/mips/include/asm/pgtable-64.h           |   8 +
->  arch/powerpc/include/asm/book3s/64/pgtable.h |  30 +-
->  arch/powerpc/kvm/book3s_64_mmu_radix.c       |  12 +-
->  arch/riscv/include/asm/pgtable-64.h          |   7 +
->  arch/riscv/include/asm/pgtable.h             |   7 +
->  arch/s390/include/asm/pgtable.h              |   2 +
->  arch/sparc/include/asm/pgtable_64.h          |   2 +
->  arch/x86/include/asm/pgtable.h               |  10 +-
->  arch/x86/mm/debug_pagetables.c               |   8 +-
->  arch/x86/mm/dump_pagetables.c                | 347 ++++++++++---------
->  arch/x86/platform/efi/efi_32.c               |   2 +-
->  arch/x86/platform/efi/efi_64.c               |   4 +-
->  include/asm-generic/pgtable.h                |  19 +
->  include/linux/mm.h                           |  26 +-
->  mm/pagewalk.c                                |  76 +++-
->  18 files changed, 407 insertions(+), 273 deletions(-)
-> 
+Also, even though the H6 is the only SoC so far that has needed this,
+we can't really assume that it will be the only SoC to use it, or that
+it will always behave like that.
 
+So having something like allwinner,sun50i-h6-operating-points would be
+great.
+
+> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+> +		efuse registers that has information about the
+> +		speedbin that is used to select the right frequency/voltage
+> +		value pair.
+> +		Please refer the for nvmem-cells
+> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+> +		and also examples below.
+> +
+> +In every OPP node:
+> +- opp-microvolt-<name>: Voltage in micro Volts.
+> +			At runtime, the platform can pick a <name> and
+> +			matching opp-microvolt-<name> property.
+> +			[See: opp.txt]
+
+You need to document the valid names here.
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6yay5myzwekec5cw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK4EOwAKCRDj7w1vZxhR
+xXr6AQDvwTpjj8VYqGfUgaR7dQGKXPaggIMLIGU9MeAPENqygwD/TQrHWLapGkm0
+0yMu+BgQ5XREz9SeD+UV2GVYA1PoxgA=
+=Bpew
+-----END PGP SIGNATURE-----
+
+--6yay5myzwekec5cw--
