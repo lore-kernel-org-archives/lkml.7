@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8BD2082A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D434A2082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="TArCdIYu"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="XMLCDCS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfDJXnj (ORCPT
+        id S1726907AbfDJXnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 19:43:39 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37966 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfDJXnh (ORCPT
+        Wed, 10 Apr 2019 19:43:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42293 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfDJXnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 19:43:37 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d13so3554710edr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:43:34 -0700 (PDT)
+        Wed, 10 Apr 2019 19:43:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x61so3529354edc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6R8FZ9I9VlaH9dWOcusBKN6Wik+G0bwQcNhbpfsJo8k=;
-        b=TArCdIYuBqLXDxuDFjBNhFVet65OV+ViRmPQYXsrhy/10RDxRG3/xXcg9rkI1pWUGH
-         o0cwm02kqkKI3iU9RXY7m/an8+HASQ3HTQvcvCpx197r8XrjpbdBBMaZ8FkBb/GWlSj5
-         /qJiYPONo70CXwV7tbEgk/Y+gBviOYvoUIZk9MIK++58KS9D6eXrjO2a/7OmmIt8qpyk
-         s3ehyxN6kBCrk9K0EFpkUSDM8WOo16mDqHksYxgJVBEHWxGo21SUA51Ppuc9x9M0Myqa
-         6pqpWBztG6lOtP38x5Cm/RHF4fIRupNdR7FBWMV36BzahfOIWl96Ws4LejA9cY8BYsCr
-         1SfA==
+        bh=lVqryB6S1f+7+dRTAY6Ggc/gqXVR5boZXsAqEDKVXmc=;
+        b=XMLCDCS5QTv8GV+Rvjug+XJQCaQmurB5fuOwa8c+rlrv/XCbZMXhlzI/6M3wT1TjLz
+         6PO63yyupurGt+7yYyEE4+qyn0a3vdFNK1RSXbmsh6aQ2+u0/U9Vwt+cegugMCJlZqmu
+         kyk4N173v5qs84AQuXRxZti1hvWAV2BgDST1rh1CEZqIa7PBbney1SQSFbQvL9++EQNi
+         tp5V5g2aSNfemBvKlwgoMXPZqUn7yFbndClFqiRqO7TlvDGIptpJH0FPowlTAQjF/+tX
+         /kLi5Nk2H9QRYfMSaKnNF/Uzt9lVuMNQ7nBjWklfBRobCijcimLjY13DALcOjwRrxAIN
+         CJ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6R8FZ9I9VlaH9dWOcusBKN6Wik+G0bwQcNhbpfsJo8k=;
-        b=Jyi05heWDr4zB2ZCbJyk3NOp5hvSQhRrQ2PmZlXLtp/DVzihRfepdPoIPZLadkGfl1
-         lcZzesihyfwjvKgp7J41lkDkm1E6/NJh3teJsvu9vgRJ6SZHv5su/zpkB2owF1IlqXp0
-         a/aQ2MAbU+orfzTzsXWWAxfqlxKzS/p3qrgRal8t1LjVVsL2a+er1vRStVwzdwDOrFiV
-         tD/4OF1L3EB+3Fqlo4JXwFWYEgO5zFpmCd+aQ6xJfjpbch2DTLoyaH4zi6M+V/LA4eN0
-         H6tIDbGEptghVhgnPLF4y9Zkpa3Mtz2uFiT7J1I3jKhITjX2RTDCvUfYZP8Q73HZ0sqD
-         BrUA==
-X-Gm-Message-State: APjAAAUlLmIpZJD7u8W/TFX44GKZLtBPVVi6ugH5YJChnwPJHffr36NZ
-        o7ce33wiuW4wXSX+DXI9hh30kQ==
-X-Google-Smtp-Source: APXvYqwduybjlxQxaIF24oAXe4ViEuyUh1NpUv9phOzIGI6ZaDme4EDg6Eb/wMkRMuJT1gabNc8BJw==
-X-Received: by 2002:a17:906:b80e:: with SMTP id dv14mr25537822ejb.157.1554939814098;
-        Wed, 10 Apr 2019 16:43:34 -0700 (PDT)
+        bh=lVqryB6S1f+7+dRTAY6Ggc/gqXVR5boZXsAqEDKVXmc=;
+        b=UsHe/X7q4O6u5ry4ukTmCDVhICiRZ4zP+3JdMKOT8tn3OyMbzFdcbc/3jLTvpMvINg
+         J5wTTFxqRCtmBF2jqduRRThFQwitZ1sOZXZQUnE9B1wo2miV3FdNaF1VuSs5aoclwVg0
+         Au+lcfPaXDIxUZWT3011gNXYqLf74eR4nH8iaQYXrtaCaaNY8Bm0cOQ8wYcn1dIqgUOo
+         o4Ck0+0MBvafqMoYNlEX6/gsMpX3AJr1BIjWtlVP3CG5syjTlEJeK4eOBGp8ZcmBw6ID
+         cJhQb7B29IxoWU3AiuhKaqjdlZTyHZzXH7IkfEMf6uOE6IqIoiYc8VMycw598Xd4KB8E
+         ZHEw==
+X-Gm-Message-State: APjAAAUhCKd5U3IZjXmik5q8RCBEAz/bG50FkpJ8Ink9H6KdkUIz6nkn
+        rAD95OjmbqTPTHWPdFFrYCZIBQ==
+X-Google-Smtp-Source: APXvYqxepdyiEKKCnkNqOYSj7H+8x6bGtA3571Nucc7F/yaZC8jtWAq/YprCciaVkp2f9OP09+uo3Q==
+X-Received: by 2002:a50:fa4c:: with SMTP id c12mr22849799edq.37.1554939816757;
+        Wed, 10 Apr 2019 16:43:36 -0700 (PDT)
 Received: from localhost.localdomain ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id f8sm4833015edt.36.2019.04.10.16.43.32
+        by smtp.gmail.com with ESMTPSA id f8sm4833015edt.36.2019.04.10.16.43.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 16:43:33 -0700 (PDT)
+        Wed, 10 Apr 2019 16:43:36 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
         jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
         ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
         cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com,
         Christian Brauner <christian@brauner.io>
-Subject: [RFC-2 PATCH 2/4] fork: add CLONE_PIDFD via anonymous inode
-Date:   Thu, 11 Apr 2019 01:40:43 +0200
-Message-Id: <20190410234045.29846-4-christian@brauner.io>
+Subject: [RFC-2 PATCH 4/4] samples: show race-free pidfd metadata access
+Date:   Thu, 11 Apr 2019 01:40:45 +0200
+Message-Id: <20190410234045.29846-6-christian@brauner.io>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190410234045.29846-1-christian@brauner.io>
 References: <20190410234045.29846-1-christian@brauner.io>
@@ -79,35 +79,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset makes it possible to retrieve pid file descriptors at process
-creation time by introducing a new flag CLONE_PIDFD. As spotted by Linus,
-there is exactly one bit left.
-
-In this version of CLONE_PIDFD anonymous inode file descriptors are used.
-They serve as a simple opaque handle on pids. Logically, this makes it
-possible to interpret a pidfd differently, narrowing or widening the scope
-of various operations (e.g. signal sending). Thus, a pidfd cannot just
-refer to a tgid, but also a tid, or in theory - given appropriate flag
-arguments in relevant syscalls - a process group or session.
-
-This patchset uses anonymous file descriptors instead of file descriptors
-from /proc/<pid>.
-A pidfd in this style comes with additional information in fdinfo: the pid
-of the process it refers to in the current pid namespace (Pid: %d).
-
-Even though originally file descriptors to /proc/<pid> were preferred we
-discovered the associated complexity while implementing this solution which
-prompted us to implement an alternative and put it up for debate. We have
-chosen to implement this alternative to illustrate how strikingly simple
-this patchset is in comparision to the original approach.
-To remove worries about missing metadata access we have written a POC that
-illustrates how a combination of CLONE_PIDFD, fdinfo, and
-pidfd_send_signal() can be used to gain race-free access to process
-metadata through /proc/<pid>. The sample program can easily be translated
-into a helper that would be suitable for inclusion in libc so that users
-don't have to worry about writing it themselves.
-
-We hope that this ultimately will be the approach the community prefers.
+This is an sample program to show userspace how to get race-free access to
+process metadata from a pidfd.
+It is really not that difficult and instead of burdening the kernel with
+this task by using fds to /proc/<pid> we can simply add a helper to libc
+that does it for the user.
 
 Signed-off-by: Christian Brauner <christian@brauner.io>
 Signed-off-by: Jann Horn <jann@thejh.net>
@@ -127,224 +103,210 @@ Cc: Aleksa Sarai <cyphar@cyphar.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
 ---
- include/linux/pid.h        |  2 +
- include/uapi/linux/sched.h |  1 +
- kernel/fork.c              | 94 ++++++++++++++++++++++++++++++++++++--
- 3 files changed, 92 insertions(+), 5 deletions(-)
+ samples/Makefile               |   2 +-
+ samples/pidfd/Makefile         |   6 ++
+ samples/pidfd/pidfd-metadata.c | 169 +++++++++++++++++++++++++++++++++
+ 3 files changed, 176 insertions(+), 1 deletion(-)
+ create mode 100644 samples/pidfd/Makefile
+ create mode 100644 samples/pidfd/pidfd-metadata.c
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index b6f4ba16065a..3c8ef5a199ca 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -66,6 +66,8 @@ struct pid
- 
- extern struct pid init_struct_pid;
- 
-+extern const struct file_operations pidfd_fops;
+diff --git a/samples/Makefile b/samples/Makefile
+index b1142a958811..fadadb1c3b05 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -3,4 +3,4 @@
+ obj-$(CONFIG_SAMPLES)	+= kobject/ kprobes/ trace_events/ livepatch/ \
+ 			   hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
+ 			   configfs/ connector/ v4l/ trace_printk/ \
+-			   vfio-mdev/ statx/ qmi/ binderfs/
++			   vfio-mdev/ statx/ qmi/ binderfs/ pidfd/
+diff --git a/samples/pidfd/Makefile b/samples/pidfd/Makefile
+new file mode 100644
+index 000000000000..0ff97784177a
+--- /dev/null
++++ b/samples/pidfd/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0
 +
- static inline struct pid *get_pid(struct pid *pid)
- {
- 	if (pid)
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index 22627f80063e..cd9bd14ce56d 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -10,6 +10,7 @@
- #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
- #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
- #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
-+#define CLONE_PIDFD	0x00001000	/* create new pid file descriptor */
- #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
- #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
- #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 9dcd18aa210b..5716ea8c32e5 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -11,6 +11,7 @@
-  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
-  */
- 
-+#include <linux/anon_inodes.h>
- #include <linux/slab.h>
- #include <linux/sched/autogroup.h>
- #include <linux/sched/mm.h>
-@@ -21,8 +22,10 @@
- #include <linux/sched/task.h>
- #include <linux/sched/task_stack.h>
- #include <linux/sched/cputime.h>
-+#include <linux/seq_file.h>
- #include <linux/rtmutex.h>
- #include <linux/init.h>
-+#include <linux/fsnotify.h>
- #include <linux/unistd.h>
- #include <linux/module.h>
- #include <linux/vmalloc.h>
-@@ -1662,6 +1665,64 @@ static inline void rcu_copy_process(struct task_struct *p)
- #endif /* #ifdef CONFIG_TASKS_RCU */
- }
- 
-+static int pidfd_release(struct inode *inode, struct file *file)
-+{
-+	struct pid *pid = file->private_data;
-+	file->private_data = NULL;
-+	put_pid(pid);
-+	return 0;
-+}
++hostprogs-y := pidfd-metadata
++always := $(hostprogs-y)
++HOSTCFLAGS_pidfd-metadata.o += -I$(objtree)/usr/include
++all: pidfd-metadata
+diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
+new file mode 100644
+index 000000000000..c46c6c34a012
+--- /dev/null
++++ b/samples/pidfd/pidfd-metadata.c
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+#ifdef CONFIG_PROC_FS
-+static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
-+{
-+	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
-+	struct pid *pid = f->private_data;
++#define _GNU_SOURCE
++#include <err.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <limits.h>
++#include <sched.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/stat.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <unistd.h>
 +
-+	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
-+	seq_putc(m, '\n');
-+}
++#ifndef CLONE_PIDFD
++#define CLONE_PIDFD 0x00001000
 +#endif
 +
-+const struct file_operations pidfd_fops = {
-+	.release = pidfd_release,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = pidfd_show_fdinfo,
-+#endif
-+};
-+
-+static int pidfd_create_cloexec(struct pid *pid, struct file **file)
++static int raw_clone_pidfd(void)
 +{
-+	unsigned int flags = O_RDWR | O_CLOEXEC;
-+	int error, fd;
-+	struct file *f;
++	unsigned long flags = CLONE_PIDFD;
 +
-+	error = __alloc_fd(current->files, 1, rlimit(RLIMIT_NOFILE), flags);
-+	if (error < 0)
-+		return error;
-+	fd = error;
++#if defined(__s390x__) || defined(__s390__) || defined(__CRIS__)
++	/* On s390/s390x and cris the order of the first and second arguments
++         * of the system call is reversed.
++         */
++	return (int)syscall(__NR_clone, NULL, flags | SIGCHLD);
++#elif defined(__sparc__) && defined(__arch64__)
++	{
++		/*
++                 * sparc64 always returns the other process id in %o0, and a
++                 * boolean flag whether this is the child or the parent in %o1.
++                 * Inline assembly is needed to get the flag returned in %o1.
++                 */
++		int in_child;
++		int child_pid;
++		asm volatile("mov %2, %%g1\n\t"
++			     "mov %3, %%o0\n\t"
++			     "mov 0 , %%o1\n\t"
++			     "t 0x6d\n\t"
++			     "mov %%o1, %0\n\t"
++			     "mov %%o0, %1"
++			     : "=r"(in_child), "=r"(child_pid)
++			     : "i"(__NR_clone), "r"(flags | SIGCHLD)
++			     : "%o1", "%o0", "%g1");
 +
-+	f = anon_inode_getfile("pidfd", &pidfd_fops, get_pid(pid), flags);
-+	if (IS_ERR(f)) {
-+		put_pid(pid);
-+		error = PTR_ERR(f);
-+		goto err_put_unused_fd;
++		if (in_child)
++			return 0;
++		else
++			return child_pid;
++	}
++#elif defined(__ia64__)
++	/* On ia64 the stack and stack size are passed as separate arguments. */
++	return (int)syscall(__NR_clone, flags | SIGCHLD, NULL, prctl_arg(0));
++#else
++	return (int)syscall(__NR_clone, flags | SIGCHLD, NULL);
++#endif
++}
++
++static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
++					unsigned int flags)
++{
++	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
++}
++
++static int pidfd_metadata_fd(int pidfd)
++{
++	int procfd, ret;
++	char path[100];
++	FILE *f;
++	size_t n = 0;
++	char *line = NULL;
++
++	snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", pidfd);
++
++	f = fopen(path, "re");
++	if (!f)
++		return -1;
++
++	ret = 0;
++	while (getline(&line, &n, f) != -1) {
++		char *numstr;
++		size_t len;
++
++		if (strncmp(line, "Pid:\t", 5))
++			continue;
++
++		numstr = line + 5;
++		len = strlen(numstr);
++		if (len > 0 && numstr[len - 1] == '\n')
++			numstr[len - 1] = '\0';
++		ret = snprintf(path, sizeof(path), "/proc/%s", numstr);
++		break;
++	}
++	free(line);
++	fclose(f);
++
++	if (!ret) {
++		errno = ENOENT;
++		warn("Failed to parse pid from fdinfo\n");
++		return -1;
 +	}
 +
-+	*file = f;
-+	return fd;
++	procfd = open(path, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
++	if (procfd < 0) {
++		warn("Failed to open %s\n", path);
++		return -1;
++	}
 +
-+err_put_unused_fd:
-+	put_unused_fd(fd);
-+	return error;
-+}
-+
-+static inline void pidfd_put_cloexec(struct pid *pid, int fd, struct file *file)
-+{
-+        put_unused_fd(fd);
-+	fput(file);
-+}
-+
- /*
-  * This creates a new process as a copy of the old one,
-  * but does not actually start it yet.
-@@ -1678,11 +1739,12 @@ static __latent_entropy struct task_struct *copy_process(
- 					struct pid *pid,
- 					int trace,
- 					unsigned long tls,
--					int node)
-+					int node, int *pidfd)
- {
- 	int retval;
- 	struct task_struct *p;
- 	struct multiprocess_signals delayed;
-+	struct file *pidfdf = NULL;
- 
- 	/*
- 	 * Don't allow sharing the root directory with processes in a different
-@@ -1936,6 +1998,18 @@ static __latent_entropy struct task_struct *copy_process(
- 		}
- 	}
- 
 +	/*
-+	 * This has to happen after we've potentially unshared the file
-+	 * descriptor table (so that the pidfd doesn't leak into the child if
-+	 * the fd table isn't shared).
++	 * Verify that the pid has not been recycled and our /proc/<pid> handle
++	 * is still valid.
 +	 */
-+	if (clone_flags & CLONE_PIDFD) {
-+		retval = pidfd_create_cloexec(pid, &pidfdf);
-+		if (retval < 0)
-+			goto bad_fork_free_pid;
-+		*pidfd = retval;
++	if (sys_pidfd_send_signal(pidfd, 0, NULL, 0) < 0) {
++		/* process does not exist */
++		if (errno == ESRCH) {
++			warn("The pid was recycled\n");
++			close(procfd);
++			return -1;
++		}
++
++		/* just not allowed to signal it */
 +	}
 +
- #ifdef CONFIG_BLOCK
- 	p->plug = NULL;
- #endif
-@@ -1996,7 +2070,7 @@ static __latent_entropy struct task_struct *copy_process(
- 	 */
- 	retval = cgroup_can_fork(p);
- 	if (retval)
--		goto bad_fork_free_pid;
-+		goto bad_fork_put_pidfd;
- 
- 	/*
- 	 * From this point on we must avoid any synchronous user-space
-@@ -2097,6 +2171,9 @@ static __latent_entropy struct task_struct *copy_process(
- 	syscall_tracepoint_update(p);
- 	write_unlock_irq(&tasklist_lock);
- 
-+	if (clone_flags & CLONE_PIDFD)
-+		fd_install(*pidfd, pidfdf);
++	return procfd;
++}
 +
- 	proc_fork_connector(p);
- 	cgroup_post_fork(p);
- 	cgroup_threadgroup_change_end(current);
-@@ -2111,6 +2188,9 @@ static __latent_entropy struct task_struct *copy_process(
- 	spin_unlock(&current->sighand->siglock);
- 	write_unlock_irq(&tasklist_lock);
- 	cgroup_cancel_fork(p);
-+bad_fork_put_pidfd:
-+	if (clone_flags & CLONE_PIDFD)
-+		pidfd_put_cloexec(pid, *pidfd, pidfdf);
- bad_fork_free_pid:
- 	cgroup_threadgroup_change_end(current);
- 	if (pid != &init_struct_pid)
-@@ -2177,7 +2257,7 @@ struct task_struct *fork_idle(int cpu)
- {
- 	struct task_struct *task;
- 	task = copy_process(CLONE_VM, 0, 0, NULL, &init_struct_pid, 0, 0,
--			    cpu_to_node(cpu));
-+			    cpu_to_node(cpu), NULL);
- 	if (!IS_ERR(task)) {
- 		init_idle_pids(task);
- 		init_idle(task, cpu);
-@@ -2202,7 +2282,7 @@ long _do_fork(unsigned long clone_flags,
- 	struct completion vfork;
- 	struct pid *pid;
- 	struct task_struct *p;
--	int trace = 0;
-+	int pidfd, trace = 0;
- 	long nr;
- 
- 	/*
-@@ -2224,7 +2304,7 @@ long _do_fork(unsigned long clone_flags,
- 	}
- 
- 	p = copy_process(clone_flags, stack_start, stack_size,
--			 child_tidptr, NULL, trace, tls, NUMA_NO_NODE);
-+			 child_tidptr, NULL, trace, tls, NUMA_NO_NODE, &pidfd);
- 	add_latent_entropy();
- 
- 	if (IS_ERR(p))
-@@ -2260,6 +2340,10 @@ long _do_fork(unsigned long clone_flags,
- 	}
- 
- 	put_pid(pid);
++int main(int argc, char *argv[])
++{
++	int procfd, ret = EXIT_FAILURE;
++	ssize_t bytes;
++	char buf[4096] = { 0 };
 +
-+	if (clone_flags & CLONE_PIDFD)
-+		nr = pidfd;
++	int pidfd = raw_clone_pidfd();
++	if (pidfd < 0)
++		return -1;
 +
- 	return nr;
- }
- 
++	if (pidfd == 0) {
++		printf("%d\n", getpid());
++		exit(EXIT_SUCCESS);
++	}
++
++	procfd = pidfd_metadata_fd(pidfd);
++	close(pidfd);
++	if (procfd < 0)
++		goto out;
++
++	int statusfd = openat(procfd, "status", O_RDONLY | O_CLOEXEC);
++	close(procfd);
++	if (statusfd < 0)
++		goto out;
++
++	bytes = read(statusfd, buf, sizeof(buf));
++	if (bytes > 0)
++		bytes = write(STDOUT_FILENO, buf, bytes);
++	close(statusfd);
++
++out:
++	(void)wait(NULL);
++	if (bytes < 0 || ret)
++		exit(EXIT_FAILURE);
++
++	exit(EXIT_SUCCESS);
++}
 -- 
 2.21.0
 
