@@ -2,85 +2,102 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D868C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157A520818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:08:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554905282;
-	bh=i4dHT4ibwSYl3XrxVP0zmBLNUAQ54jVI1SBrlEIK82g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TY7Qoy1jnNIoOeKQ8/FIluuou/p4OwKdZVVhA4tFRQisYbnfyfHuj9mNbY8+0hvbF
-	 0Oc4GquJCH0ugFQXJTBxV12OzOYF9MBWdZ4ycferSnFAXo7MS+8qkq1ktvH86mPW16
-	 GP8tLKJxmjVlMYtNrLYuOKsF35zdigk+UQI7mRHo=
+	by mail.kernel.org (Postfix) with ESMTP id 4908F20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbfDJOIA (ORCPT
+        id S1732575AbfDJOJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:08:00 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38495 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729946AbfDJOIA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:08:00 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e80so2028560ote.5;
-        Wed, 10 Apr 2019 07:07:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DtrUml0mzaurwWxpooSkRDdxwOyemSBwP6zZRHr5fz4=;
-        b=Qo9QegL8eeEwR6bH+Zf+wYGIn81t4FcjBjLrkF3XwOMdF6BiIr8OOQu+5WT+T6O3x7
-         Y3jlFeWUkNVcmdZTTEAQAulKaodZApOTiaHilyXyW7irSRL+CKtmqmVy4GwqyPKjnofo
-         V3hICjYRPr+VHMLDm6Pr1z+A7mbirFK/JlD5MmByJO5GxxEgapZtKm+CMfzaIIuW6Fo8
-         Y4uEQruJ4zOA2uCq7BxvDXIu//lc8IBU6OQYHJTXNHoFnl5xgYDafe5uMMxe5jNGBFdU
-         oPb4zBRhiLqmHpazUBTCTHxjMaODGV7fL10LrAyMf0EXdKmR4SZpoEnCMGZU9s2Hh+2O
-         lq2w==
-X-Gm-Message-State: APjAAAVfCPvvub+78/tP6MmKCq88t7HSyb88abQBKKsRCD6Akw9DryEc
-        LMUvOmf6uZis8w+U8LvJAZevziQ=
-X-Google-Smtp-Source: APXvYqw4LaO744267VQAAghjElvMUyeks4I8AeRlYqp3XNJwqOuwLzMvcveTYk0G0gcrUd1jUO6QgA==
-X-Received: by 2002:a9d:871:: with SMTP id 104mr26927420oty.315.1554905279065;
-        Wed, 10 Apr 2019 07:07:59 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m63sm7909843otc.76.2019.04.10.07.07.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 07:07:58 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 09:07:57 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>,
-        od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] dt-bindings: usb: Add usb-phy property to the
- jz4740-musb node
-Message-ID: <20190410140757.GA19016@bogus>
-References: <20190404094739.23503-1-paul@crapouillou.net>
+        Wed, 10 Apr 2019 10:09:08 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:58866 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731448AbfDJOJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:09:07 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id CBDCD20777;
+        Wed, 10 Apr 2019 16:09:05 +0200 (CEST)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id B3061202B9;
+        Wed, 10 Apr 2019 16:09:05 +0200 (CEST)
+Subject: Re: [PATCH 23/23] watchdog: tangox_wdt: Convert to use device managed
+ functions and other improvements
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mans Rullgard <mans@mansr.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
+ <1554830641-9247-24-git-send-email-linux@roeck-us.net>
+ <6ebee4d6-c650-c322-a966-4269d54da9be@free.fr>
+ <c875ddd9-13f4-c6d4-4537-21b80000b9b5@roeck-us.net>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <6f8ec860-42ff-d33a-9a58-626d2fa4e7c8@free.fr>
+Date:   Wed, 10 Apr 2019 16:09:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404094739.23503-1-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c875ddd9-13f4-c6d4-4537-21b80000b9b5@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Apr 10 16:09:05 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  4 Apr 2019 11:47:37 +0200, Paul Cercueil wrote:
-> Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
-> from devicetree.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: Change "usb-phy" DT property to "phys"
-> 
->  Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+On 10/04/2019 15:37, Guenter Roeck wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On 4/10/19 6:04 AM, Marc Gonzalez wrote:
+>
+>> On 09/04/2019 19:24, Guenter Roeck wrote:
+>>
+>>> Use device managed functions to simplify error handling, reduce
+>>> source code size, improve readability, and reduce the likelihood of bugs.
+>>> Other improvements as listed below.
+>>>
+>>> The conversion was done automatically with coccinelle using the
+>>> following semantic patches. The semantic patches and the scripts
+>>> used to generate this commit log are available at
+>>> https://github.com/groeck/coccinelle-patches
+>>>
+>>> - Drop assignments to otherwise unused variables
+>>> - Drop unnecessary braces around conditional return statements
+>>> - Drop empty remove function
+>>> - Use devm_add_action_or_reset() for calls to clk_disable_unprepare
+>>> - Replace stop on remove with call to watchdog_stop_on_unregister()
+>>> - Use devm_watchdog_register_driver() to register watchdog device
+>>
+>> No devm_clk_prepare() in mainline? :-(
+>>
+>> https://lore.kernel.org/patchwork/patch/755487/
+> 
+> We went through that several times and never succeeded. This was the major
+> reason why I didn't submit this series earlier since I was hoping for it
+> to appear at some point. Unfortunately, someone always objected, typically
+> with comments along the line that it could be misused, or citing individual
+> examples where the current code in some driver is wrong and should be fixed
+> instead.
+> 
+> This isn't really a technical argument: Everything can be misused, and all
+> code has bugs. Neither is a reason to reject a new useful API. As such, one
+> has to assume that after refuting such arguments, and even after fixing all
+> bugs in existing code, the opponents of the new API will come up with other
+> reasons to reject it.
+> 
+> At the end, I gave up trying. Feel free to try yourself; I most definitely
+> won't try it anymore. Using devm_add_action_or_reset() is a bit more clumsy,
+> but works just as well.
+
+Hello Guenter,
+
+I am saddened to read about your frustration. I might give it a try, if Dmitry
+doesn't feel like giving it another shot.
+
+Regards.
