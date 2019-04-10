@@ -2,121 +2,109 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B588C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213D9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6E42083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4OuWGjC"
+	by mail.kernel.org (Postfix) with ESMTP id EB86F2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfDJGs5 (ORCPT
+        id S1728750AbfDJGtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:48:57 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37838 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfDJGs5 (ORCPT
+        Wed, 10 Apr 2019 02:49:09 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:22110 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726894AbfDJGtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:48:57 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l20so990748edv.4;
-        Tue, 09 Apr 2019 23:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=flRuh9bHQFZIbByfoeIgE1Z7A8kc8C3hbrbhRaH/cMw=;
-        b=l4OuWGjCTqDiCw8tcK3t1wrHcXDHqloHA6+GQyHFpI0xoiBzaME/AeOg1FQ7sGRhuU
-         FYzIYiOcQe2SOMFRcIDMkKgNkIShBUWVW/l8KqAtPXYe6gwhIpZAC0QuVH+TN1tDU+V2
-         obfn9uy4bmqlBTO7AkvUsJxalkeP1VJFIbKwP8HATya+7miEz3AP31aHsfSn7Thz8quO
-         SF7spTas3raK/nop20U90ZPg3plOZZDTqmnrpVOaKquzPFMQIrsf15ShAKmL1RrP5U//
-         +Ct7+cj7MGAcLhBrkvkuKJMDZ+ONWJvluQK8rTPBYYZU1kMkTqhn9Bd34PkW2kOiRayO
-         f93Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=flRuh9bHQFZIbByfoeIgE1Z7A8kc8C3hbrbhRaH/cMw=;
-        b=Wp8nOxQEphA2uRLaYalJl2i2eplekzQCpve4tprc6H05NR1HofcbAWreYCeAtWZeEM
-         1Lp3pyv3UklRcaKano+9s0f/7jGOtHibHc7y6BvibkTtp4Rmd3Huy3KqEY4IJIBF04bB
-         L1Gcv5dy8P8rKDuy6HSLKC4TGxMf5KNv3AkBH96mgpMxAzmn3Q2hg3wCco8rDyUyOnlg
-         hAVZkEcx3Gf0r4hcUbdPrgkfVbbf8GdqqVtSedvY5GmL7rB8gp/+Hf1q1Qo2Q48yfaNp
-         3Z5uugwc5AZsQWeh7DF57B+wU8QFcsvlUhq3NPCxlN1x8xkyNiB3+aDr6bgP1mH1rcoR
-         t6KQ==
-X-Gm-Message-State: APjAAAX0WsyNY9DxCGSpvMF5TyQSSjFxxJeBYxL/3wNk7D3Dk4jH2K5x
-        HneTK1gVKoJyqLqMIz4dEnbj/gvIoMnqXbp7Ceg=
-X-Google-Smtp-Source: APXvYqwoahLpsxixg3+GMsNRY6g7PezqJqQLfIljHOC0YMHHGbMfnJx2drSXaeTlK6nJR8F4ejk3aFel+Ja738C6eNs=
-X-Received: by 2002:a50:bdc4:: with SMTP id z4mr25711024edh.199.1554878935147;
- Tue, 09 Apr 2019 23:48:55 -0700 (PDT)
+        Wed, 10 Apr 2019 02:49:08 -0400
+X-UUID: 41a6e3bcc95f46a58573be427b1cf3cb-20190410
+X-UUID: 41a6e3bcc95f46a58573be427b1cf3cb-20190410
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1471848034; Wed, 10 Apr 2019 14:47:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 10 Apr 2019 14:47:35 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 10 Apr 2019 14:47:31 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Mathias Nyman <mathias.nyman@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [v2 PATCH 1/6] usb: xhci-mtk: get optional clock by devm_clk_get_optional()
+Date:   Wed, 10 Apr 2019 14:47:24 +0800
+Message-ID: <bc6cdc2dce698dddbd692ba100fbf08c15c7b023.1554877692.git.chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <1554809242-27475-1-git-send-email-viorel.suman@nxp.com>
- <1554809242-27475-2-git-send-email-viorel.suman@nxp.com> <20190410042906.GC3032@Asurada>
- <CAEnQRZBDSrpje2-ML0zr+oJkwMbbkxV5hUNc_HzZtPZv-et8mA@mail.gmail.com> <20190410063714.GA4156@Asurada>
-In-Reply-To: <20190410063714.GA4156@Asurada>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 10 Apr 2019 09:48:43 +0300
-Message-ID: <CAEnQRZAKC93vJnirvSxyJMpaoXdht83ikJz3LYFFbeBd4w__zA@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/3] ASoC: fsl_audmix: remove "model" attribute
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Viorel Suman <viorel.suman@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Viorel Suman <viorel.suman@gmail.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 9:37 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Wed, Apr 10, 2019 at 09:20:29AM +0300, Daniel Baluta wrote:
-> > Hi Nicolin,
-> >
-> > On Wed, Apr 10, 2019 at 7:30 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 09, 2019 at 11:27:39AM +0000, Viorel Suman wrote:
-> > > > Use "of_device_id.data" to specify the machine driver
-> > > > instead of "model" DTS attribute.
-> > > >
-> > > > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> > >
-> > > Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > >
-> > > > ---
-> > > >  sound/soc/fsl/fsl_audmix.c | 43 +++++++++++++++++++++++--------------------
-> > > >  1 file changed, 23 insertions(+), 20 deletions(-)
-> > >
-> > > > +     priv->pdev = platform_device_register_data(&pdev->dev, mdrv, 0, NULL,
-> > > > +                                                0);
-> > >
-> > > Would you please send a separate patch to replace "pdev->dev"?
-> >
-> > I am not sure exactly how to explain this change in the commit message. It does
-> > make code easier to read and avoids dereferencing pdev pointer each time.
-> >
-> > Is it enough for commit description?
->
-> You mean this? https://lore.kernel.org/patchwork/patch/862610/
+Use devm_clk_get_optional() to get optional clock
 
-Yes! Thanks.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2: no changes
+---
+ drivers/usb/host/xhci-mtk.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 60987c787e44..026fe18972d3 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -206,19 +206,6 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	return xhci_mtk_host_enable(mtk);
+ }
+ 
+-/* ignore the error if the clock does not exist */
+-static struct clk *optional_clk_get(struct device *dev, const char *id)
+-{
+-	struct clk *opt_clk;
+-
+-	opt_clk = devm_clk_get(dev, id);
+-	/* ignore error number except EPROBE_DEFER */
+-	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
+-		opt_clk = NULL;
+-
+-	return opt_clk;
+-}
+-
+ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ {
+ 	struct device *dev = mtk->dev;
+@@ -229,15 +216,15 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ 		return PTR_ERR(mtk->sys_clk);
+ 	}
+ 
+-	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
++	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+ 	if (IS_ERR(mtk->ref_clk))
+ 		return PTR_ERR(mtk->ref_clk);
+ 
+-	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
++	mtk->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
+ 	if (IS_ERR(mtk->mcu_clk))
+ 		return PTR_ERR(mtk->mcu_clk);
+ 
+-	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
++	mtk->dma_clk = devm_clk_get_optional(dev, "dma_ck");
+ 	return PTR_ERR_OR_ZERO(mtk->dma_clk);
+ }
+ 
+-- 
+2.21.0
+
