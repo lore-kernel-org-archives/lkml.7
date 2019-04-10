@@ -2,67 +2,68 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA77C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D4B20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:41:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="O/25pqCH"
+	by mail.kernel.org (Postfix) with ESMTP id 1CB062133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554936142;
+	bh=8WK860sKSnflj0EGOs8UxQFwZKdjz5fHNUUwbVx4ve0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=n17/AlZlJbwBQstjwDtBLm6nrv80tMilKoyBoDXjaDXCPOgxHWepGMkb2hlM3Gn06
+	 Khs6qSo0xwL2MeOzB7KQ5hHjHd9qnquoiiKHCyaJWn6FMgYMFNOMnLV0EDGIKThRVQ
+	 jK6VYhP22J2zqkmpIGfmq9RmORmWZVseRnBblbiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfDJWlB (ORCPT
+        id S1726685AbfDJWmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:41:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38073 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbfDJWlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:41:01 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so4782409wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lQG5/tXvzBGNkqHlPz5Vc7T5e7qLQSkm2WFhbrJXDCI=;
-        b=O/25pqCHwPsg/f9zqw8+8GM20BHclNVRLLBLQEe8BW1acj4vLf7CmBpSa4yUCM+8pz
-         HzpcpBsScr6AVPZ9ZTYnWiRfMGe7fr78SQ+VLMRE2QOaAqzzs+b0eujLiDs1CEf8iRwz
-         QeHkn16TGWjzbdiWErPEKVpCsljYgNuVtNZ2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lQG5/tXvzBGNkqHlPz5Vc7T5e7qLQSkm2WFhbrJXDCI=;
-        b=r/XeAhZLo2ARkeiuePNbXb6BVZRs5j8OldzeEXSSVxOITZsPMRjWl832zfWliDGyrf
-         aV35P67LbN3BqUWAOU4N49mu1QDZ0H2wOIEKAZtmsY31KQZnc3Iic0rL9H7KIt1AVx7w
-         YKkCy9s6tSc2dhnWv8JmSvm4SoFgfAk6NI9+lwGlRpwoeOYJyH3Nsmu37e135Q0OCn/H
-         gP6J3t4/z9tHSoALsqv6eGoXtqy99EdBNi5jM3olwsYwnPdNlaYJGgkAUWsn/WD2C8VW
-         UElVJt3fYZKbGm+cJ6bFh2CNoQ/7IJDo4pu7bUbEGKeGHQ7bC3wqd9qPjrxWo0x2FMBr
-         p21g==
-X-Gm-Message-State: APjAAAWqh55VjmrLEPL7HWuaCHVGsuNLBAJ9zQ91REiVAN7JuJhu60Gb
-        EJwShy8N9SmdXpinKqPnaj3xag==
-X-Google-Smtp-Source: APXvYqzLwP7/K5coJ6txOBpJdXM5FVmtt3dLGWiYv8z18yhwwOqSQUdFCea3MpkBfEqvF0oVcOtlKA==
-X-Received: by 2002:adf:f78c:: with SMTP id q12mr7659921wrp.172.1554936059680;
-        Wed, 10 Apr 2019 15:40:59 -0700 (PDT)
-Received: from localhost.localdomain ([95.149.160.82])
-        by smtp.gmail.com with ESMTPSA id v16sm67989286wro.48.2019.04.10.15.40.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:40:58 -0700 (PDT)
-From:   Louis Taylor <louis@kragniz.eu>
-To:     dhowells@redhat.com
-Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Louis Taylor <louis@kragniz.eu>
-Subject: [PATCH v2] afs: use correct format characters
-Date:   Wed, 10 Apr 2019 23:41:24 +0100
-Message-Id: <20190410224124.6901-1-louis@kragniz.eu>
+        Wed, 10 Apr 2019 18:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725982AbfDJWmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 18:42:20 -0400
+Received: from sinanubuntu1604.mkjiurmyylmellclgttazegk5f.bx.internal.cloudapp.net (unknown [23.96.42.116])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E603120830;
+        Wed, 10 Apr 2019 22:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554936139;
+        bh=8WK860sKSnflj0EGOs8UxQFwZKdjz5fHNUUwbVx4ve0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z/wR9PDC+uj4VgiHX+OXbu6GM/ou1xVWPCkCpOL3QHio4dl/IRq4cjB6QcoERRjTf
+         TXKlGjiWruVBw6zmzi8DNphDJRxIBanPjFD4NLHcXfxkrZ++HjFKukPan+lmzBqkLO
+         mH7aZbS9XJXJG4gheuf07HiSqGcAWBMftWTJmbZs=
+From:   Sinan Kaya <okaya@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Sinan Kaya <okaya@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Changbin Du <changbin.du@intel.com>
+Subject: [PATCH v2] init: Do not select DEBUG_KERNEL by default
+Date:   Wed, 10 Apr 2019 22:42:10 +0000
+Message-Id: <20190410224213.20651-1-okaya@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190410220301.2332-1-louis@kragniz.eu>
-References: <20190410220301.2332-1-louis@kragniz.eu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,54 +71,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When compiling with -Wformat, clang warns:
+We can't seem to have a kernel with CONFIG_EXPERT set but
+CONFIG_DEBUG_KERNEL unset these days.
 
-fs/afs/flock.c:632:29: warning: format specifies type 'short' but the argument has type
-      'unsigned char' [-Wformat]
-        _leave(" = %d [%hd]", ret, fl->fl_type);
-                       ~~~         ^~~~~~~~~~~
+While some of the features under the CONFIG_EXPERT require
+CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
 
-fs/afs/dir.c:138:11: warning: format specifies type 'unsigned short' but
-the argument has type 'int' [-Wformat]
-       ntohs(dbuf->blocks[tmp].hdr.magic));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It looks like CONFIG_KALLSYMS_ALL is the only feature that
+requires CONFIG_DEBUG_KERNEL.
 
-fl_type is declared as an unsigned char unconditionally in
-include/linux/fs.h, so use the correct format characters.
+Select CONFIG_EXPERT when CONFIG_DEBUG is chosen but you can
+still choose CONFIG_EXPERT without CONFIG_DEBUG.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
 ---
- fs/afs/dir.c   | 2 +-
- fs/afs/flock.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ init/Kconfig      | 2 --
+ lib/Kconfig.debug | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 8a2562e3a316..4ceaec94e9c5 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -133,7 +133,7 @@ static bool afs_dir_check_page(struct afs_vnode *dvnode, struct page *page,
- 	dbuf = kmap(page);
- 	for (tmp = 0; tmp < qty; tmp++) {
- 		if (dbuf->blocks[tmp].hdr.magic != AFS_DIR_MAGIC) {
--			printk("kAFS: %s(%lx): bad magic %d/%d is %04hx\n",
-+			printk("kAFS: %s(%lx): bad magic %d/%d is %04x\n",
- 			       __func__, dvnode->vfs_inode.i_ino, tmp, qty,
- 			       ntohs(dbuf->blocks[tmp].hdr.magic));
- 			trace_afs_dir_check_failed(dvnode, off, i_size);
-diff --git a/fs/afs/flock.c b/fs/afs/flock.c
-index 6a0174258382..be4c3f6a3178 100644
---- a/fs/afs/flock.c
-+++ b/fs/afs/flock.c
-@@ -629,7 +629,7 @@ static int afs_do_getlk(struct file *file, struct file_lock *fl)
+diff --git a/init/Kconfig b/init/Kconfig
+index 4592bf7997c0..37e10a8391a3 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1206,8 +1206,6 @@ config BPF
  
- 	ret = 0;
- error:
--	_leave(" = %d [%hd]", ret, fl->fl_type);
-+	_leave(" = %d [%hhu]", ret, fl->fl_type);
- 	return ret;
- }
+ menuconfig EXPERT
+ 	bool "Configure standard kernel features (expert users)"
+-	# Unhide debug options, to make the on-by-default options visible
+-	select DEBUG_KERNEL
+ 	help
+ 	  This option allows certain base kernel options and settings
+           to be disabled or tweaked. This is for specialized
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 0d9e81779e37..9fbf3499ec8d 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -434,6 +434,7 @@ config MAGIC_SYSRQ_SERIAL
  
+ config DEBUG_KERNEL
+ 	bool "Kernel debugging"
++	default EXPERT
+ 	help
+ 	  Say Y here if you are developing drivers or trying to debug and
+ 	  identify kernel problems.
 -- 
 2.21.0
 
