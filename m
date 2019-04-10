@@ -2,129 +2,208 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE13BC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56456C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E65206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554884809;
-	bh=3kRCoHzwYAssjJT5pw/w57LtFwHIbEzX5fO6B+FoD3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s6CDgwFzYOYGMSEwvKhLcNJMjLtQ12BwbYV3bkp83BXk2JUxEGv96PRPwfk1lCuYv
-	 9HTub1wMfcBtJvGfpOeuBztr5zmx0dTX1K3pV4aq+be6c0UPVHgVqp+G/fgdVFzUE4
-	 tx300rrOd/6/JaCYIztn9xBPdyK6GIgx2Ss2K2OE=
+	by mail.kernel.org (Postfix) with ESMTP id 1994B2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G0kIOolM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfDJI0s (ORCPT
+        id S1729619AbfDJI1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:26:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35430 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729588AbfDJI0r (ORCPT
+        Wed, 10 Apr 2019 04:27:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52564 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729544AbfDJI1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:26:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w1so1839976wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:26:46 -0700 (PDT)
+        Wed, 10 Apr 2019 04:27:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a184so1601571wma.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 01:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FOU27czn01LbyzXwVx1HPcV0VNtC4qKCAIF9uxXqZEM=;
-        b=u/m6PwRXiYW+eyViXv5GxQjrumSTgw9wtD8JjUTntA4WgmSrf4mtyv1Ka6uvmDKT8G
-         5Ubp7iarTSS9LbOhGssnvLs/j30IDCG10RzWeH2Jq+3j0NlgOqV9einAWtIIvIoyPZir
-         g7JoA4Tm9K+gSRa8j7vnMxon0WzMwjC33IWOH4UPk968i+2gubjbsbuPOKqw42mLw1Ez
-         XbQjccBDG3Gk6LIUVo+S6c3ENYd67ZkmlQBfbcgAm02f4pemNzCOLROwHO7miw63gwby
-         p08+DM9832mmjO2BxbnHITP1LGs92Y2nh9DCU426oHzth+UKY/RWL5fPwbLfen7maoE2
-         bB+Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XX9dSz/AtUZ52Tp2kC2tWYDeGDmBEkI/+RsqbAt06sQ=;
+        b=G0kIOolMKYhh02MFYzgheBFwKwDXDSs9OqwbN4hvVkZQDMZgzfWji2bCQtJLh/Z/+u
+         A5Wk6eJ7Kf7LTeQ36bNYKHtjQN3BAMsGpnFSOYwKmtdPUrxfaa1d9u70tyY750KrLmo0
+         JTqa9XcElwSrBQYmLKzTfuvv3XVO+mRvWMU9nUH2tmJ5SiP15b8qUc86kFa73JXoerLF
+         2o//ls8QofjNHUDqmtTBjHS4bz46nL2zia2GPw7paMOOzKb32onW5/jEVjQ0zRm4HP5U
+         6yyicKdMElz8onp+I1tj4h1PdO6kx/mnq2ZA3g0z9F2TsVu88VZehxYxCA2ARB7AEc8v
+         12QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FOU27czn01LbyzXwVx1HPcV0VNtC4qKCAIF9uxXqZEM=;
-        b=WIEZVManOpfA1NkNqWw6YueP/e3Dxx1pEwnLXMvJlmS0+hZ6RLxrtTExgEWgp7aixc
-         ga9k/NgNv7I+Soh0hcNbPKWA5Hce4PdsjWqtHOA8ZtB+Y//5QoIctU1jwlrd4q9Bd51s
-         Z42RZEIoUVhWV9OrUT28f7BHXAEBdaZUin0c1LV+sAhWG7qW+82+NzIgwsqqaFEB12Sq
-         R5m1fnv4y2+oPtrXkb9+ItdvsoSsSWKilvQVKHk8Nuuza+sUKtrZDhY6o5u47FQGDIb9
-         HTsjwJhIdKWbBE4Tme8ErW41cZqjxqS+cpxcNIRqXBE5+ZO52RSL9K5PijNdqChnbQZj
-         MeLQ==
-X-Gm-Message-State: APjAAAUHCD7teRWIdyh6/uqkTyPkoFf4vCFWCXvvbK1UAuRB9ETqAflE
-        xWsxkI/aQqDZKQRjfCL+wsY=
-X-Google-Smtp-Source: APXvYqx1HcYTY0wQ08zFq7/cHZfayXC33/b7ed4q01ajd89NQPdAlDc5tgUsGn595YEU+1GQJV1Azg==
-X-Received: by 2002:a5d:69c7:: with SMTP id s7mr25723233wrw.71.1554884806043;
-        Wed, 10 Apr 2019 01:26:46 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id z63sm2174316wme.30.2019.04.10.01.26.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 01:26:44 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:26:42 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>, luto@kernel.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        keescook@chromium.org, jannh@google.com, enrico.perla@intel.com,
-        mingo@redhat.com, bp@alien8.de, tglx@linutronix.de,
-        peterz@infradead.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190410082642.GA35032@gmail.com>
-References: <20190408061358.21288-1-elena.reshetova@intel.com>
- <20190408124940.hb4d2mvwue7aydjj@treble>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XX9dSz/AtUZ52Tp2kC2tWYDeGDmBEkI/+RsqbAt06sQ=;
+        b=TpmSn+P3ysPlFMdhCDvNdam4OrwoZ6BDYxW3D15TBUjtCMg8w/2+cpmpt1+tBlGixM
+         1iVi4IUFPaRFXPBDPoBMqj4rzLnBu5qkZ4c9nDG9PCtgip6FVQTNGHfFfokvdlVr7q+4
+         81AtBTi73GnZCzemKho4iAB/AWpCSE2qo7G3zg7MF1Wk//2Sm53NorJC9gCIoYASKRqc
+         kpThPzwDNgc9tkXJgKtLCWUyocM75PxW8Gv2oisu/+eeDvo6YJzITnkMrRG9WDQMHt1O
+         k4AmnMzSINBLMDH28erbt7vZstXeauN3re34T65FJ/14Z30t4n0lpmEutp1haUBoli61
+         By1w==
+X-Gm-Message-State: APjAAAXonxlWIsgQSaPNBylIXNptuf2B77hhkUJYW0DAW+vuSpKJF9Lg
+        E4MaElujsQKSj7soHEqL1yXTfg==
+X-Google-Smtp-Source: APXvYqwl5phlBjVWWmZZs+rryyYgJ9REQaM7/AuykfJIXLP0N4nKSqMOafroPMqy6/fe0HIyqZZOMA==
+X-Received: by 2002:a1c:7211:: with SMTP id n17mr1780519wmc.32.1554884833651;
+        Wed, 10 Apr 2019 01:27:13 -0700 (PDT)
+Received: from wifi-122_dhcprange-158.wifi.unimo.it ([155.185.122.158])
+        by smtp.gmail.com with ESMTPSA id y125sm2293921wmc.39.2019.04.10.01.27.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 01:27:12 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        broonie@kernel.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, Paolo Valente <paolo.valente@linaro.org>,
+        Dmitrii Tcvetkov <demfloro@demfloro.ru>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] block, bfq: fix use after free in bfq_bfqq_expire
+Date:   Wed, 10 Apr 2019 10:26:46 +0200
+Message-Id: <20190410082646.14221-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190408124940.hb4d2mvwue7aydjj@treble>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The function bfq_bfqq_expire() invokes the function
+__bfq_bfqq_expire(), and the latter may free the in-service bfq-queue.
+If this happens, then no other instruction of bfq_bfqq_expire() must
+be executed, or a use-after-free will occur.
 
-* Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+Basing on the assumption that __bfq_bfqq_expire() invokes
+bfq_put_queue() on the in-service bfq-queue exactly once, the queue is
+assumed to be freed if its refcounter is equal to one right before
+invoking __bfq_bfqq_expire().
 
-> On Mon, Apr 08, 2019 at 09:13:58AM +0300, Elena Reshetova wrote:
-> > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> > index 7bc105f47d21..38ddc213a5e9 100644
-> > --- a/arch/x86/entry/common.c
-> > +++ b/arch/x86/entry/common.c
-> > @@ -35,6 +35,12 @@
-> >  #define CREATE_TRACE_POINTS
-> >  #include <trace/events/syscalls.h>
-> >  
-> > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-> > +#include <linux/random.h>
-> > +
-> > +void *alloca(size_t size);
-> > +#endif
-> > +
-> >  #ifdef CONFIG_CONTEXT_TRACKING
-> >  /* Called on entry from user mode with IRQs off. */
-> >  __visible inline void enter_from_user_mode(void)
-> > @@ -273,6 +279,13 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-> >  {
-> >  	struct thread_info *ti;
-> >  
-> > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-> > +	size_t offset = ((size_t)prandom_u32()) % 256;
-> > +	char *ptr = alloca(offset);
-> > +
-> > +	asm volatile("":"=m"(*ptr));
-> > +#endif
-> > +
-> >  	enter_from_user_mode();
-> >  	local_irq_enable();
-> >  	ti = current_thread_info();
-> 
-> Would it make sense to also do this for the compat syscalls
-> (do_fast_syscall_32, do_int80_syscall_32)?
+But, since commit 9dee8b3b057e1 ("block, bfq: fix queue removal from
+weights tree") this assumption is false. __bfq_bfqq_expire() may also
+invoke bfq_weights_tree_remove() and, since commit 9dee8b3b057e1, also
+the latter function may invoke bfq_put_queue(). So __bfq_bfqq_expire()
+may invoke bfq_put_queue() twice, and this is the actual case where
+the in-service queue may happen to be freed.
 
-Could someone please include the full patch, with justification and 
-performance impact analysis etc.? Can only find the code part of the 
-thread on lkml, which leaves out this context.
+To address this issue, this commit moves the check on the refcounter
+of the queue right around the last bfq_put_queue() that may be invoked
+on the queue.
 
-Thanks,
+Reported-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Dmitrii Tcvetkov <demfloro@demfloro.ru>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-iosched.c | 15 +++++++--------
+ block/bfq-iosched.h |  2 +-
+ block/bfq-wf2q.c    | 17 +++++++++++++++--
+ 3 files changed, 23 insertions(+), 11 deletions(-)
 
-	Ingo
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index fac188dd78fa..30b88ec7ad26 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2822,7 +2822,7 @@ static void bfq_dispatch_remove(struct request_queue *q, struct request *rq)
+ 	bfq_remove_request(q, rq);
+ }
+ 
+-static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
++static bool __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ {
+ 	/*
+ 	 * If this bfqq is shared between multiple processes, check
+@@ -2855,9 +2855,11 @@ static void __bfq_bfqq_expire(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 	/*
+ 	 * All in-service entities must have been properly deactivated
+ 	 * or requeued before executing the next function, which
+-	 * resets all in-service entites as no more in service.
++	 * resets all in-service entites as no more in service. This
++	 * may cause bfqq to be freed. If this happens, the next
++	 * function returns true.
+ 	 */
+-	__bfq_bfqd_reset_in_service(bfqd);
++	return __bfq_bfqd_reset_in_service(bfqd);
+ }
+ 
+ /**
+@@ -3262,7 +3264,6 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+ 	bool slow;
+ 	unsigned long delta = 0;
+ 	struct bfq_entity *entity = &bfqq->entity;
+-	int ref;
+ 
+ 	/*
+ 	 * Check whether the process is slow (see bfq_bfqq_is_slow).
+@@ -3347,10 +3348,8 @@ void bfq_bfqq_expire(struct bfq_data *bfqd,
+ 	 * reason.
+ 	 */
+ 	__bfq_bfqq_recalc_budget(bfqd, bfqq, reason);
+-	ref = bfqq->ref;
+-	__bfq_bfqq_expire(bfqd, bfqq);
+-
+-	if (ref == 1) /* bfqq is gone, no more actions on it */
++	if (__bfq_bfqq_expire(bfqd, bfqq))
++		/* bfqq is gone, no more actions on it */
+ 		return;
+ 
+ 	bfqq->injected_service = 0;
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 062e1c4787f4..86394e503ca9 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -995,7 +995,7 @@ bool __bfq_deactivate_entity(struct bfq_entity *entity,
+ 			     bool ins_into_idle_tree);
+ bool next_queue_may_preempt(struct bfq_data *bfqd);
+ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd);
+-void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
++bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd);
+ void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 			 bool ins_into_idle_tree, bool expiration);
+ void bfq_activate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index a11bef75483d..ae4d000ac0af 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -1605,7 +1605,8 @@ struct bfq_queue *bfq_get_next_queue(struct bfq_data *bfqd)
+ 	return bfqq;
+ }
+ 
+-void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
++/* returns true if the in-service queue gets freed */
++bool __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+ {
+ 	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
+ 	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
+@@ -1629,8 +1630,20 @@ void __bfq_bfqd_reset_in_service(struct bfq_data *bfqd)
+ 	 * service tree either, then release the service reference to
+ 	 * the queue it represents (taken with bfq_get_entity).
+ 	 */
+-	if (!in_serv_entity->on_st)
++	if (!in_serv_entity->on_st) {
++		/*
++		 * If no process is referencing in_serv_bfqq any
++		 * longer, then the service reference may be the only
++		 * reference to the queue. If this is the case, then
++		 * bfqq gets freed here.
++		 */
++		int ref = in_serv_bfqq->ref;
+ 		bfq_put_queue(in_serv_bfqq);
++		if (ref == 1)
++			return true;
++	}
++
++	return false;
+ }
+ 
+ void bfq_deactivate_bfqq(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+-- 
+2.20.1
+
