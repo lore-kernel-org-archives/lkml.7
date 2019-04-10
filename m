@@ -2,142 +2,342 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8948C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1766C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE702083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6uOWQwN"
+	by mail.kernel.org (Postfix) with ESMTP id A0AB62083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732283AbfDJNIq (ORCPT
+        id S1732295AbfDJNJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:08:46 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39182 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbfDJNIp (ORCPT
+        Wed, 10 Apr 2019 09:09:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45590 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727171AbfDJNJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:08:45 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c189so1137332qke.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zXqE8Yqv58ur6T6gEcKPVBzlJNHR7AFx08+xBw+rh0E=;
-        b=W6uOWQwN8qU7ciWE+ocH0Bh8tdWhTvW4XW33nzfISUh9e1Li0ow2vBu0O9e7gIizN7
-         JBI7drTgo8dm2Jy4OOdy8ovYdFyL6HjBiiEaJIdKbJ5YFkKbEu9T2/I/I09g3kMgtDdK
-         bWKlxRfpKbYdT0qktwPdanr4AAHbvnavktdzbMOzW+ayiGnDluYCyxVdMh0u/XH7/qGa
-         sDwCfzMFyDmWy8AezfIgYkg2f15Ogv08xhbSH5OC5eNto76Kr3tRk5TdIZf/eWxBojOk
-         1LzDpge0GqRzJQRAjOj9FbqScJzod/iYG+54B38xc7Wp5erdIt1ktrRUDFCR/yXM+iCs
-         Ihcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zXqE8Yqv58ur6T6gEcKPVBzlJNHR7AFx08+xBw+rh0E=;
-        b=tNx48+FrcinNpR2p/FTgJrQ9QOZQ/JZi3h2x0eODfJ9oDM/9vOfMZja5wpHOBLMzYs
-         wEXQzROkc8m6wgSc7gxSPiBGwb3iYSK/LbGU+NEfQ8dS8UhD/WbN6ca7iSGc/c088H4b
-         IfMsJ3keOeEJWZ2I+RP4AG6KGSDayyyZi8f6MRyRma3yvqTgBwPpEnG7GHbO9EK1tP5z
-         Iv+5ks0A9tkUMzBN7DKRVYHddpHU1pSdd0m+T9pIaY7/WkoHivPb8H1QUbbxOFb1+6Nh
-         o57ZNNnOpbkMyiIOt9rjPtTr24HorZAOk0X/gLBQBRw+7f8Wp8yYlkvlzdxvmxRPN9fE
-         goXQ==
-X-Gm-Message-State: APjAAAV1ODeba7G5TTL3jeSiEcYn7waJaDQJLWunsaGgUDb1XSmW3/Ck
-        ytItoCj61kGoCDHi+Ad/yv4=
-X-Google-Smtp-Source: APXvYqxtrV2DkDI7tjpRkbkeiHCYgHvNoSxXPaFBiDTpl2sq3zHU3KoshcIbykRpvNJZbfaRLsvuPw==
-X-Received: by 2002:a37:a78b:: with SMTP id q133mr34213477qke.289.1554901724767;
-        Wed, 10 Apr 2019 06:08:44 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id 56sm23824484qto.57.2019.04.10.06.08.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 06:08:43 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6F8D34039C; Wed, 10 Apr 2019 10:08:41 -0300 (-03)
-Date:   Wed, 10 Apr 2019 10:08:41 -0300
-To:     Mao Han <han_mao@c-sky.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v3 1/3] perf: use hweight64 instead of hweight_long
-Message-ID: <20190410130841.GE13888@kernel.org>
-References: <cover.1554883878.git.han_mao@c-sky.com>
- <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
+        Wed, 10 Apr 2019 09:09:32 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AD4jZS051473
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:09:31 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsf9rwjwj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:09:30 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 10 Apr 2019 14:09:28 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Apr 2019 14:09:22 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3AD9LaD49938468
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 13:09:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D009A405B;
+        Wed, 10 Apr 2019 13:09:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F4C5A4064;
+        Wed, 10 Apr 2019 13:09:20 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.205])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 10 Apr 2019 13:09:20 +0000 (GMT)
+Date:   Wed, 10 Apr 2019 16:09:18 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        ebiederm@xmission.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, akpm@linux-foundation.org,
+        ard.biesheuvel@linaro.org, horms@verge.net.au,
+        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-mm@kvack.org, wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
+ regions
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
+ <20190409102819.121335-4-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190409102819.121335-4-chenzhou10@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19041013-0016-0000-0000-0000026D54ED
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041013-0017-0000-0000-000032C9845D
+Message-Id: <20190410130917.GC17196@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904100093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 10, 2019 at 04:16:43PM +0800, Mao Han escreveu:
-> On 32-bits platform with more than 32 registers, the 64 bits mask is
-> truncate to the lower 32 bits and the return value of hweight_long will
-> always smaller than 32. When kernel outputs more than 32 registers, but
-> the user perf program only counts 32, there will be a data mismatch
-> result to overflow check fail.
+Hi,
+
+On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
+> After commit (arm64: kdump: support reserving crashkernel above 4G),
+> there may be two crash kernel regions, one is below 4G, the other is
+> above 4G.
 > 
-> CC: Peter Zijlstra <peterz@infradead.org>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-> CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> CC: Jiri Olsa <jolsa@redhat.com>
-> CC: Namhyung Kim <namhyung@kernel.org>
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
 > 
-> Signed-off-by: Mao Han <han_mao@c-sky.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > ---
->  tools/perf/util/evsel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
+>  include/linux/memblock.h |  6 +++++
+>  mm/memblock.c            |  7 ++---
+>  3 files changed, 66 insertions(+), 13 deletions(-)
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 7835e05..73c78be 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2322,7 +2322,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
->  		if (data->user_regs.abi) {
->  			u64 mask = evsel->attr.sample_regs_user;
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 3bebddf..0f18665 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
 >  
-> -			sz = hweight_long(mask) * sizeof(u64);
-> +			sz = hweight64(mask) * sizeof(u64);
->  			OVERFLOW_CHECK(array, sz, max_size);
->  			data->user_regs.mask = mask;
->  			data->user_regs.regs = (u64 *)array;
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> +/* at most two crash kernel regions, low_region and high_region */
+> +#define CRASH_MAX_USABLE_RANGES	2
+> +#define LOW_REGION_IDX			0
+> +#define HIGH_REGION_IDX			1
+> +
+>  /*
+>   * reserve_crashkernel() - reserves memory for crash kernel
+>   *
+> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>  		const char *uname, int depth, void *data)
+>  {
+>  	struct memblock_region *usablemem = data;
+> -	const __be32 *reg;
+> -	int len;
+> +	const __be32 *reg, *endp;
+> +	int len, nr = 0;
+>  
+>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>  		return 0;
+> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>  		return 1;
+>  
+> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +	endp = reg + (len / sizeof(__be32));
+> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+> +			break;
+> +	}
+>  
+>  	return 1;
+>  }
+>  
+>  static void __init fdt_enforce_memory_region(void)
+>  {
+> -	struct memblock_region reg = {
+> -		.size = 0,
+> -	};
+> +	int i, cnt = 0;
+> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
 
-Later on, in the same function, perf_evsel__parse_sample() we have:
+I only now noticed that fdt_enforce_memory_region() uses memblock_region to
+pass the ranges around. If we'd switch to memblock_type instead, the
+implementation of memblock_cap_memory_ranges() would be really
+straightforward. Can you check if the below patch works for you? 
 
-        data->intr_regs.abi = PERF_SAMPLE_REGS_ABI_NONE;
-        if (type & PERF_SAMPLE_REGS_INTR) {
-                OVERFLOW_CHECK_u64(array);
-                data->intr_regs.abi = *array;
-                array++;
+From e476d584098e31273af573e1a78e308880c5cf28 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Wed, 10 Apr 2019 16:02:32 +0300
+Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
 
-                if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
-                        u64 mask = evsel->attr.sample_regs_intr;
+The memblock_cap_memory_range() removes all the memory except the range
+passed to it. Extend this function to recieve memblock_type with the
+regions that should be kept. This allows switching to simple iteration over
+memblock arrays with 'for_each_mem_range' to remove the unneeded memory.
 
-                        sz = hweight_long(mask) * sizeof(u64);
-                        OVERFLOW_CHECK(array, sz, max_size);
-                        data->intr_regs.mask = mask;
-                        data->intr_regs.regs = (u64 *)array;
-                        array = (void *)array + sz;
-                }
-        }
+Enable use of this function in arm64 for reservation of multile regions for
+the crash kernel.
 
-You forgot to convert that one, doing it for you,
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
+ include/linux/memblock.h |  2 +-
+ mm/memblock.c            | 45 ++++++++++++++++++++++-----------------------
+ 3 files changed, 47 insertions(+), 34 deletions(-)
 
-Thanks,
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 6bc1350..30a496f 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -64,6 +64,10 @@ EXPORT_SYMBOL(memstart_addr);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ 
+ #ifdef CONFIG_KEXEC_CORE
++
++/* at most two crash kernel regions, low_region and high_region */
++#define CRASH_MAX_USABLE_RANGES	2
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -280,9 +284,9 @@ early_param("mem", early_mem);
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
+ {
+-	struct memblock_region *usablemem = data;
+-	const __be32 *reg;
+-	int len;
++	struct memblock_type *usablemem = data;
++	const __be32 *reg, *endp;
++	int len, nr = 0;
+ 
+ 	if (depth != 1 || strcmp(uname, "chosen") != 0)
+ 		return 0;
+@@ -291,22 +295,32 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+ 		return 1;
+ 
+-	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++	endp = reg + (len / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		unsigned long base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		unsigned long size = dt_mem_next_cell(dt_root_size_cells, &reg);
+ 
++		if (memblock_add_range(usablemem, base, size, NUMA_NO_NODE,
++				       MEMBLOCK_NONE))
++			return 0;
++		if (++nr >= CRASH_MAX_USABLE_RANGES)
++			break;
++	}
+ 	return 1;
+ }
+ 
+ static void __init fdt_enforce_memory_region(void)
+ {
+-	struct memblock_region reg = {
+-		.size = 0,
++	struct memblock_region usable_regions[CRASH_MAX_USABLE_RANGES];
++	struct memblock_type usablemem = {
++		.max = CRASH_MAX_USABLE_RANGES,
++		.regions = usable_regions,
+ 	};
+ 
+-	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &usablemem);
+ 
+-	if (reg.size)
+-		memblock_cap_memory_range(reg.base, reg.size);
++	if (usablemem.cnt)
++		memblock_cap_memory_ranges(&usablemem);
+ }
+ 
+ void __init arm64_memblock_init(void)
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 294d5d8..a803ae9 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -404,7 +404,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+-void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
++void memblock_cap_memory_ranges(struct memblock_type *regions_to_keep);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ bool memblock_is_map_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e7665cf..83d84d4 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1605,36 +1605,34 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      PHYS_ADDR_MAX);
+ }
+ 
+-void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
++void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+ {
+-	int start_rgn, end_rgn;
+-	int i, ret;
+-
+-	if (!size)
+-		return;
+-
+-	ret = memblock_isolate_range(&memblock.memory, base, size,
+-						&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions */
+-	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
++	phys_addr_t start, end;
++	u64 i;
+ 
+-	for (i = start_rgn - 1; i >= 0; i--)
+-		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+-			memblock_remove_region(&memblock.memory, i);
++	/* truncate memory while skipping NOMAP regions */
++	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
++			   MEMBLOCK_NONE, &start, &end, NULL)
++		memblock_remove(start, end);
+ 
+ 	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, 0, base);
+-	memblock_remove_range(&memblock.reserved,
+-			base + size, PHYS_ADDR_MAX);
++	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
++			   MEMBLOCK_NONE, &start, &end, NULL)
++		memblock_remove_range(&memblock.reserved, start, end);
+ }
+ 
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
++	struct memblock_region rgn = {
++		.base = 0,
++	};
++
++	struct memblock_type region_to_keep = {
++		.cnt = 1,
++		.max = 1,
++		.regions = &rgn,
++	};
++
+ 	phys_addr_t max_addr;
+ 
+ 	if (!limit)
+@@ -1646,7 +1644,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == PHYS_ADDR_MAX)
+ 		return;
+ 
+-	memblock_cap_memory_range(0, max_addr);
++	region_to_keep.regions[0].size = max_addr;
++	memblock_cap_memory_ranges(&region_to_keep);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+-- 
+2.7.4
 
-- Arnaldo
+
+
+-- 
+Sincerely yours,
+Mike.
+
