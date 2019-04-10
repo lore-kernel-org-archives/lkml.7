@@ -2,238 +2,267 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C66EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BABC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0088E2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PXXQMjK1"
+	by mail.kernel.org (Postfix) with ESMTP id 630282084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfDJHNu (ORCPT
+        id S1727546AbfDJHO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 03:13:50 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34314 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfDJHNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 03:13:50 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x14so1069276eds.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 00:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ojoo3K0wQ8GNFdkjmLZu9Gij19qrJE1tiYR1OIRA5/w=;
-        b=PXXQMjK1FMeAS/PRGOKqgKlvax/2cwir+UR9ZjIFMGUr0poPK9i9V4tJvUUQbxwegA
-         reK3IFfCumUXkq5qZn4CsG/EN9ZzvHqvbWX+ZuBrScDRV/s4s8qcyVWUsqgQgjzwotyg
-         kDKRa2Gi0P21YNdyRuvCeyWsMwXxtSLzm3TYU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ojoo3K0wQ8GNFdkjmLZu9Gij19qrJE1tiYR1OIRA5/w=;
-        b=DXMGrZWgT4yvqe3hwFwyalUNjIz7eAzaWYZN9D+/dM/CWav7xxs2hykU/nUkLU8mrH
-         0DKWaynahLUoP4elo3sYR1Ux5yh5WoyYQ+zjmrm+qWsRReyO6yCEBdPoTmD9vOLCmnAI
-         ny6RVs5BK/11cyoPYC2MGVNkT2hY1GUNK5ih3+IRZMENGPBghoYOTR6Zl8rYVyemPzlC
-         jJ8pYCjh9k0Xgd59pdg5SxzZAO7vJKsEO5iAQVF6VyrUdYmJHSrZk4s+u4Qrkix3KK+8
-         KmsrOJtdewEqvHRCnw7MpUXAiKvtvC+Mv6c4T7T0hhIUrK2rEimmFViW9Ph+hGt0d3Nw
-         hwUQ==
-X-Gm-Message-State: APjAAAX1y3YmGG5KJtQMfebK/ZuaxRLgY0f7+ktFEjj8g4hox4CQQWuu
-        ZEv8ZmCOZEMe0tMw0zqdNkIXi28Tuanw1gPTstxWMQ==
-X-Google-Smtp-Source: APXvYqwl1VeKe9stRYtjyLQqYnUEfmmZNH/yeuiOFPptuLdWRGVDpKxQ6jPhn9Ifobxo9roeErTfq8xZNa/kReWXR4g=
-X-Received: by 2002:a17:906:3153:: with SMTP id e19mr18295563eje.47.1554880427651;
- Wed, 10 Apr 2019 00:13:47 -0700 (PDT)
+        Wed, 10 Apr 2019 03:14:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41252 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726052AbfDJHO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 03:14:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CB876ADDB;
+        Wed, 10 Apr 2019 07:14:56 +0000 (UTC)
+Subject: Re: [PATCH RFC 00/39] x86/KVM: Xen HVM guest support
+To:     Ankur Arora <ankur.a.arora@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20190220201609.28290-1-joao.m.martins@oracle.com>
+ <35051310-c497-8ad5-4434-1b8426a317d2@redhat.com>
+ <8b1f4912-4f92-69ae-ae01-d899d5640572@oracle.com>
+ <3ee91f33-2973-c2db-386f-afbf138081b4@redhat.com>
+ <59676804-786d-3df8-7752-8e45dec6d65b@oracle.com>
+ <ac0fb2d0-59bf-1330-24ab-331c1a69b13f@suse.com>
+ <94738323-ebdf-d58e-55b6-313e27c923b0@oracle.com>
+ <585163c2-8dea-728d-7556-9cb3559f0eca@suse.com>
+ <97808492-58ee-337f-c894-900b34b7b1a5@oracle.com>
+ <59deb041-2b5d-8451-32c7-644fe36e053b@suse.com>
+ <8e2e1d56-3490-365c-e2de-c3fd262518ba@oracle.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c488152c-b97f-c6ce-1f4e-72aff05d29dd@suse.com>
+Date:   Wed, 10 Apr 2019 09:14:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190327051450.16222-1-pihsun@chromium.org> <20190327051450.16222-7-pihsun@chromium.org>
- <CAFqH_51BYkGW_jma-WpE5tsJs=daXDZB1dD6RYCErZ64RNuyTQ@mail.gmail.com>
-In-Reply-To: <CAFqH_51BYkGW_jma-WpE5tsJs=daXDZB1dD6RYCErZ64RNuyTQ@mail.gmail.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Wed, 10 Apr 2019 15:13:10 +0800
-Message-ID: <CANdKZ0ec_aux+tWatB563LJEmOt=RVJb5wH5eknQh6u1NraAqg@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] platform/chrome: cros_ec: add EC host command
- support using rpmsg.
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8e2e1d56-3490-365c-e2de-c3fd262518ba@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 10/04/2019 08:55, Ankur Arora wrote:
+> On 2019-04-08 10:04 p.m., Juergen Gross wrote:
+>> On 08/04/2019 19:31, Joao Martins wrote:
+>>> On 4/8/19 11:42 AM, Juergen Gross wrote:
+>>>> On 08/04/2019 12:36, Joao Martins wrote:
+>>>>> On 4/8/19 7:44 AM, Juergen Gross wrote:
+>>>>>> On 12/03/2019 18:14, Joao Martins wrote:
+>>>>>>> On 2/22/19 4:59 PM, Paolo Bonzini wrote:
+>>>>>>>> On 21/02/19 12:45, Joao Martins wrote:
+>>>>>>>>> On 2/20/19 9:09 PM, Paolo Bonzini wrote:
+>>>>>>>>>> On 20/02/19 21:15, Joao Martins wrote:
+>>>>>>>>>>>   2. PV Driver support (patches 17 - 39)
+>>>>>>>>>>>
+>>>>>>>>>>>   We start by redirecting hypercalls from the backend to
+>>>>>>>>>>> routines
+>>>>>>>>>>>   which emulate the behaviour that PV backends expect i.e. grant
+>>>>>>>>>>>   table and interdomain events. Next, we add support for late
+>>>>>>>>>>>   initialization of xenbus, followed by implementing
+>>>>>>>>>>>   frontend/backend communication mechanisms (i.e. grant
+>>>>>>>>>>> tables and
+>>>>>>>>>>>   interdomain event channels). Finally, introduce xen-shim.ko,
+>>>>>>>>>>>   which will setup a limited Xen environment. This uses the
+>>>>>>>>>>> added
+>>>>>>>>>>>   functionality of Xen specific shared memory (grant tables) and
+>>>>>>>>>>>   notifications (event channels).
+>>>>>>>>>>
+>>>>>>>>>> I am a bit worried by the last patches, they seem really
+>>>>>>>>>> brittle and
+>>>>>>>>>> prone to breakage.  I don't know Xen well enough to understand
+>>>>>>>>>> if the
+>>>>>>>>>> lack of support for GNTMAP_host_map is fixable, but if not,
+>>>>>>>>>> you have to
+>>>>>>>>>> define a completely different hypercall.
+>>>>>>>>>>
+>>>>>>>>> I guess Ankur already answered this; so just to stack this on
+>>>>>>>>> top of his comment.
+>>>>>>>>>
+>>>>>>>>> The xen_shim_domain() is only meant to handle the case where
+>>>>>>>>> the backend
+>>>>>>>>> has/can-have full access to guest memory [i.e. netback and
+>>>>>>>>> blkback would work
+>>>>>>>>> with similar assumptions as vhost?]. For the normal case, where
+>>>>>>>>> a backend *in a
+>>>>>>>>> guest* maps and unmaps other guest memory, this is not
+>>>>>>>>> applicable and these
+>>>>>>>>> changes don't affect that case.
+>>>>>>>>>
+>>>>>>>>> IOW, the PV backend here sits on the hypervisor, and the
+>>>>>>>>> hypercalls aren't
+>>>>>>>>> actual hypercalls but rather invoking shim_hypercall(). The
+>>>>>>>>> call chain would go
+>>>>>>>>> more or less like:
+>>>>>>>>>
+>>>>>>>>> <netback|blkback|scsiback>
+>>>>>>>>>   gnttab_map_refs(map_ops, pages)
+>>>>>>>>>     HYPERVISOR_grant_table_op(GNTTABOP_map_grant_ref,...)
+>>>>>>>>>       shim_hypercall()
+>>>>>>>>>         shim_hcall_gntmap()
+>>>>>>>>>
+>>>>>>>>> Our reasoning was that given we are already in KVM, why mapping
+>>>>>>>>> a page if the
+>>>>>>>>> user (i.e. the kernel PV backend) is himself? The lack of
+>>>>>>>>> GNTMAP_host_map is how
+>>>>>>>>> the shim determines its user doesn't want to map the page.
+>>>>>>>>> Also, there's another
+>>>>>>>>> issue where PV backends always need a struct page to reference
+>>>>>>>>> the device
+>>>>>>>>> inflight data as Ankur pointed out.
+>>>>>>>>
+>>>>>>>> Ultimately it's up to the Xen people.  It does make their API
+>>>>>>>> uglier,
+>>>>>>>> especially the in/out change for the parameter.  If you can at
+>>>>>>>> least
+>>>>>>>> avoid that, it would alleviate my concerns quite a bit.
+>>>>>>>
+>>>>>>> In my view, we have two options overall:
+>>>>>>>
+>>>>>>> 1) Make it explicit, the changes the PV drivers we have to make in
+>>>>>>> order to support xen_shim_domain(). This could mean e.g. a) add a
+>>>>>>> callback
+>>>>>>> argument to gnttab_map_refs() that is invoked for every page that
+>>>>>>> gets looked up
+>>>>>>> successfully, and inside this callback the PV driver may update
+>>>>>>> it's tracking
+>>>>>>> page. Here we no longer have this in/out parameter in
+>>>>>>> gnttab_map_refs, and all
+>>>>>>> shim_domain specific bits would be a little more abstracted from
+>>>>>>> Xen PV
+>>>>>>> backends. See netback example below the scissors mark. Or b) have
+>>>>>>> sort of a
+>>>>>>> translate_gref() and put_gref() API that Xen PV drivers use which
+>>>>>>> make it even
+>>>>>>> more explicit that there's no grant ops involved. The latter is
+>>>>>>> more invasive.
+>>>>>>>
+>>>>>>> 2) The second option is to support guest grant mapping/unmapping
+>>>>>>> [*] to allow
+>>>>>>> hosting PV backends inside the guest. This would remove the Xen
+>>>>>>> changes in this
+>>>>>>> series completely. But it would require another guest being used
+>>>>>>> as netback/blkback/xenstored, and less performance than 1)
+>>>>>>> (though, in theory,
+>>>>>>> it would be equivalent to what does Xen with grants/events). The
+>>>>>>> only changes in
+>>>>>>> Linux Xen code is adding xenstored domain support, but that is
+>>>>>>> useful on its own
+>>>>>>> outside the scope of this work.
+>>>>>>>
+>>>>>>> I think there's value on both; 1) is probably more familiar for
+>>>>>>> KVM users
+>>>>>>> perhaps (as it is similar to what vhost does?) while  2) equates
+>>>>>>> to implementing
+>>>>>>> Xen disagregation capabilities in KVM.
+>>>>>>>
+>>>>>>> Thoughts? Xen maintainers what's your take on this?
+>>>>>>
+>>>>>> What I'd like best would be a new handle (e.g. xenhost_t *) used
+>>>>>> as an
+>>>>>> abstraction layer for this kind of stuff. It should be passed to the
+>>>>>> backends and those would pass it on to low-level Xen drivers (xenbus,
+>>>>>> event channels, grant table, ...).
+>>>>>>
+>>>>> So if IIRC backends would use the xenhost layer to access grants or
+>>>>> frames
+>>>>> referenced by grants, and that would grok into some of this. IOW,
+>>>>> you would have
+>>>>> two implementors of xenhost: one for nested remote/local
+>>>>> events+grants and
+>>>>> another for this "shim domain" ?
+>>>>
+>>>> As I'd need that for nested Xen I guess that would make it 3 variants.
+>>>> Probably the xen-shim variant would need more hooks, but that should be
+>>>> no problem.
+>>>>
+>>> I probably messed up in the short description but "nested remote/local
+>>> events+grants" was referring to nested Xen (FWIW remote meant L0 and
+>>> local L1).
+>>> So maybe only 2 variants are needed?
+>>
+>> I need one xenhost variant for the "normal" case as today: talking to
+>> the single hypervisor (or in nested case: to the L1 hypervisor).
+>>
+>> Then I need a variant for the nested case talking to L0 hypervisor.
+>>
+>> And you need a variant talking to xen-shim.
+>>
+>> The first two variants can be active in the same system in case of
+>> nested Xen: the backends of L2 dom0 are talking to L1 hypervisor,
+>> while its frontends are talking with L0 hypervisor.
+> Thanks this is clarifying.
+> 
+> So, essentially backend drivers with a xenhost_t handle, communicate
+> with Xen low-level drivers etc using the same handle, however, if they
+> communicate with frontend drivers for accessing the "real" world,
+> they exclusively use standard mechanisms (Linux or hypercalls)?
 
-On Thu, Mar 28, 2019 at 7:16 PM Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
->
-> Hi
->
-> Thanks for sending this upstream, Some few comments and questions
-> below. Apart from these LGTM.
->
-> Missatge de Peter Shih <pihsun@chromium.org> del dia dc., 27 de mar=C3=A7
-> 2019 a les 6:17:
-> >
-> > From: Pi-Hsun Shih <pihsun@chromium.org>
-> >
-> > Add EC host command support through rpmsg.
-> >
-> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> > ---
-> > ...
-> > diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform=
-/chrome/cros_ec_rpmsg.c
-> > new file mode 100644
-> > index 000000000000..2ecae806cfc5
-> > --- /dev/null
-> > +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> > ...
-> > +static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *da=
-ta,
-> > +                                 int len, void *priv, u32 src)
-> > +{
-> > +       struct cros_ec_device *ec_dev =3D dev_get_drvdata(&rpdev->dev);
-> > +       struct cros_ec_rpmsg *ec_rpmsg =3D ec_dev->priv;
-> > +       struct cros_ec_rpmsg_response *resp;
-> > +
-> > +       if (!len) {
-> > +               dev_warn(ec_dev->dev, "rpmsg received empty response");
->
-> Is this is unlikely to happen?
+This should be opaque to the backends. The xenhost_t handle should have
+a pointer to a function vector for relevant grant-, event- and Xenstore-
+related functions. Calls to such functions should be done via an inline
+function with the xenhost_t handle being one parameter, that function
+will then call the correct implementation.
 
-Yes this should not happen unless the firmware is broken. Should I
-change this to `if(unlikely(!len))`, or use dev_err instead ?
+> In this scenario L2 dom0 xen-netback and L2 dom0 xen-netfront should
+> just be able to use Linux interfaces. But if L2 dom0 xenbus-backend
+> needs to talk to L2 dom0 xenbus-frontend then do you see them layered
+> or are they still exclusively talking via the standard mechanisms?
 
->
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       resp =3D data;
-> > +       len -=3D offsetof(struct cros_ec_rpmsg_response, data);
-> > +       if (resp->type =3D=3D HOST_COMMAND_MARK) {
-> > +               if (len > ec_dev->din_size) {
-> > +                       dev_warn(
-> > +                               ec_dev->dev,
-> > +                               "received length %d > din_size %d, trun=
-cating",
-> > +                               len, ec_dev->din_size);
->
-> How often this warning appears? Should be this a dev_dbg?
+The distinction is made via the function vector in xenhost_t. So the
+only change in backends needed is the introduction of xenhost_t.
 
-This also should not happen unless the firmware is broken, so I think
-it's better to have a warning here when there's something wrong.
+Whether we want to introduce xenhost_t in frontends, too, is TBD.
 
->
-> > +                       len =3D ec_dev->din_size;
-> > +               }
-> > +
-> > +               memcpy(ec_dev->din, resp->data, len);
-> > +               complete(&ec_rpmsg->xfer_ack);
-> > +       } else if (resp->type =3D=3D HOST_EVENT_MARK) {
-> > +               schedule_work(&ec_rpmsg->host_event_work);
-> > +       } else {
-> > +               dev_warn(ec_dev->dev, "rpmsg received invalid type =3D =
-%d",
-> > +                        resp->type);
->
-> Is this is unlikely to happen?
 
-Same as above, this should not happen unless the firmware is broken.
-
->
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
-> > +{
-> > +       struct device *dev =3D &rpdev->dev;
-> > +       struct cros_ec_device *ec_dev;
-> > +       struct cros_ec_rpmsg *ec_rpmsg;
-> > +       int ret;
-> > +
-> > +       ec_dev =3D devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
-> > +       if (!ec_dev)
-> > +               return -ENOMEM;
-> > +
-> > +       ec_rpmsg =3D devm_kzalloc(dev, sizeof(*ec_rpmsg), GFP_KERNEL);
-> > +       if (!ec_rpmsg)
-> > +               return -ENOMEM;
-> > +
-> > +       ec_dev->dev =3D dev;
-> > +       ec_dev->priv =3D ec_rpmsg;
-> > +       ec_dev->cmd_xfer =3D cros_ec_cmd_xfer_rpmsg;
-> > +       ec_dev->pkt_xfer =3D cros_ec_pkt_xfer_rpmsg;
-> > +       ec_dev->phys_name =3D dev_name(&rpdev->dev);
-> > +       ec_dev->din_size =3D sizeof(struct ec_host_response) +
-> > +                          sizeof(struct ec_response_get_protocol_info)=
-;
-> > +       ec_dev->dout_size =3D sizeof(struct ec_host_request);
-> > +       dev_set_drvdata(dev, ec_dev);
-> > +
-> > +       ec_rpmsg->rpdev =3D rpdev;
-> > +       init_completion(&ec_rpmsg->xfer_ack);
-> > +       INIT_WORK(&ec_rpmsg->host_event_work,
-> > +                 cros_ec_rpmsg_host_event_function);
-> > +
-> > +       ret =3D cros_ec_register(ec_dev);
-> > +       if (ret) {
-> > +               dev_err(dev, "cannot register EC\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       return 0;
->
-> cros_ec_register returns 0 on success and prints an error message if
-> something went wrong. Remove the above and just do:
->
-> return cros_ec_register(ec_dev);
->
-
-Ack, would change this in v7.
-
->
-> > +}
-> > +
-> > +static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
-> > +{
-> > +       struct cros_ec_device *ec_dev =3D dev_get_drvdata(&rpdev->dev);
-> > +       struct cros_ec_rpmsg *ec_rpmsg =3D ec_dev->priv;
-> > +
-> > +       cancel_work_sync(&ec_rpmsg->host_event_work);
-> > +}
-> > +
-> > +static const struct of_device_id cros_ec_rpmsg_of_match[] =3D {
-> > +       { .compatible =3D "google,cros-ec-rpmsg", },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, cros_ec_rpmsg_of_match);
-> > +
-> > +static struct rpmsg_driver cros_ec_driver_rpmsg =3D {
-> > +       .drv =3D {
-> > +               .name   =3D KBUILD_MODNAME,
-> > +               .of_match_table =3D cros_ec_rpmsg_of_match,
-> > +       },
-> > +       .probe          =3D cros_ec_rpmsg_probe,
-> > +       .remove         =3D cros_ec_rpmsg_remove,
-> > +       .callback       =3D cros_ec_rpmsg_callback,
-> > +};
-> > +
-> > +module_rpmsg_driver(cros_ec_driver_rpmsg);
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_DESCRIPTION("ChromeOS EC multi function device (rpmsg)");
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
+Juergen
