@@ -2,146 +2,114 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF40C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C640C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A0320693
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E0120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfDJO5G (ORCPT
+        id S1732985AbfDJO53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:57:06 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:43955 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732883AbfDJO5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:57:05 -0400
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 1316310001A;
-        Wed, 10 Apr 2019 14:56:59 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 16:56:59 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: Document
- operating-points-v2-sunxi-cpu
-Message-ID: <20190410145659.62nl4o2jvkuggmpe@flea>
-References: <20190409172558.18778-1-tiny.windzz@gmail.com>
- <20190409172558.18778-3-tiny.windzz@gmail.com>
+        Wed, 10 Apr 2019 10:57:29 -0400
+Received: from mga04.intel.com ([192.55.52.120]:62034 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732883AbfDJO51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 10:57:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 07:57:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="290361665"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga004.jf.intel.com with ESMTP; 10 Apr 2019 07:57:26 -0700
+Date:   Wed, 10 Apr 2019 07:57:25 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Paolo Bonzini' <pbonzini@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86: optimize check for valid PAT value
+Message-ID: <20190410145725.GB10760@linux.intel.com>
+References: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+ <c2aaa028ef564c6d8bd50dbd86489115@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6yay5myzwekec5cw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190409172558.18778-3-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c2aaa028ef564c6d8bd50dbd86489115@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 10, 2019 at 12:55:53PM +0000, David Laight wrote:
+> From: Paolo Bonzini
+> > Sent: 10 April 2019 10:55
+> > 
+> > This check will soon be done on every nested vmentry and vmexit,
+> > "parallelize" it using bitwise operations.
+> > 
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> ...
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index 28406aa1136d..7bc7ac9d2a44 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -347,4 +347,12 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+> >  	__this_cpu_write(current_vcpu, NULL);
+> >  }
+> > 
+> > +static inline bool kvm_pat_valid(u64 data)
+> > +{
+> > +	if (data & 0xF8F8F8F8F8F8F8F8)
+> > +		return false;
+> > +	/* 0, 1, 4, 5, 6, 7 are valid values.  */
+> > +	return (data | ((data & 0x0202020202020202) << 1)) == data;
+> > +}
+> > +
+> 
+> How about:
+> 	/*
+> 	 * Each byte must be 0, 1, 4, 5, 6 or 7.
+> 	 * Convert 001x to 011x then 100x so 2 and 3 fail the test.
+> 	 */
+> 	data |= (data ^ 0x0404040404040404ULL)) + 0x0202020202020202ULL;
+> 	if (data & 0xF8F8F8F8F8F8F8F8ULL)
+> 		return false;
 
---6yay5myzwekec5cw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Woah.  My vote is for Paolo's version as the separate checks allow the
+reader to walk through step-by-step.  The generated assembly isn't much
+different from a performance perspective since the TEST+JNE will be not
+taken in the fast path.
 
-On Tue, Apr 09, 2019 at 01:25:58PM -0400, Yangtao Li wrote:
-> Allwinner Process Voltage Scaling Tables defines the voltage and
-> frequency value  based on the speedbin blown in the efuse combination.
-> The sunxi-cpufreq-nvmem driver reads the efuse value from the SoC to
-> provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each
-> OPP of operating-points-v2 table when it is parsed by the OPP framework.
->
-> The "operating-points-v2-sunxi-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-microvolt-<name>: voltage in micro Volts.
->   At runtime, the platform can pick a <name> and matching
->   opp-microvolt-<name> property
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/opp/sunxi-nvmem-cpufreq.txt      | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
->
-> diff --git a/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> new file mode 100644
-> index 000000000000..c81a2075b974
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> @@ -0,0 +1,166 @@
-> +Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
-> +===================================
-> +
-> +For some SoCs, the CPU frequency subset and voltage value of each OPP
-> +varies based on the silicon variant in use. Allwinner Process Voltage
-> +Scaling Tables defines the voltage and frequency value  based on the
-> +speedbin blown in the efuse combination. The sunxi-cpufreq-nvmem driver
-> +reads the efuse value from the SoC to provide the OPP framework with
-> +required information.
-> +
-> +Required properties:
-> +--------------------
-> +In 'cpus' nodes:
-> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> +
-> +In 'operating-points-v2' table:
-> +- compatible: Should be
-> +	- 'operating-points-v2-sunxi-cpu'.
+Fancy:
+   0x000000000004844f <+255>:   movabs $0xf8f8f8f8f8f8f8f8,%rcx
+   0x0000000000048459 <+265>:   xor    %eax,%eax
+   0x000000000004845b <+267>:   test   %rcx,%rdx
+   0x000000000004845e <+270>:   jne    0x4848b <kvm_mtrr_valid+315>
+   0x0000000000048460 <+272>:   movabs $0x202020202020202,%rax
+   0x000000000004846a <+282>:   and    %rdx,%rax
+   0x000000000004846d <+285>:   add    %rax,%rax
+   0x0000000000048470 <+288>:   or     %rdx,%rax
+   0x0000000000048473 <+291>:   cmp    %rdx,%rax
+   0x0000000000048476 <+294>:   sete   %al
+   0x0000000000048479 <+297>:   retq
 
-Vendor-specific compatibles should have the vendor mentionned.
-
-Also, even though the H6 is the only SoC so far that has needed this,
-we can't really assume that it will be the only SoC to use it, or that
-it will always behave like that.
-
-So having something like allwinner,sun50i-h6-operating-points would be
-great.
-
-> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
-> +		efuse registers that has information about the
-> +		speedbin that is used to select the right frequency/voltage
-> +		value pair.
-> +		Please refer the for nvmem-cells
-> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
-> +		and also examples below.
-> +
-> +In every OPP node:
-> +- opp-microvolt-<name>: Voltage in micro Volts.
-> +			At runtime, the platform can pick a <name> and
-> +			matching opp-microvolt-<name> property.
-> +			[See: opp.txt]
-
-You need to document the valid names here.
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6yay5myzwekec5cw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK4EOwAKCRDj7w1vZxhR
-xXr6AQDvwTpjj8VYqGfUgaR7dQGKXPaggIMLIGU9MeAPENqygwD/TQrHWLapGkm0
-0yMu+BgQ5XREz9SeD+UV2GVYA1PoxgA=
-=Bpew
------END PGP SIGNATURE-----
-
---6yay5myzwekec5cw--
+Really fancy:
+   0x0000000000048447 <+247>:   movabs $0x404040404040404,%rcx
+   0x0000000000048451 <+257>:   movabs $0x202020202020202,%rax
+   0x000000000004845b <+267>:   xor    %rdx,%rcx
+   0x000000000004845e <+270>:   add    %rax,%rcx
+   0x0000000000048461 <+273>:   movabs $0xf8f8f8f8f8f8f8f8,%rax
+   0x000000000004846b <+283>:   or     %rcx,%rdx
+   0x000000000004846e <+286>:   test   %rax,%rdx
+   0x0000000000048471 <+289>:   sete   %al
+   0x0000000000048474 <+292>:   retq
