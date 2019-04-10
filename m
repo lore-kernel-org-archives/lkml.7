@@ -2,126 +2,197 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71322C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7C4C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3954520830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="IuGLqpYW"
+	by mail.kernel.org (Postfix) with ESMTP id 6052720820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554932705;
+	bh=gqbFpcPltWDygFGRpM8CcSE/qGbr51/gDWzkajQfu+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OYGY5mNRRrEn18Ga9fqMynsqefv5uq6E/8mYNDpRhJHO10n6obWyJW/yR50HQpReg
+	 ppV2kcOZ3kfdDfw0jOcz1XZvuOyDE3nQLsHB8uM5YSdtWExKroBiy/FA7jcRTCorVI
+	 7QogqIJupoCAL1Erex/XlTgVjuz6Gd9VwMcOaWAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfDJVi3 (ORCPT
+        id S1726215AbfDJVpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:38:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37804 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbfDJVi2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:38:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w10so4653527wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LOxvXqKFPj3MVMl61HzHsAJfIq2rKeT4Ruwa8q/szlk=;
-        b=IuGLqpYW78+nQWkej9wKStxCq8RIIrHjSMDS6OyqdFFNNxekxJhF89osk20TuKhrEO
-         MElGo2FWORrNdRRerXLqjoT6MJkaWwt2JRoVTuFYipzOQEPGknG5meN37wEVLWBVLpAF
-         x5IlPyQE3C1AOSQ8B1VRa/tpNetbiGbUNZFEI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LOxvXqKFPj3MVMl61HzHsAJfIq2rKeT4Ruwa8q/szlk=;
-        b=JD8rRVNk6MNXtSwqlD2tc12EKHnMi1aI1VKZJu/4pL8ASGPBRE2ppA81vnruKsFCo3
-         gHiHk+NWexATdOBr+Bq70lrjoZCGF4kxAcqOqISy3B8JhJaLQWPFQTpx25jwfFIvo1Qp
-         VWS7MilthZM3qHMtS4ir9GV9N/NGvpISxIfnhrr+LunszXj1cKaPg009V7snWqNMWQry
-         EInjZMWEHbdOhjhpx6M3ZemibUJd/ZW43gpbs+V1OxCE0wfxL0jZ0j7F6y4tlAAYgpop
-         1cqu3BTKFzvLwgAeZQPNBFzSVVJmi6cvtL5ddy2coIufScA/j+AV5M16JW199M47M00s
-         +lew==
-X-Gm-Message-State: APjAAAVzhxJd1kEtT0bNlqrHLKiDJGLz7J491pc2KveP334a6kBgdt2F
-        EgOtplF+KFXydV7jP3AZUs5vEg==
-X-Google-Smtp-Source: APXvYqzYK41wa+yBABjfRn4lLJk4EEpjyQYNII3AdqhtAf0gjYSQko7bu1DksvIQIi7STAbWZb8KZw==
-X-Received: by 2002:adf:ea81:: with SMTP id s1mr7852347wrm.277.1554932306536;
-        Wed, 10 Apr 2019 14:38:26 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
-        by smtp.gmail.com with ESMTPSA id j11sm49008948wrw.85.2019.04.10.14.38.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 10 Apr 2019 14:38:25 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 22:38:24 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [RFC PATCH 0/2] mm/memcontrol: Finer-grained memory control
-Message-ID: <20190410213824.GA13638@chrisdown.name>
-References: <20190410191321.9527-1-longman@redhat.com>
+        Wed, 10 Apr 2019 17:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfDJVpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 17:45:04 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521C520820;
+        Wed, 10 Apr 2019 21:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554932702;
+        bh=gqbFpcPltWDygFGRpM8CcSE/qGbr51/gDWzkajQfu+A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RYa8/w+bRisf5ihIXFc6ovT2WBrvB5MVrsb7MQfzMusHYe/7jAmLZAy/S9Ni3n6IY
+         QdADAR6jH7SkbvZ1d48rTy08SAAoKmau+uaz6/RbwIWvmq/mg+915VbOFmQV2ObnKq
+         +wIgwO0CFJqghG5M6A9+q4hLHnw6VR+kJsQ5VJDA=
+Date:   Wed, 10 Apr 2019 16:45:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>
+Subject: Re: [PATCH 2/2] x86/pci: Clean up usage of X86_DEV_DMA_OPS
+Message-ID: <20190410214500.GK256045@google.com>
+References: <20190410080220.21705-1-hch@lst.de>
+ <20190410080220.21705-3-hch@lst.de>
+ <20190410081617.GA54229@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410191321.9527-1-longman@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190410081617.GA54229@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Waiman,
+[+cc Keith, Jonathan (VMD guys)]
 
-Waiman Long writes:
->The current control mechanism for memory cgroup v2 lumps all the memory
->together irrespective of the type of memory objects. However, there
->are cases where users may have more concern about one type of memory
->usage than the others.
+I'm OK with this from a PCI perspective.  It would be nice if
 
-I have concerns about this implementation, and the overall idea in general. We 
-had per-class memory limiting in the cgroup v1 API, and it ended up really 
-poorly, and resulted in a situation where it's really hard to compose a usable 
-system out of it any more.
+  dma_domain_list
+  dma_domain_list_lock
+  add_dma_domain()
+  del_dma_domain()
+  set_dma_domain_ops()
 
-A major part of the restructure in cgroup v2 has been to simplify things so 
-that it's more easy to understand for service owners and sysadmins. This was 
-intentional, because otherwise the system overall is hard to make into 
-something that does what users *really* want, and users end up with a lot of 
-confusion, misconfiguration, and generally an inability to produce a coherent 
-system, because we've made things too hard to piece together.
+could all be moved to vmd.c, since they're really only used there.
 
-In general, for purposes of resource control, I'm not convinced that it makes 
-sense to limit only one kind of memory based on prior experience with v1. Can 
-you give a production use case where this would be a clear benefit, traded off 
-against the increase in complexity to the API?
+But we don't really have a good way to call host bridge-specific code
+like set_dma_domain_ops() except via pcibios_add_device().  Someday
+maybe pcibios_add_device() will become a host bridge method.
 
->For simplicity, the limit is not hierarchical and applies to only tasks
->in the local memory cgroup.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-We've made an explicit effort to make all things hierarchical -- this confuses 
-things further. Even if we did have something like this, it would have to 
-respect the hierarchy, we really don't want to return to the use_hierarchy 
-days where users, sysadmins, and even ourselves are confused by the resource 
-control semantics that are supposed to be achieved.
 
->We have customer request to limit memory consumption on anonymous memory
->only as they said the feature was available in other OSes like Solaris.
-
-What's the production use case where this is demonstrably providing clear 
-benefits in terms of resource control? How can it compose as part of an easy to 
-understand, resource controlling system? I'd like to see a lot more information 
-on why this is needed, and the usability and technical tradeoffs considered.
-
-Thanks,
-
-Chris
+On Wed, Apr 10, 2019 at 10:16:17AM +0200, Ingo Molnar wrote:
+> (+Cc. Patch quoted below. Acked-by from an x86 perspective.)
+> 
+> * Christoph Hellwig <hch@lst.de> wrote:
+> 
+> > We have supported per-device dma_map_ops in generic code for a long
+> > time, and this symbol just guards the inclusion of the dma_map_ops
+> > registry used for vmd.  Stop enabling it for anything but vmd.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/x86/Kconfig               | 3 ---
+> >  drivers/misc/mic/Kconfig       | 4 ++--
+> >  drivers/pci/controller/Kconfig | 1 +
+> >  drivers/pci/controller/vmd.c   | 7 -------
+> >  4 files changed, 3 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 38c62ff8a3f0..d8e2e6519a61 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -28,7 +28,6 @@ config X86_64
+> >  	select MODULES_USE_ELF_RELA
+> >  	select NEED_DMA_MAP_STATE
+> >  	select SWIOTLB
+> > -	select X86_DEV_DMA_OPS
+> >  	select ARCH_HAS_SYSCALL_WRAPPER
+> >  
+> >  #
+> > @@ -703,7 +702,6 @@ config STA2X11
+> >  	bool "STA2X11 Companion Chip Support"
+> >  	depends on X86_32_NON_STANDARD && PCI
+> >  	select ARCH_HAS_PHYS_TO_DMA
+> > -	select X86_DEV_DMA_OPS
+> >  	select SWIOTLB
+> >  	select MFD_STA2X11
+> >  	select GPIOLIB
+> > @@ -2877,7 +2875,6 @@ config HAVE_ATOMIC_IOMAP
+> >  
+> >  config X86_DEV_DMA_OPS
+> >  	bool
+> > -	depends on X86_64 || STA2X11
+> >  
+> >  config HAVE_GENERIC_GUP
+> >  	def_bool y
+> > diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
+> > index 242dcee14689..6736f72cc14a 100644
+> > --- a/drivers/misc/mic/Kconfig
+> > +++ b/drivers/misc/mic/Kconfig
+> > @@ -4,7 +4,7 @@ comment "Intel MIC Bus Driver"
+> >  
+> >  config INTEL_MIC_BUS
+> >  	tristate "Intel MIC Bus Driver"
+> > -	depends on 64BIT && PCI && X86 && X86_DEV_DMA_OPS
+> > +	depends on 64BIT && PCI && X86
+> >  	help
+> >  	  This option is selected by any driver which registers a
+> >  	  device or driver on the MIC Bus, such as CONFIG_INTEL_MIC_HOST,
+> > @@ -21,7 +21,7 @@ comment "SCIF Bus Driver"
+> >  
+> >  config SCIF_BUS
+> >  	tristate "SCIF Bus Driver"
+> > -	depends on 64BIT && PCI && X86 && X86_DEV_DMA_OPS
+> > +	depends on 64BIT && PCI && X86
+> >  	help
+> >  	  This option is selected by any driver which registers a
+> >  	  device or driver on the SCIF Bus, such as CONFIG_INTEL_MIC_HOST
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 6012f3059acd..011c57cae4b0 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -267,6 +267,7 @@ config PCIE_TANGO_SMP8759
+> >  
+> >  config VMD
+> >  	depends on PCI_MSI && X86_64 && SRCU
+> > +	select X86_DEV_DMA_OPS
+> >  	tristate "Intel Volume Management Device Driver"
+> >  	---help---
+> >  	  Adds support for the Intel Volume Management Device (VMD). VMD is a
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index cf6816b55b5e..999a5509e57e 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -95,10 +95,8 @@ struct vmd_dev {
+> >  	struct irq_domain	*irq_domain;
+> >  	struct pci_bus		*bus;
+> >  
+> > -#ifdef CONFIG_X86_DEV_DMA_OPS
+> >  	struct dma_map_ops	dma_ops;
+> >  	struct dma_domain	dma_domain;
+> > -#endif
+> >  };
+> >  
+> >  static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
+> > @@ -293,7 +291,6 @@ static struct msi_domain_info vmd_msi_domain_info = {
+> >  	.chip		= &vmd_msi_controller,
+> >  };
+> >  
+> > -#ifdef CONFIG_X86_DEV_DMA_OPS
+> >  /*
+> >   * VMD replaces the requester ID with its own.  DMA mappings for devices in a
+> >   * VMD domain need to be mapped for the VMD, not the device requiring
+> > @@ -438,10 +435,6 @@ static void vmd_setup_dma_ops(struct vmd_dev *vmd)
+> >  	add_dma_domain(domain);
+> >  }
+> >  #undef ASSIGN_VMD_DMA_OPS
+> > -#else
+> > -static void vmd_teardown_dma_ops(struct vmd_dev *vmd) {}
+> > -static void vmd_setup_dma_ops(struct vmd_dev *vmd) {}
+> > -#endif
+> >  
+> >  static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+> >  				  unsigned int devfn, int reg, int len)
+> > -- 
+> > 2.20.1
+> > 
