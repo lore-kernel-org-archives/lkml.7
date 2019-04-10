@@ -2,104 +2,156 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F37C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B22C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2114620850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A0020645
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 23:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d/mq2Rkw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mVDbyWMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfDJX1o (ORCPT
+        id S1726777AbfDJXgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 19:27:44 -0400
-Received: from mail-vk1-f171.google.com ([209.85.221.171]:40102 "EHLO
-        mail-vk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDJX1n (ORCPT
+        Wed, 10 Apr 2019 19:36:42 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55520 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDJXgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 19:27:43 -0400
-Received: by mail-vk1-f171.google.com with SMTP id l17so965748vke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gNlKPyKG8+QtNce73/Iv5lOFma4r0K9qU8E9XvP2Jc0=;
-        b=d/mq2RkwjH/zieHh3yaXl4fAgXqLQzmIqXqRsSzThUGDzWSawNIzYLSWf+yMcriAuF
-         jQocb31jPcSY+7iOFq4j6sJK1CG4f2z1a35AnhDdew0cXY08ZjccG9HAzJelvXlmZ+zy
-         KZnKq/5SR1OK4jq/kK0g4UBSbqqx2mG6Dl7XA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gNlKPyKG8+QtNce73/Iv5lOFma4r0K9qU8E9XvP2Jc0=;
-        b=FzN5gBcsMu6qG2xDNVEfWY9uIWjkJ9a3skURPe/NUFHvWkw2KI5B6CIBxfMHP5tgjM
-         lzUq651YTWvXcycCbAGA8tKUK77wtI/p3q34ELCpwZUv/N/SMjs9ujUBo6XFOFYFoC1/
-         45YGYwxOb4WbhqWiQERa4AbtYNODntBu2txCzBk4VP52ipBU0iRj8EejuK0HWokEQS1Q
-         ChJlkCqbau1m9qw5i5MMCVB117UQuut0bUI1paL/yJtkRQLohha5y4Kqt+hbmJ/dWd7x
-         H0/pKDjxJfZS6VRXXUHQ/MR5KO4QIzM4pY/X0rNYJ9gzFiYWZLjQhsYpaLtjDwdDwyrJ
-         yoZg==
-X-Gm-Message-State: APjAAAVIz06NxSrYDkE4bLiyJvMP/y0onMDpfOgwakRJrLdBAQO15OR+
-        P2qPgdO6jeT0b0KdFPoGAcbTPXvz+cU=
-X-Google-Smtp-Source: APXvYqyu91hVNmZTefE7tLbe07wlREcUAC1/mHqMv3MybcJBF5iaYcjPPMyC3yjwA+UazAkXXlLYvQ==
-X-Received: by 2002:a1f:860c:: with SMTP id i12mr26638522vkd.46.1554938861445;
-        Wed, 10 Apr 2019 16:27:41 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id u10sm17578457vku.34.2019.04.10.16.27.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 16:27:40 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id g187so2394149vsc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 16:27:40 -0700 (PDT)
-X-Received: by 2002:a67:76c7:: with SMTP id r190mr27002454vsc.196.1554938859577;
- Wed, 10 Apr 2019 16:27:39 -0700 (PDT)
+        Wed, 10 Apr 2019 19:36:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3ANYKFo155407;
+        Wed, 10 Apr 2019 23:36:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5CeB9sCERxbeedFWprX4rtcGmvvmLuMTxuYgkfpqdwI=;
+ b=mVDbyWMnUCaqdq0NFbV5Nl4mSY+cfJcgES7RbdmW/Jtw7WzEw1A1bldoW790X+ONJzvx
+ S2yn9TgYqxFaVcgLh5dFEwHqiyANsKKtdHSRvBknX5TfYJkn+f2Jew7BsghCbPVftCnK
+ Vk2grgZ9D37XkhbeuWSHJetl0jhWsuhnDR6IAn0MynCzViPKGTruHEMp2C1CvCqfV4wh
+ N45R9oV2+69/4nzkaxWOuveiwT4wOZPMWwW+VjRL6Wi+qlm0xMryMT/z1BDN1VxsiheV
+ c+2QELnPSffs7xbHxDMB1z+HlgA9d10RqBUIlhLzeECEeKASLImLh+913oJl+nUI33lB cw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rpkht5x7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 23:36:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3ANZkDi001405;
+        Wed, 10 Apr 2019 23:36:38 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2rpytcgs9f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 23:36:38 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3ANabTw019741;
+        Wed, 10 Apr 2019 23:36:37 GMT
+Received: from dhcp-10-132-91-102.usdhcp.oraclecorp.com (/10.132.91.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 10 Apr 2019 16:36:37 -0700
+Subject: Re: [PATCH] KVM: x86: optimize check for valid PAT value
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <b4d714a8-3ca5-8ec7-afe0-b7f8f324c39e@oracle.com>
+Date:   Wed, 10 Apr 2019 16:36:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
- <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
- <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
- <20190321175122.GA1587@sol.localdomain> <20190410031734.GB7140@sol.localdomain>
- <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
- <20190410190729.GA120258@gmail.com> <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
- <20190410231156.GB120258@gmail.com>
-In-Reply-To: <20190410231156.GB120258@gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 16:27:28 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
-Message-ID: <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1554890126-347-1-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904100154
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904100154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 4:12 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> You've explained *what* it does again, but not *why*.  *Why* do you want
-> hardened usercopy to detect copies across page boundaries, when there is no
-> actual buffer overflow?
 
-But that *is* how it determines it was a buffer overflow: "if you
-cross page boundaries (of a non-compound allocation), it *is* a buffer
-overflow". This assertion, however, is flawed because many contiguous
-allocations are not marked as being grouped together when it reality
-they were. It was an attempt to get allocation size information out of
-the page allocator, similar to how slab can be queries about
-allocation size. I'm open to improvements here, since it's obviously
-broken in its current state. :)
 
--- 
-Kees Cook
+On 04/10/2019 02:55 AM, Paolo Bonzini wrote:
+> This check will soon be done on every nested vmentry and vmexit,
+> "parallelize" it using bitwise operations.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/mtrr.c    | 10 +---------
+>   arch/x86/kvm/vmx/vmx.c |  2 +-
+>   arch/x86/kvm/x86.h     |  8 ++++++++
+>   3 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/kvm/mtrr.c b/arch/x86/kvm/mtrr.c
+> index e9ea2d45ae66..9f72cc427158 100644
+> --- a/arch/x86/kvm/mtrr.c
+> +++ b/arch/x86/kvm/mtrr.c
+> @@ -48,11 +48,6 @@ static bool msr_mtrr_valid(unsigned msr)
+>   	return false;
+>   }
+>   
+> -static bool valid_pat_type(unsigned t)
+> -{
+> -	return t < 8 && (1 << t) & 0xf3; /* 0, 1, 4, 5, 6, 7 */
+> -}
+> -
+>   static bool valid_mtrr_type(unsigned t)
+>   {
+>   	return t < 8 && (1 << t) & 0x73; /* 0, 1, 4, 5, 6 */
+> @@ -67,10 +62,7 @@ bool kvm_mtrr_valid(struct kvm_vcpu *vcpu, u32 msr, u64 data)
+>   		return false;
+>   
+>   	if (msr == MSR_IA32_CR_PAT) {
+> -		for (i = 0; i < 8; i++)
+> -			if (!valid_pat_type((data >> (i * 8)) & 0xff))
+> -				return false;
+> -		return true;
+> +		return kvm_pat_valid(data);
+>   	} else if (msr == MSR_MTRRdefType) {
+>   		if (data & ~0xcff)
+>   			return false;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b6c533afbf27..b74679732cfc 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1891,7 +1891,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   		break;
+>   	case MSR_IA32_CR_PAT:
+>   		if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT) {
+> -			if (!kvm_mtrr_valid(vcpu, MSR_IA32_CR_PAT, data))
+> +			if (!kvm_pat_valid(data))
+>   				return 1;
+>   			vmcs_write64(GUEST_IA32_PAT, data);
+>   			vcpu->arch.pat = data;
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 28406aa1136d..7bc7ac9d2a44 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -347,4 +347,12 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
+>   	__this_cpu_write(current_vcpu, NULL);
+>   }
+>   
+> +static inline bool kvm_pat_valid(u64 data)
+> +{
+> +	if (data & 0xF8F8F8F8F8F8F8F8)
+> +		return false;
+> +	/* 0, 1, 4, 5, 6, 7 are valid values.  */
+> +	return (data | ((data & 0x0202020202020202) << 1)) == data;
+> +}
+> +
+>   #endif
+
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
