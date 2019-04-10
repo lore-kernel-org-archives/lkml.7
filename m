@@ -2,351 +2,179 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C183C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6443820850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C0320830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxZLa4d4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fWcmmRay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDJWt7 (ORCPT
+        id S1726706AbfDJWuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:49:59 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:32974 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWt6 (ORCPT
+        Wed, 10 Apr 2019 18:50:06 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:50298 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfDJWuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:49:58 -0400
-Received: by mail-ua1-f67.google.com with SMTP id g8so1381642uaj.0;
-        Wed, 10 Apr 2019 15:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rJB8/ol/xVYphZyQKzts/AoG6Iz9fH6KI2500BWxENw=;
-        b=pxZLa4d4INZ1yP68ziEUgmF4OXFtqGqdGqFfaNDzqswnTUB4NwBuqOwWy6+i5MzJo4
-         1fi9ObP5OWguJQ6Xr801kSb+U99O0sY79l3ysSPJHoBytMKZatiJfsCb2ERye6VpW4OJ
-         268Ys9b/u+EPR8ehLL5Wc4thX5iz9gpG+g3h+tFwz1jVSJCAiy9AMEMi9Exvr4IYFPIJ
-         iLsUD1cFb7/iA450IX5kLNWQymYk7taJv/PD+7ynxd1SstBFi808o3K7sGLcadwAZhLj
-         Ozztnu8cST/WzYBEhVbXzghQGDKXtPSUcWWwHnNYJ79tH00n7gHa7+kKgr7PNf/K/v6l
-         tEoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rJB8/ol/xVYphZyQKzts/AoG6Iz9fH6KI2500BWxENw=;
-        b=PRDdT8RhghmsAYUpNqJKpNojEP341BVVUGUns48DMTEP1HTRIXOk0pA967UAwS4GZm
-         LCBPzD8dGiy+9Y2qtvpVdgQIiUhRBlD71ZcveEUpnmbWiMo1ftArLKfxEDclSLvXQ5nH
-         2EoAMC1XDDtS351YNOr2opRSifTBhqw5N38RPBTlAqO0/nqkdYRmhcGxfk35pwIWVVxm
-         gFQoSCGQI3k3nb8/HB5sMNkzS9k+cU/Yo3OcWCq+NXS1HQSdNV7xHcK0qCAelqnRjRrN
-         UpCOOkCRjMgHIFsWiKyJsMQWpOJrrdQLDMVvW6poq7pRA0jjuTGca/K0qmreCYxY3Mp9
-         XTBw==
-X-Gm-Message-State: APjAAAXqCL/6CHxwBuSPcdHZbhsQT42GcCapNPLoMLmOARyZsl3Uwnih
-        Wv5PoJ+4pPnqMZBu+7oM2xPrAPR2uXuqBHOKTGDE9g==
-X-Google-Smtp-Source: APXvYqw34Lv7faaARTZvD/5blpyRHlxGjbV9LnrjHOhz0vQTw8ayHrByDhb8RoaRX0XEqz7Ne6o+YbDfqEp98i+Iiwg=
-X-Received: by 2002:ab0:158e:: with SMTP id i14mr23148772uae.31.1554936597092;
- Wed, 10 Apr 2019 15:49:57 -0700 (PDT)
+        Wed, 10 Apr 2019 18:50:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1554936605; x=1586472605;
+  h=subject:from:to:cc:references:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=YfDM8y1jUvGmA5+FC2aYt2d1GKWwr2xeQQzppluCf58=;
+  b=fWcmmRayIK1Tk11d6Qv8nNeneHE8LYnTdrKFc5Lz/3MvCnvd/zo18bGd
+   3hN0pAdLS0sf2VL/u+4X4oVww6qVsN3J8tt72nngxjFsIgKK4f7Jk5Wqm
+   yXKnlDIhC0zvA38/+sefu126+h9htwTLPunzNj95DpCOKUjzOH5H5pA39
+   J1GxeDUtcPejrKjGFCzZdWwm5PjqLGFPBwTi9Oy6HiAjAFLtCN5awvaoY
+   N4xgbmmYYSsciKMm1+huJPKT1Vd005JxQ74t2n6D3T5oioIdvzzC4hfES
+   q9zR4/+NGHoMPRc4qGxf6v2dlFNSMZcihYH9JJOUBEp7xFWj9iwp2ZghF
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,335,1549900800"; 
+   d="scan'208";a="105470866"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Apr 2019 06:50:05 +0800
+IronPort-SDR: aGe2I3E0EOI1pRtoYqCabQ+UXwJ0292IpplXLEZ6K7Y16kQn6L57AR8uHy2Xnk9niO1jaDtxjz
+ qHLzORG2rEOkygPmX9aiM5p/2D16dzEIDlQDDMng93zEf8QjXkH49ibt4hHEuXmmFMZAouBVjD
+ tOKJBlnuWojhpG5c+Mh8LH2ZNFjvdVc/vrtuR1A353MY4f/idwl+aesRWaE2DZ3E1C/QbLLXGa
+ nSAVH4zEntCCy5L1rDVGbUUcLkZObj/GS0ow5JbqPVFIj01ahcXisyJhh6qqrZabwYmipOBsn+
+ MQtr6XDf9qV4HXZ3DgsJNffA
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP; 10 Apr 2019 15:26:59 -0700
+IronPort-SDR: 7mSdHEoCianBaHf7rrpda0MqEGGKw/fw+SdX6j1stqwolJRtrx8c8wTjw0Z5OJTcJHgohDh66O
+ ar41LAeDakEZlMd4IVjYTkxaBst+HHQuW9vbEP0BiA5i7bAGty1K9+nnC+DFW9AS88o5q2RnDU
+ YNje4lZ2k93vmmddcG2XXahNZxr7rFL4JMqHrXe5k7GCDWfwmu3STxRB8lIbXG/H2IbNSmem8M
+ HOl5rlCNrpUM4gGGjf1oJrUlnrKKbi3C1Ijs8kkrhPCv4WzR/4PDP1NlR76quB+3upjlx9a7+5
+ mLU=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
+  by uls-op-cesaip01.wdc.com with ESMTP; 10 Apr 2019 15:50:05 -0700
+Subject: Re: [RFT/RFC PATCH v3 0/5] Unify CPU topology across ARM & RISC-V
+From:   Atish Patra <atish.patra@wdc.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+References: <20190320234806.19748-1-atish.patra@wdc.com>
+Message-ID: <12c9f8b0-cdeb-2b9c-5662-6c5a08cd0a95@wdc.com>
+Date:   Wed, 10 Apr 2019 15:49:54 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190409202335.4190-1-lyude@redhat.com>
-In-Reply-To: <20190409202335.4190-1-lyude@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Thu, 11 Apr 2019 08:48:26 +1000
-Message-ID: <CACAvsv5woW9wr3JaKSOSSX8v4NACv5ubVyCoO9q9+OumspwsZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/nouveau/i2c: Disable i2c bus access after ->fini()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190320234806.19748-1-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019 at 06:23, Lyude Paul <lyude@redhat.com> wrote:
->
-> For a while, we've had the problem of i2c bus access not grabbing
-> a runtime PM ref when it's being used in userspace by i2c-dev, resulting
-> in nouveau spamming the kernel log with errors if anything attempts to
-> access the i2c bus while the GPU is in runtime suspend. An example:
->
-> [  130.078386] nouveau 0000:01:00.0: i2c: aux 000d: begin idle timeout ffffffff
->
-> Since the GPU is in runtime suspend, the MMIO region that the i2c bus is
-> on isn't accessible. On x86, the standard behavior for accessing an
-> unavailable MMIO region is to just return ~0.
->
-> Except, that turned out to be a lie. While computers with a clean
-> concious will return ~0 in this scenario, some machines will actually
-> completely hang a CPU on certian bad MMIO accesses. This was witnessed
-> with someone's Lenovo ThinkPad P50, where sensors-detect attempting to
-> access the i2c bus while the GPU was suspended would result in a CPU
-> hang:
->
->   CPU: 5 PID: 12438 Comm: sensors-detect Not tainted 5.0.0-0.rc4.git3.1.fc30.x86_64 #1
->   Hardware name: LENOVO 20EQS64N17/20EQS64N17, BIOS N1EET74W (1.47 ) 11/21/2017
->   RIP: 0010:ioread32+0x2b/0x30
->   Code: 81 ff ff ff 03 00 77 20 48 81 ff 00 00 01 00 76 05 0f b7 d7 ed c3
->   48 c7 c6 e1 0c 36 96 e8 2d ff ff ff b8 ff ff ff ff c3 8b 07 <c3> 0f 1f
->   40 00 49 89 f0 48 81 fe ff ff 03 00 76 04 40 88 3e c3 48
->   RSP: 0018:ffffaac3c5007b48 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
->   RAX: 0000000001111000 RBX: 0000000001111000 RCX: 0000043017a97186
->   RDX: 0000000000000aaa RSI: 0000000000000005 RDI: ffffaac3c400e4e4
->   RBP: ffff9e6443902c00 R08: ffffaac3c400e4e4 R09: ffffaac3c5007be7
->   R10: 0000000000000004 R11: 0000000000000001 R12: ffff9e6445dd0000
->   R13: 000000000000e4e4 R14: 00000000000003c4 R15: 0000000000000000
->   FS:  00007f253155a740(0000) GS:ffff9e644f600000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 00005630d1500358 CR3: 0000000417c44006 CR4: 00000000003606e0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   Call Trace:
->    g94_i2c_aux_xfer+0x326/0x850 [nouveau]
->    nvkm_i2c_aux_i2c_xfer+0x9e/0x140 [nouveau]
->    __i2c_transfer+0x14b/0x620
->    i2c_smbus_xfer_emulated+0x159/0x680
->    ? _raw_spin_unlock_irqrestore+0x1/0x60
->    ? rt_mutex_slowlock.constprop.0+0x13d/0x1e0
->    ? __lock_is_held+0x59/0xa0
->    __i2c_smbus_xfer+0x138/0x5a0
->    i2c_smbus_xfer+0x4f/0x80
->    i2cdev_ioctl_smbus+0x162/0x2d0 [i2c_dev]
->    i2cdev_ioctl+0x1db/0x2c0 [i2c_dev]
->    do_vfs_ioctl+0x408/0x750
->    ksys_ioctl+0x5e/0x90
->    __x64_sys_ioctl+0x16/0x20
->    do_syscall_64+0x60/0x1e0
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
->   RIP: 0033:0x7f25317f546b
->   Code: 0f 1e fa 48 8b 05 1d da 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
->   ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
->   f0 ff ff 73 01 c3 48 8b 0d ed d9 0c 00 f7 d8 64 89 01 48
->   RSP: 002b:00007ffc88caab68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->   RAX: ffffffffffffffda RBX: 00005630d0fe7260 RCX: 00007f25317f546b
->   RDX: 00005630d1598e80 RSI: 0000000000000720 RDI: 0000000000000003
->   RBP: 00005630d155b968 R08: 0000000000000001 R09: 00005630d15a1da0
->   R10: 0000000000000070 R11: 0000000000000246 R12: 00005630d1598e80
->   R13: 00005630d12f3d28 R14: 0000000000000720 R15: 00005630d12f3ce0
->   watchdog: BUG: soft lockup - CPU#5 stuck for 23s! [sensors-detect:12438]
->
-> Yikes! While I wanted to try to make it so that accessing an i2c bus on
-> nouveau would wake up the GPU as needed, airlied pointed out that pretty
-> much any usecase for userspace accessing an i2c bus on a GPU (mainly for
-> the DDC brightness control that some displays have) is going to only be
-> useful while there's at least one display enabled on the GPU anyway, and
-> the GPU never sleeps while there's displays running.
->
-> Since teaching the i2c bus to wake up the GPU on userspace accesses is a
-> good deal more difficult than it might seem, mostly due to the fact that
-> we have to use the i2c bus during runtime resume of the GPU, we instead
-> opt for the easiest solution: don't let userspace access i2c busses on
-> the GPU at all while it's in runtime suspend.
->
-> Changes since v1:
-> * Also disable i2c busses that run over DP AUX
-I've updated my tree with the v2 version of the patch.  I haven't
-investigated too thoroughly, but shouldn't it be possible to move this
-check into a single place (pad_acquire()?) for both i2c/aux?
-
-Thanks,
-Ben.
-
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: stable@vger.kernel.org
-> ---
->  .../gpu/drm/nouveau/include/nvkm/subdev/i2c.h |  2 ++
->  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c | 26 ++++++++++++++++++-
->  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h |  2 ++
->  .../gpu/drm/nouveau/nvkm/subdev/i2c/base.c    | 15 +++++++++++
->  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c | 21 ++++++++++++++-
->  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h |  1 +
->  6 files changed, 65 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> index eef54e9b5d77..7957eafa5f0e 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> @@ -38,6 +38,7 @@ struct nvkm_i2c_bus {
->         struct mutex mutex;
->         struct list_head head;
->         struct i2c_adapter i2c;
-> +       u8 enabled;
->  };
->
->  int nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *);
-> @@ -57,6 +58,7 @@ struct nvkm_i2c_aux {
->         struct mutex mutex;
->         struct list_head head;
->         struct i2c_adapter i2c;
-> +       u8 enabled;
->
->         u32 intr;
->  };
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> index 4c1f547da463..b4e7404fe660 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> @@ -105,9 +105,15 @@ nvkm_i2c_aux_acquire(struct nvkm_i2c_aux *aux)
->  {
->         struct nvkm_i2c_pad *pad = aux->pad;
->         int ret;
-> +
->         AUX_TRACE(aux, "acquire");
->         mutex_lock(&aux->mutex);
-> -       ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-> +
-> +       if (aux->enabled)
-> +               ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-> +       else
-> +               ret = -EIO;
-> +
->         if (ret)
->                 mutex_unlock(&aux->mutex);
->         return ret;
-> @@ -145,6 +151,24 @@ nvkm_i2c_aux_del(struct nvkm_i2c_aux **paux)
->         }
->  }
->
-> +void
-> +nvkm_i2c_aux_init(struct nvkm_i2c_aux *aux)
-> +{
-> +       AUX_TRACE(aux, "init");
-> +       mutex_lock(&aux->mutex);
-> +       aux->enabled = true;
-> +       mutex_unlock(&aux->mutex);
-> +}
-> +
-> +void
-> +nvkm_i2c_aux_fini(struct nvkm_i2c_aux *aux)
-> +{
-> +       AUX_TRACE(aux, "fini");
-> +       mutex_lock(&aux->mutex);
-> +       aux->enabled = false;
-> +       mutex_unlock(&aux->mutex);
-> +}
-> +
->  int
->  nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *func,
->                   struct nvkm_i2c_pad *pad, int id,
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> index 7d56c4ba693c..08f6b2ee64ab 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> @@ -16,6 +16,8 @@ int nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *, struct nvkm_i2c_pad *,
->  int nvkm_i2c_aux_new_(const struct nvkm_i2c_aux_func *, struct nvkm_i2c_pad *,
->                       int id, struct nvkm_i2c_aux **);
->  void nvkm_i2c_aux_del(struct nvkm_i2c_aux **);
-> +void nvkm_i2c_aux_init(struct nvkm_i2c_aux *);
-> +void nvkm_i2c_aux_fini(struct nvkm_i2c_aux *);
->  int nvkm_i2c_aux_xfer(struct nvkm_i2c_aux *, bool retry, u8 type,
->                       u32 addr, u8 *data, u8 *size);
->
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> index 4f197b15acf6..ecacb22834d7 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> @@ -160,8 +160,18 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev, bool suspend)
->  {
->         struct nvkm_i2c *i2c = nvkm_i2c(subdev);
->         struct nvkm_i2c_pad *pad;
-> +       struct nvkm_i2c_bus *bus;
-> +       struct nvkm_i2c_aux *aux;
->         u32 mask;
->
-> +       list_for_each_entry(aux, &i2c->aux, head) {
-> +               nvkm_i2c_aux_fini(aux);
-> +       }
-> +
-> +       list_for_each_entry(bus, &i2c->bus, head) {
-> +               nvkm_i2c_bus_fini(bus);
-> +       }
-> +
->         if ((mask = (1 << i2c->func->aux) - 1), i2c->func->aux_stat) {
->                 i2c->func->aux_mask(i2c, NVKM_I2C_ANY, mask, 0);
->                 i2c->func->aux_stat(i2c, &mask, &mask, &mask, &mask);
-> @@ -180,6 +190,7 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
->         struct nvkm_i2c *i2c = nvkm_i2c(subdev);
->         struct nvkm_i2c_bus *bus;
->         struct nvkm_i2c_pad *pad;
-> +       struct nvkm_i2c_aux *aux;
->
->         list_for_each_entry(pad, &i2c->pad, head) {
->                 nvkm_i2c_pad_init(pad);
-> @@ -189,6 +200,10 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
->                 nvkm_i2c_bus_init(bus);
->         }
->
-> +       list_for_each_entry(aux, &i2c->aux, head) {
-> +               nvkm_i2c_aux_init(aux);
-> +       }
-> +
->         return 0;
->  }
->
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> index 807a2b67bd64..ed50cc3736b9 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> @@ -110,6 +110,19 @@ nvkm_i2c_bus_init(struct nvkm_i2c_bus *bus)
->         BUS_TRACE(bus, "init");
->         if (bus->func->init)
->                 bus->func->init(bus);
-> +
-> +       mutex_lock(&bus->mutex);
-> +       bus->enabled = true;
-> +       mutex_unlock(&bus->mutex);
-> +}
-> +
-> +void
-> +nvkm_i2c_bus_fini(struct nvkm_i2c_bus *bus)
-> +{
-> +       BUS_TRACE(bus, "fini");
-> +       mutex_lock(&bus->mutex);
-> +       bus->enabled = false;
-> +       mutex_unlock(&bus->mutex);
->  }
->
->  void
-> @@ -126,9 +139,15 @@ nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *bus)
->  {
->         struct nvkm_i2c_pad *pad = bus->pad;
->         int ret;
-> +
->         BUS_TRACE(bus, "acquire");
->         mutex_lock(&bus->mutex);
-> -       ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-> +
-> +       if (bus->enabled)
-> +               ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-> +       else
-> +               ret = -EIO;
-> +
->         if (ret)
->                 mutex_unlock(&bus->mutex);
->         return ret;
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> index bea0dd33961e..465464bba58b 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> @@ -18,6 +18,7 @@ int nvkm_i2c_bus_new_(const struct nvkm_i2c_bus_func *, struct nvkm_i2c_pad *,
->                       int id, struct nvkm_i2c_bus **);
->  void nvkm_i2c_bus_del(struct nvkm_i2c_bus **);
->  void nvkm_i2c_bus_init(struct nvkm_i2c_bus *);
-> +void nvkm_i2c_bus_fini(struct nvkm_i2c_bus *);
->
->  int nvkm_i2c_bit_xfer(struct nvkm_i2c_bus *, struct i2c_msg *, int);
->
+On 3/20/19 4:48 PM, Atish Patra wrote:
+> The cpu-map DT entry in ARM can describe the CPU topology in much better
+> way compared to other existing approaches. RISC-V can easily adopt this
+> binding to represent its own CPU topology. Thus, both cpu-map DT
+> binding and topology parsing code can be moved to a common location so
+> that RISC-V or any other architecture can leverage that.
+> 
+> The relevant discussion regarding unifying cpu topology can be found in
+> [1].
+> 
+> arch_topology seems to be a perfect place to move the common code. I
+> have not introduced any significant functional changes in the moved code.
+> The only downside in this approach is that the capacity code will be
+> executed for RISC-V as well. But, it will exit immediately after not
+> able to find the appropriate DT node. If the overhead is considered too
+> much, we can always compile out capacity related functions under a
+> different config for the architectures that do not support them.
+> 
+> There was an opportunity to unify topology data structure for ARM32 done
+> by patch 3/4. But, I refrained from making any other changes as I am not
+> very well versed with original intention for some functions that
+> are present in arch_topology.c. I hope this patch series can be served
+> as a baseline for such changes in the future.
+> 
+> The patches have been tested for RISC-V and compile tested for ARM64,
+> ARM32 & x86.
+> 
+> The socket change[2] is also now part of this series.
+> 
+> [1] https://lkml.org/lkml/2018/11/6/19
+> [2] https://lkml.org/lkml/2018/11/7/918
+> 
+> QEMU changes for RISC-V topology are available at
+> 
+> https://github.com/atishp04/qemu/tree/riscv_topology_dt
+> 
+> HiFive Unleashed DT with topology node is available here.
+> https://github.com/atishp04/opensbi/tree/HiFive_unleashed_topology
+> 
+> It can be verified with OpenSBI with following additional compile time
+> option.
+> 
+> FW_PAYLOAD_FDT="unleashed_topology.dtb"
+> 
+> Changes from v2->v3
+> 1. Cover letter update with experiment DT for topology changes.
+> 2. Added the patch for [2].
+> 
+> Changes from v1->v2
+> 1. ARM32 can now use the common code as well.
+> 
+> Atish Patra (4):
+> dt-binding: cpu-topology: Move cpu-map to a common binding.
+> cpu-topology: Move cpu topology code to common code.
+> arm: Use common cpu_topology
+> RISC-V: Parse cpu topology during boot.
+> 
+> Sudeep Holla (1):
+> Documentation: DT: arm: add support for sockets defining package
+> boundaries
+> 
+> .../topology.txt => cpu/cpu-topology.txt}     | 134 ++++++--
+> arch/arm/include/asm/topology.h               |  22 +-
+> arch/arm/kernel/topology.c                    |  10 +-
+> arch/arm64/include/asm/topology.h             |  23 --
+> arch/arm64/kernel/topology.c                  | 303 +-----------------
+> arch/riscv/Kconfig                            |   1 +
+> arch/riscv/kernel/smpboot.c                   |   3 +
+> drivers/base/arch_topology.c                  | 298 ++++++++++++++++-
+> drivers/base/topology.c                       |   1 +
+> include/linux/arch_topology.h                 |  36 +++
+> 10 files changed, 453 insertions(+), 378 deletions(-)
+> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
+> 
 > --
-> 2.20.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 2.21.0
+> 
+> 
+
+Ping?
+
+Specifically, patch 3 & 4 affects ARM & ARM64. Any tests on real 
+hardware would be great.
+
+Regards,
+Atish
