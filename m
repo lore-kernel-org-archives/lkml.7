@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E19C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62D9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700CC206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1EB20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733182AbfDJPZZ (ORCPT
+        id S1733196AbfDJPZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:25:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15566 "EHLO mga06.intel.com"
+        Wed, 10 Apr 2019 11:25:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15584 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733170AbfDJPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:25:21 -0400
+        id S1733170AbfDJPZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:25:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 08:25:21 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 08:25:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="163102943"
+   d="scan'208";a="163102962"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 08:25:19 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 08:25:24 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,9 +36,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andy@infradead.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 05/12] driver core: Add helper device_find_child_by_name()
-Date:   Wed, 10 Apr 2019 18:24:58 +0300
-Message-Id: <20190410152505.87041-6-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v2 07/12] device connection: Find connections also by checking the references
+Date:   Wed, 10 Apr 2019 18:25:00 +0300
+Message-Id: <20190410152505.87041-8-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
 References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
@@ -49,70 +49,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like the child device is often matched with a name.
-This introduces a helper that does it automatically.
+We can also use this API to find named references that the
+device nodes have by using fwnode_property_get_reference_args()
+function.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/core.c    | 31 +++++++++++++++++++++++++++++++
- include/linux/device.h |  2 ++
- 2 files changed, 33 insertions(+)
+ drivers/base/devcon.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c92bda..5819ba4c9d4c 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2469,6 +2469,37 @@ struct device *device_find_child(struct device *parent, void *data,
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+index 04db9ae235e4..4cdf95532b63 100644
+--- a/drivers/base/devcon.c
++++ b/drivers/base/devcon.c
+@@ -38,6 +38,30 @@ fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+ 	return NULL;
  }
- EXPORT_SYMBOL_GPL(device_find_child);
  
-+/**
-+ * device_find_child_by_name - device iterator for locating a child device.
-+ * @parent: parent struct device
-+ * @name: name of the child device
-+ *
-+ * This is similar to the device_find_child() function above, but it
-+ * returns a reference to a device that has the name @name.
-+ *
-+ * The callback should return NULL if the child is not found and a reference to
-+ * the child device if it is found.
-+ *
-+ * NOTE: you will need to drop the reference with put_device() after use.
-+ */
-+struct device *device_find_child_by_name(struct device *parent,
-+					 const char *name)
++static void *
++fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
++		    void *data, devcon_match_fn_t match)
 +{
-+	struct klist_iter i;
-+	struct device *child;
++	struct device_connection con = { };
++	struct fwnode_reference_args args;
++	void *ret;
++	int i;
 +
-+	if (!parent)
-+		return NULL;
-+
-+	klist_iter_init(&parent->p->klist_children, &i);
-+	while ((child = next_device(&i)))
-+		if (!strcmp(dev_name(child), name) && get_device(child))
++	for (i = 0; ; i++) {
++		if (fwnode_property_get_reference_args(fwnode, con_id, NULL, 0,
++						       i, &args))
 +			break;
-+	klist_iter_exit(&i);
-+	return child;
-+}
-+EXPORT_SYMBOL_GPL(device_find_child_by_name);
 +
- int __init devices_init(void)
- {
- 	devices_kset = kset_create_and_add("devices", &device_uevent_ops, NULL);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4457e560bc2b..fadb84dd07f9 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1250,6 +1250,8 @@ extern int device_for_each_child_reverse(struct device *dev, void *data,
- 		     int (*fn)(struct device *dev, void *data));
- extern struct device *device_find_child(struct device *dev, void *data,
- 				int (*match)(struct device *dev, void *data));
-+extern struct device *device_find_child_by_name(struct device *parent,
-+						const char *name);
- extern int device_rename(struct device *dev, const char *new_name);
- extern int device_move(struct device *dev, struct device *new_parent,
- 		       enum dpm_order dpm_order);
++		con.fwnode = args.fwnode;
++		ret = match(&con, -1, data);
++		fwnode_handle_put(args.fwnode);
++		if (ret)
++			return ret;
++	}
++
++	return NULL;
++}
++
+ /**
+  * device_connection_find_match - Find physical connection to a device
+  * @dev: Device with the connection
+@@ -65,6 +89,10 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
+ 		ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
+ 		if (ret)
+ 			return ret;
++
++		ret = fwnode_devcon_match(fwnode, con_id, data, match);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	mutex_lock(&devcon_lock);
 -- 
 2.20.1
 
