@@ -2,178 +2,186 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8945CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC4C2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F74D2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554893921;
+	bh=cr8j94d885Du/l5KevVYcZmw8KiKKQE5vsfkE2tU9r4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vQ34fPpT3NqiTtNgnuSc14HabSR+umfz/e5KzaZNB+olzzQR6PXuS93jjObZeLJ0v
+	 DTGM1E6xnAIbRav/k/N0Ke6kzNtI/0AIuD8AGqAVfkmf+yR3kpumiBSBLBQ9yWwNq2
+	 zm19fIOk8mb8LWAIw3hr5KptVx3eJpQc2Qe1oW8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfDJK5a (ORCPT
+        id S1729596AbfDJK6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:57:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53912 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfDJK53 (ORCPT
+        Wed, 10 Apr 2019 06:58:40 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39974 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfDJK6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:57:29 -0400
-Received: from [IPv6:2a02:2450:102f:3e0:9891:9d6a:3d2f:24f2] (unknown [IPv6:2a02:2450:102f:3e0:9891:9d6a:3d2f:24f2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: robertfoss)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 18CD627F6D6;
-        Wed, 10 Apr 2019 11:57:27 +0100 (BST)
-Subject: Re: [PATCH] ARM: dts: imx6qdl-nitrogen6_max: Disable LVDS channels
-To:     Gary Bisson <gary.bisson@boundarydevices.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Troy Kisky <troy.kisky@boundarydevices.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190408175319.9106-1-robert.foss@collabora.com>
- <CAOMZO5DAvaibi5r9CXzk8qbE7XHiHJHHvi9rcq_BJdx7aRVgoQ@mail.gmail.com>
- <4fd506a1-c961-0569-6d39-283758f363d9@collabora.com>
- <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
-From:   Robert Foss <robert.foss@collabora.com>
-Message-ID: <550afae6-8dd8-39aa-c7a2-01b27557aa53@collabora.com>
-Date:   Wed, 10 Apr 2019 12:57:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 06:58:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so2372022wre.7;
+        Wed, 10 Apr 2019 03:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sm/tszu0J3RHjL4xyTjL1hUHUNIiZnuPvuy8orIO6bs=;
+        b=CzskLsxtUxe4CgyiIC9ogpp2gn2dHmcQY4YagteI0cOWuNGhA4JvbI9Iw+0jiue2cT
+         uxJnzOq4zYqBAWeXRPpHviCKRoBqGNTqq4aD4vXWl83i33kQfEYv7j/3pzdFg9Vknboc
+         FpxdL012rQEt71G1wtHYBsF3G0Hgrs8iTuf+OSmfxNYhhTyZoMk2qQOV4PKcT9/Y7Zmo
+         AluVufn8lsdv80KpRyFxZ4FuaAw5VSCFkEplDCsDRZk8umVKjVKNnwGoJ1og77F8FB1z
+         2sumjXeliVAs7BY8LFrLBjmXEY6WNPhJqojfeHX3MDPdptVBMnAPve+RSKvJFUazX/vc
+         FJ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sm/tszu0J3RHjL4xyTjL1hUHUNIiZnuPvuy8orIO6bs=;
+        b=WuBX1k4JYTCohZAvbUkZgBiALhkb7OgL0j40fnrKx0YcckC2y0ZLuhybwdiwT5ukx4
+         g18FZj324HelJ52f71omj3j0F9qIb35HG2LnqJ4lnZznlt93UzcUYW7M51e/272ew4zX
+         8J/xE3ZPWGSpKpww2kjuu1dWhA2a5IOj+kzOIiRIEDEtOpa9f9si5AXMml8gjxh4eK8S
+         foqhgKzvIzYOOd5VB/Lu9pzc9xcPh9jz+SEbbThX4A9OE4O2/FTVAykpnoYZhRLN4PL7
+         6Vtaj+mByb+LrZaW8GlfRq4Tk4Sh8uuD9GazitmDDHwjBZmR6PMeDF2vt0/eIzfffoqI
+         2Lmw==
+X-Gm-Message-State: APjAAAURosK3jOxliWyEPOggWqsQlO5JJfQJAAaE1wOsutVepGc+mHjI
+        xUYRrwta24891NH4j0OEtJw=
+X-Google-Smtp-Source: APXvYqzbsvMQU5DOqtWYhWwiRRDVjUBLJ+Sg+S4Jj44wxtGf/e7u0LAK4IM7FAp/86VN7Ht4TyJVfg==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr7225972wrj.16.1554893917130;
+        Wed, 10 Apr 2019 03:58:37 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a187sm2129646wma.32.2019.04.10.03.58.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 03:58:36 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 12:58:33 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
+ BARRIER EFFECTS" section
+Message-ID: <20190410105833.GA116161@gmail.com>
+References: <20190405135936.7266-1-will.deacon@arm.com>
+ <20190405135936.7266-2-will.deacon@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAMH-ys-S7miJFCAY9bxrDGTPPT7e7c430-_4+edH8scV_qTwA@mail.gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405135936.7266-2-will.deacon@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Gary,
 
-On 4/10/19 9:35 AM, Gary Bisson wrote:
-> Hi,
-> 
-> On Tue, Apr 9, 2019 at 2:07 AM Robert Foss <robert.foss@collabora.com> wrote:
->>
->> Hey Fabio,
->>
->> On 4/8/19 10:37 PM, Fabio Estevam wrote:
->>> Hi Robert,
->>>
->>> [Adding Gary]
-> 
-> Adding Troy, I'm no longer a full-time employee at Boundary Devices.
-> 
->>> On Mon, Apr 8, 2019 at 2:54 PM Robert Foss <robert.foss@collabora.com> wrote:
->>>>
->>>> If a LVDS device is not connected, having the LVDS channels
->>>> enabled will prevent imx-ldb from probing correctly even
->>>> if other CRTCs are connected.
->>>>
->>>> Signed-off-by: Robert Foss <robert.foss@collabora.com>
->>>> ---
->>>>    arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> index 39200e5dc896..5b413cf4c250 100644
->>>> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
->>>> @@ -703,7 +703,7 @@
->>>>           status = "okay";
->>>>
->>>>           lvds-channel@0 {
->>>> -               status = "okay";
->>>> +               status = "disabled";
->>>>
->>>>                   port@4 {
->>>>                           reg = <4>;
->>>> @@ -715,7 +715,7 @@
->>>>           };
->>>>
->>>>           lvds-channel@1 {
->>>> -               status = "okay";
->>>> +               status = "disabled";
->>>
->>> I am not sure I understood what you are trying to fix.
->>
->> If CONFIG_DRM_IMX_LDB is enabled, LVDS DT channels are enabled
->> and no LVDS-panels are connected the imx-ldb driver will
->> fail to bind.
->>
->> This is a problem, since it will prevent other actually connected
->> display output from being used, even if they bind properly.
->>
->>>
->>> Could you please share some logs when imx-ldb fails to probe correctly?
->>
->>
->> [    2.119563] component_bind_all() trying to bind: ldb
->> [    2.124600] imx-drm display-subsystem: binding ldb (ops imx_ldb_ops)
->> [    2.146169] drm_of_find_panel_or_bridge() np->name=lvds-channel  np->type=<NULL>
->> [    2.153709] drm_of_find_panel_or_bridge() no panel found for remote
->> [    2.160081] drm_of_find_panel_or_bridge() bridge needed
->> [    2.162043] drm_of_find_panel_or_bridge() bridge not found
->> [    2.165331] drm_of_find_panel_or_bridge() failed
->> [    2.170023] imx-drm display-subsystem: failed to bind ldb (ops imx_ldb_ops): -517
->>
->> This at the same time as HDMI binds properly:
->>
->> [    4.458954] dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.30a with
->> HDCP (DWC HDMI 3D TX PHY)
->> [    4.469633] imx-drm display-subsystem: bound 120000.hdmi (ops dw_hdmi_imx_ops)
->>
->> Which in the end causes the IMX driver to not initialize properly
->> and ignore the HDMI connection that bound properly.
->> This in turn prevents us from having any graphical output while there
->> is no LVDS panel connected.
-> 
-> Does this happen if the LVDS is disabled in cmdline? (adding "video=LVDS-1:d")
+Mostly minor grammer fixes:
 
-I hadn't tried this before, but is seems yo yield the same results
+* Will Deacon <will.deacon@arm.com> wrote:
 
-# cat /proc/cmdline
-video=LVDS-1:d enforcing=0 ip=dhcp rw rootwait root=/dev/mmcblk1p1 
-log_buf_len=16M cma=512M vmalloc=512M
+> + (*) readX(), writeX():
+>  
+> +     The readX() and writeX() MMIO accessors take a pointer to the peripheral
+> +     being accessed as an __iomem * parameter. For pointers mapped with the
+> +     default I/O attributes (e.g. those returned by ioremap()), then the
+> +     ordering guarantees are as follows:
 
-# dmesg
-imx-drm display-subsystem: failed to bind disp0 (ops imx_pd_ops): -517
-imx-drm display-subsystem: master bind failed: -517
+s/then the
+ /the
 
-This dmesg log is failing to bind disp0 at another point than what I
-was seeing before, yet the result is the same. The connected HDMI
-output is not brought online correctly.
+> +     1. All readX() and writeX() accesses to the same peripheral are ordered
+> +        with respect to each other. For example, this ensures that MMIO register
+> +	writes by the CPU to a particular device will arrive in program order.
 
-> 
-> Note that a bootscript was written for mainline kernel that takes care
-> of display configuration [1].
-> 
-> Currently this bootscript disables all the displays that aren't used.
-> It was tested with HDMI, where LVDS and LCD display are disabled, and
-> it *used to* work.
-> 
-> If this doesn't work then there's most likely a regression somewhere.
-> 
-> Regards,
-> Gary
-> 
-> [1] https://github.com/boundarydevices/u-boot-imx6/blob/boundary-v2018.07/board/boundary/bootscripts/bootscript-mainline.txt#L90
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Vertical alignment whitespace damage: some indentations are done via 
+spaces, one via tabs. Please standardize to tabs.
+
+I'd also suggest:
+
+s/For example, this ensures
+ /For example this ensures
+
+
+for the rest of the text too. The comma after the 'For example,' 
+introductory phrase is grammatically correct but stylistically confusing, 
+because in reality there's a *second* introductory phrase via "this 
+ensures".
+
+>  
+> +     2. A writeX() by the CPU to the peripheral will first wait for the
+> +        completion of all prior CPU writes to memory. For example, this ensures
+> +        that writes by the CPU to an outbound DMA buffer allocated by
+> +        dma_alloc_coherent() will be visible to a DMA engine when the CPU writes
+> +        to its MMIO control register to trigger the transfer.
+>  
+> +     3. A readX() by the CPU from the peripheral will complete before any
+> +	subsequent CPU reads from memory can begin. For example, this ensures
+> +	that reads by the CPU from an incoming DMA buffer allocated by
+> +	dma_alloc_coherent() will not see stale data after reading from the DMA
+> +	engine's MMIO status register to establish that the DMA transfer has
+> +	completed.
+>  
+> +     4. A readX() by the CPU from the peripheral will complete before any
+> +	subsequent delay() loop can begin execution. For example, this ensures
+> +	that two MMIO register writes by the CPU to a peripheral will arrive at
+> +	least 1us apart if the first write is immediately read back with readX()
+> +	and udelay(1) is called prior to the second writeX().
+
+This might be more readable via some short code sequence instead?
+
+>  
+> +     __iomem pointers obtained with non-default attributes (e.g. those returned
+> +     by ioremap_wc()) are unlikely to provide many of these guarantees.
+
+This part is a bit confusing I think, because it's so cryptic. "Unlikely" 
+as in probabilistic? ;-) So I think we should at least give some scope of 
+the exceptions and expected trouble, or at least direct people to those 
+APIs to see what the semantics are?
+
+>  
+> + (*) readX_relaxed(), writeX_relaxed():
+>  
+> +     These are similar to readX() and writeX(), but provide weaker memory
+> +     ordering guarantees. Specifically, they do not guarantee ordering with
+> +     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
+> +     but they are still guaranteed to be ordered with respect to other accesses
+> +     to the same peripheral when operating on __iomem pointers mapped with the
+> +     default I/O attributes.
+>  
+> + (*) readsX(), writesX():
+>  
+> +     The readsX() and writesX() MMIO accessors are designed for accessing
+> +     register-based, memory-mapped FIFOs residing on peripherals that are not
+> +     capable of performing DMA. Consequently, they provide only the ordering
+> +     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
+
+So is there any difference between 'X_relaxed' and 'sX' variants? What is 
+the 's' about?
+
+Thanks,
+
+	Ingo
