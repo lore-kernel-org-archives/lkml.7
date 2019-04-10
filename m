@@ -2,222 +2,170 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9872C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D8F20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752272082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDJVFp (ORCPT
+        id S1726697AbfDJVOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:05:45 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:49426 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfDJVFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:05:35 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hEKPV-0000k1-TT; Wed, 10 Apr 2019 15:05:34 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hEKPV-0001C1-GW; Wed, 10 Apr 2019 15:05:33 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 10 Apr 2019 15:05:32 -0600
-Message-Id: <20190410210532.4538-3-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190410210532.4538-1-logang@deltatee.com>
-References: <20190410210532.4538-1-logang@deltatee.com>
+        Wed, 10 Apr 2019 17:14:32 -0400
+Received: from gateway30.websitewelcome.com ([192.185.148.2]:47292 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbfDJVOb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 17:14:31 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id F3F48C1238
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:51:20 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id EKBkhpNZU90onEKBkh1glf; Wed, 10 Apr 2019 15:51:20 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.139.70] (port=41442 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hEKBk-001wjN-KM; Wed, 10 Apr 2019 15:51:20 -0500
+Subject: Re: [PATCH] watchdog: machzwd: Mark expected switch fall-through
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190410184905.GA24283@embeddedor>
+ <20190410203556.GA18676@roeck-us.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <707a1c55-c185-1227-0a65-136f3bf27617@embeddedor.com>
+Date:   Wed, 10 Apr 2019 15:51:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190410203556.GA18676@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 2/2] PCI: Clean up resource_alignment parameter to not require static buffer
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.139.70
+X-Source-L: No
+X-Exim-ID: 1hEKBk-001wjN-KM
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:41442
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up the 'resource_alignment' parameter code to use kstrdup
-in the initcall routine instead of a static buffer that wastes memory
-regardless of whether the feature is used. This allows us to drop
-'COMMAND_LINE_SIZE' bytes (typically 256-4096 depending on architecture)
-of static data.
 
-This is similar to what has been done for the 'disable_acs_redir'
-parameter.
 
-This conversion also allows us to use RCU instead of the spinlock to
-deal with the concurrency issue which further reduces memory usage.
+On 4/10/19 3:35 PM, Guenter Roeck wrote:
+> On Wed, Apr 10, 2019 at 01:49:05PM -0500, Gustavo A. R. Silva wrote:
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warnings:
+>>
+>> drivers/watchdog/machzwd.c: In function ‘zf_set_timer’:
+>> ./arch/x86/include/asm/io.h:355:14: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>  #define outw outw
+>> drivers/watchdog/machzwd.c:80:53: note: in expansion of macro ‘outw’
+>>  #define zf_writew(port, data)  { outb(port, INDEX); outw(data, DATA_W); }
+>>                                                      ^~~~
+>> drivers/watchdog/machzwd.c:179:3: note: in expansion of macro ‘zf_writew’
+>>    zf_writew(COUNTER_1, new);
+>>    ^~~~~~~~~
+>> drivers/watchdog/machzwd.c:180:2: note: here
+>>   case WD2:
+>>   ^~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
 
-As part of the clean up we also squash pci_get_resource_alignment_param()
-into resource_alignment_show() and pci_set_resource_alignment_param()
-into resource_alignment_store() seeing these functions only had one
-caller and the show/store wrappers were needlessly thin.
+Thank you, Guenter.
+--
+Gustavo
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 89 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 53 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 766f5779db92..13767c2409ae 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5896,9 +5896,7 @@ resource_size_t __weak pcibios_default_alignment(void)
- 	return 0;
- }
- 
--#define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
--static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
--static DEFINE_SPINLOCK(resource_alignment_lock);
-+static const char __rcu *resource_alignment_param;
- 
- /**
-  * pci_specified_resource_alignment - get resource alignment specified by user.
-@@ -5916,9 +5914,9 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
- 	const char *p;
- 	int ret;
- 
--	spin_lock(&resource_alignment_lock);
--	p = resource_alignment_param;
--	if (!*p && !align)
-+	rcu_read_lock();
-+	p = rcu_dereference(resource_alignment_param);
-+	if (!p)
- 		goto out;
- 	if (pci_has_flag(PCI_PROBE_ONLY)) {
- 		align = 0;
-@@ -5956,7 +5954,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
- 		p++;
- 	}
- out:
--	spin_unlock(&resource_alignment_lock);
-+	rcu_read_unlock();
- 	return align;
- }
- 
-@@ -6082,35 +6080,48 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
- 	}
- }
- 
--static ssize_t pci_set_resource_alignment_param(const char *buf, size_t count)
-+static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
- {
--	if (count > RESOURCE_ALIGNMENT_PARAM_SIZE - 1)
--		count = RESOURCE_ALIGNMENT_PARAM_SIZE - 1;
--	spin_lock(&resource_alignment_lock);
--	strncpy(resource_alignment_param, buf, count);
--	resource_alignment_param[count] = '\0';
--	spin_unlock(&resource_alignment_lock);
--	return count;
--}
-+	const char *p;
-+	size_t count = 0;
- 
--static ssize_t pci_get_resource_alignment_param(char *buf, size_t size)
--{
--	size_t count;
--	spin_lock(&resource_alignment_lock);
--	count = snprintf(buf, size, "%s", resource_alignment_param);
--	spin_unlock(&resource_alignment_lock);
--	return count;
--}
-+	rcu_read_lock();
-+	p = rcu_dereference(resource_alignment_param);
-+	if (!p)
-+		goto out;
- 
--static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
--{
--	return pci_get_resource_alignment_param(buf, PAGE_SIZE);
-+	count = snprintf(buf, PAGE_SIZE, "%s", p);
-+
-+	/*
-+	 * When set by the command line there will not be a
-+	 * line feed, which is ugly. So conditionally add it here.
-+	 */
-+	if (buf[count - 2] != '\n' && count < PAGE_SIZE - 1) {
-+		buf[count - 1] = '\n';
-+		buf[count++] = 0;
-+	}
-+
-+out:
-+	rcu_read_unlock();
-+
-+	return count;
- }
- 
- static ssize_t resource_alignment_store(struct bus_type *bus,
- 					const char *buf, size_t count)
- {
--	return pci_set_resource_alignment_param(buf, count);
-+	const char *p, *old;
-+
-+	p = kstrndup(buf, count, GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	old = rcu_dereference_protected(resource_alignment_param, 1);
-+	rcu_assign_pointer(resource_alignment_param, p);
-+	synchronize_rcu();
-+	kfree(old);
-+
-+	return count;
- }
- 
- static BUS_ATTR_RW(resource_alignment);
-@@ -6238,8 +6249,8 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "cbmemsize=", 10)) {
- 				pci_cardbus_mem_size = memparse(str + 10, &str);
- 			} else if (!strncmp(str, "resource_alignment=", 19)) {
--				pci_set_resource_alignment_param(str + 19,
--							strlen(str + 19));
-+				RCU_INIT_POINTER(resource_alignment_param,
-+						 str + 19);
- 			} else if (!strncmp(str, "ecrc=", 5)) {
- 				pcie_ecrc_get_policy(str + 5);
- 			} else if (!strncmp(str, "hpiosize=", 9)) {
-@@ -6275,15 +6286,21 @@ static int __init pci_setup(char *str)
- early_param("pci", pci_setup);
- 
- /*
-- * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
-- * to data in the __initdata section which will be freed after the init
-- * sequence is complete. We can't allocate memory in pci_setup() because some
-- * architectures do not have any memory allocation service available during
-- * an early_param() call. So we allocate memory and copy the variable here
-- * before the init section is freed.
-+ * 'resource_alignment_param' and 'disable_acs_redir_param' are initialized
-+ * in pci_setup(), above, to point to data in the __initdata section which
-+ * will be freed after the init sequence is complete. We can't allocate memory
-+ * in pci_setup() because some architectures do not have any memory allocation
-+ * service available during an early_param() call. So we allocate memory and
-+ * copy the variable here before the init section is freed.
-  */
- static int __init pci_realloc_setup_params(void)
- {
-+	const char *p;
-+
-+	p = rcu_dereference_protected(resource_alignment_param, 1);
-+	p = kstrdup(p, GFP_KERNEL);
-+	rcu_assign_pointer(resource_alignment_param, p);
-+
- 	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
- 
- 	return 0;
--- 
-2.20.1
-
+>> ---
+>>  drivers/watchdog/machzwd.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
+>> index 88d823d87a4b..108928dbc754 100644
+>> --- a/drivers/watchdog/machzwd.c
+>> +++ b/drivers/watchdog/machzwd.c
+>> @@ -177,6 +177,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
+>>  	switch (n) {
+>>  	case WD1:
+>>  		zf_writew(COUNTER_1, new);
+>> +		/* fall through */
+>>  	case WD2:
+>>  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
+>>  	default:
+>> -- 
+>> 2.21.0
+>>
