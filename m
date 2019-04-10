@@ -2,116 +2,123 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF75C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B34C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB57217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F20217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTipYG6i"
+	dkim=pass (1024-bit key) header.d=brtchip.onmicrosoft.com header.i=@brtchip.onmicrosoft.com header.b="EonrR1Tw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfDJIxK (ORCPT
+        id S1729787AbfDJI4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:53:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42860 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728821AbfDJIxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:53:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w25so1042674pfi.9;
-        Wed, 10 Apr 2019 01:53:09 -0700 (PDT)
+        Wed, 10 Apr 2019 04:56:19 -0400
+Received: from mail-eopbgr1320138.outbound.protection.outlook.com ([40.107.132.138]:7344
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727057AbfDJI4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 04:56:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MAwA8hdcGfucrSp9x2LdZHnMV91ksCJGxM5uXbbJCtY=;
-        b=JTipYG6iK0X5X1nmc9EvGfJ0YCn8chNQPHnQm7tekpIo64uFjqjB9TTWSmYR3p2dx1
-         zKw4VN9hmz6TSOBo4ouIrBarjF1yuREgL8i5e+ecToq+Br2zrGEL+si/n/6+HIdM8J1a
-         b+W3gWbrdJcrjOPvvVP18247T9LTYWT1eIiNEAXgoRbyEXYv069DoOFuFW4AtFvmEqZE
-         47AmQV4CifH0Hty+LHZ9/kdFuU4qwIhoT2LGJK89islYyIofFGmPjIE8Y8C3D2iF7HTC
-         6gfb/eBBSPmayR00oCqW7xQ3X+4q2HwSlGPEeXocBxdlSBgaLPQBAlMOIoPIpLy99Xyu
-         VSmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MAwA8hdcGfucrSp9x2LdZHnMV91ksCJGxM5uXbbJCtY=;
-        b=OwdUBIaCDat2YfS6FpBCItKOyycfvHUBBiv+R5san8BUvxnerMhgbj0lmUbE3KhBFm
-         TJg/sjYa503pqkCnfedieSM9bBSJbpjqlNw/qGDUJTV5+jCfpVc0Kyega/pBQa+ZeczO
-         e+g09Smi13fZf1KsYnrlO/mUXXP/ShdRI025vL0xLHGEmAOBbw156sG6xeAH1wMsI1mE
-         ZGI3b8Qqz5rlbxnE2DMCxC7aFFk6TRhni04php9y6l7KpbuUWfk/8SCPANy4N9A5I6zo
-         27n3rWWaGX1E1u8vwx1PpnocmVS1O8YtElu5obP2OAPcg6JTH2C8IB6dlC9CYoFK/mer
-         5AiQ==
-X-Gm-Message-State: APjAAAXNSCzQy3BgdfbSkhWf1BY01C/TU4p8NIYFTcUpT6zjm2aL3wrr
-        zU8N41rPLgU3rnT2pjMqj9s=
-X-Google-Smtp-Source: APXvYqxhkSaBHCeSJPrwvXou8ZFtLhANs4PeNDP819FhRRYIEPqUShqy+ScgDv8TvtNjZsL9uSUc/w==
-X-Received: by 2002:a63:2a8f:: with SMTP id q137mr38826358pgq.31.1554886389327;
-        Wed, 10 Apr 2019 01:53:09 -0700 (PDT)
-Received: from localhost ([175.223.11.210])
-        by smtp.gmail.com with ESMTPSA id l192sm22246219pge.42.2019.04.10.01.53.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 01:53:08 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:53:05 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 4/4] lib/hexdump.c: Allow multiple groups to be separated
- by lines '|'
-Message-ID: <20190410085305.GA4937@jagdpanzerIV>
-References: <20190410031720.11067-1-alastair@au1.ibm.com>
- <20190410031720.11067-5-alastair@au1.ibm.com>
+ d=brtchip.onmicrosoft.com; s=selector1-brtchip-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PN4OMzVGx1pIMq1o1OAUXIRt1R8rx8h2Q0rnmMLNosk=;
+ b=EonrR1TwM6l2/Fzge8VpWKoHmVEsS9cLQdPFKGagIUZIggtuBMDURDSnxYBZSswSGuaRm0h4/40Q7lDEmArYEkFf4q90lxtFIxgVecUcIn6Sw9T5JKsKcOG+JItBoirkzYl6ygTwP+FToS3JH3aXyOwz/bm0LC5ISGebmmMyej4=
+Received: from SG2PR03MB4165.apcprd03.prod.outlook.com (20.177.171.75) by
+ SG2PR03MB3340.apcprd03.prod.outlook.com (20.177.12.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.11; Wed, 10 Apr 2019 08:56:12 +0000
+Received: from SG2PR03MB4165.apcprd03.prod.outlook.com
+ ([fe80::2d63:4333:ba1d:dd5c]) by SG2PR03MB4165.apcprd03.prod.outlook.com
+ ([fe80::2d63:4333:ba1d:dd5c%2]) with mapi id 15.20.1792.007; Wed, 10 Apr 2019
+ 08:56:12 +0000
+From:   "Ramachandran Srinivasan (BRT-SG)" <srinivasan.r@brtchip.com>
+To:     Johan Hovold <johan@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Deferred URB submission for timesharing the DMA channels
+ of DWC_OTG host controller in Raspberry PI
+Thread-Topic: [PATCH] Deferred URB submission for timesharing the DMA channels
+ of DWC_OTG host controller in Raspberry PI
+Thread-Index: AQHU7gHBOqV8wADqX0uU8sxQzGaCe6YyPX+AgALc9wA=
+Date:   Wed, 10 Apr 2019 08:56:12 +0000
+Message-ID: <20190410085608.GA13848@brtchip.com>
+References: <1554724399-2972-1-git-send-email-srinivasan.r@brtchip.com>
+ <20190408131245.GC24108@localhost>
+In-Reply-To: <20190408131245.GC24108@localhost>
+Accept-Language: en-SG, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: KL1P15301CA0024.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:802:2::34) To SG2PR03MB4165.apcprd03.prod.outlook.com
+ (2603:1096:4:3d::11)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=srinivasan.r@brtchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [118.189.144.235]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 481cdb4f-d0a1-4f24-ca51-08d6bd926151
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:SG2PR03MB3340;
+x-ms-traffictypediagnostic: SG2PR03MB3340:
+x-microsoft-antispam-prvs: <SG2PR03MB33407493AA35203A018571E99B2E0@SG2PR03MB3340.apcprd03.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(376002)(136003)(396003)(366004)(346002)(199004)(189003)(8936002)(256004)(81156014)(6486002)(486006)(508600001)(14444005)(4326008)(476003)(6246003)(33656002)(68736007)(6512007)(25786009)(11346002)(2616005)(8676002)(10126004)(53936002)(36756003)(186003)(6306002)(6436002)(446003)(53376002)(229853002)(7736002)(305945005)(81166006)(105586002)(6916009)(71200400001)(71190400001)(4744005)(102836004)(6506007)(97736004)(106356001)(386003)(66066001)(86362001)(316002)(99286004)(5660300002)(2906002)(26005)(14454004)(54906003)(1076003)(6116002)(3846002)(76176011)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:SG2PR03MB3340;H:SG2PR03MB4165.apcprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: brtchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: b0c2VSMycCcsLPuRd+C9hIuWvPGsixuj2YNBiO9pTU7tPahxxxh6AwJwKL/p5zypJ7YR9boBNrOAxC6VCSxxkP6uE/+n6ABVZZoIji/8n6Q5bLNjiqlOhkDZLUYSUQyO/Vcu2dRgan8GV4WCS3yyDgtoMQokiD5BazmjYDvWgVdpHA6nDLunjdz+1gVPrWl/hUDme7g3WqgYzTw3mDy6+P3/s3VXzBLuESPYdrOiTj4PKyIb6ugYeUs1EvQI8yGOhlq6oZGLXfebZhrRxBRvw60mad67sM0JzdHppdHpsxQf408knjiGjj/KxLMAS53AYSLpO/FtW10HqkJ6+Cs+gwhHInTLSxSWJRkHxnzuVs+CdrKMSZzV1K2EIomg8XY1ytCNEOH6Hzq6HZtsg4Jkg4NlFMW3KGCKs+RwP4yXfuc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <922A6263019E3146A87102D489BC0566@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410031720.11067-5-alastair@au1.ibm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: brtchip.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 481cdb4f-d0a1-4f24-ca51-08d6bd926151
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 08:56:12.5866
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a2bb2098-6a22-417d-b196-55ac329bdd17
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR03MB3340
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/10/19 13:17), Alastair D'Silva wrote:
-> With the wider display format, it can become hard to identify how many
-> bytes into the line you are looking at.
-> 
-> The patch adds new flags to hex_dump_to_buffer() and print_hex_dump() to
-> print vertical lines to separate every N groups of bytes.
-> 
-> eg.
-> buf:00000000: 454d414e 43415053|4e495f45 00584544  NAMESPAC|E_INDEX.
-> buf:00000010: 00000000 00000002|00000000 00000000  ........|........
+Thanks, Johan, I have amend the commit message of my changes as per the
+patching process, and hence the git format-patch has created a new email
+subject "[PATCH v2] usb: serial: defer URB submission for ftdi_sio",
+Also for the whitespace problem I have run the "checkpatch.pl" script
+and ensured I got 0-Error and 0-Warnings. Please help to review the
+changes.
 
-What if the output had |-s in it?  |||||||||
+Thanks, Srini.
 
-	-ss
+The 04/08/2019 15:12, Johan Hovold wrote:
+> On Mon, Apr 08, 2019 at 11:54:00AM +0000, Ramachandran Srinivasan (BRT-SG=
+) wrote:
+>
+> Make sure to always provide a proper commit message.
+>
+> > Signed-off-by: Srinivasan R <srinivasan.r@brtchip.com>
+> > ---
+> >  drivers/usb/serial/ftdi_sio.c | 153 ++++++++++++++++++++++++++++++++++=
++++++++-
+> >  1 file changed, 152 insertions(+), 1 deletion(-)
+>
+> Your patch has been been (whitespace) corrupted and is barely readable.
+> I have no idea you're trying to here.
+>
+> Johan
+
+--
+
+Please note BRT have updated their Privacy Policy.
+
+Please click on the following link to access and review.
+
+BRT Privacy Policy<http://brtchip.com/privacy-policy/>
