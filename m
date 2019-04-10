@@ -2,169 +2,97 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D28C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293ECC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046AC2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA7C2083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="B84SeBoL"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="03zhtP3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfDJGHX (ORCPT
+        id S1727297AbfDJGJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:07:23 -0400
-Received: from mail-eopbgr1300072.outbound.protection.outlook.com ([40.107.130.72]:30160
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725924AbfDJGHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:07:23 -0400
+        Wed, 10 Apr 2019 02:09:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34489 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbfDJGJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:09:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so1394777wrq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2019 23:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ynrFHRlZLrj5J+eHpTcvYxhKBma448ynGvYpIOwKqZk=;
- b=B84SeBoLbbtVkwbBVgf5tZWBOduQogOzy+ZJ8ATNuN5dg1VuAcHQ9zX9r0n3LuX2ic3CM/qaA/aTwEQWH7iGsF9Igp2DrRlTLAjz8Mun3BpCXTugbYGDfwcYpTwDu9uqV/oLZ+B15u7lmVH7mznHkN9Eugw26DgkcsTHHnLZtPU=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB1567.apcprd02.prod.outlook.com (10.167.77.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.19; Wed, 10 Apr 2019 06:06:36 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1771.019; Wed, 10 Apr 2019
- 06:06:36 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     Christopher Lameter <cl@linux.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [External] Re: Basics : Memory Configuration
-Thread-Topic: [External] Re: Basics : Memory Configuration
-Thread-Index: AQHU7qEJC6EuUiGvjEiZ+OVh95dcd6Yz/amAgADo4Wc=
-Date:   Wed, 10 Apr 2019 06:06:36 +0000
-Message-ID: <SG2PR02MB30989B644196598CEDDD5337E82E0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-References: <SG2PR02MB3098925678D8D40B683E10E2E82D0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<0100016a02d5038e-2e436033-7726-4d2a-b29d-d3dbc4c66637-000000@email.amazonses.com>
-In-Reply-To: <0100016a02d5038e-2e436033-7726-4d2a-b29d-d3dbc4c66637-000000@email.amazonses.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc86bda2-c7a8-422d-8c58-08d6bd7ab055
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:SG2PR02MB1567;
-x-ms-traffictypediagnostic: SG2PR02MB1567:
-x-microsoft-antispam-prvs: <SG2PR02MB15676281446B4EBE6DB49FA7E82E0@SG2PR02MB1567.apcprd02.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39840400004)(376002)(136003)(366004)(396003)(189003)(199004)(66066001)(54906003)(25786009)(478600001)(33656002)(6116002)(3846002)(76176011)(2906002)(55016002)(78486014)(6436002)(86362001)(52536014)(7696005)(11346002)(229853002)(14454004)(71200400001)(6916009)(446003)(71190400001)(316002)(186003)(14444005)(4326008)(7736002)(53936002)(105586002)(256004)(81166006)(5660300002)(99286004)(6246003)(476003)(55236004)(6506007)(9686003)(8676002)(53546011)(106356001)(8936002)(66574012)(97736004)(81156014)(68736007)(44832011)(74316002)(305945005)(486006)(26005)(5024004)(102836004)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB1567;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bmlzdzWn2Pk1q+5mTtZD2YfVM4p8MYkS2goKRW2wAiGy3RGQ5ZA+V1EAlAr02T/h9h9tivL/4aZi4r8ZyEjCtBh19n8bwbymr9vwGmayKtsH2Ck1uG6De9jH5PFvDWs1nXlLAoJHGsiQqXVPwzEgR3sjzs46gKhGdkM0xwHnPayqhi/0BfUOOLgwo0PTPYaNU8PuyFx8gKlI9tOdR2dLCskYMBq9mPNcYb7xmpdC+f1hdDJO696BMrmebIWtGf2zzlhjSm50YGZpXtk6Yy/U2WUHP3b+mlH4XWzHRFs8aM3d4KOJx/+Tv/qr0rgl1NZtYLjNxBmZCkrbnYaHq9GzaC34fcrKhex5/Nf/keW2C5fzWYE8DnYoHn74JaVB1B+d33RV/i2YHlGKpyLijCKgPhU3R7NWufaLGyUlTROKy7M=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NA0KH+84Yze/o0gKU4OJJ1enqUC1AklFzqfQAGl58rs=;
+        b=03zhtP3hjGilRQUkBcV1cNKSgX7z2b5GRHf1ymBh/GZlNqm5s2d+DrUV8UKkVC/gXR
+         PaCLH1oZEfRhwXZeeU5YRiGnbI2kZKGoQ4xOERU2HkgDgMVhzc/Mex5eh1cTkXD1hwWn
+         h9GL4PYVxzAxC+TeTiWbBEYHNRKPGQySw+fKF+u9vNnN/CUGFa8PaRfvhv+CmvbBO3Jr
+         vaBWZaMFKUAAkoXBeaaWGH9C/6uXfV5VhnZNqL11WR+SaZ7MC4xd4kD9ReLRxFgt1FOb
+         VmlEywxpHr1XxM7LM6vvCiHwqgwKWaN3JnLU4hCS14Ct/P8hDhepmuKb3mTEi3Q11qVT
+         VEYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NA0KH+84Yze/o0gKU4OJJ1enqUC1AklFzqfQAGl58rs=;
+        b=Yo/IkzcXIoUQawl3S5umH6GsWcBVETN03/ngls0BhfgOxyH9Vo0RP3xnGDRtpqApNF
+         MMl4xQiW3Vcu5uTlYyxVhnLv3BOMPMO+zSMDILarZo0qo7Yfp1M1ph+Ui8VQk5nttsfd
+         afPumRFeyfksc7xjEiqEvmFkN1a0NrXx6/UEySyI2K0zpPsGewA3kYWTNlJikswmx0N7
+         zi+wPi+UZckrdGwBvc4JqiggDaSOgShJIqNrAE2fc1Uv0x/u8mvFO6dvC8/Qfwy+IDYo
+         2JTkA8EBN4yK6xXDY56PxiOfDI8+ImWXhH1Tz+49bLMcBkRLxfc9vAe9TV/6ntdDu5eH
+         V1OA==
+X-Gm-Message-State: APjAAAXcI+d9BtTqwo2QjDUJaHi6wSOnlOnXdtJEkyq6uPdFbkYs9Bok
+        YBNhpVnKumHRiHFFRBA8/k0qQpN1RX7ZGmdHOKH/3w==
+X-Google-Smtp-Source: APXvYqwGsVM+lp4TTutXtH2uxGhqQuhFdsD+/tvxC3JYLlOvD13BeFR7y/2cQJcno8YdIZdoNpSM/QAGK99XEXzYIIg=
+X-Received: by 2002:adf:f110:: with SMTP id r16mr24701189wro.153.1554876555377;
+ Tue, 09 Apr 2019 23:09:15 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc86bda2-c7a8-422d-8c58-08d6bd7ab055
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 06:06:36.0929
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB1567
+References: <20190312220752.128141-2-anup.patel@wdc.com> <mhng-02f905c7-fb28-4997-9769-2cb88c581881@palmer-si-x1c4>
+In-Reply-To: <mhng-02f905c7-fb28-4997-9769-2cb88c581881@palmer-si-x1c4>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 10 Apr 2019 11:39:03 +0530
+Message-ID: <CAAhSdy1UZ3VZAa+Gtf0KQUY9Ebwm7p=qAB+Xv7HDAjfUYpFuAQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] RISC-V: Add separate defconfig for 32bit systems
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 9, 2019 at 10:14 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> On Tue, 12 Mar 2019 15:08:12 PDT (-0700), Anup Patel wrote:
+> > This patch adds rv32_defconfig for 32bit systems. The only
+> > difference between rv32_defconfig and defconfig is that
+> > rv32_defconfig has  CONFIG_ARCH_RV32I=y.
+>
+> Thanks.  I think it makes sense to have this in 5.1 so I'm going to take it
+> into the next RC.
 
-________________________________________
-From: Christopher Lameter <cl@linux.com>
-Sent: 09 April 2019 21:31
-To: Pankaj Suryawanshi
-Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
-Subject: [External] Re: Basics : Memory Configuration
+Thanks, Palmer.
 
+Can you consider "[PATCH v3] RISC-V: Fix Maximum Physical Memory 2GiB
+option for 64bit systems" for 5.1?
 
-On Tue, 9 Apr 2019, Pankaj Suryawanshi wrote:
+Refer, https://patchwork.kernel.org/patch/10886895/
 
+The above patch is also required for 64bit system with more than 128GiB memory
+(i.e. server-class system).
 
-> I am confuse about memory configuration and I have below questions
+We can remove "Maximum Physical Memory 2GiB" option as separate patch.
 
-Hmmm... Yes some of the terminology that you use is a bit confusing.
-
-> 1. if 32-bit os maximum virtual address is 4GB, When i have 4 gb of ram
-> for 32-bit os, What about the virtual memory size ? is it required
-> virtual memory(disk space) or we can directly use physical memory ?
-
-The virtual memory size is the maximum virtual size of a single process.
-Multiple processes can run and each can use different amounts of physical
-memory. So both are actually independent.
-
-The size of the virtual memory space per process is configurable on x86 32
-bit (2G, 3G, 4G). Thus the possible virtual process size may vary
-depending on the hardware architecture and the configuration of the
-kernel.
-
-If i have configures VMSPLIT =3D 2G/2G what does it mean ?
-Virtual memory uses disk space ? let say for 32-bit os i have 4GB ram than =
-what is the use case of virtual memory ?
-
-If i have 32-bit and 2gb/3gb ram than virtual memory is useful  because its=
- less than 4GB ?
-
-> 2. In 32-bit os 12 bits are offset because page size=3D4k i.e 2^12 and
-> 2^20 for page addresses
->    What about 64-bit os, What is offset size ? What is page size ? How it=
- calculated.
-
-12 bits are passed through? Thats what you mean?
-
-The remainder of the bits  are used to lookup the physical frame
-number(PFN) in the page tables.
-
-64 bit is the same. However, the number of bits used for lookups in the
-page tables are much higher.
-
-for 32-bit os page size is 4k, what is the page size for 64-bit os ? page s=
-ize and offset is related to each other ?
-
-if i increase the page size from 4k to 8k, does it change the offset size t=
-hat it 2^12 to 2^13 ?
-
-Why only 48 bits are used in 64-bit os ?
-
-
-> 3. What is PAE? If enabled how to decide size of PAE, what is maximum
-> and minimum size of extended memory.
-
-PAE increases the physical memory size that can be addressed through a
-page table lookup. The number of bits that can be specified in the PFN is
-increased and thus more than 4GB of physical memory can be used by the
-operating system. However, the virtual memory size stays the same and an
-individual process still cannot use more memory.
-
-Let say i have ,enabled PAE for 32-bit os with 6GB ram.Virtual size is same=
- 4GB, 32-bit os cant address more thatn 4gb, Than what is the use of 6GB wi=
-th PAE enabled.
-
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
+Regards,
+Anup
