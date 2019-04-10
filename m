@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2195C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47539C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9332229F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2A9218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfDJLHS (ORCPT
+        id S1731174AbfDJLGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:07:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59019 "EHLO
+        Wed, 10 Apr 2019 07:06:18 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58969 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731189AbfDJLGU (ORCPT
+        with ESMTP id S1729647AbfDJLGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:06:20 -0400
+        Wed, 10 Apr 2019 07:06:14 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB3O-0005C8-63; Wed, 10 Apr 2019 13:06:06 +0200
-Message-Id: <20190410103646.221275815@linutronix.de>
+        id 1hEB3U-0005E1-Ot; Wed, 10 Apr 2019 13:06:12 +0200
+Message-Id: <20190410103646.580401935@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:23 +0200
+Date:   Wed, 10 Apr 2019 12:28:27 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, linux-btrfs@vger.kernel.org
-Subject: [RFC patch 29/41] btrfs: ref-verify: Simplify stack trace retrieval
+        Alexander Potapenko <glider@google.com>
+Subject: [RFC patch 33/41] lockdep: Remove unused trace argument from
+ print_circular_bug()
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,50 +43,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the indirection through struct stack_trace with an invocation of
-the storage array based interface.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Sterba <dsterba@suse.com>
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-btrfs@vger.kernel.org
 ---
- fs/btrfs/ref-verify.c |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ kernel/locking/lockdep.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -205,28 +205,17 @@ static struct root_entry *lookup_root_en
- #ifdef CONFIG_STACKTRACE
- static void __save_stack_trace(struct ref_action *ra)
- {
--	struct stack_trace stack_trace;
--
--	stack_trace.max_entries = MAX_TRACE;
--	stack_trace.nr_entries = 0;
--	stack_trace.entries = ra->trace;
--	stack_trace.skip = 2;
--	save_stack_trace(&stack_trace);
--	ra->trace_len = stack_trace.nr_entries;
-+	ra->trace_len = stack_trace_save(ra->trace, MAX_TRACE, 2);
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1522,10 +1522,9 @@ static inline int class_equal(struct loc
  }
  
- static void __print_stack_trace(struct btrfs_fs_info *fs_info,
- 				struct ref_action *ra)
+ static noinline int print_circular_bug(struct lock_list *this,
+-				struct lock_list *target,
+-				struct held_lock *check_src,
+-				struct held_lock *check_tgt,
+-				struct stack_trace *trace)
++				       struct lock_list *target,
++				       struct held_lock *check_src,
++				       struct held_lock *check_tgt)
  {
--	struct stack_trace trace;
--
- 	if (ra->trace_len == 0) {
- 		btrfs_err(fs_info, "  ref-verify: no stacktrace");
- 		return;
+ 	struct task_struct *curr = current;
+ 	struct lock_list *parent;
+@@ -2206,7 +2205,7 @@ check_prev_add(struct task_struct *curr,
+ 			 */
+ 			save(trace);
+ 		}
+-		return print_circular_bug(&this, target_entry, next, prev, trace);
++		return print_circular_bug(&this, target_entry, next, prev);
  	}
--	trace.nr_entries = ra->trace_len;
--	trace.entries = ra->trace;
--	print_stack_trace(&trace, 2);
-+	stack_trace_print(ra->trace, ra->trace_len, 2);
- }
- #else
- static void inline __save_stack_trace(struct ref_action *ra)
+ 	else if (unlikely(ret < 0))
+ 		return print_bfs_bug(ret);
 
 
