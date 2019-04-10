@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB1D21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7536D20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554924190;
-	bh=ImIrz8uOcrbyiT2MQ9I3Ny66PJUZOTDskAlnJVtUMro=;
+	s=default; t=1554924195;
+	bh=Izt/5LqM2wzPDvqkGCJHu0S4ZZhIFDLEp9Bp5Fwmx+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scNbHx+WitwKp0T5vPvXW2eyeQ0AznloNf/IWKMiiv4U3KvAhVO+yIQRZXCuC84Tw
-	 o9VlmLUH3KFDzhZmkpdYUr0qRm9p4RTiqu9W9UnpLeNi6Z9aTXQEDT4sXZfNICoZU5
-	 fElnYcq2V8atZc/O2jDEH3sG3Dg32dpMftq1P1Qg=
+	b=q0p3NEAmyJ/JDssM2/9mZCYsSbLvWILDbCQ4gSxW/RZLlHUWbg19f1uk1oeZYWc78
+	 nansTwo/QVG7ZcprpvjG+kKaG2S+5cPmZhy8VrGY9Tt3e0rBaAYs1uhZrfw1NVQMm5
+	 TzVACnnOAKvW49YFShPHFUabG8LBnlU8KB0VS/vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfDJTXJ (ORCPT
+        id S1726777AbfDJTXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:23:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44000 "EHLO
+        Wed, 10 Apr 2019 15:23:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44028 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfDJTXH (ORCPT
+        with ESMTP id S1726256AbfDJTXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 15:23:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,18 +33,18 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YulanG3i2WrJpx0xcGHlq1inbqZIAFZQdFGyn1cb8Dg=; b=Y5aV2L6s0WR/3J0tNglnGt96k7
-        WIu3ypdk2UW6ATlRH+27LSYVyflmmXEkhycbTQ0FuyGNhG7x79MU499hjHyGBZ5OEosS3ERQnl0ub
-        4DRp4iO6LoNNEGrHJOez+E+CBVfXSa5mc3XgC96BCAMox/SXXqTtrNf8/S9fhQL2gD4QXpRIwaldK
-        iFVDzwrEUBgWri6CKFd1rNjhcv+2WN5ieoghjmoNUra/Vrwfp3dCoSHag+KoB/MlKH+xOCVsZrT/L
-        BarQCHii8F1eyZs/yHnR+V7VVragEFne0n8u8sox7Nw4HH+RShZXL42N7o6SiznUspFwqpqizf17m
-        UhO8SjuA==;
+        bh=HBtp3BEM97J+VvxjcyTQ0Rh8cs8lWpfrxcjNLnrN9tA=; b=hn0QhnV4q3qU2hs3/8L/YvYfIp
+        BQqgmX1TrfZTcZ5HkclrR1Z3iPK7C2ebVb1We4iUVQ3lamLfY1QFOs2eCV3n22NmUKhtfIKng3c2Z
+        YnLHX+85KnjeW2f6RvAv+u5vRBrvnpY5I1vQY3iIcWqw8/mrRf7Bgu/U8lUEDCGcJKjE3anEy6ctB
+        fcl9MChhUsUcU+GTxzapWQGmHKOkhGtC0S3sYOMRWkUx4gQhD3sKKZJ7Ozp2Gij0x9m3yRzzJgZbd
+        GEWZIbEpRFc04iip1TXjGeEZIDJrl9cQN2LQnoXpUBETdp48nAPGCUKfFN9irlxLEpqy7cxMi7AUZ
+        CwfY6aMw==;
 Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEIoM-0003R0-JI; Wed, 10 Apr 2019 19:23:06 +0000
+        id 1hEIoM-0003R3-Jz; Wed, 10 Apr 2019 19:23:06 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hEIoI-0000yc-PK; Wed, 10 Apr 2019 16:23:02 -0300
+        id 1hEIoJ-0000zG-20; Wed, 10 Apr 2019 16:23:03 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -53,9 +52,9 @@ Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Subject: [PATCH v2 03/21] docs: hwmon: menf21bmc: convert to ReST format
-Date:   Wed, 10 Apr 2019 16:22:40 -0300
-Message-Id: <e538f79075cbaaab78d5b398b659fcb4eacb6403.1554923967.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 13/21] docs: hwmon: ads1015: convert to ReST format
+Date:   Wed, 10 Apr 2019 16:22:50 -0300
+Message-Id: <a4c22d2c42ae9efa2ec456fcce01b56ab915b84c.1554923967.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1554923967.git.mchehab+samsung@kernel.org>
 References: <cover.1554923967.git.mchehab+samsung@kernel.org>
@@ -66,43 +65,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert menf21bmc to ReST format, in order to allow it to
+Convert ads1015 to ReST format, in order to allow it to
 be parsed by Sphinx.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/hwmon/menf21bmc | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/hwmon/ads1015 | 72 ++++++++++++++++++++++---------------
+ 1 file changed, 43 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/hwmon/menf21bmc b/Documentation/hwmon/menf21bmc
-index 2a273a065c5e..1f0c6b2235ab 100644
---- a/Documentation/hwmon/menf21bmc
-+++ b/Documentation/hwmon/menf21bmc
-@@ -2,8 +2,11 @@ Kernel driver menf21bmc_hwmon
- =============================
+diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads1015
+index 02d2a459385f..e0951c4e57bb 100644
+--- a/Documentation/hwmon/ads1015
++++ b/Documentation/hwmon/ads1015
+@@ -2,17 +2,25 @@ Kernel driver ads1015
+ =====================
  
  Supported chips:
 +
- 	* MEN 14F021P00
+   * Texas Instruments ADS1015
 +
- 	  Prefix: 'menf21bmc_hwmon'
+     Prefix: 'ads1015'
+-    Datasheet: Publicly available at the Texas Instruments website :
+-               http://focus.ti.com/lit/ds/symlink/ads1015.pdf
 +
- 	  Adresses scanned: -
++    Datasheet: Publicly available at the Texas Instruments website:
++
++	       http://focus.ti.com/lit/ds/symlink/ads1015.pdf
++
+   * Texas Instruments ADS1115
++
+     Prefix: 'ads1115'
+-    Datasheet: Publicly available at the Texas Instruments website :
+-               http://focus.ti.com/lit/ds/symlink/ads1115.pdf
++
++    Datasheet: Publicly available at the Texas Instruments website:
++
++	       http://focus.ti.com/lit/ds/symlink/ads1115.pdf
  
- Author: Andreas Werner <andreas.werner@men.de>
-@@ -34,6 +37,7 @@ Sysfs entries
- The following attributes are supported. All attributes are read only
- The Limits are read once by the driver.
+ Authors:
+-        Dirk Eibach, Guntermann & Drunck GmbH <eibach@gdsys.de>
++	Dirk Eibach, Guntermann & Drunck GmbH <eibach@gdsys.de>
  
-+=============== ==========================
- in0_input	+3.3V input voltage
- in1_input	+5.0V input voltage
- in2_input	+12.0V input voltage
-@@ -48,3 +52,4 @@ in1_label	"MON_5V"
- in2_label	"MON_12V"
- in3_label	"5V_STANDBY"
- in4_label	"VBAT"
-+=============== ==========================
+ Description
+ -----------
+@@ -24,14 +32,15 @@ This device is a 12/16-bit A-D converter with 4 inputs.
+ The inputs can be used single ended or in certain differential combinations.
+ 
+ The inputs can be made available by 8 sysfs input files in0_input - in7_input:
+-in0: Voltage over AIN0 and AIN1.
+-in1: Voltage over AIN0 and AIN3.
+-in2: Voltage over AIN1 and AIN3.
+-in3: Voltage over AIN2 and AIN3.
+-in4: Voltage over AIN0 and GND.
+-in5: Voltage over AIN1 and GND.
+-in6: Voltage over AIN2 and GND.
+-in7: Voltage over AIN3 and GND.
++
++  - in0: Voltage over AIN0 and AIN1.
++  - in1: Voltage over AIN0 and AIN3.
++  - in2: Voltage over AIN1 and AIN3.
++  - in3: Voltage over AIN2 and AIN3.
++  - in4: Voltage over AIN0 and GND.
++  - in5: Voltage over AIN1 and GND.
++  - in6: Voltage over AIN2 and GND.
++  - in7: Voltage over AIN3 and GND.
+ 
+ Which inputs are available can be configured using platform data or devicetree.
+ 
+@@ -42,29 +51,34 @@ Platform Data
+ 
+ In linux/platform_data/ads1015.h platform data is defined, channel_data contains
+ configuration data for the used input combinations:
++
+ - pga is the programmable gain amplifier (values are full scale)
+-  0: +/- 6.144 V
+-  1: +/- 4.096 V
+-  2: +/- 2.048 V
+-  3: +/- 1.024 V
+-  4: +/- 0.512 V
+-  5: +/- 0.256 V
++
++    - 0: +/- 6.144 V
++    - 1: +/- 4.096 V
++    - 2: +/- 2.048 V
++    - 3: +/- 1.024 V
++    - 4: +/- 0.512 V
++    - 5: +/- 0.256 V
++
+ - data_rate in samples per second
+-  0: 128
+-  1: 250
+-  2: 490
+-  3: 920
+-  4: 1600
+-  5: 2400
+-  6: 3300
+ 
+-Example:
+-struct ads1015_platform_data data = {
++    - 0: 128
++    - 1: 250
++    - 2: 490
++    - 3: 920
++    - 4: 1600
++    - 5: 2400
++    - 6: 3300
++
++Example::
++
++  struct ads1015_platform_data data = {
+ 	.channel_data = {
+ 		[2] = { .enabled = true, .pga = 1, .data_rate = 0 },
+ 		[4] = { .enabled = true, .pga = 4, .data_rate = 5 },
+ 	}
+-};
++  };
+ 
+ In this case only in2_input (FS +/- 4.096 V, 128 SPS) and in4_input
+ (FS +/- 0.512 V, 2400 SPS) would be created.
 -- 
 2.20.1
 
