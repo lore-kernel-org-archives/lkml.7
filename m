@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C336C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D9FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D43D20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2572120818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 18:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbfDJSnU (ORCPT
+        id S1731855AbfDJSnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 14:43:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37834 "EHLO mx1.redhat.com"
+        Wed, 10 Apr 2019 14:43:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39890 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731813AbfDJSnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 14:43:15 -0400
+        id S1731797AbfDJSnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 14:43:14 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D888E3078A3B;
-        Wed, 10 Apr 2019 18:43:14 +0000 (UTC)
-Received: from llong.com (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0FA81001E9C;
+        by mx1.redhat.com (Postfix) with ESMTPS id 83E2631587B3;
         Wed, 10 Apr 2019 18:43:13 +0000 (UTC)
+Received: from llong.com (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 428CB1001E7E;
+        Wed, 10 Apr 2019 18:43:12 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -38,216 +38,169 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v3 12/14] locking/rwsem: Guard against making count negative
-Date:   Wed, 10 Apr 2019 14:42:29 -0400
-Message-Id: <20190410184231.6748-13-longman@redhat.com>
+Subject: [PATCH-tip v3 11/14] locking/rwsem: Add more rwsem owner access helpers
+Date:   Wed, 10 Apr 2019 14:42:28 -0400
+Message-Id: <20190410184231.6748-12-longman@redhat.com>
 In-Reply-To: <20190410184231.6748-1-longman@redhat.com>
 References: <20190410184231.6748-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 10 Apr 2019 18:43:15 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 10 Apr 2019 18:43:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The upper bits of the count field is used as reader count. When
-sufficient number of active readers are present, the most significant
-bit will be set and the count becomes negative. If the number of active
-readers keep on piling up, we may eventually overflow the reader counts.
-This is not likely to happen unless the number of bits reserved for
-reader count is reduced because those bits are need for other purpose.
+Before combining owner and count, we are adding two new helpers for
+accessing the owner value in the rwsem.
 
-To prevent this count overflow from happening, the most significant bit
-is now treated as a guard bit (RWSEM_FLAG_READFAIL). Read-lock attempts
-will now fail for both the fast and optimistic spinning paths whenever
-this bit is set. So all those extra readers will be put to sleep in
-the wait queue. Wakeup will not happen until the reader count reaches 0.
+ 1) struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
+ 2) bool is_rwsem_reader_owned(struct rw_semaphore *sem)
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem-xadd.c | 38 +++++++++++++++++++-----
- kernel/locking/rwsem.h      | 59 ++++++++++++++++++++++++++-----------
- 2 files changed, 73 insertions(+), 24 deletions(-)
+ kernel/locking/rwsem-xadd.c | 15 ++++++++++-----
+ kernel/locking/rwsem.c      |  3 +--
+ kernel/locking/rwsem.h      | 32 ++++++++++++++++++++++++++------
+ 3 files changed, 37 insertions(+), 13 deletions(-)
 
 diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index 196729fd7f94..db13ed13c360 100644
+index 09b245e0d6f4..196729fd7f94 100644
 --- a/kernel/locking/rwsem-xadd.c
 +++ b/kernel/locking/rwsem-xadd.c
-@@ -92,7 +92,8 @@ enum rwsem_wake_type {
- /*
-  * We limit the maximum number of readers that can be woken up for a
-  * wake-up call to not penalizing the waking thread for spending too
-- * much time doing it.
-+ * much time doing it as well as the unlikely possiblity of overflowing
-+ * the reader count.
-  */
- #define MAX_READERS_WAKEUP	0x100
+@@ -312,7 +312,7 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
  
-@@ -558,12 +559,35 @@ rwsem_waiter_is_first(struct rw_semaphore *sem, struct rwsem_waiter *waiter)
-  * Wait for the read lock to be granted
-  */
- static inline struct rw_semaphore __sched *
--__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
-+__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state, long count)
+ 	preempt_disable();
+ 	rcu_read_lock();
+-	owner = READ_ONCE(sem->owner);
++	owner = rwsem_get_owner(sem);
+ 	if (owner) {
+ 		ret = is_rwsem_owner_spinnable(owner) &&
+ 		     (is_rwsem_owner_reader(owner) || owner_on_cpu(owner));
+@@ -344,15 +344,21 @@ enum owner_state {
+ 
+ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
  {
--	long count, adjustment = -RWSEM_READER_BIAS;
-+	long adjustment = -RWSEM_READER_BIAS;
- 	struct rwsem_waiter waiter;
- 	DEFINE_WAKE_Q(wake_q);
+-	struct task_struct *owner = READ_ONCE(sem->owner);
++	struct task_struct *owner = rwsem_get_owner(sem);
+ 	long count;
  
-+	if (unlikely(count < 0)) {
-+		/*
-+		 * The sign bit has been set meaning that too many active
-+		 * readers are present. We need to decrement reader count &
-+		 * enter wait queue immediately to avoid overflowing the
-+		 * reader count.
-+		 *
-+		 * As preemption is not disabled, there is a remote
-+		 * possibility that premption can happen in the narrow
-+		 * timing window between incrementing and decrementing
-+		 * the reader count and the task is put to sleep for a
-+		 * considerable amount of time. If sufficient number
-+		 * of such unfortunate sequence of events happen, we
-+		 * may still overflow the reader count. It is extremely
-+		 * unlikey, though. If this is a concern, we should consider
-+		 * disable preemption during this timing window to make
-+		 * sure that such unfortunate event will not happen.
-+		 */
-+		atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
-+		adjustment = 0;
-+		goto queue;
-+	}
+ 	if (!is_rwsem_owner_spinnable(owner))
+ 		return OWNER_NONSPINNABLE;
+ 
+ 	rcu_read_lock();
+-	while (owner && !is_rwsem_owner_reader(owner)
+-		     && (READ_ONCE(sem->owner) == owner)) {
++	while (owner && !is_rwsem_owner_reader(owner)) {
++		struct task_struct *new_owner = rwsem_get_owner(sem);
 +
- 	if (!rwsem_can_spin_on_owner(sem))
- 		goto queue;
++		if (new_owner != owner) {
++			owner = new_owner;
++			break;	/* The owner has changed */
++		}
++
+ 		/*
+ 		 * Ensure we emit the owner->on_cpu, dereference _after_
+ 		 * checking sem->owner still matches owner, if that fails,
+@@ -379,7 +385,6 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+ 	 * spinning except when here is no active locks and the handoff bit
+ 	 * is set. In this case, we have to stop spinning.
+ 	 */
+-	owner = READ_ONCE(sem->owner);
+ 	if (!is_rwsem_owner_spinnable(owner))
+ 		return OWNER_NONSPINNABLE;
+ 	if (owner && !is_rwsem_owner_reader(owner))
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index ccbf18f560ff..38d24676e01c 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -198,8 +198,7 @@ EXPORT_SYMBOL(down_write_killable_nested);
  
-@@ -664,16 +688,16 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
- }
- 
- __visible struct rw_semaphore * __sched
--rwsem_down_read_failed(struct rw_semaphore *sem)
-+rwsem_down_read_failed(struct rw_semaphore *sem, long cnt)
+ void up_read_non_owner(struct rw_semaphore *sem)
  {
--	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
-+	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE, cnt);
+-	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
+-				sem);
++	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+ 	__up_read(sem);
  }
- EXPORT_SYMBOL(rwsem_down_read_failed);
- 
- __visible struct rw_semaphore * __sched
--rwsem_down_read_failed_killable(struct rw_semaphore *sem)
-+rwsem_down_read_failed_killable(struct rw_semaphore *sem, long cnt)
- {
--	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
-+	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE, cnt);
- }
- EXPORT_SYMBOL(rwsem_down_read_failed_killable);
  
 diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index ef7287f273fe..e4d67c0a167b 100644
+index 19ae51ff7b91..ef7287f273fe 100644
 --- a/kernel/locking/rwsem.h
 +++ b/kernel/locking/rwsem.h
-@@ -44,13 +44,28 @@
- #endif
- 
- /*
-- * The definition of the atomic counter in the semaphore:
-+ * On 64-bit architectures, the bit definitions of the count are:
-  *
-- * Bit  0   - writer locked bit
-- * Bit  1   - waiters present bit
-- * Bit  2   - lock handoff bit
-- * Bits 3-7 - reserved
-- * Bits 8-X - 24-bit (32-bit) or 56-bit reader count
-+ * Bit  0    - writer locked bit
-+ * Bit  1    - waiters present bit
-+ * Bit  2    - lock handoff bit
-+ * Bits 3-7  - reserved
-+ * Bits 8-62 - 55-bit reader count
-+ * Bit  63   - read fail bit
-+ *
-+ * On 32-bit architectures, the bit definitions of the count are:
-+ *
-+ * Bit  0    - writer locked bit
-+ * Bit  1    - waiters present bit
-+ * Bit  2    - lock handoff bit
-+ * Bits 3-7  - reserved
-+ * Bits 8-30 - 23-bit reader count
-+ * Bit  31   - read fail bit
-+ *
-+ * It is not likely that the most significant bit (read fail bit) will ever
-+ * be set. This guard bit is still checked anyway in the down_read() fastpath
-+ * just in case we need to use up more of the reader bits for other purpose
-+ * in the future.
-  *
-  * atomic_long_fetch_add() is used to obtain reader lock, whereas
-  * atomic_long_cmpxchg() will be used to obtain writer lock.
-@@ -58,6 +73,7 @@
- #define RWSEM_WRITER_LOCKED	(1UL << 0)
- #define RWSEM_FLAG_WAITERS	(1UL << 1)
- #define RWSEM_FLAG_HANDOFF	(1UL << 2)
-+#define RWSEM_FLAG_READFAIL	(1UL << (BITS_PER_LONG - 1))
- 
- #define RWSEM_READER_SHIFT	8
- #define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
-@@ -65,7 +81,7 @@
- #define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
- #define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
- #define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS|\
--				 RWSEM_FLAG_HANDOFF)
-+				 RWSEM_FLAG_HANDOFF|RWSEM_FLAG_READFAIL)
- 
- #define RWSEM_COUNT_LOCKED(c)	((c) & RWSEM_LOCK_MASK)
- #define RWSEM_COUNT_WLOCKED(c)	((c) & RWSEM_WRITER_MASK)
-@@ -188,10 +204,15 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
+@@ -92,6 +92,11 @@ static inline void rwsem_clear_owner(struct rw_semaphore *sem)
+ 	WRITE_ONCE(sem->owner, NULL);
  }
- #endif
  
--extern struct rw_semaphore *rwsem_down_read_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_read_failed_killable(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed_killable(struct rw_semaphore *sem);
-+extern struct rw_semaphore *
-+rwsem_down_read_failed(struct rw_semaphore *sem, long count);
-+extern struct rw_semaphore *
-+rwsem_down_read_failed_killable(struct rw_semaphore *sem, long count);
-+extern struct rw_semaphore *
-+rwsem_down_write_failed(struct rw_semaphore *sem);
-+extern struct rw_semaphore *
-+rwsem_down_write_failed_killable(struct rw_semaphore *sem);
++static inline struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
++{
++	return READ_ONCE(sem->owner);
++}
 +
- extern struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem, long count);
- extern struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem);
+ /*
+  * The task_struct pointer of the last owning reader will be left in
+  * the owner field.
+@@ -136,6 +141,23 @@ static inline bool is_rwsem_spinnable(struct rw_semaphore *sem)
+ 	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
+ }
  
-@@ -216,9 +237,11 @@ static inline void rwsem_set_nonspinnable(struct rw_semaphore *sem)
++/*
++ * Return true if the rwsem is owned by a reader.
++ */
++static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
++{
++#ifdef CONFIG_DEBUG_RWSEMS
++	/*
++	 * Check the count to see if it is write-locked.
++	 */
++	long count = atomic_long_read(&sem->count);
++
++	if (count & RWSEM_WRITER_MASK)
++		return false;
++#endif
++	return (unsigned long)sem->owner & RWSEM_READER_OWNED;
++}
++
+ /*
+  * Return true if rwsem is owned by an anonymous writer or readers.
   */
- static inline void __down_read(struct rw_semaphore *sem)
+@@ -155,6 +177,7 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
  {
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		rwsem_down_read_failed(sem);
-+	long count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-+						   &sem->count);
+ 	unsigned long val = (unsigned long)current | RWSEM_READER_OWNED
+ 						   | RWSEM_ANONYMOUSLY_OWNED;
 +
-+	if (unlikely(count & RWSEM_READ_FAILED_MASK)) {
-+		rwsem_down_read_failed(sem, count);
- 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+ 	if (READ_ONCE(sem->owner) == (struct task_struct *)val)
+ 		cmpxchg_relaxed((unsigned long *)&sem->owner, val,
+ 				RWSEM_READER_OWNED | RWSEM_ANONYMOUSLY_OWNED);
+@@ -196,8 +219,7 @@ static inline void __down_read(struct rw_semaphore *sem)
+ 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+ 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+ 		rwsem_down_read_failed(sem);
+-		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
+-					RWSEM_READER_OWNED), sem);
++		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
  	} else {
  		rwsem_set_reader_owned(sem);
-@@ -227,9 +250,11 @@ static inline void __down_read(struct rw_semaphore *sem)
- 
- static inline int __down_read_killable(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
--			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
-+	long count = atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
-+						   &sem->count);
-+
-+	if (unlikely(count & RWSEM_READ_FAILED_MASK)) {
-+		if (IS_ERR(rwsem_down_read_failed_killable(sem, count)))
+ 	}
+@@ -209,8 +231,7 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
+ 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+ 		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
  			return -EINTR;
- 		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+-		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
+-					RWSEM_READER_OWNED), sem);
++		DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
  	} else {
+ 		rwsem_set_reader_owned(sem);
+ 	}
+@@ -277,8 +298,7 @@ static inline void __up_read(struct rw_semaphore *sem)
+ {
+ 	long tmp;
+ 
+-	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
+-				sem);
++	DEBUG_RWSEMS_WARN_ON(!is_rwsem_reader_owned(sem), sem);
+ 	rwsem_clear_reader_owned(sem);
+ 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
+ 	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS))
 -- 
 2.18.1
 
