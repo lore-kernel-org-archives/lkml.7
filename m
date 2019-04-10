@@ -2,130 +2,117 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0AFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1C1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D1F2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EA220818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hi1wi0TD"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="SocTHFjf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfDJIlR (ORCPT
+        id S1728797AbfDJImd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:41:17 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50788 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfDJIlQ (ORCPT
+        Wed, 10 Apr 2019 04:42:33 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:47352 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfDJImc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:41:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3A8fCuM039010;
-        Wed, 10 Apr 2019 03:41:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554885672;
-        bh=eRsdKzNK/STv6PAB9KBJaS+OtSDsBtusGNDI77/gcoM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hi1wi0TDU+EAavVWQunv6hWttGqlWXqH6S6D8o+DqUolPaCXglFcu5B/EGsdvFwxj
-         1uQGrcf4u8+RNuM4my7hdWOANpRyZu4g8MHHbiar6qoSB4Zy9bhjIplEPb0Jmovf+i
-         ItIwDTGu4exA9gIKKszXNfkLlkwkGE8t0Zhu6bMg=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3A8fCjm091786
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Apr 2019 03:41:12 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 10
- Apr 2019 03:41:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 10 Apr 2019 03:41:10 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3A8f8G0067436;
-        Wed, 10 Apr 2019 03:41:08 -0500
-Subject: Re: [PATCH v4 0/5] PHY: Add support for SERDES in TI's AM654 platform
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20190405110834.13083-1-kishon@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <3cd1371d-36fd-c907-b532-3a6f46f4eabf@ti.com>
-Date:   Wed, 10 Apr 2019 11:41:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 04:42:32 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id EEF965C071C;
+        Wed, 10 Apr 2019 10:42:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1554885750;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7HuqGfOXUK8gw6tqvJtjPvBZ5uOETqKXHcsSaP+O4AE=;
+        b=SocTHFjfIYX3ZHTDPmTe7yIRuSkL+dmj4gSX7CvcL6DB3zaMvFDKHCtxf00LVs3WS03lGF
+        UEuvwatpIWGpW7ZX2E2ZDxdYL0HhlyLcqwaEcP5ceDaoBZskzo0USPc+MOE8BX8gyFRocA
+        errzNE/KYdqvq5usVdv3FOyIOIvLy1U=
 MIME-Version: 1.0
-In-Reply-To: <20190405110834.13083-1-kishon@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Wed, 10 Apr 2019 10:42:30 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     arm@kernel.org, linux@armlinux.org.uk, arnd@arndb.de,
+        ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        nicolas.pitre@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        kgene@kernel.org, krzk@kernel.org, robh@kernel.org,
+        ssantosh@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        marc.w.gonzalez@free.fr, mans@mansr.com, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] ARM: use arch_extension directive instead of arch
+ argument
+In-Reply-To: <20190409145042.GD2839@atomide.com>
+References: <7b3b9d2150d491b5cb3761d96b215749ea63175f.1554757135.git.stefan@agner.ch>
+ <20190409145042.GD2839@atomide.com>
+Message-ID: <7798addc2c24a3a3bee2954a854335cf@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kishon,
+On 09.04.2019 16:50, Tony Lindgren wrote:
+> Hi,
+> 
+> * Stefan Agner <stefan@agner.ch> [190408 20:59]:
+>> --- a/arch/arm/mach-omap2/Makefile
+>> +++ b/arch/arm/mach-omap2/Makefile
+>> @@ -41,11 +41,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-common) $(smp-y) sleep44xx.o
+>>  obj-$(CONFIG_SOC_AM43XX)		+= $(omap-4-5-common)
+>>  obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
+>>
+>> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+>> -AFLAGS_omap-headsmp.o			:=-Wa,-march=armv7-a$(plus_sec)
+>> -AFLAGS_omap-smc.o			:=-Wa,-march=armv7-a$(plus_sec)
+>> -AFLAGS_sleep44xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+>> -
+>>  # Functions loaded to SRAM
+>>  obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
+>>  obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
+>> @@ -95,9 +90,6 @@ obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
+>>  obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
+>>
+>>  AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
+>> -AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+>> -AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+>> -AFLAGS_sleep43xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+> 
+> I think we should also change the AFLAGS_sleep24xx.o above the
+> same way but with armv6 flags. This can be build tested with
+> omap2plus_defconfig.
 
-On 05/04/2019 14:08, Kishon Vijay Abraham I wrote:
-> This patch series
->   *) adds support for SERDES module in am654
->   *) modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
-> the reset callback can access registers.
->   *) Add *release* phy_ops to be invoked when the consumer relinquishes
-> PHY
-> 
-> Changes from v3:
->   *) Moved SERDES driver to use regfield
->   *) Removed reg-names binding and updated Documentation for
->      power-domains
-> 
-> Changes from v2:
->   *) Fix typos pointed out by Roger
->   *) Add dt-binding Documentation in a new file ti,phy-am654-serdes.txt
->   *) Add Roger's patch to support all CLKSEL values.
-> 
-> Changes from v1:
->   *) Add *release* phy ops
->   *) Populate release phy_ops in phy-am654-serdes to cleanup
-> initializations done in of_xlate
-> 
-> Kishon Vijay Abraham I (4):
->   phy: core: Add *release* phy_ops invoked when the consumer
->     relinquishes PHY
->   phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
->     reset callback
->   dt-bindings: phy: ti: Add dt binding documentation for SERDES in
->     AM654x SoC
->   phy: ti: Add a new SERDES driver for TI's AM654x SoC
+From what I can tell, since those do not add the sec extension they
+should work fine for LLVM's integrated assembler. But I agree, for
+consistency it would be nice to get rid of them the same way too.
 
-For these patches,
+A bit further up, there is also:
+AFLAGS_sram242x.o                      :=-Wa,-march=armv6
+AFLAGS_sram243x.o                      :=-Wa,-march=armv6
 
-Reviewed-by: Roger Quadros <rogerq@ti.com>
+I think those explicit arch definitions are not even necessary since
+ARCH_OMAP2 depends on ARCH_MULTI_V6, which cannot be built with pre v6
+architecture. So the minimum architecture we build for will be armv6...
+
+In a quick test omap2plus_defconfig builds fine without those AFLAGS. I
+will put it through some more testing and drop those flags in v3.
+
+--
+Stefan
+
 
 > 
-> Roger Quadros (1):
->   phy: ti: am654-serdes: Support all clksel values
+> Regards,
 > 
->  .../bindings/phy/ti,phy-am654-serdes.txt      |  82 +++
->  drivers/phy/phy-core.c                        |  11 +
->  drivers/phy/ti/Kconfig                        |  12 +
->  drivers/phy/ti/Makefile                       |   1 +
->  drivers/phy/ti/phy-am654-serdes.c             | 658 ++++++++++++++++++
->  include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
->  include/linux/phy/phy.h                       |   2 +
->  7 files changed, 779 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt
->  create mode 100644 drivers/phy/ti/phy-am654-serdes.c
->  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
-> 
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Tony
