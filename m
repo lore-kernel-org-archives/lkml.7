@@ -2,100 +2,236 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3189C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD5EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6402083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D1B20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HsDX4JA0"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="beaqE3PG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfDJRNg (ORCPT
+        id S1729066AbfDJROp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:13:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43003 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfDJRNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:13:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p6so1927590pgh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Loqo+ptgBIvQDOyaYvUe0ENLtUskQ9SIaVhe8fwBwp4=;
-        b=HsDX4JA03d1+AsAao3WS+PUZr78vdmDtUUzkzxcSROPWrLn8Eb5FR6bTS7gfyX5Se6
-         RXHmdSe3i63QH2Uwlc9iWjE2Kb/d+LZwYbiOVxuKvA8EzwkNnof6CPlbrPFGibCBkFp7
-         hWnq88og4FTXpEaqx+7oGp51vE2yGyxdwHHhb5UruwL0+wyypViTL9hRTLxGBkBlBe5Z
-         5qT13he4my6y/dxSEoIJLSHUik1uC5kGXGYiTwTTRDvnF0GApKaxPmfeOIMK+mweN1/G
-         s+svurRAIhhqAOxphSjjmWi/Xc3BUERxrjVzN9O04aDqqGb7V3Bqxtvxuq7qAhEEzT5v
-         jJXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Loqo+ptgBIvQDOyaYvUe0ENLtUskQ9SIaVhe8fwBwp4=;
-        b=a4g1PV/LFo4yWKCfAo9xEqeLLk3WQ74RYeL8DSLzztaElp8X/8+FkWzVSqYqYY8Ga4
-         uOw/UcjlzyCSyuIQJDa2L+4/YEjSe0CtvzXdAAwKQSJvspabh7wDxQfW4hUD+TjEpEDs
-         ipnXNuKvVb5zGiNFOVhGcKeoL7r9//nK6HBYavw2e94YmnKfkFLC8RKH3Xcu/CvwNnrM
-         z6YAU6YU1DTEE9ssjs0HbplCVIR5wKjADle0UfujiQAJHlNhmcOG38zLeTVG8fHhsDYD
-         KleER5L/YCxTZ92X/dk75iQcB0H93Lxqs+gfZsJgYWkt2F0zzPEWrgjXHSfUQH/Hblw6
-         tkqg==
-X-Gm-Message-State: APjAAAVouHbrFgQFnA/GrY2aYRrdI/q3ccFxugE5y0zKJnq3jtpCEisC
-        V735/xo98Trr2sTric6ZwrjzWQ==
-X-Google-Smtp-Source: APXvYqy4kxmphmV7146MvOIJc2ridXyRqNiZXhX/zaBHLyntGjsvpeu6HO/0SDWusydyn5LL7KjkBw==
-X-Received: by 2002:aa7:85cc:: with SMTP id z12mr44427095pfn.142.1554916415354;
-        Wed, 10 Apr 2019 10:13:35 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id j62sm35138150pfg.6.2019.04.10.10.13.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 10:13:34 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 10:13:34 -0700 (PDT)
-X-Google-Original-Date: Wed, 10 Apr 2019 09:43:10 PDT (-0700)
-Subject:     Re: [PATCH 1/3] RISC-V: Add separate defconfig for 32bit systems
-In-Reply-To: <CAAhSdy1UZ3VZAa+Gtf0KQUY9Ebwm7p=qAB+Xv7HDAjfUYpFuAQ@mail.gmail.com>
-CC:     Anup Patel <Anup.Patel@wdc.com>, aou@eecs.berkeley.edu,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     anup@brainfault.org
-Message-ID: <mhng-291f78d2-5d90-4f44-8bbd-017264cd5be7@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Apr 2019 13:14:45 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39764 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728718AbfDJROp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:14:45 -0400
+Received: from zn.tnic (p200300EC2F0CAE00295B1FE58D6681B0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:295b:1fe5:8d66:81b0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B95B1EC0400;
+        Wed, 10 Apr 2019 19:14:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554916478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9qmfhGR/+eVSbiyqb9P6ggy930HT5aQlWmwMm39jB70=;
+        b=beaqE3PGWV+RvTn9lScPdeAmy3ZkSnCJvpzBxNcpylODvYKHde/Hu3g/cSy66E3qDU0tvL
+        RQxYvf4oTqufhNhPeqWyX0YUYeus3ZrCLGm7ao3pCU/QdbEQi6ElSjlNBTHjwBggLAa/ZI
+        CNONLaUYwyjgPJ9cQRSgBi+/5ARdAtk=
+Date:   Wed, 10 Apr 2019 19:14:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190410171431.GE26580@zn.tnic>
+References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Apr 2019 23:09:03 PDT (-0700), anup@brainfault.org wrote:
-> On Tue, Apr 9, 2019 at 10:14 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> On Tue, 12 Mar 2019 15:08:12 PDT (-0700), Anup Patel wrote:
->> > This patch adds rv32_defconfig for 32bit systems. The only
->> > difference between rv32_defconfig and defconfig is that
->> > rv32_defconfig has  CONFIG_ARCH_RV32I=y.
->>
->> Thanks.  I think it makes sense to have this in 5.1 so I'm going to take it
->> into the next RC.
->
-> Thanks, Palmer.
->
-> Can you consider "[PATCH v3] RISC-V: Fix Maximum Physical Memory 2GiB
-> option for 64bit systems" for 5.1?
->
-> Refer, https://patchwork.kernel.org/patch/10886895/
->
-> The above patch is also required for 64bit system with more than 128GiB memory
-> (i.e. server-class system).
->
-> We can remove "Maximum Physical Memory 2GiB" option as separate patch.
+On Mon, Apr 08, 2019 at 11:10:17PM +0000, Junichi Nomura wrote:
+> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> in the early parsing code tries to search RSDP from EFI table but
+> that will crash because the table address is virtual when the kernel
+> was booted by kexec.
+> 
+> In the case of kexec, physical address of EFI tables is provided
+> via efi_setup_data in boot_params, which is set up by kexec(1).
+> 
+> Factor out the table parsing code and use different pointers depending
+> on whether the kernel is booted by kexec or not.
+> 
+> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Tested-by: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Dave Young <dyoung@redhat.com>
+> 
+> --
+> Original post:
+>   https://lore.kernel.org/lkml/20190322110342.GA16202@jeru.linux.bs1.fc.nec.co.jp/
+> 
+> v2: Added comments above __efi_get_rsdp_addr() and kexec_get_rsdp_addr() 
+> 
+> v3: Properly ifdef out 64bit-only kexec code to avoid 32bit build warnings
+> 
+> v4:
+>  - Make sure to avoid efi_get_rsdp_addr() when kexec setup_data exists
+>    even if the data is invalid.
+>  - Return instead of hang if systab is 0 in kexec_get_rsdp_addr().
+>  - Check 32bit EFI loader signature in the case of kexec as well.
+>  - Factor out EFI-related boot_params handling into efi_read_boot_params() to
+>    avoid duplication between efi_get_rsdp_addr() and kexec_get_rsdp_addr().
+> 
+> The patch was tested on 3 different models of EFI-booted physical machines
+> for both normal kexec and panic kexec.
+> 
+> There is a report, that similar problem still happens even with this patch:
+>   https://lore.kernel.org/lkml/20190404140809.GA7789@dhcp-128-65.nay.redhat.com/
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> index 0ef4ad5..2bc8dca 100644
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -44,71 +44,80 @@ static acpi_physical_address get_acpi_rsdp(void)
+>  	return addr;
+>  }
+>  
+> -/* Search EFI system tables for RSDP. */
+> -static acpi_physical_address efi_get_rsdp_addr(void)
+> +#ifdef CONFIG_EFI
+> +static unsigned long kexec_efi_setup_data;
+> +static unsigned long efi_systab;
+> +static bool efi_booted;
+> +static bool efi_64;
+> +
+> +static unsigned long efi_get_kexec_setup_data_addr(void)
+>  {
+> -	acpi_physical_address rsdp_addr = 0;
+> +#if defined(CONFIG_X86_64)
+> +	struct setup_data *data;
+> +	u64 pa_data;
+> +
+> +	pa_data = boot_params->hdr.setup_data;
+> +	while (pa_data) {
+> +		data = (struct setup_data *) pa_data;
+> +		if (data->type == SETUP_EFI)
+> +			return pa_data + sizeof(struct setup_data);
+> +		pa_data = data->next;
+> +	}
+> +#endif
+> +	return 0;
+> +}
+>  
+> -#ifdef CONFIG_EFI
+> -	unsigned long systab, systab_tables, config_tables;
+> -	unsigned int nr_tables;
+> +static void efi_read_boot_params(void)
+> +{
+> +	struct efi_setup_data *esd;
+>  	struct efi_info *ei;
+> -	bool efi_64;
+> -	int size, i;
+>  	char *sig;
+>  
+> +	kexec_efi_setup_data = efi_get_kexec_setup_data_addr();
 
-Ya, that should go in.  It's on the branch, thanks for the reminder!
+Why is that written here and tested in another function?!?
+
+> +
+>  	ei = &boot_params->efi_info;
+>  	sig = (char *)&ei->efi_loader_signature;
+>  
+>  	if (!strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+>  		efi_64 = true;
+> +		efi_booted = true;
+
+What is that ugliness for? Have you heard of functions returning values?
+
+This patch has gone all downhill.
+
+> +/*
+> + * EFI/kexec support is only added for 64bit. So we don't have to
+> + * care 32bit case.
+> + */
+> +static acpi_physical_address kexec_get_rsdp_addr(void)
+> +{
+> +#if defined(CONFIG_EFI) && defined(CONFIG_X86_64)
+> +	struct efi_setup_data *esd;
+> +	unsigned int nr_tables;
+> +
+> +	if (!efi_booted || !kexec_efi_setup_data)
+> +		return 0;
+> +
+> +	esd = (struct efi_setup_data *) kexec_efi_setup_data;
+> +
+> +	if (!esd->tables) {
+> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
+> +		return 0;
+> +	}
+> +
+> +	if (!efi_systab) {
+> +		debug_putstr("EFI system table not found in kexec boot_params.");
+> +		return 0;
+> +	}
+> +
+> +	/* Handle EFI bitness properly */
+> +	if (efi_64) {
+> +		efi_system_table_64_t *stbl = (efi_system_table_64_t *)efi_systab;
+> +
+> +		nr_tables	= stbl->nr_tables;
+> +	} else {
+> +		efi_system_table_32_t *stbl = (efi_system_table_32_t *)efi_systab;
+> +
+> +		nr_tables	= stbl->nr_tables;
+> +	}
+> +
+> +	return __efi_get_rsdp_addr((unsigned long) esd->tables, nr_tables);
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +
+> +static acpi_physical_address efi_get_rsdp_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	unsigned long config_tables;
+> +	unsigned int nr_tables;
+> +
+> +	efi_read_boot_params();
+
+Why do you read boot params here?
+
+No, no, no.
+
+First you do
+
+	efi_get_rsdp_addr()
+
+if you cannot get an address, you
+
+	- parse boot params
+	- then parse EFI tables from the address the kexeced kernel received
+
+No intermixing of code paths and assigning variables in one function and
+using them in another.
+
+You were on the right track with v3...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
