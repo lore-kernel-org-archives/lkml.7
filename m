@@ -2,132 +2,81 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EB4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35EDC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A347D2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 19:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14C82075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:04:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QP1vEQtQ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QmAL3kq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfDJT7K (ORCPT
+        id S1726600AbfDJUE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 15:59:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37172 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfDJT7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 15:59:09 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v13so3297697ljk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xF0+W7srIQfbgQ7tlGxBCjWOJ+vLDr6qxPO28weJN5Y=;
-        b=QP1vEQtQhoJSrpZ76JBL1JAYV+zoZbWvYwB5G5p18VhhzHZBR2lMnGBoqbyRvNr0pq
-         4OoUGdDwPBl3J8a4UO97fGmytDlID6KzSlRdoVCzR3SNnR+r4tTM1lV6ujfQlIlVagXK
-         uO0tXtmSG5ptGpp7laRSeweAc9bxB01JqHArPISzXsGzTE4q+K5w/eqPKfGwWb69zOaX
-         gDiMvuM1FKmmxSFyuvDUJ47R9sz05HNBltF4LNg8ZXPHCwcPF901ylscKJ4LzBbV2AAe
-         q8vM9cBtGjbBPp/OCI9smkda/UjqT+FOWvKWjwnr2WlqKbtk9PLFzuACWKnaqjXY94Kz
-         wKww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xF0+W7srIQfbgQ7tlGxBCjWOJ+vLDr6qxPO28weJN5Y=;
-        b=pnTyfmjW+MfW0YuADltG5D99usrXUe36hz2FrD8qUzTTQ3v5Go6C3FCKcqlRcfu3rs
-         /w7IUq58M4WVYe/t49DAnUxSvhjEdSA7xXS/8mhTePrdaTuT6xZsDzqi7Z4S1/L3wmt3
-         yFrG8hFDbKyAzaQmqzqofzb4KImqJvydURcs7c7IdnTzWJDdi3hkGorPv0Nuk+J6GSHR
-         uYEvR39/Xcih9ot4eMuZhP4/N8aThcEQHvhpAZuKRC+NBwkDIwu0l53FDYjlFN00qYZy
-         Nh7PZtgx7MdrvSom9iTwWlYk2ySe7JO9xlH/1ZETqtteUvoHP9HGcMyC+QgOm4/zdVWp
-         q5dg==
-X-Gm-Message-State: APjAAAVkj87ssKV4xMyD74k+x2zCG3ATrbKJMfFsVJJwGi9CTPTXlpX4
-        fx4iKxORd1eAlUcHXC022gppyQ==
-X-Google-Smtp-Source: APXvYqxt6FgSVLw9nqPk30okfUzZKtd0kyDRdWsGL7tCt+Tr0Rj6/diNn62XiSBXkkf/SDfYKilkmg==
-X-Received: by 2002:a2e:968c:: with SMTP id q12mr23873796lji.36.1554926346965;
-        Wed, 10 Apr 2019 12:59:06 -0700 (PDT)
-Received: from localhost (c-573670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.87])
-        by smtp.gmail.com with ESMTPSA id q5sm7150752lfm.16.2019.04.10.12.59.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 12:59:06 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, marek.vasut@gmail.com, richard@nod.at
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 2/2] mtd: nand: raw: fix build dependency
-Date:   Wed, 10 Apr 2019 21:58:52 +0200
-Message-Id: <20190410195852.4066-2-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190410195852.4066-1-anders.roxell@linaro.org>
-References: <20190410195852.4066-1-anders.roxell@linaro.org>
+        Wed, 10 Apr 2019 16:04:28 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36624 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfDJUE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 16:04:27 -0400
+Received: from zn.tnic (p200300EC2F0CAE0088EC372D30EF1627.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:88ec:372d:30ef:1627])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 58E401EC0301;
+        Wed, 10 Apr 2019 22:04:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554926666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=UiwWceHvbke+Yaj4yVTQMNIDb++qNBrOt5TLHhjPT/k=;
+        b=QmAL3kq7LH5T8Xog6gx2DavBoRdBG72vsplvN2/Hc0W1q6w8rRNJqiA9cdPIj3qTSHv/1g
+        PgAsEworR5rgTJqg97qrOKUsSCnhnwrX0mWYYogSm/bh5q49rjGXQY/SexbgdnXbyE71kA
+        MIwlEd9+7lPvWRhZqBU4VhQvnaH9VfE=
+Date:   Wed, 10 Apr 2019 22:04:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
+Message-ID: <20190410200418.GI26580@zn.tnic>
+References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
+ <20190408141205.12376-3-Yazen.Ghannam@amd.com>
+ <20190408175142.GK15689@zn.tnic>
+ <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190409203412.GE6150@zn.tnic>
+ <SN6PR12MB2639C9B48E46DA6A8BA9DB3DF82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190410164036.GC26580@zn.tnic>
+ <SN6PR12MB2639F37C634BC7F6D4B86194F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190410172539.GF26580@zn.tnic>
+ <SN6PR12MB2639F1786ED9F6BD261B1632F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2639F1786ED9F6BD261B1632F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When enable CONFIG_MTD_NAND_ECC_SW_BCH as a module, the
-MTD_NAND_ECC_SW_BCH depends on MTD_NAND, but the module controlled by
-MTD_NAND links against the module controlled by MTD_NAND_ECC_SW_BCH.
-This leads to the following link failure.
+On Wed, Apr 10, 2019 at 07:41:47PM +0000, Ghannam, Yazen wrote:
+> So I'm thinking to add another patch to the set. This will set
+> mce_bank.init=0 if we read MCA_CTL=0 from the hardware.
 
-aarch64-linux-gnu-ld: drivers/mtd/nand/raw/nand_base.o: in function `nand_cleanup':
-../drivers/mtd/nand/raw/nand_base.c:5886: undefined reference to `nand_bch_free'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5886:(.text+0x9928): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `nand_bch_free'
-aarch64-linux-gnu-ld: drivers/mtd/nand/raw/nand_base.o: in function `nand_set_ecc_soft_ops':
-../drivers/mtd/nand/raw/nand_base.c:5093: undefined reference to `nand_bch_calculate_ecc'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5093:(.text+0xe914): relocation truncated to fit: R_AARCH64_ADR_PREL_PG_HI21 against undefined symbol `nand_bch_calculate_ecc'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5093: undefined reference to `nand_bch_calculate_ecc'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5094: undefined reference to `nand_bch_correct_data'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5094:(.text+0xe934): relocation truncated to fit: R_AARCH64_ADR_PREL_PG_HI21 against undefined symbol `nand_bch_correct_data'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5094: undefined reference to `nand_bch_correct_data'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5148: undefined reference to `nand_bch_init'
-aarch64-linux-gnu-ld: ../drivers/mtd/nand/raw/nand_base.c:5148:(.text+0xebbc): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `nand_bch_init'
+Ok.
 
-Rework CONFIG_MTD_NAND_ECC_SW_BCH from tristate to bool,
-and then link the nand_bch.o file into nand.ko if its enabled.
+> Then we check if mce_bank.init=0 in the set/show functions and give a
+> message if the bank is not used.
 
-Fixes: 51ef1d0b2095 ("mtd: nand: Clarify Kconfig entry for software BCH ECC algorithm")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/mtd/nand/raw/Kconfig  | 2 +-
- drivers/mtd/nand/raw/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Nah, not a message. return -ENODEV or -EINVAL or so.
 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 615d738be411..0500c42f31cb 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
- if MTD_RAW_NAND
- 
- config MTD_NAND_ECC_SW_BCH
--	tristate "Support software BCH ECC"
-+	bool "Support software BCH ECC"
- 	select BCH
- 	default n
- 	help
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 8bc6faaa3bc7..efaf5cd25edc 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -2,7 +2,7 @@
- 
- obj-$(CONFIG_MTD_RAW_NAND)		+= nand.o
- obj-$(CONFIG_MTD_NAND_ECC_SW_HAMMING)	+= nand_ecc.o
--obj-$(CONFIG_MTD_NAND_ECC_SW_BCH)	+= nand_bch.o
-+nand-$(CONFIG_MTD_NAND_ECC_SW_BCH)	+= nand_bch.o
- obj-$(CONFIG_MTD_SM_COMMON) 		+= sm_common.o
- 
- obj-$(CONFIG_MTD_NAND_CAFE)		+= cafe_nand.o
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
