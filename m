@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342EC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257D6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CF620830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EE92133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554890204;
-	bh=gEVs0luHgaKgDIB6rGGrV4eeCFe+sJCoOyIWVOVfJ+4=;
+	s=default; t=1554890214;
+	bh=cJKEBdKmuVjuK4pvukiKgmEReBcIEGewkFl/fVneuEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JdlPK0MYtevlu7ap81U7fn/JKhRxZnAEQUkADcrdMSzUldIq0CBiww3inHSs/muby
-	 TyhzlOMXwfN+UUAZ8wM7LFNBN85+1CQe0SPIoiCZCYMUxI0SmqyG1JA60y3wbxLWaK
-	 wR0VdbHQxG/doq5u7qVoERcMQFm32lklkMpJZ0hg=
+	b=FiXyCoTskNA59MZhPoYWp8nk6xehFabqreUh4H4utJlbk/bnZqqtAxXMQjn0tcnk8
+	 wFlaGv4HTxZmCHFMnR0j6Phf0Su2tY1FoHfOQs2iJUVa/cQcT/X1akWGvuXjrdYxhT
+	 yM1TvJoOcfMfcQFTqFIDhkzDkijtiQMcd8yx8e1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbfDJJ4n (ORCPT
+        id S1730380AbfDJJ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:56:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60566 "EHLO
+        Wed, 10 Apr 2019 05:56:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60578 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730335AbfDJJ4j (ORCPT
+        with ESMTP id S1730338AbfDJJ4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 05:56:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LjqWFQd9f4udM9lpSAPOlXKEaiWBGg47uilrc82cBF4=; b=TSIfJeKgzFVi5wrZEIhCbEyaAx
-        OHDQyIG2OOffR0siWt2TJftO7LYL+YFnsXUVuYM89iFPjC7CZx50z5m9xVfzpX1bNYTGSc2/b5oos
-        rqI3L4qLDLcOTUpceWtJESTE6ta91YizIVKUtQIgzNfoRl714E3UV5WDcy7VWv7xU/0Jh/CrEden+
-        cOaPD3eurEAV+Q6U9NcYMoZtM+uCtb4WtEvehHUow0cut66Us4PBjhkNh2EXQh9/0zWrxYRaRUsSF
-        JZCpwqRQLcxDGRhviGoOYrFhcm/syGKd224VuZRzl/f29lJZhH9rlAIhg/Vjb65bOob5VDcgGyTgC
-        z4gkpofw==;
+        bh=uywpcar2BSwInr6Fjm6rS6TmPWkw/AvOUrwCmcbTPHw=; b=PWSUvsFhIYm2KE3owr/HJGiKMs
+        EcujZE9nZ0W2vNE4vvFyFnMJImElpTx5dfRJ05Quw1QjbL/wIgi3G9r2YW9r4HiRQoxaYt+QL/5rG
+        I189DNNQbgq2wZkg4Xzccy0LqOpmarIJ0e9EN1BqEMn64N7MtEoaUpeHuekJFrVIYX/Pcs6R6Ysg7
+        A0NfR48s2WxmZGnahm3U8g0I7WvTubwvrPbgWpcT1WBj5E0s4OU1wnPeAUoaTTVcVI6pYlFpWtXCd
+        ygNKqRWqi9JyeweYyAV1DXICFTDU+KAdMRlck3pz16W68nthXuLUPjKEQlN1mYp54A9rhO8EkQbaY
+        lFNhQ2Uw==;
 Received: from 177.41.129.23.dynamic.adsl.gvt.net.br ([177.41.129.23] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hE9yA-0003D3-Vd; Wed, 10 Apr 2019 09:56:38 +0000
+        id 1hE9yB-0003DQ-BD; Wed, 10 Apr 2019 09:56:39 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hE9y3-0000o9-Pp; Wed, 10 Apr 2019 06:56:31 -0300
+        id 1hE9y3-0000oH-RQ; Wed, 10 Apr 2019 06:56:31 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4/8] docs: ntb.txt: use Sphinx notation for the two ascii figures
-Date:   Wed, 10 Apr 2019 06:56:23 -0300
-Message-Id: <a4e40245a483aafeb3d820a05b44166cea11f189.1554889999.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 6/8] docs: video-output.txt: convert it to ReST format
+Date:   Wed, 10 Apr 2019 06:56:25 -0300
+Message-Id: <0a11af54345d0d8bc4e0664ab5b27ef0dddd267e.1554889999.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1554889999.git.mchehab+samsung@kernel.org>
 References: <cover.1554889999.git.mchehab+samsung@kernel.org>
@@ -63,44 +64,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make it to build with Sphinx, we need to fix the
-notation for two ascii artwork.
+This file doesn't follow the documentation style we use
+within the Kernel. Fix it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/ntb.txt | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ Documentation/video-output.txt | 52 +++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/ntb.txt b/Documentation/ntb.txt
-index a043854d28df..344a075f81f5 100644
---- a/Documentation/ntb.txt
-+++ b/Documentation/ntb.txt
-@@ -41,9 +41,10 @@ mainly used to perform the proper memory window initialization. Typically
- there are two types of memory window interfaces supported by the NTB API:
- inbound translation configured on the local ntb port and outbound translation
- configured by the peer, on the peer ntb port. The first type is
--depicted on the next figure
-+depicted on the next figure::
-+
-+ Inbound translation:
+diff --git a/Documentation/video-output.txt b/Documentation/video-output.txt
+index e517011be4f9..56d6fa2e2368 100644
+--- a/Documentation/video-output.txt
++++ b/Documentation/video-output.txt
+@@ -1,34 +1,34 @@
++Video Output Switcher Control
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
--Inbound translation:
-  Memory:              Local NTB Port:      Peer NTB Port:      Peer MMIO:
-   ____________
-  | dma-mapped |-ntb_mw_set_trans(addr)  |
-@@ -58,9 +59,10 @@ maps corresponding outbound memory window so to have access to the shared
- memory region.
+-		Video Output Switcher Control
+-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-		2006 luming.yu@intel.com
++2006 luming.yu@intel.com
  
- The second type of interface, that implies the shared windows being
--initialized by a peer device, is depicted on the figure:
-+initialized by a peer device, is depicted on the figure::
-+
-+ Outbound translation:
+ The output sysfs class driver provides an abstract video output layer that
+ can be used to hook platform specific methods to enable/disable video output
+ device through common sysfs interface. For example, on my IBM ThinkPad T42
+ laptop, The ACPI video driver registered its output devices and read/write
+-method for 'state' with output sysfs class. The user interface under sysfs is:
++method for 'state' with output sysfs class. The user interface under sysfs is::
  
--Outbound translation:
-  Memory:        Local NTB Port:    Peer NTB Port:      Peer MMIO:
-   ____________                      ______________
-  | dma-mapped |                |   | MW base addr |<== memory-mapped IO
+-linux:/sys/class/video_output # tree .
+-.
+-|-- CRT0
+-|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
+-|   |-- state
+-|   |-- subsystem -> ../../../class/video_output
+-|   `-- uevent
+-|-- DVI0
+-|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
+-|   |-- state
+-|   |-- subsystem -> ../../../class/video_output
+-|   `-- uevent
+-|-- LCD0
+-|   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
+-|   |-- state
+-|   |-- subsystem -> ../../../class/video_output
+-|   `-- uevent
+-`-- TV0
+-   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
+-   |-- state
+-   |-- subsystem -> ../../../class/video_output
+-   `-- uevent
++  linux:/sys/class/video_output # tree .
++  .
++  |-- CRT0
++  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
++  |   |-- state
++  |   |-- subsystem -> ../../../class/video_output
++  |   `-- uevent
++  |-- DVI0
++  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
++  |   |-- state
++  |   |-- subsystem -> ../../../class/video_output
++  |   `-- uevent
++  |-- LCD0
++  |   |-- device -> ../../../devices/pci0000:00/0000:00:01.0
++  |   |-- state
++  |   |-- subsystem -> ../../../class/video_output
++  |   `-- uevent
++  `-- TV0
++     |-- device -> ../../../devices/pci0000:00/0000:00:01.0
++     |-- state
++     |-- subsystem -> ../../../class/video_output
++     `-- uevent
+ 
 -- 
 2.20.1
 
