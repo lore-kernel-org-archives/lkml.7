@@ -2,337 +2,140 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C109EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F504C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7973720818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A3020818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=indeed.com header.i=@indeed.com header.b="YuwzGqEC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q50iCGuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfDJWVF (ORCPT
+        id S1726780AbfDJWVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:21:05 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40828 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWVD (ORCPT
+        Wed, 10 Apr 2019 18:21:31 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:33342 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfDJWVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:21:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t8so3422559otp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:21:02 -0700 (PDT)
+        Wed, 10 Apr 2019 18:21:30 -0400
+Received: by mail-ua1-f66.google.com with SMTP id g8so1361273uaj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=indeed.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=T2ncLTdD8d5Oto57+YGn5vuK08GhaNbX/aItgEoQJmg=;
-        b=YuwzGqEC1A2NjxbnpLXrXPXP08JN/BWcXH57wDy5XkF6VVAofxdnMbG3I89hHqzJId
-         xfY21UgYSiDi77OlXkWow2WP01EIb/LFjgzGcYGvujdOTLiGXK6GC/V5R5pINDlt0WED
-         IDH7rRhOBfDbifWPKW2yDlPG68ogn4rRlKgRg=
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=boT/6riwdA2m3FxQ0jLzkBJdoIdhrXNKi7UsmGCQNCg=;
+        b=Q50iCGuk1s4FMu7uPxo7AJcKBDeOGVVuU5GDs1SQ58P87qZgstj/5c/kHiF1+q9Chg
+         d82TiMkdbiJnRjpfUxXc+EmMGrtJcZUKVsvC8VDd0f5y1EjbHoJtbctKSUCvwpLFE9hV
+         j0nQQ61qVfyi1XygbbnDznnHUtKAQkTrNpYxA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=T2ncLTdD8d5Oto57+YGn5vuK08GhaNbX/aItgEoQJmg=;
-        b=Hen2pws1JMCo9jwxNZN9czzaZyUFdEn07/WzujkZk4sSXroxd6QOa5VwWSDo9/DJtp
-         +81Cnf3Th4cTsoy503YeNTT/7Vq2292bLYMPamARUnMcRnhEfdO+Y+8CDrxkMSrslau1
-         RstTA7vf26dHK1DnrtjbcyUwDPv3ZW74jKBByr7iizcp8G938Vql8i8U36aopgfZImhc
-         4OVuLY+6chEMuYZNBqI7fqqtv71lFagzjMbf84nL2ve6vsax8efo3rZ5W4DQOdXZXHDy
-         +gP6vG9XUIOqYasKKp6P8bExnG/4daYblfugygG3HOSzmklPSKzal0F1PrZMIGec9XE8
-         N8DQ==
-X-Gm-Message-State: APjAAAUp4TZgpRoT12FEkzpTwl+pnCN5x3vMphdHCCY35d7egJ1XtuM7
-        ychWssTRaa7ihyjpsAbxBIjGWA==
-X-Google-Smtp-Source: APXvYqwClk8ynbEe2ZxpKNS/GuTivC23wckDZBGKvUsojlFAzR8G75zu/IKFz6EDoQ/OenLA9/lWeQ==
-X-Received: by 2002:a9d:ef4:: with SMTP id 107mr30580692otj.152.1554934861768;
-        Wed, 10 Apr 2019 15:21:01 -0700 (PDT)
-Received: from cando.ausoff.indeed.net ([97.105.47.162])
-        by smtp.gmail.com with ESMTPSA id n3sm14294941oia.46.2019.04.10.15.21.00
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=boT/6riwdA2m3FxQ0jLzkBJdoIdhrXNKi7UsmGCQNCg=;
+        b=pRZhTguljQtagXmfcsYsqsnEMtzYXPztqUzWavAVisz7hzbZZM7UeChlznoSR5Ny2h
+         n9XkhU/Kpcz5ZFNpIY4OJ3bX/cRCnPiaQoNjVbiOUnPcZZLw+noOjHb/8L2lhgFhH7B0
+         cJq6Rtm4gvSPu/WVekKYjSH9EQSAQv3eROz9u2UOzMFUz/mQahr/pU66CPtajS4cGj25
+         Bsf9wfydpV4WY9nKnWRBXbFB+5EiO5dVhpgrpfRgzOyo18PVJjWUSh5AwLiMYWR7JY8l
+         uhTYIWqMGYEIHbNY7nPo+sDIO7HSn0YwVw5XIo1A0zJN0agN5UM93cpaitE4bCXP6Z2b
+         iK6A==
+X-Gm-Message-State: APjAAAWeke2x+ZIdjvLbqfayYPuhgjQoeAEgKs+wEY8BO9/w6KZhAZ5O
+        XXmV9oYVokKB0mNGW4sNTf5tO8DtDtQ=
+X-Google-Smtp-Source: APXvYqzJpZ3dfzDNRDFWbHJl1t9HF21fBkksq58JmT+ub0cT24t3QOpgTcurkpfqIO92QDjrwFTlGg==
+X-Received: by 2002:ab0:278b:: with SMTP id t11mr22731142uap.88.1554934889212;
+        Wed, 10 Apr 2019 15:21:29 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id r24sm4534297ual.8.2019.04.10.15.21.28
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:21:01 -0700 (PDT)
-From:   Dave Chiluk <chiluk+linux@indeed.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH] cgroup: Fix low cpu usage with high throttling by removing slice expiration
-Date:   Wed, 10 Apr 2019 17:20:50 -0500
-Message-Id: <1554934850-7002-2-git-send-email-chiluk+linux@indeed.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1554934850-7002-1-git-send-email-chiluk+linux@indeed.com>
-References: <CAC=E7cV_2QtXQ-mx4-GfHLyAWxW+7Ub75UmMvOLxLXzot47TWw@mail.gmail.com>
- <1554934850-7002-1-git-send-email-chiluk+linux@indeed.com>
+        Wed, 10 Apr 2019 15:21:28 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id x2so925308vkx.13
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:21:28 -0700 (PDT)
+X-Received: by 2002:a1f:7d4e:: with SMTP id y75mr25311986vkc.53.1554934886529;
+ Wed, 10 Apr 2019 15:21:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190410212627.29514-1-okaya@kernel.org> <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
+ <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org> <CAGXu5jLPxUESH9eMm6rvaTVue_9rNEdx+9dcxiV11kgi03jUmA@mail.gmail.com>
+ <ac8f52a9-30a4-41fd-50f6-65c8ae859675@kernel.org>
+In-Reply-To: <ac8f52a9-30a4-41fd-50f6-65c8ae859675@kernel.org>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 15:21:15 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLsdSsgVmAU57rpBVAYK6-KxEhzDKj-w5-z2c+dsofD-Q@mail.gmail.com>
+Message-ID: <CAGXu5jLsdSsgVmAU57rpBVAYK6-KxEhzDKj-w5-z2c+dsofD-Q@mail.gmail.com>
+Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
+To:     Sinan Kaya <Okaya@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been observed, that highly-threaded, non-cpu-bound applications
-running under cpu.cfs_quota_us constraints can hit a high percentage of
-periods throttled while simultaneously not consuming the allocated
-amount of quota.  This use case is typical of user-interactive non-cpu
-bound web services, such as those running in kubernetes or mesos.
+On Wed, Apr 10, 2019 at 3:18 PM Sinan Kaya <Okaya@kernel.org> wrote:
+>
+> On 4/10/2019 6:04 PM, Kees Cook wrote:
+>
+> >> I don't want any of the debug features in my kernel but still
+> >> need all the expert features. My kernel is considered a production
+> >> kernel. I don't really want to ship all the good debug enables.
+> >
+> > Production kernels enable it. e.g. Ubuntu:
+> > $ grep '\bCONFIG_DEBUG_KERNEL\b' /boot/config-$(uname -r)
+> > CONFIG_DEBUG_KERNEL=y
+> >
+>
+> It makes sense for a general purpose operating system. It doesn't apply
+> to my limited case where I'm very concerned about image size.
 
-This has been root caused to threads being allocated per cpu bandwidth
-slices, and then not fully using that slice within the period, and then
-having that quota expire.  This constant expiration of unused quota
-results applications not being able to utilize the quota for which they
-are allocated.
+Gotcha.
 
-The expiration of quota was recently fixed by commit 512ac999d275
-("sched/fair: Fix bandwidth timer clock drift condition"). Prior to that
-it appears that this has been broken since a least commit 51f2176d74ac
-("sched/fair: Fix unlocked reads of some cfs_b->quota/period") which was
-introduced in v3.16-rc1 in 2014.  That commit added the following
-testcase which resulted in runtime never being expired.
+>
+> >> I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
+> >> as none of the features except KALLSYMS depend on it. If there was
+> >> a compile time dependency, I'd say move it to the things that need
+> >> it as this patch suggests.
+> >
+> > CONFIG_DEBUG_KERNEL mainly only enables the visibility of various
+> > other options. I can only find two instances of it controlling a
+> > "default", and one is overridden by CONFIG_SMP on alpha. :)
+> >
+> > $ git grep -B2 'default.*DEBUG_KERNEL'
+> > arch/alpha/Kconfig.debug-config MATHEMU
+> > arch/alpha/Kconfig.debug-       tristate "Kernel FP software
+> > completion" if DEBUG_KERNEL && !SMP
+> > arch/alpha/Kconfig.debug:       default y if !DEBUG_KERNEL || SMP
+> > --
+> > kernel/trace/Kconfig-menuconfig FTRACE
+> > kernel/trace/Kconfig-   bool "Tracers"
+> > kernel/trace/Kconfig:   default y if DEBUG_KERNEL
+>
+> If the idea is to just show, nothing should happen based on
+> DEBUG_KERNEL, right?
+>
+> No default selection as in FTRACE, no c/S file changes in the code
+> path as Mathieu identified.
 
-if (cfs_rq->runtime_expires != cfs_b->runtime_expires) {
-	/* extend local deadline, drift is bounded above by 2 ticks */
-	cfs_rq->runtime_expires += TICK_NSEC;
+Yeah, this is clearly a problem. I hadn't looked for code #ifdefs :(
 
-Because this was broken for nearly 5 years, and has recently been fixed
-and is now being noticed by many users running kubernetes
-(https://github.com/kubernetes/kubernetes/issues/67577) it is my opinion
-that the mechanisms around expiring runtime should be removed
-altogether.
+> I can go after individual enables if you agree assuming Mathieu will
+> go after the changes in the other email. Let me know otherwise.
 
-This allows quota runtime slices allocated to per-cpu runqueues to live
-longer than the period boundary.  This allows threads on runqueues that
-do not use much CPU to continue to use their remaining slice over a
-longer period of time than cpu.cfs_period_us. However, this helps
-prevents the above condition of hitting throttling while also not fully
-utilizing your cpu quota.
+How about you split it, but make DEBUG_KERNEL be "default EXPERT" that
+way enabling EXPERT will enable DEBUG_KERNEL still in the default
+case?
 
-This theoretically allows a machine to use slightly more than it's
-allotted quota in some periods.  This overflow would be equal to the
-amount of quota that was left un-used on cfs_rq's in the previous
-period.  For CPU bound tasks this will change nothing, as they should
-theoretically fully utilize all of their quota in each period. For
-user-interactive tasks as described above this provides a much better
-user/application experience as their cpu utilization will more closely
-match the amount they requested when they hit throttling.
-
-This greatly improves performance of high-thread-count, interactive
-applications with low cfs_quota_us allocation on high-core-count
-machines. In the case of an artificial testcase, this performance
-discrepancy has been observed to be almost 30x performance improvement,
-while still maintaining correct cpu quota restrictions albeit over
-longer time intervals than cpu.cfs_period_us.
-
-Fixes: 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift condition")
-Signed-off-by: Dave Chiluk <chiluk+linux@indeed.com>
----
- kernel/sched/fair.c  | 71 +++++-----------------------------------------------
- kernel/sched/sched.h |  4 ---
- 2 files changed, 6 insertions(+), 69 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fdab7eb..b0c3d76 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4291,8 +4291,6 @@ void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- 
- 	now = sched_clock_cpu(smp_processor_id());
- 	cfs_b->runtime = cfs_b->quota;
--	cfs_b->runtime_expires = now + ktime_to_ns(cfs_b->period);
--	cfs_b->expires_seq++;
- }
- 
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-@@ -4314,8 +4312,7 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- {
- 	struct task_group *tg = cfs_rq->tg;
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(tg);
--	u64 amount = 0, min_amount, expires;
--	int expires_seq;
-+	u64 amount = 0, min_amount;
- 
- 	/* note: this is a positive sum as runtime_remaining <= 0 */
- 	min_amount = sched_cfs_bandwidth_slice() - cfs_rq->runtime_remaining;
-@@ -4332,61 +4329,17 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 			cfs_b->idle = 0;
- 		}
- 	}
--	expires_seq = cfs_b->expires_seq;
--	expires = cfs_b->runtime_expires;
- 	raw_spin_unlock(&cfs_b->lock);
- 
- 	cfs_rq->runtime_remaining += amount;
--	/*
--	 * we may have advanced our local expiration to account for allowed
--	 * spread between our sched_clock and the one on which runtime was
--	 * issued.
--	 */
--	if (cfs_rq->expires_seq != expires_seq) {
--		cfs_rq->expires_seq = expires_seq;
--		cfs_rq->runtime_expires = expires;
--	}
- 
- 	return cfs_rq->runtime_remaining > 0;
- }
- 
--/*
-- * Note: This depends on the synchronization provided by sched_clock and the
-- * fact that rq->clock snapshots this value.
-- */
--static void expire_cfs_rq_runtime(struct cfs_rq *cfs_rq)
--{
--	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
--
--	/* if the deadline is ahead of our clock, nothing to do */
--	if (likely((s64)(rq_clock(rq_of(cfs_rq)) - cfs_rq->runtime_expires) < 0))
--		return;
--
--	if (cfs_rq->runtime_remaining < 0)
--		return;
--
--	/*
--	 * If the local deadline has passed we have to consider the
--	 * possibility that our sched_clock is 'fast' and the global deadline
--	 * has not truly expired.
--	 *
--	 * Fortunately we can check determine whether this the case by checking
--	 * whether the global deadline(cfs_b->expires_seq) has advanced.
--	 */
--	if (cfs_rq->expires_seq == cfs_b->expires_seq) {
--		/* extend local deadline, drift is bounded above by 2 ticks */
--		cfs_rq->runtime_expires += TICK_NSEC;
--	} else {
--		/* global deadline is ahead, expiration has passed */
--		cfs_rq->runtime_remaining = 0;
--	}
--}
--
- static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
- {
- 	/* dock delta_exec before expiring quota (as it could span periods) */
- 	cfs_rq->runtime_remaining -= delta_exec;
--	expire_cfs_rq_runtime(cfs_rq);
- 
- 	if (likely(cfs_rq->runtime_remaining > 0))
- 		return;
-@@ -4577,8 +4530,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 		resched_curr(rq);
- }
- 
--static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b,
--		u64 remaining, u64 expires)
-+static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
- {
- 	struct cfs_rq *cfs_rq;
- 	u64 runtime;
-@@ -4600,7 +4552,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b,
- 		remaining -= runtime;
- 
- 		cfs_rq->runtime_remaining += runtime;
--		cfs_rq->runtime_expires = expires;
- 
- 		/* we check whether we're throttled above */
- 		if (cfs_rq->runtime_remaining > 0)
-@@ -4625,7 +4576,7 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b,
-  */
- static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
- {
--	u64 runtime, runtime_expires;
-+	u64 runtime;
- 	int throttled;
- 
- 	/* no need to continue the timer with no bandwidth constraint */
-@@ -4653,8 +4604,6 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
- 	/* account preceding periods in which throttling occurred */
- 	cfs_b->nr_throttled += overrun;
- 
--	runtime_expires = cfs_b->runtime_expires;
--
- 	/*
- 	 * This check is repeated as we are holding onto the new bandwidth while
- 	 * we unthrottle. This can potentially race with an unthrottled group
-@@ -4667,8 +4616,7 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
- 		cfs_b->distribute_running = 1;
- 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- 		/* we can't nest cfs_b->lock while distributing bandwidth */
--		runtime = distribute_cfs_runtime(cfs_b, runtime,
--						 runtime_expires);
-+		runtime = distribute_cfs_runtime(cfs_b, runtime);
- 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
- 
- 		cfs_b->distribute_running = 0;
-@@ -4745,8 +4693,7 @@ static void __return_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 		return;
- 
- 	raw_spin_lock(&cfs_b->lock);
--	if (cfs_b->quota != RUNTIME_INF &&
--	    cfs_rq->runtime_expires == cfs_b->runtime_expires) {
-+	if (cfs_b->quota != RUNTIME_INF) {
- 		cfs_b->runtime += slack_runtime;
- 
- 		/* we are under rq->lock, defer unthrottling using a timer */
-@@ -4779,7 +4726,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- {
- 	u64 runtime = 0, slice = sched_cfs_bandwidth_slice();
- 	unsigned long flags;
--	u64 expires;
- 
- 	/* confirm we're still not at a refresh boundary */
- 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
-@@ -4796,7 +4742,6 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- 	if (cfs_b->quota != RUNTIME_INF && cfs_b->runtime > slice)
- 		runtime = cfs_b->runtime;
- 
--	expires = cfs_b->runtime_expires;
- 	if (runtime)
- 		cfs_b->distribute_running = 1;
- 
-@@ -4805,11 +4750,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- 	if (!runtime)
- 		return;
- 
--	runtime = distribute_cfs_runtime(cfs_b, runtime, expires);
-+	runtime = distribute_cfs_runtime(cfs_b, runtime);
- 
- 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
--	if (expires == cfs_b->runtime_expires)
--		lsub_positive(&cfs_b->runtime, runtime);
- 	cfs_b->distribute_running = 0;
- 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- }
-@@ -4940,8 +4883,6 @@ void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- 
- 	cfs_b->period_active = 1;
- 	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
--	cfs_b->runtime_expires += (overrun + 1) * ktime_to_ns(cfs_b->period);
--	cfs_b->expires_seq++;
- 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
- }
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index efa686e..69d9bf9 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -341,8 +341,6 @@ struct cfs_bandwidth {
- 	u64			quota;
- 	u64			runtime;
- 	s64			hierarchical_quota;
--	u64			runtime_expires;
--	int			expires_seq;
- 
- 	short			idle;
- 	short			period_active;
-@@ -562,8 +560,6 @@ struct cfs_rq {
- 
- #ifdef CONFIG_CFS_BANDWIDTH
- 	int			runtime_enabled;
--	int			expires_seq;
--	u64			runtime_expires;
- 	s64			runtime_remaining;
- 
- 	u64			throttled_clock;
 -- 
-1.8.3.1
-
+Kees Cook
