@@ -2,118 +2,142 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF16C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774A7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F34A2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358232082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:35:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4bol1OLw"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="a+fx2L/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbfDJMas (ORCPT
+        id S1731973AbfDJMfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:30:48 -0400
-Received: from mail-eopbgr690049.outbound.protection.outlook.com ([40.107.69.49]:24654
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728881AbfDJMas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:30:48 -0400
+        Wed, 10 Apr 2019 08:35:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41020 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731961AbfDJMfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:35:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w30so2554609qta.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ybV0TLfP2CxtALB4yZqua1Z6zyoDIMTG9enZZUnqViI=;
- b=4bol1OLw28pAEtEp9TQ7X+nW7k6SaozODAmrcHYMQHBmClMwpgevon7YcyW155gYYFio8oUF7J91c25S/Ym9IZSNUjpiDq8GJBy0B1ApQzLAuruXJOzF/umwrMK6vpL9sfj5j96Yq3fKMfDc2AVVlEfO3sAloBPRxi7VyiRFRpg=
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com (10.168.206.9) by
- MWHPR02MB2606.namprd02.prod.outlook.com (10.168.205.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.16; Wed, 10 Apr 2019 12:30:38 +0000
-Received: from MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::905a:a5f3:8d41:431e]) by MWHPR02MB2623.namprd02.prod.outlook.com
- ([fe80::905a:a5f3:8d41:431e%6]) with mapi id 15.20.1792.016; Wed, 10 Apr 2019
- 12:30:38 +0000
-From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
-To:     Mark Brown <broonie@kernel.org>, YueHaibing <yuehaibing@huawei.com>
-CC:     "vigneshr@ti.com" <vigneshr@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
-Subject: RE: [LINUX PATCH v3] spi: spi-mem: Fix build error without
- CONFIG_SPI_MEM
-Thread-Topic: [LINUX PATCH v3] spi: spi-mem: Fix build error without
- CONFIG_SPI_MEM
-Thread-Index: AQHU75SYRghFoYZe90G0/RFUWfhl5KY1UPeAgAAAsYCAAADgoA==
-Date:   Wed, 10 Apr 2019 12:30:37 +0000
-Message-ID: <MWHPR02MB262352F3C89EB163AB1EC2B5AF2E0@MWHPR02MB2623.namprd02.prod.outlook.com>
-References: <1554897429-5959-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <2d9cee19-a776-ad18-b8ac-6d0d1b096ad6@huawei.com>
- <20190410122457.GP6106@sirena.org.uk>
-In-Reply-To: <20190410122457.GP6106@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nagasure@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ae293f6-3bfe-4cff-015a-08d6bdb05670
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MWHPR02MB2606;
-x-ms-traffictypediagnostic: MWHPR02MB2606:
-x-microsoft-antispam-prvs: <MWHPR02MB2606EB23F481A5EC1D0C1C56AF2E0@MWHPR02MB2606.namprd02.prod.outlook.com>
-x-forefront-prvs: 00032065B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(396003)(366004)(136003)(13464003)(199004)(189003)(446003)(11346002)(8936002)(74316002)(97736004)(305945005)(476003)(9686003)(105586002)(33656002)(54906003)(106356001)(316002)(110136005)(99286004)(68736007)(55016002)(4326008)(102836004)(76176011)(53546011)(6506007)(6246003)(7736002)(81166006)(186003)(53936002)(7696005)(26005)(478600001)(81156014)(8676002)(256004)(25786009)(71190400001)(71200400001)(229853002)(2906002)(52536014)(5660300002)(86362001)(3846002)(6116002)(66066001)(486006)(14454004)(4744005)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2606;H:MWHPR02MB2623.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KgB+VY2FC80vwawJRdAaKRMR2x3A+CXTiclgsoPRvWjWmxAafis364x7g8vy1RGyYMav/JrVTUBd9AkV57FHvppI9ferdnYSwSsrXQseKsJ5Ww0Ubvk/tZ5dpuimYuQRMYSVCYgkUV9t1ClX/GMENeFyo8FJo9g4OaUVTWbvP+2PiqFI/qKwqE8WirmKuDLxdyZg+5AkWZWWvOcDhC3pUutVUMypBugxo943aSIAXfwyKgJfdWnY5HFn7LeAlT2G7HkC/vZf9N68tXc0RjoSuPDryyOMUp/J3H7uOIQt0qGPfbQQmVv1v9WcSdw4vBGheDUrwBsQGBMsGlokwjr8ge6wsEUZN9eWX7CQ3nBfOegQyUY4/CI1a4WESJK0ibEF95Mlrb+Zk2Rfg7nq8eVyWCK1AF96/S9zXktqek1pkFA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rNPAM2/g8CqWDOvOfGJ4cG8h10c+7F246j/Q9RmvZYo=;
+        b=a+fx2L/8aXX+/kSlXuzsZ83HrbNoXOtqOiGKydrXbdaVyfmzdEze+olOOO7rZQEV+7
+         PSdwq5sRlRSS1oHrXhzyMK668uIZw6I7bXhyJA7emurgTzg7kSAwc7N3TV9epkYrqeWv
+         NPec7Kf6sDU0Frnyc6PYZ45A+W9arTp5TnHaY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rNPAM2/g8CqWDOvOfGJ4cG8h10c+7F246j/Q9RmvZYo=;
+        b=gFZPCoHcZcqiDtDc4usEVo5Z1jMJG5Xnb5cZwkkLX15w9BsCWdJ1pBbzJnl24lhjPi
+         RMpvAN1oQJ/SwuGr2ulwu/nkOcDE88nkkYO6CKJRh5D/YGAiN0Jn8WM4co29RUwlABlH
+         VqofKY5y2339oq71nr4s5tdfzKCNKfxpzn/yAdC6zIN7waFvupbjMWLsO4eJIwggX2oi
+         6hmP24rgEYmq2eW4uEIaN/z6AX79xC/sV6WRdvs9KSmSK8y7+svseBel+fVQZC8XWkvN
+         o726av2fQ5ZTE8fTVVYUL8Y2yV2Y8g8nwRG10XNmFdn9NDY6dbkKVBxCBdK0A1WciPvR
+         wdYQ==
+X-Gm-Message-State: APjAAAU9aNWaAIPW8jHZjP5WZo4TRSMOgNHiSq5GxVOfIedc1wV1bUm+
+        BecPcIF1IhQmTyW7+TZZ3iyv0LrNPXwmV23nzl8NT2iwxk896g==
+X-Google-Smtp-Source: APXvYqyWXmxQowxXohlALbCLFAD3sPtJSkBf0JjKT6EKmxER6E5oS7B2iPBC3ufYj0y8mw3zR8AJOaxZLNNB2xtPmxM=
+X-Received: by 2002:ac8:2f85:: with SMTP id l5mr36329015qta.269.1554899706475;
+ Wed, 10 Apr 2019 05:35:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ae293f6-3bfe-4cff-015a-08d6bdb05670
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 12:30:37.9817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2606
+References: <20190405052830.27899-1-joel@jms.id.au> <aae72ebf-2c9c-8cc4-4598-e8bb896b9a24@tronnes.org>
+In-Reply-To: <aae72ebf-2c9c-8cc4-4598-e8bb896b9a24@tronnes.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 10 Apr 2019 12:34:54 +0000
+Message-ID: <CACPK8XfosTwskxTDgv1ONdfB5yAtN9QukH=1TFu06RorrZS8cQ@mail.gmail.com>
+Subject: Re: [PATCH] drm: aspeed: Select CMA only if available
+To:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 5 Apr 2019 at 11:20, Noralf Tr=C3=B8nnes <noralf@tronnes.org> wrote=
+:
+>
+>
+>
+> Den 05.04.2019 07.28, skrev Joel Stanley:
+> > When building this driver for architectures where CMA is not available.
+> >
+> > Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Joel Stanley <joel@jms.id.au>
+> > ---
+> > This fixes the build break.
+> >
+> > Another question is if we need to select this at all, as we have a
+> > reserved memory region to allocate from. I am not familiar with this
+> > area, so advice is welcome.
+> >
+> >  drivers/gpu/drm/aspeed/Kconfig | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/aspeed/Kconfig b/drivers/gpu/drm/aspeed/Kc=
+onfig
+> > index 42b74d18a41b..1775fb85ec74 100644
+> > --- a/drivers/gpu/drm/aspeed/Kconfig
+> > +++ b/drivers/gpu/drm/aspeed/Kconfig
+> > @@ -4,8 +4,8 @@ config DRM_ASPEED_GFX
+> >       select DRM_KMS_HELPER
+> >       select DRM_KMS_CMA_HELPER
+> >       select DRM_PANEL
+> > -     select DMA_CMA
+> > -     select CMA
+> > +     select DMA_CMA if HAVE_DMA_CONTIGUOUS
+> > +     select CMA if HAVE_DMA_CONTIGUOUS
+>
+> I'm no expert on this, but the rule is that you should not select
+> options that are user visible which both of these are. The user should
+> select them. So I believe that you should remove them.
+>
+> Docs: Documentation/kbuild/kconfig-language.txt
 
-> -----Original Message-----
-> From: linux-spi-owner@vger.kernel.org <linux-spi-owner@vger.kernel.org> O=
-n Behalf Of
-> Mark Brown
-> Sent: Wednesday, April 10, 2019 5:55 PM
-> To: YueHaibing <yuehaibing@huawei.com>
-> Cc: Naga Sureshkumar Relli <nagasure@xilinx.com>; vigneshr@ti.com; linux-
-> kernel@vger.kernel.org; linux-spi@vger.kernel.org; Michal Simek <michals@=
-xilinx.com>;
-> nagasuresh12@gmail.com
-> Subject: Re: [LINUX PATCH v3] spi: spi-mem: Fix build error without CONFI=
-G_SPI_MEM
->=20
-> On Wed, Apr 10, 2019 at 08:22:29PM +0800, YueHaibing wrote:
-> > On 2019/4/10 19:57, Naga Sureshkumar Relli wrote:
->=20
-> > > +static inline bool spi_mem_default_supports_op(struct spi_mem *mem,
-> > > +				 const struct spi_mem_op *op);
->=20
-> > Here miss a Function body, right?
->=20
-> Yeah, I'm surprised that builds...
-Sorry, I tested with CONFIG_SPI_MEM enabled. It's my bad.
+I agree with your point, I was following what etnaviv did in this case.
 
-Regards,
-Naga Sureshkumar Relli
+As it's written the driver requires CMA to be enabled, or else it
+fails to probe:
+
+ [    3.398247] aspeed_gfx 1e6e6000.display: failed to initialize
+reserved mem: -22
+ [    3.410471] aspeed_gfx: probe of 1e6e6000.display failed with error -22
+
+It was suggested by Michael that 'imply' might be appropriate here.
+However, in my testing 'imply' does not set CMA=3Dy . If I start from
+both CMA and ASPEED_GFX disabled, and then use menuconfig to enable
+ASPEED_GFX, I expected CMA to be enabled. It does not.
+
+In v2[1] of this patch I make the driver depend on ARCH_ASPEED, which
+being ARM means it has CMA available. The other case is when enabling
+COMPILE_TEST, where the test for HAVE_DMA_CONTIGUOUS will stop the
+build break.
+
+CMA only depends on MMU, so we should be safe to select it. I'm open
+to other suggstions though.
+
+Cheers,
+
+Joel
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190405081117.27339-1-joel@jm=
+s.id.au/
