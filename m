@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D516C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF26C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5596C20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4DC20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbfDJNl2 (ORCPT
+        id S1731726AbfDJNl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:41:28 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46414 "EHLO mga12.intel.com"
+        Wed, 10 Apr 2019 09:41:27 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23980 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732394AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:37:04 -0400
+        id S1732397AbfDJNhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:37:06 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:04 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="336622767"
+   d="scan'208";a="130178552"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by orsmga007.jf.intel.com with ESMTP; 10 Apr 2019 06:37:02 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E796C53D; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id 486ED666; Wed, 10 Apr 2019 16:36:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 11/36] thunderbolt: Set sleep bit when suspending switch
-Date:   Wed, 10 Apr 2019 16:36:28 +0300
-Message-Id: <20190410133653.88061-12-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 18/36] thunderbolt: Add helper function to iterate from one port to another
+Date:   Wed, 10 Apr 2019 16:36:35 +0300
+Message-Id: <20190410133653.88061-19-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,118 +55,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thunderbolt 2 devices and beyond link controller needs to be notified
-when a switch is going to be suspended by setting bit 31 in LC_SX_CTRL
-register. Add this functionality to the software connection manager.
+We need to be able to walk from one port to another when we are creating
+paths where there are multiple switches between two ports. For this
+reason introduce a new function tb_next_port_on_path().
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 ---
- drivers/thunderbolt/lc.c      | 44 +++++++++++++++++++++++++++++++++++
- drivers/thunderbolt/switch.c  |  6 ++---
- drivers/thunderbolt/tb.h      |  1 +
- drivers/thunderbolt/tb_regs.h |  2 ++
- 4 files changed, 49 insertions(+), 4 deletions(-)
+ drivers/thunderbolt/switch.c | 54 ++++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/tb.h     |  2 ++
+ 2 files changed, 56 insertions(+)
 
-diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-index a5dddf176546..ae1e92611c3e 100644
---- a/drivers/thunderbolt/lc.c
-+++ b/drivers/thunderbolt/lc.c
-@@ -133,3 +133,47 @@ void tb_lc_unconfigure_link(struct tb_switch *sw)
- 	tb_lc_configure_lane(up, false);
- 	tb_lc_configure_lane(down, false);
- }
-+
-+/**
-+ * tb_lc_set_sleep() - Inform LC that the switch is going to sleep
-+ * @sw: Switch to set sleep
-+ *
-+ * Let the switch link controllers know that the switch is going to
-+ * sleep.
-+ */
-+int tb_lc_set_sleep(struct tb_switch *sw)
-+{
-+	int start, size, nlc, ret, i;
-+	u32 desc;
-+
-+	if (sw->generation < 2)
-+		return 0;
-+
-+	ret = read_lc_desc(sw, &desc);
-+	if (ret)
-+		return ret;
-+
-+	/* Figure out number of link controllers */
-+	nlc = desc & TB_LC_DESC_NLC_MASK;
-+	start = (desc & TB_LC_DESC_SIZE_MASK) >> TB_LC_DESC_SIZE_SHIFT;
-+	size = (desc & TB_LC_DESC_PORT_SIZE_MASK) >> TB_LC_DESC_PORT_SIZE_SHIFT;
-+
-+	/* For each link controller set sleep bit */
-+	for (i = 0; i < nlc; i++) {
-+		unsigned int offset = sw->cap_lc + start + i * size;
-+		u32 ctrl;
-+
-+		ret = tb_sw_read(sw, &ctrl, TB_CFG_SWITCH,
-+				 offset + TB_LC_SX_CTRL, 1);
-+		if (ret)
-+			return ret;
-+
-+		ctrl |= TB_LC_SX_CTRL_SLP;
-+		ret = tb_sw_write(sw, &ctrl, TB_CFG_SWITCH,
-+				  offset + TB_LC_SX_CTRL, 1);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index dd218dc4781b..b3f93ebe6e39 100644
+index 6f98b3d6eb2a..ecd41f7b7649 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -1586,10 +1586,8 @@ void tb_switch_suspend(struct tb_switch *sw)
- 		if (!tb_is_upstream_port(&sw->ports[i]) && sw->ports[i].remote)
- 			tb_switch_suspend(sw->ports[i].remote->sw);
- 	}
--	/*
--	 * TODO: invoke tb_cfg_prepare_to_sleep here? does not seem to have any
--	 * effect?
--	 */
-+
-+	tb_lc_set_sleep(sw);
+@@ -676,6 +676,60 @@ void tb_port_release_out_hopid(struct tb_port *port, int hopid)
+ 	ida_simple_remove(&port->out_hopids, hopid);
  }
  
- struct tb_sw_lookup {
++/**
++ * tb_next_port_on_path() - Return next port for given port on a path
++ * @start: Start port of the walk
++ * @end: End port of the walk
++ * @prev: Previous port (%NULL if this is the first)
++ *
++ * This function can be used to walk from one port to another if they
++ * are connected through zero or more switches. If the @prev is dual
++ * link port, the function follows that link and returns another end on
++ * that same link.
++ *
++ * If the @end port has been reached, return %NULL.
++ *
++ * Domain tb->lock must be held when this function is called.
++ */
++struct tb_port *tb_next_port_on_path(struct tb_port *start, struct tb_port *end,
++				     struct tb_port *prev)
++{
++	struct tb_port *next;
++
++	if (!prev)
++		return start;
++
++	if (prev->sw == end->sw) {
++		if (prev == end)
++			return NULL;
++		return end;
++	}
++
++	if (start->sw->config.depth < end->sw->config.depth) {
++		if (prev->remote &&
++		    prev->remote->sw->config.depth > prev->sw->config.depth)
++			next = prev->remote;
++		else
++			next = tb_port_at(tb_route(end->sw), prev->sw);
++	} else {
++		if (tb_is_upstream_port(prev)) {
++			next = prev->remote;
++		} else {
++			next = tb_upstream_port(prev->sw);
++			/*
++			 * Keep the same link if prev and next are both
++			 * dual link ports.
++			 */
++			if (next->dual_link_port &&
++			    next->link_nr != prev->link_nr) {
++				next = next->dual_link_port;
++			}
++		}
++	}
++
++	return next;
++}
++
+ /**
+  * tb_pci_port_enable() - Enable PCIe adapter port
+  * @port: PCIe port to enable
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 69e0534224d8..985a48a67a43 100644
+index 43bc4f490021..11d5ab53ad36 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -467,6 +467,7 @@ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
- int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
- int tb_lc_configure_link(struct tb_switch *sw);
- void tb_lc_unconfigure_link(struct tb_switch *sw);
-+int tb_lc_set_sleep(struct tb_switch *sw);
+@@ -495,6 +495,8 @@ int tb_port_alloc_in_hopid(struct tb_port *port, int hopid, int max_hopid);
+ void tb_port_release_in_hopid(struct tb_port *port, int hopid);
+ int tb_port_alloc_out_hopid(struct tb_port *port, int hopid, int max_hopid);
+ void tb_port_release_out_hopid(struct tb_port *port, int hopid);
++struct tb_port *tb_next_port_on_path(struct tb_port *start, struct tb_port *end,
++				     struct tb_port *prev);
  
- static inline int tb_route_length(u64 route)
- {
-diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index e0f867dad5cf..1ab6e0fb31c0 100644
---- a/drivers/thunderbolt/tb_regs.h
-+++ b/drivers/thunderbolt/tb_regs.h
-@@ -239,6 +239,7 @@ struct tb_regs_hop {
- 
- /* Common link controller registers */
- #define TB_LC_DESC			0x02
-+#define TB_LC_DESC_NLC_MASK		GENMASK(3, 0)
- #define TB_LC_DESC_SIZE_SHIFT		8
- #define TB_LC_DESC_SIZE_MASK		GENMASK(15, 8)
- #define TB_LC_DESC_PORT_SIZE_SHIFT	16
-@@ -250,5 +251,6 @@ struct tb_regs_hop {
- #define TB_LC_SX_CTRL_L1C		BIT(16)
- #define TB_LC_SX_CTRL_L2C		BIT(20)
- #define TB_LC_SX_CTRL_UPSTREAM		BIT(30)
-+#define TB_LC_SX_CTRL_SLP		BIT(31)
- 
- #endif
+ int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
+ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
 -- 
 2.20.1
 
