@@ -2,174 +2,138 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BECC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3CCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A07820830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47FF20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OujTAQQP"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mmEcHVE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbfDJKdV (ORCPT
+        id S1730567AbfDJKeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:33:21 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41484 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbfDJKdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:33:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d1so1172355plj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 03:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o6MP4MD2XvqRqDBpI14/SbmM5jumQB8YX4MXAiMxcgg=;
-        b=OujTAQQPHwq+Rr4uTnK74C/W70fLAhCmbeQzs7wLTUnxJN8i+7ARsbfJ8C2uFQK2VW
-         EWKctw7l0crAZJc430ajsnAkdBEKVrS0lAcIyeAJE41I1QqRZQhaGTavEHn8az8FxP9w
-         xIlDRhyb0pB3LwN8fqXS3Efiiv/cG1GIUFwHbgcCikgJtorgUi8miWSIxpTkVb1YB2HQ
-         Enc6wk+PYVv0VSXhA/B80gD5yfT+qNeoxUdIQbXxMdCW026nx27ebhaHYxBkf3HAtcTK
-         CQGessLwHtGH0qRAcf2vjXGHHG5Irfgyq0gQIeoes6n7/B2H7KTTF/MrECqqayMgyTSB
-         lXYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o6MP4MD2XvqRqDBpI14/SbmM5jumQB8YX4MXAiMxcgg=;
-        b=ntnZAvUw6UNrY+rNqzn5zGK2OVutXb+DT//hvcb36QeYkRqvNQRVz22f3bq5Ui0F0l
-         3TV6cus4eNSq9ZVmVg1JJFW2O3OkDc0N6pUZ1WgqNxeTuMYooMz4kLpBIbKOnyiR+zSf
-         bfHQDUd8T+BNXi0jglnYvuAgtFhPfWX64Q+jERL+zxmqMpErw7vfOilpAewBvHwDFM+B
-         W+OT9Zy/05e+COwzHAjXZTVgIZKQiscKW4Psh6dchxtDMUf5eI2K8z6jgESdawBkaJmJ
-         SQ/ncasnlHU+guavH++YUrfl51K52lFcG4KAiPplaAs8CH4R1/JLrt7meepTRREAdu17
-         52NQ==
-X-Gm-Message-State: APjAAAXQbKo+bv4UEo569OvrpW+/3Ja0jwFBJYmixcjo+kNCLeTprkHN
-        8ucOiANZJR5AMs2TH4KuNWoblOF9sZM=
-X-Google-Smtp-Source: APXvYqw+Nx1Y+7H23kBikUygsyauL9xa46UprB/ftsk+YWYHtSqDL/XDQtgzY94OU/Wa7WZrRXj7kQ==
-X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr43337462plb.155.1554892399613;
-        Wed, 10 Apr 2019 03:33:19 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id d68sm50349990pfg.16.2019.04.10.03.33.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 03:33:18 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 16:03:16 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, andy.gross@linaro.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org,
-        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        devicetree@vger.kernel.org, rnayak@codeaurora.org,
-        cw00.choi@samsung.com, linux-pm@vger.kernel.org,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        dianders@chromium.org
-Subject: Re: [PATCH RFC 7/9] cpufreq: qcom: Add support to update cpu node's
- OPP tables
-Message-ID: <20190410103316.sxev2f54klemq2p6@vireshk-i7>
-References: <20190328152822.532-1-sibis@codeaurora.org>
- <20190328152822.532-8-sibis@codeaurora.org>
+        Wed, 10 Apr 2019 06:34:23 -0400
+Received: from mail-eopbgr130048.outbound.protection.outlook.com ([40.107.13.48]:28390
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfDJKeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 06:34:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ThJ01jct1k9iNxpf6TgizWCfHx7DsY3NoNQvIxw8a40=;
+ b=mmEcHVE3ur+cDxDPjtIvrUUVDek1cc+YhyiMHR6Y4IMGjhSTQ9G1PmniSw3ZBVBffENeU5JQXeA9NTxRURPUYiwwrHiPBdFwi6cil7vP0x126cmyCo83+0IR2YespKOjybkXAnzUxPYey28Y/DQMjELYcdWA41mqhYHQETl2sQE=
+Received: from AM6PR05MB6133.eurprd05.prod.outlook.com (20.179.3.144) by
+ AM6PR05MB4136.eurprd05.prod.outlook.com (52.135.160.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.21; Wed, 10 Apr 2019 10:34:18 +0000
+Received: from AM6PR05MB6133.eurprd05.prod.outlook.com
+ ([fe80::b43b:8a06:4870:82cc]) by AM6PR05MB6133.eurprd05.prod.outlook.com
+ ([fe80::b43b:8a06:4870:82cc%2]) with mapi id 15.20.1771.011; Wed, 10 Apr 2019
+ 10:34:17 +0000
+From:   Petr Machata <petrm@mellanox.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     Huang Rui <huangruippp@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>, Jiri Pirko <jiri@mellanox.com>,
+        "ecree@solarflare.com" <ecree@solarflare.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "alexander.h.duyck@intel.com" <alexander.h.duyck@intel.com>,
+        "amritha.nambiar@intel.com" <amritha.nambiar@intel.com>,
+        Li Rongqing <lirongqing@baidu.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
+        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>
+Subject: Re: [PATCH] net:bridge:always disable auto-tuning when the user
+ specified MTU
+Thread-Topic: [PATCH] net:bridge:always disable auto-tuning when the user
+ specified MTU
+Thread-Index: AQHU70Wdg8ZylmIMz02uBxr+ZWpYCKY0rpyAgACEtgA=
+Date:   Wed, 10 Apr 2019 10:34:17 +0000
+Message-ID: <87y34ijgil.fsf@mellanox.com>
+References: <20190410023208.25435-1-huangruiPPP@gmail.com>
+ <20190409193911.2d68a64d@shemminger-XPS-13-9360>
+In-Reply-To: <20190409193911.2d68a64d@shemminger-XPS-13-9360>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6P191CA0040.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:7f::17) To AM6PR05MB6133.eurprd05.prod.outlook.com
+ (2603:10a6:20b:af::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=petrm@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [78.45.160.211]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4add7463-6901-41da-1eb9-08d6bda0158e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB4136;
+x-ms-traffictypediagnostic: AM6PR05MB4136:
+x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
+x-microsoft-antispam-prvs: <AM6PR05MB4136650422167DA53EA7A9EDDB2E0@AM6PR05MB4136.eurprd05.prod.outlook.com>
+x-forefront-prvs: 00032065B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(189003)(199004)(2616005)(36756003)(476003)(256004)(5660300002)(11346002)(8676002)(6116002)(14444005)(478600001)(102836004)(316002)(106356001)(99286004)(486006)(446003)(4326008)(105586002)(229853002)(26005)(86362001)(76176011)(6506007)(305945005)(386003)(6246003)(71190400001)(52116002)(2906002)(6486002)(71200400001)(7416002)(6916009)(7736002)(68736007)(8936002)(54906003)(14454004)(25786009)(97736004)(3846002)(66066001)(81156014)(186003)(6436002)(81166006)(53936002)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4136;H:AM6PR05MB6133.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ky9AvaQfnZNoTtgtBOPUNbqi3XyzsYzpdaT1dcuiQbZozwPPJjO/HhQHjkPv4/XMK8NWepH9r5hpxgWShBIB+qEl+8w/bXErVQB8Cqj0Yw/SazRWwwxcAUYQtqfpzVO92zew/EWs7O+IR7RIqCfLJFA9IM8LxCcEaQnSqwYU5WBm6ebpDfGyitiYh7B1UT10XnCl4PaRrxb28l0Km3qcGw26nsLO9bg4bJAGYT/Ne+tWBwlbXtHnEUzKzqBG4GgbO0nJpiOCP+FQ4rOr/LLDB2wVu9n5LTbAqeR23+ih8/gqWiP6cCditSmrwhONN428b6ClpDOJdC7WD/X2Ta93DJBeNKMgrpd3fnpILe39QNMZwRaZwKyoornwykuGeTx5AxnoiqT/FmufDfUMNR29SaJTrIRSljY2oKslVgHbk2g=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328152822.532-8-sibis@codeaurora.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4add7463-6901-41da-1eb9-08d6bda0158e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2019 10:34:17.7869
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-03-19, 20:58, Sibi Sankar wrote:
-> Add support to parse and update OPP tables attached to the cpu nodes.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index 4b0b50403901..5c268dd2346c 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -73,6 +73,25 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->  	return policy->freq_table[index].frequency;
->  }
->  
-> +static int qcom_find_update_opp(struct device *cpu_dev, unsigned long freq,
-> +				unsigned long volt)
-> +{
-> +	int ret;
-> +	struct dev_pm_opp *opp;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(cpu_dev, freq, true);
-> +	if (IS_ERR(opp)) {
-> +		ret = dev_pm_opp_add(cpu_dev, freq, volt);
-
-With my comment on the other patch, you can just call
-dev_pm_opp_update_voltage() and if that fails then call dev_pm_opp_add().
-
-> +	} else {
-> +		dev_pm_opp_disable(cpu_dev, freq);
-> +		ret = dev_pm_opp_update_voltage(cpu_dev, freq, volt);
-> +		dev_pm_opp_enable(cpu_dev, freq);
-
-Perhaps no one else should be using the CPU OPP table at this point of time and
-so we can get away with disable and enable stuff ? Just add a comment on why
-that works.
-
-> +		dev_pm_opp_put(opp);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  				    struct cpufreq_policy *policy,
->  				    void __iomem *base)
-> @@ -81,11 +100,16 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  	u32 volt;
->  	unsigned int max_cores = cpumask_weight(policy->cpus);
->  	struct cpufreq_frequency_table	*table;
-> +	int ret;
->  
->  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->  	if (!table)
->  		return -ENOMEM;
->  
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (ret)
-> +		dev_dbg(cpu_dev, "Couldn't add OPP table\n");
-> +
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->  		data = readl_relaxed(base + REG_FREQ_LUT +
->  				      i * LUT_ROW_SIZE);
-> @@ -104,7 +128,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  
->  		if (freq != prev_freq && core_count == max_cores) {
->  			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_find_update_opp(cpu_dev, freq * 1000, volt);
->  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		} else {
-> @@ -125,7 +149,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  			if (prev_cc != max_cores) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_find_update_opp(cpu_dev, prev_freq * 1000,
-> +						     volt);
->  			}
->  
->  			break;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-
--- 
-viresh
+DQpTdGVwaGVuIEhlbW1pbmdlciA8c3RlcGhlbkBuZXR3b3JrcGx1bWJlci5vcmc+IHdyaXRlczoN
+Cg0KPiBPbiBXZWQsIDEwIEFwciAyMDE5IDAyOjMyOjA4ICswMDAwDQo+IEh1YW5nIFJ1aSA8aHVh
+bmdydWlwcHBAZ21haWwuY29tPiB3cm90ZToNCj4NCj4+IEZvciBleGFtcGxlLg0KPj4gTXkgcHVy
+cG9zZSBpcyB0byBjcmVhdGUgYSBicmlkZ2UgYnIwIGFuZCBqb2luIGV0aDAgaW50byBicjAuDQo+
+PiBpZiB3ZSB1c2UgdGhpcyBmb2xsb3dpbmcgd2F5LCB0aGUgYXV0by10dW5pbmcgZmxhZyB3aWxs
+IG5vdCBiZSBkaXNhYmxlZC4NCj4+DQo+PiBJZiBldGgwJ3MgbXR1IGlzIDEyMDANCj4+IHN0ZXAg
+MS5icmN0bCBhZGRiciBicjANCj4+IHN0ZXAgMi5icmN0bCBhZGRpZiBicjAgZXRoMA0KPj4gc3Rl
+cCAzLmlmY29uZmlnIGJyMCBtdHUgMTIwMA0KPj4gc3RlcCA0LmlmY29uZmlnIGV0aDAgbXR1IDE1
+MDANCj4+DQo+PiBSZXN1bHQ6DQo+PiBicjAncyBNVFU6IDE1MDAsIGV0aDAncyBNVFU6IDE1MDAN
+Cj4+DQo+PiBFeHBlY3RlZDoNCj4+IGJyMCdzIE1UVTogMTIwMCwgZXRoMCdzIE1UVTogMTUwMA0K
+Pj4NCj4+IEkgaGF2ZSBzcGVjaWZpZWQgYnIwJ3MgTVRVLCAgYnV0IGF1dG8tbWluIHBvbGljeSB3
+b3Jrcy4gU28gdGhlIE1UVSBpcw0KPj4gbm90IHRoZSByZXN1bHQgd2hhdCB3ZSBleHBlY3RlZC4N
+Cj4+IEFzIGV4cGVjdGVkLCBpZiBpIGhhdmUgc3BlY2lmaWVkIGJyaWRnZSdzIE1UVSwgaXQgd2ls
+bCBzZXQgdGhlIGZsYWc6DQo+PiBCUk9QVF9NVFVfU0VUX0JZX1VTRVIgaW4gbmV0X2JyaWRnZV9v
+cHRzIGRpc2FibGVkIGFuZCBhdXRvLW1pbi9tYXgNCj4+IHBvbGljeSB3aWxsIG5vdCB3b3JrLkJ1
+dCBpbiB0aGlzIGNhc2UsIGJlY2F1c2UgdGhlIGRldl9zZXRfbXR1IHJldHVybg0KPj4gZWFybHks
+IHRoZSBCUk9QVF9NVFVfU0VUX0JZX1VTRVIgZmxhZyB3aWxsIG5vdCBiZSBkaXNhYmxlZCBhbmQN
+Cj4+IGF1dG8tbWluL21heCBwb2xpY3kgd2lsbCBzdGlsbCB3b3JrLg0KPj4NCj4+IFNpZ25lZC1v
+ZmYtYnk6IEh1YW5nIFJ1aSA8aHVhbmdydWlQUFBAZ21haWwuY29tPg0KPg0KPiBBIGJyaWRnZSBs
+aWtlIHRoaXMgZ29pbmcgdG8gZHJvcCBmcmFtZXMuDQo+IEEgZnJhbWUgcmVjZWl2ZWQgd2l0aCBN
+VFUgb2YgMTIwMCB3aWxsIGdldCBkcm9wcGVkLg0KDQpUaGF0J3MgdHJ1ZSBldmVuIGlmIGFib3Zl
+IHlvdSBzZXQgYnIwJ3MgTVRVIHRvIDEyMDEsIGJ1dCB0aGVuIHRoZQ0KYXV0by10dW5pbmcgaXMg
+ZGlzYWJsZWQgYXMgZXhwZWN0ZWQuIFRoZSBwcm9ibGVtIGlzIHRoYXQgc2V0dGluZyBNVFUgdG8N
+CjEyMDAgaXMgcGVyY2VpdmVkIGFzIGEgbm9uLWNoYW5nZSwgd2hlcmVhcyBpdCBzaG91bGQgaW5z
+dGVhZCBiZQ0KcGVyY2VpdmVkIGFzIGEgc2lnbmFsIHRoYXQgdGhlIHVzZXIgdGFrZXMgb3ZlciB0
+aGUgTVRVIG1hbmFnZW1lbnQuDQoNCj4gVGhlIHByb3BlciB3YXkgdG8gZG8gdGhpcyBpcyB0byBj
+aGFuZ2UgTVRVIG9mIGJvdGggaW50ZXJmYWNlcyB0byBtYXRjaC4NCg==
