@@ -2,158 +2,174 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6C6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BECC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E86C20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A07820830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OujTAQQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfDJKdF (ORCPT
+        id S1730548AbfDJKdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:33:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46474 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730501AbfDJKdF (ORCPT
+        Wed, 10 Apr 2019 06:33:21 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41484 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728543AbfDJKdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:33:05 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AATmmT140209
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:33:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsdyd2hg5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 06:33:04 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 10 Apr 2019 11:33:02 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 10 Apr 2019 11:33:00 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3AAX0hs55705774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 10:33:00 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A0D1A404D;
-        Wed, 10 Apr 2019 10:33:00 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB310A4040;
-        Wed, 10 Apr 2019 10:32:59 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.148])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 10 Apr 2019 10:32:59 +0000 (GMT)
-Date:   Wed, 10 Apr 2019 12:32:58 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     heiko carstens <heiko.carstens@de.ibm.com>,
-        gor <gor@linux.ibm.com>, libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Carlos O'Donell" <carlos@redhat.com>
-Subject: Re: rseq/s390: choosing code signature
-In-Reply-To: <1779981820.2626.1554838342731.JavaMail.zimbra@efficios.com>
-References: <1779981820.2626.1554838342731.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 10 Apr 2019 06:33:20 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d1so1172355plj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 03:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o6MP4MD2XvqRqDBpI14/SbmM5jumQB8YX4MXAiMxcgg=;
+        b=OujTAQQPHwq+Rr4uTnK74C/W70fLAhCmbeQzs7wLTUnxJN8i+7ARsbfJ8C2uFQK2VW
+         EWKctw7l0crAZJc430ajsnAkdBEKVrS0lAcIyeAJE41I1QqRZQhaGTavEHn8az8FxP9w
+         xIlDRhyb0pB3LwN8fqXS3Efiiv/cG1GIUFwHbgcCikgJtorgUi8miWSIxpTkVb1YB2HQ
+         Enc6wk+PYVv0VSXhA/B80gD5yfT+qNeoxUdIQbXxMdCW026nx27ebhaHYxBkf3HAtcTK
+         CQGessLwHtGH0qRAcf2vjXGHHG5Irfgyq0gQIeoes6n7/B2H7KTTF/MrECqqayMgyTSB
+         lXYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o6MP4MD2XvqRqDBpI14/SbmM5jumQB8YX4MXAiMxcgg=;
+        b=ntnZAvUw6UNrY+rNqzn5zGK2OVutXb+DT//hvcb36QeYkRqvNQRVz22f3bq5Ui0F0l
+         3TV6cus4eNSq9ZVmVg1JJFW2O3OkDc0N6pUZ1WgqNxeTuMYooMz4kLpBIbKOnyiR+zSf
+         bfHQDUd8T+BNXi0jglnYvuAgtFhPfWX64Q+jERL+zxmqMpErw7vfOilpAewBvHwDFM+B
+         W+OT9Zy/05e+COwzHAjXZTVgIZKQiscKW4Psh6dchxtDMUf5eI2K8z6jgESdawBkaJmJ
+         SQ/ncasnlHU+guavH++YUrfl51K52lFcG4KAiPplaAs8CH4R1/JLrt7meepTRREAdu17
+         52NQ==
+X-Gm-Message-State: APjAAAXQbKo+bv4UEo569OvrpW+/3Ja0jwFBJYmixcjo+kNCLeTprkHN
+        8ucOiANZJR5AMs2TH4KuNWoblOF9sZM=
+X-Google-Smtp-Source: APXvYqw+Nx1Y+7H23kBikUygsyauL9xa46UprB/ftsk+YWYHtSqDL/XDQtgzY94OU/Wa7WZrRXj7kQ==
+X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr43337462plb.155.1554892399613;
+        Wed, 10 Apr 2019 03:33:19 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id d68sm50349990pfg.16.2019.04.10.03.33.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 03:33:18 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 16:03:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     robh+dt@kernel.org, andy.gross@linaro.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        rjw@rjwysocki.net, nm@ti.com, sboyd@kernel.org,
+        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        devicetree@vger.kernel.org, rnayak@codeaurora.org,
+        cw00.choi@samsung.com, linux-pm@vger.kernel.org,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        dianders@chromium.org
+Subject: Re: [PATCH RFC 7/9] cpufreq: qcom: Add support to update cpu node's
+ OPP tables
+Message-ID: <20190410103316.sxev2f54klemq2p6@vireshk-i7>
+References: <20190328152822.532-1-sibis@codeaurora.org>
+ <20190328152822.532-8-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041010-0028-0000-0000-0000035F450D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041010-0029-0000-0000-0000241E66E3
-Message-Id: <20190410123258.37f182cf@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904100076
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328152822.532-8-sibis@codeaurora.org>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Apr 2019 15:32:22 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 28-03-19, 20:58, Sibi Sankar wrote:
+> Add support to parse and update OPP tables attached to the cpu nodes.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 29 +++++++++++++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index 4b0b50403901..5c268dd2346c 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -73,6 +73,25 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+>  	return policy->freq_table[index].frequency;
+>  }
+>  
+> +static int qcom_find_update_opp(struct device *cpu_dev, unsigned long freq,
+> +				unsigned long volt)
+> +{
+> +	int ret;
+> +	struct dev_pm_opp *opp;
+> +
+> +	opp = dev_pm_opp_find_freq_exact(cpu_dev, freq, true);
+> +	if (IS_ERR(opp)) {
+> +		ret = dev_pm_opp_add(cpu_dev, freq, volt);
 
-> Hi,
-> 
-> We are about to include the code signature required prior to restartable
-> sequences abort handlers into glibc, which will make this ABI choice final.
-> We need architecture maintainer input on that signature value.
-> 
-> That code signature is placed before each abort handler, so the kernel can
-> validate that it is indeed jumping to an abort handler (and not some
-> arbitrary attacker-chosen code). The signature is never executed.
-> 
-> The current discussion thread on the glibc mailing list leads us towards
-> using a trap with uncommon immediate operand, which simplifies integration
-> with disassemblers, emulators, makes it easier to debug if the control
-> flow gets redirected there by mistake, and is nicer for some architecture's
-> speculative execution.
-> 
-> We can have different signatures for each sub-architecture, as long as they
-> don't have to co-exist within the same process. We can special-case with
-> #ifdef for each sub-architecture and endianness if need be. If the architecture
-> has instruction set extensions that can co-exist with the architecture
-> instruction set within the same process, we need to take into account to which
-> instruction the chosen signature value would map (and possibly decide if we
-> need to extend rseq to support many signatures).
-> 
-> Here is an example of rseq signature definition template:
-> 
-> /*
->  * TODO: document trap instruction objdump output on each sub-architecture
->  * instruction sets, as well as instruction set extensions.
->  */
-> #define RSEQ_SIG 0x########
-> 
-> Ideally we'd need a patch on top of the Linux kernel
-> tools/testing/selftests/rseq/rseq-s390.h file that updates
-> the signature value, so I can then pick it up for the glibc
-> patchset.
+With my comment on the other patch, you can just call
+dev_pm_opp_update_voltage() and if that fails then call dev_pm_opp_add().
 
-The trap4 instruction is a suitable one. The patch would look like this
---
-commit 2ee28f6d1de968a71f074ab150384b90b4121216
-Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Date:   Wed Apr 10 12:28:41 2019 +0200
+> +	} else {
+> +		dev_pm_opp_disable(cpu_dev, freq);
+> +		ret = dev_pm_opp_update_voltage(cpu_dev, freq, volt);
+> +		dev_pm_opp_enable(cpu_dev, freq);
 
-    s390/rseq: use trap4 for RSEQ_SIG
-    
-    Use trap4 as the guard instruction for the restartable sequence abort
-    handler.
-    
-    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Perhaps no one else should be using the CPU OPP table at this point of time and
+so we can get away with disable and enable stuff ? Just add a comment on why
+that works.
 
-diff --git a/tools/testing/selftests/rseq/rseq-s390.h b/tools/testing/selftests/rseq/rseq-s390.h
-index 1069e85258ce..d4c8e1147d86 100644
---- a/tools/testing/selftests/rseq/rseq-s390.h
-+++ b/tools/testing/selftests/rseq/rseq-s390.h
-@@ -1,6 +1,13 @@
- /* SPDX-License-Identifier: LGPL-2.1 OR MIT */
- 
--#define RSEQ_SIG	0x53053053
-+/*
-+ * RSEQ_SIG uses the trap4 instruction. As Linux does not make use of the
-+ * access-register mode nor the linkage stack this instruction will always
-+ * cause a special-operation exception (the trap-enabled bit in the DUCT
-+ * is and will stay 0). The instruction pattern is
-+ *	b2 ff 0f ff	trap4   4095(%r0)
-+ */
-+#define RSEQ_SIG	0xB2FF0FFF
- 
- #define rseq_smp_mb()	__asm__ __volatile__ ("bcr 15,0" ::: "memory")
- #define rseq_smp_rmb()	rseq_smp_mb()
+> +		dev_pm_opp_put(opp);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>  				    struct cpufreq_policy *policy,
+>  				    void __iomem *base)
+> @@ -81,11 +100,16 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>  	u32 volt;
+>  	unsigned int max_cores = cpumask_weight(policy->cpus);
+>  	struct cpufreq_frequency_table	*table;
+> +	int ret;
+>  
+>  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>  	if (!table)
+>  		return -ENOMEM;
+>  
+> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+> +	if (ret)
+> +		dev_dbg(cpu_dev, "Couldn't add OPP table\n");
+> +
+>  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>  		data = readl_relaxed(base + REG_FREQ_LUT +
+>  				      i * LUT_ROW_SIZE);
+> @@ -104,7 +128,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>  
+>  		if (freq != prev_freq && core_count == max_cores) {
+>  			table[i].frequency = freq;
+> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+> +			qcom_find_update_opp(cpu_dev, freq * 1000, volt);
+>  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>  				freq, core_count);
+>  		} else {
+> @@ -125,7 +149,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+>  			if (prev_cc != max_cores) {
+>  				prev->frequency = prev_freq;
+>  				prev->flags = CPUFREQ_BOOST_FREQ;
+> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+> +				qcom_find_update_opp(cpu_dev, prev_freq * 1000,
+> +						     volt);
+>  			}
+>  
+>  			break;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
 -- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
-
+viresh
