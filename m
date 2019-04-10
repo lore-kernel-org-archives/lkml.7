@@ -2,96 +2,305 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6B7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9B6C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49EDF2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TkhvHLwM"
+	by mail.kernel.org (Postfix) with ESMTP id 2524B217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfDJHsL (ORCPT
+        id S1729059AbfDJHsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 03:48:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39700 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfDJHsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 03:48:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i17so946046pfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 00:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=skXQPHyDnnOMLPLPuYFyTD9T90iTaKhdEM7fSMIdTTs=;
-        b=TkhvHLwMDsXKGAq0AiPDmvH5yC1SdIcVn6Oazrqv8ASNM8ALILI1m7rMlztC6i4dDV
-         4M0++4jdbtMValVSWn83txV7CB5hj3olvE2GOkzebV9y4lvwgrcNO8Oc8ZTnIYg9ubf7
-         F8vzG2K7CJodAL0bqEPAVHOXsZQOrSqXH4qgJvBWXOP2uluSrjMLq5IsAMHa546tdE2B
-         6RKieD758yfk5Q/yUroKzvCdDf4EYiKXVdcN0HUDoQ4DJIYYyS7AbSvKuvGgdX1Ln559
-         RpSu1Z3vAFYWDZ4GHzM4/Ce5gzgtvfCftRqfLOkjvH7Zi9PIOaV9XPUsQTXVXmCRnNpP
-         OL4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=skXQPHyDnnOMLPLPuYFyTD9T90iTaKhdEM7fSMIdTTs=;
-        b=TttjKk3VUYXTXCfYhkPatbja1mInPx7X/4j6KnDdUuG4qZk0mnrIoLeCWysmJi1SRr
-         bFi2bsu7TEDEG0c3AQrjHtlvpR04HzTRCAf6Y5EufsLBBuGUiOQes3E15ARJP8zTDa4+
-         FvYX1FaVKy36Szl12t6wm4AqAiJ7fRaz46v1hC35oCUlb2UJWliT8SSV218G72fryJGZ
-         e0nFrE6Glc922WPQc993UU2Lz8GK2EmxmdV7YsCGEyE8+5Rjjy2vDxRa4owFgpUu2PwG
-         MTGG8bqdx4SS5znwSf6aYSdiBL1NT3uR4+BX6vDtasrqCZJctwGYVCR5VY0+il/wFJq2
-         FQfA==
-X-Gm-Message-State: APjAAAXbBZ1X9ddxMiz58revgw5wCBQZWl4yF+lwU23ptUPC20n4iG+w
-        yZryrW87yOsKwIEwSJ60heYhKQ==
-X-Google-Smtp-Source: APXvYqxqTeb+EqhxeDU6+0fMPYC52ziiOkECp/pdej0bBIJKPOLM9JKtccNDZMSyvjp0G1F1tFw8TQ==
-X-Received: by 2002:a62:69c2:: with SMTP id e185mr41478628pfc.119.1554882489460;
-        Wed, 10 Apr 2019 00:48:09 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 17sm46355818pgz.52.2019.04.10.00.48.06
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 10 Apr 2019 00:48:08 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
-        broonie@kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: eic: sprd: Fix incorrect irq type setting for the sync EIC
-Date:   Wed, 10 Apr 2019 15:47:54 +0800
-Message-Id: <e7ca1df3b3159d6e1c65c6a2a9f01a7ecabcc821.1554882235.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        Wed, 10 Apr 2019 03:48:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58446 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfDJHsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 03:48:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E4A65302391C;
+        Wed, 10 Apr 2019 07:48:31 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FF195DA38;
+        Wed, 10 Apr 2019 07:48:29 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id BA7D311AA4; Wed, 10 Apr 2019 09:48:28 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        BOCHS VIRTUAL GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/bochs: use simple display pipe
+Date:   Wed, 10 Apr 2019 09:48:28 +0200
+Message-Id: <20190410074828.10296-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 10 Apr 2019 07:48:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When setting sync EIC as IRQ_TYPE_EDGE_BOTH type, we missed to set the
-SPRD_EIC_SYNC_INTMODE register to 0, which means detecting edge signals.
-
-Thus this patch fixes the issue.
-
-Fixes: 25518e024e3a ("gpio: Add Spreadtrum EIC driver support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpio/gpio-eic-sprd.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bochs/bochs.h     |   6 +-
+ drivers/gpu/drm/bochs/bochs_kms.c | 178 +++++++++---------------------
+ 2 files changed, 53 insertions(+), 131 deletions(-)
 
-diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-index f0223ce..7709226 100644
---- a/drivers/gpio/gpio-eic-sprd.c
-+++ b/drivers/gpio/gpio-eic-sprd.c
-@@ -414,6 +414,7 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_EDGE_BOTH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
+diff --git a/drivers/gpu/drm/bochs/bochs.h b/drivers/gpu/drm/bochs/bochs.h
+index a7f6723bebdd..36f6ee725d13 100644
+--- a/drivers/gpu/drm/bochs/bochs.h
++++ b/drivers/gpu/drm/bochs/bochs.h
+@@ -7,6 +7,7 @@
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_fb_helper.h>
++#include <drm/drm_simple_kms_helper.h>
+ 
+ #include <drm/drm_gem.h>
+ 
+@@ -69,9 +70,8 @@ struct bochs_device {
+ 	struct edid *edid;
+ 
+ 	/* drm */
+-	struct drm_device  *dev;
+-	struct drm_crtc crtc;
+-	struct drm_encoder encoder;
++	struct drm_device *dev;
++	struct drm_simple_display_pipe pipe;
+ 	struct drm_connector connector;
+ 
+ 	/* ttm */
+diff --git a/drivers/gpu/drm/bochs/bochs_kms.c b/drivers/gpu/drm/bochs/bochs_kms.c
+index 485f9cf05e8b..5e905f50449d 100644
+--- a/drivers/gpu/drm/bochs/bochs_kms.c
++++ b/drivers/gpu/drm/bochs/bochs_kms.c
+@@ -22,76 +22,55 @@ MODULE_PARM_DESC(defy, "default y resolution");
+ 
+ /* ---------------------------------------------------------------------- */
+ 
+-static void bochs_crtc_mode_set_nofb(struct drm_crtc *crtc)
+-{
+-	struct bochs_device *bochs =
+-		container_of(crtc, struct bochs_device, crtc);
+-
+-	bochs_hw_setmode(bochs, &crtc->mode);
+-}
+-
+-static void bochs_crtc_atomic_enable(struct drm_crtc *crtc,
+-				     struct drm_crtc_state *old_crtc_state)
+-{
+-}
+-
+-static void bochs_crtc_atomic_flush(struct drm_crtc *crtc,
+-				    struct drm_crtc_state *old_crtc_state)
+-{
+-	struct drm_device *dev = crtc->dev;
+-	struct drm_pending_vblank_event *event;
+-
+-	if (crtc->state && crtc->state->event) {
+-		unsigned long irqflags;
+-
+-		spin_lock_irqsave(&dev->event_lock, irqflags);
+-		event = crtc->state->event;
+-		crtc->state->event = NULL;
+-		drm_crtc_send_vblank_event(crtc, event);
+-		spin_unlock_irqrestore(&dev->event_lock, irqflags);
+-	}
+-}
+-
+-
+-/* These provide the minimum set of functions required to handle a CRTC */
+-static const struct drm_crtc_funcs bochs_crtc_funcs = {
+-	.set_config = drm_atomic_helper_set_config,
+-	.destroy = drm_crtc_cleanup,
+-	.page_flip = drm_atomic_helper_page_flip,
+-	.reset = drm_atomic_helper_crtc_reset,
+-	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
+-	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
+-};
+-
+-static const struct drm_crtc_helper_funcs bochs_helper_funcs = {
+-	.mode_set_nofb = bochs_crtc_mode_set_nofb,
+-	.atomic_enable = bochs_crtc_atomic_enable,
+-	.atomic_flush = bochs_crtc_atomic_flush,
+-};
+-
+ static const uint32_t bochs_formats[] = {
+ 	DRM_FORMAT_XRGB8888,
+ 	DRM_FORMAT_BGRX8888,
+ };
+ 
+-static void bochs_plane_atomic_update(struct drm_plane *plane,
+-				      struct drm_plane_state *old_state)
++static void bochs_plane_update(struct bochs_device *bochs,
++			       struct drm_plane_state *state)
+ {
+-	struct bochs_device *bochs = plane->dev->dev_private;
+ 	struct bochs_bo *bo;
+ 
+-	if (!plane->state->fb)
++	if (!state->fb || !bochs->stride)
+ 		return;
+-	bo = gem_to_bochs_bo(plane->state->fb->obj[0]);
++
++	bo = gem_to_bochs_bo(state->fb->obj[0]);
+ 	bochs_hw_setbase(bochs,
+-			 plane->state->crtc_x,
+-			 plane->state->crtc_y,
++			 state->crtc_x,
++			 state->crtc_y,
+ 			 bo->bo.offset);
+-	bochs_hw_setformat(bochs, plane->state->fb->format);
++	bochs_hw_setformat(bochs, state->fb->format);
+ }
+ 
+-static int bochs_plane_prepare_fb(struct drm_plane *plane,
+-				struct drm_plane_state *new_state)
++static void bochs_pipe_enable(struct drm_simple_display_pipe *pipe,
++			      struct drm_crtc_state *crtc_state,
++			      struct drm_plane_state *plane_state)
++{
++	struct bochs_device *bochs = pipe->crtc.dev->dev_private;
++
++	bochs_hw_setmode(bochs, &crtc_state->mode);
++	bochs_plane_update(bochs, plane_state);
++}
++
++static void bochs_pipe_update(struct drm_simple_display_pipe *pipe,
++			      struct drm_plane_state *old_state)
++{
++	struct bochs_device *bochs = pipe->crtc.dev->dev_private;
++	struct drm_crtc *crtc = &pipe->crtc;
++
++	bochs_plane_update(bochs, pipe->plane.state);
++
++	if (crtc->state->event) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
++}
++
++static int bochs_pipe_prepare_fb(struct drm_simple_display_pipe *pipe,
++				 struct drm_plane_state *new_state)
+ {
+ 	struct bochs_bo *bo;
+ 
+@@ -101,8 +80,8 @@ static int bochs_plane_prepare_fb(struct drm_plane *plane,
+ 	return bochs_bo_pin(bo, TTM_PL_FLAG_VRAM);
+ }
+ 
+-static void bochs_plane_cleanup_fb(struct drm_plane *plane,
+-				   struct drm_plane_state *old_state)
++static void bochs_pipe_cleanup_fb(struct drm_simple_display_pipe *pipe,
++				  struct drm_plane_state *old_state)
+ {
+ 	struct bochs_bo *bo;
+ 
+@@ -112,73 +91,13 @@ static void bochs_plane_cleanup_fb(struct drm_plane *plane,
+ 	bochs_bo_unpin(bo);
+ }
+ 
+-static const struct drm_plane_helper_funcs bochs_plane_helper_funcs = {
+-	.atomic_update = bochs_plane_atomic_update,
+-	.prepare_fb = bochs_plane_prepare_fb,
+-	.cleanup_fb = bochs_plane_cleanup_fb,
++static const struct drm_simple_display_pipe_funcs bochs_pipe_funcs = {
++	.enable	    = bochs_pipe_enable,
++	.update	    = bochs_pipe_update,
++	.prepare_fb = bochs_pipe_prepare_fb,
++	.cleanup_fb = bochs_pipe_cleanup_fb,
+ };
+ 
+-static const struct drm_plane_funcs bochs_plane_funcs = {
+-       .update_plane   = drm_atomic_helper_update_plane,
+-       .disable_plane  = drm_atomic_helper_disable_plane,
+-       .destroy        = drm_primary_helper_destroy,
+-       .reset          = drm_atomic_helper_plane_reset,
+-       .atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
+-       .atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
+-};
+-
+-static struct drm_plane *bochs_primary_plane(struct drm_device *dev)
+-{
+-	struct drm_plane *primary;
+-	int ret;
+-
+-	primary = kzalloc(sizeof(*primary), GFP_KERNEL);
+-	if (primary == NULL) {
+-		DRM_DEBUG_KMS("Failed to allocate primary plane\n");
+-		return NULL;
+-	}
+-
+-	ret = drm_universal_plane_init(dev, primary, 0,
+-				       &bochs_plane_funcs,
+-				       bochs_formats,
+-				       ARRAY_SIZE(bochs_formats),
+-				       NULL,
+-				       DRM_PLANE_TYPE_PRIMARY, NULL);
+-	if (ret) {
+-		kfree(primary);
+-		return NULL;
+-	}
+-
+-	drm_plane_helper_add(primary, &bochs_plane_helper_funcs);
+-	return primary;
+-}
+-
+-static void bochs_crtc_init(struct drm_device *dev)
+-{
+-	struct bochs_device *bochs = dev->dev_private;
+-	struct drm_crtc *crtc = &bochs->crtc;
+-	struct drm_plane *primary = bochs_primary_plane(dev);
+-
+-	drm_crtc_init_with_planes(dev, crtc, primary, NULL,
+-				  &bochs_crtc_funcs, NULL);
+-	drm_crtc_helper_add(crtc, &bochs_helper_funcs);
+-}
+-
+-static const struct drm_encoder_funcs bochs_encoder_encoder_funcs = {
+-	.destroy = drm_encoder_cleanup,
+-};
+-
+-static void bochs_encoder_init(struct drm_device *dev)
+-{
+-	struct bochs_device *bochs = dev->dev_private;
+-	struct drm_encoder *encoder = &bochs->encoder;
+-
+-	encoder->possible_crtcs = 0x1;
+-	drm_encoder_init(dev, encoder, &bochs_encoder_encoder_funcs,
+-			 DRM_MODE_ENCODER_DAC, NULL);
+-}
+-
+-
+ static int bochs_connector_get_modes(struct drm_connector *connector)
+ {
+ 	struct bochs_device *bochs =
+@@ -278,11 +197,14 @@ int bochs_kms_init(struct bochs_device *bochs)
+ 
+ 	bochs->dev->mode_config.funcs = &bochs_mode_funcs;
+ 
+-	bochs_crtc_init(bochs->dev);
+-	bochs_encoder_init(bochs->dev);
+ 	bochs_connector_init(bochs->dev);
+-	drm_connector_attach_encoder(&bochs->connector,
+-					  &bochs->encoder);
++	drm_simple_display_pipe_init(bochs->dev,
++				     &bochs->pipe,
++				     &bochs_pipe_funcs,
++				     bochs_formats,
++				     ARRAY_SIZE(bochs_formats),
++				     NULL,
++				     &bochs->connector);
+ 
+ 	drm_mode_config_reset(bochs->dev);
+ 
 -- 
-1.7.9.5
+2.18.1
 
