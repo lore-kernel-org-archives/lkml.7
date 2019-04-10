@@ -2,81 +2,115 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35EDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9BEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14C82075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QmAL3kq7"
+	by mail.kernel.org (Postfix) with ESMTP id B4FC82075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfDJUE2 (ORCPT
+        id S1726756AbfDJUHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:04:28 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36624 "EHLO mail.skyhub.de"
+        Wed, 10 Apr 2019 16:07:52 -0400
+Received: from muru.com ([72.249.23.125]:45250 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDJUE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:04:27 -0400
-Received: from zn.tnic (p200300EC2F0CAE0088EC372D30EF1627.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ae00:88ec:372d:30ef:1627])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 58E401EC0301;
-        Wed, 10 Apr 2019 22:04:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554926666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UiwWceHvbke+Yaj4yVTQMNIDb++qNBrOt5TLHhjPT/k=;
-        b=QmAL3kq7LH5T8Xog6gx2DavBoRdBG72vsplvN2/Hc0W1q6w8rRNJqiA9cdPIj3qTSHv/1g
-        PgAsEworR5rgTJqg97qrOKUsSCnhnwrX0mWYYogSm/bh5q49rjGXQY/SexbgdnXbyE71kA
-        MIwlEd9+7lPvWRhZqBU4VhQvnaH9VfE=
-Date:   Wed, 10 Apr 2019 22:04:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH RESEND 2/5] x86/MCE: Handle MCA controls in a per_cpu way
-Message-ID: <20190410200418.GI26580@zn.tnic>
-References: <20190408141205.12376-1-Yazen.Ghannam@amd.com>
- <20190408141205.12376-3-Yazen.Ghannam@amd.com>
- <20190408175142.GK15689@zn.tnic>
- <SN6PR12MB26397E000684890C92075985F82C0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190409203412.GE6150@zn.tnic>
- <SN6PR12MB2639C9B48E46DA6A8BA9DB3DF82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190410164036.GC26580@zn.tnic>
- <SN6PR12MB2639F37C634BC7F6D4B86194F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
- <20190410172539.GF26580@zn.tnic>
- <SN6PR12MB2639F1786ED9F6BD261B1632F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
+        id S1726181AbfDJUHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 16:07:52 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AEDE580B6;
+        Wed, 10 Apr 2019 20:08:06 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 13:07:48 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Ladislav Michl <ladis@linux-mips.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+Message-ID: <20190410200748.GN2839@atomide.com>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+ <20190327081142.GA11034@lenoch>
+ <20190404141730.GE49658@atomide.com>
+ <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639F1786ED9F6BD261B1632F82E0@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 07:41:47PM +0000, Ghannam, Yazen wrote:
-> So I'm thinking to add another patch to the set. This will set
-> mce_bank.init=0 if we read MCA_CTL=0 from the hardware.
+Hi,
 
-Ok.
+* Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
+> can you ask for an acked-by before pulling a patch in your tree?
 
-> Then we check if mce_bank.init=0 in the set/show functions and give a
-> message if the bank is not used.
+I certainly do ask and wait for acks where possible :)
 
-Nah, not a message. return -ENODEV or -EINVAL or so.
+Note that I have not applied this patch. I just added
+Keerthy to Cc on this thread so maybe you misread the
+message earlier. My comment "seems like no other
+takers" was for Ladislav regarding somebody picking up
+his earlier work, not for picking up this patch :)
 
--- 
-Regards/Gruss,
-    Boris.
+In any case, I've been waiting for you guys to pick up
+the patch, here's my ack if you're waiting for it:
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+
+> On 04/04/2019 16:17, Tony Lindgren wrote:
+> > * Ladislav Michl <ladis@linux-mips.org> [190327 08:12]:
+> >> Hello Nathan,
+> >>
+> >> On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
+> >>> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
+> >>> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
+> >>> static because its prototype was not defined in a header. Unfortunately,
+> >>> this causes a build warning on multi_v7_defconfig because this function
+> >>> is not used anywhere in this translation unit:
+> >>>
+> >>> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
+> >>> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
+> >>>
+> >>> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
+> >>> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
+> >>> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
+> >>> Make unexported functions static"), which is probably where this should
+> >>> have happened.
+> >>
+> >> Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
+> >> capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
+> >> function being removed here). It is a part of an attempt to add event capture
+> >> for OMAP. Of course I would like this functionality to be implemented, but
+> >> as I do not have a time to continue, I cannot really object removing this
+> >> function.
+> >>
+> >> Just in case you'd be interested in finishing this task ;-)
+> > 
+> > Well seems like no other takers :) We can always find the missing
+> > function in git history when needed, so I suggest we apply this.
+> > 
+> > Adding Keerthy to Cc as he just posted a similar patch.
+> > 
+> > Regards,
+> > 
+> > Tony
+> > 
+> 
+> 
+> -- 
+>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+> 
