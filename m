@@ -2,296 +2,116 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70687C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB72C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0D720830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8245F2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jO0olwCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbfDJPoY (ORCPT
+        id S1730770AbfDJPpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:44:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41080 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727583AbfDJPoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:44:23 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 646203B3C0;
-        Wed, 10 Apr 2019 15:44:22 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 46B9F69197;
-        Wed, 10 Apr 2019 15:44:22 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id C12353FA45;
-        Wed, 10 Apr 2019 15:44:21 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 11:44:21 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Yuval Shaia <yuval.shaia@oracle.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
-        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
-        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
-        aarcange@redhat.com, david@redhat.com, david@fromorbit.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        pbonzini@redhat.com, kilobyte@angband.pl
-Message-ID: <1051460502.20833720.1554911061402.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190410143826.GA7856@lap1>
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-3-pagupta@redhat.com> <20190410142426.5bf0d9a4.cohuck@redhat.com> <20190410143826.GA7856@lap1>
-Subject: Re: [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
+        Wed, 10 Apr 2019 11:45:08 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44197 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729463AbfDJPpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:45:08 -0400
+Received: by mail-ua1-f65.google.com with SMTP id p13so922180uaa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 08:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EOOzgOmnaW9PWM1ThtEHEbDTMZ3kGVHOn2+NNi5Gr40=;
+        b=jO0olwCUmQkkI1+UF+TH3pc/VdIW42NCfyqi4pVYh0vexHpxwwY110t7HxlD3kSVrQ
+         RHuZDOs8QheyCF5zbqqnai3cB0/tAjohu+Hdrzm2D58eUSaMZuirE6al7j5xLaNTnGYx
+         TD+k5xm7dte+cGWrAZkqXLB5WF/TcuCWzHld4/qSq8RNmoLTsSFWfo2GbSddF4IWwgKR
+         11LVYFGEAJmSoqg+tvdwmb2bBuxXnS8tBGerYJPG/39vD2iZZtiClf+aSSyozDzUIKS9
+         a6Lzz2GFyxt5Ez0+ld/Z/7G9Iyf8sDTgwVa1cn2iBy82VCYnLJbitOTc9hKh2ub+WOl8
+         eRXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EOOzgOmnaW9PWM1ThtEHEbDTMZ3kGVHOn2+NNi5Gr40=;
+        b=fb0DeXsCAvnFRInqsQkk+h6uKJqLEvy6QFL6ileyX5ynnx6ZQzP2OOwYPBuW/R6Q0u
+         VN5SWja4ARZ1uDoJshaqIe8o2fAuz61i2ElwjVm9vIyVJ1BFcaUSP+cFGfnRC28JgWDa
+         zKo2WW45x2SZVOeb4lOsClemc1c4idl6PtuPp021rqX3r1Wg7AyLCblt5sh5scVBwmW1
+         hrUSqFTMooBs6JQHOvXN5GTMK1t+sezprYIl+lczBLWkau8kwCZBjX4tCH25jxdT9PDw
+         Ew7YVMQ1x7Sk55Bumb2aqSJvK+pvsIahFxF0GAZVYvPLF7Rs5Bh+wEjcK9K796/I7aqH
+         ojXQ==
+X-Gm-Message-State: APjAAAWRPY4f4LXkgFbE8n4x7wvISvM5/OjkdovRBLpiIwlBIrA3AaW2
+        MWgVp+KYT+B9PYg4vJdeU81LLjVRF9BXGl1tXtbOkg==
+X-Google-Smtp-Source: APXvYqw0TI6DnAqeMlVRPllfSCLVHooW+otPIG1dlwODTmK+smWDmG5Y1DN8DH9kflLZ4gQiLHA/ylQEgFCoCVv/w/A=
+X-Received: by 2002:a9f:2c09:: with SMTP id r9mr21462395uaj.56.1554911106679;
+ Wed, 10 Apr 2019 08:45:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.117, 10.4.195.10]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: XAITNQLp2s7XVOQXZG8TjuXiRrFoog==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 10 Apr 2019 15:44:22 +0000 (UTC)
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <79b6bdbc-890a-5a51-7fa1-aec57889046a@opersys.com> <CAOesGMgGFunOeMt93f57fPspdDSHp2twahhudEDhMvZ=VPJHaQ@mail.gmail.com>
+In-Reply-To: <CAOesGMgGFunOeMt93f57fPspdDSHp2twahhudEDhMvZ=VPJHaQ@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 10 Apr 2019 08:44:54 -0700
+Message-ID: <CAKOZueuQFiUVA2N0jj3cb6WkN1AjwDz2C+Q85W_spcjyMLYmjA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 10, 2019 at 8:16 AM Olof Johansson <olof@lixom.net> wrote:
+> Anyway, see my other reply just now -- CPIO + a filesystem view, and
+> providing said cpio archive in debugfs for those who want to copy it
+> off themselves might be something that fits everybody.
 
-> > 
-> > > This patch adds virtio-pmem driver for KVM guest.
-> > > 
-> > > Guest reads the persistent memory range information from
-> > > Qemu over VIRTIO and registers it on nvdimm_bus. It also
-> > > creates a nd_region object with the persistent memory
-> > > range information so that existing 'nvdimm/pmem' driver
-> > > can reserve this into system memory map. This way
-> > > 'virtio-pmem' driver uses existing functionality of pmem
-> > > driver to register persistent memory compatible for DAX
-> > > capable filesystems.
-> > > 
-> > > This also provides function to perform guest flush over
-> > > VIRTIO from 'pmem' driver when userspace performs flush
-> > > on DAX memory range.
-> > > 
-> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > > ---
-> > >  drivers/nvdimm/virtio_pmem.c     |  88 ++++++++++++++++++++++
-> > >  drivers/virtio/Kconfig           |  10 +++
-> > >  drivers/virtio/Makefile          |   1 +
-> > >  drivers/virtio/pmem.c            | 124 +++++++++++++++++++++++++++++++
-> > >  include/linux/virtio_pmem.h      |  60 +++++++++++++++
-> > >  include/uapi/linux/virtio_ids.h  |   1 +
-> > >  include/uapi/linux/virtio_pmem.h |  10 +++
-> > >  7 files changed, 294 insertions(+)
-> > >  create mode 100644 drivers/nvdimm/virtio_pmem.c
-> > >  create mode 100644 drivers/virtio/pmem.c
-> > >  create mode 100644 include/linux/virtio_pmem.h
-> > >  create mode 100644 include/uapi/linux/virtio_pmem.h
-> > > 
-> > (...)
-> > > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
-> > > new file mode 100644
-> > > index 000000000000..cc9de9589d56
-> > > --- /dev/null
-> > > +++ b/drivers/virtio/pmem.c
-> > > @@ -0,0 +1,124 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * virtio_pmem.c: Virtio pmem Driver
-> > > + *
-> > > + * Discovers persistent memory range information
-> > > + * from host and registers the virtual pmem device
-> > > + * with libnvdimm core.
-> > > + */
-> > > +#include <linux/virtio_pmem.h>
-> > > +#include <../../drivers/nvdimm/nd.h>
-> > > +
-> > > +static struct virtio_device_id id_table[] = {
-> > > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
-> > > +	{ 0 },
-> > > +};
-> > > +
-> > > + /* Initialize virt queue */
-> > > +static int init_vq(struct virtio_pmem *vpmem)
-> > 
-> > IMHO, you don't gain much by splitting off this function...
-> 
-> It make sense to have all the vq-init-related stuff in one function, so
-> here pmem_lock and req_list are used only for the vq.
+I don't think it's worth increasing the complexity of the kernel for
+the sake of a little userspace convenience. By including the headers
+in the kernel, we solve an important coordination problem --- but we
+should solve this problem in the simplest possible way, pushing
+whatever complexity possible to userspace, which is more flexible and
+which evolves faster. Providing a compressed archive is fine. The user
+burden is not large: it's just extracting an archive from a standard
+container format. The kernel has no special advantageous way of doing
+this job. If userspace wants to cache extraction, it can hash the
+compressed archive itself and use the result as a key: it's only 3MB.
+But extracting the archive every time is fine. We're not talking about
+a huge amount of data, and I don't see a need for the kind of
+long-term caching that would require revalidation.
 
-Yes.
-
-> Saying that - maybe it would be better to have the 3 in one struct.
-> 
-> > 
-> > > +{
-> > > +	struct virtqueue *vq;
-> > > +
-> > > +	/* single vq */
-> > > +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
-> > > +				host_ack, "flush_queue");
-> > > +	if (IS_ERR(vq))
-> > > +		return PTR_ERR(vq);
-> > 
-> > I'm personally not a fan of chained assignments... I think I'd just
-> > drop the 'vq' variable and operate on vpmem->req_vq directly.
-> 
-> +1
-
-Will drop extra vq.
-
-> 
-> > 
-> > > +
-> > > +	spin_lock_init(&vpmem->pmem_lock);
-> > > +	INIT_LIST_HEAD(&vpmem->req_list);
-> > > +
-> > > +	return 0;
-> > > +};
-> > > +
-> > > +static int virtio_pmem_probe(struct virtio_device *vdev)
-> > > +{
-> > > +	int err = 0;
-> > > +	struct resource res;
-> > > +	struct virtio_pmem *vpmem;
-> > > +	struct nvdimm_bus *nvdimm_bus;
-> > > +	struct nd_region_desc ndr_desc = {};
-> > > +	int nid = dev_to_node(&vdev->dev);
-> > > +	struct nd_region *nd_region;
-> > > +
-> > > +	if (!vdev->config->get) {
-> > > +		dev_err(&vdev->dev, "%s failure: config disabled\n",
-> > 
-> > Maybe s/config disabled/config access disabled/ ? That seems to be the
-> > more common message.
-> > 
-> > > +			__func__);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
-> > > +					GFP_KERNEL);
-> > 
-> > Here, the vpmem variable makes sense for convenience, but I'm again not
-> > a fan of the chaining :)
-> 
-> +1
-
-here as well.
-
-> 
-> > 
-> > > +	if (!vpmem) {
-> > > +		err = -ENOMEM;
-> > > +		goto out_err;
-> > > +	}
-> > > +
-> > > +	vpmem->vdev = vdev;
-> > > +	err = init_vq(vpmem);
-> > > +	if (err)
-> > > +		goto out_err;
-> > > +
-> > > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > > +			start, &vpmem->start);
-> > > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > > +			size, &vpmem->size);
-> > > +
-> > > +	res.start = vpmem->start;
-> > > +	res.end   = vpmem->start + vpmem->size-1;
-> > > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > > +	vpmem->nd_desc.module = THIS_MODULE;
-> > > +
-> > > +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > > +						&vpmem->nd_desc);
-> > 
-> > And here :)
-> > 
-> > > +	if (!nvdimm_bus)
-> > > +		goto out_vq;
-> > > +
-> > > +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
-> > > +
-> > > +	ndr_desc.res = &res;
-> > > +	ndr_desc.numa_node = nid;
-> > > +	ndr_desc.flush = virtio_pmem_flush;
-> > > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > > +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
-> > > +	nd_region->provider_data =  dev_to_virtio
-> > > +					(nd_region->dev.parent->parent);
-> > 
-> > Isn't it clear that this parent chain will always end up at &vdev->dev?
-> > Maybe simply set ->provider_data to vdev directly? (Does it need to
-> > grab a reference count of the device, BTW?)
-> > 
-> > > +
-> > > +	if (!nd_region)
-> > > +		goto out_nd;
-> > 
-> > Probably better to do this check before you access nd_region's
-> > members :)
-> > 
-> > > +
-> > > +	return 0;
-> > > +out_nd:
-> > > +	err = -ENXIO;
-> > > +	nvdimm_bus_unregister(nvdimm_bus);
-> > > +out_vq:
-> > > +	vdev->config->del_vqs(vdev);
-> > > +out_err:
-> > > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
-> > > +	return err;
-> > > +}
-> > > +
-> > > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > > +{
-> > > +	struct virtio_pmem *vpmem = vdev->priv;
-> > > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > > +
-> > > +	nvdimm_bus_unregister(nvdimm_bus);
-> > 
-> > I haven't followed this around the nvdimm code, but is the nd_region
-> > you created during probe cleaned up automatically, or would you need to
-> > do something here?
-> > 
-> > > +	vdev->config->del_vqs(vdev);
-> > > +	vdev->config->reset(vdev);
-> > > +	kfree(vpmem);
-> > 
-> > You allocated vpmem via devm_kzalloc; isn't it freed automatically on
-> > remove?
-> > 
-> > > +}
-> > > +
-> > > +static struct virtio_driver virtio_pmem_driver = {
-> > > +	.driver.name		= KBUILD_MODNAME,
-> > > +	.driver.owner		= THIS_MODULE,
-> > > +	.id_table		= id_table,
-> > > +	.probe			= virtio_pmem_probe,
-> > > +	.remove			= virtio_pmem_remove,
-> > > +};
-> > > +
-> > > +module_virtio_driver(virtio_pmem_driver);
-> > > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > > +MODULE_LICENSE("GPL");
-> > 
-> > Only looked at this from the general virtio driver angle; seems fine
-> > apart from some easy-to-fix issues and some personal style preference
-> > things.
-> 
-
-Best regards,
-Pankaj
+As for cpio vs tar: IME, people are much more familiar with the
+latter, and they're both omnipresent on unixish systems. I think it's
+fine to rely on a tool that's been part of POSIX for over 30 years.
