@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1FBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85F5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E485B20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7E920830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387592AbfDJPvh (ORCPT
+        id S2387501AbfDJPvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:51:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33167 "EHLO mx1.redhat.com"
+        Wed, 10 Apr 2019 11:51:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17094 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387523AbfDJPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:51:15 -0400
+        id S2387480AbfDJPvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:51:07 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C9928765E;
-        Wed, 10 Apr 2019 15:51:13 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D4B58B139;
+        Wed, 10 Apr 2019 15:51:07 +0000 (UTC)
 Received: from jlaw-desktop.bos.redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C6DF1077D2D;
-        Wed, 10 Apr 2019 15:51:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07F791017B45;
+        Wed, 10 Apr 2019 15:51:05 +0000 (UTC)
 From:   Joe Lawrence <joe.lawrence@redhat.com>
 To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
         linux-kbuild@vger.kernel.org
@@ -39,301 +39,198 @@ Cc:     Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
         Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
         Nicolai Stange <nstange@suse.de>,
         Petr Mladek <pmladek@suse.com>
-Subject: [PATCH v3 6/9] modpost: Add modinfo flag to livepatch modules
-Date:   Wed, 10 Apr 2019 11:50:55 -0400
-Message-Id: <20190410155058.9437-7-joe.lawrence@redhat.com>
+Subject: [PATCH v3 2/9] kbuild: Support for Symbols.list creation
+Date:   Wed, 10 Apr 2019 11:50:51 -0400
+Message-Id: <20190410155058.9437-3-joe.lawrence@redhat.com>
 In-Reply-To: <20190410155058.9437-1-joe.lawrence@redhat.com>
 References: <20190410155058.9437-1-joe.lawrence@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 10 Apr 2019 15:51:13 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 10 Apr 2019 15:51:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Joao Moreira <jmoreira@suse.de>
 
-Currently, livepatch infrastructure in the kernel relies on
-MODULE_INFO(livepatch, "Y") statement in a livepatch module. Then the
-kernel module loader knows a module is indeed livepatch module and can
-behave accordingly.
+For automatic resolution of livepatch relocations, a file called
+Symbols.list is used. This file maps symbols within every compiled
+kernel object allowing the identification of symbols whose name is
+unique, thus relocation can be automatically inferred, or providing
+information that helps developers when code annotation is required for
+solving the matter.
 
-klp-convert, on the other hand relies on LIVEPATCH_* statement in the
-module's Makefile for exactly the same reason.
+Add support for creating Symbols.list in the main Makefile. First,
+ensure that built-in is compiled when CONFIG_LIVEPATCH is enabled (as
+required to achieve a complete Symbols.list file). Define the command to
+build Symbols.list (cmd_klp_map) and hook it in the modules rule.
 
-Remove dependency on modinfo and generate MODULE_INFO flag
-automatically in modpost when LIVEPATCH_* is defined in the module's
-Makefile. Generate a list of all built livepatch modules based on
-the .livepatch file and store it in (MODVERDIR)/livepatchmods. Give
-this list as an argument for modpost which will use it to identify
-livepatch modules.
+As it is undesirable to have symbols from livepatch objects inside
+Symbols.list, make livepatches discernible by modifying
+scripts/Makefile.build to create a .livepatch file for each livepatch
+in $(MODVERDIR). This file then used by cmd_klp_map to identify and
+bypass livepatches.
 
-As MODULE_INFO is no longer needed, remove it.
+For identifying livepatches during the build process, a flag variable
+LIVEPATCH_$(basetarget).o is considered in scripts/Makefile.build. This
+way, set this flag for the livepatch sample Makefile in
+samples/livepatch/Makefile.
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Finally, Add a clean rule to ensure that Symbols.list is removed during
+clean.
+
+Notes:
+
+To achieve a correct Symbols.list file, all kernel objects must be
+considered, thus, its construction require these objects to be priorly
+built. On the other hand, invoking scripts/Makefile.modpost without
+having a complete Symbols.list in place would occasionally lead to
+in-tree livepatches being post-processed incorrectly. To prevent this
+from becoming a circular dependency, the construction of Symbols.list
+uses non-post-processed kernel objects and such does not cause harm as
+the symbols normally referenced from within livepatches are visible at
+this stage. Also due to these requirements, the spot in-between modules
+compilation and the invocation of scripts/Makefile.modpost was picked
+for hooking cmd_klp_map.
+
+The approach based on .livepatch files was proposed as an alternative
+to using MODULE_INFO statements. This approach was originally
+proposed by Miroslav Benes as a workaround for identifying livepathes
+without depending on modinfo during the modpost stage. It was moved to
+this patch as the approach also shown to be useful while building
+Symbols.list.
+
 Signed-off-by: Joao Moreira <jmoreira@suse.de>
 Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 ---
- lib/livepatch/Makefile                   |  5 ++
- lib/livepatch/test_klp_atomic_replace.c  |  1 -
- lib/livepatch/test_klp_callbacks_demo.c  |  1 -
- lib/livepatch/test_klp_callbacks_demo2.c |  1 -
- lib/livepatch/test_klp_livepatch.c       |  1 -
- samples/livepatch/Makefile               |  4 ++
- samples/livepatch/livepatch-sample.c     |  1 -
- scripts/Makefile.modpost                 |  8 ++-
- scripts/mod/modpost.c                    | 84 ++++++++++++++++++++++--
- 9 files changed, 94 insertions(+), 12 deletions(-)
+ .gitignore                 |  1 +
+ Makefile                   | 30 ++++++++++++++++++++++++++----
+ samples/livepatch/Makefile |  1 +
+ scripts/Makefile.build     |  7 +++++++
+ 4 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/lib/livepatch/Makefile b/lib/livepatch/Makefile
-index 26900ddaef82..513d200b7942 100644
---- a/lib/livepatch/Makefile
-+++ b/lib/livepatch/Makefile
-@@ -2,6 +2,11 @@
- #
- # Makefile for livepatch test code.
+diff --git a/.gitignore b/.gitignore
+index a20ac26aa2f5..5cd5758f5ffe 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -45,6 +45,7 @@
+ *.xz
+ Module.symvers
+ modules.builtin
++Symbols.list
  
-+LIVEPATCH_test_klp_atomic_replace := y
-+LIVEPATCH_test_klp_callbacks_demo := y
-+LIVEPATCH_test_klp_callbacks_demo2 := y
-+LIVEPATCH_test_klp_livepatch := y
+ #
+ # Top-level generic files
+diff --git a/Makefile b/Makefile
+index 15c8251d4d5e..2c07bdd87b2f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -574,10 +574,13 @@ KBUILD_BUILTIN := 1
+ # If we have only "make modules", don't compile built-in objects.
+ # When we're building modules with modversions, we need to consider
+ # the built-in objects during the descend as well, in order to
+-# make sure the checksums are up to date before we record them.
++# make sure the checksums are up to date before we record them. The
++# same applies for building livepatches, as built-in objects may hold
++# symbols which are referenced from livepatches and are required by
++# klp-convert post-processing tool for resolving these cases.
+ 
+ ifeq ($(MAKECMDGOALS),modules)
+-  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
++  KBUILD_BUILTIN := $(if $(or $(CONFIG_MODVERSIONS), $(CONFIG_LIVEPATCH)),1)
+ endif
+ 
+ # If we have "make <whatever> modules", compile modules
+@@ -1261,9 +1264,25 @@ all: modules
+ # duplicate lines in modules.order files.  Those are removed
+ # using awk while concatenating to the final file.
+ 
++quiet_cmd_klp_map = KLP     Symbols.list
++SLIST = $(objtree)/Symbols.list
 +
- obj-$(CONFIG_TEST_LIVEPATCH) += test_klp_atomic_replace.o \
- 				test_klp_callbacks_demo.o \
- 				test_klp_callbacks_demo2.o \
-diff --git a/lib/livepatch/test_klp_atomic_replace.c b/lib/livepatch/test_klp_atomic_replace.c
-index 5af7093ca00c..3bf08a1b7b12 100644
---- a/lib/livepatch/test_klp_atomic_replace.c
-+++ b/lib/livepatch/test_klp_atomic_replace.c
-@@ -52,6 +52,5 @@ static void test_klp_atomic_replace_exit(void)
- module_init(test_klp_atomic_replace_init);
- module_exit(test_klp_atomic_replace_exit);
- MODULE_LICENSE("GPL");
--MODULE_INFO(livepatch, "Y");
- MODULE_AUTHOR("Joe Lawrence <joe.lawrence@redhat.com>");
- MODULE_DESCRIPTION("Livepatch test: atomic replace");
-diff --git a/lib/livepatch/test_klp_callbacks_demo.c b/lib/livepatch/test_klp_callbacks_demo.c
-index 3fd8fe1cd1cc..76e2f51a6771 100644
---- a/lib/livepatch/test_klp_callbacks_demo.c
-+++ b/lib/livepatch/test_klp_callbacks_demo.c
-@@ -116,6 +116,5 @@ static void test_klp_callbacks_demo_exit(void)
- module_init(test_klp_callbacks_demo_init);
- module_exit(test_klp_callbacks_demo_exit);
- MODULE_LICENSE("GPL");
--MODULE_INFO(livepatch, "Y");
- MODULE_AUTHOR("Joe Lawrence <joe.lawrence@redhat.com>");
- MODULE_DESCRIPTION("Livepatch test: livepatch demo");
-diff --git a/lib/livepatch/test_klp_callbacks_demo2.c b/lib/livepatch/test_klp_callbacks_demo2.c
-index 5417573e80af..76db98fc3071 100644
---- a/lib/livepatch/test_klp_callbacks_demo2.c
-+++ b/lib/livepatch/test_klp_callbacks_demo2.c
-@@ -88,6 +88,5 @@ static void test_klp_callbacks_demo2_exit(void)
- module_init(test_klp_callbacks_demo2_init);
- module_exit(test_klp_callbacks_demo2_exit);
- MODULE_LICENSE("GPL");
--MODULE_INFO(livepatch, "Y");
- MODULE_AUTHOR("Joe Lawrence <joe.lawrence@redhat.com>");
- MODULE_DESCRIPTION("Livepatch test: livepatch demo2");
-diff --git a/lib/livepatch/test_klp_livepatch.c b/lib/livepatch/test_klp_livepatch.c
-index aff08199de71..d94d0ae232db 100644
---- a/lib/livepatch/test_klp_livepatch.c
-+++ b/lib/livepatch/test_klp_livepatch.c
-@@ -46,6 +46,5 @@ static void test_klp_livepatch_exit(void)
- module_init(test_klp_livepatch_init);
- module_exit(test_klp_livepatch_exit);
- MODULE_LICENSE("GPL");
--MODULE_INFO(livepatch, "Y");
- MODULE_AUTHOR("Seth Jennings <sjenning@redhat.com>");
- MODULE_DESCRIPTION("Livepatch test: livepatch module");
++define cmd_klp_map
++	$(shell echo "klp-convert-symbol-data.0.1" > $(SLIST))				\
++	$(shell echo "*vmlinux" >> $(SLIST))						\
++	$(shell nm -f posix $(objtree)/vmlinux | cut -d\  -f1 >> $(SLIST))		\
++	$(foreach m, $(wildcard $(MODVERDIR)/*.mod),					\
++		$(eval mod = $(patsubst %.ko,%.o,$(shell head -n1 $(m))))		\
++		$(if $(wildcard $(MODVERDIR)/$(shell basename -s .o $(mod)).livepatch),,\
++			$(eval fmod = $(subst $(quote),_,$(subst -,_,$(mod))))		\
++			$(shell echo "*$(shell basename -s .o $(fmod))" >> $(SLIST))	\
++			$(shell nm -f posix $(mod) | cut -d\  -f1 >> $(SLIST))))
++endef
++
+ PHONY += modules
+ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+ 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
++	$(if $(CONFIG_LIVEPATCH), $(call cmd,klp_map))
+ 	@$(kecho) '  Building modules, stage 2.';
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+ 
+@@ -1350,7 +1369,7 @@ clean: rm-dirs  := $(CLEAN_DIRS)
+ clean: rm-files := $(CLEAN_FILES)
+ clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation samples)
+ 
+-PHONY += $(clean-dirs) clean archclean vmlinuxclean
++PHONY += $(clean-dirs) clean archclean vmlinuxclean klpclean
+ $(clean-dirs):
+ 	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
+ 
+@@ -1358,7 +1377,10 @@ vmlinuxclean:
+ 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
+ 	$(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
+ 
+-clean: archclean vmlinuxclean
++klpclean:
++	$(Q) rm -f $(objtree)/Symbols.list
++
++clean: archclean vmlinuxclean klpclean
+ 
+ # mrproper - Delete all generated files, including .config
+ #
 diff --git a/samples/livepatch/Makefile b/samples/livepatch/Makefile
-index 8b9b42a258ad..5fb3280bbdc4 100644
+index 2472ce39a18d..8b9b42a258ad 100644
 --- a/samples/livepatch/Makefile
 +++ b/samples/livepatch/Makefile
-@@ -1,4 +1,8 @@
- LIVEPATCH_livepatch-sample := y
-+LIVEPATCH_livepatch-shadow-fix1 := y
-+LIVEPATCH_livepatch-shadow-fix2 := y
-+LIVEPATCH_livepatch-callbacks-demo := y
-+
+@@ -1,3 +1,4 @@
++LIVEPATCH_livepatch-sample := y
  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-sample.o
  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-mod.o
  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-fix1.o
-diff --git a/samples/livepatch/livepatch-sample.c b/samples/livepatch/livepatch-sample.c
-index 01c9cf003ca2..8900a175046b 100644
---- a/samples/livepatch/livepatch-sample.c
-+++ b/samples/livepatch/livepatch-sample.c
-@@ -79,4 +79,3 @@ static void livepatch_exit(void)
- module_init(livepatch_init);
- module_exit(livepatch_exit);
- MODULE_LICENSE("GPL");
--MODULE_INFO(livepatch, "Y");
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 1e8bb7442689..9fe4c5760aca 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -65,6 +65,11 @@ MODLISTCMD := find $(MODVERDIR) -name '*.mod' | xargs -r grep -h '\.ko$$' | sort
- __modules := $(shell $(MODLISTCMD))
- modules   := $(patsubst %.o,%.ko, $(wildcard $(__modules:.ko=.o)))
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 76ca30cc4791..ca76bd2080f0 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -246,6 +246,11 @@ cmd_gen_ksymdeps = \
+ 	$(CONFIG_SHELL) $(srctree)/scripts/gen_ksymdeps.sh $@ >> $(dot-target).cmd
+ endif
  
-+# find all .livepatch files listed in $(MODVERDIR)/
 +ifdef CONFIG_LIVEPATCH
-+$(shell find $(MODVERDIR) -name '*.livepatch' | xargs -r -I{} basename {} .livepatch > $(MODVERDIR)/livepatchmods)
++cmd_livepatch = $(if $(LIVEPATCH_$(basetarget)),		\
++	$(shell touch $(MODVERDIR)/$(basetarget).livepatch))
 +endif
 +
- # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
- _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
+ define rule_cc_o_c
+ 	$(call cmd,checksrc)
+ 	$(call cmd_and_fixdep,cc_o_c)
+@@ -280,6 +285,7 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ $(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ 	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
++	$(call cmd_livepatch)
+ 	@{ echo $(@:.o=.ko); echo $@; \
+ 	   $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
  
-@@ -78,7 +83,8 @@ modpost = scripts/mod/modpost                    \
-  $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
-  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
-  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
-- $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w)
-+ $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w) \
-+ $(if $(CONFIG_LIVEPATCH),-l $(MODVERDIR)/livepatchmods)
+@@ -456,6 +462,7 @@ cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^) $(cmd_secanalysis
  
- MODPOST_OPT=$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
- 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 374b22c76ec5..b3ab17d9d834 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1974,10 +1974,6 @@ static void read_symbols(const char *modname)
- 		license = get_next_modinfo(&info, "license", license);
- 	}
- 
--	/* Livepatch modules have unresolved symbols resolved by klp-convert */
--	if (get_modinfo(&info, "livepatch"))
--		mod->livepatch = 1;
--
- 	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
- 		symname = remove_dot(info.strtab + sym->st_name);
- 
-@@ -2416,6 +2412,76 @@ static void write_dump(const char *fname)
- 	free(buf.p);
- }
- 
-+struct livepatch_mod_list {
-+	struct livepatch_mod_list *next;
-+	char *livepatch_mod;
-+};
-+
-+static struct livepatch_mod_list *load_livepatch_mods(const char *fname)
-+{
-+	struct livepatch_mod_list *list_iter, *list_start = NULL;
-+	unsigned long size, pos = 0;
-+	void *file = grab_file(fname, &size);
-+	char *line;
-+
-+	if (!file)
-+		return NULL;
-+
-+	while ((line = get_next_line(&pos, file, size))) {
-+		list_iter = NOFAIL(malloc(sizeof(*list_iter)));
-+		list_iter->next = list_start;
-+		list_iter->livepatch_mod = NOFAIL(strdup(line));
-+		list_start = list_iter;
-+	}
-+	release_file(file, size);
-+
-+	return list_start;
-+}
-+
-+static void free_livepatch_mods(struct livepatch_mod_list *list_start)
-+{
-+	struct livepatch_mod_list *list_iter;
-+
-+	while (list_start) {
-+		list_iter = list_start->next;
-+		free(list_start->livepatch_mod);
-+		free(list_start);
-+		list_start = list_iter;
-+	}
-+}
-+
-+static int is_livepatch_mod(const char *modname,
-+		struct livepatch_mod_list *list)
-+{
-+	const char *myname;
-+
-+	if (!list)
-+		return 0;
-+
-+	myname = strrchr(modname, '/');
-+	if (myname)
-+		myname++;
-+	else
-+		myname = modname;
-+
-+	while (list) {
-+		if (!strcmp(myname, list->livepatch_mod))
-+			return 1;
-+		list = list->next;
-+	}
-+	return 0;
-+}
-+
-+static void add_livepatch_flag(struct buffer *b, struct module *mod,
-+		struct livepatch_mod_list *list)
-+{
-+	if (is_livepatch_mod(mod->name, list)) {
-+		buf_printf(b, "\nMODULE_INFO(livepatch, \"Y\");\n");
-+		mod->livepatch = 1;
-+	}
-+}
-+
-+
- struct ext_sym_list {
- 	struct ext_sym_list *next;
- 	const char *file;
-@@ -2431,8 +2497,9 @@ int main(int argc, char **argv)
- 	int err;
- 	struct ext_sym_list *extsym_iter;
- 	struct ext_sym_list *extsym_start = NULL;
-+	struct livepatch_mod_list *livepatch_mods = NULL;
- 
--	while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awE")) != -1) {
-+	while ((opt = getopt(argc, argv, "i:I:e:l:mnsT:o:awE")) != -1) {
- 		switch (opt) {
- 		case 'i':
- 			kernel_read = optarg;
-@@ -2449,6 +2516,9 @@ int main(int argc, char **argv)
- 			extsym_iter->file = optarg;
- 			extsym_start = extsym_iter;
- 			break;
-+		case 'l':
-+			livepatch_mods = load_livepatch_mods(optarg);
-+			break;
- 		case 'm':
- 			modversions = 1;
- 			break;
-@@ -2506,15 +2576,16 @@ int main(int argc, char **argv)
- 		buf.pos = 0;
- 
- 		err |= check_modname_len(mod);
--		err |= check_exports(mod);
- 		add_header(&buf, mod);
- 		add_intree_flag(&buf, !external_module);
- 		add_retpoline(&buf);
- 		add_staging_flag(&buf, mod->name);
-+		add_livepatch_flag(&buf, mod, livepatch_mods);
- 		err |= add_versions(&buf, mod);
- 		add_depends(&buf, mod);
- 		add_moddevtable(&buf, mod);
- 		add_srcversion(&buf, mod);
-+		err |= check_exports(mod);
- 
- 		sprintf(fname, "%s.mod.c", mod->name);
- 		write_if_changed(&buf, fname);
-@@ -2524,6 +2595,7 @@ int main(int argc, char **argv)
- 	if (sec_mismatch_count && sec_mismatch_fatal)
- 		fatal("modpost: Section mismatches detected.\n"
- 		      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
-+	free_livepatch_mods(livepatch_mods);
- 	free(buf.p);
- 
- 	return err;
+ $(multi-used-m): FORCE
+ 	$(call if_changed,link_multi-m)
++	$(call cmd,livepatch)
+ 	@{ echo $(@:.o=.ko); echo $(filter %.o,$^); \
+ 	   $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
+ $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
 -- 
 2.20.1
 
