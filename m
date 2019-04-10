@@ -2,96 +2,101 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90944C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5602C2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E18A20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="psputOWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbfDJQTM (ORCPT
+        id S2387755AbfDJQTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:19:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730374AbfDJQTL (ORCPT
+        Wed, 10 Apr 2019 12:19:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45467 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbfDJQTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:19:11 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3AGF5Jf056264
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:19:10 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rshvn7e6e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 12:19:10 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 10 Apr 2019 17:19:08 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 10 Apr 2019 17:19:04 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3AGJ3Hd52363266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 16:19:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2297E5204F;
-        Wed, 10 Apr 2019 16:19:03 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.148])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B0E7A5204E;
-        Wed, 10 Apr 2019 16:19:02 +0000 (GMT)
-Date:   Wed, 10 Apr 2019 18:19:01 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/2] s390: Convert IS_ENABLED uses to __is_defined
-In-Reply-To: <3c15d21d2b6896e76e8801dc07de2bae1dadceb1.1554827560.git.joe@perches.com>
-References: <3c15d21d2b6896e76e8801dc07de2bae1dadceb1.1554827560.git.joe@perches.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041016-0012-0000-0000-0000030D65C3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041016-0013-0000-0000-000021458AEB
-Message-Id: <20190410181901.1e40252e@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=942 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904100112
+        Wed, 10 Apr 2019 12:19:48 -0400
+Received: by mail-pf1-f194.google.com with SMTP id e24so1756709pfi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=AoqQqD+QU8jtOUItI3aQmmNwCtheLZFPcuJhb0hgBWI=;
+        b=psputOWCzEB8PrWPqHTWHtVXuQQSx2G5DvT7h7d4gnRidSdJqk4lBuS2qFo+OzG814
+         bqqxieR29JQV3oXFEHGcNeZZ/W3RvR4YEfG3xFq5mzUTN930+W1rlDIbgl6JRn3x8sUq
+         tl2cz0xHBzSQFEQTBt3nETg3va8Y1dMeY4RDfyT1O1c8DlXlhBGoxDDeQR8zCB9y5xG2
+         Mvi9Z4QuawAkaJovGaxGeQmJUknXTEhdx6DdZTIxo5iWPuqr6sqVg6whrMUcXuNuKlbG
+         H3gUm4BB7M3Ltx4cC2SdJWonF4NQLG5yulH7oUSjJZwsNQl50Jk6jB+/71G56LCLtFIE
+         sBIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AoqQqD+QU8jtOUItI3aQmmNwCtheLZFPcuJhb0hgBWI=;
+        b=DqslDgrOQJEuPInNKJim+am9Rkv+7/V+m4tvv0JMp7jm6G38nqHTnzvM4FRbcvoh4a
+         a/MyCLVBGky157H5t93R9rF+ZC+XeH6HbLfrpAOTfKBAb/TKgp6Dj/C+Z0S09R+5Jidl
+         m4cjOCwKrutJklAQQgBp2kNkf9DwX8GnVRNPj6JkWU7YCy/rTJj5puDxcIXUUbbXwQQJ
+         2Xm1nWsR1EtlnVl28P4QMw9P6a6oOs58i1Esz/9tK52Blso7VlDytvKCzR02MjtVODgJ
+         OW/Y39Ex2GmZyXDNtQkMdlL1DsfwIT5VZKxZAWeCirW4Q5dfyHjrhJU92sv2sI6H8yPN
+         WyPQ==
+X-Gm-Message-State: APjAAAVQIYhtWaIKXPpFPd+IBIFP5OUJo3pBzPO/ZbvBSLx9O1mYCdYC
+        8ix6GsJ1fnhsUFiBq312r331DgQORNI=
+X-Google-Smtp-Source: APXvYqwHjV9eSVaHQ99dN6Vtzc34zLjuQQdDru3TT+GkYJpeoZ65eV0jF/nAcKfbVdZ0V/KeGD+KUA==
+X-Received: by 2002:a63:e915:: with SMTP id i21mr41645496pgh.297.1554913187015;
+        Wed, 10 Apr 2019 09:19:47 -0700 (PDT)
+Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
+        by smtp.gmail.com with ESMTPSA id a80sm76194167pfj.61.2019.04.10.09.19.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 09:19:45 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: vexpress: Constify regulator_ops
+Date:   Thu, 11 Apr 2019 00:19:37 +0800
+Message-Id: <20190410161937.17224-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Apr 2019 09:33:12 -0700
-Joe Perches <joe@perches.com> wrote:
+vexpress_regulator_ops_ro and vexpress_regulator_ops are never changed,
+make them const.
 
-> IS_ENABLED should be reserved for CONFIG_<FOO> uses so convert
-> the uses of IS_ENABLED with a #define to __is_defined.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/vexpress-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That makes a lot of sense. Added to s390/linux:features. Thanks.
-
+diff --git a/drivers/regulator/vexpress-regulator.c b/drivers/regulator/vexpress-regulator.c
+index c810cbbd463f..ca4230fe9e77 100644
+--- a/drivers/regulator/vexpress-regulator.c
++++ b/drivers/regulator/vexpress-regulator.c
+@@ -46,11 +46,11 @@ static int vexpress_regulator_set_voltage(struct regulator_dev *regdev,
+ 	return regmap_write(reg->regmap, 0, min_uV);
+ }
+ 
+-static struct regulator_ops vexpress_regulator_ops_ro = {
++static const struct regulator_ops vexpress_regulator_ops_ro = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
+ };
+ 
+-static struct regulator_ops vexpress_regulator_ops = {
++static const struct regulator_ops vexpress_regulator_ops = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
+ 	.set_voltage = vexpress_regulator_set_voltage,
+ };
 -- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
+2.17.1
 
