@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862FDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617E920850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA1F2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727765AbfDJGNe (ORCPT
+        id S1727831AbfDJGNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:13:34 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:15765 "EHLO
+        Wed, 10 Apr 2019 02:13:36 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:11983 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726661AbfDJGNb (ORCPT
+        with ESMTP id S1726230AbfDJGN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:13:31 -0400
-X-UUID: 71b765b0752143d7a644afa918c7abc8-20190410
-X-UUID: 71b765b0752143d7a644afa918c7abc8-20190410
+        Wed, 10 Apr 2019 02:13:29 -0400
+X-UUID: 0cf77139607a445b83c138a92dbd324b-20190410
+X-UUID: 0cf77139607a445b83c138a92dbd324b-20190410
 Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1849734595; Wed, 10 Apr 2019 14:13:16 +0800
+        with ESMTP id 600075048; Wed, 10 Apr 2019 14:13:13 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 10 Apr 2019 14:13:14 +0800
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 10 Apr 2019 14:13:12 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 10 Apr 2019 14:13:12 +0800
+ Transport; Wed, 10 Apr 2019 14:13:10 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 CC:     Kevin Hilman <khilman@baylibre.com>,
@@ -50,9 +50,9 @@ CC:     Kevin Hilman <khilman@baylibre.com>,
         <linux-amlogic@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-arm-msm@vger.kernel.org>
-Subject: [v2 PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by devm_clk_get_optional()
-Date:   Wed, 10 Apr 2019 14:13:06 +0800
-Message-ID: <9f04a619e8a2cc44f5b1fe299a08f237f069d56d.1554874961.git.chunfeng.yun@mediatek.com>
+Subject: [v2 PATCH 3/4] phy: socionext: get optional clock by devm_clk_get_optional()
+Date:   Wed, 10 Apr 2019 14:13:05 +0800
+Message-ID: <f3d8f2f8d2c7bbcb88e813a647c798aa5d42543a.1554874961.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
 References: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
@@ -66,37 +66,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use devm_clk_get_optional() to get optional clock
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
-v2: add Acked-by Martin Blumenstingl
+v2: add Reviewed-by Kunihiko Hayashi
 ---
- drivers/phy/amlogic/phy-meson-gxl-usb2.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/phy/socionext/phy-uniphier-usb3hs.c | 10 +++-------
+ drivers/phy/socionext/phy-uniphier-usb3ss.c | 10 +++-------
+ 2 files changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb2.c b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-index 148ef0bdb9c1..4cbee412f2b0 100644
---- a/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-+++ b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-@@ -261,14 +261,9 @@ static int phy_meson_gxl_usb2_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->regmap))
- 		return PTR_ERR(priv->regmap);
+diff --git a/drivers/phy/socionext/phy-uniphier-usb3hs.c b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+index b1b048be6166..50f379fc4e06 100644
+--- a/drivers/phy/socionext/phy-uniphier-usb3hs.c
++++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+@@ -335,13 +335,9 @@ static int uniphier_u3hsphy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->clk_parent))
+ 		return PTR_ERR(priv->clk_parent);
  
--	priv->clk = devm_clk_get(dev, "phy");
--	if (IS_ERR(priv->clk)) {
--		ret = PTR_ERR(priv->clk);
--		if (ret == -ENOENT)
--			priv->clk = NULL;
+-	priv->clk_ext = devm_clk_get(dev, "phy-ext");
+-	if (IS_ERR(priv->clk_ext)) {
+-		if (PTR_ERR(priv->clk_ext) == -ENOENT)
+-			priv->clk_ext = NULL;
 -		else
--			return ret;
+-			return PTR_ERR(priv->clk_ext);
 -	}
-+	priv->clk = devm_clk_get_optional(dev, "phy");
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
++	priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
++	if (IS_ERR(priv->clk_ext))
++		return PTR_ERR(priv->clk_ext);
  
- 	priv->reset = devm_reset_control_get_optional_shared(dev, "phy");
- 	if (IS_ERR(priv->reset))
+ 	priv->rst = devm_reset_control_get_shared(dev, "phy");
+ 	if (IS_ERR(priv->rst))
+diff --git a/drivers/phy/socionext/phy-uniphier-usb3ss.c b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+index 4be95679c7d8..ec231e40ef2a 100644
+--- a/drivers/phy/socionext/phy-uniphier-usb3ss.c
++++ b/drivers/phy/socionext/phy-uniphier-usb3ss.c
+@@ -238,13 +238,9 @@ static int uniphier_u3ssphy_probe(struct platform_device *pdev)
+ 		if (IS_ERR(priv->clk))
+ 			return PTR_ERR(priv->clk);
+ 
+-		priv->clk_ext = devm_clk_get(dev, "phy-ext");
+-		if (IS_ERR(priv->clk_ext)) {
+-			if (PTR_ERR(priv->clk_ext) == -ENOENT)
+-				priv->clk_ext = NULL;
+-			else
+-				return PTR_ERR(priv->clk_ext);
+-		}
++		priv->clk_ext = devm_clk_get_optional(dev, "phy-ext");
++		if (IS_ERR(priv->clk_ext))
++			return PTR_ERR(priv->clk_ext);
+ 
+ 		priv->rst = devm_reset_control_get_shared(dev, "phy");
+ 		if (IS_ERR(priv->rst))
 -- 
 2.21.0
 
