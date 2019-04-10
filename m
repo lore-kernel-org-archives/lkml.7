@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E09C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D516C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C807D20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5596C20850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfDJNlc (ORCPT
+        id S1732060AbfDJNl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:41:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36687 "EHLO mga18.intel.com"
+        Wed, 10 Apr 2019 09:41:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46414 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732393AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732394AbfDJNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 10 Apr 2019 09:37:04 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:03 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:37:04 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="314707198"
+   d="scan'208";a="336622767"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 10 Apr 2019 06:36:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id CC7254C6; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
+        id E796C53D; Wed, 10 Apr 2019 16:36:54 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com, Joe Perches <joe@perches.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v4 09/36] thunderbolt: Move LC specific functionality into a separate file
-Date:   Wed, 10 Apr 2019 16:36:26 +0300
-Message-Id: <20190410133653.88061-10-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 11/36] thunderbolt: Set sleep bit when suspending switch
+Date:   Wed, 10 Apr 2019 16:36:28 +0300
+Message-Id: <20190410133653.88061-12-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
 References: <20190410133653.88061-1-mika.westerberg@linux.intel.com>
@@ -55,147 +55,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will be adding more link controller functionality in subsequent
-patches and it does not make sense to keep all that in switch.c, so
-separate LC functionality into its own file.
+Thunderbolt 2 devices and beyond link controller needs to be notified
+when a switch is going to be suspended by setting bit 31 in LC_SX_CTRL
+register. Add this functionality to the software connection manager.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/Makefile  |  2 +-
- drivers/thunderbolt/lc.c      | 21 +++++++++++++++++++++
- drivers/thunderbolt/switch.c  | 21 ++++++++++-----------
- drivers/thunderbolt/tb.h      |  3 +++
+ drivers/thunderbolt/lc.c      | 44 +++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/switch.c  |  6 ++---
+ drivers/thunderbolt/tb.h      |  1 +
  drivers/thunderbolt/tb_regs.h |  2 ++
- 5 files changed, 37 insertions(+), 12 deletions(-)
- create mode 100644 drivers/thunderbolt/lc.c
+ 4 files changed, 49 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
-index f2f0de27252b..8531f15d3b3c 100644
---- a/drivers/thunderbolt/Makefile
-+++ b/drivers/thunderbolt/Makefile
-@@ -1,3 +1,3 @@
- obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
- thunderbolt-objs := nhi.o ctl.o tb.o switch.o cap.o path.o tunnel_pci.o eeprom.o
--thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o
-+thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o
 diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
-new file mode 100644
-index 000000000000..2134a55ed837
---- /dev/null
+index a5dddf176546..ae1e92611c3e 100644
+--- a/drivers/thunderbolt/lc.c
 +++ b/drivers/thunderbolt/lc.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Thunderbolt link controller support
-+ *
-+ * Copyright (C) 2019, Intel Corporation
-+ * Author: Mika Westerberg <mika.westerberg@linux.intel.com>
-+ */
-+
-+#include "tb.h"
+@@ -133,3 +133,47 @@ void tb_lc_unconfigure_link(struct tb_switch *sw)
+ 	tb_lc_configure_lane(up, false);
+ 	tb_lc_configure_lane(down, false);
+ }
 +
 +/**
-+ * tb_lc_read_uuid() - Read switch UUID from link controller common register
-+ * @sw: Switch whose UUID is read
-+ * @uuid: UUID is placed here
++ * tb_lc_set_sleep() - Inform LC that the switch is going to sleep
++ * @sw: Switch to set sleep
++ *
++ * Let the switch link controllers know that the switch is going to
++ * sleep.
 + */
-+int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid)
++int tb_lc_set_sleep(struct tb_switch *sw)
 +{
-+	if (!sw->cap_lc)
-+		return -EINVAL;
-+	return tb_sw_read(sw, uuid, TB_CFG_SWITCH, sw->cap_lc + TB_LC_FUSE, 4);
++	int start, size, nlc, ret, i;
++	u32 desc;
++
++	if (sw->generation < 2)
++		return 0;
++
++	ret = read_lc_desc(sw, &desc);
++	if (ret)
++		return ret;
++
++	/* Figure out number of link controllers */
++	nlc = desc & TB_LC_DESC_NLC_MASK;
++	start = (desc & TB_LC_DESC_SIZE_MASK) >> TB_LC_DESC_SIZE_SHIFT;
++	size = (desc & TB_LC_DESC_PORT_SIZE_MASK) >> TB_LC_DESC_PORT_SIZE_SHIFT;
++
++	/* For each link controller set sleep bit */
++	for (i = 0; i < nlc; i++) {
++		unsigned int offset = sw->cap_lc + start + i * size;
++		u32 ctrl;
++
++		ret = tb_sw_read(sw, &ctrl, TB_CFG_SWITCH,
++				 offset + TB_LC_SX_CTRL, 1);
++		if (ret)
++			return ret;
++
++		ctrl |= TB_LC_SX_CTRL_SLP;
++		ret = tb_sw_write(sw, &ctrl, TB_CFG_SWITCH,
++				  offset + TB_LC_SX_CTRL, 1);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
 +}
 diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 1e29c06947af..63ff4c753d89 100644
+index dd218dc4781b..b3f93ebe6e39 100644
 --- a/drivers/thunderbolt/switch.c
 +++ b/drivers/thunderbolt/switch.c
-@@ -1182,6 +1182,10 @@ struct tb_switch *tb_switch_alloc(struct tb *tb, struct device *parent,
+@@ -1586,10 +1586,8 @@ void tb_switch_suspend(struct tb_switch *sw)
+ 		if (!tb_is_upstream_port(&sw->ports[i]) && sw->ports[i].remote)
+ 			tb_switch_suspend(sw->ports[i].remote->sw);
  	}
- 	sw->cap_plug_events = cap;
- 
-+	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
-+	if (cap > 0)
-+		sw->cap_lc = cap;
+-	/*
+-	 * TODO: invoke tb_cfg_prepare_to_sleep here? does not seem to have any
+-	 * effect?
+-	 */
 +
- 	/* Root switch is always authorized */
- 	if (!route)
- 		sw->authorized = true;
-@@ -1278,22 +1282,17 @@ int tb_switch_configure(struct tb_switch *sw)
- static int tb_switch_set_uuid(struct tb_switch *sw)
- {
- 	u32 uuid[4];
--	int cap, ret;
-+	int ret;
- 
--	ret = 0;
- 	if (sw->uuid)
--		return ret;
-+		return 0;
- 
- 	/*
- 	 * The newer controllers include fused UUID as part of link
- 	 * controller specific registers
- 	 */
--	cap = tb_switch_find_vse_cap(sw, TB_VSE_CAP_LINK_CONTROLLER);
--	if (cap > 0) {
--		ret = tb_sw_read(sw, uuid, TB_CFG_SWITCH, cap + 3, 4);
--		if (ret)
--			return ret;
--	} else {
-+	ret = tb_lc_read_uuid(sw, uuid);
-+	if (ret) {
- 		/*
- 		 * ICM generates UUID based on UID and fills the upper
- 		 * two words with ones. This is not strictly following
-@@ -1308,8 +1307,8 @@ static int tb_switch_set_uuid(struct tb_switch *sw)
- 
- 	sw->uuid = kmemdup(uuid, sizeof(uuid), GFP_KERNEL);
- 	if (!sw->uuid)
--		ret = -ENOMEM;
--	return ret;
-+		return -ENOMEM;
-+	return 0;
++	tb_lc_set_sleep(sw);
  }
  
- static int tb_switch_add_dma_port(struct tb_switch *sw)
+ struct tb_sw_lookup {
 diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index a166265dfcf9..e52d39b25266 100644
+index 69e0534224d8..985a48a67a43 100644
 --- a/drivers/thunderbolt/tb.h
 +++ b/drivers/thunderbolt/tb.h
-@@ -63,6 +63,7 @@ struct tb_switch_nvm {
-  * @device_name: Name of the device (or %NULL if not known)
-  * @generation: Switch Thunderbolt generation
-  * @cap_plug_events: Offset to the plug events capability (%0 if not found)
-+ * @cap_lc: Offset to the link controller capability (%0 if not found)
-  * @is_unplugged: The switch is going away
-  * @drom: DROM of the switch (%NULL if not found)
-  * @nvm: Pointer to the NVM if the switch has one (%NULL otherwise)
-@@ -96,6 +97,7 @@ struct tb_switch {
- 	const char *device_name;
- 	unsigned int generation;
- 	int cap_plug_events;
-+	int cap_lc;
- 	bool is_unplugged;
- 	u8 *drom;
- 	struct tb_switch_nvm *nvm;
-@@ -462,6 +464,7 @@ bool tb_path_is_invalid(struct tb_path *path);
- int tb_drom_read(struct tb_switch *sw);
- int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
- 
-+int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
+@@ -467,6 +467,7 @@ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
+ int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
+ int tb_lc_configure_link(struct tb_switch *sw);
+ void tb_lc_unconfigure_link(struct tb_switch *sw);
++int tb_lc_set_sleep(struct tb_switch *sw);
  
  static inline int tb_route_length(u64 route)
  {
 diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-index 6f1ff04ee195..4895ae9f0b40 100644
+index e0f867dad5cf..1ab6e0fb31c0 100644
 --- a/drivers/thunderbolt/tb_regs.h
 +++ b/drivers/thunderbolt/tb_regs.h
-@@ -237,5 +237,7 @@ struct tb_regs_hop {
- 	u32 unknown3:4; /* set to zero */
- } __packed;
+@@ -239,6 +239,7 @@ struct tb_regs_hop {
  
-+/* Common link controller registers */
-+#define TB_LC_FUSE			0x03
+ /* Common link controller registers */
+ #define TB_LC_DESC			0x02
++#define TB_LC_DESC_NLC_MASK		GENMASK(3, 0)
+ #define TB_LC_DESC_SIZE_SHIFT		8
+ #define TB_LC_DESC_SIZE_MASK		GENMASK(15, 8)
+ #define TB_LC_DESC_PORT_SIZE_SHIFT	16
+@@ -250,5 +251,6 @@ struct tb_regs_hop {
+ #define TB_LC_SX_CTRL_L1C		BIT(16)
+ #define TB_LC_SX_CTRL_L2C		BIT(20)
+ #define TB_LC_SX_CTRL_UPSTREAM		BIT(30)
++#define TB_LC_SX_CTRL_SLP		BIT(31)
  
  #endif
 -- 
