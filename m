@@ -2,186 +2,80 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEBCC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31ADC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71EFC2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4452082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RWCcaS+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbfDJPDx convert rfc822-to-8bit (ORCPT
+        id S1733025AbfDJPHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:03:53 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:50836 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732949AbfDJPDw (ORCPT
+        Wed, 10 Apr 2019 11:07:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55584 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732830AbfDJPHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:03:52 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:59554 helo=[10.2.146.249])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1hEElN-0003tI-NQ; Wed, 10 Apr 2019 17:03:45 +0200
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH 1/2] drm: panel-simple: Add simple-panel driver.
-From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-In-Reply-To: <7915415.Bhcl4jWJiJ@diego>
-Date:   Wed, 10 Apr 2019 17:03:44 +0200
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C2630261-AECD-4357-911F-B0E01E74C74A@theobroma-systems.com>
-References: <20190410141045.58097-1-christoph.muellner@theobroma-systems.com>
- <7915415.Bhcl4jWJiJ@diego>
-To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Wed, 10 Apr 2019 11:07:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Dn2JbVhnhjXRkDyjKbZgpcJeD9yYMXMOg6VKmD5Y37E=; b=RWCcaS+G9SH+VjJPy2QZN9WGx
+        pM3odcMZEW+irj54ciHNk/AADDQTqg8YPRXq7hBJFIwVjlVCy0GmJ308djV2rLROaD3mEKkv2gLDa
+        O8Q2WheSDTgO9xCwbXbZTqM73oqU7tWc+csfZ+hUK4m4dkdnrlF9l7EE04gk7FKGwN2UYAOIB+zHh
+        Lb5qu+227wAN4E7WDrhImpSR1s3wGqdMCJOwQ9cWl2nwzqVusJXDWlI6XzstV02H3xX82vSQdDsmL
+        CTaDTEtv3jl58nkHzbjiVMUBB7wqDkn7XigFczXhERwfmyX7d4BhwK0UbTBGuId2Fu2eT5JLU9SrR
+        bWjFOfH3Q==;
+Received: from [89.200.33.100] (helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEEon-0004Yq-UP; Wed, 10 Apr 2019 15:07:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5737D984F06; Wed, 10 Apr 2019 17:07:14 +0200 (CEST)
+Date:   Wed, 10 Apr 2019 17:07:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH-tip v2 02/12] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+Message-ID: <20190410150714.GK7905@worktop.programming.kicks-ass.net>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-3-longman@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190405192115.17416-3-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+On Fri, Apr 05, 2019 at 03:21:05PM -0400, Waiman Long wrote:
+> Because of writer lock stealing, it is possible that a constant
+> stream of incoming writers will cause a waiting writer or reader to
+> wait indefinitely leading to lock starvation.
+> 
+> The mutex code has a lock handoff mechanism to prevent lock starvation.
+> This patch implements a similar lock handoff mechanism to disable
+> lock stealing and force lock handoff to the first waiter in the queue
+> after at least a 5ms waiting period. The waiting period is used to
+> avoid discouraging lock stealing too much to affect performance.
 
-> On 10.04.2019, at 16:50, Heiko Stübner <heiko@sntech.de> wrote:
-> 
-> Hi Christoph,
-> 
-> Am Mittwoch, 10. April 2019, 16:10:44 CEST schrieb Christoph Muellner:
->> On our RK3399-Q7 EVK base board we have the option to connect an arbitrary
->> monitor via DP cable. The actual monitor is therefore not known in advance.
->> This means, we don't have any panel information besides the EDID
->> data from the device itself.
-> 
-> Just so I understand correctly, you have a real dp-connector wired to
-> the Analogix dp-controller, and therefore want to connect actual
-> monitors to it.
-> 
-> So the problem you're trying to work around is probably that the
-> rockchip-driver of the analogix controller explictly expects a bridge
-> to be present during probe, right?
-> 
-> I think hacking up the panel-driver is not an ideal approach:
-> (1) bridges/panels do expect to stay connected all the time
->    and are meant for devices with actual hard-wired displays with specific
->    power-sequence requirements
-> (2) devicetree is expected to describe the real hardware, therefore the
->    dt should not describe one thing while the actual hardware is really
->    different
-> 
-> So, I guess a more ideal approach could perhaps be to:
-> (1) define a "dp-connector" devicetree binding, see
->    Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
->    for a similar one
-> (2) steal an idea from drivers/gpu/drm/mediatek/mtk_hdmi.c and check
->    for that new compatible:
-> 	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> 		//move bridge handling here
-> 	}
-> 
->    and modify both the rockchip-part and the generic analogix bridge code
->    to work with the connector declared instead of a panel?
+So the mutex code doesn't have that timeout, it foces the handoff if the
+top waiter fails to acquire.
 
-Thank's for you input on this.
-
-Modelling the connector instead of the panel is indeed a better approach,
-since we can then also react to connect/disconnect events (after probe).
-
-Thanks,
-Christoph
-
-> 
->> The functionality for a 'simple-panel' has been remove a couple
->> of years ago with 81cf32b. This patch brings this feature back.
->> 
->> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->> ---
->> drivers/gpu/drm/panel/panel-simple.c | 24 ++++++++++++++++--------
->> 1 file changed, 16 insertions(+), 8 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index 9e8218f6a3f2..1f69283f3e4b 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -176,7 +176,7 @@ static int panel_simple_disable(struct drm_panel *panel)
->> 		backlight_update_status(p->backlight);
->> 	}
->> 
->> -	if (p->desc->delay.disable)
->> +	if (p->desc && p->desc->delay.disable)
->> 		msleep(p->desc->delay.disable);
->> 
->> 	p->enabled = false;
->> @@ -195,7 +195,7 @@ static int panel_simple_unprepare(struct drm_panel *panel)
->> 
->> 	regulator_disable(p->supply);
->> 
->> -	if (p->desc->delay.unprepare)
->> +	if (p->desc && p->desc->delay.unprepare)
->> 		msleep(p->desc->delay.unprepare);
->> 
->> 	p->prepared = false;
->> @@ -220,11 +220,13 @@ static int panel_simple_prepare(struct drm_panel *panel)
->> 
->> 	gpiod_set_value_cansleep(p->enable_gpio, 1);
->> 
->> -	delay = p->desc->delay.prepare;
->> -	if (p->no_hpd)
->> -		delay += p->desc->delay.hpd_absent_delay;
->> -	if (delay)
->> -		msleep(delay);
->> +	if (p->desc) {
->> +		delay = p->desc->delay.prepare;
->> +		if (p->no_hpd)
->> +			delay += p->desc->delay.hpd_absent_delay;
->> +		if (delay)
->> +			msleep(delay);
->> +	}
->> 
->> 	p->prepared = true;
->> 
->> @@ -238,7 +240,7 @@ static int panel_simple_enable(struct drm_panel *panel)
->> 	if (p->enabled)
->> 		return 0;
->> 
->> -	if (p->desc->delay.enable)
->> +	if (p->desc && p->desc->delay.enable)
->> 		msleep(p->desc->delay.enable);
->> 
->> 	if (p->backlight) {
->> @@ -280,6 +282,9 @@ static int panel_simple_get_timings(struct drm_panel *panel,
->> 	struct panel_simple *p = to_panel_simple(panel);
->> 	unsigned int i;
->> 
->> +	if (!p->desc)
->> +		return 0;
->> +
->> 	if (p->desc->num_timings < num_timings)
->> 		num_timings = p->desc->num_timings;
->> 
->> @@ -2536,6 +2541,9 @@ static const struct panel_desc arm_rtsm = {
->> 
->> static const struct of_device_id platform_of_match[] = {
->> 	{
->> +		.compatible = "simple-panel",
->> +		.data = NULL,
->> +	}, {
->> 		.compatible = "ampire,am-480272h3tmqw-t01h",
->> 		.data = &ampire_am_480272h3tmqw_t01h,
->> 	}, {
->> 
-> 
-> 
-> 
-> 
-
+I don't find the above sufficiently justifies the additional complexity.
+What were the numbers with the simple scheme vs this etc..
