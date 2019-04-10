@@ -2,91 +2,175 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C15FC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1758C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDD52063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7681D2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="puxKlU07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfDJR45 (ORCPT
+        id S1730814AbfDJR5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:56:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1638 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfDJR44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:56:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 10:56:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
-   d="scan'208";a="134637799"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 10 Apr 2019 10:56:56 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id E89705807A6;
-        Wed, 10 Apr 2019 10:56:55 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com,
-        linux-kernel@vger.kernel.org
-References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
- <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
- <20190409173939.GY9224@smile.fi.intel.com>
- <20190410135913.GK9224@smile.fi.intel.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <f78c610a-7ae7-0a5c-c58c-ec2b597b7e6c@linux.intel.com>
-Date:   Wed, 10 Apr 2019 10:55:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 13:57:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42781 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbfDJR5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 13:57:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v22so2948979lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bEw+KO2/ka8nKlM3JMAkOLDxT8xAxL50hihSpr0VWC4=;
+        b=puxKlU07gNV3QUgf1ZXEnEdM5Ip7pvi3eCYsldM+D5+C+YWicqYoef35yl8fXQO2u3
+         5o8zzdYr0esWOKglNpbGkaPO+EGg+qIcA24H9g1Lty2yg3jRVDwwqOwoX5rNGLaSrTQs
+         snqijvwq+EJzz4n9zAOc8yxXGXm0pZh2M0oo+sHkgHZaTeoYrabFujtm8zXi5yBNKcDC
+         R1l7xn//9rodLBtfyOvq53wgZm5VIfQVw+Zz8XUAXUxaydX1jdI9DOf5KLoCTFYWfiLl
+         ebppf6XPN8Ka0eHujjH9NSkGAelCgzhE+GmvitmXIgDVn9chBMx+PpILMi9gHmrqolIh
+         E5Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bEw+KO2/ka8nKlM3JMAkOLDxT8xAxL50hihSpr0VWC4=;
+        b=pyc9MTYqDzqaWya/aOZ5AqOlJG0QlBBxDT4QUJH2DOj9c1bx5sdRr1pdtC89sj+HjC
+         ANe0B/MYTs+AjtxIDlh6GxZLiLK33bj/plv4fnyKtoYSA9unKLNioRLibu+QqawyP/8B
+         XU14yzgnH7yUVHnCJp3VjCYT0aBsO1gkgYUTUOqxHiKICd2DbaNsrKPdSEItMmrQa144
+         XBnJi8e6sbewaa5fbt8WM4Z95Uos8IbJSzhd4MS+Q3m90ZiGQxpf0nUycUYj5OuXK6iP
+         m+bQPvgpChM76ebjPUU4PSuLwSKxnvTNFsanG6oBfODw1jihlPSTZ8dqrgQ1eKW6qVP3
+         Me/g==
+X-Gm-Message-State: APjAAAUAF3BtEb+HJKa4cXwGTbQeNLXrNBkMFe0+VxYiAzuIKPMMpbhm
+        68mbZx0ZpeCXf1ViwhO+73yc81svou8=
+X-Google-Smtp-Source: APXvYqwHdcmP9bf9wwpn9Jb7eJ2yB2f9t+TlsSC239drRYIGErjUkw8D8aGE10HOFkqBJEDgPlef0g==
+X-Received: by 2002:a2e:8446:: with SMTP id u6mr23207712ljh.71.1554919022671;
+        Wed, 10 Apr 2019 10:57:02 -0700 (PDT)
+Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.gmail.com with ESMTPSA id r20sm7357190ljj.22.2019.04.10.10.57.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 10:57:01 -0700 (PDT)
+From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
+To:     axboe@fb.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
+Subject: [GIT PULL] lightnvm: pblk: fix crash in pblk_end_partial_read due to multipage bvecs
+Date:   Wed, 10 Apr 2019 19:56:43 +0200
+Message-Id: <20190410175643.11000-1-mb@lightnvm.io>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <20190410135913.GK9224@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hans Holmberg <hans.holmberg@cnexlabs.com>
 
-On 4/10/19 6:59 AM, Andy Shevchenko wrote:
-> On Tue, Apr 09, 2019 at 08:39:39PM +0300, Andy Shevchenko wrote:
->> On Tue, Apr 09, 2019 at 10:07:35AM -0700, sathyanarayanan kuppuswamy wrote:
->>> On 4/9/19 4:25 AM, Andy Shevchenko wrote:
->>>> Use BIT() and BIT_MASK() macros for definitions.
->>> Looks good to me.
->> Thanks!
-> If you have no further comments, can you provide your tag here?
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
->
->>>>    /* PMC register bit definitions */
->>>>    /* PMC_CFG_REG bit masks */
->>>> -#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
->>>> +#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
->>>>    #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
->>>>    #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
->>> Do we need 0 << 4 ?
->> Yes, to explicitly show that this is a value for NO_REBOOT masked bit(s)
->> (single bit in this case).
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->>
->>
+The introduction of multipage bio vectors broke pblk's partial read
+logic due to it not being prepared for multipage bio vectors.
+
+Use bio vector iterators instead of direct bio vector indexing.
+
+Fixes: 07173c3ec276 ("block: enable multipage bvecs")
+Reported-by: Klaus Jensen <klaus.jensen@cnexlabs.com>
+Signed-off-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+Updated description.
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+---
+
+ drivers/lightnvm/pblk-read.c | 50 ++++++++++++++++++++----------------
+ 1 file changed, 28 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
+index 3789185144da..0b7d5fb4548d 100644
+--- a/drivers/lightnvm/pblk-read.c
++++ b/drivers/lightnvm/pblk-read.c
+@@ -231,14 +231,14 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
+ 	struct pblk_sec_meta *meta;
+ 	struct bio *new_bio = rqd->bio;
+ 	struct bio *bio = pr_ctx->orig_bio;
+-	struct bio_vec src_bv, dst_bv;
+ 	void *meta_list = rqd->meta_list;
+-	int bio_init_idx = pr_ctx->bio_init_idx;
+ 	unsigned long *read_bitmap = pr_ctx->bitmap;
++	struct bvec_iter orig_iter = BVEC_ITER_ALL_INIT;
++	struct bvec_iter new_iter = BVEC_ITER_ALL_INIT;
+ 	int nr_secs = pr_ctx->orig_nr_secs;
+ 	int nr_holes = nr_secs - bitmap_weight(read_bitmap, nr_secs);
+ 	void *src_p, *dst_p;
+-	int hole, i;
++	int bit, i;
+ 
+ 	if (unlikely(nr_holes == 1)) {
+ 		struct ppa_addr ppa;
+@@ -257,33 +257,39 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
+ 
+ 	/* Fill the holes in the original bio */
+ 	i = 0;
+-	hole = find_first_zero_bit(read_bitmap, nr_secs);
+-	do {
+-		struct pblk_line *line;
++	for (bit = 0; bit < nr_secs; bit++) {
++		if (!test_bit(bit, read_bitmap)) {
++			struct bio_vec dst_bv, src_bv;
++			struct pblk_line *line;
+ 
+-		line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
+-		kref_put(&line->ref, pblk_line_put);
++			line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
++			kref_put(&line->ref, pblk_line_put);
+ 
+-		meta = pblk_get_meta(pblk, meta_list, hole);
+-		meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
++			meta = pblk_get_meta(pblk, meta_list, bit);
++			meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
+ 
+-		src_bv = new_bio->bi_io_vec[i++];
+-		dst_bv = bio->bi_io_vec[bio_init_idx + hole];
++			dst_bv = bio_iter_iovec(bio, orig_iter);
++			src_bv = bio_iter_iovec(new_bio, new_iter);
+ 
+-		src_p = kmap_atomic(src_bv.bv_page);
+-		dst_p = kmap_atomic(dst_bv.bv_page);
++			src_p = kmap_atomic(src_bv.bv_page);
++			dst_p = kmap_atomic(dst_bv.bv_page);
+ 
+-		memcpy(dst_p + dst_bv.bv_offset,
+-			src_p + src_bv.bv_offset,
+-			PBLK_EXPOSED_PAGE_SIZE);
++			memcpy(dst_p + dst_bv.bv_offset,
++				src_p + src_bv.bv_offset,
++				PBLK_EXPOSED_PAGE_SIZE);
+ 
+-		kunmap_atomic(src_p);
+-		kunmap_atomic(dst_p);
++			kunmap_atomic(src_p);
++			kunmap_atomic(dst_p);
+ 
+-		mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
++			flush_dcache_page(dst_bv.bv_page);
++			mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
+ 
+-		hole = find_next_zero_bit(read_bitmap, nr_secs, hole + 1);
+-	} while (hole < nr_secs);
++			bio_advance_iter(new_bio, &new_iter,
++					PBLK_EXPOSED_PAGE_SIZE);
++			i++;
++		}
++		bio_advance_iter(bio, &orig_iter, PBLK_EXPOSED_PAGE_SIZE);
++	}
+ 
+ 	bio_put(new_bio);
+ 	kfree(pr_ctx);
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.19.1
 
