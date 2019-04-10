@@ -2,243 +2,236 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37B5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9F92083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4872083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:36:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="N848gfrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbfDJLfG (ORCPT
+        id S1731302AbfDJLgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:35:06 -0400
-Received: from foss.arm.com ([217.140.101.70]:52918 "EHLO foss.arm.com"
+        Wed, 10 Apr 2019 07:36:15 -0400
+Received: from mout.web.de ([212.227.17.12]:35081 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfDJLfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:35:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7529080D;
-        Wed, 10 Apr 2019 04:35:04 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CDF43F68F;
-        Wed, 10 Apr 2019 04:35:04 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 73CED68240B; Wed, 10 Apr 2019 12:35:02 +0100 (BST)
-Date:   Wed, 10 Apr 2019 12:35:02 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        mperttunen@nvidia.com, tiwai@suse.de, spujar@nvidia.com,
-        skomatineni@nvidia.com, krzk@kernel.org, heiko@sntech.de,
-        horms+renesas@verge.net.au, olof@lixom.net,
-        maxime.ripard@bootlin.com, andy.gross@linaro.org,
-        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
-        enric.balletbo@collabora.com, ezequiel@collabora.com,
-        stefan.wahren@i2se.com, marc.w.gonzalez@free.fr,
-        l.stach@pengutronix.de, tpiepho@impinj.com,
-        hayashi.kunihiko@socionext.com, yue.wang@amlogic.com,
-        shawn.lin@rock-chips.com, xiaowei.bao@nxp.com,
-        devicetree@vger.kernel.org, mmaddireddy@nvidia.com,
-        kthota@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190410113502.GD15144@e110455-lin.cambridge.arm.com>
-References: <20190402183110.GE141706@google.com>
- <dcbfbb32-9980-7ee4-89cd-baedfe624ce5@nvidia.com>
- <20190403173641.GI141706@google.com>
- <6cc7e047-bc7e-fa60-88ba-0b69c3d5a3f0@nvidia.com>
- <20190405185842.GC26522@google.com>
- <40c97eaa-e37e-860e-111d-879a135d9f51@nvidia.com>
- <20190409132604.GA256045@google.com>
- <a414b42c-ce10-e2db-55f0-9428cfd23e68@nvidia.com>
- <20190410081448.GC15144@e110455-lin.cambridge.arm.com>
- <31385c64-86b9-ebe3-99e3-6d156b66fb6a@nvidia.com>
+        id S1727206AbfDJLgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 07:36:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1554896153;
+        bh=EpmGjf0QE/uQH049jh3E1+zrAi2YhnCQzfXxngPbYhA=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=N848gfrFZuwmTClIH37FbfwmouB2hyvTfqA29qF7xQl3HuhTJTduN5CpOv+qUuh8J
+         cyllwtbk525f0k/xeNolJtudRohK81OxVdHCXxmIkpCjQpXOb8hTcrekLpmz47e3wj
+         LTH9aeQ5ZE9faVZtG9OV/2tRlVm4796OgNqJJ5sI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.98.93]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LsQLM-1glQMj1qXY-011yfK; Wed, 10
+ Apr 2019 13:35:53 +0200
+Subject: Re: [v2] ethernet: ti: eliminate a bit of duplicate code in
+ gbe_probe()
+To:     Wen Yang <wen.yang99@zte.com.cn>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>,
+        Wingman Kwok <w-kwok2@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <201904101838229475340@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <d0765170-5b79-23ee-8fc4-28ec459c8f01@web.de>
+Date:   Wed, 10 Apr 2019 13:35:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <201904101838229475340@zte.com.cn>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31385c64-86b9-ebe3-99e3-6d156b66fb6a@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ifja0MMk/p4oUEtpltUgZVwYhg5lVRdc43h/BO/ygYOpL4jFa+l
+ F30DMvuvOAYmtbvioaMztybr7bK0Hs4PhLtYZSMLyqpK6MB/9T+gtdJM0QewN+Q8gVq6WQ0
+ 2/JtQ7QtgyWPZcQ1Up90XPnPezRzNLjWNerbuYP8PWur+0CFUHt7/YuxBNjQFW+xXm6DgmF
+ XeNm3p85woHxp6kvDMj+A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sHdVSIsVKMs=:9zPzv7Mo0NxL+lFszc8qLQ
+ Y684bP2MilBi3yx1N8Fbmx5MefSSxmrO0ve7Zf3KrH9ZiNDDr361ZS/NtLCIszLN8pYdbdRsm
+ 9iH0jO6m13SPqNET63SVUfBZXZA9VK7cOPxyvQ9JABG+1j4i2V1MXm73fc1j787G73SIpCdyf
+ Ox8juhFPnDAO/3yWX6oekUDtSrYQQNP9asb86EpBWkTQ6I7cflPS8TRYuWfSGHuW1UhgkySEJ
+ eMFb/VoXeGGIuJGflTDj39pbPFAGU+6/5SceugNNT/9CJdioEeXqeF5U3XXX9lx89S8gkfSDT
+ RPqp/GOqtpJSNgaueVcZHo+jxUcRzwS+8xNzIHGihfS8DBopu4gwv1/oH0yOMmwZd3v7VMreB
+ TFuhmvCWmKsJyqshyzOQelTN8bQyh+0P6lW2szXaqSvlO4SfLhkvLvDTde6A28NFdHFlI0o8/
+ UCAutjP0QJS6uqYMk1ZLZZaSPBgDLsZDrmTt/HIar1BH8G6dByqzQBE6QAO8aUCPNhi839rMP
+ +xvFCp/yR4js3MQOwnP0YCXLtdaINY9aTy3LOcmbksyMCy5A+/XocnDkkeTAFlgVrCl1rWJW1
+ A2QeLgqvB2JIWRoOGYhdMJNJixdXgTOMv9FToNjWbgirhfTuyjM42j7V4xdYcHM+CPUX0n2eP
+ YCLo7Y1nL91devZRe5RC3UoaYBVKcAb9zoLpFR9SqkWp+Gz8pme7s5JYiHaOYbggmYzU2Qadu
+ /RRPvC56IkyKYA3lFGisNaWlF/XahcYrfgTARMRHy6WgWqgUE/3v/6uTyuTgCZz1YdcOl1we4
+ EjIFiOVNB8km4oaUkMaG8lcfnRKZs6azdeX2phMLIf0CiRHgQlOm2xhTv9vZLtmbGFiPhEu++
+ Qs1tJWxfPo6jg+AyuXalIxbb56pnJBsmWozJ8A/9PAQEZ289WxtafcWHM2vT2w+Vy9WU3WiZy
+ bFg3fd6DDvQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 03:23:39PM +0530, Vidya Sagar wrote:
-> On 4/10/2019 1:44 PM, Liviu Dudau wrote:
-> > On Wed, Apr 10, 2019 at 11:40:40AM +0530, Vidya Sagar wrote:
-> > > On 4/9/2019 6:56 PM, Bjorn Helgaas wrote:
-> > > > On Tue, Apr 09, 2019 at 05:00:53PM +0530, Vidya Sagar wrote:
-> > > > > On 4/6/2019 12:28 AM, Bjorn Helgaas wrote:
-> > > > > > On Fri, Apr 05, 2019 at 01:23:51AM +0530, Vidya Sagar wrote:
-> > > > > > > On 4/3/2019 11:06 PM, Bjorn Helgaas wrote:
-> > > > > > > > On Wed, Apr 03, 2019 at 03:13:09PM +0530, Vidya Sagar wrote:
-> > > > > > > > > On 4/3/2019 12:01 AM, Bjorn Helgaas wrote:
-> > > > > > > > > > On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
-> > > > > > > > > > > On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
-> > > > > > > > > > > > On Tue, Mar 26, 2019 at 08:43:26PM +0530, Vidya Sagar wrote:
-> > > > > > > > > > > > > Add support for Synopsys DesignWare core IP based PCIe host controller
-> > > > > > > > > > > > > present in Tegra194 SoC.
-> > > > > > > > > > 
-> > > > > > > > > >        - Why does this chip require pcie_pme_disable_msi()?  The only other
-> > > > > > > > > >          use is a DMI quirk for "MSI Wind U-100", added by c39fae1416d5
-> > > > > > > > > >          ("PCI PM: Make it possible to force using INTx for PCIe PME
-> > > > > > > > > >          signaling").
-> > > > > > > > > 
-> > > > > > > > > Because Tegra194 doesn't support raising PME interrupts through MSI line.
-> > > > 
-> > > > > > There's something wrong here.  Either the question of how PME is
-> > > > > > signaled is generic and the spec provides a way for the OS to discover
-> > > > > > that method, or it's part of the device-specific architecture that
-> > > > > > each host bridge driver has to know about its device.  If the former,
-> > > > > > we need to make the PCI core smart enough to figure it out.  If the
-> > > > > > latter, we need a better interface than this ad hoc
-> > > > > > pcie_pme_disable_msi() thing.  But if it is truly the latter, your
-> > > > > > current code is sufficient and we can refine it over time.
-> > > > > 
-> > > > > In case of Tegra194, it is the latter case.
-> > > > 
-> > > > This isn't a Tegra194 question; it's a question of whether this
-> > > > behavior is covered by the PCIe spec.
-> > > AFAIU the spec and what I heard from Nvidia hardware folks is that spec doesn't
-> > > explicitly talk about this and it was a design choice made by Nvidia hardware
-> > > folks to route these interrupts through legacy line instead of MSI line.
-> > > 
-> > > > 
-> > > > > > What I suspect should happen eventually is the DWC driver should call
-> > > > > > devm_pci_alloc_host_bridge() directly, as all the non-DWC drivers do.
-> > > > > > That would require a little reorganization of the DWC data structures,
-> > > > > > but it would be good to be more consistent.
-> > > > > > 
-> > > > > > For now, I think stashing the pointer in pcie_port or dw_pcie would be
-> > > > > > OK.  I'm not 100% clear on the difference, but it looks like either
-> > > > > > should be common across all the DWC drivers, which is what we want.
-> > > > > 
-> > > > > Since dw_pcie is common for both root port and end point mode structures,
-> > > > > I think it makes sense to keep the pointer in pcie_port as this structure
-> > > > > is specific to root port mode of operation.
-> > > > > I'll make a note to reorganize code to have devm_pci_alloc_host_bridge()
-> > > > > used in the beginning itself to be inline with non-DWC implementations.
-> > > > > But, I'll take it up later (after I'm done with upstreaming current series)
-> > > > 
-> > > > Fair enough.
-> > > > 
-> > > > > > > .remove() internally calls pm_runtime_put_sync() API which calls
-> > > > > > > .runtime_suspend(). I made a new patch to add a host_deinit() call
-> > > > > > > which make all these calls. Since host_init() is called from inside
-> > > > > > > .runtime_resume() of this driver, to be in sync, I'm now calling
-> > > > > > > host_deinit() from inside .runtime_suspend() API.
-> > > > > > 
-> > > > > > I think this is wrong.  pci_stop_root_bus() will detach all the
-> > > > > > drivers from all the devices.  We don't want to do that if we're
-> > > > > > merely runtime suspending the host bridge, do we?
-> > > > > 
-> > > > > In the current driver, the scenarios in which .runtime_suspend() is called
-> > > > > are
-> > > > > a) during .remove() call and
-> > > > 
-> > > > It makes sense that you should call pci_stop_root_bus() during
-> > > > .remove(), i.e., when the host controller driver is being removed,
-> > > > because the PCI bus will no longer be accessible.  I think you should
-> > > > call it *directly* from tegra_pcie_dw_remove() because that will match
-> > > > what other drivers do.
-> > > > 
-> > > > > b) when there is no endpoint found and controller would be shutdown
-> > > > > In both cases, it is required to stop the root bus and remove all devices,
-> > > > > so, instead of having same call present in respective paths, I kept them
-> > > > > in .runtime_suspend() itself to avoid code duplication.
-> > > > 
-> > > > I don't understand this part.  We should be able to runtime suspend
-> > > > the host controller without detaching drivers for child devices.
-> > > > 
-> > > > If you shutdown the controller completely and detach the *host
-> > > > controller driver*, sure, it makes sense to detach drivers from child
-> > > > devices.  But that would be handled by the host controller .remove()
-> > > > method, not by the runtime suspend method.
-> > > I think it is time I give some background about why I chose to implement
-> > > .runtime_suspend() and .runtime_resume() APIs in the first place. We wanted to
-> > > powerdown PCIe controller if there is no link up (i.e. slot is open and no endpoint
-> > > devices are connected). We want to achieve this without returning a failure in
-> > > .probe() call. Given PCIe IP power partitioning is handled by generic power domain
-> > > framework, power partition gets unpowergated before .probe() gets called and gets
-> > > powergated either when a failure is returned in .probe() or when pm_runtime_put_sync()
-> > > is called. So, I chose to call pm_runtime_put_sync() in no-link-up scenario and chose
-> > > to implement .runtime_suspend() to handle all the cleanup work before PCIe partition
-> > > getting powergated. In fact, to match this, I'm doing all the PCIe IP bring up
-> > > activity in .runtime_resume() implementation which gets invoked by pm_runtime_get_sync()
-> > > which in turn is called in .probe() path. In fact the very dw_pcie_host_init() itself
-> > > is called from .runtime_resume() implementation. So, it is because of these reasons that
-> > > I called pci_stop_root_bus() and pci_remove_root_bus() as part of .runtime_suspend()
-> > > implementation as pm_runtime_put_sync() is called from both .remove() and also during
-> > > no-link-up scenario. Please do let me know if there is a better way to do this.
-> > 
-> > I think you're missing the case where .runtime_suspend() is called when
-> > there are no *active* devices on the bus, i.e. everyone is dormant. It
-> > doesn't mean that you need to remove them from the bus and re-probe them
-> > back on .runtime_resume(). Most of the drivers for PCI devices don't
-> > expect to be removed during idle, as they will configure the hardware to
-> > be in a "quick wake" state (see PCIe Dx power states).
-> > 
-> > You should probe and configure the bus during .probe() and remove and
-> > detach all drivers during .remove(). For .runtime_suspend() all you need
-> > to do is put the host controller in low power mode if it has one, or
-> > stop all clocks that are not required for responding to devices waking
-> > up from PCIe Dx state. For .runtime_resume() you then restore the
-> > clocks, without re-scanning the bus.
-> Since this is a host controller driver and the device as such is sitting on platform
-> bus instead of PCIe bus, is it still the case that .runtime_suspend() and
-> .runtime_resume() of this driver get called when devices on PCIe bus are idle?
+>>>>> @@ -3651,22 +3651,18 @@ static int gbe_probe(struct netcp_device *ne=
+tcp_device, struct device *dev,
+>>>>>      if (ret)
+>>>>>          return ret;
+>>>>>
+>>>>> -    interfaces =3D of_get_child_by_name(node, "interfaces");
+>>>>> -    if (!interfaces)
+>>>>> -        dev_err(dev, "could not find interfaces\n");
+>>>>> -
+>>>>
+>>>> How do you think about to skip a bit of statements as a reaction for
+>>>> such a null pointer?
+>>>> https://elixir.bootlin.com/linux/v5.1-rc4/source/drivers/net/ethernet=
+/ti/netcp_ethss.c#L3562
+>> =E2=80=A6
+>>> Maybe you need to look at the implementation of for_each_child_of_node=
+() and of_node_put().
+>>> NULL check before those functions is not needed.
+>>
+>> This information is reasonable in principle.
+>>
+>> Was the reference counter incremented even if a null pointer was return=
+ed
+>> by such a function call?
+>
+> The situation you assume is an issue that the of_get_child_by_name() fun=
+ction needs to consider
+>  and has been irrelevant to our patch.
 
-The functions will be called when the device is determined to be idle,
-i.e. when there are no PM references being held by other drivers.
-
-Think of it the other way: even if the device is sitting on the platform
-bus for configuration reasons, you don't want to turn it off when the
-PCIe bus needs to be active, right?
+I suggest to reconsider the software situation a bit more.
 
 
-> 
-> Having asked that, I start to feel what I'm doing as part of .runtime_suspend() and
-> .runtime_resume() doesn't really justify these API names. Since I know where I'm
-> calling pm_runtime_get/put_sync() APIs (which eventually call .runtime_resume/suspend())
-> I should probably move the content of these APIs before calling pm_runtime_get/put_sync().
-> Do you agree with that?
+> 1, when returning NULL, the of_get_child_by_name () function needs to en=
+sure that the resources
+>  it has allocated are released;
+> 2, when returning NULL, if of_get_child_by_name() can&apos;t release its=
+ resources, then the
+>  outer function has no way to release these resources.
+>
+> If you are interested, you can check the of_get_child_by_name() function=
+ further
 
-Yeah, I think you are right. Also, I believe there are pm_runtime_get()
-calls in the pci framework as well, you need to audit the code, I
-haven't looked at it in a while.
+It seems that the corresponding software documentation can be improved als=
+o here.
+https://elixir.bootlin.com/linux/v5.1-rc4/source/drivers/of/base.c#L863
 
-Best regards,
-Liviu
 
-> 
-> > 
-> > Best regards,
-> > Liviu
-> > 
-> > 
-> > > 
-> > > > 
-> > > > Bjorn
-> > > > 
-> > > 
-> > 
-> 
+> and send it to me if you find any problems.
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+I find the exception handling suspicious in the discussed function impleme=
+ntation.
+
+
+>>>>>      ret =3D netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
+>>>>>                  gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
+>>>>> -    if (ret) {
+>>>>> -        of_node_put(interfaces);
+>>>>> +    if (ret)
+>>>>>          return ret;
+>>>>> -    }
+>>>>>
+>>>>>      ret =3D netcp_txpipe_open(&gbe_dev->tx_pipe);
+>>>>> -    if (ret) {
+>>>>> -        of_node_put(interfaces);
+>>>>> +    if (ret)
+>>>>>          return ret;
+>>>>> -    }
+>>
+>> Does the preparation of the NetCP pipe still matter in this special use=
+ case?
+=E2=80=A6
+> Please refer to my reply above.
+
+I propose to take additional software design possibilities into account.
+
+
+> We have checked the netcp_txpipe_init() and the netcp_txpipe_open() func=
+tion.
+
+I wonder if such function calls are still relevant if a questionable syste=
+m
+configuration would be detected before.
+
+
+> However, your questions may not actually be related to our patch.
+
+Your update suggestion triggered related adjustment ideas.
+
+
+
+>>>> +
+>>>> +    interfaces =3D of_get_child_by_name(node, "interfaces");
+>>>> +    if (!interfaces)
+>>>> +        dev_err(dev, "could not find interfaces\n");
+>>>>
+>>>>      /* Create network interfaces */
+>>>>      INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
+>>>>
+>>>> Can code like the following trigger corresponding software developmen=
+t concerns?
+>>>>
+>>>> for_each_child_of_node(interfaces, interface) {
+>>>> =E2=80=A6
+>>>> }
+>>>> of_node_put(interfaces);
+>>>>
+>> =E2=80=A6
+>>>> if (!gbe_dev->num_slaves)
+>>>> dev_warn(dev, "No network interface configured\n");
+>
+>> Is this message really required as another response then?
+
+Is the exception handling still questionable in this function?
+
+Regards,
+Markus
