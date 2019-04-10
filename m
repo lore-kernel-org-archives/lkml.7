@@ -2,121 +2,74 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34519C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB06C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077A7206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FCD206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 07:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfDJHzd (ORCPT
+        id S1729151AbfDJHzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 03:55:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39234 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfDJHzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 03:55:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 00:55:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="160335374"
-Received: from mylly.fi.intel.com (HELO [10.237.72.159]) ([10.237.72.159])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Apr 2019 00:55:30 -0700
-Subject: Re: [PATCH 1/1] spi: pxa2xx: add driver enabling message
-To:     Flavio Suligoi <f.suligoi@asem.it>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1554736964-6058-1-git-send-email-f.suligoi@asem.it>
- <51e9e073-625d-f5c0-6b2e-410f6ddb6346@linux.intel.com>
- <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <2c853342-f937-30e6-ce6f-010e06f7376c@linux.intel.com>
-Date:   Wed, 10 Apr 2019 10:55:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 03:55:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49582 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726667AbfDJHze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 03:55:34 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8604B67F4C4B450E1BF0;
+        Wed, 10 Apr 2019 15:55:31 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
+ 15:55:21 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <akpm@linux-foundation.org>, <keescook@chromium.org>,
+        <yamada.masahiro@socionext.com>, <pmladek@suse.com>,
+        <andriy.shevchenko@linux.intel.com>, <willy@infradead.org>,
+        <joe.lawrence@redhat.com>, <dunlap@infradead.org>,
+        <robin.murphy@arm.com>, <mcgrof@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] lib/Kconfig.debug: Fix build error without CONFIG_BLOCK
+Date:   Wed, 10 Apr 2019 15:54:34 +0800
+Message-ID: <20190410075434.35220-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <6cef52a73fb547bb9c0dd84efca8f7f8@asem.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/9/19 5:11 PM, Flavio Suligoi wrote:
-> Hi Jarkko,
-> 
->> Hi
->>
->> On 4/8/19 6:22 PM, Flavio Suligoi wrote:
->>> Add an info message for the PXA2xx device driver start-up,
->>> with the indication of the transfer mode used (DMA or GPIO).
->>>
->>> This info is useful to individuate the timing when
->>> the module starts.
->>>
->>> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
->>> ---
->>>    drivers/spi/spi-pxa2xx.c | 3 +++
->>>    1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
->>> index f7068cc..d449501 100644
->>> --- a/drivers/spi/spi-pxa2xx.c
->>> +++ b/drivers/spi/spi-pxa2xx.c
->>> @@ -1826,6 +1826,9 @@ static int pxa2xx_spi_probe(struct platform_device
->> *pdev)
->>>    		goto out_error_clock_enabled;
->>>    	}
->>>
->>> +	dev_info(dev, "PXA2xx SPI master controller (%s mode)\n",
->>> +		 platform_info->enable_dma ? "DMA" : "PIO");
->>> +
->>>    	return status;
->>>
->> Would this look better if moved before devm_spi_register_controller()
->> call?
-> 
-> Ok, so in case of SPI registering failure, we have two messages, as:
-> 
-> pxa2xx-spi 80860F0E:00: PXA2xx SPI master controller (DMA mode)
-> pxa2xx-spi 80860F0E:00: problem registering spi controller
-> 
-> Do you think that it is more explicative?
-> 
-I think yes and it should not cause confusion since the error message is 
-the last one.
+From: YueHaibing <yuehaibing@huawei.com>
 
-I was thinking the successful registration case when DMA is not 
-available. First there is a warning, followed by a debug message from 
-SPI core (if CONFIG_SPI_DEBUG) and then info message.
+If CONFIG_TEST_KMOD is set to M, while CONFIG_BLOCK is not set,
+XFS and BTRFS can not be compiled successly.
 
-[    9.506895] pxa2xx-spi pxa2xx-spi.13: no DMA channels available, 
-using PIO
-[    9.516770] pxa2xx-spi pxa2xx-spi.13: registered master spi2
-[    9.518527] pxa2xx-spi pxa2xx-spi.13: PXA2xx SPI master controller 
-(PIO mode)
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ lib/Kconfig.debug | 1 +
+ 1 file changed, 1 insertion(+)
 
-Actually this info message doesn't necessarily tell will the driver end 
-up using DMA for transfers. See pxa2xx_spi_can_dma() and 
-pxa2xx_spi_transfer_one().
-
-How about replacing "no DMA channels available, using PIO" and have 
-instead single info message telling is the DMA available or does the 
-driver use PIO only?
-
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 2020d76..65ad61b 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1939,6 +1939,7 @@ config TEST_KMOD
+ 	tristate "kmod stress tester"
+ 	depends on m
+ 	depends on NETDEVICES && NET_CORE && INET # for TUN
++	depends on BLOCK
+ 	select TEST_LKM
+ 	select XFS_FS
+ 	select TUN
 -- 
-Jarkko
+2.7.4
+
+
