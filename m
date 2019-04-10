@@ -2,136 +2,135 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D98C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273FBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9302083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52E42083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lrrRR8hW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfDJGp3 (ORCPT
+        id S1728057AbfDJGqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:45:29 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48300 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbfDJGp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:45:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DB79A78;
-        Tue,  9 Apr 2019 23:45:28 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB6CF3F718;
-        Tue,  9 Apr 2019 23:45:24 -0700 (PDT)
-Subject: Re: [PATCH v8 4/9] KVM: arm/arm64: preserve host HCR_EL2 value
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
- <1554172037-4516-5-git-send-email-amit.kachhap@arm.com>
- <f27a3e70-2099-45a6-48e6-481a67e360eb@arm.com>
- <6131d2cb-1062-6331-c2c3-7026081c458a@arm.com>
- <9a373ede-cdf8-c992-6f4b-352e46e0030a@arm.com>
- <1c4e4f50-8324-ed78-1bfd-aee05b6d4fc5@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <4d52c05d-500a-9cd0-4621-6979988ba600@arm.com>
-Date:   Wed, 10 Apr 2019 12:15:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 10 Apr 2019 02:46:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52680 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbfDJGqo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 02:46:44 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A6YEcr084530;
+        Wed, 10 Apr 2019 06:46:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=mir6tMGBE9jGK9cEzmvJu1kw5SgfkHI7OD6ZTd+4jHo=;
+ b=lrrRR8hWySFK819A9J3evNGUef4FwT7B8OtTexOeeptbwebMQeWks2Goltx0ZGsMbwtr
+ 1+Vaj0RMXnvvKEFRPXyIoASqcSE7oIAf68H8/CajKrSYKDmy81S23YtPCrDXPY7cyFwQ
+ XdX1Hb36G16kXJpKwGivO2D/QTZfFiK6Gr73MT0FUaBWNElg33USNaWdenJNwSHaLePL
+ ookdM27HiSHvcSjaoJvqrZV76yz0H7MkPy8Fo2CftR096ciA8Nmfqf4SsKfYBUr4RnN/
+ ZXq0TAquglDGRKkIwFtGd3a+IOqkmq5Ub7l4/7lNf2n7mPWFDkm8f2BAXb3G0pUX+9wk ag== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2rpkht15jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 06:46:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A6jstH122052;
+        Wed, 10 Apr 2019 06:46:34 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2rpkejqy66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Apr 2019 06:46:34 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3A6kPLY021115;
+        Wed, 10 Apr 2019 06:46:25 GMT
+Received: from kadam (/197.157.0.42)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 09 Apr 2019 23:46:24 -0700
+Date:   Wed, 10 Apr 2019 09:46:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     walter harms <wharms@bfs.de>
+Cc:     Colin King <colin.king@canonical.com>,
+        Karen Xie <kxie@chelsio.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: cxgbi: remove redundant __kfree_skb call on skb
+Message-ID: <20190410064615.GD6095@kadam>
+References: <20190409133819.21127-1-colin.king@canonical.com>
+ <5CACAD57.1030703@bfs.de>
 MIME-Version: 1.0
-In-Reply-To: <1c4e4f50-8324-ed78-1bfd-aee05b6d4fc5@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5CACAD57.1030703@bfs.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904100048
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904100048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 09, 2019 at 04:33:59PM +0200, walter harms wrote:
+> 
+> 
+> Am 09.04.2019 15:38, schrieb Colin King:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > The error return path via label rel_resource checks for a non-null
+> > skb before free'ing it.  However, skb is always null at this exit
+> > path, so the null check and the free are redundant and can be removed.
+> > Removing this allows the original goto's to rel_resource to be cleaned
+> > up; the first can be replaced by a return of -EINVAL, the second can
+> > be replaced by a more appropriate -ENOMEM return since allow_wr has
+> > failed go allocate some memory.
+> > 
+> > Addresses-Coverity: ("Logically Dead Code")
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 9 ++-------
+> >  1 file changed, 2 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> > index 75e1273a44b3..5a4387f437d5 100644
+> > --- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> > +++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+> > @@ -979,14 +979,14 @@ static int init_act_open(struct cxgbi_sock *csk)
+> >  	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
+> >  	if (csk->atid < 0) {
+> >  		pr_err("NO atid available.\n");
+> > -		goto rel_resource;
+> > +		return -EINVAL;
+> >  	}
+> >  	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
+> >  	cxgbi_sock_get(csk);
+> >  
+> >  	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
+> >  	if (!skb)
+> > -		goto rel_resource;
+> > +		return -ENOMEM;
+> 
+> I would expect a cxgb3_free_atid(csk->atid) here. Did i miss something ?
+> 
 
-Hi Mark,
-On 4/9/19 2:08 PM, Marc Zyngier wrote:
-> On 08/04/2019 19:39, Kristina Martsenko wrote:
->> On 08/04/2019 14:05, Amit Daniel Kachhap wrote:
->>> Hi James,
->>>
->>> On 4/6/19 4:07 PM, James Morse wrote:
->>>> Hi Amit,
->>>>
->>>> On 02/04/2019 03:27, Amit Daniel Kachhap wrote:
->>>>> From: Mark Rutland <mark.rutland@arm.com>
->>>>>
->>>>> When restoring HCR_EL2 for the host, KVM uses HCR_HOST_VHE_FLAGS, which
->>>>> is a constant value. This works today, as the host HCR_EL2 value is
->>>>> always the same, but this will get in the way of supporting extensions
->>>>> that require HCR_EL2 bits to be set conditionally for the host.
->>>>>
->>>>> To allow such features to work without KVM having to explicitly handle
->>>>> every possible host feature combination, this patch has KVM save/restore
->>>>> for the host HCR when switching to/from a guest HCR. The saving of the
->>>>> register is done once during cpu hypervisor initialization state and is
->>>>> just restored after switch from guest.
->>>>>
->>>>> For fetching HCR_EL2 during kvm initialisation, a hyp call is made using
->>>>> kvm_call_hyp and is helpful in non-VHE case.
->>>>>
->>>>> For the hyp TLB maintenance code, __tlb_switch_to_host_vhe() is updated
->>>>> to toggle the TGE bit with a RMW sequence, as we already do in
->>>>> __tlb_switch_to_guest_vhe().
->>>>>
->>>>> The value of hcr_el2 is now stored in struct kvm_cpu_context as both host
->>>>> and guest can now use this field in a common way.
->>>>
->>>> These HCR_EL2 flags have had me confused for quite a while.
->>>> I thought this was preserving the value that head.S or cpufeature.c had set, and with
->>>> ptrauth we couldn't know what this register should be anymore, the host flags has to vary.
->>>>
->>>> Kristina's explanation of it[0], clarified things, and with a bit more digging it appears
->>>> we always set API/APK, even if the hardware doesn't support the feature (as its harmless).
->>>> So we don't need to vary the host flags...
->>>
->>> API/APK is always set for NVHE host mode.
->>>>
->>>> My question is, what breaks if this patch isn't merged? (the MDCR change is cleanup we can
->>>> do because of this HCR change), is this HCR change just cleanup too? If so, can we merge
->>>> ptrauth without either, so we only make the change when its needed? (it will cause some
->>>> changes in your patch 7, but I can't see where you depend on the host flags).
->>>
->>> Yes you are right that this patch does not directly effect pointer authentication functionality but contains several optimizations and cleanups such as,
->>>
->>> * Removes assigning static flags HCR_HOST_VHE_FLAGS/HCR_HOST_NVHE_FLAGS from switch.c so switching functions now are more generic in nature.
->>> * Currently the variation in hcr_el2 flags is across modes (VHE/NVHE). Any future conditional change within those modes in host HCR_EL2 may not effect code changes in switch.c
->>> * Save of hcr_el2 done at hyp init time so not expensive switching wise.
->>>
->>> I am fine on posting it separately also.
->>
->> FWIW I think it makes sense to post the HCR and MDCR patches separately
->> from this series. That should make it clear that pointer auth does not
->> depend on these changes, and should make it easier to evaluate the
->> changes on their own.
->>
->> Others' opinions are welcome as well.
-> 
-> Agreed. I'm quite eager to move forward with this series, and the least
-> unrelated changes it makes, the better. Cleanups and optimizations can
-> always be merged at a later time.
-yes sure. I will re-spin the patch series shortly.
+Yeah.  I don't see that cxgb3_free_atid() drops the cxgbi_sock_get()
+reference so we would want to do a put for that as well I think.
 
-Thanks,
-Amit D.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+regards,
+dan carpenter
+
