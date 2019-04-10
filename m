@@ -2,104 +2,163 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62846C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C119C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3180920854
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XpXvL2K4"
+	by mail.kernel.org (Postfix) with ESMTP id 34AE92082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387753AbfDJQQh (ORCPT
+        id S1731498AbfDJQSu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:16:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43683 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387702AbfDJQQU (ORCPT
+        Wed, 10 Apr 2019 12:18:50 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:59205 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729891AbfDJQSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:16:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c8so1755685pfd.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 09:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=x2KYJib3dOzOX8W30eA/GdsrFGJ1QDL/O1I+P3kYlwg=;
-        b=XpXvL2K4TmeTB6apty/+7j6PaDGjBWukrD4XgOwH9jLi+UosDmIFjrCJSyhUPwI24r
-         t9Qz8BPGmRFt3uOj8lrdM/YocFw48FOg9wQe5zN745/WR4lqDEAOREOVv818ht6yOHhw
-         oaMsZGMubKVo6KkCHERJnTkhBjwwymhVBTj/g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=x2KYJib3dOzOX8W30eA/GdsrFGJ1QDL/O1I+P3kYlwg=;
-        b=m4RHfReY2LGtRgQFowIBK6W3RhWqZHAP1+1tZKmlA9VK3wHE6rvYj48r9JVCO3jOaB
-         d35KqQm/tt6nfqMKhJHNsu2apqbTV+tXG00jzMnyF2rA2cNr0Eg7ZlI1Fm4SNVsfTVNk
-         aDmHdQ9/nfj/5E45q7vMQ35gpRfQoc4LS/tARv1wh+qUhgvSCxBQBWP4CISLkqyUDUw9
-         WuRBrjMrE9mxV19+BVK+sZ4JFhcFsmvQ1O3FkIUZ0Q28Z5UUVYHYoA1TeJwN5k2fa+qU
-         vz2kdsRlnFQj7OVaN+UAK4XbPwRNUhXCsisv7anI6DQjyWPZST7Mis06Cx5n91KyyV3N
-         I8wA==
-X-Gm-Message-State: APjAAAUj2BHBB8I0PtzgcRtmfcddeHpMmk1H6R5Cv/lZlsNOkglDTpjH
-        vAyoiq2SsT6L4ABHwEvhBu3rbQ==
-X-Google-Smtp-Source: APXvYqxV7u4z3SP7rQZaoXm6DgmvlM21aDP/eOO6IxVz6Xq3ILyC5OTxhjHS1EiCzLNEbjzmkf0D4Q==
-X-Received: by 2002:a65:6389:: with SMTP id h9mr42126678pgv.398.1554912979563;
-        Wed, 10 Apr 2019 09:16:19 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id a12sm41025812pgq.21.2019.04.10.09.16.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 09:16:18 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexander Popov <alpopov@ptsecurity.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH 0/3] Kconfig: Refactor memory initialization hardening
-Date:   Wed, 10 Apr 2019 09:16:09 -0700
-Message-Id: <20190410161612.18545-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Apr 2019 12:18:50 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 06398100008;
+        Wed, 10 Apr 2019 16:18:45 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 18:18:43 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>, <richard@nod.at>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <paul.burton@mips.com>, <bbrezillon@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH] mtd: nand: Fix build error while
+ CONFIG_MTD_NAND_ECC_SW_BCH is set to module
+Message-ID: <20190410181843.489a4e33@xps13>
+In-Reply-To: <41165c39-da0c-0f15-87f9-4fb588b77dcc@huawei.com>
+References: <20190410130747.35692-1-yuehaibing@huawei.com>
+        <20190410153920.68267a1a@collabora.com>
+        <20190410155856.655122c8@collabora.com>
+        <8b020124-4008-6081-c04c-eaefb7875878@huawei.com>
+        <20190410162927.17ea678b@collabora.com>
+        <41165c39-da0c-0f15-87f9-4fb588b77dcc@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a proposed alternative for the memory initialization series,
-which refactoring the existing gcc plugins into a separate Kconfig
-file and collects all the related options together with some more
-language to describe their differences. The last patch adds the
-Clang auto init option, as done by Alexander Potapenko.
+Hi YueHaibing,
 
-Since there isn't really a good way to "select" with dependencies,
-I've left out CONFIG_INIT_ALL_MEMORY for the moment...
+YueHaibing <yuehaibing@huawei.com> wrote on Wed, 10 Apr 2019 23:03:24
++0800:
 
--Kees
+> On 2019/4/10 22:29, Boris Brezillon wrote:
+> > On Wed, 10 Apr 2019 22:22:16 +0800
+> > YueHaibing <yuehaibing@huawei.com> wrote:
+> >   
+> >> On 2019/4/10 21:58, Boris Brezillon wrote:  
+> >>> On Wed, 10 Apr 2019 15:39:28 +0200
+> >>> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> >>>     
+> >>>> On Wed, 10 Apr 2019 21:07:47 +0800
+> >>>> Yue Haibing <yuehaibing@huawei.com> wrote:
+> >>>>    
+> >>>>> From: YueHaibing <yuehaibing@huawei.com>
+> >>>>>
+> >>>>> Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
+> >>>>> is set to module:
+> >>>>>
+> >>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
+> >>>>> (.text+0xef6): undefined reference to `nand_bch_free'
+> >>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
+> >>>>> nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
+> >>>>> nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
+> >>>>> nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
+> >>>>>
+> >>>>> CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
+> >>>>> because MTD_RAW_NAND need it while linked.
+> >>>>>
+> >>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >>>>> Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support"      
+> >>>>
+> >>>> Nope, it's not this one that introduced the regression.
+> >>>>
+> >>>>
+> >>>>    
+> >>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >>>>> ---
+> >>>>>  drivers/mtd/nand/raw/Kconfig | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+> >>>>> index 615d738..0500c42 100644
+> >>>>> --- a/drivers/mtd/nand/raw/Kconfig
+> >>>>> +++ b/drivers/mtd/nand/raw/Kconfig
+> >>>>> @@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
+> >>>>>  if MTD_RAW_NAND
+> >>>>>  
+> >>>>>  config MTD_NAND_ECC_SW_BCH
+> >>>>> -	tristate "Support software BCH ECC"
+> >>>>> +	bool "Support software BCH ECC"
+> >>>>>  	select BCH
+> >>>>>  	default n
+> >>>>>  	help      
+> >>>>
+> >>>> Should be fixed with the following diff squashed into:
+> >>>>
+> >>>> 51ef1d0b2095 ("mtd: nand: Clarify Kconfig entry for software BCH ECC algorithm")
+> >>>>    
+> >>>> --->8---      
+> >>>> diff --git a/include/linux/mtd/nand_bch.h b/include/linux/mtd/nand_bch.h
+> >>>> index b8106651f807..06ce2b655c13 100644
+> >>>> --- a/include/linux/mtd/nand_bch.h
+> >>>> +++ b/include/linux/mtd/nand_bch.h
+> >>>> @@ -15,7 +15,7 @@ struct mtd_info;
+> >>>>  struct nand_chip;
+> >>>>  struct nand_bch_control;
+> >>>>  
+> >>>> -#if defined(CONFIG_MTD_NAND_ECC_BCH)
+> >>>> +#if defined(CONFIG_MTD_NAND_ECC_SW_BCH)
+> >>>>  
+> >>>>  static inline int mtd_nand_has_bch(void) { return 1; }
+> >>>>  
+> >>>> @@ -39,7 +39,7 @@ struct nand_bch_control *nand_bch_init(struct mtd_info *mtd);
+> >>>>   */
+> >>>>  void nand_bch_free(struct nand_bch_control *nbc);
+> >>>>  
+> >>>> -#else /* !CONFIG_MTD_NAND_ECC_BCH */
+> >>>> +#else /* !CONFIG_MTD_NAND_ECC_SW_BCH */
+> >>>>  
+> >>>>  static inline int mtd_nand_has_bch(void) { return 0; }
+> >>>>  
+> >>>> @@ -64,6 +64,6 @@ static inline struct nand_bch_control *nand_bch_init(struct mtd_info *mtd)
+> >>>>  
+> >>>>  static inline void nand_bch_free(struct nand_bch_control *nbc) {}
+> >>>>  
+> >>>> -#endif /* CONFIG_MTD_NAND_ECC_BCH */
+> >>>> +#endif /* CONFIG_MTD_NAND_ECC_SW_BCH */
+> >>>>  
+> >>>>  #endif /* __MTD_NAND_BCH_H__ */    
+> >>>
+> >>> Sorry, I didn't look at the right branch, this part of the code was
+> >>> correct, but we still have a problem to express the RAW_NAND(y) ->
+> >>> SW_BCH(y) dependency.    
+> >>
+> >> It seems this dependency is not always need,
+> >>
+> >> case MTD_RAW_NAND set to y works well while CONFIG_MTD_NAND_ECC_SW_BCH is not set.  
+> > 
+> > Yes, I know, but forcing nand_bch to a be a boolean is not the right
+> > solution either, hence my suggestion to use 'imply'.  
 
-Kees Cook (3):
-  Kconfig: Create "kernel hardening" config area
-  kbuild: Move stackleak config to Kconfig.hardening
-  kbuild: Implement Clang's stack initialization
+Why exactly? SW BCH is going to be converted to the generic ECC engine
+abstraction and IIRC you told me that it would not be problematic to
+turn it into a boolean?
 
- Makefile                    |   5 ++
- scripts/gcc-plugins/Kconfig | 121 +-------------------------
- security/Kconfig            |   2 +
- security/Kconfig.hardening  | 165 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 175 insertions(+), 118 deletions(-)
- create mode 100644 security/Kconfig.hardening
 
--- 
-2.17.1
-
+Thanks,
+Miquèl
