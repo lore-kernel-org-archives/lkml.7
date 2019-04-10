@@ -2,130 +2,122 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCE3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA77C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C331E20850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D4B20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lmjoIghn"
+	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="O/25pqCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfDJWeb (ORCPT
+        id S1726564AbfDJWlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:34:31 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33294 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDJWea (ORCPT
+        Wed, 10 Apr 2019 18:41:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38073 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDJWlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:34:30 -0400
-Received: by mail-vs1-f67.google.com with SMTP id a190so2360336vsd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:34:30 -0700 (PDT)
+        Wed, 10 Apr 2019 18:41:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so4782409wro.5
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:41:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/d+/Smh+ztTKnhe7lRqmlhlKS4kJ9d0Yz1XzvP1SVsI=;
-        b=lmjoIghnhFGVRmeW7FlGNwb+HYAG+0AXZxYzMM1eWAwIUi32/pVnH8w3L/tAoULcbR
-         OTOo7y9qzxhwrWmLexdTslLY0L/NaAhLwae4S/sD/o6FJGVgR28RKAOHfgWorVCcJtFV
-         60Z7Daj1NnQdcjpzkqhB4Sv2pENweuYx6muCs=
+        d=kragniz.eu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lQG5/tXvzBGNkqHlPz5Vc7T5e7qLQSkm2WFhbrJXDCI=;
+        b=O/25pqCHwPsg/f9zqw8+8GM20BHclNVRLLBLQEe8BW1acj4vLf7CmBpSa4yUCM+8pz
+         HzpcpBsScr6AVPZ9ZTYnWiRfMGe7fr78SQ+VLMRE2QOaAqzzs+b0eujLiDs1CEf8iRwz
+         QeHkn16TGWjzbdiWErPEKVpCsljYgNuVtNZ2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/d+/Smh+ztTKnhe7lRqmlhlKS4kJ9d0Yz1XzvP1SVsI=;
-        b=WdchU5PHCQFk9CBRxyz2eMueOHE6pTOkJIvupRwMIP6rRQm962IQtrXj+ARqyxb1VN
-         VdPysV4lCQ2XotzthLYjMBpanQ11Gi5Iu0QO5R5METKAdfyKFbrX+AR3wyc15Akox1pp
-         WO8Zw7lJrRZlOI6Zumpf28pmFqBqzm8xN3tcFfjRhyGV55QItlGOtN7FSyDsf8yOPEu2
-         iyCRcd1LBnOO15VzhH5UVLPsusCExOwa7OzcrhAJDefLJ1pyb05mqwNTx7N10Sn339hy
-         d1h89qkEg+LdnVeqIFvLyqcr+kKU6sv0bNpGJTKpaCE7lda6oqC0gz/R4beAbIw1GD+R
-         lOvQ==
-X-Gm-Message-State: APjAAAUpY1yKZjDZM4MVR3dTIUJIZkHJrfF+fihxUD3NL/d9h6g2FYOb
-        WHTWlvhzWbrACZM7q0F0FJ4dpX2M1+Q=
-X-Google-Smtp-Source: APXvYqx1wgvv8IYc4ReITG/pnA6Z22RYlV+9R9FRLF5zlJyZJQVun8pJw6WQQMdgapBpMRONke25KQ==
-X-Received: by 2002:a67:d38f:: with SMTP id b15mr25636195vsj.154.1554935669220;
-        Wed, 10 Apr 2019 15:34:29 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id d134sm16743006vkf.6.2019.04.10.15.34.28
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lQG5/tXvzBGNkqHlPz5Vc7T5e7qLQSkm2WFhbrJXDCI=;
+        b=r/XeAhZLo2ARkeiuePNbXb6BVZRs5j8OldzeEXSSVxOITZsPMRjWl832zfWliDGyrf
+         aV35P67LbN3BqUWAOU4N49mu1QDZ0H2wOIEKAZtmsY31KQZnc3Iic0rL9H7KIt1AVx7w
+         YKkCy9s6tSc2dhnWv8JmSvm4SoFgfAk6NI9+lwGlRpwoeOYJyH3Nsmu37e135Q0OCn/H
+         gP6J3t4/z9tHSoALsqv6eGoXtqy99EdBNi5jM3olwsYwnPdNlaYJGgkAUWsn/WD2C8VW
+         UElVJt3fYZKbGm+cJ6bFh2CNoQ/7IJDo4pu7bUbEGKeGHQ7bC3wqd9qPjrxWo0x2FMBr
+         p21g==
+X-Gm-Message-State: APjAAAWqh55VjmrLEPL7HWuaCHVGsuNLBAJ9zQ91REiVAN7JuJhu60Gb
+        EJwShy8N9SmdXpinKqPnaj3xag==
+X-Google-Smtp-Source: APXvYqzLwP7/K5coJ6txOBpJdXM5FVmtt3dLGWiYv8z18yhwwOqSQUdFCea3MpkBfEqvF0oVcOtlKA==
+X-Received: by 2002:adf:f78c:: with SMTP id q12mr7659921wrp.172.1554936059680;
+        Wed, 10 Apr 2019 15:40:59 -0700 (PDT)
+Received: from localhost.localdomain ([95.149.160.82])
+        by smtp.gmail.com with ESMTPSA id v16sm67989286wro.48.2019.04.10.15.40.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 15:34:28 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id v7so1342812uak.13
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 15:34:28 -0700 (PDT)
-X-Received: by 2002:ab0:60cd:: with SMTP id g13mr24036899uam.85.1554935667664;
- Wed, 10 Apr 2019 15:34:27 -0700 (PDT)
+        Wed, 10 Apr 2019 15:40:58 -0700 (PDT)
+From:   Louis Taylor <louis@kragniz.eu>
+To:     dhowells@redhat.com
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Louis Taylor <louis@kragniz.eu>
+Subject: [PATCH v2] afs: use correct format characters
+Date:   Wed, 10 Apr 2019 23:41:24 +0100
+Message-Id: <20190410224124.6901-1-louis@kragniz.eu>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190410220301.2332-1-louis@kragniz.eu>
+References: <20190410220301.2332-1-louis@kragniz.eu>
 MIME-Version: 1.0
-References: <20190408220925.13077-1-mcroce@redhat.com> <20190408220925.13077-3-mcroce@redhat.com>
- <CAGXu5jKc2q3gnBrJ5JowDvOC_tSR5o9iKuF+JVKMJYWAPOZANQ@mail.gmail.com>
- <CAGnkfhwZEqX03H7PqsSTa=GVwZXX127hQO5YHzJasAEYtpLMZw@mail.gmail.com>
- <CAGXu5j+0sAc2fHTuYwYTLoHPDbnfxYuAEJ+tRfgc2Z5DDqp9Jg@mail.gmail.com> <CAGnkfhxPZJXmnPJ+k8nGPCBNeDBM_=rN+kEea-Uyq0zfCt0MXg@mail.gmail.com>
-In-Reply-To: <CAGnkfhxPZJXmnPJ+k8nGPCBNeDBM_=rN+kEea-Uyq0zfCt0MXg@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 15:34:16 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKf8ezMOxMn3P8DW+0GQrdkmno8_qxgQtxBD98cP3MRKA@mail.gmail.com>
-Message-ID: <CAGXu5jKf8ezMOxMn3P8DW+0GQrdkmno8_qxgQtxBD98cP3MRKA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kernel: use sysctl shared variables for range check
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 3:30 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Wed, Apr 10, 2019 at 11:51 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 12:24 PM Matteo Croce <mcroce@redhat.com> wrote:
-> > >
-> > > On Wed, Apr 10, 2019 at 8:46 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > On Mon, Apr 8, 2019 at 3:09 PM Matteo Croce <mcroce@redhat.com> wrote:
-> > > > >
-> > > > > Use the shared variables for range check, instead of declaring a local one
-> > > > > in every source file.
-> > > >
-> > > > I was expecting this to be a tree-wide change for all the cases found
-> > > > by patch 1's "git grep".
-> > > >
-> > >
-> > > Hi Kees,
-> > >
-> > > I have already the whole patch ready, but I was frightened by the
-> > > output of get_maintainer.pl, so I decided to split the patch into
-> > > small pieces and send the first one.
-> >
-> > Heh, sounds fine. Normally the big tree-wide changes go via Linus just
-> > before cutting rc1 (or rc2). This is "only" 31 source files, though,
-> > so maybe akpm wants to take these instead? Andrew, how do you feel
-> > about that?
-> >
->
-> FYI, this are the stats from my local repo, just to let you the size
-> of a series with all the changes in it:
->
-> $ git --no-pager log --stat --oneline linus/master
->  2 files changed, 4 insertions(+), 9 deletions(-)
->  2 files changed, 7 insertions(+), 14 deletions(-)
->  6 files changed, 15 insertions(+), 30 deletions(-)
->  1 file changed, 16 insertions(+), 19 deletions(-)
->  1 file changed, 3 insertions(+), 5 deletions(-)
->  3 files changed, 15 insertions(+), 20 deletions(-)
->  12 files changed, 93 insertions(+), 116 deletions(-)
->  3 files changed, 98 insertions(+), 104 deletions(-)
->  2 files changed, 9 insertions(+)
+When compiling with -Wformat, clang warns:
 
-Tiny! :) Seriously, though, I think this should be fine to take
-directly to Linus after patch 1 lands, or see if akpm wants to carry
-it directly.
+fs/afs/flock.c:632:29: warning: format specifies type 'short' but the argument has type
+      'unsigned char' [-Wformat]
+        _leave(" = %d [%hd]", ret, fl->fl_type);
+                       ~~~         ^~~~~~~~~~~
 
+fs/afs/dir.c:138:11: warning: format specifies type 'unsigned short' but
+the argument has type 'int' [-Wformat]
+       ntohs(dbuf->blocks[tmp].hdr.magic));
+       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+fl_type is declared as an unsigned char unconditionally in
+include/linux/fs.h, so use the correct format characters.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+---
+ fs/afs/dir.c   | 2 +-
+ fs/afs/flock.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 8a2562e3a316..4ceaec94e9c5 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -133,7 +133,7 @@ static bool afs_dir_check_page(struct afs_vnode *dvnode, struct page *page,
+ 	dbuf = kmap(page);
+ 	for (tmp = 0; tmp < qty; tmp++) {
+ 		if (dbuf->blocks[tmp].hdr.magic != AFS_DIR_MAGIC) {
+-			printk("kAFS: %s(%lx): bad magic %d/%d is %04hx\n",
++			printk("kAFS: %s(%lx): bad magic %d/%d is %04x\n",
+ 			       __func__, dvnode->vfs_inode.i_ino, tmp, qty,
+ 			       ntohs(dbuf->blocks[tmp].hdr.magic));
+ 			trace_afs_dir_check_failed(dvnode, off, i_size);
+diff --git a/fs/afs/flock.c b/fs/afs/flock.c
+index 6a0174258382..be4c3f6a3178 100644
+--- a/fs/afs/flock.c
++++ b/fs/afs/flock.c
+@@ -629,7 +629,7 @@ static int afs_do_getlk(struct file *file, struct file_lock *fl)
+ 
+ 	ret = 0;
+ error:
+-	_leave(" = %d [%hd]", ret, fl->fl_type);
++	_leave(" = %d [%hhu]", ret, fl->fl_type);
+ 	return ret;
+ }
+ 
 -- 
-Kees Cook
+2.21.0
+
