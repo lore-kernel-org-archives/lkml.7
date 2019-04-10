@@ -3,40 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCAAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05160C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2821B1A
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE73D2229F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 11:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfDJLFr (ORCPT
+        id S1730455AbfDJLJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 07:05:47 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58779 "EHLO
+        Wed, 10 Apr 2019 07:09:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:58793 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730890AbfDJLFo (ORCPT
+        with ESMTP id S1730925AbfDJLFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 07:05:44 -0400
+        Wed, 10 Apr 2019 07:05:46 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hEB2z-00054D-Jd; Wed, 10 Apr 2019 13:05:41 +0200
-Message-Id: <20190410103644.661974663@linutronix.de>
+        id 1hEB32-00055S-QE; Wed, 10 Apr 2019 13:05:44 +0200
+Message-Id: <20190410103644.853527514@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 10 Apr 2019 12:28:06 +0200
+Date:   Wed, 10 Apr 2019 12:28:08 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC patch 12/41] mm/page_owner: Remove the ULONG_MAX stack trace
+        Alexander Potapenko <glider@google.com>
+Subject: [RFC patch 14/41] latency_top: Remove the ULONG_MAX stack trace
  hackery
 References: <20190410102754.387743324@linutronix.de>
 MIME-Version: 1.0
@@ -46,29 +43,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No architecture terminates the stack trace with ULONG_MAX anymore. Remove
-the cruft.
+No architecture terminates the stack trace with ULONG_MAX anymore. The
+consumer terminates on the first zero entry or at the number of entries, so
+no functional change.
+
+Remove the cruft.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: linux-mm@kvack.org
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- mm/page_owner.c |    3 ---
- 1 file changed, 3 deletions(-)
+ fs/proc/base.c      |    3 +--
+ kernel/latencytop.c |   12 ++++++------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -148,9 +148,6 @@ static noinline depot_stack_handle_t sav
- 	depot_stack_handle_t handle;
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -489,10 +489,9 @@ static int lstats_show_proc(struct seq_f
+ 				   lr->count, lr->time, lr->max);
+ 			for (q = 0; q < LT_BACKTRACEDEPTH; q++) {
+ 				unsigned long bt = lr->backtrace[q];
++
+ 				if (!bt)
+ 					break;
+-				if (bt == ULONG_MAX)
+-					break;
+ 				seq_printf(m, " %ps", (void *)bt);
+ 			}
+ 			seq_putc(m, '\n');
+--- a/kernel/latencytop.c
++++ b/kernel/latencytop.c
+@@ -120,8 +120,8 @@ account_global_scheduler_latency(struct
+ 				break;
+ 			}
  
- 	save_stack_trace(&trace);
--	if (trace.nr_entries != 0 &&
--	    trace.entries[trace.nr_entries-1] == ULONG_MAX)
--		trace.nr_entries--;
+-			/* 0 and ULONG_MAX entries mean end of backtrace: */
+-			if (record == 0 || record == ULONG_MAX)
++			/* 0 entry marks end of backtrace: */
++			if (!record)
+ 				break;
+ 		}
+ 		if (same) {
+@@ -210,8 +210,8 @@ void __sched
+ 				break;
+ 			}
  
- 	/*
- 	 * We need to check recursion here because our request to stackdepot
+-			/* 0 and ULONG_MAX entries mean end of backtrace: */
+-			if (record == 0 || record == ULONG_MAX)
++			/* 0 entry is end of backtrace */
++			if (!record)
+ 				break;
+ 		}
+ 		if (same) {
+@@ -252,10 +252,10 @@ static int lstats_show(struct seq_file *
+ 				   lr->count, lr->time, lr->max);
+ 			for (q = 0; q < LT_BACKTRACEDEPTH; q++) {
+ 				unsigned long bt = lr->backtrace[q];
++
+ 				if (!bt)
+ 					break;
+-				if (bt == ULONG_MAX)
+-					break;
++
+ 				seq_printf(m, " %ps", (void *)bt);
+ 			}
+ 			seq_puts(m, "\n");
 
 
