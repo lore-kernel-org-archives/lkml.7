@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC058C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C3020850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A11D20830
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 10:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbfDJKpd (ORCPT
+        id S1730741AbfDJKp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 06:45:33 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:40894 "EHLO huawei.com"
+        Wed, 10 Apr 2019 06:45:57 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:41240 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730487AbfDJKpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 06:45:33 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 75AC32E6FD220BA6978F;
-        Wed, 10 Apr 2019 18:45:31 +0800 (CST)
+        id S1730729AbfDJKp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 06:45:57 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id C9645159ABD44B127B7B;
+        Wed, 10 Apr 2019 18:45:55 +0800 (CST)
 Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 10 Apr 2019 18:45:31 +0800
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 10 Apr 2019 18:45:54 +0800
 Received: from szvp000201624.huawei.com (10.120.216.130) by
  dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 10 Apr 2019 18:45:30 +0800
+ 15.1.1591.10; Wed, 10 Apr 2019 18:45:54 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix error path of recovery
-Date:   Wed, 10 Apr 2019 18:45:26 +0800
-Message-ID: <20190410104526.82254-1-yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to avoid deadloop in foreground GC
+Date:   Wed, 10 Apr 2019 18:45:50 +0800
+Message-ID: <20190410104550.82389-1-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -49,78 +49,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some places in where we missed to unlock page or unlock page
-incorrectly, fix them.
+As Jungyeon reported in bugzilla:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=203211
+
+- Overview
+When mounting the attached crafted image and making a new file, I got this error and the error messages keep repeating.
+
+The image is intentionally fuzzed from a normal f2fs image for testing and I run with option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+cd test
+touch t
+
+- Messages
+[   58.820451] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.821485] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.822530] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.823571] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.824616] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.825640] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.826663] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.827698] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.828719] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.829759] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.830783] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.831828] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.832869] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.833888] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.834945] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.835996] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.837028] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.838051] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.839072] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.840100] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.841147] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.842186] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.843214] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.844267] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.845282] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.846305] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+[   58.847341] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
+... (repeating)
+
+During GC, if segment type stored in SSA and SIT is inconsistent, we just
+skip migrating current segment directly, since we need to know the exact
+type to decide the migration function we use.
+
+So in foreground GC, we will easily run into a infinite loop as we may
+select the same victim segment which has inconsistent type due to greedy
+policy. In order to end up this, we choose to shutdown filesystem. For
+backgrond GC, we need to do that as well, so that we can avoid latter
+potential infinite looped foreground GC.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/recovery.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/f2fs/gc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index e3883db868d8..d4f9d5408103 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -325,8 +325,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 			break;
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index ab764bd106de..a66a8752e5f6 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1175,6 +1175,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
+ 				"type [%d, %d] in SSA and SIT",
+ 				segno, type, GET_SUM_TYPE((&sum->footer)));
+ 			set_sbi_flag(sbi, SBI_NEED_FSCK);
++			f2fs_stop_checkpoint(sbi, false);
+ 			goto skip;
  		}
  
--		if (!is_recoverable_dnode(page))
-+		if (!is_recoverable_dnode(page)) {
-+			f2fs_put_page(page, 1);
- 			break;
-+		}
- 
- 		if (!is_fsync_dnode(page))
- 			goto next;
-@@ -338,8 +340,10 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 			if (!check_only &&
- 					IS_INODE(page) && is_dent_dnode(page)) {
- 				err = f2fs_recover_inode_page(sbi, page);
--				if (err)
-+				if (err) {
-+					f2fs_put_page(page, 1);
- 					break;
-+				}
- 				quota_inode = true;
- 			}
- 
-@@ -355,6 +359,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 					err = 0;
- 					goto next;
- 				}
-+				f2fs_put_page(page, 1);
- 				break;
- 			}
- 		}
-@@ -370,6 +375,7 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 				"%s: detect looped node chain, "
- 				"blkaddr:%u, next:%u",
- 				__func__, blkaddr, next_blkaddr_of_node(page));
-+			f2fs_put_page(page, 1);
- 			err = -EINVAL;
- 			break;
- 		}
-@@ -380,7 +386,6 @@ static int find_fsync_dnodes(struct f2fs_sb_info *sbi, struct list_head *head,
- 
- 		f2fs_ra_meta_pages_cond(sbi, blkaddr);
- 	}
--	f2fs_put_page(page, 1);
- 	return err;
- }
- 
-@@ -666,8 +671,10 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
- 		 */
- 		if (IS_INODE(page)) {
- 			err = recover_inode(entry->inode, page);
--			if (err)
-+			if (err) {
-+				f2fs_put_page(page, 1);
- 				break;
-+			}
- 		}
- 		if (entry->last_dentry == blkaddr) {
- 			err = recover_dentry(entry->inode, page, dir_list);
 -- 
 2.18.0.rc1
 
