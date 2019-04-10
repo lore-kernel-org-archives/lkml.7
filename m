@@ -2,175 +2,149 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1758C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A10C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7681D2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9782063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 17:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="puxKlU07"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EX2ze/6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfDJR5F (ORCPT
+        id S1730886AbfDJR5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 13:57:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42781 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729307AbfDJR5E (ORCPT
+        Wed, 10 Apr 2019 13:57:11 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42850 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730819AbfDJR5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 13:57:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v22so2948979lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:57:03 -0700 (PDT)
+        Wed, 10 Apr 2019 13:57:11 -0400
+Received: by mail-qk1-f195.google.com with SMTP id b74so1775574qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 10:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bEw+KO2/ka8nKlM3JMAkOLDxT8xAxL50hihSpr0VWC4=;
-        b=puxKlU07gNV3QUgf1ZXEnEdM5Ip7pvi3eCYsldM+D5+C+YWicqYoef35yl8fXQO2u3
-         5o8zzdYr0esWOKglNpbGkaPO+EGg+qIcA24H9g1Lty2yg3jRVDwwqOwoX5rNGLaSrTQs
-         snqijvwq+EJzz4n9zAOc8yxXGXm0pZh2M0oo+sHkgHZaTeoYrabFujtm8zXi5yBNKcDC
-         R1l7xn//9rodLBtfyOvq53wgZm5VIfQVw+Zz8XUAXUxaydX1jdI9DOf5KLoCTFYWfiLl
-         ebppf6XPN8Ka0eHujjH9NSkGAelCgzhE+GmvitmXIgDVn9chBMx+PpILMi9gHmrqolIh
-         E5Qg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rvFEBtg/8gPu1SPiOVpApQWqwc7src0Ap4Z1oALjYi0=;
+        b=EX2ze/6DAocz2055pAEWSuvrjiGWI6P2LQHdyigF9CLGW/hGVAATJVoaI/0ctLcV4p
+         enIpOq3OsjgeA8tofJaLL/G7INTFaljBstYyl2dtzQ2+tO8g51e82gdwSW2QMmKRCqTI
+         3pPJkL8xyfL8dscXwYCu6Nbn7laB9gzLT2OvxkZfq/yshCnZua1c8wGez0NEU5KQQZiD
+         Voxe0O4fLF+XZTlTEImSY/9Exbls1e45eROXj0mBffWi+KfLZmkPKAd+Wl/kMxUXSObr
+         tvtu8ZyWLHTA3a8QlfmAIJQkY9CODeqYg8XOAK/BU//Z0fcWRZeAJXJnUwVHoa4qLJzK
+         62Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bEw+KO2/ka8nKlM3JMAkOLDxT8xAxL50hihSpr0VWC4=;
-        b=pyc9MTYqDzqaWya/aOZ5AqOlJG0QlBBxDT4QUJH2DOj9c1bx5sdRr1pdtC89sj+HjC
-         ANe0B/MYTs+AjtxIDlh6GxZLiLK33bj/plv4fnyKtoYSA9unKLNioRLibu+QqawyP/8B
-         XU14yzgnH7yUVHnCJp3VjCYT0aBsO1gkgYUTUOqxHiKICd2DbaNsrKPdSEItMmrQa144
-         XBnJi8e6sbewaa5fbt8WM4Z95Uos8IbJSzhd4MS+Q3m90ZiGQxpf0nUycUYj5OuXK6iP
-         m+bQPvgpChM76ebjPUU4PSuLwSKxnvTNFsanG6oBfODw1jihlPSTZ8dqrgQ1eKW6qVP3
-         Me/g==
-X-Gm-Message-State: APjAAAUAF3BtEb+HJKa4cXwGTbQeNLXrNBkMFe0+VxYiAzuIKPMMpbhm
-        68mbZx0ZpeCXf1ViwhO+73yc81svou8=
-X-Google-Smtp-Source: APXvYqwHdcmP9bf9wwpn9Jb7eJ2yB2f9t+TlsSC239drRYIGErjUkw8D8aGE10HOFkqBJEDgPlef0g==
-X-Received: by 2002:a2e:8446:: with SMTP id u6mr23207712ljh.71.1554919022671;
-        Wed, 10 Apr 2019 10:57:02 -0700 (PDT)
-Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id r20sm7357190ljj.22.2019.04.10.10.57.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 10:57:01 -0700 (PDT)
-From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-To:     axboe@fb.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL] lightnvm: pblk: fix crash in pblk_end_partial_read due to multipage bvecs
-Date:   Wed, 10 Apr 2019 19:56:43 +0200
-Message-Id: <20190410175643.11000-1-mb@lightnvm.io>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rvFEBtg/8gPu1SPiOVpApQWqwc7src0Ap4Z1oALjYi0=;
+        b=thk4VFYIa2pU8SoelM1a3PmaMFwzpfP3I8MR33zg2t5vMFl4H3ojaY+c5SB+6T1j5y
+         KiIyOvvgh47KCybEkMgA3jj26SdYsx+DBeDz6zfrntDjO7qnF4A291uOU5a6y3AmVPW6
+         Zgo+bydgg1ccpKLifFooEk1Xfg+QGacchzel4a0x2X8JO5SCtow8Vz6TOXOGAVKXCxzy
+         Eq512BGwoPpBrrMvICP32JhHWDHrkenf3Ruwhj5USdKjEo7e8SXqBh4YLi+z7XO6pIsB
+         n5MQJhOkiLA5eVo8fu3Cc/217euIXdU+DO9Uew94b71yFPTreyI1S83/ZE+F5fBXOVqD
+         7PnA==
+X-Gm-Message-State: APjAAAXuXMwYjC3zLZu15YfiNFHyhkjrOcRO/AMh97x2UrP41ynFAG8M
+        b0JNGExrm5gNIzyby3otOwvh5g==
+X-Google-Smtp-Source: APXvYqzHjti7rsotzy6Brc9cjV0LRaZNbg9/rET8ZBSn3KNT+vhVW5zHbMjiwy2OOmzae5gN8kGBhw==
+X-Received: by 2002:a37:b444:: with SMTP id d65mr34415956qkf.125.1554919029700;
+        Wed, 10 Apr 2019 10:57:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id c21sm18785060qkm.8.2019.04.10.10.57.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Apr 2019 10:57:08 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hEHTA-00023n-9J; Wed, 10 Apr 2019 14:57:08 -0300
+Date:   Wed, 10 Apr 2019 14:57:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com
+Subject: Re: [PATCH v2 1/3] ftpm: dt-binding: add dts documentation for fTPM
+ driver
+Message-ID: <20190410175708.GM8997@ziepe.ca>
+References: <20190409184958.7476-1-sashal@kernel.org>
+ <20190409184958.7476-2-sashal@kernel.org>
+ <CAL_JsqLXcY9VFuY8xZvek0ybUXetS27jL-PW0XGLSVQR3Nc5aw@mail.gmail.com>
+ <20190410161949.GC11568@sasha-vm>
+ <CAL_JsqJ0p8MsFe2HnqVHvdGyz=6P7dV++xj1d1TTgcobsFqpjg@mail.gmail.com>
+ <20190410170316.GK8997@ziepe.ca>
+ <20190410175359.GE11568@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410175359.GE11568@sasha-vm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Holmberg <hans.holmberg@cnexlabs.com>
+On Wed, Apr 10, 2019 at 01:53:59PM -0400, Sasha Levin wrote:
+> On Wed, Apr 10, 2019 at 02:03:16PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Apr 10, 2019 at 12:01:37PM -0500, Rob Herring wrote:
+> > > On Wed, Apr 10, 2019 at 11:19 AM Sasha Levin <sashal@kernel.org> wrote:
+> > > >
+> > > > On Tue, Apr 09, 2019 at 04:18:29PM -0500, Rob Herring wrote:
+> > > > >On Tue, Apr 9, 2019 at 1:50 PM Sasha Levin <sashal@kernel.org> wrote:
+> > > > >>
+> > > > >> The parameters are similar to the ones used by IBM's vTPM and the
+> > > > >> various I2C tpm drivers.
+> > > > >
+> > > > >Bindings describe h/w (or firmware interfaces in this case), not drivers.
+> > > > >
+> > > > >>
+> > > > >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > > >>  .../bindings/security/tpm/tpm_ftpm_tee.txt          | 13 +++++++++++++
+> > > > >>  .../devicetree/bindings/vendor-prefixes.txt         |  1 +
+> > > > >>  2 files changed, 14 insertions(+)
+> > > > >>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
+> > > > >>
+> > > > >> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt b/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
+> > > > >> new file mode 100644
+> > > > >> index 000000000000..20fca67a56c4
+> > > > >> +++ b/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
+> > > > >> @@ -0,0 +1,13 @@
+> > > > >> +Required properties:
+> > > > >> +- compatible: should be "microsoft,ftpm"
+> > > > >> +- linux,sml-base: 64-bit base address of the reserved memory allocated
+> > > > >> +                 for the firmware event log
+> > > > >> +- linux,sml-size: size of the memory allocated for the firmware event log
+> > > > >
+> > > > >Firmware is defining linux specific properties? What if I want to run
+> > > > >BSD? We should use 'reg' here instead.
+> > > >
+> > > > This is based on already existing code that defines these names, see
+> > > > tpm_read_log_of() in drivers/char/tpm/eventlog/of.c .
+> > > 
+> > > BTW, that probably needs updating to handle endianness correctly.
+> > 
+> > IIRC this legacy IBM code has broken endianness in the firmware..
+> > 
+> > All that stuff in read_log_of, and the related DT stuff, is historical
+> > IBM special case-ness and should not be copied into new things.
+> 
+> The fTPM driver does not use it on it's own, so I guess I can just drop
+> this patch then?
 
-The introduction of multipage bio vectors broke pblk's partial read
-logic due to it not being prepared for multipage bio vectors.
+If your ARM system boots via EFI then it should pass the firmware
+event log through EFI mechanisms, IIRC.
 
-Use bio vector iterators instead of direct bio vector indexing.
+Otherwise maybe you could make a case for using this, but only if the
+old IBM stuff is perfectly emulated, bugs and all.
 
-Fixes: 07173c3ec276 ("block: enable multipage bvecs")
-Reported-by: Klaus Jensen <klaus.jensen@cnexlabs.com>
-Signed-off-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
-Updated description.
-Signed-off-by: Matias Bjørling <mb@lightnvm.io>
----
+Do you even have an event log?
 
- drivers/lightnvm/pblk-read.c | 50 ++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
-index 3789185144da..0b7d5fb4548d 100644
---- a/drivers/lightnvm/pblk-read.c
-+++ b/drivers/lightnvm/pblk-read.c
-@@ -231,14 +231,14 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
- 	struct pblk_sec_meta *meta;
- 	struct bio *new_bio = rqd->bio;
- 	struct bio *bio = pr_ctx->orig_bio;
--	struct bio_vec src_bv, dst_bv;
- 	void *meta_list = rqd->meta_list;
--	int bio_init_idx = pr_ctx->bio_init_idx;
- 	unsigned long *read_bitmap = pr_ctx->bitmap;
-+	struct bvec_iter orig_iter = BVEC_ITER_ALL_INIT;
-+	struct bvec_iter new_iter = BVEC_ITER_ALL_INIT;
- 	int nr_secs = pr_ctx->orig_nr_secs;
- 	int nr_holes = nr_secs - bitmap_weight(read_bitmap, nr_secs);
- 	void *src_p, *dst_p;
--	int hole, i;
-+	int bit, i;
- 
- 	if (unlikely(nr_holes == 1)) {
- 		struct ppa_addr ppa;
-@@ -257,33 +257,39 @@ static void pblk_end_partial_read(struct nvm_rq *rqd)
- 
- 	/* Fill the holes in the original bio */
- 	i = 0;
--	hole = find_first_zero_bit(read_bitmap, nr_secs);
--	do {
--		struct pblk_line *line;
-+	for (bit = 0; bit < nr_secs; bit++) {
-+		if (!test_bit(bit, read_bitmap)) {
-+			struct bio_vec dst_bv, src_bv;
-+			struct pblk_line *line;
- 
--		line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
--		kref_put(&line->ref, pblk_line_put);
-+			line = pblk_ppa_to_line(pblk, rqd->ppa_list[i]);
-+			kref_put(&line->ref, pblk_line_put);
- 
--		meta = pblk_get_meta(pblk, meta_list, hole);
--		meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
-+			meta = pblk_get_meta(pblk, meta_list, bit);
-+			meta->lba = cpu_to_le64(pr_ctx->lba_list_media[i]);
- 
--		src_bv = new_bio->bi_io_vec[i++];
--		dst_bv = bio->bi_io_vec[bio_init_idx + hole];
-+			dst_bv = bio_iter_iovec(bio, orig_iter);
-+			src_bv = bio_iter_iovec(new_bio, new_iter);
- 
--		src_p = kmap_atomic(src_bv.bv_page);
--		dst_p = kmap_atomic(dst_bv.bv_page);
-+			src_p = kmap_atomic(src_bv.bv_page);
-+			dst_p = kmap_atomic(dst_bv.bv_page);
- 
--		memcpy(dst_p + dst_bv.bv_offset,
--			src_p + src_bv.bv_offset,
--			PBLK_EXPOSED_PAGE_SIZE);
-+			memcpy(dst_p + dst_bv.bv_offset,
-+				src_p + src_bv.bv_offset,
-+				PBLK_EXPOSED_PAGE_SIZE);
- 
--		kunmap_atomic(src_p);
--		kunmap_atomic(dst_p);
-+			kunmap_atomic(src_p);
-+			kunmap_atomic(dst_p);
- 
--		mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
-+			flush_dcache_page(dst_bv.bv_page);
-+			mempool_free(src_bv.bv_page, &pblk->page_bio_pool);
- 
--		hole = find_next_zero_bit(read_bitmap, nr_secs, hole + 1);
--	} while (hole < nr_secs);
-+			bio_advance_iter(new_bio, &new_iter,
-+					PBLK_EXPOSED_PAGE_SIZE);
-+			i++;
-+		}
-+		bio_advance_iter(bio, &orig_iter, PBLK_EXPOSED_PAGE_SIZE);
-+	}
- 
- 	bio_put(new_bio);
- 	kfree(pr_ctx);
--- 
-2.19.1
-
+Jason
