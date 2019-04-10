@@ -2,124 +2,143 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E61C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154F1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328CF2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tuVY75I6"
+	by mail.kernel.org (Postfix) with ESMTP id DDA502171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfDLPao (ORCPT
+        id S1727478AbfDLPbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:30:44 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37238 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfDLPan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:30:43 -0400
-Received: by mail-vs1-f66.google.com with SMTP id w13so5778236vsc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WCeVpCJn+/VBqGO7SUvicv745LSiVr8/+6GQ6wCM828=;
-        b=tuVY75I6tPrTGvJwWKarA/iYaQuwlcLQphJVG6VFjczrbRvlWFKr5CGKYTgboJF5+w
-         LonhQj++DgJzMYXl/hrWXwkUDYM8ZVK69w1B1kHkx1q495XiDKpPZapStMILRzz2iWkQ
-         54R7AvDr8YJ1uRFdEzWYTFlsb6gfNrynNS2HdabUXQR2BQpccHxZ8wFHwY5p0+Lk3xCF
-         pbNYktnRXpZbLNkEa+WAdTsvsWnq68E1Vn146Sn9zvgb6JlF7ESh8EPRcVnZxSZjPdO6
-         cNYdVsOYAqKiELuT+QU2qHFODxmHPMKMnAj+0S2Tq13iCgTgOg5FcXfNkb7P38ZhBUd1
-         ooXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WCeVpCJn+/VBqGO7SUvicv745LSiVr8/+6GQ6wCM828=;
-        b=LBM7SG/MhqPs8iM+TwqwiX9/JL2bL/eHDqkLdT0/uirie/+6s8669M3F3lAm+e9kYY
-         +ochl/f5x9Jnkf0mM0rlEn0WFc7X8X0/Wa+5RET76qvnJvo4ifGZ4eNp7zJc0tg6HwBp
-         aP1hMWiRoKSEPbbJt+94Yer++2yahlKVv6bl1Pvn3kkBwlyO/RT0BtmR33S4jVSE+d5V
-         1J2q+B5Ctggw13JpDuxaYUgag+CIUsq9q/sf7CD1usXiMBsMueFgBA2xDCw+FwCVFmFj
-         cO9RcMXnwxRJjYs0kBdQR5V+yyF4WuB7kqg99nej09Nk7GC/Tg/1jh+40im/9Cg39EkG
-         wF3A==
-X-Gm-Message-State: APjAAAXMNZVAY9jME2bcTbJYhMAvlatOIAcpxEqYUwBb0rcNemx/Llay
-        x2Ij6s+FoJu8/94mlkOC6Fj1yYVsvT44tPlFhAOFPA==
-X-Google-Smtp-Source: APXvYqzVWARcHk7V3SZK97ROzJzUIBAYjoig4ImnN5OLcMFwyeglwtcavgVLfUT+PZoHPi50u3Vwn6FXhv07EAvwLNU=
-X-Received: by 2002:a67:6847:: with SMTP id d68mr31850761vsc.90.1555083042000;
- Fri, 12 Apr 2019 08:30:42 -0700 (PDT)
+        Fri, 12 Apr 2019 11:31:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:34862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727429AbfDLPbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:31:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DEF915AB;
+        Fri, 12 Apr 2019 08:31:06 -0700 (PDT)
+Received: from [192.168.100.242] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB9503F557;
+        Fri, 12 Apr 2019 08:31:05 -0700 (PDT)
+Subject: Re: [v7 00/10] arm64: add system vulnerability sysfs entries
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2se.com,
+        Andre.Przywara@arm.com, linux-kernel@vger.kernel.org
+References: <20190410231237.52506-1-jeremy.linton@arm.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <fbbbd716-044c-f916-c744-625c5cf3a3c9@arm.com>
+Date:   Tue, 9 Apr 2019 19:48:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org> <20190412065314.GC13373@dhcp22.suse.cz>
- <CAKOZuetQH1rVtPdMNgw0sdnzWidd6v9eCWscRiOb7Y+3-JQ14Q@mail.gmail.com>
-In-Reply-To: <CAKOZuetQH1rVtPdMNgw0sdnzWidd6v9eCWscRiOb7Y+3-JQ14Q@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 12 Apr 2019 08:30:30 -0700
-Message-ID: <CAKOZueu-ZRzzER3Cb6bNBtbmmhBJRzqjGvwvt8KTyVrmP9wQ7g@mail.gmail.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        yuzhoujian@didichuxing.com,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190410231237.52506-1-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 7:14 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Thu, Apr 11, 2019 at 11:53 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 11-04-19 08:33:13, Matthew Wilcox wrote:
-> > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > > > victim process. The usage of this flag is currently limited to SIGKILL
-> > > > signal and only to privileged users.
-> > >
-> > > What is the downside of doing expedited memory reclaim?  ie why not do it
-> > > every time a process is going to die?
-> >
-> > Well, you are tearing down an address space which might be still in use
-> > because the task not fully dead yeat. So there are two downsides AFAICS.
-> > Core dumping which will not see the reaped memory so the resulting
->
-> Test for SIGNAL_GROUP_COREDUMP before doing any of this then. If you
-> try to start a core dump after reaping begins, too bad: you could have
-> raced with process death anyway.
->
-> > coredump might be incomplete. And unexpected #PF/gup on the reaped
-> > memory will result in SIGBUS.
->
-> It's a dying process. Why even bother returning from the fault
-> handler? Just treat that situation as a thread exit. There's no need
-> to make this observable to userspace at all.
+Hi,
 
-Just for clarity, checking the code, I think we already do this.
-zap_other_threads sets SIGKILL pending on every thread in the group,
-and we'll handle SIGKILL in the process of taking any page fault or
-doing any system call, so I don't think it's actually possible for a
-thread in a dying process to observe the SIGBUS that reaping in theory
-can generate.
+This patch has a bug, and I think i'm going to tweak patch 9 to drop the 
+tristate (and default to a bool that is not vulnerable) since I ended up 
+adding all those extra return checks to deal with the unresponsive 
+firmware case.
+
+
+
+On 4/10/19 6:12 PM, Jeremy Linton wrote:
+> Arm64 machines should be displaying a human readable
+> vulnerability status to speculative execution attacks in
+> /sys/devices/system/cpu/vulnerabilities
+> 
+> This series enables that behavior by providing the expected
+> functions. Those functions expose the cpu errata and feature
+> states, as well as whether firmware is responding appropriately
+> to display the overall machine status. This means that in a
+> heterogeneous machine we will only claim the machine is mitigated
+> or safe if we are confident all booted cores are safe or
+> mitigated.
+> 
+> v6->v7: Invert ssb white/black list logic so that we only mark
+> 	       cores in the whitelist not affected when the firmware
+> 	       fails to respond. Removed reviewed/tested tags for
+> 	       just patch 9 because of this.
+> 
+> v5->v6:
+> 	Invert meltdown logic to display that a core is safe rather
+> 	       than mitigated if the mitigation has been enabled on
+> 	       machines that are safe. This can happen when the
+> 	       mitigation was forced on via command line or KASLR.
+> 	       This means that in order to detect if kpti is enabled
+> 	       other methods must be used (look at dmesg) when the
+> 	       machine isn't itself susceptible to meltdown.
+> 	Trivial whitespace tweaks.
+> 
+> v4->v5:
+> 	Revert the changes to remove the CONFIG_EXPERT hidden
+> 	       options, but leave the detection paths building
+> 	       without #ifdef wrappers. Also remove the
+> 	       CONFIG_GENERIC_CPU_VULNERABILITIES #ifdefs
+> 	       as we are 'select'ing the option in the Kconfig.
+> 	       This allows us to keep all three variations of
+> 	       the CONFIG/enable/disable paths without a lot of
+> 	       (CONFIG_X || CONFIG_Y) checks.
+> 	Various bits/pieces moved between the patches in an attempt
+> 		to keep similar features/changes together.
+> 
+> v3->v4:
+>          Drop the patch which selectivly exports sysfs entries
+>          Remove the CONFIG_EXPERT hidden options which allowed
+>                 the kernel to be built without the vulnerability
+>                 detection code.
+>          Pick Marc Z's patches which invert the white/black
+>                 lists for spectrev2 and clean up the firmware
+>                 detection logic.
+>          Document the existing kpti controls
+>          Add a nospectre_v2 option to boot time disable the
+>               mitigation
+> 
+> v2->v3:
+>          Remove "Unknown" states, replace with further blacklists
+>                 and default vulnerable/not affected states.
+>          Add the ability for an arch port to selectively export
+>                 sysfs vulnerabilities.
+> 
+> v1->v2:
+>          Add "Unknown" state to ABI/testing docs.
+>          Minor tweaks.
+> 
+> Jeremy Linton (6):
+>    arm64: Provide a command line to disable spectre_v2 mitigation
+>    arm64: add sysfs vulnerability show for meltdown
+>    arm64: Always enable spectrev2 vulnerability detection
+>    arm64: add sysfs vulnerability show for spectre v2
+>    arm64: Always enable ssb vulnerability detection
+>    arm64: add sysfs vulnerability show for speculative store bypass
+> 
+> Marc Zyngier (2):
+>    arm64: Advertise mitigation of Spectre-v2, or lack thereof
+>    arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
+> 
+> Mian Yousaf Kaukab (2):
+>    arm64: add sysfs vulnerability show for spectre v1
+>    arm64: enable generic CPU vulnerabilites support
+> 
+>   .../admin-guide/kernel-parameters.txt         |   8 +-
+>   arch/arm64/Kconfig                            |   1 +
+>   arch/arm64/include/asm/cpufeature.h           |   4 -
+>   arch/arm64/kernel/cpu_errata.c                | 257 +++++++++++++-----
+>   arch/arm64/kernel/cpufeature.c                |  58 +++-
+>   5 files changed, 241 insertions(+), 87 deletions(-)
+> 
+
