@@ -2,180 +2,276 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEC8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29604C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D41F20820
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ez3t9X+x"
+	by mail.kernel.org (Postfix) with ESMTP id DFCD720820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 15:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733293AbfDJP0G (ORCPT
+        id S1730877AbfDJP0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 11:26:06 -0400
-Received: from mout.gmx.net ([212.227.17.20]:34883 "EHLO mout.gmx.net"
+        Wed, 10 Apr 2019 11:26:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15566 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfDJP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 11:26:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554909874;
-        bh=xA/BnWtun4BOCtmmVM/Q6GGeuQ7oR+arBXiulO7kTmI=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=ez3t9X+xkifsKQVPzXOndt53CZVRb6llbtR/jLqXGeQeeujVvDVgLjbDiVqUGtsr9
-         aV8glwwT2c63gZz/lZbkujrjXd5R/Ae6nFap9q5lCRd3zof+ILXenA9/UKNuFjpZxr
-         kr1/qAVR+1p+7zpWxob3lMS4iBhQxfElIyDN+9AE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LnPnu-1gfk561V8w-00hh9T; Wed, 10
- Apr 2019 17:24:34 +0200
-Date:   Wed, 10 Apr 2019 17:24:24 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dirk Eibach <eibach@gdsys.de>,
-        George Joseph <george.joseph@fairview5.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Juerg Haefliger <juergh@gmail.com>,
-        Steve Glendinning <steve.glendinning@shawell.net>,
-        Huang Rui <ray.huang@amd.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Rudolf Marek <r.marek@assembler.cz>,
-        Andreas Werner <andreas.werner@men.de>,
-        Jim Cromie <jim.cromie@gmail.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        id S1730602AbfDJPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 11:25:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 08:25:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="163102926"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 08:25:13 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans de Goede <hdegoede@redhat.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Hulsman <m.hulsman@tudelft.nl>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 21/21] docs: hwmon: Add an index file and rename docs to
- *.rst
-Message-ID: <20190410152424.GA11536@latitude>
-References: <cover.1554893881.git.mchehab+samsung@kernel.org>
- <5ac1fbc7f19192dcd30a184e62e3f7989a5437a4.1554893882.git.mchehab+samsung@kernel.org>
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 03/12] software node: Add support for references
+Date:   Wed, 10 Apr 2019 18:24:56 +0300
+Message-Id: <20190410152505.87041-4-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
+References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
-In-Reply-To: <5ac1fbc7f19192dcd30a184e62e3f7989a5437a4.1554893882.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:TLAu39kAkvV+JyJofEtse/6D/K/biPwb9iYGF66/M1pJjOfHjSl
- 5Gvn9F/iX0LVkfahejNon6kcT3qms/6ipAdpwzk/bcp4CJrO2+ikn2UVt5DmS72xmQYbgAm
- Fwh59tkKvyzys0LmnxFnI4MCbOHN9hjVtoafK6B2JMU0kM0HkZOw/KRixn01devzi7mS8qk
- oGfwAeMn0j3k8kz+gF+Jg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w13mbtVepiE=:pSML0XQUkNJ6CmMU23Mlte
- vu/Z26coQEsMKKGod1U9gjsHOUCIIuBPVyYm76i5FBcIA+08ebR4D07ovg6H93+0PbkZgWpnO
- Sjyqt/PTV8R5YcXFsGXvnu0urHmg57DNsRhiK1JEgoT62IfNuIf6oOFpFtccRZLyObbyf7Pfe
- D7aJHp3A4KnnSdDumrU/KzzElawLvXuihHVnnRxxTYn1kQPdmV2aL1PW6eSINuoBY+VohrO2r
- qiNtsAfDaCdnhZSx6qFX3E497osiokRZvFXzp2AEWIlFcpWE35KdIe9K6XHvuWhoH8zyiK2C5
- ETCP3SuguC/MNfY4u5R17eNQqbE+KTZp74MAseKET5MOE0mOxXUSW3+zevwdhH2on0ShlN99f
- 5Y4djz+vvvoisni+eYA3NalyurndKVm1ddPIvfmfjuvPIDmsEG2luv+oPBalKU+VvncWYw5mE
- kkyPU5W4VVbiUxH/BakxzEiUpDZk4aRqeG/wPg+4hNildye6YKy8tmMysLmS7xLBx5sJQqV2x
- WZ9xUGBRxVwPN2czGmgR/kcwkCznsD419G+NoFU7Xd/hAYh2Io33EI9jfdMk11tYZG+g5suQi
- TzUeOsta6Qe1zDIKFGEBZ7uZayKa8HvGRnKvrsEH/oYBZQzxGtsZlBML+CXbgolfzd8ZObkYO
- 8mF9BLzJU0sw+fIq6BYF0c/F/GrrntuN3E+7ZjgVIb+YyepwTKUOBFZcdbqoa+mUAuAggQ1qH
- zGTdArRP9sgaJvUwC3j7gLdGbVT3W9wn8EF/FCN1EpuW8pHPp7bD+7NfA7F4KhtoiGCGqbIxP
- ZjKXx+2ufjotOia15JO5KMby/niNkBzRa7vgN0vFkYsh9ch7U5Lt6Wmj8b5nLLTkD1WXfp3iQ
- ao3001jtjArPcKXrOi0D0tgVFN79gawVQRUxxEHbh02Kqq00hQXQV00sC/7jwc
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introducing functions that can be used for adding and
+removing references to other software nodes. The goal is to
+support fwnode_property_get_reference_args() also with
+software nodes, however, get_reference_args fwnode operation
+callback is not yet implemented in this commit for the
+software nodes. This commit will only add support for
+reference addition/removal.
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The next example shows how to add references to GPIOs using the
+format described in Documentation/acpi/gpio-properties.txt:
 
-Hello,
+/* Array with two GPIOs */
+static struct fwnode_reference_args gpioargs[] __initdata = {
+	{
+		.nargs = 3,
+		.args[0]= 19, /* index */
+		.args[1]= 0,  /* pin */
+		.args[2]= 0,  /* active_low */
+	},
+	{
+		.nargs = 3,
+		.args[0]= 20, /* index */
+		.args[1]= 0,  /* pin */
+		.args[2]= 0,  /* active_low */
+	},
+	{ }
+};
 
-On Wed, Apr 10, 2019 at 08:12:11AM -0300, Mauro Carvalho Chehab wrote:
-> Now that all files were converted to ReST format, rename them
-> and add an index.
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
-[...]
-> diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon=
-/submitting-patches.rst
-> similarity index 99%
-> rename from Documentation/hwmon/submitting-patches
-> rename to Documentation/hwmon/submitting-patches.rst
-> index 12540b7d9b50..6120db7556aa 100644
-> --- a/Documentation/hwmon/submitting-patches
-> +++ b/Documentation/hwmon/submitting-patches.rst
+static int myinit(void)
+{
+	struct software_node_reference *ref;
+	struct fwnode_handle *gpio_node;
+	struct fwnode_handle *my_node;
 
-I'd additionally suggest:
+	/* Creating the nodes */
+	gpio_node = fwnode_create_software_node(gpio_props, NULL);
+	...
+	my_node = fwnode_create_software_node(my_props, NULL);
+	...
 
-diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon/s=
-ubmitting-patches.rst
-index f88221b46153..0000a86be4b9 100644
---- a/Documentation/hwmon/submitting-patches
-+++ b/Documentation/hwmon/submitting-patches.rst
-@@ -38,7 +38,7 @@ increase the chances of your change being accepted.
- 2. Adding functionality to existing drivers
- -------------------------------------------
-=20
--* Make sure the documentation in Documentation/hwmon/<driver_name> is up to
-+* Make sure the documentation in Documentation/hwmon/<driver_name>.rst is =
-up to
-   date.
-=20
- * Make sure the information in Kconfig is up to date.
-@@ -60,7 +60,7 @@ increase the chances of your change being accepted.
-=20
- * Consider adding yourself to MAINTAINERS.
-=20
--* Document the driver in Documentation/hwmon/<driver_name>.
-+* Document the driver in Documentation/hwmon/<driver_name>.rst.
-=20
- * Add the driver to Kconfig and Makefile in alphabetical order.
-=20
+	/* gpio_node is associated with a GPIO/Pin controller in this example */
+	...
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+	/* Assigning the actual node references */
+	gpioargs[0].fwnode = gpio_node;
+	gpioargs[1].fwnode = gpio_node;
 
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
+	/* my_node will now have a named ("gpios") reference to the two GPIOs */
+	ref = fwnode_create_software_node_reference(my_node, "gpios", gpioargs);
+	...
+	return 0;
+}
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/swnode.c    | 101 +++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |   8 ++++
+ 2 files changed, 109 insertions(+)
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyuCqAACgkQCDBEmo7z
-X9ssgw//ZmPBGq00gnKgIkdptmktJsCCdbRKqAnKS97nKt6Ad54+llNhFidFR3ij
-Owq03OnpCXcu+3rc9qn/bOEv9QHjUmJ9aBysxuMCjbp5Wm69ItkylykWH6DPik8b
-BhloTUt0lnoweWJjZ4qtHyp5xuUlsQ2q6RbGR+BQwgvPA3y3FMuMYnvqi4BmuJs4
-B2DHhAUQnwgy+CMGBq62WTLZsWU6O4xAGnPRepoEIP4yf3ikOn5uiyYXeJt9sWmB
-7TyiXuM+noRFv5qyyiR695nBSlRZN0W690W2au5d8o1d1zp2tnuNTtljFGPv18S9
-gxxRiAzJRiXIGlg9cPZuyu/LD+4NbGwbRv8AfYYTcXyf1ZwLU6/y2VYRt9riJ/Ul
-1k5LFmFhHlxicwFJmobOor+AxJYtkb6fXCwJ2fSclBgP5tMYiKz3SjMlFxsiAczd
-x5uS/ABnXpJXEy3aOKlF3/GLI2ehMXegPLntmgUYGPHybPxTPgMf4ThsKLN0uovd
-f5ZeHCR5EtdFtJuECRIbvAeTs7MyawkdRzABA0dVUXmAxRzNxaU5tpFT8S9/AN1I
-wHTaekePAAReHn5G87/nu1RwsRWoLe8TyGkpy3IFCPmcYgGzZSF63tM2X0/eHuPi
-Q6PdjLqczbpT3X31fJdJ3q9BEWwy+zsHmKCHB81cYGY1F5fAYIY=
-=QA5J
------END PGP SIGNATURE-----
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 7b321bf8424c..39b8f8f35cfe 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -11,10 +11,19 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
++struct software_node_reference {
++	struct list_head list;
++	const char *name;
++	int nrefs;
++	struct fwnode_reference_args *args;
++};
++
+ struct software_node {
+ 	int id;
+ 	struct kobject kobj;
+ 	struct fwnode_handle fwnode;
++	struct list_head references;
++	struct mutex lock; /* node lock */
+ 
+ 	/* hierarchy */
+ 	struct ida child_ids;
+@@ -598,9 +607,11 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 	swnode->kobj.kset = swnode_kset;
+ 	swnode->fwnode.ops = &software_node_ops;
+ 
++	mutex_init(&swnode->lock);
+ 	ida_init(&swnode->child_ids);
+ 	INIT_LIST_HEAD(&swnode->entry);
+ 	INIT_LIST_HEAD(&swnode->children);
++	INIT_LIST_HEAD(&swnode->references);
+ 	swnode->parent = p;
+ 
+ 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
+@@ -631,6 +642,11 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ 	if (!swnode)
+ 		return;
+ 
++	mutex_lock(&swnode->lock);
++	WARN(!list_empty(&swnode->references),
++	     "\"%s\" has still references", kobject_name(&swnode->kobj));
++	mutex_unlock(&swnode->lock);
++
+ 	if (swnode->parent) {
+ 		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
+ 		list_del(&swnode->entry);
+@@ -642,6 +658,91 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+ 
++/**
++ * fwnode_create_software_node_reference - Create named reference description
++ * @fwnode: The software node to have the references
++ * @name: Name given to reference description
++ * @args: Zero terminated array of software node references with arguments
++ *
++ * Associates software nodes listed in @args with @fwnode. The association is
++ * named @name. The reference count is incremented for the nodes in @args.
++ *
++ * Returns pointer to software node reference description on success, or ERR_PTR
++ * on failure.
++ */
++struct software_node_reference *
++fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
++				      const char *name,
++				      const struct fwnode_reference_args *args)
++{
++	struct software_node *swnode = to_software_node(fwnode);
++	struct software_node_reference *ref;
++	int n;
++
++	if (!swnode)
++		return ERR_PTR(-EINVAL);
++
++	for (n = 0; args[n].fwnode; n++)
++		if (!is_software_node(args[n].fwnode))
++			return ERR_PTR(-EINVAL);
++
++	ref = kzalloc(sizeof(*ref), GFP_KERNEL);
++	if (!ref)
++		return ERR_PTR(-ENOMEM);
++
++	ref->nrefs = n;
++
++	ref->name = kstrdup(name, GFP_KERNEL);
++	if (!ref->name) {
++		kfree(ref);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	ref->args = kcalloc(ref->nrefs, sizeof(*ref->args), GFP_KERNEL);
++	if (!ref->args) {
++		kfree(ref->name);
++		kfree(ref);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	for (n = 0; n < ref->nrefs; n++) {
++		ref->args[n] = args[n];
++		software_node_get(ref->args[n].fwnode);
++	}
++
++	mutex_lock(&swnode->lock);
++	list_add_tail(&ref->list, &swnode->references);
++	mutex_unlock(&swnode->lock);
++
++	return ref;
++}
++EXPORT_SYMBOL_GPL(fwnode_create_software_node_reference);
++
++/**
++ * fwnode_remove_software_node_reference - Remove named reference description
++ * @ref: Software node reference description
++ *
++ * Remove named reference @ref. Decrements the software node reference count of
++ * each node in @ref, and removes the association that was created in
++ * fwnode_create_software_node_reference().
++ */
++void fwnode_remove_software_node_reference(struct software_node_reference *ref)
++{
++	int n;
++
++	if (IS_ERR_OR_NULL(ref))
++		return;
++
++	for (n = 0; n < ref->nrefs; n++)
++		kobject_put(&to_software_node(ref->args[n].fwnode)->kobj);
++
++	list_del(&ref->list);
++	kfree(ref->args);
++	kfree(ref->name);
++	kfree(ref);
++}
++EXPORT_SYMBOL_GPL(fwnode_remove_software_node_reference);
++
+ int software_node_notify(struct device *dev, unsigned long action)
+ {
+ 	struct fwnode_handle *fwnode = dev_fwnode(dev);
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 65d3420dd5d1..40e12ca43556 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -314,6 +314,8 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
++struct sofware_node_reference;
++
+ bool is_software_node(const struct fwnode_handle *fwnode);
+ 
+ int software_node_notify(struct device *dev, unsigned long action);
+@@ -323,4 +325,10 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 			    const struct fwnode_handle *parent);
+ void fwnode_remove_software_node(struct fwnode_handle *fwnode);
+ 
++struct software_node_reference *
++fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
++				      const char *name,
++				      const struct fwnode_reference_args *args);
++void fwnode_remove_software_node_reference(struct software_node_reference *ref);
++
+ #endif /* _LINUX_PROPERTY_H_ */
+-- 
+2.20.1
 
---1yeeQ81UyVL57Vl7--
