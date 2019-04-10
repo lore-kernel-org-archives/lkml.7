@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B23C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBDEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8B3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FC6206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 16:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tkPqN11s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiLoy+uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387851AbfDJQ2S (ORCPT
+        id S2387878AbfDJQ2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 12:28:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45710 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387812AbfDJQ2L (ORCPT
+        Wed, 10 Apr 2019 12:28:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45066 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387813AbfDJQ2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 12:28:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bf11so1716845plb.12;
-        Wed, 10 Apr 2019 09:28:11 -0700 (PDT)
+        Wed, 10 Apr 2019 12:28:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y3so1841775pgk.12;
+        Wed, 10 Apr 2019 09:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=t3iZkPj/7QCSXgrBm7/GlIk+twTdtIQx1Nhm2nRrQHg=;
-        b=tkPqN11s969TlYPx3VFZ2A3McPaHTkOy4MsIFU1DOC+BsBvlSipzYD7wELfzaw7s9I
-         j1slMpZIvPm5+VQN7qc2eZWKjb+duuGvPnUa/Pf8S1haN4xfXnuiNHrtpJVq53S2iXTz
-         V5sCdIFZOkYN/Lm31o0Koms+2Y0yFpDgOV2OdHpDSqVfimblpGHDXRlIkEItua4PLCF/
-         o6l98JmnG13/VmX+8yHbZLPjvMdztrnidV1uZb0BUu4WmoJOnAORT8gq1Sii87jkq1NM
-         ieTedG9TT0XM4ZxCodZ9b8Wk6M7tqDpH8MDKsatEdkc+A31ayneXjzQ1jJVzkdX/C2ne
-         8VeA==
+        bh=3medKjGV47ZOPN+yjhvR37qQjE3neDO4pCs+uQdUuow=;
+        b=SiLoy+uv58kts4jBEs48iVumvE/HLvagIxBjXPUYtsQfKZqe5qcnM2+ig+ooKiSkFn
+         E4gpQViNBSDQtQ3aI6Vg3lsVguei+TftF02nCcUy4IaSZxkddkgNWK3cE8B5RxAHiGZW
+         OcmAx99CJ8QpL+kLOikMEi0fGtQmjAwAnjDrg5Jx3Ju1Ui9wOJ/bYaVEplEIwAP1+8/r
+         uI54dkYcR8NQZZY/prbkdhUPq78mEmIm7P+s6jKZl8LtSQCAP7cIwMHyBq+WgZCvVGQ0
+         AMtmTqXU/jnAiQcDL9vgJzxmHng+xOSEx2h9y0FoYaXvd5u9OFQjP9KSLreNQ389k1ng
+         fBMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=t3iZkPj/7QCSXgrBm7/GlIk+twTdtIQx1Nhm2nRrQHg=;
-        b=LVxljmFy7xM+Jr8e5wd6hFrSQTPoSRu73hdCFgVs53LHTekJfFL5aEN8MjsHctjHMc
-         JL9T6sjVbwCCjicJhCjnKYENbg/G569YbyK55/aq0X7OTpt62U01w8KzmisrX6Go8xW1
-         vKXAPxrDUUe4uxGJVG/LWwAqlzD218QFqLZkG03HKzHF4sLnfmLoQfodUg+HW8VO2PDB
-         a2cm+NCbzYmKWzowLwIXDhSiYd82zR+BEDT+jzlMsqm8tZX0wk3N12dxk33+Lcx7KiAj
-         4ZH+qbWFqOJ3gvkwbLCajiSMCtSFMHk1OmRARGkvsOErB5iLCALwucWc74UhgScMN6IV
-         pseg==
-X-Gm-Message-State: APjAAAVuEHdoBO2tWaFLL3K3RbkxSyNN3v0/tbeUqQx7sk2D/Bm/uWAz
-        3/znB1BHs/5nHV2M6a1Soac=
-X-Google-Smtp-Source: APXvYqxeklMPCnCSirHPjI0gup8IyZvEBoC+EMNKwfezsgxQfVBeWhDJfQQ2v+f/wRAJoCNE6sQu0Q==
-X-Received: by 2002:a17:902:b089:: with SMTP id p9mr19938275plr.185.1554913690705;
-        Wed, 10 Apr 2019 09:28:10 -0700 (PDT)
+        bh=3medKjGV47ZOPN+yjhvR37qQjE3neDO4pCs+uQdUuow=;
+        b=VEN6hN7Mh5K4kNiLMsusNXgX1qiV3Mzkg0o6yeimR38zBta6g8PM4hJR84gHoQM6q6
+         S77eWxjKUCvbT0/6/37kYcuRqjEwXoeHisxwM4DEcvDEILHPfo98NUL28PzEfvBL4Zek
+         CzbKm1cQL8XA6GP13y27yUX6UK/foN5IZYnp+KJ32eUSp3U/Ct4IRm12bqkRI5NUT702
+         a4XdC/w9J4UDLFgD645i8ysKGgcMVYpH92s4F4u0m/3QcoyiY1kWHUNBD9zPFo8HiHn5
+         JR6WSupG/HmJtQd+sgg+SXhrY0BGvIJoTQUZoSlQ5hXC/QIz/66/6lqWJTkqv+KBLoNa
+         UjEQ==
+X-Gm-Message-State: APjAAAV/JVnt/tsrcydxkVSpyaOAmhpVxOJRbWCnZGM378C/8fE/5bbJ
+        RBFuSUS5tSclFJkrq5lkAksw1aVW
+X-Google-Smtp-Source: APXvYqwMD17pV8HqfUE8FecYaD+ZJ4CqA71db2mZ8Z139UVyRSd5PdhoUU73zQHncAnoHK1ZOvBzoA==
+X-Received: by 2002:a63:6849:: with SMTP id d70mr41635996pgc.21.1554913693429;
+        Wed, 10 Apr 2019 09:28:13 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m25sm49166154pfa.175.2019.04.10.09.28.10
+        by smtp.gmail.com with ESMTPSA id k124sm61321660pgc.65.2019.04.10.09.28.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 09:28:10 -0700 (PDT)
+        Wed, 10 Apr 2019 09:28:12 -0700 (PDT)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 02/22] watchdog: tqmx86_wdt: Use 'dev' instead of dereferencing it repeatedly
-Date:   Wed, 10 Apr 2019 09:27:43 -0700
-Message-Id: <1554913683-25454-3-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 04/22] watchdog: ts72xx_wdt: Use 'dev' instead of dereferencing it repeatedly
+Date:   Wed, 10 Apr 2019 09:27:45 -0700
+Message-Id: <1554913683-25454-5-git-send-email-linux@roeck-us.net>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
 References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
@@ -80,61 +80,49 @@ https://github.com/groeck/coccinelle-patches
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/tqmx86_wdt.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/watchdog/ts72xx_wdt.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/tqmx86_wdt.c b/drivers/watchdog/tqmx86_wdt.c
-index 52941207a12a..72d0b0adde38 100644
---- a/drivers/watchdog/tqmx86_wdt.c
-+++ b/drivers/watchdog/tqmx86_wdt.c
-@@ -70,11 +70,12 @@ static struct watchdog_ops tqmx86_wdt_ops = {
+diff --git a/drivers/watchdog/ts72xx_wdt.c b/drivers/watchdog/ts72xx_wdt.c
+index 3aa11c84dea9..bf918f5fa131 100644
+--- a/drivers/watchdog/ts72xx_wdt.c
++++ b/drivers/watchdog/ts72xx_wdt.c
+@@ -122,11 +122,12 @@ static const struct watchdog_ops ts72xx_wdt_ops = {
  
- static int tqmx86_wdt_probe(struct platform_device *pdev)
+ static int ts72xx_wdt_probe(struct platform_device *pdev)
  {
 +	struct device *dev = &pdev->dev;
- 	struct tqmx86_wdt *priv;
- 	struct resource *res;
- 	int err;
+ 	struct ts72xx_wdt_priv *priv;
+ 	struct watchdog_device *wdd;
+ 	int ret;
  
 -	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
 +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
  	if (!priv)
  		return -ENOMEM;
  
-@@ -82,14 +83,13 @@ static int tqmx86_wdt_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -ENODEV;
+@@ -143,20 +144,20 @@ static int ts72xx_wdt_probe(struct platform_device *pdev)
+ 	wdd->ops = &ts72xx_wdt_ops;
+ 	wdd->min_timeout = 1;
+ 	wdd->max_hw_heartbeat_ms = 8000;
+-	wdd->parent = &pdev->dev;
++	wdd->parent = dev;
  
--	priv->io_base = devm_ioport_map(&pdev->dev, res->start,
--					resource_size(res));
-+	priv->io_base = devm_ioport_map(dev, res->start, resource_size(res));
- 	if (!priv->io_base)
- 		return -ENOMEM;
+ 	watchdog_set_nowayout(wdd, nowayout);
  
- 	watchdog_set_drvdata(&priv->wdd, priv);
+ 	wdd->timeout = TS72XX_WDT_DEFAULT_TIMEOUT;
+-	watchdog_init_timeout(wdd, timeout, &pdev->dev);
++	watchdog_init_timeout(wdd, timeout, dev);
  
--	priv->wdd.parent = &pdev->dev;
-+	priv->wdd.parent = dev;
- 	priv->wdd.info = &tqmx86_wdt_info;
- 	priv->wdd.ops = &tqmx86_wdt_ops;
- 	priv->wdd.min_timeout = 1;
-@@ -97,16 +97,16 @@ static int tqmx86_wdt_probe(struct platform_device *pdev)
- 	priv->wdd.max_hw_heartbeat_ms = 4096*1000;
- 	priv->wdd.timeout = WDT_TIMEOUT;
+ 	watchdog_set_drvdata(wdd, priv);
  
--	watchdog_init_timeout(&priv->wdd, timeout, &pdev->dev);
-+	watchdog_init_timeout(&priv->wdd, timeout, dev);
- 	watchdog_set_nowayout(&priv->wdd, WATCHDOG_NOWAYOUT);
+-	ret = devm_watchdog_register_device(&pdev->dev, wdd);
++	ret = devm_watchdog_register_device(dev, wdd);
+ 	if (ret)
+ 		return ret;
  
- 	tqmx86_wdt_set_timeout(&priv->wdd, priv->wdd.timeout);
- 
--	err = devm_watchdog_register_device(&pdev->dev, &priv->wdd);
-+	err = devm_watchdog_register_device(dev, &priv->wdd);
- 	if (err)
- 		return err;
- 
--	dev_info(&pdev->dev, "TQMx86 watchdog\n");
-+	dev_info(dev, "TQMx86 watchdog\n");
+-	dev_info(&pdev->dev, "TS-72xx Watchdog driver\n");
++	dev_info(dev, "TS-72xx Watchdog driver\n");
  
  	return 0;
  }
