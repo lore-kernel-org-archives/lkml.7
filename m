@@ -2,123 +2,90 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE411C10F0E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864D3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B698B21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4896C21905
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 01:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjPjuL9A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfDJBzq (ORCPT
+        id S1726907AbfDJB5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 9 Apr 2019 21:55:46 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19659 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfDJBzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 9 Apr 2019 21:55:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Apr 2019 18:55:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,331,1549958400"; 
-   d="scan'208";a="141425152"
-Received: from aubrey-lkp.sh.intel.com ([10.239.97.113])
-  by orsmga003.jf.intel.com with ESMTP; 09 Apr 2019 18:55:40 -0700
-From:   Aubrey Li <aubrey.li@linux.intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
-        hpa@zytor.com
-Cc:     ak@linux.intel.com, tim.c.chen@linux.intel.com,
-        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, aubrey.li@intel.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Aubrey Li <aubrey.li@linux.intel.com>
-Subject: [PATCH v14 3/3] Documentation/filesystems/proc.txt: add AVX512_elapsed_ms
-Date:   Wed, 10 Apr 2019 09:53:25 +0800
-Message-Id: <20190410015326.24500-3-aubrey.li@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190410015326.24500-1-aubrey.li@linux.intel.com>
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+        Tue, 9 Apr 2019 21:57:20 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39874 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfDJB5U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 9 Apr 2019 21:57:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k45so531721edb.6;
+        Tue, 09 Apr 2019 18:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W/4oSLi7P+fdzuEz8yEm6yC4qCoqNztla3aC5YWV4Rs=;
+        b=hjPjuL9AnGKn00Un4/uVYT10ZUjNCpkqUxgnnEMjH5jdT9Aa3IwfF2WWwvevzUMuTK
+         zpjYqFtlTBb36qMco+0BqYbX2YQNKJC9dKrUTmNU2Uyho/vIahUOgHmTrszrHMzHp8L0
+         oZL/tImdRulKlxIRSZWHZ5keS2YhAKg1JZRLKl/4diqJIW0ZxxppOn/wtXmU8hyCn/+0
+         J0LJ/0iB2D3H/tA0KfaydkL3zZDsP0ptksimxrXnOMB5ay6nPihmroKS0yeX3qZqw9aw
+         9ms+/8lPWXHQk9LBnyksRlkDvYrni7lO0v0J0R6904KhG5b4lG8lvUuBXT+a7lxHUiJM
+         II8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W/4oSLi7P+fdzuEz8yEm6yC4qCoqNztla3aC5YWV4Rs=;
+        b=o6k2Wtk+eUG53p5ZvJyVXs5JrN6mNVNgD3GUKbe8t5FSu9CmUyria7NnRv2BSfHq8V
+         luSFObzSLihdNDHRQ1YTN87Z/JXQMfvlC5QRM/6ipWgN0Uq1OMDoI6tDcSbWIYTwy2yg
+         5f6ht3CEwdCPizYvuPDilQqPn9rwRUgdiqCmWkGSh+UUKKTX2uJKJCx0Uf+MggOo/QAi
+         1qC1OSnlgWx34cJ1eBnqq5JHlsA0QwLt9aHbLrnwqFfCCm4m9bzZ90jM+KnqSQP1vzAn
+         c8vxqNfFaMbiZBDJNFpKM1jM7gbM8cvASOmcAgVNbWl2Bnwu3Ui2TJUDqUBghcPkXtmc
+         +D8w==
+X-Gm-Message-State: APjAAAWfcCRoxy5pq48QqyUcJuyg58K437MD6goSZETgz52RQ0cLRFfO
+        vpXF3mvjXSpKu1WW3UijXuc=
+X-Google-Smtp-Source: APXvYqxOVV0illSmRv4b3YRdpcF5hHicWXnmMFxbfRYGw/Lhj88N68zKUK1dquC/0YVFyfL0uXfmCQ==
+X-Received: by 2002:a50:897b:: with SMTP id f56mr25936128edf.144.1554861438311;
+        Tue, 09 Apr 2019 18:57:18 -0700 (PDT)
+Received: from [10.230.28.107] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id lw14sm6289231ejb.24.2019.04.09.18.57.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 09 Apr 2019 18:57:17 -0700 (PDT)
+Subject: Re: [PATCH v2 net-next 02/22] net: dsa: Fix pharse -> phase typo
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        georg.waibel@sensor-technik.de
+References: <20190410005700.31582-1-olteanv@gmail.com>
+ <20190410005700.31582-3-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <8031aa8a-5281-95f0-a9df-c829f9a565af@gmail.com>
+Date:   Tue, 9 Apr 2019 18:57:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190410005700.31582-3-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added AVX512_elapsed_ms in /proc/<pid>/status. Report it
-in Documentation/filesystems/proc.txt
 
-Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Linux API <linux-api@vger.kernel.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- Documentation/filesystems/proc.txt | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c86171..c4a9e48681ad 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -207,6 +207,7 @@ read the file /proc/PID/status:
-   Speculation_Store_Bypass:       thread vulnerable
-   voluntary_ctxt_switches:        0
-   nonvoluntary_ctxt_switches:     1
-+  AVX512_elapsed_ms:	8
- 
- This shows you nearly the same information you would get if you viewed it with
- the ps  command.  In  fact,  ps  uses  the  proc  file  system  to  obtain its
-@@ -224,7 +225,7 @@ asynchronous manner and the value may not be very precise. To see a precise
- snapshot of a moment, you can see /proc/<pid>/smaps file and scan page table.
- It's slow but very precise.
- 
--Table 1-2: Contents of the status files (as of 4.19)
-+Table 1-2: Contents of the status files (as of 5.1)
- ..............................................................................
-  Field                       Content
-  Name                        filename of the executable
-@@ -289,6 +290,32 @@ Table 1-2: Contents of the status files (as of 4.19)
-  Mems_allowed_list           Same as previous, but in "list format"
-  voluntary_ctxt_switches     number of voluntary context switches
-  nonvoluntary_ctxt_switches  number of non voluntary context switches
-+ AVX512_elapsed_ms           time elapsed since last AVX512 usage recorded
-+
-+ AVX512_elapsed_ms:
-+ ------------------
-+  If AVX512 is supported on the machine, this entry shows the milliseconds
-+  elapsed since the last time AVX512 usage was recorded. The recording
-+  happens on a best effort basis when a task is scheduled out. This means
-+  that the value depends on two factors:
-+
-+    1) The time which the task spent on the CPU without being scheduled
-+       out. With CPU isolation and a single runnable task this can take
-+       several seconds.
-+
-+    2) The time since the task was scheduled out last. Depending on the
-+       reason for being scheduled out (time slice exhausted, syscall ...)
-+       this can be arbitrary long time.
-+
-+  As a consequence the value cannot be considered precise and authoritative
-+  information. The application which uses this information has to be aware
-+  of the overall scenario on the system in order to determine whether a
-+  task is a real AVX512 user or not.
-+
-+  A special value of '-1' indicates that no AVX512 usage was recorded, thus
-+  the task is unlikely an AVX512 user, but depends on the workload and the
-+  scheduling scenario, it also could be a false negative mentioned above.
-+
- ..............................................................................
- 
- Table 1-3: Contents of the statm files (as of 2.6.8-rc3)
+On 4/9/2019 5:56 PM, Vladimir Oltean wrote:
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.21.0
-
+Florian
