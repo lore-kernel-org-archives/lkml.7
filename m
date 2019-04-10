@@ -2,136 +2,194 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304C1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341D6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E949B20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B4C20820
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M3PkFBip"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iZUPsVjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfDJVrU (ORCPT
+        id S1726562AbfDJVtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:47:20 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:33049 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfDJVrU (ORCPT
+        Wed, 10 Apr 2019 17:49:49 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:50551 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDJVtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:47:20 -0400
-Received: by mail-vk1-f195.google.com with SMTP id x194so927927vke.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:47:19 -0700 (PDT)
+        Wed, 10 Apr 2019 17:49:49 -0400
+Received: by mail-it1-f196.google.com with SMTP id q14so6169101itk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QXiJ2lj9JMynWfUKN3oco9k+HtXMmTEkaf5hOpFuSF0=;
-        b=M3PkFBipDHKGS5UOcLR0+UhlihZ24+1iPN5mHuqvm0Od6lBF8iUekWEXKlR03/hZ9M
-         nGSioiCcJNj1f6zI3xHdrsc5tCVC+K0LM8KWyvM7Vwc1P+mb5hYsptfrS095OGOBJVLO
-         YShxXzd9fG9ZqI8fPEfeuhZxAaliAEIpo9IAw=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e868xr/naBP8Ia4Ix3OMgJwwrPy0huba5mSynPBdj0E=;
+        b=iZUPsVjd5JdNUfgTDd2wbUA5JQmEOyUW7HVciQvDMLSPwwr528b4pnnH8BFvvZi1lk
+         /WqmZFF9QAvRWTe0JwdZxj/yu1pqvL1I/hR1XbgwQ9oCKQ/SwlLSE1iqmzv0sFPjdvR1
+         0PlNcDm7kR7MkY9tfmj1O3cjPI56+9vleIlHE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QXiJ2lj9JMynWfUKN3oco9k+HtXMmTEkaf5hOpFuSF0=;
-        b=Z7Cp+QzjXbQC89gKKta0jiQoO9Ic3wyAIy+rzMW+lItVbuB+t1BvLGCz4OSoxuJTM6
-         gVy1nRdeF+rAT/zAOrBbEgJh8M0na+IvX1GX9IbfFaP8Msa4d0lR8eViFxucc2fMDr99
-         74xSg1u27uxEkzxsW0yiVGiMabTEWcsAfHoqIdsrtllEFtA4+8YGitWK98896TpJgN1v
-         rgRpVJ5jpFgaZcE2YYhxs5LSJoHBZ11hoFxspsSlsFXaqpoRgZomG0yXyRCBlaS7bQuP
-         r0JzZQ5i9wc5DDPNK1DzN3DDbH9GZIXQxcg1D38rMpdJD2VZt5u7Vuw91w4TNKBWg8dB
-         OBrQ==
-X-Gm-Message-State: APjAAAVtGbxp9voEH79vAgVoE3KYQ2KaVsSoAwH4Rug+4IWTK8ma0/E1
-        6CSJ/kd7iR0JnxnBIjLiiJrzlUu528U=
-X-Google-Smtp-Source: APXvYqx2TEAqt9y9pbjpQ3QaXfuBD7KkgJ+FkUt6ZSzIo71BXcGSEXrxS14s9Wjdb8bQAtdoHUhYXQ==
-X-Received: by 2002:a1f:1384:: with SMTP id 126mr24665723vkt.71.1554932838045;
-        Wed, 10 Apr 2019 14:47:18 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id j71sm29544522vsd.0.2019.04.10.14.47.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 14:47:17 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id n4so2288525vsm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:47:16 -0700 (PDT)
-X-Received: by 2002:a67:7e12:: with SMTP id z18mr1959700vsc.82.1554932836399;
- Wed, 10 Apr 2019 14:47:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e868xr/naBP8Ia4Ix3OMgJwwrPy0huba5mSynPBdj0E=;
+        b=MGSlhwPX9q7idow1YFxcmQk/tcTjjVVTtNs1y8c0iPvWQLDR8DUSYscIfNbLz1LF5T
+         Eyqz8alIF2EknVHAqJLZFyU22KKZTa1QfswUmrkgRHqjayAzOEXFT477Konlt1yUOXOC
+         bvDqZ5sB5cCevVmD9MdesYrLdZ7WmG5jg6jYxhtouPy78UPSW5Tbas84w1A4aevV2G20
+         8aR2PfV4RsUt8HyJkMTUih+c2S923PjBPvU6R40wyfloYfOWFEvaUY2eSArI/YCRPhy+
+         eXTV4f32QMBXE/yIKMrLXmgG22temiixZKfwUgjPOOB7S6JrUngOumHHex5AxkJYITIJ
+         8FRg==
+X-Gm-Message-State: APjAAAVoEHNogULhd+sWTTdnoDIjSOIqBD+W51wUJkixWN3gMUFU8aEp
+        QNpY5KJIyGMKaYl2aye94zeqvA==
+X-Google-Smtp-Source: APXvYqzsUYDpDIN9RSTxzuotJjDeGJLXvngBHRs3WY1txsRbMzKKPt5VgDplKXzMRsWAEYPIFaAOOQ==
+X-Received: by 2002:a02:924d:: with SMTP id y13mr30220161jag.24.1554932988239;
+        Wed, 10 Apr 2019 14:49:48 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id u66sm14626610ioe.74.2019.04.10.14.49.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 10 Apr 2019 14:49:47 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        derat@google.com, groeck@google.com, dtor@google.com,
+        sjg@chromium.org, alevkoy@chromium.org, keithshort@chromium.org,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v2] platform/chrome: wilco_ec: Add h1_gpio status to debugfs
+Date:   Wed, 10 Apr 2019 15:49:41 -0600
+Message-Id: <20190410214941.45554-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190208181210.GA8388@embeddedor>
-In-Reply-To: <20190208181210.GA8388@embeddedor>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 10 Apr 2019 14:47:05 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+_CGq=69qAaZz1zYpHx-khRT+VSLtARkU+8txBkdzk2A@mail.gmail.com>
-Message-ID: <CAGXu5j+_CGq=69qAaZz1zYpHx-khRT+VSLtARkU+8txBkdzk2A@mail.gmail.com>
-Subject: Re: [PATCH] mtd: lpddr_cmds: Mark expected switch fall-through
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux mtd <linux-mtd@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 8, 2019 at 10:12 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
->
-> This patch fixes the following warnings:
->
-> drivers/mtd/lpddr/lpddr_cmds.c: In function =E2=80=98chip_ready=E2=80=99:
-> drivers/mtd/lpddr/lpddr_cmds.c:319:6: warning: this statement may fall th=
-rough [-Wimplicit-fallthrough=3D]
->    if (mode =3D=3D FL_READY && chip->oldstate =3D=3D FL_READY)
->       ^
-> drivers/mtd/lpddr/lpddr_cmds.c:322:2: note: here
->   default:
->   ^~~~~~~
->
-> Warning level 3 was used: -Wimplicit-fallthrough=3D3
->
-> This patch is part of the ongoing efforts to enabling
-> -Wimplicit-fallthrough.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
+tests, we need to ensure that the H1 chip is properly setting
+some GPIO lines. The h1_gpio attribute exposes the state
+of the lines:
+- ENTRY_TO_FACT_MODE in BIT(0)
+- SPI_CHROME_SEL in BIT(1)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+There are two reasons that I am exposing this in debugfs,
+and not as a GPIO:
+1. This is only useful for testing, so end users shouldn't ever
+care about this. In fact, if it passes the tests, then the value of
+h1_gpio will always be 2, so it would be really uninteresting for users.
+2. This GPIO is not connected to, controlled by, or really even related
+to the AP. The GPIO runs between the EC and the H1 security chip.
 
--Kees
+Changes in v2:
+- Zero out the unused fields in the request.
+- Format result as "%02x\n" instead of as a decimal.
 
-> ---
->  drivers/mtd/lpddr/lpddr_cmds.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mtd/lpddr/lpddr_cmds.c b/drivers/mtd/lpddr/lpddr_cmd=
-s.c
-> index b13557fe52bd..76a4c73e100e 100644
-> --- a/drivers/mtd/lpddr/lpddr_cmds.c
-> +++ b/drivers/mtd/lpddr/lpddr_cmds.c
-> @@ -318,6 +318,7 @@ static int chip_ready(struct map_info *map, struct fl=
-chip *chip, int mode)
->                 /* Only if there's no operation suspended... */
->                 if (mode =3D=3D FL_READY && chip->oldstate =3D=3D FL_READ=
-Y)
->                         return 0;
-> +               /* fall through */
->
->         default:
->  sleep:
-> --
-> 2.20.1
->
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+---
+ drivers/platform/chrome/wilco_ec/debugfs.c | 64 +++++++++++++++++++++-
+ 1 file changed, 63 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+index 17c4c9068aaf..e1d9a6b73be9 100644
+--- a/drivers/platform/chrome/wilco_ec/debugfs.c
++++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+@@ -4,7 +4,7 @@
+  *
+  * Copyright 2019 Google LLC
+  *
+- * There is only one attribute used for debugging, called raw.
++ * The raw attribute is very useful for EC debugging.
+  * You can write a hexadecimal sentence to raw, and that series of bytes
+  * will be sent to the EC. Then, you can read the bytes of response
+  * by reading from raw.
+@@ -30,6 +30,16 @@
+  * Note that the first 32 bytes of the received MBOX[] will be printed,
+  * even if some of the data is junk. It is up to you to know how many of
+  * the first bytes of data are the actual response.
++ *
++ * There is also another debugfs attribute, called h1_gpio.
++ * As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
++ * tests, we need to ensure that the H1 chip is properly setting
++ * some GPIO lines. The h1_gpio attribute exposes the state
++ * of the lines:
++ * - ENTRY_TO_FACT_MODE in BIT(0)
++ * - SPI_CHROME_SEL in BIT(1)
++
++ * Output will be "0\n", "1\n", "2\n", or "3\n".
+  */
+ 
+ #include <linux/ctype.h>
+@@ -189,6 +199,56 @@ static const struct file_operations fops_raw = {
+ 	.llseek = no_llseek,
+ };
+ 
++#define CMD_KB_CHROME		0x88
++#define SUB_CMD_H1_GPIO		0x0A
++
++struct h1_gpio_status_request {
++	u8 cmd;		/* Always CMD_KB_CHROME */
++	u8 reserved;
++	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
++} __packed;
++
++struct hi_gpio_status_response {
++	u8 status;	/* 0 if allowed */
++	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
++} __packed;
++
++static ssize_t h1_gpio_read(struct file *file, char __user *user_buf,
++			    size_t count, loff_t *ppos)
++{
++	struct h1_gpio_status_request rq;
++	struct hi_gpio_status_response rs;
++	struct wilco_ec_message msg;
++	char buf[4];
++	int ret;
++
++	memset(&rq, 0, sizeof(rq));
++	rq.cmd = CMD_KB_CHROME;
++	rq.sub_cmd = SUB_CMD_H1_GPIO;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.type = WILCO_EC_MSG_LEGACY;
++	msg.request_data = &rq;
++	msg.request_size = sizeof(rq);
++	msg.response_data = &rs;
++	msg.response_size = sizeof(rs);
++	ret = wilco_ec_mailbox(debug_info->ec, &msg);
++	if (ret < 0)
++		return ret;
++	if (rs.status)
++		return -EIO;
++
++	sprintf(buf, "%02x\n", rs.val);
++
++	return simple_read_from_buffer(user_buf, count, ppos, buf, sizeof(buf));
++}
++
++static const struct file_operations fops_h1_gpio = {
++	.owner = THIS_MODULE,
++	.read = h1_gpio_read,
++	.llseek = no_llseek,
++};
++
+ /**
+  * wilco_ec_debugfs_probe() - Create the debugfs node
+  * @pdev: The platform device, probably created in core.c
+@@ -210,6 +270,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
+ 	if (!debug_info->dir)
+ 		return 0;
+ 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
++	debugfs_create_file("h1_gpio", 0444, debug_info->dir, NULL,
++			    &fops_h1_gpio);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
 
---=20
-Kees Cook
