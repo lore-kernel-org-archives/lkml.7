@@ -2,92 +2,189 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42544C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B2DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097532133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D069D206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 08:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfDJIYt (ORCPT
+        id S1729525AbfDJIYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 04:24:49 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:57327 "EHLO
+        Wed, 10 Apr 2019 04:24:53 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:49249 "EHLO
         smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729024AbfDJIYt (ORCPT
+        by vger.kernel.org with ESMTP id S1729258AbfDJIYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 04:24:49 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436846|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.438601-0.11346-0.44794;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.EJJYW7S_1554884686;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EJJYW7S_1554884686)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Wed, 10 Apr 2019 16:24:46 +0800
+        Wed, 10 Apr 2019 04:24:51 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436917|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.375491-0.016038-0.608471;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03289;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.EJJSTpS_1554884688;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EJJSTpS_1554884688)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Wed, 10 Apr 2019 16:24:48 +0800
 From:   Mao Han <han_mao@c-sky.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 0/3] csky: perf callchain dwarf support
-Date:   Wed, 10 Apr 2019 16:16:42 +0800
-Message-Id: <cover.1554883878.git.han_mao@c-sky.com>
+Cc:     Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>
+Subject: [PATCH v3 2/3] csky: Add support for perf registers sampling
+Date:   Wed, 10 Apr 2019 16:16:44 +0800
+Message-Id: <4a37bc0ffa48cbe2a49a50f5db791ffbef144ef4.1554883878.git.han_mao@c-sky.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1554883878.git.han_mao@c-sky.com>
+References: <cover.1554883878.git.han_mao@c-sky.com>
+In-Reply-To: <cover.1554883878.git.han_mao@c-sky.com>
+References: <cover.1554883878.git.han_mao@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set add perf DWARF unwinding support for C-SKY.
-Including user registers/stack dump API, and libdw support.
+This patch implements the perf registers sampling and validation API
+for csky arch. The valid registers and their register ID are defined in
+perf_regs.h. Perf tool can backtrace in userspace with unwind library
+and the registers/user stack dump support.
 
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Jiri Olsa <jolsa@redhat.com>
-CC: Namhyung Kim <namhyung@kernel.org>
 CC: Guo Ren <guoren@kernel.org>
 
-Changes since v2:
-  - use same registers name as struct pt_regs
-  - code convention
-
-Changes since v1:
-  - seperate the callchain support using frame pointer
-
-Mao Han (3):
-  perf: use hweight64 instead of hweight_long
-  csky: Add support for perf registers sampling
-  csky: add support for libdw
-
- arch/csky/Kconfig                            |   2 +
- arch/csky/include/uapi/asm/perf_regs.h       |  51 ++++++++++++++
- arch/csky/kernel/Makefile                    |   1 +
- arch/csky/kernel/perf_regs.c                 |  40 +++++++++++
- tools/arch/csky/include/uapi/asm/perf_regs.h |  51 ++++++++++++++
- tools/perf/Makefile.config                   |   6 +-
- tools/perf/arch/csky/Build                   |   1 +
- tools/perf/arch/csky/Makefile                |   3 +
- tools/perf/arch/csky/include/perf_regs.h     | 100 +++++++++++++++++++++++++++
- tools/perf/arch/csky/util/Build              |   2 +
- tools/perf/arch/csky/util/dwarf-regs.c       |  49 +++++++++++++
- tools/perf/arch/csky/util/unwind-libdw.c     |  78 +++++++++++++++++++++
- tools/perf/util/evsel.c                      |   2 +-
- 13 files changed, 384 insertions(+), 2 deletions(-)
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+---
+ arch/csky/Kconfig                      |  2 ++
+ arch/csky/include/uapi/asm/perf_regs.h | 51 ++++++++++++++++++++++++++++++++++
+ arch/csky/kernel/Makefile              |  1 +
+ arch/csky/kernel/perf_regs.c           | 40 ++++++++++++++++++++++++++
+ 4 files changed, 94 insertions(+)
  create mode 100644 arch/csky/include/uapi/asm/perf_regs.h
  create mode 100644 arch/csky/kernel/perf_regs.c
- create mode 100644 tools/arch/csky/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/csky/Build
- create mode 100644 tools/perf/arch/csky/Makefile
- create mode 100644 tools/perf/arch/csky/include/perf_regs.h
- create mode 100644 tools/perf/arch/csky/util/Build
- create mode 100644 tools/perf/arch/csky/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/csky/util/unwind-libdw.c
 
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index c4974cf..8e45c7a 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -38,6 +38,8 @@ config CSKY
+ 	select HAVE_KERNEL_LZO
+ 	select HAVE_KERNEL_LZMA
+ 	select HAVE_PERF_EVENTS
++	select HAVE_PERF_REGS
++	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_DMA_API_DEBUG
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/csky/include/uapi/asm/perf_regs.h b/arch/csky/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 0000000..ee323d8
+--- /dev/null
++++ b/arch/csky/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
++
++#ifndef _ASM_CSKY_PERF_REGS_H
++#define _ASM_CSKY_PERF_REGS_H
++
++/* Index of struct pt_regs */
++enum perf_event_csky_regs {
++	PERF_REG_CSKY_TLS,
++	PERF_REG_CSKY_LR,
++	PERF_REG_CSKY_PC,
++	PERF_REG_CSKY_SR,
++	PERF_REG_CSKY_SP,
++	PERF_REG_CSKY_ORIG_A0,
++	PERF_REG_CSKY_A0,
++	PERF_REG_CSKY_A1,
++	PERF_REG_CSKY_A2,
++	PERF_REG_CSKY_A3,
++	PERF_REG_CSKY_REGS0,
++	PERF_REG_CSKY_REGS1,
++	PERF_REG_CSKY_REGS2,
++	PERF_REG_CSKY_REGS3,
++	PERF_REG_CSKY_REGS4,
++	PERF_REG_CSKY_REGS5,
++	PERF_REG_CSKY_REGS6,
++	PERF_REG_CSKY_REGS7,
++	PERF_REG_CSKY_REGS8,
++	PERF_REG_CSKY_REGS9,
++#if defined(__CSKYABIV2__)
++	PERF_REG_CSKY_EXREGS0,
++	PERF_REG_CSKY_EXREGS1,
++	PERF_REG_CSKY_EXREGS2,
++	PERF_REG_CSKY_EXREGS3,
++	PERF_REG_CSKY_EXREGS4,
++	PERF_REG_CSKY_EXREGS5,
++	PERF_REG_CSKY_EXREGS6,
++	PERF_REG_CSKY_EXREGS7,
++	PERF_REG_CSKY_EXREGS8,
++	PERF_REG_CSKY_EXREGS9,
++	PERF_REG_CSKY_EXREGS10,
++	PERF_REG_CSKY_EXREGS11,
++	PERF_REG_CSKY_EXREGS12,
++	PERF_REG_CSKY_EXREGS13,
++	PERF_REG_CSKY_EXREGS14,
++	PERF_REG_CSKY_HI,
++	PERF_REG_CSKY_LO,
++	PERF_REG_CSKY_DCSR,
++#endif
++	PERF_REG_CSKY_MAX,
++};
++#endif /* _ASM_CSKY_PERF_REGS_H */
+diff --git a/arch/csky/kernel/Makefile b/arch/csky/kernel/Makefile
+index 4c462f5..1624b04 100644
+--- a/arch/csky/kernel/Makefile
++++ b/arch/csky/kernel/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o
+ obj-$(CONFIG_STACKTRACE)		+= stacktrace.o
+ obj-$(CONFIG_CSKY_PMU_V1)		+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_callchain.o
++obj-$(CONFIG_HAVE_PERF_REGS)            += perf_regs.o
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+diff --git a/arch/csky/kernel/perf_regs.c b/arch/csky/kernel/perf_regs.c
+new file mode 100644
+index 0000000..88f1875
+--- /dev/null
++++ b/arch/csky/kernel/perf_regs.c
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
++
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/perf_event.h>
++#include <linux/bug.h>
++#include <asm/perf_regs.h>
++#include <asm/ptrace.h>
++
++u64 perf_reg_value(struct pt_regs *regs, int idx)
++{
++	if (WARN_ON_ONCE((u32)idx >= PERF_REG_CSKY_MAX))
++		return 0;
++
++	return ((long *)regs)[idx];
++}
++
++#define REG_RESERVED (~((1ULL << PERF_REG_CSKY_MAX) - 1))
++
++int perf_reg_validate(u64 mask)
++{
++	if (!mask || mask & REG_RESERVED)
++		return -EINVAL;
++
++	return 0;
++}
++
++u64 perf_reg_abi(struct task_struct *task)
++{
++	return PERF_SAMPLE_REGS_ABI_32;
++}
++
++void perf_get_regs_user(struct perf_regs *regs_user,
++			struct pt_regs *regs,
++			struct pt_regs *regs_user_copy)
++{
++	regs_user->regs = task_pt_regs(current);
++	regs_user->abi = perf_reg_abi(current);
++}
 -- 
 2.7.4
 
