@@ -2,136 +2,105 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B96CC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39A52083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51485217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 06:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RLKyRjyV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kKWEuING"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfDJG7N (ORCPT
+        id S1728861AbfDJG7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 02:59:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50596 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfDJG7M (ORCPT
+        Wed, 10 Apr 2019 02:59:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58722 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfDJG7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 02:59:12 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A6s3KB107629;
-        Wed, 10 Apr 2019 06:56:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=eUy6uNd20IYE0HM61hq/WDfOphNCC2hmiq/ognC0Li0=;
- b=RLKyRjyVa1eDa8Wtlw0800FywfAOqyVuwzvDOe+0DCgQQRFWcxH4tB947aFQDZ2vFfCv
- Ot7KxM2KJKfq2xNinZqcgvWuh3nidCddrNcRmpkwwcqg0fiad9WgaPUUrNUZsemyPHNa
- 7SUqb7ipupeQWGRMqx3LUpyOM+z3h43BScoqp05ktY0pWxOJo49KRLb7jDBHkqrYG0N5
- wpIincfr87c1v7e6iES1tBNxOKIW3vLq0WwtzxdqXZXnoYBUOEuyw4+jn0lMUwXYYtw2
- SiO5WtUp1RSXG3djmjhC+WvC2DZ5fu25eTcj8slgDF8bUafIEgq4hI8k0plONv8ktNPr Uw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2rpmrq9365-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 06:56:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3A6tdvQ002850;
-        Wed, 10 Apr 2019 06:56:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2rpytc2p5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 06:56:57 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3A6ukAF026990;
-        Wed, 10 Apr 2019 06:56:46 GMT
-Received: from kadam (/197.157.0.42)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 09 Apr 2019 23:56:45 -0700
-Date:   Wed, 10 Apr 2019 09:56:27 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, linux-fbdev@vger.kernel.org,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        David Airlie <airlied@linux.ie>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org,
-        linux-scsi@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
-        ath10k@lists.infradead.org, intel-gfx@lists.freedesktop.org,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-fsdevel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
- hex_dump_to_buffer with flags
-Message-ID: <20190410065627.GF6095@kadam>
-References: <20190410031720.11067-1-alastair@au1.ibm.com>
- <20190410031720.11067-4-alastair@au1.ibm.com>
+        Wed, 10 Apr 2019 02:59:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Pa9yXGXWbJBeYpUWKfQ3OcoqrYebqvpcXb3jKozmpHo=; b=kKWEuING3f2F4y1Crs43dW3di
+        7Bgxl9UZq1ZWxGCBndfeH4As6FMxSHsqaBeXbGy1nKaBH4fcs4OGwRybfuk4thgRdacux+1NeL1wd
+        fZ6MJ5QYy6PgmfZlZ1HuxBa2ZUuT4ynZ1HRd05tlU6w3HRdXC5FyER53UnJmZ3eODIvvVSDtMzA1o
+        y0AmGJwp57NBJKxbBbCHJh4/wf99JEbw+dEwYWXttkE5YROQ6NdHe5mr0dWl2/XApRnu9i+o1aNrt
+        ekUQ+YuDTPg9b5SNQIt5cFJD4lyNzNCzk4BP4gjihHO/QIWHLOmKmkyDFDaFRJut/1iiO9BJAP5q3
+        475Whn/4g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hE7CO-0003NH-8Q; Wed, 10 Apr 2019 06:59:08 +0000
+Date:   Tue, 9 Apr 2019 23:59:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+        Paul Burton <paul.burton@mips.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Hogan <jhogan@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v2 2/5] arm64, mm: Move generic mmap layout functions to
+ mm
+Message-ID: <20190410065908.GC2942@infradead.org>
+References: <20190404055128.24330-1-alex@ghiti.fr>
+ <20190404055128.24330-3-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410031720.11067-4-alastair@au1.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=630
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904100050
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=652 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904100050
+In-Reply-To: <20190404055128.24330-3-alex@ghiti.fr>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 01:17:19PM +1000, Alastair D'Silva wrote:
-> @@ -107,7 +108,7 @@ EXPORT_SYMBOL(bin2hex);
->   * string if enough space had been available.
->   */
->  int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
-> -		       char *linebuf, size_t linebuflen, bool ascii)
-> +		       char *linebuf, size_t linebuflen, u64 flags)
->  {
->  	const u8 *ptr = buf;
->  	int ngroups;
-> @@ -184,7 +185,7 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
->  		if (j)
->  			lx--;
->  	}
-> -	if (!ascii)
-> +	if (!flags & HEXDUMP_ASCII)
-            ^^^^^^^^^^^^^^^^^^^^^^
-This is a precedence bug.  It should be if (!(flags & HEXDUMP_ASCII)).
+On Thu, Apr 04, 2019 at 01:51:25AM -0400, Alexandre Ghiti wrote:
+> - fix the case where stack randomization should not be taken into
+>   account.
 
+Hmm.  This sounds a bit vague.  It might be better if something
+considered a fix is split out to a separate patch with a good
+description.
 
->  		goto nil;
->  
+> +config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> +	bool
+> +	help
+> +	  This allows to use a set of generic functions to determine mmap base
+> +	  address by giving priority to top-down scheme only if the process
+> +	  is not in legacy mode (compat task, unlimited stack size or
+> +	  sysctl_legacy_va_layout).
 
-regards,
-dan carpenter
+Given that this is an option that is just selected by other Kconfig
+options the help text won't ever be shown.  I'd just move it into a
+comment bove the definition.
 
+> +#ifdef CONFIG_MMU
+> +#ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
 
+I don't think we need the #ifdef CONFIG_MMU here,
+CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT should only be selected
+if the MMU is enabled to start with.
+
+> +#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
+> +unsigned long arch_mmap_rnd(void)
+
+Now that a bunch of architectures use a version in common code
+the arch_ prefix is a bit mislead.  Probably not worth changing
+here, but some time in the future it could use a new name.
