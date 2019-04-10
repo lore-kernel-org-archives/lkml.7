@@ -2,150 +2,203 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14F4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A70C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C864B2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E17F2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 09:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfDJJP2 convert rfc822-to-8bit (ORCPT
+        id S1727306AbfDJJRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 05:15:28 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:37561 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727263AbfDJJP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 05:15:28 -0400
-Received: from xps13 (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9ABAA10000A;
-        Wed, 10 Apr 2019 09:15:22 +0000 (UTC)
-Date:   Wed, 10 Apr 2019 11:15:21 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        richard@nod.at, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
- randomizer support
-Message-ID: <20190410111521.026c7010@xps13>
-In-Reply-To: <OF37AF39D0.77A1B5F5-ON482583D8.002E12E6-482583D8.002FA5B1@mxic.com.tw>
-References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190409090427.22de9917@collabora.com>
-        <OF6C97E4DE.45261545-ON482583D7.00340468-482583D7.0034B3FE@mxic.com.tw>
-        <20190409114701.744c2c8c@collabora.com>
-        <OF9601E14B.A48284C4-ON482583D8.0005E3EB-482583D8.0006CC14@mxic.com.tw>
-        <20190410091612.229c91b4@xps13>
-        <OF37AF39D0.77A1B5F5-ON482583D8.002E12E6-482583D8.002FA5B1@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 10 Apr 2019 05:17:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:55030 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726494AbfDJJRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 05:17:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 02:17:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="314651496"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by orsmga005.jf.intel.com with ESMTP; 10 Apr 2019 02:17:41 -0700
+Subject: Re: [RFC PATCH v3 2/4] x86: Add the support of ACRN guest
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
+ <1554711131-21514-3-git-send-email-yakui.zhao@intel.com>
+ <20190408143952.GF15689@zn.tnic>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <ab54d5a4-4f4c-9401-2e98-f0ac09d023b1@intel.com>
+Date:   Wed, 10 Apr 2019 17:15:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190408143952.GF15689@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi masonccyang@mxic.com.tw,
-
-masonccyang@mxic.com.tw wrote on Wed, 10 Apr 2019 16:40:25 +0800:
-
-> Hi Miquel,
->  
-> > > > 
-> > > > Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and   
-> randomizer 
-> > > support  
-> > > > 
-> > > > On Tue, 9 Apr 2019 17:35:39 +0800
-> > > > masonccyang@mxic.com.tw wrote:
-> > > >   
-> > > > > > > +
-> > > > > > > +static const struct kobj_attribute sysfs_mxic_nand =
-> > > > > > > +   __ATTR(nand_random, S_IRUGO | S_IWUSR,
-> > > > > > > +          mxic_nand_rand_type_show,
-> > > > > > > +          mxic_nand_rand_type_store);   
-> > > > > > 
-> > > > > > No, we don't want to expose that through a sysfs file,   
-> especially 
-> > > since  
-> > > > > > changing the randomizer config means making the NAND unreadable   
-> for
-> > > > > > those that have used it before the change.
-> > > > > >   
-> > > > > 
-> > > > > Our on-die randomizer is still readable from user after the   
-> function 
-> > > > > is enabled.   
-> > > > 
-> > > > You mean the memory is still readable no matter the randomizer   
-> state.
-> > > > Not sure how that's possible, but okay.  
-> > 
-> > So if you write non-randomized data to the NAND chip, then enable the
-> > randomizer en read back the data, all will be ok?  
-
-s/en/and/
-
-> 
-> yes !
-
-I don't understand how this is possible. Have you tried it yourself?
-
-Can you explain how this is supposed to work?
-
-> 
-> > 
-> > And if randomized data is written to the NAND chip and we disable the
-> > randomizer, then the data will also be correct?
-> >   
-> 
-> Enable randomizer is a OTP(One-Time-Program) bit and can't be erased 
-> again!
-> That means never disable it once it has been enabled.
-> 
-> > > >   
-> > > > > This randomizer is just like a internal memory cell 
-> > > > > reliability enhanced.   
-> > > > 
-> > > > Why don't you enable it by default then?   
-> > > 
-> > > The penalty of randomizer is read/write performance down.
-> > > i.e,. tPROG 300 us to 340 us (randomizer enable)
-> > > therefore, disable it by default.  
-> > 
-> > Is this info somewhere in the ONFI param page? I suppose once
-> > randomization is enabled we should also tweak the timings and verify
-> > that the controller supports it.  
-> 
-> yes, it is in ONFI param page@Byte# 167 of bit 1 (Vendor Blocks 
-> starting@Byte# 164).
-> 
-> +#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-> +
-> +struct nand_onfi_vendor_macronix {
-> +                u8 reserved[1];
-> +                u8 reliability_func;
-> +} __packed;
-> 
-> 
-> in addition, enable randomizer has no any impact on timing of tRC, tRP, 
-> tWC and so on.
-> host driver just need to check the status pin of RY/#BY as like standard
-> read/write operation flow.
-> 
-> thanks & best regards,
-> Mason
-> 
 
 
-Thanks,
-Miquèl
+On 2019年04月08日 22:39, Borislav Petkov wrote:
+> On Mon, Apr 08, 2019 at 04:12:09PM +0800, Zhao Yakui wrote:
+>> ACRN is an open-source hypervisor maintained by Linuxfoundation.
+> 
+> I think tglx wanted to say "by the Linux Foundation" here.
+
+Sure. It will be fixed.
+> 
+>> This is to add the Linux guest support on acrn-hypervisor.
+> 
+> I think you were told already:
+> 
+> "Please do not use 'This is to add' or 'This adds'. Just say:
+> 
+> Add ...."
+> 
+> So please take your time, work in *all* review feedback instead of
+> hurrying the next version out without addressing all review comments.
+> 
+>> Add x86_hyper_acrn into supported hypervisors array, which enables
+>> Linux ACRN guest running on ACRN hypervisor. It is restricted to X86_64.
+> 
+> So this all talks about *what* the patch does. But that is visible from
+> the diff below and doesn't belong in the commit message.
+> 
+> Rather, your commit message should talk about *why* a change is being
+> done.
+
+I will refine the commit log and only talk about "why" a changed is added.
+
+> 
+>> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
+>> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
+>> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+>> ---
+>> v1->v2: Change the CONFIG_ACRN to CONFIG_ACRN_GUEST, which makes it easy to
+>> understand.
+>>          Remove the export of x86_hyper_acrn.
+>>
+>> v2->v3: Remove the unnecessary dependency of PARAVIRT
+>> ---
+>>   arch/x86/Kconfig                  |  8 ++++++++
+>>   arch/x86/include/asm/hypervisor.h |  1 +
+>>   arch/x86/kernel/cpu/Makefile      |  1 +
+>>   arch/x86/kernel/cpu/acrn.c        | 35 +++++++++++++++++++++++++++++++++++
+>>   arch/x86/kernel/cpu/hypervisor.c  |  4 ++++
+>>   5 files changed, 49 insertions(+)
+>>   create mode 100644 arch/x86/kernel/cpu/acrn.c
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 54d1fbc..d77d215 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -845,6 +845,14 @@ config JAILHOUSE_GUEST
+>>   	  cell. You can leave this option disabled if you only want to start
+>>   	  Jailhouse and run Linux afterwards in the root cell.
+>>   
+>> +config ACRN_GUEST
+>> +	bool "ACRN Guest support"
+>> +	depends on X86_64
+>> +	help
+>> +	  This option allows to run Linux as guest in ACRN hypervisor. Enabling
+>> +	  this will allow the kernel to boot in virtualized environment under
+>> +	  the ACRN hypervisor.
+> 
+> WARNING: please write a paragraph that describes the config symbol fully
+> #47: FILE: arch/x86/Kconfig:848:
+> +config ACRN_GUEST
+> 
+> That help text above could use some of the explanation what ACRN is from
+> your 0/4 message.
+> 
+
+Make sense. I will add some description in patch 0 for the Kconfig 
+description.
+
+>> +
+>>   endif #HYPERVISOR_GUEST
+>>   
+>>   source "arch/x86/Kconfig.cpu"
+>> diff --git a/arch/x86/include/asm/hypervisor.h b/arch/x86/include/asm/hypervisor.h
+>> index 8c5aaba..50a30f6 100644
+>> --- a/arch/x86/include/asm/hypervisor.h
+>> +++ b/arch/x86/include/asm/hypervisor.h
+>> @@ -29,6 +29,7 @@ enum x86_hypervisor_type {
+>>   	X86_HYPER_XEN_HVM,
+>>   	X86_HYPER_KVM,
+>>   	X86_HYPER_JAILHOUSE,
+>> +	X86_HYPER_ACRN,
+>>   };
+>>   
+>>   #ifdef CONFIG_HYPERVISOR_GUEST
+>> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+>> index cfd24f9..17a7cdf 100644
+>> --- a/arch/x86/kernel/cpu/Makefile
+>> +++ b/arch/x86/kernel/cpu/Makefile
+>> @@ -44,6 +44,7 @@ obj-$(CONFIG_X86_CPU_RESCTRL)		+= resctrl/
+>>   obj-$(CONFIG_X86_LOCAL_APIC)		+= perfctr-watchdog.o
+>>   
+>>   obj-$(CONFIG_HYPERVISOR_GUEST)		+= vmware.o hypervisor.o mshyperv.o
+>> +obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
+>>   
+>>   ifdef CONFIG_X86_FEATURE_NAMES
+>>   quiet_cmd_mkcapflags = MKCAP   $@
+>> diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+>> new file mode 100644
+>> index 0000000..3956567
+>> --- /dev/null
+>> +++ b/arch/x86/kernel/cpu/acrn.c
+>> @@ -0,0 +1,35 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * ACRN detection support
+>> + *
+>> + * Copyright (C) 2019 Intel Corporation. All rights reserved.
+>> + *
+>> + * Jason Chen CJ <jason.cj.chen@intel.com>
+>> + * Zhao Yakui <yakui.zhao@intel.com>
+>> + *
+>> + */
+>> +
+>> +#include <asm/hypervisor.h>
+>> +
+>> +static uint32_t __init acrn_detect(void)
+>> +{
+>> +	return hypervisor_cpuid_base("ACRNACRNACRN\0\0", 0);
+>> +}
+>> +
+>> +static void __init acrn_init_platform(void)
+>> +{
+>> +}
+>> +
+>> +static bool acrn_x2apic_available(void)
+>> +{
+>> +	/* do not support x2apic */
+> 
+> Why?
+> 
+> This comment could explain why that choice has been made.
+>
+
+Currently the x2apic is not enabled in the first step.
+Next step it needs to check the cpu info reported by ACRN hypervisor to 
+determine whether the x2apic should be supported.
+How about using the below comments?
+" x2apic is not supported now. Later it will check the cpu info to 
+determine whether the x2apic can be supported or not."
+
+Thanks
+
