@@ -2,91 +2,122 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E78C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45BAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02F20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554904611;
-	bh=N8wWF4mt4uxFFT7fVSC7POcIG3X0yFtEiD4KkVBG5UI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BYnkdLDK8YJGGq1w6W7qV89WLvjNFi+4yC060w3s3fSPSOi+SzU++48I4SyUQ0fMa
-	 3DUXW71QHytudN4NWxM5Zfmdb81zDiJldaRXfppJxOOTR3XEzYTEthDnxiQE3sWWBM
-	 c0aSNLCkELXoITFdxe4tyNCNNVZShBuG9ZBuCKzI=
+	by mail.kernel.org (Postfix) with ESMTP id 7B8AC20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 13:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbfDJN4u (ORCPT
+        id S1732301AbfDJN5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 09:56:50 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42259 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731470AbfDJN4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 09:56:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 103so1966622otd.9;
-        Wed, 10 Apr 2019 06:56:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l9wHU6OXz7jYCVcXbXfWTNfEtZHB/ROeE+wXFopTNNQ=;
-        b=k51Uwtaf0VMYv6I4o4CtjvjUQkObx4pKu63UdoIZoLe3EHvzXSh+NA756VC4Z7DAJR
-         JZT/c2LZZtVvsKcE7+0jMJ4dFIs+ajkhXzeVhu3JWdApiT8B32jgIVFXU6I95/ZG2JVe
-         JISmzeTPLyxeKfOH0jGIxI7VPqZxZYACk+HFLyAZ/OzCIspVlBAeTUDq59HgN7I6tWhM
-         hOvKhCbRXUenpi8dM/0eKSUJ2/ZcmQifjjgXN601rL6kJ32XLQw8Goo6KOLRxer6dfQH
-         RXD3wZkB2SMGwrYdLLVPmeCypUQrDDqQ17FA2e2dhdMs5CZzSJl6H4EJWQAzZ/vvwxDo
-         EG5g==
-X-Gm-Message-State: APjAAAVWiZSBDCS1KGlfHj5C3jn+S92+frevL0juWvJ2Qs0u+ilabDz8
-        5mVE0bMn/8gY3P3C/qSgNWvn9jM=
-X-Google-Smtp-Source: APXvYqzgkJhj/i+rNzOG9HHT0S+BoNQFVrdb300ydUh5N1rMQBjE1BtoguMLYgwrTUHSLu38GVfXnw==
-X-Received: by 2002:a9d:3f4b:: with SMTP id m69mr28270573otc.246.1554904609205;
-        Wed, 10 Apr 2019 06:56:49 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s31sm15586216otb.35.2019.04.10.06.56.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 10 Apr 2019 06:56:48 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 08:56:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     pierre Kuo <vichy.kuo@gmail.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
-Message-ID: <20190410135648.GA25739@bogus>
-References: <20190219074500.16454-1-vichy.kuo@gmail.com>
+        Wed, 10 Apr 2019 09:57:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:10037 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731302AbfDJN5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 09:57:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 06:57:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
+   d="scan'208";a="159933940"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2019 06:57:53 -0700
+Received: from [10.251.26.102] (kliang2-mobl.ccr.corp.intel.com [10.251.26.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 5A8F45807A6;
+        Wed, 10 Apr 2019 06:57:52 -0700 (PDT)
+Subject: Re: [PATCH 1/2] perf/x86/intel: Support adaptive PEBS for fixed
+ counters
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        acme@kernel.org, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <1554858600-148296-1-git-send-email-kan.liang@linux.intel.com>
+ <1554858600-148296-2-git-send-email-kan.liang@linux.intel.com>
+ <20190410074139.GW11158@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <d23c9f80-b73e-693a-f4ab-507e4108c46b@linux.intel.com>
+Date:   Wed, 10 Apr 2019 09:57:50 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190219074500.16454-1-vichy.kuo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190410074139.GW11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 03:45:00PM +0800, pierre Kuo wrote:
-> The __reserved_mem_init_node will call region specific reserved memory
-> init codes, but once all compatibled init codes failed, the memory region
-> will left in memory.reserved and cause leakage.
-> 
-> Take cma reserve memory DTS for example, if user declare 1MB size,
-> which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
-> pageblock_order)), rmem_cma_setup will return -EINVAL.
-> Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
-> property is not set. If finally there is no reserved memory init pick up
-> this memory, kernel will left the 1MB leak in memory.reserved.
-> 
-> This patch will remove this kind of memory from memory.reserved, only
-> when __reserved_mem_init_node return neither 0 nor -ENOENT.
-> 
-> Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
-> ---
->  drivers/of/of_reserved_mem.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
 
-As no one else seems to have any comments, I've applied it.
 
-Rob
+On 4/10/2019 3:41 AM, Peter Zijlstra wrote:
+> On Tue, Apr 09, 2019 at 06:09:59PM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Fixed counters can also generate adaptive PEBS record, if the
+>> corresponding bit in IA32_FIXED_CTR_CTRL is set.
+>> Otherwise, only basic record is generated.
+>>
+>> Unconditionally set the bit when PEBS is enabled on fixed counters.
+>> Let MSR_PEBS_CFG decide which format of PEBS record should be generated.
+>> There is no harmful to leave the bit set.
+> 
+> I'll merge this back into:
+> 
+>    Subject: perf/x86/intel: Support adaptive PEBSv4
+> 
+> such that this bug never existed, ok?
+
+Yes, please.
+
+Thanks,
+Kan
+
+> 
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   arch/x86/events/intel/core.c      | 5 +++++
+>>   arch/x86/include/asm/perf_event.h | 1 +
+>>   2 files changed, 6 insertions(+)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 56df0f6..f34d92b 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -2174,6 +2174,11 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+>>   	bits <<= (idx * 4);
+>>   	mask = 0xfULL << (idx * 4);
+>>   
+>> +	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip) {
+>> +		bits |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
+>> +		mask |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
+>> +	}
+>> +
+>>   	rdmsrl(hwc->config_base, ctrl_val);
+>>   	ctrl_val &= ~mask;
+>>   	ctrl_val |= bits;
+>> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+>> index dcb8bac..ce0dc88 100644
+>> --- a/arch/x86/include/asm/perf_event.h
+>> +++ b/arch/x86/include/asm/perf_event.h
+>> @@ -33,6 +33,7 @@
+>>   #define HSW_IN_TX					(1ULL << 32)
+>>   #define HSW_IN_TX_CHECKPOINTED				(1ULL << 33)
+>>   #define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
+>> +#define ICL_FIXED_0_ADAPTIVE				(1ULL << 32)
+>>   
+>>   #define AMD64_EVENTSEL_INT_CORE_ENABLE			(1ULL << 36)
+>>   #define AMD64_EVENTSEL_GUESTONLY			(1ULL << 40)
+>> -- 
+>> 2.7.4
+>>
