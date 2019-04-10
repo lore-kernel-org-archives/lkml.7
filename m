@@ -3,131 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65832C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D4FC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFEB20830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554933241;
-	bh=igfqVUJvHfC4/Lc+rM2btJrQ0bssNL4DEJbb09pJ4uc=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=c9zMGuxk0/beL2oY4xGFqyVqe0wFqzBulIIwzKbWAkltfWLptvcRCqePByTCJ0R+f
-	 4VJk39cciLJbesQ2ay+wAepwD8vcF4+iADadfCuzxazxRz04EUP4qitjIyJXr4zEKA
-	 G7f9JpH5b0xFQ6ctyeokcKU12QsRPPKZISOiaWq8=
+	by mail.kernel.org (Postfix) with ESMTP id 04E472082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 21:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gv1MQ9tG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDJVyA (ORCPT
+        id S1726588AbfDJV6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 17:54:00 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38858 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfDJVx7 (ORCPT
+        Wed, 10 Apr 2019 17:58:03 -0400
+Received: from mail-vk1-f178.google.com ([209.85.221.178]:36158 "EHLO
+        mail-vk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDJV6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 17:53:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d13so4807578qth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:53:58 -0700 (PDT)
+        Wed, 10 Apr 2019 17:58:03 -0400
+Received: by mail-vk1-f178.google.com with SMTP id w140so925502vkd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FNNkCCOpCVrsD7hVcfnPcZYMncHlpeZFL/47O/ZmfVU=;
-        b=ZI6D8fT9Q4gSnzMXM2iZEcJE9Wm75O//EUXUb2Ww2xS3b0PiJmxUCt2PsO9RA/+bHz
-         MFH2mGl3Gq5vEY+pOTNI3WMBmE9am7YInZQV5mo+TAtuW54EAj48nL8sOz6OlbS90oNF
-         IXl9eth7hLQIv7iYjFHIyIiUPz+EqhrlYijv6Thaf2Dj7BffHdQ/tGNP2Jbn078IBivz
-         4YZ/cUwGNN9Vy6O+61Ws1aS9onKIOhnsltISWfZ3XM4Gq4Z4mJjBb+rASUd/7MOmsylG
-         /+mHC1pIdI0KJe+2wcLDVB2WUyAu9MO/aBe4PFrvqZLGYRLKEUfgkhKqZZi8r2eTRacp
-         fJ7Q==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zQ6wwUQrK1NqHrZtbqa5TkZR4Gt0ENtEbKzfcyHpppE=;
+        b=gv1MQ9tGqukjy1cxAUfCcBksLGw3OlCHJEx6K+6Mj+1qUsoKucc/YgqMNaG86eMB1D
+         WTZemX8QDCe1WFlW0Juf+fhQeN08D7xVWNfo88NerKEYK9jpXnm7gPmG9WLWOA3Q0qGA
+         0Zf/bWUhqXgosvN7oHj639aOLqJscqb1wUEVI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FNNkCCOpCVrsD7hVcfnPcZYMncHlpeZFL/47O/ZmfVU=;
-        b=RviPtNOcV/jPtYSd5zKDN3wunCvIQD6/XlKQvWVCwcOJLmj1JhSflZdZk/k++RWkNj
-         ANw1EHANDmzey4+Z/D/0Bgzv9oHGXNS4FKn9hzshcBOvyFggXIBXsWzjPqDimkD1r6Mc
-         ehXXVwdxh3n2NARfTHBUFNpgw5kwsnrY+DB3o38IKManxQKLVEcq7SA26FpxMlUNEO9d
-         +9mMOjV5/A6YNkKYAksVT3AostldIAhRRtCd3CXhk9Rb7x/s6Nvx6OdzeWV7XZejaQnt
-         35vVohqAOskKTH2ZNYUKCzcKQT7z2PC0x2216KvmW28OZvMqwN5eWYcSm5d/F4Ns9fgB
-         bS0Q==
-X-Gm-Message-State: APjAAAUw4ovVq6TY8Z+JFjPjBr2aS6MJ2vy2MXdDAFfrls1+aOqiUz5t
-        VSA69snd3lHY93HQow/nIdmPry0s
-X-Google-Smtp-Source: APXvYqwNdA1fNbFd7MKIX0uPWFWouBHyMUp/tZkitQiRGpWSXgbiGdklMlOz9ouTwNJOQr28l6HlYw==
-X-Received: by 2002:a0c:8772:: with SMTP id 47mr37237729qvi.120.1554933238454;
-        Wed, 10 Apr 2019 14:53:58 -0700 (PDT)
-Received: from [10.84.150.60] ([167.220.148.60])
-        by smtp.gmail.com with ESMTPSA id u44sm18810575qte.40.2019.04.10.14.53.57
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zQ6wwUQrK1NqHrZtbqa5TkZR4Gt0ENtEbKzfcyHpppE=;
+        b=BSx0teldFTdEWB8nuL60GTa3T8J0SWm4wgXkVHeeO4O+FPw9Vtupqg8NrrguK2Ti7g
+         Tyzeds7oEOLCbxCfLckhnIzkR+j3nMFo0Ib3y6dxXTDF/7xmvZyhyscxKBsqeqKn5ZUb
+         H5I0uEdu/dke71MPH1Tnal8fGqcpkZ+yn7bdmVy5Dj/i+ZoGyX0LGuWmAI5a6hQkZal+
+         jTj+aDTz5ycutluN8yrMuycSNeL4TNi6pIlvfH48EVId7GwBb3xuhjR2W6QMZ2y3XffE
+         LJBzXaTQ7opEpKwn7mcJxFZNi7E0S08V5RVPg6qa0VxgfvjwLRaS/fpccgDalIzjEz9P
+         JhkQ==
+X-Gm-Message-State: APjAAAXk8NCgPLm9LlRCyE3DwY9fjcDJxbO3lbi40kw8k1Z3IVKiBRvC
+        +GpPzM/UMn/lxLsv0P4MHTEtQ4VKLhI=
+X-Google-Smtp-Source: APXvYqzwDvmV5N3syCkoeEBTAL0ogOVoXmRE7W2Qp5F7QVVM8r4hKWER0hmHK27xcpf1u7hTGQb8cg==
+X-Received: by 2002:a1f:2b8e:: with SMTP id r136mr25307247vkr.48.1554933481186;
+        Wed, 10 Apr 2019 14:58:01 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id d193sm5764984vkd.41.2019.04.10.14.57.59
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 14:53:57 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>
-References: <20190410212627.29514-1-okaya@kernel.org>
- <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
-Message-ID: <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org>
-Date:   Wed, 10 Apr 2019 17:53:57 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 10 Apr 2019 14:57:59 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id j184so2275673vsd.11
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 14:57:59 -0700 (PDT)
+X-Received: by 2002:a67:1345:: with SMTP id 66mr24870637vst.30.1554933478741;
+ Wed, 10 Apr 2019 14:57:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+ <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
+ <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+ <20190321175122.GA1587@sol.localdomain> <20190410031734.GB7140@sol.localdomain>
+ <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com> <20190410190729.GA120258@gmail.com>
+In-Reply-To: <20190410190729.GA120258@gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 10 Apr 2019 14:57:46 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
+Message-ID: <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/2019 5:45 PM, Kees Cook wrote:
-> On Wed, Apr 10, 2019 at 2:26 PM Sinan Kaya <okaya@kernel.org> wrote:
->>
->> We can't seem to have a kernel with CONFIG_EXPERT set but
->> CONFIG_DEBUG_KERNEL unset these days.
->>
->> While some of the features under the CONFIG_EXPERT require
->> CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
->>
->> The meaning of CONFIG_EXPERT and CONFIG_DEBUG_KERNEL has been
->> mixed here.
-> 
-> I don't agree: the point of EXPERT is to show _everything_, which
-> means DEBUG_KERNEL should be selected to show those options as well. I
-> think this is fine as-is. What is the problem you want to solve?
-> 
-> I think of it as low (nothing selected) medium (DEBUG_KERNEL) and high
-> (EXPERT and DEBUG_KERNEL). So EXPERT enables DEBUG_KERNEL too.
-> 
+On Wed, Apr 10, 2019 at 12:07 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> That didn't answer my question.  My question is what is the purpose of this?  If
+> there was actual buffer overflow when __GFP_COMP isn't specified that would make
+> perfect sense, but AFAICS there isn't.  So why does hardened usercopy consider
+> it broken when __GFP_COMP isn't specified?
 
-Sure, let's see if there is a better option.
+The goal of CONFIG_HARDENED_USERCOPY_PAGESPAN was to detect copies
+across page boundaries in memory allocated by the page allocator.
+There appear to be enough cases of allocations that span pages but do
+not mark them with __GFP_COMP, so this logic hasn't proven useful in
+the real world (which is why no one should use the ..._PAGESPAN config
+in production). I'd like to get the kernel to the point where hardened
+usercopy can correctly do these checks (right now it's mainly only
+useful at checking for overflows in slub and slab), but it'll take
+time/focus for a while. No one has had time yet to track all of these
+down and fix them. (I defer to Laura and Rik on the design of the
+pagespan checks; they did the bulk of the work there.)
 
-I don't want any of the debug features in my kernel but still
-need all the expert features. My kernel is considered a production
-kernel. I don't really want to ship all the good debug enables.
+Does that help explain it, or am I still missing your question?
 
-On the other hand, I need the features under CONFIG_EXPERT to have
-a functional system.
-
-Let's take "multiple users" as an example.
-
-What's the point of having a kernel without multiple users? :)
-
-I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
-as none of the features except KALLSYMS depend on it. If there was
-a compile time dependency, I'd say move it to the things that need
-it as this patch suggests.
-
-P.S. I found a circular dependency now. I can respin the patch based
-on feedback.
+-- 
+Kees Cook
