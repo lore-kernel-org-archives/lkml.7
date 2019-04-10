@@ -2,163 +2,402 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB1FC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C07C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5528020850
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAC120850
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 20:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qwkrXTMM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkcIrXgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfDJU3W (ORCPT
+        id S1726828AbfDJU3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 16:29:22 -0400
-Received: from mail.efficios.com ([167.114.142.138]:35500 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfDJU3V (ORCPT
+        Wed, 10 Apr 2019 16:29:36 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36909 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfDJU3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 16:29:21 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 898471D540B;
-        Wed, 10 Apr 2019 16:29:20 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id 9SoFt2tLLfu3; Wed, 10 Apr 2019 16:29:20 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 2B11F1D5402;
-        Wed, 10 Apr 2019 16:29:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2B11F1D5402
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1554928160;
-        bh=SnPtn6Kglai7FPgDVxEngiNmEWyxw0Il9J+v8PyYSMs=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=qwkrXTMMTu771lCi/wNtsbqCZfQ0NZwIL9Wjqdf6x0EGp2slE23uFz/rlVqi8AEf3
-         bGvsCAyOjqk+rzf8mlIiwAt8r/vwW0jICOszSU3bedobzHzrGWFmC71qocMXGuGKCt
-         YwHRxJPd47imW4VyQMkbJrzhsFHMlQWL5+HUxpIrgiVZ5TAuPfekRhefghSNG2Acfk
-         SDdNeSZFvXEWqoOrcAtH9wH9Sh8ftim4eX2woUWYCnMdlD320YBTemXCWcaLmMC71+
-         cQ/EAKfsTq9UGofAW4rv16QOOOyFAtfT1VeCd9zgBTJldteBawMQl5VJ9vejl1oGru
-         f6RhYmv2JQhxQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id U09vR1nmnf5f; Wed, 10 Apr 2019 16:29:20 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 0C3391D53F6;
-        Wed, 10 Apr 2019 16:29:20 -0400 (EDT)
-Date:   Wed, 10 Apr 2019 16:29:19 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>
-Message-ID: <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com>
-References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com>
-Subject: Re: rseq/arm32: choosing rseq code signature
+        Wed, 10 Apr 2019 16:29:36 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v14so4005642wmf.2;
+        Wed, 10 Apr 2019 13:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=edbqvC5ISJb/a1nvB+Du32vNFh0jCyJ1iWtGNjm6Nlw=;
+        b=ZkcIrXgHRqBxZ27Gj+fr/XLY7e1+dvGcuCmNw2JcNtKRygNJRLMi7EX2VbqmhS5mbX
+         oYVKrEtJ+ai/KOVkygnK5+6larTykMJjYLda3EEKVE8LsYt423NiE0pW2J8smcqE419+
+         V7V4TFItYkVjBkyhnDCT0AzEeUTMV6Qgrdedgk0tCX6thMZ9b52foTs18CwKygzV567j
+         0dKbbktOUWJc7bZ/J6E3aqQ6BX2xIg+NfgO81xOsMO37v/cMtuiP3TA1SA/F7X2G/bID
+         SUukm8xtmelA3GBMvXZ2pmk/L3SUSXTCY90tlBZOfYfaOxQu/Ub3hkZXGCBLt1aTWIb5
+         zVQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=edbqvC5ISJb/a1nvB+Du32vNFh0jCyJ1iWtGNjm6Nlw=;
+        b=W5oLe5sGcvhQNuwbttR1zi+ajyymO2J3yge+X/xeOsj585T3BmpT75CzzwfoSyBEKH
+         kv6cOgAcMhK1JoHbTYtEl8c6zKF7DOp2NSlCEXVef6l8IPLg1SBwPmadh7xavxxqIkMp
+         VDwU8N+w0RQhKAf1Fo594/5Fwjvb+CORvYoQdLLSxkjghOM+YfysNGwTVIAKxqUXlNTu
+         cUsjHMD/7s36aaUp0eMaev3j/tqtKGUX/LlXxPslqs5HYGkDvjOPVKBXV+xbdzLV0JB5
+         NHm39E4KoYSEe0yDVk/FyTauvYi4UOGc9+MCt/yY8XSfEKV1iVzk0LgrVlxtLK/O4csE
+         K7aQ==
+X-Gm-Message-State: APjAAAW2ApWhhjmGth10XENZOEsBMvLOyCy2pfu1KfIWJdel+BJKmrqS
+        r0sjUv4PWa6OKcVpu+i83JT08iDTBCA=
+X-Google-Smtp-Source: APXvYqxPNnL9jgjku0buCLoxa/B2BJXFzUqX26QIJu4VyTmsW7kycVF9/xg4Jjymob/VrG+MS0Km1A==
+X-Received: by 2002:a05:600c:ca:: with SMTP id u10mr4189500wmm.122.1554928173516;
+        Wed, 10 Apr 2019 13:29:33 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id x21sm29493817wrd.45.2019.04.10.13.29.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 13:29:32 -0700 (PDT)
+Subject: [PATCH 05/11] platform/x86: asus-wmi: Support queued WMI event codes
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
+Message-ID: <777027ac-921e-ee37-493e-974b49242d18@gmail.com>
+Date:   Wed, 10 Apr 2019 22:29:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/arm32: choosing rseq code signature
-Thread-Index: lqjgiUr5F3kvBEqSpepP+LTQoQudsWBX8YP7
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 9, 2019, at 3:32 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+Event codes are expected to be polled from a queue on at least some
+models.
 
-> Hi Will,
-> 
-> We are about to include the code signature required prior to restartable
-> sequences abort handlers into glibc, which will make this ABI choice final.
-> We need architecture maintainer input on that signature value.
-> 
-> That code signature is placed before each abort handler, so the kernel can
-> validate that it is indeed jumping to an abort handler (and not some
-> arbitrary attacker-chosen code). The signature is never executed.
-> 
-> The current discussion thread on the glibc mailing list leads us towards
-> using a trap with uncommon immediate operand, which simplifies integration
-> with disassemblers, emulators, makes it easier to debug if the control
-> flow gets redirected there by mistake, and is nicer for some architecture's
-> speculative execution.
-> 
-> We can have different signatures for each sub-architecture, as long as they
-> don't have to co-exist within the same process. We can special-case with
-> #ifdef for each sub-architecture and endianness if need be. If the architecture
-> has instruction set extensions that can co-exist with the architecture
-> instruction set within the same process (e.g. thumb for arm), we need to take
-> into account to which instruction the chosen signature value would map (and
-> possibly decide if we need to extend rseq to support many signatures).
-> 
-> Here is an example of rseq signature definition template:
-> 
-> /*
-> * TODO: document trap instruction objdump output on each sub-architecture
-> * instruction sets, as well as instruction set extensions.
-> */
-> #define RSEQ_SIG 0x########
-> 
-> Ideally we'd need a patch on top of the Linux kernel
-> tools/testing/selftests/rseq/rseq-arm.h file that updates
-> the signature value, so I can then pick it up for the glibc
-> patchset.
+The WMI event codes are pushed into queue based on circular buffer. After
+INIT method is called ACPI code is allowed to push events into this buffer
+the INIT method can not be reverted. If the module is unloaded and an
+event (such as hotkey press) gets emitted before inserting it back the
+events get processed delayed by one or, if the queue overflows,
+additionally delayed by about 3 seconds.
 
-Would the following diff work for you ? If so, can I get your
-acked-by ?
+Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
 
-diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
-index 5f262c54364f..1f261ad2ac1b 100644
---- a/tools/testing/selftests/rseq/rseq-arm.h
-+++ b/tools/testing/selftests/rseq/rseq-arm.h
-@@ -5,7 +5,17 @@
-  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-  */
+FX505GM
+Device (ATKD)
+{ ..
+    Name (ATKQ, Package (0x10)
+    {
+        0xFFFFFFFF, ..
+    }
+
+    Method (IANQ, 1, Serialized)
+    {
+        If ((AQNO >= 0x10))
+        {
+            Local0 = 0x64
+            While ((Local0 && (AQNO >= 0x10)))
+            {
+                Local0--
+                Sleep (0x0A)
+            }
+            ...
+        ..
+        AQTI++
+        AQTI &= 0x0F
+        ATKQ [AQTI] = Arg0
+        ...
+    }
+
+    Method (GANQ, 0, Serialized)
+    {
+        ..
+        If (AQNO)
+        {
+            ...
+            Local0 = DerefOf (ATKQ [AQHI])
+            AQHI++
+            AQHI &= 0x0F
+            Return (Local0)
+        }
+
+        Return (One)
+    }
+
+This code is almost identical to K54C, which does return Ones on empty
+queue.
+
+K54C:
+Method (GANQ, 0, Serialized)
+{
+    If (AQNO)
+    {
+        ...
+        Return (Local0)
+    }
+
+    Return (Ones)
+}
+
+The fix flushes the old key codes out of the queue on load and after
+receiving event the queue is read until either ..FFFF or 1 is encountered.
+
+It might be considered a minor issue and no normal user would likely to
+observe this (there is little reason unloading the driver), but it does
+significantly frustrate a developer who is unlucky enough to encounter
+this.
+
+Introduce functionality for flushing and processing queued codes, which is
+enabled via quirk flag for ASUS7000. It might be considered if it is
+reasonable to enable it everywhere (might introduce regressions) or always
+try to flush the queue on module load and try to detect if this quirk is
+present in the future.
+
+This patch limits the effect to the specific hardware defined by ASUS7000
+device that is used for driver detection by vendor driver of Fx505. The
+fallback is also implemented in case initial flush fails.
+
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c |   1 +
+ drivers/platform/x86/asus-wmi.c    | 122 ++++++++++++++++++++++-------
+ drivers/platform/x86/asus-wmi.h    |   2 +
+ 3 files changed, 97 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index cc5f0765a8d9..357d273ed336 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -438,6 +438,7 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
  
--#define RSEQ_SIG       0x53053053
-+/*
-+ * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
-+ * value 0x5305. This traps if user-space reaches this instruction by mistake,
-+ * and the uncommon operand ensures the kernel does not move the instruction
-+ * pointer to attacker-controlled code on rseq abort.
-+ *
-+ * The instruction pattern is:
-+ *
-+ * e7f530f5    udf    #21253    ; 0x5305
-+ */
-+#define RSEQ_SIG       0xe7f530f5
+ 	if (acpi_dev_found("ASUS7000")) {
+ 		driver->quirks->force_dsts = true;
++		driver->quirks->wmi_event_queue = true;
+ 	}
+ }
  
- #define rseq_smp_mb()  __asm__ __volatile__ ("dmb" ::: "memory", "cc")
- #define rseq_smp_rmb() __asm__ __volatile__ ("dmb" ::: "memory", "cc")
-@@ -78,7 +88,8 @@ do {                                                                  \
-                __rseq_str(table_label) ":\n\t"                         \
-                ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
-                ".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
--               ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
-+               ".arm\n\t"                                              \
-+               ".inst " __rseq_str(RSEQ_SIG) "\n\t"                    \
-                __rseq_str(label) ":\n\t"                               \
-                teardown                                                \
-                "b %l[" __rseq_str(abort_label) "]\n\t"
-
-
-> 
-> Thanks!
-> 
-> Mathieu
-> 
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 58890d87d50c..e0a710c64dea 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -80,6 +80,12 @@ MODULE_LICENSE("GPL");
+ #define USB_INTEL_XUSB2PR		0xD0
+ #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
+ 
++#define WMI_EVENT_QUEUE_SIZE		0x10
++#define WMI_EVENT_QUEUE_END		0x1
++#define WMI_EVENT_MASK			0xFFFF
++/* The event value is always the same. */
++#define WMI_EVENT_VALUE			0xFF
++
+ static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+ 
+ static bool ashs_present(void)
+@@ -143,6 +149,7 @@ struct asus_wmi {
+ 	int dsts_id;
+ 	int spec;
+ 	int sfun;
++	bool wmi_event_queue;
+ 
+ 	struct input_dev *inputdev;
+ 	struct backlight_device *backlight_device;
+@@ -1637,77 +1644,126 @@ static int is_display_toggle(int code)
+ 	return 0;
+ }
+ 
+-static void asus_wmi_notify(u32 value, void *context)
++static int asus_poll_wmi_event(u32 value)
+ {
+-	struct asus_wmi *asus = context;
+-	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+ 	acpi_status status;
+-	int code;
+-	int orig_code;
+-	unsigned int key_value = 1;
+-	bool autorelease = 1;
++	int code = -EIO;
+ 
+-	status = wmi_get_event_data(value, &response);
+-	if (status != AE_OK) {
+-		pr_err("bad event status 0x%x\n", status);
+-		return;
++	status = wmi_get_event_data(value, &output);
++	if (ACPI_FAILURE(status)) {
++		pr_warn(PR "Failed to get WMI event code: %s\n",
++				acpi_format_exception(status));
++		return code;
+ 	}
+ 
+-	obj = (union acpi_object *)response.pointer;
++	obj = (union acpi_object *)output.pointer;
+ 
+-	if (!obj || obj->type != ACPI_TYPE_INTEGER)
+-		goto exit;
++	if (obj && obj->type == ACPI_TYPE_INTEGER)
++		code = (int)(obj->integer.value & WMI_EVENT_MASK);
++
++	kfree(obj);
++	return code;
++}
++
++static void asus_wmi_handle_notify(int code, struct asus_wmi *asus)
++{
++	int orig_code;
++	unsigned int key_value = 1;
++	bool autorelease = 1;
+ 
+-	code = obj->integer.value;
+ 	orig_code = code;
+ 
+ 	if (asus->driver->key_filter) {
+ 		asus->driver->key_filter(asus->driver, &code, &key_value,
+ 					 &autorelease);
+ 		if (code == ASUS_WMI_KEY_IGNORE)
+-			goto exit;
++			return;
+ 	}
+ 
+ 	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
+ 		code = ASUS_WMI_BRN_UP;
+-	else if (code >= NOTIFY_BRNDOWN_MIN &&
+-		 code <= NOTIFY_BRNDOWN_MAX)
++	else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
+ 		code = ASUS_WMI_BRN_DOWN;
+ 
+ 	if (code == ASUS_WMI_BRN_DOWN || code == ASUS_WMI_BRN_UP) {
+ 		if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 			asus_wmi_backlight_notify(asus, orig_code);
+-			goto exit;
++			return;
+ 		}
+ 	}
+ 
+ 	if (code == NOTIFY_KBD_BRTUP) {
+ 		kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+-		goto exit;
++		return;
+ 	}
+ 	if (code == NOTIFY_KBD_BRTDWN) {
+ 		kbd_led_set_by_kbd(asus, asus->kbd_led_wk - 1);
+-		goto exit;
++		return;
+ 	}
+ 	if (code == NOTIFY_KBD_BRTTOGGLE) {
+ 		if (asus->kbd_led_wk == asus->kbd_led.max_brightness)
+ 			kbd_led_set_by_kbd(asus, 0);
+ 		else
+ 			kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+-		goto exit;
++		return;
+ 	}
+ 
+-	if (is_display_toggle(code) &&
+-	    asus->driver->quirks->no_display_toggle)
+-		goto exit;
++	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
++		return;
+ 
+ 	if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
++}
+ 
+-exit:
+-	kfree(obj);
++static void asus_wmi_notify(u32 value, void *context)
++{
++	struct asus_wmi *asus = context;
++	int code;
++	int i;
++
++	for (i = 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
++		code = asus_poll_wmi_event(value);
++
++		if (code < 0) {
++			pr_warn(PR "Failed to get event code: 0x%x\n", code);
++			return;
++		}
++
++		if (code == WMI_EVENT_QUEUE_END || code == WMI_EVENT_MASK)
++			return;
++
++		asus_wmi_handle_notify(code, asus);
++
++		if (!asus->wmi_event_queue)
++			return;
++	}
++
++	pr_warn(PR "Failed to process event queue, last code: 0x%x\n", code);
++}
++
++static int asus_wmi_notify_queue_flush(struct asus_wmi *asus)
++{
++	int code;
++	int i;
++
++	for (i = 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
++		code = asus_poll_wmi_event(WMI_EVENT_VALUE);
++
++		if (code < 0) {
++			pr_warn(PR "Failed to poll event during flush: %d\n",
++					code);
++			return code;
++		}
++
++		if (code == WMI_EVENT_QUEUE_END || code == WMI_EVENT_MASK)
++			return 0;
++	}
++
++	pr_warn(PR "Failed to flush event queue\n");
++	return -EIO;
+ }
+ 
+ /*
+@@ -2159,8 +2215,18 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		err = asus_wmi_backlight_init(asus);
+ 		if (err && err != -ENODEV)
+ 			goto fail_backlight;
+-	} else
++	} else {
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
++	}
++
++	/** Try to initialize queue and fallback if it fails. */
++	if (asus->driver->quirks->wmi_event_queue) {
++		err = asus_wmi_notify_queue_flush(asus);
++		if (err)
++			asus->driver->quirks->wmi_event_queue = false;
++		else
++			pr_info(PR "WMI event queue enabled\n");
++	}
+ 
+ 	status = wmi_install_notify_handler(asus->driver->event_guid,
+ 					    asus_wmi_notify, asus);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 94056da02fde..1248658d6442 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -54,6 +54,8 @@ struct quirk_entry {
+ 	 */
+ 	int no_display_toggle;
+ 	u32 xusb2pr;
++	/* Multiple event codes can be queued in buffer. */
++	bool wmi_event_queue;
+ 	/**
+ 	 * Force DSTS instead of DSCS and skip detection. Useful if WMNB
+ 	 * returns nothing on unknown method call.
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.17.1
+
