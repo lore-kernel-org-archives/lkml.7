@@ -2,294 +2,209 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75AEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFD9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B253620830
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD802082A
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 22:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="prWWO71w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbfDJWEE (ORCPT
+        id S1726664AbfDJWEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 18:04:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11254 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbfDJWED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 18:04:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 15:04:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,334,1549958400"; 
-   d="p7s'?scan'208";a="163200774"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 15:04:01 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX105.amr.corp.intel.com ([169.254.2.167]) with mapi id 14.03.0415.000;
- Wed, 10 Apr 2019 15:04:01 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "mingo@kernel.org" <mingo@kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "hch@lst.de" <hch@lst.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 2/2] x86/pci: Clean up usage of X86_DEV_DMA_OPS
-Thread-Topic: [PATCH 2/2] x86/pci: Clean up usage of X86_DEV_DMA_OPS
-Thread-Index: AQHU73PVlfD6CeGreEGOC3obJdahu6Y1gciAgADh9YCAAAU5gA==
-Date:   Wed, 10 Apr 2019 22:03:59 +0000
-Message-ID: <af8787f3bdd8f48e568ce421030b2b4415d79678.camel@intel.com>
-References: <20190410080220.21705-1-hch@lst.de>
-         <20190410080220.21705-3-hch@lst.de> <20190410081617.GA54229@gmail.com>
-         <20190410214500.GK256045@google.com>
-In-Reply-To: <20190410214500.GK256045@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.7.162]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-/z1VEyz5xNWnpBvJvX2X"
+        Wed, 10 Apr 2019 18:04:16 -0400
+Received: from mail.efficios.com ([167.114.142.138]:44532 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDJWEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 18:04:16 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 7A6061D6EC4;
+        Wed, 10 Apr 2019 18:04:14 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id UKkLdQt7k0IP; Wed, 10 Apr 2019 18:04:14 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id DD78D1D6EBC;
+        Wed, 10 Apr 2019 18:04:13 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DD78D1D6EBC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554933853;
+        bh=zXHo3ascIvnn6Gi8Rh+uqbICiFkpyNMt9L4NLn8wBjQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=prWWO71wYyz/ZbqR7PMsRA3g1mONVt3dv3+vihTTquv+XaM35n81jkR98FO7t4qq4
+         op6kwJfSkOzZDf98o87AqztB+crKGxsDzQe2ei6R8T5FVWbfXpk3bS7JECHWD5d/Zf
+         H5osmt8uaOmiiFX6qTcMCMcZp6IEwLvpkCO5/A6adULwWIilXiFF4MDb5+V0qgm7Ap
+         Xc0k/mGBKTFlI/5qbtZktX893FNTfJZJMi1bHYzUWFxmj3oc0AM+Wz9msXilKnGrT1
+         DQLBMqJKfxeDNK3Q2ebnoZV/bFp1SuP2lkpgALJvOOMnRvswfA1sozOtf+l05IKdhb
+         L/Qa5bYbFm5vQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id MQ6eOleVNaJO; Wed, 10 Apr 2019 18:04:13 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id BB2C21D6EB5;
+        Wed, 10 Apr 2019 18:04:13 -0400 (EDT)
+Date:   Wed, 10 Apr 2019 18:04:13 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Sinan Kaya <Okaya@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>, gor <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>
+Message-ID: <1603884360.3426.1554933853589.JavaMail.zimbra@efficios.com>
+In-Reply-To: <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org>
+References: <20190410212627.29514-1-okaya@kernel.org> <CAGXu5j+uBuPjDc+gGcxW_QoJJi7sQZ8m=Zg-Q2wKDxyTt7yGvg@mail.gmail.com> <a9508cc3-3385-256e-2f27-c1e0a770ba69@kernel.org>
+Subject: Re: [PATCH v1] init: Do not select DEBUG_KERNEL by default
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: init: Do not select DEBUG_KERNEL by default
+Thread-Index: t/tBgzHoDIbXdXv4lUazlpV8CgqggA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-/z1VEyz5xNWnpBvJvX2X
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+----- On Apr 10, 2019, at 5:53 PM, Sinan Kaya Okaya@kernel.org wrote:
 
-On Wed, 2019-04-10 at 16:45 -0500, Bjorn Helgaas wrote:
-> [+cc Keith, Jonathan (VMD guys)]
->=20
-> I'm OK with this from a PCI perspective.  It would be nice if
->=20
->   dma_domain_list
->   dma_domain_list_lock
->   add_dma_domain()
->   del_dma_domain()
->   set_dma_domain_ops()
->=20
-> could all be moved to vmd.c, since they're really only used there.
->=20
-> But we don't really have a good way to call host bridge-specific code
-> like set_dma_domain_ops() except via pcibios_add_device().  Someday
-> maybe pcibios_add_device() will become a host bridge method.
-I think these could have been contained to vmd.c with the host bridge
-add_device callback [1] but I can't seem to find whatever came about
-that discussion
+> On 4/10/2019 5:45 PM, Kees Cook wrote:
+>> On Wed, Apr 10, 2019 at 2:26 PM Sinan Kaya <okaya@kernel.org> wrote:
+>>>
+>>> We can't seem to have a kernel with CONFIG_EXPERT set but
+>>> CONFIG_DEBUG_KERNEL unset these days.
+>>>
+>>> While some of the features under the CONFIG_EXPERT require
+>>> CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
+>>>
+>>> The meaning of CONFIG_EXPERT and CONFIG_DEBUG_KERNEL has been
+>>> mixed here.
+>> 
+>> I don't agree: the point of EXPERT is to show _everything_, which
+>> means DEBUG_KERNEL should be selected to show those options as well. I
+>> think this is fine as-is. What is the problem you want to solve?
+>> 
+>> I think of it as low (nothing selected) medium (DEBUG_KERNEL) and high
+>> (EXPERT and DEBUG_KERNEL). So EXPERT enables DEBUG_KERNEL too.
+>> 
+> 
+> Sure, let's see if there is a better option.
+> 
+> I don't want any of the debug features in my kernel but still
+> need all the expert features. My kernel is considered a production
+> kernel. I don't really want to ship all the good debug enables.
+> 
+> On the other hand, I need the features under CONFIG_EXPERT to have
+> a functional system.
+> 
+> Let's take "multiple users" as an example.
+> 
+> What's the point of having a kernel without multiple users? :)
+> 
+> I don't see the relationship between CONFIG_DEBUG and CONFIG_EXPERT
+> as none of the features except KALLSYMS depend on it. If there was
+> a compile time dependency, I'd say move it to the things that need
+> it as this patch suggests.
+> 
+> P.S. I found a circular dependency now. I can respin the patch based
+> on feedback.
 
-[1] https://marc.info/?l=3Dlinux-pci&m=3D153337765811720&w=3D2
+I think part of the issue here is that a few .c/.S files use CONFIG_DEBUG_KERNEL
+as #ifdef directly, which I'm not sure was meant to be. For instance:
 
+arch/powerpc/kernel/sysfs.c:
 
-
-Either way, this looks fine
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-
-
->=20
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->=20
->=20
-> On Wed, Apr 10, 2019 at 10:16:17AM +0200, Ingo Molnar wrote:
-> > (+Cc. Patch quoted below. Acked-by from an x86 perspective.)
-> >=20
-> > * Christoph Hellwig <hch@lst.de> wrote:
-> >=20
-> > > We have supported per-device dma_map_ops in generic code for a
-> > > long
-> > > time, and this symbol just guards the inclusion of the
-> > > dma_map_ops
-> > > registry used for vmd.  Stop enabling it for anything but vmd.
-> > >=20
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/x86/Kconfig               | 3 ---
-> > >  drivers/misc/mic/Kconfig       | 4 ++--
-> > >  drivers/pci/controller/Kconfig | 1 +
-> > >  drivers/pci/controller/vmd.c   | 7 -------
-> > >  4 files changed, 3 insertions(+), 12 deletions(-)
-> > >=20
-> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > index 38c62ff8a3f0..d8e2e6519a61 100644
-> > > --- a/arch/x86/Kconfig
-> > > +++ b/arch/x86/Kconfig
-> > > @@ -28,7 +28,6 @@ config X86_64
-> > >  	select MODULES_USE_ELF_RELA
-> > >  	select NEED_DMA_MAP_STATE
-> > >  	select SWIOTLB
-> > > -	select X86_DEV_DMA_OPS
-> > >  	select ARCH_HAS_SYSCALL_WRAPPER
-> > > =20
-> > >  #
-> > > @@ -703,7 +702,6 @@ config STA2X11
-> > >  	bool "STA2X11 Companion Chip Support"
-> > >  	depends on X86_32_NON_STANDARD && PCI
-> > >  	select ARCH_HAS_PHYS_TO_DMA
-> > > -	select X86_DEV_DMA_OPS
-> > >  	select SWIOTLB
-> > >  	select MFD_STA2X11
-> > >  	select GPIOLIB
-> > > @@ -2877,7 +2875,6 @@ config HAVE_ATOMIC_IOMAP
-> > > =20
-> > >  config X86_DEV_DMA_OPS
-> > >  	bool
-> > > -	depends on X86_64 || STA2X11
-> > > =20
-> > >  config HAVE_GENERIC_GUP
-> > >  	def_bool y
-> > > diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-> > > index 242dcee14689..6736f72cc14a 100644
-> > > --- a/drivers/misc/mic/Kconfig
-> > > +++ b/drivers/misc/mic/Kconfig
-> > > @@ -4,7 +4,7 @@ comment "Intel MIC Bus Driver"
-> > > =20
-> > >  config INTEL_MIC_BUS
-> > >  	tristate "Intel MIC Bus Driver"
-> > > -	depends on 64BIT && PCI && X86 && X86_DEV_DMA_OPS
-> > > +	depends on 64BIT && PCI && X86
-> > >  	help
-> > >  	  This option is selected by any driver which registers a
-> > >  	  device or driver on the MIC Bus, such as
-> > > CONFIG_INTEL_MIC_HOST,
-> > > @@ -21,7 +21,7 @@ comment "SCIF Bus Driver"
-> > > =20
-> > >  config SCIF_BUS
-> > >  	tristate "SCIF Bus Driver"
-> > > -	depends on 64BIT && PCI && X86 && X86_DEV_DMA_OPS
-> > > +	depends on 64BIT && PCI && X86
-> > >  	help
-> > >  	  This option is selected by any driver which registers a
-> > >  	  device or driver on the SCIF Bus, such as
-> > > CONFIG_INTEL_MIC_HOST
-> > > diff --git a/drivers/pci/controller/Kconfig
-> > > b/drivers/pci/controller/Kconfig
-> > > index 6012f3059acd..011c57cae4b0 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -267,6 +267,7 @@ config PCIE_TANGO_SMP8759
-> > > =20
-> > >  config VMD
-> > >  	depends on PCI_MSI && X86_64 && SRCU
-> > > +	select X86_DEV_DMA_OPS
-> > >  	tristate "Intel Volume Management Device Driver"
-> > >  	---help---
-> > >  	  Adds support for the Intel Volume Management Device (VMD).
-> > > VMD is a
-> > > diff --git a/drivers/pci/controller/vmd.c
-> > > b/drivers/pci/controller/vmd.c
-> > > index cf6816b55b5e..999a5509e57e 100644
-> > > --- a/drivers/pci/controller/vmd.c
-> > > +++ b/drivers/pci/controller/vmd.c
-> > > @@ -95,10 +95,8 @@ struct vmd_dev {
-> > >  	struct irq_domain	*irq_domain;
-> > >  	struct pci_bus		*bus;
-> > > =20
-> > > -#ifdef CONFIG_X86_DEV_DMA_OPS
-> > >  	struct dma_map_ops	dma_ops;
-> > >  	struct dma_domain	dma_domain;
-> > > -#endif
-> > >  };
-> > > =20
-> > >  static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
-> > > @@ -293,7 +291,6 @@ static struct msi_domain_info
-> > > vmd_msi_domain_info =3D {
-> > >  	.chip		=3D &vmd_msi_controller,
-> > >  };
-> > > =20
-> > > -#ifdef CONFIG_X86_DEV_DMA_OPS
-> > >  /*
-> > >   * VMD replaces the requester ID with its own.  DMA mappings for
-> > > devices in a
-> > >   * VMD domain need to be mapped for the VMD, not the device
-> > > requiring
-> > > @@ -438,10 +435,6 @@ static void vmd_setup_dma_ops(struct vmd_dev
-> > > *vmd)
-> > >  	add_dma_domain(domain);
-> > >  }
-> > >  #undef ASSIGN_VMD_DMA_OPS
-> > > -#else
-> > > -static void vmd_teardown_dma_ops(struct vmd_dev *vmd) {}
-> > > -static void vmd_setup_dma_ops(struct vmd_dev *vmd) {}
-> > > -#endif
-> > > =20
-> > >  static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct
-> > > pci_bus *bus,
-> > >  				  unsigned int devfn, int reg, int len)
-> > > --=20
-> > > 2.20.1
-> > >=20
-
---=-/z1VEyz5xNWnpBvJvX2X
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-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
-PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
-AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
-HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
-b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
-JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
-bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
-SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
-MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
-gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
-AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
-gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
-ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
-p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
-7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
-NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
-CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
-FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
-bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
-IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDQxMDIyMDM0M1owIwYJ
-KoZIhvcNAQkEMRYEFIpZydeQcMbgUhkmqpebqv6NakseMA0GCSqGSIb3DQEBAQUABIIBAI6dVy5+
-9w/aI1dKBPEj/yuolDP1eBJjWb9daH3hFCyLS2BbRaBdLY1XWfbLYbEZOgz6LNkfsI4v25r/UxFU
-UD6q3MY8lLeiQWdcqIYcSm/mDfnSBBFoDSm5DpXsPAchtlYgf0t/FBbJeXB/sDYot57berzYLueP
-CB03Cd/PGQC22lRuD62Bp7KxWUHBJz4NKgEkUKgOHo8Hi5Sk5irQWTf/7esCOWXWVLWhndkaFZkr
-E6mow/2kw+gL3dq7e//wdVjPItT5XHzCn2npCTgSKHTBlRb4qnaPOADKbLXIaEfRyFZWtlpnvrIU
-ltkpCnvaw8ERcxUt1KqMghFXuuGJEhQAAAAAAAA=
+#ifdef CONFIG_DEBUG_KERNEL
+SYSFS_SPRSETUP(hid0, SPRN_HID0);
+SYSFS_SPRSETUP(hid1, SPRN_HID1);
+SYSFS_SPRSETUP(hid4, SPRN_HID4);
+SYSFS_SPRSETUP(hid5, SPRN_HID5);
+SYSFS_SPRSETUP(ima0, SPRN_PA6T_IMA0);
+SYSFS_SPRSETUP(ima1, SPRN_PA6T_IMA1);
+SYSFS_SPRSETUP(ima2, SPRN_PA6T_IMA2);
+SYSFS_SPRSETUP(ima3, SPRN_PA6T_IMA3);
+SYSFS_SPRSETUP(ima4, SPRN_PA6T_IMA4);
+SYSFS_SPRSETUP(ima5, SPRN_PA6T_IMA5);
+SYSFS_SPRSETUP(ima6, SPRN_PA6T_IMA6);
+SYSFS_SPRSETUP(ima7, SPRN_PA6T_IMA7);
+SYSFS_SPRSETUP(ima8, SPRN_PA6T_IMA8);
+SYSFS_SPRSETUP(ima9, SPRN_PA6T_IMA9);
+SYSFS_SPRSETUP(imaat, SPRN_PA6T_IMAAT);
+SYSFS_SPRSETUP(btcr, SPRN_PA6T_BTCR);
+SYSFS_SPRSETUP(pccr, SPRN_PA6T_PCCR);
+SYSFS_SPRSETUP(rpccr, SPRN_PA6T_RPCCR);
+SYSFS_SPRSETUP(der, SPRN_PA6T_DER);
+SYSFS_SPRSETUP(mer, SPRN_PA6T_MER);
+SYSFS_SPRSETUP(ber, SPRN_PA6T_BER);
+SYSFS_SPRSETUP(ier, SPRN_PA6T_IER);
+SYSFS_SPRSETUP(sier, SPRN_PA6T_SIER);
+SYSFS_SPRSETUP(siar, SPRN_PA6T_SIAR);
+SYSFS_SPRSETUP(tsr0, SPRN_PA6T_TSR0);
+SYSFS_SPRSETUP(tsr1, SPRN_PA6T_TSR1);
+SYSFS_SPRSETUP(tsr2, SPRN_PA6T_TSR2);
+SYSFS_SPRSETUP(tsr3, SPRN_PA6T_TSR3);
+#endif /* CONFIG_DEBUG_KERNEL */
 
 
---=-/z1VEyz5xNWnpBvJvX2X--
+arch/mips/kernel/setup.c:
+
+#if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
+                /*
+                 * This information is necessary when debugging the kernel
+                 * But is a security vulnerability otherwise!
+                 */
+                show_kernel_relocation(KERN_INFO);
+#endif
+
+net/netfilter/core.c:
+
+static void hooks_validate(const struct nf_hook_entries *hooks)
+{
+#ifdef CONFIG_DEBUG_KERNEL
+        struct nf_hook_ops **orig_ops;
+        int prio = INT_MIN;
+        size_t i = 0;
+
+        orig_ops = nf_hook_entries_get_hook_ops(hooks);
+
+        for (i = 0; i < hooks->num_hook_entries; i++) {
+                if (orig_ops[i] == &dummy_ops)
+                        continue;
+
+                WARN_ON(orig_ops[i]->priority < prio);
+
+                if (orig_ops[i]->priority > prio)
+                        prio = orig_ops[i]->priority;
+        }
+#endif
+}
+
+and also:
+arch/xtensa/kernel/smp.c
+arch/xtensa/kernel/entry.S
+
+I was under the impression that config DEBUG_KERNEL was only making a
+"group" of menu entries visible without any direct impact on the code,
+but it does not appear to be the case for a few exceptions. Perhaps this
+is the actual issue ? (and lack of documentation of this Kconfig entry)
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
