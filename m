@@ -2,116 +2,142 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC48EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BF12133D
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2812083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="dJBwE/0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730672AbfDJMWg (ORCPT
+        id S1731823AbfDJMWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:22:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6141 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727497AbfDJMWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:22:36 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5F8318B7C3622181CB30;
-        Wed, 10 Apr 2019 20:22:34 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Wed, 10 Apr 2019
- 20:22:30 +0800
-Subject: Re: [LINUX PATCH v3] spi: spi-mem: Fix build error without
- CONFIG_SPI_MEM
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
-        <vigneshr@ti.com>, <broonie@kernel.org>
-References: <1554897429-5959-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <michal.simek@xilinx.com>, <nagasuresh12@gmail.com>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <2d9cee19-a776-ad18-b8ac-6d0d1b096ad6@huawei.com>
-Date:   Wed, 10 Apr 2019 20:22:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <1554897429-5959-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Wed, 10 Apr 2019 08:22:41 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45680 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730681AbfDJMWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:22:40 -0400
+Received: by mail-ed1-f65.google.com with SMTP id o26so1814889edv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 05:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=gIpH8nukPXLUgFESkQN+PXva8bA2gsMJOsACXEGLiUo=;
+        b=dJBwE/0d68SqNDVwq7bVDdeee7smFtR33tDwJkfWXm02BTk9FG616XWhzQ0LWljXZY
+         OzBojerw/zVkt/1/aR5EdQUP0U4RlpzRlccwWETTtDCq0fqr7ljQ4GJFKpCBq3cLWl+P
+         edGTcYsaN3SFpXa7L03z00pr9wlOhG9mRmYIMRiTkzEJP0BdhSkZlbPoRj/aw+XsoscA
+         a382WWycaLLZyDW5izqkZs+oxOVBYMFNwWEjGAee3dlL14boAzwrH7fTDcZNn/RWmE0T
+         xJqklLapC6W/scT5oqD6pxYxd1cyUp88KN0ywd/MNLGcSwgES8LxgZtvBXhPqzv9PJdr
+         kj1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=gIpH8nukPXLUgFESkQN+PXva8bA2gsMJOsACXEGLiUo=;
+        b=iOfIZoohQyWPd6v6PLe1E9XAklEEP/fhRokB4hyfH4kXsQGcEsYZamWD0gJFnawxiH
+         uRMNZiEfH9uBitnh3WxzEtT/fGd6pFphcP2GWYafVyVAXOCZHeFLkvXBA/CXGE0SjvWs
+         GXsXGpsiDYXBjW/OKtg09acEY2yQd2vDiAJ9bGcMA1XUD6nUV+80XUuVPJczQMkpKOW6
+         40wsU+qELoQUwZxeoemcna/PagWqg2/u/Ca159IypD7PWbeV0vxabY+G4iB0XN5DkzRU
+         6XRra131T2TEXmRtDNyYJ8zJdjnFXDKZhPaKWGaH8fGAFPw0VwtALDMimi0uC2Np3jzb
+         0Q6w==
+X-Gm-Message-State: APjAAAVqCW55sZ5rL/FvmoUvTbE1rGr+NYBBTb6bOX1Y5QtI2CbvTsfG
+        CBUzeRTnUmghP9hjgJcrp84siQ==
+X-Google-Smtp-Source: APXvYqwzBowlOD6IkSvmk2rM350kHZzKKBDz5EjL3Hr1jp6DjTwXaQaEgb71fx4ksV97BhcTddMG0Q==
+X-Received: by 2002:a50:fe03:: with SMTP id f3mr27351881edt.57.1554898958587;
+        Wed, 10 Apr 2019 05:22:38 -0700 (PDT)
+Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id c4sm2149621edl.63.2019.04.10.05.22.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 10 Apr 2019 05:22:37 -0700 (PDT)
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Message-Id: <5D5705F7-C0D7-4303-82A2-965320560220@javigon.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] lightnvm: pblk: fix crash in pblk_end_partial_read due to
+ multipage bvecs
+Date:   Wed, 10 Apr 2019 14:22:36 +0200
+In-Reply-To: <20190408073308.3082-1-hans@owltronix.com>
+Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        "Konopko, Igor J" <igor.j.konopko@intel.com>,
+        Klaus Birkelund Jensen <klaus.jensen@cnexlabs.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>
+To:     Hans Holmberg <hans@owltronix.com>
+References: <20190408073308.3082-1-hans@owltronix.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/10 19:57, Naga Sureshkumar Relli wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+
+--Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+> On 8 Apr 2019, at 09.33, hans@owltronix.com wrote:
 > 
-> When building with CONFIG_SPI_MEM is not set
-> gc warns this:
+> From: Hans Holmberg <hans.holmberg@cnexlabs.com>
 > 
-> drivers/spi/spi-zynq-qspi.o: In function `zynq_qspi_supports_op':
-> spi-zynq-qspi.c:(.text+0x1da): undefined reference to `spi_mem_default_supports_op'
+> Ever since '07173c3ec276 ("block: enable multipage bvecs")' we
+> need to handle bios with multipage bvecs in pblk.
 > 
-> Fixes: 67dca5e580f1 ("spi: spi-mem: Add support for Zynq QSPI controller")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+> Currently, a multipage bvec results in a crash[1].
+> Fix this by using bvec iterators in stead of direct bvec indexing.
+> 
+> Also add a dcache flush, for the same reasons as in:
+> '6e6e811d747b ("block: Add missing flush_dcache_page() call")'
+> 
+> [1] https://github.com/OpenChannelSSD/linux/issues/61
+> 
+> Reported-by: Klaus Jensen <klaus.jensen@cnexlabs.com>
+> Signed-off-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
 > ---
-> Changes in v3
->  - Updated the Author name
->  - Removed extra line between Fixes and rest of the tags
-> Changes in v2
->  - Added static inline to the function spi_mem_default_supports_op();
-> ---
->  include/linux/spi/spi-mem.h | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> index eb71e9d..bf399f2 100644
-> --- a/include/linux/spi/spi-mem.h
-> +++ b/include/linux/spi/spi-mem.h
-> @@ -295,6 +295,8 @@ int spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
->  void spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
->  					  const struct spi_mem_op *op,
->  					  struct sg_table *sg);
-> +bool spi_mem_default_supports_op(struct spi_mem *mem,
-> +				 const struct spi_mem_op *op);
->  #else
->  static inline int
->  spi_controller_dma_map_mem_op_data(struct spi_controller *ctlr,
-> @@ -310,6 +312,9 @@ spi_controller_dma_unmap_mem_op_data(struct spi_controller *ctlr,
->  				     struct sg_table *sg)
->  {
->  }
-> +
-> +static inline bool spi_mem_default_supports_op(struct spi_mem *mem,
-> +				 const struct spi_mem_op *op);
-
-Here miss a Function body, right?
-
-+static inline bool
-+spi_mem_default_supports_op(struct spi_mem *mem,
-+			    const struct spi_mem_op *op)
-+{
-+	return false;
-+}
-
->  #endif /* CONFIG_SPI_MEM */
->  
->  int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op);
-> @@ -336,9 +341,6 @@ int spi_mem_driver_register_with_owner(struct spi_mem_driver *drv,
->  
->  void spi_mem_driver_unregister(struct spi_mem_driver *drv);
->  
-> -bool spi_mem_default_supports_op(struct spi_mem *mem,
-> -				 const struct spi_mem_op *op);
-> -
->  #define spi_mem_driver_register(__drv)                                  \
->  	spi_mem_driver_register_with_owner(__drv, THIS_MODULE)
->  
+> It ain't pretty, but let's fix the breakage while waiting for Igor's
+> partial read cleanup to be ready.
 > 
 
+I would prefer to have the real fix, but it is good to have this fixed for
+5.2. Can we agree on a revert if Igor sends the patch within the 5.2
+window?
+
+Javier
+
+--Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlyt4AwACgkQPEYBfS0l
+eOAz/g/9Fmx5T2IMaMjvJPhKDA3gejav6rTdHc7tRxL7uXiZ85wVFrgQDaTKkup0
+ysVroXUUztk9KpSxrajZxYpFgWdsTM4BUQZtIXVIx3soKifOZbSdwOcHUIs2TVCo
+WO88W7s1eVUR8qb1e4EEWAQ4GCEGtRfXoxFgFwY0p2RNEieVo9UnY1dy1V5yXwXp
+JhpySwbKRG0XVrNUTOQTEmnUnK+Jz1nmSm0IurrajW5V78I8KWWIPQryVmIngSv6
+kSfx4LOBrMXuUWU97i5FvfwIKpVOH4+jFhHI+9tO+ySQQZQ1oBep0IdVXzcSI1x1
+auTkZNdQAWXUkjHR4yL9FZS5WabqMEhIvv99fU1K4BcuW7i3/tYieg0OS/B3z7LZ
+ShbI4G36RWVKkPq8/cqqW8/eE0LwuthzyZlt7/wBSzknGSLB6JWLIxu7G7ZmegkS
+6G4ay+Bohi/bX+/g1wGeJI9TA1VV+qtZnWN+Dz79zNoWJm8abd94/E7EEiXPk7do
+RrBPP/TCy4BPG/i7cPKAa/aP/LwtgOBMkap43KHrDhuRdZLjEGOa1Z6pmGljrQ98
+Qm8luiUgpPM7hbUWb9XQVnYCb6+v/bkX3dAQLQlRRFjGTKpGsJvm/UJ1FleHkAEk
+JRJrWtYJPRpCsjNsu53AIt9sGcEexqrlJq4Y48ICLl7P4x2oAJg=
+=kcp3
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_0AA9B68A-323A-419E-A631-4771C821D7FD--
