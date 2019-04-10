@@ -2,314 +2,156 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E4EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4DBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C9E21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zcbdSOGo"
+	by mail.kernel.org (Postfix) with ESMTP id E97332133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 14:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfDJOjo (ORCPT
+        id S1732844AbfDJOjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 10:39:44 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:47906 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbfDJOjo (ORCPT
+        Wed, 10 Apr 2019 10:39:54 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:45575 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732824AbfDJOjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 10:39:44 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AEcbdu111325;
-        Wed, 10 Apr 2019 14:38:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=8zY1P35x/rzR+C1mZrAQNK5FK6EfzLZNq2j3WW+HQq0=;
- b=zcbdSOGoaRvd42yr8N7Pe1s82+WI5xUHwMjo7QLsB5zPLkFlUV2yCJckNj8vqBxQa28q
- md1OCK7m2Ys3vDLJar0a/zvCizjTRB5JApyt1lZccd/xmtysqcVs1hn4xIJwKftMnmwo
- kMhS7/inTmVxoe8KSYvB564o8VTjliqUpa0+ARRIF7BL2XB4MuE/7EVk3Z6El0UZfR9n
- 6yTEkR2xBxKs6+C6wdu7NaSiBE+jQuR6koWsPisbqvVxxxaYFQN/HVUTP82w9A8xcNvL
- GKPHpvqMTcWG0cvPB3nYeBaPLHEJZdMGwJcodCWQMLTT9q+6yChgKSD/ne33L9RZgRD4 HA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2rphmeknu0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 14:38:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3AEc8Oo074891;
-        Wed, 10 Apr 2019 14:38:52 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2rpkejxshf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Apr 2019 14:38:51 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3AEcihO024464;
-        Wed, 10 Apr 2019 14:38:44 GMT
-Received: from lap1 (/77.138.183.59)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 10 Apr 2019 07:38:43 -0700
-Date:   Wed, 10 Apr 2019 17:38:26 +0300
-From:   Yuval Shaia <yuval.shaia@oracle.com>
-To:     Cornelia Huck <cohuck@redhat.com>, pagupta@redhat.com
-Cc:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, david@fromorbit.com,
-        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
-        kilobyte@angband.pl
-Subject: Re: [PATCH v5 2/5] virtio-pmem: Add virtio pmem driver
-Message-ID: <20190410143826.GA7856@lap1>
-References: <20190410040826.24371-1-pagupta@redhat.com>
- <20190410040826.24371-3-pagupta@redhat.com>
- <20190410142426.5bf0d9a4.cohuck@redhat.com>
+        Wed, 10 Apr 2019 10:39:53 -0400
+Received: from [IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f] ([IPv6:2001:983:e9a7:1:5c18:3544:e4bb:f52f])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id EEOBhlVEENG8zEEOCh1eY1; Wed, 10 Apr 2019 16:39:50 +0200
+Subject: Re: [RFC PATCH] media/doc: Allow sizeimage to be set by v4l clients
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+References: <20190116123701.10344-1-stanimir.varbanov@linaro.org>
+ <299e8aeb-6deb-b383-8f63-cf2cbf5d2e9f@xs4all.nl>
+ <adecdc4e-1aed-fc33-b14b-083322797c70@linaro.org>
+ <c103b0d8-0020-17e0-4584-e5c3ca6bbc51@xs4all.nl>
+ <b6a231ea-c039-d276-313d-1b6dd19cab14@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f374662e-64f8-d280-21f8-892c70b6b29e@xs4all.nl>
+Date:   Wed, 10 Apr 2019 16:39:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410142426.5bf0d9a4.cohuck@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904100104
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9222 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904100104
+In-Reply-To: <b6a231ea-c039-d276-313d-1b6dd19cab14@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfPhIn2jdk7/TjaYtV/4WT/kp/s3oY7UeUYIGlZFCcR3+unp1ORVg4w+wmxikTQKBgQceE+zTJx2gLRcQ+AoxAnIi9MFgOWPcNtmi9eH3MA524uQYXnmU
+ GvljoiFzjOb/AOUmg5Z8njdeQjD5IAXKN4KkDuxuxcBCj76o95HLh17QTxEMym08mGRn8mTNHuBJXG0PamaaIC05PjTjD4ryFmfR17pRRv82gY37dSDWshk3
+ LTYHxDlyjl8GjE48Aei5N11wS7j6+4R5OYI3g8QHmAVRTxJRCcTV09bLoyFSa0zYcFSrT+RDzuNsrtvrDDxrAmXHULR0q9NMSQRe1Dm1hOq+rsVWUzmrmXjP
+ Qpll2W0JRpDMOjRcB+Vq/GzlAD4MJx1OjZdl2nWKNbOgk7z/yaZV3kUGBXc91cRD/odbawMPUo4UvyuLcZN91iCYWZPeNhKAgjglQe6AUAO2a7oIbNvHjwuL
+ +wiYxNxX3yRbebjJlp8CGH3sTcOKUd/7n+m6E9CYAq5rrYluvRAYLyfgZqGIzfyMM3SAcinJueJ32coRYjrR9Qpg0LJpAp9snp9e9w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 02:24:26PM +0200, Cornelia Huck wrote:
-> On Wed, 10 Apr 2019 09:38:22 +0530
-> Pankaj Gupta <pagupta@redhat.com> wrote:
+On 4/10/19 4:21 PM, Stanimir Varbanov wrote:
+> Hi Hans,
 > 
-> > This patch adds virtio-pmem driver for KVM guest.
-> > 
-> > Guest reads the persistent memory range information from
-> > Qemu over VIRTIO and registers it on nvdimm_bus. It also
-> > creates a nd_region object with the persistent memory
-> > range information so that existing 'nvdimm/pmem' driver
-> > can reserve this into system memory map. This way
-> > 'virtio-pmem' driver uses existing functionality of pmem
-> > driver to register persistent memory compatible for DAX
-> > capable filesystems.
-> > 
-> > This also provides function to perform guest flush over
-> > VIRTIO from 'pmem' driver when userspace performs flush
-> > on DAX memory range.
-> > 
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/nvdimm/virtio_pmem.c     |  88 ++++++++++++++++++++++
-> >  drivers/virtio/Kconfig           |  10 +++
-> >  drivers/virtio/Makefile          |   1 +
-> >  drivers/virtio/pmem.c            | 124 +++++++++++++++++++++++++++++++
-> >  include/linux/virtio_pmem.h      |  60 +++++++++++++++
-> >  include/uapi/linux/virtio_ids.h  |   1 +
-> >  include/uapi/linux/virtio_pmem.h |  10 +++
-> >  7 files changed, 294 insertions(+)
-> >  create mode 100644 drivers/nvdimm/virtio_pmem.c
-> >  create mode 100644 drivers/virtio/pmem.c
-> >  create mode 100644 include/linux/virtio_pmem.h
-> >  create mode 100644 include/uapi/linux/virtio_pmem.h
-> > 
-> (...)
-> > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
-> > new file mode 100644
-> > index 000000000000..cc9de9589d56
-> > --- /dev/null
-> > +++ b/drivers/virtio/pmem.c
-> > @@ -0,0 +1,124 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * virtio_pmem.c: Virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and registers the virtual pmem device
-> > + * with libnvdimm core.
-> > + */
-> > +#include <linux/virtio_pmem.h>
-> > +#include <../../drivers/nvdimm/nd.h>
-> > +
-> > +static struct virtio_device_id id_table[] = {
-> > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
-> > +	{ 0 },
-> > +};
-> > +
-> > + /* Initialize virt queue */
-> > +static int init_vq(struct virtio_pmem *vpmem)
+> On 3/14/19 3:11 PM, Hans Verkuil wrote:
+>> On 1/21/19 11:48 AM, Stanimir Varbanov wrote:
+>>> Hi Hans,
+>>>
+>>> On 1/18/19 11:13 AM, Hans Verkuil wrote:
+>>>> On 1/16/19 1:37 PM, Stanimir Varbanov wrote:
+>>>>> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
+>>>>> field description to allow v4l clients to set bigger image size
+>>>>> in case of variable length compressed data.
+>>>>>
+>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>>> ---
+>>>>>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 5 ++++-
+>>>>>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 3 ++-
+>>>>>  2 files changed, 6 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>>>>> index 7f82dad9013a..dbe0b74e9ba4 100644
+>>>>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>>>>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+>>>>> @@ -30,7 +30,10 @@ describing all planes of that format.
+>>>>>  
+>>>>>      * - __u32
+>>>>>        - ``sizeimage``
+>>>>> -      - Maximum size in bytes required for image data in this plane.
+>>>>> +      - Maximum size in bytes required for image data in this plane,
+>>>>> +        set by the driver. When the image consists of variable length
+>>>>> +        compressed data this is the maximum number of bytes required
+>>>>> +        to hold an image, and it is allowed to be set by the client.
+>>>>>      * - __u32
+>>>>>        - ``bytesperline``
+>>>>>        - Distance in bytes between the leftmost pixels in two adjacent
+>>>>> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>>>>> index 71eebfc6d853..54b6d2b67bd7 100644
+>>>>> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>>>>> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+>>>>> @@ -89,7 +89,8 @@ Single-planar format structure
+>>>>>        - Size in bytes of the buffer to hold a complete image, set by the
+>>>>>  	driver. Usually this is ``bytesperline`` times ``height``. When
+>>>>>  	the image consists of variable length compressed data this is the
+>>>>> -	maximum number of bytes required to hold an image.
+>>>>> +	maximum number of bytes required to hold an image, and it is
+>>>>> +	allowed to be set by the client.
+>>>>>      * - __u32
+>>>>>        - ``colorspace``
+>>>>>        - Image colorspace, from enum :c:type:`v4l2_colorspace`.
+>>>>>
+>>>>
+>>>> Hmm. "maximum number of bytes required to hold an image": that's not actually true
+>>>> for bitstream formats like MPEG. It's just the size of the buffer used to store the
+>>>> bitstream, i.e. one buffer may actually contain multiple compressed images, or a
+>>>> compressed image is split over multiple buffers.
+>>>>
+>>>
+>>> Do you want me to change something in the current documentation, i.e.
+>>> the quoted above?
+>>
+>> Hmm, it looks like this discussion stalled (i.e. I forgot to reply).
+>>
+>> How about this:
+>>
+>> "When the image consists of variable length compressed data this is the
+>> number of bytes required by the encoder to support the worst-case
 > 
-> IMHO, you don't gain much by splitting off this function...
+> I don't think 'encoder' is the right word here:
+> 
+> s/encoder/encoder or decoder
 
-It make sense to have all the vq-init-related stuff in one function, so
-here pmem_lock and req_list are used only for the vq.
-Saying that - maybe it would be better to have the 3 in one struct.
-
-> 
-> > +{
-> > +	struct virtqueue *vq;
-> > +
-> > +	/* single vq */
-> > +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
-> > +				host_ack, "flush_queue");
-> > +	if (IS_ERR(vq))
-> > +		return PTR_ERR(vq);
-> 
-> I'm personally not a fan of chained assignments... I think I'd just
-> drop the 'vq' variable and operate on vpmem->req_vq directly.
-
-+1
+or perhaps just 'codec'? Either is fine by me.
 
 > 
-> > +
-> > +	spin_lock_init(&vpmem->pmem_lock);
-> > +	INIT_LIST_HEAD(&vpmem->req_list);
-> > +
-> > +	return 0;
-> > +};
-> > +
-> > +static int virtio_pmem_probe(struct virtio_device *vdev)
-> > +{
-> > +	int err = 0;
-> > +	struct resource res;
-> > +	struct virtio_pmem *vpmem;
-> > +	struct nvdimm_bus *nvdimm_bus;
-> > +	struct nd_region_desc ndr_desc = {};
-> > +	int nid = dev_to_node(&vdev->dev);
-> > +	struct nd_region *nd_region;
-> > +
-> > +	if (!vdev->config->get) {
-> > +		dev_err(&vdev->dev, "%s failure: config disabled\n",
+>> compression scenario. Clients are allowed to set this field. However,
+>> drivers may ignore the value or modify it."
 > 
-> Maybe s/config disabled/config access disabled/ ? That seems to be the
-> more common message.
+> Can we rephrase to:
 > 
-> > +			__func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
-> > +					GFP_KERNEL);
+> "Clients are allowed to set sizeimage field, but however drivers my
+> ignore the value or modify it."
 > 
-> Here, the vpmem variable makes sense for convenience, but I'm again not
-> a fan of the chaining :)
 
-+1
+How about this:
 
-> 
-> > +	if (!vpmem) {
-> > +		err = -ENOMEM;
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	vpmem->vdev = vdev;
-> > +	err = init_vq(vpmem);
-> > +	if (err)
-> > +		goto out_err;
-> > +
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			start, &vpmem->start);
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			size, &vpmem->size);
-> > +
-> > +	res.start = vpmem->start;
-> > +	res.end   = vpmem->start + vpmem->size-1;
-> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > +	vpmem->nd_desc.module = THIS_MODULE;
-> > +
-> > +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > +						&vpmem->nd_desc);
-> 
-> And here :)
-> 
-> > +	if (!nvdimm_bus)
-> > +		goto out_vq;
-> > +
-> > +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
-> > +
-> > +	ndr_desc.res = &res;
-> > +	ndr_desc.numa_node = nid;
-> > +	ndr_desc.flush = virtio_pmem_flush;
-> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
-> > +	nd_region->provider_data =  dev_to_virtio
-> > +					(nd_region->dev.parent->parent);
-> 
-> Isn't it clear that this parent chain will always end up at &vdev->dev?
-> Maybe simply set ->provider_data to vdev directly? (Does it need to
-> grab a reference count of the device, BTW?)
-> 
-> > +
-> > +	if (!nd_region)
-> > +		goto out_nd;
-> 
-> Probably better to do this check before you access nd_region's
-> members :)
-> 
-> > +
-> > +	return 0;
-> > +out_nd:
-> > +	err = -ENXIO;
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +out_vq:
-> > +	vdev->config->del_vqs(vdev);
-> > +out_err:
-> > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
-> > +	return err;
-> > +}
-> > +
-> > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > +{
-> > +	struct virtio_pmem *vpmem = vdev->priv;
-> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > +
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> 
-> I haven't followed this around the nvdimm code, but is the nd_region
-> you created during probe cleaned up automatically, or would you need to
-> do something here?
-> 
-> > +	vdev->config->del_vqs(vdev);
-> > +	vdev->config->reset(vdev);
-> > +	kfree(vpmem);
-> 
-> You allocated vpmem via devm_kzalloc; isn't it freed automatically on
-> remove?
-> 
-> > +}
-> > +
-> > +static struct virtio_driver virtio_pmem_driver = {
-> > +	.driver.name		= KBUILD_MODNAME,
-> > +	.driver.owner		= THIS_MODULE,
-> > +	.id_table		= id_table,
-> > +	.probe			= virtio_pmem_probe,
-> > +	.remove			= virtio_pmem_remove,
-> > +};
-> > +
-> > +module_virtio_driver(virtio_pmem_driver);
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > +MODULE_LICENSE("GPL");
-> 
-> Only looked at this from the general virtio driver angle; seems fine
-> apart from some easy-to-fix issues and some personal style preference
-> things.
+"Clients are allowed to set the sizeimage field, but drivers may
+ modify it."
+
+'ignore the value' isn't right, since that suggests that the sizeimage
+value that is returned may not be in actual use. Since sizeimage can now
+be set by userspace, this means that a sanity check is needed in drivers
+as well (i.e. what if userspace sets sizeimage to ~0?)
+
+This should be tested in v4l2-compliance as well.
+
+Regards,
+
+	Hans
