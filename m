@@ -2,124 +2,645 @@ Return-Path: <SRS0=SZ1Q=SM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC755C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3183C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B8B20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6590220818
+	for <linux-kernel@archiver.kernel.org>; Wed, 10 Apr 2019 12:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732071AbfDJMnf (ORCPT
+        id S1732055AbfDJMqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 08:43:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64825 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730084AbfDJMnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 08:43:35 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 05:43:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,332,1549958400"; 
-   d="scan'208";a="141619105"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Apr 2019 05:43:33 -0700
-Date:   Wed, 10 Apr 2019 05:35:46 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v6 13/20] x86/split_lock: Enable split lock detection by
- default
-Message-ID: <20190410123546.GA214455@romley-ivt3.sc.intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
- <1554326526-172295-14-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1904041932500.1802@nanos.tec.linutronix.de>
- <20190410000229.GA209676@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1904100827530.2020@nanos.tec.linutronix.de>
+        Wed, 10 Apr 2019 08:46:05 -0400
+Received: from mailgate-2.ics.forth.gr ([139.91.1.5]:42988 "EHLO
+        mailgate-2.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730406AbfDJMqE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 08:46:04 -0400
+Received: from av1.ics.forth.gr (av3in [139.91.1.77])
+        by mailgate-2.ics.forth.gr (8.14.4/ICS-FORTH/V10-1.8-GATE) with ESMTP id x3ACj6IZ032169;
+        Wed, 10 Apr 2019 12:45:08 GMT
+X-AuditID: 8b5b9d4d-8f5ff7000000235c-d8-5cade5522f3d
+Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.1.35])
+        by av1.ics.forth.gr (SMTP Outbound / FORTH / ICS) with SMTP id 38.68.09052.255EDAC5; Wed, 10 Apr 2019 15:45:06 +0300 (EEST)
+Received: from webmail.ics.forth.gr (localhost [127.0.0.1])
+        by enigma.ics.forth.gr (8.15.1//ICS-FORTH/V10.5.0C-EXTNULL-SSL-SASL) with ESMTP id x3ACj4U2014585;
+        Wed, 10 Apr 2019 15:45:05 +0300
+X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904100827530.2020@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 10 Apr 2019 15:45:04 +0300
+From:   Nick Kossifidis <mick@ics.forth.gr>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 3/3] RISC-V: Allow booting kernel from any 4KB aligned
+ address
+Organization: FORTH
+In-Reply-To: <20190312220752.128141-4-anup.patel@wdc.com>
+References: <20190312220752.128141-1-anup.patel@wdc.com>
+ <20190312220752.128141-4-anup.patel@wdc.com>
+Message-ID: <50665c486952cc799e0b23b4b714e681@mailhost.ics.forth.gr>
+X-Sender: mick@mailhost.ics.forth.gr
+User-Agent: Roundcube Webmail/1.1.2
+X-Greylist: inspected by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 10 Apr 2019 12:45:08 +0000 (GMT) for IP:'139.91.1.77' DOMAIN:'av3in' HELO:'av1.ics.forth.gr' FROM:'mick@ics.forth.gr' RCPT:''
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 10 Apr 2019 12:45:08 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 08:31:31AM +0200, Thomas Gleixner wrote:
-> On Tue, 9 Apr 2019, Fenghua Yu wrote:
-> > On Thu, Apr 04, 2019 at 08:07:57PM +0200, Thomas Gleixner wrote:
-> > > On Wed, 3 Apr 2019, Fenghua Yu wrote:
-> > > >  static void early_init_intel(struct cpuinfo_x86 *c)
-> > > >  {
-> > > >  	u64 misc_enable;
-> > > >  
-> > > > +	init_split_lock_detect(c);
-> > > 
-> > > so we have in early boot:
-> > > 
-> > > 	early_cpu_init()
-> > > 	  early_identify_cpu()
-> > > 	    this_cpu->c_early_init(c)
-> > > 	      early_init_intel() {
-> > > 	        init_split_lock_detect();
-> > > 	      }	
-> > >             ....
-> > >             cpu_set_core_cap_bits(c)
-> > > 	       set(FEATURE_SPLIT_LOCK)
-> > > 
-> > > I don't have to understand how init_split_lock_detect() will magically see
-> > > the feature bit which gets set afterwards, right? 
-> > 
-> > early_init_intel() is called twice on the boot CPU. Besides it's called
-> > in earl_cpu_init(), it's also called in:
-> > 	identify_boot_cpu()
-> > 		identify_cpu()
-> > 			init_intel()
-> > 				early_init_intel()
-> > 					init_split_lock_detect();
-> > 
-> > It's true that init_split_lock_detect() doesn't see the feature bit when
-> > it's called for the first time in early_cpu_init(). But it sees the feature
-> > bit when it's called for the second time in identify_boot_cpu().
+Στις 2019-03-13 00:08, Anup Patel έγραψε:
+> Currently, we have to boot RISCV64 kernel from a 2MB aligned physical
+> address and RISCV32 kernel from a 4MB aligned physical address. This
+> constraint is because initial pagetable setup (i.e. setup_vm()) maps
+> entire RAM using hugepages (i.e. 2MB for 3-level pagetable and 4MB for
+> 2-level pagetable).
 > 
-> That's hideous, really. 
+> Further, the above booting contraint also results in memory wastage
+> because if we boot kernel from some <xyz> address (which is not same as
+> RAM start address) then RISCV kernel will map PAGE_OFFSET virtual 
+> address
+> lineraly to <xyz> physical address and memory between RAM start and 
+> <xyz>
+> will be reserved/unusable.
 > 
-> > So is init_split_lock_detect() in the right place?
+> For example, RISCV64 kernel booted from 0x80200000 will waste 2MB of 
+> RAM
+> and RISCV32 kernel booted from 0x80400000 will waste 4MB of RAM.
 > 
-> You're not seriously asking that?
+> This patch re-writes the initial pagetable setup code to allow booting
+> RISV32 and RISCV64 kernel from any 4KB (i.e. PAGE_SIZE) aligned 
+> address.
 > 
-> It's obviously not the right place. We are not placing calls at random
-> points just because they happen to work by chance.
+> To achieve this:
+> 1. We map kernel, dtb and only some amount of RAM (few MBs) using 4KB
+>    mappings in setup_vm() (called from head.S)
+> 2. Once we reach paging_init() (called from setup_arch()) after
+>    memblock setup, we map all available memory banks using 4KB
+>    mappings and memblock APIs.
+> 
+> With this patch in-place, the booting constraint for RISCV32 and 
+> RISCV64
+> kernel is much more relaxed and we can now boot kernel very close to
+> RAM start thereby minimizng memory wastage.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/include/asm/fixmap.h     |   5 +
+>  arch/riscv/include/asm/pgtable-64.h |   5 +
+>  arch/riscv/include/asm/pgtable.h    |   6 +-
+>  arch/riscv/kernel/head.S            |   1 +
+>  arch/riscv/kernel/setup.c           |   4 +-
+>  arch/riscv/mm/init.c                | 357 +++++++++++++++++++++++-----
+>  6 files changed, 317 insertions(+), 61 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/fixmap.h 
+> b/arch/riscv/include/asm/fixmap.h
+> index 57afe604b495..5cf53dd882e5 100644
+> --- a/arch/riscv/include/asm/fixmap.h
+> +++ b/arch/riscv/include/asm/fixmap.h
+> @@ -21,6 +21,11 @@
+>   */
+>  enum fixed_addresses {
+>  	FIX_HOLE,
+> +#define FIX_FDT_SIZE	SZ_1M
+> +	FIX_FDT_END,
+> +	FIX_FDT = FIX_FDT_END + FIX_FDT_SIZE / PAGE_SIZE - 1,
+> +	FIX_PTE,
+> +	FIX_PMD,
+>  	FIX_EARLYCON_MEM_BASE,
+>  	__end_of_fixed_addresses
+>  };
+> diff --git a/arch/riscv/include/asm/pgtable-64.h
+> b/arch/riscv/include/asm/pgtable-64.h
+> index 7aa0ea9bd8bb..56ecc3dc939d 100644
+> --- a/arch/riscv/include/asm/pgtable-64.h
+> +++ b/arch/riscv/include/asm/pgtable-64.h
+> @@ -78,6 +78,11 @@ static inline pmd_t pfn_pmd(unsigned long pfn, 
+> pgprot_t prot)
+>  	return __pmd((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
+>  }
+> 
+> +static inline unsigned long _pmd_pfn(pmd_t pmd)
+> +{
+> +	return pmd_val(pmd) >> _PAGE_PFN_SHIFT;
+> +}
+> +
+>  #define pmd_ERROR(e) \
+>  	pr_err("%s:%d: bad pmd %016lx.\n", __FILE__, __LINE__, pmd_val(e))
+> 
+> diff --git a/arch/riscv/include/asm/pgtable.h 
+> b/arch/riscv/include/asm/pgtable.h
+> index 1141364d990e..05fa2115e736 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -121,12 +121,16 @@ static inline void pmd_clear(pmd_t *pmdp)
+>  	set_pmd(pmdp, __pmd(0));
+>  }
+> 
+> -
+>  static inline pgd_t pfn_pgd(unsigned long pfn, pgprot_t prot)
+>  {
+>  	return __pgd((pfn << _PAGE_PFN_SHIFT) | pgprot_val(prot));
+>  }
+> 
+> +static inline unsigned long _pgd_pfn(pgd_t pgd)
+> +{
+> +	return pgd_val(pgd) >> _PAGE_PFN_SHIFT;
+> +}
+> +
+>  #define pgd_index(addr) (((addr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+> 
+>  /* Locate an entry in the page global directory */
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 7966262b4f9d..12a3ec5eb8ab 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -63,6 +63,7 @@ clear_bss_done:
+>  	/* Initialize page tables and relocate to virtual addresses */
+>  	la sp, init_thread_union + THREAD_SIZE
+>  	la a0, _start
+> +	mv a1, s1
+>  	call setup_vm
+>  	call relocate
+> 
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index ecb654f6a79e..acdd0f74982b 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/sched/task.h>
+>  #include <linux/swiotlb.h>
+> 
+> +#include <asm/fixmap.h>
+>  #include <asm/setup.h>
+>  #include <asm/sections.h>
+>  #include <asm/pgtable.h>
+> @@ -62,7 +63,8 @@ unsigned long boot_cpu_hartid;
+> 
+>  void __init parse_dtb(unsigned int hartid, void *dtb)
+>  {
+> -	if (early_init_dt_scan(__va(dtb)))
+> +	dtb = (void *)fix_to_virt(FIX_FDT) + ((uintptr_t)dtb & ~PAGE_MASK);
+> +	if (early_init_dt_scan(dtb))
+>  		return;
+> 
+>  	pr_err("No DTB passed to the kernel\n");
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index f35299f2f3d5..ee55a4b90dec 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1,14 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
+>   * Copyright (C) 2012 Regents of the University of California
+> - *
+> - *   This program is free software; you can redistribute it and/or
+> - *   modify it under the terms of the GNU General Public License
+> - *   as published by the Free Software Foundation, version 2.
+> - *
+> - *   This program is distributed in the hope that it will be useful,
+> - *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - *   GNU General Public License for more details.
+>   */
+> 
+>  #include <linux/init.h>
+> @@ -43,13 +36,6 @@ void setup_zero_page(void)
+>  	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+>  }
+> 
+> -void __init paging_init(void)
+> -{
+> -	setup_zero_page();
+> -	local_flush_tlb_all();
+> -	zone_sizes_init();
+> -}
+> -
+>  void __init mem_init(void)
+>  {
+>  #ifdef CONFIG_FLATMEM
+> @@ -146,13 +132,24 @@ void __init setup_bootmem(void)
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+>  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+> 
+> +#define MAX_EARLY_MAPPING_SIZE	SZ_128M
+> +
+>  #ifndef __PAGETABLE_PMD_FOLDED
+> -#define NUM_SWAPPER_PMDS ((uintptr_t)-PAGE_OFFSET >> PGDIR_SHIFT)
+> -pmd_t swapper_pmd[PTRS_PER_PMD*((-PAGE_OFFSET)/PGDIR_SIZE)] 
+> __page_aligned_bss;
+> -pmd_t trampoline_pmd[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+> +#if MAX_EARLY_MAPPING_SIZE < PGDIR_SIZE
+> +#define NUM_SWAPPER_PMDS	1UL
+> +#else
+> +#define NUM_SWAPPER_PMDS	(MAX_EARLY_MAPPING_SIZE/PGDIR_SIZE)
+> +#endif
+> +pmd_t swapper_pmd[PTRS_PER_PMD*NUM_SWAPPER_PMDS] __page_aligned_bss;
+> +pmd_t trampoline_pmd[PTRS_PER_PMD] __initdata __aligned(PAGE_SIZE);
+>  pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> +#define NUM_SWAPPER_PTES	(MAX_EARLY_MAPPING_SIZE/PMD_SIZE)
+> +#else
+> +#define NUM_SWAPPER_PTES	(MAX_EARLY_MAPPING_SIZE/PGDIR_SIZE)
+>  #endif
+> 
+> +pte_t swapper_pte[PTRS_PER_PTE*NUM_SWAPPER_PTES] __page_aligned_bss;
+> +pte_t trampoline_pte[PTRS_PER_PTE] __initdata __aligned(PAGE_SIZE);
+>  pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
+> 
+>  void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t 
+> prot)
+> @@ -172,76 +169,318 @@ void __set_fixmap(enum fixed_addresses idx,
+> phys_addr_t phys, pgprot_t prot)
+>  	}
+>  }
+> 
+> +struct mapping_ops {
+> +	pte_t *(*get_pte_virt)(phys_addr_t pa);
+> +	phys_addr_t (*alloc_pte)(uintptr_t va, uintptr_t load_pa);
+> +	pmd_t *(*get_pmd_virt)(phys_addr_t pa);
+> +	phys_addr_t (*alloc_pmd)(uintptr_t va, uintptr_t load_pa);
+> +};
+> +
+>  static inline void *__early_va(void *ptr, uintptr_t load_pa)
+>  {
+>  	extern char _start;
+>  	uintptr_t va = (uintptr_t)ptr;
+>  	uintptr_t sz = (uintptr_t)(&_end) - (uintptr_t)(&_start);
+> 
+> -	if (va >= PAGE_OFFSET && va < (PAGE_OFFSET + sz))
+> +	if (va >= PAGE_OFFSET && va <= (PAGE_OFFSET + sz))
+>  		return (void *)(load_pa + (va - PAGE_OFFSET));
+>  	return (void *)va;
+>  }
+> 
+> -asmlinkage void __init setup_vm(uintptr_t load_pa)
+> +#define __early_pa(ptr, load_pa)	(uintptr_t)__early_va(ptr, load_pa)
+> +
+> +static phys_addr_t __init final_alloc_pgtable(void)
+> +{
+> +	return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> +}
+> +
+> +static pte_t *__init early_get_pte_virt(phys_addr_t pa)
+>  {
+> -	uintptr_t i;
+> +	return (pte_t *)((uintptr_t)pa);
+> +}
+> +
+> +static pte_t *__init final_get_pte_virt(phys_addr_t pa)
+> +{
+> +	clear_fixmap(FIX_PTE);
+> +
+> +	return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
+> +}
+> +
+> +static phys_addr_t __init early_alloc_pte(uintptr_t va, uintptr_t 
+> load_pa)
+> +{
+> +	pte_t *base = __early_va(swapper_pte, load_pa);
+> +	uintptr_t pte_num = ((va - PAGE_OFFSET) >> PMD_SHIFT);
+> +
+> +	BUG_ON(pte_num >= NUM_SWAPPER_PTES);
+> +
+> +	return (uintptr_t)&base[pte_num * PTRS_PER_PTE];
+> +}
+> +
+> +static phys_addr_t __init final_alloc_pte(uintptr_t va, uintptr_t 
+> load_pa)
+> +{
+> +	return final_alloc_pgtable();
+> +}
+> +
+> +static void __init create_pte_mapping(pte_t *ptep,
+> +				      uintptr_t va, phys_addr_t pa,
+> +				      phys_addr_t sz, pgprot_t prot)
+> +{
+> +	uintptr_t pte_index = pte_index(va);
+> +
+> +	BUG_ON(sz != PAGE_SIZE);
+> +
+> +	if (pte_none(ptep[pte_index]))
+> +		ptep[pte_index] = pfn_pte(PFN_DOWN(pa), prot);
+> +}
+> +
+>  #ifndef __PAGETABLE_PMD_FOLDED
+> +static pmd_t *__init early_get_pmd_virt(phys_addr_t pa)
+> +{
+> +	return (pmd_t *)((uintptr_t)pa);
+> +}
+> +
+> +static pmd_t *__init final_get_pmd_virt(phys_addr_t pa)
+> +{
+> +	clear_fixmap(FIX_PMD);
+> +
+> +	return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
+> +}
+> +
+> +static phys_addr_t __init early_alloc_pmd(uintptr_t va, uintptr_t 
+> load_pa)
+> +{
+> +	pmd_t *base = __early_va(swapper_pmd, load_pa);
+> +	uintptr_t pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> +
+> +	BUG_ON(pmd_num >= NUM_SWAPPER_PMDS);
+> +
+> +	return (uintptr_t)&base[pmd_num * PTRS_PER_PMD];
+> +}
+> +
+> +static phys_addr_t __init final_alloc_pmd(uintptr_t va, uintptr_t 
+> load_pa)
+> +{
+> +	return final_alloc_pgtable();
+> +}
+> +
+> +static void __init create_pmd_mapping(pmd_t *pmdp,
+> +				      uintptr_t va, phys_addr_t pa,
+> +				      phys_addr_t sz, pgprot_t prot,
+> +				      uintptr_t ops_load_pa,
+> +				      struct mapping_ops *ops)
+> +{
+> +	pte_t *ptep;
+> +	phys_addr_t pte_phys;
+> +	uintptr_t pmd_index = pmd_index(va);
+> +
+> +	if (sz == PMD_SIZE) {
+> +		if (pmd_none(pmdp[pmd_index]))
+> +			pmdp[pmd_index] = pfn_pmd(PFN_DOWN(pa), prot);
+> +		return;
+> +	}
+> +
+> +	if (pmd_none(pmdp[pmd_index])) {
+> +		pte_phys = ops->alloc_pte(va, ops_load_pa);
+> +		pmdp[pmd_index] = pfn_pmd(PFN_DOWN(pte_phys),
+> +					  __pgprot(_PAGE_TABLE));
+> +		ptep = ops->get_pte_virt(pte_phys);
+> +		memset(ptep, 0, PAGE_SIZE);
+> +	} else {
+> +		pte_phys = PFN_PHYS(_pmd_pfn(pmdp[pmd_index]));
+> +		ptep = ops->get_pte_virt(pte_phys);
+> +	}
+> +
+> +	create_pte_mapping(ptep, va, pa, sz, prot);
+> +}
+> +
+> +static void __init create_pgd_mapping(pgd_t *pgdp,
+> +				      uintptr_t va, phys_addr_t pa,
+> +				      phys_addr_t sz, pgprot_t prot,
+> +				      uintptr_t ops_load_pa,
+> +				      struct mapping_ops *ops)
+> +{
+>  	pmd_t *pmdp;
+> +	phys_addr_t pmd_phys;
+> +	uintptr_t pgd_index = pgd_index(va);
+> +
+> +	if (sz == PGDIR_SIZE) {
+> +		if (pgd_val(pgdp[pgd_index]) == 0)
+> +			pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pa), prot);
+> +		return;
+> +	}
+> +
+> +	if (pgd_val(pgdp[pgd_index]) == 0) {
+> +		pmd_phys = ops->alloc_pmd(va, ops_load_pa);
+> +		pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pmd_phys),
+> +					  __pgprot(_PAGE_TABLE));
+> +		pmdp = ops->get_pmd_virt(pmd_phys);
+> +		memset(pmdp, 0, PAGE_SIZE);
+> +	} else {
+> +		pmd_phys = PFN_PHYS(_pgd_pfn(pgdp[pgd_index]));
+> +		pmdp = ops->get_pmd_virt(pmd_phys);
+> +	}
+> +
+> +	create_pmd_mapping(pmdp, va, pa, sz, prot, ops_load_pa, ops);
+> +}
+> +#else
+> +static void __init create_pgd_mapping(pgd_t *pgdp,
+> +				      uintptr_t va, phys_addr_t pa,
+> +				      phys_addr_t sz, pgprot_t prot,
+> +				      uintptr_t ops_load_pa,
+> +				      struct mapping_ops *ops)
+> +{
+> +	pte_t *ptep;
+> +	phys_addr_t pte_phys;
+> +	uintptr_t pgd_index = pgd_index(va);
+> +
+> +	if (sz == PGDIR_SIZE) {
+> +		if (pgd_val(pgdp[pgd_index]) == 0)
+> +			pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pa), prot);
+> +		return;
+> +	}
+> +
+> +	if (pgd_val(pgdp[pgd_index]) == 0) {
+> +		pte_phys = ops->alloc_pte(va, ops_load_pa);
+> +		pgdp[pgd_index] = pfn_pgd(PFN_DOWN(pte_phys),
+> +					  __pgprot(_PAGE_TABLE));
+> +		ptep = ops->get_pte_virt(pte_phys);
+> +		memset(ptep, 0, PAGE_SIZE);
+> +	} else {
+> +		pte_phys = PFN_PHYS(_pgd_pfn(pgdp[pgd_index]));
+> +		ptep = ops->get_pte_virt(pte_phys);
+> +	}
+> +
+> +	create_pte_mapping(ptep, va, pa, sz, prot);
+> +}
+>  #endif
+> -	pgd_t *pgdp;
+> +
+> +asmlinkage void __init setup_vm(uintptr_t load_pa, uintptr_t dtb_pa)
+> +{
+>  	phys_addr_t map_pa;
+> +	uintptr_t va, end_va;
+> +	uintptr_t load_sz = __early_pa(&_end, load_pa) - load_pa;
+>  	pgprot_t tableprot = __pgprot(_PAGE_TABLE);
+>  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
+> +	struct mapping_ops ops;
+> 
+>  	va_pa_offset = PAGE_OFFSET - load_pa;
+>  	pfn_base = PFN_DOWN(load_pa);
+> 
+>  	/* Sanity check alignment and size */
+>  	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
+> -	BUG_ON((load_pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
+> +	BUG_ON((load_pa % PAGE_SIZE) != 0);
+> +	BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+> +
+> +	/* Setup mapping ops */
+> +	ops.get_pte_virt = __early_va(early_get_pte_virt, load_pa);
+> +	ops.alloc_pte = __early_va(early_alloc_pte, load_pa);
+> +	ops.get_pmd_virt = NULL;
+> +	ops.alloc_pmd = NULL;
+> 
+>  #ifndef __PAGETABLE_PMD_FOLDED
+> -	pgdp = __early_va(trampoline_pg_dir, load_pa);
+> -	map_pa = (uintptr_t)__early_va(trampoline_pmd, load_pa);
+> -	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
+> -		pfn_pgd(PFN_DOWN(map_pa), tableprot);
+> -	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(load_pa), prot);
+> +	/* Update mapping ops for PMD */
+> +	ops.get_pmd_virt = __early_va(early_get_pmd_virt, load_pa);
+> +	ops.alloc_pmd = __early_va(early_alloc_pmd, load_pa);
+> +
+> +	/* Setup trampoline PGD and PMD */
+> +	map_pa = __early_pa(trampoline_pmd, load_pa);
+> +	create_pgd_mapping(__early_va(trampoline_pg_dir, load_pa),
+> +			   PAGE_OFFSET, map_pa, PGDIR_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +	map_pa = __early_pa(trampoline_pte, load_pa);
+> +	create_pmd_mapping(__early_va(trampoline_pmd, load_pa),
+> +			   PAGE_OFFSET, map_pa, PMD_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +
+> +	/* Setup swapper PGD and PMD for fixmap */
+> +	map_pa = __early_pa(fixmap_pmd, load_pa);
+> +	create_pgd_mapping(__early_va(swapper_pg_dir, load_pa),
+> +			   FIXADDR_START, map_pa, PGDIR_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +	map_pa = __early_pa(fixmap_pte, load_pa);
+> +	create_pmd_mapping(__early_va(fixmap_pmd, load_pa),
+> +			   FIXADDR_START, map_pa, PMD_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +#else
+> +	/* Setup trampoline PGD */
+> +	map_pa = __early_pa(trampoline_pte, load_pa);
+> +	create_pgd_mapping(__early_va(trampoline_pg_dir, load_pa),
+> +			   PAGE_OFFSET, map_pa, PGDIR_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +
+> +	/* Setup swapper PGD for fixmap */
+> +	map_pa = __early_pa(fixmap_pte, load_pa);
+> +	create_pgd_mapping(__early_va(swapper_pg_dir, load_pa),
+> +			   FIXADDR_START, map_pa, PGDIR_SIZE, tableprot,
+> +			   load_pa, &ops);
+> +#endif
+> 
+> -	pgdp = __early_va(swapper_pg_dir, load_pa);
+> +	/* Setup trampoling PTE */
+> +	end_va = PAGE_OFFSET + PAGE_SIZE*PTRS_PER_PTE;
+> +	for (va = PAGE_OFFSET; va < end_va; va += PAGE_SIZE)
+> +		create_pte_mapping(__early_va(trampoline_pte, load_pa),
+> +				   va, load_pa + (va - PAGE_OFFSET),
+> +				   PAGE_SIZE, prot);
+> +
+> +	/*
+> +	 * Setup swapper PGD covering kernel and some amount of
+> +	 * RAM which will allows us to reach paging_init(). We map
+> +	 * all memory banks later in setup_vm_final() below.
+> +	 */
+> +	end_va = PAGE_OFFSET + load_sz;
+> +	for (va = PAGE_OFFSET; va < end_va; va += PAGE_SIZE)
+> +		create_pgd_mapping(__early_va(swapper_pg_dir, load_pa),
+> +				   va, load_pa + (va - PAGE_OFFSET),
+> +				   PAGE_SIZE, prot, load_pa, &ops);
+> +
+> +	/* Create fixed mapping for early parsing of FDT */
+> +	end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
+> +	for (va = __fix_to_virt(FIX_FDT); va < end_va; va += PAGE_SIZE)
+> +		create_pte_mapping(__early_va(fixmap_pte, load_pa),
+> +				   va, dtb_pa + (va - __fix_to_virt(FIX_FDT)),
+> +				   PAGE_SIZE, prot);
+> +}
+> 
+> -	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
+> -		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
+> +static void __init setup_vm_final(void)
+> +{
+> +	phys_addr_t pa, start, end;
+> +	struct memblock_region *reg;
+> +	struct mapping_ops ops;
+> +	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
+> 
+> -		map_pa = (uintptr_t)__early_va(swapper_pmd, load_pa);
+> -		pgdp[o] = pfn_pgd(PFN_DOWN(map_pa) + i, tableprot);
+> -	}
+> -	pmdp = __early_va(swapper_pmd, load_pa);
+> -	for (i = 0; i < ARRAY_SIZE(swapper_pmd); i++)
+> -		pmdp[i] = pfn_pmd(PFN_DOWN(load_pa + i * PMD_SIZE), prot);
+> -
+> -	map_pa = (uintptr_t)__early_va(fixmap_pmd, load_pa);
+> -	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
+> -		pfn_pgd(PFN_DOWN(map_pa), tableprot);
+> -	pmdp = __early_va(fixmap_pmd, load_pa);
+> -	map_pa = (uintptr_t)__early_va(fixmap_pte, load_pa);
+> -	fixmap_pmd[(FIXADDR_START >> PMD_SHIFT) % PTRS_PER_PMD] =
+> -		pfn_pmd(PFN_DOWN(map_pa), tableprot);
+> +	/* Setup mapping ops */
+> +	ops.get_pte_virt = final_get_pte_virt;
+> +	ops.alloc_pte = final_alloc_pte;
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +	ops.get_pmd_virt = final_get_pmd_virt;
+> +	ops.alloc_pmd = final_alloc_pmd;
+>  #else
+> -	pgdp = __early_va(trampoline_pg_dir, load_pa);
+> -	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
+> -		pfn_pgd(PFN_DOWN(load_pa), prot);
+> -
+> -	pgdp = __early_va(swapper_pg_dir, load_pa);
+> -
+> -	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
+> -		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
+> +	ops.get_pmd_virt = NULL;
+> +	ops.alloc_pmd = NULL;
+> +#endif
+> 
+> -		pgdp[o] = pfn_pgd(PFN_DOWN(load_pa + i * PGDIR_SIZE), prot);
+> +	/* Map all memory banks */
+> +	for_each_memblock(memory, reg) {
+> +		start = reg->base;
+> +		end = start + reg->size;
+> +
+> +		if (start >= end)
+> +			break;
+> +		if (memblock_is_nomap(reg))
+> +			continue;
+> +
+> +		for (pa = start; pa < end; pa += PAGE_SIZE)
+> +			create_pgd_mapping(swapper_pg_dir,
+> +					   (uintptr_t)__va(pa), pa,
+> +					   PAGE_SIZE, prot, 0, &ops);
+>  	}
+> 
+> -	map_pa = (uintptr_t)__early_va(fixmap_pte, load_pa);
+> -	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
+> -		pfn_pgd(PFN_DOWN(map_pa), tableprot);
+> -#endif
+> +	clear_fixmap(FIX_PTE);
+> +	clear_fixmap(FIX_PMD);
+> +}
+> +
+> +void __init paging_init(void)
+> +{
+> +	setup_vm_final();
+> +	setup_zero_page();
+> +	local_flush_tlb_all();
+> +	zone_sizes_init();
+>  }
 
-Is it OK to put init_split_lock_detect(c) after early_init_intel() in
-init_intel()? X86_FEATURE_SPLIT_LOCK_DETECT is available now and
-init_split_lock_detec() is called only once on each CPU.
+Some thoughts on that:
 
-@@ -746,6 +749,8 @@ static void init_intel(struct cpuinfo_x86 *c)
- {
-        early_init_intel(c);
- 
-+       init_split_lock_detect(c);
-+
-        intel_workarounds(c);
+a) I agree we don't want to waste memory but that doesn't mean we need 
+to change the kernel's load address alignment requirements, we can 
+re-claim the address below the kernel and use pages from there (instead 
+of hugepages).
 
-Thanks.
+b) If we do so OpenSBI, BBL and any other firmware / SBI implementation 
+will need to modify the device tree they pass on to the kernel to 
+indicate where they are in memory so that the kernel won't try to use 
+their memory. In case of kexec for example right now I have no way of 
+knowing where the firmware is, I get the /memory node and it says that 
+the whole memory is usable (and its start address is aligned), which is 
+wrong.
 
--Fenghua
+Regards
+Nick
