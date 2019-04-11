@@ -2,192 +2,85 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DADC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92530C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A359920850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FF420850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfDKBCg (ORCPT
+        id S1726827AbfDKBFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:02:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19226 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKBCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:02:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 18:02:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,335,1549958400"; 
-   d="scan'208";a="163237465"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 18:02:32 -0700
-Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
- <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
- <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
- <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
- <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
- <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
- <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
-Date:   Thu, 11 Apr 2019 09:02:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
-MIME-Version: 1.0
-In-Reply-To: <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 10 Apr 2019 21:05:07 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:59177 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725782AbfDKBFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:05:06 -0400
+X-UUID: 2fe1136a61104be0b6a3761b7a79c787-20190411
+X-UUID: 2fe1136a61104be0b6a3761b7a79c787-20190411
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 977830350; Thu, 11 Apr 2019 09:05:02 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 11 Apr
+ 2019 09:05:00 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Apr 2019 09:04:59 +0800
+Message-ID: <1554944699.10179.181.camel@mhfsdcap03>
+Subject: Re: [v2 PATCH 4/4] phy: phy-meson-gxl-usb2: get optional clock by
+ devm_clk_get_optional()
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Andy Gross" <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Motoya Tanigawa <tanigawa.motoya@socionext.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>
+Date:   Thu, 11 Apr 2019 09:04:59 +0800
+In-Reply-To: <CAFBinCBoQ6C7MrtwSctDgFPpXnaRVKm490piGOFmN2i2PV3GOQ@mail.gmail.com>
+References: <a8539bcf66065380069676fbea99a51254309803.1554874961.git.chunfeng.yun@mediatek.com>
+         <9f04a619e8a2cc44f5b1fe299a08f237f069d56d.1554874961.git.chunfeng.yun@mediatek.com>
+         <CAFBinCBoQ6C7MrtwSctDgFPpXnaRVKm490piGOFmN2i2PV3GOQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 6CF08254F7B4AD4CBBAD478DAA7D9C5E9F0742FDD2D8A18FA0B5EF750B3D59842000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/10 22:54, Andy Lutomirski wrote:
-> On Tue, Apr 9, 2019 at 8:40 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>
->> On 2019/4/10 10:36, Li, Aubrey wrote:
->>> On 2019/4/10 10:25, Andy Lutomirski wrote:
->>>> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>
->>>>> On 2019/4/10 9:58, Andy Lutomirski wrote:
->>>>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
->>>>>>>
->>>>>>> The architecture specific information of the running processes could
->>>>>>> be useful to the userland. Add support to examine process architecture
->>>>>>> specific information externally.
->>>>>>>
->>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>>>> Cc: Andi Kleen <ak@linux.intel.com>
->>>>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->>>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
->>>>>>> Cc: Linux API <linux-api@vger.kernel.org>
->>>>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
->>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>>> ---
->>>>>>>  fs/proc/array.c         | 5 +++++
->>>>>>>  include/linux/proc_fs.h | 2 ++
->>>>>>>  2 files changed, 7 insertions(+)
->>>>>>>
->>>>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
->>>>>>> index 2edbb657f859..331592a61718 100644
->>>>>>> --- a/fs/proc/array.c
->>>>>>> +++ b/fs/proc/array.c
->>>>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>>>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>>>>>>  }
->>>>>>>
->>>>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
->>>>>>> +{
->>>>>>> +}
->>>>>>
->>>>>> This pointlessly bloats other architectures.  Do this instead in an
->>>>>> appropriate header:
->>>>>>
->>>>>> #ifndef arch_proc_pid_status
->>>>>> static inline void arch_proc_pid_status(...)
->>>>>> {
->>>>>> }
->>>>>> #endif
->>>>>>
->>>>>
->>>>> I saw a bunch of similar weak functions, is it not acceptable?
->>>>>
->>>>> fs/proc$ grep weak *.c
->>>>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
->>>>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
->>>>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
->>>>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
->>>>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->>>>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
->>>>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
->>>>> vmcore.c:ssize_t __weak
->>>>
->>>> I think they're acceptable, but I don't personally like them.
->>>>
->>>
->>> okay, let me try to see if I can refine it in an appropriate way.
->>
->> Hi Andy,
->>
->> Is this what you want?
->>
->> Thanks,
->> -Aubrey
->>
->> ====================================================================
->> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
->> index 2bb3a648fc12..82d77d3aefff 100644
->> --- a/arch/x86/include/asm/processor.h
->> +++ b/arch/x86/include/asm/processor.h
->> @@ -990,5 +990,8 @@ enum l1tf_mitigations {
->>  };
->>
->>  extern enum l1tf_mitigations l1tf_mitigation;
->> +/* Add support for architecture specific output in /proc/pid/status */
->> +void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
->> +#define arch_proc_pid_status arch_proc_pid_status
->>
->>  #endif /* _ASM_X86_PROCESSOR_H */
->> diff --git a/fs/proc/array.c b/fs/proc/array.c
->> index 2edbb657f859..fd65a6ba2864 100644
->> --- a/fs/proc/array.c
->> +++ b/fs/proc/array.c
->> @@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>  }
->>
->> +/* Add support for architecture specific output in /proc/pid/status */
->> +#ifndef arch_proc_pid_status
->> +#define arch_proc_pid_status(m, task)
->> +#endif
->> +
->>  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->>                         struct pid *pid, struct task_struct *task)
->>  {
->> @@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->>         task_cpus_allowed(m, task);
->>         cpuset_task_status_allowed(m, task);
->>         task_context_switch_counts(m, task);
->> +       arch_proc_pid_status(m, task);
->>         return 0;
->>  }
->>
-> 
-> Yes.  But I still think it would be nicer to separate the arch stuff
-> into its own file.  Others might reasonably disagree with me.
-> 
-I like arch_status, I proposed but no other arch shows interesting in it.
+On Wed, 2019-04-10 at 19:59 +0200, Martin Blumenstingl wrote:
+> On Wed, Apr 10, 2019 at 8:13 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> >
+> > Use devm_clk_get_optional() to get optional clock
+> >
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> now also:
+> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> (on my Khadas VIM by manually adjusting meson-gxl.dtsi and dropping
+> the clocks in usb2_phy0 and usb2_phy1)
 
-I think the problem is similar for x86_status, it does not make sense for
-those x86 platform without AVX512 to have an empty arch file. I personally
-don't like [arch]_status because the code may become unclean if more arches
-added in future.
+Thank you:)
 
-Maybe it's too early to have a separated arch staff file for now.
 
-Thanks,
--Aubrey
