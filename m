@@ -2,169 +2,153 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1541C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD2C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949262146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555001435;
-	bh=yIir5Y2LTtThpcZ0wmoahtPjJhRvzPB4XRFyJC5fbpY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W+JXR7U9J0vClZrtgo4ofPeGpWvkgUnfk94wOxQ29Xo5b9z5omksgb9BORMsk1Yy+
-	 4LiR1GTIlnYrlCiXhG1WsxE3Y8mseMbNQwPlZ0hax2wng1rCd1p7u0ZtwnRGiBY/RD
-	 IqCE6nEsWjEo31FiichGve6yTD25YfmIbjABvxlg=
+	by mail.kernel.org (Postfix) with ESMTP id EF2ED2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfDKQue (ORCPT
+        id S1727019AbfDKQuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKQud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:50:33 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC0C2146F;
-        Thu, 11 Apr 2019 16:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555001432;
-        bh=yIir5Y2LTtThpcZ0wmoahtPjJhRvzPB4XRFyJC5fbpY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vnL9Do0tI6kdTd3ZBZSqJJl+7Mqkt4UshkZI4sl3m6mDQmAqWApaTluwpiYPUZxAX
-         EpZYF9Y26xbZK80UxkgViwBbmu5TM8z9R+scsafLZ5Z2dJwThJMf3f/0AZRryzcEtF
-         mGDVpDI+Ixwwb2kHm0DDCXs1fHOp4sOOv3+prKGM=
-Received: by mail-qt1-f170.google.com with SMTP id z16so7905811qtn.4;
-        Thu, 11 Apr 2019 09:50:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAUv/vXy44gK+UJzQoDZg/vUCrUuDGKosXubRxLTmUYsef03eojq
-        ooTiSTyHl+FRtra74pswktk2a9wkBh+Sy3mK+A==
-X-Google-Smtp-Source: APXvYqwTqvX7C0TTcwgCaYWdFm3bXLLByPKzUgynxM+iqmu4l9jDYFGRw2vas6PYj2tYWtRg5Rk0rxSUelKiNEkJZNg=
-X-Received: by 2002:aed:3e3d:: with SMTP id l58mr43153787qtf.77.1555001431360;
- Thu, 11 Apr 2019 09:50:31 -0700 (PDT)
+        Thu, 11 Apr 2019 12:50:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46262 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726962AbfDKQuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:50:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F0CC15AD;
+        Thu, 11 Apr 2019 09:50:43 -0700 (PDT)
+Received: from [10.37.12.69] (unknown [10.37.12.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E2733F59C;
+        Thu, 11 Apr 2019 09:50:41 -0700 (PDT)
+Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20190208165513.8435-1-julien.grall@arm.com>
+ <20190404105233.GD3567@e103592.cambridge.arm.com>
+ <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
+ <20190405150722.GE3567@e103592.cambridge.arm.com>
+ <899713e0-2d32-04a0-b2f2-3493f7299033@arm.com>
+ <20190411163423.GJ3567@e103592.cambridge.arm.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <e647de48-fd74-eabc-0a57-c2c519a36012@arm.com>
+Date:   Thu, 11 Apr 2019 17:50:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190403090108.24788-1-brgl@bgdev.pl> <20190403090108.24788-3-brgl@bgdev.pl>
- <20190406070746.GA29624@bogus> <CAMRc=Mc+cTVrzywTydp-10Hj=-m=qCmtK1+4NRiOFHZ855fnDw@mail.gmail.com>
- <CAL_JsqKHjppN2kXqVpv5LjTedykA-Q8vteQDipw=FAaoUZLGeg@mail.gmail.com>
- <CAMRc=Mc4HOn+Pjwf+sD4fU7gNoksRKXz9Yq6zE233CCoNskPiQ@mail.gmail.com> <CAMRc=MfkdBMmhrCM7Ut8ZGkgT=gFTRrbgFmu3MbghGwCRkEEKg@mail.gmail.com>
-In-Reply-To: <CAMRc=MfkdBMmhrCM7Ut8ZGkgT=gFTRrbgFmu3MbghGwCRkEEKg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 11 Apr 2019 11:50:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKHGczKAD3VjBsq6G=Ev0t8p_qWZ0YG6rRsqO8GuRAK7Q@mail.gmail.com>
-Message-ID: <CAL_JsqKHGczKAD3VjBsq6G=Ev0t8p_qWZ0YG6rRsqO8GuRAK7Q@mail.gmail.com>
-Subject: Re: [PATCH v8 02/11] dt-bindings: power: supply: add DT bindings for max77650
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190411163423.GJ3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 10:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> wt., 9 kwi 2019 o 13:04 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
-> >
-> > wt., 9 kwi 2019 o 03:10 Rob Herring <robh@kernel.org> napisa=C5=82(a):
-> > >
-> > > On Mon, Apr 8, 2019 at 7:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> > > >
-> > > > sob., 6 kwi 2019 o 09:07 Rob Herring <robh@kernel.org> napisa=C5=82=
-(a):
-> > > > >
-> > > > > On Wed, Apr 03, 2019 at 11:00:59AM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > >
-> > > > > > Add the DT binding document for the battery charger module of m=
-ax77650.
-> > > > > >
-> > > > > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > ---
-> > > > > >  .../power/supply/max77650-charger.txt         | 27 +++++++++++=
-++++++++
-> > > > > >  1 file changed, 27 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/power/sup=
-ply/max77650-charger.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/power/supply/max=
-77650-charger.txt b/Documentation/devicetree/bindings/power/supply/max77650=
--charger.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..fef188144386
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/power/supply/max77650-c=
-harger.txt
-> > > > > > @@ -0,0 +1,27 @@
-> > > > > > +Battery charger driver for MAX77650 PMIC from Maxim Integrated=
-.
-> > > > > > +
-> > > > > > +This module is part of the MAX77650 MFD device. For more detai=
-ls
-> > > > > > +see Documentation/devicetree/bindings/mfd/max77650.txt.
-> > > > > > +
-> > > > > > +The charger is represented as a sub-node of the PMIC node on t=
-he device tree.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +--------------------
-> > > > > > +- compatible:                Must be "maxim,max77650-charger"
-> > > > > > +
-> > > > > > +Optional properties:
-> > > > > > +--------------------
-> > > > > > +- min-microvolt:     Minimum CHGIN regulation voltage (in micr=
-ovolts). Must be
-> > > > > > +                     one of: 4000000, 4100000, 4200000, 430000=
-0, 4400000,
-> > > > > > +                     4500000, 4600000, 4700000.
-> > > > > > +- current-limit-microamp:    CHGIN input current limit (in mic=
-roamps). Must
-> > > > > > +                             be one of: 95000, 190000, 285000,=
- 380000, 475000.
-> > > > >
-> > > > > To repeat what I said on v6, these should be common properties IM=
-O (and
-> > > > > therefore documented as such).
-> > > > >
-> > > >
-> > > > Do you mean a separate "charger.txt" document in
-> > > > Documentation/devicetree/bindings/power/supply/?
-> > >
-> > > Yes, though I thought we had something already.
-> > >
-> > > Rob
-> >
-> > We don't AFAICT. There's only a binding document for "simple-battery"
-> > in power supply.
-> >
-> > Bart
->
-> Can we have it locally for now but without the maxim prefix and then
-> reuse it if any other charger needs such functionality? To make it
-> even more generic we can name it: "input-voltage-min-microvolt" &
-> "input-current-limit-microamp".
+Hi Dave,
 
-I guess. And defining these as 'input' is good because we do have
-similar property names already for battery current limit and voltages.
+On 4/11/19 5:34 PM, Dave Martin wrote:
+> On Thu, Apr 11, 2019 at 04:58:41PM +0100, Julien Grall wrote:
+>> Hi Dave,
+>>
+>> On 4/5/19 4:07 PM, Dave Martin wrote:
+>>> On Fri, Apr 05, 2019 at 10:02:45AM +0100, Julien Grall wrote:
+>>>>>> +#ifdef CONFIG_KERNEL_MODE_NEON
+>>>>>> +
+>>>>>>   /*
+>>>>>>    * may_use_simd - whether it is allowable at this time to issue SIMD
+>>>>>>    *                instructions or access the SIMD register file
+>>>>>> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+>>>>>> index 5ebe73b69961..b7e5dac26190 100644
+>>>>>> --- a/arch/arm64/kernel/fpsimd.c
+>>>>>> +++ b/arch/arm64/kernel/fpsimd.c
+>>>>>> @@ -90,7 +90,8 @@
+>>>>>>    * To prevent this from racing with the manipulation of the task's FPSIMD state
+>>>>>>    * from task context and thereby corrupting the state, it is necessary to
+>>>>>>    * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
+>>>>>> - * flag with local_bh_disable() unless softirqs are already masked.
+>>>>>> + * flag with kernel_neon_{disable, enable}. This will still allow softirqs to
+>>>>>> + * run but prevent them to use FPSIMD.
+>>>>>>    *
+>>>>>>    * For a certain task, the sequence may look something like this:
+>>>>>>    * - the task gets scheduled in; if both the task's fpsimd_cpu field
+>>>>>> @@ -142,6 +143,9 @@ extern void __percpu *efi_sve_state;
+>>>>>>   #endif /* ! CONFIG_ARM64_SVE */
+>>>>>> +static void kernel_neon_disable(void);
+>>>>>> +static void kernel_neon_enable(void);
+>>>>>
+>>>>> I find these names a bit confusing: _disable() actualy enables FPSIMD/SVE
+>>>>> context access for the current context (i.e., makes it safe).
+>>>>>
+>>>>> Since these also disable/enable preemption, perhaps we can align them
+>>>>> with the existing get_cpu()/put_cpu(), something like:
+>>>>>
+>>>>> void get_cpu_fpsimd_context();
+>>>>> vold put_cpu_fpsimd_context();
+>>>>>
+>>>>> If you consider it's worth adding the checking helper I alluded to
+>>>>> above, it could then be called something like:
+>>>>>
+>>>>> bool have_cpu_fpsimd_context();
+>>>>
+>>>> I am not sure where you suggested a checking helper above. Do you refer to
+>>>> exposing kernel_neon_busy even for !CONFIG_KERNEL_MODE_NEON?
+>>>
+>>> Hmmm, looks like I got my reply out of order here.
+>>>
+>>> I meant the helper (if any) to check
+>>> !preemptible() && !__this_cpu_read(kernel_neon_busy).
+>>
+>> I guess you are using && instead of || because some of the caller may not
+>> call get_cpu_fpsimd_context() before but still disable preemption, right?
+>>
+>> Wouldn't it be better to have all the user calling get_cpu_fpsimd_context()
+>> and put_cpu_fpsimd_context()?
+>>
+>> This has the advantage to uniformize how the way FPSIMD is protected and
+>> also...
+> 
+> My expectation is that all users would have called
+> get_cpu_fpsimd_context().
 
-Rob
+This is not the case today (see kvm_arch_vcpu_put_fp), I will look at 
+protecting it with a call to get_cpu_fpsimd_context().
+
+> 
+> The reason for writing the check that way is that we can't meaningfully
+> inspect percpu variables unless we are non-preemptible already.  The &&
+> means we don't do the percpu read at all is the case where preemptible()
+> is true.
+
+I am not sure to understand why it would be necessary. 
+this_cpu_read(kernel_neon_busy) should be sufficient here.
+
+If it is set then, preemption is disabled. Or are you worried about user 
+directly setting kernel_neon_busy instead of calling get_cpu_fpsimd_context?
+
+> 
+> Or do you think my logic is wrong somewhere?  (It's possible...)
+
+I think your logic would not return the correct value. We want 
+have_cpu_fpsimd_context() to return true if it is not preemptible and 
+kernel_neon_busy is true. So we would want:
+
+!preemptible() && __this_cpu_read(kernel_neon_busy)
+
+If we speak about the implementation of have_cpu_fpsimd_context(), then 
+we want:
+
+!preemptible() && __this_cpu_read(kernel_neon_busy)
+
+Cheers,
+
+-- 
+Julien Grall
