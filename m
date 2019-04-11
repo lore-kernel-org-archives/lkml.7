@@ -2,127 +2,180 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D32C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B67C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73778217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfDKIKB (ORCPT
+        id S1726685AbfDKIKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:10:01 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49343 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfDKIKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:10:00 -0400
-X-Originating-IP: 90.88.18.121
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9E98720007;
-        Thu, 11 Apr 2019 08:09:55 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 10:09:55 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
-Message-ID: <20190411080955.ysp3wreifwqrpn3n@flea>
-References: <20190410174139.20012-1-tiny.windzz@gmail.com>
- <20190410174139.20012-2-tiny.windzz@gmail.com>
+        Thu, 11 Apr 2019 04:10:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37786 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfDKIKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 04:10:08 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A62858762D;
+        Thu, 11 Apr 2019 08:10:07 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-33.pek2.redhat.com [10.72.8.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F03845D9CD;
+        Thu, 11 Apr 2019 08:09:59 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 16:09:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        Jens Axboe <axboe@kernel.dk>, Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Some new bio merging behaviors in __bio_try_merge_page
+Message-ID: <20190411080953.GE421@ming.t460p>
+References: <85c5fa1a-a506-e26f-c354-1554d47d8b2b@huawei.com>
+ <20190411070807.GA421@ming.t460p>
+ <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ljbikfewuqsnslmi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410174139.20012-2-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 11 Apr 2019 08:10:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 11, 2019 at 03:43:02PM +0800, Gao Xiang wrote:
+> 
+> 
+> On 2019/4/11 15:08, Ming Lei wrote:
+> > Hi Gao Xiang,
+> > 
+> > On Thu, Apr 11, 2019 at 01:47:49PM +0800, Gao Xiang wrote:
+> >> Hi Ming,
+> >>
+> >> I found a erofs issue after commit 07173c3ec276
+> >> ("block: enable multipage bvecs") is merged. It seems that
+> >> it tries to merge more physical continuous pages in one iovec.
+> >>
+> >> However it breaks the current erofs_read_raw_page logic since it uses
+> >> nr_iovecs of bio_alloc to limit the maximum number of physical
+> > 
+> > I believe you can do the limit outside easily, such as by checking
+> > how many pages have been added to the bio.
+> 
+> Yes, I agree that. However, I noticed that bio_add_page is exported as
+> EXPORT_SYMBOL. I have no idea how many out-of-tree drivers break as well.
 
---ljbikfewuqsnslmi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't think it is a good behaviour to use bio->bi_max_vecs to limit
+max allowed page, you may see the idea from the naming simply...
 
-Hi,
+If there were other such drivers, we may fix it easily, and the following
+patch should fix your issue:
 
-On Wed, Apr 10, 2019 at 01:41:38PM -0400, Yangtao Li wrote:
-> For some SoCs, the CPU frequency subset and voltage value of each OPP
-> varies based on the silicon variant in use. The sunxi-cpufreq-nvmem
-> driver reads the efuse value from the SoC to provide the OPP framework
-> with required information.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+index 526e0dbea5b5..8878f2f2593e 100644
+--- a/drivers/staging/erofs/data.c
++++ b/drivers/staging/erofs/data.c
+@@ -298,7 +298,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+ 	*last_block = current_block;
+ 
+ 	/* shift in advance in case of it followed by too many gaps */
+-	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
++	if (unlikely(bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE)) {
+ 		/* err should reassign to 0 after submitting */
+ 		err = 0;
+ 		goto submit_bio_out;
+> 
+> Is there no way to take old behavior into consideration in the block layer as well?
 
-The driver has a bunch of checkpatch warnings, please fix them
-(running checkpatch with --strict).
+One new interface, such as bio_add_page_limit(), may be helpful for
+addressing this issue, but not sure if it is necessary, since it is
+more reasonable to put the logic in user side.
 
-> ---
->  MAINTAINERS                           |   7 +
->  drivers/cpufreq/Kconfig.arm           |  10 ++
->  drivers/cpufreq/Makefile              |   1 +
->  drivers/cpufreq/cpufreq-dt-platdev.c  |   2 +
->  drivers/cpufreq/sunxi-cpufreq-nvmem.c | 232 ++++++++++++++++++++++++++
->  5 files changed, 252 insertions(+)
->  create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 391405091c6b..bfd18ba6aa1a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -667,6 +667,13 @@ S:	Maintained
->  F:	Documentation/i2c/busses/i2c-ali1563
->  F:	drivers/i2c/busses/i2c-ali1563.c
->
-> +ALLWINNER CPUFREQ DRIVER
-> +M:	Yangtao Li <tiny.windzz@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
-> +F:	drivers/cpufreq/sunxi-cpufreq-nvmem.c
-> +
+> 
+> > 
+> >> continuous blocks as well. It was practicable since the old
+> >> __bio_try_merge_page only tries to merge in the same page.
+> >> it is a kAPI behavior change which also affects bio_alloc...
+> >>
+> >> ...
+> >> 231                 err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+> >> 232                 if (unlikely(err))
+> >> 233                         goto err_out;
+> >> ...
+> >> 284                 /* max # of continuous pages */
+> >> 285                 if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
+> >> 286                         nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
+> >> 287                 if (nblocks > BIO_MAX_PAGES)
+> >> 288                         nblocks = BIO_MAX_PAGES;
+> >> 289
+> >> 290                 bio = erofs_grab_bio(sb, blknr, nblocks, sb,
+> >> 291                                      read_endio, false);
+> > 
+> > Previously this bio is allowed to add at most 'nblocks' pages, however,
+> > now we are allowed to add at most 'nblocks' io vecs, instead of pages.
+> > 
+> >> 292                 if (IS_ERR(bio)) {
+> >> 293                         err = PTR_ERR(bio);
+> >> 294                         bio = NULL;
+> >> 295                         goto err_out;
+> >> 296                 }
+> >> 297         }
+> >> 298
+> >> 299         err = bio_add_page(bio, page, PAGE_SIZE, 0);
+> >> 300         /* out of the extent or bio is full */
+> >> 301         if (err < PAGE_SIZE)
+> >> 302                 goto submit_bio_retry;
+> >> ...
+> >>
+> >> After commit 07173c3ec276 ("block: enable multipage bvecs"), erofs could
+> >> read more beyond what erofs_map_blocks assigns, and out-of-bound data could
+> >> be read and it breaks tail-end inline determination.
+> > 
+> > I don't understand why, could you explain a bit why erofs reads more?
+> 
+> In current erofs, file could be break in two parts (non tail-end and tail-end blocks).
+> Considering this on-disk layout,
+>  ________________________________________________________________
+> |     non tail-end data              |   meta data               |
+> |____________________________________|_(inode) + non-inline data_|
+>                           ^          ^
+>                           |          |        
+>                           bio start  \-- what nr_iovecs indicates as well:
+>                                          the end of the non tail-end data.
+> 
+> Before this commit, it will stop just before the next meta data. However,
+> if the new bio merging behavior is introduced, it could add pages more than
+> nr_iovecs, thus meta data will be read as the normal data...
 
-Please use a less generic name for the driver as well. It's called
-sunxi, but applies to a single SoC (for now).
+I'd suggest you to not re-use bio->bi_max_vecs for this purpose.
 
-> +struct sunxi_cpufreq_soc_data {
-> +	u32 (*efuse_xlate)(const struct sunxi_cpufreq_soc_data *soc_data,
-> +			   u32 efuse);
-> +	u32 nvmem_mask;
-> +	u32 nvmem_shift;
-> +};
+> 
+> 
+> > 
+> > The amount depends on how many pages you added to the bio.
+> > 
+> >>
+> >> I can change the logic in erofs. However, out of curiosity, I have no idea
+> >> if some other places also are designed like this.
+> >>
+> >> IMO, it's better to provide a total count which indicates how many real
+> >> pages have been added in this bio. some thoughts?
+> > 
+> > As I mentioned, you may count how many pages added to bio, or you still
+> > can get the number via bio_segments(bio).
+> 
+> It is unsuitable to introduce bio_segments for each bio_add_page...
 
-What cases do you have? You're mentionning that it might apply to more
-SoCs, which ones? How is the data stored on those SoCs (and why do you
-need this particular abstraction)?
+It isn't necessary, see the above patch.
 
-Thanks!
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ljbikfewuqsnslmi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK72UwAKCRDj7w1vZxhR
-xddWAP4/ozszJEsxyLl3PcSuUQNUmGNPTI5/EZoFHMnPIMM1+gEA26Mdnj9YBQVs
-HKxva/PTNG3RNdsvgtKweCHQ+Qrllww=
-=diSg
------END PGP SIGNATURE-----
-
---ljbikfewuqsnslmi--
+Thanks,
+Ming
