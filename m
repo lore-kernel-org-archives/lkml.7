@@ -2,110 +2,162 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F64BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28FDC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE9B2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555001471;
-	bh=W8vmqTJJQ5bkw2ibphr0GbRKYsJCRSQrBCH2au6Oapc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k7gsoFrl0gUFgUDFfir2vU6IUMooW8QOhA6mXog0pAPh4HIT1me8RCcx1XqbY5JBy
-	 wjllC2vF3V5vwZhmrPkWwLtcF3YJ6AlZAzYCoFCF5eBy1DjtbqXYY39F1SSC1DZURz
-	 rVOwcXhWr/r0On3IOHtEOnbK6TduABMb/cQwjoJw=
+	by mail.kernel.org (Postfix) with ESMTP id 71A542133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KoQx+8ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfDKQvJ (ORCPT
+        id S1726920AbfDKQwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:51:09 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38786 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfDKQvJ (ORCPT
+        Thu, 11 Apr 2019 12:52:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53647 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfDKQwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:51:09 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p14so6162894ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:51:08 -0700 (PDT)
+        Thu, 11 Apr 2019 12:52:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q16so7596473wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n/hx0NnsCoe25Udwmu9EvTCGmVL1NWLmRxa3s9qSNGE=;
-        b=OULQRYO1z+YohekQGwp2/pmaJbeorta81jqJLvhROkmKxSDTRczQVcQgnSHRvKqbrZ
-         sAbS3xz8hZ4p+yGnIOw/nKDHUFbdIyKX/gFvwfcew+OH+651b6Uo4eorhexO+mDQ4wY0
-         mHVAD8o1bKZ5hm1ctB+zL12qiQL5NveFu0jEc=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9t4ilQ6mof2vrLlpPEWpt1SKNbSf3Ic0fWoK+soeb7k=;
+        b=KoQx+8iiWRxjA8U2wqa3Gp4LXLKkMSDps9mjaswCu2E2D75/ajSZcpqVF72V/CMWpB
+         E04amp3V283Qxd5MqHfVBcBAT7RMXry65eEMWgyRUOyn2BgqjeNomweQRPrFGCRUdHi5
+         I7Zu3T8ulQp16SjL0Z+tsV6XoOtTI7OaWTiZQKadmZ3uexV05U1ops4CYHx/d2EhgUm4
+         MaI7VpSDnXHhqO5G1rbIFX4eTQ3+j17GrMvwW5keA6MqrIAQ2pqyRNK2PLtwhIh9bt6v
+         AnLBnrN+BvliGStfKI+gUULlm/A0+wBGK7INTJGzfy4TnA7LZ/URWhucul4Vg+vCXhIL
+         +E7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n/hx0NnsCoe25Udwmu9EvTCGmVL1NWLmRxa3s9qSNGE=;
-        b=MPi5xwJSwLjpLoBVgV2YwaAT3v2b7nrgKB+hkDURLeU1cqZTEXF58NIX5sPX/ie6wZ
-         TeYDuLlVyD1UgYGiCF4/CYU1c/3MWaoPrMST3/PGbaYjNPgWf+ZTEWZ79PkxKEzguW/F
-         TLgou3hCSCPYbaEV6bbuW8rejc5uDhj3wyOIVBI0S9LJHV6Ch6Se1i+qIJLMMef9JxsE
-         FkOVZkvUegn4L1ZxwkSbHlC7YItQw5Tx1cDG0M8rZ7l9gDNe2BW1klxt7AI4gzZNIeQS
-         viRgMtm8Go9POn50MhgOFuBYjdk3nhKOq3F7Xzg9FRwrERGIGNSbsfp2f3Ah6l3PLGiz
-         lOiw==
-X-Gm-Message-State: APjAAAX8pwjwG/+Pfr/XA7cqlMKEpyazLDY/nazrDI1V3ihVWdEyP7xh
-        qLYG9GhF9RZjve9LOEXHcAIcU3hSuyo=
-X-Google-Smtp-Source: APXvYqw90ZxGvD68RbSL44uQsi5MP3dcIwTRbp0hrAKk/xKkxzUP4Inmn4oEXxb8LXKiK2Tgzf1uFw==
-X-Received: by 2002:a2e:884a:: with SMTP id z10mr4653805ljj.21.1555001465673;
-        Thu, 11 Apr 2019 09:51:05 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id r20sm7776741ljj.22.2019.04.11.09.51.04
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9t4ilQ6mof2vrLlpPEWpt1SKNbSf3Ic0fWoK+soeb7k=;
+        b=Wt5d+wEGno51OdI3rL9tJIPutTBSNRB6lz27rLp7qONzqOt1Y1ks/EHp6U5tZrjkc5
+         gy6m58rgOvmPAvtGoH5FgCdHIAYNgsZ3tBOZU70snJ7ROT1apfdJu+MzL0zdbAOoMJVs
+         032vtLODWCWID4GmVaRMLHrhNusyG7x/XMQrjU3a4IzdUDsdng0PiEyyQsEe5mO5y23A
+         7LN3bOMOxZ/EgoA2Rq/MrHZnZ/fusOBcBL3JuX+cgWfZowt6VVFSlG19Ece2PjZlra1o
+         uIEPckT5xupR4lp9Uyi3TQeiJ4LefjQUIxNSOTRD0SWyCvF/6MPm/SX4vdh9rugPROmb
+         tH7w==
+X-Gm-Message-State: APjAAAUs0XiHemEpPmLtM+dlx5DIF7B1Ps119CJsscyLcdqP3FPNvN8z
+        Jwke73YFYoPrt6MqaJ8FcJDZYuv3S5c=
+X-Google-Smtp-Source: APXvYqx0gbTtZ4aF/yVlAevNj6Jyrc5c4iwdKCkgY4KAaVtrSC2rGv+ELhgjLV/NSgdK7lCsb4tFEw==
+X-Received: by 2002:a1c:480b:: with SMTP id v11mr7334426wma.25.1555001542551;
+        Thu, 11 Apr 2019 09:52:22 -0700 (PDT)
+Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
+        by smtp.googlemail.com with ESMTPSA id j7sm56746955wrt.96.2019.04.11.09.52.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:51:04 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id u17so5260164lfi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:51:04 -0700 (PDT)
-X-Received: by 2002:ac2:546c:: with SMTP id e12mr16140942lfn.121.1555001463837;
- Thu, 11 Apr 2019 09:51:03 -0700 (PDT)
+        Thu, 11 Apr 2019 09:52:22 -0700 (PDT)
+Subject: Re: [PATCH v3 01/13] thermal: qoriq: Remove unnecessary DT node is
+ NULL check
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
+ <20190401041418.5999-2-andrew.smirnov@gmail.com>
+ <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
+ <CAHQ1cqEDiqn3KJeG62zqLm0tLv=+dgVHxSafm9_TYoi=VOMNhA@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6cc7173a-ea45-4f79-61e6-bcfe1b9aaa4a@linaro.org>
+Date:   Thu, 11 Apr 2019 18:52:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190410234045.29846-1-christian@brauner.io>
-In-Reply-To: <20190410234045.29846-1-christian@brauner.io>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 11 Apr 2019 09:50:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wifyY+XGNW=ZC4MyTHD14w81F8JjQNH-GaGAm2RxZ_S8Q@mail.gmail.com>
-Message-ID: <CAHk-=wifyY+XGNW=ZC4MyTHD14w81F8JjQNH-GaGAm2RxZ_S8Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] fork: add CLONE_PIDFD
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHQ1cqEDiqn3KJeG62zqLm0tLv=+dgVHxSafm9_TYoi=VOMNhA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 4:43 PM Christian Brauner <christian@brauner.io> wrote:
->
-> RFC-2:
-> This alternative patchset uses anonymous file descriptors instead of
-> file descriptors from /proc/<pid>.
+On 05/04/2019 19:51, Andrey Smirnov wrote:
+> On Wed, Apr 3, 2019 at 8:21 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 01/04/2019 06:14, Andrey Smirnov wrote:
+>>> This driver is meant to be used with Device Tree and there's no
+>>> use-case where device's DT node is going to be NULL. Remove code
+>>> protecting against that.
+>>
+>> May be elaborate why is never going to be NULL?
+>>
+> 
+> Hmm, I am not sure what can be elaborated further than what's already
+> there. The driver is written to be instantiated via DT and there's no
+> code that tries to do that via board code or anything like that. I am
+> guessing you maybe read the description differently. Can you help me
+> by giving an example of what you think needs clarifying?
 
-I think I prefer this one. Your diffstat makes it look bigger, but
-that's because you added the example code to use this to that rfc..
+May be just say if the probe function is called, the dev.of_node is
+guarantee to be filled by the underlying framework because the
+compatible string was found so the check is pointless.
 
-Plus making anon_inodes unconditional makes sense anyway.  They are
-always selected in practice to begin with.
+Anyway, it is a detail.
 
-               Linus
+>>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>>> Cc: Chris Healy <cphealy@gmail.com>
+>>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>>> Cc: Zhang Rui <rui.zhang@intel.com>
+>>> Cc: Eduardo Valentin <edubezval@gmail.com>
+>>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+>>> Cc: linux-imx@nxp.com
+>>> Cc: linux-pm@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>
+>>> ---
+>>>  drivers/thermal/qoriq_thermal.c | 5 -----
+>>>  1 file changed, 5 deletions(-)
+>>>
+>>> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+>>> index 3b5f5b3fb1bc..7b364933bfb1 100644
+>>> --- a/drivers/thermal/qoriq_thermal.c
+>>> +++ b/drivers/thermal/qoriq_thermal.c
+>>> @@ -193,11 +193,6 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+>>>       struct qoriq_tmu_data *data;
+>>>       struct device_node *np = pdev->dev.of_node;
+>>>
+>>> -     if (!np) {
+>>> -             dev_err(&pdev->dev, "Device OF-Node is NULL");
+>>> -             return -ENODEV;
+>>> -     }
+>>> -
+>>>       data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
+>>>                           GFP_KERNEL);
+>>>       if (!data)
+>>>
+>>
+>>
+>> --
+>>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
