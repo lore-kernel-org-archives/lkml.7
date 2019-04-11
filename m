@@ -2,108 +2,130 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1E9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DB9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE402082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3014220693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RuVYDtl/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X+MWK/nB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfDKRJU (ORCPT
+        id S1726785AbfDKRMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:09:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36242 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfDKRJU (ORCPT
+        Thu, 11 Apr 2019 13:12:50 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42240 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfDKRMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:09:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h18so7618957wml.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:09:19 -0700 (PDT)
+        Thu, 11 Apr 2019 13:12:50 -0400
+Received: by mail-vs1-f66.google.com with SMTP id f15so3924152vsk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8IUsO6EPkitkkKfslQlrk9jdhyI8ls4f5Jkizx1ufco=;
-        b=RuVYDtl/y7612dj4+IKeQW/slL0xo/AO6Znlwf7Hk3P2RrSWmjQpRS6ixXs2G8hWnM
-         5vNuGTVOdUPuWKgMoRIQuxNiBv180LSi9UhCLLCvBuYRUxBZU7hgts7AytfwciBQfvID
-         jNGtv1XyjoNg3XEeUO4Lm+sNUnngJXrgwttFghcHeGnyP7g3J54xsvTnfdAXR7TSq13V
-         /eHOw3id/WZuF8E0KF/QLG4QrEmm8VM0Pt/cWI3F5or+WfokXQI5ztNCx5QllAG4A8C1
-         /XUA0jFNJ7OFtjlKRcbiK+3MEx7G65bNVtOWntS+GPkswQlfwl03iFmFUz0AI42MD7NW
-         ErQA==
+        bh=xbVhfxmGF0URsGvyR2UkMeD56y0+dvwTkthYL3Uleek=;
+        b=X+MWK/nBnYRuHCbAkw7FFJUhs/b+TfhegS9ar0HHGiRvNTE24iJdfV77fs7sYwIhTZ
+         7AHrBpobPL1qYM+8x2quOZno9dt9UpqI2l8hmRsmDhe1fOBt6/7WS57SQLr7A8czn+6I
+         DKvlexZH15Z1OSRBWpQ565uNRY1P8uBJ+lh2w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8IUsO6EPkitkkKfslQlrk9jdhyI8ls4f5Jkizx1ufco=;
-        b=rYSJ5qt5i/oLQAN+vlroaZwHHQ7cgav8lJYDOLEhXShOk18kx7ImrThry1HhOhLRnp
-         /bYFFrXVOKPxS4ITNhF2q16sWT0mTaMOAwO1FA+qMv199m5Hbj1vbDmWVSMdwjkcGYC8
-         /EQkuaAg5XG/v58ZXcSS2DYj5cFsBbdEk6x0xOXHzizeR0u+Ts49uaz7fzaaMIa8pDjv
-         P2ByjpmnlPe0nSjuzOPqcIt7Ve9VHiP7/iP4IRWxYlCBR9M1wqNH3omIJdhue00qJKUT
-         tPtk/N3J2ZzMMMzvtDFDtAziFMbhx98iIULy2ik7QZEGJwqg1yQQvZ5yfStoxDkzBEum
-         XDow==
-X-Gm-Message-State: APjAAAUPcwocwPeu2c/bmegMCTxwyTPJdjCZ5ylTsP6ch5sSIHnuroOV
-        nMtTGpOnUbfzc7/uh1Cvj8Z5+oF4qteEluw7uQyw9Q==
-X-Google-Smtp-Source: APXvYqxCOHI/Gb4CSvdUX/vm83ezHcctTmbLcpiwE5HrPevLzsRkqOTIvPC7LtxSX6FYCDdaSzHtCjw1Y83jhMor1P0=
-X-Received: by 2002:a1c:c00b:: with SMTP id q11mr7791999wmf.38.1555002557981;
- Thu, 11 Apr 2019 10:09:17 -0700 (PDT)
+        bh=xbVhfxmGF0URsGvyR2UkMeD56y0+dvwTkthYL3Uleek=;
+        b=d4bi3FZcGnNYcztihtA3fnCZNdQvPhDCezDBMKEshKvugIb8IO7YUohLPy/WmArj3y
+         at0nD7b+LxBXRCqkuG2xnom0wM8bx4ev/qbFU7Akib4bELOE3p39GvWvm2UqtGFUW+kx
+         k3tmupaEcOnOL++nVwg9JU7VvL4weKUcrjiYXu12Ip8aJVi85Spd3IwUk784A1C7ieoQ
+         qa2OOdogdHWDeGxoDZzOOKwi8Yy4AgCiJrj3luWY1+4lunuf11RT4iWU9+fsdwMlMjCo
+         lpv4bQuUAaHkRA2sCDLvNJrPYhbCJmoLPdAc5Wi8MU89cHMtr+HkAGrOXtxinRcnv3jp
+         tWkw==
+X-Gm-Message-State: APjAAAXkRbnB04CJmkOk+xUHhjzx48jnPK79sPuziZIuNGzg3iND0z8Q
+        CuYZTVbxd/jWGDxvU1/Tn/lUnkN+/i0=
+X-Google-Smtp-Source: APXvYqzzQ7DLV1Das05aO6sYEFx7xJUSu0V1oZKFzjRRoiprKQaR1+zybXXU8M09XagBO8MiChg7FA==
+X-Received: by 2002:a67:e9c8:: with SMTP id q8mr26496511vso.120.1555002767353;
+        Thu, 11 Apr 2019 10:12:47 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id y18sm2822883vsm.10.2019.04.11.10.12.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 10:12:47 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id l17so1541667vke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:12:46 -0700 (PDT)
+X-Received: by 2002:a1f:ab8d:: with SMTP id u135mr25497993vke.80.1555002445937;
+ Thu, 11 Apr 2019 10:07:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org>
-In-Reply-To: <20190411153313.GE22763@bombadil.infradead.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 11 Apr 2019 10:09:06 -0700
-Message-ID: <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
-        David Rientjes <rientjes@google.com>,
-        yuzhoujian@didichuxing.com,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        ebiederm@xmission.com, Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
+References: <20190410161612.18545-1-keescook@chromium.org> <20190410161612.18545-4-keescook@chromium.org>
+ <CAK7LNAQpm5Tz_Fo0rSq00emB7BLnfYB-+mwXd9GiMKAqKCfkrA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQpm5Tz_Fo0rSq00emB7BLnfYB-+mwXd9GiMKAqKCfkrA@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 11 Apr 2019 10:07:14 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJYPO7buixedop=8e_e+Pf-4nmkz-iS3EV5CXC0obKpdA@mail.gmail.com>
+Message-ID: <CAGXu5jJYPO7buixedop=8e_e+Pf-4nmkz-iS3EV5CXC0obKpdA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] kbuild: Implement Clang's stack initialization
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Alexander Popov <alpopov@ptsecurity.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emese Revfy <re.emese@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
+On Thu, Apr 11, 2019 at 1:06 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > victim process. The usage of this flag is currently limited to SIGKILL
-> > signal and only to privileged users.
+> On Thu, Apr 11, 2019 at 1:16 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > CONFIG_INIT_STACK_ALL turns on stack initialization based on
+> > -ftrivial-auto-var-init in Clang builds and on
+> > -fplugin-arg-structleak_plugin-byref-all in GCC builds.
 >
-> What is the downside of doing expedited memory reclaim?  ie why not do it
-> every time a process is going to die?
+> Is CONFIG_INIT_STACK_ALL wired up to GCC plugin in any way?
+> I could not understand it from the code.
 
-I think with an implementation that does not use/abuse oom-reaper
-thread this could be done for any kill. As I mentioned oom-reaper is a
-limited resource which has access to memory reserves and should not be
-abused in the way I do in this reference implementation.
-While there might be downsides that I don't know of, I'm not sure it's
-required to hurry every kill's memory reclaim. I think there are cases
-when resource deallocation is critical, for example when we kill to
-relieve resource shortage and there are kills when reclaim speed is
-not essential. It would be great if we can identify urgent cases
-without userspace hints, so I'm open to suggestions that do not
-involve additional flags.
+No, it's only available under Clang. Clang is all-or-nothing, and the
+GCC plugin has a degrees up to "all passed by reference" which isn't
+truly "all" (i.e. Clang will initialize variables that aren't passed
+by reference and trigger a compiler warning about being
+uninitialized.)
+
+> >  choice
+> >         prompt "Initialize kernel stack variables at function entry"
+> >         depends on CC_HAS_AUTO_VAR_INIT || GCC_PLUGINS
+> > +       default INIT_STACK_ALL if CC_HAS_AUTO_VAR_INIT
+>
+> Why should this be enabled by default?
+> Ins't it a performance regression
+> since it inserts instructions in function prologue?
+
+There are very few users of Clang right now (mainly Android), so I
+figured it'd be nice to start Clang builds from a "protected by
+default" here, especially given Linus's thoughts on making this always
+happen[1]. I don't want to do it for GCC yet, since that would likely
+come as a huge surprise to everyone else. :) But I'm happy to change
+this, of course.
+
+-Kees
+
+[1] https://lkml.kernel.org/r/CA+55aFykZL+cSBJjBBts7ebEFfyGPdMzTmLSxKnT_29=j942dA@mail.gmail.com
+
+--
+Kees Cook
