@@ -2,107 +2,152 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8A1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B401C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48FC2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2FC20869
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555026875;
+	bh=iDk7VPNMjyytc6vtXDUph5TANBR9kngZfJ1wQSMo1RE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DOliM6CUYSqu/E+u1tR1YPQU+F/Toj23QOC/nDbcySw1bl+hnfSh7X+dn2YSB9a8C
+	 5aJaV14XnLnFf6VHs48OhlC88kE+htusKwBTIG2Gr/pdO7KeL4mHsWUAsELBIdUWFx
+	 R/cVh6yb2rLLXr4b7RVw/gfa+mIqDIGui1p4KGfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfDKXnI (ORCPT
+        id S1727170AbfDKXye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:43:08 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.252]:43035 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726800AbfDKXnI (ORCPT
+        Thu, 11 Apr 2019 19:54:34 -0400
+Received: from casper.infradead.org ([85.118.1.10]:47202 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfDKXyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:43:08 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 9449074920
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 18:43:07 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id EjLXh0rya4FKpEjLXhV58c; Thu, 11 Apr 2019 18:43:07 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=33350 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hEjLW-001spb-Qo; Thu, 11 Apr 2019 18:43:06 -0500
-Date:   Thu, 11 Apr 2019 18:43:06 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] rhashtable: use struct_size() in kvzalloc()
-Message-ID: <20190411234306.GA20668@embeddedor>
+        Thu, 11 Apr 2019 19:54:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5+tH/MOpUFSidIY9WhSFyEPUDHOXXaJKp7Fz0cd8hdM=; b=ePP6Db/DLudz1vlMEo/ff/KUH5
+        OqIIhxDmQ5npakBG0WwaLJRr/hxePnhmsXGFwPXcxVRFB2xCAa1wjqQFPEgJ8E4iFw+Z3OmsG3tVQ
+        FRti79d0KGc3O0/B1/F1j3HZk8C/gWPCHLOlyVvkbEJ3Wel9ntoME3ghT9JVauUcmnTu7Bo1SlJPP
+        8KF0sbpgUTXpRCaDIUl9dfzF1WMVTubdsMz0W9ACuGbff+7jKZ2hQHvRheIRgivLzVJtqUHfgghuD
+        K9eFeM+TdFLYi9bZ1i2IOC559xIxUykO5u/frgkzO6gFr0YH3TeZ7iQynn2f2tU5Rs3d7wyZlDJqO
+        82tOS35Q==;
+Received: from 201.86.162.146.dynamic.adsl.gvt.net.br ([201.86.162.146] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEjWT-0006at-9F; Thu, 11 Apr 2019 23:54:25 +0000
+Date:   Thu, 11 Apr 2019 20:54:17 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
+Message-ID: <20190411205417.187f9565@coco.lan>
+In-Reply-To: <20190411210731.GA29378@roeck-us.net>
+References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+        <20190411124324.3ed62fad@lwn.net>
+        <20190411174357.251904f5@coco.lan>
+        <20190411210731.GA29378@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hEjLW-001spb-Qo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.139.70]:33350
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along with
-memory for some number of elements for that array.  For example:
+Em Thu, 11 Apr 2019 14:07:31 -0700
+Guenter Roeck <linux@roeck-us.net> escreveu:
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
+> On Thu, Apr 11, 2019 at 05:43:57PM -0300, Mauro Carvalho Chehab wrote:
+> > Em Thu, 11 Apr 2019 12:43:24 -0600
+> > Jonathan Corbet <corbet@lwn.net> escreveu:
+> >   
+> > > On Wed, 10 Apr 2019 16:22:37 -0300
+> > > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > >   
+> > > > This series converts the contents of Documentation/hwmon to ReST
+> > > > format.
+> > > > 
+> > > > PS.: I opted to group the conversion files per groups of maintainer
+> > > > set, as, if I were to generate one patch per file, it would give around
+> > > > 160 patches.
+> > > > 
+> > > > I also added those patches to my development tree at:
+> > > > 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=hwmon
+> > > > 
+> > > > If you want to see the results, they're at:
+> > > > 	https://www.infradead.org/~mchehab/hwmon/    
+> > > 
+> > > This set seems generally good and could probably be applied as-is.  But I
+> > > have to ask...is there a reason to not take the last step and actually
+> > > bring this stuff into the Sphinx doc tree?
+> > > 
+> > > We seem to be mostly documenting sysfs files and such.  I am *guessing*
+> > > that perhaps the set should move to Documentation/admin-guide/hwmon?  Or
+> > > have I misunderstood the intended audience here?  
+> > 
+> > :-)
+> > 
+> > Yeah, I'd say that 80% of the contents there are user-faced.
+> > 
+> > Yet, the main issue with this (and other driver subsystems) is that there's
+> > a mix of userspace and Kernelspace stuff. One somewhat simple case is
+> > the abituguru: it has a "datasheet" file:
+> > 
+> > 	abituguru-datasheet
+> > 
+> > This contains programming information for the corresponding drivers,
+> > while abituguru and abituguru3 contains mostly userspace
+> > stuff (still, it also contains the I2C address, with shouldn't mean
+> > anything for the user).
+> > 
+> > However, if you take a look at w83781d, you'll see a mix of both
+> > userspace and driver developer info there... it has a chapter called
+> > "Data sheet updates", for example, with is probably meaningless for
+> > anyone but the hwmon driver developers.
+> > 
+> > That's, btw, a pattern that happens a lot inside device driver
+> > documents on almost all subsystems I checked: driver-specific
+> > documentation is usually not split into user-facing/kernel-facing.
+> > 
+> > While nobody does such split, IMHO, the best would be to keep the
+> > information outside Documentation/admin-guide. But hey! You're
+> > the Doc maintainer. If you prefer to move, I'm perfectly fine
+> > with that.
+> >   
+> 
+> Same here, but please don't move the files which are kernel facing only.
+> 
+> How do you want to handle this series ? Do you expect it to be pushed
+> through hwmon, or through Documentation, or do you plan to push yourself ?
+> 
+> If the series isn't pushed through hwmon, we'll likely have a couple of
+> conflicts against hwmon-next.
 
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = kvzalloc(size, GFP_KERNEL);
+Guenter,
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
+I won't be pushing it myself. IMO, it makes more sense to apply it at
+hwmon-next, except if it would cause some conflicts against docs-next.
 
-instance = kvzalloc(struct_size(instance, entry, count), GFP_KERNEL);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- lib/rhashtable.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index a8583af43b59..9c84f5cef69c 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -175,8 +175,7 @@ static struct bucket_table *bucket_table_alloc(struct rhashtable *ht,
- 	int i;
- 	static struct lock_class_key __key;
- 
--	size = sizeof(*tbl) + nbuckets * sizeof(tbl->buckets[0]);
--	tbl = kvzalloc(size, gfp);
-+	tbl = kvzalloc(struct_size(tbl, buckets, nbuckets), gfp);
- 
- 	size = nbuckets;
- 
--- 
-2.21.0
-
+Regards,
+Mauro
