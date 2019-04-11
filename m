@@ -2,463 +2,228 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D04CC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3062DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C4220850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555013296;
-	bh=gIg//eROhvbCE8bvembw1SYuhCEzh2sotXRYdoey/XE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xZ/IOvGzBLQkm0/9qA5b8iVLCSuXlYQ1H50W3nSG4/Mai9NwzfYWySKyXjA57faI4
-	 GQN2sCWTQaViMHB3FIR9SIA3+6v4m1FkehyswPhUdZpu3Edchf261CTXXe+GEbjmNB
-	 I/xxmbFL/gze8SoMfbbUXEx/oEFtlFLNg394nuIc=
+	by mail.kernel.org (Postfix) with ESMTP id D8E1F20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PN3lgWkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfDKUIP (ORCPT
+        id S1726838AbfDKUI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:08:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDKUIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:08:14 -0400
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1E520850;
-        Thu, 11 Apr 2019 20:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555013293;
-        bh=gIg//eROhvbCE8bvembw1SYuhCEzh2sotXRYdoey/XE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nHS8fYzo/rzY1dv9K4FBNnpu7o2VsLP2fYk8kOslejsfAWapDRyUu4pHn/jPXCp1r
-         w2AQ+cd2ywssPkAE9Blz9x6eNdCWeNs5PdynOYKE9MmTFroURXXVi19T34WiMl53N3
-         COfDTOrk2F5QUNOPSqQw1FPazy426lceSZdtgapc=
-Received: by mail-ed1-f52.google.com with SMTP id g6so2382565edc.8;
-        Thu, 11 Apr 2019 13:08:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAX1laIQjetXaNxBaSwSppSSO6R+0dFSeEiLRGmRoOdlMAta88u6
-        Ybm2A4DW9dgHaNxpLl3xptC+lKNin+w0qQ0Y0Do=
-X-Google-Smtp-Source: APXvYqz44XMQhGvV5BRHqdRLbfeBFqZaVfWjnn7305X4RFBszfFOOrHPPRE8naAu98kXI2BNWdrqjMCk4mq0Xy118IQ=
-X-Received: by 2002:a17:906:b84c:: with SMTP id ga12mr27057478ejb.253.1555013291552;
- Thu, 11 Apr 2019 13:08:11 -0700 (PDT)
+        Thu, 11 Apr 2019 16:08:28 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:37376 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfDKUI1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:08:27 -0400
+Received: by mail-yb1-f194.google.com with SMTP id p134so2722923ybc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:08:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MCmOdUk7t0kgqaj6nH2xU4Mztx+DrWgSylXE7z1aynQ=;
+        b=PN3lgWkD6qaMLyp0PtnfLsvj3OF9tRn1eTJw6d1rnTkHXEp3U1VUdI46GFU7mLRmDh
+         VM95TvnWkFkCWCLBYQj7FW/P9VueQ3pYX5+lDtD9n7OUTNCa0+yld4rr+v2NdGtvDE3S
+         RJEm6gVzuAuK5+ZuZKKsqopkam1J/xVP3Ndk27FoxJm3Df6UXL7Zkec3x2dCmXBKgGMC
+         0rUFxlJw8ZVuup7IlIUKLI5N1XqoSO6b5Xppyw7FH0sPKTepeOuEcBBKo/259gxC1MhA
+         pGgaj3+pGDxttnjAdYP+r1b3svGoEMZtD8esrn+e6PGCOEzI5HG7sJt88fYT5O1zVpRm
+         Ry/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MCmOdUk7t0kgqaj6nH2xU4Mztx+DrWgSylXE7z1aynQ=;
+        b=M3YQBRLvs62I0NULq6QATd81QuftpU9xJaI+k/4luVwi7h8RbYcUzr2S2Mp84pPEdJ
+         U36qr39MSzyuICOP8qy2LiZ/dnPoiu054TMU8gQweESoUCgA5CdXibkD+WrLd+lHrqOJ
+         4TwHbD2vXxpHmZ+OjmyoVcgFqhD+7LzaEIat4MniPQeYh1ctecsWN4X8NQJIyas9L+OZ
+         S5k483UcpfDzY69RTPpFHjOBgryYtNJvufEo/y+FraNPHZkHVEm3irabPQcaVL4YohQ/
+         oyVXVfudzqg2WGpyFw1x/4qAcgV+bh8zHxXzXpaClMToa3lR44zopVvjcRo3b7LrqKJ4
+         lP2g==
+X-Gm-Message-State: APjAAAXYXljMESHTbpiLCBMczdm1PXldlSAClt/u/zR1yY+D2bfNOtuo
+        R/atreA4bjl6oKLQF0BZYy4GBaaZzWkl2/eRd8jzdQ==
+X-Google-Smtp-Source: APXvYqyNu6MIoeBWsFVGLQshOwqj3Wpc8wGYqvhgR1TirvxsuzR/P9yAdh9xRg5BgsxYGE/XIc7/b70QrL2TrLM8iXM=
+X-Received: by 2002:a25:a049:: with SMTP id x67mr41690409ybh.3.1555013306518;
+ Thu, 11 Apr 2019 13:08:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com> <1553483264-5379-16-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1553483264-5379-16-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Thu, 11 Apr 2019 15:07:35 -0500
-X-Gmail-Original-Message-ID: <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
-Message-ID: <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
-Subject: Re: [PATCH 15/17] fpga: dfl: fme: add power management support
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
+References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+ <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+ <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
+ <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
+ <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
+ <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
+ <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com> <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
+In-Reply-To: <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 11 Apr 2019 13:08:15 -0700
+Message-ID: <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernelci@groups.io, Dan Williams <dan.j.williams@intel.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
-
-Hi Hao,
-
+On Thu, Apr 11, 2019 at 10:35 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> This patch adds support for power management private feature under
-> FPGA Management Engine (FME), sysfs interfaces are introduced for
-> different power management functions, users could use these sysfs
-> interface to get current number of consumed power, throttling
-
-How about
-s/number/measurement/
-?
-
-> thresholds, threshold status and other information, and configure
-> different value for throttling thresholds too.
+> On Thu, Apr 11, 2019 at 9:42 AM Guenter Roeck <groeck@google.com> wrote:
+> >
+> > On Thu, Apr 11, 2019 at 9:19 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Thu, Mar 7, 2019 at 7:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > I went ahead and acquired one of these boards to see if I can can
+> > > > debug this locally.
+> > >
+> > > Hi! Any progress on this? Might it be possible to unblock this series
+> > > for v5.2 by adding a temporary "not on ARM" flag?
+> > >
+> >
+> > Can someone send me a pointer to the series in question ? I would like
+> > to run it through my testbed.
 >
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++
->  drivers/fpga/dfl-fme-main.c                      | 257 +++++++++++++++++++++++
->  2 files changed, 313 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> index d3aeb88..4b6448f 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> @@ -100,3 +100,59 @@ Description:       Read-only. Read this file to get the policy of temperature
->                 threshold1. It only supports two value (policy):
->                     0 - AP2 state (90% throttling)
->                     1 - AP1 state (50% throttling)
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/consumed
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. It returns current power consumed by FPGA.
-
-What are the units?
-
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-Write. Read/Write this file to get/set current power
-> +               threshold1 in Watts.
-
-Perhaps document error codes here and for threshold2 below.
-
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-Write. Read/Write this file to get/set current power
-> +               threshold2 in Watts.
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1_status
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. It returns 1 if power consumption reaches the
-> +               threshold1, otherwise 0.
-
-I'm used to things like this requiring user to reset the status, so it
-may be worth making it explicit that it will return to zero if
-consumption drops below threshold if that's what's happening here.
-If it's correct, perhaps could just say something like 'returns 1 if
-power consumption is currently at or above threshold1, otherwise 0'
-
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2_status
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. It returns 1 if power consumption reaches the
-> +               threshold2, otherwise 0.
-
-Same here.
-
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/ltr
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. Read this file to get current Latency Tolerance
-> +               Reporting (ltr) value, it's only valid for integrated
-> +               solution as it blocks CPU on low power state.
-
-If we're not on the integrated solution, it returns a value but it is
-not really real?
-
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/xeon_limit
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. Read this file to get power limit for xeon, it
-> +               is only valid for integrated solution.
-> +
-> +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/fpga_limit
-> +Date:          March 2019
-> +KernelVersion:  5.2
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Read-only. Read this file to get power limit for fpga, it
-> +               is only valid for integrated solution.
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 449a17d..dafa6580 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -415,6 +415,259 @@ static const struct dfl_feature_ops fme_thermal_mgmt_ops = {
->         .uinit = fme_thermal_mgmt_uinit,
->  };
->
-> +#define FME_PWR_STATUS         0x8
-> +#define FME_LATENCY_TOLERANCE  BIT_ULL(18)
-> +#define PWR_CONSUMED           GENMASK_ULL(17, 0)
-> +
-> +#define FME_PWR_THRESHOLD      0x10
-> +#define PWR_THRESHOLD1         GENMASK_ULL(6, 0)       /* in Watts */
-> +#define PWR_THRESHOLD2         GENMASK_ULL(14, 8)      /* in Watts */
-> +#define PWR_THRESHOLD_MAX      0x7f
-> +#define PWR_THRESHOLD1_STATUS  BIT_ULL(16)
-> +#define PWR_THRESHOLD2_STATUS  BIT_ULL(17)
-> +
-> +#define FME_PWR_XEON_LIMIT     0x18
-> +#define XEON_PWR_LIMIT         GENMASK_ULL(14, 0)
-> +#define XEON_PWR_EN            BIT_ULL(15)
-> +#define FME_PWR_FPGA_LIMIT     0x20
-> +#define FPGA_PWR_LIMIT         GENMASK_ULL(14, 0)
-> +#define FPGA_PWR_EN            BIT_ULL(15)
-> +
-> +#define POWER_ATTR(_name, _mode, _show, _store)        \
-> +struct device_attribute power_attr_##_name =           \
-> +       __ATTR(_name, _mode, _show, _store)
-> +
-> +#define POWER_ATTR_RO(_name, _show)                    \
-> +       POWER_ATTR(_name, 0444, _show, NULL)
-> +
-> +#define POWER_ATTR_RW(_name, _show, _store)            \
-> +       POWER_ATTR(_name, 0644, _show, _store)
-
-Are these #defines necessary?  Seems like you could just use DEVICE_ATTR*
-
-> +
-> +static ssize_t pwr_consumed_show(struct device *dev,
-> +                                struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_STATUS);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(PWR_CONSUMED, v));
-> +}
-> +static POWER_ATTR_RO(consumed, pwr_consumed_show);
-> +
-> +static ssize_t pwr_threshold1_show(struct device *dev,
-> +                                  struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1, v));
-> +}
-> +
-> +static ssize_t pwr_threshold1_store(struct device *dev,
-> +                                   struct device_attribute *attr,
-> +                                   const char *buf, size_t count)
-> +{
-> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> +       void __iomem *base;
-> +       u8 threshold;
-> +       int ret;
-> +       u64 v;
-> +
-> +       ret = kstrtou8(buf, 0, &threshold);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (threshold > PWR_THRESHOLD_MAX)
-> +               return -EINVAL;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       mutex_lock(&pdata->lock);
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +       v &= ~PWR_THRESHOLD1;
-> +       v |= FIELD_PREP(PWR_THRESHOLD1, threshold);
-> +       writeq(v, base + FME_PWR_THRESHOLD);
-> +       mutex_unlock(&pdata->lock);
-> +
-> +       return count;
-> +}
-> +static POWER_ATTR_RW(threshold1, pwr_threshold1_show, pwr_threshold1_store);
-> +
-> +static ssize_t pwr_threshold2_show(struct device *dev,
-> +                                  struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2, v));
-> +}
-> +
-> +static ssize_t pwr_threshold2_store(struct device *dev,
-> +                                   struct device_attribute *attr,
-> +                                   const char *buf, size_t count)
-> +{
-> +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> +       void __iomem *base;
-> +       u8 threshold;
-> +       int ret;
-> +       u64 v;
-> +
-> +       ret = kstrtou8(buf, 0, &threshold);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (threshold > PWR_THRESHOLD_MAX)
-> +               return -EINVAL;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       mutex_lock(&pdata->lock);
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +       v &= ~PWR_THRESHOLD2;
-> +       v |= FIELD_PREP(PWR_THRESHOLD2, threshold);
-> +       writeq(v, base + FME_PWR_THRESHOLD);
-> +       mutex_unlock(&pdata->lock);
-> +
-> +       return count;
-> +}
-> +static POWER_ATTR_RW(threshold2, pwr_threshold2_show, pwr_threshold2_store);
-> +
-> +static ssize_t pwr_threshold1_status_show(struct device *dev,
-> +                                         struct device_attribute *attr,
-> +                                         char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1_STATUS, v));
-> +}
-> +static POWER_ATTR_RO(threshold1_status, pwr_threshold1_status_show);
-> +
-> +static ssize_t pwr_threshold2_status_show(struct device *dev,
-> +                                         struct device_attribute *attr,
-> +                                         char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_THRESHOLD);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2_STATUS, v));
-> +}
-> +static POWER_ATTR_RO(threshold2_status, pwr_threshold2_status_show);
-> +
-> +static ssize_t ltr_show(struct device *dev,
-> +                       struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_STATUS);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> +                        (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-> +}
-> +static POWER_ATTR_RO(ltr, ltr_show);
-> +
-> +static ssize_t xeon_limit_show(struct device *dev,
-> +                              struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u16 xeon_limit = 0;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_XEON_LIMIT);
-> +
-> +       if (FIELD_GET(XEON_PWR_EN, v))
-> +               xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n", xeon_limit);
-> +}
-> +static POWER_ATTR_RO(xeon_limit, xeon_limit_show);
-> +
-> +static ssize_t fpga_limit_show(struct device *dev,
-> +                              struct device_attribute *attr, char *buf)
-> +{
-> +       void __iomem *base;
-> +       u16 fpga_limit = 0;
-> +       u64 v;
-> +
-> +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> +
-> +       v = readq(base + FME_PWR_FPGA_LIMIT);
-> +
-> +       if (FIELD_GET(FPGA_PWR_EN, v))
-> +               fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-> +
-> +       return scnprintf(buf, PAGE_SIZE, "%u\n", fpga_limit);
-> +}
-> +static POWER_ATTR_RO(fpga_limit, fpga_limit_show);
-> +
-> +static struct attribute *power_mgmt_attrs[] = {
-> +       &power_attr_consumed.attr,
-> +       &power_attr_threshold1.attr,
-> +       &power_attr_threshold2.attr,
-> +       &power_attr_threshold1_status.attr,
-> +       &power_attr_threshold2_status.attr,
-> +       &power_attr_xeon_limit.attr,
-> +       &power_attr_fpga_limit.attr,
-> +       &power_attr_ltr.attr,
-
-This is a nit, but I would expect to see these listed in the same
-order as their show/store functions above.  So ltr_attr would come
-between threshold2_status_attr and xeon_limit_attr.
-
-> +       NULL,
-> +};
-> +
-> +static struct attribute_group power_mgmt_attr_group = {
-> +       .attrs  = power_mgmt_attrs,
-> +       .name   = "power_mgmt",
-> +};
-> +
-> +static int fme_power_mgmt_init(struct platform_device *pdev,
-> +                              struct dfl_feature *feature)
-> +{
-> +       return sysfs_create_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> +}
-> +
-> +static void fme_power_mgmt_uinit(struct platform_device *pdev,
-> +                                struct dfl_feature *feature)
-> +{
-> +       sysfs_remove_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> +}
-> +
-> +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-> +       {.id = FME_FEATURE_ID_POWER_MGMT,},
-> +       {0,}
-> +};
-> +
-> +static const struct dfl_feature_ops fme_power_mgmt_ops = {
-> +       .init = fme_power_mgmt_init,
-> +       .uinit = fme_power_mgmt_uinit,
-> +};
-> +
->  static struct dfl_feature_driver fme_feature_drvs[] = {
->         {
->                 .id_table = fme_hdr_id_table,
-> @@ -429,6 +682,10 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
->                 .ops = &fme_thermal_mgmt_ops,
->         },
->         {
-> +               .id_table = fme_power_mgmt_id_table,
-> +               .ops = &fme_power_mgmt_ops,
-> +       },
-> +       {
->                 .ops = NULL,
->         },
->  };
-> --
-> 2.7.4
+> It's already in -mm and linux-next (",mm: shuffle initial free memory
+> to improve memory-side-cache utilization") but it gets enabled with
+> CONFIG_SHUFFLE_PAGE_ALLOCATOR=y (which was made the default briefly in
+> -mm which triggered problems on ARM as was reverted).
 >
 
-Thanks,
-Alan
+Boot tests report
+
+Qemu test results:
+    total: 345 pass: 345 fail: 0
+
+This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+and the known crashes fixed.
+
+$ git log --oneline next-20190410..
+3367c36ce744 Set SHUFFLE_PAGE_ALLOCATOR=y for testing.
+d2aee8b3cd5d Revert "crypto: scompress - Use per-CPU struct instead
+multiple variables"
+4bc9f5bc9a84 Fix: rhashtable: use bit_spin_locks to protect hash bucket.
+
+Boot tests on arm are:
+
+Building arm:versatilepb:versatile_defconfig:aeabi:pci:scsi:mem128:versatile-pb:rootfs
+... running ........ passed
+Building arm:versatilepb:versatile_defconfig:aeabi:pci:mem128:versatile-pb:initrd
+... running ........ passed
+Building arm:versatileab:versatile_defconfig:mem128:versatile-ab:initrd
+... running ........ passed
+Building arm:imx25-pdk:imx_v4_v5_defconfig:nonand:mem128:imx25-pdk:initrd
+... running ........ passed
+Building arm:kzm:imx_v6_v7_defconfig:nodrm:mem128:initrd ... running
+.......... passed
+Building arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:mem256:imx6ul-14x14-evk:initrd
+... running .......... passed
+Building arm:mcimx6ul-evk:imx_v6_v7_defconfig:nodrm:sd:mem256:imx6ul-14x14-evk:rootfs
+... running .......... passed
+Building arm:vexpress-a9:multi_v7_defconfig:nolocktests:mem128:vexpress-v2p-ca9:initrd
+... running ........ passed
+Building arm:vexpress-a9:multi_v7_defconfig:nolocktests:sd:mem128:vexpress-v2p-ca9:rootfs
+... running ........ passed
+Building arm:vexpress-a9:multi_v7_defconfig:nolocktests:virtio-blk:mem128:vexpress-v2p-ca9:rootfs
+... running ........ passed
+Building arm:vexpress-a15:multi_v7_defconfig:nolocktests:sd:mem128:vexpress-v2p-ca15-tc1:rootfs
+... running ........ passed
+Building arm:vexpress-a15-a7:multi_v7_defconfig:nolocktests:sd:mem256:vexpress-v2p-ca15_a7:rootfs
+... running ........ passed
+Building arm:beagle:multi_v7_defconfig:sd:mem256:omap3-beagle:rootfs
+... running ............ passed
+Building arm:beaglexm:multi_v7_defconfig:sd:mem512:omap3-beagle-xm:rootfs
+... running ........... passed
+Building arm:overo:multi_v7_defconfig:sd:mem256:omap3-overo-tobi:rootfs
+... running ........... passed
+Building arm:midway:multi_v7_defconfig:mem2G:ecx-2000:initrd ...
+running .......... passed
+Building arm:sabrelite:multi_v7_defconfig:mem256:imx6dl-sabrelite:initrd
+... running ............ passed
+Building arm:mcimx7d-sabre:multi_v7_defconfig:mem256:imx7d-sdb:initrd
+... running .......... passed
+Building arm:xilinx-zynq-a9:multi_v7_defconfig:mem128:zynq-zc702:initrd
+... running ............ passed
+Building arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zc702:rootfs
+... running ............ passed
+Building arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zc706:rootfs
+... running ............ passed
+Building arm:xilinx-zynq-a9:multi_v7_defconfig:sd:mem128:zynq-zed:rootfs
+... running ........... passed
+Building arm:cubieboard:multi_v7_defconfig:mem128:sun4i-a10-cubieboard:initrd
+... running ........... passed
+Building arm:raspi2:multi_v7_defconfig:bcm2836-rpi-2-b:initrd ...
+running .......... passed
+Building arm:raspi2:multi_v7_defconfig:sd:bcm2836-rpi-2-b:rootfs ...
+running .......... passed
+Building arm:virt:multi_v7_defconfig:virtio-blk:mem512:rootfs ...
+running ......... passed
+Building arm:smdkc210:exynos_defconfig:cpuidle:nocrypto:mem128:exynos4210-smdkv310:initrd
+... running ......... passed
+Building arm:realview-pb-a8:realview_defconfig:realview_pb:mem512:arm-realview-pba8:initrd
+... running ........ passed
+Building arm:realview-pbx-a9:realview_defconfig:realview_pb:arm-realview-pbx-a9:initrd
+... running ........ passed
+Building arm:realview-eb:realview_defconfig:realview_eb:mem512:arm-realview-eb:initrd
+... running ........ passed
+Building arm:realview-eb-mpcore:realview_defconfig:realview_eb:mem512:arm-realview-eb-11mp-ctrevb:initrd
+... running ......... passed
+Building arm:akita:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:borzoi:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:mainstone:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:spitz:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:terrier:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:tosa:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:z2:pxa_defconfig:nofdt:nodebug:notests:novirt:nousb:noscsi:initrd
+... running ..... passed
+Building arm:collie:collie_defconfig:aeabi:notests:initrd ... running
+..... passed
+Building arm:integratorcp:integrator_defconfig:mem128:integratorcp:initrd
+... running ....... passed
+Building arm:palmetto-bmc:aspeed_g4_defconfig:aspeed-bmc-opp-palmetto:initrd
+... running ................. passed
+Building arm:witherspoon-bmc:aspeed_g5_defconfig:notests:aspeed-bmc-opp-witherspoon:initrd
+... running ........... passed
+Building arm:ast2500-evb:aspeed_g5_defconfig:notests:aspeed-ast2500-evb:initrd
+... running ................ passed
+Building arm:romulus-bmc:aspeed_g5_defconfig:notests:aspeed-bmc-opp-romulus:initrd
+... running ......................... passed
+Building arm:mps2-an385:mps2_defconfig:mps2-an385:initrd ... running
+...... passed
+
+Guenter
