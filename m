@@ -2,98 +2,160 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB1DC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA73C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B552146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F532083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfDKS0l (ORCPT
+        id S1726699AbfDKSag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:26:41 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:42124 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKS0k (ORCPT
+        Thu, 11 Apr 2019 14:30:36 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.66]:15046 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726603AbfDKSag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:26:40 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-0-112-nat.elisa-mobile.fi [85.76.0.112])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id BA88B20049;
-        Thu, 11 Apr 2019 21:26:37 +0300 (EEST)
-Date:   Thu, 11 Apr 2019 21:26:37 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RESEND][PATCH v2] firmware/psci: add support for SYSTEM_RESET2
-Message-ID: <20190411182637.GC16745@darkstar.musicnaut.iki.fi>
-References: <20190411103346.22462-1-sudeep.holla@arm.com>
- <AM0PR07MB6019AB10C7DD38F7AFECF0E0F42F0@AM0PR07MB6019.eurprd07.prod.outlook.com>
- <20190411164936.GB5327@e107155-lin>
+        Thu, 11 Apr 2019 14:30:36 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 554E81CC69F
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:30:34 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id EeT4hl4HB2PzOEeT4hKQM1; Thu, 11 Apr 2019 13:30:34 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.139.70] (port=55132 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hEeT3-0036b3-NS; Thu, 11 Apr 2019 13:30:33 -0500
+Subject: Re: [PATCH v2] mtd: rawnand: mark expected switch fall-throughs
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190128181520.GA25887@embeddedor>
+ <20190205135521.622f82c2@xps13>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
+Date:   Thu, 11 Apr 2019 13:30:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411164936.GB5327@e107155-lin>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190205135521.622f82c2@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.139.70
+X-Source-L: No
+X-Exim-ID: 1hEeT3-0036b3-NS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:55132
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Miquel,
 
-On Thu, Apr 11, 2019 at 05:49:36PM +0100, Sudeep Holla wrote:
-> On Thu, Apr 11, 2019 at 11:42:28AM +0000, Koskinen, Aaro (Nokia - FI/Espoo) wrote:
-> > From: Sudeep Holla [sudeep.holla@arm.com]:
-> > >  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
-> > >  {
-> > > +       if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
-> > 
-> > I would omit the REBOOT_SOFT here.
+On 2/5/19 6:55 AM, Miquel Raynal wrote:
+[..]
+>> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
+>>  			if ((this->version_id & 0xf) == 0xe)
+>>  				this->options |= ONENAND_HAS_NOP_1;
+>>  		}
+>> +		/* fall through */
+>>  
+>>  	case ONENAND_DEVICE_DENSITY_2Gb:
+>>  		/* 2Gb DDP does not have 2 plane */
+>>  		if (!ONENAND_IS_DDP(this))
+>>  			this->options |= ONENAND_HAS_2PLANE;
+>>  		this->options |= ONENAND_HAS_UNLOCK_ALL;
+>> +		/* fall through */
 > 
-> I included REBOOT_SOFT for 2 reasons:
-> 1. drivers/firmware/efi/reboot.c - efi_reboot treats WARM and SOFT reboots same
-> 2. If the vendors specific reboots are added and handled in EFI, I assume it
->    will be categorised under REBOOT_SOFT.
+> This looks strange.
 > 
-> If that's wrong I can drop REBOOT_SOFT.
-
-Not a big issue, but it's just unclear what SOFT means. WARM at least maps
-nicely to the PSCI spec.
-
-> > > +           psci_system_reset2_supported)
-> > > +               /*
-> > > +                * reset_type[31] = 0 (architectural)
-> > > +                * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
-> > > +                * cookie = 0 (ignored by the implementation)
-> > > +                */
-> > > +               invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
-> > > +
-> > >        invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
-> >
-> > Use else here, so that we fall back to system halt if SYSTEM_RESET2 fails.
+> In ONENAND_DEVICE_DENSITY_2Gb:
+> ONENAND_HAS_UNLOCK_ALL is set unconditionally.
 > 
-> Will that not change current behaviour ? IOW, is that expected behaviour ?
-> I am not sure if halt can be prefer over cold reboot in absence of warm/soft
-> reboot when the system is request to reboot. From PSCI perspective, since
-> SYSTEM_RESET is mandatory I prefer that unless Linux has any restriction
-> on this behaviour.
+> But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
+> if process is evaluated to true.
+> 
+> Same problem with ONENAND_HAS_2PLANE:
+> - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
+> - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
+> 
+> Maybe this portion should be reworked because I am unsure if this is a
+> missing fall through or a bug.
+> 
 
-Hmm, so does it mean that even if firmware tells that SYSTEM_RESET2
-is implemented it does not imply that SYSTEM_WARM_RESET is
-available? I.e. the firmware could choose to implement only some
-vendor-specific resets but not architectural ones. In that case, could
-we fall back to cold reset only if NOT_SUPPORTED is returned? My point
-is that if the warm reset fails unexpectedly, we should halt the system
-like we do if the cold reset fails.
+I wonder if you had the chance to take a look into this piece of code.
 
-A.
+Thanks
+--
+Gustavo
