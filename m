@@ -2,169 +2,111 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FECC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794972184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C67E20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="C6aYrfiw";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YalNxcjw"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="KftPYl6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfDKVpw (ORCPT
+        id S1726844AbfDKVtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:45:52 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:45730 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726682AbfDKVpw (ORCPT
+        Thu, 11 Apr 2019 17:49:55 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:47542 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbfDKVtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:45:52 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BLXY59026043;
-        Thu, 11 Apr 2019 14:45:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Uycx9w4oxxYGUR9EyzTH5ito/EdyYrW2Wmut8rQPRoo=;
- b=C6aYrfiwjXz+tFHJ6VbBeye6ERPqa+K8lsGWSxldL4zxM/4wFnpU2sOb4rwkg5PTj+xQ
- 6NYy+FfAlQGnI17qgn/OBxrjPXZIAIcv68AFlBMAjO9BUwQwyaBGoaNb+AaOR0GhuZZx
- higHQLN/8igJf+JB45KAgHHAx7QXdfX02x4= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2rt88816wn-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 11 Apr 2019 14:45:12 -0700
-Received: from frc-hub02.TheFacebook.com (2620:10d:c021:18::172) by
- frc-hub04.TheFacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 11 Apr 2019 14:45:06 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 11 Apr 2019 14:45:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uycx9w4oxxYGUR9EyzTH5ito/EdyYrW2Wmut8rQPRoo=;
- b=YalNxcjwAH8q+jgoWxRxXjO9xHptzmENNqdiivZqMSSeD+M+P0X9jn3EjaJnsog+2/VJbvwCl+LpAnVswcc4LIls+3kfHPaqZCeBVJDOLru8Tw3dJmVcud8iGEFxnYOebOkfMbeTM1qbz2Oyv+eZBTaHPY7UBHa5RGSLjtn/FA0=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3238.namprd15.prod.outlook.com (20.179.57.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.16; Thu, 11 Apr 2019 21:45:03 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.016; Thu, 11 Apr 2019
- 21:45:03 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "David Rientjes" <rientjes@google.com>,
-        "yuzhoujian@didichuxing.com" <yuzhoujian@didichuxing.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Christian Brauner" <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-Thread-Topic: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-Thread-Index: AQHU8Agfba8deeGsZ0iHj8xHvEZD6KY3F6+AgAAaygCAAE0VgA==
-Date:   Thu, 11 Apr 2019 21:45:03 +0000
-Message-ID: <20190411214458.GB31565@tower.DHCP.thefacebook.com>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org>
- <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
-In-Reply-To: <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0072.namprd14.prod.outlook.com
- (2603:10b6:300:81::34) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:3965]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e74d29b9-c262-478a-c75b-08d6bec6f43b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3238;
-x-ms-traffictypediagnostic: BYAPR15MB3238:
-x-microsoft-antispam-prvs: <BYAPR15MB3238A6D79F2AD14C94083F3ABE2F0@BYAPR15MB3238.namprd15.prod.outlook.com>
-x-forefront-prvs: 00046D390F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(366004)(376002)(346002)(199004)(189003)(256004)(25786009)(6916009)(76176011)(53936002)(316002)(8936002)(71200400001)(81156014)(6486002)(7416002)(305945005)(7736002)(99286004)(97736004)(8676002)(4326008)(81166006)(6512007)(102836004)(68736007)(6246003)(14444005)(6116002)(6436002)(54906003)(52116002)(229853002)(33656002)(11346002)(186003)(86362001)(1076003)(53546011)(9686003)(14454004)(476003)(6506007)(105586002)(486006)(386003)(478600001)(106356001)(5660300002)(46003)(93886005)(71190400001)(2906002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3238;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 77AToC3krpjoZ8GjvAzNHNhSjw+fHUKGGcDHXEKEOj5M0FwMitA0PTNkiV3TanQCAdkR4Kd3Qeg3qXMu+WaxRN9cGrpD2+oqThMEPai64Q1/XTIGyVPGo+LO/Lq+GdkNwN1DWxtxSJW9w57pbYHQe1GWFeaeEOxxeF0OXlz9r9JXjg96PRDf0U/8Ga2Se022K67LOaRnL+zsk2De9l0o+dSuRgH2eQhp2xYioDMdGbF1bHqOf8Kgv4hx3Mk82ilX//Kd6EGvbLM+JRZY6IXZBiMUAWuvDe/qM4uHcjnCGoN5/3oFidZ4pUhMvN9liQfG1LTcQMV8ciLUL2drs3Se+Uu3xX1tz2f46QAyw4hS03o0eIfohZHp1n5YsCePGY3oyKEjEuF5YYtxR1EbB2EpLDlxMf528MOYAA5jjcf9HCg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9898E43111BA1D479F58D887B9230D92@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 11 Apr 2019 17:49:55 -0400
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BLkXvj018314;
+        Thu, 11 Apr 2019 22:49:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=jan2016.eng; bh=bBiPovhGnGZGZIXDesz1FBvgCZKSTHZ+GKmRcxtjspg=;
+ b=KftPYl6cckHjdh0zzRTpChvU0DsFAZAA91V61waC27bc+QXZHRB442QnNU6JMbheig2J
+ v4cxibsLBaI52245XpO02GdXopKwBkuPtWcs5oIXYd/94Q6Hgio3UKTSIl1uquZCl6fK
+ d5yhJi8kkncuSTaaLm0mLH1HBmoibOMyRPnaY1fKfjB82rz8lZ5TTIfg5q3umDZ84cP4
+ HxQzsNoSTGp+3a4YqFkoh/mF46SKdsEMXILzj6n7FAciX4sgsZD/R/kwD0WS5pEwTkU/
+ Gx4EtySGkbk3QAcrAo04OR1C/QW/hMh4x6xKxQ0iiHB2raDE+V5AGuUrO0bs6hMg1U2O cQ== 
+Received: from prod-mail-ppoint3 (a96-6-114-86.deploy.static.akamaitechnologies.com [96.6.114.86] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2rsmx5n6sr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Apr 2019 22:49:47 +0100
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x3BLkc7B023526;
+        Thu, 11 Apr 2019 17:49:46 -0400
+Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 2rpqeyxex4-1;
+        Thu, 11 Apr 2019 17:49:43 -0400
+Received: from bos-lpxjs (bos-lpxjs.kendall.corp.akamai.com [172.29.171.194])
+        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id E05B120077;
+        Thu, 11 Apr 2019 21:49:42 +0000 (GMT)
+Received: from dbanerje by bos-lpxjs with local (Exim 4.86_2)
+        (envelope-from <dbanerje@akamai.com>)
+        id 1hEhZb-0000VJ-DS; Thu, 11 Apr 2019 17:49:31 -0400
+From:   Debabrata Banerjee <dbanerje@akamai.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Dmitry Monakhov <dmonakhov@openvz.org>,
+        linux-kernel@vger.kernel.org
+Cc:     dbanerje@akamai.com
+Subject: [PATCH] ext4: bad mount opts in no journal mode
+Date:   Thu, 11 Apr 2019 17:49:17 -0400
+Message-Id: <20190411214917.1899-1-dbanerje@akamai.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e74d29b9-c262-478a-c75b-08d6bec6f43b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 21:45:03.2856
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3238
-X-OriginatorOrg: fb.com
+Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
  signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904110139
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904110139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:09:06AM -0700, Suren Baghdasaryan wrote:
-> On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrot=
-e:
-> >
-> > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > > victim process. The usage of this flag is currently limited to SIGKIL=
-L
-> > > signal and only to privileged users.
-> >
-> > What is the downside of doing expedited memory reclaim?  ie why not do =
-it
-> > every time a process is going to die?
+Fixes:
+commit 1e381f60dad9 ("ext4: do not allow journal_opts for fs w/o journal")
 
-Hello, Suren!
+Instead of removing EXT4_MOUNT_JOURNAL_CHECKSUM from s_def_mount_opt as
+I assume was intended, all other options were blown away leading to
+_ext4_show_options() output being incorrect. I don't see why this or
+other journal related flags should be removed from s_def_mount_opt
+regardless, it is only used for comparison to display opts, and we
+already made sure they couldn't be set.
 
-I also like the idea to reap always.
+Signed-off-by: Debabrata Banerjee <dbanerje@akamai.com>
+---
+ fs/ext4/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> I think with an implementation that does not use/abuse oom-reaper
-> thread this could be done for any kill. As I mentioned oom-reaper is a
-> limited resource which has access to memory reserves and should not be
-> abused in the way I do in this reference implementation.
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 6ed4eb81e674..63eef29666e0 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4238,7 +4238,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 				 "data=, fs mounted w/o journal");
+ 			goto failed_mount_wq;
+ 		}
+-		sbi->s_def_mount_opt &= EXT4_MOUNT_JOURNAL_CHECKSUM;
+ 		clear_opt(sb, JOURNAL_CHECKSUM);
+ 		clear_opt(sb, DATA_FLAGS);
+ 		sbi->s_journal = NULL;
+-- 
+2.21.0
 
-In most OOM cases it doesn't matter that much which task to reap,
-so I don't think that reusing the oom-reaper thread is bad.
-It should be relatively easy to tweak in a way, that it won't
-wait for mmap_sem if there are other tasks waiting to be reaped.
-Also, the oom code add to the head of the list, and the expedited
-killing to the end, or something like this.
-
-The only think, if we're going to reap all tasks, we probably
-want to have a per-node oom_reaper thread.
-
-Thanks!
