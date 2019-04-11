@@ -2,123 +2,85 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB723C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 04:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7209C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 04:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B6A2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 04:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44582133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 04:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDKEsN (ORCPT
+        id S1726711AbfDKEti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 00:48:13 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48850 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfDKEsM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 00:48:12 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hERco-0005NN-UV; Thu, 11 Apr 2019 04:47:47 +0000
-Date:   Thu, 11 Apr 2019 05:47:46 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 14/15] dcache: Implement partial shrink via Slab
- Movable Objects
-Message-ID: <20190411044746.GE2217@ZenIV.linux.org.uk>
-References: <20190411013441.5415-1-tobin@kernel.org>
- <20190411013441.5415-15-tobin@kernel.org>
- <20190411023322.GD2217@ZenIV.linux.org.uk>
- <20190411024821.GB6941@eros.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411024821.GB6941@eros.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 11 Apr 2019 00:49:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37742 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfDKEti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 00:49:38 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4504A307E04C;
+        Thu, 11 Apr 2019 04:49:37 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D291A5D9C4;
+        Thu, 11 Apr 2019 04:49:33 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id A989F16E03; Thu, 11 Apr 2019 06:49:32 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm: fix drm_fb_xrgb8888_to_rgb888_dstclip()
+Date:   Thu, 11 Apr 2019 06:49:32 +0200
+Message-Id: <20190411044932.13247-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 11 Apr 2019 04:49:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 12:48:21PM +1000, Tobin C. Harding wrote:
+Oops, the __iomem annotation was added to the header file only.
+Add it to the implementation (and documentation) too.
 
-> Oh, so putting entries on a shrink list is enough to pin them?
+Fixes: 5c5373b51bec ("drm: switch drm_fb_xrgb8888_to_rgb888_dstclip to accept __iomem dst")
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/drm_format_helper.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Not exactly pin, but __dentry_kill() has this:
-        if (dentry->d_flags & DCACHE_SHRINK_LIST) {
-                dentry->d_flags |= DCACHE_MAY_FREE;
-                can_free = false;
-        }
-        spin_unlock(&dentry->d_lock);
-        if (likely(can_free))
-                dentry_free(dentry);
-and shrink_dentry_list() - this:
-                        if (dentry->d_lockref.count < 0)
-                                can_free = dentry->d_flags & DCACHE_MAY_FREE;
-                        spin_unlock(&dentry->d_lock);
-                        if (can_free)
-                                dentry_free(dentry);
-			continue;
-so if dentry destruction comes before we get around to
-shrink_dentry_list(), it'll stop short of dentry_free() and mark it for
-shrink_dentry_list() to do just dentry_free(); if it overlaps with
-shrink_dentry_list(), but doesn't progress all the way to freeing,
-we will
-	* have dentry removed from shrink list
-	* notice the negative ->d_count (i.e. that it has already reached
-__dentry_kill())
-	* see that __dentry_kill() is not through with tearing the sucker
-apart (no DCACHE_MAY_FREE set)
-... and just leave it alone, letting __dentry_kill() do the rest of its
-thing - it's already off the shrink list, so __dentry_kill() will do
-everything, including dentry_free().
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index 319de608a088..da388012df2a 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -230,7 +230,7 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
+ 
+ /**
+  * drm_fb_xrgb8888_to_rgb888_dstclip - Convert XRGB8888 to RGB888 clip buffer
+- * @dst: RGB565 destination buffer
++ * @dst: RGB565 destination buffer (iomem)
+  * @dst_pitch: destination buffer pitch
+  * @vaddr: XRGB8888 source buffer
+  * @fb: DRM framebuffer
+@@ -241,9 +241,9 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
+  * support XRGB8888.
+  *
+  * This function applies clipping on dst, i.e. the destination is a
+- * full framebuffer but only the clip rect content is copied over.
++ * full (iomem) framebuffer but only the clip rect content is copied over.
+  */
+-void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
++void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch,
+ 				       void *vaddr, struct drm_framebuffer *fb,
+ 				       struct drm_rect *clip)
+ {
+-- 
+2.18.1
 
-The reason for that dance is the locking - shrink list belongs to whoever
-has set it up and nobody else is modifying it.  So __dentry_kill() doesn't
-even try to remove the victim from there; it does all the teardown
-(detaches from inode, unhashes, etc.) and leaves removal from the shrink
-list and actual freeing to the owner of shrink list.  That way we don't
-have to protect all shrink lists a single lock (contention on it would
-be painful) and we don't have to play with per-shrink-list locks and
-all the attendant headaches (those lists usually live on stack frame
-of some function, so just having the lock next to the list_head would
-do us no good, etc.).  Much easier to have the shrink_dentry_list()
-do all the manipulations...
-
-The bottom line is, once it's on a shrink list, it'll stay there
-until shrink_dentry_list().  It may get extra references after
-being inserted there (e.g. be found by hash lookup), it may drop
-those, whatever - it won't get freed until we run shrink_dentry_list().
-If it ends up with extra references, no problem - shrink_dentry_list()
-will just kick it off the shrink list and leave it alone.
-
-Note, BTW, that umount coming between isolate and drop is not a problem;
-it call shrink_dcache_parent() on the root.  And if shrink_dcache_parent()
-finds something on (another) shrink list, it won't put it to the shrink
-list of its own, but it will make note of that and repeat the scan in
-such case.  So if we find something with zero refcount and not on
-shrink list, we can move it to our shrink list and be sure that its
-superblock won't go away under us...
