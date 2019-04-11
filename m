@@ -2,63 +2,60 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05DDC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459ECC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A199A2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9402173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tL5RJJCK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j+fC+evh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfDKTjr (ORCPT
+        id S1726998AbfDKTjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:39:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60962 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfDKTjL (ORCPT
+        Thu, 11 Apr 2019 15:39:53 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50454 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfDKTjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Apr 2019 15:39:11 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcpR2014770;
-        Thu, 11 Apr 2019 14:38:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555011531;
-        bh=uLRO4LuM3Cx4BzGDVEVCqujZlgCV+aiVlzqD9CTygSE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tL5RJJCK37NZxEUs6mKW6mvHn16vL+51Y+RPk1olGkFfLC3UrftDuVtT3jGJYbPEU
-         Wi7phKdHmjWV/k3fyHIpwgpJ67rr8/dnKUD7SoEdQXPKw2LoopABIK6CX03/XHpA3c
-         YYB+YUjDbCTR9LxXx1cCA8mD3PG+bOkalR/Oei8w=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BJcpF5095222
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Apr 2019 14:38:51 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
- Apr 2019 14:38:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 11 Apr 2019 14:38:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BJco8P103607;
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BJco8o097024;
         Thu, 11 Apr 2019 14:38:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555011530;
+        bh=5G6Ljq4Dr2dteCKjHGZ3Qf2Oc7FENGSX4rNStT8Zc+Q=;
+        h=From:To:CC:Subject:Date;
+        b=j+fC+evhSfWnrL7bkKa9xP0xJGPlM9A2OSD47dBqKotLkW1w4gwlr2kJ3EL9N9gEN
+         COy9p0n71R7UKP4R6E3OkkCetuM8MvZJSc3h8+CwyNBPLgpUdnjyMERCVTdKwdmTp+
+         fHifg7XbINXnAnlgAJ1dSPB4OJ+TrlE5YCR3oJlk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BJcnQW105850
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Apr 2019 14:38:50 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
+ Apr 2019 14:38:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 11 Apr 2019 14:38:49 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcnhn082059;
+        Thu, 11 Apr 2019 14:38:49 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <marek.behun@nic.cz>, <rdunlap@infradead.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 3/7] documention: leds: Add multicolor class documentation
-Date:   Thu, 11 Apr 2019 14:38:44 -0500
-Message-ID: <20190411193848.23140-4-dmurphy@ti.com>
+Subject: [PATCH v2 0/7] Multicolor Framework
+Date:   Thu, 11 Apr 2019 14:38:41 -0500
+Message-ID: <20190411193848.23140-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190411193848.23140-1-dmurphy@ti.com>
-References: <20190411193848.23140-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,121 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support documentation on the multicolor LED framework.
-This document defines the directores and file generated by the
-multicolor framework.  It also documents usage.
+I have updated the patchset for the multicolor framework and scrubed the base
+code.  I have incoroporated the minor changes that were asked for.  But I still
+have not added any code for the brightness models as this is still in discussion.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/leds/leds-class-multicolor.txt | 99 ++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+I have also included the TI LP50xx driver that demonstrates how to use the
+Multicolor framework.
+
+Finally I have built this on top of Jacek's LED name composition patchset
+https://lore.kernel.org/patchwork/project/lkml/list/?series=388765
+
+The MC FW will leverage the COLOR_ID and led_colors definitions provided there.
+And I have added a new COLOR_ID to support this framework because with multicolor
+having to declare a top level color for the directory just did not make sense
+
+So the directory would be appended with multicolor which would denote that this
+directory supports the MC FW
+multicolor:activity  multicolor:standby   multicolor:status 
+
+Dan
+
+Dan Murphy (7):
+  leds: multicolor: Add sysfs interface definition
+  dt: bindings: Add multicolor class dt bindings documention
+  documention: leds: Add multicolor class documentation
+  dt-bindings: leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  91 +++
+ .../devicetree/bindings/leds/common.txt       |   2 +
+ .../bindings/leds/leds-class-multicolor.txt   | 142 ++++
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++
+ Documentation/leds/leds-class-multicolor.txt  |  99 +++
+ Documentation/leds/leds-lp50xx.txt            |  36 +
+ drivers/leds/Kconfig                          |  17 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 401 ++++++++++
+ drivers/leds/led-class.c                      |   1 +
+ drivers/leds/leds-lp50xx.c                    | 716 ++++++++++++++++++
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          |  74 ++
+ 13 files changed, 1725 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
  create mode 100644 Documentation/leds/leds-class-multicolor.txt
+ create mode 100644 Documentation/leds/leds-lp50xx.txt
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
-diff --git a/Documentation/leds/leds-class-multicolor.txt b/Documentation/leds/leds-class-multicolor.txt
-new file mode 100644
-index 000000000000..edbb8139e514
---- /dev/null
-+++ b/Documentation/leds/leds-class-multicolor.txt
-@@ -0,0 +1,99 @@
-+
-+Multi Color LED handling under Linux
-+=================================================
-+
-+Author: Dan Murphy <dmurphy@ti.com>
-+
-+Description
-+-----------
-+There are varying monochrome LED colors available for application.  These
-+LEDs can be used as a single use case LED or can be mixed with other color
-+LEDs to produce the full spectrum of color.  Color LEDs that are grouped
-+can be presented under a single LED node with individual color control.
-+The multicolor class groups these LEDs and allows dynamically setting the value
-+of a single LED or setting the brightness values of the LEDs in the group and
-+updating the LEDs virtually simultaneously.
-+
-+Multicolor Class Control
-+-------------------------
-+The multicolor class presents the LED groups under a directory called "colors".
-+This directory is a child under the LED parent node created by the led_class
-+framework.  The led_class framework is documented in led-class.txt within this
-+documentation directory.
-+
-+Each colored LED is given its own directory.  These directories can be, but not
-+limited to red, green, blue, white, amber, yellow and violet.  Under these
-+directories the brightness and max_brightness files are presented for each LED.
-+
-+Under the "colors" directory there are two files created: "sync" and
-+"sync_enable". The sync_enable file controls whether the LED brightness
-+value is set real time or if the LED brightness value setting is deferred until
-+the "sync" file is written.  If sync_enable is set then writing to each LED
-+"brightness" file will store the brightness value.  Once the "sync" file is
-+written then each LED color defined in the node will write the brightness of
-+the LED in the device driver.
-+
-+If "sync_enable" is not set then writing the brightness value of the LED to the
-+device driver is done immediately.  Writing the "sync" file has no affect.
-+
-+Directory Layout Example
-+------------------------
-+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-+colors/:
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-+--w-------    1 root     root          4096 Jun 28 20:21 sync
-+-rw-------    1 root     root          4096 Jun 28 20:22 sync_enable
-+
-+colors/blue:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/green:
-+-rw-------    1 root     root          4096 Jun 28 20:22 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+colors/red:
-+-rw-------    1 root     root          4096 Jun 28 20:21 brightness
-+-r--------    1 root     root          4096 Jun 28 20:27 max_brightness
-+
-+Example of Writing LEDs with Sync Enabled
-+-----------------------------------------
-+Below the red, green and blue LEDs are set to corresponding values.  These
-+values are stored and not written until the sync file is written.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 1 > sync_enable
-+
-+echo 100 > red/brightness
-+echo 80 > green/brightness
-+echo 180 > blue/brightness
-+
-+* LED device driver has not been updated and the LED states have not changed.
-+* Writing the LED brightness files again will only change the stored value and
-+* not the device driver value.
-+
-+echo 1 > sync
-+
-+* LED device driver has been updated; the LEDs should present the brightness
-+* levels that have been set.  Since sync_enable is still enabled writing to the
-+* LED brightness files will not change the current brightnesses.
-+
-+Example of Writing LEDs with Sync Disabled
-+------------------------------------------
-+Below the values of each LED are written to the device driver immediately upon
-+request.
-+
-+cd /sys/class/leds/rgb:grouped_leds/colors
-+
-+echo 0 > sync_enable
-+
-+echo 100 > red/brightness // Red LED should be on with the current brightness
-+echo 80 > green/brightness // Green LED should be on with the current brightness
-+echo 180 > blue/brightness // Blue LED should be on with the current brightness
-+.
-+.
-+.
-+echo 0 > green/brightness // Green LED should be off
 -- 
 2.21.0.5.gaeb582a983
 
