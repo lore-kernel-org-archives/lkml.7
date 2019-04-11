@@ -2,122 +2,74 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B23CC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5927C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325C82184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C090C2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfDKMZR (ORCPT
+        id S1726884AbfDKMZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:25:17 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:40167 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfDKMZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:25:16 -0400
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id D583B100009;
-        Thu, 11 Apr 2019 12:25:08 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 14:25:08 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 07/11] drm: sun4i: Add support for enabling DDC I2C
- bus power to dw_hdmi glue
-Message-ID: <20190411122508.k2pjuwmmdhiuouaf@flea>
-References: <20190411101951.30223-1-megous@megous.com>
- <20190411101951.30223-8-megous@megous.com>
+        Thu, 11 Apr 2019 08:25:29 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6151 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726096AbfDKMZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:25:29 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E19E3B67E15566250BCD;
+        Thu, 11 Apr 2019 20:25:26 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
+ 20:25:24 +0800
+Subject: Re: [PATCH -next] memory: tegra: Make terga20_mc_reset_ops static
+To:     Thierry Reding <thierry.reding@gmail.com>
+References: <20190410140450.31604-1-yuehaibing@huawei.com>
+ <20190411093301.GC4633@ulmo>
+CC:     <jonathanh@nvidia.com>, <digetx@gmail.com>, <jroedel@suse.de>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <ceb5d977-afd2-a21a-11b8-e5f426288c68@huawei.com>
+Date:   Thu, 11 Apr 2019 20:25:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lpuusnskz5r7hduh"
-Content-Disposition: inline
-In-Reply-To: <20190411101951.30223-8-megous@megous.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190411093301.GC4633@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/4/11 17:33, Thierry Reding wrote:
+> On Wed, Apr 10, 2019 at 10:04:50PM +0800, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warning:
+>>
+>> drivers/memory/tegra/tegra20.c:277:33: warning:
+>>  symbol 'terga20_mc_reset_ops' was not declared. Should it be static?
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/memory/tegra/tegra20.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Applied thanks. I noticed that you use a slightly different name in your
+> git author settings and your email setup. The only difference seems to
+> be a space between the first and last name, so you may want to look into
+> that to avoid having any inconsistencies.
 
---lpuusnskz5r7hduh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yeah, indeed, I will fix my git config, thanks!
 
-On Thu, Apr 11, 2019 at 12:19:47PM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
-> transistors, before the bus can be used.
->
-> Model this as a power supply for DDC bus on the HDMI connector connected
-> to the output port (port 1) of the HDMI controller.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 60 ++++++++++++++++++++++++++-
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
->  2 files changed, 60 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> index 39d8509d96a0..1b6ffba41177 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
->  	return crtcs;
->  }
->
-> +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-> +					     struct platform_device **pdev_out)
-> +{
-> +	struct platform_device* pdev;
+> 
+> Thierry
+> 
 
-This doesn't respect the guidelines.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---lpuusnskz5r7hduh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8yJAAKCRDj7w1vZxhR
-xe+4AP9jkclVfL9WKNeJODike+nNV/Og4GtPELxcHrhyB8qCqgEA5HV80djUQ3QC
-Ihpatxw/+U/1FcIBWXTwmQdeInx1bwk=
-=Zba/
------END PGP SIGNATURE-----
-
---lpuusnskz5r7hduh--
