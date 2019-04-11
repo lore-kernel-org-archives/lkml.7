@@ -2,223 +2,146 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989DC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AFCC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465B22083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B0B2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="De16ed2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfDKQSC (ORCPT
+        id S1726797AbfDKQSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:18:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57744 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfDKQSC (ORCPT
+        Thu, 11 Apr 2019 12:18:47 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38726 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfDKQSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:18:02 -0400
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hEcOl-00029w-EL
-        for linux-kernel@vger.kernel.org; Thu, 11 Apr 2019 16:17:59 +0000
-Received: by mail-pl1-f197.google.com with SMTP id v5so4391105plo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:17:59 -0700 (PDT)
+        Thu, 11 Apr 2019 12:18:46 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d13so7785565qth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dtBnB10BHscANlI2Pry7Ppm8oEPt+C4ZM4LG9RdUtdk=;
+        b=De16ed2XEEtRbo1CKENs6sMutHD49Q/cAstG3x5wpdUx4DYv3vn40aZ7zGxs9pKUVk
+         ek9QFv0RYGM538H15uQSE5LbohaaIJCUg3LcLe/YhVbL6RalwlCudvAPNrrnoKElWsFy
+         JbF/ndTJJqlDbBBt3CnWLC2x1CfLe3+PtzByzBGTFse0rpiDiCHpCqH597QWvGbXVEyG
+         FEtE4zye0+fCtu9PhwqVIEGGh9u/EPP+2pTHpDHfkdI4CPDLNUN3oGq220fh2X2a8qHw
+         NgNJikpyAVpALN8w62AAEgQHCP1yb5FfC3P6SpnQjNJU4Kkr2Kpre+vEGC8ZjZKo8Gl5
+         o8SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=pdshwTx/pfd5OCAw4/o5Jg8UfEuVpurlXeHPmIBSah0=;
-        b=Rs5jaDUepQg3HTzmQB8tNF26IDRjwdKkI6Z8tBQKMEZJSC5Jat48jfv0cvLWWtxwq1
-         6YKavGFwFCewPS8ik4svOdN7tJNzh+m03znqkVqRP1ohmByj0bKM8KU12NB4EThdRz8f
-         DB0YYKkcpOJjak+UXdaxNHa8yp+8Zh4FufqMqSeZqEmNAlceUe19XugTVgRpGo6FifQn
-         UYdNxA9ixEdZCt5zTJwmMq2cgNVlJhSKoivk6SnsHMl6ClH9oC1IcMloX3IUCyL7pncp
-         KY4GWlf0pND6Qdg/ghV0M80OjZ5Tkepbx+40d/AtYpOyYIRHJfQ9+zNIEksaQNEx0FpY
-         6rmg==
-X-Gm-Message-State: APjAAAXWPU2yw5a3C4qLGbv5kB0id0Jl3XAjQ8rajpYbAKiDTwGInCSw
-        D3WxILJxNSToFVaOBMTrtt8WEatDlIofS0WFTEKBoma5OIaMrx+9eXx2GSKIjgKAvUnzbDZVSsb
-        v754Z7OmVNTkjnWOjaCA8Yc4Ph7r2sI6FLecay/2SGg==
-X-Received: by 2002:a63:2a8f:: with SMTP id q137mr46818674pgq.31.1554999477503;
-        Thu, 11 Apr 2019 09:17:57 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy94GtVLLbCjSHoeMQkRlLNf6G+xDgFaBrnJkTCA+hbxgLGLfVHrSCuz3H3ucf1ntjWVyq+YA==
-X-Received: by 2002:a63:2a8f:: with SMTP id q137mr46818624pgq.31.1554999477106;
-        Thu, 11 Apr 2019 09:17:57 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-e18e-6428-b232-8eaa.dynamic-ip6.hinet.net (2001-b011-380f-14b9-e18e-6428-b232-8eaa.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:e18e:6428:b232:8eaa])
-        by smtp.gmail.com with ESMTPSA id j19sm28512252pfr.155.2019.04.11.09.17.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:17:56 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <LbZjy9p--3-1@tutanota.com>
-Date:   Fri, 12 Apr 2019 00:17:52 +0800
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Swboyd <swboyd@chromium.org>,
-        Bigeasy <bigeasy@linutronix.de>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <B7A141A3-613C-4EB8-8BB4-F845A0AC8F23@canonical.com>
-References: <20190325125704.6585-1-hotwater438@tutanota.com>
- <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
- <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com>
- <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
- <abe3eccb-1490-e088-1fd8-6af4dc1bd2ec@redhat.com> <LbI7kio--3-1@tutanota.com>
- <a58ebeb8-10fd-29d0-1562-4ed8d84f2239@redhat.com> <LbZjy9p--3-1@tutanota.com>
-To:     hotwater438@tutanota.com
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dtBnB10BHscANlI2Pry7Ppm8oEPt+C4ZM4LG9RdUtdk=;
+        b=FAlYRWQdezLkTyT+mjbjGoXctf17yEQYbpsQhw2mfn8zG7wqT5spuTbfW/eu/0MAEA
+         U9z+aVr5ozAKPUDoqnshjWPyKTE06XZDGRGpbDXY28jk+oRxmMww+RN4XLCa9j0BDKfW
+         Bdi5fJUrNA9qk4Hh2zJlgjQDs01ffBF0qHbi6dPEwV20M4AxBVuhUwdu/zByJXE9iNGK
+         GnbtHYBOxf8xDXw2ReyTVCJviDaCqkWiHSPM2NfxgkzWznY7zoIBUixaGHp0tnNFaSQM
+         wN62GInNFxUIoD0jy61xbEKmAzAex6M6txT37yFE9vp43jwmx3G85L5lK2gk7KGSDt+t
+         yf4g==
+X-Gm-Message-State: APjAAAVZfsr3Mur685gr+7saK97s4/Mr6IcQLj7iCPchsFSCi6OMRQ/E
+        P/bnuey7P4IhVIaP9utHz2q7zwuxqR3lRLMra2hbvA==
+X-Google-Smtp-Source: APXvYqx5CWpGgbACybyrinBfzS83tX4KRJs57zlMkMYYYLfTduHXBqgvj3424Yc5issdUsStUoC8yj5bc9QGP2WynL0=
+X-Received: by 2002:ac8:1a21:: with SMTP id v30mr42590152qtj.103.1554999525039;
+ Thu, 11 Apr 2019 09:18:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190411014353.113252-1-surenb@google.com> <20190411105111.GR10383@dhcp22.suse.cz>
+In-Reply-To: <20190411105111.GR10383@dhcp22.suse.cz>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Thu, 11 Apr 2019 12:18:33 -0400
+Message-ID: <CAJWu+oq45tYxXJpLPLAU=-uZaYRg=OnxMHkgp2Rm0nbShb_eEA@mail.gmail.com>
+Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        penguin-kernel@i-love.sakura.ne.jp, ebiederm@xmission.com,
+        shakeelb@google.com, Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 11, 2019 at 6:51 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 10-04-19 18:43:51, Suren Baghdasaryan wrote:
+> [...]
+> > Proposed solution uses existing oom-reaper thread to increase memory
+> > reclaim rate of a killed process and to make this rate more determinist=
+ic.
+> > By no means the proposed solution is considered the best and was chosen
+> > because it was simple to implement and allowed for test data collection=
+.
+> > The downside of this solution is that it requires additional =E2=80=9Ce=
+xpedite=E2=80=9D
+> > hint for something which has to be fast in all cases. Would be great to
+> > find a way that does not require additional hints.
+>
+> I have to say I do not like this much. It is abusing an implementation
+> detail of the OOM implementation and makes it an official API. Also
+> there are some non trivial assumptions to be fullfilled to use the
+> current oom_reaper. First of all all the process groups that share the
+> address space have to be killed. How do you want to guarantee/implement
+> that with a simply kill to a thread/process group?
 
-at 05:18, <hotwater438@tutanota.com> <hotwater438@tutanota.com> wrote:
+Will task_will_free_mem() not bail out in such cases because of
+process_shares_mm() returning true? AFAIU, Suren's patch calls that.
+Also, if I understand correctly, this patch is opportunistic and knows
+what it may not be possible to reap in advance this way in all cases.
+        /*
+         * Make sure that all tasks which share the mm with the given tasks
+         * are dying as well to make sure that a) nobody pins its mm and
+         * b) the task is also reapable by the oom reaper.
+         */
+        rcu_read_lock();
+        for_each_process(p) {
+                if (!process_shares_mm(p, mm))
 
-> Hi.
+> > Other possible approaches include:
+> > - Implementing a dedicated syscall to perform opportunistic reclaim in =
+the
+> > context of the process waiting for the victim=E2=80=99s death. A natura=
+l boost
+> > bonus occurs if the waiting process has high or RT priority and is not
+> > limited by cpuset cgroup in its CPU choices.
+> > - Implement a mechanism that would perform opportunistic reclaim if it=
+=E2=80=99s
+> > possible unconditionally (similar to checks in task_will_free_mem()).
+> > - Implement opportunistic reclaim that uses shrinker interface, PSI or
+> > other memory pressure indications as a hint to engage.
 >
-> 1) Run "cat /proc/interrupts | grep ELAN" , note down the value
-> 2) Very quickly/briefly touch the touchpad once
-> 3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
-> 4) Subtract result from 1. from result from 3, this difference is
-> the value we are interested in. E.g. my testing got 254 and 257, so
-> a difference of 3.
-> I've tested that, main diffs are 30, 24, 16 (the most frequent), 2 (the  
-> least frequent).
->
-> I was using 4.19.13 kernel, because I use ParrotOS (which happens to be  
-> Debian distribution).
-> But I've installed experimental 5.0.0 kernel and I can't say right now if  
-> suspend problem is resolved (i have to rebuild latest kernel with patch).
+> I would question whether we really need this at all? Relying on the exit
+> speed sounds like a fundamental design problem of anything that relies
+> on it. Sure task exit might be slow, but async mm tear down is just a
+> mere optimization this is not guaranteed to really help in speading
+> things up. OOM killer uses it as a guarantee for a forward progress in a
+> finite time rather than as soon as possible.
 
-Can you try below fix?
+Per the data collected by Suren, it does speed things up. It would be
+nice if we can reuse this mechanism, or come up with a similar
+mechanism.
 
-This can solve what commit 1475af255e18 ("HID: i2c-hid: Ignore input report  
-if there's no data present on Elan touchpanels”) tries to workaround.
+thanks,
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c  
-b/drivers/pinctrl/intel/pinctrl-intel.c
-index c19a4c45f7bb..30e3664f1ae5 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -957,6 +957,10 @@ static void intel_gpio_irq_mask_unmask(struct irq_data  
-*d, bool mask)
-                 reg = community->regs + community->ie_offset + gpp * 4;
- 
-                 raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+               if (!mask)
-+                       writel(BIT(gpp_offset), community->regs +  
-community->is_offset + gpp * 4);
-+
-                 value = readl(reg);
-                 if (mask)
-                         value &= ~BIT(gpp_offset);
-
-
->
-> Regards,
-> Vladislav.
->
-> Apr 3, 2019, 2:18 PM by hdegoede@redhat.com:
-> Hi,
->
-> On 31-03-19 11:50, hotwater438@tutanota.com wrote:
-> Hi. I've done everything you said, here are results:
->
-> Vladislav can you check the output of /cat/interrupts on a kernel
-> without the patch and while *not* using the touchpad; and check
-> if the amount of touchpads-interrupts still keeps increasing in this
-> case?
->
-> IWI or IRQ work interrupts keep increasing with speed at least 3  
-> interrupts/s.
->
-> I'm really only interested in the touchpad related IRQs, so e.g. the line
-> about "intel-gpio 129 ELAN1200:00", if you're seeing 3 interrupts/s on
-> some others that is fine, so I take it the ELAN1200:00 interrupt count
-> does not increase on an *unpatched* kernel, unless you use the touchpad?
-> Also when I am moving touchpad IR-IO-APIC 14-fasteoi INT345D:00 get's  
-> triggered and increased.
->
-> That is the GPIO controller interrupt, so that one increasing is normal.
->
-> If I understand things correctly then this all means that the IRQ indeed
-> is a normal level IRQ and Dmitry is likely correct that there is an
-> pinctrl / gpiochip driver problem here.
->
-> Can you try the following with an *unpatched* kernel? :
->
-> 1) Run "cat /proc/interrupts | grep ELAN" , note down the value
-> 2) Very quickly/briefly touch the touchpad once
-> 3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
-> 4) Subtract result from 1. from result from 3, this difference is
-> the value we are interested in. E.g. my testing got 254 and 257, so
-> a difference of 3.
->
-> The goal here is to get an as low as possible difference. Feel free
-> to repeat this a couple of times.
->
-> On an Apollo Lake laptop with an I2C hid mt touchpad I can get the
-> amount of interrupts triggered for a single touch down to 3,
-> given the huge interrupt counts of 130000+ reported in:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1543769
->
-> I expect you to get a much bigger smallest possible difference
-> between 2 "cat /proc/interrupts | grep ELAN" commands, note a
-> difference of 0 means your touch did not register.
->
-> Assuming you indeed see much more interrupts for a very quick
-> touch + release, then we indeed have an interrupt handling problem
-> we need to investigate further.
-> I don't know if it's important or not, but for some reason these  
-> interrupts keep popping only on CPU2 (i have 4cpu processor).
->
-> That does not matter.
-> 1) Suspending the machine by selecting suspend from a menu in your
-> desktop environment, or by briefly pressing the power-button, do
-> not close the lid
-> 2) As soon as the system starts suspending and while it is suspended, move
-> your finger around the touchpad
-> 3) Wake the system up with the powerbutton while moving your finger around
-> 4) Check if the touchpad still works after this
->
-> It works, but as it seems, looses edge. JournalCTL is being flooded with  
-> i2c_hid_get_input: incomplete report (16/65535)
->
-> That is probably a different issue. If you loose the edge IRQ, then the  
-> touchpad
-> would stop working without any messages. I believe that the suspend /  
-> resume
-> issue may be fixed by:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=52cf93e63ee672a92f349edc6ddad86ec8808fd8
->
-> Does your kernel have this commit? (please always use the latest kernel  
-> while
-> testing).
-> Also a thing to notice, that after manually removing and modprobing  
-> i2c_hid module, it says next in journalctl:
->
-> i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using  
-> dummy regulator
-> i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using  
-> dummy regulator
->
-> Those messages can safely be ignored.
->
-> Regards,
->
-> Hans
-
+ - Joel
