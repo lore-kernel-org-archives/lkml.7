@@ -2,72 +2,66 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9410FC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0648C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C5C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E2120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfDKT1S (ORCPT
+        id S1726800AbfDKT2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:27:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:32924 "EHLO gloria.sntech.de"
+        Thu, 11 Apr 2019 15:28:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:26330 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDKT1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:27:18 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEfLu-0001JR-Kb; Thu, 11 Apr 2019 21:27:14 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Caesar Wang <caesar.wang@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, mka@chromium.org,
-        ryandcase@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] clk: rockchip: Make rkpwm a critical clock on rk3288
-Date:   Thu, 11 Apr 2019 21:27:13 +0200
-Message-ID: <4051007.xZozYk3gQ9@diego>
-In-Reply-To: <20190409204707.150347-3-dianders@chromium.org>
-References: <20190409204707.150347-1-dianders@chromium.org> <20190409204707.150347-3-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        id S1726630AbfDKT2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 15:28:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 12:28:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,338,1549958400"; 
+   d="scan'208";a="160850569"
+Received: from arajaman-mobl4.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.134.140])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Apr 2019 12:28:21 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/2] soundwire: fix Kconfig select/depend issues
+Date:   Thu, 11 Apr 2019 14:28:12 -0500
+Message-Id: <20190411192814.10663-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 9. April 2019, 22:47:06 CEST schrieb Douglas Anderson:
-> Most rk3288-based boards are derived from the EVB and thus use a PWM
-> regulator for the logic rail.  However, most rk3288-based boards don't
-> specify the PWM regulator in their device tree.  We'll deal with that
-> by making it critical.
-> 
-> NOTE: it's important to make it critical and not just IGNORE_UNUSED
-> because all PWMs in the system share the same clock.  We don't want
-> another PWM user to turn the clock on and off and kill the logic rail.
-> 
-> This change is in preparation for actually having the PWMs in the
-> rk3288 device tree actually point to the proper PWM clock.  Up until
-> now they've all pointed to the clock for the old IP block and they've
-> all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
-> clock rates for both clocks were the same.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+0-day/Kbuild starts complaining about missed module dependencies and
+compilation issues. Since codecs and soc drivers need to be compilable
+independently, let's fix this using the following model:
 
-applied for 5.2
-I've added a comment line describing the pwm-reg reason.
+SOUNDWIRE_INTEL ---- select -----------
+                                      |
+				      v
+REGMAP_SOUNDWIRE --- select ---> SOUNDWIRE_BUS
 
 
-Heiko
+Pierre-Louis Bossart (2):
+  regmap: soundwire: fix Kconfig select/depend issue
+  soundwire: fix SOUNDWIRE_BUS option
 
+ drivers/base/regmap/Kconfig | 3 ++-
+ drivers/soundwire/Kconfig   | 1 -
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
 
