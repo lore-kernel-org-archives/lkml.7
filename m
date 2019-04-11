@@ -2,76 +2,112 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03179C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F020C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72F22077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B48206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfDKNT7 (ORCPT
+        id S1726694AbfDKNVM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33522 "EHLO mail.kernel.org"
+        Thu, 11 Apr 2019 09:21:12 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:58476 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfDKNT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:19:59 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3782206B7;
-        Thu, 11 Apr 2019 13:19:57 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 09:19:55 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        keescook@chromium.org, mathieu.desnoyers@efficios.com,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] module: Make __tracepoints_ptrs as read-only
-Message-ID: <20190411091955.67cdd9fd@gandalf.local.home>
-In-Reply-To: <20190411082106.GB167446@google.com>
-References: <20190410195708.162185-1-joel@joelfernandes.org>
-        <20190410195708.162185-3-joel@joelfernandes.org>
-        <20190410161112.540017d9@gandalf.local.home>
-        <20190410202902.GA167446@google.com>
-        <20190410204401.62f928ca@gandalf.local.home>
-        <20190411082106.GB167446@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726264AbfDKNVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:21:11 -0400
+Received: from wf0380.dip.tu-dresden.de ([141.76.181.124] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hEZdO-00086a-Hc; Thu, 11 Apr 2019 15:20:54 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 4/5] arm64: dts: rk3399: Add dfi and dmc nodes.
+Date:   Thu, 11 Apr 2019 15:20:53 +0200
+Message-ID: <7786013.gjegOBUKu0@phil>
+In-Reply-To: <20190321231440.19031-5-gael.portay@collabora.com>
+References: <20190321231440.19031-1-gael.portay@collabora.com> <20190321231440.19031-5-gael.portay@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 04:21:06 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
+Hi Gaël,
 
-> Patch 2/3 and 3/3 would not be nececessary if this works out. 1/3 may be a
-> nice clean up but is not something urgent and we could do that in the future
-> if needed.
+Am Freitag, 22. März 2019, 00:14:39 CEST schrieb Gaël PORTAY:
+> From: Lin Huang <hl@rock-chips.com>
+> 
+> These are required to support DDR DVFS on rk3399 platform. The patch also
+> introduces a new file with default DRAM settings.
+> 
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
 
-Well, jump_labels is "special" because it requires sorting the RO data
-and is done via module notify. The only other user that had to modify
-RO data on module load is ftrace. It had to do the nop conversions in
-the text area. It use to do it via module notify, but because of the
-hardening of the kernel, doing it there was no longer possible because
-everything was RO then. The solution was to call into ftrace directly
-from the module code instead of a notifier. This was done before
-sections were made RO.
+> +	dmc: dmc {
+> +		compatible = "rockchip,rk3399-dmc";
+> +		rockchip,pmu = <&pmugrf>;
+> +		devfreq-events = <&dfi>;
+> +		clocks = <&cru SCLK_DDRC>;
+> +		clock-names = "dmc_clk";
+> +		status = "disabled";
+> +		rockchip,ddr3_speed_bin = <21>;
+> +		rockchip,pd_idle = <0x40>;
+> +		rockchip,sr_idle = <0x2>;
+> +		rockchip,sr_mc_gate_idle = <0x3>;
+> +		rockchip,srpd_lite_idle	= <0x4>;
+> +		rockchip,standby_idle = <0x2000>;
+> +		rockchip,dram_dll_dis_freq = <300000000>;
+> +		rockchip,phy_dll_dis_freq = <125000000>;
+> +		rockchip,auto_pd_dis_freq = <666000000>;
+> +		rockchip,ddr3_odt_dis_freq = <333000000>;
+> +		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
+> +		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
+> +		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
+> +		rockchip,lpddr3_odt_dis_freq = <333000000>;
+> +		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
+> +		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
+> +		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
+> +		rockchip,lpddr4_odt_dis_freq = <333000000>;
+> +		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
+> +		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
+> +		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
+> +		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
+> +		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
+> +		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
+> +		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
 
-One option is to do the same with jump_labels and just have a call to
-the sorting before the notifiers and before the section gets turned
-into RO. Or I would say just leave it as is. As I stated, jump_labels
-are "special" and adding a loop of one section where I don't envision
-any other sections needing to do the same thing for a long time to
-come. I would save that patch for if there is another section that
-comes along that needs to be modify at module notify.
+as Rob mentioned in his review, these values look board-specific,
+so should probably move over to the specific board you're using them
+on?
 
--- Steve
+
+Heiko
+
+
