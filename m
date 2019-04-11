@@ -2,312 +2,98 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9309DC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00985C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBD3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4191217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFGuQoiu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poDHCcir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfDKNcE (ORCPT
+        id S1726826AbfDKNcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:32:04 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34641 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKNcD (ORCPT
+        Thu, 11 Apr 2019 09:32:41 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40312 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfDKNcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:32:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so3441312plt.1;
-        Thu, 11 Apr 2019 06:32:03 -0700 (PDT)
+        Thu, 11 Apr 2019 09:32:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a28so4723409lfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yniYJajAgBbPQfJmdnpnuLeK+jk1ku2qRv9Ob8ZNfKQ=;
-        b=MFGuQoiuikujyxTafYJZzryYP9+IFdB8li17rHJAUW6n0N7FZ8pcxJn5HfCxAx/6Wu
-         dUB0Qp9hIYXLWVnaaRc90dHwK5wv122UNPrTTNOwuYnw/gqqcAa9xw0miUMF8q0YFncx
-         3tSKO2GPBaa5sIykKZjdGjV+Gb9B3N302Pq2Ul9YsV/OnUu4OXSxueUTuJVZllQ4xwc1
-         axRgklvVDlw3pkvWVqWBzTEj3yjKd6rss5tRXs4NktL0RFWfQtu2rSN3DMqCR7gHv+b6
-         ixx3U4+kls5cvio8x8WXlPgi5gb5iyiHRxWYwnABNio4UxARwz0zMgwT+Lpm28ieuE5B
-         SMwg==
+        bh=xvSuYyh6IKBEj54FFCtw6W7UjqwtB1CXJsCRn+E+pGw=;
+        b=poDHCcirbQv0Ydxb9B8Y0kJjroHTkglNGRX9V7PrXX5qAiDRxul61bGRvdreuA3vDm
+         i5gSa/Hz2dz8DsZVroN7DbQe3PjnN31070Y+eNrQzZRKkhlWEdo6awG0XKknON79hMdX
+         Gtzzdk0Aw5S2/vIA/yJcyEZbQqNI21hkhf4Hnhz/awT0kpJ/MeKwMHDOi/k5IkG5kMSP
+         MNSzY9NKRo6u/HdOgjOQB0NkOcHHzi4OL4V92M6vJY28YWLjf3mu8lH97PQSpHevW42N
+         r0UsvPf/+dAF3HF+jSXgjce3iqvzzcf0wSj9p1/2qqnPcz9Nnci5ba8W/EXWqGO3n3VS
+         33QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yniYJajAgBbPQfJmdnpnuLeK+jk1ku2qRv9Ob8ZNfKQ=;
-        b=aEE3GEoYOqobT7d6OnbkzbX/zMAMiUSA6eFdzfDrKoUYQlnNY8hlvxmLbR95O8wV4s
-         nYC0yh7w+ZnEnURcyHOQhT4QdZxCyUCyoF0dul2PBfDlA/288BaDRCxyqYizipc2vWx5
-         gA00ayApXluo8VU0+U1VUson/krheoihBTRJLrCmvKlYx0FSUHctrbx/8ej4n8cMuIKn
-         gZRQG5/EosbrmIruz82h7+Klgq+6ASW8nGnho5ZUwa5xa+LP+IoIG3VeCbvUfgQEzYcr
-         8pItQNn7dYfq1/Ipukm5Ioh9lx0U2W4SF/QTSOlfJ+RSnS4EvalQTXxSRthRMXtJlxBJ
-         sM+Q==
-X-Gm-Message-State: APjAAAWOnKXYaWK/sKFIP5MlfeH1n86KBKB4CAtFLEa2uy2Ysmi+ZjRa
-        BBe3TzQsJ418kWwXD0aSOv62TajggbQyK4x8jqk=
-X-Google-Smtp-Source: APXvYqzu2R7J1L/i7gtQ1Eu9UwkZp94Ii/MJZaQ71CvyBijMunj+vi2ZFYO0+YkrZvopZV6y4Iq3EupzSSmfwV0qiNQ=
-X-Received: by 2002:a17:902:2c83:: with SMTP id n3mr48674967plb.281.1554989522810;
- Thu, 11 Apr 2019 06:32:02 -0700 (PDT)
+        bh=xvSuYyh6IKBEj54FFCtw6W7UjqwtB1CXJsCRn+E+pGw=;
+        b=DN5IYsMmTlviTUk5k6sNg3csCvxZDQxgRBvxZUreevZB/rFZ2ASX9CNBusuxuOtlFV
+         HVWPs1B9p7OJKOosRQvg3Afi2M5NYLj3tIYA/2QJaP6wB1PDDiU2dpohnhMT539YmVMz
+         ANNEnD2L3yfALcCQfkAtNIrFU2FbJO388J6CW3IKB/b+/uqPHD+iTNn2p2KeRy+VNl5R
+         wOTBTiTk9hHcL1L3ovBPGL0xXbOLIEtgOz4/Yc2d8nUqlUuqR1/xM011vsAWIHIsP8Gm
+         YjPkat1HvaxoNCTKappKq+7ocZdRuf8KKTFOak7Tvsb1HIM5uQ8WZkvaZCCrBTCcGUcQ
+         tqOw==
+X-Gm-Message-State: APjAAAVPcnPA5n7aRjqS5IWRKyq8L45pV6tivSYLaugs+NADfPAiW7+A
+        WTd0c1esCH5fvC/RUIb1bQ3ZMDFQJs+eYmSHlkeV/w==
+X-Google-Smtp-Source: APXvYqyjmHv/mGR/RqOhp+RKnOxwRCUtA9yqbVi0pL+gjI70u0xxHQTtGuInduan/H6y5j+/15DqnTbQJvrQ377Gw+o=
+X-Received: by 2002:ac2:546c:: with SMTP id e12mr15580332lfn.121.1554989559272;
+ Thu, 11 Apr 2019 06:32:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com> <20190410152505.87041-10-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20190410152505.87041-10-heikki.krogerus@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 11 Apr 2019 16:31:51 +0300
-Message-ID: <CAHp75Vde9rX7XaVuUyn_mozwr1VFtCNVYzkerGE4DXT_hp_wPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/12] platform/x86: intel_cht_int33fe: Provide
- software nodes for the devices
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <1554800820-5412-1-git-send-email-p.paillet@st.com> <1554800820-5412-3-git-send-email-p.paillet@st.com>
+In-Reply-To: <1554800820-5412-3-git-send-email-p.paillet@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 11 Apr 2019 15:32:28 +0200
+Message-ID: <CACRpkdZnjA+6yXw-23AMe4FUCtWzdToaa7ebRCwzu1anQyhTzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: stm32: add stpmic1 support on
+ stm32mp157a dk1 board
+To:     Pascal PAILLET-LME <p.paillet@st.com>
+Cc:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "biju.das@bp.renesas.com" <biju.das@bp.renesas.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 6:25 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Software nodes provide two features that we will need later.
-> 1) Software nodes can have references to other software nodes.
-> 2) Software nodes can exist before a device entry is created.
->
+On Tue, Apr 9, 2019 at 11:08 AM Pascal PAILLET-LME <p.paillet@st.com> wrote:
 
-It seems does two things in one patch, and the first one is not
-mentioned in the commit message.
-I would suggest to create a preparation patch which extracts finding
-and registering max17047 device followed by what you do here.
+> This patch adds stpmic1 support on stm32mp157a dk1 board.
+> The STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
+> regulators, 3 power switches, a watchdog and an input for a power on key.
+> The DMAs are disabled because the PMIC generates a very few traffic and
+> DMA channels may lack for other usage.
+>
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_cht_int33fe.c | 124 +++++++++++++++++------
->  1 file changed, 93 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index 657b8d61554c..a9abc77fffa7 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -21,18 +21,28 @@
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> +#include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->
->  #define EXPECTED_PTYPE         4
->
-> +enum {
-> +       INT33FE_NODE_FUSB302,
-> +       INT33FE_NODE_MAX17047,
-> +       INT33FE_NODE_PI3USB30532,
-> +       INT33FE_NODE_MAX,
-> +};
-> +
->  struct cht_int33fe_data {
->         struct i2c_client *max17047;
->         struct i2c_client *fusb302;
->         struct i2c_client *pi3usb30532;
->         /* Contain a list-head must be per device */
->         struct device_connection connections[4];
-> +
-> +       struct fwnode_handle *node[INT33FE_NODE_MAX];
->  };
->
->  /*
-> @@ -63,14 +73,6 @@ static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
->         return 1;
->  }
->
-> -static struct i2c_client *cht_int33fe_find_max17047(void)
-> -{
-> -       struct i2c_client *max17047 = NULL;
-> -
-> -       i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
-> -       return max17047;
-> -}
-> -
->  static const char * const max17047_suppliers[] = { "bq24190-charger" };
->
->  static const struct property_entry max17047_props[] = {
-> @@ -78,6 +80,36 @@ static const struct property_entry max17047_props[] = {
->         { }
->  };
->
-> +static int
-> +cht_int33fe_find_max17047(struct device *dev, struct cht_int33fe_data *data)
-> +{
-> +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_MAX17047];
-> +       struct i2c_client *max17047 = NULL;
-> +       struct i2c_board_info board_info;
-> +       int ret;
-> +
-> +       i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
-> +       if (max17047) {
-> +               /* Pre-existing i2c-client for the max17047, add device-props */
-> +               max17047->dev.fwnode->secondary = fwnode;
-> +               /* And re-probe to get the new device-props applied. */
-> +               ret = device_reprobe(&max17047->dev);
-> +               if (ret)
-> +                       dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
-> +               return 0;
-> +       }
-> +
-> +       memset(&board_info, 0, sizeof(board_info));
-> +       strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
-> +       board_info.dev_name = "max17047";
-> +       board_info.fwnode = fwnode;
-> +       data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
-> +       if (IS_ERR(data->max17047))
-> +               return PTR_ERR(data->max17047);
-> +
-> +       return 0;
-> +}
-> +
->  static const struct property_entry fusb302_props[] = {
->         PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
->         PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
-> @@ -86,12 +118,50 @@ static const struct property_entry fusb302_props[] = {
->         { }
->  };
->
-> +static const struct property_entry *props[] = {
-> +       [INT33FE_NODE_FUSB302]          = fusb302_props,
-> +       [INT33FE_NODE_MAX17047]         = max17047_props,
-> +       [INT33FE_NODE_PI3USB30532]      = NULL,
-> +};
-> +
-> +static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < INT33FE_NODE_MAX; i++) {
-> +               fwnode_remove_software_node(data->node[i]);
-> +               data->node[i] = NULL;
-> +       }
-> +}
-> +
-> +static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
-> +{
-> +       struct fwnode_handle *fwnode;
-> +       int ret;
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(props); i++) {
-> +               fwnode = fwnode_create_software_node(props[i], NULL);
-> +               if (IS_ERR(fwnode)) {
-> +                       ret = PTR_ERR(fwnode);
-> +                       goto err_remove_nodes;
-> +               }
-> +               data->node[i] = fwnode;
-> +       }
-> +
-> +       return 0;
-> +
-> +err_remove_nodes:
-> +       cht_int33fe_remove_nodes(data);
-> +
-> +       return ret;
-> +}
-> +
->  static int cht_int33fe_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
->         struct i2c_board_info board_info;
->         struct cht_int33fe_data *data;
-> -       struct i2c_client *max17047;
->         struct regulator *regulator;
->         unsigned long long ptyp;
->         acpi_status status;
-> @@ -151,26 +221,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         if (!data)
->                 return -ENOMEM;
->
-> -       /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> -       max17047 = cht_int33fe_find_max17047();
-> -       if (max17047) {
-> -               /* Pre-existing i2c-client for the max17047, add device-props */
-> -               ret = device_add_properties(&max17047->dev, max17047_props);
-> -               if (ret)
-> -                       return ret;
-> -               /* And re-probe to get the new device-props applied. */
-> -               ret = device_reprobe(&max17047->dev);
-> -               if (ret)
-> -                       dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
-> -       } else {
-> -               memset(&board_info, 0, sizeof(board_info));
-> -               strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
-> -               board_info.dev_name = "max17047";
-> -               board_info.properties = max17047_props;
-> -               data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
-> -               if (IS_ERR(data->max17047))
-> -                       return PTR_ERR(data->max17047);
-> -       }
-> +       ret = cht_int33fe_add_nodes(data);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
-> +       ret = cht_int33fe_find_max17047(dev, data);
-> +       if (ret)
-> +               goto out_remove_nodes;
->
->         data->connections[0].endpoint[0] = "port0";
->         data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
-> @@ -187,7 +245,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         memset(&board_info, 0, sizeof(board_info));
->         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
->         board_info.dev_name = "fusb302";
-> -       board_info.properties = fusb302_props;
-> +       board_info.fwnode = data->node[INT33FE_NODE_FUSB302];
->         board_info.irq = fusb302_irq;
->
->         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
-> @@ -198,6 +256,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->
->         memset(&board_info, 0, sizeof(board_info));
->         board_info.dev_name = "pi3usb30532";
-> +       board_info.fwnode = data->node[INT33FE_NODE_PI3USB30532];
->         strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
->
->         data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
-> @@ -214,9 +273,11 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         i2c_unregister_device(data->fusb302);
->
->  out_unregister_max17047:
-> +       device_connections_remove(data->connections);
->         i2c_unregister_device(data->max17047);
->
-> -       device_connections_remove(data->connections);
-> +out_remove_nodes:
-> +       cht_int33fe_remove_nodes(data);
->
->         return ret;
->  }
-> @@ -230,6 +291,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
->         i2c_unregister_device(data->max17047);
->
->         device_connections_remove(data->connections);
-> +       cht_int33fe_remove_nodes(data);
->
->         return 0;
->  }
-> --
-> 2.20.1
->
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
