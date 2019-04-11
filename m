@@ -2,98 +2,410 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52669C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1B22070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEA02133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfDKHOO convert rfc822-to-8bit (ORCPT
+        id S1726828AbfDKHP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:14:14 -0400
-Received: from smtp.asem.it ([151.1.184.197]:59119 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbfDKHON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:14:13 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003806042.MSG 
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:14:07 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Thu, 11
- Apr 2019 09:14:06 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Thu, 11 Apr 2019 09:14:06 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
-Thread-Topic: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
-Thread-Index: AQHU75yQbkDNn+rZPkCFgi0S9cPL1qY1OMwAgAAnBxCAAAN6AIABJ5/A
-Date:   Thu, 11 Apr 2019 07:14:06 +0000
-Message-ID: <7ad025c8049e4e828ce75ef1e41dcbfd@asem.it>
-References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
- <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
- <20190410125612.GR6106@sirena.org.uk>
- <6eeaf42f4d3f42c58546c429194213b8@asem.it>
- <20190410152820.GT6106@sirena.org.uk>
-In-Reply-To: <20190410152820.GT6106@sirena.org.uk>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 11 Apr 2019 03:15:57 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:58758 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726121AbfDKHP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:15:56 -0400
+Received: from [IPv6:2001:983:e9a7:1:4cd3:53c0:7e2b:d8bc] ([IPv6:2001:983:e9a7:1:4cd3:53c0:7e2b:d8bc])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ETw7hwlVfUjKfETw8hktMf; Thu, 11 Apr 2019 09:15:52 +0200
+Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
+ <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
+ <7e905f61-3570-d66b-949b-36cc9ba840a9@xs4all.nl>
+Message-ID: <1c774bf0-c4c9-4f58-814b-9e734a5974a6@xs4all.nl>
+Date:   Thu, 11 Apr 2019 09:15:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-SGHeloLookup-Result: hardfail smtp.helo=webmail.asem.it (does not match 172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B020A.5CAEE93F.002F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+In-Reply-To: <7e905f61-3570-d66b-949b-36cc9ba840a9@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNePpeGlwfdCvF1LHqZgjPz9qHKV7AVIu0zPC1vvp8fZor0aKUgX1TPU2mFJ+CKe1QM3qfOub8fRkD1W7tYqxDKndfAY6myWd0oU92eMIUHgylXMsqOb
+ geKxCylXqnWlZrLl8Z/5JZFJL8No70dtQl6s3CGPT2WLGYQtWJqbKrBptX8DzvTFzeAsCiseEZ/ZuKOF3ijb+uWV+rpdMd1uP8sRN6zJGWrizJi4cmQik86V
+ ebPNcCG9GQmyXaGoexHeY48Kb1BD9lU6+hE+CL6ilDSnY7o57bgOyTGSy6HCIlgCgQkU8Dxuhy3riu4pde2uISkx34Bq97TfUQ8Dpc5n65dle7jONr61OUOv
+ sONpyak1IUjqQJ8odIe387Tdimef/8PE/C/4uExlYzmvaFhQHYuVIVA6M1ken1PSj3ZSYBjAbcy37VToQXc6ETMk04t1U5dIKE5JrJuvnv30HrsWr9gLVD0+
+ /pJSSn6JozOnhnIqgcotCjWRfmClah4taXYpBZPzNyIJPkd1aw0FuTutfDp2vnzmpYk0vdj+FPZd3lRYnLtGoT0avpk59DvV/V96Zp2yVU/ge2uLzIAJ781N
+ JDvQKS0kJb0g84C4s/pXEmd93U4XxvcmqYP23t8D1ejI4DQ7B1IQXyFEdpZH01TY7v8LFiuakfOHmEeI4JSNPuztBz9kteJjTww5LUXP2EuPrzbW5kQD+AJ1
+ NFYO/LtxEFk9D/BLWG7RNGQ9zSh0lwBapI9fjmdXT7yeMUbwgVdeTLf2yBUNX+bdbVWNQM0yqpBwS8u0+ja6c+LyaMyC3A3N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I think that the problem could be related to how the DMA channel is
-> requested.
-> > At the moment the function used are:
+On 4/11/19 9:12 AM, Hans Verkuil wrote:
+> Hi Maxime,
 > 
-> > pxa2xx_spi_dma_setup --> dma_request_slave_channel_compat -->
-> > --> __dma_request_slave_channel_compat --> dma_request_slave_channel -->
-> > --> dma_request_chan
+> Some comments below...
 > 
-> > Actually the final function "dma_request_chan" return
-> > the channel number or "-EPROBE_DEFER" if it's not ready.
-> > But this information ("-EPROBE_DEFER") is lost in the penultimate
-> function
-> > "dma_request_slave_channel", which return only the chann, if all is ok,
-> or
-> > NULL, in case of errors.
-> > So the deferral mechanism is not used.
+> On 3/19/19 10:57 PM, Maxime Ripard wrote:
+>> V4L2 uses different fourcc's than DRM, and has a different set of formats.
+>> For now, let's add the v4l2 fourcc's for the already existing formats.
+>>
+>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>> ---
+>>  include/linux/image-formats.h |  9 +++++-
+>>  lib/image-formats.c           | 67 ++++++++++++++++++++++++++++++++++++-
+>>  2 files changed, 76 insertions(+)
+>>
+>> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
+>> index 53fd73a71b3d..fbc3a4501ebd 100644
+>> --- a/include/linux/image-formats.h
+>> +++ b/include/linux/image-formats.h
+>> @@ -26,6 +26,13 @@ struct image_format_info {
+>>  	};
+>>  
+>>  	/**
+>> +	 * @v4l2_fmt:
+>> +	 *
+>> +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
+>> +	 */
+>> +	u32 v4l2_fmt;
+>> +
+>> +	/**
+>>  	 * @depth:
+>>  	 *
+>>  	 * Color depth (number of bits per pixel excluding padding bits),
+>> @@ -222,6 +229,8 @@ image_format_info_is_yuv_sampling_444(const struct image_format_info *info)
+>>  
+>>  const struct image_format_info *__image_format_drm_lookup(u32 drm);
+>>  const struct image_format_info *image_format_drm_lookup(u32 drm);
+>> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
+>> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
+>>  unsigned int image_format_plane_cpp(const struct image_format_info *format,
+>>  				    int plane);
+>>  unsigned int image_format_plane_width(int width,
+>> diff --git a/lib/image-formats.c b/lib/image-formats.c
+>> index 9b9a73220c5d..39f1d38ae861 100644
+>> --- a/lib/image-formats.c
+>> +++ b/lib/image-formats.c
+>> @@ -8,6 +8,7 @@
+>>  static const struct image_format_info formats[] = {
+>>  	{
+>>  		.drm_fmt = DRM_FORMAT_C8,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
+>>  		.depth = 8,
+>>  		.num_planes = 1,
+>>  		.cpp = { 1, 0, 0 },
+>> @@ -15,6 +16,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_RGB332,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
+>>  		.depth = 8,
+>>  		.num_planes = 1,
+>>  		.cpp = { 1, 0, 0 },
+>> @@ -29,6 +31,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_XRGB4444,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB444,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -57,6 +60,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_ARGB4444,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB444,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -89,6 +93,7 @@ static const struct image_format_info formats[] = {
+>>  		.has_alpha = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_XRGB1555,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB555,
+>>  		.depth = 15,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -117,6 +122,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_ARGB1555,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB555,
+>>  		.depth = 15,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -149,6 +155,7 @@ static const struct image_format_info formats[] = {
+>>  		.has_alpha = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_RGB565,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_RGB565,
+>>  		.depth = 16,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -163,6 +170,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_RGB888,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
 > 
-> Right, yes - that analysis seems correct.  The interfaces seem a bit
-> weird here but fixing them looks like the most complete and robust fix.
+> The V4L2 pixelformats describe the order of the components in memory, and as
+> such are independent of the CPU endianness. How is that for the DRM formats?
+> 
+> Will the order of DRM_FORMAT_RGB888 in memory differ between little and big
+> endian systems?
+> 
+> Mind you, V4L2 drivers are frankly never tested on big endian systems and I
+> suspect many if not all will fail miserably on details like this.
 
-Ok Mark, I'll fix this problem as soon as I can, using EPROBE_DEFER.
-For now, in my application, I use the patch that I already sent,
-with the "softdep" workaround:
+Never mind, I now see that there was a long discussion about this same topic.
 
-MODULE_SOFTDEP("pre: dw_dmac");
+	Hans
 
-I tested it a lot, with more than 2000 cold reboot (automatic
-switch on/off using a controlled power supply) and it always worked good.
+> 
+>>  		.depth = 24,
+>>  		.num_planes = 1,
+>>  		.cpp = { 3, 0, 0 },
+>> @@ -170,6 +178,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_BGR888,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
+>>  		.depth = 24,
+>>  		.num_planes = 1,
+>>  		.cpp = { 3, 0, 0 },
+>> @@ -177,6 +186,7 @@ static const struct image_format_info formats[] = {
+>>  		.vsub = 1,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_XRGB8888,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB32,
+>>  		.depth = 24,
+>>  		.num_planes = 1,
+>>  		.cpp = { 4, 0, 0 },
+>> @@ -281,6 +291,7 @@ static const struct image_format_info formats[] = {
+>>  		.has_alpha = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_ARGB8888,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB32,
+>>  		.depth = 32,
+>>  		.num_planes = 1,
+>>  		.cpp = { 4, 0, 0 },
+>> @@ -361,6 +372,7 @@ static const struct image_format_info formats[] = {
+>>  		.has_alpha = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YUV410,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YUV410,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -369,6 +381,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YVU410,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YVU410,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -393,6 +406,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YUV420,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YUV420M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -401,6 +415,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YVU420,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YVU420M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -409,6 +424,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YUV422,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YUV422M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -417,6 +433,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YVU422,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YVU422M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -425,6 +442,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YUV444,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YUV444M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -433,6 +451,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YVU444,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YVU444M,
+>>  		.depth = 0,
+>>  		.num_planes = 3,
+>>  		.cpp = { 1, 1, 1 },
+>> @@ -441,6 +460,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV12,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV12,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -449,6 +469,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV21,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV21,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -457,6 +478,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV16,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV16,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -465,6 +487,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV61,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV61,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -473,6 +496,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV24,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV24,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -481,6 +505,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_NV42,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_NV42,
+>>  		.depth = 0,
+>>  		.num_planes = 2,
+>>  		.cpp = { 1, 2, 0 },
+>> @@ -489,6 +514,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YUYV,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YUYV,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -497,6 +523,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_YVYU,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_YVYU,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -505,6 +532,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_UYVY,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_UYVY,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -513,6 +541,7 @@ static const struct image_format_info formats[] = {
+>>  		.is_yuv = true,
+>>  	}, {
+>>  		.drm_fmt = DRM_FORMAT_VYUY,
+>> +		.v4l2_fmt = V4L2_PIX_FMT_VYUY,
+>>  		.depth = 0,
+>>  		.num_planes = 1,
+>>  		.cpp = { 2, 0, 0 },
+>> @@ -632,6 +661,44 @@ const struct image_format_info *image_format_drm_lookup(u32 drm)
+>>  EXPORT_SYMBOL(image_format_drm_lookup);
+>>  
+>>  /**
+>> + * __image_format_v4l2_lookup - query information for a given format
+>> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+>> + *
+>> + * The caller should only pass a supported pixel format to this function.
+>> + *
+>> + * Returns:
+>> + * The instance of struct image_format_info that describes the pixel format, or
+>> + * NULL if the format is unsupported.
+>> + */
+>> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2)
+>> +{
+>> +	return __image_format_lookup(v4l2_fmt, v4l2);
+>> +}
+>> +EXPORT_SYMBOL(__image_format_v4l2_lookup);
+>> +
+>> +/**
+>> + * image_format_v4l2_lookup - query information for a given format
+>> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
+>> + *
+>> + * The caller should only pass a supported pixel format to this function.
+>> + * Unsupported pixel formats will generate a warning in the kernel log.
+>> + *
+>> + * Returns:
+>> + * The instance of struct image_format_info that describes the pixel format, or
+>> + * NULL if the format is unsupported.
+>> + */
+>> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2)
+>> +{
+>> +	const struct image_format_info *format;
+>> +
+>> +	format = __image_format_v4l2_lookup(v4l2);
+>> +
+>> +	WARN_ON(!format);
+>> +	return format;
+>> +}
+>> +EXPORT_SYMBOL(image_format_v4l2_lookup);
+>> +
+>> +/**
+>>   * image_format_plane_cpp - determine the bytes per pixel value
+>>   * @format: pointer to the image_format
+>>   * @plane: plane index
+>>
+> 
+> Anyway, I think this is a great improvement!
+> 
+> Regards,
+> 
+> 	Hans
+> 
 
-Thanks for your help!
-
-Flavio
