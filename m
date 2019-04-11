@@ -2,160 +2,73 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA73C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661EDC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F532083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395482173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555007568;
+	bh=bnaK2ph1z18jBKO65oM+P5eeGJFvE7nj+sWrpyDm6fY=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=0p08QUC7Rqu+R70zadKUkH2WD5qCFuIDtsbCYrJjHbx/9luP2on8qkpv3qyy64YD8
+	 v5UcSZ39cG3Gz4ovsVV96RBbpSvx1hzRYFAghxfT2bz5FS/9ZH9iArmdY+4L4Dy48+
+	 GqacDX31/B0i+moUjmO2SKC9dCKKRuB3nEsX+20s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfDKSag (ORCPT
+        id S1726730AbfDKScq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:30:36 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.66]:15046 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726603AbfDKSag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:30:36 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 554E81CC69F
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:30:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id EeT4hl4HB2PzOEeT4hKQM1; Thu, 11 Apr 2019 13:30:34 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=55132 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hEeT3-0036b3-NS; Thu, 11 Apr 2019 13:30:33 -0500
-Subject: Re: [PATCH v2] mtd: rawnand: mark expected switch fall-throughs
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Wan ZongShun <mcuos.com@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190128181520.GA25887@embeddedor>
- <20190205135521.622f82c2@xps13>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
-Date:   Thu, 11 Apr 2019 13:30:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 14:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfDKScq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 14:32:46 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B813C2083E;
+        Thu, 11 Apr 2019 18:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555007565;
+        bh=bnaK2ph1z18jBKO65oM+P5eeGJFvE7nj+sWrpyDm6fY=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=Xep8/hxvsyE36rMvyka0fERYf5S1phsLidA1tRmuMqSiYWNaIvmfAZ+02kqc0DAwd
+         cTZNx30lZJg83edglbe+kl8FvfhfFYT/fflOE4ub2R74/Gm13wOkC4B+J9144me/Ae
+         uC4xaEjVvsgQYVnfVSLfeguj0VUBXy9yhhiB4ogs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190205135521.622f82c2@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hEeT3-0036b3-NS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:55132
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1551742066-10825-1-git-send-email-jollys@xilinx.com>
+References: <1551742066-10825-1-git-send-email-jollys@xilinx.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] drivers: clk: zynqmp: Allow zero divisor value
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>
+To:     Jolly Shah <jolly.shah@xilinx.com>, linux-clk@vger.kernel.org,
+        michal.simek@xilinx.com, mturquette@baylibre.com,
+        sboyd@codeaurora.org
+Message-ID: <155500756492.20095.7980404191794562567@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 11 Apr 2019 11:32:44 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+Quoting Jolly Shah (2019-03-04 15:27:46)
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
+>=20
+> Zero divider is valid and default for some of ZynqMP
+> clocks. Allow zero divisor when CLK_DIVIDER_ALLOW_ZERO
+> for the clock is set.
+>=20
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> ---
 
-On 2/5/19 6:55 AM, Miquel Raynal wrote:
-[..]
->> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
->>  			if ((this->version_id & 0xf) == 0xe)
->>  				this->options |= ONENAND_HAS_NOP_1;
->>  		}
->> +		/* fall through */
->>  
->>  	case ONENAND_DEVICE_DENSITY_2Gb:
->>  		/* 2Gb DDP does not have 2 plane */
->>  		if (!ONENAND_IS_DDP(this))
->>  			this->options |= ONENAND_HAS_2PLANE;
->>  		this->options |= ONENAND_HAS_UNLOCK_ALL;
->> +		/* fall through */
-> 
-> This looks strange.
-> 
-> In ONENAND_DEVICE_DENSITY_2Gb:
-> ONENAND_HAS_UNLOCK_ALL is set unconditionally.
-> 
-> But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
-> if process is evaluated to true.
-> 
-> Same problem with ONENAND_HAS_2PLANE:
-> - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
-> - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
-> 
-> Maybe this portion should be reworked because I am unsure if this is a
-> missing fall through or a bug.
-> 
+Applied to clk-next
 
-I wonder if you had the chance to take a look into this piece of code.
-
-Thanks
---
-Gustavo
