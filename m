@@ -2,106 +2,104 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30503C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC3C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 038C62070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555005510;
-	bh=pDhoCNdjeWrX/vbXMoWNxoXMBQ5uWIGVajVGVcqJMWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ws2vm1r7Ivjdyi9JiYgaQMuqFvp9Tmz3qY/Wr/4jvbpe5wMUC8sTrR3AlOsBGn8RE
-	 SKO/HVWnNL21S72sCn7sirXpM+zKgCPHu6MEVJ88RccLUC7aPoua83iXDLGlARdaAn
-	 jkDTK9zWW7lfW6ZuCHXw7xYBenOceApWnMp1z5zo=
+	by mail.kernel.org (Postfix) with ESMTP id BC13320850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Px0T0NZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfDKR61 (ORCPT
+        id S1726712AbfDKR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDKR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:58:27 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A37F2070D;
-        Thu, 11 Apr 2019 17:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555005506;
-        bh=pDhoCNdjeWrX/vbXMoWNxoXMBQ5uWIGVajVGVcqJMWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TqRT/D2bY+vD2/ipEBuIR7EhPIJZ1dyOdUd1PhF/ZbNz1X2+KRuqX4zrziUuz9cOB
-         uTT0Xr1mikQiwpDMnAwdPiA3W4KqXFwtWOzwrjpiHfke0Dw2OoA9d4XEs2qFwSrj+W
-         15+Z2cp/nX6yoafj5Xgw7D4l9bqFSqf4r4T8hvIk=
-Date:   Thu, 11 Apr 2019 10:58:24 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-Message-ID: <20190411175823.GC225654@gmail.com>
-References: <20190319170911.GB202956@gmail.com>
- <20190320185719.GB180195@gmail.com>
- <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
- <20190321175122.GA1587@sol.localdomain>
- <20190410031734.GB7140@sol.localdomain>
- <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
- <20190410190729.GA120258@gmail.com>
- <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
- <20190410231156.GB120258@gmail.com>
- <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
+        Thu, 11 Apr 2019 13:59:23 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40956 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfDKR7W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 13:59:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d31so3871781pgl.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fM6RWzAbIFr1PsVvrEclHdq1XDLHiApauiaIfSN88Kg=;
+        b=Px0T0NZaiEDpf0XprSK8iOu0q39xE9pJuDaKI0b/3DD48jGm5GIxXgKgV0iyLiBCnE
+         OaZ+KNASuZc+xot57LWBwkpaqr51qomxaQfINeA/gr48vDikzcFuvA+md/bVHKxRrdWr
+         DnZa03lFZY33IQz5sOMY/HuKbSxXc66AUDzX8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fM6RWzAbIFr1PsVvrEclHdq1XDLHiApauiaIfSN88Kg=;
+        b=lhdU6hnNhYi/fGCgsj3+rCvjoURCo9xcRSDFZW7oVEVcdaFnRI4PRmmCh5gwtHlBCN
+         coFNyDP+5kUUe8LkK6FdAZ8NpbT2d/pydH0uyv7b2aZ5oDl3Cf14gXxHZPWdYXHciTpS
+         8zNh+Re9OFmAaRcmBv2IDM32NVFFOUps5GLX7Y5dLOs9603deFYz7MYAaV9oc1pBw/fu
+         NLERAZI8PpuC887BTWoDIBqRCjaXH1CajvTwwyteVqCqoZlwR8zxm5WuFWl3O0IQMCN+
+         KqydX7whfL2T0kiBzvHxbsOH3H3r7zGq6cFmTwISPKq4zE9unRiRsS7pz5/h+uKim2U3
+         K2xg==
+X-Gm-Message-State: APjAAAWNABRKrGlMATx48KLNTsTgC8GWX1YxJRoxIon8h7kEJ85Hi/G6
+        yZ75HE2XlBrnRO6dqFAnPTZV+w==
+X-Google-Smtp-Source: APXvYqy0hVx1MoV5iIQ0mm5Ph4f3eCbTXpoZFbj78KHkGPPDUfTJAXD1a8MKC4K2zT3LsThydTahlg==
+X-Received: by 2002:a63:5149:: with SMTP id r9mr46486539pgl.177.1555005562196;
+        Thu, 11 Apr 2019 10:59:22 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id g67sm60773947pfg.94.2019.04.11.10.59.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 10:59:21 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] clk: rockchip: rk3288: Limit use of USB PHY clock to USB
+Date:   Thu, 11 Apr 2019 10:59:17 -0700
+Message-Id: <20190411175917.173566-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 04:27:28PM -0700, Kees Cook wrote:
-> On Wed, Apr 10, 2019 at 4:12 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > You've explained *what* it does again, but not *why*.  *Why* do you want
-> > hardened usercopy to detect copies across page boundaries, when there is no
-> > actual buffer overflow?
-> 
-> But that *is* how it determines it was a buffer overflow: "if you
-> cross page boundaries (of a non-compound allocation), it *is* a buffer
-> overflow". This assertion, however, is flawed because many contiguous
-> allocations are not marked as being grouped together when it reality
-> they were. It was an attempt to get allocation size information out of
-> the page allocator, similar to how slab can be queries about
-> allocation size. I'm open to improvements here, since it's obviously
-> broken in its current state. :)
-> 
-> -- 
-> Kees Cook
+The USB PHY clock can be configured as (grand) parent of uart0_sclk and
+sclk_gpu. It has been observed that UART0 doesn't work reliably in high
+speed mode with the PHY clock as input when certain USB devices are
+plugged to the USB HOST1 port (see https://crrev.com/c/320543).
 
-Well, I'm still at a loss as to whether I'm actually supposed to "fix" this by
-adding __GFP_COMP, or whether you're saying the option is broken anyway so I
-shouldn't bother doing anything.  IIUC, even the kernel stack is still not
-marked __GFP_COMP, so copies to/from the stack can trigger this too, despite
-this being reported over 2 years ago
-(http://lkml.iu.edu/hypermail/linux/kernel/1701.2/01450.html)?
-CONFIG_HARDENED_USERCOPY_PAGESPAN is even disabled in syzbot because you already
-said the option is broken and should not be used.
+Prefix the name of the PHY clock with a '.' in the non-USB muxes to
+effectively remove the clock as input from these muxes.
 
-I worry that people will enable all the hardened usercopy options "because
-security", then when the pagespan check breaks something they will disable all
-hardened usercopy options, because they don't understand the individual options.
-Providing broken options is actively harmful, IMO.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/clk/rockchip/clk-rk3288.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-- Eric
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 5a67b7869960..677bc5485201 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -200,8 +200,8 @@ PNAME(mux_aclk_cpu_src_p)	= { "cpll_aclk_cpu", "gpll_aclk_cpu" };
+ PNAME(mux_pll_src_cpll_gpll_p)		= { "cpll", "gpll" };
+ PNAME(mux_pll_src_npll_cpll_gpll_p)	= { "npll", "cpll", "gpll" };
+ PNAME(mux_pll_src_cpll_gpll_npll_p)	= { "cpll", "gpll", "npll" };
+-PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
+-PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", "usbphy480m_src", "npll" };
++PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", ".usbphy480m_src" };
++PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", ".usbphy480m_src", "npll" };
+ 
+ PNAME(mux_mmc_src_p)	= { "cpll", "gpll", "xin24m", "xin24m" };
+ PNAME(mux_i2s_pre_p)	= { "i2s_src", "i2s_frac", "ext_i2s", "xin12m" };
+-- 
+2.21.0.392.gf8f6787159e-goog
+
