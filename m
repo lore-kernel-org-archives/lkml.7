@@ -2,73 +2,100 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8498C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5436C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04812077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFD72173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfDKP2F (ORCPT
+        id S1726735AbfDKP2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:28:05 -0400
-Received: from 8bytes.org ([81.169.241.247]:34190 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfDKP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:28:05 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4FA40451; Thu, 11 Apr 2019 17:28:03 +0200 (CEST)
-Date:   Thu, 11 Apr 2019 17:28:03 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        christian.koenig@amd.com, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        baolu.lu@linux.intel.com, zhangfei.gao@foxmail.com
-Subject: Re: [PATCH v3 1/1] iommu: Bind process address spaces to devices
-Message-ID: <20190411152803.GB29810@8bytes.org>
-References: <20190410151516.47754-1-jean-philippe.brucker@arm.com>
- <20190410151516.47754-2-jean-philippe.brucker@arm.com>
+        Thu, 11 Apr 2019 11:28:50 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:54997 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKP2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 11:28:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id 7B47E18670;
+        Thu, 11 Apr 2019 17:28:47 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id LCcmIKMGFwow; Thu, 11 Apr 2019 17:28:46 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+        by bastet.se.axis.com (Postfix) with ESMTPS id 06ACD18699;
+        Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0E0C1A090;
+        Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5AAF1A08E;
+        Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+        by boulder02.se.axis.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Received: from lnxartpec.se.axis.com (lnxartpec.se.axis.com [10.88.4.9])
+        by thoth.se.axis.com (Postfix) with ESMTP id A9EF521E;
+        Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Received: by lnxartpec.se.axis.com (Postfix, from userid 10564)
+        id 9B48E80DB0; Thu, 11 Apr 2019 17:28:45 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 17:28:45 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: Add NULL TTY driver
+Message-ID: <20190411152845.xomzmhtyejzr4r35@axis.com>
+References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+ <20190403131213.GA4246@kroah.com>
+ <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+ <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+ <20190405090043.vnsftwpdm56cx2hr@axis.com>
+ <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410151516.47754-2-jean-philippe.brucker@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 04:15:16PM +0100, Jean-Philippe Brucker wrote:
->  drivers/iommu/iommu.c | 104 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/iommu.h |  70 ++++++++++++++++++++++++++++
->  2 files changed, 174 insertions(+)
+On Fri, Apr 05, 2019 at 02:32:41PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 05.04.19 11:00, Vincent Whitchurch wrote:
+> > On Fri, Apr 05, 2019 at 10:39:43AM +0200, Enrico Weigelt, metux IT consult wrote:
+> >> On 03.04.19 16:11, Vincent Whitchurch wrote:
+> >>
+> >>> Especially on embedded systems, it would be convenient to have a simple
+> >>> way to disable the console (both for kernel and userspace) on a system
+> >>> which normally uses it, to free up the UART for other things.
+> >>
+> >> Just symlinking to /dev/null does not work ?
+> > 
+> > No, /dev/null does not support the TTY ioctls.
+> 
+> hmm, wo (which programs) do you need, that really need them ?
 
-Applied to the api-features branch for now, thanks Jean-Philippe!
+I think it was systemd's debug-shell which complained about the ioctls.
 
-'for now' because I have a question below.
+> >> OTOH, if you're introducing a dummy console, wouldn't a ringbuffer that,
+> >> can be read out later, a better option ?
+> > 
+> > There is already a ttyprintk driver in mainline to send these messages
+> > to the printk ring buffer if one is actually intrested in what is
+> > written to the console.  There's no option to enable it via console= in
+> > mainline but I have a patch for that too.
+> 
+> Great. IMHO, that would be the better way.
 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index ed6738c358ca..87fe1cddd817 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -51,10 +51,13 @@ struct device;
->  struct iommu_domain;
->  struct notifier_block;
->  struct iommu_fault_event;
-> +struct iommu_sva;
-
-The iommu_fault_event doesn't yet exist in my tree, is this patch based
-on something else I need besided Lu Baolus work? I got quite some
-conflicts while applying the patch because of this.
-
-> + * @sva_set_ops: Set ops for a SVA handle
-
-I also removed this line.
-
-Regards,
-
-	Joerg
+Like Krzysztof explained, sometimes you just want to discard these
+messages.
