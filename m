@@ -2,167 +2,121 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46258C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52CAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E061217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C2A217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554969360;
+	bh=Ntu/qQY/9iJWJ4IUJRfTfi77Y/NH4rZNwPVkCTZZags=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BjFswtHdb9Rq7ZNuSgZq/HNGTQ5qbyJCrQ3nZ1Fk+DnbbTmovf8rdnlOC+iSq3oI8
+	 p8zbHbN+isvRa2+Bbb/gX/9LcUbgAc6cfKwaIftj0NGBrvPDvN3wwE+Uq2QmNHScOR
+	 ZS/0zwKCOlXt66vUi8ek54Wt6VGIHYreYQDHbcHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfDKHzp (ORCPT
+        id S1727042AbfDKHz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:55:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47036 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfDKHzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:55:44 -0400
-Received: from mail-pl1-f197.google.com ([209.85.214.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hEUYg-0006Lx-Bq
-        for linux-kernel@vger.kernel.org; Thu, 11 Apr 2019 07:55:42 +0000
-Received: by mail-pl1-f197.google.com with SMTP id 3so3577084ple.19
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 00:55:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=O8I6+QP8dAnvcFSf5snO01pHB909XvBWfAoeHtdYzI8=;
-        b=nM8JAkAcT9zaEvZdzipR5p64XdMwymvi7p7E7UBP8FyeqpJNyRcK5zhi8Qeft/9AqF
-         03UNmQoYuVplf5CzljAnLIYC6y5TFIFUVRfHglfuD9AnDSOIv1PYNwU8oj7ITZDgLB9C
-         WQxF2TgitYboLCrNCT/dHHAsJd0MQa7QXmVl4i/j+L3Eipiw7fSvhjSunNkED3ZfF70i
-         ZTRLS6Gy9IXUjd1E1bNV0qKdyFctJu+JgNgrXQXDJSYOrJkbfrcBX2f8d6r3sVD3Y4Dq
-         6N9kU93ivukGd9jq4RN9fxSfrbwKsUHWcdDWmif00EdRuA2aRVoWztZFgJvqXg75/TFu
-         ghOQ==
-X-Gm-Message-State: APjAAAV+K0QclwQpqUaq4hUq2Dx3WfmdiedG86qaw2XCjs89gV5K2PSq
-        mB9hNMV5IlEdQShax7VF9OeKLtqyE6Hz6OZvgqVwEYi2YV9q202tk++MrNHSUI2W6v/5rFzLLVY
-        9KQ4SkIaMqlyyFNXgVSZTT2kdsbhy0rRTfzyoS4nchg==
-X-Received: by 2002:a63:5d04:: with SMTP id r4mr45228664pgb.117.1554969340866;
-        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyf9uzTE307KSiC17kXBaM23T2n+LvwNyaSWq56IFkwGEPI52Bl0l3Pm5K8lQQ663fOW+HivA==
-X-Received: by 2002:a63:5d04:: with SMTP id r4mr45228644pgb.117.1554969340636;
-        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-9cff-45f9-ad8b-c268.dynamic-ip6.hinet.net (2001-b011-380f-14b9-9cff-45f9-ad8b-c268.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:9cff:45f9:ad8b:c268])
-        by smtp.gmail.com with ESMTPSA id l2sm42048820pgl.2.2019.04.11.00.55.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH v2] USB: Disable USB2 LPM at shutdown
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <9EC6DA7E-2503-40F8-AB5A-25A2424B6346@canonical.com>
-Date:   Thu, 11 Apr 2019 15:55:38 +0800
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <80534332-7E39-42B9-8B64-580B483B83A5@canonical.com>
-References: <20190124061643.11663-1-kai.heng.feng@canonical.com>
- <20190130082133.GA32660@kroah.com>
- <D84EEC8F-8B65-4B0C-9EA7-E01A0BB47398@canonical.com>
- <9EC6DA7E-2503-40F8-AB5A-25A2424B6346@canonical.com>
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 11 Apr 2019 03:55:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53360 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726230AbfDKHz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:55:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AFE66ACAE;
+        Thu, 11 Apr 2019 07:55:57 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 09:55:56 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Tejun Heo <tj@kernel.org>, Qian Cai <cai@lca.pw>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH 0/1] mm: Remove the SLAB allocator
+Message-ID: <20190411075556.GO10383@dhcp22.suse.cz>
+References: <20190410024714.26607-1-tobin@kernel.org>
+ <f06aaeae-28c0-9ea4-d795-418ec3362d17@suse.cz>
+ <20190410081618.GA25494@eros.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410081618.GA25494@eros.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 18:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+On Wed 10-04-19 18:16:18, Tobin C. Harding wrote:
+> On Wed, Apr 10, 2019 at 10:02:36AM +0200, Vlastimil Babka wrote:
+> > On 4/10/19 4:47 AM, Tobin C. Harding wrote:
+> > > Recently a 2 year old bug was found in the SLAB allocator that crashes
+> > > the kernel.  This seems to imply that not that many people are using the
+> > > SLAB allocator.
+> > 
+> > AFAIK that bug required CONFIG_DEBUG_SLAB_LEAK, not just SLAB. That
+> > seems to imply not that many people are using SLAB when debugging and
+> > yeah, SLUB has better debugging support. But I wouldn't dare to make the
+> > broader implication :)
+> 
+> Point noted.
+> 
+> > > Currently we have 3 slab allocators.  Two is company three is a crowd -
+> > > let's get rid of one. 
+> > > 
+> > >  - The SLUB allocator has been the default since 2.6.23
+> > 
+> > Yeah, with a sophisticated reasoning :)
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a0acd820807680d2ccc4ef3448387fcdbf152c73
+> > 
+> > >  - The SLOB allocator is kinda sexy.  Its only 664 LOC, the general
+> > >    design is outlined in KnR, and there is an optimisation taken from
+> > >    Knuth - say no more.
+> > > 
+> > > If you are using the SLAB allocator please speak now or forever hold your peace ...
+> > 
+> > FWIW, our enterprise kernel use it (latest is 4.12 based), and openSUSE
+> > kernels as well (with openSUSE Tumbleweed that includes latest
+> > kernel.org stables). AFAIK we don't enable SLAB_DEBUG even in general
+> > debug kernel flavours as it's just too slow.
+> 
+> Ok, so that probably already kills this.  Thanks for the response.  No
+> flaming, no swearing, man! and they said LKML was a harsh environment ...
+> 
+> > IIRC last time Mel evaluated switching to SLUB, it wasn't a clear
+> > winner, but I'll just CC him for details :)
+> 
+> Probably don't need to take up too much of Mel's time, if we have one
+> user in production we have to keep it, right.
 
-> at 00:01, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->
->>> On Jan 30, 2019, at 16:21, Greg KH <gregkh@linuxfoundation.org> wrote:
->>>
->>> On Thu, Jan 24, 2019 at 02:16:43PM +0800, Kai-Heng Feng wrote:
->>>> The QCA Rome USB Bluetooth controller has several issues once LPM gets
->>>> enabled:
->>>> - Fails to get enumerated in coldboot. [1]
->>>> - Drains more power (~ 0.2W) when the system is in S5. [2]
->>>> - Disappears after a warmboot. [2]
->>>>
->>>> The issue happens because the device lingers at LPM L1 in S5, so device
->>>> can't get enumerated even after a reboot.
->>>>
->>>> Disable LPM at shutdown to solve the issue.
->>>>
->>>> [1] https://bugs.launchpad.net/bugs/1757218
->>>> [2] https://patchwork.kernel.org/patch/10607097/
->>>>
->>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>> ---
->>>> v2: Use new LPM helpers.
->>>>
->>>> drivers/usb/core/port.c | 9 +++++++++
->>>> 1 file changed, 9 insertions(+)
->>>>
->>>> diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
->>>> index 1a06a4b5fbb1..bbbb35fa639f 100644
->>>> --- a/drivers/usb/core/port.c
->>>> +++ b/drivers/usb/core/port.c
->>>> @@ -285,6 +285,14 @@ static int usb_port_runtime_suspend(struct device  
->>>> *dev)
->>>> }
->>>> #endif
->>>>
->>>> +static void usb_port_shutdown(struct device *dev)
->>>> +{
->>>> +	struct usb_port *port_dev = to_usb_port(dev);
->>>> +
->>>> +	if (port_dev->child)
->>>> +		usb_disable_usb2_hardware_lpm(port_dev->child);
->>>> +}
->>>> +
->>>> static const struct dev_pm_ops usb_port_pm_ops = {
->>>> #ifdef CONFIG_PM
->>>> 	.runtime_suspend =	usb_port_runtime_suspend,
->>>> @@ -301,6 +309,7 @@ struct device_type usb_port_device_type = {
->>>> static struct device_driver usb_port_driver = {
->>>> 	.name = "usb",
->>>> 	.owner = THIS_MODULE,
->>>> +	.shutdown = usb_port_shutdown,
->>>> };
->>>
->>> So you now do this for all ports in the system, no matter what is
->>> plugged in or not.  Are you _SURE_ you want to do that?  It seems like a
->>> big hammer to solve just one single device's problems.
->>
->> Yes I think this should be universally applied.
->>
->> I don’t think the bug only happens to one device. Users won’t find this
->> unless they connect their laptop to a power meter.
->>
->> Platform may not completely cut off USB bus power during shutdown,
->> so the device transits to L1 after system shutdown. Now xHC is disabled
->> so nothing can bring it back to L0 or L2.
->
-> It would be great if someone can come up with better ideas.
->
-> We can also use other approaches, but currently this is the only way I  
-> can think of.
+Well, I wouldn't be opposed to dropping SLAB. Especially when this is
+not a longterm stable kmalloc implementation anymore. It turned out that
+people want to push features from SLUB back to SLAB and then we are just
+having two featurefull allocators and double the maintenance cost.
 
-Alan and Mathias,
+So as long as the performance gap is no longer there and the last data
+from Mel (I am sorry but I cannot find a link handy) suggests that there
+is no overall winner in benchmarks then why to keep them both?
 
-It would be great if you can review this patch, or give me some suggestion.
+That being said, if somebody is willing to go and benchmark both
+allocators to confirm Mel's observations and current users of SLAB
+can confirm their workloads do not regress either then let's just drop
+it.
 
-Kai-Heng
-
->
-> Kai-Heng
->
->> Kai-Heng
->>
->>> thanks,
->>>
->>> greg k-h
-
-
+Please please have it more rigorous then what happened when SLUB was
+forced to become a default
+-- 
+Michal Hocko
+SUSE Labs
