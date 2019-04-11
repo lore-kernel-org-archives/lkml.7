@@ -2,105 +2,103 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406ADC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957AB217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ABD2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfDKQNm (ORCPT
+        id S1726757AbfDKQQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:13:42 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54927 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfDKQNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:13:42 -0400
-X-Originating-IP: 109.213.33.177
-Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A01A660009;
-        Thu, 11 Apr 2019 16:13:39 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 18:13:39 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: pnx4008: readout watchddog state
-Message-ID: <20190411161339.GL3578@piout.net>
-References: <20190411153646.32228-1-alexandre.belloni@bootlin.com>
- <20190411160305.GA27530@roeck-us.net>
+        Thu, 11 Apr 2019 12:16:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52912 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726603AbfDKQQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:16:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A5ED6AC3D;
+        Thu, 11 Apr 2019 16:16:10 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-serial@vger.kernel.org, gregkh@linuxfoundation.org,
+        Paul Walmsley <paul@pwsan.com>, Jiri Slaby <jslaby@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v4 2/2] tty: serial: add driver for the SiFive UART
+References: <20190411090027.8670-1-paul.walmsley@sifive.com>
+        <20190411090027.8670-3-paul.walmsley@sifive.com>
+X-Yow:  Four thousand different MAGNATES, MOGULS & NABOBS are romping in my
+ gothic solarium!!
+Date:   Thu, 11 Apr 2019 18:16:09 +0200
+In-Reply-To: <20190411090027.8670-3-paul.walmsley@sifive.com> (Paul Walmsley's
+        message of "Thu, 11 Apr 2019 02:00:30 -0700")
+Message-ID: <mvmtvf4ecvq.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411160305.GA27530@roeck-us.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 09:03:05-0700, Guenter Roeck wrote:
-> Hi Alexandre,
-> 
-> On Thu, Apr 11, 2019 at 05:36:46PM +0200, Alexandre Belloni wrote:
-> > Readout the enabled state so it is possible to get the pre-userspace
-> > handler working. Also, avoid disabling the watchdog when nowayout is set to
-> > ensure the watchdog continues working and triggers if there is an issue
-> > later in the boot or if userspace fails to start.
-> > 
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> >  drivers/watchdog/pnx4008_wdt.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
-> > index 8e261799c84e..9e3714e3814c 100644
-> > --- a/drivers/watchdog/pnx4008_wdt.c
-> > +++ b/drivers/watchdog/pnx4008_wdt.c
-> > @@ -209,7 +209,11 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
-> >  	watchdog_set_nowayout(&pnx4008_wdd, nowayout);
-> >  	watchdog_set_restart_priority(&pnx4008_wdd, 128);
-> >  
-> > -	pnx4008_wdt_stop(&pnx4008_wdd);	/* disable for now */
-> > +	if (readl(WDTIM_CTRL(wdt_base)) & COUNT_ENAB)
-> > +		set_bit(WDOG_HW_RUNNING, &pnx4008_wdd.status);
-> > +
-> > +	if (!nowayout)
-> > +		pnx4008_wdt_stop(&pnx4008_wdd);	/* disable for now */
-> 
-> I don't see the point of stopping the watchdog here, even though that is the
-> old behavior. If it is possible to detect that the watchdog is running, we
-> can let the core handle pings until the watchdog device is opened. The code
-> above does that, but only if nowayout is set. That seems inconsistent and
-> unnecessary. Is there a downside to doing that unconditionally ?
-> 
+On Apr 11 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-I guess the downside is the change of behaviour. I don't think many will
-be affected but they will have to ensure the core pings the watchdog
-until the device is open.  WATCHDOG_HANDLE_BOOT_ENABLED is y by default
-so that should be fine for most.
+> +static void sifive_serial_set_termios(struct uart_port *port,
+> +				      struct ktermios *termios,
+> +				      struct ktermios *old)
+> +{
+> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
+> +	unsigned long flags;
+> +	u32 v, old_v;
+> +	int rate;
+> +	char nstop;
+> +
+> +	if ((termios->c_cflag & CSIZE) != CS8) {
+> +		dev_err(ssp->port.dev, "only 8-bit words supported\n");
+> +		return;
+> +	}
+> +
+> +	/* Set number of stop bits */
+> +	nstop = (termios->c_cflag & CSTOPB) ? 2 : 1;
+> +	__ssp_set_stop_bits(ssp, nstop);
+> +
+> +	/* Set line rate */
+> +	rate = uart_get_baud_rate(port, termios, old, 0, ssp->clkin_rate / 16);
+> +	__ssp_update_baud_rate(ssp, rate);
+> +
+> +	spin_lock_irqsave(&ssp->port.lock, flags);
+> +
+> +	/*
+> +	 * Update the per-port timeout.
+> +	 */
+> +	uart_update_timeout(port, termios->c_cflag, rate);
+> +
+> +	ssp->port.read_status_mask = 0;
+> +	if (termios->c_iflag & INPCK) {
+> +		dev_err(ssp->port.dev, "INPCK flag not supported\n");
+> +		goto ssst_out;
+> +	}
+> +	if (termios->c_iflag & (BRKINT | PARMRK)) {
+> +		dev_err(ssp->port.dev, "BRKINT/PARMRK flag not supported\n");
+> +		goto ssst_out;
+> +	}
 
-Honestly, I would just never disable the watchdog, that is the whole
-point of this patch. If you are fine with that, I will just remove the
-line.
+I don't think it is a good idea to print something while the port is
+locked.
 
+And I think set_termios is supposed to apply all applicable settings,
+even if some of them are not supported.
 
-> Nitpick: s/watchddog/watchdog/ in subject line.
-> 
-
-I'll fix it.
-
+Andreas.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
