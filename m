@@ -2,112 +2,188 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4065C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325B5C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C012184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74EE2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554987812;
+	bh=9XTYCCyJm+fbwpelfocSJVzlq8fNSgae63WzueN6KF0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TPQANigEVutwnS4+7DdEDHYrAWN6FfqsexAab1D3zTKC2IT/mrnBccgr9CfCyH8at
+	 1qEMUPwyuLxi4QjwEhDDFZ9FH1VKjzhiwxSeg4b8VMTG0cn81qGLJp3D4c7m39aZ0U
+	 GNBuCvpZ1PzRea3QOX/i+stMqE4Tdnw6+vUQd454=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfDKNCi (ORCPT
+        id S1726731AbfDKNDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:02:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:55028 "EHLO mga14.intel.com"
+        Thu, 11 Apr 2019 09:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKNCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:02:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 06:02:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
-   d="scan'208";a="163381047"
-Received: from unknown (HELO kuha.fi.intel.com) ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 11 Apr 2019 06:02:33 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 11 Apr 2019 16:02:33 +0300
-Date:   Thu, 11 Apr 2019 16:02:33 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 06/12] ACPI / property: Don't limit named child node
- matching to data nodes
-Message-ID: <20190411130233.GA29292@kuha.fi.intel.com>
-References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
- <20190410152505.87041-7-heikki.krogerus@linux.intel.com>
+        id S1726014AbfDKNDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:03:30 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDE2A21850;
+        Thu, 11 Apr 2019 13:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554987808;
+        bh=9XTYCCyJm+fbwpelfocSJVzlq8fNSgae63WzueN6KF0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cofgem3ndsI06Xs8x9qplIdwBEHqQGWHYEGTrm4Pb1L+0DKpYnn5YRtBA4z/o0IX0
+         DYb44pquD02iUawKhlqwAVd5Iy5UhSkRcMC0d5tEZIfBJJFg7wkXzgoYJQz7Y1FUXb
+         1aV3HYbm+AS+4rkS45nVbCIx7x72o62GdzY5abzU=
+Received: by mail-qt1-f170.google.com with SMTP id k14so6970200qtb.0;
+        Thu, 11 Apr 2019 06:03:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAVEFQYJxWBxCxJX0tTre9R6r3RD2GyCFc7qlBGaEZEIXBAzdbEI
+        wWuN3ITOL9RRniaWGFyjxxu4M/qBNKil3dLfzQ==
+X-Google-Smtp-Source: APXvYqyKqshKFZvGidjWRZTIr5iIb0RBzNZgkIQWM4X1rEDTWqFLfA3D0CJ7vYpeef7un8R0LKvwiPuXkBMKWGZ1LW4=
+X-Received: by 2002:ac8:3f6f:: with SMTP id w44mr39624776qtk.59.1554987807959;
+ Thu, 11 Apr 2019 06:03:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410152505.87041-7-heikki.krogerus@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411084304.5072-6-paul.walmsley@sifive.com>
+In-Reply-To: <20190411084304.5072-6-paul.walmsley@sifive.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 11 Apr 2019 08:03:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ-tF081FoK3_O6vR-MUjefvEqTGWKRpW7K33nzav8eXA@mail.gmail.com>
+Message-ID: <CAL_JsqJ-tF081FoK3_O6vR-MUjefvEqTGWKRpW7K33nzav8eXA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] riscv: dts: add initial board data for the SiFive
+ HiFive Unleashed
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        Paul Walmsley <paul@pwsan.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-
-On Wed, Apr 10, 2019 at 06:24:59PM +0300, Heikki Krogerus wrote:
-> There is no reason why we should limit the use of
-> fwnode_get_named_child_node() to data nodes only.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Thu, Apr 11, 2019 at 3:43 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> Add initial board data for the SiFive HiFive Unleashed A00.
+>
+> Currently the data populated in this DT file describes the board
+> DRAM configuration and the external clock sources that supply the
+> PRCI.
+>
+> This second version adds onboard SPI device data, fixes the board's
+> memory size, and adds changes based on comments from Rob Herring
+> <robh+dt@kernel.org>.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  drivers/acpi/property.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 77abe0ec4043..c3fb52c387a6 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -602,15 +602,29 @@ static struct fwnode_handle *
->  acpi_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
->  				 const char *childname)
->  {
-> +	char name[ACPI_PATH_SEGMENT_LENGTH];
->  	struct fwnode_handle *child;
-> +	struct acpi_buffer path;
-> +	acpi_status status;
->  
-> -	/*
-> -	 * Find first matching named child node of this fwnode.
-> -	 * For ACPI this will be a data only sub-node.
-> -	 */
-> -	fwnode_for_each_child_node(fwnode, child)
-> -		if (acpi_data_node_match(child, childname))
-> +	path.length = sizeof(name);
-> +	path.pointer = name;
+>  arch/riscv/boot/dts/sifive/Makefile           |  2 +
+>  .../dts/sifive/hifive-unleashed-a00-fu540.dts | 69 +++++++++++++++++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/sifive/Makefile
+>  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+>
+> diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
+> new file mode 100644
+> index 000000000000..fb825db888df
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/sifive/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+> new file mode 100644
+> index 000000000000..9d35e811a3aa
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: (Apache-2.0 OR GPL-2.0+)
+> +/* Copyright (c) 2018-2019 SiFive, Inc */
 > +
-> +	fwnode_for_each_child_node(fwnode, child) {
-> +		if (is_acpi_data_node(child)) {
-> +			if (acpi_data_node_match(child, childname))
-> +				return child;
-> +			continue;
-> +		}
+> +/dts-v1/;
 > +
-> +		status = acpi_get_name(ACPI_HANDLE_FWNODE(child),
-> +				       ACPI_SINGLE_NAME, &path);
-> +		if (ACPI_FAILURE(status))
-> +			break;
+> +#include "fu540-c000.dtsi"
 > +
-> +		if (!strncmp(name, childname, ACPI_NAME_SIZE))
+> +/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
+> +#define RTCCLK_FREQ            1000000
+> +
+> +/ {
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +       model = "SiFive HiFive Unleashed A00 (FU540-C000)";
+> +       compatible = "sifive,hifive-unleashed-a00-fu540",
+> +               "sifive,hifive-unleashed-fu540",
+> +               "sifive,fu540-c000", "sifive-fu540";
 
-I rebased these on of todays linux-next, and noticed that Bob renamed
-ACPI_NAME_SIZE to ACPI_NAMESEG_SIZE in commit 3278675567df ("ACPICA:
-Rename nameseg length macro/define for clarity").
+This doesn't match your schema which has 3 entries. Really, 4 entries
+is kind of pointless typically. Usually, just a board and SoC
+compatible are enough.
 
-I'll fix that and resend these tomorrow.
-
-thanks,
-
--- 
-heikki
+> +
+> +       chosen {
+> +       };
+> +
+> +       cpus {
+> +               timebase-frequency = <RTCCLK_FREQ>;
+> +       };
+> +
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x80000000 0x2 0x00000000>;
+> +       };
+> +
+> +       soc {
+> +       };
+> +
+> +       hfclk: hfclk {
+> +               #clock-cells = <0>;
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <33333333>;
+> +               clock-output-names = "hfclk";
+> +       };
+> +
+> +       rtcclk: rtcclk {
+> +               #clock-cells = <0>;
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <RTCCLK_FREQ>;
+> +               clock-output-names = "rtcclk";
+> +       };
+> +};
+> +
+> +&qspi0 {
+> +       flash@0 {
+> +               compatible = "issi,is25wp256d", "jedec,spi-nor";
+> +               reg = <0>;
+> +               spi-max-frequency = <50000000>;
+> +               m25p,fast-read;
+> +               spi-tx-bus-width = <4>;
+> +               spi-rx-bus-width = <4>;
+> +       };
+> +};
+> +
+> +&qspi2 {
+> +       status = "okay";
+> +       mmc@0 {
+> +               compatible = "mmc-spi-slot";
+> +               reg = <0>;
+> +               spi-max-frequency = <20000000>;
+> +               voltage-ranges = <3300 3300>;
+> +               disable-wp;
+> +       };
+> +};
+> --
+> 2.20.1
+>
