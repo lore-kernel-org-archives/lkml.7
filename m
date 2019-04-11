@@ -2,206 +2,81 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346CEC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F24217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ech443MR"
+	by mail.kernel.org (Postfix) with ESMTP id 03A25217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDKBts (ORCPT
+        id S1726671AbfDKBvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:49:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38139 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDKBtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:49:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d13so3733483edr.5;
-        Wed, 10 Apr 2019 18:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oGBUzOtz4UlgntJVeZC6/P4en79ynT2N/NyNJk2IxFU=;
-        b=ech443MRe2yYmWkh01LaEXj3S+ATTSYZV+xtnaBCYZYgm+Tmsn0B194rioEHS52R7c
-         lLuRry5ziPZ1j9mdmNj0BtVmEi/5pChxrAmgzQoCHzb/C/ejvlfeBQJSrP2uQULFlHOK
-         3x12Pw9bZGN1I+NRcm57ivGbd/mVIWTdK2Cj0OSp4getc/ZnwHvzv5adP73kx4iI57ho
-         IkR44o6ZLKHqS1CL9hI+aLuko7dqy0sxDL/Im5aUGQCwfxkF6z1MKFAlDS58lGver7ds
-         wN9gvr9r79x4RN2m/t2waXAio34qlECyO/fsBF3sr9Cx2cUtLKkFzre6GfA6QnPKzuUR
-         bKnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oGBUzOtz4UlgntJVeZC6/P4en79ynT2N/NyNJk2IxFU=;
-        b=Kdj+Um8FMTJBY4epT96kREXtlTTOx4KZpIjG7OMHDYgel0KhlQe7ApLMBsd+HkNw92
-         Ma+RPSOO9CySvuhfnlZPm9qJLRTUX9rVUywCk7X4lZhuSIHeMnOFLUvYZevmpp55I5Iv
-         pve55gaIzJ5Mbzc8Td8nG59GlKpDtsj98ATudSGCoUYuqzIyCyPXOEZWkPpYl+geenbA
-         Z6qNJVPjUKQbv3lNjAp0nJKUpvA1WOpQdijrwoWssXuviytj4ZFeK2CnXwFYCZ27GwPM
-         QYtxm0Bm4CMqRtJwYG9eD3FslPA6kAjAFba26TaH5c/nG05bjKkLVjRim7GppLxlkFPB
-         bN2Q==
-X-Gm-Message-State: APjAAAX8S0gN3Fsxcot4U0RicOWQ7w0ihiUBN0Wlr1t9F6kXu94HGcRd
-        tCv/J0k8NLArJQN2pypQNGQPUSJLMe8nAsbDAjk=
-X-Google-Smtp-Source: APXvYqxEdxX9B+zhjhddm9iB31fJsPsa+NW85wqXiJTKyaAp7CYolOSEjnTEbfcle2MX5K1NKKIu9mgZmnDamcA5sn4=
-X-Received: by 2002:a17:906:4f19:: with SMTP id t25mr25803524eju.165.1554947385409;
- Wed, 10 Apr 2019 18:49:45 -0700 (PDT)
+        Wed, 10 Apr 2019 21:51:32 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfDKBvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:51:32 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 42CCB7DAFB5C248C3242;
+        Thu, 11 Apr 2019 09:51:30 +0800 (CST)
+Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.151]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0415.000; Thu, 11 Apr 2019 09:51:26 +0800
+From:   xiaojiangfeng <xiaojiangfeng@huawei.com>
+To:     Frank Rowand <frowand.list@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?UmU6IFxcIOetlOWkjTogW1BBVENIXSBvZjogZGVsIHJlZHVuZGFudCB0eXBl?=
+ =?utf-8?Q?_conversion?=
+Thread-Topic: =?utf-8?B?XFwg562U5aSNOiBbUEFUQ0hdIG9mOiBkZWwgcmVkdW5kYW50IHR5cGUgY29u?=
+ =?utf-8?Q?version?=
+Thread-Index: AdTwCQoU8Jmrv994RDuEBnLEvo5c2w==
+Date:   Thu, 11 Apr 2019 01:51:26 +0000
+Message-ID: <BE69D0C4DC96EF4BA3F03246F234C4BD01FDE17F@dggeml512-mbx.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.65.87.206]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190408205422.dj7z4dl36nauwlk7@intel.com> <1554809706-15389-1-git-send-email-ayan.halder@arm.com>
- <20190409115913.hvyjxlda4wtzm75t@intel.com> <20190409122710.k2bh25xg43lrqzvq@intel.com>
-In-Reply-To: <20190409122710.k2bh25xg43lrqzvq@intel.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 10 Apr 2019 21:49:33 -0400
-Message-ID: <CAF6AEGvUsWF+_dZzGBM1BYnwvZRY9T0P7OGq30KJLohFU3soKg@mail.gmail.com>
-Subject: Re: [PATCH libdrm] headers: Sync with drm-next
-To:     Eric Engestrom <eric.engestrom@intel.com>
-Cc:     Ayan Halder <Ayan.Halder@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "malidp@foss.arm.com" <malidp@foss.arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 8:27 AM Eric Engestrom <eric.engestrom@intel.com> wrote:
->
-> On Tuesday, 2019-04-09 12:59:13 +0100, Eric Engestrom wrote:
-> > On Tuesday, 2019-04-09 11:35:14 +0000, Ayan Halder wrote:
-> > > Generated using make headers_install from the drm-next
-> > > tree - git://anongit.freedesktop.org/drm/drm
-> > > branch - drm-next
-> > > commit - 14d2bd53a47a7e1cb3e03d00a6b952734cf90f3f
-> > >
-> > > The changes were as follows :-
-> > >
-> > > core: (drm.h, drm_fourcc.h, drm_mode.h)
-> > > - Added 'struct drm_syncobj_transfer', 'struct drm_syncobj_timeline_wait' and 'struct drm_syncobj_timeline_array'
-> > > - Added various DRM_IOCTL_SYNCOBJ_ ioctls
-> > > - Added some new RGB and YUV formats
-> > > - Added 'DRM_FORMAT_MOD_VENDOR_ALLWINNER'
-> > > - Added 'SAMSUNG' and Arm's 'AFBC' and 'ALLWINNER' format modifiers
-> > > - Added 'struct drm_mode_rect'
-> > >
-> > > i915:
-> > > - Added struct 'struct i915_user_extension' and various 'struct drm_i915_gem_context_'
-> > > - Added different modes of per-process Graphics Translation Table
-> > >
-> > > msm:
-> > > - Added various get or set GEM buffer info flags
-> > > - Added some MSM_SUBMIT_BO_ macros
-> > > - Modified 'struct drm_msm_gem_info'
-> > >
-> > > Signed-off-by: Ayan Kumar halder <ayan.halder@arm.com>
-> >
-> > This looks sane, and applies cleanly :)
-> > Acked-by: Eric Engestrom <eric.engestrom@intel.com>
->
-> Actually, revoking that, as this patch breaks the build; see below.
->
-> >
-> > > ---
-> > >  include/drm/drm.h        |  36 +++++++
-> > >  include/drm/drm_fourcc.h | 136 +++++++++++++++++++++++++++
-> > >  include/drm/drm_mode.h   |  23 ++++-
-> > >  include/drm/i915_drm.h   | 237 ++++++++++++++++++++++++++++++++++++++++-------
-> > >  include/drm/msm_drm.h    |  25 +++--
-> > >  5 files changed, 415 insertions(+), 42 deletions(-)
-> > >
-> [snip]
-> > > diff --git a/include/drm/msm_drm.h b/include/drm/msm_drm.h
-> > > index c06d0a5..91a16b3 100644
-> > > --- a/include/drm/msm_drm.h
-> > > +++ b/include/drm/msm_drm.h
-> > > @@ -105,14 +105,24 @@ struct drm_msm_gem_new {
-> > >     __u32 handle;         /* out */
-> > >  };
-> > >
-> > > -#define MSM_INFO_IOVA      0x01
-> > > -
-> > > -#define MSM_INFO_FLAGS (MSM_INFO_IOVA)
-> > > +/* Get or set GEM buffer info.  The requested value can be passed
-> > > + * directly in 'value', or for data larger than 64b 'value' is a
-> > > + * pointer to userspace buffer, with 'len' specifying the number of
-> > > + * bytes copied into that buffer.  For info returned by pointer,
-> > > + * calling the GEM_INFO ioctl with null 'value' will return the
-> > > + * required buffer size in 'len'
-> > > + */
-> > > +#define MSM_INFO_GET_OFFSET        0x00   /* get mmap() offset, returned by value */
-> > > +#define MSM_INFO_GET_IOVA  0x01   /* get iova, returned by value */
-> > > +#define MSM_INFO_SET_NAME  0x02   /* set the debug name (by pointer) */
-> > > +#define MSM_INFO_GET_NAME  0x03   /* get debug name, returned by pointer */
-> > >
-> > >  struct drm_msm_gem_info {
-> > >     __u32 handle;         /* in */
-> > > -   __u32 flags;          /* in - combination of MSM_INFO_* flags */
-> > > -   __u64 offset;         /* out, mmap() offset or iova */
-> > > +   __u32 info;           /* in - one of MSM_INFO_* */
-> > > +   __u64 value;          /* in or out */
-> > > +   __u32 len;            /* in or out */
-> > > +   __u32 pad;
->
-> freedreno/msm/msm_bo.c needs to be updated to reflect those changes.
-
-
-I think you can just rename flags->info and offset->value, the rest of
-the struct should be zero-initialized.. if in doubt you can check
-$mesa/src/freedreno/drm/msm_bo.c
-
-side-note:  the libdrm_freedreno code was folded into mesa in 19.0, so
-at *some* point we can probably disable libdrm_freedreno build by
-default.  (I'd kinda still like to keep the code around for some misc
-standalone tools I have, but that is the sort of thing where I can fix
-libdrm if it gets broken).  When to switch to disabled by default I
-guess comes down to how long we want to support mesa 18.x with latest
-libdrm??  Maybe after 19.1, since (selfishly motivated) that gives me
-a long enough window back in case I find myself needing to bisect for
-some regression..
-
-BR,
--R
-
->
-> > >  };
-> > >
-> > >  #define MSM_PREP_READ        0x01
-> > > @@ -188,8 +198,11 @@ struct drm_msm_gem_submit_cmd {
-> > >   */
-> > >  #define MSM_SUBMIT_BO_READ             0x0001
-> > >  #define MSM_SUBMIT_BO_WRITE            0x0002
-> > > +#define MSM_SUBMIT_BO_DUMP             0x0004
-> > >
-> > > -#define MSM_SUBMIT_BO_FLAGS            (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE)
-> > > +#define MSM_SUBMIT_BO_FLAGS            (MSM_SUBMIT_BO_READ | \
-> > > +                                   MSM_SUBMIT_BO_WRITE | \
-> > > +                                   MSM_SUBMIT_BO_DUMP)
-> > >
-> > >  struct drm_msm_gem_submit_bo {
-> > >     __u32 flags;          /* in, mask of MSM_SUBMIT_BO_x */
-> > > --
-> > > 2.7.4
-> > >
+TXkgcGxlYXN1cmUuDQoNCkkgYW0gdmVyeSBuZXcgdG8gc3BhcnNlLg0KDQpJIGd1ZXNzIHRoZSB3
+YXJuaW5nIGlzIGNhdXNlZCBieSB0aGUgbWFjcm8gbWluLg0KDQpUaGVuIEkgc3VibWl0dGVkIG15
+IGNoYW5nZXMuDQoNClRoYW5rcyBmb3IgY29kZSByZXZpZXcuDQoNCg0KLS0tLS3pgq7ku7bljp/k
+u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBGcmFuayBSb3dhbmQgW21haWx0bzpmcm93YW5kLmxpc3RAZ21h
+aWwuY29tXSANCuWPkemAgeaXtumXtDogMjAxOeW5tDTmnIgxMeaXpSAyOjUwDQrmlLbku7bkuro6
+IHhpYW9qaWFuZ2ZlbmcgPHhpYW9qaWFuZ2ZlbmdAaHVhd2VpLmNvbT47IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgcm9iaEBrZXJuZWwub3JnDQrmioTpgIE6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrkuLvpopg6IFJlOiBbUEFUQ0hdIG9mOiBk
+ZWwgcmVkdW5kYW50IHR5cGUgY29udmVyc2lvbg0KDQpPbiA0LzEwLzE5IDE6MjkgQU0sIHhpYW9q
+aWFuZ2Zlbmcgd3JvdGU6DQo+IFRoZSB0eXBlIG9mIHZhcmlhYmxlIGwgaW4gZWFybHlfaW5pdF9k
+dF9zY2FuX2Nob3NlbiBpcyBpbnQsIHRoZXJlIGlzIA0KPiBubyBuZWVkIHRvIGNvbnZlcnQgdG8g
+aW50Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogeGlhb2ppYW5nZmVuZyA8eGlhb2ppYW5nZmVuZ0Bo
+dWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvb2YvZmR0LmMgfCAyICstDQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL29mL2ZkdC5jIGIvZHJpdmVycy9vZi9mZHQuYyBpbmRleCANCj4gNDczNDIyMy4u
+ZGU4OTNjOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYw0KPiArKysgYi9kcml2ZXJz
+L29mL2ZkdC5jDQo+IEBAIC0xMDkxLDcgKzEwOTEsNyBAQCBpbnQgX19pbml0IGVhcmx5X2luaXRf
+ZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwNCj4g
+IAkvKiBSZXRyaWV2ZSBjb21tYW5kIGxpbmUgKi8NCj4gIAlwID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
+cChub2RlLCAiYm9vdGFyZ3MiLCAmbCk7DQo+ICAJaWYgKHAgIT0gTlVMTCAmJiBsID4gMCkNCj4g
+LQkJc3RybGNweShkYXRhLCBwLCBtaW4oKGludClsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAr
+CQlzdHJsY3B5KGRhdGEsIHAsIG1pbihsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAgDQo+ICAJ
+LyoNCj4gIAkgKiBDT05GSUdfQ01ETElORSBpcyBtZWFudCB0byBiZSBhIGRlZmF1bHQgaW4gY2Fz
+ZSBub3RoaW5nIGVsc2UNCj4gDQoNClRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhlIHJlZHVuZGFudCBj
+YXN0Lg0KDQpUaGVyZSBpcyBhIHNlY29uZCBwcm9ibGVtIGRldGVjdGVkIGJ5IHNwYXJzZSBvbiB0
+aGF0IGxpbmU6DQoNCiAgZHJpdmVycy9vZi9mZHQuYzoxMDk0OjM0OiB3YXJuaW5nOiBleHByZXNz
+aW9uIHVzaW5nIHNpemVvZih2b2lkKQ0KDQpDYW4geW91IHBsZWFzZSBmaXggYm90aCBpc3N1ZXM/
+DQoNClRoYW5rcywNCg0KRnJhbmsNCg==
