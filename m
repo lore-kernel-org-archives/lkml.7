@@ -2,123 +2,102 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4B1C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D52AC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A5B217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE602083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfDKCd6 (ORCPT
+        id S1726756AbfDKCe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:33:58 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:47368 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDKCd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:33:57 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hEPWk-0002SB-Qp; Thu, 11 Apr 2019 02:33:22 +0000
-Date:   Thu, 11 Apr 2019 03:33:22 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 14/15] dcache: Implement partial shrink via Slab
- Movable Objects
-Message-ID: <20190411023322.GD2217@ZenIV.linux.org.uk>
-References: <20190411013441.5415-1-tobin@kernel.org>
- <20190411013441.5415-15-tobin@kernel.org>
+        Wed, 10 Apr 2019 22:34:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbfDKCe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:34:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 71ABD7D7D5;
+        Thu, 11 Apr 2019 02:34:28 +0000 (UTC)
+Received: from treble (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F04B13ABE;
+        Thu, 11 Apr 2019 02:34:27 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 21:34:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [RFC patch 16/41] tracing: Remove the ULONG_MAX stack trace
+ hackery
+Message-ID: <20190411023425.f7aolamijvxdcuvp@treble>
+References: <20190410102754.387743324@linutronix.de>
+ <20190410103645.048761764@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190411013441.5415-15-tobin@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190410103645.048761764@linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 11 Apr 2019 02:34:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 11:34:40AM +1000, Tobin C. Harding wrote:
-> +/*
-> + * d_isolate() - Dentry isolation callback function.
-> + * @s: The dentry cache.
-> + * @v: Vector of pointers to the objects to isolate.
-> + * @nr: Number of objects in @v.
-> + *
-> + * The slab allocator is holding off frees. We can safely examine
-> + * the object without the danger of it vanishing from under us.
-> + */
-> +static void *d_isolate(struct kmem_cache *s, void **v, int nr)
-> +{
-> +	struct dentry *dentry;
-> +	int i;
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		dentry = v[i];
-> +		__dget(dentry);
-> +	}
-> +
-> +	return NULL;		/* No need for private data */
-> +}
+On Wed, Apr 10, 2019 at 12:28:10PM +0200, Thomas Gleixner wrote:
+> No architecture terminates the stack trace with ULONG_MAX anymore. As the
+> code checks the number of entries stored anyway there is no point in
+> keeping all that ULONG_MAX magic around.
+> 
+> The histogram code zeroes the storage before saving the stack, so if the
+> trace is shorter than the maximum number of entries it can terminate the
+> print loop if a zero entry is detected.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events_hist.c |    2 +-
+>  kernel/trace/trace_stack.c       |   20 +++++---------------
+>  2 files changed, 6 insertions(+), 16 deletions(-)
+> 
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -5246,7 +5246,7 @@ static void hist_trigger_stacktrace_prin
+>  	unsigned int i;
+>  
+>  	for (i = 0; i < max_entries; i++) {
+> -		if (stacktrace_entries[i] == ULONG_MAX)
+> +		if (!stacktrace_entries[i])
+>  			return;
+>  
+>  		seq_printf(m, "%*c", 1 + spaces, ' ');
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -18,8 +18,7 @@
+>  
+>  #include "trace.h"
+>  
+> -static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES+1] =
+> -	 { [0 ... (STACK_TRACE_ENTRIES)] = ULONG_MAX };
+> +static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES + 1];
 
-Huh?  This is compeletely wrong; what you need is collecting the ones
-with zero refcount (and not on shrink lists) into a private list.
-*NOT* bumping the refcounts at all.  And do it in your isolate thing.
+Is the "+ 1" still needed?  AFAICT, accesses to this array never go past
+nr_entries.
 
-> +static void d_partial_shrink(struct kmem_cache *s, void **v, int nr,
-> +		      int node, void *_unused)
-> +{
-> +	struct dentry *dentry;
-> +	LIST_HEAD(dispose);
-> +	int i;
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		dentry = v[i];
-> +		spin_lock(&dentry->d_lock);
-> +		dentry->d_lockref.count--;
-> +
-> +		if (dentry->d_lockref.count > 0 ||
-> +		    dentry->d_flags & DCACHE_SHRINK_LIST) {
-> +			spin_unlock(&dentry->d_lock);
-> +			continue;
-> +		}
-> +
-> +		if (dentry->d_flags & DCACHE_LRU_LIST)
-> +			d_lru_del(dentry);
-> +
-> +		d_shrink_add(dentry, &dispose);
-> +
-> +		spin_unlock(&dentry->d_lock);
-> +	}
+Also I've been staring at the code but I can't figure out why
+max_entries is "- 1".
 
-Basically, that loop (sans jerking the refcount up and down) should
-get moved into d_isolate().
-> +
-> +	if (!list_empty(&dispose))
-> +		shrink_dentry_list(&dispose);
-> +}
+struct stack_trace stack_trace_max = {
+	.max_entries		= STACK_TRACE_ENTRIES - 1,
+	.entries		= &stack_dump_trace[0],
+};
 
-... with this left in d_partial_shrink().  And you obviously need some way
-to pass the list from the former to the latter...
+-- 
+Josh
