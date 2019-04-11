@@ -2,95 +2,69 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052D8C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8158CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FA62133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415032184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="b4PHaMd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfDKNsP (ORCPT
+        id S1726800AbfDKNtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:48:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:43524 "EHLO foss.arm.com"
+        Thu, 11 Apr 2019 09:49:08 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53106 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfDKNsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:48:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C0480D;
-        Thu, 11 Apr 2019 06:48:15 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 116B63F68F;
-        Thu, 11 Apr 2019 06:48:13 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add rk3399 UART DMAs
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190321162244.10080-1-katsuhiro@katsuster.net>
- <14265087.Gbs4YZABJo@phil> <69d5d0fd-00c3-36ae-596e-1b9f9452a07a@arm.com>
- <2463729.IUJ8mRE5Ts@phil>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8d164cfe-c345-aa45-aaf3-11983f9142e5@arm.com>
-Date:   Thu, 11 Apr 2019 14:48:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726014AbfDKNtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:49:07 -0400
+Received: from zn.tnic (p200300EC2F0ABD00B0506403E4AFEFF4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bd00:b050:6403:e4af:eff4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A1B241EC0A8F;
+        Thu, 11 Apr 2019 15:49:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554990546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=sPs7o/G+UQ9SWhBybAWOHU16f+ESKLmeQTXgWc3iDEk=;
+        b=b4PHaMd3lnkYsUM1bgRqQpAU0BjQTZG4mrY2vo3r/XTyATwlWo9GzdJQg5Uk0FVIQzCNxO
+        wBET439tMUuIG+2jfr900avOm6DbkE6Afa0/oIA0XFcQNZlf6h2/u+Q+Q8Vx7Wbp9xlAi+
+        htaC6dnmnonH11DjTCjI3GUEJ2wyvRc=
+Date:   Thu, 11 Apr 2019 15:49:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Zhao, Yakui" <yakui.zhao@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: Re: [RFC PATCH v3 2/4] x86: Add the support of ACRN guest
+Message-ID: <20190411134900.GG30080@zn.tnic>
+References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
+ <1554711131-21514-3-git-send-email-yakui.zhao@intel.com>
+ <20190408143952.GF15689@zn.tnic>
+ <ab54d5a4-4f4c-9401-2e98-f0ac09d023b1@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <2463729.IUJ8mRE5Ts@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ab54d5a4-4f4c-9401-2e98-f0ac09d023b1@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 13:46, Heiko Stuebner wrote:
-> Hi Robin,
-> 
-> Am Samstag, 30. März 2019, 00:24:16 CEST schrieb Robin Murphy:
->> On 2019-03-27 12:00 pm, Heiko Stuebner wrote:
->>> Hi,
->>>
->>> Am Dienstag, 26. März 2019, 14:49:16 CET schrieb Katsuhiro Suzuki:
->>>> Hello Robin,
->>>>
->>>> Sorry for inconvenience. Since I don't adhere enabling DMA for UARTs,
->>>> please revert my patch if you need.
->>>
->>> I've dropped the patch from my queue now.
->>>
->>>> BTW, there are DMA properties in RK3328 device-tree like as this patch.
->>>> RK3328 UART DMA could not work correctly too...??
->>>
->>> I remember Rockcihip dma-controllers having issues with burst-sizes
->>> and flushing (there is a no-flushp option in pl330), so it's
->>> possible that all share the same error up to rk3399 and rk3328
->>>
->>> But so far no-one has shouted regarding the rk3328.
->>
->> Let me be the first, then, I guess :)
->>
->> I found an easy way to observe the problem on my 3399, and I've just
->> fired up my 3328 box with a 5.0 distro kernel to find that it behaves
->> the same. Basically just dump a large pile of text into 'less' on the
->> serial console, and scroll through line-by-line - certain lines get
->> dropped except for a few characters at the end.
->>
->> I'll see if I can narrow it down a bit, starting with trying
->> broken-flushp...
-> 
-> did you manage to find time for that test you wanted to do?
+On Wed, Apr 10, 2019 at 05:15:48PM +0800, Zhao, Yakui wrote:
+> Currently the x2apic is not enabled in the first step.
+> Next step it needs to check the cpu info reported by ACRN hypervisor to
+> determine whether the x2apic should be supported.
 
-Sadly not - I got somewhat distracted by the ethernet thing, and since 
-then I've had too much else going on to follow up on any of my 'for fun' 
-projects :(
+What "cpu info"? CPUID or something ACRN-specific?
 
-If it helps, from a quick look based on what I can remember off-hand, 
-Rockchip UARTs in general have probably been using DMA since 4.19 with 
-d8095f94e195 ("dmaengine: add support for reporting pause and resume 
-separately").
+-- 
+Regards/Gruss,
+    Boris.
 
-Robin.
+Good mailing practices for 400: avoid top-posting and trim the reply.
