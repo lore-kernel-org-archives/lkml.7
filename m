@@ -2,130 +2,200 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBF9C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B41BC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA04F2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B8A20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GaP44zLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfDKCXI (ORCPT
+        id S1726736AbfDKCYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:23:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:47234 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfDKCXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:23:08 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hEPMf-0002Fx-8f; Thu, 11 Apr 2019 02:22:57 +0000
-Date:   Thu, 11 Apr 2019 03:22:57 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel BUG at fs/inode.c:LINE!
-Message-ID: <20190411022257.GB2217@ZenIV.linux.org.uk>
-References: <00000000000036a4a9058619dff3@google.com>
- <20190410002603.GS2217@ZenIV.linux.org.uk>
- <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
- <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
- <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
- <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net>
- <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
- <20190410121159.GY2217@ZenIV.linux.org.uk>
- <CACT4Y+bc=A=djKChMkJGwXYbZ7UXuxmRu5Z0Y1BEXAFH1-Z6Kw@mail.gmail.com>
- <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net>
+        Wed, 10 Apr 2019 22:24:21 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43013 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfDKCYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:24:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44flG96pBKz9s3l;
+        Thu, 11 Apr 2019 12:24:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554949458;
+        bh=BbcGnj23b10G3Nthin6BRg7O8vxWrhLf97KzW+jCYtg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GaP44zLptblMSs66VQ8a9Yt+P5OUTBmXf+gbyygY6F/ttCbCv+4u6luiU1JGNFtgj
+         S8RvS9tLb3KKOWQ0oWsmswf5sSyL0NOjc/g8ZSKKtnFxmULnxCIBfXxCAVonyMlV53
+         iuHnKPIaz1OwTA3jwKSL14y9CcMOWe3pS+xHcKcoW+GY8QeVd5r5NPQ5tT+PYe8cGp
+         orHQSbaLpIiI7hbb3gWgg+HIBsFRbOJdCAMgaifJ/TFNgCKhjjflFqcVloHWbc1J9t
+         ipxEVwIapa3XW8W8wK5Uvv9TuRnhikY6FwIi08RsF4xdXkPLz0tF+02UmU64ws87Mj
+         JXQVBJ4+vYGCA==
+Date:   Thu, 11 Apr 2019 12:24:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     John Johansen <john.johansen@canonical.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Chris Coulson <chris.coulson@canonical.com>
+Subject: linux-next: manual merge of the apparmor tree with Linus' tree
+Message-ID: <20190411122408.7b35cf74@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Q/8EpOQ53.R7ce447/f/weu"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 08:50:17AM +0800, Ian Kent wrote:
-> On Wed, 2019-04-10 at 14:41 +0200, Dmitry Vyukov wrote:
-> > On Wed, Apr 10, 2019 at 2:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > 
-> > > On Wed, Apr 10, 2019 at 08:07:15PM +0800, Ian Kent wrote:
-> > > 
-> > > > > I'm unable to find a branch matching the line numbers.
-> > > > > 
-> > > > > Given that, on the face of it, the scenario is impossible I'm
-> > > > > seeking clarification on what linux-next to look at for the
-> > > > > sake of accuracy.
-> > > > > 
-> > > > > So I'm wondering if this testing done using the master branch
-> > > > > or one of the daily branches one would use to check for conflicts
-> > > > > before posting?
-> > > > 
-> > > > Sorry those are tags not branches.
-> > > 
-> > > FWIW, that's next-20181214; it is what master had been in mid-December
-> > > and master is rebased every day.  Can it be reproduced with the current
-> > > tree?
-> > 
-> > From the info on the dashboard we know that it happened only once on
-> > d14b746c (the second one is result of reproducing the first one). So
-> > it was either fixed or just hard to trigger.
-> 
-> Looking at the source of tag next-20181214 in linux-next-history I see
-> this is mistake I made due to incorrect error handling which I fixed
-> soon after (there was in fact a double iput()).
+--Sig_/Q/8EpOQ53.R7ce447/f/weu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Right - "autofs: fix possible inode leak in autofs_fill_super()" had been
-broken (and completely pointless), leading to double iput() in that failure
-case.  And yes, double iput() can trigger that BUG_ON(), and with non-zero
-odds do so with that stack trace.
+Hi all,
 
-As far as I'm concerned, case closed - bug had been in a misguided "fix"
-for inexistent leak (coming from misreading the calling conventions for
-d_make_root()), introduced in -next at next-20181130 and kicked out of
-there in next-20181219.  Dropped by Ian's request in 
-Message-ID: <66d497c00cffb3e4109ca0d5287c8277954d7132.camel@themaw.net>
-which has fixed that crap.  Moreover, that posting had been in reply to
-that very syzcaller report, AFAICS.
+Today's linux-next merge of the apparmor tree got a conflict in:
 
-I don't know how to tell the bot to STFU and close the report in this
-situation; up to you, folks.
+  security/apparmor/lsm.c
 
-As an aside, the cause of that bug is that d_make_root() calling conventions
-are insufficiently documented.  All we have is
+between commit:
 
-||[mandatory]
-||        d_alloc_root() is gone, along with a lot of bugs caused by code
-||misusing it.  Replacement: d_make_root(inode).  The difference is,
-||d_make_root() drops the reference to inode if dentry allocation fails.
+  e33c1b992377 ("apparmor: Restore Y/N in /sys for apparmor's "enabled"")
 
-in Documentation/filesystems/porting, and that's not good enough.  Anyone
-willing to take a shot at that?  FWIW, the calling conventions are:
+from Linus' tree and commit:
 
-	d_make_root(inode) normally allocates and returns a new dentry.
-On failure NULL is returned.  A reference to inode is consumed in all
-cases (on success it is transferred to new dentry, on failure it is
-dropped), so failure handling does not need anything done to inode.
-d_make_root(NULL) quietly returns NULL, which further simplifies the
-error handling in typical caller.  Usually it's something like
-	inode = foofs_new_inode(....);
-	s->s_root = d_make_inode(inode);
-	if (!s->s_root)
-		bugger off, no need to undo inode allocation
-	success
-We do not need to check if foofs_new_inode() has returned NULL and we
-do not need any special cleanups in case of failure - not for the
-undoing the inode allocation.
+  876dd866c084 ("apparmor: Initial implementation of raw policy blob compre=
+ssion")
 
-If anyone cares to convert that into coherent (and printable) documentation,
-patches are welcome...
+from the apparmor tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc security/apparmor/lsm.c
+index 87500bde5a92,e1e9c3c01cd3..000000000000
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@@ -25,8 -25,8 +25,9 @@@
+  #include <linux/user_namespace.h>
+  #include <linux/netfilter_ipv4.h>
+  #include <linux/netfilter_ipv6.h>
++ #include <linux/zlib.h>
+  #include <net/sock.h>
+ +#include <uapi/linux/mount.h>
+ =20
+  #include "include/apparmor.h"
+  #include "include/apparmorfs.h"
+@@@ -1420,46 -1424,37 +1436,77 @@@ static int param_get_aauint(char *buffe
+  	return param_get_uint(buffer, kp);
+  }
+ =20
+ +/* Can only be set before AppArmor is initialized (i.e. on boot cmdline).=
+ */
+ +static int param_set_aaintbool(const char *val, const struct kernel_param=
+ *kp)
+ +{
+ +	struct kernel_param kp_local;
+ +	bool value;
+ +	int error;
+ +
+ +	if (apparmor_initialized)
+ +		return -EPERM;
+ +
+ +	/* Create local copy, with arg pointing to bool type. */
+ +	value =3D !!*((int *)kp->arg);
+ +	memcpy(&kp_local, kp, sizeof(kp_local));
+ +	kp_local.arg =3D &value;
+ +
+ +	error =3D param_set_bool(val, &kp_local);
+ +	if (!error)
+ +		*((int *)kp->arg) =3D *((bool *)kp_local.arg);
+ +	return error;
+ +}
+ +
+ +/*
+ + * To avoid changing /sys/module/apparmor/parameters/enabled from Y/N to
+ + * 1/0, this converts the "int that is actually bool" back to bool for
+ + * display in the /sys filesystem, while keeping it "int" for the LSM
+ + * infrastructure.
+ + */
+ +static int param_get_aaintbool(char *buffer, const struct kernel_param *k=
+p)
+ +{
+ +	struct kernel_param kp_local;
+ +	bool value;
+ +
+ +	/* Create local copy, with arg pointing to bool type. */
+ +	value =3D !!*((int *)kp->arg);
+ +	memcpy(&kp_local, kp, sizeof(kp_local));
+ +	kp_local.arg =3D &value;
+ +
+ +	return param_get_bool(buffer, &kp_local);
+ +}
+ +
++ static int param_set_aacompressionlevel(const char *val,
++ 					const struct kernel_param *kp)
++ {
++ 	int error;
++=20
++ 	if (!apparmor_enabled)
++ 		return -EINVAL;
++ 	if (apparmor_initialized)
++ 		return -EPERM;
++=20
++ 	error =3D param_set_int(val, kp);
++=20
++ 	aa_g_rawdata_compression_level =3D clamp(aa_g_rawdata_compression_level,
++ 					       Z_NO_COMPRESSION,
++ 					       Z_BEST_COMPRESSION);
++ 	pr_info("AppArmor: policy rawdata compression level set to %u\n",
++ 		aa_g_rawdata_compression_level);
++=20
++ 	return error;
++ }
++=20
++ static int param_get_aacompressionlevel(char *buffer,
++ 					const struct kernel_param *kp)
++ {
++ 	if (!apparmor_enabled)
++ 		return -EINVAL;
++ 	if (apparmor_initialized && !policy_view_capable(NULL))
++ 		return -EPERM;
++ 	return param_get_int(buffer, kp);
++ }
++=20
+  static int param_get_audit(char *buffer, const struct kernel_param *kp)
+  {
+  	if (!apparmor_enabled)
+
+--Sig_/Q/8EpOQ53.R7ce447/f/weu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyupUgACgkQAVBC80lX
+0Gx45gf/VB40HfJVDnmWY+s10LavRxSl+A0EbfHr4qU6PsC+vjkxxO62tWWLzcVZ
+SoGk/RhQ6zFZ6v7A8DJ6zFPKt+SyzKu8z4wvm5qaT+p5Tixjm1AzdL9re0FUEz7u
+QH9q5eGM7HiS1phlanEJVscIm1wtRkXZo8HYmWKOh8ukAEF5Jv0T5OZ5uGurFeUq
+/xelZvOpWqljZrYiUFwPqoMD7loqiH0kYLJTTgpXVlBGgdlbV6Qm3H8oOgEMO6No
+j1marxDD2H2VtZsuO6vg94Uf3MjNXjFhJ2SHTpGWKG4TQQ2oxorYfq+FvyAqGhD5
+Da4gRfEZutuLBQCmR8M6FC+AdDcIyA==
+=HLfv
+-----END PGP SIGNATURE-----
+
+--Sig_/Q/8EpOQ53.R7ce447/f/weu--
