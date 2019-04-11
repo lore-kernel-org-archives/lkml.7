@@ -4,115 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E7C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5F5C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4068D2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1382082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H3SRF4NY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jz89wF/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfDKRqn (ORCPT
+        id S1726682AbfDKRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:46:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39966 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKRqm (ORCPT
+        Thu, 11 Apr 2019 13:48:03 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:47014 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfDKRsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:46:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c207so3805807pfc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:46:42 -0700 (PDT)
+        Thu, 11 Apr 2019 13:48:03 -0400
+Received: by mail-vs1-f67.google.com with SMTP id e2so3969688vsc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EEsnno8UWCUD8Kimd0fiNYZh+xSomoXPpGJKWoxyYTA=;
-        b=H3SRF4NYZaNJBzjGTjYrBYGqvcT6/dwzlC0Bxh9QbJX0eJCD/Zd7YB4dwCsKh+pF/q
-         VzRcQRgcsNx9VBpS0bKcLgwuCu/IQL1kRiQz4jpVKHnz0yuvrBxz7/JNYDLusXjeimE9
-         Ib0GSBzKK+92Hr2C2bzG+Sl5J35pMJnVnUBeaqc3mKNBdQNwKbqciwj6Sht/VIcDInBa
-         5WW2Y76AlhDvRdUNTp8PDjO+ZWUuqA2W5q2l8buRynTEehUS2sKxd0k+FfL84NLBlUVp
-         6MKw9JJoXxz8mtXifGJkIyKyYZivELqmJbr7XzX5a4YmSRaXHY+VEzPKotNYJb7CAjWF
-         Bprg==
+        bh=EdmEfhETvX5sRZ2i3AN4xgxKTisr0Ltj90Tc5NPzL+I=;
+        b=jz89wF/PI7xg90sbXXootb01OYHrWVY1nyKpnYun8KA/55ifTn0poh8w9zFwRH252Z
+         Dw+IysDpcGaJw6W5CznS2kYl/jSmZrStx7LG6OgW7ihxHEasnyj+5cNjp8m1rxozoENV
+         vMjq/0/brXM7n2UaYUjItZAJjRAXYz1OmAao8Sd69dilMIvL2IJT3oDvDBgrSAejGbbH
+         Zkfmdw/a3nVbVz2iTiFBR2bFuKyW6eJU5N2v2KaFR6vXkF5HJzyxVz9TqJVHMm1aLN/9
+         EFNznjoGr1qh/+0NrHLQrLhfHjTFVDwPn5uDgrh7B5/JwMRo4NtPiZ0lSShhe+MBfz37
+         1zCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EEsnno8UWCUD8Kimd0fiNYZh+xSomoXPpGJKWoxyYTA=;
-        b=b+BWUUog6uojZeTh+Du1o9WRz0siLEvxjFPuQMf/Kuz3RsaJ2yZEAil2QqaMZwTybF
-         uPqeGTohEoPvajsnRSKdaqurKymQ46iF+6HcC6uU42N0ebdFlWBDKxiqvREF5qeCcY8y
-         hRqQz/sTrewI4o1uKQqAimsuY9LJMqZCRQ0X5ayjKYw64ZnZ3jFTjXfwfI0n1CgCjFMC
-         GLXM4MWS6GeqaUB833pJ6dLPbFuqm3rAa3Djtp6IbNpeklFGAFOo1KzdlsRugPl0ORND
-         Ns/17EZIRzbCefSpZ3XYpuK9CcfxNUN+oOVGAXqs+MmbmoJeyTrFgPKnikEjgD4n1Cvt
-         Dm2A==
-X-Gm-Message-State: APjAAAXtoervyrV+OcULbffLLpsTxWGvRSPkAoOzjyKuk5b9a4ODEM4o
-        /TlY/PXs/9oaz3BcGiHcKyhY3MNUM2jjnsCNl4gRNA==
-X-Google-Smtp-Source: APXvYqz3U8KGRrwS/vDRCeN45kyfkRJs9sbt+b0Q75CPsiAfaogHFBc2dcRfvSGi1L20G1+JGU294l4owrMH5N04xMQ=
-X-Received: by 2002:a63:7444:: with SMTP id e4mr48964424pgn.261.1555004801668;
- Thu, 11 Apr 2019 10:46:41 -0700 (PDT)
+        bh=EdmEfhETvX5sRZ2i3AN4xgxKTisr0Ltj90Tc5NPzL+I=;
+        b=BcqqUIYTHpvyb7PKXdwXocuH621UvGsP86STtjwOqj3C/sTjoFupuPYneMP7C+SCTQ
+         UxGM1dmvIJWaRViyrgzqfVkF8pRbE3ssKqDeDdxu328Vco0cpL0UFjPmdXoW/T0bwaAC
+         Ym74bbx/mrnJYmymSFL5GGoYkKFoGTqEANNMKGoDEXbHiNrY+ZoUtN6L0dvQyV3aWTzr
+         tKhWG3BTi0zlBCptJFVhpyFNH9oHADpCyN2thu7uA7SyqieER/Cas4yiBfe2S48yr10Q
+         lS5s457EDaNFf7MPd8OKPNR2oJRgi3dMRqVo2CcRYSzUnR1BaZ0vnT41FZSKLgT94Uun
+         CuNg==
+X-Gm-Message-State: APjAAAVy9ZBhRMkbRFl5rXPM+zcUMg5BlYAxTSDeUiDzob6HkL+wjcgy
+        Hai1U/wcZjzPuO8Ea5nk/nZH89tGdBpdoQxgC6atqA==
+X-Google-Smtp-Source: APXvYqwI0Tosne+pusVzKzdHblB/C7MtpXTvYlDo3J+xGAIK5hCHrHvOO0GrDJKsNhe/ffI89eTSYRDp9xlhLXpu9Ig=
+X-Received: by 2002:a05:6102:212:: with SMTP id z18mr29458490vsp.218.1555004881611;
+ Thu, 11 Apr 2019 10:48:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410201300.3528984-1-arnd@arndb.de> <CAKwvOdnZjj_FRQkAqmmmMcG=s+TGFXqQS5-ZhT2E9fcGu-nm8w@mail.gmail.com>
- <CAK8P3a3bn8yWHfhwppXdTfkyy7_uM=_OySKahoQtOyBxBT5QoQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3bn8yWHfhwppXdTfkyy7_uM=_OySKahoQtOyBxBT5QoQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 11 Apr 2019 10:46:30 -0700
-Message-ID: <CAKwvOdmmaxgXPQdEEEdGj7pBNeYrnME3=GpthThO1P8owsDD_w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] s390: only build for new CPUs with clang
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Rudo <prudo@linux.vnet.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
+ <20190411153313.GE22763@bombadil.infradead.org> <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+ <CAKOZuetFU4tXE27bxA86zzDfNSCbw83p8fPxfkQ_d_Em0C04Sg@mail.gmail.com> <20190411173649.GF22763@bombadil.infradead.org>
+In-Reply-To: <20190411173649.GF22763@bombadil.infradead.org>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 11 Apr 2019 10:47:50 -0700
+Message-ID: <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
+Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        yuzhoujian@didichuxing.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 3:18 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Apr 11, 2019 at 10:36 AM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> On Thu, Apr 11, 2019 at 12:20 AM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 1:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Apr 11, 2019 at 10:33:32AM -0700, Daniel Colascione wrote:
+> > On Thu, Apr 11, 2019 at 10:09 AM Suren Baghdasaryan <surenb@google.com> wrote:
+> > > On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
+> > > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
+> > > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
+> > > > > victim process. The usage of this flag is currently limited to SIGKILL
+> > > > > signal and only to privileged users.
+> > > >
+> > > > What is the downside of doing expedited memory reclaim?  ie why not do it
+> > > > every time a process is going to die?
 > > >
-> > > llvm does does not understand -march=z9-109 and older target
+> > > I think with an implementation that does not use/abuse oom-reaper
+> > > thread this could be done for any kill. As I mentioned oom-reaper is a
+> > > limited resource which has access to memory reserves and should not be
+> > > abused in the way I do in this reference implementation.
+> > > While there might be downsides that I don't know of, I'm not sure it's
+> > > required to hurry every kill's memory reclaim. I think there are cases
+> > > when resource deallocation is critical, for example when we kill to
+> > > relieve resource shortage and there are kills when reclaim speed is
+> > > not essential. It would be great if we can identify urgent cases
+> > > without userspace hints, so I'm open to suggestions that do not
+> > > involve additional flags.
 > >
-> > Please file bugs for these in LLVM's issue tracker.  It might be
-> > possible to enable these additional architecture variants if they're
-> > similar to existing ones and simply unrecognized.  IIRC, we had this
-> > issue with armv7 variants.
+> > I was imagining a PI-ish approach where we'd reap in case an RT
+> > process was waiting on the death of some other process. I'd still
+> > prefer the API I proposed in the other message because it gets the
+> > kernel out of the business of deciding what the right signal is. I'm a
+> > huge believer in "mechanism, not policy".
 >
-> I really don't see that as necessary here. While generally speaking,
-> it would be nice to support the widest possible range of hardware,
-> and it would not be hard to add this support, it seems highly unlikely
-> that anyone would actually want to use that in case of s390.
->
-> The last enterprise distros to support z9 were SLES11 (end of life as
-> of last month) and RHEL6 (ending its 10 year life next year). Anyone
-> who is still on those releases will probably not install a brand new
-> compiler, and anyone who is on newer releases won't run on prehistoric
-> hardware.
+> It's not a question of the kernel deciding what the right signal is.
+> The kernel knows whether a signal is fatal to a particular process or not.
+> The question is whether the killing process should do the work of reaping
+> the dying process's resources sometimes, always or never.  Currently,
+> that is never (the process reaps its own resources); Suren is suggesting
+> sometimes, and I'm asking "Why not always?"
 
-Are those machine variants worth dropping kernel support for then?
-
->
-> Debian still runs on very old hardware in theory, but even there you'd
-> have a hard time finding someone to test the output of the compiler
-> on an old machine.
->
->        Arnd
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+FWIW, Suren's initial proposal is that the oom_reaper kthread do the
+reaping, not the process sending the kill. Are you suggesting that
+sending SIGKILL should spend a while in signal delivery reaping pages
+before returning? I thought about just doing it this way, but I didn't
+like the idea: it'd slow down mass-killing programs like killall(1).
+Programs expect sending SIGKILL to be a fast operation that returns
+immediately.
