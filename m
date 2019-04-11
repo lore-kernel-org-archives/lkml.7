@@ -2,123 +2,93 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D796C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0347C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17212073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:34:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rt8amp4h"
+	by mail.kernel.org (Postfix) with ESMTP id 768532073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfDKMeq (ORCPT
+        id S1726644AbfDKMhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:34:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46281 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfDKMep (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:34:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 9so3377617pfj.13;
-        Thu, 11 Apr 2019 05:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KMdKIIiHipKQKDZGpqrpYyWUnjQx+WvOjRbBgeImJsA=;
-        b=Rt8amp4hd8F2GS9qXUQci8A5SLByOiPZyEU6I1c9Y5aeqYpjSdyOTrdiTJw7nNHsdD
-         CBOvJW1x7kzByhlAfmg4aQXZZlxz1ksg1Ahp9qTJk7R1/9ysIhQlBZFp7ejaeuMMBXUG
-         ZBb3Rly4LN40bCD3A3vmtqXrUS8sYQ/i90qs9GDxxcqonUu0ydPZb/HyLUdwioySw+9N
-         diU1R5MQ1bVai+zzxRxgGw9sxbC8cdhv1bhEwtEkGdvWe5CfuWwGuxTQehecCaU6bpKl
-         bHIaKgac80i7Mxxob/KKsy43HabtlvIqkd8t59F9kNa204swlvmX9SQzosi6G1inylXl
-         OVJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KMdKIIiHipKQKDZGpqrpYyWUnjQx+WvOjRbBgeImJsA=;
-        b=uDbl0iy0Q65pHqi25NtSjPXcSrxc3hN5iJO3ACwjtuTgYxMQ6ollWNYHhzn8N+j05h
-         l/j+rKgMg6hiV13DssZDwdRlywMFiL36WB4cRc/EraE6qfo7tw1ajyYfbmj+fCNSmDyR
-         sYu/L6qE6R3+2nhsJXvHE+CKeWxllFFWQtZEgLaeWFCZr5QKrmKL3T7ZekmS19+0oejZ
-         jvZiy44IxJ5YMIkDuS7ZUgTu+7j5E0afubP7q9rJx9zWvNQ1L+0zdQ9Lql64EupaGnan
-         y04gbbpHT12y36qLnoXNcWYuQxW/uInhqnJwwSRV0Dq5vhVjYmtfLtM873sjVqPn+zIW
-         93xg==
-X-Gm-Message-State: APjAAAU+ol0wqYViVKjCWJf70cgvWqKfJnKuFlZX+BQh1LlPaV5Jlijo
-        1VbEGb25KZp6Oqw5vAufNQ+NN8gM1TPxHBCKE1HLXR7H
-X-Google-Smtp-Source: APXvYqzbF8eYfOavSgWa1wDzm1HtE4UJ6VkeikDJE1ncgZm6EHoMgDdMML/PKDzNgxDmySUiXZzSWxgNNHigMIs7feI=
-X-Received: by 2002:a65:4302:: with SMTP id j2mr44574088pgq.291.1554986084822;
- Thu, 11 Apr 2019 05:34:44 -0700 (PDT)
+        Thu, 11 Apr 2019 08:37:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfDKMg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:36:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9BAA4AC4C;
+        Thu, 11 Apr 2019 12:36:58 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 14:36:56 +0200
+From:   "jroedel@suse.de" <jroedel@suse.de>
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Nikolai Kostrigin <nickel@altlinux.org>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND 1/1] PCI: Add ATS-disable quirk for AMD Radeon R7
+ GPUs
+Message-ID: <20190411123656.GE3349@suse.de>
+References: <20190408103725.30426-1-nickel@altlinux.org>
+ <20190408103725.30426-2-nickel@altlinux.org>
+ <20190409215927.GC256045@google.com>
+ <BN6PR12MB1809C529684D59E8DF3D1F0FF72E0@BN6PR12MB1809.namprd12.prod.outlook.com>
+ <BN6PR12MB18094BA9F4011E6698A56742F72E0@BN6PR12MB1809.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com> <20190410152505.87041-9-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20190410152505.87041-9-heikki.krogerus@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 11 Apr 2019 15:34:33 +0300
-Message-ID: <CAHp75Vca6EdAYK=mQhrUfwyZZL75sQWHB2czWec1RSUvWcTEgA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/12] usb: typec: Registering real device entries for
- the muxes
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN6PR12MB18094BA9F4011E6698A56742F72E0@BN6PR12MB1809.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 6:25 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Registering real device entries (struct device) for the mode
-> muxes as well as for the orientation switches.
->
-> The Type-C mux code was deliberately attempting to avoid
-> creation of separate device entries for the orientation
-> switch and the mode switch (alternate modes) because they
-> are not physical devices. They are functions of a single
-> physical multiplexer/demultiplexer switch device.
->
-> Unfortunately because of the dependency we still have on the
-> underlying mux device driver, we had to put in hacks like
-> the one in the commit 3e3b81965cbf ("usb: typec: mux: Take
-> care of driver module reference counting") to make sure the
-> driver does not disappear from underneath us. Even with
-> those hacks we were still left with a potential NUll pointer
-> dereference scenario, so just creating the device entries,
-> and letting the core take care of the dependencies. No more
-> hacks needed.
+On Wed, Apr 10, 2019 at 03:59:57PM +0000, Deucher, Alexander wrote:
+> > + a few AMD people
+> > 
+> > Seeing this bug makes it more clear.  I don't think this is a problem with the
+> > GPU.  I think it's a problem with either the sbios or iommu.  I think the original
+> > quirk added for stoney (0x98e4) is probably wrong as well.  I suspect we
+> > need a quirk for a particular laptop or sbios versions.  We validated ATS
+> > extensively with Carrizo based systems (the system in the bug report above
+> > is Carrizo based) since it is the basis of our ROCm support on APUs.  We have
+> > also been involved in tons of Linux OEM preloads with both Carrizo and
+> > Stoney based APUs in combination with TOPAZ dGPUs (0x6900) and haven't
+> > seen this issue in those programs.  We also have TOPAZ dGPUs used in OEM
+> > programs with Intel chipsets and haven't seen the issue.  I suspect since
+> > windows does not use the IOMMU by default, the sbios settings may not be
+> > well validated on certain windows only skus.  I'd rather make these DMI
+> > matches or something like that for the platform or at the very least match
+> > the SSIDs as well.
+> 
+> Reading through these bugs again it seems to be an issue with Stoney
+> APUs, not the dGPU specifically.  I think it would be better to
+> disable ATS in general if a stoney based platform was detected rather
+> than adding ATS quirks for devices then someone may put in a Stoney
+> based platform.  It also seems to be related to runtime pm on the
+> dGPU.  Disabling runtime pm also seem to fix the issue.  On these
+> systems runtime pm for the dGPU is controlled via ACPI (either ATPX or
+> _PR3 depending on the platform).  Maybe something doesn't get restored
+> properly on runtime resume which cases the ATS issues?
 
->  drivers/platform/x86/intel_cht_int33fe.c |   4 +-
+This seems all pretty much possible, but we lack the ability to debug
+this further on our side. So until we have a real root-cause with a more
+specific quirk that only targets systems with a broken sbios or
+whatever, we need to catch-all approach.
 
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index 6fa3cced6f8e..657b8d61554c 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -173,10 +173,10 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         }
->
->         data->connections[0].endpoint[0] = "port0";
-> -       data->connections[0].endpoint[1] = "i2c-pi3usb30532";
-> +       data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
->         data->connections[0].id = "orientation-switch";
->         data->connections[1].endpoint[0] = "port0";
-> -       data->connections[1].endpoint[1] = "i2c-pi3usb30532";
-> +       data->connections[1].endpoint[1] = "i2c-pi3usb30532-mux";
->         data->connections[1].id = "mode-switch";
->         data->connections[2].endpoint[0] = "i2c-fusb302";
->         data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
+We can remove these quirks again when AMD sends more specific quirks
+upstream.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+	Joerg
