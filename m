@@ -2,78 +2,192 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE52FC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DADC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33D0217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A359920850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfDKBBB (ORCPT
+        id S1726843AbfDKBCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:01:01 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:58899 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfDKBBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:01:01 -0400
-Received: by mail-it1-f198.google.com with SMTP id j203so4189040itb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 18:01:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=tv6qffGYPBYILk02p1FMdoKuMlPTDm5i51uvShtRcdg=;
-        b=PYWCtFVwlzLch7pvvLvTAC5p2zXCw4xOPzKtiVAwXSaxZjmBQVBWz+fOL1kikuZIvM
-         5svHM55GBYjPj726J/TTwS7Ygc+WFwQXSMJVETVvVQU+lXmYJtD+ukgZeWswPSwmmBIb
-         BA2YIQ0QX+sFBO1Nga+J1VE6mujgo1kOBi1NJ9f66cK7+IQKKmAF5b8epFXHjm+Tu+yB
-         zGUhZm4+2jqgcAKLaRFbBz1xMJYhche6Jc+WfNQste8bOJ68ehdNMAAPqa2FVz9zkPSO
-         jAWc6oB5uw0+q77EzG7y/TckfmLrB2/ZyioJL4tP5Idy7KBiL65dqOPy90YaaI8luC33
-         PFZQ==
-X-Gm-Message-State: APjAAAVXwlZBwM1N3JXv49o7rv5/xU1K+eHYV3JgyKmDaDsu4oxKn0cY
-        2LPLQ1u6SduNuvKMnzptgmvCiiFMG1L1BxBsj90V+VYU9k6k
-X-Google-Smtp-Source: APXvYqxCZLGueWq5+oTUJrVwXdp0ypnCtB9uKcBjYF7CAUuJhz4sOdX1+9dO3GIL47zrKLAQa5u9dFaPzSh25WO+CAWv07XsXDdf
+        Wed, 10 Apr 2019 21:02:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:19226 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfDKBCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:02:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 18:02:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,335,1549958400"; 
+   d="scan'208";a="163237465"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 18:02:32 -0700
+Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+ <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+ <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
+ <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
+ <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
+ <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
+ <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
+Date:   Thu, 11 Apr 2019 09:02:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:3d8e:: with SMTP id n136mr1715965itn.3.1554944460297;
- Wed, 10 Apr 2019 18:01:00 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 18:01:00 -0700
-In-Reply-To: <00000000000065a79f057a095de8@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000033a06b058636b877@google.com>
-Subject: Re: WARNING in usb_submit_urb (4)
-From:   syzbot <syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com>
-To:     Thinh.Nguyen@synopsys.com, andreyknvl@google.com,
-        felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mmarek@suse.com, shuah@kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 2019/4/10 22:54, Andy Lutomirski wrote:
+> On Tue, Apr 9, 2019 at 8:40 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>>
+>> On 2019/4/10 10:36, Li, Aubrey wrote:
+>>> On 2019/4/10 10:25, Andy Lutomirski wrote:
+>>>> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>>>>>
+>>>>> On 2019/4/10 9:58, Andy Lutomirski wrote:
+>>>>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>>>>>>>
+>>>>>>> The architecture specific information of the running processes could
+>>>>>>> be useful to the userland. Add support to examine process architecture
+>>>>>>> specific information externally.
+>>>>>>>
+>>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+>>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>>>>> Cc: Andi Kleen <ak@linux.intel.com>
+>>>>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+>>>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>>>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
+>>>>>>> Cc: Linux API <linux-api@vger.kernel.org>
+>>>>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+>>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>>>> ---
+>>>>>>>  fs/proc/array.c         | 5 +++++
+>>>>>>>  include/linux/proc_fs.h | 2 ++
+>>>>>>>  2 files changed, 7 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+>>>>>>> index 2edbb657f859..331592a61718 100644
+>>>>>>> --- a/fs/proc/array.c
+>>>>>>> +++ b/fs/proc/array.c
+>>>>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>>>>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>>>>>>>  }
+>>>>>>>
+>>>>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
+>>>>>>> +{
+>>>>>>> +}
+>>>>>>
+>>>>>> This pointlessly bloats other architectures.  Do this instead in an
+>>>>>> appropriate header:
+>>>>>>
+>>>>>> #ifndef arch_proc_pid_status
+>>>>>> static inline void arch_proc_pid_status(...)
+>>>>>> {
+>>>>>> }
+>>>>>> #endif
+>>>>>>
+>>>>>
+>>>>> I saw a bunch of similar weak functions, is it not acceptable?
+>>>>>
+>>>>> fs/proc$ grep weak *.c
+>>>>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
+>>>>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
+>>>>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+>>>>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
+>>>>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>>>>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+>>>>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+>>>>> vmcore.c:ssize_t __weak
+>>>>
+>>>> I think they're acceptable, but I don't personally like them.
+>>>>
+>>>
+>>> okay, let me try to see if I can refine it in an appropriate way.
+>>
+>> Hi Andy,
+>>
+>> Is this what you want?
+>>
+>> Thanks,
+>> -Aubrey
+>>
+>> ====================================================================
+>> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+>> index 2bb3a648fc12..82d77d3aefff 100644
+>> --- a/arch/x86/include/asm/processor.h
+>> +++ b/arch/x86/include/asm/processor.h
+>> @@ -990,5 +990,8 @@ enum l1tf_mitigations {
+>>  };
+>>
+>>  extern enum l1tf_mitigations l1tf_mitigation;
+>> +/* Add support for architecture specific output in /proc/pid/status */
+>> +void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
+>> +#define arch_proc_pid_status arch_proc_pid_status
+>>
+>>  #endif /* _ASM_X86_PROCESSOR_H */
+>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+>> index 2edbb657f859..fd65a6ba2864 100644
+>> --- a/fs/proc/array.c
+>> +++ b/fs/proc/array.c
+>> @@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>>  }
+>>
+>> +/* Add support for architecture specific output in /proc/pid/status */
+>> +#ifndef arch_proc_pid_status
+>> +#define arch_proc_pid_status(m, task)
+>> +#endif
+>> +
+>>  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>>                         struct pid *pid, struct task_struct *task)
+>>  {
+>> @@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>>         task_cpus_allowed(m, task);
+>>         cpuset_task_status_allowed(m, task);
+>>         task_context_switch_counts(m, task);
+>> +       arch_proc_pid_status(m, task);
+>>         return 0;
+>>  }
+>>
+> 
+> Yes.  But I still think it would be nicer to separate the arch stuff
+> into its own file.  Others might reasonably disagree with me.
+> 
+I like arch_status, I proposed but no other arch shows interesting in it.
 
-commit c470abd4fde40ea6a0846a2beab642a578c0b8cd
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun Feb 19 22:34:00 2017 +0000
+I think the problem is similar for x86_status, it does not make sense for
+those x86 platform without AVX512 to have an empty arch file. I personally
+don't like [arch]_status because the code may become unclean if more arches
+added in future.
 
-     Linux 4.10
+Maybe it's too early to have a separated arch staff file for now.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b415ed200000
-start commit:   e12e00e3 Merge tag 'kbuild-fixes-v4.20' of git://git.kerne..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f215f21f041a0d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=7634edaea4d0b341c625
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ce6fbd400000
-
-Reported-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
-Fixes: c470abd4fde4 ("Linux 4.10")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+-Aubrey
