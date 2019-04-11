@@ -2,114 +2,274 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463DEC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F2C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182222073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CC8217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfDKL4H (ORCPT
+        id S1726694AbfDKMBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:56:07 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58491 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbfDKL4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:56:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 04:56:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
-   d="scan'208";a="134858982"
-Received: from unknown (HELO [10.237.72.155]) ([10.237.72.155])
-  by orsmga006.jf.intel.com with ESMTP; 11 Apr 2019 04:56:02 -0700
-Subject: Re: [PATCH 1/2] spi: pxa2xx: fix SCR (divisor) calculation
-To:     Flavio Suligoi <f.suligoi@asem.it>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <34b8442a-15ac-dea2-a088-fde8b1966e1e@linux.intel.com>
-Date:   Thu, 11 Apr 2019 14:55:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 11 Apr 2019 08:01:19 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:40370 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKMBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:01:18 -0400
+X-Greylist: delayed 377 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Apr 2019 08:01:17 EDT
+Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id 755B07B3075;
+        Thu, 11 Apr 2019 08:55:05 -0300 (-03)
+From:   pgreco@centosproject.org
+To:     linux-sunxi@googlegroups.com
+Cc:     Pablo Greco <pgreco@centosproject.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] ARM: dts: sun8i: v40: Update BPi M2 Berry DTS to the level of M2 Ultra
+Date:   Thu, 11 Apr 2019 08:54:49 -0300
+Message-Id: <1554983689-47305-3-git-send-email-pgreco@centosproject.org>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1554983689-47305-1-git-send-email-pgreco@centosproject.org>
+References: <1554983689-47305-1-git-send-email-pgreco@centosproject.org>
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: 755B07B3075.A161A
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
+        BAYES_00 -1.90)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 3:51 PM, Flavio Suligoi wrote:
-> Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-> that the SSP transmission rate can be greater than the device rate.
-> 
-> When the division between the SSP clock and the device rate generates
-> a reminder, we have to increment by one the divisor.
-> In this way the resulting SSP clock will never be greater than the
-> device SPI max frequency.
-> 
-> For example, with:
-> 
->   - ssp_clk  = 50 MHz
->   - dev freq = 15 MHz
-> 
-> without this patch the SSP clock will be greater than 15 MHz:
-> 
->   - 25 MHz for PXA25x_SSP and CE4100_SSP
->   - 16,56 MHz for the others
-> 
-> Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
-> so the max rate of the SPI device clock is respected.
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->   drivers/spi/spi-pxa2xx.c | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-> index f7068cc..c9560a1 100644
-> --- a/drivers/spi/spi-pxa2xx.c
-> +++ b/drivers/spi/spi-pxa2xx.c
-> @@ -884,10 +884,15 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
->   
->   	rate = min_t(int, ssp_clk, rate);
->   
-> +	/*
-> +	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-> +	 * that the SSP transmission rate can be greater than the device rate
-> +	 */
->   	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
-> -		return (ssp_clk / (2 * rate) - 1) & 0xff;
-> +		return (ssp_clk / (2 * rate) - 1 +
-> +			(ssp_clk % (2 * rate) ? 1 : 0)) & 0xff;
->   	else
-> -		return (ssp_clk / rate - 1) & 0xfff;
-> +		return (ssp_clk / rate - 1 + (ssp_clk % rate ? 1 : 0)) & 0xfff;
->   }
->   
-I think DIV_ROUND_UP() - 1 would also fix this?
+From: Pablo Greco <pgreco@centosproject.org>
 
-I realized we have also another issue here with the low rates. 
-Calculated divider will underflow due masking with 0xff or 0xfff when 
-the rate is low enough.
+BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
+software compatible.
 
-Would you want to fix that by setting the ctlr->min_speed_hz so that spi 
-core can validate the rate? I'm asking since it goes well together with 
-your fix. Maybe one patch setting the min_speed_hz and getting masking 
-off from here and then another fixing the rate calculation.
+Changes include:
+- 2GiB -> 1GiB
+- no eMMC
+- no onboard microphone
+- no IR
+- no blue LED
+- no charging (and power jack to USB)
+- dropped USB2 and connect USB1 to a 4-port HUB.
 
+This patch brings the BPi M2 Berry to the same level as the BPi M2 Ultra
+Includes the changes from:
+commit c36fd5a48bd2 ("ARM: dts: sun8i: r40: bananapi-m2-ultra: Enable GMAC
+ethernet controller")
+commit db49c6825901 ("ARM: dts: sun8i: r40: Enable HDMI output on BananaPi
+M2 Ultra")
+commit ccefd95f648a ("ARM: dts: sun8i: r40: Add missing TCON-TOP - TCON
+connections")
+commit 6a7556f604f9 ("ARM: dts: sun8i: r40: Disable TCONs by default.")
+commit 666907a3f9bd ("ARM: dts: sun8i: sun8i-r40-bananapi-m2-ultra: enable
+AHCI")
+commit e5c6e693be83 ("ARM: dts: sun8i: r40: bananapi-m2-ultra: Fix WiFi
+regulator definitions")
+commit 1e5f1db4ccd8 ("ARM: dts: sun8i: r40: bananapi-m2-ultra: Add
+Bluetooth device node")
+
+Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+---
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 118 ++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index f05cabd..3d0bb7e 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -50,6 +50,7 @@
+ 	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+ 
+ 	aliases {
++		ethernet0 = &gmac;
+ 		serial0 = &uart0;
+ 	};
+ 
+@@ -57,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -84,14 +96,52 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
++		clocks = <&ccu CLK_OUTA>;
++		clock-names = "ext_clock";
+ 	};
+ };
+ 
++&ahci {
++	ahci-supply = <&reg_dldo4>;
++	phy-supply = <&reg_eldo3>;
++	status = "okay";
++};
++
++&de {
++	status = "okay";
++};
++
+ &ehci1 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+ 	status = "okay";
+ };
+ 
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_rgmii_pins>;
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii";
++	phy-supply = <&reg_dc1sw>;
++	status = "okay";
++};
++
++&gmac_mdio {
++	phy1: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -123,6 +173,18 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&clk_out_a_pin>;
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	regulator-name = "vcc-pa";
++};
++
+ &reg_aldo3 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <2700000>;
+@@ -130,6 +192,12 @@
+ 	regulator-name = "avcc";
+ };
+ 
++&reg_dc1sw {
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-gmac-phy";
++};
++
+ &reg_dcdc1 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <3000000>;
+@@ -164,18 +232,68 @@
+ 	regulator-name = "vcc-wifi-io";
+ };
+ 
++/*
++ * Our WiFi chip needs both DLDO2 and DLDO3 to be powered at the same
++ * time, with the two being in sync, to be able to meet maximum power
++ * consumption during transmits. Since this is not really supported
++ * right now, just use the two as always on, and we will fix it later.
++ */
++
+ &reg_dldo2 {
++	regulator-always-on;
+ 	regulator-min-microvolt = <3300000>;
+ 	regulator-max-microvolt = <3300000>;
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&reg_dldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi-2";
++};
++
++&reg_dldo4 {
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	regulator-name = "vdd2v5-sata";
++};
++
++&reg_eldo3 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vdd1v2-sata";
++};
++
++&tcon_tv0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
+ 	status = "okay";
+ };
+ 
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pg_pins>, <&uart3_rts_cts_pg_pins>;
++	uart-has-rtscts;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&ccu CLK_OUTA>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_dldo2>;
++		vddio-supply = <&reg_dldo1>;
++		device-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
++		/* TODO host wake line connected to PMIC GPIO pins */
++		shutdown-gpios = <&pio 7 12 GPIO_ACTIVE_HIGH>; /* PH12 */
++		max-speed = <1500000>;
++	};
++};
++
+ &usbphy {
+ 	usb1_vbus-supply = <&reg_vcc5v0>;
+ 	status = "okay";
 -- 
-Jarkko
+1.8.3.1
+
