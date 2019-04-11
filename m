@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22108C10F14
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E424C282DE
 	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AB7218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD6621850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XGJOQLMJ"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="j0iRJk61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfDKKUI (ORCPT
+        id S1726876AbfDKKUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:20:08 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48654 "EHLO vps.xff.cz"
+        Thu, 11 Apr 2019 06:20:07 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48628 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfDKKUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726783AbfDKKUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Apr 2019 06:20:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977998; bh=op3dm3pge3hkv+pHZJvJy03uxi6x4i/4K3sT0Q5NnKo=;
+        t=1554977997; bh=k+NFW5pnNye36nApqt9JrO71mvvDIYVukOTYPbvyx1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XGJOQLMJkpSslkwXm/VvU2qMpf5vs/sEjdq53pbLv8HN7S3nguc0HDTkamrHDeEJN
-         g7vsLIAh9igd4Ia8B3vyCEEP1+ST8NLNgZt6xUKTdL61z6YBWDnehLY99k8X7Z7jYA
-         5MvQYo4TYYE165L6ACC9fNVLSf4NOlA2oax7Dfig=
+        b=j0iRJk61GDGLkWr6mQFSzMCUVtteL54tuiyUIlf3mnHQTv/MGFWO511lce0iUcvuA
+         mThmZdJI0LKS8i3dohUEy3dSIiAzAyLYM1NL+H/IidT1pkANDFlgKbpOvovQmE3+LO
+         h388K2BEa03/w6iEVW0gjSHGoOZ5tiEGLOwJ5tos=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -54,9 +54,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 09/11] brcmfmac: Loading the correct firmware for brcm43456
-Date:   Thu, 11 Apr 2019 12:19:49 +0200
-Message-Id: <20190411101951.30223-10-megous@megous.com>
+Subject: [PATCH v3 08/11] arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+Date:   Thu, 11 Apr 2019 12:19:48 +0200
+Message-Id: <20190411101951.30223-9-megous@megous.com>
 In-Reply-To: <20190411101951.30223-1-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 MIME-Version: 1.0
@@ -68,37 +68,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-SDIO based brcm43456 is currently misdetected as brcm43455 and the wrong
-firmware name is used. Correct the detection and load the correct firmware
-file. Chiprev for brcm43456 is "9".
+Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
+I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index a06af0cd4a7f..22b73da42822 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -622,6 +622,7 @@ BRCMF_FW_DEF(43430A0, "brcmfmac43430a0-sdio");
- /* Note the names are not postfixed with a1 for backward compatibility */
- BRCMF_FW_DEF(43430A1, "brcmfmac43430-sdio");
- BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
-+BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
- BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
- BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
-@@ -642,7 +643,8 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_4339_CHIP_ID, 0xFFFFFFFF, 4339),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0x00000001, 43430A0),
- 	BRCMF_FW_ENTRY(BRCM_CC_43430_CHIP_ID, 0xFFFFFFFE, 43430A1),
--	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFFC0, 43455),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0x00000200, 43456),
-+	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
- 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
- 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
- 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 6d6b1f66796d..58a6635c909e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -22,6 +22,18 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++		ddc-supply = <&reg_ddc>;
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -37,6 +49,15 @@
+ 		};
+ 	};
+ 
++	reg_ddc: ddc-io {
++		compatible = "regulator-fixed";
++		regulator-name = "ddc-io";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++	};
++
+ 	reg_vcc5v: vcc5v {
+ 		/* board wide 5V supply directly from the DC jack */
+ 		compatible = "regulator-fixed";
+@@ -72,6 +93,10 @@
+ 	cpu-supply = <&reg_dcdca>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -91,6 +116,16 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.21.0
 
