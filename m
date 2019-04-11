@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33D2C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BD6C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F12720818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C252820818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="degI29QP"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="rShVtDlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfDKKU2 (ORCPT
+        id S1727081AbfDKKUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:20:28 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48720 "EHLO vps.xff.cz"
+        Thu, 11 Apr 2019 06:20:42 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48598 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfDKKUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:20:04 -0400
+        id S1726677AbfDKKUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:20:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977998; bh=ZOGzdottk2RIleoufnn4ifjkGAGSzeCzkeoCu7y/pEo=;
+        t=1554977997; bh=5oK+hUHvbPopzw2Jlb3qkR0ZnXTFnDc3XhhaDlcdJng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=degI29QP7YcQKyPUxemM2IX9aelSS2lzM+LB7J5Lwuq4jETxcCofSDshcwqSgtn27
-         pYOjNtuwuBo/JfYwWEpOsaPJNNug+N/qC9u/A/DEsOvcDEajouZ1KAWnd4Qqp7vOOW
-         zVaeomVuAfHe6XGBAwpoz6tPlavhKMf9a/95eydQ=
+        b=rShVtDlmYfsIffqn52CiTS0aaDYBAlJANuq/YRzukRqIi6d1SHXabea4uVW760pay
+         pRvWPTfEPjc35EVA0vxz1Z3ShtAi/MtrfsKdGGcO1IIzWgcFL5whEH8Ecyyg5cPrNY
+         BG6r3ulcBnlaCmXGbi7JFMwfMelCwQkTqSPPcVyY=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -53,9 +53,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 10/11] arm64: dts: allwinner: h6: Add MMC1 pins
-Date:   Thu, 11 Apr 2019 12:19:50 +0200
-Message-Id: <20190411101951.30223-11-megous@megous.com>
+Subject: [PATCH v3 06/11] dt-bindings: display: hdmi-connector: Add DDC power supply
+Date:   Thu, 11 Apr 2019 12:19:46 +0200
+Message-Id: <20190411101951.30223-7-megous@megous.com>
 In-Reply-To: <20190411101951.30223-1-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 MIME-Version: 1.0
@@ -67,46 +67,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
-SDIO interface with a WiFi chip. Add pin definitions for this use case.
+Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+on-board voltage shifting logic for the DDC bus to be usable. Use
+ddc-supply on the hdmi-connector to model this.
 
-As this is the only possible configration for mmc1, make it the default
-one, too.
+Add binding documentation for optional ddc-supply property.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..bd37b849d3b7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -243,6 +243,15 @@
- 				bias-pull-up;
- 			};
+diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+index 508aee461e0d..33085aeb0bb9 100644
+--- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - label: a symbolic name for the connector
+ - hpd-gpios: HPD GPIO number
+ - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
++- ddc-supply: the power supply for the DDC bus
  
-+			/omit-if-no-ref/
-+			mmc1_pins: mmc1-pins {
-+				pins = "PG0", "PG1", "PG2", "PG3",
-+				       "PG4", "PG5";
-+				function = "mmc1";
-+				drive-strength = <30>;
-+				bias-pull-up;
-+			};
-+
- 			mmc2_pins: mmc2-pins {
- 				pins = "PC1", "PC4", "PC5", "PC6",
- 				       "PC7", "PC8", "PC9", "PC10",
-@@ -294,6 +303,8 @@
- 			resets = <&ccu RST_BUS_MMC1>;
- 			reset-names = "ahb";
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc1_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ Required nodes:
+ - Video port for HDMI input
 -- 
 2.21.0
 
