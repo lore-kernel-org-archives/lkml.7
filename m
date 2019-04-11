@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF92C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9359FC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E828020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D89B217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IcJskFP5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YcOfaefS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfDKAhs (ORCPT
+        id S1726853AbfDKAhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 20:37:48 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:37072 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbfDKAhs (ORCPT
+        Wed, 10 Apr 2019 20:37:53 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:40484 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfDKAhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 20:37:48 -0400
-Received: by mail-pl1-f201.google.com with SMTP id v5so2889596plo.4
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 17:37:48 -0700 (PDT)
+        Wed, 10 Apr 2019 20:37:52 -0400
+Received: by mail-pf1-f201.google.com with SMTP id f7so3018732pfd.7
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 17:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=WuCLO1xjYGpgkgYX+R5A6aWXWpQcgwwbzIbNqQedb3g=;
-        b=IcJskFP59nqQ5mMXNq/5o//icwqeVqId2wqPiIY3EhJX2irh1kELAK854GGCOjV/bZ
-         6HBSJZJF0IYJtNS0SuFmbIf/NTXRo72PCy8hrI65ij3MND33zs969MAU7QFpeaxRzDmJ
-         npgDP39/zC8UvwE/68CJRJ/Y+TCSqBBiyJn95MuznFkAeLBQSKJBOR3KZKKdMAJlaqnl
-         XC06ww6anU8YSYlDonGUu/g1RS/N5b7Zs1IKqheSZRuBObzsFAefwSheZgFVD2Q5Ks6T
-         /aG99s/Z/qQ6ki9llMl4P+mv6G4n82wvrx3ISYjmvFvWbEw3J0/o4UYBb3WBXJWqGHph
-         Yd5A==
+        bh=sjT6DpYQBJJsmTdMcmaumUE9gKAmThJGm77LVwpquRY=;
+        b=YcOfaefSzIGtjAzsICexlH/tE/Yrz0TsAy7DYC4/vds8sa5CDEUnYECL4lXluuvabv
+         UGFKkV6i92vKW/qJxJwaQ/3c+6aTquMr2pG+nHY08dnCL3Jx33e6ZzU2wyNw3TKq72Hb
+         eWNI9T0MJF2wzX/+ggZBTVvqww1w5RHAaHm8xl8CgxZjFh5fNpTben3u9DVlYyDTa8vK
+         1vWVtNwvL9TynMpQaiFEXtOfYKoimKYbrqIIkfPh7HHcopQ+Ox8iiWQU6Riuy2eZHuy7
+         0qxcTpo5IwsvEl9Cv/Msz1vMBfj1a0tCzmo3v/oYvC2+qtzCuqanT/2T2kgwVph3K8Cb
+         Hu3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=WuCLO1xjYGpgkgYX+R5A6aWXWpQcgwwbzIbNqQedb3g=;
-        b=Gg/gwkTtyNuMjmEY9jJoRe7aqm/FLnJKX51hAoasefM9CIc0h+t2NnoWFcn+HAPmNe
-         O/L7X2s0McgQNVdR1fpe2PJeeo4TdQludwv+4lDcWtFkg8xsDGu8949ngGWT7mjDjSUz
-         JtT64GwLzfq9sMqZeZQhz6al7oW61wQXHvinQNvi2XaD8gBCyAgzPqFNqUEIULEX8gDT
-         u5D45Fdd/J+Wp+ADp6LFGmUFbmh2R+9EUzcdCr+s0YcRCPtzTELOTy8cBwNmYQAlTT1I
-         k4BXfgT9neSWHimGK8nQuAKaGAGrBMw2QpltiuHY4Nte/cUhxZ/Lp6Z+UU1lPxQaOqp7
-         I+RA==
-X-Gm-Message-State: APjAAAUYXsWNcmHUK4qKRmZ0lr7GccMab8fSJSGoQefejmNAMzul6oyj
-        nO6rnXfN5dRWZFqLsqf7or08fwhl4gE+
-X-Google-Smtp-Source: APXvYqwgi72xgqf2PdPoZjm4GHT4sI2kpVQJuaB+WmgSWW0GWdmHUx5f9z0ItapkZmReasKEYRt/41ll6M4G
-X-Received: by 2002:a17:902:8f90:: with SMTP id z16mr1946536plo.6.1554943067362;
- Wed, 10 Apr 2019 17:37:47 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:37:36 -0700
-In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
-Message-Id: <20190411003738.55073-1-rajatja@google.com>
+        bh=sjT6DpYQBJJsmTdMcmaumUE9gKAmThJGm77LVwpquRY=;
+        b=g41Dn7pzd3y0aE6dOma76Qdj6hPRE5taLQv/P+0XLjAUZpTO4ay5ahGiDcMJRd06PP
+         yP/MKjm+PPYVH0O3Nj4YuhSMXb8B+YDfIONCBhYPHyNCyw4neslifI+zDJSO+B8kvTYs
+         M4n4TRowni1j44EP4hVZ8GPAB3wUmxLCAHXj7peErCGuWNZctf8nvmtdgZsfHZUWmunG
+         qS9ReOkUHC9yXHR2q2aDTbnrHMGNXMugHQlXxiYCOnTLS/PBnWjw4lbXrQfP3EExx0jm
+         EO1xUC4upqaY+Vw1Abf+nOZxWKxqrOMv6ZOsueM+dEkOZe+ih7rRp1MUwJugSj6NpRUT
+         Uv9w==
+X-Gm-Message-State: APjAAAV8ppkXJEllQmrUN7QgMeVVm6vaVJzLwFLwGA8d5FK1GKPt4qN+
+        hLOnm409QgnzOrWkaCjk3x9HeVJ1vUVJ
+X-Google-Smtp-Source: APXvYqwvjgloPKcxsL0dvH9X1D10OuR44FqgdnKpSKYIciLLjbjrqPyiM6HKDhaNdE0But0XwSxZg2yPWp29
+X-Received: by 2002:a63:e509:: with SMTP id r9mr1021666pgh.72.1554943071064;
+ Wed, 10 Apr 2019 17:37:51 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 17:37:37 -0700
+In-Reply-To: <20190411003738.55073-1-rajatja@google.com>
+Message-Id: <20190411003738.55073-2-rajatja@google.com>
 Mime-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com>
+References: <20190313222124.229371-1-rajatja@google.com> <20190411003738.55073-1-rajatja@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v5 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+Subject: [PATCH v5 2/3] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
 From:   Rajat Jain <rajatja@google.com>
 To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
         Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
@@ -75,107 +76,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the intel_pmc_core driver to a platform driver, and attach using
-the ACPI enumeration method (via the ACPI device "INT33A1").
+Add a module parameter which when enabled, will check on resume, if the
+last S0ix attempt was successful. If not, the driver would warn and provide
+helpful debug information (which gets latched during the failed suspend
+attempt) to debug the S0ix failure.
+
+This information is very useful to debug S0ix failures. Specially since
+the latched debug information will be lost (over-written) if the system
+attempts to go into runtime (or imminent) S0ix again after that failed
+suspend attempt.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v5: Remove the gerrit ID from commit log
-v4: put back the x86_match_cpu() method.
-v3: Don't instantiate the platform_device. Use ACPI enumeration.
-v2: Rephrase the commit log. No code changes.
+v5: Remove the gerrit id from commit log
+v4: Use 1 condition per if statement, rename some functions.
+v3: No changes
+v2: Use pm_suspend_via_firmware() to enable the check only for S0ix
 
- drivers/platform/x86/intel_pmc_core.c | 42 ++++++++++++++++++++++-----
- 1 file changed, 34 insertions(+), 8 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 93 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h |  7 ++
+ 2 files changed, 100 insertions(+)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 9908d233305e..8da886e17681 100644
+index 8da886e17681..b1f099de5cb3 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -19,6 +19,7 @@
- #include <linux/io.h>
+@@ -20,6 +20,7 @@
  #include <linux/module.h>
  #include <linux/pci.h>
-+#include <linux/platform_device.h>
+ #include <linux/platform_device.h>
++#include <linux/suspend.h>
  #include <linux/uaccess.h>
  
  #include <asm/cpu_device_id.h>
-@@ -854,13 +855,17 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
- 	{}
- };
- 
--static int __init pmc_core_probe(void)
-+static int pmc_core_probe(struct platform_device *pdev)
- {
-+	static bool device_initialized;
- 	struct pmc_dev *pmcdev = &pmc;
- 	const struct x86_cpu_id *cpu_id;
- 	u64 slp_s0_addr;
- 	int err;
- 
-+	if (device_initialized)
-+		return -ENODEV;
-+
- 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
- 	if (!cpu_id)
- 		return -ENODEV;
-@@ -888,28 +893,49 @@ static int __init pmc_core_probe(void)
- 	mutex_init(&pmcdev->lock);
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
- 
-+	dmi_check_system(pmc_core_dmi_table);
-+	platform_set_drvdata(pdev, pmcdev);
-+
- 	err = pmc_core_dbgfs_register(pmcdev);
- 	if (err < 0) {
--		pr_warn(" debugfs register failed.\n");
-+		dev_warn(&pdev->dev, "debugfs register failed.\n");
- 		iounmap(pmcdev->regbase);
- 		return err;
- 	}
- 
--	dmi_check_system(pmc_core_dmi_table);
--	pr_info(" initialized\n");
-+	dev_info(&pdev->dev, " initialized\n");
-+	device_initialized = true;
-+
+@@ -920,6 +921,97 @@ static int pmc_core_remove(struct platform_device *pdev)
  	return 0;
  }
--module_init(pmc_core_probe)
  
--static void __exit pmc_core_remove(void)
-+static int pmc_core_remove(struct platform_device *pdev)
- {
--	struct pmc_dev *pmcdev = &pmc;
-+	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
- 
-+	platform_set_drvdata(pdev, NULL);
- 	pmc_core_dbgfs_unregister(pmcdev);
- 	mutex_destroy(&pmcdev->lock);
- 	iounmap(pmcdev->regbase);
++#ifdef CONFIG_PM_SLEEP
++
++static bool warn_on_s0ix_failures;
++module_param(warn_on_s0ix_failures, bool, 0644);
++MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
++
++static int pmc_core_suspend(struct device *dev)
++{
++	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++
++	pmcdev->check_counters = false;
++
++	/* No warnings on S0ix failures */
++	if (!warn_on_s0ix_failures)
++		return 0;
++
++	/* Check if the syspend will actually use S0ix */
++	if (pm_suspend_via_firmware())
++		return 0;
++
++	/* Save PC10 and S0ix residency for checking later */
++	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
++	    !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
++		pmcdev->check_counters = true;
++
 +	return 0;
- }
--module_exit(pmc_core_remove)
++}
 +
-+static const struct acpi_device_id pmc_core_acpi_ids[] = {
-+	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
-+	{ }
++static inline bool pmc_core_is_pc10_failed(struct pmc_dev *pmcdev)
++{
++	u64 pc10_counter;
++
++	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
++	    pc10_counter == pmcdev->pc10_counter)
++		return true;
++
++	return false;
++}
++
++static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
++{
++	u64 s0ix_counter;
++
++	if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
++	    s0ix_counter == pmcdev->s0ix_counter)
++		return true;
++
++	return false;
++}
++
++static int pmc_core_resume(struct device *dev)
++{
++	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++
++	if (!pmcdev->check_counters)
++		return 0;
++
++	if (pmc_core_is_pc10_failed(pmcdev)) {
++		dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
++			 pmcdev->pc10_counter);
++	} else if (pmc_core_is_s0ix_failed(pmcdev)) {
++
++		const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
++		const struct pmc_bit_map *map;
++		int offset = pmcdev->map->slps0_dbg_offset;
++		u32 data;
++
++		dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
++			 pmcdev->s0ix_counter);
++		while (*maps) {
++			map = *maps;
++			data = pmc_core_reg_read(pmcdev, offset);
++			offset += 4;
++			while (map->name) {
++				dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
++					 map->name,
++					 data & map->bit_mask ? "Yes" : "No");
++				++map;
++			}
++			++maps;
++		}
++	}
++	return 0;
++}
++
++#endif
++
++static const struct dev_pm_ops pmc_core_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
 +};
-+MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
 +
-+static struct platform_driver pmc_core_driver = {
-+	.driver = {
-+		.name = "pmc_core",
-+		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
-+	},
-+	.probe = pmc_core_probe,
-+	.remove = pmc_core_remove,
-+};
+ static const struct acpi_device_id pmc_core_acpi_ids[] = {
+ 	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+ 	{ }
+@@ -930,6 +1022,7 @@ static struct platform_driver pmc_core_driver = {
+ 	.driver = {
+ 		.name = "pmc_core",
+ 		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
++		.pm = &pmc_core_pm_ops,
+ 	},
+ 	.probe = pmc_core_probe,
+ 	.remove = pmc_core_remove,
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 88d9c0653a5f..fdee5772e532 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -241,6 +241,9 @@ struct pmc_reg_map {
+  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
+  *			used to read MPHY PG and PLL status are available
+  * @mutex_lock:		mutex to complete one transcation
++ * @check_counters:	On resume, check if counters are getting incremented
++ * @pc10_counter:	PC10 residency counter
++ * @s0ix_counter:	S0ix residency (step adjusted)
+  *
+  * pmc_dev contains info about power management controller device.
+  */
+@@ -253,6 +256,10 @@ struct pmc_dev {
+ #endif /* CONFIG_DEBUG_FS */
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
 +
-+module_platform_driver(pmc_core_driver);
++	bool check_counters; /* Check for counter increments on resume */
++	u64 pc10_counter;
++	u64 s0ix_counter;
+ };
  
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("Intel PMC Core Driver");
+ #endif /* PMC_CORE_H */
 -- 
 2.21.0.392.gf8f6787159e-goog
 
