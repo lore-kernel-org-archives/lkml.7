@@ -2,131 +2,123 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFE3C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE98C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E612146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7CD2073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I8Bd6cQR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G8uviIkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfDKUZK (ORCPT
+        id S1726789AbfDKU22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:25:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38044 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfDKUZJ (ORCPT
+        Thu, 11 Apr 2019 16:28:28 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44528 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbfDKU21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:25:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k11so9038389wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OTg+YucJbC88+/MvrejQnacV5f7NWqAfb85l4/kbNV4=;
-        b=I8Bd6cQR/3+3IE8gc5TKIeYmshHktD54mN9mnwIBeNwPFvuv5A7ASdmJrFP/lAbjos
-         zGU2mnLvmJ+M/gVv9LyrIhq0f0A3c0FYDFngdZAeAgMr6dZtLiBQFU2YyDST9qbSAdU+
-         7TxUd1d0mA8WJLZ2wvo44Gn5ySzjFMtEEFe1osjrnd4U5SyoXtupirkgDoxyg/jFfGd/
-         qgn5qBtENXp3Xyv/mQd0DihqWqWUNPlFG74VIsNL2Bf1LpylqlzoBWpbNy7EgNZbVE0G
-         /aGR/VFHTBMPKcA5BaFqAH72Cn4mliZMGLBdhMysllg7r2fPdn6YyszIZiluRsfR1iVJ
-         yyVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OTg+YucJbC88+/MvrejQnacV5f7NWqAfb85l4/kbNV4=;
-        b=jI3VD8GezqIzNJZRUcuBG1LP0YMRNrXvd5ZBKqOmhEKb+opleDMK4jg9ZcNwbDf8PT
-         4Bbaxf601q9GkS4Gh6Fd9X0mo1ZIYTIRCPN9Ln2ghwV+gqCUdckp7C9aNWRq3dst3x9V
-         0rTUetpifS2QNzL/7I4UY0hiHOt6V6H9xSPujw9OkEKSFML//6z3sj29NYHELO1HNPEm
-         qoD716XDWm+0X5UXPzstLY7uUTDzn4mVsiNBxztaHe3gpXdupBAZz++bl76EtglNfHzR
-         HIcStLrbRJO5VyPJIgDwi5hnBe1OcvcvYbE9TTg0hGCl2caT+upQ/fMfTrRAHK/6DGc6
-         CCaA==
-X-Gm-Message-State: APjAAAVItPbgLAoqNwmXqykERPNRGHC51A2WMLBFzqWlwfMhzihi6hUc
-        +wL6fc4BF9erqCjEaoD7kDlp7g==
-X-Google-Smtp-Source: APXvYqx1DJfb/uhQrT1rFvxgrWAe4WNJa72gJkva9Qr/pVknOckSqspOTdUW6gRIjdfu8V1yrC6rfw==
-X-Received: by 2002:adf:c18d:: with SMTP id x13mr27485970wre.246.1555014308026;
-        Thu, 11 Apr 2019 13:25:08 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id z140sm15891905wmc.27.2019.04.11.13.25.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 13:25:07 -0700 (PDT)
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
- omap_dm_timer_set_load_start
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Keerthy <j-keerthy@ti.com>
-References: <20190327050126.12064-1-natechancellor@gmail.com>
- <20190327081142.GA11034@lenoch> <20190404141730.GE49658@atomide.com>
- <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
- <20190410200748.GN2839@atomide.com>
- <b8a177ee-0058-2730-4c95-56834f6bafd4@linaro.org>
- <20190411193614.GA8469@archlinux-i9>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <a65245e7-8c08-227a-a24a-7736468a2f4d@linaro.org>
-Date:   Thu, 11 Apr 2019 22:25:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 16:28:27 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3BK9esF173636;
+        Thu, 11 Apr 2019 20:27:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=woVzfZGcSwnBxxuUFWVwRSs3kH2EYlIWop6DF6lHv4A=;
+ b=G8uviIkLAA9Z4UISLkf/C4W8xdBmwKfeekBgf+eUf/T5l7j3aBysnlTWaWmUuNpMucs9
+ 1/Xw5m4YJisDnkHWyx0hLuB6TE92uqt0brXoo7VB0MhawF7UH6Olx59SC+IGyGdj6/Lg
+ dAIEQDF2iVN82OwwzNmODFuBqQ3uKmOO0BQUigXwCAp6krbDL1QyEB/VL5llFQgynlGK
+ KQyE7Ba+3NE4HA4uNTIp4IWevgLZUJV5vmEP0hn+vWzuG1/MEbPHc9ZTSftVo5oqttk7
+ tt4g+WH1/b82cIp/1eAyFcHj5O2mpMG7O3pjLbU6wSEVHsRZ5mhvxnITl7B5aNRNeXyZ fg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2rphmeuat5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 20:27:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3BKRf6p072214;
+        Thu, 11 Apr 2019 20:27:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2rt9upu0ak-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 20:27:52 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3BKRix9020217;
+        Thu, 11 Apr 2019 20:27:44 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Apr 2019 13:27:43 -0700
+Date:   Thu, 11 Apr 2019 16:28:07 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        akpm@linux-foundation.org, Alan Tull <atull@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] mm: change locked_vm's type from unsigned long to
+ atomic64_t
+Message-ID: <20190411202807.q2fge33uoduhtehq@ca-dmjordan1.us.oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <20190402204158.27582-2-daniel.m.jordan@oracle.com>
+ <614ea07a-dd1e-2561-b6f4-2d698bf55f5b@ozlabs.ru>
+ <20190411095543.GA55197@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190411193614.GA8469@archlinux-i9>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411095543.GA55197@lakrids.cambridge.arm.com>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9224 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=867
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904110133
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9224 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=18 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=894 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904110133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 21:36, Nathan Chancellor wrote:
-> On Thu, Apr 11, 2019 at 09:20:56PM +0200, Daniel Lezcano wrote:
->> On 10/04/2019 22:07, Tony Lindgren wrote:
->>> Hi,
->>>
->>> * Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
->>>> can you ask for an acked-by before pulling a patch in your tree?
->>>
->>> I certainly do ask and wait for acks where possible :)
->>
->> Ok, I may have missed them.
->>
->>> Note that I have not applied this patch. I just added
->>> Keerthy to Cc on this thread so maybe you misread the
->>> message earlier. My comment "seems like no other
->>> takers" was for Ladislav regarding somebody picking up
->>> his earlier work, not for picking up this patch :)
->>
->> Actually I was referring to the commit 592ea6bd1fad. Anyway as stated
->> above I could have miss your call.
->>
->>> In any case, I've been waiting for you guys to pick up
->>> the patch, here's my ack if you're waiting for it:
->>>
->>> Acked-by: Tony Lindgren <tony@atomide.com>
->>
->> The patch does not apply. Is it aligned with tip/timers/core ?
->>
+On Thu, Apr 11, 2019 at 10:55:43AM +0100, Mark Rutland wrote:
+> On Thu, Apr 11, 2019 at 02:22:23PM +1000, Alexey Kardashevskiy wrote:
+> > On 03/04/2019 07:41, Daniel Jordan wrote:
 > 
-> The commit this fixes is in timers/urgent and it doesn't look like that
-> has been backmerged into timers/core.
+> > > -	dev_dbg(dev, "[%d] RLIMIT_MEMLOCK %c%ld %ld/%ld%s\n", current->pid,
+> > > +	dev_dbg(dev, "[%d] RLIMIT_MEMLOCK %c%ld %lld/%lu%s\n", current->pid,
+> > >  		incr ? '+' : '-', npages << PAGE_SHIFT,
+> > > -		current->mm->locked_vm << PAGE_SHIFT, rlimit(RLIMIT_MEMLOCK),
+> > > -		ret ? "- exceeded" : "");
+> > > +		(s64)atomic64_read(&current->mm->locked_vm) << PAGE_SHIFT,
+> > > +		rlimit(RLIMIT_MEMLOCK), ret ? "- exceeded" : "");
+> > 
+> > 
+> > 
+> > atomic64_read() returns "long" which matches "%ld", why this change (and
+> > similar below)? You did not do this in the two pr_debug()s above anyway.
+> 
+> Unfortunately, architectures return inconsistent types for atomic64 ops.
+> 
+> Some return long (e..g. powerpc), some return long long (e.g. arc), and
+> some return s64 (e.g. x86).
 
-Anyway, probably simple to apply it directly to timers/urgent then.
-That's good I have other patches for the branch.
+Yes, Mark said it all, I'm just chiming in to confirm that's why I added the
+cast.
 
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Btw, thanks for doing this, Mark.
