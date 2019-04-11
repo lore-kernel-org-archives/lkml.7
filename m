@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B068EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59056C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EABA20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C0120818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jnLgY6hj"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SC6T5zFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfDKKUn (ORCPT
+        id S1727044AbfDKKUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:20:43 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48596 "EHLO vps.xff.cz"
+        Thu, 11 Apr 2019 06:20:41 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48608 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfDKKUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:20:01 -0400
+        id S1726775AbfDKKUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:20:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977996; bh=IsaR7dDt8nOTyMWc3EVZ7VXz2M/dDBLCBbhMC8cbWJY=;
+        t=1554977997; bh=6VLGBninVYhLf3SKuzVOvcFENaFxMRjZ/uyrW9t0ZFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnLgY6hjCJohILqwFAXKl6dPqfw/6qsQj7ifGAUTOoU7873CeYzCQUUSj7ZRCQolu
-         pgRoWbDzwgf96DAcDneMWUsRz46Yi1wfwzxtiYD4rC3uK7gh/D3GoA7F/2ICbQ+2Si
-         l0npHr7A+46ySSMJwFUMzaqo+IfaiuIV6mTJoUBc=
+        b=SC6T5zFHak+HH758QTiX/0XdsteacPTzOO0BLxDh/pqZwl943jaz3s/nZICaiTPmp
+         UkO0sF/Ggir//tPrEm1F3Wx6h3TSe4UAebDkyUgVgGFr3xRZIjJQ5jzdV5yQuq4d1d
+         VNeQqNnGcT1QRDYPHwQQd/NG8lV2XqN/r0+csXWA=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -53,9 +53,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
         brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 05/11] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Date:   Thu, 11 Apr 2019 12:19:45 +0200
-Message-Id: <20190411101951.30223-6-megous@megous.com>
+Subject: [PATCH v3 07/11] drm: sun4i: Add support for enabling DDC I2C bus power to dw_hdmi glue
+Date:   Thu, 11 Apr 2019 12:19:47 +0200
+Message-Id: <20190411101951.30223-8-megous@megous.com>
 In-Reply-To: <20190411101951.30223-1-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 MIME-Version: 1.0
@@ -67,91 +67,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
-to the phy datasheet, both regulators need to be enabled at the same time,
-but we can only specify a single phy-supply in the DT.
+Orange Pi 3 board requires enabling DDC I2C bus via some GPIO connected
+transistors, before the bus can be used.
 
-This can be achieved by making one regulator depedning on the other via
-vin-supply. While it's not a technically correct description of the
-hardware, it achieves the purpose.
-
-All values of RX/TX delay were tested exhaustively and a middle one of the
-working values was chosen.
+Model this as a power supply for DDC bus on the HDMI connector connected
+to the output port (port 1) of the HDMI controller.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 60 ++++++++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
+ 2 files changed, 60 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 17d496990108..6d6b1f66796d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -15,6 +15,7 @@
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+index 39d8509d96a0..1b6ffba41177 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
+ 	return crtcs;
+ }
  
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
++static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
++					     struct platform_device **pdev_out)
++{
++	struct platform_device* pdev;
++	struct device_node *remote;
++
++	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
++	if (!remote)
++		return -ENODEV;
++
++	if (!of_device_is_compatible(remote, "hdmi-connector")) {
++		of_node_put(remote);
++		return -ENODEV;
++	}
++
++	pdev = of_find_device_by_node(remote);
++	of_node_put(remote);
++	if (!pdev)
++		return -ENODEV;
++
++	*pdev_out = pdev;
++	return 0;
++}
++
+ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 			      void *data)
+ {
+@@ -151,16 +175,34 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 		return PTR_ERR(hdmi->regulator);
+ 	}
  
- 	chosen {
-@@ -44,6 +45,27 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
- 	};
++	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
++	if (!ret) {
++		hdmi->ddc_regulator = regulator_get(&hdmi->connector_pdev->dev, "ddc");
++		if (IS_ERR(hdmi->ddc_regulator)) {
++			platform_device_put(hdmi->connector_pdev);
++			dev_err(dev, "Couldn't get ddc regulator\n");
++			return PTR_ERR(hdmi->ddc_regulator);
++		}
++	}
 +
-+	/*
-+	 * The board uses 2.5V RGMII signalling. Power sequence to enable
-+	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
-+	 * at the same time and to wait 100ms.
-+	 */
-+	reg_gmac_2v5: gmac-2v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gmac-2v5";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+ 	ret = regulator_enable(hdmi->regulator);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to enable regulator\n");
+-		return ret;
++		goto err_unref_ddc_regulator;
++	}
 +
-+		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-+		 * enable two regulators to power the phy. This is one way
-+		 * to achieve that.
-+		 */
-+		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-+	};
++	if (hdmi->ddc_regulator) {
++		ret = regulator_enable(hdmi->ddc_regulator);
++		if (ret) {
++			dev_err(dev, "Failed to enable ddc regulator\n");
++			goto err_disable_regulator;
++		}
+ 	}
+ 
+ 	ret = reset_control_deassert(hdmi->rst_ctrl);
+ 	if (ret) {
+ 		dev_err(dev, "Could not deassert ctrl reset control\n");
+-		goto err_disable_regulator;
++		goto err_disable_ddc_regulator;
+ 	}
+ 
+ 	ret = clk_prepare_enable(hdmi->clk_tmds);
+@@ -213,8 +255,15 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ err_assert_ctrl_reset:
+ 	reset_control_assert(hdmi->rst_ctrl);
++err_disable_ddc_regulator:
++	if (hdmi->ddc_regulator)
++		regulator_disable(hdmi->ddc_regulator);
+ err_disable_regulator:
+ 	regulator_disable(hdmi->regulator);
++err_unref_ddc_regulator:
++	if (hdmi->ddc_regulator)
++		regulator_put(hdmi->ddc_regulator);
++	platform_device_put(hdmi->connector_pdev);
+ 
+ 	return ret;
+ }
+@@ -229,6 +278,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ 	reset_control_assert(hdmi->rst_ctrl);
+ 	regulator_disable(hdmi->regulator);
++
++	if (hdmi->ddc_regulator) {
++		regulator_disable(hdmi->ddc_regulator);
++		regulator_put(hdmi->ddc_regulator);
++	}
++
++	platform_device_put(hdmi->connector_pdev);
+ }
+ 
+ static const struct component_ops sun8i_dw_hdmi_ops = {
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 720c5aa8adc1..60f5200aee73 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -188,8 +188,10 @@ struct sun8i_dw_hdmi {
+ 	struct sun8i_hdmi_phy		*phy;
+ 	struct dw_hdmi_plat_data	plat_data;
+ 	struct regulator		*regulator;
++	struct regulator		*ddc_regulator;
+ 	const struct sun8i_dw_hdmi_quirks *quirks;
+ 	struct reset_control		*rst_ctrl;
++	struct platform_device		*connector_pdev;
  };
  
- &cpu0 {
-@@ -58,6 +80,28 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_gmac_2v5>;
-+	allwinner,rx-delay-ps = <1500>;
-+	allwinner,tx-delay-ps = <700>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+
-+		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-+		reset-assert-us = <15000>;
-+		reset-deassert-us = <40000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+ static inline struct sun8i_dw_hdmi *
 -- 
 2.21.0
 
