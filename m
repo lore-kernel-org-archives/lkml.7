@@ -2,55 +2,154 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E4C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC76C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF4D2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E352186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:31:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EU8l7n5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfDKVaQ (ORCPT
+        id S1726968AbfDKVbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:30:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:32836 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfDKVaP (ORCPT
+        Thu, 11 Apr 2019 17:31:48 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33338 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDKVbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:30:15 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hEhGv-0003Tj-IZ; Thu, 11 Apr 2019 21:30:13 +0000
-Date:   Thu, 11 Apr 2019 22:30:13 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        axboe@kernel.dk
-Subject: Re: [PATCH REPOST] docs: Add struct file refcounting and SCM_RIGHTS
- mess info
-Message-ID: <20190411213013.GI2217@ZenIV.linux.org.uk>
-References: <20190411142308.179247a4@lwn.net>
+        Thu, 11 Apr 2019 17:31:48 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k14so8998791qtb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OqG8bpvaiUhwKE/BjM7CPLdVnvy5MPJ5aI4Qoz+FGA=;
+        b=EU8l7n5jrbaWT2rnF5SCnjzHOtqGp+detg+64WnL25G/HHKCHiFxcpQjAI9iMFsUVr
+         aQznuQJq1S2biRCBSk4PlYxEgwPFOi32NJjhYXVRjG4/LHiqtoRPLb2F05y5xEwJZPDQ
+         jck9lw413exw9RYdeq2xhfp/RiqdXR+R2F8SWqH0pbo1g9bZvQwwGzxqCTUODemukeaX
+         vRr0a8oKHpzRx6LE6rkoClK+6l0lm9AACZK5xkuDi+RkyJPBpBIgtFcb8daAk2Zhieb4
+         wLvdQFoeCp5SIkjHKULM1jlarkaoVvXDsqBS9JupMhIQPE4Rv30Lek2gqF2A+AQ8AHWq
+         8WIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3OqG8bpvaiUhwKE/BjM7CPLdVnvy5MPJ5aI4Qoz+FGA=;
+        b=Hvt53rT863zI6d1UHtgSTxHiYhs/0KLq35DAhVbsGI9U1Pt9uJ9zQNcsKKSD16+5aW
+         AS9enEgrJr9KjMlC9AJEPruxku4M2pkuNAAey7Y6NIRThUBSK63HoY7A3IWudS+USwTD
+         kwdvc5iUJ3p8/Qqw5SwxRGTJGzki032PM6gZ/NSc9hfTyw69H7kcSsp2ntY+yMJhzSti
+         ZWmPOnLbCD6iBPM49pA76whEe0QJ8exrdh8xqJXxvw7zdsjTWQNcUfyclOnI01t3UxQs
+         xOPBa8mJdu7xK2o+zSiLeKgQvvzsaIIyX1wwpH44dBM8sShAwA/ZJ7+HpNUWrg/PpAGj
+         +rxQ==
+X-Gm-Message-State: APjAAAUyyW8cpIFuwHneYFTTmCtFuJpy837AnWM5fDl5vCVcpmDQpXux
+        yoGZDROiNX5cBDeO++bfY1Efig==
+X-Google-Smtp-Source: APXvYqwUQeZO4niaQIliUfDO/bTDu2EtxF2q3U/X8Wy4Miirz3W0LXYoWnUZnbNSCo/cbvWCXJ/p5A==
+X-Received: by 2002:a0c:afd4:: with SMTP id t20mr43584794qvc.128.1555018306182;
+        Thu, 11 Apr 2019 14:31:46 -0700 (PDT)
+Received: from Qians-MBP.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e128sm13871914qkd.79.2019.04.11.14.31.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 14:31:45 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/hotplug: treat CMA pages as unmovable
+Date:   Thu, 11 Apr 2019 17:31:24 -0400
+Message-Id: <20190411213124.8254-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411142308.179247a4@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 02:23:08PM -0600, Jonathan Corbet wrote:
-> docs: Add struct file refcounting and SCM_RIGHTS mess info
-> 
-> Work up some text posted by Al and add it to the filesystem manual.
-> 
-> Co-developed-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> ---
-> This is the third sending of this patch.  Al, you *did* ask me to run it
-> past you before putting it in; do you think you might get a chance to have
-> a look sometime soon?
+When offlining a memory block that contains reserved CMA areas, it will
+set those page blocks migration type as MIGRATE_ISOLATE. Then, onlining
+will set them as MIGRATE_MOVABLE. As the results, those page blocks lose
+their original types, i.e., MIGRATE_CMA, and then it causes troubles
+like accounting for CMA areas becomes inconsist,
 
-Will do, hopefully tonight...
+ # grep cma /proc/vmstat
+ nr_free_cma 205824
+
+ # cat /sys/kernel/debug/cma/cma-kvm_cma/count
+ 209920
+
+Also, kmemleak still think those memory address are reserved but have
+already been used by the buddy allocator after onlining.
+
+Offlined Pages 4096
+kmemleak: Cannot insert 0xc000201f7d040008 into the object search tree
+(overlaps existing)
+Call Trace:
+[c00000003dc2faf0] [c000000000884b2c] dump_stack+0xb0/0xf4 (unreliable)
+[c00000003dc2fb30] [c000000000424fb4] create_object+0x344/0x380
+[c00000003dc2fbf0] [c0000000003d178c] __kmalloc_node+0x3ec/0x860
+[c00000003dc2fc90] [c000000000319078] kvmalloc_node+0x58/0x110
+[c00000003dc2fcd0] [c000000000484d9c] seq_read+0x41c/0x620
+[c00000003dc2fd60] [c0000000004472bc] __vfs_read+0x3c/0x70
+[c00000003dc2fd80] [c0000000004473ac] vfs_read+0xbc/0x1a0
+[c00000003dc2fdd0] [c00000000044783c] ksys_read+0x7c/0x140
+[c00000003dc2fe20] [c00000000000b108] system_call+0x5c/0x70
+kmemleak: Kernel memory leak detector disabled
+kmemleak: Object 0xc000201cc8000000 (size 13757317120):
+kmemleak:   comm "swapper/0", pid 0, jiffies 4294937297
+kmemleak:   min_count = -1
+kmemleak:   count = 0
+kmemleak:   flags = 0x5
+kmemleak:   checksum = 0
+kmemleak:   backtrace:
+     cma_declare_contiguous+0x2a4/0x3b0
+     kvm_cma_reserve+0x11c/0x134
+     setup_arch+0x300/0x3f8
+     start_kernel+0x9c/0x6e8
+     start_here_common+0x1c/0x4b0
+kmemleak: Automatic memory scanning thread ended
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/page_alloc.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d96ca5bc555b..896db9241fa6 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8015,14 +8015,18 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 	 * can still lead to having bootmem allocations in zone_movable.
+ 	 */
+ 
+-	/*
+-	 * CMA allocations (alloc_contig_range) really need to mark isolate
+-	 * CMA pageblocks even when they are not movable in fact so consider
+-	 * them movable here.
+-	 */
+-	if (is_migrate_cma(migratetype) &&
+-			is_migrate_cma(get_pageblock_migratetype(page)))
+-		return false;
++	if (is_migrate_cma(get_pageblock_migratetype(page))) {
++		/*
++		 * CMA allocations (alloc_contig_range) really need to mark
++		 * isolate CMA pageblocks even when they are not movable in fact
++		 * so consider them movable here.
++		 */
++		if (is_migrate_cma(migratetype))
++			return false;
++
++		pr_warn("page: %px is in CMA", page);
++		return true;
++	}
+ 
+ 	pfn = page_to_pfn(page);
+ 	for (found = 0, iter = 0; iter < pageblock_nr_pages; iter++) {
+-- 
+2.20.1 (Apple Git-117)
+
