@@ -2,112 +2,105 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F020C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B48206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF55F2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFZn8VKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDKNVM convert rfc822-to-8bit (ORCPT
+        id S1726708AbfDKNVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:21:12 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58476 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfDKNVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:21:11 -0400
-Received: from wf0380.dip.tu-dresden.de ([141.76.181.124] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEZdO-00086a-Hc; Thu, 11 Apr 2019 15:20:54 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     =?ISO-8859-1?Q?Ga=EBl?= PORTAY <gael.portay@collabora.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 4/5] arm64: dts: rk3399: Add dfi and dmc nodes.
-Date:   Thu, 11 Apr 2019 15:20:53 +0200
-Message-ID: <7786013.gjegOBUKu0@phil>
-In-Reply-To: <20190321231440.19031-5-gael.portay@collabora.com>
-References: <20190321231440.19031-1-gael.portay@collabora.com> <20190321231440.19031-5-gael.portay@collabora.com>
+        Thu, 11 Apr 2019 09:21:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36489 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbfDKNVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:21:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y13so7365745wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uRxGkieKZ6erotNh26J8cH5u6+2wuWz6FxzE797DTYQ=;
+        b=mFZn8VKPmg/l7CM+8RPQrYWkC2Gqy9EXZjMAYyJtorHcWy+vVPNVciPdtir330OJwg
+         e3D3ZnUYPMRPcTDK9cNudb8+ZvdTzYESTRUpUUc/GsEELxg0WCUXQf8DoqhFLDskfAa/
+         sWGpCglBW0tUx5S/jMYql+0HcHDkPmyWy8m9McCIDaAl8TrJ4RnX3tBnMYw3M7yGMT/W
+         /6MKib7UVOlXrqIIbDbv7RSltJvRb6FVxH24PguQ6r1qnc9jG2PzbUISK6F7XfoKxd/B
+         XwPNkKZqXuZYGCXslB5MuYSPpXoa59pozPyBlnZo5FU3cZXVyANkIVH4jXy0l9msuaNz
+         /qcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uRxGkieKZ6erotNh26J8cH5u6+2wuWz6FxzE797DTYQ=;
+        b=RfDTEH1+5iFwPfVA1rxf9KQVbdSPuRMmi5DNX24Iq990b2nblLTpFowTlY3rQUW3os
+         WyzwjUoNePsL7NHYFnoFLHIdpytaGlSsQayQegYXPCN+5F/XWL6H5IsH4UW34wZ72Jq5
+         9DYp8tLzcY2PyBXxuZhNPh6PYZAYS+U819G/HqfD2nKFCGnhzwdWZDjwxwDCWqqyVnZf
+         LC0yAHYHwzsCv9YNXEmXiEwWxyvywQjQ/kFryIeGuN8cMG9zevw3tAa7fKYzrCgSKlWE
+         YYIEhEioH6mKSar6O51Dy3tuGh9CEAwpwZ7spInm8iM7vPdh6bXT5iRwpsgHfqtZIZV1
+         LhsQ==
+X-Gm-Message-State: APjAAAVn76kFUyAbRFBUaowX6Mt0ixv9ny+thQfTslIgoUqA3fxDHpiK
+        bnb4ipMLWzQXdo3HzRbK/9ZOcd0f4+Q=
+X-Google-Smtp-Source: APXvYqyjm0m6naUedLwlk/m3kWz659hDXmoUEiGVYsnVWflv+eXQ4x+vyUUBvPNd0graQX/BjnIqDQ==
+X-Received: by 2002:adf:ba81:: with SMTP id p1mr32922363wrg.192.1554988899096;
+        Thu, 11 Apr 2019 06:21:39 -0700 (PDT)
+Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id 204sm8452928wmc.1.2019.04.11.06.21.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 06:21:38 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/tegra: rework for compensation of
+ suspend time
+To:     Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190402030234.13488-1-josephl@nvidia.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b66bd5ef-1ab4-aa5e-6e97-5ccb7f7dd1cc@linaro.org>
+Date:   Thu, 11 Apr 2019 15:21:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190402030234.13488-1-josephl@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gaël,
-
-Am Freitag, 22. März 2019, 00:14:39 CEST schrieb Gaël PORTAY:
-> From: Lin Huang <hl@rock-chips.com>
+On 02/04/2019 05:02, Joseph Lo wrote:
+> Since the clocksource framework has the support for suspend time
+> compensation. Re-work the driver to use that, so we can reduce the
+> duplicate code.
 > 
-> These are required to support DDR DVFS on rk3399 platform. The patch also
-> introduces a new file with default DRAM settings.
-> 
-> Signed-off-by: Lin Huang <hl@rock-chips.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
-
-> +	dmc: dmc {
-> +		compatible = "rockchip,rk3399-dmc";
-> +		rockchip,pmu = <&pmugrf>;
-> +		devfreq-events = <&dfi>;
-> +		clocks = <&cru SCLK_DDRC>;
-> +		clock-names = "dmc_clk";
-> +		status = "disabled";
-> +		rockchip,ddr3_speed_bin = <21>;
-> +		rockchip,pd_idle = <0x40>;
-> +		rockchip,sr_idle = <0x2>;
-> +		rockchip,sr_mc_gate_idle = <0x3>;
-> +		rockchip,srpd_lite_idle	= <0x4>;
-> +		rockchip,standby_idle = <0x2000>;
-> +		rockchip,dram_dll_dis_freq = <300000000>;
-> +		rockchip,phy_dll_dis_freq = <125000000>;
-> +		rockchip,auto_pd_dis_freq = <666000000>;
-> +		rockchip,ddr3_odt_dis_freq = <333000000>;
-> +		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
-> +		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
-> +		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr3_odt_dis_freq = <333000000>;
-> +		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
-> +		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
-> +		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr4_odt_dis_freq = <333000000>;
-> +		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
-> +		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
-> +		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
-> +		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
-
-as Rob mentioned in his review, these values look board-specific,
-so should probably move over to the specific board you're using them
-on?
+> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
 
 
-Heiko
+Awesome, thanks for this patch.
 
+Applied for 5.2
+
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
