@@ -2,136 +2,219 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969EAC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1463C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7922083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F812083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZHLg5oUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfDKQmY (ORCPT
+        id S1726872AbfDKQmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:42:24 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46124 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfDKQmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:42:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AA02374;
-        Thu, 11 Apr 2019 09:42:23 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 115063F59C;
-        Thu, 11 Apr 2019 09:42:21 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 17:42:19 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>, peter.maydell@linaro.org,
-        richard.earnshaw@arm.com
-Subject: Re: rseq/arm32: choosing rseq code signature
-Message-ID: <20190411164219.GE29081@fuggles.cambridge.arm.com>
-References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com>
- <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com>
+        Thu, 11 Apr 2019 12:42:49 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:46550 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfDKQms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:42:48 -0400
+Received: by mail-yb1-f195.google.com with SMTP id m5so643183ybk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BSA7wAcOkSLlzctNlW4vWiUg1c9DSNGuTiqEkfsYEjo=;
+        b=ZHLg5oUiZ7PADbbxTPmb/WsaETcl7adx55BpjlMoWbMWOUMagh8EL+bnGH7n4dVIWC
+         qIOFh+IZ4PXVC+gpv1xWnXCTDaIkAs/aYqw4hdqipEov8gj480QMTrffAfUdi3t/5ZCC
+         ltm4BxoinZ37dYVl2S4vxNSMIyAWgMB5MiV6GWuQ+K4AZF94R5PHOm+aLCsbZJ+eYo4P
+         5lvp3KA2ER4agUaLhJ2YrtqZybvuymIFVHcFYzcTJnbRDOujXyeU6e/kJjze+bmz/ZSM
+         qznxmiBhseZ1op2Dc+iNdJy2sSiaVri/gJnsd431sO+SGY+XMqhvpzwECiFx72JBYAYz
+         G/Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BSA7wAcOkSLlzctNlW4vWiUg1c9DSNGuTiqEkfsYEjo=;
+        b=i7/YS7htxDZs2J/xpS/a59EY79chlptJ0bwbK0candKDacbHBk4UA78bTgjtUT4T5W
+         a/VXgvoVcODu+CteQTa/gcxg1JIKXww+MM7Fpz+xfJrLiVRoydqMj0HG4hCyrdiiIcA+
+         SUna+msOU+yt8rnv7CI+4X0pEQXag1uxlrDBokas53K8v9Nms22U9IZ5dT551TqCMJH0
+         a2Po6UjB6rvCvVQG1n8BfclZU0WNOpINhFXFNv5StwQRhaZTS5OMssG/XKWc2bas1lrt
+         hmweZAQlxkCjzSG61m8sw9QIRf1FRTVNOgH7d2Q3FrjdMe60Ml1D/NvT5kcTpu9Bxo9n
+         BY2w==
+X-Gm-Message-State: APjAAAVwHCP02xXE5aiphkr8elBuqMPx+njq2RdZeDSxweVKr45pEhD3
+        pZJiFWIBp/Qb80OScdeo4Jphy4An8YjBNrQM3sZNEg==
+X-Google-Smtp-Source: APXvYqwitDr3lcVKRDmlY1iKyvtiPzjYrs/F9J5p5FgXRkJnmEUEV+NtSF97So8fFJqc1eKEHvCRAmddioLmTd0my8c=
+X-Received: by 2002:a25:e54a:: with SMTP id c71mr40728505ybh.336.1555000967421;
+ Thu, 11 Apr 2019 09:42:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+ <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+ <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
+ <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
+ <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
+ <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
+In-Reply-To: <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 11 Apr 2019 09:42:35 -0700
+Message-ID: <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     kernelci@groups.io, Kees Cook <keescook@chromium.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On Thu, Apr 11, 2019 at 9:19 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Mar 7, 2019 at 7:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Thu, Mar 7, 2019 at 1:17 AM Guillaume Tucker
+> > <guillaume.tucker@collabora.com> wrote:
+> > >
+> > > On 06/03/2019 14:05, Mike Rapoport wrote:
+> > > > On Wed, Mar 06, 2019 at 10:14:47AM +0000, Guillaume Tucker wrote:
+> > > >> On 01/03/2019 23:23, Dan Williams wrote:
+> > > >>> On Fri, Mar 1, 2019 at 1:05 PM Guillaume Tucker
+> > > >>> <guillaume.tucker@collabora.com> wrote:
+> > > >>>
+> > > >>> Is there an early-printk facility that can be turned on to see how far
+> > > >>> we get in the boot?
+> > > >>
+> > > >> Yes, I've done that now by enabling CONFIG_DEBUG_AM33XXUART1 and
+> > > >> earlyprintk in the command line.  Here's the result, with the
+> > > >> commit cherry picked on top of next-20190304:
+> > > >>
+> > > >>   https://lava.collabora.co.uk/scheduler/job/1526326
+> > > >>
+> > > >> [    1.379522] ti-sysc 4804a000.target-module: sysc_flags 00000222 != 00000022
+> > > >> [    1.396718] Unable to handle kernel paging request at virtual address 77bb4003
+> > > >> [    1.404203] pgd = (ptrval)
+> > > >> [    1.406971] [77bb4003] *pgd=00000000
+> > > >> [    1.410650] Internal error: Oops: 5 [#1] ARM
+> > > >> [...]
+> > > >> [    1.672310] [<c07051a0>] (clk_hw_create_clk.part.21) from [<c06fea34>] (devm_clk_get+0x4c/0x80)
+> > > >> [    1.681232] [<c06fea34>] (devm_clk_get) from [<c064253c>] (sysc_probe+0x28c/0xde4)
+> > > >>
+> > > >> It's always failing at that point in the code.  Also when
+> > > >> enabling "debug" on the kernel command line, the issue goes
+> > > >> away (exact same binaries etc..):
+> > > >>
+> > > >>   https://lava.collabora.co.uk/scheduler/job/1526327
+> > > >>
+> > > >> For the record, here's the branch I've been using:
+> > > >>
+> > > >>   https://gitlab.collabora.com/gtucker/linux/tree/beaglebone-black-next-20190304-debug
+> > > >>
+> > > >> The board otherwise boots fine with next-20190304 (SMP=n), and
+> > > >> also with the patch applied but the shuffle configs set to n.
+> > > >>
+> > > >>> Were there any boot *successes* on ARM with shuffling enabled? I.e.
+> > > >>> clues about what's different about the specific memory setup for
+> > > >>> beagle-bone-black.
+> > > >>
+> > > >> Looking at the KernelCI results from next-20190215, it looks like
+> > > >> only the BeagleBone Black with SMP=n failed to boot:
+> > > >>
+> > > >>   https://kernelci.org/boot/all/job/next/branch/master/kernel/next-20190215/
+> > > >>
+> > > >> Of course that's not all the ARM boards that exist out there, but
+> > > >> it's a fairly large coverage already.
+> > > >>
+> > > >> As the kernel panic always seems to originate in ti-sysc.c,
+> > > >> there's a chance it's only visible on that platform...  I'm doing
+> > > >> a KernelCI run now with my test branch to double check that,
+> > > >> it'll take a few hours so I'll send an update later if I get
+> > > >> anything useful out of it.
+> > >
+> > > Here's the result, there were a couple of failures but some were
+> > > due to infrastructure errors (nyan-big) and I'm not sure about
+> > > what was the problem with the meson boards:
+> > >
+> > >   https://staging.kernelci.org/boot/all/job/gtucker/branch/kernelci-local/kernel/next-20190304-1-g4f0b547b03da/
+> > >
+> > > So there's no clear indicator that the shuffle config is causing
+> > > any issue on any other platform than the BeagleBone Black.
+> > >
+> > > >> In the meantime, I'm happy to try out other things with more
+> > > >> debug configs turned on or any potential fixes someone might
+> > > >> have.
+> > > >
+> > > > ARM is the only arch that sets ARCH_HAS_HOLES_MEMORYMODEL to 'y'. Maybe the
+> > > > failure has something to do with it...
+> > > >
+> > > > Guillaume, can you try this patch:
+> >
+> > Mike, I appreciate the help!
+> >
+> > >
+> > > Sure, it doesn't seem to be fixing the problem though:
+> > >
+> > >   https://lava.collabora.co.uk/scheduler/job/1527471
+> > >
+> > > I've added the patch to the same branch based on next-20190304.
+> > >
+> > > I guess this needs to be debugged a little further to see what
+> > > the panic really is about.  I'll see if I can spend a bit more
+> > > time on it this week, unless there's any BeagleBone expert
+> > > available to help or if someone has another fix to try out.
+> >
+> > Thanks for the help Guillaume!
+> >
+> > I went ahead and acquired one of these boards to see if I can can
+> > debug this locally.
+>
+> Hi! Any progress on this? Might it be possible to unblock this series
+> for v5.2 by adding a temporary "not on ARM" flag?
+>
 
-On Wed, Apr 10, 2019 at 04:29:19PM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 9, 2019, at 3:32 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-> > We are about to include the code signature required prior to restartable
-> > sequences abort handlers into glibc, which will make this ABI choice final.
-> > We need architecture maintainer input on that signature value.
-> > 
-> > That code signature is placed before each abort handler, so the kernel can
-> > validate that it is indeed jumping to an abort handler (and not some
-> > arbitrary attacker-chosen code). The signature is never executed.
-> > 
-> > The current discussion thread on the glibc mailing list leads us towards
-> > using a trap with uncommon immediate operand, which simplifies integration
-> > with disassemblers, emulators, makes it easier to debug if the control
-> > flow gets redirected there by mistake, and is nicer for some architecture's
-> > speculative execution.
-> > 
-> > We can have different signatures for each sub-architecture, as long as they
-> > don't have to co-exist within the same process. We can special-case with
-> > #ifdef for each sub-architecture and endianness if need be. If the architecture
-> > has instruction set extensions that can co-exist with the architecture
-> > instruction set within the same process (e.g. thumb for arm), we need to take
-> > into account to which instruction the chosen signature value would map (and
-> > possibly decide if we need to extend rseq to support many signatures).
-> > 
-> > Here is an example of rseq signature definition template:
-> > 
-> > /*
-> > * TODO: document trap instruction objdump output on each sub-architecture
-> > * instruction sets, as well as instruction set extensions.
-> > */
-> > #define RSEQ_SIG 0x########
-> > 
-> > Ideally we'd need a patch on top of the Linux kernel
-> > tools/testing/selftests/rseq/rseq-arm.h file that updates
-> > the signature value, so I can then pick it up for the glibc
-> > patchset.
-> 
-> Would the following diff work for you ? If so, can I get your
-> acked-by ?
+Can someone send me a pointer to the series in question ? I would like
+to run it through my testbed.
 
-I had a quick chat with Richard and Peter (CC'd), since they're much more
-familiar with the A32 instruction set than I am and also have a better view
-of what might already be in use.
+Thanks,
+Guenter
 
-Peter suggests that anything of the form 0xe7fxdefx should trap in both A32
-and T32, although it does assemble to UDF; B <imm11> in T16. I'm not sure we
-should get too obsessed with trying to encode a signature that universally
-decodes to a trap.
-
-Whatever you choose, it would be worth checking that it doesn't clash with
-other allocations such as software breakpoints in GDB.
-
-Will
-
-> diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
-> index 5f262c54364f..1f261ad2ac1b 100644
-> --- a/tools/testing/selftests/rseq/rseq-arm.h
-> +++ b/tools/testing/selftests/rseq/rseq-arm.h
-> @@ -5,7 +5,17 @@
->   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->   */
->  
-> -#define RSEQ_SIG       0x53053053
-> +/*
-> + * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
-> + * value 0x5305. This traps if user-space reaches this instruction by mistake,
-> + * and the uncommon operand ensures the kernel does not move the instruction
-> + * pointer to attacker-controlled code on rseq abort.
-> + *
-> + * The instruction pattern is:
-> + *
-> + * e7f530f5    udf    #21253    ; 0x5305
-> + */
-> +#define RSEQ_SIG       0xe7f530f5
->  
->  #define rseq_smp_mb()  __asm__ __volatile__ ("dmb" ::: "memory", "cc")
->  #define rseq_smp_rmb() __asm__ __volatile__ ("dmb" ::: "memory", "cc")
-> @@ -78,7 +88,8 @@ do {                                                                  \
->                 __rseq_str(table_label) ":\n\t"                         \
->                 ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
->                 ".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
-> -               ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
-> +               ".arm\n\t"                                              \
-> +               ".inst " __rseq_str(RSEQ_SIG) "\n\t"                    \
->                 __rseq_str(label) ":\n\t"                               \
->                 teardown                                                \
->                 "b %l[" __rseq_str(abort_label) "]\n\t"
+> Thanks!
+>
+> --
+> Kees Cook
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Groups.io Links: You receive all messages sent to this group.
+>
+> View/Reply Online (#350): https://groups.io/g/kernelci/message/350
+> Mute This Topic: https://groups.io/mt/30172851/955378
+> Group Owner: kernelci+owner@groups.io
+> Unsubscribe: https://groups.io/g/kernelci/unsub  [groeck@google.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
