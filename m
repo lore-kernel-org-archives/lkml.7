@@ -2,189 +2,154 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB72C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4293C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16142184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIzBGpzE"
+	by mail.kernel.org (Postfix) with ESMTP id A44282084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfDKLPm (ORCPT
+        id S1726697AbfDKLSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:15:42 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38600 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbfDKLPm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:15:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d13so4858275edr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 04:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vMzOF4uSDEO2czI0u54xXAsMS0XJszj2itVS4kGxliE=;
-        b=aIzBGpzEc+WkohNa9Z2aqEpD+O1b6cnlEt1JZ42UBLnEPAK5ueo66UUwQ/3uDaeSxt
-         CAv2HaWP/4BrjgujYwvqBHpvBGVdlhfbPFql+Z+kidt4EmeC9c3R5JWjhJwCZq6vvVsV
-         NMGmkGZGS/pJIs9cLnp70uyDsdBbaUJ6FO99Z9J6H0rHhGTVTQm1WauPAj3TkDZzt+1P
-         +sZNna9PN0nRvNcrayjq8YJqAp48Y8GJatpCKBuqbyzvKiDiPq+zhDnrqkVUe8smF7jN
-         +iRWRhJJ+ypexp5qB6xmmLttXirrM1lU/AuZY3UD+lL0P9Ptzvk7BX7pF3A5h1IY3K8z
-         Jvuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vMzOF4uSDEO2czI0u54xXAsMS0XJszj2itVS4kGxliE=;
-        b=jkhIzllDhDCBWeBrb5vhmcl6BerjNJu6LxONili6bEsrKhsOSnBFY8MjyRnjPrE4E1
-         CAyAYkE3LZYWtsvyztJiQYb9Md8FWmGfisJNlba1hbbTuuMHWW4F0s9+VALmdBQUni6V
-         pBSceI9F8rhcDbj+U/tEzyAkWlbAYhk2eqkSJKo6Wi4Z0LAG06yG3VvhDJpjaUqFU6Qf
-         k3LhFjS0iuNkhXG18nfBGF/aXOiaQ0GO8rTYGO0MFIratPLeZ7zuwQH/vz2DeczidUAj
-         KILiAkcDcgfgUmjeUkwRxdqi7vdcG0FiknpKsfxGrWRQEZY4ou0587zQdpq410VF3uxL
-         p9lw==
-X-Gm-Message-State: APjAAAXjTfIOGYQGVTIhPkKEllRmg2+MoSgdaSVZbWOzq6L5u/7V79XH
-        D1krT5lLick7cjlgOy8mYeNKJM01PuG/48/+Ou8=
-X-Google-Smtp-Source: APXvYqwtFkdXzzznOt+LGqMT+WWQHuvaK5bL+8ulM1daZktTxcAkO+p9DA5+QKyNnw1BtNmN9qlbJ53aybHPgPqK3GI=
-X-Received: by 2002:a05:6402:12d5:: with SMTP id k21mr16320470edx.75.1554981339790;
- Thu, 11 Apr 2019 04:15:39 -0700 (PDT)
+        Thu, 11 Apr 2019 07:18:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33118 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbfDKLSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 07:18:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C65137E7B;
+        Thu, 11 Apr 2019 11:18:10 +0000 (UTC)
+Received: from [10.36.118.43] (unknown [10.36.118.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DE4E60BF7;
+        Thu, 11 Apr 2019 11:18:08 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
+ find_memory_block()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190410101455.17338-1-david@redhat.com>
+ <20190411084141.GQ10383@dhcp22.suse.cz>
+ <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
+ <20190411105617.GS10383@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <711db571-ee39-eb64-4551-baaa5b562579@redhat.com>
+Date:   Thu, 11 Apr 2019 13:18:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1554975348.git.shengjiu.wang@nxp.com> <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
-In-Reply-To: <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 11 Apr 2019 14:15:28 +0300
-Message-ID: <CAEnQRZAQk1w79uqFCBCkFy=4_FQvxetfPsS10c+AMddJpc1VNg@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] ASoC: fsl_asrc: replace the process_option table
- with function
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190411105617.GS10383@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 11 Apr 2019 11:18:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shengjiu,
+On 11.04.19 12:56, Michal Hocko wrote:
+> On Thu 11-04-19 11:11:05, David Hildenbrand wrote:
+>> On 11.04.19 10:41, Michal Hocko wrote:
+>>> On Wed 10-04-19 12:14:55, David Hildenbrand wrote:
+>>>> While current node handling is probably terribly broken for memory block
+>>>> devices that span several nodes (only possible when added during boot,
+>>>> and something like that should be blocked completely), properly put the
+>>>> device reference we obtained via find_memory_block() to get the nid.
+>>>
+>>> The changelog could see some improvements I believe. (Half) stating
+>>> broken status of multinode memblock is not really useful without a wider
+>>> context so I would simply remove it. More to the point, it would be much
+>>> better to actually describe the actual problem and the user visible
+>>> effect.
+>>>
+>>> "
+>>> d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug") has started
+>>> using find_memory_block to get a nodeid for the beginnig of the onlined
+>>> pfn range. The commit has missed that the memblock contains a reference
+>>> counted object and a missing put_device will leak the kobject behind
+>>> which ADD THE USER VISIBLE EFFECT HERE.
+>>> "
+>>
+>> I don't think mentioning the commit a second time is really needed.
+>>
+>> "
+>> Right now we are using find_memory_block() to get the node id for the
+>> pfn range to online. We are missing to drop a reference to the memory
+>> block device. While the device still gets unregistered via
+>> device_unregister(), resulting in no user visible problem, the device is
+>> never released via device_release(), resulting in a memory leak. Fix
+>> that by properly using a put_device().
+>> "
+> 
+> OK, sounds good to me. I was not sure about all the sysfs machinery
+> and the kobj dependencies but if there are no sysfs files leaking and
+> crashing upon a later access then a leak of a small amount of memory
+> that is not user controlable then this is not super urgent.
+> 
+> Thanks!
 
-Mostly looking good. See few comments inline:
+I think it can be triggered by onlining/offlining memory in a loop. But
+as you said, only leaks of small amount of memory.
 
-<snip>
+Thanks!
 
-> +/*
-> + * Select the pre-processing and post-processing options
-> + *
-> + * Fsin: input sample rate
-> + * Fsout: output sample rate
-> + * pre_proc: return value for pre-processing option
-> + * post_proc: return value for post-processing option
-> + */
-> +static int fsl_asrc_sel_proc(int Fsin, int Fsout, int *pre_proc, int *post_proc)
+-- 
 
-Lets be naming consistent here: Fsin -> fs_in, Fsout -> fs_out.
+Thanks,
 
-> +{
-> +       bool det_out_op2_cond;
-> +       bool det_out_op0_cond;
-> +
-> +       /* Codition for selection of post-processing */
-> +       det_out_op2_cond = (((Fsin * 15 > Fsout * 16) & (Fsout < 56000)) |
-> +                                       ((Fsin > 56000) & (Fsout < 56000)));
-Remove outer parenthesis. Also should here be a logical or (||)
-instead of bitwise or (|)?
-Same for && vs &.
-
-> +       det_out_op0_cond = (Fsin * 23 < Fsout * 8);
-
-Remove outer parenthesis.
-> +
-> +       /*
-> +        * unsupported case: Tsout>16.125*Tsin, and Tsout>8.125*Tsin.
-> +        * Tsout>16.125*Tsin -> Fsin * 8 > 129 * Fsout
-> +        * Tsout>8.125*Tsin  -> Fsin * 8 > 65 * Fsout
-> +        * Tsout>4.125*Tsin  -> Fsin * 8 > 33 * Fsout
-> +        * Tsout>1.875*Tsin  -> Fsin * 8 > 15 * Fsout
-> +        */
-> +       if (Fsin * 8 > 129 * Fsout)
-> +               *pre_proc = 5;
-> +       else if (Fsin * 8 > 65 * Fsout)
-> +               *pre_proc = 4;
-> +       else if (Fsin * 8 > 33 * Fsout)
-> +               *pre_proc = 2;
-> +       else if (Fsin * 8 > 15 * Fsout) {
-> +               if (Fsin > 152000)
-> +                       *pre_proc = 2;
-> +               else
-> +                       *pre_proc = 1;
-> +       } else if (Fsin < 76000)
-> +               *pre_proc = 0;
-> +       else if (Fsin > 152000)
-> +               *pre_proc = 2;
-> +       else
-> +               *pre_proc = 1;
-> +
-> +       if (det_out_op2_cond)
-> +               *post_proc = 2;
-> +       else if (det_out_op0_cond)
-> +               *post_proc = 0;
-> +       else
-> +               *post_proc = 1;
-> +
-> +       /* unsupported options */
-> +       if (*pre_proc == 4 || *pre_proc == 5)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * Request ASRC pair
->   *
-> @@ -239,8 +278,10 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->         u32 inrate, outrate, indiv, outdiv;
->         u32 clk_index[2], div[2];
->         int in, out, channels;
-> +       int pre_proc, post_proc;
->         struct clk *clk;
->         bool ideal;
-> +       int ret;
->
->         if (!config) {
->                 pair_err("invalid pair config\n");
-> @@ -289,6 +330,12 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->                 return -EINVAL;
->         }
->
-> +       ret = fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
-> +       if (ret) {
-> +               pair_err("No supported pre-processing options\n");
-> +               return ret;
-> +       }
-> +
->         /* Validate input and output clock sources */
->         clk_index[IN] = clk_map[IN][config->inclk];
->         clk_index[OUT] = clk_map[OUT][config->outclk];
-> @@ -380,8 +427,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
->         /* Apply configurations for pre- and post-processing */
->         regmap_update_bits(asrc_priv->regmap, REG_ASRCFG,
->                            ASRCFG_PREMODi_MASK(index) | ASRCFG_POSTMODi_MASK(index),
-> -                          ASRCFG_PREMOD(index, process_option[in][out][0]) |
-> -                          ASRCFG_POSTMOD(index, process_option[in][out][1]));
-> +                          ASRCFG_PREMOD(index, pre_proc) |
-> +                          ASRCFG_POSTMOD(index, post_proc));
->
->         return fsl_asrc_set_ideal_ratio(pair, inrate, outrate);
->  }
-> --
-> 1.9.1
->
+David / dhildenb
