@@ -3,150 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8FDC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1968AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56C8217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E370E217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfDKHnj (ORCPT
+        id S1726944AbfDKHno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:43:39 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57558 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726104AbfDKHnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:43:39 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 52BF599CD303C71DD8AD;
-        Thu, 11 Apr 2019 15:43:36 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 11 Apr
- 2019 15:43:28 +0800
-Subject: Re: Some new bio merging behaviors in __bio_try_merge_page
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-        Jens Axboe <axboe@kernel.dk>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <85c5fa1a-a506-e26f-c354-1554d47d8b2b@huawei.com>
- <20190411070807.GA421@ming.t460p>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
-Date:   Thu, 11 Apr 2019 15:43:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 11 Apr 2019 03:43:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47714 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbfDKHnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:43:42 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B7hSxM073026
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:40 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rt0ynhkp0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:39 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Thu, 11 Apr 2019 08:41:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 08:40:58 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B7eue857671698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 07:40:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0FBDAE053;
+        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 424DDAE051;
+        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.74.176])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
+Date:   Thu, 11 Apr 2019 09:40:55 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Ingo Franzki <ifranzki@de.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/12] s390: zcrypt: initialize variables before_use
+In-Reply-To: <CAK8P3a1-1axfWq5Y1pK9XORMdsbmZyq75p+V5Do71hNRowct+g@mail.gmail.com>
+References: <20190408212648.2407234-1-arnd@arndb.de>
+        <20190408212648.2407234-5-arnd@arndb.de>
+        <8875e0b6-00b4-884d-fd6a-a5a144543559@linux.ibm.com>
+        <20190410175946.0e6d2b00@mschwideX1>
+        <CAK8P3a1-1axfWq5Y1pK9XORMdsbmZyq75p+V5Do71hNRowct+g@mail.gmail.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190411070807.GA421@ming.t460p>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+x-cbid: 19041107-0020-0000-0000-0000032E9E70
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041107-0021-0000-0000-00002180CD0C
+Message-Id: <20190411094055.5884244c@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=897 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 10 Apr 2019 20:57:21 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-
-On 2019/4/11 15:08, Ming Lei wrote:
-> Hi Gao Xiang,
+> On Wed, Apr 10, 2019 at 5:59 PM Martin Schwidefsky
+> <schwidefsky@de.ibm.com> wrote:
+> > On Tue, 9 Apr 2019 11:54:30 +0200 Harald Freudenberger <freude@linux.ibm.com> wrote:  
+> > > On 08.04.19 23:26, Arnd Bergmann wrote:  
+> > > >             }  
+> > > Thanks Arnd, but as Nathan already wrote, I'd prefer to have the
+> > > variable initialized with 0 instead of -1.
+> > > If you agree with this, I'll rewrite the patch and apply it to our
+> > > internal git and it will appear at kernel org with the next s390 code merge then.  
+> >
+> > Do we agreement on func_coed=0 for this one ?  
 > 
-> On Thu, Apr 11, 2019 at 01:47:49PM +0800, Gao Xiang wrote:
->> Hi Ming,
->>
->> I found a erofs issue after commit 07173c3ec276
->> ("block: enable multipage bvecs") is merged. It seems that
->> it tries to merge more physical continuous pages in one iovec.
->>
->> However it breaks the current erofs_read_raw_page logic since it uses
->> nr_iovecs of bio_alloc to limit the maximum number of physical
+> Yes, I think that was the consensus.
 > 
-> I believe you can do the limit outside easily, such as by checking
-> how many pages have been added to the bio.
-
-Yes, I agree that. However, I noticed that bio_add_page is exported as
-EXPORT_SYMBOL. I have no idea how many out-of-tree drivers break as well.
-
-Is there no way to take old behavior into consideration in the block layer as well?
-
+>        Arnd
 > 
->> continuous blocks as well. It was practicable since the old
->> __bio_try_merge_page only tries to merge in the same page.
->> it is a kAPI behavior change which also affects bio_alloc...
->>
->> ...
->> 231                 err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
->> 232                 if (unlikely(err))
->> 233                         goto err_out;
->> ...
->> 284                 /* max # of continuous pages */
->> 285                 if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
->> 286                         nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
->> 287                 if (nblocks > BIO_MAX_PAGES)
->> 288                         nblocks = BIO_MAX_PAGES;
->> 289
->> 290                 bio = erofs_grab_bio(sb, blknr, nblocks, sb,
->> 291                                      read_endio, false);
-> 
-> Previously this bio is allowed to add at most 'nblocks' pages, however,
-> now we are allowed to add at most 'nblocks' io vecs, instead of pages.
-> 
->> 292                 if (IS_ERR(bio)) {
->> 293                         err = PTR_ERR(bio);
->> 294                         bio = NULL;
->> 295                         goto err_out;
->> 296                 }
->> 297         }
->> 298
->> 299         err = bio_add_page(bio, page, PAGE_SIZE, 0);
->> 300         /* out of the extent or bio is full */
->> 301         if (err < PAGE_SIZE)
->> 302                 goto submit_bio_retry;
->> ...
->>
->> After commit 07173c3ec276 ("block: enable multipage bvecs"), erofs could
->> read more beyond what erofs_map_blocks assigns, and out-of-bound data could
->> be read and it breaks tail-end inline determination.
-> 
-> I don't understand why, could you explain a bit why erofs reads more?
 
-In current erofs, file could be break in two parts (non tail-end and tail-end blocks).
-Considering this on-disk layout,
- ________________________________________________________________
-|     non tail-end data              |   meta data               |
-|____________________________________|_(inode) + non-inline data_|
-                          ^          ^
-                          |          |        
-                          bio start  \-- what nr_iovecs indicates as well:
-                                         the end of the non tail-end data.
+Ok, committed with func_code=0.
 
-Before this commit, it will stop just before the next meta data. However,
-if the new bio merging behavior is introduced, it could add pages more than
-nr_iovecs, thus meta data will be read as the normal data...
+-- 
+blue skies,
+   Martin.
 
+"Reality continues to ruin my life." - Calvin.
 
-> 
-> The amount depends on how many pages you added to the bio.
-> 
->>
->> I can change the logic in erofs. However, out of curiosity, I have no idea
->> if some other places also are designed like this.
->>
->> IMO, it's better to provide a total count which indicates how many real
->> pages have been added in this bio. some thoughts?
-> 
-> As I mentioned, you may count how many pages added to bio, or you still
-> can get the number via bio_segments(bio).
-
-It is unsuitable to introduce bio_segments for each bio_add_page...
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Ming
-> 
