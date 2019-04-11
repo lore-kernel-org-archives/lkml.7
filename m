@@ -2,95 +2,92 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84819C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA006C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F0220818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79358217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDKDFw (ORCPT
+        id S1726686AbfDKDID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:05:52 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:26187 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725981AbfDKDFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:05:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TP0HtHW_1554951941;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TP0HtHW_1554951941)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 11 Apr 2019 11:05:48 +0800
-Date:   Thu, 11 Apr 2019 11:05:41 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>
-Subject: Re: [RFC][PATCH 13/16] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20190411030541.GA99895@aaronlu>
-References: <20190218165620.383905466@infradead.org>
- <20190218173514.667598558@infradead.org>
- <20190402064612.GA46500@aaronlu>
- <20190402082812.GJ12232@hirez.programming.kicks-ass.net>
- <20190405145530.GA453@aaronlu>
- <460ce6fb-6a40-4a72-47e8-cf9c7c409bef@linux.intel.com>
- <20190410043633.GA67532@aaronlu>
- <20190410144418.GH2490@worktop.programming.kicks-ass.net>
+        Wed, 10 Apr 2019 23:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfDKDID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 23:08:03 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BD520818;
+        Thu, 11 Apr 2019 03:08:02 +0000 (UTC)
+Date:   Wed, 10 Apr 2019 23:07:59 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [RFC patch 16/41] tracing: Remove the ULONG_MAX stack trace
+ hackery
+Message-ID: <20190410230759.7a0c2c10@oasis.local.home>
+In-Reply-To: <20190411023425.f7aolamijvxdcuvp@treble>
+References: <20190410102754.387743324@linutronix.de>
+        <20190410103645.048761764@linutronix.de>
+        <20190411023425.f7aolamijvxdcuvp@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410144418.GH2490@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 04:44:18PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 10, 2019 at 12:36:33PM +0800, Aaron Lu wrote:
-> > On Tue, Apr 09, 2019 at 11:09:45AM -0700, Tim Chen wrote:
-> > > Now that we have accumulated quite a number of different fixes to your orginal
-> > > posted patches.  Would you like to post a v2 of the core scheduler with the fixes?
-> > 
-> > One more question I'm not sure: should a task with cookie=0, i.e. tasks
-> > that are untagged, be allowed to scheduled on the the same core with
-> > another tagged task?
+On Wed, 10 Apr 2019 21:34:25 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+> > --- a/kernel/trace/trace_stack.c
+> > +++ b/kernel/trace/trace_stack.c
+> > @@ -18,8 +18,7 @@
+> >  
+> >  #include "trace.h"
+> >  
+> > -static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES+1] =
+> > -	 { [0 ... (STACK_TRACE_ENTRIES)] = ULONG_MAX };
+> > +static unsigned long stack_dump_trace[STACK_TRACE_ENTRIES + 1];  
 > 
-> That was not meant to be possible.
+> Is the "+ 1" still needed?  AFAICT, accesses to this array never go past
+> nr_entries.
 
-Good to know this.
+Probably not. But see this for an explanation:
 
-> > The current patch seems to disagree on this, e.g. in pick_task(),
-> > if max is already chosen but max->core_cookie == 0, then we didn't care
-> > about cookie and simply use class_pick for the other cpu. This means we
-> > could schedule two tasks with different cookies(one is zero and the
-> > other can be tagged).
+ http://lkml.kernel.org/r/20180620110758.crunhd5bfep7zuiz@kili.mountain
+
+
 > 
-> When core_cookie==0 we shouldn't schedule the other siblings at all.
-
-Not even with another untagged task?
-
-I was thinking to leave host side tasks untagged, like kernel threads,
-init and other system daemons or utilities etc., and tenant tasks tagged.
-Then at least two untagged tasks can be scheduled on the same core.
-
-Kindly let me know if you see a problem with this.
-
-> > But then sched_core_find() only allow idle task to match with any tagged
-> > tasks(we didn't place untagged tasks to the core tree of course :-).
-> > 
-> > Thoughts? Do I understand this correctly? If so, I think we probably
-> > want to make this clear before v2. I personally feel, we shouldn't allow
-> > untagged tasks(like kernel threads) to match with tagged tasks.
+> Also I've been staring at the code but I can't figure out why
+> max_entries is "- 1".
 > 
-> Agreed, cookie should always match or idle.
+> struct stack_trace stack_trace_max = {
+> 	.max_entries		= STACK_TRACE_ENTRIES - 1,
+> 	.entries		= &stack_dump_trace[0],
+> };
+> 
 
-Thanks a lot for the clarification.
+Well, it had a reason in the past, but there doesn't seem to be a
+reason today.  Looking at git history, that code was originally:
+
+	.max_entries		= STACK_TRACE_ENTRIES - 1,
+	.entries		= &stack_dump_trace[1],
+
+Where we had to make max_entries -1 as we started at the first index
+into the array.
+
+I'll have to take a new look into this code. After Thomas's clean up
+here, I'm sure we can simplify it a bit more.
+
+-- Steve
+
