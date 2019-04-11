@@ -4,85 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328B0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B007DC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF03D217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD24217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JhxxXH4X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIrP9hh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfDKKn2 (ORCPT
+        id S1726753AbfDKKnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:43:28 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:40156 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfDKKn2 (ORCPT
+        Thu, 11 Apr 2019 06:43:51 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33910 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbfDKKnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:43:28 -0400
-Received: by mail-ua1-f66.google.com with SMTP id b8so1845504uaq.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:28 -0700 (PDT)
+        Thu, 11 Apr 2019 06:43:50 -0400
+Received: by mail-vs1-f66.google.com with SMTP id t78so3206459vsc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7/GOt53/+wDHfpgnpT8grotgDQli96x/+uDMiECu7lo=;
-        b=JhxxXH4XebXphnXH5p0S6kdRrIB/VfaOnvQd/t1tpaq9+MooKHstrNTPGEG2A+n1oj
-         SLNU0kVNYhg7W7JZBeumZdyYP23lNuyvopeww9OkIHqXIak5KgJWxr9oZE2btkuVmv+b
-         3+YTQcmaMZK+GnoxIyS5ldSu4AweyTd8YsfWWbHpsYNvBHkiVGkGIh99u7zJV1Zq+Kwe
-         NM/OdZ1uf0+9uFs/5i70OTfB7I1higLUcWB6SjBUAwH9wdG5sN2nE3AJYEaM8Nvpa/Zq
-         rgu+kRdGiW4f8At948k2nTWS2jpmyQ4HrWQc3yw2ZsOExSnnYOP2wdEzerVy7nmGQoH4
-         LYkw==
+        bh=WLOKfUksx4CoR+vUiDn8/P6m64a24gTDOgWcpsMihPs=;
+        b=XIrP9hh9WndJnJg5Hu16WIWQQmql5H9f51UGF8Qlv8EWhNN2qiF/UwB4Gu1Ncmuy9m
+         PigZOa0JSwIMEkF0z48NfNqFk1ik5WkEV3yUqJ96MAUnuHCgdW9ca3lEjETtQiHfqOSq
+         jdW5K2xKy7ZDbwQfCoBUWJbTNVUbj3FLdctO/8LqRQhSupFAzF6TkVqfKsA2XnV48CQw
+         TsIXFWHu1aiirFgF0+mNlrnIm5NASEUvt5IPk2JE3HxjKT6el0dnc3luZLfoOKbiHnxe
+         TRjiqIBOyL/1xoNyfpQTr2jrzolOTTqPg6cEuaGkuUhY7rDKSvpbjhJO/U6OTsxIe5Hc
+         M8bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7/GOt53/+wDHfpgnpT8grotgDQli96x/+uDMiECu7lo=;
-        b=pixFlBEi/CFI2XpIzmXb2ry3alQ7Upo1645r7ZBpnuE4/xNnYPW/HdEpl86SNmRhmK
-         4blGxX4ckLTJ1dJIxIBmTZR4PskoPL1pVK6KQJMTES0+trAR/ne8vuBLsBkiPLV7kzgf
-         +K6A9lcxZjeB//oGS3Cd+1TsGAf0cPzPJwfViQV4hYIGTSsuQnM5TYakXepympMBRTzP
-         0Bx+qTX3kiMwZYqAzlHtMcBZ22hsK8WOtQVa2arRauIsnNxZeLlL+kMLAVy5mLzNm7zz
-         p2a3lal1YATLAk8Wk39GkszXfx+ofP+96FoVXotswadTTTTjLK3oweor6oe+xBS8HSTk
-         fSew==
-X-Gm-Message-State: APjAAAVPvo6+sp569xcMBEanIZb3oTz/t3Yt7uaX38SK/aqXh/lwZqsk
-        lHEqqsDBo9ukBepZscYcUz9YFS1s3qeBwW/z6zvYXQ==
-X-Google-Smtp-Source: APXvYqxI1PzG3yy/bEp5uAMoIdnxkHc5s2GiSSgeHHKKtoEmEuUvPlab0FrGMhaX9/Z72JHCupRY6iTOczLzc7oc/d8=
-X-Received: by 2002:ab0:340a:: with SMTP id z10mr16616980uap.10.1554979407639;
- Thu, 11 Apr 2019 03:43:27 -0700 (PDT)
+        bh=WLOKfUksx4CoR+vUiDn8/P6m64a24gTDOgWcpsMihPs=;
+        b=mSM7FrcVxCzlGQfbXuAtY1C6I4tiBZj0atrW1tdQD+vDMwJDIkttCiCrnET0j+/0HJ
+         OKn4XG0qsKngXuYFJrlHHOyMnJPO9lWkTwD5JRrKd9oeN6jVZEjBMOxuGP/M9FAT67bZ
+         G6mh6e3K6QZUbtkT93MyOTHqwkwVS2zxVJfSL1hHKL/VBJwIFyTml4hMQUnXoC4Rnc9u
+         O8zhv4CFo7zVe1ACuAHVMBG5MmZZTK8hJ+1Uxu7N5wdhR2cqTgS50XYIDaQ99nv7u7zz
+         IKgqFencaU8D4hQ+Qbx24llvYyfPCEjknDStKsD+373tW8QJ0YSBkNrkuhTLW+wof+Mu
+         ZiRA==
+X-Gm-Message-State: APjAAAXEuoqw8oayAAMpwuAAsj6srTl4+6qagLpm9zRPwU5CYv7c4Tx3
+        2Aytc4rW3v/VLAk5MLyQtFvRSSy0wlxjAdhynpwLSg==
+X-Google-Smtp-Source: APXvYqzYoMXg8O7xXM4xBHT5TPPkC6ZsCmbYw4e3cs/+O7DyQeDOnSPHGUj/kGrNrfBKFovE5iG1FdT68+SwjjgMbSk=
+X-Received: by 2002:a67:fa04:: with SMTP id i4mr27531604vsq.18.1554979429381;
+ Thu, 11 Apr 2019 03:43:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401125804.5665-1-faiz_abbas@ti.com>
-In-Reply-To: <20190401125804.5665-1-faiz_abbas@ti.com>
+References: <20190403193050.22180-1-fparent@baylibre.com>
+In-Reply-To: <20190403193050.22180-1-fparent@baylibre.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 11 Apr 2019 12:42:51 +0200
-Message-ID: <CAPDyKFpTc-RTQtbV+Q1_ebPoYa-3phmGpjvvCNRnG8-tSiCm=w@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci_am654: Clear HISPD_ENA in some lower speed modes
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Thu, 11 Apr 2019 12:43:13 +0200
+Message-ID: <CAPDyKFrKxGxp5K38P-AHrRpjOGjKhBv333HXAHPNKYWqLJmz+g@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: mtk-sd: check for valid optional memory resource
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jjian Zhou <jjian.zhou@mediatek.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 at 14:58, Faiz Abbas <faiz_abbas@ti.com> wrote:
+On Wed, 3 Apr 2019 at 21:31, Fabien Parent <fparent@baylibre.com> wrote:
 >
-> According to the AM654x Data Manual[1], the setup timing in lower speed
-> modes can only be met if the controller uses a falling edge data launch.
+> 'top_base' memory region is optional. Check that the resource is valid
+> before using it. This avoid getting a "invalid resource" error message
+> printed by the kernel.
 >
-> To ensure this, the HIGH_SPEED_ENA (HOST_CONTROL[2]) bit should be
-> cleared in default speed, SD high speed, MMC high speed, SDR12 and SDR25
-> speed modes.
->
-> Use the sdhci writeb callback to implement this condition.
->
-> [1] http://www.ti.com/lit/gpn/am6546 Section 5.10.5.16.1
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
 Applied for next, thanks!
 
@@ -92,64 +90,32 @@ Uffe
 
 > ---
 >
-> v2: Dropped QUIRK in favour of writeb callback
+> V2:
+>         Fix invalid condition: check against 'res' variable instead of 'ret'.
 >
->  drivers/mmc/host/Kconfig       |  1 +
->  drivers/mmc/host/sdhci_am654.c | 22 ++++++++++++++++++++++
->  2 files changed, 23 insertions(+)
+> ---
+>  drivers/mmc/host/mtk-sd.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 28fcd8f580a1..6379fba8b122 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -993,6 +993,7 @@ config MMC_SDHCI_OMAP
->  config MMC_SDHCI_AM654
->         tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
->         depends on MMC_SDHCI_PLTFM && OF
-> +       select MMC_SDHCI_IO_ACCESSORS
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
->           support present in TI's AM654 SOCs. The controller supports
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index eea183e90f1b..a91c0b45c48d 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -158,6 +158,27 @@ static void sdhci_am654_set_power(struct sdhci_host *host, unsigned char mode,
->         sdhci_set_power_noreg(host, mode, vdd);
->  }
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 833ef0590af8..61bf8704491c 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -2123,9 +2123,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>         }
 >
-> +static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
-> +{
-> +       unsigned char timing = host->mmc->ios.timing;
-> +
-> +       if (reg == SDHCI_HOST_CONTROL) {
-> +               switch (timing) {
-> +               /*
-> +                * According to the data manual, HISPD bit
-> +                * should not be set in these speed modes.
-> +                */
-> +               case MMC_TIMING_SD_HS:
-> +               case MMC_TIMING_MMC_HS:
-> +               case MMC_TIMING_UHS_SDR12:
-> +               case MMC_TIMING_UHS_SDR25:
-> +                       val &= ~SDHCI_CTRL_HISPD;
-> +               }
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -       host->top_base = devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(host->top_base))
+> -               host->top_base = NULL;
+> +       if (res) {
+> +               host->top_base = devm_ioremap_resource(&pdev->dev, res);
+> +               if (IS_ERR(host->top_base))
+> +                       host->top_base = NULL;
 > +       }
-> +
-> +       writeb(val, host->ioaddr + reg);
-> +}
-> +
->  static struct sdhci_ops sdhci_am654_ops = {
->         .get_max_clock = sdhci_pltfm_clk_get_max_clock,
->         .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-> @@ -165,6 +186,7 @@ static struct sdhci_ops sdhci_am654_ops = {
->         .set_bus_width = sdhci_set_bus_width,
->         .set_power = sdhci_am654_set_power,
->         .set_clock = sdhci_am654_set_clock,
-> +       .write_b = sdhci_am654_write_b,
->         .reset = sdhci_reset,
->  };
 >
+>         ret = mmc_regulator_get_supply(mmc);
+>         if (ret)
 > --
-> 2.19.2
+> 2.20.1
 >
