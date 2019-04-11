@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28595C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BAF2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35F32073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfDKM1Q (ORCPT
+        id S1727190AbfDKM1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 11 Apr 2019 08:27:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6157 "EHLO huawei.com"
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6159 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726814AbfDKM0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726832AbfDKM0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Apr 2019 08:26:47 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2C946320A98A202D6050;
+        by Forcepoint Email with ESMTP id 30B0592564D0BF429361;
         Thu, 11 Apr 2019 20:26:43 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 11 Apr 2019 20:26:36 +0800
+ 14.3.408.0; Thu, 11 Apr 2019 20:26:34 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 12/12] net: hns3: code optimization for command queue' spin lock
-Date:   Thu, 11 Apr 2019 20:25:31 +0800
-Message-ID: <1554985531-1827-13-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 08/12] net: hns3: divide shared buffer between TC
+Date:   Thu, 11 Apr 2019 20:25:27 +0800
+Message-ID: <1554985531-1827-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554985531-1827-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554985531-1827-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,62 +46,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Li <lipeng321@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch removes some redundant BH disable when initialization
-and uninitialization command queue.
+Currently hardware may have not enough buffer to receive packet
+when it has used more than two MPS(maximum packet size) of
+buffer, but there are still a lot of shared buffer left unused
+when TC num is small.
 
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+This patch divides shared buffer to be used between TC when
+the port supports DCB, and adjust the wateline and thredhold
+according to user manual for the port that does not support
+DCB.
+
+This patch also change hclge_get_tc_num's return type to u32
+to avoid signed-unsigned mix with divide.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 27 ++++++++++++++++------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-index cf7ff4a..fbd904e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
-@@ -355,7 +355,7 @@ int hclge_cmd_init(struct hclge_dev *hdev)
- 	int ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 5926016..709099a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -1422,7 +1422,7 @@ static int hclge_tx_buffer_alloc(struct hclge_dev *hdev,
+ 	return ret;
+ }
  
- 	spin_lock_bh(&hdev->hw.cmq.csq.lock);
--	spin_lock_bh(&hdev->hw.cmq.crq.lock);
-+	spin_lock(&hdev->hw.cmq.crq.lock);
+-static int hclge_get_tc_num(struct hclge_dev *hdev)
++static u32 hclge_get_tc_num(struct hclge_dev *hdev)
+ {
+ 	int i, cnt = 0;
  
- 	hdev->hw.cmq.csq.next_to_clean = 0;
- 	hdev->hw.cmq.csq.next_to_use = 0;
-@@ -364,7 +364,7 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+@@ -1495,8 +1495,8 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
+ 				struct hclge_pkt_buf_alloc *buf_alloc,
+ 				u32 rx_all)
+ {
+-	u32 shared_buf_min, shared_buf_tc, shared_std;
+-	int tc_num = hclge_get_tc_num(hdev);
++	u32 shared_buf_min, shared_buf_tc, shared_std, hi_thrd, lo_thrd;
++	u32 tc_num = hclge_get_tc_num(hdev);
+ 	u32 shared_buf, aligned_mps;
+ 	u32 rx_priv;
+ 	int i;
+@@ -1526,13 +1526,26 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
+ 	} else {
+ 		buf_alloc->s_buf.self.high = aligned_mps +
+ 						HCLGE_NON_DCB_ADDITIONAL_BUF;
+-		buf_alloc->s_buf.self.low =
+-			roundup(aligned_mps / 2, HCLGE_BUF_SIZE_UNIT);
++		buf_alloc->s_buf.self.low = aligned_mps;
++	}
++
++	if (hnae3_dev_dcb_supported(hdev)) {
++		if (tc_num)
++			hi_thrd = (shared_buf - hdev->dv_buf_size) / tc_num;
++		else
++			hi_thrd = shared_buf - hdev->dv_buf_size;
++
++		hi_thrd = max_t(u32, hi_thrd, 2 * aligned_mps);
++		hi_thrd = rounddown(hi_thrd, HCLGE_BUF_SIZE_UNIT);
++		lo_thrd = hi_thrd - aligned_mps / 2;
++	} else {
++		hi_thrd = aligned_mps + HCLGE_NON_DCB_ADDITIONAL_BUF;
++		lo_thrd = aligned_mps;
+ 	}
  
- 	hclge_cmd_init_regs(&hdev->hw);
+ 	for (i = 0; i < HCLGE_MAX_TC_NUM; i++) {
+-		buf_alloc->s_buf.tc_thrd[i].low = aligned_mps;
+-		buf_alloc->s_buf.tc_thrd[i].high = 2 * aligned_mps;
++		buf_alloc->s_buf.tc_thrd[i].low = lo_thrd;
++		buf_alloc->s_buf.tc_thrd[i].high = hi_thrd;
+ 	}
  
--	spin_unlock_bh(&hdev->hw.cmq.crq.lock);
-+	spin_unlock(&hdev->hw.cmq.crq.lock);
- 	spin_unlock_bh(&hdev->hw.cmq.csq.lock);
- 
- 	clear_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 054556e..1b428d4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -334,7 +334,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 	int ret;
- 
- 	spin_lock_bh(&hdev->hw.cmq.csq.lock);
--	spin_lock_bh(&hdev->hw.cmq.crq.lock);
-+	spin_lock(&hdev->hw.cmq.crq.lock);
- 
- 	/* initialize the pointers of async rx queue of mailbox */
- 	hdev->arq.hdev = hdev;
-@@ -348,7 +348,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 
- 	hclgevf_cmd_init_regs(&hdev->hw);
- 
--	spin_unlock_bh(&hdev->hw.cmq.crq.lock);
-+	spin_unlock(&hdev->hw.cmq.crq.lock);
- 	spin_unlock_bh(&hdev->hw.cmq.csq.lock);
- 
- 	clear_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
+ 	return true;
 -- 
 2.7.4
 
