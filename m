@@ -2,153 +2,110 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AD2C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F64BC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2ED2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE9B2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555001471;
+	bh=W8vmqTJJQ5bkw2ibphr0GbRKYsJCRSQrBCH2au6Oapc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k7gsoFrl0gUFgUDFfir2vU6IUMooW8QOhA6mXog0pAPh4HIT1me8RCcx1XqbY5JBy
+	 wjllC2vF3V5vwZhmrPkWwLtcF3YJ6AlZAzYCoFCF5eBy1DjtbqXYY39F1SSC1DZURz
+	 rVOwcXhWr/r0On3IOHtEOnbK6TduABMb/cQwjoJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDKQuo (ORCPT
+        id S1726962AbfDKQvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:50:44 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46262 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfDKQuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:50:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F0CC15AD;
-        Thu, 11 Apr 2019 09:50:43 -0700 (PDT)
-Received: from [10.37.12.69] (unknown [10.37.12.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E2733F59C;
-        Thu, 11 Apr 2019 09:50:41 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190404105233.GD3567@e103592.cambridge.arm.com>
- <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
- <20190405150722.GE3567@e103592.cambridge.arm.com>
- <899713e0-2d32-04a0-b2f2-3493f7299033@arm.com>
- <20190411163423.GJ3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <e647de48-fd74-eabc-0a57-c2c519a36012@arm.com>
-Date:   Thu, 11 Apr 2019 17:50:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 12:51:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38786 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDKQvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:51:09 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so6162894ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n/hx0NnsCoe25Udwmu9EvTCGmVL1NWLmRxa3s9qSNGE=;
+        b=OULQRYO1z+YohekQGwp2/pmaJbeorta81jqJLvhROkmKxSDTRczQVcQgnSHRvKqbrZ
+         sAbS3xz8hZ4p+yGnIOw/nKDHUFbdIyKX/gFvwfcew+OH+651b6Uo4eorhexO+mDQ4wY0
+         mHVAD8o1bKZ5hm1ctB+zL12qiQL5NveFu0jEc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n/hx0NnsCoe25Udwmu9EvTCGmVL1NWLmRxa3s9qSNGE=;
+        b=MPi5xwJSwLjpLoBVgV2YwaAT3v2b7nrgKB+hkDURLeU1cqZTEXF58NIX5sPX/ie6wZ
+         TeYDuLlVyD1UgYGiCF4/CYU1c/3MWaoPrMST3/PGbaYjNPgWf+ZTEWZ79PkxKEzguW/F
+         TLgou3hCSCPYbaEV6bbuW8rejc5uDhj3wyOIVBI0S9LJHV6Ch6Se1i+qIJLMMef9JxsE
+         FkOVZkvUegn4L1ZxwkSbHlC7YItQw5Tx1cDG0M8rZ7l9gDNe2BW1klxt7AI4gzZNIeQS
+         viRgMtm8Go9POn50MhgOFuBYjdk3nhKOq3F7Xzg9FRwrERGIGNSbsfp2f3Ah6l3PLGiz
+         lOiw==
+X-Gm-Message-State: APjAAAX8pwjwG/+Pfr/XA7cqlMKEpyazLDY/nazrDI1V3ihVWdEyP7xh
+        qLYG9GhF9RZjve9LOEXHcAIcU3hSuyo=
+X-Google-Smtp-Source: APXvYqw90ZxGvD68RbSL44uQsi5MP3dcIwTRbp0hrAKk/xKkxzUP4Inmn4oEXxb8LXKiK2Tgzf1uFw==
+X-Received: by 2002:a2e:884a:: with SMTP id z10mr4653805ljj.21.1555001465673;
+        Thu, 11 Apr 2019 09:51:05 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id r20sm7776741ljj.22.2019.04.11.09.51.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 09:51:04 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id u17so5260164lfi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:51:04 -0700 (PDT)
+X-Received: by 2002:ac2:546c:: with SMTP id e12mr16140942lfn.121.1555001463837;
+ Thu, 11 Apr 2019 09:51:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190411163423.GJ3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190410234045.29846-1-christian@brauner.io>
+In-Reply-To: <20190410234045.29846-1-christian@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 11 Apr 2019 09:50:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifyY+XGNW=ZC4MyTHD14w81F8JjQNH-GaGAm2RxZ_S8Q@mail.gmail.com>
+Message-ID: <CAHk-=wifyY+XGNW=ZC4MyTHD14w81F8JjQNH-GaGAm2RxZ_S8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] fork: add CLONE_PIDFD
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Wed, Apr 10, 2019 at 4:43 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> RFC-2:
+> This alternative patchset uses anonymous file descriptors instead of
+> file descriptors from /proc/<pid>.
 
-On 4/11/19 5:34 PM, Dave Martin wrote:
-> On Thu, Apr 11, 2019 at 04:58:41PM +0100, Julien Grall wrote:
->> Hi Dave,
->>
->> On 4/5/19 4:07 PM, Dave Martin wrote:
->>> On Fri, Apr 05, 2019 at 10:02:45AM +0100, Julien Grall wrote:
->>>>>> +#ifdef CONFIG_KERNEL_MODE_NEON
->>>>>> +
->>>>>>   /*
->>>>>>    * may_use_simd - whether it is allowable at this time to issue SIMD
->>>>>>    *                instructions or access the SIMD register file
->>>>>> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
->>>>>> index 5ebe73b69961..b7e5dac26190 100644
->>>>>> --- a/arch/arm64/kernel/fpsimd.c
->>>>>> +++ b/arch/arm64/kernel/fpsimd.c
->>>>>> @@ -90,7 +90,8 @@
->>>>>>    * To prevent this from racing with the manipulation of the task's FPSIMD state
->>>>>>    * from task context and thereby corrupting the state, it is necessary to
->>>>>>    * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
->>>>>> - * flag with local_bh_disable() unless softirqs are already masked.
->>>>>> + * flag with kernel_neon_{disable, enable}. This will still allow softirqs to
->>>>>> + * run but prevent them to use FPSIMD.
->>>>>>    *
->>>>>>    * For a certain task, the sequence may look something like this:
->>>>>>    * - the task gets scheduled in; if both the task's fpsimd_cpu field
->>>>>> @@ -142,6 +143,9 @@ extern void __percpu *efi_sve_state;
->>>>>>   #endif /* ! CONFIG_ARM64_SVE */
->>>>>> +static void kernel_neon_disable(void);
->>>>>> +static void kernel_neon_enable(void);
->>>>>
->>>>> I find these names a bit confusing: _disable() actualy enables FPSIMD/SVE
->>>>> context access for the current context (i.e., makes it safe).
->>>>>
->>>>> Since these also disable/enable preemption, perhaps we can align them
->>>>> with the existing get_cpu()/put_cpu(), something like:
->>>>>
->>>>> void get_cpu_fpsimd_context();
->>>>> vold put_cpu_fpsimd_context();
->>>>>
->>>>> If you consider it's worth adding the checking helper I alluded to
->>>>> above, it could then be called something like:
->>>>>
->>>>> bool have_cpu_fpsimd_context();
->>>>
->>>> I am not sure where you suggested a checking helper above. Do you refer to
->>>> exposing kernel_neon_busy even for !CONFIG_KERNEL_MODE_NEON?
->>>
->>> Hmmm, looks like I got my reply out of order here.
->>>
->>> I meant the helper (if any) to check
->>> !preemptible() && !__this_cpu_read(kernel_neon_busy).
->>
->> I guess you are using && instead of || because some of the caller may not
->> call get_cpu_fpsimd_context() before but still disable preemption, right?
->>
->> Wouldn't it be better to have all the user calling get_cpu_fpsimd_context()
->> and put_cpu_fpsimd_context()?
->>
->> This has the advantage to uniformize how the way FPSIMD is protected and
->> also...
-> 
-> My expectation is that all users would have called
-> get_cpu_fpsimd_context().
+I think I prefer this one. Your diffstat makes it look bigger, but
+that's because you added the example code to use this to that rfc..
 
-This is not the case today (see kvm_arch_vcpu_put_fp), I will look at 
-protecting it with a call to get_cpu_fpsimd_context().
+Plus making anon_inodes unconditional makes sense anyway.  They are
+always selected in practice to begin with.
 
-> 
-> The reason for writing the check that way is that we can't meaningfully
-> inspect percpu variables unless we are non-preemptible already.  The &&
-> means we don't do the percpu read at all is the case where preemptible()
-> is true.
-
-I am not sure to understand why it would be necessary. 
-this_cpu_read(kernel_neon_busy) should be sufficient here.
-
-If it is set then, preemption is disabled. Or are you worried about user 
-directly setting kernel_neon_busy instead of calling get_cpu_fpsimd_context?
-
-> 
-> Or do you think my logic is wrong somewhere?  (It's possible...)
-
-I think your logic would not return the correct value. We want 
-have_cpu_fpsimd_context() to return true if it is not preemptible and 
-kernel_neon_busy is true. So we would want:
-
-!preemptible() && __this_cpu_read(kernel_neon_busy)
-
-If we speak about the implementation of have_cpu_fpsimd_context(), then 
-we want:
-
-!preemptible() && __this_cpu_read(kernel_neon_busy)
-
-Cheers,
-
--- 
-Julien Grall
+               Linus
