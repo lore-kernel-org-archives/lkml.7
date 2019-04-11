@@ -2,231 +2,125 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA4C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8F8020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944F720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jp8OhHVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfDKCAk (ORCPT
+        id S1726628AbfDKCGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:00:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60404 "EHLO huawei.com"
+        Wed, 10 Apr 2019 22:06:08 -0400
+Received: from mail-eopbgr40064.outbound.protection.outlook.com ([40.107.4.64]:48789
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbfDKCAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:00:39 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6B8E4EB095994463CA7C;
-        Thu, 11 Apr 2019 10:00:36 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
- 10:00:28 +0800
-Subject: Re: [PATCH 2/2] kvm: arm: Unify handling THP backed host memory
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>, <julien.thierry@arm.com>,
-        <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
-        <andrew.murray@arm.com>, <eric.auger@redhat.com>,
-        <zhengxiang9@huawei.com>, <wanghaibin.wang@huawei.com>
-References: <1554909297-6753-1-git-send-email-suzuki.poulose@arm.com>
- <1554909832-7169-1-git-send-email-suzuki.poulose@arm.com>
- <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <c48b2bd4-68e6-dbc0-b010-78a23a889196@huawei.com>
-Date:   Thu, 11 Apr 2019 09:59:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
-MIME-Version: 1.0
-In-Reply-To: <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1725782AbfDKCGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:06:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tZW/p3vVChYHL/3GC9dqHtLbYFjiVuOOUqSKfatIDnE=;
+ b=jp8OhHVbTebDigro0/wzyU4yr1DADRTOxMKDI8ecBa7V8rNnzKB973rTsFAZZn8F2kgre94uALgrliVXOT9IszOJnmmbhiDgKlVopBDQvXUY9G9mMHA7VybJSMGcC9G9PIuyl9NBMvMKFsF+GiQ1GPVqE1TXa700o7KmR6n5Hx0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3866.eurprd04.prod.outlook.com (52.134.71.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.14; Thu, 11 Apr 2019 02:06:04 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1771.016; Thu, 11 Apr 2019
+ 02:06:04 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] rtc: mxc: use dev_pm_set_wake_irq() to simplify code
+Thread-Topic: [PATCH] rtc: mxc: use dev_pm_set_wake_irq() to simplify code
+Thread-Index: AQHU8AseXcUv7QdF4Eas7C+lQpgLug==
+Date:   Thu, 11 Apr 2019 02:06:04 +0000
+Message-ID: <1554948064-2343-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0013.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::25) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a599c34-7c35-4455-02da-08d6be22405e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3866;
+x-ms-traffictypediagnostic: DB3PR0402MB3866:
+x-microsoft-antispam-prvs: <DB3PR0402MB3866F7C79A32F05167C20195F52F0@DB3PR0402MB3866.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00046D390F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(396003)(346002)(376002)(39860400002)(199004)(189003)(81166006)(256004)(102836004)(4326008)(2501003)(14444005)(25786009)(66066001)(106356001)(305945005)(508600001)(14454004)(7736002)(105586002)(6506007)(386003)(6116002)(2616005)(3846002)(476003)(5660300002)(53936002)(8676002)(97736004)(99286004)(8936002)(486006)(6512007)(2201001)(316002)(36756003)(2906002)(6436002)(26005)(68736007)(6486002)(52116002)(186003)(71200400001)(50226002)(71190400001)(86362001)(110136005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3866;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BuobKqErt2hZXASaCF3bmHRyRYKud2+3EuG/jvGofdy4OxvzE8HXnzMLad1z9/VfsLUklxya/+UZB1mYJLzEspn5D0lmmj+oGnkAv9s4aIzxvCWHNpzeGTjAetgvOBQfuS8+pZjR06xreLiweaHmNUD/TetOvvI3uv2GuN8+07G49E8j8TPvo5xwahPpL9p/cbmdhoVIsHDzgQ2huJL8gv7k6KMJASEWPAsvRyfGnf8uoI/qZzwacOTWBqW+YkVY+oAXSS1VBlK9WkUme3Gs2x9UO1RxnLlTUYQjr6+XU7+nqhRUT3Ye8MdGhUgSNUt2qf0u1UMOf3cvocTBskSTLFoQy4G663Z6IKCuuCiOV9hyrOlQe+8RZGTht423+d4tjw5MjzvLbb6DeSOL+AN2hydHiS4HiG7g9ZM7fjiant4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a599c34-7c35-4455-02da-08d6be22405e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 02:06:04.1755
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3866
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On 2019/4/10 23:23, Suzuki K Poulose wrote:
-> We support mapping host memory backed by PMD transparent hugepages
-> at stage2 as huge pages. However the checks are now spread across
-> two different places. Let us unify the handling of the THPs to
-> keep the code cleaner (and future proof for PUD THP support).
-> This patch moves transparent_hugepage_adjust() closer to the caller
-> to avoid a forward declaration for fault_supports_stage2_huge_mappings().
-> 
-> Also, since we already handle the case where the host VA and the guest
-> PA may not be aligned, the explicit VM_BUG_ON() is not required.
-> 
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Christoffer Dall <christoffer.dall@arm.com>
-> Cc: Zneghui Yu <yuzenghui@huawei.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   virt/kvm/arm/mmu.c | 123 +++++++++++++++++++++++++++--------------------------
->   1 file changed, 62 insertions(+), 61 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 6d73322..714eec2 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1380,53 +1380,6 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
->   	return ret;
->   }
->   
-> -static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
-> -{
-> -	kvm_pfn_t pfn = *pfnp;
-> -	gfn_t gfn = *ipap >> PAGE_SHIFT;
-> -	struct page *page = pfn_to_page(pfn);
-> -
-> -	/*
-> -	 * PageTransCompoundMap() returns true for THP and
-> -	 * hugetlbfs. Make sure the adjustment is done only for THP
-> -	 * pages.
-> -	 */
-> -	if (!PageHuge(page) && PageTransCompoundMap(page)) {
-> -		unsigned long mask;
-> -		/*
-> -		 * The address we faulted on is backed by a transparent huge
-> -		 * page.  However, because we map the compound huge page and
-> -		 * not the individual tail page, we need to transfer the
-> -		 * refcount to the head page.  We have to be careful that the
-> -		 * THP doesn't start to split while we are adjusting the
-> -		 * refcounts.
-> -		 *
-> -		 * We are sure this doesn't happen, because mmu_notifier_retry
-> -		 * was successful and we are holding the mmu_lock, so if this
-> -		 * THP is trying to split, it will be blocked in the mmu
-> -		 * notifier before touching any of the pages, specifically
-> -		 * before being able to call __split_huge_page_refcount().
-> -		 *
-> -		 * We can therefore safely transfer the refcount from PG_tail
-> -		 * to PG_head and switch the pfn from a tail page to the head
-> -		 * page accordingly.
-> -		 */
-> -		mask = PTRS_PER_PMD - 1;
-> -		VM_BUG_ON((gfn & mask) != (pfn & mask));
-> -		if (pfn & mask) {
-> -			*ipap &= PMD_MASK;
-> -			kvm_release_pfn_clean(pfn);
-> -			pfn &= ~mask;
-> -			kvm_get_pfn(pfn);
-> -			*pfnp = pfn;
-> -		}
-> -
-> -		return true;
-> -	}
-> -
-> -	return false;
-> -}
-> -
->   /**
->    * stage2_wp_ptes - write protect PMD range
->    * @pmd:	pointer to pmd entry
-> @@ -1677,6 +1630,61 @@ static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->   	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
->   }
->   
-> +/*
-> + * Check if the given hva is backed by a transparent huge page (THP)
-> + * and whether it can be mapped using block mapping in stage2. If so, adjust
-> + * the stage2 PFN and IPA accordingly. Only PMD_SIZE THPs are currently
-> + * supported. This will need to be updated to support other THP sizes.
-> + *
-> + * Returns the size of the mapping.
-> + */
-> +static unsigned long
-> +transparent_hugepage_adjust(struct kvm_memory_slot *memslot,
-> +			    unsigned long hva, kvm_pfn_t *pfnp,
-> +			    phys_addr_t *ipap)
-> +{
-> +	kvm_pfn_t pfn = *pfnp;
-> +	struct page *page = pfn_to_page(pfn);
-> +
-> +	/*
-> +	 * PageTransCompoundMap() returns true for THP and
-> +	 * hugetlbfs. Make sure the adjustment is done only for THP
-> +	 * pages. Also make sure that the HVA and IPA are sufficiently
-> +	 * aligned and that the  block map is contained within the memslot.
-> +	 */
-> +	if (!PageHuge(page) && PageTransCompoundMap(page) &&
-
-We managed to get here, ensure that we only play with normal size pages
-and no hugetlbfs pages will be involved.  "!PageHuge(page)" will always
-return true and we can let it go.
-
-> +	    fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE)) {
-> +		/*
-> +		 * The address we faulted on is backed by a transparent huge
-> +		 * page.  However, because we map the compound huge page and
-> +		 * not the individual tail page, we need to transfer the
-> +		 * refcount to the head page.  We have to be careful that the
-> +		 * THP doesn't start to split while we are adjusting the
-> +		 * refcounts.
-> +		 *
-> +		 * We are sure this doesn't happen, because mmu_notifier_retry
-> +		 * was successful and we are holding the mmu_lock, so if this
-> +		 * THP is trying to split, it will be blocked in the mmu
-> +		 * notifier before touching any of the pages, specifically
-> +		 * before being able to call __split_huge_page_refcount().
-> +		 *
-> +		 * We can therefore safely transfer the refcount from PG_tail
-> +		 * to PG_head and switch the pfn from a tail page to the head
-> +		 * page accordingly.
-> +		 */
-> +		*ipap &= PMD_MASK;
-> +		kvm_release_pfn_clean(pfn);
-> +		pfn &= ~(PTRS_PER_PMD - 1);
-> +		kvm_get_pfn(pfn);
-> +		*pfnp = pfn;
-> +
-> +		return PMD_SIZE;
-> +	}
-> +
-> +	/* Use page mapping if we cannot use block mapping */
-> +	return PAGE_SIZE;
-> +}
-> +
->   static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->   			  struct kvm_memory_slot *memslot, unsigned long hva,
->   			  unsigned long fault_status)
-> @@ -1780,20 +1788,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->   	if (mmu_notifier_retry(kvm, mmu_seq))
->   		goto out_unlock;
->   
-> -	if (vma_pagesize == PAGE_SIZE && !force_pte) {
-> -		/*
-> -		 * Only PMD_SIZE transparent hugepages(THP) are
-> -		 * currently supported. This code will need to be
-> -		 * updated to support other THP sizes.
-> -		 *
-> -		 * Make sure the host VA and the guest IPA are sufficiently
-> -		 * aligned and that the block is contained within the memslot.
-> -		 */
-> -		if (fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE) &&
-> -		    transparent_hugepage_adjust(&pfn, &fault_ipa))
-> -			vma_pagesize = PMD_SIZE;
-> -	}
-> -
-> +	/*
-> +	 * If we are not forced to use page mapping, check if we are
-> +	 * backed by a THP and thus use block mapping if possible.
-> +	 */
-> +	if (vma_pagesize == PAGE_SIZE && !force_pte)
-> +		vma_pagesize = transparent_hugepage_adjust(memslot, hva,
-> +							   &pfn, &fault_ipa);
->   	if (writable)
->   		kvm_set_pfn_dirty(pfn);
->   
-thanks,
-zenghui
-
+V2l0aCBjYWxsaW5nIGRldl9wbV9zZXRfd2FrZV9pcnEoKSB0byBzZXQgTVhDIFJUQyBhcyB3YWtl
+dXAgc291cmNlDQpmb3Igc3VzcGVuZCwgZ2VuZXJpYyB3YWtlIGlycSBtZWNoYW5pc20gd2lsbCBh
+dXRvbWF0aWNhbGx5IGVuYWJsZQ0KaXQgYXMgd2FrZXVwIHNvdXJjZSB3aGVuIHN1c3BlbmQsIHRo
+ZW4gdGhlIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrDQp3aGljaCBhcmUgT05MWSBmb3IgZW5hYmxp
+bmcvZGlzYWJsaW5nIGlycSB3YWtlIGNhbiBiZSByZW1vdmVkLCBpdA0Kc2ltcGxpZmllcyB0aGUg
+Y29kZS4NCg0KU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
+DQotLS0NCiBkcml2ZXJzL3J0Yy9ydGMtbXhjLmMgfCAzMiArKysrKystLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9u
+cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ydGMvcnRjLW14Yy5jIGIvZHJpdmVycy9ydGMv
+cnRjLW14Yy5jDQppbmRleCAyOGExNWJkLi43MDhiOWU5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9y
+dGMvcnRjLW14Yy5jDQorKysgYi9kcml2ZXJzL3J0Yy9ydGMtbXhjLmMNCkBAIC04LDYgKzgsNyBA
+QA0KICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5o
+Pg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCisjaW5jbHVkZSA8bGludXgv
+cG1fd2FrZWlycS5oPg0KICNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCiAjaW5jbHVkZSA8bGludXgv
+b2YuaD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQpAQCAtMzk0LDggKzM5NSwxMiBA
+QCBzdGF0aWMgaW50IG14Y19ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+CiAJCXBkYXRhLT5pcnEgPSAtMTsNCiAJfQ0KIA0KLQlpZiAocGRhdGEtPmlycSA+PSAwKQ0KKwlp
+ZiAocGRhdGEtPmlycSA+PSAwKSB7DQogCQlkZXZpY2VfaW5pdF93YWtldXAoJnBkZXYtPmRldiwg
+MSk7DQorCQlyZXQgPSBkZXZfcG1fc2V0X3dha2VfaXJxKCZwZGV2LT5kZXYsIHBkYXRhLT5pcnEp
+Ow0KKwkJaWYgKHJldCkNCisJCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxl
+IGlycSB3YWtlXG4iKTsNCisJfQ0KIA0KIAlydGMgPSBkZXZtX3J0Y19kZXZpY2VfcmVnaXN0ZXIo
+JnBkZXYtPmRldiwgcGRldi0+bmFtZSwgJm14Y19ydGNfb3BzLA0KIAkJCQkgIFRISVNfTU9EVUxF
+KTsNCkBAIC00MjYsMzUgKzQzMSwxMCBAQCBzdGF0aWMgaW50IG14Y19ydGNfcmVtb3ZlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCXJldHVybiAwOw0KIH0NCiANCi0jaWZkZWYgQ09O
+RklHX1BNX1NMRUVQDQotc3RhdGljIGludCBteGNfcnRjX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
+ZGV2KQ0KLXsNCi0Jc3RydWN0IHJ0Y19wbGF0X2RhdGEgKnBkYXRhID0gZGV2X2dldF9kcnZkYXRh
+KGRldik7DQotDQotCWlmIChkZXZpY2VfbWF5X3dha2V1cChkZXYpKQ0KLQkJZW5hYmxlX2lycV93
+YWtlKHBkYXRhLT5pcnEpOw0KLQ0KLQlyZXR1cm4gMDsNCi19DQotDQotc3RhdGljIGludCBteGNf
+cnRjX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQotew0KLQlzdHJ1Y3QgcnRjX3BsYXRfZGF0
+YSAqcGRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCi0NCi0JaWYgKGRldmljZV9tYXlfd2Fr
+ZXVwKGRldikpDQotCQlkaXNhYmxlX2lycV93YWtlKHBkYXRhLT5pcnEpOw0KLQ0KLQlyZXR1cm4g
+MDsNCi19DQotI2VuZGlmDQotDQotc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKG14Y19ydGNfcG1f
+b3BzLCBteGNfcnRjX3N1c3BlbmQsIG14Y19ydGNfcmVzdW1lKTsNCi0NCiBzdGF0aWMgc3RydWN0
+IHBsYXRmb3JtX2RyaXZlciBteGNfcnRjX2RyaXZlciA9IHsNCiAJLmRyaXZlciA9IHsNCiAJCSAg
+IC5uYW1lCT0gIm14Y19ydGMiLA0KIAkJICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRy
+KGlteF9ydGNfZHRfaWRzKSwNCi0JCSAgIC5wbQkJPSAmbXhjX3J0Y19wbV9vcHMsDQogCX0sDQog
+CS5pZF90YWJsZSA9IGlteF9ydGNfZGV2dHlwZSwNCiAJLnByb2JlID0gbXhjX3J0Y19wcm9iZSwN
+Ci0tIA0KMi43LjQNCg0K
