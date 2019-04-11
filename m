@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3492BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0915C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E74217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCF32084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFRoasOJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw8J5926"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfDKDfI (ORCPT
+        id S1726854AbfDKDfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:35:08 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43947 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDKDfI (ORCPT
+        Wed, 10 Apr 2019 23:35:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36435 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDKDfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:35:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so2766140pgu.10;
-        Wed, 10 Apr 2019 20:35:07 -0700 (PDT)
+        Wed, 10 Apr 2019 23:35:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z5so2726110pfn.3;
+        Wed, 10 Apr 2019 20:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OZv6hPSdAHA1swD7FEOslfLZwpmxkzvHikN4MHT7irA=;
-        b=GFRoasOJpQPhb1awaLCimBo3kHfJqM/1lwpjAHrqrbcV2K+UypQ9VoQ4tqQFmPBjXG
-         8cFfeFW2+OteM9nQdV1xiJGEH0T2q77N39kDTdDvrAdSFHmP71mkI6SvQo6M8rP5WP/S
-         hwAF3woe91WxKgGqQzX0eAeqwt7XapDdM+GNHU245hYv72pf0iH/2zVyggIe8s3x/oC5
-         2y7pblvESq1nEX0tlN0U0nZSHhGN4kenlzLA7eqyV8j2WV8RuXaA4iPhbDsWgsYWtg9R
-         j7kPVDVZBztHEo/NXUdDULwsHooEdlqV2RnDFg0Ym2QyHpikiwo8oKB3NXqM+IBZB40/
-         l+hg==
+        bh=CWZZCmwLSXHeUqxxSF0Ph+9iewvMlr+/1Ia04zeauj4=;
+        b=Rw8J5926VOh6N6GRYh64cQHUYKgIbzn3cVCWvglyjinr/XQis7QUebTd1zkribG7yU
+         f1GvC+vhIm07yufwON2Q6gG2S+rMfRT2OYdTv7Ywql9CpZSBzVFhJEUXz5pukAg1Qofu
+         41YrO6ick+TDyM5/01vdqZ9eWZfbMPNtAdHdiJkzN6vKmKiTFoShyx2AfzF2imlch2AG
+         PUYNk8bhga8X8v7yXgCG7yCajZzWKGTFpEd1yAZ0tR5DfuK8+YXJM4BbcIFd/Zpn0Fxl
+         fUVxdJX+fVKVgYhLchbdzldoFMHzw0zaUf0X32Wa4Nvx+526PzFq6h1tHLYm74XEC/HK
+         0esw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OZv6hPSdAHA1swD7FEOslfLZwpmxkzvHikN4MHT7irA=;
-        b=ZvfGVEdttCv27Hm0XphCQroIjYO5xSmJ4thYvFG1eKu6zJ52ucASpFRGYhUpqwOiF/
-         UutTiawykwCaEHv/ISsOLhNywvxjJv21T37fS8o9V6pKLiHEnP15BtpbZ5819SFJs3KZ
-         ff35a2+jhZrt6/fXnICgKeOhRfT30WqwTRrgO2lK81gmKg08xik39I6Tx/pEcRbR8Shl
-         7W4nyLQnKueTTHCB/pYp/g97e508iR0lBKKJ9EzBU4PWNp0E+1G8qenEiqt1bZe2LGTY
-         lPmEHn6w+VLwKI2wSoGx2kKrAseo1gokWN5ceFBSJBbXJibQf/p3tpalD8MuauhYFZVZ
-         Z3Mg==
-X-Gm-Message-State: APjAAAWcUbQ5CzZXU7yN47+q1DBxJbpuiO3J9+6lPklAJIMUfr5UzhN3
-        9fSE8UmeWoulvmKTiV5Uowc=
-X-Google-Smtp-Source: APXvYqwsc0FdRw26an9Arfnk9WRkzB4Ut2g6Vqasz3X3ajdkvlglSDeRCCpSAsQLD70uhmqFVpdwhw==
-X-Received: by 2002:a65:64c9:: with SMTP id t9mr44251725pgv.221.1554953707587;
-        Wed, 10 Apr 2019 20:35:07 -0700 (PDT)
+        bh=CWZZCmwLSXHeUqxxSF0Ph+9iewvMlr+/1Ia04zeauj4=;
+        b=VN7Tmp8zL0nOWLK6nG8SPWQLvy6RIWZogbvMl1Y/esdaBhQTP0vn7U7ieyDWQdh4kJ
+         zQqXkgBLgovhIJiOLNaZ2T5BD8upMiUVp5pa9tHo4J7Cuzzb20l5RPlXyGk6KfNi1p1z
+         Mv5q8wJ1yBNQhxOwhLW+TQL5PdN43uotVpGu7dEIZn4b6J5akFAbEHgGFMvyGF12y5O6
+         hxnLgreduOhNr1HWzw3FakO6bXI9iYVkq5atetkAo/ckyMU4oVYwySKSoqaQzcFMGRqN
+         MBPkEIAdPIVWXRmbxHjV0ZTBo8SilbiqtPzQKzB4IE5bXPlxaLf+CmQ7qiJ77b3g/H0H
+         viJw==
+X-Gm-Message-State: APjAAAVvvG/UOfHYGLfZY+6AGfZuSY0UtdTnhy2KG0ICBNxXhWGBFcvr
+        I2ndCKgKfmhQypgWOEmw0t8=
+X-Google-Smtp-Source: APXvYqzz0Xm66Ni2uxsno4bD0pqDZS8jgJGqdXnEg82Kz8dd6boGm+cqHzPjvqlvPsYMFG/YmkMXIw==
+X-Received: by 2002:a62:75cd:: with SMTP id q196mr38508311pfc.70.1554953712281;
+        Wed, 10 Apr 2019 20:35:12 -0700 (PDT)
 Received: from bobo.local0.net ([203.63.188.231])
-        by smtp.gmail.com with ESMTPSA id b9sm37231416pfd.32.2019.04.10.20.35.03
+        by smtp.gmail.com with ESMTPSA id b9sm37231416pfd.32.2019.04.10.20.35.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 20:35:06 -0700 (PDT)
+        Wed, 10 Apr 2019 20:35:11 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <fweisbec@gmail.com>
@@ -65,9 +66,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 1/5] sched/core: allow the remote scheduler tick to be started on CPU0
-Date:   Thu, 11 Apr 2019 13:34:44 +1000
-Message-Id: <20190411033448.20842-2-npiggin@gmail.com>
+Subject: [PATCH v2 2/5] PM / suspend: add function to disable secondaries for suspend
+Date:   Thu, 11 Apr 2019 13:34:45 +1000
+Message-Id: <20190411033448.20842-3-npiggin@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190411033448.20842-1-npiggin@gmail.com>
 References: <20190411033448.20842-1-npiggin@gmail.com>
@@ -78,27 +79,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This has no effect yet because CPU0 will always be a housekeeping CPU
-until a later change.
+This adds a function to disable secondary CPUs for suspend that are
+not necessarily non-zero / non-boot CPUs. Platforms will be able to
+use this to suspend using non-zero CPUs.
 
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/cpu.h      | 10 ++++++++++
+ kernel/kexec_core.c      |  4 ++--
+ kernel/power/hibernate.c | 12 ++++++------
+ kernel/power/suspend.c   |  4 ++--
+ 4 files changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 4778c48a7fda..10e05ec049b6 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5918,7 +5918,7 @@ void __init sched_init_smp(void)
- 
- static int __init migration_init(void)
- {
--	sched_rq_cpu_starting(smp_processor_id());
-+	sched_cpu_starting(smp_processor_id());
- 	return 0;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 5041357d0297..563e697e7779 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -137,6 +137,16 @@ static inline int disable_nonboot_cpus(void)
+ 	return freeze_secondary_cpus(0);
  }
- early_initcall(migration_init);
+ extern void enable_nonboot_cpus(void);
++
++static inline int suspend_disable_secondary_cpus(void)
++{
++	return freeze_secondary_cpus(0);
++}
++static inline void suspend_enable_secondary_cpus(void)
++{
++	return enable_nonboot_cpus();
++}
++
+ #else /* !CONFIG_PM_SLEEP_SMP */
+ static inline int disable_nonboot_cpus(void) { return 0; }
+ static inline void enable_nonboot_cpus(void) {}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d7140447be75..fd5c95ff9251 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1150,7 +1150,7 @@ int kernel_kexec(void)
+ 		error = dpm_suspend_end(PMSG_FREEZE);
+ 		if (error)
+ 			goto Resume_devices;
+-		error = disable_nonboot_cpus();
++		error = suspend_disable_secondary_cpus();
+ 		if (error)
+ 			goto Enable_cpus;
+ 		local_irq_disable();
+@@ -1183,7 +1183,7 @@ int kernel_kexec(void)
+  Enable_irqs:
+ 		local_irq_enable();
+  Enable_cpus:
+-		enable_nonboot_cpus();
++		suspend_enable_secondary_cpus();
+ 		dpm_resume_start(PMSG_RESTORE);
+  Resume_devices:
+ 		dpm_resume_end(PMSG_RESTORE);
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index abef759de7c8..cfc7a57049e4 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -281,7 +281,7 @@ static int create_image(int platform_mode)
+ 	if (error || hibernation_test(TEST_PLATFORM))
+ 		goto Platform_finish;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error || hibernation_test(TEST_CPUS))
+ 		goto Enable_cpus;
+ 
+@@ -323,7 +323,7 @@ static int create_image(int platform_mode)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_finish:
+ 	platform_finish(platform_mode);
+@@ -417,7 +417,7 @@ int hibernation_snapshot(int platform_mode)
+ 
+ int __weak hibernate_resume_nonboot_cpu_disable(void)
+ {
+-	return disable_nonboot_cpus();
++	return suspend_disable_secondary_cpus();
+ }
+ 
+ /**
+@@ -486,7 +486,7 @@ static int resume_target_kernel(bool platform_mode)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Cleanup:
+ 	platform_restore_cleanup(platform_mode);
+@@ -564,7 +564,7 @@ int hibernation_platform_enter(void)
+ 	if (error)
+ 		goto Platform_finish;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error)
+ 		goto Enable_cpus;
+ 
+@@ -586,7 +586,7 @@ int hibernation_platform_enter(void)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_finish:
+ 	hibernation_ops->finish();
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 0bd595a0b610..59b6def23046 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -428,7 +428,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	if (suspend_test(TEST_PLATFORM))
+ 		goto Platform_wake;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error || suspend_test(TEST_CPUS))
+ 		goto Enable_cpus;
+ 
+@@ -458,7 +458,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	BUG_ON(irqs_disabled());
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_wake:
+ 	platform_resume_noirq(state);
 -- 
 2.20.1
 
