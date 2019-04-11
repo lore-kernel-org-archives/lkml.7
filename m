@@ -2,431 +2,97 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B79DC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F269C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530B42075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D97D2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="naQoW4S2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfDKVRf (ORCPT
+        id S1726814AbfDKVUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:17:35 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58057 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfDKVRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:17:34 -0400
-X-Originating-IP: 90.66.53.80
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 59A0E40002;
-        Thu, 11 Apr 2019 21:17:28 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 23:17:27 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] MIPS: SGI-IP27: fix readb/writeb addressing
-Message-ID: <20190411211727.GN3578@piout.net>
-References: <20190409154610.6735-1-tbogendoerfer@suse.de>
- <20190409154610.6735-4-tbogendoerfer@suse.de>
+        Thu, 11 Apr 2019 17:20:54 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59947 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726577AbfDKVUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 17:20:53 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gDTb3s6Nz9s47;
+        Fri, 12 Apr 2019 07:20:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555017651;
+        bh=be9AsbfawJj2H/6pXLvHMoriL7mP9/AFeO9OlWPym2M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=naQoW4S2h8JntHhb1I49uOteqYxvuXHyG+ENYaL3qX4RbbZnfFCpgjfuqj48/wdAN
+         b5X7LnALYzO0iY2Mhco+mHOfqbhTrrBJ4hHZnFYL+XXJqXQDrodVtTA7P+Jt6jVBE0
+         O8Qm4s4wiBmwTO1W2c2d5CPchMl5KPtukAItwP9Zxw9tya1Ske2cY9Y/chGBYy/NFO
+         GxeaIRoE2BITfN+3xuEew3r0vSm97f3qpohPK2dYxi10fNwuRSfpC9LLTCXSVQBK5l
+         eSy9SzAzjgx8aH5T0qOz7xsUMZsA2aowQ2AvJaE/3/itq4+3yuRACi9eFlDxAIrWU0
+         KP9rItkGVob+w==
+Date:   Fri, 12 Apr 2019 07:20:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Faiz Abbas <faiz_abbas@ti.com>
+Subject: linux-next: Fixes tag needs some work in the mmc-fixes tree
+Message-ID: <20190412072049.08b5eeb6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409154610.6735-4-tbogendoerfer@suse.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/rkIH=yXnYYacT/rKsFybRYs"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 17:46:07+0200, Thomas Bogendoerfer wrote:
-> Our chosen byte swapping, which is what firmware already uses, is to
-> do readl/writel by normal lw/sw intructions (data invariance). This
-> also means we need to mangle addresses for u8 and u16 accesses. The
-> mangling for 16bit has been done aready, but 8bit one was missing.
-> Correcting this causes different addresses for accesses to the
-> SuperIO and local bus of the IOC3 chip. This is fixed by changing
-> byte order in ioc3 and m48rtc_rtc structs.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+--Sig_/rkIH=yXnYYacT/rKsFybRYs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Considering this is probably the only platform to have that RTC and that
-is probably not worth having a better fix for a platform this old:
+Hi all,
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+In commit
 
-> ---
->  arch/mips/include/asm/mach-ip27/mangle-port.h |   2 +-
->  arch/mips/include/asm/sn/ioc3.h               | 198 +++++++++++++-------------
->  arch/mips/sgi-ip27/ip27-console.c             |   5 +-
->  drivers/rtc/rtc-m48t35.c                      |  11 ++
->  drivers/tty/serial/8250/8250_ioc3.c           |   4 +-
->  5 files changed, 114 insertions(+), 106 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/mach-ip27/mangle-port.h b/arch/mips/include/asm/mach-ip27/mangle-port.h
-> index f6e4912ea062..7771ae0f3971 100644
-> --- a/arch/mips/include/asm/mach-ip27/mangle-port.h
-> +++ b/arch/mips/include/asm/mach-ip27/mangle-port.h
-> @@ -8,7 +8,7 @@
->  #ifndef __ASM_MACH_IP27_MANGLE_PORT_H
->  #define __ASM_MACH_IP27_MANGLE_PORT_H
->  
-> -#define __swizzle_addr_b(port)	(port)
-> +#define __swizzle_addr_b(port)	((port) ^ 3)
->  #define __swizzle_addr_w(port)	((port) ^ 2)
->  #define __swizzle_addr_l(port)	(port)
->  #define __swizzle_addr_q(port)	(port)
-> diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
-> index 69069f420930..059885d736de 100644
-> --- a/arch/mips/include/asm/sn/ioc3.h
-> +++ b/arch/mips/include/asm/sn/ioc3.h
-> @@ -10,35 +10,35 @@
->  
->  /* serial port register map */
->  struct ioc3_serialregs {
-> -	uint32_t	sscr;
-> -	uint32_t	stpir;
-> -	uint32_t	stcir;
-> -	uint32_t	srpir;
-> -	uint32_t	srcir;
-> -	uint32_t	srtr;
-> -	uint32_t	shadow;
-> +	u32	sscr;
-> +	u32	stpir;
-> +	u32	stcir;
-> +	u32	srpir;
-> +	u32	srcir;
-> +	u32	srtr;
-> +	u32	shadow;
->  };
->  
->  /* SUPERIO uart register map */
->  struct ioc3_uartregs {
-> +	u8	iu_lcr;
->  	union {
-> -		char	rbr;	/* read only, DLAB == 0 */
-> -		char	thr;	/* write only, DLAB == 0 */
-> -		char	dll;	/* DLAB == 1 */
-> -	} u1;
-> +		u8	iir;	/* read only */
-> +		u8	fcr;	/* write only */
-> +	};
->  	union {
-> -		char	ier;	/* DLAB == 0 */
-> -		char	dlm;	/* DLAB == 1 */
-> -	} u2;
-> +		u8	ier;	/* DLAB == 0 */
-> +		u8	dlm;	/* DLAB == 1 */
-> +	};
->  	union {
-> -		char	iir;	/* read only */
-> -		char	fcr;	/* write only */
-> -	} u3;
-> -	char	iu_lcr;
-> -	char	iu_mcr;
-> -	char	iu_lsr;
-> -	char	iu_msr;
-> -	char	iu_scr;
-> +		u8	rbr;	/* read only, DLAB == 0 */
-> +		u8	thr;	/* write only, DLAB == 0 */
-> +		u8	dll;	/* DLAB == 1 */
-> +	} u1;
-> +	u8	iu_scr;
-> +	u8	iu_msr;
-> +	u8	iu_lsr;
-> +	u8	iu_mcr;
->  };
->  
->  #define iu_rbr u1.rbr
-> @@ -50,122 +50,122 @@ struct ioc3_uartregs {
->  #define iu_fcr u3.fcr
->  
->  struct ioc3_sioregs {
-> -	char	fill[0x141];	/* starts at 0x141 */
-> +	u8	fill[0x141];	/* starts at 0x141 */
->  
-> -	char	uartc;
-> -	char	kbdcg;
-> +	u8	kbdcg;
-> +	u8	uartc;
->  
-> -	char	fill0[0x150 - 0x142 - 1];
-> +	u8	fill0[0x151 - 0x142 - 1];
->  
-> -	char	pp_data;
-> -	char	pp_dsr;
-> -	char	pp_dcr;
-> +	u8	pp_dcr;
-> +	u8	pp_dsr;
-> +	u8	pp_data;
->  
-> -	char	fill1[0x158 - 0x152 - 1];
-> +	u8	fill1[0x159 - 0x153 - 1];
->  
-> -	char	pp_fifa;
-> -	char	pp_cfgb;
-> -	char	pp_ecr;
-> +	u8	pp_ecr;
-> +	u8	pp_cfgb;
-> +	u8	pp_fifa;
->  
-> -	char	fill2[0x168 - 0x15a - 1];
-> +	u8	fill2[0x16a - 0x15b - 1];
->  
-> -	char	rtcad;
-> -	char	rtcdat;
-> +	u8	rtcdat;
-> +	u8	rtcad;
->  
-> -	char	fill3[0x170 - 0x169 - 1];
-> +	u8	fill3[0x170 - 0x16b - 1];
->  
->  	struct ioc3_uartregs	uartb;	/* 0x20170  */
->  	struct ioc3_uartregs	uarta;	/* 0x20178  */
->  };
->  
->  struct ioc3_ethregs {
-> -	uint32_t	emcr;		/* 0x000f0  */
-> -	uint32_t	eisr;		/* 0x000f4  */
-> -	uint32_t	eier;		/* 0x000f8  */
-> -	uint32_t	ercsr;		/* 0x000fc  */
-> -	uint32_t	erbr_h;		/* 0x00100  */
-> -	uint32_t	erbr_l;		/* 0x00104  */
-> -	uint32_t	erbar;		/* 0x00108  */
-> -	uint32_t	ercir;		/* 0x0010c  */
-> -	uint32_t	erpir;		/* 0x00110  */
-> -	uint32_t	ertr;		/* 0x00114  */
-> -	uint32_t	etcsr;		/* 0x00118  */
-> -	uint32_t	ersr;		/* 0x0011c  */
-> -	uint32_t	etcdc;		/* 0x00120  */
-> -	uint32_t	ebir;		/* 0x00124  */
-> -	uint32_t	etbr_h;		/* 0x00128  */
-> -	uint32_t	etbr_l;		/* 0x0012c  */
-> -	uint32_t	etcir;		/* 0x00130  */
-> -	uint32_t	etpir;		/* 0x00134  */
-> -	uint32_t	emar_h;		/* 0x00138  */
-> -	uint32_t	emar_l;		/* 0x0013c  */
-> -	uint32_t	ehar_h;		/* 0x00140  */
-> -	uint32_t	ehar_l;		/* 0x00144  */
-> -	uint32_t	micr;		/* 0x00148  */
-> -	uint32_t	midr_r;		/* 0x0014c  */
-> -	uint32_t	midr_w;		/* 0x00150  */
-> +	u32	emcr;		/* 0x000f0  */
-> +	u32	eisr;		/* 0x000f4  */
-> +	u32	eier;		/* 0x000f8  */
-> +	u32	ercsr;		/* 0x000fc  */
-> +	u32	erbr_h;		/* 0x00100  */
-> +	u32	erbr_l;		/* 0x00104  */
-> +	u32	erbar;		/* 0x00108  */
-> +	u32	ercir;		/* 0x0010c  */
-> +	u32	erpir;		/* 0x00110  */
-> +	u32	ertr;		/* 0x00114  */
-> +	u32	etcsr;		/* 0x00118  */
-> +	u32	ersr;		/* 0x0011c  */
-> +	u32	etcdc;		/* 0x00120  */
-> +	u32	ebir;		/* 0x00124  */
-> +	u32	etbr_h;		/* 0x00128  */
-> +	u32	etbr_l;		/* 0x0012c  */
-> +	u32	etcir;		/* 0x00130  */
-> +	u32	etpir;		/* 0x00134  */
-> +	u32	emar_h;		/* 0x00138  */
-> +	u32	emar_l;		/* 0x0013c  */
-> +	u32	ehar_h;		/* 0x00140  */
-> +	u32	ehar_l;		/* 0x00144  */
-> +	u32	micr;		/* 0x00148  */
-> +	u32	midr_r;		/* 0x0014c  */
-> +	u32	midr_w;		/* 0x00150  */
->  };
->  
->  struct ioc3_serioregs {
-> -	uint32_t	km_csr;		/* 0x0009c  */
-> -	uint32_t	k_rd;		/* 0x000a0  */
-> -	uint32_t	m_rd;		/* 0x000a4  */
-> -	uint32_t	k_wd;		/* 0x000a8  */
-> -	uint32_t	m_wd;		/* 0x000ac  */
-> +	u32	km_csr;		/* 0x0009c  */
-> +	u32	k_rd;		/* 0x000a0  */
-> +	u32	m_rd;		/* 0x000a4  */
-> +	u32	k_wd;		/* 0x000a8  */
-> +	u32	m_wd;		/* 0x000ac  */
->  };
->  
->  /* Register layout of IOC3 in configuration space.  */
->  struct ioc3 {
->  	/* PCI Config Space registers  */
-> -	uint32_t	pci_id;		/* 0x00000  */
-> -	uint32_t	pci_scr;	/* 0x00004  */
-> -	uint32_t	pci_rev;	/* 0x00008  */
-> -	uint32_t	pci_lat;	/* 0x0000c  */
-> -	uint32_t	pci_addr;	/* 0x00010  */
-> -	uint32_t	pci_err_addr_l;	/* 0x00014  */
-> -	uint32_t	pci_err_addr_h;	/* 0x00018  */
-> -
-> -	uint32_t	sio_ir;		/* 0x0001c  */
-> -	uint32_t	sio_ies;	/* 0x00020  */
-> -	uint32_t	sio_iec;	/* 0x00024  */
-> -	uint32_t	sio_cr;		/* 0x00028  */
-> -	uint32_t	int_out;	/* 0x0002c  */
-> -	uint32_t	mcr;		/* 0x00030  */
-> +	u32	pci_id;		/* 0x00000  */
-> +	u32	pci_scr;	/* 0x00004  */
-> +	u32	pci_rev;	/* 0x00008  */
-> +	u32	pci_lat;	/* 0x0000c  */
-> +	u32	pci_addr;	/* 0x00010  */
-> +	u32	pci_err_addr_l;	/* 0x00014  */
-> +	u32	pci_err_addr_h;	/* 0x00018  */
-> +
-> +	u32	sio_ir;		/* 0x0001c  */
-> +	u32	sio_ies;	/* 0x00020  */
-> +	u32	sio_iec;	/* 0x00024  */
-> +	u32	sio_cr;		/* 0x00028  */
-> +	u32	int_out;	/* 0x0002c  */
-> +	u32	mcr;		/* 0x00030  */
->  
->  	/* General Purpose I/O registers  */
-> -	uint32_t	gpcr_s;		/* 0x00034  */
-> -	uint32_t	gpcr_c;		/* 0x00038  */
-> -	uint32_t	gpdr;		/* 0x0003c  */
-> -	uint32_t	gppr[16];	/* 0x00040  */
-> +	u32	gpcr_s;		/* 0x00034  */
-> +	u32	gpcr_c;		/* 0x00038  */
-> +	u32	gpdr;		/* 0x0003c  */
-> +	u32	gppr[16];	/* 0x00040  */
->  
->  	/* Parallel Port Registers  */
-> -	uint32_t	ppbr_h_a;	/* 0x00080  */
-> -	uint32_t	ppbr_l_a;	/* 0x00084  */
-> -	uint32_t	ppcr_a;		/* 0x00088  */
-> -	uint32_t	ppcr;		/* 0x0008c  */
-> -	uint32_t	ppbr_h_b;	/* 0x00090  */
-> -	uint32_t	ppbr_l_b;	/* 0x00094  */
-> -	uint32_t	ppcr_b;		/* 0x00098  */
-> +	u32	ppbr_h_a;	/* 0x00080  */
-> +	u32	ppbr_l_a;	/* 0x00084  */
-> +	u32	ppcr_a;		/* 0x00088  */
-> +	u32	ppcr;		/* 0x0008c  */
-> +	u32	ppbr_h_b;	/* 0x00090  */
-> +	u32	ppbr_l_b;	/* 0x00094  */
-> +	u32	ppcr_b;		/* 0x00098  */
->  
->  	/* Keyboard and Mouse Registers	 */
->  	struct ioc3_serioregs	serio;
->  
->  	/* Serial Port Registers  */
-> -	uint32_t	sbbr_h;		/* 0x000b0  */
-> -	uint32_t	sbbr_l;		/* 0x000b4  */
-> +	u32	sbbr_h;		/* 0x000b0  */
-> +	u32	sbbr_l;		/* 0x000b4  */
->  	struct ioc3_serialregs	port_a;
->  	struct ioc3_serialregs	port_b;
->  
->  	/* Ethernet Registers */
->  	struct ioc3_ethregs	eth;
-> -	uint32_t	pad1[(0x20000 - 0x00154) / 4];
-> +	u32	pad1[(0x20000 - 0x00154) / 4];
->  
->  	/* SuperIO Registers  XXX */
->  	struct ioc3_sioregs	sregs;	/* 0x20000 */
-> -	uint32_t	pad2[(0x40000 - 0x20180) / 4];
-> +	u32	pad2[(0x40000 - 0x20180) / 4];
->  
->  	/* SSRAM Diagnostic Access */
-> -	uint32_t	ssram[(0x80000 - 0x40000) / 4];
-> +	u32	ssram[(0x80000 - 0x40000) / 4];
->  
->  	/* Bytebus device offsets
->  	   0x80000 -   Access to the generic devices selected with   DEV0
-> @@ -598,8 +598,4 @@ struct ioc3_etxd {
->  
->  #define MIDR_DATA_MASK		0x0000ffff
->  
-> -#if defined(CONFIG_SGI_IP27) || defined(CONFIG_SGI_IP30)
-> -extern int bridge_alloc_irq(struct pci_dev *dev);
-> -#endif
-> -
->  #endif /* MIPS_SN_IOC3_H */
-> diff --git a/arch/mips/sgi-ip27/ip27-console.c b/arch/mips/sgi-ip27/ip27-console.c
-> index 6bdb48d41276..5886bee89d06 100644
-> --- a/arch/mips/sgi-ip27/ip27-console.c
-> +++ b/arch/mips/sgi-ip27/ip27-console.c
-> @@ -35,6 +35,7 @@ void prom_putchar(char c)
->  {
->  	struct ioc3_uartregs *uart = console_uart();
->  
-> -	while ((uart->iu_lsr & 0x20) == 0);
-> -	uart->iu_thr = c;
-> +	while ((readb(&uart->iu_lsr) & 0x20) == 0)
-> +		;
-> +	writeb(c, &uart->iu_thr);
->  }
-> diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
-> index 0cf6507de3c7..05f0d91366af 100644
-> --- a/drivers/rtc/rtc-m48t35.c
-> +++ b/drivers/rtc/rtc-m48t35.c
-> @@ -24,6 +24,16 @@
->  
->  struct m48t35_rtc {
->  	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
-> +#ifdef CONFIG_SGI_IP27
-> +	u8	hour;
-> +	u8	min;
-> +	u8	sec;
-> +	u8	control;
-> +	u8	year;
-> +	u8	month;
-> +	u8	date;
-> +	u8	day;
-> +#else
->  	u8	control;
->  	u8	sec;
->  	u8	min;
-> @@ -32,6 +42,7 @@ struct m48t35_rtc {
->  	u8	date;
->  	u8	month;
->  	u8	year;
-> +#endif
->  };
->  
->  #define M48T35_RTC_SET		0x80
-> diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
-> index 2be6ed2967e0..4c405f1b9c67 100644
-> --- a/drivers/tty/serial/8250/8250_ioc3.c
-> +++ b/drivers/tty/serial/8250/8250_ioc3.c
-> @@ -23,12 +23,12 @@ struct ioc3_8250_data {
->  
->  static unsigned int ioc3_serial_in(struct uart_port *p, int offset)
->  {
-> -	return readb(p->membase + offset);
-> +	return readb(p->membase + (offset ^ 3));
->  }
->  
->  static void ioc3_serial_out(struct uart_port *p, int offset, int value)
->  {
-> -	writeb(value, p->membase + offset);
-> +	writeb(value, p->membase + (offset ^ 3));
->  }
->  
->  static int serial8250_ioc3_probe(struct platform_device *pdev)
-> -- 
-> 2.13.7
-> 
+  5c41ea6d5200 ("mmc: sdhci-omap: Don't finish_mrq() on a command error dur=
+ing tuning")
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Fixes tag
+
+  Fixes: 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rkIH=yXnYYacT/rKsFybRYs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyvr7EACgkQAVBC80lX
+0GyELgf/UHblpwwqE1ZuCeiPBFhG8c1q868YBFpJzBv766hUCaa97L5mWu0Jc/7q
+Gv19k8lNyNEBGNC+C9YyjyapARB9MuMGVHq3/FHUsLqa0gJ+7NR7tGo+SgDB97sO
+z+b90XAukclD8q+AQlIEuVQ3F5a9M4sUq2yC8NNlCyoyt1AWEl/IIV+J80yA2+zu
+wogKm2ur6xI/T1iUBgEDwzaZCEgWwh3dXsChZGE2X8XIUTqSD6hRjXcJF+jMqypl
+9TbWJ97t9r7s40WpqvtKZGBVPnXfmhVxDvUBPKYd7J9tvQ5lxGJUFQaWUI1sPpR2
+2RCI5Xm3QPXk+wi6dLWBCVUcozRGRQ==
+=71oc
+-----END PGP SIGNATURE-----
+
+--Sig_/rkIH=yXnYYacT/rKsFybRYs--
