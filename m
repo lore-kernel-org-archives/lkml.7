@@ -2,89 +2,112 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1190AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90061C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60BA2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="J8qMadnT"
+	by mail.kernel.org (Postfix) with ESMTP id 6382A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfDKQZc (ORCPT
+        id S1726921AbfDKQZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:25:32 -0400
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com ([98.137.64.148]:33592
-        "EHLO sonic301-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726264AbfDKQZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:25:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1554999931; bh=I9/9b8JzNUiEkC+ANGk8ni2bQCTQ2fH3InVBXrkHSjk=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=J8qMadnTT6/WX10x774CADuqbZiUgg6SrHB+BTxEzi7/uZsXTI0mkRHfLbvMjQNOlLWR0tet/Y7tEqRZ6Q9a5bBcjHwyrEdkPCMDeKPf6TltTccR+lFuYdl0dLdQrnlV8Vg7skxVj0jMlf9OTpt39FNtVQnUJt7hhxR4xAnO3GaDkwbmXBpFFD/bsfJrvU/nZWrAmdyR95coxH/aJXGSS1+YeZTDLYKKx5u4Np+LVSLbaT+kHdh4wvTmSJ+CQD048Yp4uwUQBpbYypus/t7QDZ1uwwy+PT86t+XNOV5+bByhiMS7e2Io+vZrCZBNvY5NBZYPL6MBu1Jg3bI+3D9S3g==
-X-YMail-OSG: KpcX.CwVM1n_5Zl1Q_TBEyil7KB_aXoJzta5M_NbNyGD8Rga7WlWL3LV_VI1ZPb
- c5a5ug2adA6d1YnXdasO_O8H.LZCp2P7WBTYLFE3QyIhr6l8Pe.cLnl1eTYYgXY6z9wNy75IIpMx
- Ryc5bK5hgVTnq4kNLIGh0ELfWW5rGP22zk9GRiA1CNrZHLk61k1qpkofeaMLaxMRUV1wO_Hw.hUa
- GLkUp83m4GWfQlRiGQ1_JTErmVDK6zr0A7D2oImiCsvkdJG5qsfL2k.XAd2apmVcn0bZvJ6Dq782
- qh00eEEu1mniHypnOQpgbiX6pnl9EfjsFGRNhbGjAYIHWixy3SbsOCsKHoQ38SXLrXlCc7TsnINM
- rS5iVF8U_fxIL5VWfVz2ZZRURhW2JqRbkIORS9xA6BQ5lcqaU0iUTm5NM5nBhfYsEMo5Sl7GTElL
- 7BLkmIC7CEHf41GV0_ODRL0p7DM6wBhhLVpuHAYaMQ4zb1qR469Z3FVH5xTgpkYXXurmeL6xMWv_
- vFt8RRwnFkBB5rUZJ4RnufCLDO6oBLj0v.T6V9WtfpfxVv_vYTvXgn32RNfIo7ZD46NrgPoocDw3
- HYBOw4RERMxTzZzg2pLlMcWy4S01pXqWxAawyCBerkYBPx7IQ3NFKuU3Xoh5_qfVrBqIPVL.yOWp
- Vq0zjSBe8pM89R0KYRnddkrx7gnaeQrtP0cRwLVdDOCdxr7maKIS.lzMMsVQsFSAIjswsVOZsgt9
- YntLjYimLK3jyZyh0CZFJEfrDI.EILoC_EueHPP2arIdUqyqkOAajxomF_Z.3UdeVi6vO1FKDvbS
- gL43xJnJXQBvbvRVvsgRek8B3EcyKMfBWoX8cBIxQWWIfYw84MdUyGUM556oLAa7HXdNpLSo5m.x
- 5Q5dI2IEn5Ps14vuD15G5o3y74rB9muQlsYIzNQxxQCUK5okAPtWOkNOM4byLnC7sErsexnfdCPl
- QnpjYYe3DEoMGqePOltxaVa4PYfBFk7sQMVXNtai8S8pKC15sUg4DLUNxHE0FOQ172dpuco9w7Le
- BHX_0s4GvqO9V9lZyQDlh9XPai4yFLDdyGhAHfcOP7oSet_leUjzBKmuHYbAu95wb6Y8-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Thu, 11 Apr 2019 16:25:31 +0000
-Received: from 183.134.187.219 (EHLO [10.1.1.220]) ([183.134.187.219])
-          by smtp417.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID f05c167cc9395c75445739520518f23b;
-          Thu, 11 Apr 2019 16:25:27 +0000 (UTC)
-Subject: Re: Some new bio merging behaviors in __bio_try_merge_page
-To:     Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
-References: <85c5fa1a-a506-e26f-c354-1554d47d8b2b@huawei.com>
- <20190411070807.GA421@ming.t460p>
- <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
- <20190411080953.GE421@ming.t460p> <20190411153411.GA16987@infradead.org>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <9aa607da-6ccb-8166-22df-735a3b127f2e@aol.com>
-Date:   Fri, 12 Apr 2019 00:25:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 12:25:55 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45860 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726798AbfDKQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:25:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95B0280D;
+        Thu, 11 Apr 2019 09:25:54 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18FA33F59C;
+        Thu, 11 Apr 2019 09:25:52 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 17:25:45 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RESEND][PATCH v2] firmware/psci: add support for SYSTEM_RESET2
+Message-ID: <20190411162545.GA5327@e107155-lin>
+References: <20190411103346.22462-1-sudeep.holla@arm.com>
+ <20190411110302.GA55959@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190411153411.GA16987@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411110302.GA55959@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/4/11 23:34, Christoph Hellwig wrote:
-> On Thu, Apr 11, 2019 at 04:09:54PM +0800, Ming Lei wrote:
->> I don't think it is a good behaviour to use bio->bi_max_vecs to limit
->> max allowed page, you may see the idea from the naming simply...
->>
->> If there were other such drivers, we may fix it easily, and the following
->> patch should fix your issue:
+On Thu, Apr 11, 2019 at 12:03:04PM +0100, Mark Rutland wrote:
+> On Thu, Apr 11, 2019 at 11:33:46AM +0100, Sudeep Holla wrote:
+> > PSCI v1.1 introduced SYSTEM_RESET2 to allow both architectural resets
+> > where the semantics are described by the PSCI specification itself as
+> > well as vendor-specific resets. Currently only system warm reset
+> > semantics is defined as part of architectural resets by the specification.
+> > 
+> > This patch implements support for SYSTEM_RESET2 by making using of
+> > reboot_mode passed by the reboot infrastructure in the kernel.
+> > 
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/psci.c   | 21 +++++++++++++++++++++
+> >  include/uapi/linux/psci.h |  2 ++
+> >  2 files changed, 23 insertions(+)
+> > 
+> > Resending [1] based on the request. I hope to get some testing this time.
+> > Last time Xilinx asked multiple times but never got any review or testing
+> > https://lore.kernel.org/lkml/1525257003-8608-1-git-send-email-sudeep.holla@arm.com/
+> > 
+> > diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> > index c80ec1d03274..91748725534e 100644
+> > --- a/drivers/firmware/psci.c
+> > +++ b/drivers/firmware/psci.c
+> > @@ -88,6 +88,7 @@ static u32 psci_function_id[PSCI_FN_MAX];
+> >  				PSCI_1_0_EXT_POWER_STATE_TYPE_MASK)
+> > 
+> >  static u32 psci_cpu_suspend_feature;
+> > +static bool psci_system_reset2_supported;
+> > 
+> >  static inline bool psci_has_ext_power_state(void)
+> >  {
+> > @@ -253,6 +254,15 @@ static int get_set_conduit_method(struct device_node *np)
+> > 
+> >  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+> >  {
+> > +	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> > +	    psci_system_reset2_supported)
+> > +		/*
+> > +		 * reset_type[31] = 0 (architectural)
+> > +		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+> > +		 * cookie = 0 (ignored by the implementation)
+> > +		 */
+> > +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
 > 
-> Yep.  Consumers of the block layer really have no business at all
-> looking at bi_vcnt.
+> Since the comment and invocation span multiple lines, could we please
+> wrap them in braces?
+>
 
-Thanks for pointing out, Ming's solution is enough to solve erofs issue.
+Yes, that would be better, will update it.
 
-Thanks,
-Gao XIang
-
+> Other than that, this looks good to me, so:
 > 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+
+Thanks.
+
+--
+Regards,
+Sudeep
