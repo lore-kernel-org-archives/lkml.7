@@ -2,78 +2,99 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A964C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214AAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659C52084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="S+q4HEJd"
+	by mail.kernel.org (Postfix) with ESMTP id DED7E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555006541;
+	bh=CYpuz4kSFGt3ReVvAdShqeumca74RVzqor2qC337P/w=;
+	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
+	b=Z8imuSKOImKHWU65tSfWX74kBI5oyZlSz6A/0qDPgUlInERhFUAU64X2FCkNJ/PCH
+	 zwk4VnAM77My6k0siFYCyavkCLILTTaCsKebKqJbYx5o9ULOQaeIsIYPp4RezQzss+
+	 vDd8B3Nn0ZYWAfuhQlgT2y1upmNJ3XPPkZyjl7KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDKSOR (ORCPT
+        id S1726705AbfDKSPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:14:17 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:52670 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKSOQ (ORCPT
+        Thu, 11 Apr 2019 14:15:39 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33414 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfDKSPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555006457; x=1586542457;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=TA1nweJzazRcI8nGG0xaae8sgqSHrilFQeoJtWiH2Y8=;
-  b=S+q4HEJdLGDC+LGyh+J/4YLaNRr7n+F9Q8/cSFBCrFaCMyUwCPQIjjEX
-   Txqr9v8yKgMzkPwuKSXdmvVu/0DdoyvNrC5dSDPGmIOspYlPVDIplujSC
-   GrqbCD6DUhq+4oVz0PHKbCwSuBgHHtFlhceWK4XBnrg2L+WfmPdE/s4Kh
-   QCinwoHgFSi7SSdSVg793g+p3GzcNkUf6kqEDOEcCBu6zIQ4EB8gZjKFF
-   GQw7urfGv4LWPPP6IUsVabM5Xhjpgv6OzXP54IipmkuS8+dDnFmsRDl6A
-   u6kjKR11kzSigPFaIcfbNv3vNc2Z/2QpGiZWSdbNH3iJoL9bUqX1SSJnM
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,338,1549900800"; 
-   d="scan'208";a="204574358"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Apr 2019 02:14:10 +0800
-IronPort-SDR: ijQhTNZjDFqgqAnS3VY2Nem3JvEDlFzV+iul+1w4tHde89Lh14kUYMFWj5Cwt8hvsBFUN/p/xQ
- 7lUr/HccH8hV20lmFg+9DdT+ilIFgyPKgka+HID8LmhgTmHs52IPDwj0ZfCSyTk5Jj+pW3LmDU
- KK22LTMwyNgdDcyV/3LDhmj4JdmE4mST7nQ69vRGKNjIqVdpmKnLJAb+PMUtXaKxKHhbglgavO
- 94bzrxTkGVUm0Iz8X1Zp5bPzV3cs5iLpOICnvr3i6mSzRdUEPB/930PAMqGt4yRZ2pyMbx8sX8
- ildTM8Z7VB9DN3CIaDKyvnkp
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 11 Apr 2019 10:51:02 -0700
-IronPort-SDR: ElvWdcaZMzVpcsef1OmngfWr+osjSLfdQXNLcrk/lNFkajTJlJZd9dBiZfXJkXZGHKYkAVSABB
- 3LrXyxlWwgw9YtCu7ox59/ZX0UKof7p/fxMhFG4nipAy6B9o1KZlR2FJh2+zKNJpvhpLcc6vhH
- kUZEYx5bw4p54PBMkwmLGIvLEOzQe+2BiYaOU2UaaT7Ly5hQMulH0F/FiSV5YoRAE0B977Ijse
- I1qsLZIf5xMfwldJONebJi86MKM/W2gR7Syqf6BRVVNW32yi3ybGr7f9+vS34/8RJ3rM7XRPd7
- 19Y=
-Received: from r6220.sdcorp.global.sandisk.com (HELO [192.168.1.6]) ([10.196.157.143])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Apr 2019 11:14:10 -0700
-Subject: Re: [PATCH v2 2/4] RISC-V: Fix of_get_cpu_node usage
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
-        Johan Hovold <johan@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <20190410230443.15729-1-atish.patra@wdc.com>
- <20190410230443.15729-3-atish.patra@wdc.com>
- <20190411065904.GC29422@infradead.org>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <2c078b17-625b-b3d0-7914-9cb2d05580e2@wdc.com>
-Date:   Thu, 11 Apr 2019 11:14:09 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 11 Apr 2019 14:15:39 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k14so8289841qtb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TVgurs4GiZUYMCyRAOgHBG6ClH9hAVLK6w8uzS9DNis=;
+        b=GEc2j/2xhzfpicBPi6SMEwiPnM45uwzCZqrp+AOKZ7AMieV+rFT5hinylJbaZFZOb8
+         h9rCaGy4khD2r/4TbZ3vLJya5tY+hW6mxg8dYwyG+7ZRtk3LxaSyofZkXdguuTQlD793
+         nj+yPRtAJc3RdSHLWh4i2cmw/jQHZEqHXhFEKyRZfwQ/kyAWPLkcWI4fJjIrrmOpelXF
+         Cj0Wa6LvgfBM6Yg1ccXg09utXzNrqBAVgVf1yJJC34DyCW+vSAq6qvgEas9rPqkgS5X6
+         FKVqULURWjRl8z9cnHDo9kkG+rqLPZ8zoZLLMJ/r71PawPghB/vW3QLNtcHNuij0acVb
+         sEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TVgurs4GiZUYMCyRAOgHBG6ClH9hAVLK6w8uzS9DNis=;
+        b=PL5ZK3bgx6aV01z2Cu6lbCA0erPUAT27LqGXjrm5Ct/tIEfDbGdSk6h2R97ZTB/Um/
+         g8xx6nkSohj8U/pdjjmbu6DF0ElmZ+LSuhFWvwFkHmR+ANNwuEivu+S847Y5DYBoWHmd
+         PU/NKmIoLwlUdLcDuIwoKPdiTI/vQOCYdG7GtkFo3LWy41ACUXB9KofPP0nxHKOWCvzs
+         AjhChIRX9k4bgFuuwy4TqVGnsumiUlaBf5XFjcNp+0ofR+a3D8veSs3V1+nTHM46pLtW
+         5GRm6n+gUWFhmrZ/rNnA4hmSXXASFmCL52S/l2F3LmMGaEbrTKCPX7jB3uHPMG+Xp4CR
+         /DgQ==
+X-Gm-Message-State: APjAAAWZv0pXe3ngtf3k0lTF2G7tWIIh/d2adwQevNHzQ737A1MuYL2G
+        42JQfZcGZVZBegaerPcb5NM=
+X-Google-Smtp-Source: APXvYqzv1rCPsXgrZWzmBNIPeGDVdFr+SIcu6khPUQQ/uF4OUThORkd6rdqfcP4l4a1aKNmfpWmjDQ==
+X-Received: by 2002:ac8:2246:: with SMTP id p6mr42032186qtp.225.1555006538066;
+        Thu, 11 Apr 2019 11:15:38 -0700 (PDT)
+Received: from [10.84.150.23] ([167.220.149.23])
+        by smtp.gmail.com with ESMTPSA id v58sm25999568qtv.66.2019.04.11.11.15.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 11:15:37 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v3] init: Do not select DEBUG_KERNEL by default
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Changbin Du <changbin.du@intel.com>
+References: <20190411005634.8495-1-okaya@kernel.org>
+ <CAK7LNAS=G7-nXr=pT2EYExGNkCcOcd2NH1haaBMt+JsyhX2Z8Q@mail.gmail.com>
+ <c8babeca-2d24-4265-0477-0634d87efa70@kernel.org>
+ <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
+Message-ID: <ac79dcfc-50cc-01d4-758c-8c0881ab0d2e@kernel.org>
+Date:   Thu, 11 Apr 2019 14:15:36 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190411065904.GC29422@infradead.org>
+In-Reply-To: <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,16 +103,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 11:59 PM, Christoph Hellwig wrote:
-> On Wed, Apr 10, 2019 at 04:04:41PM -0700, Atish Patra wrote:
->> of_get_cpu_node expects a logical cpu id not a hartid.
-> 
-> But only because you changed that with your patch 1, so it should
-> be folded into that.
-> 
+On 4/11/2019 1:48 AM, Masahiro Yamada wrote:
+>> I was going by what Kconfig tells me
+>>
+>> Symbol: KALLSYMS_ALL [=n]
+>>    Depends on: DEBUG_KERNEL [=n] && KALLSYMS [=y]
+> Lots of features have 'depends on DEBUG_KERNEL'.
+> What is special about KALLSYMS_ALL here?
 
-Yes. I should merge this to patch 1. Otherwise, git bisect will have 
-issues later with patch 1.
+I had to do some learning about KALLSYSM_ALL. Based on my limited
+searching, KALLSYMS_ALL allows you to locate the symbol location
+at runtime from the kernel.
 
-Regards,
-Atish
+Without KALLSYM_ALL, you can only locate the kernel code only. With
+KALLSYMS_ALL, you can locate the symbols for any data structure
+including kernel modules.
+
+I'm not a KALLSYMS person but based on my search, I'd consider
+KALLSYMS_ALL a debug feature as it is today.
+
+kernel/kallsyms.c:              else if (IS_ENABLED(CONFIG_KALLSYMS_ALL))
+kernel/livepatch/Kconfig:       depends on KALLSYMS_ALL
+kernel/module.c:#ifdef CONFIG_KALLSYMS_ALL
+kernel/module.c:#ifndef CONFIG_KALLSYMS_ALL
+
+lib/Kconfig.debug:      select KALLSYMS_ALL
+     config LOCKDEP
+             bool
+             depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
+             select KALLSYMS
+             select KALLSYMS_ALL
+
+lib/Kconfig.debug:      select KALLSYMS_ALL
+     config LATENCYTOP
+             bool "Latency measuring infrastructure"
+             select KALLSYMS
+             select KALLSYMS_ALL
+
+scripts/link-vmlinux.sh:        if [ -n "${CONFIG_KALLSYMS_ALL}" ]; then
+
