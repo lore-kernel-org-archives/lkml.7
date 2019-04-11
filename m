@@ -2,187 +2,105 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302EEC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4DDC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F242D21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A924E20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jj4C1apl"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BFe4Euni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfDKKV2 (ORCPT
+        id S1726777AbfDKKXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:21:28 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48438 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726678AbfDKKT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:19:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977995; bh=DdOJz/KUHvzyoOqY/X/p8VGDaZGkFFOEFng4t6EKayc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jj4C1aplFLTIhC+zesYBGtAgQarcYkxVN/3bdGBb6on/rJ3BytYOg8T5nHOIR2me7
-         ZxiqsSpiAQVKG1AmXYY6PB4+mjxspzXnWHLQL9icIf2jA8uDt22aUXsFxAaipBRG9i
-         8idxt9JEfJYf62x2x7cTjCFf0c3K4NJugm1yl4GQ=
-From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 03/11] pinctrl: sunxi: Prepare for alternative bias voltage setting methods
-Date:   Thu, 11 Apr 2019 12:19:43 +0200
-Message-Id: <20190411101951.30223-4-megous@megous.com>
-In-Reply-To: <20190411101951.30223-1-megous@megous.com>
-References: <20190411101951.30223-1-megous@megous.com>
+        Thu, 11 Apr 2019 06:23:11 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:32476 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfDKKXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:23:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1554978190; x=1586514190;
+  h=from:to:subject:date:message-id:mime-version;
+  bh=ZdwRQPKamKRhDq4hZZRT4OqvNsRINrDHac1Ji29q3kM=;
+  b=BFe4EunidO+S6/DoqdcbX2wQwsfhRZkBifVzTKn3AVVtGsoZoWK2nmuY
+   bJkWWgIcBhhsLYVKtjaebo4b8y6cowr7xQ8Ns+YKKwoGMlEjE/mwoVSyQ
+   ZJQbjbacotZLyIFrq/Wac91JBHbSf3SH4ouI2OtElhbRVA+jh4/pVtNo7
+   g=;
+X-IronPort-AV: E=Sophos;i="5.60,337,1549929600"; 
+   d="scan'208";a="727378066"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Apr 2019 10:23:08 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x3BAN6k2067872
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 11 Apr 2019 10:23:06 GMT
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Apr 2019 10:23:05 +0000
+Received: from udc4a3e82dbc15a031435.hfa14.amazon.com (10.43.160.69) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 11 Apr 2019 10:22:58 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <talel@amazon.com>, <robh@kernel.org>, <edubezval@gmail.com>,
+        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <rui.zhang@intel.com>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <hanochu@amazon.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH v3 0/2] Amazon's Annapurna Labs Thermal Sensor Driver
+Date:   Thu, 11 Apr 2019 13:22:46 +0300
+Message-ID: <1554978168-17369-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.69]
+X-ClientProxiedBy: EX13D15UWB001.ant.amazon.com (10.43.161.254) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+This series introduces support for Amazon's Annapurna Labs Thermal Sensor
+based on a new simple MMIO thermal driver. This driver is intended to be
+used by other devices as well, which require just a simple MMIO access to
+read temperature. 
 
-H6 has a different I/O voltage bias setting method than A80. Prepare
-existing code for using alternative bias voltage setting methods.
+Changes since v2:
+=================
+- dt-binding: changed node name from "thermal_z0" to "thermal-z0"
+- dt-binding: changed node name from thermalz0_crit to "critical"
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 47 +++++++++++++----------
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  9 ++++-
- 3 files changed, 36 insertions(+), 22 deletions(-)
+Changes since v1:
+==================
+- removed the "thermal_mmio" compatible string. With v2 version, only
+  specific hardware can bound
+- add initialization function that is mapped based on the specific binding
+  string
+- removed thermal_mmio_readl and thermal_readw, but kept mmio reads in
+  callback function. Left only thermal_mmio_reab which is used by
+  al-thermal
+- removed divider, bias, width which are not needed for al-thermal.
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-index da37d594a13d..0633a03d5e13 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
- 	.npins = ARRAY_SIZE(sun9i_a80_pins),
- 	.irq_banks = 5,
- 	.disable_strict_mode = true,
--	.has_io_bias_cfg = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_GRP_CONFIG,
- };
- 
- static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index be04223591d4..98c4de5f4019 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -617,7 +617,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	u32 val, reg;
- 	int uV;
- 
--	if (!pctl->desc->has_io_bias_cfg)
-+	if (!pctl->desc->io_bias_cfg_variant)
- 		return 0;
- 
- 	uV = regulator_get_voltage(supply);
-@@ -628,25 +628,32 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	if (uV == 0)
- 		return 0;
- 
--	/* Configured value must be equal or greater to actual voltage */
--	if (uV <= 1800000)
--		val = 0x0; /* 1.8V */
--	else if (uV <= 2500000)
--		val = 0x6; /* 2.5V */
--	else if (uV <= 2800000)
--		val = 0x9; /* 2.8V */
--	else if (uV <= 3000000)
--		val = 0xA; /* 3.0V */
--	else
--		val = 0xD; /* 3.3V */
--
--	pin -= pctl->desc->pin_base;
--
--	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
--	reg &= ~IO_BIAS_MASK;
--	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
--
--	return 0;
-+	switch (pctl->desc->io_bias_cfg_variant) {
-+	case BIAS_VOLTAGE_GRP_CONFIG:
-+		/*
-+		 * Configured value must be equal or greater to actual
-+		 * voltage.
-+		 */
-+		if (uV <= 1800000)
-+			val = 0x0; /* 1.8V */
-+		else if (uV <= 2500000)
-+			val = 0x6; /* 2.5V */
-+		else if (uV <= 2800000)
-+			val = 0x9; /* 2.8V */
-+		else if (uV <= 3000000)
-+			val = 0xA; /* 3.0V */
-+		else
-+			val = 0xD; /* 3.3V */
-+
-+		pin -= pctl->desc->pin_base;
-+
-+		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
-+		reg &= ~IO_BIAS_MASK;
-+		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- static int sunxi_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index ee15ab067b5f..4bfc8a6d9dce 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,6 +95,13 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+enum sunxi_desc_bias_voltage {
-+	BIAS_VOLTAGE_NONE,
-+	/* Bias voltage configuration is done through
-+	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
-+	BIAS_VOLTAGE_GRP_CONFIG,
-+};
-+
- struct sunxi_desc_function {
- 	unsigned long	variant;
- 	const char	*name;
-@@ -117,7 +124,7 @@ struct sunxi_pinctrl_desc {
- 	const unsigned int		*irq_bank_map;
- 	bool				irq_read_needs_mux;
- 	bool				disable_strict_mode;
--	bool				has_io_bias_cfg;
-+	int				io_bias_cfg_variant;
- };
- 
- struct sunxi_pinctrl_function {
+
+
+Talel Shenhar (2):
+  dt-bindings: thermal: al-thermal: Add binding documentation
+  thermal: Introduce Amazon's Annapurna Labs Thermal Driver
+
+ .../bindings/thermal/amazon,al-thermal.txt         |  33 ++++++
+ MAINTAINERS                                        |   6 +
+ drivers/thermal/Kconfig                            |  10 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/thermal_mmio.c                     | 129 +++++++++++++++++++++
+ 5 files changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+ create mode 100644 drivers/thermal/thermal_mmio.c
+
 -- 
-2.21.0
+2.7.4
 
