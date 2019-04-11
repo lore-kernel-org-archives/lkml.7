@@ -2,165 +2,401 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC74FC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FD6C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FEC20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE4420850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ieVgGoac"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="nzoHh2m8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfDKARU (ORCPT
+        id S1726686AbfDKAUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 20:17:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43151 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDKART (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 20:17:19 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c8so2438327pfd.10
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 17:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yrRwK9cUwCNY+yL4zo069B0QP8XQ3h1nIC4OFqrdMO0=;
-        b=ieVgGoacjlJ25s8/AyIeevAbIqcP89f6248JPH9B6LZ97k8+FOrdANGAz8HqrDkkjg
-         +tmCkujj7YAKxRdLpSLQkbV7tzdvdjePrZuMIobM9A22d+rynSTBgXGyhYeR7WdhNA6y
-         H7eETHeU9FHYOtg9/Yc/tMuiL50kRWUHCs5C8qQpDOJYL3z1C3TrxiSdz4lizMQ9jY7c
-         a+A9Wu/gKO/QZQn+BH3qiYIguGeka375PIbhIaguzBR1rSt91s1zlQi/JwTPoVtJNgYI
-         5i+0JmiizLeEd16exSKF1nMu46PxuXPt9Ay6MmmktaGQ52qSFwHcXv/nOxdQ2AJj23xp
-         JBtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=yrRwK9cUwCNY+yL4zo069B0QP8XQ3h1nIC4OFqrdMO0=;
-        b=b4YN6XxBDUZtjbubIfj6HCnz937VPKUE5DlGoUAju+Ox3ELz//3xdkTp0Exl5kGYSi
-         F+IWkLa24f3MFG8mWC9T1PmmoJdbGkI1bOgoODIh0PnuGNzxZ7Og+QxxHNcoJnY/4gec
-         CJtOu9AQBKOCz3pY2GLzxggUfi1WwNSDqaMrlFZBnGE08SRR+J/e+pMRLxbYI2MmDBb6
-         vrLSg84g5GSfNbk+aNRdj6SUMrPkNycS3ip+AEN5VOrpVruSsEqoznffXTIcxtI9NoQA
-         L3xsdnW7VuyPoDXXH/dJo5Z9fna+hLbJ44LojBdfEDo0br0cnhqRYStps/Tmf0MlFLIR
-         jiVg==
-X-Gm-Message-State: APjAAAWCsDla6JD/eu6fWtKZpHfHbWX1cSnj1+eeI+AqfaV4GGMK/2Fv
-        h6M4zimwqLXe/wNGOPtoE9wuNg==
-X-Google-Smtp-Source: APXvYqyXBrJbhcn5P5ZhZ108Qi5mgNPljdjCXbF1+9f2VyMu+f85GcVHBGeESF4/gSES3u9Ay+2RZg==
-X-Received: by 2002:a63:450f:: with SMTP id s15mr43274300pga.157.1554941838869;
-        Wed, 10 Apr 2019 17:17:18 -0700 (PDT)
-Received: from linaro.org ([121.95.100.191])
-        by smtp.googlemail.com with ESMTPSA id b16sm51013408pfo.168.2019.04.10.17.17.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 17:17:18 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 09:19:42 +0900
-From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [RFC patch 17/41] tracing: Make stack_trace_print() static and
- rename it
-Message-ID: <20190411001941.GJ2948@linaro.org>
-Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexander Potapenko <glider@google.com>
-References: <20190410102754.387743324@linutronix.de>
- <20190410103645.136887071@linutronix.de>
- <20190410084703.2b702e70@gandalf.local.home>
+        Wed, 10 Apr 2019 20:20:45 -0400
+Received: from vps.xff.cz ([195.181.215.36]:43322 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfDKAUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 20:20:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1554942042; bh=fD6bQqDjgKTw1DvWij6cFvCpOrELqpOUZDmhQ5T8Tco=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nzoHh2m8iva8LUBIEeJPgARTCkgc90GAl3vaSTKFrCu6f6gVyUaDTGcVHu+CQMT4b
+         Z7b8csBPSJfi1GTqY5KbfcxP5r3nD7QwTwk69784SNw1yRjzcPocVp63P45r5ndfdO
+         IiiJDrV+oj7Y+NhbPX4e2f6MRsw2JgS+GIq/naRw=
+Date:   Thu, 11 Apr 2019 02:20:42 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH v5 3/5] phy: allwinner: add phy driver for
+ USB3 PHY on Allwinner H6 SoC
+Message-ID: <20190411002042.mw7pozfzopj5qnxu@core.my.home>
+Mail-Followup-To: Icenowy Zheng <icenowy@aosc.io>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+References: <20190405205736.55177-1-icenowy@aosc.io>
+ <20190405205736.55177-4-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410084703.2b702e70@gandalf.local.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190405205736.55177-4-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 08:47:03AM -0400, Steven Rostedt wrote:
-> On Wed, 10 Apr 2019 12:28:11 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sat, Apr 06, 2019 at 04:57:34AM +0800, Icenowy Zheng wrote:
+> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
+> controlled).
 > 
-> > It's only used in the source file where it is defined and it's using the
-> > stack_trace_ namespace. Rename it to free it up for stack trace related
-> > functions.
-> > 
+> Add a driver for it.
 > 
-> Can you put it back to its original name "print_max_stack()" which was
-> changed by this commit:
+> The register operations in this driver is mainly extracted from the BSP
+> USB3 driver.
 > 
-> bb99d8ccec7 ("tracing: Allow arch-specific stack tracer")
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> Changes in v5:
+> - Dropped support for vbus-supply property in the device node itself and
+>   added support for vbus-supply property in the connector subnode.
 > 
-> I actually want to do a clean up and remove all "trace_" functions that
-> are not a tracepoint. It's getting confusing to see a "trace_..." and
-> search for the corresponding TRACE_EVENT() macro and not being able to
-> find it.
+> Changes in v4:
+> - Added support for vbus-supply property.
 > 
-> Hmm, I'm not sure why Akashi changed that function to be global in the
-> first place. It looks like only check_stack() needed to be changed.
+> Changes in v3:
+> - Dropped USB_SUPPORT dependency.
+> - Added Chen-Yu's Review tag.
 > 
-> Akashi?
+> No changes in v2, v1. drivers/phy/allwinner/Kconfig           |  12 ++
+>  drivers/phy/allwinner/Makefile          |   1 +
+>  drivers/phy/allwinner/phy-sun50i-usb3.c | 260 ++++++++++++++++++++++++
+>  3 files changed, 273 insertions(+)
+>  create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+> 
+> diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
+> index fb1204bcc454..2c363db177f2 100644
+> --- a/drivers/phy/allwinner/Kconfig
+> +++ b/drivers/phy/allwinner/Kconfig
+> @@ -41,3 +41,15 @@ config PHY_SUN9I_USB
+>  	  sun9i SoCs.
+>  
+>  	  This driver controls each individual USB 2 host PHY.
+> +
+> +config PHY_SUN50I_USB3
+> +	tristate "Allwinner sun50i SoC USB3 PHY driver"
+> +	depends on ARCH_SUNXI && HAS_IOMEM && OF
+> +	depends on RESET_CONTROLLER
+> +	select USB_COMMON
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the USB3.0-capable transceiver that is
+> +	  part of some Allwinner sun50i SoCs.
+> +
+> +	  This driver controls each individual USB 2+3 host PHY combo.
+> diff --git a/drivers/phy/allwinner/Makefile b/drivers/phy/allwinner/Makefile
+> index 7d0053efbfaa..59575a895779 100644
+> --- a/drivers/phy/allwinner/Makefile
+> +++ b/drivers/phy/allwinner/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
+>  obj-$(CONFIG_PHY_SUN6I_MIPI_DPHY)	+= phy-sun6i-mipi-dphy.o
+>  obj-$(CONFIG_PHY_SUN9I_USB)		+= phy-sun9i-usb.o
+> +obj-$(CONFIG_PHY_SUN50I_USB3)		+= phy-sun50i-usb3.o
+> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> new file mode 100644
+> index 000000000000..5299aef98668
+> --- /dev/null
+> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Allwinner sun50i(H6) USB 3.0 phy driver
+> + *
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * Based on phy-sun9i-usb.c, which is:
+> + *
+> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens@csie.org>
+> + *
+> + * Based on code from Allwinner BSP, which is:
+> + *
+> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/usb/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +
+> +/* Interface Status and Control Registers */
+> +#define SUNXI_ISCR			0x00
+> +#define SUNXI_PIPE_CLOCK_CONTROL	0x14
+> +#define SUNXI_PHY_TUNE_LOW		0x18
+> +#define SUNXI_PHY_TUNE_HIGH		0x1c
+> +#define SUNXI_PHY_EXTERNAL_CONTROL	0x20
+> +
+> +/* USB2.0 Interface Status and Control Register */
+> +#define SUNXI_ISCR_FORCE_VBUS		(3 << 12)
+> +
+> +/* PIPE Clock Control Register */
+> +#define SUNXI_PCC_PIPE_CLK_OPEN		(1 << 6)
+> +
+> +/* PHY External Control Register */
+> +#define SUNXI_PEC_EXTERN_VBUS		(3 << 1)
+> +#define SUNXI_PEC_SSC_EN		(1 << 24)
+> +#define SUNXI_PEC_REF_SSP_EN		(1 << 26)
+> +
+> +/* PHY Tune High Register */
+> +#define SUNXI_TX_DEEMPH_3P5DB(n)	((n) << 19)
+> +#define SUNXI_TX_DEEMPH_3P5DB_MASK	GENMASK(24, 19)
+> +#define SUNXI_TX_DEEMPH_6DB(n)		((n) << 13)
+> +#define SUNXI_TX_DEEMPH_6GB_MASK	GENMASK(18, 13)
+> +#define SUNXI_TX_SWING_FULL(n)		((n) << 6)
+> +#define SUNXI_TX_SWING_FULL_MASK	GENMASK(12, 6)
+> +#define SUNXI_LOS_BIAS(n)		((n) << 3)
+> +#define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+> +#define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
+> +
+> +struct sun50i_usb3_phy {
+> +	struct phy *phy;
+> +	void __iomem *regs;
+> +	struct reset_control *reset;
+> +	struct clk *clk;
+> +	struct platform_device *connector_dev;
+> +	struct regulator *vbus;
+> +};
+> +
+> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +	val |= SUNXI_PEC_EXTERN_VBUS;
+> +	val |= SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
+> +	writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +	val |= SUNXI_PCC_PIPE_CLK_OPEN;
+> +	writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
+> +
+> +	val = readl(phy->regs + SUNXI_ISCR);
+> +	val |= SUNXI_ISCR_FORCE_VBUS;
+> +	writel(val, phy->regs + SUNXI_ISCR);
+> +
+> +	/*
+> +	 * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
+> +	 * registers are directly taken from the BSP USB3 driver from
+> +	 * Allwiner.
+> +	 */
+> +	writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
+> +
+> +	val = readl(phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +	val &= ~(SUNXI_TXVBOOSTLVL_MASK | SUNXI_LOS_BIAS_MASK |
+> +		 SUNXI_TX_SWING_FULL_MASK | SUNXI_TX_DEEMPH_6GB_MASK |
+> +		 SUNXI_TX_DEEMPH_3P5DB_MASK);
+> +	val |= SUNXI_TXVBOOSTLVL(0x7);
+> +	val |= SUNXI_LOS_BIAS(0x7);
+> +	val |= SUNXI_TX_SWING_FULL(0x55);
+> +	val |= SUNXI_TX_DEEMPH_6DB(0x20);
+> +	val |= SUNXI_TX_DEEMPH_3P5DB(0x15);
+> +	writel(val, phy->regs + SUNXI_PHY_TUNE_HIGH);
+> +}
+> +
+> +static int sun50i_usb3_phy_init(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(phy->clk);
+> +	if (ret)
+> +		goto err_clk;
+> +
+> +	ret = reset_control_deassert(phy->reset);
+> +	if (ret)
+> +		goto err_reset;
+> +
+> +	sun50i_usb3_phy_open(phy);
+> +	return 0;
+> +
+> +err_reset:
+> +	clk_disable_unprepare(phy->clk);
+> +
+> +err_clk:
+> +	return ret;
+> +}
+> +
+> +static int sun50i_usb3_phy_exit(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	reset_control_assert(phy->reset);
+> +	clk_disable_unprepare(phy->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_on(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	if (phy->vbus)
+> +		return regulator_enable(phy->vbus);
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int sun50i_usb3_phy_power_off(struct phy *_phy)
+> +{
+> +	struct sun50i_usb3_phy *phy = phy_get_drvdata(_phy);
+> +
+> +	if (phy->vbus)
+> +		return regulator_disable(phy->vbus);
+> +	else
+> +		return 0;
+> +}
+> +
+> +static const struct phy_ops sun50i_usb3_phy_ops = {
+> +	.init		= sun50i_usb3_phy_init,
+> +	.exit		= sun50i_usb3_phy_exit,
+> +	.power_on	= sun50i_usb3_phy_power_on,
+> +	.power_off	= sun50i_usb3_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int sun50i_usb3_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct sun50i_usb3_phy *phy;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy_provider *phy_provider;
+> +	struct resource *res;
+> +	struct device_node *connector_node;
+> +	int ret;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, phy);
+> +
+> +	phy->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(phy->clk)) {
+> +		dev_err(dev, "failed to get phy clock\n");
+> +		return PTR_ERR(phy->clk);
+> +	}
+> +
+> +	phy->reset = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(phy->reset)) {
+> +		dev_err(dev, "failed to get reset control\n");
+> +		return PTR_ERR(phy->reset);
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	phy->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(phy->regs))
+> +		return PTR_ERR(phy->regs);
+> +
+> +	/* Populate the connector as platform device */
+> +	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Currently the Allwinner USB3 PHY contains only one port, so we
+> +	 * only process one connector now.
+> +	 */
+> +	connector_node = of_get_next_child(pdev->dev.of_node, NULL);
+> +
+> +	if (connector_node) {
+> +		/* Get the platform device */
+> +		phy->connector_dev = of_find_device_by_node(connector_node);
 
-Well, as indicated in the commit log, I implemented arch64-specific
-check_stack() and used stack_trace_print() in there. At the end of the day,
-however, only the first part of my patch set[1], including 'bb99d8ccec7',
-was merged. Since then the said function was never used outside of the file.
+Also of_find_device_by_node takes a reference that needs to be put back in
+sun50i_usb3_phy_remove() and error paths. So many refs to take care of,
+everywhere. Hmm. :)
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/393716.html
+I'm just noticing all this now, because I'm writing similar code for
+HDMI/connector regualtor borrowing from HDMI controller via of_graph.
 
-Thanks,
--Takahiro Akashi
+regards,
+	o.
 
-> -- Steve
+> +		if (!phy->connector_dev) {
+> +			dev_err(dev, "no device for connector\n");
+> +			return -ENODEV;
+> +		}
+> +
+> +		phy->vbus = regulator_get(&phy->connector_dev->dev, "vbus");
+> +		if (IS_ERR(phy->vbus))
+> +			return PTR_ERR(phy->vbus);
+> +	}
+> +
+> +	phy->phy = devm_phy_create(dev, NULL, &sun50i_usb3_phy_ops);
+> +	if (IS_ERR(phy->phy)) {
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(phy->phy);
+> +	}
+> +
+> +	phy_set_drvdata(phy->phy, phy);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static int sun50i_usb3_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct sun50i_usb3_phy *phy = dev_get_drvdata(dev);
+> +
+> +	if (phy->vbus)
+> +		regulator_put(phy->vbus);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sun50i_usb3_phy_of_match[] = {
+> +	{ .compatible = "allwinner,sun50i-h6-usb3-phy" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, sun50i_usb3_phy_of_match);
+> +
+> +static struct platform_driver sun50i_usb3_phy_driver = {
+> +	.probe	= sun50i_usb3_phy_probe,
+> +	.remove	= sun50i_usb3_phy_remove,
+> +	.driver = {
+> +		.of_match_table	= sun50i_usb3_phy_of_match,
+> +		.name  = "sun50i-usb3-phy",
+> +	}
+> +};
+> +module_platform_driver(sun50i_usb3_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner sun50i USB 3.0 phy driver");
+> +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.18.1
 > 
-> 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > ---
-> >  include/linux/ftrace.h     |    1 -
-> >  kernel/trace/trace_stack.c |    4 ++--
-> >  2 files changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -251,7 +251,6 @@ extern unsigned long stack_trace_max_siz
-> >  extern arch_spinlock_t stack_trace_max_lock;
-> >  
-> >  extern int stack_tracer_enabled;
-> > -void stack_trace_print(void);
-> >  int
-> >  stack_trace_sysctl(struct ctl_table *table, int write,
-> >  		   void __user *buffer, size_t *lenp,
-> > --- a/kernel/trace/trace_stack.c
-> > +++ b/kernel/trace/trace_stack.c
-> > @@ -41,7 +41,7 @@ static DEFINE_MUTEX(stack_sysctl_mutex);
-> >  int stack_tracer_enabled;
-> >  static int last_stack_tracer_enabled;
-> >  
-> > -void stack_trace_print(void)
-> > +static void trace_stack_trace_print(void)
-> >  {
-> >  	long i;
-> >  	int size;
-> > @@ -179,7 +179,7 @@ check_stack(unsigned long ip, unsigned l
-> >  	stack_trace_max.nr_entries = x;
-> >  
-> >  	if (task_stack_end_corrupted(current)) {
-> > -		stack_trace_print();
-> > +		trace_stack_trace_print();
-> >  		BUG();
-> >  	}
-> >  
-> > 
-> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
