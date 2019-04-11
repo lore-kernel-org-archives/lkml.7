@@ -2,169 +2,324 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295C2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B230BC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFB02083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DB32083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dys1RAc3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmD6pE/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfDKSdU (ORCPT
+        id S1726706AbfDKSgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:33:20 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36059 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfDKSdU (ORCPT
+        Thu, 11 Apr 2019 14:36:55 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40090 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfDKSgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:33:20 -0400
-Received: by mail-vs1-f67.google.com with SMTP id n4so4080966vsm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:33:19 -0700 (PDT)
+        Thu, 11 Apr 2019 14:36:55 -0400
+Received: by mail-it1-f195.google.com with SMTP id k64so11215753itb.5;
+        Thu, 11 Apr 2019 11:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ETxANaq/Qz0wt53H7RU5QOss/NV8wuC5HeoYqujoieY=;
-        b=Dys1RAc35JFj8zWrj0l62FRQghB7NP9SOfxts6YK8syiZCLqNpDAUG/vOkkS904C5R
-         U4IEA/OVQXpfpZo/c9a3ITJDCl/OCA7Q4ICIdj4Qaen233iTKgQdGdWHKStS/v6R9NGK
-         nRCiZpTKqHiHEBQ+hwOEXRcU5+Ad/a9bsS3Ho=
+        bh=d9TNf3UZ35qeYaXcIAD6Jv3jypBLTq8q3CpN92zAumA=;
+        b=TmD6pE/j5mgVbno8cslMwumh6exLxW9mCQU13hx1QZ5KeOu0L84BN4zZarNmXEE02O
+         G+D6VrR9OnOdipmlrTyF/S7Kw6f8Cn32piGg7ifOQsg5xN/Ad91WGpl0In3ShB2t5Lg7
+         AbMfD0PkJzmGktt6ShrAwVGloVGgqrEg8Ka/njlX/ymdhJ9CReRMhHVibd9o05jTtV2c
+         8xgCcIiHUpQE+2HwIhB8+rwZvx4NPPfUupmtb590Qiz9rGC//3CS1L1SVvvDAvqWlatV
+         w9Becw86FbDsqRl99oJ3nP3Nk8LOYQAdXizAj8SZ/4CUYwRdWHsBeBb3BjyOEpmOOGN2
+         vmfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ETxANaq/Qz0wt53H7RU5QOss/NV8wuC5HeoYqujoieY=;
-        b=fjNoJdV4UZyZtWzT5v5hiTxx5O36RDB35OxrjPi5JdJnAZwJ0pIRMcdFiRLn78nrws
-         PcWvtatwb4w24dSvxetqzmS3222Dej7t6kiYcaBpIBfEk+XxCgurxLr4EVPdQB2z8JT6
-         eFNGLuDC9C9W1gYTccNagfzGItFZP0TioO4axnN9v7hNoL79yQtYnZpajTY9i8pWQj/t
-         N+lncEbavmA01VOB9l0RJd2yviMWnxTjnbSfPcU/CwStL9dcMkvgOh3a04MqAc7UWwzT
-         FJ75ibxACbsX8z6BgwHdpDtoWvhmahfP+YsoLKzTb+Pk5J/6nDDp9VrEBj1RRa8mJqSZ
-         1hAg==
-X-Gm-Message-State: APjAAAU8tAPHnHTopCPPDkAfWFkM7iMsc4l81DdtuXPJPKPclPCgvYT0
-        dpFteqkdp2KUA5OhU3ZyA6VbJjy11g4=
-X-Google-Smtp-Source: APXvYqyNcOEgMFZj7wctLPDS1caWyarrCtf+9i3Ppor6zN1a2rYNlxvCLkIGnwfV7lymQ5PDTOOS4A==
-X-Received: by 2002:a67:dd8d:: with SMTP id i13mr29279392vsk.64.1555007597948;
-        Thu, 11 Apr 2019 11:33:17 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id w184sm23742967vkd.0.2019.04.11.11.33.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 11:33:17 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id h4so2369149uaj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:33:16 -0700 (PDT)
-X-Received: by 2002:ab0:4eaa:: with SMTP id l42mr22631556uah.80.1555007596300;
- Thu, 11 Apr 2019 11:33:16 -0700 (PDT)
+        bh=d9TNf3UZ35qeYaXcIAD6Jv3jypBLTq8q3CpN92zAumA=;
+        b=NMxujN2vgp48sdtWDdtNRLWFmWP2WPjSWCsDqqldCSL8UonW+rOKikKk3JwtC4SoH5
+         VC5C31obNBGRJzxkGf3F4PBmiCe+uut9jZhSfNVhE9tCc0zgBrXHrbcLoljIk/ND2XFF
+         +MvS/L6gkIt1QZ2HMGLPqtb0H5bjxenggh/a+Us6mEE0kjFqIsndWIuYVBtP6pqljNGn
+         JSbjnZV6Ya/Uck6KeEW2XiFJFEjDd/qGkJX86noUhCdXFgl90eMe2q4urAvbeATToglb
+         iEM+twYzZUOsW4zUjI7ys+aF5eVJjE4Hpzo7jPwjFYXF65e6zJiXwbm+Y4jQsotbCUac
+         fybw==
+X-Gm-Message-State: APjAAAUIng1grThH25eOHYaSL+otD3PtfO/nkpn89B7Y9dTyq+GPWRwQ
+        XnOX/wynrcdiuz92TZi884B1fSAr2agNNxEz5C8=
+X-Google-Smtp-Source: APXvYqzPphzMLED9oICsy9RE9R0jAzoFDCSwTkJjrbhF+K1Dhnf31CHfnDQrAsgrXGoP3yhrQv2JTup+DXqJ2ej3IZw=
+X-Received: by 2002:a24:160d:: with SMTP id a13mr9751033ita.4.1555007813898;
+ Thu, 11 Apr 2019 11:36:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
- <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
- <20190321175122.GA1587@sol.localdomain> <20190410031734.GB7140@sol.localdomain>
- <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
- <20190410190729.GA120258@gmail.com> <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
- <20190410231156.GB120258@gmail.com> <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
- <20190411175823.GC225654@gmail.com>
-In-Reply-To: <20190411175823.GC225654@gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 11 Apr 2019 11:33:04 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+u3f3qUVkQO+zYLN7BDh3r7w-W3k3aa+qdAP11k7A1dw@mail.gmail.com>
-Message-ID: <CAGXu5j+u3f3qUVkQO+zYLN7BDh3r7w-W3k3aa+qdAP11k7A1dw@mail.gmail.com>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-2-tiny.windzz@gmail.com>
+ <20190411080955.ysp3wreifwqrpn3n@flea>
+In-Reply-To: <20190411080955.ysp3wreifwqrpn3n@flea>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Fri, 12 Apr 2019 02:36:42 +0800
+Message-ID: <CAEExFWvcoK+C=_+knCw4nZQso2Frz0-CpbECQbVzKPS11P9RUw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Chen-Yu Tsai <wens@csie.org>, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.ferre@microchip.com, Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:58 AM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Wed, Apr 10, 2019 at 04:27:28PM -0700, Kees Cook wrote:
-> > On Wed, Apr 10, 2019 at 4:12 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > You've explained *what* it does again, but not *why*.  *Why* do you want
-> > > hardened usercopy to detect copies across page boundaries, when there is no
-> > > actual buffer overflow?
-> >
-> > But that *is* how it determines it was a buffer overflow: "if you
-> > cross page boundaries (of a non-compound allocation), it *is* a buffer
-> > overflow". This assertion, however, is flawed because many contiguous
-> > allocations are not marked as being grouped together when it reality
-> > they were. It was an attempt to get allocation size information out of
-> > the page allocator, similar to how slab can be queries about
-> > allocation size. I'm open to improvements here, since it's obviously
-> > broken in its current state. :)
-> >
-> > --
-> > Kees Cook
->
-> Well, I'm still at a loss as to whether I'm actually supposed to "fix" this by
-> adding __GFP_COMP, or whether you're saying the option is broken anyway so I
+Hi,
+    Changes:
+    1. I removed this sunxi_cpufreq_soc_data structure for now.
+    2. Convert to  less generic name.
+    3. Update soc_bin xlate. (LINE:484
+https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/soc/sunxi/sunxi-sid.c)
 
-I would love it if you could fix it, yes.
+    Now temporarily consider it as supporting only one platform.
+    Anything else to modify?
 
-> shouldn't bother doing anything.  IIUC, even the kernel stack is still not
-> marked __GFP_COMP, so copies to/from the stack can trigger this too, despite
-> this being reported over 2 years ago
-> (http://lkml.iu.edu/hypermail/linux/kernel/1701.2/01450.html)?
-> CONFIG_HARDENED_USERCOPY_PAGESPAN is even disabled in syzbot because you already
-> said the option is broken and should not be used.
+THx,
+Yangtao
 
-stacks are checked before PAGESPAN, so that particular problem should
-no longer be present since commit 7bff3c069973 ("mm/usercopy.c: no
-check page span for stack objects").
-
-> I worry that people will enable all the hardened usercopy options "because
-> security", then when the pagespan check breaks something they will disable all
-> hardened usercopy options, because they don't understand the individual options.
-> Providing broken options is actively harmful, IMO.
-
-It's behind EXPERT, default-n, and says:
-
-          When a multi-page allocation is done without __GFP_COMP,
-          hardened usercopy will reject attempts to copy it. There are,
-          however, several cases of this in the kernel that have not all
-          been removed. This config is intended to be used only while
-          trying to find such users.
-
-I'd rather leave it since it's still useful.
-
-Perhaps it could be switched to WARN by default and we reenable it in
-syzbot to improve its utility there?
-
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 14faadcedd06..6e7e28fe062b 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -208,8 +208,13 @@ static inline void check_page_span(const void
-*ptr, unsigned long n,
-         */
-        is_reserved = PageReserved(page);
-        is_cma = is_migrate_cma_page(page);
--       if (!is_reserved && !is_cma)
--               usercopy_abort("spans multiple pages", NULL, to_user, 0, n);
-+       if (!is_reserved && !is_cma) {
-+               usercopy_warn("spans multiple pages without __GFP_COMP",
-+                               NULL, to_user,
-+                               (unsigned long)ptr & (unsigned long)PAGE_MASK,
-+                               n);
-+               return;
-+       }
-
-        for (ptr += PAGE_SIZE; ptr <= end; ptr += PAGE_SIZE) {
-                page = virt_to_head_page(ptr);
-
-
+diff --git a/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+b/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+new file mode 100644
+index 000000000000..08a8f99463ba
+--- /dev/null
++++ b/drivers/cpufreq/sun5i-cpufreq-nvmem.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Allwinner CPUFreq nvmem based driver
++ *
++ * The sun5i-cpufreq-nvmem driver reads the efuse value from the SoC to
++ * provide the OPP framework with required information.
++ *
++ * Copyright (C) 2019 Yangtao Li <tiny.windzz@gmail.com>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/module.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++#include <linux/slab.h>
++
++#define MAX_NAME_LEN 7
++
++#define NVMEM_MASK 0x7
++#define NVMEM_SHIFT 5
++
++static struct platform_device *cpufreq_dt_pdev, *sunxi_cpufreq_pdev;
++
++/**
++ * sunxi_cpufreq_get_efuse() - Parse and return efuse value present on SoC
++ * @versions: Set to the value parsed from efuse
++ *
++ * Returns 0 if success.
++ */
++static int sunxi_cpufreq_get_efuse(u32 *versions)
++{
++ struct nvmem_cell *speedbin_nvmem;
++ struct device_node *np;
++ struct device *cpu_dev;
++ u32 *speedbin, efuse_value;
++ size_t len;
++ int ret;
++
++ cpu_dev = get_cpu_device(0);
++ if (!cpu_dev)
++ return -ENODEV;
++
++ np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
++ if (!np)
++ return -ENOENT;
++
++ ret = of_device_is_compatible(np,
++ "allwinner,sun50i-h6-operating-points");
++ if (!ret) {
++ of_node_put(np);
++ return -ENOENT;
++ }
++
++ speedbin_nvmem = of_nvmem_cell_get(np, NULL);
++ of_node_put(np);
++ if (IS_ERR(speedbin_nvmem)) {
++ if (PTR_ERR(speedbin_nvmem) != -EPROBE_DEFER)
++ pr_err("Could not get nvmem cell: %ld\n",
++ PTR_ERR(speedbin_nvmem));
++ return PTR_ERR(speedbin_nvmem);
++ }
++
++ speedbin = nvmem_cell_read(speedbin_nvmem, &len);
++ nvmem_cell_put(speedbin_nvmem);
++ if (IS_ERR(speedbin))
++ return PTR_ERR(speedbin);
++
++ efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
++ switch (efuse_value) {
++ case 0b0001:
++ *versions = 1;
++ break;
++ case 0b0011:
++ *versions = 2;
++ break;
++ default:
++ /*
++ * For other situations, we treat it as bin0.
++ * This vf table can be run for any good cpu.
++ */
++ *versions = 0;
++ break;
++ }
++
++ kfree(speedbin);
++ return 0;
++};
++
++static int sunxi_cpufreq_nvmem_probe(struct platform_device *pdev)
++{
++ struct opp_table **opp_tables;
++ char name[MAX_NAME_LEN];
++ unsigned int cpu;
++ u32 speed = 0;
++ int ret;
++
++ opp_tables = kcalloc(num_possible_cpus(), sizeof(*opp_tables),
++      GFP_KERNEL);
++ if (!opp_tables)
++ return -ENOMEM;
++
++ ret = sunxi_cpufreq_get_efuse(&speed);
++ if (ret)
++ return ret;
++
++ snprintf(name, MAX_NAME_LEN, "speed%d", speed);
++
++ for_each_possible_cpu(cpu) {
++ struct device *cpu_dev = get_cpu_device(cpu);
++
++ if (cpu_dev == NULL) {
++ ret = -ENODEV;
++ goto free_opp;
++ }
++
++ opp_tables[cpu] = dev_pm_opp_set_prop_name(cpu_dev, name);
++ if (IS_ERR(opp_tables[cpu])) {
++ ret = PTR_ERR(opp_tables[cpu]);
++ pr_err("Failed to set prop name\n");
++ goto free_opp;
++ }
++ }
++
++ cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
++   NULL, 0);
++ if (!IS_ERR(cpufreq_dt_pdev)) {
++ platform_set_drvdata(pdev, opp_tables);
++ return 0;
++ }
++
++ ret = PTR_ERR(cpufreq_dt_pdev);
++ pr_err("Failed to register platform device\n");
++
++free_opp:
++ for_each_possible_cpu(cpu) {
++ if (IS_ERR_OR_NULL(opp_tables[cpu]))
++ break;
++ dev_pm_opp_put_prop_name(opp_tables[cpu]);
++ }
++ kfree(opp_tables);
++
++ return ret;
++}
++
++static int sunxi_cpufreq_nvmem_remove(struct platform_device *pdev)
++{
++ struct opp_table **opp_tables = platform_get_drvdata(pdev);
++ unsigned int cpu;
++
++ platform_device_unregister(cpufreq_dt_pdev);
++
++ for_each_possible_cpu(cpu)
++ dev_pm_opp_put_prop_name(opp_tables[cpu]);
++
++ kfree(opp_tables);
++
++ return 0;
++}
++
++static struct platform_driver sunxi_cpufreq_driver = {
++ .probe = sunxi_cpufreq_nvmem_probe,
++ .remove = sunxi_cpufreq_nvmem_remove,
++ .driver = {
++ .name = "sunxi-cpufreq-nvmem",
++ },
++};
++
++static const struct of_device_id sunxi_cpufreq_match_list[] = {
++ { .compatible = "allwinner,sun50i-h6" },
++ {}
++};
++
++static const struct of_device_id *sunxi_cpufreq_match_node(void)
++{
++ const struct of_device_id *match;
++ struct device_node *np;
++
++ np = of_find_node_by_path("/");
++ match = of_match_node(sunxi_cpufreq_match_list, np);
++ of_node_put(np);
++
++ return match;
++}
++
++/*
++ * Since the driver depends on nvmem drivers, which may return EPROBE_DEFER,
++ * all the real activity is done in the probe, which may be defered as well.
++ * The init here is only registering the driver and the platform device.
++ */
++static int __init sunxi_cpufreq_init(void)
++{
++ const struct of_device_id *match;
++ int ret;
++
++ match = sunxi_cpufreq_match_node();
++ if (!match)
++ return -ENODEV;
++
++ ret = platform_driver_register(&sunxi_cpufreq_driver);
++ if (unlikely(ret < 0))
++ return ret;
++
++ sunxi_cpufreq_pdev = platform_device_register_simple(
++ "sunxi-cpufreq-nvmem", -1, NULL, 0);
++ ret = PTR_ERR_OR_ZERO(sunxi_cpufreq_pdev);
++ if (ret == 0)
++ return 0;
++
++ platform_driver_unregister(&sunxi_cpufreq_driver);
++ return ret;
++}
++module_init(sunxi_cpufreq_init);
++
++static void __exit sunxi_cpufreq_exit(void)
++{
++ platform_device_unregister(sunxi_cpufreq_pdev);
++ platform_driver_unregister(&sunxi_cpufreq_driver);
++}
++module_exit(sunxi_cpufreq_exit);
++
++MODULE_DESCRIPTION("Sunxi cpufreq driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Kees Cook
+2.17.1
