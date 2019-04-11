@@ -2,185 +2,85 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747F0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F26C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1E22184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC952184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555021322;
+	bh=abD3u4yTSrT+p4xKIErOvga70MdiFtqQa7xI8OAof+c=;
+	h=Subject:From:To:Date:List-ID:From;
+	b=ytKyXJM/0FSviGn3g1sMeqGW1sEhnzi9OfBbjg4vIZLDZf9n6NNAidcJZXF0KXGeN
+	 2SqZ9WbDUmiln6qWQrPg3KjaL+mbrExLGmTvrpwXIUnefLCyho8jCZzduBI2e0ZZeu
+	 aq+GzuiQtHx5fZ7j3xS4+SliUT6E06fIzhMsimfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfDKWUg (ORCPT
+        id S1727081AbfDKWWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:20:36 -0400
-Received: from gateway23.websitewelcome.com ([192.185.49.124]:11141 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726636AbfDKWUf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:20:35 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 40AAD8D6C
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:20:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Ei3ehaY8OdnCeEi3ehOLpp; Thu, 11 Apr 2019 17:20:34 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.139.70] (port=56800 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hEi3d-0015ij-Ji; Thu, 11 Apr 2019 17:20:33 -0500
-Subject: Re: [PATCH v2] mtd: rawnand: mark expected switch fall-throughs
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Wan ZongShun <mcuos.com@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190128181520.GA25887@embeddedor>
- <20190205135521.622f82c2@xps13>
- <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
- <20190412001009.2db358b7@xps13>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <017bdd52-8d1f-f746-6e1c-4d38491b2d6a@embeddedor.com>
-Date:   Thu, 11 Apr 2019 17:20:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412001009.2db358b7@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 11 Apr 2019 18:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbfDKWWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 18:22:00 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DAF2146F;
+        Thu, 11 Apr 2019 22:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555021320;
+        bh=abD3u4yTSrT+p4xKIErOvga70MdiFtqQa7xI8OAof+c=;
+        h=Subject:From:To:Date:From;
+        b=ue9/PAjqDtqyPsG2fYv0S7NqZJSqBEo1JJZb7o2mfpoLVzUsBE8rgHWFBwIt07EfO
+         QbKmytI0wupSRFNFVaZQP+VTpyr5JUmNR0n0DlaBlfzBIqoPTywUDD/Y/2MfiVGRSq
+         LiVUw3oZ/IJcjVrMQbEfDA3nhCZeWY9HxfFM1th0=
+Message-ID: <1555021318.12566.17.camel@kernel.org>
+Subject: [ANNOUNCE] 3.18.138-rt115
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Julia Cartwright <julia@ni.com>
+Date:   Thu, 11 Apr 2019 17:21:58 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.139.70
-X-Source-L: No
-X-Exim-ID: 1hEi3d-0015ij-Ji
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.139.70]:56800
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello RT Folks!
+
+I'm pleased to announce the 3.18.138-rt115 stable release.
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v3.18-rt
+  Head SHA1: 0b31ad979fb6e00b1aa16f873c05fa2cb486b00f
+
+Or to build 3.18.138-rt115 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v3.x/patch-3.18.138.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/patch-3.18.138-rt115.patch.xz
 
 
-On 4/11/19 5:10 PM, Miquel Raynal wrote:
-> Hi Gustavo,
-> 
-> "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Thu, 11 Apr
-> 2019 13:30:31 -0500:
-> 
->> Hi Miquel,
->>
->> On 2/5/19 6:55 AM, Miquel Raynal wrote:
->> [..]
->>>> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
->>>>  			if ((this->version_id & 0xf) == 0xe)
->>>>  				this->options |= ONENAND_HAS_NOP_1;
->>>>  		}
->>>> +		/* fall through */
->>>>  
->>>>  	case ONENAND_DEVICE_DENSITY_2Gb:
->>>>  		/* 2Gb DDP does not have 2 plane */
->>>>  		if (!ONENAND_IS_DDP(this))
->>>>  			this->options |= ONENAND_HAS_2PLANE;
->>>>  		this->options |= ONENAND_HAS_UNLOCK_ALL;
->>>> +		/* fall through */  
->>>
->>> This looks strange.
->>>
->>> In ONENAND_DEVICE_DENSITY_2Gb:
->>> ONENAND_HAS_UNLOCK_ALL is set unconditionally.
->>>
->>> But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
->>> if process is evaluated to true.
->>>
->>> Same problem with ONENAND_HAS_2PLANE:
->>> - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
->>> - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
->>>
->>> Maybe this portion should be reworked because I am unsure if this is a
->>> missing fall through or a bug.
->>>   
->>
->> I wonder if you had the chance to take a look into this piece of code.
->>
->> Thanks
->> --
->> Gustavo
-> 
-> What do you mean?
-> 
+Enjoy!
 
-You commented that the piece of code above should be reworked. So, it wasn't
-clear to me who was going to do that; and that's why I'm asking if you took
-a look into it and finally determine whether we are dealing with an actual
-bug or a false positive.
-
-Thanks
---
-Gustavo
-
-
+   Tom
