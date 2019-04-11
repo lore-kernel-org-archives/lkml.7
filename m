@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C6EC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37409C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3D1217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF9F72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH+pvqRX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2CJjcit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfDKDfX (ORCPT
+        id S1726938AbfDKDf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:35:23 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42406 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDKDfW (ORCPT
+        Wed, 10 Apr 2019 23:35:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33395 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDKDf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:35:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p6so2773542pgh.9;
-        Wed, 10 Apr 2019 20:35:21 -0700 (PDT)
+        Wed, 10 Apr 2019 23:35:26 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t16so2675300plo.0;
+        Wed, 10 Apr 2019 20:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=++5Kahm69pfih1hlK32V2CQsRTIBHswnoEuweJf+4FY=;
-        b=WH+pvqRX3E2xh2rFecOyDRCL/X74JCuPg/LesGHhNgXVZDyFJA0pQLS9Vy3VdLRxvP
-         vTSlK0Zk5yKDB7vLIIUxly10b8IO+D989VVDom5iZ7qDXy3L5dW65+HleAdiQodR7A+2
-         Md3pdYPS+GqAam57HbHSogR6EqZEN81o8OR03KxxXDccb/s5bQki31tJb7gGL+5Yr0t6
-         EePjGtlxj/m/LDQ47/STaqzMd40vfqCO3/gVetZjVvVOqTrm2kh6XqKyGnpWMxj+6bbZ
-         FXEiBQtOxW1hn5hzUuVUz+tgJ21i9wa8d77Yd/AusxdfZpjw8qF2Jo2BBguFKMaz02Sw
-         xlXw==
+        bh=UpRg7geaI+sWEyGZepnH29ISOYwE+XLjV9k/cfsCiuY=;
+        b=o2CJjcitwO6wtJumeOLIWIub9KrwU4jm2I0w2cXbOuJZY00RCSlCWBF2hlS/LCqFwo
+         GJzDCLga3utOB9Rj7VXj41vD5AdLfm+uZ61hB+8BsP60YHo+oyZbgtti+htyZxrPQJPU
+         TBybDPzy0GCp7Lhhu6rd9HINhbZxSh6QiZgfvnY27n+LeMP0O/a5SgP5Io647Hjag7Zc
+         EPNFrJpMtce1w7be7OptoalHJpOukogTux0ZNDRfpt9gNWQ8HOJAKbZDMJHsT6kVr9nf
+         fGg3J20z0aSquozH9ecnFGulBLcxpKVUPb6BRQuRcm9p0iUrzNZG6LoVPY0XktdPBJrM
+         bNBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=++5Kahm69pfih1hlK32V2CQsRTIBHswnoEuweJf+4FY=;
-        b=gE0+uWRBrMdCRHoJUdoJ1Crf8FnRVLCIe+Z3zsYPDJbr8SSQCP1TN2sBf+Jj1C0HWp
-         9uSBIj3ctwihTd58SJ0DQIURMSH9bxVuKQY4f05d4yf2hg53yBuit8AcgAacM+V3m4/i
-         EzIiD6nionAV0bu1RBwXQPscw8mBnqS5qI0kFCsNQQk3lEKGBYBSEq+ILS3/Jkrgulp3
-         Cj4IfOLorYaw827LD4EUYp+QcOj7VOFEJa2oL149CkFM6P5dGgxBEuVOjnuaGIrtzYrN
-         0gs+YRBNY3HX0x+NlinKoxp4j2hfEJJuC18D9o4+Kli/1CrXGcwF/QOkJBX9CsR4hmau
-         RMMA==
-X-Gm-Message-State: APjAAAUP998tv1IVqqGmM+ktRqH7mZKYT+X3ywxHbXRiG5EjlGgfsqaB
-        mT48jmL2Wo/YBclKH08AO/o=
-X-Google-Smtp-Source: APXvYqwTHeF65/Hp98rNuZyayD9mE9HdJHFhhwJYBomZ+S1ESXIs7o+WkVag66TeJ4YVjbnqclZNJA==
-X-Received: by 2002:a63:115c:: with SMTP id 28mr15643940pgr.270.1554953721421;
-        Wed, 10 Apr 2019 20:35:21 -0700 (PDT)
+        bh=UpRg7geaI+sWEyGZepnH29ISOYwE+XLjV9k/cfsCiuY=;
+        b=rF/VozTnk9523e6mrosf4X7zTRwAKPUu5bN85FcHwprjRabThrnkJBCUfWsngn6RZp
+         CK/Ms1nQh6tahANnGUYQQX/oIqzyScxpGJsP2g36GFqkfMojJD+95y8+x/tp29U0C37p
+         XSq7FuymDX+u/0WX8gI5ML7S5+z1NWikbiGFwJ6cNVMm1m0HP+Gf1JUCD/HylukCYaCr
+         TbgdVMmv4keZrqcHztWbHKkDUSqOxJaOkAb/nFyIoB4RQlw2DGGLDKj0kBa4mtad1zVd
+         anpfLxX22N0PiXyY8kqFej6E0NkSNF3iKmwsDuBwsJ7cmJjOyYuYkLzFo1EyP3+5m/RK
+         7L/A==
+X-Gm-Message-State: APjAAAU5XN7n2rIogXiAUMzMRL8oFLtUnzSZS4e5NsN+cXFmZH5PFM+M
+        8Bi1dNDwjYnNCPcGSujvIfk=
+X-Google-Smtp-Source: APXvYqzHm5C8szaxszwf4LH9CmoFhQYt3+sIDLhVmTUw/W6VqM+UxaJ3ACZETByRUvwVV+JLTX67AQ==
+X-Received: by 2002:a17:902:441:: with SMTP id 59mr18094723ple.242.1554953726019;
+        Wed, 10 Apr 2019 20:35:26 -0700 (PDT)
 Received: from bobo.local0.net ([203.63.188.231])
-        by smtp.gmail.com with ESMTPSA id b9sm37231416pfd.32.2019.04.10.20.35.17
+        by smtp.gmail.com with ESMTPSA id b9sm37231416pfd.32.2019.04.10.20.35.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 20:35:20 -0700 (PDT)
+        Wed, 10 Apr 2019 20:35:25 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <fweisbec@gmail.com>
@@ -65,9 +65,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2 4/5] kernel/sched/isolation: require a present CPU in housekeeping mask
-Date:   Thu, 11 Apr 2019 13:34:47 +1000
-Message-Id: <20190411033448.20842-5-npiggin@gmail.com>
+Subject: [PATCH v2 5/5] nohz_full: Allow the boot CPU to be nohz_full
+Date:   Thu, 11 Apr 2019 13:34:48 +1000
+Message-Id: <20190411033448.20842-6-npiggin@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190411033448.20842-1-npiggin@gmail.com>
 References: <20190411033448.20842-1-npiggin@gmail.com>
@@ -78,65 +78,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During housekeeping mask setup, currently a possible CPU is required.
-That does not guarantee the CPU would be available at boot time, so
-check to ensure that at least one present CPU is in the mask.
+Allow the boot CPU / CPU0 to be nohz_full. Have the boot CPU take the
+do_timer duty during boot until a housekeeping CPU can take over.
+
+This is supported when CONFIG_PM_SLEEP_SMP is not configured, or when
+it is configured and the arch allows suspend on non-zero CPUs.
+
+nohz_full has been trialed at a large supercomputer site and found to
+significantly reduce jitter. In order to deploy it in production, they
+need CPU0 to be nohz_full because their job control system requires
+the application CPUs to start from 0, and the housekeeping CPUs are
+placed higher. An equivalent job scheduling that uses CPU0 for
+housekeeping could be achieved by modifying their system, but it is
+preferable if nohz_full can support their environment without
+modification.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- kernel/sched/isolation.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ kernel/time/tick-common.c | 50 +++++++++++++++++++++++++++++++++++----
+ kernel/time/tick-sched.c  | 34 ++++++++++++++++++--------
+ 2 files changed, 70 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index b02d148e7672..687302051a27 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -65,6 +65,7 @@ void __init housekeeping_init(void)
- static int __init housekeeping_setup(char *str, enum hk_flags flags)
- {
- 	cpumask_var_t non_housekeeping_mask;
-+	cpumask_var_t tmp;
- 	int err;
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 529143b4c8d2..31146c13226e 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -46,6 +46,14 @@ ktime_t tick_period;
+  *    procedure also covers cpu hotplug.
+  */
+ int tick_do_timer_cpu __read_mostly = TICK_DO_TIMER_BOOT;
++#ifdef CONFIG_NO_HZ_FULL
++/*
++ * tick_do_timer_boot_cpu indicates the boot CPU temporarily owns
++ * tick_do_timer_cpu and it should be taken over by an eligible secondary
++ * when one comes online.
++ */
++static int tick_do_timer_boot_cpu __read_mostly = -1;
++#endif
  
- 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
-@@ -75,16 +76,23 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 		return 0;
+ /*
+  * Debugging: see timer_list.c
+@@ -167,6 +175,26 @@ void tick_setup_periodic(struct clock_event_device *dev, int broadcast)
  	}
+ }
  
-+	alloc_bootmem_cpumask_var(&tmp);
- 	if (!housekeeping_flags) {
- 		alloc_bootmem_cpumask_var(&housekeeping_mask);
- 		cpumask_andnot(housekeeping_mask,
- 			       cpu_possible_mask, non_housekeeping_mask);
--		if (cpumask_empty(housekeeping_mask))
++#ifdef CONFIG_NO_HZ_FULL
++static void giveup_do_timer(void *info)
++{
++	int cpu = *(unsigned int *)info;
 +
-+		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-+		if (cpumask_empty(tmp)) {
-+			pr_warn("Housekeeping: must include one present CPU, "
-+				"using boot CPU:%d\n", smp_processor_id());
- 			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
-+			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
-+		}
- 	} else {
--		cpumask_var_t tmp;
--
--		alloc_bootmem_cpumask_var(&tmp);
-+		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-+		if (cpumask_empty(tmp))
-+			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
- 		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
- 		if (!cpumask_equal(tmp, housekeeping_mask)) {
- 			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
-@@ -92,8 +100,8 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 			free_bootmem_cpumask_var(non_housekeeping_mask);
- 			return 0;
++	WARN_ON(tick_do_timer_cpu != smp_processor_id());
++
++	tick_do_timer_cpu = cpu;
++}
++
++static void tick_take_do_timer_from_boot(void)
++{
++	int cpu = smp_processor_id();
++	int from = tick_do_timer_boot_cpu;
++
++	if (from >= 0 && from != cpu)
++		smp_call_function_single(from, giveup_do_timer, &cpu, 1);
++}
++#endif
++
+ /*
+  * Setup the tick device
+  */
+@@ -186,12 +214,26 @@ static void tick_setup_device(struct tick_device *td,
+ 		 * this cpu:
+ 		 */
+ 		if (tick_do_timer_cpu == TICK_DO_TIMER_BOOT) {
+-			if (!tick_nohz_full_cpu(cpu))
+-				tick_do_timer_cpu = cpu;
+-			else
+-				tick_do_timer_cpu = TICK_DO_TIMER_NONE;
++			tick_do_timer_cpu = cpu;
++
+ 			tick_next_period = ktime_get();
+ 			tick_period = NSEC_PER_SEC / HZ;
++#ifdef CONFIG_NO_HZ_FULL
++			/*
++			 * The boot CPU may be nohz_full, in which case set
++			 * tick_do_timer_boot_cpu so the first housekeeping
++			 * secondary that comes up will take do_timer from
++			 * us.
++			 */
++			if (tick_nohz_full_cpu(cpu))
++				tick_do_timer_boot_cpu = cpu;
++
++		} else if (tick_do_timer_boot_cpu != -1 &&
++						!tick_nohz_full_cpu(cpu)) {
++			tick_take_do_timer_from_boot();
++			tick_do_timer_boot_cpu = -1;
++			WARN_ON(tick_do_timer_cpu != cpu);
++#endif
  		}
--		free_bootmem_cpumask_var(tmp);
- 	}
-+	free_bootmem_cpumask_var(tmp);
  
- 	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_TICK)) {
- 		if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
+ 		/*
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 6fa52cd6df0b..4aa917acbe1c 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -121,10 +121,16 @@ static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
+ 	 * into a long sleep. If two CPUs happen to assign themselves to
+ 	 * this duty, then the jiffies update is still serialized by
+ 	 * jiffies_lock.
++	 *
++	 * If nohz_full is enabled, this should not happen because the
++	 * tick_do_timer_cpu never relinquishes.
+ 	 */
+-	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)
+-	    && !tick_nohz_full_cpu(cpu))
++	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
++#ifdef CONFIG_NO_HZ_FULL
++		WARN_ON(tick_nohz_full_running);
++#endif
+ 		tick_do_timer_cpu = cpu;
++	}
+ #endif
+ 
+ 	/* Check, if the jiffies need an update */
+@@ -395,8 +401,8 @@ void __init tick_nohz_full_setup(cpumask_var_t cpumask)
+ static int tick_nohz_cpu_down(unsigned int cpu)
+ {
+ 	/*
+-	 * The boot CPU handles housekeeping duty (unbound timers,
+-	 * workqueues, timekeeping, ...) on behalf of full dynticks
++	 * The tick_do_timer_cpu CPU handles housekeeping duty (unbound
++	 * timers, workqueues, timekeeping, ...) on behalf of full dynticks
+ 	 * CPUs. It must remain online when nohz full is enabled.
+ 	 */
+ 	if (tick_nohz_full_running && tick_do_timer_cpu == cpu)
+@@ -423,12 +429,15 @@ void __init tick_nohz_init(void)
+ 		return;
+ 	}
+ 
+-	cpu = smp_processor_id();
++	if (IS_ENABLED(CONFIG_PM_SLEEP_SMP) &&
++			!IS_ENABLED(CONFIG_PM_SLEEP_SMP_NONZERO_CPU)) {
++		cpu = smp_processor_id();
+ 
+-	if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
+-		pr_warn("NO_HZ: Clearing %d from nohz_full range for timekeeping\n",
+-			cpu);
+-		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
++		if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
++			pr_warn("NO_HZ: Clearing %d from nohz_full range "
++				"for timekeeping\n", cpu);
++			cpumask_clear_cpu(cpu, tick_nohz_full_mask);
++		}
+ 	}
+ 
+ 	for_each_cpu(cpu, tick_nohz_full_mask)
+@@ -904,8 +913,13 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+ 		/*
+ 		 * Boot safety: make sure the timekeeping duty has been
+ 		 * assigned before entering dyntick-idle mode,
++		 * tick_do_timer_cpu is TICK_DO_TIMER_BOOT
+ 		 */
+-		if (tick_do_timer_cpu == TICK_DO_TIMER_NONE)
++		if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_BOOT))
++			return false;
++
++		/* Should not happen for nohz-full */
++		if (WARN_ON_ONCE(tick_do_timer_cpu == TICK_DO_TIMER_NONE))
+ 			return false;
+ 	}
+ 
 -- 
 2.20.1
 
