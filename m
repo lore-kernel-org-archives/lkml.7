@@ -2,73 +2,74 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE99EC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45FC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8667D2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B4C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554950585;
+	bh=dFs87/I5FzSAKmfefEU/2kxGJKT+FUKq0QrvX8wspck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yQ4z/SBvKXt9g5B9CVtOZpSg+9XNDD+yROJGoe5avFJjKhEysoGRDhAKP04g3eN/m
+	 pNYUY+dZJ0Z3pAF7r01T6FAJXLTvzLvVWVXPi8wGr/sUFZn/EtfJPgYFEmRc+bXtB+
+	 V2dIgsyWPnLiC1Z2w46uyu8Nr6G2chnSgw2o6TSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfDKCgS (ORCPT
+        id S1726748AbfDKCnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:36:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6722 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbfDKCgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:36:17 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D0B799636B293CBF9E36;
-        Thu, 11 Apr 2019 10:36:15 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 11 Apr 2019 10:36:06 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Faiz Abbas <faiz_abbas@ti.com>, Tony Lindgren <tony@atomide.com>,
-        "Rob Herring" <robh@kernel.org>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] bus: ti-sysc: Use PTR_ERR_OR_ZERO in sysc_init_resets()
-Date:   Thu, 11 Apr 2019 02:47:08 +0000
-Message-ID: <20190411024708.123605-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Apr 2019 22:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfDKCnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:43:04 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1BC2217D9;
+        Thu, 11 Apr 2019 02:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554950583;
+        bh=dFs87/I5FzSAKmfefEU/2kxGJKT+FUKq0QrvX8wspck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CRHDzfUSrkXr4n9W4H3po3dQplC0qiYdnWfkPKeOX++hc37AgkObCOyRt/3lDafEw
+         y+K2N9sltJyfr1QDVS3iSf1Z1yuS+qCgIeAh1RbNEo/S9MaeufBxhOr44llXli7suy
+         RrnZxAkiIBlHBuixi2ziOqDHdyjEB6/rXvHybGgE=
+Date:   Thu, 11 Apr 2019 10:42:51 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] ARM: dts: imx6: RDU2: Use new CODEC reset pin name
+Message-ID: <20190411024250.GL26817@dragon>
+References: <20190329181313.21009-1-afd@ti.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190329181313.21009-1-afd@ti.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+On Fri, Mar 29, 2019 at 01:13:10PM -0500, Andrew F. Davis wrote:
+> The correct DT property for specifying a GPIO used for reset
+> is "reset-gpios", the driver now accepts this name, use it here.
+> 
+> Note the GPIO polarity in the driver was ignored before and always
+> assumed to be active low, when all the DTs are fixed we will start
+> respecting the specified polarity. Switch polarity in DT to the
+> currently assumed one, this way when the driver changes the
+> behavior will not change.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/bus/ti-sysc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+I fixed up the prefix to use board name, and applied patch #1 ~ #3.
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index b696f26a3894..2b93be2882f3 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -432,10 +432,7 @@ static int sysc_init_resets(struct sysc *ddata)
- {
- 	ddata->rsts =
- 		devm_reset_control_array_get_optional_exclusive(ddata->dev);
--	if (IS_ERR(ddata->rsts))
--		return PTR_ERR(ddata->rsts);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(ddata->rsts);
- }
- 
- /**
-
-
-
-
-
+Shawn
