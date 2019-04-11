@@ -2,219 +2,125 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1C3C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA5AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBD220873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C3E20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Axjj5t9v"
+	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="tyqXkcZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfDKFtB (ORCPT
+        id S1726682AbfDKFyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 01:49:01 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:23467 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDKFtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 01:49:01 -0400
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x3B5mcbw029917
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:48:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3B5mcbw029917
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554961719;
-        bh=uQTSX/3waKUJHoKtE6OAnsIQqz5N3oazBYIFncLxLFs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Axjj5t9vQafp4nVIN+cxOxJ0wPkvFD8Rg4GfTVhIuDmd8AL51jymVY1OL3GL3JGBm
-         Ukz/ozBSDADnC5C3iD+9xhq76bMNiP0Gl85essCEK7b3x/orrD1R+pltT3RUoumg7w
-         4PU96OC8cl1m98+cIS708Jy2FAmUai4ufJYcPrX0tOyR0M98oAuCikc/wKQJt2MIL1
-         ZaWhRlg/O/kESSsJyccaImwd6K3fMtZI6lo1JyLd/mqmni7yIk1frHmDYX22IEtlBz
-         zloTWFzQcjSHevPq9GGT56oQFdK4LjJUUojywrTrDI3VUl0FS2mu2bDJedHAYKvlAC
-         Dlopz2Zf3mtwg==
-X-Nifty-SrcIP: [209.85.221.177]
-Received: by mail-vk1-f177.google.com with SMTP id h127so1100044vkd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 22:48:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAUbYsDJEcg21z8SIxYhRWHxvpMM+QD9Xq/Y7nGVzviZ0f2UjdcT
-        nhve4i6gDHoUaVpvgaXMHJ1XKtQKgz/z7/J9/Ag=
-X-Google-Smtp-Source: APXvYqxqfCFRJUjt+5sOp0XMUMQ3C/nUxwL3A4U93CBfNbgWzWCZtKtmlypZtv/hkdnW1tm2E/uruytmHlm7u9DdlSw=
-X-Received: by 2002:a1f:793:: with SMTP id 141mr14138184vkh.31.1554961717997;
- Wed, 10 Apr 2019 22:48:37 -0700 (PDT)
+        Thu, 11 Apr 2019 01:54:08 -0400
+Received: from mail-eopbgr60061.outbound.protection.outlook.com ([40.107.6.61]:52766
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfDKFyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 01:54:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iwZRpdEHQvPO+4y/YGswZvyJm+/pjrO66N3vae/mhdI=;
+ b=tyqXkcZRIDxjyMXtm4DOPQiNp1ujf57eewBE4Ml8fphRVXUMMwRXYrJYkJzTRQu/4qxXNpLgNV+tcvUVh6AWZraFFBT2N7Ph+/kVHg/ZFRu0dNGSBWiyClHqRuR5LaBNT2B+3QCoD8bL975H5VCVvODasIsBWcVCbG4vlLmefWU=
+Received: from AM6PR06MB5557.eurprd06.prod.outlook.com (20.178.94.211) by
+ AM6PR06MB5461.eurprd06.prod.outlook.com (20.178.91.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.13; Thu, 11 Apr 2019 05:54:04 +0000
+Received: from AM6PR06MB5557.eurprd06.prod.outlook.com
+ ([fe80::c0b4:b693:fdc7:e476]) by AM6PR06MB5557.eurprd06.prod.outlook.com
+ ([fe80::c0b4:b693:fdc7:e476%4]) with mapi id 15.20.1792.009; Thu, 11 Apr 2019
+ 05:54:04 +0000
+From:   Han Nandor <nandor.han@vaisala.com>
+To:     "sre@kernel.org" <sre@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Han Nandor <nandor.han@vaisala.com>
+Subject: [PATCH v2 0/2] Use NVMEM as reboot-mode write interface
+Thread-Topic: [PATCH v2 0/2] Use NVMEM as reboot-mode write interface
+Thread-Index: AQHU8Cr3IuksBurIX0qE9ETHsNCMmw==
+Date:   Thu, 11 Apr 2019 05:54:03 +0000
+Message-ID: <20190411055341.9263-1-nandor.han@vaisala.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0160.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::47) To AM6PR06MB5557.eurprd06.prod.outlook.com
+ (2603:10a6:20b:9c::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nandor.han@vaisala.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.2
+x-originating-ip: [193.143.230.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 58f50371-ace8-4835-66c0-08d6be421989
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:AM6PR06MB5461;
+x-ms-traffictypediagnostic: AM6PR06MB5461:
+x-tenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+x-microsoft-antispam-prvs: <AM6PR06MB5461593DF5808FC1E064BF86852F0@AM6PR06MB5461.eurprd06.prod.outlook.com>
+x-forefront-prvs: 00046D390F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(39850400004)(136003)(396003)(189003)(199004)(5660300002)(71190400001)(2616005)(305945005)(6116002)(478600001)(256004)(86362001)(97736004)(68736007)(2906002)(36756003)(7736002)(486006)(476003)(6436002)(8676002)(66066001)(1076003)(14454004)(71200400001)(105586002)(2201001)(6486002)(386003)(6506007)(26005)(99286004)(52116002)(4326008)(316002)(110136005)(14444005)(3846002)(53936002)(8936002)(2501003)(25786009)(81166006)(107886003)(186003)(50226002)(102836004)(106356001)(6512007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR06MB5461;H:AM6PR06MB5557.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vaisala.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mGoBP6JJHsT7zIvL6ApB1e2HDXw/M4CL+MYVrs5iLxPaWALIlkoBhhiLc+NJrMamnhY1IebQH+c/g7EIgwKQ9occN7sM7oXHAxIp3Ofy0UqgKGzYbMDMGOmkYXGc/BqOpTWHspWOdomIHHNeQ0NYip+fUfKYa7gQUX6obRy53l/m/SXvq7uOgkLPEcLW1lDTvw6Jn0kJDbag1APCqV8vteIVC3IP26TGf7RDfNkP1h/poO/IjcAEPvLdL2POTu7LAW2GLQv97WtWDXgeX9+HoOUC3v9FgpkGV/Q5dRGqUrjPC6KPZ/gCFCoAhMbDmHRMxsj1Gg+msl7OtaFOrvJXPr+OiWy2xx5gnkDfn3UpsND8BuRJSRkpXsqPBrzg60nMcekL9UH/KXzdeuWZ4i6jNihvQtW6LB9vUuCqzdWlo2Y=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190411005634.8495-1-okaya@kernel.org> <CAK7LNAS=G7-nXr=pT2EYExGNkCcOcd2NH1haaBMt+JsyhX2Z8Q@mail.gmail.com>
- <c8babeca-2d24-4265-0477-0634d87efa70@kernel.org>
-In-Reply-To: <c8babeca-2d24-4265-0477-0634d87efa70@kernel.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 11 Apr 2019 14:48:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
-Message-ID: <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
-Subject: Re: [PATCH v3] init: Do not select DEBUG_KERNEL by default
-To:     Sinan Kaya <Okaya@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Changbin Du <changbin.du@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58f50371-ace8-4835-66c0-08d6be421989
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 05:54:03.9167
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR06MB5461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 2:44 PM Sinan Kaya <Okaya@kernel.org> wrote:
->
-> On 4/11/2019 1:31 AM, Masahiro Yamada wrote:
-> >> t looks like CONFIG_KALLSYMS_ALL is the only feature that
-> >> requires CONFIG_DEBUG_KERNEL.
-> > Which part of KALLSYMS_ALL code requires CONFIG_DEBUG_KERNEL?
-> >
->
-> I was going by what Kconfig tells me
->
-> Symbol: KALLSYMS_ALL [=n]
->   Depends on: DEBUG_KERNEL [=n] && KALLSYMS [=y]
-
-Lots of features have 'depends on DEBUG_KERNEL'.
-What is special about KALLSYMS_ALL here?
-
-
-./drivers/gpio/Kconfig:52: depends on DEBUG_KERNEL
-./drivers/pci/Kconfig:69: depends on DEBUG_KERNEL
-./drivers/usb/gadget/Kconfig:51: depends on DEBUG_KERNEL
-./drivers/base/Kconfig:119: depends on DEBUG_KERNEL
-./drivers/base/Kconfig:130: depends on DEBUG_KERNEL
-./drivers/base/Kconfig:142: depends on DEBUG_KERNEL
-./drivers/spi/Kconfig:29: depends on DEBUG_KERNEL
-./drivers/pinctrl/Kconfig:29: depends on DEBUG_KERNEL
-./drivers/gpu/drm/Kconfig:55: depends on DEBUG_KERNEL
-./kernel/rcu/Kconfig.debug:16: depends on DEBUG_KERNEL
-./kernel/rcu/Kconfig.debug:33: depends on DEBUG_KERNEL
-./kernel/rcu/Kconfig.debug:61: depends on DEBUG_KERNEL
-./kernel/rcu/Kconfig.debug:73: depends on DEBUG_KERNEL
-./net/dccp/Kconfig:30: depends on DEBUG_KERNEL=y
-./crypto/Kconfig:173: depends on DEBUG_KERNEL && !CRYPTO_MANAGER_DISABLE_TESTS
-./init/Kconfig:951: depends on DEBUG_KERNEL
-./init/Kconfig:1476: depends on DEBUG_KERNEL && KALLSYMS
-./mm/Kconfig.debug:12: depends on DEBUG_KERNEL
-./mm/Kconfig.debug:44: depends on DEBUG_KERNEL && STACKTRACE_SUPPORT
-./mm/Kconfig.debug:99: depends on DEBUG_KERNEL
-./mm/Kconfig:494: depends on DEBUG_KERNEL && CMA
-./lib/Kconfig.kgdb:8: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:80: depends on DEBUG_KERNEL && PRINTK &&
-GENERIC_CALIBRATE_DELAY
-./lib/Kconfig.debug:172: depends on DEBUG_KERNEL && !COMPILE_TEST
-./lib/Kconfig.debug:264:        depends on DEBUG_KERNEL
-./lib/Kconfig.debug:363: depends on DEBUG_KERNEL && (M68K || UML ||
-SUPERH) || ARCH_WANT_FRAME_POINTERS
-./lib/Kconfig.debug:387: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:447: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:508: depends on DEBUG_KERNEL && SLAB
-./lib/Kconfig.debug:549: depends on DEBUG_KERNEL && HAVE_DEBUG_KMEMLEAK
-./lib/Kconfig.debug:614: depends on DEBUG_KERNEL && !IA64
-./lib/Kconfig.debug:623: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:661: depends on DEBUG_KERNEL && ARCH_HAS_DEBUG_VIRTUAL
-./lib/Kconfig.debug:670: depends on DEBUG_KERNEL && !MMU
-./lib/Kconfig.debug:712: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:723: depends on DEBUG_KERNEL && HIGHMEM
-./lib/Kconfig.debug:733: depends on DEBUG_KERNEL && HAVE_DEBUG_STACKOVERFLOW
-./lib/Kconfig.debug:802: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:816: depends on DEBUG_KERNEL && !S390
-./lib/Kconfig.debug:868: depends on DEBUG_KERNEL && !S390
-./lib/Kconfig.debug:902: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:956: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:997: depends on DEBUG_KERNEL && PROC_FS
-./lib/Kconfig.debug:1010: depends on DEBUG_KERNEL && PROC_FS
-./lib/Kconfig.debug:1023: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1048: depends on DEBUG_KERNEL && PREEMPT &&
-TRACE_IRQFLAGS_SUPPORT
-./lib/Kconfig.debug:1065: depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-./lib/Kconfig.debug:1111: depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-./lib/Kconfig.debug:1133: depends on DEBUG_KERNEL && RT_MUTEXES
-./lib/Kconfig.debug:1140: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1150: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1157: depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-./lib/Kconfig.debug:1174: depends on DEBUG_KERNEL && RWSEM_SPIN_ON_OWNER
-./lib/Kconfig.debug:1181: depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-./lib/Kconfig.debug:1196: depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-./lib/Kconfig.debug:1207: depends on DEBUG_KERNEL && LOCKDEP
-./lib/Kconfig.debug:1216: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1226: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1237: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1308: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1346: depends on DEBUG_KERNEL || BUG_ON_DATA_CORRUPTION
-./lib/Kconfig.debug:1355: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1365: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1375: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1385: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1402: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1417: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1444: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1457: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1536: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1615: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1680: depends on DEBUG_KERNEL || m
-./lib/Kconfig.debug:1690: depends on DEBUG_KERNEL || m
-./lib/Kconfig.debug:1699: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1710: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1724: depends on DEBUG_KERNEL
-./lib/Kconfig.debug:1731: depends on DEBUG_KERNEL
-./arch/xtensa/Kconfig.debug:5: depends on DEBUG_KERNEL && MMU
-./arch/x86/Kconfig.debug:70: depends on DEBUG_KERNEL
-./arch/x86/Kconfig.debug:129: depends on DEBUG_KERNEL
-./arch/x86/Kconfig.debug:174: depends on DEBUG_KERNEL && KPROBES
-./arch/x86/Kconfig.debug:258: depends on DEBUG_KERNEL
-./arch/x86/Kconfig.debug:265: depends on DEBUG_KERNEL
-./arch/x86/Kconfig.debug:285: depends on DEBUG_KERNEL
-./arch/x86/Kconfig.debug:295: depends on DEBUG_KERNEL && X86_LOCAL_APIC
-./arch/x86/Kconfig.debug:319: depends on DEBUG_KERNEL
-./arch/ia64/Kconfig.debug:23: depends on DEBUG_KERNEL
-./arch/ia64/Kconfig.debug:33: depends on DEBUG_KERNEL
-./arch/ia64/Kconfig.debug:42: depends on DEBUG_KERNEL
-./arch/ia64/Kconfig.debug:51: depends on DEBUG_KERNEL
-./arch/s390/Kconfig.debug:8: depends on DEBUG_KERNEL
-./arch/powerpc/Kconfig.debug:57: depends on DEBUG_KERNEL
-./arch/powerpc/Kconfig.debug:70: depends on DEBUG_KERNEL &&
-JUMP_LABEL_FEATURE_CHECKS
-./arch/powerpc/Kconfig.debug:79: depends on DEBUG_KERNEL
-./arch/powerpc/Kconfig.debug:83: depends on DEBUG_KERNEL
-./arch/powerpc/Kconfig.debug:90: depends on DEBUG_KERNEL
-./arch/powerpc/Kconfig.debug:127: depends on DEBUG_KERNEL && PPC32
-./arch/powerpc/Kconfig.debug:355:        depends on DEBUG_KERNEL && DEBUG_FS
-./arch/powerpc/Kconfig.debug:366:        depends on DEBUG_KERNEL &&
-PPC_BOOK3S_64
-./arch/arm/Kconfig.debug:8: depends on DEBUG_KERNEL
-./arch/arm/Kconfig.debug:105: depends on DEBUG_KERNEL
-./arch/arm64/Kconfig.debug:7: depends on DEBUG_KERNEL
-./arch/unicore32/Kconfig.debug:17: depends on DEBUG_KERNEL
-./arch/mips/Kconfig.debug:90: depends on DEBUG_KERNEL && SYS_SUPPORTS_ZBOOT
-./arch/sh/Kconfig.debug:22: depends on DEBUG_KERNEL && SUPERH32
-./arch/sh/Kconfig.debug:31: depends on DEBUG_KERNEL && (MMU || BROKEN)
-&& !PAGE_SIZE_64KB
-./arch/sh/Kconfig.debug:41: depends on DEBUG_KERNEL && SUPERH32 && BROKEN
-./arch/sh/Kconfig.debug:49: depends on DEBUG_KERNEL && SUPERH32
-./arch/sh/Kconfig.debug:70: depends on DEBUG_KERNEL
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+RGVzY3JpcHRpb24NCi0tLS0tLS0tLS0tDQpFeHRlbmQgdGhlIHJlYm9vdCBtb2RlIGRyaXZlciB0
+byB1c2UgYSBOVk1FTSBjZWxsIGFzIHdyaXRpbmcgaW50ZXJmYWNlLg0KDQpUZXN0aW5nDQotLS0t
+LS0tDQpUaGUgdGVzdGluZyBpcyBkb25lIGJ5IGNvbmZpZ3VyaW5nIERUIGZyb20gYSBjdXN0b20g
+Ym9hcmQuDQpUaGUgTlZNRU0gY2VsbCBpcyBjb25maWd1cmVkIGluIGFuIFJUQyBub24tdm9sYXRp
+bGUgbWVtb3J5Lg0KS2VybmVsOiA0LjE0LjYwICh0aGUgcGF0Y2hzZXQgd2FzIHJlYmFzZWQgb24g
+a2VybmVsIG1hc3RlcikNCg0KRFQgY29uZmlndXJhdGlvbnM6DQpgDQouLi4NCnJlYm9vdC1tb2Rl
+LW52bWVtQDAgew0KICAgIGNvbXBhdGlibGUgPSAic2ltcGxlLW1mZCI7DQogICAgcmVib290LW1v
+ZGUgew0KICAgICAgICBjb21wYXRpYmxlID0gIm52bWVtLXJlYm9vdC1tb2RlIjsNCiAgICAgICAg
+bnZtZW0tY2VsbHMgPSA8JnJlYm9vdF9tb2RlPjsNCiAgICAgICAgbnZtZW0tY2VsbC1uYW1lcyA9
+ICJyZWJvb3QtbW9kZSI7DQoNCiAgICAgICAgbW9kZS10ZXN0ICAgICAgID0gPDB4MjE5NjkxNDc+
+Ow0KICAgIH07DQp9Ow0KLi4uDQpyZWJvb3RfbW9kZTogbnZtZW1fcmVib290X21vZGVAMCB7DQog
+ICAgICAgIHJlZyA9IDwweDAwIDB4ND47DQp9Ow0KLi4uDQpgDQoNCjEuIFJlYm9vdCB0aGUgc3lz
+dGVtIHVzaW5nIHRoZSBjb21tYW5kIGByZWJvb3QgdGVzdGANCg0KMi4gVmVyaWZ5IHRoYXQga2Vy
+bmVsIGxvZ3Mgc2hvdyB0aGF0IHJlYm9vdCB3YXMgZG9uZSBpbiBtb2RlIGB0ZXN0YDoNClBBU1MN
+CmBbICA0MTMuOTU3MTcyXSByZWJvb3Q6IFJlc3RhcnRpbmcgc3lzdGVtIHdpdGggY29tbWFuZCAn
+dGVzdCcgYA0KDQozLiBTdG9wIGluIFUtQm9vdCBhbmQgdmVyaWZ5IHRoYXQgbW9kZSBgdGVzdGAg
+bWFnaWMgdmFsdWUgaXMgcHJlc2VudA0KaW4gUlRDcyBub24tdm9sYXRpbGUgbWVtb3J5OiBQQVNT
+DQoNCktlcm5lbDogNS4xLjAtcmMzDQoNCjEuIENvbmZpZ3VyZSBgYXJjaC9hcm0vY29uZmlncy9p
+bXhfdjZfdjdfZGVmY29uZmlnYCB0byBjb250YWluIA0KYENPTkZJR19OVk1FTV9SRUJPT1RfTU9E
+RT15YA0KMi4gVmVyaWZ5IHRoYXQgS2VybmVsIGNvbXBpbGVzIHN1Y2Nlc3NmdWw6IFBBU1MNCmAN
+Cm1ha2UgQVJDSD1hcm0gQ1JPU1NfQ09NUElMRT1hcm0tbGludXgtZ251LSBpbXhfdjZfdjdfZGVm
+Y29uZmlnIHpJbWFnZQ0KLi4uDQpDQyAgICAgIGRyaXZlcnMvcG93ZXIvcmVzZXQvbnZtZW0tcmVi
+b290LW1vZGUubw0KLi4uDQpLZXJuZWw6IGFyY2gvYXJtL2Jvb3QvekltYWdlIGlzIHJlYWR5DQpg
+DQpDaGFuZ2VzIHNpbmNlIHYxOg0KLS0tLS0tLS0tLS0tLS0tLS0NCiAtIHNwbGl0IHRoZSBkb2N1
+bWVudGF0aW9uIG9uIGEgc2VwYXJhdGUgcGF0Y2gNCiAtIGFkZCBhIG1pc3NpbmcgaGVhZGVyDQoN
+Ck5hbmRvciBIYW4gKDIpOg0KICBwb3dlcjogcmVzZXQ6IG52bWVtLXJlYm9vdC1tb2RlOiB1c2Ug
+TlZNRU0gYXMgcmVib290IG1vZGUgd3JpdGUNCiAgICBpbnRlcmZhY2UNCiAgZHQtYmluZGluZ3M6
+IHBvd2VyOiByZXNldDogYWRkIGRvY3VtZW50IGZvciBOVk1FTSBiYXNlZCByZWJvb3QtbW9kZQ0K
+DQogLi4uL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLnR4dCAgICAgICAgIHwgMzIgKysr
+KysrKysNCiBkcml2ZXJzL3Bvd2VyL3Jlc2V0L0tjb25maWcgICAgICAgICAgICAgICAgICAgfCAg
+OSArKysNCiBkcml2ZXJzL3Bvd2VyL3Jlc2V0L01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAg
+MSArDQogZHJpdmVycy9wb3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS5jICAgICAgIHwgNzYg
+KysrKysrKysrKysrKysrKysrKw0KIDQgZmlsZXMgY2hhbmdlZCwgMTE4IGluc2VydGlvbnMoKykN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
+d2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLmMNCg0KLS0gDQoyLjE3LjINCg0K
