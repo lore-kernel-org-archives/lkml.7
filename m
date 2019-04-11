@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C409BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C058FC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9008520850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928EB21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfDKVJM (ORCPT
+        id S1727314AbfDKVJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:09:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:26252 "EHLO mx1.redhat.com"
+        Thu, 11 Apr 2019 17:09:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54248 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfDKVJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:09:10 -0400
+        id S1727280AbfDKVJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 17:09:11 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8B72723E6C5;
-        Thu, 11 Apr 2019 21:09:09 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C86FA0C5C;
+        Thu, 11 Apr 2019 21:09:11 +0000 (UTC)
 Received: from localhost.localdomain.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E84B35C220;
-        Thu, 11 Apr 2019 21:09:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB5D95C21E;
+        Thu, 11 Apr 2019 21:09:09 +0000 (UTC)
 From:   jglisse@redhat.com
 To:     linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -40,19 +40,17 @@ Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Ming Lei <ming.lei@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?q?Ernesto=20A=20=2E=20Fern=C3=A1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>, Jeff Moyer <jmoyer@redhat.com>
-Subject: [PATCH v1 12/15] fs/direct-io: keep track of wether a page is coming from GUP or not
-Date:   Thu, 11 Apr 2019 17:08:31 -0400
-Message-Id: <20190411210834.4105-13-jglisse@redhat.com>
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v1 13/15] fs/splice: use put_user_page() when appropriate
+Date:   Thu, 11 Apr 2019 17:08:32 -0400
+Message-Id: <20190411210834.4105-14-jglisse@redhat.com>
 In-Reply-To: <20190411210834.4105-1-jglisse@redhat.com>
 References: <20190411210834.4105-1-jglisse@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 11 Apr 2019 21:09:09 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 11 Apr 2019 21:09:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,16 +58,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jérôme Glisse <jglisse@redhat.com>
 
-We want to keep track of how we got a reference on page when doing DIO,
-ie wether the page was reference through GUP (get_user_page*) or not.
-For that this patch rework the way page reference is taken and handed
-over between DIO code and BIO. Instead of taking a reference for page
-that have been successfuly added to a BIO we just steal the reference
-we have when we lookup the page (either through GUP or for ZERO_PAGE).
-
-So this patch keep track of wether the reference has been stolen by the
-BIO or not. This avoids a bunch of get_page()/put_page() so this limit
-the number of atomic operations.
+Use put_user_page() when page reference was taken through GUP.
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
 Cc: linux-fsdevel@vger.kernel.org
@@ -86,245 +75,46 @@ Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Dave Chinner <david@fromorbit.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Cc: Jeff Moyer <jmoyer@redhat.com>
 ---
- fs/direct-io.c | 82 ++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 60 insertions(+), 22 deletions(-)
+ fs/splice.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index b8b5d8e31aeb..ef9fc7703a78 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -100,6 +100,7 @@ struct dio_submit {
- 	unsigned cur_page_len;		/* Nr of bytes at cur_page_offset */
- 	sector_t cur_page_block;	/* Where it starts */
- 	loff_t cur_page_fs_offset;	/* Offset in file */
-+	bool cur_page_from_gup;		/* Current page is coming from GUP */
+diff --git a/fs/splice.c b/fs/splice.c
+index 4a0b522a0cb4..c9c350d37912 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -371,6 +371,7 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 	unsigned int nr_pages;
+ 	size_t offset, base, copied = 0;
+ 	ssize_t res;
++	bool gup;
+ 	int i;
  
- 	struct iov_iter *iter;
- 	/*
-@@ -148,6 +149,8 @@ struct dio {
- 		struct page *pages[DIO_PAGES];	/* page buffer */
- 		struct work_struct complete_work;/* deferred AIO completion */
- 	};
-+
-+	bool gup;			/* pages are coming from GUP */
- } ____cacheline_aligned_in_smp;
+ 	if (pipe->nrbufs == pipe->buffers)
+@@ -383,7 +384,7 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 	offset = *ppos & ~PAGE_MASK;
  
- static struct kmem_cache *dio_cache __read_mostly;
-@@ -167,6 +170,7 @@ static inline int dio_refill_pages(struct dio *dio, struct dio_submit *sdio)
- {
- 	ssize_t ret;
- 
-+	dio->gup = iov_iter_get_pages_use_gup(sdio->iter);
- 	ret = iov_iter_get_pages(sdio->iter, dio->pages, LONG_MAX, DIO_PAGES,
- 				&sdio->from);
- 
-@@ -181,6 +185,7 @@ static inline int dio_refill_pages(struct dio *dio, struct dio_submit *sdio)
- 			dio->page_errors = ret;
- 		get_page(page);
- 		dio->pages[0] = page;
-+		dio->gup = false;
- 		sdio->head = 0;
- 		sdio->tail = 1;
- 		sdio->from = 0;
-@@ -490,8 +495,12 @@ static inline void dio_bio_submit(struct dio *dio, struct dio_submit *sdio)
-  */
- static inline void dio_cleanup(struct dio *dio, struct dio_submit *sdio)
- {
--	while (sdio->head < sdio->tail)
--		put_page(dio->pages[sdio->head++]);
-+	while (sdio->head < sdio->tail) {
-+		if (dio->gup)
-+			put_user_page(dio->pages[sdio->head++]);
+ 	iov_iter_pipe(&to, READ, pipe, len + offset);
+-
++	gup = iov_iter_get_pages_use_gup(&to);
+ 	res = iov_iter_get_pages_alloc(&to, &pages, len + offset, &base);
+ 	if (res <= 0)
+ 		return -ENOMEM;
+@@ -419,8 +420,12 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 	if (vec != __vec)
+ 		kfree(vec);
+ out:
+-	for (i = 0; i < nr_pages; i++)
+-		put_page(pages[i]);
++	for (i = 0; i < nr_pages; i++) {
++		if (gup)
++			put_user_page(pages[i]);
 +		else
-+			put_page(dio->pages[sdio->head++]);
++			put_page(pages[i]);
 +	}
- }
- 
- /*
-@@ -760,15 +769,19 @@ static inline int dio_bio_add_page(struct dio_submit *sdio)
- {
- 	int ret;
- 
--	ret = bio_add_page(sdio->bio, sdio->cur_page,
--			sdio->cur_page_len, sdio->cur_page_offset, false);
-+	/*
-+	 * The bio is stealing the page reference and that is fine we can add a
-+	 * page only once ie when dio_send_cur_page() is call and each call to
-+	 * dio_send_cur_page() clear the cur_page (on success).
-+	 */
-+	ret = bio_add_page(sdio->bio, sdio->cur_page, sdio->cur_page_len,
-+			 sdio->cur_page_offset, sdio->cur_page_from_gup);
- 	if (ret == sdio->cur_page_len) {
- 		/*
- 		 * Decrement count only, if we are done with this page
- 		 */
- 		if ((sdio->cur_page_len + sdio->cur_page_offset) == PAGE_SIZE)
- 			sdio->pages_in_io--;
--		get_page(sdio->cur_page);
- 		sdio->final_block_in_bio = sdio->cur_page_block +
- 			(sdio->cur_page_len >> sdio->blkbits);
- 		ret = 0;
-@@ -828,9 +841,14 @@ static inline int dio_send_cur_page(struct dio *dio, struct dio_submit *sdio,
- 		ret = dio_new_bio(dio, sdio, sdio->cur_page_block, map_bh);
- 		if (ret == 0) {
- 			ret = dio_bio_add_page(sdio);
-+			if (!ret)
-+				/* Clear the current page. */
-+				sdio->cur_page = NULL;
- 			BUG_ON(ret != 0);
- 		}
--	}
-+	} else
-+		/* Clear the current page. */
-+		sdio->cur_page = NULL;
- out:
- 	return ret;
- }
-@@ -855,7 +873,7 @@ static inline int dio_send_cur_page(struct dio *dio, struct dio_submit *sdio,
- static inline int
- submit_page_section(struct dio *dio, struct dio_submit *sdio, struct page *page,
- 		    unsigned offset, unsigned len, sector_t blocknr,
--		    struct buffer_head *map_bh)
-+		    struct buffer_head *map_bh, bool gup)
- {
- 	int ret = 0;
- 
-@@ -882,14 +900,13 @@ submit_page_section(struct dio *dio, struct dio_submit *sdio, struct page *page,
- 	 */
- 	if (sdio->cur_page) {
- 		ret = dio_send_cur_page(dio, sdio, map_bh);
--		put_page(sdio->cur_page);
--		sdio->cur_page = NULL;
- 		if (ret)
- 			return ret;
- 	}
- 
--	get_page(page);		/* It is in dio */
-+	/* Steal page reference and GUP flag */
- 	sdio->cur_page = page;
-+	sdio->cur_page_from_gup = gup;
- 	sdio->cur_page_offset = offset;
- 	sdio->cur_page_len = len;
- 	sdio->cur_page_block = blocknr;
-@@ -903,8 +920,6 @@ submit_page_section(struct dio *dio, struct dio_submit *sdio, struct page *page,
- 		ret = dio_send_cur_page(dio, sdio, map_bh);
- 		if (sdio->bio)
- 			dio_bio_submit(dio, sdio);
--		put_page(sdio->cur_page);
--		sdio->cur_page = NULL;
- 	}
- 	return ret;
- }
-@@ -946,13 +961,29 @@ static inline void dio_zero_block(struct dio *dio, struct dio_submit *sdio,
- 	this_chunk_bytes = this_chunk_blocks << sdio->blkbits;
- 
- 	page = ZERO_PAGE(0);
-+	get_page(page);
- 	if (submit_page_section(dio, sdio, page, 0, this_chunk_bytes,
--				sdio->next_block_for_io, map_bh))
-+				sdio->next_block_for_io, map_bh, false)) {
-+		put_page(page);
- 		return;
-+	}
- 
- 	sdio->next_block_for_io += this_chunk_blocks;
- }
- 
-+static inline void dio_put_page(const struct dio *dio, bool stolen,
-+				struct page *page)
-+{
-+	/* If page reference was stolen then nothing to do. */
-+	if (stolen)
-+		return;
-+
-+	if (dio->gup)
-+		put_user_page(page);
-+	else
-+		put_page(page);
-+}
-+
- /*
-  * Walk the user pages, and the file, mapping blocks to disk and generating
-  * a sequence of (page,offset,len,block) mappings.  These mappings are injected
-@@ -977,6 +1008,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 	int ret = 0;
- 
- 	while (sdio->block_in_file < sdio->final_block_in_request) {
-+		bool stolen = false;
- 		struct page *page;
- 		size_t from, to;
- 
-@@ -1003,7 +1035,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 
- 				ret = get_more_blocks(dio, sdio, map_bh);
- 				if (ret) {
--					put_page(page);
-+					dio_put_page(dio, stolen, page);
- 					goto out;
- 				}
- 				if (!buffer_mapped(map_bh))
-@@ -1048,7 +1080,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 
- 				/* AKPM: eargh, -ENOTBLK is a hack */
- 				if (dio->op == REQ_OP_WRITE) {
--					put_page(page);
-+					dio_put_page(dio, stolen, page);
- 					return -ENOTBLK;
- 				}
- 
-@@ -1061,7 +1093,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 				if (sdio->block_in_file >=
- 						i_size_aligned >> blkbits) {
- 					/* We hit eof */
--					put_page(page);
-+					dio_put_page(dio, stolen, page);
- 					goto out;
- 				}
- 				zero_user(page, from, 1 << blkbits);
-@@ -1099,11 +1131,13 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 						  from,
- 						  this_chunk_bytes,
- 						  sdio->next_block_for_io,
--						  map_bh);
-+						  map_bh, dio->gup);
- 			if (ret) {
--				put_page(page);
-+				dio_put_page(dio, stolen, page);
- 				goto out;
--			}
-+			} else
-+				/* The page reference has been  stolen ... */
-+				stolen = true;
- 			sdio->next_block_for_io += this_chunk_blocks;
- 
- 			sdio->block_in_file += this_chunk_blocks;
-@@ -1117,7 +1151,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 		}
- 
- 		/* Drop the ref which was taken in get_user_pages() */
--		put_page(page);
-+		dio_put_page(dio, stolen, page);
- 	}
- out:
- 	return ret;
-@@ -1356,8 +1390,12 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
- 		ret2 = dio_send_cur_page(dio, &sdio, &map_bh);
- 		if (retval == 0)
- 			retval = ret2;
--		put_page(sdio.cur_page);
--		sdio.cur_page = NULL;
-+		else {
-+			if (sdio.cur_page_from_gup)
-+				put_user_page(sdio.cur_page);
-+			else
-+				put_page(sdio.cur_page);
-+		}
- 	}
- 	if (sdio.bio)
- 		dio_bio_submit(dio, &sdio);
+ 	kvfree(pages);
+ 	iov_iter_advance(&to, copied);	/* truncates and discards */
+ 	return res;
 -- 
 2.20.1
 
