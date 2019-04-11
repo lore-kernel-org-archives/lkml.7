@@ -7,67 +7,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F83C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1147C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF6221841
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B8921841
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CLRlNpcJ"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GYT7PXbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfDKInu (ORCPT
+        id S1727161AbfDKIny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:43:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41372 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfDKInt (ORCPT
+        Thu, 11 Apr 2019 04:43:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33759 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfDKInx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:43:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so3182271pgs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:43:48 -0700 (PDT)
+        Thu, 11 Apr 2019 04:43:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h5so3140205pfo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:43:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=V7iT3ZB4whlJ7SaEMLeDA/+Cc985ijuEksdJYrKjTpo=;
-        b=CLRlNpcJJbab4Iw8f/mERFQkjxdFOzFwrtqG1jfj0qkFSLLPNduyh/67TxTfm3E4rM
-         xlBm7uMwRkmPu0oidetWo0OtkZ6Qg/Zrfk7N6JW8m+Y56R0EUYMaUwdVJ9nYdKg14R+j
-         cHFKt7cgIR9FFCWsxUcVm6Lp4EAml7pUsocuqfU5/W9bTtz5F+keGJ1OX4/8zOKnSeg7
-         knh0d0iVWdvIjgSsfeD9fZ7DVWqFNGPEzkAKTZLSTh57POI+kDBC5eyF+ArohmqEzlJ1
-         JUaHGPrKgLFQdvhPBX7NZxC1H2iBupCjedpOPdIyF5QB+rum00bxu6bLNihYWDkyCHuq
-         fsxg==
+        bh=3uDRcROgGcVy6omy5p81C7LS9FeeN6XiopSGYFDTY88=;
+        b=GYT7PXbthjwqYq0DLG/UzPHOX+w/ANcASoFvtTw3H/15gT2HSG2WQcXoAhqTW1AcSg
+         pDzJBopIpk/7YJL2wWWBFjS2A6+frZ/4L/myGtJF5wjbDouaKClAhXoTz/peiMqxvMDM
+         iNZkSQtIjxJdZkMSG8lJ7AkhL9KOanQYpKwnQKBfUiZYh7Yr+5/pBmVK3kDaSeFthJ8A
+         vmw/SQbGkWwtmNB/0ZApAPEtYh0SpNtXLxabS9hllFSy5upNYaY5KzYU8m/Y02y+wFaz
+         CbdfbNQVW3XmxWOvLxNqwE6ylPctPUlEhr/PL9GNyzVFyPhZ3mDc6LVZ+Rw1XLKD0Ox2
+         kfnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=V7iT3ZB4whlJ7SaEMLeDA/+Cc985ijuEksdJYrKjTpo=;
-        b=eEUQqOkTg6ogU4chvpz+xdsiywdDWiPt9nNb9PTD57O+qHml14Mwh0iDb3vdvlj5aI
-         F0S0vZpPoGqLFgSuHzFLZlwPMBU46Xm99AFOb5XTobbFCecYH1qpWs7RT8ThDJLOx1ta
-         K1T9ENdwwRMnZdIklwjg4Rbf9n8sAIM6xIwwZRoK+YESYZmS6sCrLPuP7BZTmyxQ2udb
-         CpY5Ns9o0vDTuEoODdGyAUJ/S+SkZw9zvbZ8IVzM2dREca1cGUcWfVXT//wAb3CJrD/H
-         +WOZ0pwDWdnNhAs0CER7j48Vi3JqsFje29wC3QENIAoohljhJkNU3HQaUI7Y3HQZBtsa
-         8Xcw==
-X-Gm-Message-State: APjAAAU6bFYTDwOSNm3PWbYaqiX0bBLO8qrgd1pP+gzGMNRn+qEfwQWX
-        AvEeXvTlhmA7WjW/KrewJTmzWJoOQBE=
-X-Google-Smtp-Source: APXvYqye6k8PBckeC3MlXT5CqlZpgGSMhiXHEShG1oez7V70W9vgoDKcQYLFbBEM/CVb4g2nbAqN/w==
-X-Received: by 2002:aa7:9193:: with SMTP id x19mr49302325pfa.108.1554972228269;
-        Thu, 11 Apr 2019 01:43:48 -0700 (PDT)
+        bh=3uDRcROgGcVy6omy5p81C7LS9FeeN6XiopSGYFDTY88=;
+        b=YHKmAr1Cjb2eKdeHamgEyA47ETlKIA0ZuwK2e6ZUtKCBa041h5mYEHcWUTJxbJh8Xi
+         ae9kL+APmbmh+UwH9QnMPmWkRTfLgmS0BSOGhQOb4fZ2WV9NEdkxrqXdknNhEJhp3A0I
+         5Dzi70x1nyKSdsu5xdqZqWup6zo8XL5gdgsiTc0+rYeOX3tskFq0JLLU0jLpM/EHVqwz
+         lc0hcTCunF8/7RkzTrmc/7bv/MPlEo0lHcAKzQZnivtswFtgputlmuLQJ3tUNBo+OIys
+         MJCk1seGFxVi/8ZvMaTY3T9J8AkVKZ7jTz0I4hrk5XepL0VXD0rYcai2wOmuQY+6Bbdl
+         UqKg==
+X-Gm-Message-State: APjAAAXrIOb7QsMhlLL1RkaQeO/pl3XDbs79+MB2VlBg9lGm9Ytnf7Tk
+        i3xaCVQNycMNfvI0f1sGgFHRNaOwZxQ=
+X-Google-Smtp-Source: APXvYqynHgbPARnw8SqKyrMoIi7d1N9ocPMTUPVNg0szL7boUoJFI746C4foY3XJWkSUDvALMbTJAg==
+X-Received: by 2002:a62:415d:: with SMTP id o90mr48539392pfa.236.1554972232835;
+        Thu, 11 Apr 2019 01:43:52 -0700 (PDT)
 Received: from viisi.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id a3sm61699456pfn.182.2019.04.11.01.43.47
+        by smtp.gmail.com with ESMTPSA id a3sm61699456pfn.182.2019.04.11.01.43.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 01:43:47 -0700 (PDT)
+        Thu, 11 Apr 2019 01:43:52 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
         devicetree@vger.kernel.org
 Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Paul Walmsley <paul@pwsan.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Palmer Dabbelt <palmer@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH 5/6] riscv: dts: add initial board data for the SiFive HiFive Unleashed
-Date:   Thu, 11 Apr 2019 01:43:03 -0700
-Message-Id: <20190411084304.5072-6-paul.walmsley@sifive.com>
+Subject: [PATCH 6/6] riscv: defconfig: enable ARCH_SIFIVE
+Date:   Thu, 11 Apr 2019 01:43:04 -0700
+Message-Id: <20190411084304.5072-7-paul.walmsley@sifive.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190411084304.5072-2-paul.walmsley@sifive.com>
 References: <20190411084304.5072-2-paul.walmsley@sifive.com>
@@ -78,115 +76,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial board data for the SiFive HiFive Unleashed A00.
-
-Currently the data populated in this DT file describes the board
-DRAM configuration and the external clock sources that supply the
-PRCI.
-
-This second version adds onboard SPI device data, fixes the board's
-memory size, and adds changes based on comments from Rob Herring
-<robh+dt@kernel.org>.
+Enable CONFIG_ARCH_SIFIVE in the RISC-V defconfig so
+DTB files for SiFive boards are generated by default.
 
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: devicetree@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/riscv/boot/dts/sifive/Makefile           |  2 +
- .../dts/sifive/hifive-unleashed-a00-fu540.dts | 69 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 arch/riscv/boot/dts/sifive/Makefile
- create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+ arch/riscv/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-new file mode 100644
-index 000000000000..fb825db888df
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-new file mode 100644
-index 000000000000..9d35e811a3aa
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: (Apache-2.0 OR GPL-2.0+)
-+/* Copyright (c) 2018-2019 SiFive, Inc */
-+
-+/dts-v1/;
-+
-+#include "fu540-c000.dtsi"
-+
-+/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
-+#define RTCCLK_FREQ		1000000
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	model = "SiFive HiFive Unleashed A00 (FU540-C000)";
-+	compatible = "sifive,hifive-unleashed-a00-fu540",
-+		"sifive,hifive-unleashed-fu540",
-+		"sifive,fu540-c000", "sifive-fu540";
-+
-+	chosen {
-+	};
-+
-+	cpus {
-+		timebase-frequency = <RTCCLK_FREQ>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x2 0x00000000>;
-+	};
-+
-+	soc {
-+	};
-+
-+	hfclk: hfclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <33333333>;
-+		clock-output-names = "hfclk";
-+	};
-+
-+	rtcclk: rtcclk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <RTCCLK_FREQ>;
-+		clock-output-names = "rtcclk";
-+	};
-+};
-+
-+&qspi0 {
-+	flash@0 {
-+		compatible = "issi,is25wp256d", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		m25p,fast-read;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+	};
-+};
-+
-+&qspi2 {
-+	status = "okay";
-+	mmc@0 {
-+		compatible = "mmc-spi-slot";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+		voltage-ranges = <3300 3300>;
-+		disable-wp;
-+	};
-+};
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 2fd3461e50ab..0fb782c8cc1e 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -12,6 +12,7 @@ CONFIG_CHECKPOINT_RESTORE=y
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
+ CONFIG_BPF_SYSCALL=y
++CONFIG_ARCH_SIFIVE=y
+ CONFIG_SMP=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
 -- 
 2.20.1
 
