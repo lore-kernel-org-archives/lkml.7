@@ -2,146 +2,231 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4D1C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA4C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761D9217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="McgM5h/e"
+	by mail.kernel.org (Postfix) with ESMTP id B8F8020873
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfDKB7m (ORCPT
+        id S1726676AbfDKCAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:59:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35685 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfDKB7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:59:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so2537613plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 18:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DrevsH0dd7zYeHPKVruK4Dh9c/U5um+nzdIZSxK7Blo=;
-        b=McgM5h/eX/cQru0WtH7bMyIVn2GWdg7V3sXDE+7LGX/l7tWC3IPb2TpS2tmgBN9gXY
-         aY+WOIgZJ+NZBnArwPjC2b7ly4Hj8WPWra4+f2pYSHlu3xG/l389uT+3s6K7OY6ipT38
-         F+rA+82m8KhQo0XPN2/G2TcIBQItoZLtEY9sXZ86DgoRLtFo1W0hskYRHcKqNM7aSR/g
-         lQSJBC02oeK0+CeJ+ANlri+is50ij5A1ISbDUlupjTvLmmdjiZR2YtJYwWvRaMdGNSTx
-         Xs4DKWV6AsWZ8LvoG8XXq4Tl5RAzu1igRj5Cgz3QRBKpAsUakTPu6GPgXuynekwy/CGt
-         bJfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DrevsH0dd7zYeHPKVruK4Dh9c/U5um+nzdIZSxK7Blo=;
-        b=L8gSsN9C/x70LmYBrlwIr+kxm4SVgloslgABtCDJEuhPzzb66yFXkXOWHiwWVorAz4
-         BLn9gj+XtgjeghZol3Kz+tbEgmlsr8w/IhKC4qsQ2d8QpSY4kMK/Ap1ETjDstB0+iEkE
-         mQ0wE+HC6oYvC1UY24E07HM4Gwe32+N0x5rxiBFhAaeWyCVxIE4AZ4eu8/E9Z26dLRRg
-         1Zqi8DInaP203EWTz+3tMvpD0wyqSurwkEW4p2OqrgCwCZCugOE+UPydPNhhdNAnc8fZ
-         BHybHM8ySRkWr6K7aXksTABC6ueSTxRN8RdUcN0lUcJYbN/hHxGDUZmalhtpZezUHpVZ
-         KEJA==
-X-Gm-Message-State: APjAAAULfKIFwlD3svzQIHzY9FEw5FwKibNPn12laq8oObgChItBTbr5
-        pbIZy6riiMvimneqDKo7HY5dLQ==
-X-Google-Smtp-Source: APXvYqyq0GJQdU18yV2jjJiPYSuT94TZPIsqDPNloeuSbUWhyqM6XZB2vAfZ0oE//2VKoZdclEj4+A==
-X-Received: by 2002:a17:902:7d81:: with SMTP id a1mr47231025plm.202.1554947978181;
-        Wed, 10 Apr 2019 18:59:38 -0700 (PDT)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id e193sm6612532pgc.53.2019.04.10.18.59.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 18:59:37 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: mcp16502: Remove setup_regulators function
-Date:   Thu, 11 Apr 2019 09:59:23 +0800
-Message-Id: <20190411015923.7157-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411015923.7157-1-axel.lin@ingics.com>
-References: <20190411015923.7157-1-axel.lin@ingics.com>
+        Wed, 10 Apr 2019 22:00:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60404 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725981AbfDKCAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:00:39 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6B8E4EB095994463CA7C;
+        Thu, 11 Apr 2019 10:00:36 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
+ 10:00:28 +0800
+Subject: Re: [PATCH 2/2] kvm: arm: Unify handling THP backed host memory
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>, <julien.thierry@arm.com>,
+        <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
+        <andrew.murray@arm.com>, <eric.auger@redhat.com>,
+        <zhengxiang9@huawei.com>, <wanghaibin.wang@huawei.com>
+References: <1554909297-6753-1-git-send-email-suzuki.poulose@arm.com>
+ <1554909832-7169-1-git-send-email-suzuki.poulose@arm.com>
+ <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <c48b2bd4-68e6-dbc0-b010-78a23a889196@huawei.com>
+Date:   Thu, 11 Apr 2019 09:59:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
+MIME-Version: 1.0
+In-Reply-To: <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems a little bit odd current code pass struct regulator_config rather
-than a pointer to setup_regulators. The setup_regulators is so simple and
-only has one caller, so remove it.
+Hi Suzuki,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/mcp16502.c | 37 +++++++++++-------------------------
- 1 file changed, 11 insertions(+), 26 deletions(-)
+On 2019/4/10 23:23, Suzuki K Poulose wrote:
+> We support mapping host memory backed by PMD transparent hugepages
+> at stage2 as huge pages. However the checks are now spread across
+> two different places. Let us unify the handling of the THPs to
+> keep the code cleaner (and future proof for PUD THP support).
+> This patch moves transparent_hugepage_adjust() closer to the caller
+> to avoid a forward declaration for fault_supports_stage2_huge_mappings().
+> 
+> Also, since we already handle the case where the host VA and the guest
+> PA may not be aligned, the explicit VM_BUG_ON() is not required.
+> 
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Cc: Zneghui Yu <yuzenghui@huawei.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   virt/kvm/arm/mmu.c | 123 +++++++++++++++++++++++++++--------------------------
+>   1 file changed, 62 insertions(+), 61 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 6d73322..714eec2 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1380,53 +1380,6 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
+>   	return ret;
+>   }
+>   
+> -static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
+> -{
+> -	kvm_pfn_t pfn = *pfnp;
+> -	gfn_t gfn = *ipap >> PAGE_SHIFT;
+> -	struct page *page = pfn_to_page(pfn);
+> -
+> -	/*
+> -	 * PageTransCompoundMap() returns true for THP and
+> -	 * hugetlbfs. Make sure the adjustment is done only for THP
+> -	 * pages.
+> -	 */
+> -	if (!PageHuge(page) && PageTransCompoundMap(page)) {
+> -		unsigned long mask;
+> -		/*
+> -		 * The address we faulted on is backed by a transparent huge
+> -		 * page.  However, because we map the compound huge page and
+> -		 * not the individual tail page, we need to transfer the
+> -		 * refcount to the head page.  We have to be careful that the
+> -		 * THP doesn't start to split while we are adjusting the
+> -		 * refcounts.
+> -		 *
+> -		 * We are sure this doesn't happen, because mmu_notifier_retry
+> -		 * was successful and we are holding the mmu_lock, so if this
+> -		 * THP is trying to split, it will be blocked in the mmu
+> -		 * notifier before touching any of the pages, specifically
+> -		 * before being able to call __split_huge_page_refcount().
+> -		 *
+> -		 * We can therefore safely transfer the refcount from PG_tail
+> -		 * to PG_head and switch the pfn from a tail page to the head
+> -		 * page accordingly.
+> -		 */
+> -		mask = PTRS_PER_PMD - 1;
+> -		VM_BUG_ON((gfn & mask) != (pfn & mask));
+> -		if (pfn & mask) {
+> -			*ipap &= PMD_MASK;
+> -			kvm_release_pfn_clean(pfn);
+> -			pfn &= ~mask;
+> -			kvm_get_pfn(pfn);
+> -			*pfnp = pfn;
+> -		}
+> -
+> -		return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+>   /**
+>    * stage2_wp_ptes - write protect PMD range
+>    * @pmd:	pointer to pmd entry
+> @@ -1677,6 +1630,61 @@ static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
+>   	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
+>   }
+>   
+> +/*
+> + * Check if the given hva is backed by a transparent huge page (THP)
+> + * and whether it can be mapped using block mapping in stage2. If so, adjust
+> + * the stage2 PFN and IPA accordingly. Only PMD_SIZE THPs are currently
+> + * supported. This will need to be updated to support other THP sizes.
+> + *
+> + * Returns the size of the mapping.
+> + */
+> +static unsigned long
+> +transparent_hugepage_adjust(struct kvm_memory_slot *memslot,
+> +			    unsigned long hva, kvm_pfn_t *pfnp,
+> +			    phys_addr_t *ipap)
+> +{
+> +	kvm_pfn_t pfn = *pfnp;
+> +	struct page *page = pfn_to_page(pfn);
+> +
+> +	/*
+> +	 * PageTransCompoundMap() returns true for THP and
+> +	 * hugetlbfs. Make sure the adjustment is done only for THP
+> +	 * pages. Also make sure that the HVA and IPA are sufficiently
+> +	 * aligned and that the  block map is contained within the memslot.
+> +	 */
+> +	if (!PageHuge(page) && PageTransCompoundMap(page) &&
 
-diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 9292ab8736c7..e5a02711cb46 100644
---- a/drivers/regulator/mcp16502.c
-+++ b/drivers/regulator/mcp16502.c
-@@ -427,36 +427,15 @@ static const struct regmap_config mcp16502_regmap_config = {
- 	.wr_table	= &mcp16502_yes_reg_table,
- };
- 
--/*
-- * set_up_regulators() - initialize all regulators
-- */
--static int setup_regulators(struct mcp16502 *mcp, struct device *dev,
--			    struct regulator_config config)
--{
--	struct regulator_dev *rdev;
--	int i;
--
--	for (i = 0; i < NUM_REGULATORS; i++) {
--		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
--		if (IS_ERR(rdev)) {
--			dev_err(dev,
--				"failed to register %s regulator %ld\n",
--				mcp16502_desc[i].name, PTR_ERR(rdev));
--			return PTR_ERR(rdev);
--		}
--	}
--
--	return 0;
--}
--
- static int mcp16502_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
- 	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
- 	struct device *dev;
- 	struct mcp16502 *mcp;
- 	struct regmap *rmap;
--	int ret = 0;
-+	int i, ret;
- 
- 	dev = &client->dev;
- 	config.dev = dev;
-@@ -482,9 +461,15 @@ static int mcp16502_probe(struct i2c_client *client,
- 		return PTR_ERR(mcp->lpm);
- 	}
- 
--	ret = setup_regulators(mcp, dev, config);
--	if (ret != 0)
--		return ret;
-+	for (i = 0; i < NUM_REGULATORS; i++) {
-+		rdev = devm_regulator_register(dev, &mcp16502_desc[i], &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(dev,
-+				"failed to register %s regulator %ld\n",
-+				mcp16502_desc[i].name, PTR_ERR(rdev));
-+			return PTR_ERR(rdev);
-+		}
-+	}
- 
- 	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_ACTIVE);
- 
--- 
-2.17.1
+We managed to get here, ensure that we only play with normal size pages
+and no hugetlbfs pages will be involved.  "!PageHuge(page)" will always
+return true and we can let it go.
+
+> +	    fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE)) {
+> +		/*
+> +		 * The address we faulted on is backed by a transparent huge
+> +		 * page.  However, because we map the compound huge page and
+> +		 * not the individual tail page, we need to transfer the
+> +		 * refcount to the head page.  We have to be careful that the
+> +		 * THP doesn't start to split while we are adjusting the
+> +		 * refcounts.
+> +		 *
+> +		 * We are sure this doesn't happen, because mmu_notifier_retry
+> +		 * was successful and we are holding the mmu_lock, so if this
+> +		 * THP is trying to split, it will be blocked in the mmu
+> +		 * notifier before touching any of the pages, specifically
+> +		 * before being able to call __split_huge_page_refcount().
+> +		 *
+> +		 * We can therefore safely transfer the refcount from PG_tail
+> +		 * to PG_head and switch the pfn from a tail page to the head
+> +		 * page accordingly.
+> +		 */
+> +		*ipap &= PMD_MASK;
+> +		kvm_release_pfn_clean(pfn);
+> +		pfn &= ~(PTRS_PER_PMD - 1);
+> +		kvm_get_pfn(pfn);
+> +		*pfnp = pfn;
+> +
+> +		return PMD_SIZE;
+> +	}
+> +
+> +	/* Use page mapping if we cannot use block mapping */
+> +	return PAGE_SIZE;
+> +}
+> +
+>   static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   			  struct kvm_memory_slot *memslot, unsigned long hva,
+>   			  unsigned long fault_status)
+> @@ -1780,20 +1788,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>   	if (mmu_notifier_retry(kvm, mmu_seq))
+>   		goto out_unlock;
+>   
+> -	if (vma_pagesize == PAGE_SIZE && !force_pte) {
+> -		/*
+> -		 * Only PMD_SIZE transparent hugepages(THP) are
+> -		 * currently supported. This code will need to be
+> -		 * updated to support other THP sizes.
+> -		 *
+> -		 * Make sure the host VA and the guest IPA are sufficiently
+> -		 * aligned and that the block is contained within the memslot.
+> -		 */
+> -		if (fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE) &&
+> -		    transparent_hugepage_adjust(&pfn, &fault_ipa))
+> -			vma_pagesize = PMD_SIZE;
+> -	}
+> -
+> +	/*
+> +	 * If we are not forced to use page mapping, check if we are
+> +	 * backed by a THP and thus use block mapping if possible.
+> +	 */
+> +	if (vma_pagesize == PAGE_SIZE && !force_pte)
+> +		vma_pagesize = transparent_hugepage_adjust(memslot, hva,
+> +							   &pfn, &fault_ipa);
+>   	if (writable)
+>   		kvm_set_pfn_dirty(pfn);
+>   
+thanks,
+zenghui
 
