@@ -2,118 +2,134 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B3C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401F12133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554952436;
-	bh=yarpaGMsaE+EItRjUnPuzHRP+F0uBBWkdIMrh2vaERc=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=Bosqtwo+vpp1Vq9JkW7hYUpWjm5xfjFNY9IyRz+czDdDEnt+2EX6snWDu9AqD/bMJ
-	 FS7xT7i8U2h51ZL9reFcOr9fLVWNS9Pv8ej6ds4HJtvXrOrxtMkd0V2S2RQQCgYc69
-	 y0mW2gR6lkjJboOkLLrNUqJMRGjNHci0fnOaL1is=
+	by mail.kernel.org (Postfix) with ESMTP id 097442133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlO9jVLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfDKDNz (ORCPT
+        id S1726717AbfDKDPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:13:55 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:36844 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDKDNy (ORCPT
+        Wed, 10 Apr 2019 23:15:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36202 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfDKDPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:13:54 -0400
-Received: by mail-yb1-f193.google.com with SMTP id e76so1678726ybc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 20:13:54 -0700 (PDT)
+        Wed, 10 Apr 2019 23:15:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 85so2764650pgc.3;
+        Wed, 10 Apr 2019 20:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yarpaGMsaE+EItRjUnPuzHRP+F0uBBWkdIMrh2vaERc=;
-        b=hsK4eg6XWVwQTSPyKdu5W/9Rzvu/5q7ADbZEmLmamCMV9qIS+JU3VBwprw6Ird30e2
-         jA2l2EpOf9KEZ5PR2XQ7i1T3mM55/lYitbUeN1PGmiAva8t5yW5c+VHUKqWHkjDCkkWt
-         +piFaKpIXlsf9a0P5UrPdj+Niy0/HinrDZ/54SHgdXQjGVz0hRBma0YKUaJK2U4ki+to
-         kQvwxlIgJGZ6q0l3A3JLgw4nhI9qnLOA8Esm7PRnWsefd31eAuxw3UrOMpqzCABnFCwi
-         i8tIXt5d6dD0qMlZopLLSTjTv1ndZok3o+GDDFBS/EOrDuCQnl9kTrCcNFg+PMYntaXh
-         JJeQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V2a7SiMlQ8P6sQfZS+jUcSN/tLlscA3p7VdfQYPLowY=;
+        b=nlO9jVLqHhncQxlUUmukEz3YnoJKI7vlao94/IogK2D1OEr3rUptNQPvGF3XWdTOlI
+         fz2nRZFHfESnahdW98+MfBe8vgOKXCnWRQEtBvny2nn5VkzgO53PB6wy1Vgnr/o9QPS4
+         Gp1wKNqkQfOEisD7qC+G9IRVk2D3F9CiIb2TmK8hGHEoDgf+REiXTG0tEuUUWY+PNA/4
+         9ffazHCpVotMKYn8WVLvJXhdJkL6EAEImBt4gKdatWGEammb9mduQ8+4+eChvzNlWQg/
+         aadLf6bScXzUDDZd0k9AvSfq3RgK9P+5OeCsSx8bKjRb+EOQB2aY1q6Ra/sBPuWncd/h
+         y5pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yarpaGMsaE+EItRjUnPuzHRP+F0uBBWkdIMrh2vaERc=;
-        b=TOHXiwY+08kdddg4oTv4HqdY2YA8uLN2eOFNbQme7e366SKICvCxanAFwDy1Uo+AbX
-         4K4gEZ7xukaavzFg6FYfNTlnGRwXLPf7J1uJTkCPL0dGubkjwtQycTsM9zWuGP0kXaZ1
-         EBERfAV8y+wpL9a5P2gLxrxKHnX7GGi48UBx0DY0lAV68TP96S13YLsZ/VodEPBnRhks
-         cYOrRIsFrEP8K2bXjtcVvMjXrRTuwS62ZoRNeoNPEfhnszUPJ8ICk0ExjJvG1lgOBGEX
-         hpwFle1jnZZYIdiEHlTtKQF43Ba3BERblVGlLoTVrytnL2nqrp2sd2ojlbepLHXGdx+h
-         8Etg==
-X-Gm-Message-State: APjAAAWpqfKPCblfdtY1fJZREeT13AyRzbJkTiLShGeXdhCD013Eu7YC
-        XNItGgCFmyqpOg0ID5RMbvo=
-X-Google-Smtp-Source: APXvYqzvbARJXnya9JLCpbt2Obku/ADcBtLNmtD0vwz9dDH1+uxci6UwK/RGLeWhd5xEQNQPE9l71w==
-X-Received: by 2002:a25:41c1:: with SMTP id o184mr11485642yba.183.1554952433853;
-        Wed, 10 Apr 2019 20:13:53 -0700 (PDT)
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net. [75.58.59.55])
-        by smtp.gmail.com with ESMTPSA id 74sm8070279ywe.81.2019.04.10.20.13.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V2a7SiMlQ8P6sQfZS+jUcSN/tLlscA3p7VdfQYPLowY=;
+        b=CH4XtQ+lzLiFCqXlu+74CCzM83XyfSPn5FcvxZJWUx5m+hN8AGLwcq5JjpsQCRxXQl
+         S4DefEMbFoqSUVcR0oEJBL4joVekQMOo0ufHkt6vFUmiwggSfFxHNBlpW8mKO3KO/q5e
+         tixHrhNSIrsmaWARSe2ml7F7KXc9135+LjP4GbgWZQPSPuK0fel2ofnfPiskAfwXDS+w
+         K690g+mftSJZ5ypLLv8ht0/pWB2+0kO4VugP2GtLVvtvFYbJ/5AupbEB2+1Yp3qbT9zI
+         jmCI1srlb7mEutLs8Lwos13YtuQ2ikSmb6Pr1nQzN4sjTQ+YccZji3aAqLLjuX0DEZ1t
+         FRCQ==
+X-Gm-Message-State: APjAAAX51ybALmcKW9dC9lcFyatIXKEpQRT50BJmHmZ79NWrHXL8mEHb
+        qakwxtXCMD1yWvfXuj/LmR4vAaaj
+X-Google-Smtp-Source: APXvYqzfY3rnNZ2CdL2rT8yh6VxCvhwwMs0imLwVbfnMFS19iMppkl70xg90Q96KcWU0s2/n/D9BsA==
+X-Received: by 2002:a63:4620:: with SMTP id t32mr44130049pga.363.1554952545508;
+        Wed, 10 Apr 2019 20:15:45 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::e])
+        by smtp.gmail.com with ESMTPSA id s19sm52184126pfe.74.2019.04.10.20.15.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 20:13:53 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v2] init: Do not select DEBUG_KERNEL by default
-To:     Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wed, 10 Apr 2019 20:15:44 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 20:15:42 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Changbin Du <changbin.du@intel.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Ingo Molnar <mingo@kernel.org>
-References: <20190410224213.20651-1-okaya@kernel.org>
- <CAGXu5jKzBGRr7LjFVdpvHhSFV7C7kuj-6VphhtLsMEoetr_R7g@mail.gmail.com>
- <135E84E9-F068-44CB-B4F6-A5AC2F4CDE3D@joshtriplett.org>
- <CAGXu5jLc_Z=TiNsMd40GN8-0D117RVbdD7Hy4MzjPQNbFf=bcg@mail.gmail.com>
- <FF2E07CA-99D7-4F9C-B281-425897535C84@joshtriplett.org>
-Message-ID: <e901a9cc-f335-fb31-535c-97dce2ca8f5b@kernel.org>
-Date:   Wed, 10 Apr 2019 23:13:52 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
+ kernel easier
+Message-ID: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com>
+ <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+ <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+ <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <FF2E07CA-99D7-4F9C-B281-425897535C84@joshtriplett.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/2019 11:02 PM, Josh Triplett wrote:
-> Then let's fix*that*, and get checkpatch to help enforce it in the future. EXPERT doesn't affect code generation, and neither should this.
+On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
+> On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
+> >
+> > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
+> > [snip]
+> > > > > Wouldn't it be more convenient to provide it in a standardized format
+> > > > > such that you won't have to take an additional step, and always have
+> > > > > This is that form IMO.
+...
+> Compared to:
+>  - Extract tarball
+>  - Build and load
+>  - Remove file tree from filesystem
 
-I think we have to do both. We need to go after the users as well as
-solve the immediate problem per this patch.
+I think there are too many assumptions in this thread in regard to what
+is more convenient for user space.
+I think bcc should try to avoid extracting tarball into file system.
+For example libbcc can uncompress kheader.tar.xz into virtual file system
+of clang front-end. It's more or less std::map<string, string>
+with key=path, value=content of the file. Access to such in-memory
+'files' is obviously faster than doing open/read syscalls.
+bcc already uses this approach for some bcc internal 'files' that
+it passes to clang during compilation.
+All of /proc/kheaders.tar.xz files can be passed the same way
+without extracting them into real file system.
 
-As Mathieu identified, CONFIG_DEBUG_KERNEL is being used all over the
-place and getting subsystem owners to remove let alone add a check
-to checkpatch is just going to take time.
+Joel, would be great if you can share corresponding bcc patch
+that takes advantage of /proc/kheaders
 
-Please let us know if you are OK with this plan.
