@@ -2,291 +2,140 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB655C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49242C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E022075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16ED82184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="WR7cmCux"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrBSE2Us"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfDKKeN (ORCPT
+        id S1726780AbfDKKes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:34:13 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40081 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDKKeM (ORCPT
+        Thu, 11 Apr 2019 06:34:48 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39704 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDKKer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:34:12 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h22so4746959edw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:34:11 -0700 (PDT)
+        Thu, 11 Apr 2019 06:34:47 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so5982227wmk.4;
+        Thu, 11 Apr 2019 03:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SLtwlQnsi2lxcF6BSEB1RE69e3LNi43QlxoMz0lcnyM=;
-        b=WR7cmCuxaqUTW3U8NCvm3nHG1pEljHfaby69xQf7Yzpfr6r72pl0gd7FUC5bNIXWAr
-         Lkb52vpBxGi0q0E1vCBrHjrwd97EqS3DUUqpzYX3P/fFCqsbyl/imgNs+VHbiNkdlslg
-         V/yywiCR4LWDNPIuTrXdE8hnXTBn7GT0EmZM4tQsZTT5Htt2rw78Mqwezbw3etngp1MB
-         V4xleOURfQF2S0QRBXQBFmYMFxfQ1UYskDWKPyBqZ77tE6a9UxiSIgFtqBO0s/m8mQ7N
-         B62XNWDenkl0iaEFES/inbg7cx7fFzOJpE3EMU+KmZHAMuWksB7YDB7I9UwQ1/niTvEf
-         eNUA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ncP/XNUc6zUJMN6LMeRFfRBUv3h/NA4fn494LmOhRG8=;
+        b=RrBSE2Usc9PBkc7LAnBazfFCMJYidCyT2Ku0n71GbZZKb23GkVn5nbFq2uwPbmzd7t
+         M/Ai4p0mmF5+xoGCyQkOABae4LRxfhs0yKoDzVBSUb8i4hCnf4LQwEeer+ZSahHY+0RJ
+         mUFwI/KaJ24zYnuLLWB4PHUU3MF0HEKnWCtgXNVUvyFLoMQnmAl25rBCxSRx5z6c/Qpe
+         +jiinKtSMc5jEtzHYmdFniH1Ll45Na5yLFMyomvD9iTV7AmF9uFPeR0BO3fyroLcZcqX
+         t4NMphRED/AS4doJLsvAkN56rtQ5CE5f5wfIv+UPz/2otXxaeCfPL88ku9Hf00UoIWuF
+         yxhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SLtwlQnsi2lxcF6BSEB1RE69e3LNi43QlxoMz0lcnyM=;
-        b=OcXPEnoBJBFW6zrFjrb5k4C+l+XYqCLuvBoYasQ0NxCejBZGwEcq7YlH6ccJfXG1f/
-         wUowvjIEF0HokFb1WXyj5QN9QkATLFX9R3fxQsXFvbvxvdOE/CkOIc4upKmPb8cRcrfQ
-         90CyF4Mp4YXt/TcexiMEenZgM9YL+Sx91pGpVnzuOAocRU4Yb5RzyA/UddVq1tevbMkD
-         HlBR0CYQws+xoHP1sbgLsVyPtl5J4GOZICQmpiqI1UIBaOvx+U2LSs1ijo8UE7iq7+HV
-         3M4vNwq2sgpQC8eVWYUdsZ+liBvbnr+3uyE5z+m9vNjrOFgR1ZRIQzEvHNY8Q3Ns1Vad
-         8wow==
-X-Gm-Message-State: APjAAAX7u/VsvsjoU3+BLIAzbWlj/tbknMcLZczH0XhYkBxxLdaao575
-        tgChzL1lr5unjVvZu+OHRwp/Zg==
-X-Google-Smtp-Source: APXvYqwA6LgvLM60i09zDdeKKwXX937omKO+V0ZH1k2dUoOGwbesknRoF0Nc2lHHpaDhrf2UXCInCg==
-X-Received: by 2002:a50:93a6:: with SMTP id o35mr31398796eda.245.1554978850611;
-        Thu, 11 Apr 2019 03:34:10 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id h16sm2378946edq.73.2019.04.11.03.34.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Apr 2019 03:34:10 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 12:34:08 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com, rientjes@google.com,
-        willy@infradead.org, yuzhoujian@didichuxing.com,
-        jrdr.linux@gmail.com, guro@fb.com, hannes@cmpxchg.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, ebiederm@xmission.com,
-        shakeelb@google.com, minchan@kernel.org, timmurray@google.com,
-        dancol@google.com, joel@joelfernandes.org, jannh@google.com,
-        linux-mm@kvack.org, lsf-pc@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        oleg@redhat.com
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-Message-ID: <20190411103407.67zdy5zzp7lsyaa4@brauner.io>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411014353.113252-3-surenb@google.com>
- <20190411103018.tcsinifuj7klh6rp@brauner.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ncP/XNUc6zUJMN6LMeRFfRBUv3h/NA4fn494LmOhRG8=;
+        b=SeHNNUBS6SNr5JKjSvn6XTDAw9cgJAyCnRh0S3NyuB83ul5CGGfYEjF5O+rN6wtwye
+         9zQTbSZ4GO9G4Tg6G+bufqYBXnN5Typqdq7yQri8f1G8URTzpO69x4SBOORG11j1gQ17
+         VmnDKOoeOwcnz9vF8SixFhr3SGYh2RBXuBorigG5+Dk8ghQz8yptBuG4pW/zChERIxHg
+         sQ6w2smtks+w33ehag5p3Ke3Gs09ElQgYs3m2sy3tpq5apSPeT5F1aS3v1R7kdlbTXBq
+         Ftc6mJ1Ij/KIr+xRaAyNvtfJlixqx9m9VqELcOp7sYMzpxQzhY/BhTpafi+rnnXy6Wtd
+         ZCJw==
+X-Gm-Message-State: APjAAAUh5ibMIL7fujlY43TtlGS312KsR9859OmdcaVtzYg0UkKn5pLE
+        qAtj87D9uBRkTt4kovxjYqUZBplj5+AxPjrI2Gs=
+X-Google-Smtp-Source: APXvYqxxCXwjF9kqHwwwiWd9xsdmZosDQqKBbtF+8N3rXMyB3xLNbDAv48MMIJr2EQBnQEJJTjcA5IsgI+HX33M/TtA=
+X-Received: by 2002:a1c:cc15:: with SMTP id h21mr6003355wmb.85.1554978885091;
+ Thu, 11 Apr 2019 03:34:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190411103018.tcsinifuj7klh6rp@brauner.io>
-User-Agent: NeoMutt/20180716
+References: <20190411101951.30223-1-megous@megous.com> <20190411101951.30223-4-megous@megous.com>
+In-Reply-To: <20190411101951.30223-4-megous@megous.com>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Thu, 11 Apr 2019 20:34:33 +1000
+Message-ID: <CAGRGNgUhPC+G+H_zYSi7KFx-K10uPOXRsPqPFcirGaWScw59dQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v3 03/11] pinctrl: sunxi: Prepare for
+ alternative bias voltage setting methods
+To:     megous@megous.com
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Oleg too
+Hi Ondrej
 
-On Thu, Apr 11, 2019 at 12:30:18PM +0200, Christian Brauner wrote:
-> On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > victim process. The usage of this flag is currently limited to SIGKILL
-> > signal and only to privileged users.
-> > 
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  include/linux/sched/signal.h |  3 ++-
-> >  include/linux/signal.h       | 11 ++++++++++-
-> >  ipc/mqueue.c                 |  2 +-
-> >  kernel/signal.c              | 37 ++++++++++++++++++++++++++++--------
-> >  kernel/time/itimer.c         |  2 +-
-> >  5 files changed, 43 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> > index e412c092c1e8..8a227633a058 100644
-> > --- a/include/linux/sched/signal.h
-> > +++ b/include/linux/sched/signal.h
-> > @@ -327,7 +327,8 @@ extern int send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
-> >  extern void force_sigsegv(int sig, struct task_struct *p);
-> >  extern int force_sig_info(int, struct kernel_siginfo *, struct task_struct *);
-> >  extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
-> > -extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
-> > +extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid,
-> > +				bool expedite);
-> >  extern int kill_pid_info_as_cred(int, struct kernel_siginfo *, struct pid *,
-> >  				const struct cred *);
-> >  extern int kill_pgrp(struct pid *pid, int sig, int priv);
-> > diff --git a/include/linux/signal.h b/include/linux/signal.h
-> > index 9702016734b1..34b7852aa4a0 100644
-> > --- a/include/linux/signal.h
-> > +++ b/include/linux/signal.h
-> > @@ -446,8 +446,17 @@ int __save_altstack(stack_t __user *, unsigned long);
-> >  } while (0);
-> >  
-> >  #ifdef CONFIG_PROC_FS
-> > +
-> > +/*
-> > + * SS_FLAGS values used in pidfd_send_signal:
-> > + *
-> > + * SS_EXPEDITE indicates desire to expedite the operation.
-> > + */
-> > +#define SS_EXPEDITE	0x00000001
-> 
-> Does this make sense as an SS_* flag?
-> How does this relate to the signal stack?
-> Is there any intention to ever use this flag with stack_t?
-> 
-> New flags should be PIDFD_SIGNAL_*. (E.g. the thread flag will be
-> PIDFD_SIGNAL_THREAD.)
-> And since this is exposed to userspace in contrast to the mm internal
-> naming it should be something more easily understandable like
-> PIDFD_SIGNAL_MM_RECLAIM{_FASTER} or something.
-> 
-> > +
-> >  struct seq_file;
-> >  extern void render_sigset_t(struct seq_file *, const char *, sigset_t *);
-> > -#endif
-> > +
-> > +#endif /* CONFIG_PROC_FS */
-> >  
-> >  #endif /* _LINUX_SIGNAL_H */
-> > diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-> > index aea30530c472..27c66296e08e 100644
-> > --- a/ipc/mqueue.c
-> > +++ b/ipc/mqueue.c
-> > @@ -720,7 +720,7 @@ static void __do_notify(struct mqueue_inode_info *info)
-> >  			rcu_read_unlock();
-> >  
-> >  			kill_pid_info(info->notify.sigev_signo,
-> > -				      &sig_i, info->notify_owner);
-> > +				      &sig_i, info->notify_owner, false);
-> >  			break;
-> >  		case SIGEV_THREAD:
-> >  			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
-> > diff --git a/kernel/signal.c b/kernel/signal.c
-> > index f98448cf2def..02ed4332d17c 100644
-> > --- a/kernel/signal.c
-> > +++ b/kernel/signal.c
-> > @@ -43,6 +43,7 @@
-> >  #include <linux/compiler.h>
-> >  #include <linux/posix-timers.h>
-> >  #include <linux/livepatch.h>
-> > +#include <linux/oom.h>
-> >  
-> >  #define CREATE_TRACE_POINTS
-> >  #include <trace/events/signal.h>
-> > @@ -1394,7 +1395,8 @@ int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp)
-> >  	return success ? 0 : retval;
-> >  }
-> >  
-> > -int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
-> > +int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid,
-> > +				  bool expedite)
-> >  {
-> >  	int error = -ESRCH;
-> >  	struct task_struct *p;
-> > @@ -1402,8 +1404,17 @@ int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid)
-> >  	for (;;) {
-> >  		rcu_read_lock();
-> >  		p = pid_task(pid, PIDTYPE_PID);
-> > -		if (p)
-> > +		if (p) {
-> >  			error = group_send_sig_info(sig, info, p, PIDTYPE_TGID);
-> > +
-> > +			/*
-> > +			 * Ignore expedite_reclaim return value, it is best
-> > +			 * effort only.
-> > +			 */
-> > +			if (!error && expedite)
-> > +				expedite_reclaim(p);
-> 
-> SIGKILL will take the whole thread group down so the reclaim should make
-> sense here.
-> 
-> > +		}
-> > +
-> >  		rcu_read_unlock();
-> >  		if (likely(!p || error != -ESRCH))
-> >  			return error;
-> > @@ -1420,7 +1431,7 @@ static int kill_proc_info(int sig, struct kernel_siginfo *info, pid_t pid)
-> >  {
-> >  	int error;
-> >  	rcu_read_lock();
-> > -	error = kill_pid_info(sig, info, find_vpid(pid));
-> > +	error = kill_pid_info(sig, info, find_vpid(pid), false);
-> >  	rcu_read_unlock();
-> >  	return error;
-> >  }
-> > @@ -1487,7 +1498,7 @@ static int kill_something_info(int sig, struct kernel_siginfo *info, pid_t pid)
-> >  
-> >  	if (pid > 0) {
-> >  		rcu_read_lock();
-> > -		ret = kill_pid_info(sig, info, find_vpid(pid));
-> > +		ret = kill_pid_info(sig, info, find_vpid(pid), false);
-> >  		rcu_read_unlock();
-> >  		return ret;
-> >  	}
-> > @@ -1704,7 +1715,7 @@ EXPORT_SYMBOL(kill_pgrp);
-> >  
-> >  int kill_pid(struct pid *pid, int sig, int priv)
-> >  {
-> > -	return kill_pid_info(sig, __si_special(priv), pid);
-> > +	return kill_pid_info(sig, __si_special(priv), pid, false);
-> >  }
-> >  EXPORT_SYMBOL(kill_pid);
-> >  
-> > @@ -3577,10 +3588,20 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-> >  	struct pid *pid;
-> >  	kernel_siginfo_t kinfo;
-> >  
-> > -	/* Enforce flags be set to 0 until we add an extension. */
-> > -	if (flags)
-> > +	/* Enforce no unknown flags. */
-> > +	if (flags & ~SS_EXPEDITE)
-> >  		return -EINVAL;
-> >  
-> > +	if (flags & SS_EXPEDITE) {
-> > +		/* Enforce SS_EXPEDITE to be used with SIGKILL only. */
-> > +		if (sig != SIGKILL)
-> > +			return -EINVAL;
-> 
-> Not super fond of this being a SIGKILL specific flag but I get why.
-> 
-> > +
-> > +		/* Limit expedited killing to privileged users only. */
-> > +		if (!capable(CAP_SYS_NICE))
-> > +			return -EPERM;
-> 
-> Do you have a specific (DOS or other) attack vector in mind that renders
-> ns_capable unsuitable?
-> 
-> > +	}
-> > +
-> >  	f = fdget_raw(pidfd);
-> >  	if (!f.file)
-> >  		return -EBADF;
-> > @@ -3614,7 +3635,7 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
-> >  		prepare_kill_siginfo(sig, &kinfo);
-> >  	}
-> >  
-> > -	ret = kill_pid_info(sig, &kinfo, pid);
-> > +	ret = kill_pid_info(sig, &kinfo, pid, (flags & SS_EXPEDITE) != 0);
-> >  
-> >  err:
-> >  	fdput(f);
-> > diff --git a/kernel/time/itimer.c b/kernel/time/itimer.c
-> > index 02068b2d5862..c926483cdb53 100644
-> > --- a/kernel/time/itimer.c
-> > +++ b/kernel/time/itimer.c
-> > @@ -140,7 +140,7 @@ enum hrtimer_restart it_real_fn(struct hrtimer *timer)
-> >  	struct pid *leader_pid = sig->pids[PIDTYPE_TGID];
-> >  
-> >  	trace_itimer_expire(ITIMER_REAL, leader_pid, 0);
-> > -	kill_pid_info(SIGALRM, SEND_SIG_PRIV, leader_pid);
-> > +	kill_pid_info(SIGALRM, SEND_SIG_PRIV, leader_pid, false);
-> >  
-> >  	return HRTIMER_NORESTART;
-> >  }
-> > -- 
-> > 2.21.0.392.gf8f6787159e-goog
-> > 
+On Thu, Apr 11, 2019 at 8:19 PM megous via linux-sunxi
+<linux-sunxi@googlegroups.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> H6 has a different I/O voltage bias setting method than A80. Prepare
+> existing code for using alternative bias voltage setting methods.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index ee15ab067b5f..4bfc8a6d9dce 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -95,6 +95,13 @@
+>  #define PINCTRL_SUN7I_A20      BIT(7)
+>  #define PINCTRL_SUN8I_R40      BIT(8)
+>
+> +enum sunxi_desc_bias_voltage {
+> +       BIAS_VOLTAGE_NONE,
+> +       /* Bias voltage configuration is done through
+> +        * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
+> +       BIAS_VOLTAGE_GRP_CONFIG,
+> +};
+> +
+>  struct sunxi_desc_function {
+>         unsigned long   variant;
+>         const char      *name;
+> @@ -117,7 +124,7 @@ struct sunxi_pinctrl_desc {
+>         const unsigned int              *irq_bank_map;
+>         bool                            irq_read_needs_mux;
+>         bool                            disable_strict_mode;
+> -       bool                            has_io_bias_cfg;
+> +       int                             io_bias_cfg_variant;
+
+Shouldn't we be defining this field using the enum rather than as an int?
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
