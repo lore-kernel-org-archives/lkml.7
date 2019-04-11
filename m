@@ -2,100 +2,82 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E50BC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A077BC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B10421871
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554980183;
-	bh=K7fqSzzRHoACqpC7C3D0ODbY7QXdLqMt78eVtZvQpOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BNAW1+TaYZJqVpHYr/Lm4G3fHDBpcJyOqIdJb5AjAlQ3eVRsuT3AbVSULFMEFqzy4
-	 gBzklJQDUSaH2fVDPbf3hgsKp2PucxzgEAshy2ioaA+QuhE5hGXOw9mu6lUiEUB6QC
-	 8jzb+w3pbqjZEfu8m3xPRaLgrTF6F3x5Nvznvezk=
+	by mail.kernel.org (Postfix) with ESMTP id 7BEC52184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDKK4W (ORCPT
+        id S1726767AbfDKK4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:56:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39968 "EHLO mx1.suse.de"
+        Thu, 11 Apr 2019 06:56:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44542 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726628AbfDKK4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:56:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2CF44ABAC;
-        Thu, 11 Apr 2019 10:56:20 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 12:56:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
- find_memory_block()
-Message-ID: <20190411105617.GS10383@dhcp22.suse.cz>
-References: <20190410101455.17338-1-david@redhat.com>
- <20190411084141.GQ10383@dhcp22.suse.cz>
- <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
+        id S1726517AbfDKK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:56:47 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D86701A69786D7FA9083;
+        Thu, 11 Apr 2019 18:56:45 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 11 Apr
+ 2019 18:56:37 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH] staging: erofs: fix unexpected out-of-bound data access
+Date:   Thu, 11 Apr 2019 18:55:55 +0800
+Message-ID: <20190411105555.133551-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-04-19 11:11:05, David Hildenbrand wrote:
-> On 11.04.19 10:41, Michal Hocko wrote:
-> > On Wed 10-04-19 12:14:55, David Hildenbrand wrote:
-> >> While current node handling is probably terribly broken for memory block
-> >> devices that span several nodes (only possible when added during boot,
-> >> and something like that should be blocked completely), properly put the
-> >> device reference we obtained via find_memory_block() to get the nid.
-> > 
-> > The changelog could see some improvements I believe. (Half) stating
-> > broken status of multinode memblock is not really useful without a wider
-> > context so I would simply remove it. More to the point, it would be much
-> > better to actually describe the actual problem and the user visible
-> > effect.
-> > 
-> > "
-> > d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug") has started
-> > using find_memory_block to get a nodeid for the beginnig of the onlined
-> > pfn range. The commit has missed that the memblock contains a reference
-> > counted object and a missing put_device will leak the kobject behind
-> > which ADD THE USER VISIBLE EFFECT HERE.
-> > "
-> 
-> I don't think mentioning the commit a second time is really needed.
-> 
-> "
-> Right now we are using find_memory_block() to get the node id for the
-> pfn range to online. We are missing to drop a reference to the memory
-> block device. While the device still gets unregistered via
-> device_unregister(), resulting in no user visible problem, the device is
-> never released via device_release(), resulting in a memory leak. Fix
-> that by properly using a put_device().
-> "
+Unexpected out-of-bound data will be read in erofs_read_raw_page
+after commit 07173c3ec276 ("block: enable multipage bvecs") since
+one iovec could have multiple pages.
 
-OK, sounds good to me. I was not sure about all the sysfs machinery
-and the kobj dependencies but if there are no sysfs files leaking and
-crashing upon a later access then a leak of a small amount of memory
-that is not user controlable then this is not super urgent.
+Let's fix as what Ming's pointed out in the previous email.
 
-Thanks!
+Suggested-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
 
+It should be fixed from linux-5.1-rc after multi-page bvec feature.
+
+Thanks,
+Gao Xiang
+
+ drivers/staging/erofs/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+index 0714061ba888..c64ec76643d4 100644
+--- a/drivers/staging/erofs/data.c
++++ b/drivers/staging/erofs/data.c
+@@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+ 	*last_block = current_block;
+ 
+ 	/* shift in advance in case of it followed by too many gaps */
+-	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
++	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
+ 		/* err should reassign to 0 after submitting */
+ 		err = 0;
+ 		goto submit_bio_out;
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
