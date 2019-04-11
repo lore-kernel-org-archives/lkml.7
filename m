@@ -2,134 +2,81 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1FFC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D77BC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097442133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:15:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlO9jVLq"
+	by mail.kernel.org (Postfix) with ESMTP id E3DCF2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfDKDPr (ORCPT
+        id S1726731AbfDKDRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:15:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36202 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDKDPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:15:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 85so2764650pgc.3;
-        Wed, 10 Apr 2019 20:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V2a7SiMlQ8P6sQfZS+jUcSN/tLlscA3p7VdfQYPLowY=;
-        b=nlO9jVLqHhncQxlUUmukEz3YnoJKI7vlao94/IogK2D1OEr3rUptNQPvGF3XWdTOlI
-         fz2nRZFHfESnahdW98+MfBe8vgOKXCnWRQEtBvny2nn5VkzgO53PB6wy1Vgnr/o9QPS4
-         Gp1wKNqkQfOEisD7qC+G9IRVk2D3F9CiIb2TmK8hGHEoDgf+REiXTG0tEuUUWY+PNA/4
-         9ffazHCpVotMKYn8WVLvJXhdJkL6EAEImBt4gKdatWGEammb9mduQ8+4+eChvzNlWQg/
-         aadLf6bScXzUDDZd0k9AvSfq3RgK9P+5OeCsSx8bKjRb+EOQB2aY1q6Ra/sBPuWncd/h
-         y5pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V2a7SiMlQ8P6sQfZS+jUcSN/tLlscA3p7VdfQYPLowY=;
-        b=CH4XtQ+lzLiFCqXlu+74CCzM83XyfSPn5FcvxZJWUx5m+hN8AGLwcq5JjpsQCRxXQl
-         S4DefEMbFoqSUVcR0oEJBL4joVekQMOo0ufHkt6vFUmiwggSfFxHNBlpW8mKO3KO/q5e
-         tixHrhNSIrsmaWARSe2ml7F7KXc9135+LjP4GbgWZQPSPuK0fel2ofnfPiskAfwXDS+w
-         K690g+mftSJZ5ypLLv8ht0/pWB2+0kO4VugP2GtLVvtvFYbJ/5AupbEB2+1Yp3qbT9zI
-         jmCI1srlb7mEutLs8Lwos13YtuQ2ikSmb6Pr1nQzN4sjTQ+YccZji3aAqLLjuX0DEZ1t
-         FRCQ==
-X-Gm-Message-State: APjAAAX51ybALmcKW9dC9lcFyatIXKEpQRT50BJmHmZ79NWrHXL8mEHb
-        qakwxtXCMD1yWvfXuj/LmR4vAaaj
-X-Google-Smtp-Source: APXvYqzfY3rnNZ2CdL2rT8yh6VxCvhwwMs0imLwVbfnMFS19iMppkl70xg90Q96KcWU0s2/n/D9BsA==
-X-Received: by 2002:a63:4620:: with SMTP id t32mr44130049pga.363.1554952545508;
-        Wed, 10 Apr 2019 20:15:45 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::e])
-        by smtp.gmail.com with ESMTPSA id s19sm52184126pfe.74.2019.04.10.20.15.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 20:15:44 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 20:15:42 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
- kernel easier
-Message-ID: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com>
- <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
- <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+        Wed, 10 Apr 2019 23:17:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50947 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726615AbfDKDRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 23:17:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 20:17:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,335,1549958400"; 
+   d="scan'208";a="160147274"
+Received: from slin7-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.204.16])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2019 20:17:12 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 0/5] soundwire: code cleanup
+Date:   Wed, 10 Apr 2019 22:16:56 -0500
+Message-Id: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
-> On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
-> > [snip]
-> > > > > Wouldn't it be more convenient to provide it in a standardized format
-> > > > > such that you won't have to take an additional step, and always have
-> > > > > This is that form IMO.
-...
-> Compared to:
->  - Extract tarball
->  - Build and load
->  - Remove file tree from filesystem
+SoundWire support will be provided in Linux with the Sound Open
+Firmware (SOF) on Intel platforms. Before we start adding the missing
+pieces, there are a number of warnings and style issues reported by
+checkpatch, cppcheck and Coccinelle that need to be cleaned-up.
 
-I think there are too many assumptions in this thread in regard to what
-is more convenient for user space.
-I think bcc should try to avoid extracting tarball into file system.
-For example libbcc can uncompress kheader.tar.xz into virtual file system
-of clang front-end. It's more or less std::map<string, string>
-with key=path, value=content of the file. Access to such in-memory
-'files' is obviously faster than doing open/read syscalls.
-bcc already uses this approach for some bcc internal 'files' that
-it passes to clang during compilation.
-All of /proc/kheaders.tar.xz files can be passed the same way
-without extracting them into real file system.
+Changes since v2:
+fixed inversion of devm_kcalloc parameters, detected while rebasing
+additional patches.
 
-Joel, would be great if you can share corresponding bcc patch
-that takes advantage of /proc/kheaders
+Changes since v1:
+added missing newlines in new patch (suggested by Joe Perches)
+
+Pierre-Louis Bossart (5):
+  soundwire: intel: fix inversion in devm_kcalloc parameters
+  soundwire: fix style issues
+  soundwire: bus: remove useless initializations
+  soundwire: stream: remove useless initialization of local variable
+  soundwire: add missing newlines in dynamic debug logs
+
+ drivers/soundwire/Kconfig          |   2 +-
+ drivers/soundwire/bus.c            | 137 ++++++++-------
+ drivers/soundwire/bus.h            |  16 +-
+ drivers/soundwire/bus_type.c       |   4 +-
+ drivers/soundwire/cadence_master.c |  99 +++++------
+ drivers/soundwire/cadence_master.h |  22 +--
+ drivers/soundwire/intel.c          | 103 ++++++-----
+ drivers/soundwire/intel.h          |   4 +-
+ drivers/soundwire/intel_init.c     |  12 +-
+ drivers/soundwire/mipi_disco.c     | 116 +++++++------
+ drivers/soundwire/slave.c          |  10 +-
+ drivers/soundwire/stream.c         | 267 +++++++++++++++--------------
+ 12 files changed, 404 insertions(+), 388 deletions(-)
+
+-- 
+2.17.1
 
