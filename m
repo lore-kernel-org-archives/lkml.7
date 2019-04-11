@@ -2,93 +2,86 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C17BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1AAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0642083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="brU6yRC2"
+	by mail.kernel.org (Postfix) with ESMTP id 12A222082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfDKIpp (ORCPT
+        id S1726963AbfDKIqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:45:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52093 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfDKIpm (ORCPT
+        Thu, 11 Apr 2019 04:46:35 -0400
+Received: from host.76.145.23.62.rev.coltfrance.com ([62.23.145.76]:56237 "EHLO
+        proxy.6wind.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKIqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:45:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 4so5619362wmf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=72YojJ2ZI4Hnj5UZWtMVH1bJJscttQzZHVGA77jha6k=;
-        b=brU6yRC2/R67qR7FwEPXgWq7TMtY3G392GEJp4iDaBRyvhCusWFHyAaS6pYicJMf60
-         FJV8zzS64jtbceJfeADF5+UAO8jacrkTYcZ7pp6+JGcHd5z/neIKvlLN+wRfC7qUHsIh
-         YOEUxQTUj6SDJ+t9OGUxNCOID2PE43j+B4dvYouzart1YuyCaOp/MMPwSJLE6bpX8aZD
-         NDbVvy3g5fHNVl1xV+TuRZOS7beZEef5kJmo5F1wFntu8AfiJt3eVeDYMr48o3LoqYXn
-         +VdlfQayRS8iyKStauO6bGg45cnZefIdE1snnnrxUcwm9SgI1JygDlhOmNyxVecixHZx
-         HqKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=72YojJ2ZI4Hnj5UZWtMVH1bJJscttQzZHVGA77jha6k=;
-        b=qy24PODTvm6wujSNr/Z3qLR2VG5GdN/32bb7r1ir/VzFmHeHXnYvY8yx95EXLR3fdA
-         /ARK3FDbMrcyM1mqk4b7SeCwWo5R7u9isPPUuuRbNXbK4JRehIjjqcN8h+knO5qtf1LS
-         /U5tAc+B8u4IVbdVCQYT1uYY49Rh5GjkpaewX8y4xFAmHOZw9ZgYyS5D9jV43pDtF63e
-         2rsmJo5+hOX7ldl/+2f2Cca+t2GOM8tjQfy9Bd7fQzp1sQjQF25ls5F1J1PZJHI1Jt1U
-         kXcu54EcWfpy62zXaoE5gl2BWUSuiFB1P5f6GJIbbZYOqxAX20hhtZ0pEJv5vnxENgHu
-         Unqw==
-X-Gm-Message-State: APjAAAXPvQB79fEjk+WNK4fxIK/kI2AAz5qGBZguTdenu3nM7vN5eM1E
-        dziqCG97G45mST358XAXwJtp/w==
-X-Google-Smtp-Source: APXvYqzD6/VS9PfVDNO6HphW5M4EV309P4F8/HO4da7MQt2vi/o/ZoTzBqwZPAJIq2PCDip1y0tfhA==
-X-Received: by 2002:a1c:b782:: with SMTP id h124mr5858487wmf.5.1554972340768;
-        Thu, 11 Apr 2019 01:45:40 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 7sm128602876wrc.81.2019.04.11.01.45.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 01:45:40 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     jbrunet@baylibre.com, narmstrong@baylibre.com,
-        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: clk: g12a-clkc: add Temperature Sensor clock ID
-Date:   Thu, 11 Apr 2019 10:45:36 +0200
-Message-Id: <20190411084537.30299-2-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411084537.30299-1-glaroque@baylibre.com>
-References: <20190411084537.30299-1-glaroque@baylibre.com>
+        Thu, 11 Apr 2019 04:46:35 -0400
+X-Greylist: delayed 412 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Apr 2019 04:46:34 EDT
+Received: from bretzel.dev.6wind.com (unknown [10.16.0.19])
+        by proxy.6wind.com (Postfix) with ESMTPS id 337FA29703B;
+        Thu, 11 Apr 2019 10:39:41 +0200 (CEST)
+Received: from dichtel by bretzel.dev.6wind.com with local (Exim 4.89)
+        (envelope-from <dichtel@bretzel.dev.6wind.com>)
+        id 1hEVFF-00012m-22; Thu, 11 Apr 2019 10:39:41 +0200
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+To:     tglx@linutronix.de, jpoimboe@redhat.com, eb@emlix.com,
+        yamada.masahiro@socionext.com, peterz@infradead.org
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Subject: [PATCH linux] objtool: fix pkg-config query in case of cross-compilation
+Date:   Thu, 11 Apr 2019 10:39:40 +0200
+Message-Id: <20190411083940.3911-1-nicolas.dichtel@6wind.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock id used by temperature sensor for G12A Socs
+In case of cross-compilation, there may be two pkg-config tools, one for
+the host and one for the target. Enable to override the default name.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Fixes: 056d28d135bc ("objtool: Query pkg-config for libelf location")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 ---
- include/dt-bindings/clock/g12a-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+ Makefile               | 3 ++-
+ tools/objtool/Makefile | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index 30303728fe09..85cfcab10507 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -133,5 +133,6 @@
- #define CLKID_MPLL_5OM				177
- #define CLKID_CPU_CLK				187
- #define CLKID_PCIE_PLL				201
-+#define CLKID_TS				203
+diff --git a/Makefile b/Makefile
+index 15c8251d4d5e..f12ca3598fc4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -953,7 +953,8 @@ mod_sign_cmd = true
+ endif
+ export mod_sign_cmd
  
- #endif /* __G12A_CLKC_H */
+-HOST_LIBELF_LIBS = $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
++export HOST_PKG_CONFIG ?= pkg-config
++HOST_LIBELF_LIBS = $(shell $(HOST_PKG_CONFIG) libelf --libs 2>/dev/null || echo -lelf)
+ 
+ ifdef CONFIG_STACK_VALIDATION
+   has_libelf := $(call try-run,\
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 53f8be0f4a1f..4e229e77aacf 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -25,8 +25,8 @@ LIBSUBCMD		= $(LIBSUBCMD_OUTPUT)libsubcmd.a
+ OBJTOOL    := $(OUTPUT)objtool
+ OBJTOOL_IN := $(OBJTOOL)-in.o
+ 
+-LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
+-LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
++LIBELF_FLAGS := $(shell $(HOST_PKG_CONFIG) libelf --cflags 2>/dev/null)
++LIBELF_LIBS  := $(shell $(HOST_PKG_CONFIG) libelf --libs 2>/dev/null || echo -lelf)
+ 
+ all: $(OBJTOOL)
+ 
 -- 
-2.17.1
+2.21.0
 
