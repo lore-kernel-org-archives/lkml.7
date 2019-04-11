@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81288C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ACBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1592084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94362184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="K8z/d+aH"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NzNFKjHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfDKWBb (ORCPT
+        id S1726951AbfDKWBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:01:31 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52000 "EHLO
+        Thu, 11 Apr 2019 18:01:30 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35849 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfDKWBZ (ORCPT
+        with ESMTP id S1726890AbfDKWB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:01:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 4so8632808wmf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:01:24 -0700 (PDT)
+        Thu, 11 Apr 2019 18:01:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so8495154wml.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ppI9nqpQVIT5EX87CEcKbfdI9W3paDlwzbHWj7vYXTg=;
-        b=K8z/d+aH5mjiptQEK6iIvRF5y6r0lfHtJ2mmS1otxJlDG8x6bxBz44Ahm4f4XQfs1+
-         cOqQ4+ESVP8nM6T7Wl724gJlOdaAjcOPaOmwPKL89bDgFvb/fka7ZPYKIgOZZe5vhABe
-         ViA/k5YhxEIxOn0Zvwm88Sd2YC95kEMpRw5yOcTuDYt7zWsmMbIv/Q6pCXyUOo1OD61d
-         XGyoSMgiOeNdP5ETplauulOv5IZIIWKVHWKVMABjThJHeukWIgDihy/TgBGDF8frgK2G
-         U7p2RlmMPOerGXwlzEOai+8xI/JbK3EraMbgpSliTd4337GMu36XDqj2Rpk6WlctInq0
-         zR8Q==
+        bh=4m105n5JXJH4GNf9WN+soWtXGry/vpyc5a/iSxRDFzw=;
+        b=NzNFKjHb09kbOIHFC41lGJd95srXDx+k6jOgARNJ6GIQ36ROXxomwgG1t5ZZmtnDcq
+         9x0D4BW/E1st5N+fdpO4q/KshtnUPtQJjHjutgQdFrpX/HAI1lc5Ni4VWJC9Jhnak+9a
+         WLTkCFzeaPFj4djeAlX7H65RWyYR3vJnvlRvlCcEvZ6vxC6XH5Mo7QYJ4PKFAQdOrrZl
+         BH44N+OpoVxPWmBdIAwy0qsgN2oarmGgx7+jb8cJfmn2RlvtqijKBA420rFOYuQ2us0E
+         shLtv0GWTTcOa/xcgDqYvMJ0mH2xgXcuRLkpajKWtvCRPnSPjSLKY+s4lAdDjEeGD7+3
+         +R2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ppI9nqpQVIT5EX87CEcKbfdI9W3paDlwzbHWj7vYXTg=;
-        b=rTu6e9rfYmGbqFDQcDC1xXLOzwPwUSoq1VbCWqUaSJLfkEQPyF6vOKB+Ae0XMGtVc+
-         Uh5ggHRdi5g3Sls4vOYPrfFFtvcbVqjCnNEDSRivVu8rovASByTXt0u7yWbog/wHI29h
-         Pujp0HIjL162N6DqEPeDPqdumZ3LfxNJSjKEx5HJyKOlGfmN8x6V/zEgGr9f1XD92i+R
-         I/zrpkPrGXcfYeI/UYdGbGPMuNeei7YViWXiRZcaCPvhipXzdoRJ3dKHXb81xRpq3uIs
-         OEJ5kMzomuX8DbOXlnEF3gYvLTlS5ld01YgA5uf9IB9NE3G+pA/WUDcLq9T1Gkr5wF8x
-         HR9A==
-X-Gm-Message-State: APjAAAUboVIZGNq2VgomklnNa+Y4/vR5THvAe4zqrercpztRrmJBhKb5
-        SRxzqFGkOh3QIJOtl2jHJSyEL1rb
-X-Google-Smtp-Source: APXvYqzluhRlLS7+aeGTBMGtndLaXbk7pEcHusdW0T738cU+A7Iw4rH1UIR99+QzGesPhCuXYb/STQ==
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr8160946wmh.32.1555020083782;
-        Thu, 11 Apr 2019 15:01:23 -0700 (PDT)
+        bh=4m105n5JXJH4GNf9WN+soWtXGry/vpyc5a/iSxRDFzw=;
+        b=tGKh7bvGHSCpxHdmyruxCNEdM/fYKe/HWL35Af9hQIbbQj53y9ODz/31i5WUj/UKIK
+         e3/Nf/k81bq75qbfSGf32amNcZJ573eWMEpU4k7ZO5Bd6ldGABMJNI3W7fBJWi5p5Wzt
+         8aIbDohaahUJzZOWykJZQuZ5oxzoSU8kGD+nE9PP+tOhD0BSOtBLbt3LwHXQevufONbD
+         67a8FMdZB0ePIHLQuI6q9B1mZEI9nnbbEzMd1nACQBN3tX/kRfwA/Mn+nvC/XhXD90wW
+         MNx6QT1QJimCKsBzJP27zwU9NPEzG8qbf/yQFJycG+SMRDZri6ezicGMa5ffPt+mw4DN
+         VVMA==
+X-Gm-Message-State: APjAAAV+8iqKww7DZxujuCfrfPdtk31Q7eKQjmXm5YEvaglsBJMIDSdd
+        wWFgyf2Mo1OtpBQdiVy8oR0=
+X-Google-Smtp-Source: APXvYqwvz5r4sd151G017FJh/Vn+1GDk5EwoOrb7sRHdQs5rc/n1+l76wMQOKuKsn5oRdB6Q4mftzg==
+X-Received: by 2002:a1c:6783:: with SMTP id b125mr8256171wmc.41.1555020085029;
+        Thu, 11 Apr 2019 15:01:25 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C8AD0009F15067C8D22C31.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:9f1:5067:c8d2:2c31])
-        by smtp.googlemail.com with ESMTPSA id s189sm13266186wmf.45.2019.04.11.15.01.22
+        by smtp.googlemail.com with ESMTPSA id s189sm13266186wmf.45.2019.04.11.15.01.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 15:01:23 -0700 (PDT)
+        Thu, 11 Apr 2019 15:01:24 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     liang.yang@amlogic.com, linux-amlogic@lists.infradead.org,
         linux-mtd@lists.infradead.org, richard@nod.at,
@@ -65,9 +65,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, marek.vasut@gmail.com,
         dwmw2@infradead.org, bbrezillon@kernel.org,
         jianxin.pan@amlogic.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/4] mtd: rawnand: meson: use a void pointer for meson_nfc_dma_buffer_setup
-Date:   Fri, 12 Apr 2019 00:00:55 +0200
-Message-Id: <20190411220056.19109-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/4] mtd: rawnand: meson: only initialize the RB completion once
+Date:   Fri, 12 Apr 2019 00:00:56 +0200
+Message-Id: <20190411220056.19109-5-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411220056.19109-1-martin.blumenstingl@googlemail.com>
 References: <20190411220056.19109-1-martin.blumenstingl@googlemail.com>
@@ -78,62 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This simplifies the code because it gets rid of the casts to an
-u8-pointer when passing "info_buf" from struct meson_nfc_nand_chip.
-Also it gets rid of the cast of the u8 databuf pointer to a void
-pointer.
-The logic inside meson_nfc_dma_buffer_setup() doesn't care about the
-pointer types themselves because it only passes them to dma_map_single
-which accepts a void pointer.
+Documentation/scheduler/completion.txt states:
+  Calling init_completion() on the same completion object twice is
+  most likely a bug as it re-initializes the queue to an empty queue and
+  enqueued tasks could get "lost" - use reinit_completion() in that case,
+  but be aware of other races.
 
-No functional changes.
+Initialize nfc->completion in meson_nfc_probe using init_completion and
+change the call in meson_nfc_queue_rb to reinit_completion so the logic
+matches what the documentation suggests.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/mtd/nand/raw/meson_nand.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/mtd/nand/raw/meson_nand.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mtd/nand/raw/meson_nand.c b/drivers/mtd/nand/raw/meson_nand.c
-index 9a6023638101..57cc4bd3f665 100644
+index 57cc4bd3f665..ea57ddcec41e 100644
 --- a/drivers/mtd/nand/raw/meson_nand.c
 +++ b/drivers/mtd/nand/raw/meson_nand.c
-@@ -470,15 +470,15 @@ static int meson_nfc_ecc_correct(struct nand_chip *nand, u32 *bitflips,
- 	return ret;
- }
+@@ -400,7 +400,7 @@ static int meson_nfc_queue_rb(struct meson_nfc *nfc, int timeout_ms)
+ 	cfg |= NFC_RB_IRQ_EN;
+ 	writel(cfg, nfc->reg_base + NFC_REG_CFG);
  
--static int meson_nfc_dma_buffer_setup(struct nand_chip *nand, u8 *databuf,
--				      int datalen, u8 *infobuf, int infolen,
-+static int meson_nfc_dma_buffer_setup(struct nand_chip *nand, void *databuf,
-+				      int datalen, void *infobuf, int infolen,
- 				      enum dma_data_direction dir)
- {
- 	struct meson_nfc *nfc = nand_get_controller_data(nand);
- 	u32 cmd;
- 	int ret = 0;
+-	init_completion(&nfc->completion);
++	reinit_completion(&nfc->completion);
  
--	nfc->daddr = dma_map_single(nfc->dev, (void *)databuf, datalen, dir);
-+	nfc->daddr = dma_map_single(nfc->dev, databuf, datalen, dir);
- 	ret = dma_mapping_error(nfc->dev, nfc->daddr);
- 	if (ret) {
- 		dev_err(nfc->dev, "DMA mapping error\n");
-@@ -645,7 +645,7 @@ static int meson_nfc_write_page_sub(struct nand_chip *nand,
- 		return ret;
+ 	/* use the max erase time as the maximum clock for waiting R/B */
+ 	cmd = NFC_CMD_RB | NFC_CMD_RB_INT
+@@ -1380,6 +1380,7 @@ static int meson_nfc_probe(struct platform_device *pdev)
  
- 	ret = meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf,
--					 data_len, (u8 *)meson_chip->info_buf,
-+					 data_len, meson_chip->info_buf,
- 					 info_len, DMA_TO_DEVICE);
- 	if (ret)
- 		return ret;
-@@ -729,7 +729,7 @@ static int meson_nfc_read_page_sub(struct nand_chip *nand,
- 		return ret;
+ 	nand_controller_init(&nfc->controller);
+ 	INIT_LIST_HEAD(&nfc->chips);
++	init_completion(&nfc->completion);
  
- 	ret = meson_nfc_dma_buffer_setup(nand, meson_chip->data_buf,
--					 data_len, (u8 *)meson_chip->info_buf,
-+					 data_len, meson_chip->info_buf,
- 					 info_len, DMA_FROM_DEVICE);
- 	if (ret)
- 		return ret;
+ 	nfc->dev = dev;
+ 
 -- 
 2.21.0
 
