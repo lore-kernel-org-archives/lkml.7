@@ -2,133 +2,110 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9ACC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA8C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20F2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE1E2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MqphQP92"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CWZrJl4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfDKWAG (ORCPT
+        id S1726798AbfDKWBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:00:06 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:40367 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfDKWAF (ORCPT
+        Thu, 11 Apr 2019 18:01:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36895 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfDKWBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:00:05 -0400
-Received: by mail-wr1-f44.google.com with SMTP id h4so9286358wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:00:04 -0700 (PDT)
+        Thu, 11 Apr 2019 18:01:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so8479069wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NawObyE9Zp16eLwFu5OPgzzdF2i4lMyPHI2QyUPOlK0=;
-        b=MqphQP92OgsvRoMbbmbXn3lXPPv7JgQOj3uXy35tv7nQiYjdSaAyYZaXa/Q7P7wDXE
-         kGDHBRN5P2Lxpgtg6vv9KELeDa+b3yyz+BtJsKyHo48XdAlE2kKFtC1jZgiuMjPMBn/9
-         OjTpxGIvco4tQgJzkGyFaNaRFQw9jCg2YL9qyPEAMG5OlnctCup4J4BXFYZ/5M2VYQr0
-         Xz7YQh086MWcG/jvWQkMTlzO9JW1GGWdNOTMp5I2/2LKJbdmYK+RLRhBva2DzlJdqhdP
-         JiesYrjhOGVLwWT6cGkmVZ6UZseKXfSVFLy30lBl+Ts4/WKG4lrSxQ+OyS3G12/Y4EFk
-         KCOQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=USu0U08XtV62/FT9Y9Zw6NN9l+FpUxSZTLC2grbjDtk=;
+        b=CWZrJl4Vr7VzKxx4cuNrkwzXvIhQIEfjKSZI99fOT5xoTTBPIFfNC4x1k2/Ehi5YGE
+         cJLZz13nPJucNqWvqlx/Ol3o8Yb4yvARPRelZNiAjlxtQ2yylVm77DBAfzRqxd2G4D5k
+         wKawDinP0rtC7FqirFT5TqwBU6HDUa6N6PlIVbIyinUCNoxUR9JpnYSEVHqsnYC2qC/n
+         Blatm/jNmqQstPsj0SvkKwOS3/Mrd0AluYcEuvfosUAI6QgRvtPRbYvUzy+iSj4nS5Qe
+         C+PRbgd/rM7XaApOmLpVVDYqj1v32bFm8lctgHhFP+dTpdpkORpQ/1jqDEAdt38WLTAU
+         8/4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NawObyE9Zp16eLwFu5OPgzzdF2i4lMyPHI2QyUPOlK0=;
-        b=fIrHA/j6+GTqIC/4NsFCcWhCx9YzuAGi3TfAfW2yxjL9H4jS1tuFOxBxcXEPZo4wz+
-         M/Ga9wifR0A0nuMna9YkAZUPrLFbSGt3AHmb3WtE4VAOm28sV8VoCfzkMykqjbzJx9eK
-         eWAJMW7GhJMwZ//OmYMtD2H4rjl1jcNCgO1JusP6M2mvKKhQFnNfgJWg9XN15GehUpfy
-         GA3/xnbP2WPz7Bm74KUXz04jPf8t/AjbYUtpw8s7vwFhUE8tGixe5pyqTVEovgBbbz9N
-         GNN+DjVTNpir/b0Pq+Qn75q3GBl5eaYRcCxX147JqnsdAPmGRqREmHAMwZh/577Y7GK1
-         U5kw==
-X-Gm-Message-State: APjAAAXiVgdELXI7fLLJ1ML2qE2cbtCwp5RANrMue5VRFhwI+eKZO1Ci
-        CYpQgqUra8uQAe3XjmuboYMr8hYdfvllQaY8dBi3jw==
-X-Google-Smtp-Source: APXvYqywLXFZ26VMEzhbK5mzgQdSEa7/h59iSNw606UZ4yYmpRG6kaPD22As4lJ8uuB9GyxIbnLHPOuNGB/AzmlW7dI=
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr13689115wrj.16.1555020003406;
- Thu, 11 Apr 2019 15:00:03 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=USu0U08XtV62/FT9Y9Zw6NN9l+FpUxSZTLC2grbjDtk=;
+        b=VSusQMSnLBByKDMMVYf+dlr4F5KKFLE42wEw/X39zTIB9myPs8NFQv9ZWjpS3HlKE2
+         dVNaD1cEE7sPQ11c7vtaQhBhlRBs4a6Nv7SHeIKYfOzymfUni/GZdhUNjyN2X+gE5RCa
+         tlXTK6+4P4/kVU60/UMesrRYZvwpqLX73WM1payoEY+PXh4m0uvDPLzEujtzc2X6eJXK
+         EtwZHRpAF1moAvkowR8gHH4z8PWOkI5fH1tE0JeLTBwdE2JsMGldooBN9Cf0tkyeI5oe
+         A1swiQOvBH/IUbTH+RNzaBOlpZlnANdj6Hy5bQlDfX8DabWn1/tN4DA/O+K593lr6UPL
+         JkRg==
+X-Gm-Message-State: APjAAAWYkhHQyobXMvBe3AMtbZkVAm0L0BvBqZ9jAPyu2HUDUnLbKL9m
+        Sp6EmSlBlJUQ0Ex44DKIkPI=
+X-Google-Smtp-Source: APXvYqwrbxKve66ns57EPKWCyRVS1dNWITS6KhJEq0fgugMXjWKS9x4TQNLghNMdLAeaq01QCtsMTg==
+X-Received: by 2002:a1c:be0e:: with SMTP id o14mr8237655wmf.118.1555020080027;
+        Thu, 11 Apr 2019 15:01:20 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C8AD0009F15067C8D22C31.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:9f1:5067:c8d2:2c31])
+        by smtp.googlemail.com with ESMTPSA id s189sm13266186wmf.45.2019.04.11.15.01.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 15:01:19 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     liang.yang@amlogic.com, linux-amlogic@lists.infradead.org,
+        linux-mtd@lists.infradead.org, richard@nod.at,
+        miquel.raynal@bootlin.com
+Cc:     linux-arm-kernel@lists.infradead.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, bbrezillon@kernel.org,
+        jianxin.pan@amlogic.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/4] meson-nand: small code improvements
+Date:   Fri, 12 Apr 2019 00:00:52 +0200
+Message-Id: <20190411220056.19109-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org> <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
- <20190411214458.GB31565@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190411214458.GB31565@tower.DHCP.thefacebook.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 11 Apr 2019 14:59:51 -0700
-Message-ID: <CAJuCfpFjwv7SFEYZ9gbZXYdiPSPpnKHaXfsbEJorN8Y55QAjVg@mail.gmail.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        "yuzhoujian@didichuxing.com" <yuzhoujian@didichuxing.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 2:45 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Thu, Apr 11, 2019 at 10:09:06AM -0700, Suren Baghdasaryan wrote:
-> > On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > > > victim process. The usage of this flag is currently limited to SIGKILL
-> > > > signal and only to privileged users.
-> > >
-> > > What is the downside of doing expedited memory reclaim?  ie why not do it
-> > > every time a process is going to die?
->
-> Hello, Suren!
->
-> I also like the idea to reap always.
->
-> > I think with an implementation that does not use/abuse oom-reaper
-> > thread this could be done for any kill. As I mentioned oom-reaper is a
-> > limited resource which has access to memory reserves and should not be
-> > abused in the way I do in this reference implementation.
->
-> In most OOM cases it doesn't matter that much which task to reap,
-> so I don't think that reusing the oom-reaper thread is bad.
-> It should be relatively easy to tweak in a way, that it won't
-> wait for mmap_sem if there are other tasks waiting to be reaped.
-> Also, the oom code add to the head of the list, and the expedited
-> killing to the end, or something like this.
->
-> The only think, if we're going to reap all tasks, we probably
-> want to have a per-node oom_reaper thread.
+This series comes with four small improvements for the meson-nand
+driver:
+* the first patches are replacing open-coded logic with existing
+  utilities / helpers
+* the third patch drops some unnecessary casting after changing
+  the type of the info buffer parameter from "u8 *" to "void *"
+* the fourth patch adjusts the usage of init_completion with what the
+  documentation suggests
 
-Thanks for the ideas Roman. I'll take some time to digest the input
-from everybody. What I heard from everyone is that we want this to be
-a part of generic kill functionality which does not require a change
-in userspace API.
+I have tested these patches as best as I could on my Meson8m2 board
+using experimental patches on top of this series which add support for
+this older SoC to the meson-nand driver.
 
-> Thanks!
->
-> --
-> You received this message because you are subscribed to the Google Groups "kernel-team" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+Liang, can you please test this series on GXL and/or AXG so I don't
+break the NFC driver on these newer SoCs? All of my GXL/GXM boards
+have eMMC instead of raw NAND, so I cannot test it on these newer SoCs
+myself.
+
+This series is meant to be applied to the nand/next tree.
+
+
+Martin Blumenstingl (4):
+  mtd: rawnand: meson: use struct_size macro
+  mtd: rawnand: meson: use of_property_count_elems_of_size helper
+  mtd: rawnand: meson: use a void pointer for meson_nfc_dma_buffer_setup
+  mtd: rawnand: meson: only initialize the RB completion once
+
+ drivers/mtd/nand/raw/meson_nand.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+-- 
+2.21.0
+
