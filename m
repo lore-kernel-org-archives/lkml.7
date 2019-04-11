@@ -2,200 +2,216 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B41BC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BF9C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B8A20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GaP44zLp"
+	by mail.kernel.org (Postfix) with ESMTP id 2BFE720818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfDKCYV (ORCPT
+        id S1726765AbfDKCZU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:24:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43013 "EHLO ozlabs.org"
+        Wed, 10 Apr 2019 22:25:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57046 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfDKCYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:24:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726577AbfDKCZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:25:19 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44flG96pBKz9s3l;
-        Thu, 11 Apr 2019 12:24:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554949458;
-        bh=BbcGnj23b10G3Nthin6BRg7O8vxWrhLf97KzW+jCYtg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GaP44zLptblMSs66VQ8a9Yt+P5OUTBmXf+gbyygY6F/ttCbCv+4u6luiU1JGNFtgj
-         S8RvS9tLb3KKOWQ0oWsmswf5sSyL0NOjc/g8ZSKKtnFxmULnxCIBfXxCAVonyMlV53
-         iuHnKPIaz1OwTA3jwKSL14y9CcMOWe3pS+xHcKcoW+GY8QeVd5r5NPQ5tT+PYe8cGp
-         orHQSbaLpIiI7hbb3gWgg+HIBsFRbOJdCAMgaifJ/TFNgCKhjjflFqcVloHWbc1J9t
-         ipxEVwIapa3XW8W8wK5Uvv9TuRnhikY6FwIi08RsF4xdXkPLz0tF+02UmU64ws87Mj
-         JXQVBJ4+vYGCA==
-Date:   Thu, 11 Apr 2019 12:24:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     John Johansen <john.johansen@canonical.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Chris Coulson <chris.coulson@canonical.com>
-Subject: linux-next: manual merge of the apparmor tree with Linus' tree
-Message-ID: <20190411122408.7b35cf74@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id EC47F285B3;
+        Thu, 11 Apr 2019 02:25:18 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-189.rdu2.redhat.com [10.10.120.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8416017172;
+        Thu, 11 Apr 2019 02:25:17 +0000 (UTC)
+Subject: Re: [PATCH-tip v2 02/12] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <20190405192115.17416-1-longman@redhat.com>
+ <20190405192115.17416-3-longman@redhat.com>
+ <20190410184429.GX4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
+ XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
+ jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
+ r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
+ CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
+ 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
+ VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
+ evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
+ Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
+ h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
+ bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
+ FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
+ oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
+ ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
+ fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
+ 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
+ rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
+ 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
+ 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
+ 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
+ QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
+ TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
+ Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
+ yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
+ lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
+ drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
+ M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
+ 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
+ MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
+ bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
+ qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
+ AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
+ 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
+ GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
+ jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
+ 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
+ 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
+ yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
+ 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
+ Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
+ wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
+ weim8xU=
+Organization: Red Hat
+Message-ID: <bc06ff44-4dd0-f49c-c938-5f6c514e9596@redhat.com>
+Date:   Wed, 10 Apr 2019 22:25:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Q/8EpOQ53.R7ce447/f/weu"; protocol="application/pgp-signature"
+In-Reply-To: <20190410184429.GX4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 11 Apr 2019 02:25:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Q/8EpOQ53.R7ce447/f/weu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 04/10/2019 02:44 PM, Peter Zijlstra wrote:
+> On Fri, Apr 05, 2019 at 03:21:05PM -0400, Waiman Long wrote:
+>> Because of writer lock stealing, it is possible that a constant
+>> stream of incoming writers will cause a waiting writer or reader to
+>> wait indefinitely leading to lock starvation.
+>>
+>> The mutex code has a lock handoff mechanism to prevent lock starvation.
+>> This patch implements a similar lock handoff mechanism to disable
+>> lock stealing and force lock handoff to the first waiter in the queue
+>> after at least a 5ms waiting period. The waiting period is used to
+>> avoid discouraging lock stealing too much to affect performance.
+> I would say the handoff it not at all similar to the mutex code. It is
+> in fact radically different.
+>
 
-Hi all,
+I mean they are similar in concept. Of course, the implementations are
+quite different.
 
-Today's linux-next merge of the apparmor tree got a conflict in:
+>> @@ -131,6 +138,15 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+>>  		adjustment = RWSEM_READER_BIAS;
+>>  		oldcount = atomic_long_fetch_add(adjustment, &sem->count);
+>>  		if (unlikely(oldcount & RWSEM_WRITER_MASK)) {
+>> +			/*
+>> +			 * Initiate handoff to reader, if applicable.
+>> +			 */
+>> +			if (!(oldcount & RWSEM_FLAG_HANDOFF) &&
+>> +			    time_after(jiffies, waiter->timeout)) {
+>> +				adjustment -= RWSEM_FLAG_HANDOFF;
+>> +				lockevent_inc(rwsem_rlock_handoff);
+>> +			}
+>> +
+>>  			atomic_long_sub(adjustment, &sem->count);
+>>  			return;
+>>  		}
+> That confuses the heck out of me...
+>
+> The above seems to rely on __rwsem_mark_wake() to be fully serialized
+> (and it is, by ->wait_lock, but that isn't spelled out anywhere) such
+> that we don't get double increment of FLAG_HANDOFF.
+>
+> So there is NO __rwsem_mark_wake() vs __wesem_mark_wake() race like:
+>
+>   CPU0					CPU1
+>
+>   oldcount = atomic_long_fetch_add(adjustment, &sem->count)
+>
+> 					oldcount = atomic_long_fetch_add(adjustment, &sem->count)
+>
+>   if (!(oldcount & HANDOFF))
+>     adjustment -= HANDOFF;
+>
+> 					if (!(oldcount & HANDOFF))
+> 					  adjustment -= HANDOFF;
+>   atomic_long_sub(adjustment)
+> 					atomic_long_sub(adjustment)
+>
+>
+> *whoops* double negative decrement of HANDOFF (aka double increment).
 
-  security/apparmor/lsm.c
+Yes, __rwsem_mark_wake() is always called with wait_lock held. I can add
+a lockdep_assert() statement to clarify this point.
 
-between commit:
+>
+> However there is another site that fiddles with the HANDOFF bit, namely
+> __rwsem_down_write_failed_common(), and that does:
+>
+> +                               atomic_long_or(RWSEM_FLAG_HANDOFF, &sem->count);
+>
+> _OUTSIDE_ of ->wait_lock, which would yield:
+>
+>   CPU0					CPU1
+>
+>   oldcount = atomic_long_fetch_add(adjustment, &sem->count)
+>
+> 					atomic_long_or(HANDOFF)
+>
+>   if (!(oldcount & HANDOFF))
+>     adjustment -= HANDOFF;
+>
+>   atomic_long_sub(adjustment)
+>
+> *whoops*, incremented HANDOFF on HANDOFF.
+>
+>
+> And there's not a comment in sight that would elucidate if this is
+> possible or not.
+>
 
-  e33c1b992377 ("apparmor: Restore Y/N in /sys for apparmor's "enabled"")
+A writer can only set the handoff bit if it is the first waiter in the
+queue. If it is the first waiter, a racing __rwsem_mark_wake() will see
+that the first waiter is a writer and so won't go into the reader path.
+I know I something don't spell out all the conditions that may look
+obvious to me but not to others. I will elaborate more in comments.
 
-from Linus' tree and commit:
+> Also:
+>
+> +                               atomic_long_or(RWSEM_FLAG_HANDOFF, &sem->count);
+> +                               first++;
+> +
+> +                               /*
+> +                                * Make sure the handoff bit is seen by
+> +                                * others before proceeding.
+> +                                */
+> +                               smp_mb__after_atomic();
+>
+> That comment is utter nonsense. smp_mb() doesn't (and cannot) 'make
+> visible'. There needs to be order between two memops on both sides.
+>
+I kind of add that for safety. I will take some time to rethink if it is
+really necessary.
 
-  876dd866c084 ("apparmor: Initial implementation of raw policy blob compre=
-ssion")
-
-from the apparmor tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
 Cheers,
-Stephen Rothwell
+Longman
 
-diff --cc security/apparmor/lsm.c
-index 87500bde5a92,e1e9c3c01cd3..000000000000
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@@ -25,8 -25,8 +25,9 @@@
-  #include <linux/user_namespace.h>
-  #include <linux/netfilter_ipv4.h>
-  #include <linux/netfilter_ipv6.h>
-+ #include <linux/zlib.h>
-  #include <net/sock.h>
- +#include <uapi/linux/mount.h>
- =20
-  #include "include/apparmor.h"
-  #include "include/apparmorfs.h"
-@@@ -1420,46 -1424,37 +1436,77 @@@ static int param_get_aauint(char *buffe
-  	return param_get_uint(buffer, kp);
-  }
- =20
- +/* Can only be set before AppArmor is initialized (i.e. on boot cmdline).=
- */
- +static int param_set_aaintbool(const char *val, const struct kernel_param=
- *kp)
- +{
- +	struct kernel_param kp_local;
- +	bool value;
- +	int error;
- +
- +	if (apparmor_initialized)
- +		return -EPERM;
- +
- +	/* Create local copy, with arg pointing to bool type. */
- +	value =3D !!*((int *)kp->arg);
- +	memcpy(&kp_local, kp, sizeof(kp_local));
- +	kp_local.arg =3D &value;
- +
- +	error =3D param_set_bool(val, &kp_local);
- +	if (!error)
- +		*((int *)kp->arg) =3D *((bool *)kp_local.arg);
- +	return error;
- +}
- +
- +/*
- + * To avoid changing /sys/module/apparmor/parameters/enabled from Y/N to
- + * 1/0, this converts the "int that is actually bool" back to bool for
- + * display in the /sys filesystem, while keeping it "int" for the LSM
- + * infrastructure.
- + */
- +static int param_get_aaintbool(char *buffer, const struct kernel_param *k=
-p)
- +{
- +	struct kernel_param kp_local;
- +	bool value;
- +
- +	/* Create local copy, with arg pointing to bool type. */
- +	value =3D !!*((int *)kp->arg);
- +	memcpy(&kp_local, kp, sizeof(kp_local));
- +	kp_local.arg =3D &value;
- +
- +	return param_get_bool(buffer, &kp_local);
- +}
- +
-+ static int param_set_aacompressionlevel(const char *val,
-+ 					const struct kernel_param *kp)
-+ {
-+ 	int error;
-+=20
-+ 	if (!apparmor_enabled)
-+ 		return -EINVAL;
-+ 	if (apparmor_initialized)
-+ 		return -EPERM;
-+=20
-+ 	error =3D param_set_int(val, kp);
-+=20
-+ 	aa_g_rawdata_compression_level =3D clamp(aa_g_rawdata_compression_level,
-+ 					       Z_NO_COMPRESSION,
-+ 					       Z_BEST_COMPRESSION);
-+ 	pr_info("AppArmor: policy rawdata compression level set to %u\n",
-+ 		aa_g_rawdata_compression_level);
-+=20
-+ 	return error;
-+ }
-+=20
-+ static int param_get_aacompressionlevel(char *buffer,
-+ 					const struct kernel_param *kp)
-+ {
-+ 	if (!apparmor_enabled)
-+ 		return -EINVAL;
-+ 	if (apparmor_initialized && !policy_view_capable(NULL))
-+ 		return -EPERM;
-+ 	return param_get_int(buffer, kp);
-+ }
-+=20
-  static int param_get_audit(char *buffer, const struct kernel_param *kp)
-  {
-  	if (!apparmor_enabled)
 
---Sig_/Q/8EpOQ53.R7ce447/f/weu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyupUgACgkQAVBC80lX
-0Gx45gf/VB40HfJVDnmWY+s10LavRxSl+A0EbfHr4qU6PsC+vjkxxO62tWWLzcVZ
-SoGk/RhQ6zFZ6v7A8DJ6zFPKt+SyzKu8z4wvm5qaT+p5Tixjm1AzdL9re0FUEz7u
-QH9q5eGM7HiS1phlanEJVscIm1wtRkXZo8HYmWKOh8ukAEF5Jv0T5OZ5uGurFeUq
-/xelZvOpWqljZrYiUFwPqoMD7loqiH0kYLJTTgpXVlBGgdlbV6Qm3H8oOgEMO6No
-j1marxDD2H2VtZsuO6vg94Uf3MjNXjFhJ2SHTpGWKG4TQQ2oxorYfq+FvyAqGhD5
-Da4gRfEZutuLBQCmR8M6FC+AdDcIyA==
-=HLfv
------END PGP SIGNATURE-----
-
---Sig_/Q/8EpOQ53.R7ce447/f/weu--
