@@ -2,178 +2,155 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD49C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E07DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4622184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A632184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWsWREFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfDKNoh (ORCPT
+        id S1726796AbfDKNox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:44:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47892 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726655AbfDKNog (ORCPT
+        Thu, 11 Apr 2019 09:44:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36237 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726629AbfDKNow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:44:36 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BDbD8w121537
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:44:35 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rt6cysdxg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:44:34 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 11 Apr 2019 14:44:34 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Apr 2019 14:44:29 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BDiShL32243756
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 13:44:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E57A6B2065;
-        Thu, 11 Apr 2019 13:44:27 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B830BB205F;
-        Thu, 11 Apr 2019 13:44:27 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Apr 2019 13:44:27 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id BFC7916C32C2; Thu, 11 Apr 2019 06:44:28 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 06:44:28 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, mathieu.desnoyers@efficios.com,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] module: Make __tracepoints_ptrs as read-only
-Reply-To: paulmck@linux.ibm.com
-References: <20190410195708.162185-1-joel@joelfernandes.org>
- <20190410195708.162185-3-joel@joelfernandes.org>
- <20190410161112.540017d9@gandalf.local.home>
- <20190410202902.GA167446@google.com>
- <20190410204401.62f928ca@gandalf.local.home>
- <20190411082106.GB167446@google.com>
+        Thu, 11 Apr 2019 09:44:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so3496010pfn.3;
+        Thu, 11 Apr 2019 06:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQgjGvRFXYx192kJ2MT8Ee7tSO38gssau7hWJK/zzFE=;
+        b=RWsWREFsT246W7R7rmVANTvshyNZ0Iz5TY2rlkzmPWshVmRHcpIY0C6cEsOxtyYyTN
+         WLAiS5Kx9pJhBiWNm6UXCrG7UAPifEnAuv8V5XW4/J8dkhn9eVosLvE/vuYciH++Opmx
+         XUZIGM908tM0yYaZ/i4ar5uKpzBSAMgXC2iT+hv8HrqXTAq4acKoL0XijpRmCmztpoUi
+         4R7dacbRx5RJ4bC8m6ieF4FQfsQ4ZoYNCqYxVaW1tSBeYbg5aUZjixBB4WHNJVCCnX6c
+         ihO5M/sOSzTDfaFru2GU7GTblsE3qGP0kZR2RubO+omOH3Ypv+YU9/R8+JWqHOvMZh7e
+         hrFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQgjGvRFXYx192kJ2MT8Ee7tSO38gssau7hWJK/zzFE=;
+        b=sBwButYC6bpUQv5IEIta6oujOdj5ABRWb/H7EJ+9w1bpwtJ0OJ83eo3NzjBnPO/Qg7
+         Y6u7P/np604iwW1eF4p//e4TtI6Th4VUURjrXSdAFZkdo2Pzh9uCd5Lrofz56edJTtKr
+         YLhljHCMoWbktM7V3+LyaGAKzOoJz1s/n7uijS4O9r0LxmaS8Hid0MwTpvP2h1KMdo3z
+         0zttoNQ6FPodJPHQ4aM9Bl+tneFkEWgYfTXIiw+Lfb4L2RIo6RUTYgcmZeqfUIRwtzTt
+         cDF4RbP9DuxPVsbjfDj1uu5MCuVu+g1VhWNivWXV+X3RIp+NjOHB7fnvlYEXod/LV9tz
+         tA8w==
+X-Gm-Message-State: APjAAAXndXorpVuWCD3RyWZX2Fz7roUKsZUK3nWP+Q1SHnCle2MomFOP
+        JEmXTai4Yad3041S/JMpwkJjXhj3kokex+Say2h8gia/
+X-Google-Smtp-Source: APXvYqzfLdyilQYaghSL/PtStxNMmhsVrmAHQzyOVpxzyye1UrcXEEufYY9mT1p006SsEbiCKjHFNSVGJ8RrZZhdDE4=
+X-Received: by 2002:a63:fd49:: with SMTP id m9mr47441971pgj.16.1554990292193;
+ Thu, 11 Apr 2019 06:44:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411082106.GB167446@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19041113-2213-0000-0000-00000375012F
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010908; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01187551; UDB=6.00622058; IPR=6.00968315;
- MB=3.00026393; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 13:44:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041113-2214-0000-0000-00005DFC1540
-Message-Id: <20190411134428.GY14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904110094
+References: <20190313222124.229371-1-rajatja@google.com> <20190411003738.55073-1-rajatja@google.com>
+In-Reply-To: <20190411003738.55073-1-rajatja@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 11 Apr 2019 16:44:40 +0300
+Message-ID: <CAHp75VceZ7w33U=2Ly_qp58E=xEf4vUBEYgfHHHKgvSg2Q+yMw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Evan Green <evgreen@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 04:21:06AM -0400, Joel Fernandes wrote:
-> On Wed, Apr 10, 2019 at 08:44:01PM -0400, Steven Rostedt wrote:
-> > On Wed, 10 Apr 2019 16:29:02 -0400
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > The srcu structure pointer array is modified at module load time because the
-> > > array is fixed up by the module loader at load-time with the final locations
-> > > of the tracepoints right?  Basically relocation fixups. At compile time, I
-> > > believe it is not know what the values in the ptr array are. I believe same
-> > > is true for the tracepoint ptrs array.
-> > > 
-> > > Also it needs to be in a separate __tracepoint_ptrs so that this code works:
-> > > 
-> > > 
-> > > #ifdef CONFIG_TRACEPOINTS
-> > > 	mod->tracepoints_ptrs = section_objs(info, "__tracepoints_ptrs",
-> > > 					     sizeof(*mod->tracepoints_ptrs),
-> > > 					     &mod->num_tracepoints);
-> > > #endif
-> > > 
-> > > Did I  miss some point? Thanks,
-> > 
-> > But there's a lot of others too. Hmm, does this mean that the RO data
-> > sections that are in modules are not set to RO?
-> > 
-> > There's a bunch of separate sections that are RO. Just look in
-> > include/asm-generic/vmlinux.lds.h under the RO_DATA_SECTION() macro.
-> > 
-> > A lot of the sections saved in module.c:find_module_sections() are in
-> > that RO_DATA when compiled as a builtin. Are they not RO when loaded via
-> > a module?
-> > 
-> > If this is the case, there probably is going to be a lot more sections
-> > added to your list.
-> 
-> Hi Steven,
-> 
-> You are right. It turns out that this patch for tracepoint is not needed
-> since each tracepoint pointer is marked as a const which automatically makes
-> the section non-writable after relocations..
-> 
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-> typedef const int tracepoint_ptr_t;
-> #else
-> typedef struct tracepoint * const tracepoint_ptr_t;
-> #endif
-> 
-> So the fix for SRCU could just be the following. I verified with the change
-> that the ELF section section is marked only with the ALLOCATE flag, not the
-> WRITE flag which should automatically put the srcu pointer array in rodata.
-> I'll test this out tomorrow.
-> 
-> Patch 2/3 and 3/3 would not be nececessary if this works out. 1/3 may be a
-> nice clean up but is not something urgent and we could do that in the future
-> if needed.
-> 
-> Any thoughts? Thanks a lot for the review!
-> 
-> (I believe it is still worth auditing other sections in built-in RODATA and
-> making sure they are non-writable for modules as well).
+On Thu, Apr 11, 2019 at 3:37 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> Convert the intel_pmc_core driver to a platform driver, and attach using
+> the ACPI enumeration method (via the ACPI device "INT33A1").
 
-Nice and simple change!  ;-)
+>         cpu_id = x86_match_cpu(intel_pmc_core_ids);
+>         if (!cpu_id)
+>                 return -ENODEV;
+> @@ -888,28 +893,49 @@ static int __init pmc_core_probe(void)
+>         mutex_init(&pmcdev->lock);
+>         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>
+> +       dmi_check_system(pmc_core_dmi_table);
+> +       platform_set_drvdata(pdev, pmcdev);
+> +
+>         err = pmc_core_dbgfs_register(pmcdev);
+>         if (err < 0) {
+> -               pr_warn(" debugfs register failed.\n");
+> +               dev_warn(&pdev->dev, "debugfs register failed.\n");
+>                 iounmap(pmcdev->regbase);
+>                 return err;
+>         }
+>
+> -       dmi_check_system(pmc_core_dmi_table);
+> -       pr_info(" initialized\n");
 
-If it works and Steve is OK with it, I will be happy to take the
-corresponding formal patch.
+> +       dev_info(&pdev->dev, " initialized\n");
+> +       device_initialized = true;
 
-							Thanx, Paul
+First you do something, then print it's done, and not other way around.
 
-> ---8<-----------------------
-> 
-> diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
-> index 8af1824c46a8..9cfcc8a756ae 100644
-> --- a/include/linux/srcutree.h
-> +++ b/include/linux/srcutree.h
-> @@ -123,7 +123,7 @@ struct srcu_struct {
->  #ifdef MODULE
->  # define __DEFINE_SRCU(name, is_static)					\
->  	is_static struct srcu_struct name;				\
-> -	struct srcu_struct *__srcu_struct_##name			\
-> +	struct srcu_struct * const __srcu_struct_##name			\
->  		__section("___srcu_struct_ptrs") = &name
->  #else
->  # define __DEFINE_SRCU(name, is_static)					\
-> 
+> +
+>         return 0;
+>  }
+> -module_init(pmc_core_probe)
+>
+> -static void __exit pmc_core_remove(void)
+> +static int pmc_core_remove(struct platform_device *pdev)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+>
+> +       platform_set_drvdata(pdev, NULL);
+>         pmc_core_dbgfs_unregister(pmcdev);
+>         mutex_destroy(&pmcdev->lock);
+>         iounmap(pmcdev->regbase);
+> +       return 0;
+>  }
+> -module_exit(pmc_core_remove)
+> +
+> +static const struct acpi_device_id pmc_core_acpi_ids[] = {
+> +       {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
+> +
+> +static struct platform_driver pmc_core_driver = {
+> +       .driver = {
+> +               .name = "pmc_core",
+> +               .acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+> +       },
+> +       .probe = pmc_core_probe,
+> +       .remove = pmc_core_remove,
+> +};
+> +
+> +module_platform_driver(pmc_core_driver);
 
+So, this patch has a bisectability issue. After it AFAIU some
+platforms will not be able to enumerate the device.
+
+To avoid such you have to reconsider logic behind this conversion, i.e.
+1. Split the driver to core part and current initialization mechanism
+2. Add platform driver as a separate module.
+
+-- 
+With Best Regards,
+Andy Shevchenko
