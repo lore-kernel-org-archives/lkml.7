@@ -2,107 +2,91 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D253C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8B2C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88E32146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:48:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpMpMIkf"
+	by mail.kernel.org (Postfix) with ESMTP id 39EB42133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfDKQsr (ORCPT
+        id S1727059AbfDKQtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:48:47 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:38255 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKQse (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:48:34 -0400
-Received: by mail-wm1-f42.google.com with SMTP id w15so7528356wmc.3;
-        Thu, 11 Apr 2019 09:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MupClbbPCAMqvvPxT4Mofjt3KZ1UBW04TL/nvAxW0bU=;
-        b=fpMpMIkfHtGDzIe0/lue3RnyAW25xIAjn2xr4Gz17E1dQ3eHgrHOzkF6Ha+/4DM1rM
-         4DFLN+n2vNCZFzBERk028iR3TOleZbKwsq1ZQCfYy1YxGyVAOPw8OiVlNkpBh6Q5Zx80
-         /6AYDAD/6/sb/etGg6Ym+X31rjGsX1RfTDto5jUOqT4SQLCV/G3uoKwrNiGKdHoqCfYF
-         IVry6GLGUXJ903h1KEIL0CLTSbMBOW/m9hLQooiC6X99LKnDh+uaw/z6EZHgtxmFkSiN
-         eFKU/RVlaJwV9pYhicGRESQPG2yHoyy7S0GzNzdygmE+CiOcpk5CEsXj4Jw8pkaqVxG6
-         CxQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=MupClbbPCAMqvvPxT4Mofjt3KZ1UBW04TL/nvAxW0bU=;
-        b=AB41yoKQLYVnXn7BTzOBphR9LhhZKOdjvKQVCasAX3OVP3Vuh/nGDyfv7MZKYEf761
-         dBv5uxboW4Enu8MX5dDFC061zKfFNzme4f1iprr764lLDVftyYdKQk9KvrCvH7LnDR8H
-         W7d7N878h3r+kc+N6QVBB1ubBX9jLivxOKip4zDfNFRuwFTcn+KpUG0FLZD5e7GwcE+b
-         y7DO7k3IS0M8VkS5OI2KfZPRxo2o7BAZFknsxeG6JIEyd63dIWC6CkfN9VoDXW75/WgU
-         ASdZ3Aa8lXBzBskJnowTWLsle91us5P8XapaEtzH9CsjZBgAK1gcnymvWEWtGGYP3wuY
-         G4fA==
-X-Gm-Message-State: APjAAAXIDoIgMp0Ipv2lis7hV7pL1ujInpAQn/TkKhJZfogvbO7eofou
-        stP/uuWEkAc/3i1bmlm+/siUUZ3u
-X-Google-Smtp-Source: APXvYqy1qAEo/YMSn/RQU+1QHzHg/u/UcU1AOWqdl5jVFncKlUEGqZ0/GVzuVvSI1UbUeJih/AISmQ==
-X-Received: by 2002:a05:600c:28b:: with SMTP id 11mr7340295wmk.129.1555001312057;
-        Thu, 11 Apr 2019 09:48:32 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id f10sm46386134wrs.17.2019.04.11.09.48.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:48:31 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 2/3] selftests: kvm: fix for compilers that do not support -no-pie
-Date:   Thu, 11 Apr 2019 18:48:27 +0200
-Message-Id: <1555001308-36016-3-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1555001308-36016-1-git-send-email-pbonzini@redhat.com>
-References: <1555001308-36016-1-git-send-email-pbonzini@redhat.com>
+        Thu, 11 Apr 2019 12:49:41 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46220 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbfDKQtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:49:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50221374;
+        Thu, 11 Apr 2019 09:49:40 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C74633F59C;
+        Thu, 11 Apr 2019 09:49:38 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 17:49:36 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RESEND][PATCH v2] firmware/psci: add support for SYSTEM_RESET2
+Message-ID: <20190411164936.GB5327@e107155-lin>
+References: <20190411103346.22462-1-sudeep.holla@arm.com>
+ <AM0PR07MB6019AB10C7DD38F7AFECF0E0F42F0@AM0PR07MB6019.eurprd07.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR07MB6019AB10C7DD38F7AFECF0E0F42F0@AM0PR07MB6019.eurprd07.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--no-pie was added to GCC at the same time as their configuration option
---enable-default-pie.  Compilers that were built before do not have
--no-pie, but they also do not need it.  Detect the option at build
-time.
+On Thu, Apr 11, 2019 at 11:42:28AM +0000, Koskinen, Aaro (Nokia - FI/Espoo) wrote:
+> Hi,
+> 
+> From: Sudeep Holla [sudeep.holla@arm.com]:
+> >  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+> >  {
+> > +       if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> 
+> I would omit the REBOOT_SOFT here.
+>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+I included REBOOT_SOFT for 2 reasons:
+1. drivers/firmware/efi/reboot.c - efi_reboot treats WARM and SOFT reboots same
+2. If the vendors specific reboots are added and handled in EFI, I assume it
+   will be categorised under REBOOT_SOFT.
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 7514fcea91a7..2d2e10b219d5 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -1,3 +1,5 @@
-+include ../../../../scripts/Kbuild.include
-+
- all:
- 
- top_srcdir = ../../../..
-@@ -30,7 +32,11 @@ INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
- CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
--LDFLAGS += -pthread -no-pie
-+
-+no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-+        $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
-+
-+LDFLAGS += -pthread $(no-pie-option)
- 
- # After inclusion, $(OUTPUT) is defined and
- # $(TEST_GEN_PROGS) starts with $(OUTPUT)/
--- 
-1.8.3.1
+If that's wrong I can drop REBOOT_SOFT.
 
+> > +           psci_system_reset2_supported)
+> > +               /*
+> > +                * reset_type[31] = 0 (architectural)
+> > +                * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+> > +                * cookie = 0 (ignored by the implementation)
+> > +                */
+> > +               invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
+> > +
+> >        invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+>
+> Use else here, so that we fall back to system halt if SYSTEM_RESET2 fails.
+>
 
+Will that not change current behaviour ? IOW, is that expected behaviour ?
+I am not sure if halt can be prefer over cold reboot in absence of warm/soft
+reboot when the system is request to reboot. From PSCI perspective, since
+SYSTEM_RESET is mandatory I prefer that unless Linux has any restriction
+on this behaviour.
+
+--
+Regards,
+Sudeep
