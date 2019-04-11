@@ -2,259 +2,609 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278EDC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F753C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EC52084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3C62173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zHaeQrt6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NsnYV0eE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfDKTjc (ORCPT
+        id S1726954AbfDKTjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:39:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38948 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfDKTj0 (ORCPT
+        Thu, 11 Apr 2019 15:39:40 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50456 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfDKTjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:39:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CW1Q+51QZ4j2Ak9AQRMDEQT5D9J6O0amIoe71Wm3Fq8=; b=zHaeQrt6RjKHj4ZN7636kCCdF
-        8VADVF3RQvZgGyfCjJgJzFIXP8v7YhOWQwdEMWeZQucVm4xniTHa3BMuvM4EPka4Q6JcRedc+j8/e
-        I/DQxzsKro/2k+0xyPLk0+lXmBXz3Z+rWIO3/aVRiJr5o6Td2Edi3NTfkW2S/BZVzzpE9/swZK1X9
-        pkL1227TMEFq36OpUvOp96x9C7qNO7Yy00diulXBoC4ahIEJnZ6nJCvyH/kKepXQ3lnSLcNbG5t1Z
-        xjsrBfA2NeenT6GvKgo8U5tgYDCxT7JyjSGy+vsfiH9e7XP+tfyktjnBJAt9nD767q4/cjLk4kIgr
-        7iAoUivSQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEfXT-0003qs-7w; Thu, 11 Apr 2019 19:39:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A7BE329AB9D56; Thu, 11 Apr 2019 21:39:06 +0200 (CEST)
-Date:   Thu, 11 Apr 2019 21:39:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     LKP <lkp@01.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"):  BUG:
- KASAN: stack-out-of-bounds in __change_page_attr_set_clr
-Message-ID: <20190411193906.GA12232@hirez.programming.kicks-ass.net>
-References: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com>
+        Thu, 11 Apr 2019 15:39:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcpG8097038;
+        Thu, 11 Apr 2019 14:38:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555011531;
+        bh=vToNwzZQlvlPe1znDzav9uCkfdmhArgCOxvQEkVQK+E=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=NsnYV0eEwTi3qf2f6UtHskq/bSMDTvdeBkx+qn99xy40VEv0RIcf2H57UGmfgRJxM
+         SYaLIFtQUcDy+Sf4HHCRTcWuJzBLUcPgkcaJkXPfzUDCwlA9oNSWL5H24/8j0R+JoI
+         Yh+IB9i8cTWZpmXNl542qTZj1OVgjZh2CON8ToBo=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BJcpcB095226
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Apr 2019 14:38:51 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
+ Apr 2019 14:38:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 11 Apr 2019 14:38:51 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcpqk082072;
+        Thu, 11 Apr 2019 14:38:51 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <marek.behun@nic.cz>, <rdunlap@infradead.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 5/7] leds: multicolor: Introduce a multicolor class definition
+Date:   Thu, 11 Apr 2019 14:38:46 -0500
+Message-ID: <20190411193848.23140-6-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190411193848.23140-1-dmurphy@ti.com>
+References: <20190411193848.23140-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 10:55:00PM +0800, kernel test robot wrote:
-> Greetings,
-> 
-> 0day kernel testing robot got the below dmesg and the first bad commit is
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/mm
-> 
-> commit 1808d65b55e4489770dd4f76fb0dff5b81eb9b11
-> Author:     Peter Zijlstra <peterz@infradead.org>
-> AuthorDate: Thu Sep 20 10:50:11 2018 +0200
-> Commit:     Ingo Molnar <mingo@kernel.org>
-> CommitDate: Wed Apr 3 10:32:58 2019 +0200
-> 
->     asm-generic/tlb: Remove arch_tlb*_mmu()
->     
->     Now that all architectures are converted to the generic code, remove
->     the arch hooks.
->     
->     No change in behavior intended.
->     
->     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->     Acked-by: Will Deacon <will.deacon@arm.com>
->     Cc: Andrew Morton <akpm@linux-foundation.org>
->     Cc: Andy Lutomirski <luto@kernel.org>
->     Cc: Borislav Petkov <bp@alien8.de>
->     Cc: Dave Hansen <dave.hansen@linux.intel.com>
->     Cc: H. Peter Anvin <hpa@zytor.com>
->     Cc: Linus Torvalds <torvalds@linux-foundation.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Rik van Riel <riel@surriel.com>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> 
-> 9de7d833e3  s390/tlb: Convert to generic mmu_gather
-> 1808d65b55  asm-generic/tlb: Remove arch_tlb*_mmu()
-> 6455959819  ia64/tlb: Eradicate tlb_migrate_finish() callback
-> 31437a258f  Merge branch 'perf/urgent'
-> +------------------------------------------------------------+------------+------------+------------+------------+
-> |                                                            | 9de7d833e3 | 1808d65b55 | 6455959819 | 31437a258f |
-> +------------------------------------------------------------+------------+------------+------------+------------+
-> | boot_successes                                             | 0          | 0          | 0          | 0          |
-> | boot_failures                                              | 44         | 11         | 11         | 11         |
-> | BUG:KASAN:stack-out-of-bounds_in__unwind_start             | 44         |            |            |            |
-> | BUG:KASAN:stack-out-of-bounds_in__change_page_attr_set_clr | 0          | 11         | 11         | 11         |
-> +------------------------------------------------------------+------------+------------+------------+------------+
-> 
-> [   13.977997] rodata_test: all tests were successful
-> [   13.979792] x86/mm: Checking user space page tables
-> [   14.011779] x86/mm: Checked W+X mappings: passed, no W+X pages found.
-> [   14.013022] Run /init as init process
-> [   14.015154] ==================================================================
-> [   14.016489] BUG: KASAN: stack-out-of-bounds in __change_page_attr_set_clr+0xa8/0x4df
-> [   14.017853] Read of size 8 at addr ffff8880191ef8b0 by task init/1
-> [   14.018976] 
-> [   14.019259] CPU: 0 PID: 1 Comm: init Not tainted 5.1.0-rc3-00029-g1808d65 #3
-> [   14.020509] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [   14.022028] Call Trace:
-> [   14.022471]  print_address_description+0x9d/0x26b
-> [   14.023295]  ? __change_page_attr_set_clr+0xa8/0x4df
-> [   14.024161]  ? __change_page_attr_set_clr+0xa8/0x4df
-> [   14.025031]  kasan_report+0x145/0x18a
-> [   14.025667]  ? __change_page_attr_set_clr+0xa8/0x4df
-> [   14.026542]  __change_page_attr_set_clr+0xa8/0x4df
-> [   14.027433]  ? __change_page_attr+0xad0/0xad0
-> [   14.028260]  ? kasan_unpoison_shadow+0xf/0x2e
-> [   14.029062]  ? preempt_latency_start+0x22/0x68
-> [   14.029962]  ? get_page_from_freelist+0xf37/0x1281
-> [   14.030796]  ? native_flush_tlb_one_user+0x54/0x95
-> [   14.031602]  ? trace_tlb_flush+0x1f/0x106
-> [   14.032352]  ? flush_tlb_func_common+0x26a/0x289
-> [   14.033322]  ? trace_irq_enable_rcuidle+0x21/0xf5
-> [   14.034109]  __kernel_map_pages+0x148/0x1b1
-> [   14.034777]  ? set_pages_rw+0x94/0x94
-> [   14.035408]  ? flush_tlb_mm_range+0x161/0x1ae
-> [   14.036134]  ? atomic_read+0xe/0x3f
-> [   14.036715]  ? page_expected_state+0x46/0x81
-> [   14.037442]  free_unref_page_prepare+0xe1/0x192
-> [   14.038201]  free_unref_page_list+0xd3/0x319
-> [   14.038960]  release_pages+0x5d1/0x612
-> [   14.039581]  ? __put_compound_page+0x91/0x91
-> [   14.040346]  ? tlb_flush_mmu_tlbonly+0x107/0x1c5
-> [   14.041193]  ? preempt_latency_start+0x22/0x68
-> [   14.041922]  ? free_swap_cache+0x51/0xd5
-> [   14.042566]  tlb_flush_mmu_free+0x31/0xca
-> [   14.043254]  tlb_finish_mmu+0xf6/0x1b5
-> [   14.043883]  shift_arg_pages+0x280/0x30b
-> [   14.044535]  ? __register_binfmt+0x18d/0x18d
-> [   14.045259]  ? trace_irq_enable_rcuidle+0x21/0xf5
-> [   14.046029]  ? ___might_sleep+0xac/0x33e
-> [   14.046666]  setup_arg_pages+0x46a/0x56e
-> [   14.047347]  ? shift_arg_pages+0x30b/0x30b
-> [   14.048208]  load_elf_binary+0x888/0x20dd
-> [   14.048872]  ? _raw_read_unlock+0x14/0x24
-> [   14.049532]  ? ima_bprm_check+0x18c/0x1c2
-> [   14.050199]  ? elf_map+0x1e8/0x1e8
-> [   14.050756]  ? ima_file_mmap+0xf3/0xf3
-> [   14.051583]  search_binary_handler+0x154/0x511
-> [   14.052323]  __do_execve_file+0x10b5/0x15e9
-> [   14.053004]  ? open_exec+0x3a/0x3a
-> [   14.053564]  ? memcpy+0x34/0x46
-> [   14.054095]  ? rest_init+0xdd/0xdd
-> [   14.054669]  kernel_init+0x66/0x10d
-> [   14.055262]  ? rest_init+0xdd/0xdd
-> [   14.055833]  ret_from_fork+0x3a/0x50
-> [   14.056516] 
-> [   14.056769] The buggy address belongs to the page:
-> [   14.057552] page:ffff88801de82c48 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-> [   14.058923] flags: 0x680000000000()
-> [   14.059495] raw: 0000680000000000 ffff88801de82c50 ffff88801de82c50 0000000000000000
+Introduce a multicolor class that groups colored LEDs
+within a LED node.
 
-I think this bisect is bad. If you look at your own logs this patch
-merely changes the failure, but doesn't make it go away.
+The framework allows for dynamically setting individual LEDs
+or setting brightness levels of LEDs and updating them virtually
+simultaneously.
 
-Before this patch (in fact, before tip/core/mm entirely) the errror
-reads like the below, which suggests there is memory corruption
-somewhere, and the fingered patch just makes it trigger differently.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig                 |  10 +
+ drivers/leds/Makefile                |   1 +
+ drivers/leds/led-class-multicolor.c  | 401 +++++++++++++++++++++++++++
+ include/linux/led-class-multicolor.h |  74 +++++
+ 4 files changed, 486 insertions(+)
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
-It would be very good to find the source of this corruption, but I'm
-fairly certain it is not here.
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index f24d31138471..1e400af24114 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -29,6 +29,16 @@ config LEDS_CLASS_FLASH
+ 	  for the flash related features of a LED device. It can be built
+ 	  as a module.
+ 
++config LEDS_CLASS_MULTI_COLOR
++	tristate "LED Mulit Color LED Class Support"
++	depends on LEDS_CLASS
++	help
++	  This option enables the multicolor LED sysfs class in /sys/class/leds.
++	  It wraps LED Class and adds multicolor LED specific sysfs attributes
++	  and kernel internal API to it. You'll need this to provide support
++	  for multicolor LEDs that are grouped together. This class is not
++	  intended for single color LEDs.  It can be built as a module.
++
+ config LEDS_BRIGHTNESS_HW_CHANGED
+ 	bool "LED Class brightness_hw_changed attribute support"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 4c1b0054f379..c57c2aec9510 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -4,6 +4,7 @@
+ obj-$(CONFIG_NEW_LEDS)			+= led-core.o
+ obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+ obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
++obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
+ obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+ 
+ # LED Platform Drivers
+diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+new file mode 100644
+index 000000000000..481ef0ac217c
+--- /dev/null
++++ b/drivers/leds/led-class-multicolor.c
+@@ -0,0 +1,401 @@
++// SPDX-License-Identifier: GPL-2.0
++// LED Multi Color class interface
++// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include "leds.h"
++
++struct led_classdev_mc_data {
++	struct led_classdev_mc *mcled_cdev;
++	struct kobject *color_kobj;
++	struct kobject *led_kobj;
++
++	struct device_attribute sync_attr;
++	struct device_attribute sync_enable_attr;
++
++	struct list_head color_list;
++};
++
++struct led_classdev_mc_priv {
++	struct led_classdev_mc *mcled_cdev;
++
++	struct device_attribute max_brightness_attr;
++	struct device_attribute brightness_attr;
++
++	enum led_brightness max_brightness;
++	enum led_brightness brightness;
++	struct list_head list;
++
++	int color_id;
++};
++
++static ssize_t sync_store(struct device *dev,
++			  struct device_attribute *sync_attr,
++			  const char *buf, size_t size)
++{
++	struct led_classdev_mc_data *data = container_of(sync_attr,
++						      struct led_classdev_mc_data,
++						      sync_attr);
++	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
++	struct led_classdev *led_cdev = &mcled_cdev->led_cdev;
++	const struct led_multicolor_ops *ops = mcled_cdev->ops;
++	struct led_classdev_mc_priv *priv;
++	unsigned long sync_value;
++	ssize_t ret = -EINVAL;
++
++	mutex_lock(&led_cdev->led_access);
++
++	if (!mcled_cdev->sync_enabled)
++		goto unlock;
++
++	ret = kstrtoul(buf, 0, &sync_value);
++	if (ret)
++		goto unlock;
++
++	if (!sync_value) {
++		ret = size;
++		goto unlock;
++	}
++
++	list_for_each_entry(priv, &data->color_list, list) {
++		ret = ops->set_color_brightness(priv->mcled_cdev,
++						priv->color_id,
++						priv->brightness);
++		if (ret < 0)
++			goto unlock;
++	}
++
++	ret = size;
++unlock:
++	mutex_unlock(&led_cdev->led_access);
++	return ret;
++}
++
++static ssize_t sync_enable_store(struct device *dev,
++				 struct device_attribute *sync_enable_attr,
++				 const char *buf, size_t size)
++{
++	struct led_classdev_mc_data *data = container_of(sync_enable_attr,
++						      struct led_classdev_mc_data,
++						      sync_enable_attr);
++	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
++	struct led_classdev *led_cdev = &mcled_cdev->led_cdev;
++	unsigned long sync_value;
++	ssize_t ret = -EINVAL;
++
++	mutex_lock(&led_cdev->led_access);
++
++	ret = kstrtoul(buf, 0, &sync_value);
++	if (ret)
++		goto unlock;
++
++	mcled_cdev->sync_enabled = sync_value;
++
++	ret = size;
++unlock:
++	mutex_unlock(&led_cdev->led_access);
++	return ret;
++}
++
++static ssize_t sync_enable_show(struct device *dev,
++				struct device_attribute *sync_enable_attr,
++				char *buf)
++{
++	struct led_classdev_mc_data *data = container_of(sync_enable_attr,
++						      struct led_classdev_mc_data,
++						      sync_enable_attr);
++	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
++
++	return sprintf(buf, "%d\n", mcled_cdev->sync_enabled);
++}
++
++static ssize_t brightness_store(struct device *dev,
++				struct device_attribute *brightness_attr,
++				const char *buf, size_t size)
++{
++	struct led_classdev_mc_priv *priv = container_of(brightness_attr,
++						      struct led_classdev_mc_priv,
++						      brightness_attr);
++	struct led_multicolor_ops *ops = priv->mcled_cdev->ops;
++	struct led_classdev *led_cdev = &priv->mcled_cdev->led_cdev;
++
++	int old_brightness;
++	unsigned long value;
++	ssize_t ret = -EINVAL;
++
++	mutex_lock(&led_cdev->led_access);
++
++	ret = kstrtoul(buf, 10, &value);
++	if (ret)
++		goto unlock;
++
++	if (value > priv->max_brightness) {
++		ret = -EINVAL;
++		goto unlock;
++	}
++
++	/* Retain the current brightness in case writing the LED fails */
++	old_brightness = priv->brightness;
++	priv->brightness = value;
++
++	if (priv->mcled_cdev->sync_enabled) {
++		ret = size;
++		goto unlock;
++	}
++
++	ret = ops->set_color_brightness(priv->mcled_cdev,
++					priv->color_id, value);
++	if (ret < 0) {
++		priv->brightness = old_brightness;
++		goto unlock;
++	}
++
++	ret = size;
++unlock:
++	mutex_unlock(&led_cdev->led_access);
++	return ret;
++}
++
++static ssize_t brightness_show(struct device *dev,
++			       struct device_attribute *brightness_attr, char *buf)
++{
++	struct led_classdev_mc_priv *priv = container_of(brightness_attr,
++						      struct led_classdev_mc_priv,
++						      brightness_attr);
++	const struct led_multicolor_ops *ops = priv->mcled_cdev->ops;
++	int value = 0;
++
++	if (priv->mcled_cdev->sync_enabled) {
++		value = priv->brightness;
++		goto sync_enabled;
++	}
++
++	if (ops->get_color_brightness) {
++		value = ops->get_color_brightness(priv->mcled_cdev,
++						  priv->color_id);
++		priv->brightness = value;
++	} else {
++		value = priv->brightness;
++	}
++
++sync_enabled:
++	return sprintf(buf, "%d\n", value);
++}
++
++static ssize_t max_brightness_show(struct device *dev,
++				   struct device_attribute *max_brightness_attr,
++				   char *buf)
++{
++	struct led_classdev_mc_priv *priv = container_of(max_brightness_attr,
++						      struct led_classdev_mc_priv,
++						      max_brightness_attr);
++
++	return sprintf(buf, "%d\n", priv->max_brightness);
++}
++
++static int led_multicolor_init_color(struct led_classdev_mc_data *data,
++				     struct led_classdev_mc *mcled_cdev,
++				     int color_id)
++{
++	struct led_classdev *led_cdev = &mcled_cdev->led_cdev;
++	struct led_classdev_mc_priv *mc_priv;
++	int ret;
++
++	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
++	if (!mc_priv)
++		return -ENOMEM;
++
++	mc_priv->color_id = color_id;
++	mc_priv->mcled_cdev = mcled_cdev;
++
++	data->led_kobj = kobject_create_and_add(led_colors[color_id],
++						data->color_kobj);
++	if (!data->led_kobj)
++		return -EINVAL;
++
++	sysfs_attr_init(&mc_priv->brightness_attr.attr);
++	mc_priv->brightness_attr.attr.name = "brightness";
++	mc_priv->brightness_attr.attr.mode = S_IRUSR | S_IWUSR;
++	mc_priv->brightness_attr.show = brightness_show;
++	mc_priv->brightness_attr.store = brightness_store;
++	ret = sysfs_create_file(data->led_kobj,
++				&mc_priv->brightness_attr.attr);
++	if (ret)
++		goto err_out;
++
++	sysfs_attr_init(&mc_priv->max_brightness_attr.attr);
++	mc_priv->max_brightness_attr.attr.name = "max_brightness";
++	mc_priv->max_brightness_attr.attr.mode = S_IRUSR;
++	mc_priv->max_brightness_attr.show = max_brightness_show;
++	ret = sysfs_create_file(data->led_kobj,
++				&mc_priv->max_brightness_attr.attr);
++	if (ret)
++		goto err_out;
++
++	mc_priv->max_brightness = LED_FULL;
++	list_add_tail(&mc_priv->list, &data->color_list);
++
++err_out:
++	return ret;
++}
++
++static int led_multicolor_init_color_dir(struct led_classdev_mc_data *data,
++					 struct led_classdev_mc *mcled_cdev)
++{
++	struct led_classdev *led_cdev = &mcled_cdev->led_cdev;
++	int ret;
++
++	data->color_kobj = kobject_create_and_add("colors",
++						  &led_cdev->dev->kobj);
++	if (!data->color_kobj)
++		return -EINVAL;
++
++	sysfs_attr_init(&data->sync_enable_attr.attr);
++	data->sync_enable_attr.attr.name = "sync_enable";
++	data->sync_enable_attr.attr.mode = S_IRUSR | S_IWUSR;
++	data->sync_enable_attr.show = sync_enable_show;
++	data->sync_enable_attr.store = sync_enable_store;
++	ret = sysfs_create_file(data->color_kobj,
++				&data->sync_enable_attr.attr);
++	if (ret)
++		goto err_out;
++
++	sysfs_attr_init(&data->sync_attr.attr);
++	data->sync_attr.attr.name = "sync";
++	data->sync_attr.attr.mode = S_IWUSR;
++	data->sync_attr.store = sync_store;
++	ret = sysfs_create_file(data->color_kobj,
++				&data->sync_attr.attr);
++	if (ret)
++		goto err_out;
++
++	data->mcled_cdev = mcled_cdev;
++
++err_out:
++	return ret;
++}
++
++int led_classdev_multicolor_register_ext(struct device *parent,
++				     struct led_classdev_mc *mcled_cdev,
++				     struct led_init_data *init_data)
++{
++	struct led_classdev *led_cdev;
++	struct led_multicolor_ops *ops;
++	struct led_classdev_mc_data *data;
++	int ret;
++	int i;
++
++	if (!mcled_cdev)
++		return -EINVAL;
++
++	ops = mcled_cdev->ops;
++	if (!ops || !ops->set_color_brightness)
++		return -EINVAL;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	led_cdev = &mcled_cdev->led_cdev;
++
++	INIT_LIST_HEAD(&data->color_list);
++
++	/* Register led class device */
++	ret = led_classdev_register_ext(parent, led_cdev, init_data);
++	if (ret)
++		return ret;
++
++	ret = led_multicolor_init_color_dir(data, mcled_cdev);
++	if (ret)
++		return ret;
++
++
++	/* Select the sysfs attributes to be created for the device */
++	for (i = 0; i < mcled_cdev->num_leds; i++) {
++		ret = led_multicolor_init_color(data, mcled_cdev,
++						mcled_cdev->available_colors[i]);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(led_classdev_multicolor_register_ext);
++
++void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev)
++{
++	if (!mcled_cdev)
++		return;
++
++	led_classdev_unregister(&mcled_cdev->led_cdev);
++}
++EXPORT_SYMBOL_GPL(led_classdev_multicolor_unregister);
++
++static void devm_led_classdev_multicolor_release(struct device *dev, void *res)
++{
++	led_classdev_multicolor_unregister(*(struct led_classdev_mc **)res);
++}
++
++/**
++ * devm_of_led_classdev_register - resource managed led_classdev_register()
++ *
++ * @parent: parent of LED device
++ * @led_cdev: the led_classdev structure for this device.
++ */
++int devm_led_classdev_multicolor_register(struct device *parent,
++					  struct led_classdev_mc *mcled_cdev)
++{
++	struct led_classdev_mc **dr;
++	int ret;
++
++	dr = devres_alloc(devm_led_classdev_multicolor_release,
++			  sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return -ENOMEM;
++
++	ret = led_classdev_multicolor_register(parent, mcled_cdev);
++	if (ret) {
++		devres_free(dr);
++		return ret;
++	}
++
++	*dr = mcled_cdev;
++	devres_add(parent, dr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_register);
++
++static int devm_led_classdev_multicolor_match(struct device *dev,
++					      void *res, void *data)
++{
++	struct mcled_cdev **p = res;
++
++	if (WARN_ON(!p || !*p))
++		return 0;
++
++	return *p == data;
++}
++
++/**
++ * devm_led_classdev_multicolor_unregister() - resource managed
++ *					led_classdev_multicolor_unregister()
++ * @parent: The device to unregister.
++ * @mcled_cdev: the led_classdev_mc structure for this device.
++ */
++void devm_led_classdev_multicolor_unregister(struct device *dev,
++				  struct led_classdev_mc *mcled_cdev)
++{
++	WARN_ON(devres_release(dev,
++			       devm_led_classdev_multicolor_release,
++			       devm_led_classdev_multicolor_match, mcled_cdev));
++}
++EXPORT_SYMBOL_GPL(devm_led_classdev_multicolor_unregister);
++
++MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
++MODULE_DESCRIPTION("Multi Color LED class interface");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/led-class-multicolor.h b/include/linux/led-class-multicolor.h
+new file mode 100644
+index 000000000000..af52ef84b475
+--- /dev/null
++++ b/include/linux/led-class-multicolor.h
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0
++/* LED Multicolor class interface
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
++#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
++
++#include <linux/leds.h>
++#include <dt-bindings/leds/common.h>
++
++struct led_classdev_mc;
++
++struct led_multicolor_ops {
++	/* Set brightness for a specific color id */
++	int (*set_color_brightness)(struct led_classdev_mc *mcled_cdev,
++				    int color_id, int value);
++	/* Read current color setting */
++	int (*get_color_brightness)(struct led_classdev_mc *mcled_cdev,
++				    int color_id);
++};
++
++struct led_classdev_mc {
++	/* led class device */
++	struct led_classdev led_cdev;
++
++	/* multicolor led specific ops */
++	struct led_multicolor_ops *ops;
++
++	u32 available_colors[LED_COLOR_ID_COUNT];
++	int num_leds;
++
++	bool sync_enabled;
++};
++
++static inline struct led_classdev_mc *lcdev_to_mccdev(
++						struct led_classdev *lcdev)
++{
++	return container_of(lcdev, struct led_classdev_mc, led_cdev);
++}
++
++/**
++ * led_classdev_multicolor_register_ext - register a new object of led_classdev
++ *				      class with support for multicolor LEDs
++ * @parent: the multicolor LED to register
++ * @mcled_cdev: the led_classdev_mc structure for this device
++ * @init_data: the LED class Multi color device initialization data
++ *
++ * Returns: 0 on success or negative error value on failure
++ */
++extern int led_classdev_multicolor_register_ext(struct device *parent,
++					    struct led_classdev_mc *mcled_cdev,
++					    struct led_init_data *init_data);
++
++#define led_classdev_multicolor_register(parent, mcled_cdev)		\
++	led_classdev_multicolor_register_ext(parent, mcled_cdev, NULL)
++
++/**
++ * led_classdev_multicolor_unregister - unregisters an object of led_classdev
++ *					class with support for multicolor LEDs
++ * @mcled_cdev: the multicolor LED to unregister
++ *
++ * Unregister a previously registered via led_classdev_multicolor_register
++ * object
++ */
++extern void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev);
++
++extern int devm_led_classdev_multicolor_register(struct device *parent,
++						 struct led_classdev_mc *mcled_cdev);
++
++extern void devm_led_classdev_multicolor_unregister(struct device *parent,
++						    struct led_classdev_mc *mcled_cdev);
++
++#endif	/* __LINUX_MULTICOLOR_LEDS_H_INCLUDED */
+-- 
+2.21.0.5.gaeb582a983
 
-[   10.273617] rodata_test: all tests were successful
-[   10.275015] x86/mm: Checking user space page tables
-[   10.295444] x86/mm: Checked W+X mappings: passed, no W+X pages found.
-[   10.296334] Run /init as init process
-[   10.301465] ==================================================================
-[   10.302460] BUG: KASAN: stack-out-of-bounds in __unwind_start+0x7e/0x4fe
-[   10.303355] Write of size 88 at addr ffff8880191efa28 by task init/1
-[   10.304241]
-[   10.304455] CPU: 0 PID: 1 Comm: init Not tainted 5.1.0-rc4-00288-ga131d61b43e0-dirty #10
-[   10.305542] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-[   10.306641] Call Trace:
-[   10.306990]  print_address_description+0x9d/0x26b
-[   10.307654]  ? __unwind_start+0x7e/0x4fe
-[   10.308222]  ? __unwind_start+0x7e/0x4fe
-[   10.308755]  __kasan_report+0x145/0x18a
-[   10.309266]  ? __unwind_start+0x7e/0x4fe
-[   10.309823]  kasan_report+0xe/0x12
-[   10.310273]  memset+0x1f/0x31
-[   10.310703]  __unwind_start+0x7e/0x4fe
-[   10.311223]  ? unwind_next_frame+0x10a9/0x10a9
-[   10.311839]  ? native_flush_tlb_one_user+0x54/0x95
-[   10.312504]  ? kasan_unpoison_shadow+0xf/0x2e
-[   10.313090]  __save_stack_trace+0x65/0xe7
-[   10.313667]  ? trace_irq_enable_rcuidle+0x21/0xf5
-[   10.314284]  ? tracer_hardirqs_on+0xb/0x1b
-[   10.314830]  ? trace_hardirqs_on+0x2c/0x37
-[   10.315369]  save_stack+0x32/0xa3
-[   10.315842]  ? __put_compound_page+0x91/0x91
-[   10.316458]  ? preempt_latency_start+0x22/0x68
-[   10.317052]  ? free_swap_cache+0x51/0xd5
-[   10.317586]  ? tlb_flush_mmu_free+0x31/0xca
-[   10.318140]  ? arch_tlb_finish_mmu+0x8c/0x112
-[   10.318759]  ? tlb_finish_mmu+0xc7/0xd6
-[   10.319298]  ? unmap_region+0x275/0x2b9
-[   10.319835]  ? special_mapping_fault+0x26d/0x26d
-[   10.320448]  ? trace_irq_disable_rcuidle+0x21/0xf5
-[   10.321085]  __kasan_slab_free+0xd3/0xf4
-[   10.321623]  ? remove_vma+0xdf/0xe7
-[   10.322105]  kmem_cache_free+0x4e/0xca
-[   10.322600]  remove_vma+0xdf/0xe7
-[   10.323038]  __do_munmap+0x72c/0x75e
-[   10.323514]  __vm_munmap+0xd0/0x135
-[   10.323980]  ? __x64_sys_brk+0x40e/0x40e
-[   10.324496]  ? trace_irq_disable_rcuidle+0x21/0xf5
-[   10.325160]  __x64_sys_munmap+0x6a/0x6f
-[   10.325670]  do_syscall_64+0x3f0/0x462
-[   10.326162]  ? syscall_return_slowpath+0x154/0x154
-[   10.326810]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-[   10.327485]  ? trace_irq_disable_rcuidle+0x21/0xf5
-[   10.328153]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
-[   10.328873]  ? trace_hardirqs_off_caller+0x3e/0x40
-[   10.329505]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[   10.330162]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   10.330830] RIP: 0033:0x7efc4d707457
-[   10.331306] Code: f0 ff ff 73 01 c3 48 8d 0d 5a be 20 00 31 d2 48 29 c2 89 11 48 83 c8 ff eb eb 90 90 90 90 90 90 90 90 90 b8 0b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8d 0d 2d be 20 00 31 d2 48 29 c2 89
-[   10.333711] RSP: 002b:00007fff973da398 EFLAGS: 00000203 ORIG_RAX: 000000000000000b
-[   10.334728] RAX: ffffffffffffffda RBX: 00007efc4d9132c8 RCX: 00007efc4d707457
-[   10.335670] RDX: 0000000000000000 RSI: 0000000000001d67 RDI: 00007efc4d90d000
-[   10.336596] RBP: 00007fff973da4f0 R08: 0000000000000007 R09: 00000000ffffffff
-[   10.337512] R10: 0000000000000000 R11: 0000000000000203 R12: 000000073dd74283
-[   10.338457] R13: 000000073db1ab4f R14: 00007efc4d909700 R15: 00007efc4d9132c8
-[   10.339373]
-[   10.339585] The buggy address belongs to the page:
-[   10.340224] page:ffff88801de82c48 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-[   10.341338] flags: 0x680000000000()
-[   10.341832] raw: 0000680000000000 ffff88801de82c50 ffff88801de82c50 0000000000000000
-[   10.342846] raw: 0000000000000000 0000000000000000 00000000ffffffff
-[   10.343679] page dumped because: kasan: bad access detected
-[   10.344415]
-[   10.344629] Memory state around the buggy address:
-[   10.345254]  ffff8880191ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   10.346245]  ffff8880191ef980: 00 00 f1 f1 f1 f1 00 f2 f2 f2 00 00 00 00 00 00
-[   10.347217] >ffff8880191efa00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
-[   10.348152]                                   ^
-[   10.348755]  ffff8880191efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   10.349698]  ffff8880191efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   10.350650] ==================================================================
