@@ -2,65 +2,92 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD4DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931B1C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C357E206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514DE2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555011083;
+	bh=ycO9yGHUX+7rVRcrLCRFLTp3y2AZo4I1kFRK4y83NAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2esoMlfHM4hAnFCW7LmlriE+vx2fa33S6wpvyMbNAuRZTysYRRhBjXQze+5UQGDZ/
+	 yqbWZYfyi+LzGBhYDN+ZBLFLIXox/tOKUIG0uOJ6slWZS6/KxT+S85M+sHVsDu8FdU
+	 P+GnaZ6JuHiNf1JzpVMD4mrUzAX+t37IE6Mq8Rfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbfDKT3j (ORCPT
+        id S1726739AbfDKTbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:29:39 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:32978 "EHLO gloria.sntech.de"
+        Thu, 11 Apr 2019 15:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726577AbfDKT3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:29:38 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEfOB-0001KB-Qv; Thu, 11 Apr 2019 21:29:35 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Caesar Wang <caesar.wang@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, mka@chromium.org,
-        ryandcase@chromium.org, Elaine Zhang <zhangqing@rock-chips.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] ARM: dts: rockchip: fix PWM clock found on RK3288 Socs
-Date:   Thu, 11 Apr 2019 21:29:35 +0200
-Message-ID: <2052522.emLDVJXZZO@diego>
-In-Reply-To: <20190409204707.150347-4-dianders@chromium.org>
-References: <20190409204707.150347-1-dianders@chromium.org> <20190409204707.150347-4-dianders@chromium.org>
+        id S1726137AbfDKTbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 15:31:21 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB8EF206BA;
+        Thu, 11 Apr 2019 19:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555011081;
+        bh=ycO9yGHUX+7rVRcrLCRFLTp3y2AZo4I1kFRK4y83NAI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pZIr1QirXMr4zf+bzOukody9xmdqxnZchuRy+QI6v8+BiE7dmuYuHFWtIPu9kil/O
+         iPaS6bhOwJO3+Gqij8dxjmVJPJws8N7e1dosXN62V0pI2D7qNo4qYQ4x/W6w6V7kN+
+         USubL0sTI/DSOWcu4x+kb6/lz/B6gSIeSgrWXKHc=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Rik van Riel <riel@surriel.com>
+Subject: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
+Date:   Thu, 11 Apr 2019 12:28:27 -0700
+Message-Id: <20190411192827.72551-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190411192607.GD225654@gmail.com>
+References: <20190411192607.GD225654@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 9. April 2019, 22:47:07 CEST schrieb Douglas Anderson:
-> From: Caesar Wang <caesar.wang@rock-chips.com>
-> 
-> We use the new PWM IP on RK3288, but the PWM's clock indeed incorrect.
-> 
-> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+From: Eric Biggers <ebiggers@google.com>
 
-applied into a branch for 5._3_ ... as it requires a change coming
-through a different tree, the patch gets a "quarantine"-release in
-between.
+This is needed so that CONFIG_HARDENED_USERCOPY_PAGESPAN=y doesn't
+incorrectly report a buffer overflow when the destination of
+copy_from_iter() spans the page boundary in the 2-page buffer.
 
-Thanks
-Heiko
+Fixes: 3f47a03df6e8 ("crypto: testmgr - add testvec_config struct and helper functions")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/testmgr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 0f6bfb6ce6a46..3522c0bed2492 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -156,7 +156,8 @@ static int __testmgr_alloc_buf(char *buf[XBUFSIZE], int order)
+ 	int i;
+ 
+ 	for (i = 0; i < XBUFSIZE; i++) {
+-		buf[i] = (char *)__get_free_pages(GFP_KERNEL, order);
++		buf[i] = (char *)__get_free_pages(GFP_KERNEL | __GFP_COMP,
++						  order);
+ 		if (!buf[i])
+ 			goto err_free_buf;
+ 	}
+-- 
+2.21.0.392.gf8f6787159e-goog
 
