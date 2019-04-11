@@ -2,168 +2,113 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F816C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08959C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDDE20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2ABA20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LFBHGgqx"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fAyjEW4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfDKVLE (ORCPT
+        id S1727209AbfDKVMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:11:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37000 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfDKVLD (ORCPT
+        Thu, 11 Apr 2019 17:12:01 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36784 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfDKVMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:11:03 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e6so4097458pgc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:11:03 -0700 (PDT)
+        Thu, 11 Apr 2019 17:12:00 -0400
+Received: by mail-it1-f196.google.com with SMTP id y10so12028432itc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=I+PugfY7FgqqWZlX12lcfitAcnPLuri4PjNmIYu5QC0=;
-        b=LFBHGgqxaNhM1QkYzfgVAiZNPyPSnPApVPKSjqfzAskaEthnehAuBAC/cJ+VOv3hkG
-         zloQJPtt3vojCn51Tud33Z3AD0JyHW4sUB/rdW8EDqKykODjSGjxCScS70wKtsQQoIoO
-         eaNctJ67Ms/J+woOhqLxKhBFfRtN/0NGQ7eqc=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=IkuarGGVKCQsG79ZJK4mrZNMD40jUbFO5RJo6N6EJrQ=;
+        b=fAyjEW4Yx1t1hT+431iRw8huCVDlNbsu9i1y3gQX+1JtUn6uB7Zp3/6/Q+D7JR9B4f
+         4UfpJ+qTSuENZH/fEPTdb8ltie3rmYv48KE4cuNUd2lpPaHq84Ri636NG+73cTurJy8P
+         d0TlWUcYY3Bz5Tr+uUT5l6JPzB5uFUi0Lx5JKgf05VBHygvm8ZemOzNHIYPbZcdacyiC
+         7KyOxUqgATenkn0ZmLMtn7ZWbFVjbZbhk02O65/kLKnRLNPrfIZBV/QbJAY3dLKiy1T1
+         7vWPSAwfJsA6Ic9ZvyBg6mtbVXW9JCDLjAgBGyiFbeLOG9S2FW75EAZOn8wA2koVyouh
+         My6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=I+PugfY7FgqqWZlX12lcfitAcnPLuri4PjNmIYu5QC0=;
-        b=O7tgR3ffb67IWZiNZnDSUTZLvrixv8lvbUC9gPS6n8WaO0CLcw6uiww8kDnaLBWyu1
-         0ywYZ+6ziPFG42d9yE9MVJIXP8H0OHw09w8USfVNgBqNHx+TX7W+yRapG+02NdpUDUSc
-         8bXYZC1G5i9eQtrL5k/Ib8AzPioZK/F+cKPgDc5d/P4d/LE+ZueKndwKUzAh48jR5q4U
-         WS3v5RpDqrYqGDqag0afjxi3xFR1e7YvTT2abubcL7/1WSMrKiFNzeLFGHToLXGizBgH
-         slLIXfoL4Az8aFAOmGk+oJkADEbdzdj85JHuU68der1H2wSL1LSHqbbKlGDWDzon4tQA
-         HG5g==
-X-Gm-Message-State: APjAAAW3WmYTgysuOSSNDW8d1Shq6guACq8g5H4zGfdCbtu8HD2IGoIi
-        kn/LyuqZ+uQSJVZTKtJ/U1AQPQ==
-X-Google-Smtp-Source: APXvYqzKotygSk0Un81n8ndkReO8MzVRYC2KJpHXIj5+6OIFGorhASRNEQDfIyC8G4Ox/UkAP8a1mg==
-X-Received: by 2002:a62:26c1:: with SMTP id m184mr14958505pfm.102.1555017062281;
-        Thu, 11 Apr 2019 14:11:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p7sm71208945pfp.70.2019.04.11.14.11.00
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=IkuarGGVKCQsG79ZJK4mrZNMD40jUbFO5RJo6N6EJrQ=;
+        b=gCAUCIncIBjZEhN4n1Ufd5LBfYTV/PQc0/ecBeitKw+Xg97RzZGEqJSvaa6r7rw21k
+         AmX77YS4LFjWUU8eOGNDWWN181RUY/zOfdn2Og87xfiQJ2vN2z0cDmvri9004Jsd4wB+
+         JnmB27G18qMCsWNURvoHtJCPTbotP2ORrGQC7bF7Gp1GaExqhOnWDycD085GLos6AQhQ
+         HRtkFK9PerykbLUg1I/xc3uHSYPtey1a/B6fL5z3eHkp1857ybigjd69fLaAL156VJQF
+         xx/h9qHBXSONgD8WNwTCLLioNcsXgIr0NzGTnfQEOaBthJuviuvwTTLyFj7bYke8zqf8
+         4TsA==
+X-Gm-Message-State: APjAAAWCuH3pDNNGt17gpnGoMi2aW8E/w39ixBCX6h1dKyDW8febEUZp
+        MTEeL/vCIg89Xnsm9AD0b9SMZQ==
+X-Google-Smtp-Source: APXvYqzeKBXYfT9mMVLuIyeUJKPRizOio6KDDbYBXQhMeGA/MGafpAUyZqe721Bbp1rdLANQyR8wMA==
+X-Received: by 2002:a24:80c2:: with SMTP id g185mr9042453itd.11.1555017119267;
+        Thu, 11 Apr 2019 14:11:59 -0700 (PDT)
+Received: from localhost (63-238-229-145.dia.static.qwest.net. [63.238.229.145])
+        by smtp.gmail.com with ESMTPSA id l68sm3080312itb.29.2019.04.11.14.11.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Apr 2019 14:11:01 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 17:11:00 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        penguin-kernel@i-love.sakura.ne.jp, ebiederm@xmission.com,
-        shakeelb@google.com, Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
-Message-ID: <20190411211100.GB130334@google.com>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411105111.GR10383@dhcp22.suse.cz>
- <CAJWu+oq45tYxXJpLPLAU=-uZaYRg=OnxMHkgp2Rm0nbShb_eEA@mail.gmail.com>
- <20190411181243.GB10383@dhcp22.suse.cz>
- <20190411191430.GA46425@google.com>
- <20190411201151.GA4743@dhcp22.suse.cz>
+        Thu, 11 Apr 2019 14:11:58 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 14:11:58 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+In-Reply-To: <20190411114616.GA10032@infradead.org>
+Message-ID: <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411114616.GA10032@infradead.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411201151.GA4743@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:11:51PM +0200, Michal Hocko wrote:
-> On Thu 11-04-19 15:14:30, Joel Fernandes wrote:
-> > On Thu, Apr 11, 2019 at 08:12:43PM +0200, Michal Hocko wrote:
-> > > On Thu 11-04-19 12:18:33, Joel Fernandes wrote:
-> > > > On Thu, Apr 11, 2019 at 6:51 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > >
-> > > > > On Wed 10-04-19 18:43:51, Suren Baghdasaryan wrote:
-> > > > > [...]
-> > > > > > Proposed solution uses existing oom-reaper thread to increase memory
-> > > > > > reclaim rate of a killed process and to make this rate more deterministic.
-> > > > > > By no means the proposed solution is considered the best and was chosen
-> > > > > > because it was simple to implement and allowed for test data collection.
-> > > > > > The downside of this solution is that it requires additional “expedite”
-> > > > > > hint for something which has to be fast in all cases. Would be great to
-> > > > > > find a way that does not require additional hints.
-> > > > >
-> > > > > I have to say I do not like this much. It is abusing an implementation
-> > > > > detail of the OOM implementation and makes it an official API. Also
-> > > > > there are some non trivial assumptions to be fullfilled to use the
-> > > > > current oom_reaper. First of all all the process groups that share the
-> > > > > address space have to be killed. How do you want to guarantee/implement
-> > > > > that with a simply kill to a thread/process group?
-> > > > 
-> > > > Will task_will_free_mem() not bail out in such cases because of
-> > > > process_shares_mm() returning true?
-> > > 
-> > > I am not really sure I understand your question. task_will_free_mem is
-> > > just a shortcut to not kill anything if the current process or a victim
-> > > is already dying and likely to free memory without killing or spamming
-> > > the log. My concern is that this patch allows to invoke the reaper
-> > 
-> > Got it.
-> > 
-> > > without guaranteeing the same. So it can only be an optimistic attempt
-> > > and then I am wondering how reasonable of an interface this really is.
-> > > Userspace send the signal and has no way to find out whether the async
-> > > reaping has been scheduled or not.
-> > 
-> > Could you clarify more what you're asking to guarantee? I cannot picture it.
-> > If you mean guaranteeing that "a task is dying anyway and will free its
-> > memory on its own", we are calling task_will_free_mem() to check that before
-> > invoking the oom reaper.
-> 
-> No, I am talking about the API aspect. Say you kall kill with the flag
-> to make the async address space tear down. Now you cannot really
-> guarantee that this is safe to do because the target task might
-> clone(CLONE_VM) at any time. So this will be known only once the signal
-> is sent, but the calling process has no way to find out. So the caller
-> has no way to know what is the actual result of the requested operation.
-> That is a poor API in my book.
-> 
-> > Could you clarify what is the draback if OOM reaper is invoked in parallel to
-> > an exiting task which will free its memory soon? It looks like the OOM reaper
-> > is taking all the locks necessary (mmap_sem) in particular and is unmapping
-> > pages. It seemed to me to be safe, but I am missing what are the main draw
-> > backs of this - other than the intereference with core dump. One could be
-> > presumably scalability since the since OOM reaper could be bottlenecked by
-> > freeing memory on behalf of potentially several dying tasks.
-> 
-> oom_reaper or any other kernel thread doing the same is a mere
-> implementation detail I think. The oom killer doesn't really need the
-> oom_reaper to act swiftly because it is there to act as a last resort if
-> the oom victim cannot terminate on its own. If you want to offer an
-> user space API then you can assume users will like to use it and expect
-> a certain behavior but what that is? E.g. what if there are thousands of
-> tasks killed this way? Do we care that some of them will not get the
-> async treatment? If yes why do we need an API to control that at all?
-> 
-> Am I more clear now?
+On Thu, 11 Apr 2019, Christoph Hellwig wrote:
 
-Yes, your concerns are more clear now. We will think more about this and your
-other responses, thanks a lot.
+> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
+> > Similar to ARM64, add support for building DTB files from DT source
+> > data for RISC-V boards.
+> > 
+> > This patch starts with the infrastructure needed for SiFive boards.
+> > Boards from other vendors would add support here in a similar form.
+> 
+> What do we build it for?  We'd really need something like this:
+> 
+> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
+> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+> 
+> To actually use the DT files.
 
- - Joel
+Those patches might be useful - I have not reviewed them closely - but 
+they are not necessary. 
+
+The FSBL already supplies a DTB to Linux.  I assume the U-boot port works 
+the same way.
+
+I haven't switched to U-boot yet for these driver tests, so I personally 
+have been using the open-source FSBL (freedom-u540-c000-bootloader) with 
+the following trivial patches applied:
+
+https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
+
+The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output, 
+e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
+
+
+- Paul
 
