@@ -2,161 +2,157 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D36C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044EBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0F120873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17F721841
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfDKH2K (ORCPT
+        id S1726833AbfDKHcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:28:10 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48033 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfDKH2K (ORCPT
+        Thu, 11 Apr 2019 03:32:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57000 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726139AbfDKHcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:28:10 -0400
-X-Originating-IP: 90.88.18.121
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 02864240007;
-        Thu, 11 Apr 2019 07:28:06 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 09:28:06 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
-Message-ID: <20190411072806.yr3z3ei6djjhpo32@flea>
-References: <20190410232543.13297-1-peron.clem@gmail.com>
- <20190410232543.13297-5-peron.clem@gmail.com>
+        Thu, 11 Apr 2019 03:32:43 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B7UFxS094717
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:32:42 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rt10grtc6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:32:41 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Thu, 11 Apr 2019 08:32:39 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 08:32:37 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B7Waa353608620
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 07:32:36 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0FCCE11C04A;
+        Thu, 11 Apr 2019 07:32:36 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 955B911C054;
+        Thu, 11 Apr 2019 07:32:35 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.74.176])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 07:32:35 +0000 (GMT)
+Date:   Thu, 11 Apr 2019 09:32:34 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 10/12] s390: avoid __builtin_return_address(n) on clang
+In-Reply-To: <CAK8P3a2n+nEcaNrATQVO8NSGzfrMP5n+SrvjpTYcH4ikCN5LGg@mail.gmail.com>
+References: <20190408212648.2407234-1-arnd@arndb.de>
+        <20190408212648.2407234-10-arnd@arndb.de>
+        <20190410180357.3290d24f@mschwideX1>
+        <20190410121421.1414e179@gandalf.local.home>
+        <CAK8P3a2n+nEcaNrATQVO8NSGzfrMP5n+SrvjpTYcH4ikCN5LGg@mail.gmail.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z6x6bvm6fottyrqb"
-Content-Disposition: inline
-In-Reply-To: <20190410232543.13297-5-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041107-0012-0000-0000-0000030D9DB6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041107-0013-0000-0000-00002145C4A5
+Message-Id: <20190411093234.5f212a2e@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=897 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 10 Apr 2019 21:07:56 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
 
---z6x6bvm6fottyrqb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Apr 10, 2019 at 6:14 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Wed, 10 Apr 2019 18:03:57 +0200 Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
+> >  
+> > > > --- a/arch/s390/include/asm/ftrace.h
+> > > > +++ b/arch/s390/include/asm/ftrace.h
+> > > > @@ -13,7 +13,12 @@
+> > > >
+> > > >  #ifndef __ASSEMBLY__
+> > > >
+> > > > +#ifdef CONFIG_CC_IS_CLANG
+> > > > +/* https://bugs.llvm.org/show_bug.cgi?id=41424 */
+> > > > +#define ftrace_return_address(n) __builtin_return_address(0)
+> > > > +#else
+> > > >  #define ftrace_return_address(n) __builtin_return_address(n)
+> > > > +#endif
+> > > >
+> > > >  void _mcount(void);
+> > > >  void ftrace_caller(void);  
+> > >
+> > > I can say I like this one. If the compiler can not do __builtin_return_address(n)
+> > > it feels wrong to just use __builtin_return_address(0).  
+> >
+> > I agree. The proper return value is 0UL, see include/linux/ftrace.h
+> >
+> > /* Archs may use other ways for ADDR1 and beyond */
+> > #ifndef ftrace_return_address
+> > # ifdef CONFIG_FRAME_POINTER
+> > #  define ftrace_return_address(n) __builtin_return_address(n)
+> > # else
+> > #  define ftrace_return_address(n) 0UL
+> > # endif
+> > #endif
+> >
+> > This is why we treat zero differently:
+> >
+> > #define CALLER_ADDR0 ((unsigned long)ftrace_return_address0)
+> > #define CALLER_ADDR1 ((unsigned long)ftrace_return_address(1))
+> > #define CALLER_ADDR2 ((unsigned long)ftrace_return_address(2))
+> > #define CALLER_ADDR3 ((unsigned long)ftrace_return_address(3))
+> > #define CALLER_ADDR4 ((unsigned long)ftrace_return_address(4))
+> > #define CALLER_ADDR5 ((unsigned long)ftrace_return_address(5))
+> > #define CALLER_ADDR6 ((unsigned long)ftrace_return_address(6))  
+> 
+> Right, got it.
+> 
+> Martin, do you want me to send a replacement patch, or can you
+> commit the patch with
+> 
+> #ifdef CONFIG_CC_IS_CLANG
+> /* https://bugs.llvm.org/show_bug.cgi?id=41424 */
+> #define ftrace_return_address(n) 0UL
+> #else
+> #define ftrace_return_address(n) __builtin_return_address(n)
+> #endif
+> 
+> instead?
 
-On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=E9ment P=E9ron wrote:
-> Add the mali gpu node to the H6 device-tree.
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++++
->  1 file changed, 80 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> index e0dc4a05c1ba..152b2128aadf 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -17,6 +17,71 @@
->  	#address-cells =3D <1>;
->  	#size-cells =3D <1>;
->
-> +	gpu_opp_table: opp_table1 {
-> +		compatible =3D "operating-points-v2";
-> +
-> +		opp@756000000 {
-> +			opp-hz =3D /bits/ 64 <756000000>;
-> +			opp-microvolt =3D <1040000>;
-> +		};
-> +		opp@624000000 {
-> +			opp-hz =3D /bits/ 64 <624000000>;
-> +			opp-microvolt =3D <950000>;
-> +		};
-> +		opp@576000000 {
-> +			opp-hz =3D /bits/ 64 <576000000>;
-> +			opp-microvolt =3D <930000>;
-> +		};
-> +		opp@540000000 {
-> +			opp-hz =3D /bits/ 64 <540000000>;
-> +			opp-microvolt =3D <910000>;
-> +		};
-> +		opp@504000000 {
-> +			opp-hz =3D /bits/ 64 <504000000>;
-> +			opp-microvolt =3D <890000>;
-> +		};
-> +		opp@456000000 {
-> +			opp-hz =3D /bits/ 64 <456000000>;
-> +			opp-microvolt =3D <870000>;
-> +		};
-> +		opp@432000000 {
-> +			opp-hz =3D /bits/ 64 <432000000>;
-> +			opp-microvolt =3D <860000>;
-> +		};
-> +		opp@420000000 {
-> +			opp-hz =3D /bits/ 64 <420000000>;
-> +			opp-microvolt =3D <850000>;
-> +		};
-> +		opp@408000000 {
-> +			opp-hz =3D /bits/ 64 <408000000>;
-> +			opp-microvolt =3D <840000>;
-> +		};
-> +		opp@384000000 {
-> +			opp-hz =3D /bits/ 64 <384000000>;
-> +			opp-microvolt =3D <830000>;
-> +		};
-> +		opp@360000000 {
-> +			opp-hz =3D /bits/ 64 <360000000>;
-> +			opp-microvolt =3D <820000>;
-> +		};
-> +		opp@336000000 {
-> +			opp-hz =3D /bits/ 64 <336000000>;
-> +			opp-microvolt =3D <810000>;
-> +		};
-> +		opp@312000000 {
-> +			opp-hz =3D /bits/ 64 <312000000>;
-> +			opp-microvolt =3D <810000>;
-> +		};
-> +		opp@264000000 {
-> +			opp-hz =3D /bits/ 64 <264000000>;
-> +			opp-microvolt =3D <810000>;
-> +		};
-> +		opp@216000000 {
-> +			opp-hz =3D /bits/ 64 <216000000>;
-> +			opp-microvolt =3D <810000>;
-> +		};
-> +	};
-> +
+Ok, done.
 
-How were those OPPs tested?
+-- 
+blue skies,
+   Martin.
 
-Maxime
+"Reality continues to ruin my life." - Calvin.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---z6x6bvm6fottyrqb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK7shgAKCRDj7w1vZxhR
-xRDJAP4khN/zfxuwm7SW2nQx8NlUPFsBsRM7b6g6j8zpPbmumwD/bFuHyrRVbpY9
-aV++rHkiM3wLYccRwb8jwI3mHL7L8Q4=
-=x49b
------END PGP SIGNATURE-----
-
---z6x6bvm6fottyrqb--
