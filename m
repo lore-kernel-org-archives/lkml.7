@@ -2,180 +2,123 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57521C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73778217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3384B2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfDKIKJ (ORCPT
+        id S1726738AbfDKIKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:10:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37786 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfDKIKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:10:08 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A62858762D;
-        Thu, 11 Apr 2019 08:10:07 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-33.pek2.redhat.com [10.72.8.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F03845D9CD;
-        Thu, 11 Apr 2019 08:09:59 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 16:09:54 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-        Jens Axboe <axboe@kernel.dk>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Some new bio merging behaviors in __bio_try_merge_page
-Message-ID: <20190411080953.GE421@ming.t460p>
-References: <85c5fa1a-a506-e26f-c354-1554d47d8b2b@huawei.com>
- <20190411070807.GA421@ming.t460p>
- <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
+        Thu, 11 Apr 2019 04:10:34 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:42088 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfDKIKd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 04:10:33 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 6C63625AD6D;
+        Thu, 11 Apr 2019 18:10:31 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id ED1A2940356; Thu, 11 Apr 2019 10:10:28 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 10:10:28 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Magnus Damm <damm+renesas@opensource.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        iommu@lists.linux-foundation.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] iommu/ipmmu-vmsa: Link IOMMUs and devices in sysfs
+Message-ID: <20190411081028.b2wf3nnzx4tw7xdr@verge.net.au>
+References: <20190403182148.18058-1-geert+renesas@glider.be>
+ <20190403182148.18058-2-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 11 Apr 2019 08:10:08 +0000 (UTC)
+In-Reply-To: <20190403182148.18058-2-geert+renesas@glider.be>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 03:43:02PM +0800, Gao Xiang wrote:
-> 
-> 
-> On 2019/4/11 15:08, Ming Lei wrote:
-> > Hi Gao Xiang,
-> > 
-> > On Thu, Apr 11, 2019 at 01:47:49PM +0800, Gao Xiang wrote:
-> >> Hi Ming,
-> >>
-> >> I found a erofs issue after commit 07173c3ec276
-> >> ("block: enable multipage bvecs") is merged. It seems that
-> >> it tries to merge more physical continuous pages in one iovec.
-> >>
-> >> However it breaks the current erofs_read_raw_page logic since it uses
-> >> nr_iovecs of bio_alloc to limit the maximum number of physical
-> > 
-> > I believe you can do the limit outside easily, such as by checking
-> > how many pages have been added to the bio.
-> 
-> Yes, I agree that. However, I noticed that bio_add_page is exported as
-> EXPORT_SYMBOL. I have no idea how many out-of-tree drivers break as well.
+On Wed, Apr 03, 2019 at 08:21:43PM +0200, Geert Uytterhoeven wrote:
+> As of commit 7af9a5fdb9e0ca33 ("iommu/ipmmu-vmsa: Use
+> iommu_device_sysfs_add()/remove()"), IOMMU devices show up under
+> /sys/class/iommus/, but their "devices" subdirectories are empty.
 
-I don't think it is a good behaviour to use bio->bi_max_vecs to limit
-max allowed page, you may see the idea from the naming simply...
+Hi Geert,
 
-If there were other such drivers, we may fix it easily, and the following
-patch should fix your issue:
+Should the path be /sys/class/iommu/ (no trailing 's') ?
 
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 526e0dbea5b5..8878f2f2593e 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -298,7 +298,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 	*last_block = current_block;
- 
- 	/* shift in advance in case of it followed by too many gaps */
--	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
-+	if (unlikely(bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE)) {
- 		/* err should reassign to 0 after submitting */
- 		err = 0;
- 		goto submit_bio_out;
+> Likewise, devices tied to an IOMMU do not have an "iommu" backlink.
 > 
-> Is there no way to take old behavior into consideration in the block layer as well?
-
-One new interface, such as bio_add_page_limit(), may be helpful for
-addressing this issue, but not sure if it is necessary, since it is
-more reasonable to put the logic in user side.
-
+> Make sure all links are created, on both arm32 and arm64.
 > 
-> > 
-> >> continuous blocks as well. It was practicable since the old
-> >> __bio_try_merge_page only tries to merge in the same page.
-> >> it is a kAPI behavior change which also affects bio_alloc...
-> >>
-> >> ...
-> >> 231                 err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-> >> 232                 if (unlikely(err))
-> >> 233                         goto err_out;
-> >> ...
-> >> 284                 /* max # of continuous pages */
-> >> 285                 if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
-> >> 286                         nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
-> >> 287                 if (nblocks > BIO_MAX_PAGES)
-> >> 288                         nblocks = BIO_MAX_PAGES;
-> >> 289
-> >> 290                 bio = erofs_grab_bio(sb, blknr, nblocks, sb,
-> >> 291                                      read_endio, false);
-> > 
-> > Previously this bio is allowed to add at most 'nblocks' pages, however,
-> > now we are allowed to add at most 'nblocks' io vecs, instead of pages.
-> > 
-> >> 292                 if (IS_ERR(bio)) {
-> >> 293                         err = PTR_ERR(bio);
-> >> 294                         bio = NULL;
-> >> 295                         goto err_out;
-> >> 296                 }
-> >> 297         }
-> >> 298
-> >> 299         err = bio_add_page(bio, page, PAGE_SIZE, 0);
-> >> 300         /* out of the extent or bio is full */
-> >> 301         if (err < PAGE_SIZE)
-> >> 302                 goto submit_bio_retry;
-> >> ...
-> >>
-> >> After commit 07173c3ec276 ("block: enable multipage bvecs"), erofs could
-> >> read more beyond what erofs_map_blocks assigns, and out-of-bound data could
-> >> be read and it breaks tail-end inline determination.
-> > 
-> > I don't understand why, could you explain a bit why erofs reads more?
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  drivers/iommu/ipmmu-vmsa.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
 > 
-> In current erofs, file could be break in two parts (non tail-end and tail-end blocks).
-> Considering this on-disk layout,
->  ________________________________________________________________
-> |     non tail-end data              |   meta data               |
-> |____________________________________|_(inode) + non-inline data_|
->                           ^          ^
->                           |          |        
->                           bio start  \-- what nr_iovecs indicates as well:
->                                          the end of the non tail-end data.
+> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+> index 9a380c10655e182d..9f2b781e20a0eba6 100644
+> --- a/drivers/iommu/ipmmu-vmsa.c
+> +++ b/drivers/iommu/ipmmu-vmsa.c
+> @@ -885,27 +885,37 @@ static int ipmmu_init_arm_mapping(struct device *dev)
+>  
+>  static int ipmmu_add_device(struct device *dev)
+>  {
+> +	struct ipmmu_vmsa_device *mmu = to_ipmmu(dev);
+>  	struct iommu_group *group;
+> +	int ret;
+>  
+>  	/*
+>  	 * Only let through devices that have been verified in xlate()
+>  	 */
+> -	if (!to_ipmmu(dev))
+> +	if (!mmu)
+>  		return -ENODEV;
+>  
+> -	if (IS_ENABLED(CONFIG_ARM) && !IS_ENABLED(CONFIG_IOMMU_DMA))
+> -		return ipmmu_init_arm_mapping(dev);
+> +	if (IS_ENABLED(CONFIG_ARM) && !IS_ENABLED(CONFIG_IOMMU_DMA)) {
+> +		ret = ipmmu_init_arm_mapping(dev);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		group = iommu_group_get_for_dev(dev);
+> +		if (IS_ERR(group))
+> +			return PTR_ERR(group);
+>  
+> -	group = iommu_group_get_for_dev(dev);
+> -	if (IS_ERR(group))
+> -		return PTR_ERR(group);
+> +		iommu_group_put(group);
+> +	}
+>  
+> -	iommu_group_put(group);
+> +	iommu_device_link(&mmu->iommu, dev);
+>  	return 0;
+>  }
+>  
+>  static void ipmmu_remove_device(struct device *dev)
+>  {
+> +	struct ipmmu_vmsa_device *mmu = to_ipmmu(dev);
+> +
+> +	iommu_device_unlink(&mmu->iommu, dev);
+>  	arm_iommu_detach_device(dev);
+>  	iommu_group_remove_device(dev);
+>  }
+> -- 
+> 2.17.1
 > 
-> Before this commit, it will stop just before the next meta data. However,
-> if the new bio merging behavior is introduced, it could add pages more than
-> nr_iovecs, thus meta data will be read as the normal data...
-
-I'd suggest you to not re-use bio->bi_max_vecs for this purpose.
-
-> 
-> 
-> > 
-> > The amount depends on how many pages you added to the bio.
-> > 
-> >>
-> >> I can change the logic in erofs. However, out of curiosity, I have no idea
-> >> if some other places also are designed like this.
-> >>
-> >> IMO, it's better to provide a total count which indicates how many real
-> >> pages have been added in this bio. some thoughts?
-> > 
-> > As I mentioned, you may count how many pages added to bio, or you still
-> > can get the number via bio_segments(bio).
-> 
-> It is unsuitable to introduce bio_segments for each bio_add_page...
-
-It isn't necessary, see the above patch.
-
-
-Thanks,
-Ming
