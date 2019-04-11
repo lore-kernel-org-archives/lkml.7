@@ -2,140 +2,192 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CC9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1BF217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="aqrr9mcq"
+	by mail.kernel.org (Postfix) with ESMTP id 101B02073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfDKQUZ (ORCPT
+        id S1726755AbfDKQXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:20:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45754 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfDKQUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:20:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id e24so3673587pfi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3w9TkuZHAqslrWVxIfj/pr9QdQEYv2bicep/qG+WXX8=;
-        b=aqrr9mcq2AeDtB59HAIaIucdjBx2Yzk4ptZilZRNndX4ha+I/ju9YYj6Ggq9psCcEz
-         hfJ+mbRqvBmAbF1f+WvsNFsFx/SGp9HVcxK7Ubjt5dpdAcTKAm0klQaEKf/Vye2SKLMP
-         AmxCHFkVF6LGPtlspwIna02aLr9Ak/6fx+p9RNdrExRDBFEUxLgR40S24CZXf1g9nU/Z
-         rJ9uqvU/B/pldGfMkK9jbbCAZGSt+ViBEROl5PTlZAVVNcTn9wq4FzBGrcqCqdmDTLh8
-         gygeK5c51xR8R0XeR0q5qi5WCnUGLHmY5qtRS5RQy5JA0JI46557f9Co/Wvw+bBfqWnG
-         kKWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3w9TkuZHAqslrWVxIfj/pr9QdQEYv2bicep/qG+WXX8=;
-        b=o1qcOWVWASRGhD1NP7jVtrrpBY2Wkf/XpQNbSwLbI1I/mjZGl4MHDJKA7+nwmPFK6k
-         BWvEr770Hzbmq021yvU6jXxtmTQba2f5PAeE1sPG9vojMa/2muPQbyQXMZ/OlW3eR9ZF
-         Je7zkRZqA12MYoZ77wVAcYrNlRkaZa+7GiUDnULlX4MnT6mDv8eipUAtqKoFR9r/HuUs
-         M+OiRqmrlQjF9PegNiJorQvEMXYLw2fKmBuYcg9R2EmFkMPhisrl9MMpwAXhU7cSAk4p
-         hFKUIa90cDUpJhb/QQy16oH0NN/W9FSPhLFwGnZZEwmkeaDJJf4VRETRMk479wXoGSWB
-         0xrQ==
-X-Gm-Message-State: APjAAAWYf9R4T+d8t4AztCHJyTLzhBiX2n6Asko04vHFcZuCx3Gfnp4f
-        NS15Bv8C52Rc7N4ZBq0JoiDp4Q==
-X-Google-Smtp-Source: APXvYqzUPW5eM71ndUc6UDWTkzD31OKaYqK67v6v5VZ9SRY7hlz4748BeUborAx0SFYr/LSSK6DuEg==
-X-Received: by 2002:a62:69c2:: with SMTP id e185mr50470609pfc.119.1554999623683;
-        Thu, 11 Apr 2019 09:20:23 -0700 (PDT)
-Received: from localhost ([2620:0:1000:1601:3fed:2d30:9d40:70a3])
-        by smtp.gmail.com with ESMTPSA id c22sm42692365pfn.136.2019.04.11.09.20.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Apr 2019 09:20:23 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 09:20:22 -0700
-From:   Sandeep Patil <sspatil@android.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
-        rientjes@google.com, willy@infradead.org,
-        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
-        hannes@cmpxchg.org, penguin-kernel@I-love.SAKURA.ne.jp,
-        ebiederm@xmission.com, shakeelb@google.com, christian@brauner.io,
-        minchan@kernel.org, timmurray@google.com, dancol@google.com,
-        joel@joelfernandes.org, jannh@google.com, linux-mm@kvack.org,
-        lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
-Message-ID: <20190411162022.GB124555@google.com>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411105111.GR10383@dhcp22.suse.cz>
+        Thu, 11 Apr 2019 12:23:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58814 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbfDKQXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:23:03 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E7A03134342;
+        Thu, 11 Apr 2019 16:23:03 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DCC38183DC;
+        Thu, 11 Apr 2019 16:23:01 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5DC143FB10;
+        Thu, 11 Apr 2019 16:23:00 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 12:23:00 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     cohuck@redhat.com, Jan Kara <jack@suse.cz>,
+        KVM list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, david <david@fromorbit.com>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        virtualization@lists.linux-foundation.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        jmoyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>, kilobyte@angband.pl,
+        Rik van Riel <riel@surriel.com>,
+        yuval shaia <yuval.shaia@oracle.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        Kevin Wolf <kwolf@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Igor Mammedov <imammedo@redhat.com>
+Message-ID: <1150671088.21162726.1554999780030.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAPcyv4gOPtgmVyk+zayRBtkbSivEvBNn1tyKL2ycT_q_nTHUUA@mail.gmail.com>
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com> <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com> <1463291806.21158433.1554998258746.JavaMail.zimbra@redhat.com> <CAPcyv4gOPtgmVyk+zayRBtkbSivEvBNn1tyKL2ycT_q_nTHUUA@mail.gmail.com>
+Subject: Re: [Qemu-devel] [PATCH v5 1/6] libnvdimm: nd_region flush callback
+ support
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411105111.GR10383@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.71, 10.4.195.1]
+Thread-Topic: libnvdimm: nd_region flush callback support
+Thread-Index: gw3ZQ9aBgaO/mtRYQSpGSYATa+Jryw==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 11 Apr 2019 16:23:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 12:51:11PM +0200, Michal Hocko wrote:
-> On Wed 10-04-19 18:43:51, Suren Baghdasaryan wrote:
-> [...]
-> > Proposed solution uses existing oom-reaper thread to increase memory
-> > reclaim rate of a killed process and to make this rate more deterministic.
-> > By no means the proposed solution is considered the best and was chosen
-> > because it was simple to implement and allowed for test data collection.
-> > The downside of this solution is that it requires additional “expedite”
-> > hint for something which has to be fast in all cases. Would be great to
-> > find a way that does not require additional hints.
+
+> > > > This patch adds functionality to perform flush from guest
+> > > > to host over VIRTIO. We are registering a callback based
+> > > > on 'nd_region' type. virtio_pmem driver requires this special
+> > > > flush function. For rest of the region types we are registering
+> > > > existing flush function. Report error returned by host fsync
+> > > > failure to userspace.
+> > > >
+> > > > This also handles asynchronous flush requests from the block layer
+> > > > by creating a child bio and chaining it with parent bio.
+> > > >
+> > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > > ---bio_chain Dan williams
+> > > [..]
+> > > > diff --git a/drivers/nvdimm/region_devs.c
+> > > > b/drivers/nvdimm/region_devs.c
+> > > > index b4ef7d9ff22e..fb1041ab32a6 100644
+> > > > --- a/drivers/nvdimm/region_devs.c
+> > > > +++ b/drivers/nvdimm/region_devs.c
+> > > > @@ -295,7 +295,9 @@ static ssize_t deep_flush_store(struct device *dev,
+> > > > struct device_attribute *att
+> > > >                 return rc;
+> > > >         if (!flush)
+> > > >                 return -EINVAL;
+> > > > -       nvdimm_flush(nd_region);
+> > > > +       rc = nvdimm_flush(nd_region, NULL, false);
+> > > > +       if (rc)
+> > > > +               return rc;
+> > > >
+> > > >         return len;
+> > > >  }
+> > > > @@ -1085,6 +1087,11 @@ static struct nd_region *nd_region_create(struct
+> > > > nvdimm_bus *nvdimm_bus,
+> > > >         dev->of_node = ndr_desc->of_node;
+> > > >         nd_region->ndr_size = resource_size(ndr_desc->res);
+> > > >         nd_region->ndr_start = ndr_desc->res->start;
+> > > > +       if (ndr_desc->flush)
+> > > > +               nd_region->flush = ndr_desc->flush;
+> > > > +       else
+> > > > +               nd_region->flush = generic_nvdimm_flush;
+> > > > +
+> > > >         nd_device_register(dev);
+> > > >
+> > > >         return nd_region;
+> > > > @@ -1125,11 +1132,36 @@ struct nd_region
+> > > > *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
+> > > >
+> > > > +int nvdimm_flush(struct nd_region *nd_region, struct bio *bio, bool
+> > > > async)
+> > > > +{
+> > >
+> > > I don't quite see the point of the 'async' argument. All the usages of
+> > > this routine are either
+> > >
+> > > nvdimm_flush(nd_region, bio, true)
+> > > ...or:
+> > > nvdimm_flush(nd_region, NULL, false)
+> >
+> > Agree.
+> >
+> > >
+> > > ...so why not gate async behavior on the presence of the 'bio' argument?
+> >
+> > Sure.
+> >
+> > >
+> > >
+> > > > +       int rc = 0;
+> > > > +
+> > > > +       /* Create child bio for asynchronous flush and chain with
+> > > > +        * parent bio. Otherwise directly call nd_region flush.
+> > > > +        */
+> > > > +       if (async && bio->bi_iter.bi_sector != -1) {
+> > > > +
+> > > > +               struct bio *child = bio_alloc(GFP_ATOMIC, 0);
+> > > > +
+> > > > +               if (!child)
+> > > > +                       return -ENOMEM;
+> > > > +               bio_copy_dev(child, bio);
+> > > > +               child->bi_opf = REQ_PREFLUSH;
+> > > > +               child->bi_iter.bi_sector = -1;
+> > > > +               bio_chain(child, bio);
+> > > > +               submit_bio(child);
+> > >
+> > > I understand how this works, but it's a bit too "magical" for my
+> > > taste. I would prefer that all flush implementations take an optional
+> > > 'bio' argument rather than rely on the make_request implementation to
+> > > stash the bio away on a driver specific list.
+> >
+> > I did this to make use of "bio_chain" for chaining child bio for async
+> > flush
+> > suggested [1]. Are you saying to remove this and just call "flush" based on
+> > bio argument? Or I implemented the 'bio_chain' request entirely wrong?
 > 
-> I have to say I do not like this much. It is abusing an implementation
-> detail of the OOM implementation and makes it an official API. Also
-> there are some non trivial assumptions to be fullfilled to use the
-> current oom_reaper. First of all all the process groups that share the
-> address space have to be killed. How do you want to guarantee/implement
-> that with a simply kill to a thread/process group?
+> No, I think you implemented it correctly. I'm just asking for the
+> chaining to be performed internal to the ->flush() callback rather
+> than in the common nvdimm_flush() front-end.
+
+Sure. Perfect!
+
+Thank you very much for all the suggestions. 
+
+Best regards,
+Pankaj
 > 
-> > Other possible approaches include:
-> > - Implementing a dedicated syscall to perform opportunistic reclaim in the
-> > context of the process waiting for the victim’s death. A natural boost
-> > bonus occurs if the waiting process has high or RT priority and is not
-> > limited by cpuset cgroup in its CPU choices.
-> > - Implement a mechanism that would perform opportunistic reclaim if it’s
-> > possible unconditionally (similar to checks in task_will_free_mem()).
-> > - Implement opportunistic reclaim that uses shrinker interface, PSI or
-> > other memory pressure indications as a hint to engage.
-> 
-> I would question whether we really need this at all? Relying on the exit
-> speed sounds like a fundamental design problem of anything that relies
-> on it.
-
-OTOH, we want to keep as many processes around as possible for recency. In which
-case, the exit path (particularly the memory reclaim) becomes critical to
-maintain interactivity for phones.
-
-Android keeps processes around because cold starting applications is much
-slower than simply bringing them up from background. This obviously presents
-the problem when a background application _is_ killed, it is almost always to
-address sudden spike in memory needs by something else much more important
-and user visible. e.g. a foreground application or critical system process.
-
-> Sure task exit might be slow, but async mm tear down is just a
-> mere optimization this is not guaranteed to really help in speading
-> things up. OOM killer uses it as a guarantee for a forward progress in a
-> finite time rather than as soon as possible.
-
-With OOM killer, things are already really bad. When lmkd[1] kills processes,
-it is doing so to serve the immediate needs of the system while trying to
-avoid the OOM killer.
-
-
-- ssp
-
-1] https://android.googlesource.com/platform/system/core/+/refs/heads/master/lmkd/
