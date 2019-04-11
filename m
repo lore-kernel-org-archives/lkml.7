@@ -2,120 +2,130 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E54C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6071AC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACE020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377322082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDKGOa (ORCPT
+        id S1726717AbfDKGUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 02:14:30 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59735 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726121AbfDKGOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 02:14:30 -0400
-X-UUID: 46a0ab1f03f0401089e178a492f70ced-20190411
-X-UUID: 46a0ab1f03f0401089e178a492f70ced-20190411
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1609266676; Thu, 11 Apr 2019 14:14:25 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 11 Apr 2019 14:14:23 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 11 Apr 2019 14:14:24 +0800
-Message-ID: <1554963264.4768.7.camel@mtksdaap41>
-Subject: Re: [PATCH v2 10/25] drm/mediatek: add commponent OVL0_2L
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Thu, 11 Apr 2019 14:14:24 +0800
-In-Reply-To: <1553667561-25447-11-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-11-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 11 Apr 2019 02:20:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19996 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfDKGUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 02:20:39 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 23:20:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,336,1549958400"; 
+   d="scan'208";a="163291683"
+Received: from hmoshe-mobl.ger.corp.intel.com (HELO intel.com) ([10.252.14.247])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2019 23:20:33 -0700
+Date:   Thu, 11 Apr 2019 07:20:32 +0100
+From:   Eric Engestrom <eric.engestrom@intel.com>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Ayan Halder <Ayan.Halder@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "malidp@foss.arm.com" <malidp@foss.arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH libdrm] headers: Sync with drm-next
+Message-ID: <20190411062032.qqxz3j7mm4cgzgfp@intel.com>
+References: <20190408205422.dj7z4dl36nauwlk7@intel.com>
+ <1554809706-15389-1-git-send-email-ayan.halder@arm.com>
+ <20190409115913.hvyjxlda4wtzm75t@intel.com>
+ <20190409122710.k2bh25xg43lrqzvq@intel.com>
+ <CAF6AEGvUsWF+_dZzGBM1BYnwvZRY9T0P7OGq30KJLohFU3soKg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGvUsWF+_dZzGBM1BYnwvZRY9T0P7OGq30KJLohFU3soKg@mail.gmail.com>
+Organization: Intel Corporation (UK) Ltd. - Co. Reg. 1134945 - Pipers Way,
+ Swindon SN3 1RJ
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Wednesday, 2019-04-10 21:49:33 -0400, Rob Clark wrote:
+> On Tue, Apr 9, 2019 at 8:27 AM Eric Engestrom <eric.engestrom@intel.com> wrote:
+> > > > diff --git a/include/drm/msm_drm.h b/include/drm/msm_drm.h
+> > > > index c06d0a5..91a16b3 100644
+> > > > --- a/include/drm/msm_drm.h
+> > > > +++ b/include/drm/msm_drm.h
+> > > > @@ -105,14 +105,24 @@ struct drm_msm_gem_new {
+> > > >     __u32 handle;         /* out */
+> > > >  };
+> > > >
+> > > > -#define MSM_INFO_IOVA      0x01
+> > > > -
+> > > > -#define MSM_INFO_FLAGS (MSM_INFO_IOVA)
+> > > > +/* Get or set GEM buffer info.  The requested value can be passed
+> > > > + * directly in 'value', or for data larger than 64b 'value' is a
+> > > > + * pointer to userspace buffer, with 'len' specifying the number of
+> > > > + * bytes copied into that buffer.  For info returned by pointer,
+> > > > + * calling the GEM_INFO ioctl with null 'value' will return the
+> > > > + * required buffer size in 'len'
+> > > > + */
+> > > > +#define MSM_INFO_GET_OFFSET        0x00   /* get mmap() offset, returned by value */
+> > > > +#define MSM_INFO_GET_IOVA  0x01   /* get iova, returned by value */
+> > > > +#define MSM_INFO_SET_NAME  0x02   /* set the debug name (by pointer) */
+> > > > +#define MSM_INFO_GET_NAME  0x03   /* get debug name, returned by pointer */
+> > > >
+> > > >  struct drm_msm_gem_info {
+> > > >     __u32 handle;         /* in */
+> > > > -   __u32 flags;          /* in - combination of MSM_INFO_* flags */
+> > > > -   __u64 offset;         /* out, mmap() offset or iova */
+> > > > +   __u32 info;           /* in - one of MSM_INFO_* */
+> > > > +   __u64 value;          /* in or out */
+> > > > +   __u32 len;            /* in or out */
+> > > > +   __u32 pad;
+> >
+> > freedreno/msm/msm_bo.c needs to be updated to reflect those changes.
 > 
-> This patch add commponent OVL0_2L
 > 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 2 ++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 2 ++
->  2 files changed, 4 insertions(+)
+> I think you can just rename flags->info and offset->value, the rest of
+> the struct should be zero-initialized.. if in doubt you can check
+> $mesa/src/freedreno/drm/msm_bo.c
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> index 310c0b9..19a8b06 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -227,6 +227,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
->  
->  static const char * const mtk_ddp_comp_stem[MTK_DDP_COMP_TYPE_MAX] = {
->  	[MTK_DISP_OVL] = "ovl",
-> +	[MTK_DISP_OVL_2L] = "ovl_2l",
->  	[MTK_DISP_RDMA] = "rdma",
->  	[MTK_DISP_WDMA] = "wdma",
->  	[MTK_DISP_COLOR] = "color",
-> @@ -266,6 +267,7 @@ struct mtk_ddp_comp_match {
->  	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
->  	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
->  	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
-> +	[DDP_COMPONENT_OVL0_2L]	= { MTK_DISP_OVL_2L,	0, NULL },
->  	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
->  	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
->  	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 87ef290..c061784 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -25,6 +25,7 @@
->  
->  enum mtk_ddp_comp_type {
->  	MTK_DISP_OVL,
-> +	MTK_DISP_OVL_2L,
->  	MTK_DISP_RDMA,
->  	MTK_DISP_WDMA,
->  	MTK_DISP_COLOR,
-> @@ -58,6 +59,7 @@ enum mtk_ddp_comp_id {
->  	DDP_COMPONENT_OD0,
->  	DDP_COMPONENT_OD1,
->  	DDP_COMPONENT_OVL0,
-> +	DDP_COMPONENT_OVL0_2L,
+> side-note:  the libdrm_freedreno code was folded into mesa in 19.0, so
+> at *some* point we can probably disable libdrm_freedreno build by
+> default.
 
-I think this component is the OVL_2L with index 0, I would like the
-naming to be DDP_COMPONENT_OVL_2L0.
+Right now, freedreno's `auto` enables it by default on arm and disables it on
+everything else.
 
-Regards,
-CK
+I always enable everything to at least build-test it, but Ayan was using
+the defaults which is why he didn't see this issue at first.
 
->  	DDP_COMPONENT_OVL1,
->  	DDP_COMPONENT_PWM0,
->  	DDP_COMPONENT_PWM1,
+Btw, the GitLab CI builds everything, so it hopefully won't bitrot unnoticed.
 
-
+> (I'd kinda still like to keep the code around for some misc
+> standalone tools I have, but that is the sort of thing where I can fix
+> libdrm if it gets broken).  When to switch to disabled by default I
+> guess comes down to how long we want to support mesa 18.x with latest
+> libdrm??  Maybe after 19.1, since (selfishly motivated) that gives me
+> a long enough window back in case I find myself needing to bisect for
+> some regression..
