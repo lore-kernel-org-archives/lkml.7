@@ -2,218 +2,118 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272B8C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE33C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4D421841
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40D820873
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554965699;
+	bh=uLr3QRaW+Ev4ux8zgTIcxmyBefsZzpI+t8kUFfSzWfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jLKN0FuZM+rXDW4mc/ja+E2DzXMIO8lnhaZu10OXlLxWi8/XPPSg7yCZJ40h/9jmQ
+	 aQKqBPgaPrGaS8g6CjUogSvag1RUbigSTaPVjsEOIwTxMkhrDFm1wadoSrqTGxwAXg
+	 Yf1ZbQxhPIRGLXhENamkp68piebFwNwiNeQAxrNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDKGx7 (ORCPT
+        id S1726794AbfDKGy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 02:53:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57254 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfDKGx6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 02:53:58 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 11 Apr 2019 02:54:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfDKGy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 02:54:57 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7EC282756F7;
-        Thu, 11 Apr 2019 07:53:56 +0100 (BST)
-Date:   Thu, 11 Apr 2019 08:53:53 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
- randomizer support
-Message-ID: <20190411085353.4c1af008@collabora.com>
-In-Reply-To: <OF071D3608.9D6D2523-ON482583D9.00173F52-482583D9.0018188C@mxic.com.tw>
-References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190409090427.22de9917@collabora.com>
-        <OF6C97E4DE.45261545-ON482583D7.00340468-482583D7.0034B3FE@mxic.com.tw>
-        <20190409114701.744c2c8c@collabora.com>
-        <OF9601E14B.A48284C4-ON482583D8.0005E3EB-482583D8.0006CC14@mxic.com.tw>
-        <20190410092258.332ef399@collabora.com>
-        <OF071D3608.9D6D2523-ON482583D9.00173F52-482583D9.0018188C@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 442D220873;
+        Thu, 11 Apr 2019 06:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554965696;
+        bh=uLr3QRaW+Ev4ux8zgTIcxmyBefsZzpI+t8kUFfSzWfw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pClAzeeYxuPS8DbQNlbUjPt3ELlBKQnrhiUmcQps5LinL4zIWFjiSPLQGIZbPQEdn
+         EIOQB4mus2VJ1pAUrd2edRwnVpF3TVA3T+bpu7BbQAGPlu0T5e+2b955N7HbhThpyl
+         El8vXruq6yvU455uFiHSlQCCe90m+9JWbJn5IGaE=
+Date:   Thu, 11 Apr 2019 14:54:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Markus Kueffner <kueffner.markus@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Message-ID: <20190411065440.GB26817@dragon>
+References: <1554566420-1008-1-git-send-email-kueffner.markus@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554566420-1008-1-git-send-email-kueffner.markus@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 12:23:11 +0800
-masonccyang@mxic.com.tw wrote:
-
-> Hi Boris,
+On Sat, Apr 06, 2019 at 06:00:20PM +0200, Markus Kueffner wrote:
+> Add Pincfgs to enable the i.MX6's OTG feature for UDOO
+> 
+> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-udoo.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> index 776bfc7..42954ee 100644
+> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> @@ -221,6 +221,14 @@
+>  			>;
+>  		};
 >  
+> +		pinctrl_usbotg: usbotg {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
+> +				MX6QDL_PAD_EIM_D22__USB_OTG_PWR 0x17059
+> +				MX6QDL_PAD_EIM_D21__USB_OTG_OC 0x17059
+> +			>;
+> +		};
+> +
+
+I know ac97 is out of order, but I still would like to keep pinctrl
+nodes sort alphabetically.  That said, pinctrl_usbotg should go after
+pinctrl_usbh.
+
+>  		pinctrl_ac97_running: ac97running {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
+> @@ -294,6 +302,14 @@
+>  	status = "okay";
+>  };
 >  
-> > > > Subject
-> > > > 
-> > > > Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and   
-> randomizer 
-> > > support  
-> > > > 
-> > > > On Tue, 9 Apr 2019 17:35:39 +0800
-> > > > masonccyang@mxic.com.tw wrote:
-> > > >   
-> > > > > > > +
-> > > > > > > +static const struct kobj_attribute sysfs_mxic_nand =
-> > > > > > > +   __ATTR(nand_random, S_IRUGO | S_IWUSR,
-> > > > > > > +          mxic_nand_rand_type_show,
-> > > > > > > +          mxic_nand_rand_type_store);   
-> > > > > > 
-> > > > > > No, we don't want to expose that through a sysfs file,   
-> especially 
-> > > since  
-> > > > > > changing the randomizer config means making the NAND unreadable   
-> for
-> > > > > > those that have used it before the change.
-> > > > > >   
-> > > > > 
-> > > > > Our on-die randomizer is still readable from user after the   
-> function 
-> > > > > is enabled.   
-> > > > 
-> > > > You mean the memory is still readable no matter the randomizer   
-> state.
-> > > > Not sure how that's possible, but okay.
-> > > >   
-> > > > > This randomizer is just like a internal memory cell 
-> > > > > reliability enhanced.   
-> > > > 
-> > > > Why don't you enable it by default then?   
-> > > 
-> > > The penalty of randomizer is read/write performance down.
-> > > i.e,. tPROG 300 us to 340 us (randomizer enable)
-> > > therefore, disable it by default.  
-> > 
-> > I'm a bit puzzled. On the NAND I've seen that required data
-> > randomization it's not something you'd want to disable as this implied
-> > poor data retention. What's the use case here? Are we talking about SLC
-> > or MLC NANDs? Should we enable this feature once we start seeing that
-> > the NAND starts being less reliable (basically when read-retry happens
-> > more often)? I really think this is something you should decide kernel
-> > side, because users have no clue when it's appropriate to switch this
-> > feature on/off.
-> >   
-> 
-> It's SLC NAND and seems to has nothing to do with read-retry happens.
-> later, I will get more information for your concerns.
+> +&usbotg {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg>;
+> +	fsl,power-line-polarity-active-high;
+> +	fsl,over-current-polarity-active-low;
 
-Well, this feature is optional, and can be enabled to improve
-reliability. Sounds like a good reason to enable it when your NAND
-device starts showing reliability issues, and the number of read_retry
-attempts reflects the wear level pretty well. Alternatively, you could
-use the number of bitflips, but, in any case, don't expect the user to
-take this decision, because almost nobody knows what the randomizer
-is needed for.
+Are these two properties supported by upstream bindings and driver?
 
-> 
-> > >   
-> > > >   
-> > > > > It could be enable at any time with OTP bit function and that's   
-> why
-> > > > > we patch it by sys-fs.   
-> > > > 
-> > > > Sorry, but that's not a good reason to expose that through sysfs.   
-> > > 
-> > > Any good way to expose randomizer function for user ?  
-> > 
-> > Don't expose it :P.  
-> 
-> oh, okay, I will remove sys-fs randomizer.
-> 
-> Is it OK to keep set/get features for randomizer ?
+Shawn
 
-I don't think it's a good idea to have dead code, so no. But I'm pretty
-sure we'll find a way to use/expose this feature.
-
-> that is :
-> 
-> +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> +{
-> +                struct nand_parameters *p = &chip->parameters;
-> +                struct kobject *kobj;
-> +                int ret;
+> +	status = "okay";
+> +};
 > +
-> +                if (p->onfi) {
-> +                                struct nand_onfi_vendor_macronix *mxic =
-> +                                                                (void 
-> *)p->onfi->vendor;
-> +
-> +                                if (mxic->reliability_func & 
-> MACRONIX_READ_RETRY_BIT) {
-> +                                                chip->read_retries = 
-> MACRONIX_READ_RETRY_MODE + 1;
-> +                                                chip->setup_read_retry =
-> + macronix_nand_setup_read_retry;
-> +                                                if 
-> (p->supports_set_get_features) {
-> + set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +  p->set_feature_list);
-> + set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +  p->get_feature_list);
-> +                                                }
-> +                                }
-> +
-> +                                if (mxic->reliability_func & 
-> MACRONIX_RANDOMIZER_BIT) {
-> +                                                if 
-> (p->supports_set_get_features) {
-> + set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +  p->set_feature_list);
-> + set_bit(ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-> +  p->get_feature_list);
-> +                                                }
-> +                                }
-> +                }
-> +}
-> + 
+>  &audmux {
+>  	status = "okay";
+>  };
+> -- 
+> 2.1.4
 > 
-> thanks & best regards,
-> Mason
-> 
-> 
-> 
-> CONFIDENTIALITY NOTE:
-> 
-> This e-mail and any attachments may contain confidential information 
-> and/or personal data, which is protected by applicable laws. Please be 
-> reminded that duplication, disclosure, distribution, or use of this e-mail 
-> (and/or its attachments) or any part thereof is prohibited. If you receive 
-> this e-mail in error, please notify us immediately and delete this mail as 
-> well as its attachment(s) from your system. In addition, please be 
-> informed that collection, processing, and/or use of personal data is 
-> prohibited unless expressly permitted by personal data protection laws. 
-> Thank you for your attention and cooperation.
-> 
-> Macronix International Co., Ltd.
-> 
-> =====================================================================
-> 
-> 
-> 
-> ============================================================================
-> 
-> CONFIDENTIALITY NOTE:
-> 
-> This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-> 
-> Macronix International Co., Ltd.
-> 
-> =====================================================================
-
