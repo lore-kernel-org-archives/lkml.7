@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA50C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D561C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C22A20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A41120693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N4REOu2P"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KS/NfPl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfDKXWu (ORCPT
+        id S1727020AbfDKXWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:22:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35025 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfDKXWt (ORCPT
+        Thu, 11 Apr 2019 19:22:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40974 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfDKXWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:22:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t21so4183070pfh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:22:49 -0700 (PDT)
+        Thu, 11 Apr 2019 19:22:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f6so4224421pgs.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IkgB2Wu06Pd4z96v65dmkLjB7xuMujb7ajfyz6BRah8=;
-        b=N4REOu2PSJZDy8Il/YjNSGOzdd42AawfVoDMOOt6HZp1ngpPBE6CA/t76JpBEwkXBl
-         cAN8r2SyAJ1bLpt011QPNQ8lZnjDMCSXRqEMDkWXr0wmUKdmTRvB3oPXPk0Lz5Opngui
-         1WEL9Zwqmou9Zs2xgCH45HTwTWINT+X5NCU3E=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8FKJf/NaqYGyiUvGYru2/2r1FkwEHrLbQS3N/eYB4lI=;
+        b=KS/NfPl8RJldrt8mNhy3MbR0s3XVMRoY1JtQVPa2H5JgXYDmX2Gj5reoKqtC6MPJZo
+         MnntIAMLm0VT6DvXWGY+7IVnisZGpq5PMZB0pjigiJOn5VyXVfCaQap5sZgNyAFp0Wkz
+         N7b4JoVpM4Onl7eGHR3DySurhjWIo/rJxSGrY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IkgB2Wu06Pd4z96v65dmkLjB7xuMujb7ajfyz6BRah8=;
-        b=IcciELykvKeP8UlJSZfEx+fmpHYo6SMea9/4KsOrMAhh59jXonmWniKgW3MXB+KdVN
-         iY3JkBjuUCN8JT1nIKPJBEnXX7SGwIPcD62GkeHeaauMIRm59wX92DCWPKGQ8lMNH0as
-         pv5fQLkaF97tXPoRpdEOHe5cZoB6qQqYYFiJzTs1fcUsgMyhgsmg7kjHodGbTVv+ZeYE
-         bz7TkYQ9SP0hKZpgb+US97bat8vJfj8x/C5WuoOCTPm1aCb3z/YuGSG+mAXhwNkhPGB8
-         1i84PX9+Ba3LPFoOBAC777FHI2rOYdPM/ZsGrE8Sx+7lcfjgjalUn52fDGek/ebhyMqz
-         NbXQ==
-X-Gm-Message-State: APjAAAXV+4uStqVYVV/HL/WGFgABSwM771Ke+NVlhZna1NCGos1pDs2d
-        vfV0TwVeuE8HgJgbu3cune5jAQ==
-X-Google-Smtp-Source: APXvYqwIprzlKW2nejCZ3fCZPI0yJSk+LmODFFzKDpPN5QTpEfwTCtsN7TwwhtNqpjpRD3mINi7aMg==
-X-Received: by 2002:a63:ed48:: with SMTP id m8mr35963091pgk.104.1555024968498;
-        Thu, 11 Apr 2019 16:22:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8FKJf/NaqYGyiUvGYru2/2r1FkwEHrLbQS3N/eYB4lI=;
+        b=WgqnOpkEVGBF3VTmE3DxEdV0RXeQfxpN4Q3xgULL5By+bb5z7g20/SuwYgeYlQBC1W
+         7oMQumOylZQzpMMwe3k+V3J1UbNc6Ky7HG1zvr9S3vDA87J8uSg7fEEjZYbGimfMWNVH
+         wkNHKIYSqI2jel/aWaSa8nOCt7qM5nQkIjotgBwf9n2K1dnYKTnJ0XrROu+TVG6Ihllr
+         YYexDqwJwlGGBdmxqUqaYTE7/EOs0g7r1yh6DuL8zsNtOSPhf8ZrBj8MgBc2KXB4g1GV
+         LYmd75wRJ/hHy4c7JaL/NCwt+JXdokopC+7Hdh6moZ3wroY8BVutG3BLNctkzCTg05ZH
+         Mx9w==
+X-Gm-Message-State: APjAAAVEK1B5xXI9yqwMtVZjpCm7ij2ip5mSWoymBvJ5FgPx91th5Fn+
+        Txmxfo8M34PJ5Ozyy1TBVsetVg==
+X-Google-Smtp-Source: APXvYqzF6EMcdmnX13ucI/Kyu+YMU4DSuvUyYP7dA+WAWkBpVu3DEO/SrCvvL0Esyk6oCZIVsOY/ZQ==
+X-Received: by 2002:a63:c302:: with SMTP id c2mr50588843pgd.235.1555024969853;
+        Thu, 11 Apr 2019 16:22:49 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id y20sm37288903pfe.188.2019.04.11.16.22.47
+        by smtp.gmail.com with ESMTPSA id y20sm37288903pfe.188.2019.04.11.16.22.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 16:22:47 -0700 (PDT)
+        Thu, 11 Apr 2019 16:22:49 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>,
         Elaine Zhang <zhangqing@rock-chips.com>
@@ -61,13 +61,15 @@ Cc:     dbasehore@chromium.org, amstan@chromium.org,
         mka@chromium.org, ryandcase@chromium.org,
         Chris Zhong <zyw@rock-chips.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/5] clk: rockchip: Turn on "aclk_dmac1" for suspend
-Date:   Thu, 11 Apr 2019 16:21:53 -0700
-Message-Id: <20190411232157.55125-1-dianders@chromium.org>
+        linux-arm-kernel@lists.infradead.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] ARM: rockchip: pm: Mark init functions __init
+Date:   Thu, 11 Apr 2019 16:21:54 -0700
+Message-Id: <20190411232157.55125-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190411232157.55125-1-dianders@chromium.org>
+References: <20190411232157.55125-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,83 +77,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Experimentally it can be seen that going into deep sleep (specifically
-setting PMU_CLR_DMA and PMU_CLR_BUS in RK3288_PMU_PWRMODE_CON1)
-appears to fail unless "aclk_dmac1" is on.  The failure is that the
-system never signals that it made it into suspend on the GLOBAL_PWROFF
-pin and it just hangs.
-
-NOTE that it's confirmed that it's the actual suspend that fails, not
-one of the earlier calls to read/write registers.  Specifically if you
-comment out the "PMU_GLOBAL_INT_DISABLE" setting in
-rk3288_slp_mode_set() and then comment out the "cpu_do_idle()" call in
-rockchip_lpmode_enter() then you can exercise the whole suspend path
-without any crashing.
-
-This is currently not a problem with suspend upstream because there is
-no current way to exercise the deep suspend code.  However, anyone
-trying to make it work will run into this issue.
-
-This was not a problem on shipping rk3288-based Chromebooks because
-those devices all ran on an old kernel based on 3.14.  On that kernel
-"aclk_dmac1" appears to be left on all the time.
-
-There are several ways to skin this problem.
-
-A) We could add "aclk_dmac1" to the list of critical clocks and that
-apperas to work, but presumably that wastes power.
-
-B) We could keep a list of "struct clk" objects to enable at suspend
-time in clk-rk3288.c and use the standard clock APIs.
-
-C) We could make the rk3288-pmu driver keep a list of clocks to enable
-at suspend time.  Presumably this would require a dts and bindings
-change.
-
-D) We could just whack the clock on in the existing syscore suspend
-function where we whack a bunch of other clocks.  This is particularly
-easy because we know for sure that the clock's only parent
-("aclk_cpu") is a critical clock so we don't need to do anything more
-than ungate it.
-
-In this case I have chosen D) because it seemed like the least work,
-but any of the other options would presumably also work fine.
+The functions rk3288_config_bootdata() and rk3288_suspend_init() are
+only called in the context of rockchip_suspend_init() which is already
+marked __init.  We can mark them __init too.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- drivers/clk/rockchip/clk-rk3288.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/mach-rockchip/pm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 5a67b7869960..b245367393cd 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -859,6 +859,9 @@ static const int rk3288_saved_cru_reg_ids[] = {
- 	RK3288_CLKSEL_CON(10),
- 	RK3288_CLKSEL_CON(33),
- 	RK3288_CLKSEL_CON(37),
-+
-+	/* We turn aclk_dmac1 on for suspend; this will restore it */
-+	RK3288_CLKGATE_CON(10),
- };
+diff --git a/arch/arm/mach-rockchip/pm.c b/arch/arm/mach-rockchip/pm.c
+index 0592534e0b88..065b09e6f1eb 100644
+--- a/arch/arm/mach-rockchip/pm.c
++++ b/arch/arm/mach-rockchip/pm.c
+@@ -59,7 +59,7 @@ static inline u32 rk3288_l2_config(void)
+ 	return l2ctlr;
+ }
  
- static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
-@@ -874,6 +877,14 @@ static int rk3288_clk_suspend(void)
- 				readl_relaxed(rk3288_cru_base + reg_id);
- 	}
+-static void rk3288_config_bootdata(void)
++static void __init rk3288_config_bootdata(void)
+ {
+ 	rkpm_bootdata_cpusp = rk3288_bootram_phy + (SZ_4K - 8);
+ 	rkpm_bootdata_cpu_code = __pa_symbol(cpu_resume);
+@@ -230,7 +230,7 @@ static void rk3288_suspend_finish(void)
+ 		pr_err("%s: Suspend finish failed\n", __func__);
+ }
  
-+	/*
-+	 * Going into deep sleep (specifically setting PMU_CLR_DMA in
-+	 * RK3288_PMU_PWRMODE_CON1) appears to fail unless
-+	 * "aclk_dmac1" is on.
-+	 */
-+	writel_relaxed(1 << (12 + 16),
-+		       rk3288_cru_base + RK3288_CLKGATE_CON(10));
-+
- 	/*
- 	 * Switch PLLs other than DPLL (for SDRAM) to slow mode to
- 	 * avoid crashes on resume. The Mask ROM on the system will
+-static int rk3288_suspend_init(struct device_node *np)
++static int __init rk3288_suspend_init(struct device_node *np)
+ {
+ 	struct device_node *sram_np;
+ 	struct resource res;
 -- 
 2.21.0.392.gf8f6787159e-goog
 
