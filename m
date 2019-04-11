@@ -2,158 +2,337 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C2C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5ADBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEC7218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TM09KqEA"
+	by mail.kernel.org (Postfix) with ESMTP id 630082064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555025661;
+	bh=HF6B0krY2yyaDuo/RkTrbW9Wr7QNtuOSxt5dZyroLQA=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=czUW/+hP1FuVrgaBoyXptheVBRuGPArtO0l+s56I0nhq0K1L4x5gwj8NH0GrWZsnT
+	 NjRDFV39MGsu3JuXMBe1AdOnOYohhWrsBpWFfuqOxq40orkYdOwtzyxPt3XwgRXDpO
+	 kXh4d2C1Ke08ExE/d759WOx3xnotjGiqd70t/mD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfDKX3p (ORCPT
+        id S1727073AbfDKXeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:29:45 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:33553 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfDKX3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:29:44 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190411232940epoutp03c0aeb5480f589e389c30f48704a4588a~Uj1hOaqKY2376123761epoutp03W
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 23:29:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190411232940epoutp03c0aeb5480f589e389c30f48704a4588a~Uj1hOaqKY2376123761epoutp03W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555025380;
-        bh=eeA7iT8mPuMquIA0Pg7p9LbihwviJC895bKXwhRkWUs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=TM09KqEALmWhyh5Se48XP//ANqUInIL+svEC50a7N3pHxXcGFafg8XDxCr0gX02Ey
-         wTDc/7+nc0mEN5gpzC9iuZzbpK8ZXrtxdwtG6aCYgL8Ay4ZyiJ7bRJpsqD468FOaDm
-         s7v5wFDDFj71QrlEj5gXZAs9fbNxJolYAUuuUDtc=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190411232939epcas1p4d00e44df9ee4025fdaa4e3b5f4a04810~Uj1fsaLr43248932489epcas1p4w;
-        Thu, 11 Apr 2019 23:29:39 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A0.ED.04257.3EDCFAC5; Fri, 12 Apr 2019 08:29:39 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190411232938epcas1p173fb31206ad30eccb209ebdbd9d61aee~Uj1fOqiyu1959919599epcas1p1Y;
-        Thu, 11 Apr 2019 23:29:38 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190411232938epsmtrp2fcf7192890bb344b5313f8251c3d2bfe~Uj1fN_L481129211292epsmtrp2g;
-        Thu, 11 Apr 2019 23:29:38 +0000 (GMT)
-X-AuditID: b6c32a38-5e3ff700000010a1-0a-5cafcde341d7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4F.93.03662.2EDCFAC5; Fri, 12 Apr 2019 08:29:38 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190411232938epsmtip1170ab88479e6aab550a21bd3da0fe8a8~Uj1fDzKSR2185521855epsmtip1b;
-        Thu, 11 Apr 2019 23:29:38 +0000 (GMT)
-Subject: Re: [PATCH v2] extcon: axp288: Add a depends on ACPI to the Kconfig
- entry
-To:     Yue Haibing <yuehaibing@huawei.com>, myungjoo.ham@samsung.com,
-        wens@csie.org, hdegoede@redhat.com, rjw@rjwysocki.net
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <c11e2ae8-d785-902d-1469-4ff538ebe2ab@samsung.com>
-Date:   Fri, 12 Apr 2019 08:30:27 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190404141748.27048-1-yuehaibing@huawei.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe7a761WbPc3K0z7UvBWhoe6ms7vSMJJY5AejiArDLu6m4t66
-        d0YWxCxLW1HZC+EKCiU0Ixa2wkk2MMssM7OEsjfJqCjT1LIUrLbdRX77nfOc/znn/zwPJVfV
-        k2qq0GLnBQtnoskI4uadOG1C/yN3jnZgmGAH2s7K2NrbxxH7tOk8yb4srSPZjofdCna85bGM
-        ffXjI5ERZrj27orCUNb6VWEYut1DGjw95YThmKceGUYb5mWTW4vSCnjOyAsa3pJnNRZa8tPp
-        dRtyV+fqUrVMAqNnl9EaC2fm0+nMrOyENYUm/y60ZhdnKvansjlRpJNWpgnWYjuvKbCK9nSa
-        txlNNr0tUeTMYrElPzHPal7OaLVLdf7C7UUFTZUOZHNE7u7rLpM50G/KicIpwCnwzdkuc6II
-        SoUbETjejIdJwQiCnwdrSSkYQzAy2qH4J2l8cFohHTQj+DT4NSQZQjDRWY2ciKKi8UaY7NAE
-        BLPwHqgrbSICLMdpUNP1AAWYxPHg+/ScDPAMHAs9v/qDeSVeCX8ee4NM4EXgrngbrJmNN8Pb
-        e9cUUs1MaK96H+wZjlfAUO0lUuofA73vL8gkng8HbpyTB3YDPErC8NhwyEEmeD/fCpM4Gj63
-        eUKshtHBZlLivXC5vZWUxBUIPL6ukDgZfJdOyQIm5TgO3E1J0rAoGPxxVBFIA1ZCxSGVVL0A
-        nva9lkk8F2rKD4faG8A5+ROdQLGuKXZcUyy4plhw/R92ERH1aA5vE835vMjYUqa+dgMK/tN4
-        thHd6sxqQZhC9HRlXZo7R6Xgdokl5hYElJyepdxI+FNKI1eyhxesuUKxiRdbkM5/25Vy9ew8
-        q//XW+y5jG5pcnIym8Kk6hiGjlG6M1bnqHA+Z+eLeN7GC/90Mipc7UCpXVssRyayfr2Oivyi
-        37Cp7zuX6PAU6fRxwhMjbj1z/3KjfV9SGdoc51519/SKiOby9UpyTSKUXF/cOwfX7wgfcy2k
-        e6Oqqk96Rd+kvKZb+NDmPbjW57LHXlUvyeio0l8ntf3ENjL21PojqnhT5rSGZy+808YHxN6d
-        pTcrT+ynCbGAY+Llgsj9BTx3V/q9AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSnO6js+tjDGY3K1m8OT6dyWL5vn5G
-        i8u75rBZ3G5cwWZx5vQlVoufh84zWdz5+pzFgd1jw6PVrB4tR96yerzfd5XNY8vVdhaPvi2r
-        GD0+b5ILYIvisklJzcksSy3St0vgytg1sYGxoIG74sGlFqYGxn8cXYycHBICJhI7Tk1hBbGF
-        BHYzSrx+ygcRl5SYdvEocxcjB5AtLHH4cHEXIxdQyVtGia67D9hB4sICIRJ/zyiAlIsIVEnM
-        7znPDGIzC9hILL5wihFi5H5GiadXMkBsNgEtif0vbrCB2PwCihJXfzwGq+EVsJP4f34nmM0i
-        oCqxvuM+WI2oQITEmfcrWCBqBCVOznwCZnMKWEu8X76UDWKXusSfeZeg9opL3HoynwnClpdo
-        3jqbeQKj8Cwk7bOQtMxC0jILScsCRpZVjJKpBcW56bnFhgVGeanlesWJucWleel6yfm5mxjB
-        MaWltYPxxIn4Q4wCHIxKPLwrbNbHCLEmlhVX5h5ilOBgVhLhDWEBCvGmJFZWpRblxxeV5qQW
-        H2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamBsCH0itF7bavGBD+/thV/1aUzSWjJ3
-        xq93j++dfWK4esb0h8/uBH97ZCn/S0nkP7thRO+lzGVB3ecufYx4op51+a7Q87N+cjwO9yu2
-        ZkXZ5eT795wT8M+JE3M8f/Eho8A3Z87TSd1av+Ny2m69/rvYf/PMJz3fJ3Gf9rzlofqQ4VXq
-        +/qVcVJnlViKMxINtZiLihMBwj4526UCAAA=
-X-CMS-MailID: 20190411232938epcas1p173fb31206ad30eccb209ebdbd9d61aee
-X-Msg-Generator: CA
+        Thu, 11 Apr 2019 19:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726708AbfDKXeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 19:34:19 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 995A420643;
+        Thu, 11 Apr 2019 23:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555025657;
+        bh=HF6B0krY2yyaDuo/RkTrbW9Wr7QNtuOSxt5dZyroLQA=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=t8XMgSRO3cU/iG/jB0wfYlzd+nALqkUk5sZXF2LfEQaExdvkCm2dfAg+ALEOBTWOS
+         hSXiYQuniLnc0+MWC6jogrjkRc1g/aoxi88d+amBFYRqdyPjoZiNmX1PpnXz0zJdiE
+         eGAU+dG6Q28CKtQEXZ40tt/ONCwplYNqkHibPNDM=
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633
-References: <20190404104222.23900-1-yuehaibing@huawei.com>
-        <CGME20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633@epcas1p1.samsung.com>
-        <20190404141748.27048-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190108161940.4814-1-miquel.raynal@bootlin.com>
+References: <20190108161940.4814-1-miquel.raynal@bootlin.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 0/4] Add device links to clocks
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>
+Message-ID: <155502565678.20095.10517989462650657961@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 11 Apr 2019 16:34:16 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 4. 4. 오후 11:17, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> As Hans de Goede pointed, using this driver without ACPI
-> makes little sense, so add ACPI dependency to Kconfig entry
-> to fix a build error while CONFIG_ACPI is not set.
-> 
-> drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
-> drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
->     put_device(&adev->dev);
-> 
-> Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: rework patch
-> ---
->  drivers/extcon/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 1ed4b45..de06faf 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -30,7 +30,7 @@ config EXTCON_ARIZONA
->  
->  config EXTCON_AXP288
->  	tristate "X-Power AXP288 EXTCON support"
-> -	depends on MFD_AXP20X && USB_SUPPORT && X86
-> +	depends on MFD_AXP20X && USB_SUPPORT && X86 && ACPI
->  	select USB_ROLE_SWITCH
->  	help
->  	  Say Y here to enable support for USB peripheral detection
-> 
+Quoting Miquel Raynal (2019-01-08 08:19:36)
+> Hello,
+>=20
+> While working on suspend to RAM feature, I ran into troubles multiple
+> times when clocks where not suspending/resuming at the desired time. I
+> had a look at the core and I think the same logic as in the
+> regulator's core may be applied here to (very easily) fix this issue:
+> using device links.
+>=20
+> The only additional change I had to do was to always (when available)
+> populate the device entry of the core clock structure so that it could
+> be used later. This is the purpose of patch 1. Patch 2 actually adds
+> support for device links.
+>=20
+> Here is a step-by-step explanation of how links are managed, following
+> Maxime Ripard's suggestion.
+>=20
+>=20
+> The order of probe has no importance because the framework already
+> handles orphaned clocks so let's be simple and say there are two root
+> clocks, not depending on anything, that are probed first: xtal0 and
+> xtal1. None of these clocks have a parent, there is no device link in
+> the game, yet.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +----------------+            +----------------+
+>=20
+> Then, a peripheral clock periph0 is probed. His parent is xtal1. The
+> clock_register_*() call will run __clk_init_parent() and a link between
+> periph0's core and xtal1's core will be created and stored in
+> periph0's core->parent_clk_link entry.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +----------------+            +-------^--------+
+>                                          |
+>                                          |
+>                           +--------------+
+>                           |   ->parent_clk_link
+>                           |
+>                   +----------------+
+>                   |                |
+>                   |                |
+>                   |  periph0 core  |
+>                   |                |
+>                   |                |
+>                   +-------^^-------+
+>                           ||
+>                           ||
+>                   +----------------+
+>                   |                |
+>                   |  periph0 clk 0 |
+>                   |                |
+>                   +----------------+
+>=20
+> Then, device0 is probed and "get" the periph0 clock. clk_get() will be
+> called and a struct clk will be instantiated for device0 (called in
+> the figure clk 1). A link between device0 and the new clk 1 instance of
+> periph0 will be created and stored in the clk->consumer_link entry.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +----------------+            +-------^--------+
+>                                          |
+>                                          |
+>                           +--------------+
+>                           |   ->parent_clk_link
+>                           |
+>                   +----------------+
+>                   |                |
+>                   |                |
+>                   |  periph0 core  |
+>                   |                <-------------+
+>                   |                <-------------|
+>                   +-------^^-------+            ||
+>                           ||                    ||
+>                           ||                    ||
+>                   +----------------+    +----------------+
+>                   |                |    |                |
+>                   |  periph0 clk 0 |    |  periph0 clk 1 |
+>                   |                |    |                |
+>                   +----------------+    +----------------+
+>                                                 |
+>                                                 | ->consumer_link
+>                                                 |
+>                                                 |
+>                                                 |
+>                                         +-------v--------+
+>                                         |    device0     |
+>                                         +----------------+
+>=20
+> Right now, device0 is linked to periph0, itself linked to xtal1 so
+> everything is fine.
+>=20
+> Now let's get some fun: the new parent of periph0 is xtal1. The process
+> will call clk_reparent(), periph0's core->parent_clk_link will be
+> destroyed and a new link to xtal1 will be setup and stored. The
+> situation is now that device0 is linked to periph0 and periph0 is
+> linked to xtal1, so the dependency between device0 and xtal1 is still
+> clear.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +-------^--------+            +----------------+
+>            |
+>            |                           \ /
+>            +----------------------------x
+>       ->parent_clk_link   |            / \
+>                           |
+>                   +----------------+
+>                   |                |
+>                   |                |
+>                   |  periph0 core  |
+>                   |                <-------------+
+>                   |                <-------------|
+>                   +-------^^-------+            ||
+>                           ||                    ||
+>                           ||                    ||
+>                   +----------------+    +----------------+
+>                   |                |    |                |
+>                   |  periph0 clk 0 |    |  periph0 clk 1 |
+>                   |                |    |                |
+>                   +----------------+    +----------------+
+>                                                 |
+>                                                 | ->consumer_link
+>                                                 |
+>                                                 |
+>                                                 |
+>                                         +-------v--------+
+>                                         |    device0     |
+>                                         +----------------+
+>=20
+> I assume periph0 cannot be removed while there are devices using it,
+> same for xtal0.
+>=20
+> What can happen is that device0 'put' the clock periph0. The relevant
+> link is deleted and the clk instance dropped.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +-------^--------+            +----------------+
+>            |
+>            |                           \ /
+>            +----------------------------x
+>       ->parent_clk_link   |            / \
+>                           |
+>                   +----------------+
+>                   |                |
+>                   |                |
+>                   |  periph0 core  |
+>                   |                |
+>                   |                |
+>                   +-------^^-------+
+>                           ||
+>                           ||
+>                   +----------------+
+>                   |                |
+>                   |  periph0 clk 0 |
+>                   |                |
+>                   +----------------+
+>=20
+> Now we can unregister periph0: link with the parent will be destroyed
+> and the clock may be safely removed.
+>=20
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |                |            |                |
+>    |   xtal0 core   |            |   xtal1 core   |
+>    |                |            |                |
+>    |                |            |                |
+>    +-------^^-------+            +-------^^-------+
+>            ||                            ||
+>            ||                            ||
+>    +----------------+            +----------------+
+>    |                |            |                |
+>    |   xtal0 clk    |            |   xtal1 clk    |
+>    |                |            |                |
+>    +----------------+            +----------------+
+>=20
+>=20
+> This is my understanding of the common clock framework and how links
+> can be added to it.
+>=20
+> As a result, here are the links created during the boot of an
+> ESPRESSObin:
+>=20
 
-Applied it. Thanks.
+Sorry this patch series is taking way too long to get merged. It's
+already mid-April!
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+So I still have some of the original questions I had from before, mostly
+around circular parent chains between clk providers. For example, there
+are clk providers that both provide clks to other providers and consume
+clks from those providers. Does device links work gracefully here?
+
+Just speaking from my own qcom experience, I can point to the PCIe PHY
+that's a provider of a clk to GCC and a consumer of a clk in GCC. In
+block diagram form this is:
+
+
+      PCIE PHY                        GCC
+   +--------------+          +-------------------------+
+   |              |          |                         |
+   |     PHY clk ->----------+---- gcc_pipe_clk ---+   |
+   |              |          |                     |   |
+   |              |          |                     |   |
+   | pci_pipe_clk <----------|---------------------+   |
+   |              |          |                         |
+   +--------------+          +-------------------------+
+
+The end result is that the PCIe PHY is a clk controller that provides
+the PHY clk to GCC's gcc_pipe_clk and then it gets the same clk signal
+back from GCC and uses it on the PCIe PHY's pci_pipe_clk input.
+
+So is this is a problem?
+
