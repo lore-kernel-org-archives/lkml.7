@@ -2,140 +2,108 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96528C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB41C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6095B20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555013517;
-	bh=Xh2eYhsuJKUwHtedvI6eBb6HmwAvHTRH25HmjYjQbZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eoSm3FVCYezKURa6cbmbyef//HIuEkYGMkOMRB//pBZN0DCliJ+VGC/fF3O7gogj0
-	 nLrGBCP6Y4v8ZawQDpI6G0wVsRziKhp0Qmi6QHVURlv8G3FlYpftWRx77HWRUupc6U
-	 B1FtX2IBWZ+wegQCAvjvCf4xfbXDZIv0aEyckB+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 25AFC2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:12:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ahey5ESf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfDKULz (ORCPT
+        id S1726826AbfDKUMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:11:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40468 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726615AbfDKULz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:11:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1E911AE0F;
-        Thu, 11 Apr 2019 20:11:53 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 22:11:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        penguin-kernel@i-love.sakura.ne.jp, ebiederm@xmission.com,
-        shakeelb@google.com, Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
-Message-ID: <20190411201151.GA4743@dhcp22.suse.cz>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411105111.GR10383@dhcp22.suse.cz>
- <CAJWu+oq45tYxXJpLPLAU=-uZaYRg=OnxMHkgp2Rm0nbShb_eEA@mail.gmail.com>
- <20190411181243.GB10383@dhcp22.suse.cz>
- <20190411191430.GA46425@google.com>
+        Thu, 11 Apr 2019 16:12:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32889 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfDKUMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:12:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h5so3988949pfo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lkadqpOzNcf9LB0J7+vgu9aowMST+yhJ4ntbZQm8mK8=;
+        b=Ahey5ESf4YTsZMyDj4Z3utUoGjJNU09BAjDZUKQ4heDd8tga8DW6XtxbmwQZSgDwHc
+         J9hjI0kmlwcTyPm/5/FvQ89a/vF8GftB0Ti5lip9t1XGRaufWcv/4CBdWYPb/86S//y2
+         mbed1DO8XUlcNQraiVKsqIlmInYCXPlzx22bKcgRhATvq0UDceETZbDW66wv8dkjRGgL
+         CJq79JBJL4VORZTlKHW336gg+73R8GUkBjB/VJxchr95Cznj0Avnz43Vp23OsNdozTC0
+         qfUUFM/7bAuLIBS0gQVR5/8EnoUW06dcoGIrBkhrJqnOcIpki6++OZt72vXsYo4pP0n+
+         JomQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lkadqpOzNcf9LB0J7+vgu9aowMST+yhJ4ntbZQm8mK8=;
+        b=rMvA6jyxIb27pu1tlxOYxjSnJ/O64bWvOW0FBhHNIycQgzj4rc54xycl4MMz9IAVT9
+         Q+WQVj0RKpl1kSRDobmCKOINBM2mK/RyNcNJLhV5nLK63bAS+sGTAnb7N9zUntahn5je
+         wmaABaYWxQ9pxK2GbjSucFE3FwF41KBg5DAqWshpTXnN2PquQxsH+dIoh7jn912diva0
+         LBwv+Jht+9qMjdg59PMN00JirtvpDEKmLhDM4QUOjPWrd530zJ8TuJG/iGrRV7mN/H8s
+         KMue2xaT/0KmYx4wh8ELODq4UqutOQoFcO6gbh/w2E33Z6nlpbiJYWfbKojTahvScdM6
+         ufSQ==
+X-Gm-Message-State: APjAAAXmL+t46rXi30qCYDuGweeY/jCJNWkFwpwgwPvXuxGgTJ1xQUpn
+        NJuVTbUDAZo6Mblvkxpbkbs=
+X-Google-Smtp-Source: APXvYqzIRelUUPwc7KH6u9QK8MLgTolFA8LYMQjvOP8nVu5UXxiS4QAr9AlV4vpSGS4+3ds2Liudpg==
+X-Received: by 2002:a63:fd49:: with SMTP id m9mr49394582pgj.16.1555013521607;
+        Thu, 11 Apr 2019 13:12:01 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id r11sm78255231pga.87.2019.04.11.13.12.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 13:12:01 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 13:11:58 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 2/2] ASoC: fsl_asrc: Unify the supported input and
+ output rate
+Message-ID: <20190411201158.GB13170@Asurada-Nvidia.nvidia.com>
+References: <cover.1554975348.git.shengjiu.wang@nxp.com>
+ <b7f4c8dd00743ddd09c33def00c1759757b8e743.1554975348.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411191430.GA46425@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b7f4c8dd00743ddd09c33def00c1759757b8e743.1554975348.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-04-19 15:14:30, Joel Fernandes wrote:
-> On Thu, Apr 11, 2019 at 08:12:43PM +0200, Michal Hocko wrote:
-> > On Thu 11-04-19 12:18:33, Joel Fernandes wrote:
-> > > On Thu, Apr 11, 2019 at 6:51 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Wed 10-04-19 18:43:51, Suren Baghdasaryan wrote:
-> > > > [...]
-> > > > > Proposed solution uses existing oom-reaper thread to increase memory
-> > > > > reclaim rate of a killed process and to make this rate more deterministic.
-> > > > > By no means the proposed solution is considered the best and was chosen
-> > > > > because it was simple to implement and allowed for test data collection.
-> > > > > The downside of this solution is that it requires additional “expedite”
-> > > > > hint for something which has to be fast in all cases. Would be great to
-> > > > > find a way that does not require additional hints.
-> > > >
-> > > > I have to say I do not like this much. It is abusing an implementation
-> > > > detail of the OOM implementation and makes it an official API. Also
-> > > > there are some non trivial assumptions to be fullfilled to use the
-> > > > current oom_reaper. First of all all the process groups that share the
-> > > > address space have to be killed. How do you want to guarantee/implement
-> > > > that with a simply kill to a thread/process group?
-> > > 
-> > > Will task_will_free_mem() not bail out in such cases because of
-> > > process_shares_mm() returning true?
-> > 
-> > I am not really sure I understand your question. task_will_free_mem is
-> > just a shortcut to not kill anything if the current process or a victim
-> > is already dying and likely to free memory without killing or spamming
-> > the log. My concern is that this patch allows to invoke the reaper
-> 
-> Got it.
-> 
-> > without guaranteeing the same. So it can only be an optimistic attempt
-> > and then I am wondering how reasonable of an interface this really is.
-> > Userspace send the signal and has no way to find out whether the async
-> > reaping has been scheduled or not.
-> 
-> Could you clarify more what you're asking to guarantee? I cannot picture it.
-> If you mean guaranteeing that "a task is dying anyway and will free its
-> memory on its own", we are calling task_will_free_mem() to check that before
-> invoking the oom reaper.
+On Thu, Apr 11, 2019 at 09:39:09AM +0000, S.j. Wang wrote:
+> Unify the supported input and output rate, add the
 
-No, I am talking about the API aspect. Say you kall kill with the flag
-to make the async address space tear down. Now you cannot really
-guarantee that this is safe to do because the target task might
-clone(CLONE_VM) at any time. So this will be known only once the signal
-is sent, but the calling process has no way to find out. So the caller
-has no way to know what is the actual result of the requested operation.
-That is a poor API in my book.
+We previously didn't support 5KHz->5KHz, but now we do? That'd be
+great if so.
 
-> Could you clarify what is the draback if OOM reaper is invoked in parallel to
-> an exiting task which will free its memory soon? It looks like the OOM reaper
-> is taking all the locks necessary (mmap_sem) in particular and is unmapping
-> pages. It seemed to me to be safe, but I am missing what are the main draw
-> backs of this - other than the intereference with core dump. One could be
-> presumably scalability since the since OOM reaper could be bottlenecked by
-> freeing memory on behalf of potentially several dying tasks.
+>  static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+> @@ -626,14 +629,18 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
+>  		.stream_name = "ASRC-Playback",
+>  		.channels_min = 1,
+>  		.channels_max = 10,
+> -		.rates = FSL_ASRC_RATES,
+> +		.rate_min = 5512,
+> +		.rate_max = 192000,
+> +		.rates = SNDRV_PCM_RATE_KNOT,
+>  		.formats = FSL_ASRC_FORMATS,
+>  	},
+>  	.capture = {
+>  		.stream_name = "ASRC-Capture",
+>  		.channels_min = 1,
+>  		.channels_max = 10,
+> -		.rates = FSL_ASRC_RATES,
 
-oom_reaper or any other kernel thread doing the same is a mere
-implementation detail I think. The oom killer doesn't really need the
-oom_reaper to act swiftly because it is there to act as a last resort if
-the oom victim cannot terminate on its own. If you want to offer an
-user space API then you can assume users will like to use it and expect
-a certain behavior but what that is? E.g. what if there are thousands of
-tasks killed this way? Do we care that some of them will not get the
-async treatment? If yes why do we need an API to control that at all?
+Probably could remove FSL_ASRC_RATES define since it's not used.
 
-Am I more clear now?
-
--- 
-Michal Hocko
-SUSE Labs
+Thanks
