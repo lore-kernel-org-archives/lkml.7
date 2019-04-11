@@ -2,120 +2,363 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6308C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3262C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86401217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9212921850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tELmZcya"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN6hgXSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfDKPem (ORCPT
+        id S1726965AbfDKPer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:34:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52414 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfDKPeZ (ORCPT
+        Thu, 11 Apr 2019 11:34:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42647 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfDKPeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:34:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a184so7285366wma.2;
-        Thu, 11 Apr 2019 08:34:24 -0700 (PDT)
+        Thu, 11 Apr 2019 11:34:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g3so7927019wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 08:34:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sOdMFyKk56d0w/J3QLL7NnLqGzBT/BCupV2Zgzm7Gwk=;
-        b=tELmZcyaPQzofEmpxbiQDhIybi2i/HblazXBf079I0m2PqR/XL7o4I0UdLwfjvlORK
-         CjH8IxsbX8KXOp1EYE5RaI6VzkDXV3ziVudIFMFJ8lUNA+pf8VWPx2TjAqlU4iZPSgHy
-         eouPPTmtS84GnDDlS7nYUfVu0gEUfqAQ6zSfcxKsUxR7BrkwU7TAfNWwi9DsSLCmVA/j
-         zf0Ze1kdn6yEDCV9r1prdNagobudg7Jt2xuwgWr9D3BBEzO0f7G/yRJ1mu62VhIp5cHc
-         yhHqSupfEVn0OdY9WIZHVAztZbk5J0VtSVa+gJ4tkvO0/hyw0KrzVScIQFeSAtUamb2m
-         9fUQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=H8CKRiQBJrU9wnvoQVT3UbKuoETyr+5Jz1SZnQKUh/k=;
+        b=ZN6hgXSCtlTPbMmvp/ojwcsYK2THTdLfGjYX2Bap1YoEHgNJ1uDyGtUkwzWrt5kSrG
+         o3YCoLy4wwkDIsWuLlkZmKuVvniTOghG3qHYy7zm/3F+6fBgYmeS6wxKRpKRlbF8bEQL
+         6IdNbXP5yIoJkQi9rozhLFTOOQulS2wgq9LJLe7okPzxgOfBTMLs/8kv3UCgr+5V9gZK
+         QaGABA2/c/0TcjGkhPp8KHxECaaUYl0YMcaC44T5NnNbxHIg7zjCC5N9VDQCqFV9FtIf
+         KdsHmp9BhSnSlhvZdq5FyCl4C9HWDUo7VV2a2zI5huVnxvqFDSLr/H46KmO5/xPEYCdr
+         Psbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sOdMFyKk56d0w/J3QLL7NnLqGzBT/BCupV2Zgzm7Gwk=;
-        b=oSkw43GPzjMiHalEv+iTwajPpS34sQN1rN3HTYtyPYZR+dXXyWchv6LWAZKVPz8HRz
-         aVHDpf4TWuW53C9G6WsXD37ofN7+AInxtvWcyI3AS6o7Sfw6W75tkncJmqk4mAhMXgYL
-         XyhI0d+6PVJQHvTxpxUUUJJ5qd6n8HNO7ElBCMnyaHfcVAMvGsmcnbWseOru0nt8zTvD
-         pQYFuN/C1eCLQz8ZyzPW3D7wBdJJNY6RTLjcZUaa+bLMY/WdeSmYAJtG/Wjf5pAbWuik
-         kVz/fJ9x5DPIntdKYGB/UTN8dtaeivZ3/U3x7k5QM5z7/hQ2c5SMNTLptz5i/zwZgOnW
-         2j5g==
-X-Gm-Message-State: APjAAAVmo04vA1x9sSgqKqlUlHgL2qbtMHaQtJApuvE2ZWga2gMFSvRd
-        XaJL8lEAKaz9Y21B2a4w67M=
-X-Google-Smtp-Source: APXvYqxB5zsZhTq5iN8RGvrjpyV2z5T6MlX9Z8fYy30Oe/1dROj4JgP5us/PNYPPYwDN3vj7QLXhHA==
-X-Received: by 2002:a7b:c111:: with SMTP id w17mr7161627wmi.6.1554996863911;
-        Thu, 11 Apr 2019 08:34:23 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id e12sm38327342wrt.94.2019.04.11.08.34.23
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=H8CKRiQBJrU9wnvoQVT3UbKuoETyr+5Jz1SZnQKUh/k=;
+        b=qqnzOXWGtuPcrF6LIzu33x2oX4kiHkVdRLCmLwh7bgAbecAQguLG45M8NTasKmt8k9
+         +gSTulqMi4GeA1eCTkcBDTVXuj9SV2XpQm+EQCtSicA5+VwLr4McxaLrsc2D74JDhep4
+         CF/XRHyzZul2P0qBDE5gik2k+mWfVYA2MNc7m1jA4CbpJcn0JgFHkam9suTG46o5iCNg
+         aUBn8xEgF58ebPrwSjSM6Yr0TxTYfny1ATNgv+rlvtsNJYck7++SzXEgAS1n2OgQCo6Z
+         FZme+NyAAG5KwHGDEr6ysnHuwxRFjYJ87XyOH+dht5ZTAjyJIL0eqMdp6mnqj0I4YRDI
+         cCaQ==
+X-Gm-Message-State: APjAAAUjgtA3wuOEjLQ3mPlUT67Icg2J0xek/F59B2SYggp6HOORheKX
+        7e2DtHfWOq/SeUdoyPyPWY4=
+X-Google-Smtp-Source: APXvYqwP0+fI2vXpZJYCfbxU5ppVWn4tyWRPpJ4O101dUJBwc0UoRitGEoY1DegOuYY13O2b/Ri8Vw==
+X-Received: by 2002:adf:df0f:: with SMTP id y15mr10845698wrl.175.1554996882485;
+        Thu, 11 Apr 2019 08:34:42 -0700 (PDT)
+Received: from ?IPv6:::1? (lan.nucleusys.com. [92.247.61.126])
+        by smtp.gmail.com with ESMTPSA id f11sm50072974wrm.30.2019.04.11.08.34.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 08:34:23 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 1/3] arm64: dts: allwinner: h6: add watchdog node
-Date:   Thu, 11 Apr 2019 17:45:32 +0200
-Message-Id: <20190411154534.25563-2-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411154534.25563-1-peron.clem@gmail.com>
-References: <20190411154534.25563-1-peron.clem@gmail.com>
+        Thu, 11 Apr 2019 08:34:41 -0700 (PDT)
+Subject: [PATCH 1/4] z3fold: introduce helper functions
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oleksiy.Avramchenko@sony.com, Dan Streetman <ddstreet@ieee.org>
+References: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
+Message-ID: <0d1e978b-1701-9d46-de86-cc6b7d8934f0@gmail.com>
+Date:   Thu, 11 Apr 2019 17:34:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has a watchog identical to A64 one.
+This patch introduces a separate helper function for object
+allocation, as well as 2 smaller helpers to add a buddy to the list
+and to get a pointer to the pool from the z3fold header. No
+functional changes here.
 
-Declare it in the device tree but leave it disable
-with a comment as it is broken on some H6 revisions.
-
-Test has been performs on 3 boards.
-
-Chen-Yu Tsai boards:
-Pine H64 - H6 V200-AWIN H6448BA 7782 => OK
-OrangePi Lite 2 - H6 V200-AWIN H8068BA 61C2 => KO
-
-Clément Péron board:
-Beelink GS1 - H6 V200-AWIN H7309BA 6842 => KO
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+  mm/z3fold.c | 184 ++++++++++++++++++++++++++++------------------------
+  1 file changed, 100 insertions(+), 84 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..5c2f5451227b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -208,6 +208,15 @@
- 			reg = <0x03006000 0x400>;
- 		};
- 
-+		watchdog: watchdog@30090a0 {
-+			compatible = "allwinner,sun50i-a64-wdt",
-+				     "allwinner,sun6i-a31-wdt";
-+			reg = <0x030090a0 0x20>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			/* Broken on some H6 rev */
-+			status = "disabled";
-+		};
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index aee9b0b8d907..7a59875d880c 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -255,10 +255,15 @@ static enum buddy handle_to_buddy(unsigned long handle)
+  	return (handle - zhdr->first_num) & BUDDY_MASK;
+  }
+  
++static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *zhdr)
++{
++	return zhdr->pool;
++}
 +
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
+  static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
+  {
+  	struct page *page = virt_to_page(zhdr);
+-	struct z3fold_pool *pool = zhdr->pool;
++	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
+  
+  	WARN_ON(!list_empty(&zhdr->buddy));
+  	set_bit(PAGE_STALE, &page->private);
+@@ -295,9 +300,10 @@ static void release_z3fold_page_locked_list(struct kref *ref)
+  {
+  	struct z3fold_header *zhdr = container_of(ref, struct z3fold_header,
+  					       refcount);
+-	spin_lock(&zhdr->pool->lock);
++	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
++	spin_lock(&pool->lock);
+  	list_del_init(&zhdr->buddy);
+-	spin_unlock(&zhdr->pool->lock);
++	spin_unlock(&pool->lock);
+  
+  	WARN_ON(z3fold_page_trylock(zhdr));
+  	__release_z3fold_page(zhdr, true);
+@@ -349,6 +355,23 @@ static int num_free_chunks(struct z3fold_header *zhdr)
+  	return nfree;
+  }
+  
++/* Add to the appropriate unbuddied list */
++static inline void add_to_unbuddied(struct z3fold_pool *pool,
++				struct z3fold_header *zhdr)
++{
++	if (zhdr->first_chunks == 0 || zhdr->last_chunks == 0 ||
++			zhdr->middle_chunks == 0) {
++		struct list_head *unbuddied = get_cpu_ptr(pool->unbuddied);
++
++		int freechunks = num_free_chunks(zhdr);
++		spin_lock(&pool->lock);
++		list_add(&zhdr->buddy, &unbuddied[freechunks]);
++		spin_unlock(&pool->lock);
++		zhdr->cpu = smp_processor_id();
++		put_cpu_ptr(pool->unbuddied);
++	}
++}
++
+  static inline void *mchunk_memmove(struct z3fold_header *zhdr,
+  				unsigned short dst_chunk)
+  {
+@@ -406,10 +429,8 @@ static int z3fold_compact_page(struct z3fold_header *zhdr)
+  
+  static void do_compact_page(struct z3fold_header *zhdr, bool locked)
+  {
+-	struct z3fold_pool *pool = zhdr->pool;
++	struct z3fold_pool *pool = zhdr_to_pool(zhdr);
+  	struct page *page;
+-	struct list_head *unbuddied;
+-	int fchunks;
+  
+  	page = virt_to_page(zhdr);
+  	if (locked)
+@@ -430,18 +451,7 @@ static void do_compact_page(struct z3fold_header *zhdr, bool locked)
+  	}
+  
+  	z3fold_compact_page(zhdr);
+-	unbuddied = get_cpu_ptr(pool->unbuddied);
+-	fchunks = num_free_chunks(zhdr);
+-	if (fchunks < NCHUNKS &&
+-	    (!zhdr->first_chunks || !zhdr->middle_chunks ||
+-			!zhdr->last_chunks)) {
+-		/* the page's not completely free and it's unbuddied */
+-		spin_lock(&pool->lock);
+-		list_add(&zhdr->buddy, &unbuddied[fchunks]);
+-		spin_unlock(&pool->lock);
+-		zhdr->cpu = smp_processor_id();
+-	}
+-	put_cpu_ptr(pool->unbuddied);
++	add_to_unbuddied(pool, zhdr);
+  	z3fold_page_unlock(zhdr);
+  }
+  
+@@ -453,6 +463,67 @@ static void compact_page_work(struct work_struct *w)
+  	do_compact_page(zhdr, false);
+  }
+  
++/* returns _locked_ z3fold page header or NULL */
++static inline struct z3fold_header *__z3fold_alloc(struct z3fold_pool *pool,
++						size_t size, bool can_sleep)
++{
++	struct z3fold_header *zhdr = NULL;
++	struct page *page;
++	struct list_head *unbuddied;
++	int chunks = size_to_chunks(size), i;
++
++lookup:
++	/* First, try to find an unbuddied z3fold page. */
++	unbuddied = get_cpu_ptr(pool->unbuddied);
++	for_each_unbuddied_list(i, chunks) {
++		struct list_head *l = &unbuddied[i];
++
++		zhdr = list_first_entry_or_null(READ_ONCE(l),
++					struct z3fold_header, buddy);
++
++		if (!zhdr)
++			continue;
++
++		/* Re-check under lock. */
++		spin_lock(&pool->lock);
++		l = &unbuddied[i];
++		if (unlikely(zhdr != list_first_entry(READ_ONCE(l),
++						struct z3fold_header, buddy)) ||
++		    !z3fold_page_trylock(zhdr)) {
++			spin_unlock(&pool->lock);
++			zhdr = NULL;
++			put_cpu_ptr(pool->unbuddied);
++			if (can_sleep)
++				cond_resched();
++			goto lookup;
++		}
++		list_del_init(&zhdr->buddy);
++		zhdr->cpu = -1;
++		spin_unlock(&pool->lock);
++
++		page = virt_to_page(zhdr);
++		if (test_bit(NEEDS_COMPACTING, &page->private)) {
++			z3fold_page_unlock(zhdr);
++			zhdr = NULL;
++			put_cpu_ptr(pool->unbuddied);
++			if (can_sleep)
++				cond_resched();
++			goto lookup;
++		}
++
++		/*
++		 * this page could not be removed from its unbuddied
++		 * list while pool lock was held, and then we've taken
++		 * page lock so kref_put could not be called before
++		 * we got here, so it's safe to just call kref_get()
++		 */
++		kref_get(&zhdr->refcount);
++		break;
++	}
++	put_cpu_ptr(pool->unbuddied);
++
++	return zhdr;
++}
+  
+  /*
+   * API Functions
+@@ -546,7 +617,7 @@ static void z3fold_destroy_pool(struct z3fold_pool *pool)
+  static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
+  			unsigned long *handle)
+  {
+-	int chunks = 0, i, freechunks;
++	int chunks = size_to_chunks(size);
+  	struct z3fold_header *zhdr = NULL;
+  	struct page *page = NULL;
+  	enum buddy bud;
+@@ -561,56 +632,8 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
+  	if (size > PAGE_SIZE - ZHDR_SIZE_ALIGNED - CHUNK_SIZE)
+  		bud = HEADLESS;
+  	else {
+-		struct list_head *unbuddied;
+-		chunks = size_to_chunks(size);
+-
+-lookup:
+-		/* First, try to find an unbuddied z3fold page. */
+-		unbuddied = get_cpu_ptr(pool->unbuddied);
+-		for_each_unbuddied_list(i, chunks) {
+-			struct list_head *l = &unbuddied[i];
+-
+-			zhdr = list_first_entry_or_null(READ_ONCE(l),
+-						struct z3fold_header, buddy);
+-
+-			if (!zhdr)
+-				continue;
+-
+-			/* Re-check under lock. */
+-			spin_lock(&pool->lock);
+-			l = &unbuddied[i];
+-			if (unlikely(zhdr != list_first_entry(READ_ONCE(l),
+-					struct z3fold_header, buddy)) ||
+-			    !z3fold_page_trylock(zhdr)) {
+-				spin_unlock(&pool->lock);
+-				put_cpu_ptr(pool->unbuddied);
+-				goto lookup;
+-			}
+-			list_del_init(&zhdr->buddy);
+-			zhdr->cpu = -1;
+-			spin_unlock(&pool->lock);
+-
+-			page = virt_to_page(zhdr);
+-			if (test_bit(NEEDS_COMPACTING, &page->private)) {
+-				z3fold_page_unlock(zhdr);
+-				zhdr = NULL;
+-				put_cpu_ptr(pool->unbuddied);
+-				if (can_sleep)
+-					cond_resched();
+-				goto lookup;
+-			}
+-
+-			/*
+-			 * this page could not be removed from its unbuddied
+-			 * list while pool lock was held, and then we've taken
+-			 * page lock so kref_put could not be called before
+-			 * we got here, so it's safe to just call kref_get()
+-			 */
+-			kref_get(&zhdr->refcount);
+-			break;
+-		}
+-		put_cpu_ptr(pool->unbuddied);
+-
++retry:
++		zhdr = __z3fold_alloc(pool, size, can_sleep);
+  		if (zhdr) {
+  			if (zhdr->first_chunks == 0) {
+  				if (zhdr->middle_chunks != 0 &&
+@@ -630,8 +653,9 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
+  					z3fold_page_unlock(zhdr);
+  				pr_err("No free chunks in unbuddied\n");
+  				WARN_ON(1);
+-				goto lookup;
++				goto retry;
+  			}
++			page = virt_to_page(zhdr);
+  			goto found;
+  		}
+  		bud = FIRST;
+@@ -662,8 +686,12 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
+  	if (!page)
+  		return -ENOMEM;
+  
+-	atomic64_inc(&pool->pages_nr);
+  	zhdr = init_z3fold_page(page, pool);
++	if (!zhdr) {
++		__free_page(page);
++		return -ENOMEM;
++	}
++	atomic64_inc(&pool->pages_nr);
+  
+  	if (bud == HEADLESS) {
+  		set_bit(PAGE_HEADLESS, &page->private);
+@@ -680,19 +708,7 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
+  		zhdr->middle_chunks = chunks;
+  		zhdr->start_middle = zhdr->first_chunks + ZHDR_CHUNKS;
+  	}
+-
+-	if (zhdr->first_chunks == 0 || zhdr->last_chunks == 0 ||
+-			zhdr->middle_chunks == 0) {
+-		struct list_head *unbuddied = get_cpu_ptr(pool->unbuddied);
+-
+-		/* Add to unbuddied list */
+-		freechunks = num_free_chunks(zhdr);
+-		spin_lock(&pool->lock);
+-		list_add(&zhdr->buddy, &unbuddied[freechunks]);
+-		spin_unlock(&pool->lock);
+-		zhdr->cpu = smp_processor_id();
+-		put_cpu_ptr(pool->unbuddied);
+-	}
++	add_to_unbuddied(pool, zhdr);
+  
+  headless:
+  	spin_lock(&pool->lock);
 -- 
 2.17.1
 
