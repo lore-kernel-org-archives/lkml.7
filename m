@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F949C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2695CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F9321852
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F226B21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfDKMrq (ORCPT
+        id S1727050AbfDKMr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:47:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41650 "EHLO huawei.com"
+        Thu, 11 Apr 2019 08:47:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41558 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbfDKMro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:47:44 -0400
+        id S1726829AbfDKMrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:47:32 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C42A1BD3D086657F26F9;
+        by Forcepoint Email with ESMTP id B4305CC29C2BA525B29B;
         Thu, 11 Apr 2019 20:47:29 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
@@ -28,10 +28,12 @@ Received: from localhost.localdomain (10.67.212.75) by
 From:   John Garry <john.garry@huawei.com>
 To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
 CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 3/9] scsi: hisi_sas: Fix for setting the PHY linkrate when disconnected
-Date:   Thu, 11 Apr 2019 20:46:38 +0800
-Message-ID: <1554986804-233706-4-git-send-email-john.garry@huawei.com>
+        <linux-scsi@vger.kernel.org>,
+        Xiang Chen <chenxiang66@hisilicon.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 5/9] scsi: hisi_sas: allocate different SAS address for directly attached situation
+Date:   Thu, 11 Apr 2019 20:46:40 +0800
+Message-ID: <1554986804-233706-6-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1554986804-233706-1-git-send-email-john.garry@huawei.com>
 References: <1554986804-233706-1-git-send-email-john.garry@huawei.com>
@@ -44,244 +46,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit efdcad62e7b8 ("scsi: hisi_sas: Set PHY linkrate when
-disconnected"), we use the sas_phy_data.enable flag to track whether
-the PHY was enabled or not, so that we know if we should set the
-PHY negotiated linkrate at SAS_LINK_RATE_UNKNOWN or SAS_PHY_DISABLED.
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-However, it is not proper to use sas_phy_data.enable, since it is
-only set when libsas attempts to set the PHY disabled/enabled; hence,
-it may not even have an initial value.
+In commit 8b8d66531555 ("scsi: hisi_sas: make SAS address of SATA
+disks unique"), we ensured that each SATA disk in the system has a
+unique SAS address, even if it is fake. That was for v2 hw.
 
-As a solution to this problem, introduce hisi_sas_phy.enable to track
-whether the PHY is enabled or not, so that we can set the negotiated
-linkrate properly when the PHY comes down.
+Add this for v3 hw.
 
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas.h       |  3 ++
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 43 ++++++++++++++++++++------
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 11 ++-----
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  6 ++--
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |  6 ++--
- 5 files changed, 46 insertions(+), 23 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
-index 9bfa9f12d81e..fc87994b5d73 100644
---- a/drivers/scsi/hisi_sas/hisi_sas.h
-+++ b/drivers/scsi/hisi_sas/hisi_sas.h
-@@ -170,6 +170,7 @@ struct hisi_sas_phy {
- 	u32		code_violation_err_count;
- 	enum sas_linkrate	minimum_linkrate;
- 	enum sas_linkrate	maximum_linkrate;
-+	int enable;
- };
- 
- struct hisi_sas_port {
-@@ -551,6 +552,8 @@ extern int hisi_sas_slave_configure(struct scsi_device *sdev);
- extern int hisi_sas_scan_finished(struct Scsi_Host *shost, unsigned long time);
- extern void hisi_sas_scan_start(struct Scsi_Host *shost);
- extern int hisi_sas_host_reset(struct Scsi_Host *shost, int reset_type);
-+extern void hisi_sas_phy_enable(struct hisi_hba *hisi_hba, int phy_no,
-+				int enable);
- extern void hisi_sas_phy_down(struct hisi_hba *hisi_hba, int phy_no, int rdy);
- extern void hisi_sas_slot_task_free(struct hisi_hba *hisi_hba,
- 				    struct sas_task *task,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index e7401e2bea27..d4da537f9a45 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -10,7 +10,6 @@
-  */
- 
- #include "hisi_sas.h"
--#include "../libsas/sas_internal.h"
- #define DRV_NAME "hisi_sas"
- 
- #define DEV_IS_GONE(dev) \
-@@ -171,7 +170,7 @@ void hisi_sas_stop_phys(struct hisi_hba *hisi_hba)
- 	int phy_no;
- 
- 	for (phy_no = 0; phy_no < hisi_hba->n_phy; phy_no++)
--		hisi_hba->hw->phy_disable(hisi_hba, phy_no);
-+		hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- }
- EXPORT_SYMBOL_GPL(hisi_sas_stop_phys);
- 
-@@ -976,6 +975,30 @@ static void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
- 	timer_setup(&phy->timer, hisi_sas_wait_phyup_timedout, 0);
- }
- 
-+/* Wrapper to ensure we track hisi_sas_phy.enable properly */
-+void hisi_sas_phy_enable(struct hisi_hba *hisi_hba, int phy_no, int enable)
-+{
-+	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
-+	struct asd_sas_phy *aphy = &phy->sas_phy;
-+	struct sas_phy *sphy = aphy->phy;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&phy->lock, flags);
-+
-+	if (enable) {
-+		/* We may have been enabled already; if so, don't touch */
-+		if (!phy->enable)
-+			sphy->negotiated_linkrate = SAS_LINK_RATE_UNKNOWN;
-+		hisi_hba->hw->phy_start(hisi_hba, phy_no);
-+	} else {
-+		sphy->negotiated_linkrate = SAS_PHY_DISABLED;
-+		hisi_hba->hw->phy_disable(hisi_hba, phy_no);
-+	}
-+	phy->enable = enable;
-+	spin_unlock_irqrestore(&phy->lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(hisi_sas_phy_enable);
-+
- static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy)
- {
- 	struct sas_ha_struct *sas_ha = sas_phy->ha;
-@@ -1112,10 +1135,10 @@ static int hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	hisi_hba->hw->phy_disable(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 	msleep(100);
- 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
--	hisi_hba->hw->phy_start(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- 
- 	return 0;
- }
-@@ -1133,13 +1156,13 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
- 		break;
- 
- 	case PHY_FUNC_LINK_RESET:
--		hisi_hba->hw->phy_disable(hisi_hba, phy_no);
-+		hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 		msleep(100);
--		hisi_hba->hw->phy_start(hisi_hba, phy_no);
-+		hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- 		break;
- 
- 	case PHY_FUNC_DISABLE:
--		hisi_hba->hw->phy_disable(hisi_hba, phy_no);
-+		hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 		break;
- 
- 	case PHY_FUNC_SET_LINK_RATE:
-@@ -2172,16 +2195,18 @@ static void hisi_sas_phy_disconnected(struct hisi_sas_phy *phy)
- {
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	struct sas_phy *sphy = sas_phy->phy;
--	struct sas_phy_data *d = sphy->hostdata;
-+	unsigned long flags;
- 
- 	phy->phy_attached = 0;
- 	phy->phy_type = 0;
- 	phy->port = NULL;
- 
--	if (d->enable)
-+	spin_lock_irqsave(&phy->lock, flags);
-+	if (phy->enable)
- 		sphy->negotiated_linkrate = SAS_LINK_RATE_UNKNOWN;
- 	else
- 		sphy->negotiated_linkrate = SAS_PHY_DISABLED;
-+	spin_unlock_irqrestore(&phy->lock, flags);
- }
- 
- void hisi_sas_phy_down(struct hisi_hba *hisi_hba, int phy_no, int rdy)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index 078ddd3871f2..717972283acf 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -798,16 +798,11 @@ static void start_phy_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
- 	enable_phy_v1_hw(hisi_hba, phy_no);
- }
- 
--static void stop_phy_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
--{
--	disable_phy_v1_hw(hisi_hba, phy_no);
--}
--
- static void phy_hard_reset_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
- {
--	stop_phy_v1_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 	msleep(100);
--	start_phy_v1_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- }
- 
- static void start_phys_v1_hw(struct timer_list *t)
-@@ -817,7 +812,7 @@ static void start_phys_v1_hw(struct timer_list *t)
- 
- 	for (i = 0; i < hisi_hba->n_phy; i++) {
- 		hisi_sas_phy_write32(hisi_hba, i, CHL_INT2_MSK, 0x12a);
--		start_phy_v1_hw(hisi_hba, i);
-+		hisi_sas_phy_enable(hisi_hba, i, 1);
- 	}
- }
- 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 33b72c7f72c5..3696cfe48574 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1546,14 +1546,14 @@ static void phy_hard_reset_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	u32 txid_auto;
- 
--	disable_phy_v2_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 	if (phy->identify.device_type == SAS_END_DEVICE) {
- 		txid_auto = hisi_sas_phy_read32(hisi_hba, phy_no, TXID_AUTO);
- 		hisi_sas_phy_write32(hisi_hba, phy_no, TXID_AUTO,
- 					txid_auto | TX_HARDRST_MSK);
- 	}
- 	msleep(100);
--	start_phy_v2_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- }
- 
- static void phy_get_events_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
-@@ -1586,7 +1586,7 @@ static void phys_init_v2_hw(struct hisi_hba *hisi_hba)
- 		if (!sas_phy->phy->enabled)
- 			continue;
- 
--		start_phy_v2_hw(hisi_hba, i);
-+		hisi_sas_phy_enable(hisi_hba, i, 1);
- 	}
- }
- 
 diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index e8323d038d53..3b33816ea6e6 100644
+index 3b33816ea6e6..89551b772cd4 100644
 --- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
 +++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -856,14 +856,14 @@ static void phy_hard_reset_v3_hw(struct hisi_hba *hisi_hba, int phy_no)
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	u32 txid_auto;
+@@ -1380,6 +1380,7 @@ static irqreturn_t phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
+ 		struct hisi_sas_initial_fis *initial_fis;
+ 		struct dev_to_host_fis *fis;
+ 		u8 attached_sas_addr[SAS_ADDR_SIZE] = {0};
++		struct Scsi_Host *shost = hisi_hba->shost;
  
--	disable_phy_v3_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 	if (phy->identify.device_type == SAS_END_DEVICE) {
- 		txid_auto = hisi_sas_phy_read32(hisi_hba, phy_no, TXID_AUTO);
- 		hisi_sas_phy_write32(hisi_hba, phy_no, TXID_AUTO,
- 					txid_auto | TX_HARDRST_MSK);
- 	}
- 	msleep(100);
--	start_phy_v3_hw(hisi_hba, phy_no);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- }
+ 		dev_info(dev, "phyup: phy%d link_rate=%d(sata)\n", phy_no, link_rate);
+ 		initial_fis = &hisi_hba->initial_fis[phy_no];
+@@ -1396,6 +1397,7 @@ static irqreturn_t phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
  
- static enum sas_linkrate phy_get_max_linkrate_v3_hw(void)
-@@ -882,7 +882,7 @@ static void phys_init_v3_hw(struct hisi_hba *hisi_hba)
- 		if (!sas_phy->phy->enabled)
- 			continue;
- 
--		start_phy_v3_hw(hisi_hba, i);
-+		hisi_sas_phy_enable(hisi_hba, i, 1);
- 	}
- }
- 
+ 		sas_phy->oob_mode = SATA_OOB_MODE;
+ 		attached_sas_addr[0] = 0x50;
++		attached_sas_addr[6] = shost->host_no;
+ 		attached_sas_addr[7] = phy_no;
+ 		memcpy(sas_phy->attached_sas_addr,
+ 		       attached_sas_addr,
 -- 
 2.17.1
 
