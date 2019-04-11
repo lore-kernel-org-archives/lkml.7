@@ -2,99 +2,168 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3990FC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78752146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:48:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS9KcqR5"
+	by mail.kernel.org (Postfix) with ESMTP id 0981320818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfDKUsw (ORCPT
+        id S1726978AbfDKUuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:48:52 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41795 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbfDKUsw (ORCPT
+        Thu, 11 Apr 2019 16:50:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726615AbfDKUuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:48:52 -0400
-Received: by mail-qk1-f194.google.com with SMTP id o129so4354337qke.8;
-        Thu, 11 Apr 2019 13:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MFxx8aXhh0G/CS6goo7udzq09ZCw/FPJwQJNH7tq1kU=;
-        b=GS9KcqR50oOE6DZenl/eg2vjZV9mXtAQl3FhcV8lXa5DSQjBr8sriYOzsBIgNUay04
-         EEkqYcTyqlfKHxsNJaGFolfJSa+BRb8AfT6C5EZRZlAeZI+S2Jxq2OqorJa2pMT1KfLi
-         j3WED/jwBH4sHdeCFRHadMRVbYv/EEIqrCdBbZIgWnErgYIpbuK17yN5kCOs+O/0r7xR
-         BCuJnlnzFcsmbgYa7OAP/v+jicgedYArQSFQVz/OtH/KpC2dUQ9rlPoewIEzbpO8RVgv
-         M22jEIGZ97J4WQ4HcZH8MZlwxxGijlvEnLKkvYg/RkSLcKvJb9SC6NtSecGtlkkI/Rx+
-         PXyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MFxx8aXhh0G/CS6goo7udzq09ZCw/FPJwQJNH7tq1kU=;
-        b=NTpQ7c4nLRTdcW8/u3JxVBxVfMNRwFT9dY2J+5YDazHjXDJIDVdB9vFcuLcNtAZJds
-         U01v/kEgcEZ5zJtsRsBwCax0EVRWuzlQCURenV9ElE/6I+VNW0ubBwxny7WDl/O5HyeI
-         +LeziseYMnnLYWLw1MuRw8FRGvim736ERUUQHCvQmK3afY/KMNOZ1iDcIKVc36kQwYKB
-         qcqZySzlNoBXbVyH1MmD0Ydu9PapdbTKP3yyMp9LXlc8cv8KoTz5rvXKsRkw/tJ33YH/
-         uueJDghsn2fyZlcAdzQV2aKbZwiRhEq2yqvUU0zED3JWnJ5fknWLYerk7A/axBppUJU2
-         WlWQ==
-X-Gm-Message-State: APjAAAXiEG8EekUrTmSCsN4FXMgv57TeIvyy2cJC0iPEZug6uVFUdQXA
-        Lziu221kg3K7O97iwu5/37/xmvOVO14IT9FsXUY=
-X-Google-Smtp-Source: APXvYqxwQLpGHtJsQPkPcAXLOJqtbc3Kfhu5iIYHmKQgrUf26yhZfXRnMdMyjBzS3i7Nd+tOiwXfcuWo2eObcqVMc8k=
-X-Received: by 2002:a05:620a:16c5:: with SMTP id a5mr42060684qkn.212.1555015730985;
- Thu, 11 Apr 2019 13:48:50 -0700 (PDT)
+        Thu, 11 Apr 2019 16:50:01 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BKnm2R007706
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:50:00 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rt964ub3j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:49:59 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 11 Apr 2019 21:49:57 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 21:49:51 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BKnoGY52625548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 20:49:50 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A67CA4055;
+        Thu, 11 Apr 2019 20:49:50 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61C83A404D;
+        Thu, 11 Apr 2019 20:49:48 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.230])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 11 Apr 2019 20:49:48 +0000 (GMT)
+Date:   Thu, 11 Apr 2019 23:49:46 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, kernelci@groups.io,
+        Dan Williams <dan.j.williams@intel.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+References: <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com>
+ <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
+ <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com>
+ <20190306140529.GG3549@rapoport-lnx>
+ <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com>
+ <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
+ <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
+ <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
+ <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
+ <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
 MIME-Version: 1.0
-References: <3c15d21d2b6896e76e8801dc07de2bae1dadceb1.1554827560.git.joe@perches.com>
- <20190410181901.1e40252e@mschwideX1>
-In-Reply-To: <20190410181901.1e40252e@mschwideX1>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 11 Apr 2019 13:48:39 -0700
-Message-ID: <CAPhsuW54C34tB82-g0uzyt-pWnYh616=fR9cGT6hp5t0L5h+HA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] s390: Convert IS_ENABLED uses to __is_defined
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-s390@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19041120-0016-0000-0000-0000026DE2C6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041120-0017-0000-0000-000032CA1B06
+Message-Id: <20190411204945.GA26085@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:43 AM Martin Schwidefsky
-<schwidefsky@de.ibm.com> wrote:
->
-> On Tue,  9 Apr 2019 09:33:12 -0700
-> Joe Perches <joe@perches.com> wrote:
->
-> > IS_ENABLED should be reserved for CONFIG_<FOO> uses so convert
-> > the uses of IS_ENABLED with a #define to __is_defined.
+On Thu, Apr 11, 2019 at 01:08:15PM -0700, Guenter Roeck wrote:
+> On Thu, Apr 11, 2019 at 10:35 AM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > Signed-off-by: Joe Perches <joe@perches.com>
+> > On Thu, Apr 11, 2019 at 9:42 AM Guenter Roeck <groeck@google.com> wrote:
+> > >
+> > > On Thu, Apr 11, 2019 at 9:19 AM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > On Thu, Mar 7, 2019 at 7:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > I went ahead and acquired one of these boards to see if I can can
+> > > > > debug this locally.
+> > > >
+> > > > Hi! Any progress on this? Might it be possible to unblock this series
+> > > > for v5.2 by adding a temporary "not on ARM" flag?
+> > > >
+> > >
+> > > Can someone send me a pointer to the series in question ? I would like
+> > > to run it through my testbed.
+> >
+> > It's already in -mm and linux-next (",mm: shuffle initial free memory
+> > to improve memory-side-cache utilization") but it gets enabled with
+> > CONFIG_SHUFFLE_PAGE_ALLOCATOR=y (which was made the default briefly in
+> > -mm which triggered problems on ARM as was reverted).
+> >
+> 
+> Boot tests report
+> 
+> Qemu test results:
+>     total: 345 pass: 345 fail: 0
+> 
+> This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+> and the known crashes fixed.
+> 
+> $ git log --oneline next-20190410..
+> 3367c36ce744 Set SHUFFLE_PAGE_ALLOCATOR=y for testing.
+> d2aee8b3cd5d Revert "crypto: scompress - Use per-CPU struct instead
+> multiple variables"
+> 4bc9f5bc9a84 Fix: rhashtable: use bit_spin_locks to protect hash bucket.
+> 
+> Boot tests on arm are:
+> 
+> Building arm:versatilepb:versatile_defconfig:aeabi:pci:scsi:mem128:versatile-pb:rootfs
+> ... running ........ passed
+> Building arm:versatilepb:versatile_defconfig:aeabi:pci:mem128:versatile-pb:initrd
+> ... running ........ passed
 
-Acked-by: Song Liu <songliubraving@fb.com>
+...
 
->
-> That makes a lot of sense. Added to s390/linux:features. Thanks.
->
-> --
-> blue skies,
->    Martin.
->
-> "Reality continues to ruin my life." - Calvin.
->
+> Building arm:witherspoon-bmc:aspeed_g5_defconfig:notests:aspeed-bmc-opp-witherspoon:initrd
+> ... running ........... passed
+> Building arm:ast2500-evb:aspeed_g5_defconfig:notests:aspeed-ast2500-evb:initrd
+> ... running ................ passed
+> Building arm:romulus-bmc:aspeed_g5_defconfig:notests:aspeed-bmc-opp-romulus:initrd
+> ... running ......................... passed
+> Building arm:mps2-an385:mps2_defconfig:mps2-an385:initrd ... running
+> ...... passed
+
+The issue was with an omap2 board and, AFAIK, qemu does not simulate those.
+
+-- 
+Sincerely yours,
+Mike.
+
