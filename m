@@ -2,97 +2,131 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68E2C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F19217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90855217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDKHwl (ORCPT
+        id S1726917AbfDKHwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:52:41 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:59286 "EHLO
+        Thu, 11 Apr 2019 03:52:46 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:41914 "EHLO
         smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbfDKHwk (ORCPT
+        by vger.kernel.org with ESMTP id S1726145AbfDKHwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:52:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436667|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.503563-0.118714-0.377724;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.EJokYFd_1554969155;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EJokYFd_1554969155)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Thu, 11 Apr 2019 15:52:36 +0800
+        Thu, 11 Apr 2019 03:52:41 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07437655|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.389576-0.0133998-0.597024;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.EJoSU-3_1554969157;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EJoSU-3_1554969157)
+          by smtp.aliyun-inc.com(10.147.41.187);
+          Thu, 11 Apr 2019 15:52:37 +0800
 From:   Mao Han <han_mao@c-sky.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Cc:     Mao Han <han_mao@c-sky.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH v4 0/3] csky: perf callchain dwarf support
-Date:   Thu, 11 Apr 2019 15:44:58 +0800
-Message-Id: <cover.1554967684.git.han_mao@c-sky.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v4 1/3] perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
+Date:   Thu, 11 Apr 2019 15:44:59 +0800
+Message-Id: <bd145773bdde019aa044e51306924bd84311b1d4.1554967684.git.han_mao@c-sky.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1554967684.git.han_mao@c-sky.com>
+References: <cover.1554967684.git.han_mao@c-sky.com>
+In-Reply-To: <cover.1554967684.git.han_mao@c-sky.com>
+References: <cover.1554967684.git.han_mao@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set add perf DWARF unwinding support for C-SKY.
-Including user registers/stack dump API, and libdw support.
+On 32-bits platform with more than 32 registers, the 64 bits mask is
+truncate to the lower 32 bits and the return value of hweight_long will
+always smaller than 32. When kernel outputs more than 32 registers, but
+the user perf program only counts 32, there will be a data mismatch
+result to overflow check fail.
 
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Jiri Olsa <jolsa@redhat.com>
-CC: Namhyung Kim <namhyung@kernel.org>
-CC: Guo Ren <guoren@kernel.org>
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 6a21c0b5c2ab ("perf tools: Add core support for sampling intr machine state regs")
+Fixes: d03f2170546d ("perf tools: Expand perf_event__synthesize_sample()")
+Fixes: 0f6a30150ca2 ("perf tools: Support user regs and stack in sample parsing")
+: http://lkml.kernel.org/r/29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/evsel.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Changes since v3:
-  - update with patch from Arnaldo
-    replace other hweight_long with hweight64
-
-Changes since v2:
-  - use same registers name as struct pt_regs
-  - code convention
-
-Changes since v1:
-  - seperate the callchain support using frame pointer
-
-Mao Han (3):
-  perf evsel: Use hweight64() instead of
-    hweight_long(attr.sample_regs_user)
-  csky: Add support for perf registers sampling
-  csky: Add support for libdw
-
- arch/csky/Kconfig                            |   2 +
- arch/csky/include/uapi/asm/perf_regs.h       |  51 ++++++++++++++
- arch/csky/kernel/Makefile                    |   1 +
- arch/csky/kernel/perf_regs.c                 |  40 +++++++++++
- tools/arch/csky/include/uapi/asm/perf_regs.h |  51 ++++++++++++++
- tools/perf/Makefile.config                   |   6 +-
- tools/perf/arch/csky/Build                   |   1 +
- tools/perf/arch/csky/Makefile                |   3 +
- tools/perf/arch/csky/include/perf_regs.h     | 100 +++++++++++++++++++++++++++
- tools/perf/arch/csky/util/Build              |   2 +
- tools/perf/arch/csky/util/dwarf-regs.c       |  49 +++++++++++++
- tools/perf/arch/csky/util/unwind-libdw.c     |  78 +++++++++++++++++++++
- tools/perf/util/evsel.c                      |  12 ++--
- 13 files changed, 389 insertions(+), 7 deletions(-)
- create mode 100644 arch/csky/include/uapi/asm/perf_regs.h
- create mode 100644 arch/csky/kernel/perf_regs.c
- create mode 100644 tools/arch/csky/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/csky/Build
- create mode 100644 tools/perf/arch/csky/Makefile
- create mode 100644 tools/perf/arch/csky/include/perf_regs.h
- create mode 100644 tools/perf/arch/csky/util/Build
- create mode 100644 tools/perf/arch/csky/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/csky/util/unwind-libdw.c
-
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 66d066f..9663608 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2368,7 +2368,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->user_regs.abi) {
+ 			u64 mask = evsel->attr.sample_regs_user;
+ 
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->user_regs.mask = mask;
+ 			data->user_regs.regs = (u64 *)array;
+@@ -2424,7 +2424,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
+ 			u64 mask = evsel->attr.sample_regs_intr;
+ 
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->intr_regs.mask = mask;
+ 			data->intr_regs.regs = (u64 *)array;
+@@ -2552,7 +2552,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2580,7 +2580,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2710,7 +2710,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			*array++ = sample->user_regs.abi;
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->user_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
+@@ -2746,7 +2746,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			*array++ = sample->intr_regs.abi;
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->intr_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
 -- 
 2.7.4
 
