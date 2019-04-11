@@ -3,217 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A47C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46258C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610A7217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E061217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbfDKHyn (ORCPT
+        id S1727035AbfDKHzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:54:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47018 "EHLO
+        Thu, 11 Apr 2019 03:55:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47036 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDKHym (ORCPT
+        with ESMTP id S1726635AbfDKHzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:54:42 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        Thu, 11 Apr 2019 03:55:44 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
         by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
         (Exim 4.76)
         (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hEUXg-0006GE-PP
-        for linux-kernel@vger.kernel.org; Thu, 11 Apr 2019 07:54:40 +0000
-Received: by mail-pf1-f197.google.com with SMTP id g83so3774223pfd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 00:54:40 -0700 (PDT)
+        id 1hEUYg-0006Lx-Bq
+        for linux-kernel@vger.kernel.org; Thu, 11 Apr 2019 07:55:42 +0000
+Received: by mail-pl1-f197.google.com with SMTP id 3so3577084ple.19
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 00:55:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
          :content-transfer-encoding:message-id:references:to;
-        bh=HkNXh+4xiympXYqqWJcQIb61EJ3dAcyW6hTTwwpfCmc=;
-        b=Dwi3eocI4X2D4IhVuOQhFAHuQycMwMN2x0kwhXScfA8vnJzlJmIKdNuuxsacTx1Gm7
-         bQmV46zp4dzxuZMlWaA/tmvz72ik4R/+k/CzVo7XCjS5g2dEqHdaSKfbOOsjIDq4qZEw
-         eAgvc1+MKpwBULFnclpa/4sClOj2llyyUcvFg3efmnhwnTXWdg098krCgqEYH9teNyO8
-         vk0xgckBKxD+Mb6zBEy+GUwbiKZZSWqZ+fIyzMHeroHPofkVeinJcB1GWiSijrApE3Mn
-         xrSFroQvoTWc1tHmMYFjlhoN+HLov0GrrZ20Y/Ia6LoEefcT7fPf75RimiXxklWU6tof
-         Pe0w==
-X-Gm-Message-State: APjAAAV93DU+JaUJa+esdoSE2ZgxhQJ6lNWR7ctRwyktb4QrskmOyLlU
-        3aLQYZ7WPtpQQ05Hp3SY8KEAjyEUSX2KwEKZ3SjYGGHwjF7xV4YOMvU3V3ljuKEYeG0euBOugC8
-        Nwzkl3CkMKC+ThyD4cOiAyNKONXDmpgCWbi0tZbHjYQ==
-X-Received: by 2002:a17:902:d24:: with SMTP id 33mr49857987plu.246.1554969279396;
-        Thu, 11 Apr 2019 00:54:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwIlla7xJii1YsohMxgPLk3ZuNeeOxkguOFBDyqBnU1+l1QzY5DvtjVARZhOJAD2gJwQc/IMg==
-X-Received: by 2002:a17:902:d24:: with SMTP id 33mr49857962plu.246.1554969279033;
-        Thu, 11 Apr 2019 00:54:39 -0700 (PDT)
+        bh=O8I6+QP8dAnvcFSf5snO01pHB909XvBWfAoeHtdYzI8=;
+        b=nM8JAkAcT9zaEvZdzipR5p64XdMwymvi7p7E7UBP8FyeqpJNyRcK5zhi8Qeft/9AqF
+         03UNmQoYuVplf5CzljAnLIYC6y5TFIFUVRfHglfuD9AnDSOIv1PYNwU8oj7ITZDgLB9C
+         WQxF2TgitYboLCrNCT/dHHAsJd0MQa7QXmVl4i/j+L3Eipiw7fSvhjSunNkED3ZfF70i
+         ZTRLS6Gy9IXUjd1E1bNV0qKdyFctJu+JgNgrXQXDJSYOrJkbfrcBX2f8d6r3sVD3Y4Dq
+         6N9kU93ivukGd9jq4RN9fxSfrbwKsUHWcdDWmif00EdRuA2aRVoWztZFgJvqXg75/TFu
+         ghOQ==
+X-Gm-Message-State: APjAAAV+K0QclwQpqUaq4hUq2Dx3WfmdiedG86qaw2XCjs89gV5K2PSq
+        mB9hNMV5IlEdQShax7VF9OeKLtqyE6Hz6OZvgqVwEYi2YV9q202tk++MrNHSUI2W6v/5rFzLLVY
+        9KQ4SkIaMqlyyFNXgVSZTT2kdsbhy0rRTfzyoS4nchg==
+X-Received: by 2002:a63:5d04:: with SMTP id r4mr45228664pgb.117.1554969340866;
+        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyf9uzTE307KSiC17kXBaM23T2n+LvwNyaSWq56IFkwGEPI52Bl0l3Pm5K8lQQ663fOW+HivA==
+X-Received: by 2002:a63:5d04:: with SMTP id r4mr45228644pgb.117.1554969340636;
+        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
 Received: from 2001-b011-380f-14b9-9cff-45f9-ad8b-c268.dynamic-ip6.hinet.net (2001-b011-380f-14b9-9cff-45f9-ad8b-c268.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:9cff:45f9:ad8b:c268])
-        by smtp.gmail.com with ESMTPSA id l2sm42048820pgl.2.2019.04.11.00.54.37
+        by smtp.gmail.com with ESMTPSA id l2sm42048820pgl.2.2019.04.11.00.55.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 00:54:38 -0700 (PDT)
+        Thu, 11 Apr 2019 00:55:40 -0700 (PDT)
 Content-Type: text/plain;
         charset=utf-8;
         delsp=yes;
         format=flowed
 Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH v2] Input: elantech: Enable SMBus on new (2018+) systems
+Subject: Re: [PATCH v2] USB: Disable USB2 LPM at shutdown
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <CAO-hwJLPFzwkY+tkgeas8066CNygfyTY2EoVrximURx4dwQ0TQ@mail.gmail.com>
-Date:   Thu, 11 Apr 2019 15:54:35 +0800
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+In-Reply-To: <9EC6DA7E-2503-40F8-AB5A-25A2424B6346@canonical.com>
+Date:   Thu, 11 Apr 2019 15:55:38 +0800
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
         lkml <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: 8bit
-Message-Id: <F7D6560C-789E-48E4-B2B9-BC2EBED16E7F@canonical.com>
-References: <20190121070258.1844-1-kai.heng.feng@canonical.com>
- <CAO-hwJLPFzwkY+tkgeas8066CNygfyTY2EoVrximURx4dwQ0TQ@mail.gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Message-Id: <80534332-7E39-42B9-8B64-580B483B83A5@canonical.com>
+References: <20190124061643.11663-1-kai.heng.feng@canonical.com>
+ <20190130082133.GA32660@kroah.com>
+ <D84EEC8F-8B65-4B0C-9EA7-E01A0BB47398@canonical.com>
+ <9EC6DA7E-2503-40F8-AB5A-25A2424B6346@canonical.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
 X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+at 18:22, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-at 16:33, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-
-> On Mon, Jan 21, 2019 at 8:03 AM Kai-Heng Feng
-> <kai.heng.feng@canonical.com> wrote:
->> There are some new HP laptops with Elantech touchpad don't support
->> multitouch.
->>
->> Currently we use ETP_NEW_IC_SMBUS_HOST_NOTIFY() to check if SMBus is
->> supported, but in addition to firmware version, the bus type also
->> informs us if the IC can support SMBus, so also check that.
->>
->> In case of breaking old ICs, only enables SMBus on systems manufactured
->> after 2018, alongsides aforementioned checks.
->>
->> Lastly, consolidats all check into elantech_use_host_notify() and use it
->> to determine whether to use PS/2 or SMBus.
->>
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> v2:
->> - Wording.
->> - Further restrain on older systems (< 2018).
->>
->>  drivers/input/mouse/elantech.c | 63 ++++++++++++++++++----------------
->>  1 file changed, 34 insertions(+), 29 deletions(-)
->>
->> diff --git a/drivers/input/mouse/elantech.c  
->> b/drivers/input/mouse/elantech.c
->> index 9fe075c137dc..2594130b0079 100644
->> --- a/drivers/input/mouse/elantech.c
->> +++ b/drivers/input/mouse/elantech.c
->> @@ -1799,6 +1799,39 @@ static int elantech_create_smbus(struct psmouse  
->> *psmouse,
->>                                   leave_breadcrumbs);
->>  }
->>
->> +static bool elantech_use_host_notify(struct psmouse *psmouse,
->> +                                    struct elantech_device_info *info)
->> +{
->> +       bool host_notify = false;
->> +
->> +       if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
->> +               host_notify = true;
->> +       else {
->> +               switch (info->bus) {
->> +               case ETP_BUS_PS2_ONLY:
->> +                       /* expected case */
->> +                       break;
->> +               case ETP_BUS_SMB_ALERT_ONLY:
->> +                       /* fall-through  */
->> +               case ETP_BUS_PS2_SMB_ALERT:
->> +                       psmouse_dbg(psmouse, "Ignoring SMBus provider  
->> through alert protocol.\n");
->> +                       break;
->> +               case ETP_BUS_SMB_HST_NTFY_ONLY:
->> +                       /* fall-through  */
->> +               case ETP_BUS_PS2_SMB_HST_NTFY:
->> +                       host_notify = true;
->> +                       break;
->> +               default:
->> +                       psmouse_dbg(psmouse,
->> +                                   "Ignoring SMBus bus provider %d.\n",
->> +                                   info->bus);
->> +               }
->> +       }
->> +
->> +       /* SMbus implementation is stable after 2018 */
->> +       return host_notify && (dmi_get_bios_year() >= 2018);
+> at 00:01, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 >
-> Strictly speaking, the check for the year should be in the `switch
-> (info->bus)`, but OTOH, laptops with ETP_NEW_IC_SMBUS_HOST_NOTIFY
-> should be manufactured after 2018 too, so we should be good.
+>>> On Jan 30, 2019, at 16:21, Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Thu, Jan 24, 2019 at 02:16:43PM +0800, Kai-Heng Feng wrote:
+>>>> The QCA Rome USB Bluetooth controller has several issues once LPM gets
+>>>> enabled:
+>>>> - Fails to get enumerated in coldboot. [1]
+>>>> - Drains more power (~ 0.2W) when the system is in S5. [2]
+>>>> - Disappears after a warmboot. [2]
+>>>>
+>>>> The issue happens because the device lingers at LPM L1 in S5, so device
+>>>> can't get enumerated even after a reboot.
+>>>>
+>>>> Disable LPM at shutdown to solve the issue.
+>>>>
+>>>> [1] https://bugs.launchpad.net/bugs/1757218
+>>>> [2] https://patchwork.kernel.org/patch/10607097/
+>>>>
+>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>>> ---
+>>>> v2: Use new LPM helpers.
+>>>>
+>>>> drivers/usb/core/port.c | 9 +++++++++
+>>>> 1 file changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/core/port.c b/drivers/usb/core/port.c
+>>>> index 1a06a4b5fbb1..bbbb35fa639f 100644
+>>>> --- a/drivers/usb/core/port.c
+>>>> +++ b/drivers/usb/core/port.c
+>>>> @@ -285,6 +285,14 @@ static int usb_port_runtime_suspend(struct device  
+>>>> *dev)
+>>>> }
+>>>> #endif
+>>>>
+>>>> +static void usb_port_shutdown(struct device *dev)
+>>>> +{
+>>>> +	struct usb_port *port_dev = to_usb_port(dev);
+>>>> +
+>>>> +	if (port_dev->child)
+>>>> +		usb_disable_usb2_hardware_lpm(port_dev->child);
+>>>> +}
+>>>> +
+>>>> static const struct dev_pm_ops usb_port_pm_ops = {
+>>>> #ifdef CONFIG_PM
+>>>> 	.runtime_suspend =	usb_port_runtime_suspend,
+>>>> @@ -301,6 +309,7 @@ struct device_type usb_port_device_type = {
+>>>> static struct device_driver usb_port_driver = {
+>>>> 	.name = "usb",
+>>>> 	.owner = THIS_MODULE,
+>>>> +	.shutdown = usb_port_shutdown,
+>>>> };
+>>>
+>>> So you now do this for all ports in the system, no matter what is
+>>> plugged in or not.  Are you _SURE_ you want to do that?  It seems like a
+>>> big hammer to solve just one single device's problems.
+>>
+>> Yes I think this should be universally applied.
+>>
+>> I don’t think the bug only happens to one device. Users won’t find this
+>> unless they connect their laptop to a power meter.
+>>
+>> Platform may not completely cut off USB bus power during shutdown,
+>> so the device transits to L1 after system shutdown. Now xHC is disabled
+>> so nothing can bring it back to L0 or L2.
 >
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> It would be great if someone can come up with better ideas.
+>
+> We can also use other approaches, but currently this is the only way I  
+> can think of.
 
-Hi Dmitry,
+Alan and Mathias,
 
-Would it be possible to include this patch?
+It would be great if you can review this patch, or give me some suggestion.
 
 Kai-Heng
 
 >
-> Cheers,
-> Benjamin
+> Kai-Heng
 >
->> +}
->> +
->>  /**
->>   * elantech_setup_smbus - called once the PS/2 devices are enumerated
->>   * and decides to instantiate a SMBus InterTouch device.
->> @@ -1818,7 +1851,7 @@ static int elantech_setup_smbus(struct psmouse  
->> *psmouse,
->>                  * i2c_blacklist_pnp_ids.
->>                  * Old ICs are up to the user to decide.
->>                  */
->> -               if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
->> +               if (!elantech_use_host_notify(psmouse, info) ||
->>                     psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
->>                         return -ENXIO;
->>         }
->> @@ -1838,34 +1871,6 @@ static int elantech_setup_smbus(struct psmouse  
->> *psmouse,
->>         return 0;
->>  }
+>> Kai-Heng
 >>
->> -static bool elantech_use_host_notify(struct psmouse *psmouse,
->> -                                    struct elantech_device_info *info)
->> -{
->> -       if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
->> -               return true;
->> -
->> -       switch (info->bus) {
->> -       case ETP_BUS_PS2_ONLY:
->> -               /* expected case */
->> -               break;
->> -       case ETP_BUS_SMB_ALERT_ONLY:
->> -               /* fall-through  */
->> -       case ETP_BUS_PS2_SMB_ALERT:
->> -               psmouse_dbg(psmouse, "Ignoring SMBus provider through  
->> alert protocol.\n");
->> -               break;
->> -       case ETP_BUS_SMB_HST_NTFY_ONLY:
->> -               /* fall-through  */
->> -       case ETP_BUS_PS2_SMB_HST_NTFY:
->> -               return true;
->> -       default:
->> -               psmouse_dbg(psmouse,
->> -                           "Ignoring SMBus bus provider %d.\n",
->> -                           info->bus);
->> -       }
->> -
->> -       return false;
->> -}
->> -
->>  int elantech_init_smbus(struct psmouse *psmouse)
->>  {
->>         struct elantech_device_info info;
->> —
+>>> thanks,
+>>>
+>>> greg k-h
 
->> 2.17.1
 
