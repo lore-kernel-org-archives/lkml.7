@@ -2,123 +2,135 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A44C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E279C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FC92184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iIeEZvto"
+	by mail.kernel.org (Postfix) with ESMTP id 461A120850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfDKJbe (ORCPT
+        id S1727035AbfDKJc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:31:34 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:48911 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfDKJbe (ORCPT
+        Thu, 11 Apr 2019 05:32:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:19631 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726106AbfDKJc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:31:34 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x3B9ULYI018071;
-        Thu, 11 Apr 2019 18:30:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3B9ULYI018071
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554975021;
-        bh=pamsHavWO/HjsWP8UtMBGwElWsTCMSpe/5Xz6rV18G0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iIeEZvtoUpr1/SIBNhL45jIZd/+85UWQbxMGYM88BUOXLF3oeTjzx2RBVZyeFNR3o
-         Bg2BXC4gbUuo3F5IGBFqpZtTbstSWwK8ZV2Tf3I8xnQBAOM006PbzSLAuGYvml9X8k
-         nHPxCRCzmSq8DS1RE2kQf8HJZcM9jfn1eIEXWUK8fu8vg4NAXdXWI6ZK/B15+Dolpr
-         /WfHsrW2gzwqe3IOoMfGpy7/86vlfbhI9Xxvx6e1EmkM9c57T8tYdp/pRWUt6TQAVy
-         q6b18KrxzvMnP+qk+Tb/nMWrS9azCjdB4Wa8Gs2chIjyg5kM9zLsBm/l8neEI9Fjtm
-         dELs+eubnXlBA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: vdso: use $(LD) instead of $(CC) to link VDSO
-Date:   Thu, 11 Apr 2019 18:30:15 +0900
-Message-Id: <20190411093015.6529-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 11 Apr 2019 05:32:27 -0400
+X-UUID: 7a47800325c04888a9aef94c0fc8b703-20190411
+X-UUID: 7a47800325c04888a9aef94c0fc8b703-20190411
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1661400953; Thu, 11 Apr 2019 17:32:21 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 11 Apr 2019 17:32:19 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Apr 2019 17:32:20 +0800
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <wsd_upstream@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH] pinctrl: Add kernel config PINCTRL_MTK_V2
+Date:   Thu, 11 Apr 2019 17:32:18 +0800
+Message-ID: <1554975138-801-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A6DD1241F2D8275B83E54A096B950E706E0CC870382B6252B194A838054000E22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We use $(LD) to link vmlinux, modules, decompressors, etc.
+Since no single Mediatek chip use code for PINCTRL_MTK and code for
+PINCTRL_MTK_MOORE/PINCTRL_MTK_PARIS simultaneously, it is better to use
+different config to determine if related code will be built or not on
+building non-generic kernel.
 
-VDSO is the only exceptional case where $(CC) is used as the linker
-driver, but I do not know why we need to do so. VDSO uses a special
-linker script, and does not link standard libraries at all.
+Add kernel config PINCTRL_MTK_V2 selected by either PINCTRL_MTK_MOORE
+or PINCTRL_MTK_PARIS.
+Use PINCTRL_MTK and PINCTRL_MTK_V2 to control building of
+drivers/pinctrl/medaitek/.
+Remove selection of EINT_MTK from PINCTRL_MTK since code for EINT_MTK is
+only related to PINCTRL_MTK_MOORE/PINCTRL_MTK_PARIS, i.e. PINCTL_MTK_V2.
 
-I changed the Makefile to use $(LD) rather than $(CC). I tested this,
-and VDSO worked for me.
-
-Users will be able to use their favorite linker (e.g. lld instead of
-of bfd) by passing LD= from the command line.
-
-My plan is to rewrite all VDSO Makefiles to use $(LD), then delete
-cc-ldoption.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
+ drivers/pinctrl/Makefile         |  3 ++-
+ drivers/pinctrl/mediatek/Kconfig | 15 ++++++++++++---
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
- arch/arm64/kernel/vdso/Makefile | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index a0af6bf6c11b..744b9dbaba03 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -12,17 +12,12 @@ obj-vdso := gettimeofday.o note.o sigreturn.o
- targets := $(obj-vdso) vdso.so vdso.so.dbg
- obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 712184b..fcee0e0 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -65,6 +65,7 @@ obj-$(CONFIG_PINCTRL_SUNXI)	+= sunxi/
+ obj-y				+= ti/
+ obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
+ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
+-obj-y				+= mediatek/
++obj-$(CONFIG_PINCTRL_MTK)	+= mediatek/
++obj-$(CONFIG_PINCTRL_MTK_V2)	+= mediatek/
+ obj-$(CONFIG_PINCTRL_ZX)	+= zte/
+ obj-y				+= cirrus/
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index a005cbc..5e26462 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -2,10 +2,15 @@ menu "MediaTek pinctrl drivers"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
  
--ccflags-y := -shared -fno-common -fno-builtin
--ccflags-y += -nostdlib -Wl,-soname=linux-vdso.so.1 \
--		$(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-+ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
-+		$(call ld-option, --hash-style=sysv) -n -T
+ config EINT_MTK
+-	bool "MediaTek External Interrupt Support"
+-	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
++	bool "MediaTek External Interrupt driver that is based on PINCTRL_MTK_V2"
++	depends on PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
+ 	select GPIOLIB
+ 	select IRQ_DOMAIN
++	help
++	  Say yes here to enable support for MediaTek External Interrupt
++	  (EINT) driver based on PINCTRL_MTK version 2.
++	  This driver is combined with MediaTek Pinctrl driver version 2
++	  so PINCTRL_MTK_V2 shall be set first.
  
- # Disable gcov profiling for VDSO code
- GCOV_PROFILE := n
+ config PINCTRL_MTK
+ 	bool
+@@ -13,9 +18,11 @@ config PINCTRL_MTK
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+ 	select GPIOLIB
+-	select EINT_MTK
+ 	select OF_GPIO
  
--# Workaround for bare-metal (ELF) toolchains that neglect to pass -shared
--# down to collect2, resulting in silent corruption of the vDSO image.
--ccflags-y += -Wl,-shared
--
- obj-y += vdso.o
- extra-y += vdso.lds
- CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
-@@ -32,7 +27,7 @@ $(obj)/vdso.o : $(obj)/vdso.so
++config PINCTRL_MTK_V2
++	bool "MediaTek Pinctrl Support V2"
++
+ config PINCTRL_MTK_MOORE
+ 	bool
+ 	depends on OF
+@@ -24,6 +31,7 @@ config PINCTRL_MTK_MOORE
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GPIOLIB
+ 	select OF_GPIO
++	select PINCTRL_MTK_V2
  
- # Link rule for the .so file, .lds has to be first
- $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
--	$(call if_changed,vdsold)
-+	$(call if_changed,ld)
+ config PINCTRL_MTK_PARIS
+ 	bool
+@@ -33,6 +41,7 @@ config PINCTRL_MTK_PARIS
+ 	select GPIOLIB
+ 	select EINT_MTK
+ 	select OF_GPIO
++	select PINCTRL_MTK_V2
  
- # Strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
-@@ -52,8 +47,6 @@ $(obj-vdso): %.o: %.S FORCE
- 	$(call if_changed_dep,vdsoas)
- 
- # Actual build commands
--quiet_cmd_vdsold = VDSOL   $@
--      cmd_vdsold = $(CC) $(c_flags) -Wl,-n -Wl,-T $(real-prereqs) -o $@
- quiet_cmd_vdsoas = VDSOA   $@
-       cmd_vdsoas = $(CC) $(a_flags) -c -o $@ $<
- 
+ # For ARMv7 SoCs
+ config PINCTRL_MT2701
 -- 
-2.17.1
+1.8.1.1.dirty
 
