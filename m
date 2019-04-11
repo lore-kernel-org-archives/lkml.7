@@ -2,124 +2,261 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D354C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BCAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0532133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C912084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wSXQKdFi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3NtVl0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfDKK0o (ORCPT
+        id S1726742AbfDKK2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:26:44 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40248 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDKK0m (ORCPT
+        Thu, 11 Apr 2019 06:28:01 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46728 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDKK2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:26:42 -0400
-Received: by mail-yw1-f68.google.com with SMTP id p64so1858068ywg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:26:42 -0700 (PDT)
+        Thu, 11 Apr 2019 06:28:00 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s81so3077076qke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:28:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kn1CQ1tYlKG5aPBdLbq4769GlOaJ+hSDTJk4frbl//4=;
-        b=wSXQKdFiLT7eRRV1xpEWlnn6oDoyrVoxEQpm7cWhC24G4u9LO5gywM4Mub9N6WDcar
-         myRjy2THqlrNXGW+mbO4FlbVGHTmlIdEdysola3NWYAhWp6ATRsm+S6W//rxaUXC3bzI
-         I5gFR8F4BSs1FKUYuY4IHHvIGZ8yzYmnRnR10tLXw3vWVfo8++FGgugTe5hM6zqma3Kj
-         Y9VLykXXohkBPWKGPkhmvVwwtgmTAfU2t1CRdfwb7pqML4XdiJxLj9zi0J3cG7qcCZBD
-         Rc1q1BsaNLLnQv89XCSkNSm4AnlfMXoPs4FO6mHzU10QXZ3ml7W4i3ZZS6yDYmD6Rp0A
-         jQeQ==
+         :cc:content-transfer-encoding;
+        bh=grdc76U9tDNbOgB+7NdKk/TMxPFcXxSaUorB6uoVnUA=;
+        b=J3NtVl0WurflsV8IDr2rfNvAox03n3YYyVnLeI8teywRGSYuHnX9CKwMJXkca1T/ga
+         sIbBbPhK9nZfkO5hM2pQWnWV1a3mOPtp5UVJbE+Ey2iPNYFzRs26qbtgxEo8gzn4RKfv
+         aBGRh69m3t2Qv5xDPUYFcoGcY7e6Od4/vxuG6+QjDl1glJZ1w9+KVQluf4H70mxRSbVE
+         i5OFugnjhuEmA9hBMPd1gHaVWO61XtOj2UuKFOopU2JifeEMQeNXQBc+mfFKNsNpfhnH
+         Xu0QzFu8Zw+0ARMuD7ckh/RmPMuHzo3lNOQ7qK74qfK8ALb4Z8MOmLUbFd0iZNL3uFLi
+         1QhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kn1CQ1tYlKG5aPBdLbq4769GlOaJ+hSDTJk4frbl//4=;
-        b=ZepLCQntCt435kK6vZ7+tSMugi927Pf/fe13E0i/2JR6NwfOE+QPq9OxtoZmnJ+VhI
-         6Snufi/2E7tKUFDylG+P2eFTcWpinwDudXRNB7KWnUy7A39v0wwYGa09mlkKTXBuiEdZ
-         ZVPzG2rU1OceYaNfeuhlh9dR1XNGQtXXIjVNEVF1lFYdeXCHHd/GXrZFb1AvD23JZq2C
-         nfnV1KnZE7Ycmu9mTc28+r9v/z5EM1s8VltpSxpcBLhi5hygtghvXsbCdbFpcb2Gll99
-         kuFjyObH4CMnEjrkYNj0b/urPrX2g1oWVAEOzDkCRmnTpLGfwkVuIauCJgWp7IV8EnN1
-         nZ1w==
-X-Gm-Message-State: APjAAAWjDv5sTExDd0EW/GN9ThajEmRO490AY1CgFdPeO94a4aFlcksR
-        l5H5zF6/aZX9ZBqdcvJdnKn8yLxnaXEnp+8EJ7Y8PQ==
-X-Google-Smtp-Source: APXvYqw71x9PVBFYW4WEXSzgn6lidQHTEr8sCuaYmjrzWtuxOZbrjyQ4T70Yg0c8rem4CP+5ly7HmMkawImzeLf7orQ=
-X-Received: by 2002:a0d:d407:: with SMTP id w7mr36829790ywd.50.1554978401447;
- Thu, 11 Apr 2019 03:26:41 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=grdc76U9tDNbOgB+7NdKk/TMxPFcXxSaUorB6uoVnUA=;
+        b=YLUu7ufZeD2sXLQdfUMWpmsQ/rmprsJN82B85MXJTO+NZjaiT6f2QDGURrPbX4aVsT
+         KsDkIKHWO/+ql7mhBSkL34eN8l3PelJtF43D61zh3EA2z7oMf6u0n8CduNvAlHSR23JT
+         xLwGPcgl7pfpT2/JrwLypoCqXMQTVWW468LSmts/H+MD87BHiAoj4FGLg1XNxZ1v5Z8z
+         phjM9wYnIlTlpNpu0WctLxJ0QvtWnh4nbAEDKhJp4MrIPe/O6BQwgCB9Dwrb1VPJ6Ump
+         jb9VZvH6OEf3eJmi2VHpxqcwCvecqcj+BuHavqzJLdOcNP4kwN20WxUpPKX8SRgk8yXM
+         8Jpg==
+X-Gm-Message-State: APjAAAXGTaiCL2+x6juiphwo9QU0PUqsGPIoeZreyKygM21FdzkrQb64
+        unUPclD80ei56v2KmlXRBq2YwIDpFX1o5rNdKzc=
+X-Google-Smtp-Source: APXvYqwJyM7+o+Rsfj89I4izFbDmn4xBiJkwh6h+ig1/cg6ofeDEe1mp0AXans0cAvYlyErlXo5nYeeWyHXtkl0xrsA=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr38533211qke.234.1554978479414;
+ Thu, 11 Apr 2019 03:27:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410101947.8603-1-juha-matti.tilli@foreca.com>
- <CANn89iK9DcDi68WQn0z2R65L1fQpa88nUnpe_di1OWGhhoqAQw@mail.gmail.com>
- <CAA1_w3_4ZeOA-viD4W0QH1rUYPczcwS2KpnsvRhCX2hQniV-kQ@mail.gmail.com>
- <CANn89iLmzADQF5=htGsjNwXrUZxMUYaYZB+6WOM_vo6zG+JB9A@mail.gmail.com> <CAA1_w39v3sjg9qOoX68bSNx_WeWVJxEh3MKrx7G-uJTO7UxhiQ@mail.gmail.com>
-In-Reply-To: <CAA1_w39v3sjg9qOoX68bSNx_WeWVJxEh3MKrx7G-uJTO7UxhiQ@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 11 Apr 2019 03:26:30 -0700
-Message-ID: <CANn89iJOAwcAL2Tf=h7R-Sd5BaDyoqDh7KtOgfedSQ6HJYNZRg@mail.gmail.com>
-Subject: Re: [PATCH] net: add big honking pfmemalloc OOM warning
-To:     Juha-Matti Tilli <juha-matti.tilli@foreca.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Murphy Zhou <xzhou@redhat.com>,
-        Yongcheng Yang <yoyang@redhat.com>,
-        Jianhong Yin <jiyin@redhat.com>
+References: <20190327051450.16222-1-pihsun@chromium.org> <20190327051450.16222-7-pihsun@chromium.org>
+ <CAFqH_51BYkGW_jma-WpE5tsJs=daXDZB1dD6RYCErZ64RNuyTQ@mail.gmail.com> <CANdKZ0ec_aux+tWatB563LJEmOt=RVJb5wH5eknQh6u1NraAqg@mail.gmail.com>
+In-Reply-To: <CANdKZ0ec_aux+tWatB563LJEmOt=RVJb5wH5eknQh6u1NraAqg@mail.gmail.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 11 Apr 2019 12:27:47 +0200
+Message-ID: <CAFqH_52DaLP98woJM_Kj9AZkxZZ48MVpck0cXrHLPSxnFUX_2w@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] platform/chrome: cros_ec: add EC host command
+ support using rpmsg.
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:26 PM Juha-Matti Tilli
-<juha-matti.tilli@foreca.com> wrote:
+Hi,
+
+Missatge de Pi-Hsun Shih <pihsun@chromium.org> del dia dc., 10 d=E2=80=99ab=
+r.
+2019 a les 9:13:
 >
-> On Wed, Apr 10, 2019 at 6:36 PM Eric Dumazet <edumazet@google.com> wrote:
-> > Before diving into the details, can we first double check which exact
-> > kernel version you are using ?
+> Hi,
+>
+> On Thu, Mar 28, 2019 at 7:16 PM Enric Balletbo Serra
+> <eballetbo@gmail.com> wrote:
 > >
-> > In the past some pfmemalloc bugs have been solved, I do not want spend
-> > time finding them a second time.
+> > Hi
+> >
+> > Thanks for sending this upstream, Some few comments and questions
+> > below. Apart from these LGTM.
+> >
+> > Missatge de Peter Shih <pihsun@chromium.org> del dia dc., 27 de mar=C3=
+=A7
+> > 2019 a les 6:17:
+> > >
+> > > From: Pi-Hsun Shih <pihsun@chromium.org>
+> > >
+> > > Add EC host command support through rpmsg.
+> > >
+> > > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> > > ---
+> > > ...
+> > > diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platfo=
+rm/chrome/cros_ec_rpmsg.c
+> > > new file mode 100644
+> > > index 000000000000..2ecae806cfc5
+> > > --- /dev/null
+> > > +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+> > > ...
+> > > +static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *=
+data,
+> > > +                                 int len, void *priv, u32 src)
+> > > +{
+> > > +       struct cros_ec_device *ec_dev =3D dev_get_drvdata(&rpdev->dev=
+);
+> > > +       struct cros_ec_rpmsg *ec_rpmsg =3D ec_dev->priv;
+> > > +       struct cros_ec_rpmsg_response *resp;
+> > > +
+> > > +       if (!len) {
+> > > +               dev_warn(ec_dev->dev, "rpmsg received empty response"=
+);
+> >
+> > Is this is unlikely to happen?
 >
-> Of course I can tell the kernel version.
+> Yes this should not happen unless the firmware is broken. Should I
+> change this to `if(unlikely(!len))`, or use dev_err instead ?
 >
-> The NFS server is 3.10.0-862.14.4.el7.foreca.x86_64 where "foreca"
-> means we've applied a custom Samsung SSD TRIM patch, nothing else
-> different from regular CentOS / RHEL kernel.
+> >
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > > +       resp =3D data;
+> > > +       len -=3D offsetof(struct cros_ec_rpmsg_response, data);
+> > > +       if (resp->type =3D=3D HOST_COMMAND_MARK) {
+> > > +               if (len > ec_dev->din_size) {
+> > > +                       dev_warn(
+> > > +                               ec_dev->dev,
+> > > +                               "received length %d > din_size %d, tr=
+uncating",
+> > > +                               len, ec_dev->din_size);
+> >
+> > How often this warning appears? Should be this a dev_dbg?
 >
-> The NFS client is 3.10.0-957.5.1.el7.x86_64.
+> This also should not happen unless the firmware is broken, so I think
+> it's better to have a warning here when there's something wrong.
 >
-> The pfmemalloc problem happens at the server, not at the client.
->
-> The exact patches in this kernel may be a bit complicated to
-> determine, because RHEL apparently likes to maintain their own kernel
-> version. They do not have the SNMP counter even, which is why I opened
-> a bug report to RHEL Bugzilla. I have extracted source code, so if you
-> can tell a list of git commit SHA1 hashes that could fix the issue, I
-> can check manually whether they're there, and open bug reports to RHEL
-> bugzilla to have them backported if not there.
->
-> I at least see this in the exact kernel version I'm using:
 
-Here (netdev/lkml) we deal with current kernels.
+Ok, fine with me.
 
-Chances are very high the bug(s) you are fighting was(were) already fixed.
-
-Please repro the bug using latest David Miller net tree, otherwise we
-will _not_ accept any patch.
-
-Thank you
-
+> >
+> > > +                       len =3D ec_dev->din_size;
+> > > +               }
+> > > +
+> > > +               memcpy(ec_dev->din, resp->data, len);
+> > > +               complete(&ec_rpmsg->xfer_ack);
+> > > +       } else if (resp->type =3D=3D HOST_EVENT_MARK) {
+> > > +               schedule_work(&ec_rpmsg->host_event_work);
+> > > +       } else {
+> > > +               dev_warn(ec_dev->dev, "rpmsg received invalid type =
+=3D %d",
+> > > +                        resp->type);
+> >
+> > Is this is unlikely to happen?
 >
-> static inline bool ixgbe_page_is_reserved(struct page *page)
-> {
->         return (page_to_nid(page) != numa_mem_id()) || page_is_pfmemalloc(page);
-> }
+> Same as above, this should not happen unless the firmware is broken.
 >
-> ...so ixgbe shouldn't be reusing pfmemalloc pages.
+> >
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
+> > > +{
+> > > +       struct device *dev =3D &rpdev->dev;
+> > > +       struct cros_ec_device *ec_dev;
+> > > +       struct cros_ec_rpmsg *ec_rpmsg;
+> > > +       int ret;
+> > > +
+> > > +       ec_dev =3D devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
+> > > +       if (!ec_dev)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       ec_rpmsg =3D devm_kzalloc(dev, sizeof(*ec_rpmsg), GFP_KERNEL)=
+;
+> > > +       if (!ec_rpmsg)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       ec_dev->dev =3D dev;
+> > > +       ec_dev->priv =3D ec_rpmsg;
+> > > +       ec_dev->cmd_xfer =3D cros_ec_cmd_xfer_rpmsg;
+> > > +       ec_dev->pkt_xfer =3D cros_ec_pkt_xfer_rpmsg;
+> > > +       ec_dev->phys_name =3D dev_name(&rpdev->dev);
+> > > +       ec_dev->din_size =3D sizeof(struct ec_host_response) +
+> > > +                          sizeof(struct ec_response_get_protocol_inf=
+o);
+> > > +       ec_dev->dout_size =3D sizeof(struct ec_host_request);
+> > > +       dev_set_drvdata(dev, ec_dev);
+> > > +
+> > > +       ec_rpmsg->rpdev =3D rpdev;
+> > > +       init_completion(&ec_rpmsg->xfer_ack);
+> > > +       INIT_WORK(&ec_rpmsg->host_event_work,
+> > > +                 cros_ec_rpmsg_host_event_function);
+> > > +
+> > > +       ret =3D cros_ec_register(ec_dev);
+> > > +       if (ret) {
+> > > +               dev_err(dev, "cannot register EC\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       return 0;
+> >
+> > cros_ec_register returns 0 on success and prints an error message if
+> > something went wrong. Remove the above and just do:
+> >
+> > return cros_ec_register(ec_dev);
+> >
 >
-> BR, Juha-Matti
+> Ack, would change this in v7.
+>
+
+Will wait for v7.
+
+Thanks,
+ Enric
+
+> >
+> > > +}
+> > > +
+> > > +static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
+> > > +{
+> > > +       struct cros_ec_device *ec_dev =3D dev_get_drvdata(&rpdev->dev=
+);
+> > > +       struct cros_ec_rpmsg *ec_rpmsg =3D ec_dev->priv;
+> > > +
+> > > +       cancel_work_sync(&ec_rpmsg->host_event_work);
+> > > +}
+> > > +
+> > > +static const struct of_device_id cros_ec_rpmsg_of_match[] =3D {
+> > > +       { .compatible =3D "google,cros-ec-rpmsg", },
+> > > +       { }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, cros_ec_rpmsg_of_match);
+> > > +
+> > > +static struct rpmsg_driver cros_ec_driver_rpmsg =3D {
+> > > +       .drv =3D {
+> > > +               .name   =3D KBUILD_MODNAME,
+> > > +               .of_match_table =3D cros_ec_rpmsg_of_match,
+> > > +       },
+> > > +       .probe          =3D cros_ec_rpmsg_probe,
+> > > +       .remove         =3D cros_ec_rpmsg_remove,
+> > > +       .callback       =3D cros_ec_rpmsg_callback,
+> > > +};
+> > > +
+> > > +module_rpmsg_driver(cros_ec_driver_rpmsg);
+> > > +
+> > > +MODULE_LICENSE("GPL v2");
+> > > +MODULE_DESCRIPTION("ChromeOS EC multi function device (rpmsg)");
+> > > --
+> > > 2.21.0.392.gf8f6787159e-goog
+> > >
