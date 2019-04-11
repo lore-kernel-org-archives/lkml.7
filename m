@@ -2,345 +2,104 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4887BC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABA8C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008E82084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:09:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FeYTKpFs"
+	by mail.kernel.org (Postfix) with ESMTP id 7D1332084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfDKWJV (ORCPT
+        id S1726872AbfDKWKR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:09:21 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38536 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfDKWJS (ORCPT
+        Thu, 11 Apr 2019 18:10:17 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:52985 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfDKWKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:09:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id v4so6782183ioj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N+KHzpPEzxiX0Ro0ISDWs6yLhJrXHxEIc70pati1wqs=;
-        b=FeYTKpFszOooF+/VXmGwfotFmY6sJjBJgnEw8svTmrSBBHwzbiFTO6v/mrOiGed1Cw
-         /G6E25Z2LmpBH4gNc2CNAEa/9GYdk1IDDxciHbuLdKx70RtfF/+ro028wJ9eMlP/mCyC
-         jGD2RhdiRsP51Y6TJ/JtvHNwAZ46PLUDQ9CYg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N+KHzpPEzxiX0Ro0ISDWs6yLhJrXHxEIc70pati1wqs=;
-        b=lPekl9aCsj6HHaifkBnzPKQxMa7w1FbHXgmiPrsT+ZW+Y6y9JlGmCcoB4j8EosyhiD
-         cgvTj9pwFGDB4YXXpMQY97GKLjyWqdbBtK/jTB0fCtLOpgSAJ3MEhUoA8lXa3sh7dRG0
-         K/tzOs/Rvv8LC2asMYJNY8bN8r4iJJZjdONvZRmCeXKk0KdVKeuPI+IxLejpxbT0SvRO
-         4XwuwZKddNjnvdohUbevIY1vzj7LnPwgPG3Bf1kNoObYwal21QeFczQgZm3FuXMKzjWV
-         5SgpN4wXb4vE9U/lg30lh7xjeoh7iIoniOm9s/baGHoIxoqOSzm2dmIiD1n652DjIU7E
-         PRpg==
-X-Gm-Message-State: APjAAAV7nTGvILwkmPSCzl8cnIIrhBWsbEkcHFj1zmnDKRIFwY7XBsKx
-        lG5UFngjj8LtqNcV1QZILtVe0g==
-X-Google-Smtp-Source: APXvYqzZvqo2Fa50VZvneu8l4Ia4IBaVyJuX+A7oLhdoPC0oid4xoRz96FTFJ4LlnFDP6yZL7pr/7A==
-X-Received: by 2002:a5e:c019:: with SMTP id u25mr34184557iol.104.1555020556664;
-        Thu, 11 Apr 2019 15:09:16 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id m81sm3327620itm.33.2019.04.11.15.09.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 15:09:16 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-trace-devel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc:     djkurtz@chromium.org, zwisler@chromium.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v1 4/4] mmc/host/sdhci: Make sdhci_read/sdhci_write call trace functions
-Date:   Thu, 11 Apr 2019 16:08:22 -0600
-Message-Id: <20190411220822.81845-5-rrangel@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190411220822.81845-1-rrangel@chromium.org>
-References: <20190411220822.81845-1-rrangel@chromium.org>
+        Thu, 11 Apr 2019 18:10:16 -0400
+X-Originating-IP: 81.185.166.150
+Received: from xps13 (150.166.185.81.rev.sfr.net [81.185.166.150])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 5F6C924000B;
+        Thu, 11 Apr 2019 22:10:11 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 00:10:09 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] mtd: rawnand: mark expected switch fall-throughs
+Message-ID: <20190412001009.2db358b7@xps13>
+In-Reply-To: <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
+References: <20190128181520.GA25887@embeddedor>
+        <20190205135521.622f82c2@xps13>
+        <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An example trace can be seen here: https://pastebin.com/x73d5cvL
+Hi Gustavo,
 
-I was unable to leave sdhci_readX and sdhci_writeX as macros because
-they are used in other modules (i.e., sdhci-pci). This means they can't
-call the trace_sdhci_XXX functions without explicitly exporting the
-private trace function name.
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Thu, 11 Apr
+2019 13:30:31 -0500:
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+> Hi Miquel,
+> 
+> On 2/5/19 6:55 AM, Miquel Raynal wrote:
+> [..]
+> >> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
+> >>  			if ((this->version_id & 0xf) == 0xe)
+> >>  				this->options |= ONENAND_HAS_NOP_1;
+> >>  		}
+> >> +		/* fall through */
+> >>  
+> >>  	case ONENAND_DEVICE_DENSITY_2Gb:
+> >>  		/* 2Gb DDP does not have 2 plane */
+> >>  		if (!ONENAND_IS_DDP(this))
+> >>  			this->options |= ONENAND_HAS_2PLANE;
+> >>  		this->options |= ONENAND_HAS_UNLOCK_ALL;
+> >> +		/* fall through */  
+> > 
+> > This looks strange.
+> > 
+> > In ONENAND_DEVICE_DENSITY_2Gb:
+> > ONENAND_HAS_UNLOCK_ALL is set unconditionally.
+> > 
+> > But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
+> > if process is evaluated to true.
+> > 
+> > Same problem with ONENAND_HAS_2PLANE:
+> > - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
+> > - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
+> > 
+> > Maybe this portion should be reworked because I am unsure if this is a
+> > missing fall through or a bug.
+> >   
+> 
+> I wonder if you had the chance to take a look into this piece of code.
+> 
+> Thanks
+> --
+> Gustavo
 
- drivers/mmc/host/sdhci-core.c | 136 ++++++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci.h      |  89 ++--------------------
- 2 files changed, 142 insertions(+), 83 deletions(-)
+What do you mean?
 
-diff --git a/drivers/mmc/host/sdhci-core.c b/drivers/mmc/host/sdhci-core.c
-index a8141ff9be03..9e3f114629d9 100644
---- a/drivers/mmc/host/sdhci-core.c
-+++ b/drivers/mmc/host/sdhci-core.c
-@@ -36,6 +36,7 @@
- #include <linux/mmc/slot-gpio.h>
- 
- #include "sdhci.h"
-+#include "sdhci-trace.h"
- 
- #define DRIVER_NAME "sdhci"
- 
-@@ -54,6 +55,141 @@ static void sdhci_finish_data(struct sdhci_host *);
- 
- static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
- 
-+#ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
-+
-+void sdhci_writel(struct sdhci_host *host, u32 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U32_MAX);
-+
-+	if (unlikely(host->ops->write_l))
-+		host->ops->write_l(host, val, reg);
-+	else
-+		writel(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writel);
-+
-+void sdhci_writew(struct sdhci_host *host, u16 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U16_MAX);
-+
-+	if (unlikely(host->ops->write_w))
-+		host->ops->write_w(host, val, reg);
-+	else
-+		writew(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writew);
-+
-+void sdhci_writeb(struct sdhci_host *host, u8 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U8_MAX);
-+
-+	if (unlikely(host->ops->write_b))
-+		host->ops->write_b(host, val, reg);
-+	else
-+		writeb(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writeb);
-+
-+u32 sdhci_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 val;
-+
-+	if (unlikely(host->ops->read_l))
-+		val = host->ops->read_l(host, reg);
-+	else
-+		val = readl(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U32_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readl);
-+
-+u16 sdhci_readw(struct sdhci_host *host, int reg)
-+{
-+	u16 val;
-+
-+	if (unlikely(host->ops->read_w))
-+		val = host->ops->read_w(host, reg);
-+	else
-+		val = readw(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U16_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readw);
-+
-+u8 sdhci_readb(struct sdhci_host *host, int reg)
-+{
-+	u8 val;
-+
-+	if (unlikely(host->ops->read_b))
-+		val = host->ops->read_b(host, reg);
-+	else
-+		val = readb(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U8_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readb);
-+
-+#else
-+
-+void sdhci_writel(struct sdhci_host *host, u32 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U32_MAX);
-+	writel(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writel);
-+
-+void sdhci_writew(struct sdhci_host *host, u16 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U16_MAX);
-+	writew(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writew);
-+
-+void sdhci_writeb(struct sdhci_host *host, u8 val, int reg)
-+{
-+	trace_sdhci_write(host, reg, val, U8_MAX);
-+	writeb(val, host->ioaddr + reg);
-+}
-+EXPORT_SYMBOL(sdhci_writeb);
-+
-+u32 sdhci_readl(struct sdhci_host *host, int reg)
-+{
-+	u32 val = readl(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U32_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readl);
-+
-+u16 sdhci_readw(struct sdhci_host *host, int reg)
-+{
-+	u16 val = readw(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U16_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readw);
-+
-+u8 sdhci_readb(struct sdhci_host *host, int reg)
-+{
-+	u8 val = readb(host->ioaddr + reg);
-+
-+	trace_sdhci_read(host, reg, val, U8_MAX);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(sdhci_readb);
-+
-+#endif /* CONFIG_MMC_SDHCI_IO_ACCESSORS */
-+
- void sdhci_dumpregs(struct sdhci_host *host)
- {
- 	SDHCI_DUMP("============ SDHCI REGISTER DUMP ===========\n");
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 01002cba1359..052361f27ec0 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -647,89 +647,12 @@ struct sdhci_ops {
- 				   dma_addr_t addr, int len, unsigned int cmd);
- };
- 
--#ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
--
--static inline void sdhci_writel(struct sdhci_host *host, u32 val, int reg)
--{
--	if (unlikely(host->ops->write_l))
--		host->ops->write_l(host, val, reg);
--	else
--		writel(val, host->ioaddr + reg);
--}
--
--static inline void sdhci_writew(struct sdhci_host *host, u16 val, int reg)
--{
--	if (unlikely(host->ops->write_w))
--		host->ops->write_w(host, val, reg);
--	else
--		writew(val, host->ioaddr + reg);
--}
--
--static inline void sdhci_writeb(struct sdhci_host *host, u8 val, int reg)
--{
--	if (unlikely(host->ops->write_b))
--		host->ops->write_b(host, val, reg);
--	else
--		writeb(val, host->ioaddr + reg);
--}
--
--static inline u32 sdhci_readl(struct sdhci_host *host, int reg)
--{
--	if (unlikely(host->ops->read_l))
--		return host->ops->read_l(host, reg);
--	else
--		return readl(host->ioaddr + reg);
--}
--
--static inline u16 sdhci_readw(struct sdhci_host *host, int reg)
--{
--	if (unlikely(host->ops->read_w))
--		return host->ops->read_w(host, reg);
--	else
--		return readw(host->ioaddr + reg);
--}
--
--static inline u8 sdhci_readb(struct sdhci_host *host, int reg)
--{
--	if (unlikely(host->ops->read_b))
--		return host->ops->read_b(host, reg);
--	else
--		return readb(host->ioaddr + reg);
--}
--
--#else
--
--static inline void sdhci_writel(struct sdhci_host *host, u32 val, int reg)
--{
--	writel(val, host->ioaddr + reg);
--}
--
--static inline void sdhci_writew(struct sdhci_host *host, u16 val, int reg)
--{
--	writew(val, host->ioaddr + reg);
--}
--
--static inline void sdhci_writeb(struct sdhci_host *host, u8 val, int reg)
--{
--	writeb(val, host->ioaddr + reg);
--}
--
--static inline u32 sdhci_readl(struct sdhci_host *host, int reg)
--{
--	return readl(host->ioaddr + reg);
--}
--
--static inline u16 sdhci_readw(struct sdhci_host *host, int reg)
--{
--	return readw(host->ioaddr + reg);
--}
--
--static inline u8 sdhci_readb(struct sdhci_host *host, int reg)
--{
--	return readb(host->ioaddr + reg);
--}
--
--#endif /* CONFIG_MMC_SDHCI_IO_ACCESSORS */
-+void sdhci_writel(struct sdhci_host *host, u32 val, int reg);
-+void sdhci_writew(struct sdhci_host *host, u16 val, int reg);
-+void sdhci_writeb(struct sdhci_host *host, u8 val, int reg);
-+u32 sdhci_readl(struct sdhci_host *host, int reg);
-+u16 sdhci_readw(struct sdhci_host *host, int reg);
-+u8 sdhci_readb(struct sdhci_host *host, int reg);
- 
- struct sdhci_host *sdhci_alloc_host(struct device *dev, size_t priv_size);
- void sdhci_free_host(struct sdhci_host *host);
--- 
-2.21.0.392.gf8f6787159e-goog
 
+Thanks,
+Miquèl
