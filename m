@@ -2,149 +2,204 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D224BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04D7C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AF3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC5B2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WmwA2o/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDKP6p (ORCPT
+        id S1726750AbfDKQB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:58:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:45446 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfDKP6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:58:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6843D80D;
-        Thu, 11 Apr 2019 08:58:44 -0700 (PDT)
-Received: from [10.37.12.69] (unknown [10.37.12.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A94DE3F68F;
-        Thu, 11 Apr 2019 08:58:42 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
- FPSIMD/SVE state
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20190208165513.8435-1-julien.grall@arm.com>
- <20190404105233.GD3567@e103592.cambridge.arm.com>
- <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
- <20190405150722.GE3567@e103592.cambridge.arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <899713e0-2d32-04a0-b2f2-3493f7299033@arm.com>
-Date:   Thu, 11 Apr 2019 16:58:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 12:01:27 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3098 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfDKQB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:01:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5caf64d30000>; Thu, 11 Apr 2019 09:01:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 11 Apr 2019 09:01:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 11 Apr 2019 09:01:25 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Apr
+ 2019 16:01:25 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Apr
+ 2019 16:01:24 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 11 Apr 2019 16:01:24 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.42.162]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5caf64d10007>; Thu, 11 Apr 2019 09:01:24 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <sakari.ailus@linux.intel.com>, <paul.kocialkowski@bootlin.com>,
+        <tfiga@chromium.org>, <keiichiw@chromium.org>, <sumitg@nvidia.com>,
+        <bbasu@nvidia.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [Patch V2] v4l2-core: fix use-after-free error
+Date:   Thu, 11 Apr 2019 21:31:18 +0530
+Message-ID: <1554998478-30349-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20190405150722.GE3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554998483; bh=sEufludimsSbbAIyEALaQypOEDwA1U3AV6D8y6MVhVY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=WmwA2o/AN6c9kcgQungtMS4ra+riwT8ikqlOJuL89+teccY92E/O23hXB2v6Ym9UN
+         dSIxZt/hA9LIQCPMM2MPqvl/ffsO2k7qpdYou4V2VrfHZb5pVdJkOfFvSOqWmTnwoY
+         AUftPzaQgC+okfWrmTUN3FVbv57+FnVug8V4ubwU9nOBatH2cKd66gLSKxlUQHGAis
+         LRFu65ShRthvGK3Dqd1Vm7hYyKjH9LHdX8dCvDkGRUa/LKTGqs0/6V1CI48AfHP62u
+         ueOpMan9UbVJOm5qU026trP2ky1TsQcjsN5LyV5c/Q2Cx5WJ7Lpjwi8d9dG4oVORSV
+         dqXNq+88XlAKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+From: sumitg <sumitg@nvidia.com>
 
-On 4/5/19 4:07 PM, Dave Martin wrote:
-> On Fri, Apr 05, 2019 at 10:02:45AM +0100, Julien Grall wrote:
->>>> +#ifdef CONFIG_KERNEL_MODE_NEON
->>>> +
->>>>   /*
->>>>    * may_use_simd - whether it is allowable at this time to issue SIMD
->>>>    *                instructions or access the SIMD register file
->>>> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
->>>> index 5ebe73b69961..b7e5dac26190 100644
->>>> --- a/arch/arm64/kernel/fpsimd.c
->>>> +++ b/arch/arm64/kernel/fpsimd.c
->>>> @@ -90,7 +90,8 @@
->>>>    * To prevent this from racing with the manipulation of the task's FPSIMD state
->>>>    * from task context and thereby corrupting the state, it is necessary to
->>>>    * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
->>>> - * flag with local_bh_disable() unless softirqs are already masked.
->>>> + * flag with kernel_neon_{disable, enable}. This will still allow softirqs to
->>>> + * run but prevent them to use FPSIMD.
->>>>    *
->>>>    * For a certain task, the sequence may look something like this:
->>>>    * - the task gets scheduled in; if both the task's fpsimd_cpu field
->>>> @@ -142,6 +143,9 @@ extern void __percpu *efi_sve_state;
->>>>   #endif /* ! CONFIG_ARM64_SVE */
->>>> +static void kernel_neon_disable(void);
->>>> +static void kernel_neon_enable(void);
->>>
->>> I find these names a bit confusing: _disable() actualy enables FPSIMD/SVE
->>> context access for the current context (i.e., makes it safe).
->>>
->>> Since these also disable/enable preemption, perhaps we can align them
->>> with the existing get_cpu()/put_cpu(), something like:
->>>
->>> void get_cpu_fpsimd_context();
->>> vold put_cpu_fpsimd_context();
->>>
->>> If you consider it's worth adding the checking helper I alluded to
->>> above, it could then be called something like:
->>>
->>> bool have_cpu_fpsimd_context();
->>
->> I am not sure where you suggested a checking helper above. Do you refer to
->> exposing kernel_neon_busy even for !CONFIG_KERNEL_MODE_NEON?
-> 
-> Hmmm, looks like I got my reply out of order here.
-> 
-> I meant the helper (if any) to check
-> !preemptible() && !__this_cpu_read(kernel_neon_busy).
+Fixing use-after-free within __v4l2_ctrl_handler_setup().
+Memory is being freed with kfree(new_ref) for duplicate
+control reference entry but cluster is still referring
+to the duplicate entry. Change done to update ctrl->cluster
+only when new control reference is added. Also, checking if
+ctrl->ncontrols is non-zero before accessing controls from
+cluster pointer to avoid illegal access when cluster has
+zero controls.
 
-I guess you are using && instead of || because some of the caller may 
-not call get_cpu_fpsimd_context() before but still disable preemption, 
-right?
+ ==================================================================
+ BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+ Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
 
-Wouldn't it be better to have all the user calling 
-get_cpu_fpsimd_context() and put_cpu_fpsimd_context()?
+ Allocated by task 312:
 
-This has the advantage to uniformize how the way FPSIMD is protected and 
-also...
+ Freed by task 312:
 
-> 
-> Looks like you inferred what I meant later on anyway.
-> 
->>
->>>
->>>> +
->>>>   /*
->>>>    * Call __sve_free() directly only if you know task can't be scheduled
->>>>    * or preempted.
->>>> @@ -213,11 +217,11 @@ static void sve_free(struct task_struct *task)
->>>>    * thread_struct is known to be up to date, when preparing to enter
->>>>    * userspace.
->>>>    *
->>>> - * Softirqs (and preemption) must be disabled.
->>>> + * Preemption must be disabled.
->>>
->>> [*] That's not enough: we need to be in kernel_neon_disable()...
->>> _enable() (i.e., kernel_neon_busy needs to be true to prevent softirqs
->>> messing with the FPSIMD state).
->>
->> How about not mentioning preemption at all and just say:
->>
->> "The fpsimd context should be acquired before hand".
->>
->> This would help if we ever decide to protect critical section differently.
-> 
-> Yes, or even better, name the function used to do this (i.e.,
-> kernel_neon_disable() or get_cpu_fpsimd_context() or whatever it's
-> called).
+ The buggy address belongs to the object at ffffffc324e78600
+  which belongs to the cache kmalloc-64 of size 64
+ The buggy address is located 24 bytes inside of
+  64-byte region [ffffffc324e78600, ffffffc324e78640)
+ The buggy address belongs to the page:
+ page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+					(null) index:0xffffffc324e78f80
+ flags: 0x4000000000000100(slab)
+ raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+ raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+ page dumped because: kasan: bad access detected
 
-... would make the comments simpler because we would have only one 
-possible case to care.
+ Memory state around the buggy address:
+  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                             ^
+  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ==================================================================
 
-Cheers,
+Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+---
+v2:
+* update ctrl->cluster only when new control reference is added.
+* check ctrl->ncontrols to avoid illegal access when cluster has zero controls.
 
+ drivers/media/v4l2-core/v4l2-ctrls.c | 53 +++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 5e3806f..3d0a952 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2154,15 +2154,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	if (size_extra_req)
+ 		new_ref->p_req.p = &new_ref[1];
+ 
+-	if (ctrl->handler == hdl) {
+-		/* By default each control starts in a cluster of its own.
+-		   new_ref->ctrl is basically a cluster array with one
+-		   element, so that's perfect to use as the cluster pointer.
+-		   But only do this for the handler that owns the control. */
+-		ctrl->cluster = &new_ref->ctrl;
+-		ctrl->ncontrols = 1;
+-	}
+-
+ 	INIT_LIST_HEAD(&new_ref->node);
+ 
+ 	mutex_lock(hdl->lock);
+@@ -2195,6 +2186,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	hdl->buckets[bucket] = new_ref;
+ 	if (ctrl_ref)
+ 		*ctrl_ref = new_ref;
++	if (ctrl->handler == hdl) {
++		/* By default each control starts in a cluster of its own.
++		 * new_ref->ctrl is basically a cluster array with one
++		 * element, so that's perfect to use as the cluster pointer.
++		 * But only do this for the handler that owns the control.
++		 */
++		ctrl->cluster = &new_ref->ctrl;
++		ctrl->ncontrols = 1;
++	}
+ 
+ unlock:
+ 	mutex_unlock(hdl->lock);
+@@ -2725,25 +2725,28 @@ int __v4l2_ctrl_handler_setup(struct v4l2_ctrl_handler *hdl)
+ 		ctrl->done = false;
+ 
+ 	list_for_each_entry(ctrl, &hdl->ctrls, node) {
+-		struct v4l2_ctrl *master = ctrl->cluster[0];
+-		int i;
+-
+-		/* Skip if this control was already handled by a cluster. */
+-		/* Skip button controls and read-only controls. */
+-		if (ctrl->done || ctrl->type == V4L2_CTRL_TYPE_BUTTON ||
+-		    (ctrl->flags & V4L2_CTRL_FLAG_READ_ONLY))
+-			continue;
++		if (ctrl->ncontrols) {
++			struct v4l2_ctrl *master = ctrl->cluster[0];
++			int i;
++
++			/* Skip if this control was already handled by a */
++			/* cluster. Skip button controls and read-only */
++			/* controls. */
++			if (ctrl->done || ctrl->type == V4L2_CTRL_TYPE_BUTTON ||
++				(ctrl->flags & V4L2_CTRL_FLAG_READ_ONLY))
++				continue;
+ 
+-		for (i = 0; i < master->ncontrols; i++) {
+-			if (master->cluster[i]) {
+-				cur_to_new(master->cluster[i]);
+-				master->cluster[i]->is_new = 1;
+-				master->cluster[i]->done = true;
++			for (i = 0; i < master->ncontrols; i++) {
++				if (master->cluster[i]) {
++					cur_to_new(master->cluster[i]);
++					master->cluster[i]->is_new = 1;
++					master->cluster[i]->done = true;
++				}
+ 			}
++			ret = call_op(master, s_ctrl);
++			if (ret)
++				break;
+ 		}
+-		ret = call_op(master, s_ctrl);
+-		if (ret)
+-			break;
+ 	}
+ 
+ 	return ret;
 -- 
-Julien Grall
+2.7.4
+
