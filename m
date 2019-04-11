@@ -2,120 +2,127 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF2AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C25C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B08217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09CE217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfDKKCo (ORCPT
+        id S1726930AbfDKKDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:02:44 -0400
-Received: from mga17.intel.com ([192.55.52.151]:18234 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfDKKCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:02:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 03:02:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
-   d="scan'208";a="133343941"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga008.jf.intel.com with ESMTP; 11 Apr 2019 03:02:36 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hEWXT-0000iE-67; Thu, 11 Apr 2019 13:02:35 +0300
-Date:   Thu, 11 Apr 2019 13:02:35 +0300
-From:   Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@linux.intel.com>, Liu@smile.fi.intel.com,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 08/18] iommu: Introduce cache_invalidate API
-Message-ID: <20190411100235.GQ9224@smile.fi.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1554767973-30125-9-git-send-email-jacob.jun.pan@linux.intel.com>
- <20190409100718.GE9224@smile.fi.intel.com>
- <20190409094328.03731c3c@jacob-builder>
- <20190409173755.GX9224@smile.fi.intel.com>
- <20190410142131.50ee2e44@jacob-builder>
+        Thu, 11 Apr 2019 06:03:53 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:58594 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfDKKDx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:03:53 -0400
+Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hEWYf-000336-PW from Jiada_Wang@mentor.com ; Thu, 11 Apr 2019 03:03:49 -0700
+Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Thu, 11 Apr 2019 03:03:46 -0700
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after device initialization
+Date:   Thu, 11 Apr 2019 19:03:52 +0900
+Message-ID: <20190411100352.15977-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410142131.50ee2e44@jacob-builder>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 02:21:31PM -0700, Jacob Pan wrote:
-> On Tue, 9 Apr 2019 20:37:55 +0300
-> Andriy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Apr 09, 2019 at 09:43:28AM -0700, Jacob Pan wrote:
-> > > On Tue, 9 Apr 2019 13:07:18 +0300
-> > > Andriy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > > On Mon, Apr 08, 2019 at 04:59:23PM -0700, Jacob Pan wrote:  
-> > 
-> > > > > +int iommu_cache_invalidate(struct iommu_domain *domain, struct
-> > > > > device *dev,
-> > > > > +			   struct iommu_cache_invalidate_info
-> > > > > *inv_info) +{
-> > > > > +	int ret = 0;    
-> > > > 
-> > > > Redundant assignment.
-> > > >   
-> > > I am not a security expert but initialization of local variable can
-> > > be more secure.
-> > > I was looking at this talk.
-> > > https://outflux.net/slides/2018/lss/danger.pdf
-> > > https://cwe.mitre.org/data/definitions/457.html  
-> > 
-> > I hardly see any of these applied to your case here.
-> > Care to show what I'm missing?
-> > 
-> I thought your comments was that I should not need to initialize local
-> variable ret = 0. 
+Currently IRQ is remain enabled after .remove, later if device is probed,
+IRQ is requested before .thermal_init, this may cause IRQ function be
+triggered but not able to clear IRQ status, thus cause system to hang.
 
-Correct.
+this patch by moving request of IRQ after device initialization to
+avoid this issue.
 
-> Always initialize local variable can be a good
-> security practice as suggested in the paper. Perhaps I missed
-> something :)
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
-Paper suggested to do that in a sense to avoid use of uninitialized variable.
-This is not your case (usually it's not the case for variable which contains
-return code), so, assignment is redundant. Moreover, default assignment can
-hide an actual warning and an issue. Security people are not always correct.
-
-> > > > > +	if (unlikely(!domain->ops->cache_invalidate))
-> > > > > +		return -ENODEV;
-> > > > > +
-> > > > > +	ret = domain->ops->cache_invalidate(domain, dev,
-> > > > > inv_info); +
-> > > > > +	return ret;
-> > > > > +}    
-
+diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+index 88fa41cf16e8..4d095d7f9763 100644
+--- a/drivers/thermal/rcar_gen3_thermal.c
++++ b/drivers/thermal/rcar_gen3_thermal.c
+@@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	/*
+-	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
+-	 * to trigger on the low and high trip points of the current
+-	 * temp window at this point.
+-	 */
+-	for (i = 0; i < 2; i++) {
+-		irq = platform_get_irq(pdev, i);
+-		if (irq < 0)
+-			return irq;
+-
+-		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
+-					 dev_name(dev), i);
+-		if (!irqname)
+-			return -ENOMEM;
+-
+-		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
+-						rcar_gen3_thermal_irq_thread,
+-						IRQF_SHARED, irqname, priv);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_get_sync(dev);
+ 
+@@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 		goto error_unregister;
+ 	}
+ 
++	/*
++	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
++	 * to trigger on the low and high trip points of the current
++	 * temp window at this point.
++	 */
++	for (i = 0; i < 2; i++) {
++		irq = platform_get_irq(pdev, i);
++		if (irq < 0) {
++			ret = irq;
++			goto error_unregister;
++		}
++
++		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
++					 dev_name(dev), i);
++		if (!irqname) {
++			ret = -ENOMEM;
++			goto error_unregister;
++		}
++
++		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
++						rcar_gen3_thermal_irq_thread,
++						IRQF_SHARED, irqname, priv);
++		if (ret)
++			goto error_unregister;
++	}
++
+ 	rcar_thermal_irq_set(priv, true);
+ 
+ 	return 0;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.19.2
 
