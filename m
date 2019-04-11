@@ -2,111 +2,104 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A2C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE66C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAC22146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF3D2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZNzrxnG/"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="TvaDwhxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfDKViF (ORCPT
+        id S1727032AbfDKViz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:38:05 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:42154 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDKViF (ORCPT
+        Thu, 11 Apr 2019 17:38:55 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36821 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDKViz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:38:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555018684; x=1586554684;
-  h=from:subject:to:cc:references:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=NtI2VCs09OfggKYynEKfYppzyRx311u5nZ4KBIOzIW8=;
-  b=ZNzrxnG/Z7DQPP6sjeHKN1FNIn4YNVDqeqPHLdq0gmYQC3IkQsNPxYAA
-   RORJDDCrTU2TztyVtp/AxqahRAfLd6MVdl5MCYlkWJLVncMB4O3GL4gAA
-   AP1qqy9F0ThrRbDDcXf1M4rJ/gyGqrDSeN10wkkVzN5WPLS3s1b43mDDT
-   t+GJqDVK8F5PpTMj9O2MfrgMg/6tOa0eXeZ9xD6PXii2+Uh4hQ6pWSKrn
-   QrCy2LB3vkf/TKSGtB4ghXf9VCRvI0f4OBZPSjlq5A5ldEoLVwBLuNa1O
-   FNpY0MaE6gBOgrkTXawAVii7WKlN9qSl3kASwmEksNurtz13hY6IUCWDJ
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,338,1549900800"; 
-   d="scan'208";a="211425449"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Apr 2019 05:38:04 +0800
-IronPort-SDR: pximnqMPvSY/SL6Qyo7DpTMrPPmX822ly+IHjGQ+bsm/8EgY3bdgnS0cegVuN0bwZyzTDR8M+x
- x4bZgbDD3um6TQzOpRpv0VF8iBUuOzEttbDsod0IVLHcxF6mKJD0Tgtx3rSwMmwhim+zRbg0Cv
- x27qmTepIf5ce+Qf+8IORB5MMqaMlaQSnsnGdEyneSiL/6vmKNzZYcYX40EA/FON7b0Oalb1Ll
- MiCa1lXuvnOT3gV9y/NDFzHywuoOAXScKJO1pM19WsLKxB4SPYQStwiyV+74w9F6FDiy/M5Gay
- SNAhN+Fbr4mtvxjremkQdGJ5
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 11 Apr 2019 14:14:57 -0700
-IronPort-SDR: oFMBs+ixy3Mxisl+X4Lv2ip0TCwJpkuq8TKEsIcw9gml3/WDhk/75Kf3oMq4vG8YFukkBtsmwj
- sye+UQCyG6Xjv62LzqAplZnWWkmD7zI0+EUhgDyJalpQyyBShs/foVV6S2zFWDLawDJkFWj1jR
- 0Ylz2OBO4eu2va+BT8lnAbglWAwqpL7KxGgWJqXlnZWVY7phcyMLL8lhO2x1VtXVwn13FiZdOl
- Xl5rXsw4VE1uk4zoe0oPkb8zh2Bb/5BLhAOusJpFKuf9COGOlQA+iFvKbpiv2DkgrCAm6SxFxS
- egg=
-Received: from usa001883.ad.shared (HELO [10.86.51.17]) ([10.86.51.17])
-  by uls-op-cesaip01.wdc.com with ESMTP; 11 Apr 2019 14:38:03 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
- DT source data
-To:     Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
- <20190411114616.GA10032@infradead.org>
-Message-ID: <b1f10ff7-6c45-1468-c97c-ff301bb66966@wdc.com>
-Date:   Thu, 11 Apr 2019 14:38:02 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 11 Apr 2019 17:38:55 -0400
+Received: by mail-oi1-f196.google.com with SMTP id l203so6261946oia.3;
+        Thu, 11 Apr 2019 14:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c/Eaat6mJaApPXTKW9fxNSQtMRxRCGIGBY0z0WTwZsY=;
+        b=TvaDwhxfg26dt8H/AyPFMVm1oubn9ub7EVmMtB+QXJr+GfKype/hsuV1znFc5ueAUg
+         XNSe5y9xoMLQ21nUKsuVikIHiMtsr+ZA1aoNrhWiAILFzu0LT6UGrb/jIVQfFa65SpYU
+         R1OI79488ZvcxCSU0wYM4tA8tLETlnz6zhLMWghea0PWRlBx/SzlO/8TjNFXqKAaMhDK
+         by7GY5b9rNGKSqal9xQk98TnVcSMUWdCTyQ2nMSOw+Y6szke6WlY/ZWWD3TFDvgg+TEf
+         zA1aXbnfvOBaMHltAHsjvzs68MNyQLyYTztaRv4G7gesBJ71JXtet+ex5ahay4550GQ4
+         2UTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c/Eaat6mJaApPXTKW9fxNSQtMRxRCGIGBY0z0WTwZsY=;
+        b=LJuoyVt+hB6+Km7ljcrV4QH8nnYZ3ym94CBX6Re2hvDIFzbvyOTKmWSNQsxtcPZtxT
+         kvpiVNoPtPd3uzZOhoEvPbt/rBoQqdtowlZzqIHma+gdQxuEZKntRBb7FVTcLsit6NMD
+         qQ9cVsJ/nCoqj78gCNS7N/WtgJWttymyZnJ5a/HkNVbIs3cR0yJFQGDOEWNs+ROfO2HM
+         Uewgmlg6ykP6lb3lAEFcK2nWZM/3e1k71WKQvObuo4E0Kyy6hZKeYaGmJBggysebCkf6
+         GQeVTm6yTKihtpTdpPMPJ/mrST0VPMiLh1cgjOl1WuPq5HFP2gkKGAqba6w+kk3bx6+q
+         1K9A==
+X-Gm-Message-State: APjAAAU0vFJJj8wxVgK1+tzI9HsWnOgBP48RXPp4mQno/tNK11MPKZoC
+        xRRxJzgIP4B4O/8sCyryBwZdt3Vq3wUZZjOhccE=
+X-Google-Smtp-Source: APXvYqxpFjlc5TAR58LDBDGCS9RlzmCK78XSQeYEC3Z/MRTErq4S19jysbPYG23FDxcOpZ+8xZAKbsLGBGqwTHnXxxU=
+X-Received: by 2002:aca:4482:: with SMTP id r124mr8219082oia.39.1555018734440;
+ Thu, 11 Apr 2019 14:38:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190411114616.GA10032@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190411084537.30299-1-glaroque@baylibre.com> <20190411084537.30299-3-glaroque@baylibre.com>
+In-Reply-To: <20190411084537.30299-3-glaroque@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 11 Apr 2019 23:38:43 +0200
+Message-ID: <CAFBinCBVmPa5hi83B1ZTe-guassHxKQFrN5QOyMJc9s95LJ1cg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: meson-g12a: Add Temperature Sensor clock
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>,
+        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 4:46 AM, Christoph Hellwig wrote:
-> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
->> Similar to ARM64, add support for building DTB files from DT source
->> data for RISC-V boards.
->>
->> This patch starts with the infrastructure needed for SiFive boards.
->> Boards from other vendors would add support here in a similar form.
-> 
-> What do we build it for?  We'd really need something like this:
-> 
-> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
-> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
-> 
-> To actually use the DT files.
-> 
+Hi Guillaume,
 
-We also need to modify the DT, as the default DTS file in this patch 
-series has hart0 status as "okay",
+On Thu, Apr 11, 2019 at 10:46 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Add TS clock used by two temperature sensor
+thank you for working on this!
 
-Or we should set hart0 status as "masked" in the .dts file now.
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  drivers/clk/meson/g12a.c | 31 +++++++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h |  3 ++-
+>  2 files changed, 33 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index 3a3134976534..e6d2af6ee8ea 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -2335,6 +2335,33 @@ static struct clk_regmap g12a_mali = {
+>         },
+>  };
+>
+> +static struct clk_regmap g12a_ts_div = {
+> +       .data = &(struct clk_regmap_div_data){
+> +               .offset = HHI_TS_CLK_CNTL,
+> +               .shift = 0,
+> +               .width = 7,
+buildroot_openlinux_kernel_4.9_fbdev_20180706 uses ".width = 8".
+That matches with the public S922X datasheet from hardkernel which
+states that HHI_TS_CLK_CNTL[7:0] is "ts_clk clk_div"
 
-Regards,
-Atish
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
 
-
+Martin
