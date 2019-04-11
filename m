@@ -2,80 +2,79 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE63C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F78AC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361C5206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A70E206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="HMjW9K8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfDKCsP (ORCPT
+        id S1726884AbfDKCsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:48:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51072 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbfDKCsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:48:15 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A31FBB80ABA2886961B7;
-        Thu, 11 Apr 2019 10:48:13 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 11 Apr 2019 10:48:02 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Will Deacon <will.deacon@arm.com>, <ulf.hansson@linaro.org>,
-        <axboe@kernel.dk>, <osandov@fb.com>, <hare@suse.de>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] memstick: remove set but not used variable 'data'
-Date:   Thu, 11 Apr 2019 02:59:04 +0000
-Message-ID: <20190411025904.188152-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 10 Apr 2019 22:48:35 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43742 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfDKCsf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:48:35 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c20so2568322qkc.10;
+        Wed, 10 Apr 2019 19:48:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V3tq+TxRJwqDARBUrE55iNPOiXSBMRVKigZqe97wLYo=;
+        b=HMjW9K8t91tmqeNDGyvAA4kF3VwhYrvqV2jNhjTKlcPmj9vW6LLSazDo31nlDWzArA
+         QtcLhAmnZlNhJucX6fRaySmmrRYFAOer3K6Ur5a9VN4cg4remUOBNAwklXvCvg7rpSwJ
+         3VaHxyf8BdyFshA7TZj2SWrXuQJaUxIYBU6yU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V3tq+TxRJwqDARBUrE55iNPOiXSBMRVKigZqe97wLYo=;
+        b=nvov3DfoTNNDTam0ukzlS7whCnpJVBc4+Ttn4THathBrqh/oY6I+mPwSvL7J3yD63d
+         kjd38X62GdTrd2ZZrXzQ5n/rzLOOz0+tVS03lD3xlTlg9vDogtKHwILokGNfqTrvZdI3
+         eUZuqGinlahAvyezEYli4mDxVGscAlbeRGaxy4C/ZoazMcnyWR8HxxrFZVfJzXAFXQJS
+         IB9nx08vepQa3G04zBsxL6QGs1yPg76IgEuvugzj7NnRNrPTemcOtn29Wfp4jL+kSI8c
+         qlzMkX5LhajIgJmoBsb7hpGb98XVIzIdoOer51UljT62Hl6ayb8e1zggrFewvjS1DldL
+         6Tng==
+X-Gm-Message-State: APjAAAVeTRiDQC2T7s45IpmiYOrkxoqT5w+eXMwYL9hGuUQVX1edzdHP
+        oJ2G/zoM5X5Ebf5L7k8W7H8xNUE2Z7cFxmZm8/g=
+X-Google-Smtp-Source: APXvYqwmYS6pVRFmrhvuHPrLCVkLt/wIumlTHJtmzA2KxJWCL6GYQ5w8GtsLyxQRz9CoCPrFJX6jqI4sCf1v2WetRCI=
+X-Received: by 2002:a37:9fc6:: with SMTP id i189mr37450052qke.246.1554950914025;
+ Wed, 10 Apr 2019 19:48:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <1554229478-5621-1-git-send-email-eajames@linux.ibm.com> <1554229478-5621-2-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <1554229478-5621-2-git-send-email-eajames@linux.ibm.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 11 Apr 2019 02:48:22 +0000
+Message-ID: <CACPK8XdAdHhaRRTyniPeKDD0SruA3RxB3WCaeLaMzeMSSPsREw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] media: platform: Aspeed: Remove use of reset line
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed@lists.ozlabs.org, Joel Stanley <joel@jms.id.au>,
+        linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Tue, 2 Apr 2019 at 18:24, Eddie James <eajames@linux.ibm.com> wrote:
+>
+> The reset line is toggled by enabling the clocks, so it's not necessary
+> to manually toggle the reset as well.
+>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-drivers/memstick/host/jmb38x_ms.c: In function 'jmb38x_ms_issue_cmd':
-drivers/memstick/host/jmb38x_ms.c:371:17: warning:
- variable 'data' set but not used [-Wunused-but-set-variable]
-
-It's never used since introduction and can be removed.
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/memstick/host/jmb38x_ms.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
-index e3a5af65dbce..acec09813419 100644
---- a/drivers/memstick/host/jmb38x_ms.c
-+++ b/drivers/memstick/host/jmb38x_ms.c
-@@ -368,7 +368,6 @@ static int jmb38x_ms_transfer_data(struct jmb38x_ms_host *host)
- static int jmb38x_ms_issue_cmd(struct memstick_host *msh)
- {
- 	struct jmb38x_ms_host *host = memstick_priv(msh);
--	unsigned char *data;
- 	unsigned int data_len, cmd, t_val;
- 
- 	if (!(STATUS_HAS_MEDIA & readl(host->addr + STATUS))) {
-@@ -400,8 +399,6 @@ static int jmb38x_ms_issue_cmd(struct memstick_host *msh)
- 			cmd |= TPC_WAIT_INT;
- 	}
- 
--	data = host->req->data;
--
- 	if (!no_dma)
- 		host->cmd_flags |= DMA_DATA;
-
-
-
+Reviewed-by: Joel Stanley <joel@jms.id.au>
