@@ -3,475 +3,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF25C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09791C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDC4217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEDE2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfDKDz5 (ORCPT
+        id S1726831AbfDKD5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:55:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40266 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726615AbfDKDz4 (ORCPT
+        Wed, 10 Apr 2019 23:57:25 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44216 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfDKD5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:55:56 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B3sU9q016499
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 23:55:54 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rsx3c01qj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 23:55:54 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <shilpa.bhat@linux.vnet.ibm.com>;
-        Thu, 11 Apr 2019 04:55:52 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Apr 2019 04:55:51 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B3toqt20119574
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 03:55:50 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED5CA11C04C;
-        Thu, 11 Apr 2019 03:55:49 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64F2211C04A;
-        Thu, 11 Apr 2019 03:55:48 +0000 (GMT)
-Received: from oc4502181600.ibm.com (unknown [9.199.36.192])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Apr 2019 03:55:48 +0000 (GMT)
-From:   Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ego@linux.vnet.ibm.com,
-        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Subject: [PATCH V3] powernv: sensor-groups: Add debugfs file to enable/disable sensor groups
-Date:   Thu, 11 Apr 2019 09:24:46 +0530
+        Wed, 10 Apr 2019 23:57:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TP0I5rB_1554955031;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TP0I5rB_1554955031)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 11 Apr 2019 11:57:22 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
+        hannes@cmpxchg.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, keith.busch@intel.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
+        ying.huang@intel.com, ziy@nvidia.com
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 1/9] mm: define N_CPU_MEM node states
+Date:   Thu, 11 Apr 2019 11:56:51 +0800
+Message-Id: <1554955019-29472-2-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19041103-0020-0000-0000-0000032E8D53
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041103-0021-0000-0000-00002180BB19
-Message-Id: <1554954886-24460-1-git-send-email-shilpa.bhat@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904110027
+In-Reply-To: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch provides support to disable and enable platform specific
-sensor groups like performance, utilization and frequency which are
-not supported in hwmon.
+Kernel has some pre-defined node masks called node states, i.e.
+N_MEMORY, N_CPU, etc.  But, there might be cpuless nodes, i.e. PMEM
+nodes, and some architectures, i.e. Power, may have memoryless nodes.
+It is not very straight forward to get the nodes with both CPUs and
+memory.  So, define N_CPU_MEMORY node states.  The nodes with both CPUs
+and memory are called "primary" nodes.  /sys/devices/system/node/primary
+would show the current online "primary" nodes.
 
-Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
-Changes from V2:
-- Rebase on master
+ drivers/base/node.c      |  2 ++
+ include/linux/nodemask.h |  3 ++-
+ mm/memory_hotplug.c      |  6 ++++++
+ mm/page_alloc.c          |  1 +
+ mm/vmstat.c              | 11 +++++++++--
+ 5 files changed, 20 insertions(+), 3 deletions(-)
 
-Changes from V1:
-- As per Michael Ellerman's suggestion, adding the "enable" files to debugfs.
-  The original code had been written in mind to accomodate the "enable" file
-  in the same path as "clear" attribute. As this is not required anymore
-  the code is cleaned up to bifurcate the functions adding "enable" and
-  "clear" attribute.
-
- .../powerpc/platforms/powernv/opal-sensor-groups.c | 292 ++++++++++++++-------
- 1 file changed, 194 insertions(+), 98 deletions(-)
-
-diff --git a/arch/powerpc/platforms/powernv/opal-sensor-groups.c b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
-index 1796092..1208538 100644
---- a/arch/powerpc/platforms/powernv/opal-sensor-groups.c
-+++ b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
-@@ -15,22 +15,21 @@
- #include <linux/kobject.h>
- #include <linux/slab.h>
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 86d6cd9..1b963b2 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -634,6 +634,7 @@ static ssize_t show_node_state(struct device *dev,
+ #endif
+ 	[N_MEMORY] = _NODE_ATTR(has_memory, N_MEMORY),
+ 	[N_CPU] = _NODE_ATTR(has_cpu, N_CPU),
++	[N_CPU_MEM] = _NODE_ATTR(primary, N_CPU_MEM),
+ };
  
-+#include <asm/debugfs.h>
- #include <asm/opal.h>
+ static struct attribute *node_state_attrs[] = {
+@@ -645,6 +646,7 @@ static ssize_t show_node_state(struct device *dev,
+ #endif
+ 	&node_state_attr[N_MEMORY].attr.attr,
+ 	&node_state_attr[N_CPU].attr.attr,
++	&node_state_attr[N_CPU_MEM].attr.attr,
+ 	NULL
+ };
  
--DEFINE_MUTEX(sg_mutex);
-+#define SENSOR_GROUPS_DIR_STR	"sensor_groups"
+diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
+index 27e7fa3..66a8964 100644
+--- a/include/linux/nodemask.h
++++ b/include/linux/nodemask.h
+@@ -398,7 +398,8 @@ enum node_states {
+ 	N_HIGH_MEMORY = N_NORMAL_MEMORY,
+ #endif
+ 	N_MEMORY,		/* The node has memory(regular, high, movable) */
+-	N_CPU,		/* The node has one or more cpus */
++	N_CPU,			/* The node has one or more cpus */
++	N_CPU_MEM,		/* The node has both cpus and memory */
+ 	NR_NODE_STATES
+ };
  
- static struct kobject *sg_kobj;
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index f767582..1140f3b 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -729,6 +729,9 @@ static void node_states_set_node(int node, struct memory_notify *arg)
  
--struct sg_attr {
--	u32 handle;
--	struct kobj_attribute attr;
--};
--
- static struct sensor_group {
--	char name[20];
-+	struct kobj_attribute sattr;
- 	struct attribute_group sg;
--	struct sg_attr *sgattrs;
--} *sgs;
-+	struct mutex mutex;
-+	char name[20];
-+	u32 handle;
-+	u32 enable;
-+} *sgroups;
- 
- int sensor_group_enable(u32 handle, bool enable)
- {
-@@ -60,10 +59,12 @@ int sensor_group_enable(u32 handle, bool enable)
- }
- EXPORT_SYMBOL_GPL(sensor_group_enable);
- 
--static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
--			const char *buf, size_t count)
-+static ssize_t sgroup_clear_store(struct kobject *kobj,
-+				  struct kobj_attribute *attr,
-+				  const char *buf, size_t count)
- {
--	struct sg_attr *sattr = container_of(attr, struct sg_attr, attr);
-+	struct sensor_group *sgroup = container_of(attr, struct sensor_group,
-+						   sattr);
- 	struct opal_msg msg;
- 	u32 data;
- 	int ret, token;
-@@ -81,11 +82,11 @@ static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
- 		return token;
- 	}
- 
--	ret = mutex_lock_interruptible(&sg_mutex);
-+	ret = mutex_lock_interruptible(&sgroup->mutex);
- 	if (ret)
- 		goto out_token;
- 
--	ret = opal_sensor_group_clear(sattr->handle, token);
-+	ret = opal_sensor_group_clear(sgroup->handle, token);
- 	switch (ret) {
- 	case OPAL_ASYNC_COMPLETION:
- 		ret = opal_async_wait_response(token, &msg);
-@@ -106,135 +107,230 @@ static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
- 	}
- 
- out:
--	mutex_unlock(&sg_mutex);
-+	mutex_unlock(&sgroup->mutex);
- out_token:
- 	opal_async_release_token(token);
- 	return ret;
+ 	if (arg->status_change_nid >= 0)
+ 		node_set_state(node, N_MEMORY);
++
++	if (node_state(node, N_CPU))
++		node_set_state(node, N_CPU_MEM);
  }
  
--static struct sg_ops_info {
--	int opal_no;
--	const char *attr_name;
--	ssize_t (*store)(struct kobject *kobj, struct kobj_attribute *attr,
--			const char *buf, size_t count);
--} ops_info[] = {
--	{ OPAL_SENSOR_GROUP_CLEAR, "clear", sg_store },
--};
-+static int find_nr_groups(struct device_node *sensor_group_node, int opal_no)
-+{
-+	struct device_node *node;
-+	int count = 0;
-+
-+	for_each_child_of_node(sensor_group_node, node) {
-+		u32 sgid, op;
-+
-+		if (of_device_is_compatible(node, "ibm,opal-sensor"))
-+			continue;
-+
-+		if (of_property_read_u32(node, "ops", &op))
-+			continue;
-+
-+		if (op != opal_no)
-+			continue;
-+
-+		if (of_property_read_u32(node, "sensor-group-id", &sgid))
-+			continue;
-+		count++;
-+	}
+ static void __meminit resize_zone_range(struct zone *zone, unsigned long start_pfn,
+@@ -1569,6 +1572,9 @@ static void node_states_clear_node(int node, struct memory_notify *arg)
  
--static void add_attr(int handle, struct sg_attr *attr, int index)
-+	return count;
-+}
+ 	if (arg->status_change_nid >= 0)
+ 		node_clear_state(node, N_MEMORY);
 +
-+#ifdef CONFIG_DEBUG_FS
-+static int sgroup_enable_get(void *data, u64 *val)
- {
--	attr->handle = handle;
--	sysfs_attr_init(&attr->attr.attr);
--	attr->attr.attr.name = ops_info[index].attr_name;
--	attr->attr.attr.mode = 0220;
--	attr->attr.store = ops_info[index].store;
-+	struct sensor_group *sgroup = (struct sensor_group *)data;
-+	int rc;
-+
-+	rc = mutex_lock_interruptible(&sgroup->mutex);
-+	if (rc)
-+		return rc;
-+
-+	*val = sgroup->enable;
-+	mutex_unlock(&sgroup->mutex);
-+
-+	return 0;
++	if (node_state(node, N_CPU))
++		node_clear_state(node, N_CPU_MEM);
  }
  
--static int add_attr_group(const __be32 *ops, int len, struct sensor_group *sg,
--			   u32 handle)
-+static int sgroup_enable_set(void *data, u64 val)
- {
--	int i, j;
--	int count = 0;
-+	struct sensor_group *sgroup = (struct sensor_group *)data;
-+	int rc;
-+
-+	if (val != 0 && val != 1)
-+		return -EINVAL;
+ static int __ref __offline_pages(unsigned long start_pfn,
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 03fcf73..7cd88a4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -122,6 +122,7 @@ struct pcpu_drain {
+ #endif
+ 	[N_MEMORY] = { { [0] = 1UL } },
+ 	[N_CPU] = { { [0] = 1UL } },
++	[N_CPU_MEM] = { { [0] = 1UL } },
+ #endif	/* NUMA */
+ };
+ EXPORT_SYMBOL(node_states);
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 36b56f8..1a431dc 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1910,15 +1910,22 @@ static void __init init_cpu_node_state(void)
+ 	int node;
  
--	for (i = 0; i < len; i++)
--		for (j = 0; j < ARRAY_SIZE(ops_info); j++)
--			if (be32_to_cpu(ops[i]) == ops_info[j].opal_no) {
--				add_attr(handle, &sg->sgattrs[count], j);
--				sg->sg.attrs[count] =
--					&sg->sgattrs[count].attr.attr;
--				count++;
--			}
-+	rc = mutex_lock_interruptible(&sgroup->mutex);
-+	if (rc)
-+		return rc;
- 
--	return sysfs_create_group(sg_kobj, &sg->sg);
-+	if (val != sgroup->enable) {
-+		rc = sensor_group_enable(sgroup->handle, val);
-+		if (!rc)
-+			sgroup->enable = val;
-+	}
-+
-+	mutex_unlock(&sgroup->mutex);
-+	return rc;
- }
- 
--static int get_nr_attrs(const __be32 *ops, int len)
-+DEFINE_DEBUGFS_ATTRIBUTE(sensor_debugfs_ops, sgroup_enable_get,
-+			 sgroup_enable_set, "%llx\n");
-+static struct dentry *sensor_debugfs_parent;
-+static struct sensor_group *dgroups;
-+
-+static void add_debugfs_attrs(struct device_node *sensor_group_node)
- {
--	int i, j;
--	int nr_attrs = 0;
-+	struct device_node *node;
-+	int i = 0, count;
-+
-+	count = find_nr_groups(sensor_group_node, OPAL_SENSOR_GROUP_ENABLE);
-+	if (!count)
-+		return;
-+
-+	dgroups = kcalloc(count, sizeof(*dgroups), GFP_KERNEL);
-+	if (!dgroups)
-+		return;
-+
-+	sensor_debugfs_parent = debugfs_create_dir(SENSOR_GROUPS_DIR_STR,
-+						   powerpc_debugfs_root);
- 
--	for (i = 0; i < len; i++)
--		for (j = 0; j < ARRAY_SIZE(ops_info); j++)
--			if (be32_to_cpu(ops[i]) == ops_info[j].opal_no)
--				nr_attrs++;
-+	if (!sensor_debugfs_parent)
-+		goto out_dgroups;
- 
--	return nr_attrs;
-+	for_each_child_of_node(sensor_group_node, node) {
-+		struct dentry *group;
-+		u32 op, sgid, chipid;
-+
-+		if (of_device_is_compatible(node, "ibm,opal-sensor"))
-+			continue;
-+
-+		if (of_property_read_u32(node, "ops", &op))
-+			continue;
-+
-+		if (op != OPAL_SENSOR_GROUP_ENABLE)
-+			continue;
-+
-+		if (of_property_read_u32(node, "sensor-group-id", &sgid))
-+			continue;
-+
-+		if (!of_property_read_u32(node, "ibm,chip-id", &chipid))
-+			sprintf(dgroups[i].name, "%s%d", node->name, chipid);
-+		else
-+			sprintf(dgroups[i].name, "%s", node->name);
-+
-+		dgroups[i].handle = sgid;
-+		dgroups[i].enable = 1;
-+		mutex_init(&dgroups[i].mutex);
-+		group = debugfs_create_dir(dgroups[i].name,
-+					   sensor_debugfs_parent);
-+		if (!group) {
-+			of_node_put(node);
-+			goto out_debugfs;
+ 	for_each_online_node(node) {
+-		if (cpumask_weight(cpumask_of_node(node)) > 0)
++		if (cpumask_weight(cpumask_of_node(node)) > 0) {
+ 			node_set_state(node, N_CPU);
++			if (node_state(node, N_MEMORY))
++				node_set_state(node, N_CPU_MEM);
 +		}
-+
-+		if (!debugfs_create_file("enable", 0664, group, &dgroups[i],
-+					 &sensor_debugfs_ops)) {
-+			of_node_put(node);
-+			goto out_debugfs;
-+		}
-+		i++;
-+	}
-+
-+	return;
-+
-+out_debugfs:
-+	debugfs_remove_recursive(sensor_debugfs_parent);
-+out_dgroups:
-+	kfree(dgroups);
+ 	}
  }
-+#endif /* CONFIG_DEBUG_FS */
  
- void __init opal_sensor_groups_init(void)
+ static int vmstat_cpu_online(unsigned int cpu)
  {
--	struct device_node *sg, *node;
--	int i = 0;
-+	struct device_node *sensor_group_node, *node;
-+	int i = 0, count;
- 
--	sg = of_find_compatible_node(NULL, NULL, "ibm,opal-sensor-group");
--	if (!sg) {
-+	sensor_group_node = of_find_compatible_node(NULL, NULL,
-+						    "ibm,opal-sensor-group");
-+	if (!sensor_group_node) {
- 		pr_devel("Sensor groups node not found\n");
- 		return;
- 	}
- 
--	sgs = kcalloc(of_get_child_count(sg), sizeof(*sgs), GFP_KERNEL);
--	if (!sgs)
--		return;
-+	count = find_nr_groups(sensor_group_node, OPAL_SENSOR_GROUP_CLEAR);
-+	if (!count)
-+		goto out_node_put;
++	int node = cpu_to_node(cpu);
 +
-+	sgroups = kcalloc(count, sizeof(*sgroups), GFP_KERNEL);
-+	if (!sgroups)
-+		goto out_node_put;
- 
--	sg_kobj = kobject_create_and_add("sensor_groups", opal_kobj);
-+	sg_kobj = kobject_create_and_add(SENSOR_GROUPS_DIR_STR, opal_kobj);
- 	if (!sg_kobj) {
- 		pr_warn("Failed to create sensor group kobject\n");
--		goto out_sgs;
-+		goto out_sgroups;
- 	}
- 
--	for_each_child_of_node(sg, node) {
--		const __be32 *ops;
--		u32 sgid, len, nr_attrs, chipid;
-+	for_each_child_of_node(sensor_group_node, node) {
-+		u32 sgid, chipid, op;
- 
--		ops = of_get_property(node, "ops", &len);
--		if (!ops)
-+		if (of_property_read_u32(node, "ops", &op))
- 			continue;
- 
--		nr_attrs = get_nr_attrs(ops, len);
--		if (!nr_attrs)
-+		if (op != OPAL_SENSOR_GROUP_CLEAR)
- 			continue;
- 
--		sgs[i].sgattrs = kcalloc(nr_attrs, sizeof(*sgs[i].sgattrs),
--					 GFP_KERNEL);
--		if (!sgs[i].sgattrs)
--			goto out_sgs_sgattrs;
--
--		sgs[i].sg.attrs = kcalloc(nr_attrs + 1,
--					  sizeof(*sgs[i].sg.attrs),
--					  GFP_KERNEL);
--
--		if (!sgs[i].sg.attrs) {
--			kfree(sgs[i].sgattrs);
--			goto out_sgs_sgattrs;
--		}
--
--		if (of_property_read_u32(node, "sensor-group-id", &sgid)) {
--			pr_warn("sensor-group-id property not found\n");
--			goto out_sgs_sgattrs;
--		}
-+		if (of_property_read_u32(node, "sensor-group-id", &sgid))
-+			continue;
- 
- 		if (!of_property_read_u32(node, "ibm,chip-id", &chipid))
--			sprintf(sgs[i].name, "%pOFn%d", node, chipid);
-+			sprintf(sgroups[i].name, "%pOFn%d", node, chipid);
- 		else
--			sprintf(sgs[i].name, "%pOFn", node);
-+			sprintf(sgroups[i].name, "%pOFn", node);
-+
-+		sgroups[i].sg.attrs = kzalloc(sizeof(struct attribute *) * 2,
-+					      GFP_KERNEL);
-+		if (!sgroups[i].sg.attrs) {
-+			of_node_put(node);
-+			goto out_sg_attrs;
-+		}
- 
--		sgs[i].sg.name = sgs[i].name;
--		if (add_attr_group(ops, len, &sgs[i], sgid)) {
-+		sgroups[i].sg.name = sgroups[i].name;
-+		sgroups[i].handle = sgid;
-+		sysfs_attr_init(sgroups[i].sattr.attr);
-+		sgroups[i].sattr.attr.name = "clear";
-+		sgroups[i].sattr.attr.mode = 0220;
-+		sgroups[i].sattr.store = sgroup_clear_store;
-+		sgroups[i].sg.attrs[0] = &sgroups[i].sattr.attr;
-+		sgroups[i].sg.attrs[1] = NULL;
-+		mutex_init(&sgroups[i].mutex);
-+
-+		if (sysfs_create_group(sg_kobj, &sgroups[i].sg)) {
- 			pr_warn("Failed to create sensor attribute group %s\n",
--				sgs[i].sg.name);
--			goto out_sgs_sgattrs;
-+				sgroups[i].sg.name);
-+			kfree(sgroups[i].sg.attrs);
-+			of_node_put(node);
-+			goto out_sg_attrs;
- 		}
-+
- 		i++;
- 	}
- 
--	return;
-+#ifdef CONFIG_DEBUG_FS
-+	add_debugfs_attrs(sensor_group_node);
-+#endif /* CONFIG_DEBUG_FS */
- 
--out_sgs_sgattrs:
--	while (--i >= 0) {
--		kfree(sgs[i].sgattrs);
--		kfree(sgs[i].sg.attrs);
--	}
-+	goto out_node_put;
-+
-+out_sg_attrs:
-+	while (i-- > 0)
-+		kfree(sgroups[i].sg.attrs);
- 	kobject_put(sg_kobj);
--out_sgs:
--	kfree(sgs);
-+out_sgroups:
-+	kfree(sgroups);
-+out_node_put:
-+	of_node_put(sensor_group_node);
+ 	refresh_zone_stat_thresholds();
+-	node_set_state(cpu_to_node(cpu), N_CPU);
++	node_set_state(node, N_CPU);
++	if (node_state(node, N_MEMORY))
++		node_set_state(node, N_CPU_MEM);
+ 	return 0;
  }
+ 
 -- 
 1.8.3.1
 
