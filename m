@@ -2,160 +2,102 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CD4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBFCC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A8A2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554946666;
-	bh=7IIzJ5j96mHcrlfO5rnfZhFJ3/qUC61ViUb/TqwmoF4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohqVJum12DnjTQsdahYT21BQkGE7ssmygBtpZSqgnojpGm2hkCuItpr+8hZWyviRv
-	 P8Jmat2HMwOsrrgBqreKhaRwn3/FMql7xA6mzVUtBzw2elQmu6kk29toD/BCWoKs9I
-	 2o/qjKk3otpN1LCV50cbS8dAf6UMzOy6O8rXQQhU=
+	by mail.kernel.org (Postfix) with ESMTP id 6D30A217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfDKBhp (ORCPT
+        id S1727290AbfDKBh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:37:45 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:36515 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbfDKBhn (ORCPT
+        Wed, 10 Apr 2019 21:37:58 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:56308 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfDKBh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:37:43 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3835E999B;
-        Wed, 10 Apr 2019 21:37:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 10 Apr 2019 21:37:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=bQrKJO1ca6Jnb6VAVcy4YOcaMtIAYDp36gD1sjc6/M8=; b=yBlNj5Aj
-        x0jERAcX2nr8Cd8pENxlZdO97pwvF1NoK6TuCQ1brau0DWTvV1ZSAt1dD+zRVwt1
-        f7G5jP181kU6gbOeouIaRF4A6IZLX20cnJ0PCFa/nGlv/IfL6IJWJtdT0N3ZOXBU
-        TEj8iyiSmiX8iwAMHX9jUxkgs4KHVBbZL5HdCCorCoHBuh4x0Fr43See53XVlJl5
-        vzXXuJUfpxuFmBKCN8ruXW6Q8GiYxgFV1oW8b40DUJ3RHiA+nFIPaSBX6MckJ9W+
-        UUSWKB2gpBjc4X76BEUfeXBA9tKmd1n+ZV7ZxbWuO4pxRq1wdrzfVUn39bFzO9sn
-        v4xFOp3swHx1Ug==
-X-ME-Sender: <xms:ZZquXJCrAVQEDp_0eq0hFxaFtI5OiOF4bIethMS67w2YR9Kdq7_Dbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudekgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudejuddrudelrdduleegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:ZZquXLezwxv2nRBUMSG-riGoxXI303uykE5A8vzzWrl_5OtCCx5O7A>
-    <xmx:ZZquXNEuO00nfKwnCztsTH-gnPDWMoTAfPvgDz7HuE_iOP6tDZxdUQ>
-    <xmx:ZZquXNXFyubUjW-O0i8GykgVGgog10PVBVThGrr6IJvGV-RRXL4kCw>
-    <xmx:ZpquXO5IVF19Ojbcc8e9uXN0JvZAt1FudYX4shceC83MWYKHF_PAYQ>
-Received: from eros.localdomain (124-171-19-194.dyn.iinet.net.au [124.171.19.194])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 62D49E408B;
-        Wed, 10 Apr 2019 21:37:34 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "Theodore Ts'o" <tytso@mit.edu>, Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 15/15] dcache: Add CONFIG_DCACHE_SMO
-Date:   Thu, 11 Apr 2019 11:34:41 +1000
-Message-Id: <20190411013441.5415-16-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190411013441.5415-1-tobin@kernel.org>
-References: <20190411013441.5415-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 10 Apr 2019 21:37:57 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hEOes-0004xg-7E; Wed, 10 Apr 2019 21:37:42 -0400
+Message-ID: <e3efd9c01626aa3bed02f10f845533711864bb17.camel@surriel.com>
+Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
+ multiple pages
+From:   Rik van Riel <riel@surriel.com>
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>
+Date:   Wed, 10 Apr 2019 21:37:41 -0400
+In-Reply-To: <20190410231156.GB120258@gmail.com>
+References: <CAMuHMdWhx0-kspDyLOgTp+9udiBpkMHULSGyMg9uPPV16=FWQg@mail.gmail.com>
+         <20190319170911.GB202956@gmail.com> <20190320185719.GB180195@gmail.com>
+         <CAGXu5jL-5C1ZGZ1JgaNFqK-z1Pp1N1X8gD3_ysKTCa=omD+_VQ@mail.gmail.com>
+         <20190321175122.GA1587@sol.localdomain>
+         <20190410031734.GB7140@sol.localdomain>
+         <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
+         <20190410190729.GA120258@gmail.com>
+         <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
+         <20190410231156.GB120258@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-I0iYs52hNxEw6RSke2FZ"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an attempt to make the SMO patchset as non-invasive as possible add a
-config option CONFIG_DCACHE_SMO (under "Memory Management options") for
-enabling SMO for the DCACHE.  Whithout this option dcache constructor is
-used but no other code is built in, with this option enabled slab
-mobility is enabled and the isolate/migrate functions are built in.
 
-Add CONFIG_DCACHE_SMO to guard the partial shrinking of the dcache via
-Slab Movable Objects infrastructure.
+--=-I0iYs52hNxEw6RSke2FZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- fs/dcache.c | 4 ++++
- mm/Kconfig  | 7 +++++++
- 2 files changed, 11 insertions(+)
+On Wed, 2019-04-10 at 16:11 -0700, Eric Biggers wrote:
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index 5c707ed9ab5a..5ef68b78b457 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -3069,6 +3069,7 @@ void d_tmpfile(struct dentry *dentry, struct inode *inode)
- }
- EXPORT_SYMBOL(d_tmpfile);
- 
-+#ifdef CONFIG_DCACHE_SMO
- /*
-  * d_isolate() - Dentry isolation callback function.
-  * @s: The dentry cache.
-@@ -3136,6 +3137,7 @@ static void d_partial_shrink(struct kmem_cache *s, void **v, int nr,
- 	if (!list_empty(&dispose))
- 		shrink_dentry_list(&dispose);
- }
-+#endif	/* CONFIG_DCACHE_SMO */
- 
- static __initdata unsigned long dhash_entries;
- static int __init set_dhash_entries(char *str)
-@@ -3182,7 +3184,9 @@ static void __init dcache_init(void)
- 					   sizeof_field(struct dentry, d_iname),
- 					   dcache_ctor);
- 
-+#ifdef CONFIG_DCACHE_SMO
- 	kmem_cache_setup_mobility(dentry_cache, d_isolate, d_partial_shrink);
-+#endif
- 
- 	/* Hash may have been set up in dcache_init_early */
- 	if (!hashdist)
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 47040d939f3b..92fc27ad3472 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -265,6 +265,13 @@ config SMO_NODE
-        help
-          On NUMA systems enable moving objects to and from a specified node.
- 
-+config DCACHE_SMO
-+       bool "Enable Slab Movable Objects for the dcache"
-+       depends on SLUB
-+       help
-+         Under memory pressure we can try to free dentry slab cache objects from
-+         the partial slab list if this is enabled.
-+
- config PHYS_ADDR_T_64BIT
- 	def_bool 64BIT
- 
--- 
-2.21.0
+> You've explained *what* it does again, but not *why*.  *Why* do you
+> want
+> hardened usercopy to detect copies across page boundaries, when there
+> is no
+> actual buffer overflow?
+
+When some subsystem in the kernel allocates multiple
+pages without _GFP_COMP, there is no way afterwards
+to detect exactly how many pages it allocated.
+
+In other words, there is no way to see how large the
+buffer is, nor whether the copy operation in question
+would overflow it.
+
+--=20
+All Rights Reversed.
+
+--=-I0iYs52hNxEw6RSke2FZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlyummUACgkQznnekoTE
+3oN5Ogf+JB1+Q62gA3I1CjbG9J1N9Yo0SopCRnifEmRD5OOuHcTnKtJk9cDddftF
+JckxLVhf0YXgLZa78GQhNW74dTw/XBgB1tE59q7eYI3srERNjFc8G9cjLMEu0aKS
+wpv4wOL0AB7k1eFPvXkDbQ7mnzxb7s8+wGoH4F6Shs4ls9At//2kofAvES14Cfn8
+c8lCTakBYcQ4lEhr7dxQ3v//NoD6/ZC6tacDN5A6mgcwM/VkdNgNskDVX25sTn1P
+Kvnes/43AAefodugVLVuXCtXhnBM1aJ1zn+J7VgyC5ZJAktdPSNixT6J7xlC16rZ
+U5Uf2fWdPx6UWgcs8agsp1NCrvu31w==
+=ewwZ
+-----END PGP SIGNATURE-----
+
+--=-I0iYs52hNxEw6RSke2FZ--
 
