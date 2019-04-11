@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D054C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C17BC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A002083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0642083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hcXgs/Us"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="brU6yRC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfDKIpq (ORCPT
+        id S1727020AbfDKIpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:45:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38806 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfDKIpn (ORCPT
+        Thu, 11 Apr 2019 04:45:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52093 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfDKIpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:45:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so6191942wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:45:42 -0700 (PDT)
+        Thu, 11 Apr 2019 04:45:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 4so5619362wmf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:45:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=uZ7qqews2O7XucznXFEO2bWGmRBz91rjfUznQYaR+AU=;
-        b=hcXgs/Us2i1LqiCpownxWKZxx3I0JEedLl7VZ0y48hDAtgCzhSb/I09gP2H4m0nw+2
-         NkpeFsk6niKChc3wbjXiDxYbI3w7HWN5i29s+9bKj7sn/U92jLTk6//qc/bm2J7TNmF9
-         mL5/HIgHEf8+p/rGagIfcVnuJmHOu2UfS2ryG490lGsCXjEzTqvouiIKdhdfmt8YGbiB
-         iz5H9O+HJ85SpBaqRE5iLArDPmjVycGOY5jw0YNvwGjF43lp5LlY2CWozbKlX7tzU+LG
-         7vLeBoNpBS8I39/RZJQ1oGJJ+nGf+N4g7jBtAI5ZMwYgcicuJuogiejVD/LURDOIk0Fd
-         F7/g==
+        bh=72YojJ2ZI4Hnj5UZWtMVH1bJJscttQzZHVGA77jha6k=;
+        b=brU6yRC2/R67qR7FwEPXgWq7TMtY3G392GEJp4iDaBRyvhCusWFHyAaS6pYicJMf60
+         FJV8zzS64jtbceJfeADF5+UAO8jacrkTYcZ7pp6+JGcHd5z/neIKvlLN+wRfC7qUHsIh
+         YOEUxQTUj6SDJ+t9OGUxNCOID2PE43j+B4dvYouzart1YuyCaOp/MMPwSJLE6bpX8aZD
+         NDbVvy3g5fHNVl1xV+TuRZOS7beZEef5kJmo5F1wFntu8AfiJt3eVeDYMr48o3LoqYXn
+         +VdlfQayRS8iyKStauO6bGg45cnZefIdE1snnnrxUcwm9SgI1JygDlhOmNyxVecixHZx
+         HqKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=uZ7qqews2O7XucznXFEO2bWGmRBz91rjfUznQYaR+AU=;
-        b=UnLSP9QI8PQgy8W1mgfK7d3X8la9pSjtDA/MMaA5QjmMYoZT0zulYcoXO1pbRawKcT
-         XaWn4mEB5ev5TA8Dw4zHT4QKvbi4fZgfYshVtR4gY1rBNpjRjEoyRqP4rgwZHCAp4msk
-         CazyYrKyLadAe/U4iyAlyFnVC/FWfDC0MyEXmtiZi8lxN8O27HqX5UYH568VbqRdTme7
-         7PHXLgaFafCGuxx/IWAESe91NdRAcjPlPYsLyLQ3OP+fiDO9QBbhAXIfMS6xDmxhqkdu
-         pvlZgzW3vA2kdyXYEkF8bbyacK5eHI1vIoI8FphlrhHWyFxl3b51pUpQtbXgrygB660C
-         rxkg==
-X-Gm-Message-State: APjAAAXBWNOdp9qfAyXW9l88ivmoeHbQxVNeu7y8AvgA0i4takwKqmdI
-        gIrVS9C3kwV47+JxfG6febEiqg==
-X-Google-Smtp-Source: APXvYqwyTjtvyg5KjtWDh44Yy0fg/y31wD+PxhUHgzWO+R7B19HFHB0yjhjcu9qJ+ovfQ+AEjhN8+g==
-X-Received: by 2002:a5d:660c:: with SMTP id n12mr30498225wru.160.1554972341885;
-        Thu, 11 Apr 2019 01:45:41 -0700 (PDT)
+        bh=72YojJ2ZI4Hnj5UZWtMVH1bJJscttQzZHVGA77jha6k=;
+        b=qy24PODTvm6wujSNr/Z3qLR2VG5GdN/32bb7r1ir/VzFmHeHXnYvY8yx95EXLR3fdA
+         /ARK3FDbMrcyM1mqk4b7SeCwWo5R7u9isPPUuuRbNXbK4JRehIjjqcN8h+knO5qtf1LS
+         /U5tAc+B8u4IVbdVCQYT1uYY49Rh5GjkpaewX8y4xFAmHOZw9ZgYyS5D9jV43pDtF63e
+         2rsmJo5+hOX7ldl/+2f2Cca+t2GOM8tjQfy9Bd7fQzp1sQjQF25ls5F1J1PZJHI1Jt1U
+         kXcu54EcWfpy62zXaoE5gl2BWUSuiFB1P5f6GJIbbZYOqxAX20hhtZ0pEJv5vnxENgHu
+         Unqw==
+X-Gm-Message-State: APjAAAXPvQB79fEjk+WNK4fxIK/kI2AAz5qGBZguTdenu3nM7vN5eM1E
+        dziqCG97G45mST358XAXwJtp/w==
+X-Google-Smtp-Source: APXvYqzD6/VS9PfVDNO6HphW5M4EV309P4F8/HO4da7MQt2vi/o/ZoTzBqwZPAJIq2PCDip1y0tfhA==
+X-Received: by 2002:a1c:b782:: with SMTP id h124mr5858487wmf.5.1554972340768;
+        Thu, 11 Apr 2019 01:45:40 -0700 (PDT)
 Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 7sm128602876wrc.81.2019.04.11.01.45.40
+        by smtp.gmail.com with ESMTPSA id 7sm128602876wrc.81.2019.04.11.01.45.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 01:45:41 -0700 (PDT)
+        Thu, 11 Apr 2019 01:45:40 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     jbrunet@baylibre.com, narmstrong@baylibre.com,
         khilman@baylibre.com, linux-amlogic@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/2] clk: meson-g12a: Add Temperature Sensor clock
-Date:   Thu, 11 Apr 2019 10:45:37 +0200
-Message-Id: <20190411084537.30299-3-glaroque@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: clk: g12a-clkc: add Temperature Sensor clock ID
+Date:   Thu, 11 Apr 2019 10:45:36 +0200
+Message-Id: <20190411084537.30299-2-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190411084537.30299-1-glaroque@baylibre.com>
 References: <20190411084537.30299-1-glaroque@baylibre.com>
@@ -71,85 +71,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TS clock used by two temperature sensor
+Add clock id used by temperature sensor for G12A Socs
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/clk/meson/g12a.c | 31 +++++++++++++++++++++++++++++++
- drivers/clk/meson/g12a.h |  3 ++-
- 2 files changed, 33 insertions(+), 1 deletion(-)
+ include/dt-bindings/clock/g12a-clkc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 3a3134976534..e6d2af6ee8ea 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -2335,6 +2335,33 @@ static struct clk_regmap g12a_mali = {
- 	},
- };
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 30303728fe09..85cfcab10507 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -133,5 +133,6 @@
+ #define CLKID_MPLL_5OM				177
+ #define CLKID_CPU_CLK				187
+ #define CLKID_PCIE_PLL				201
++#define CLKID_TS				203
  
-+static struct clk_regmap g12a_ts_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_TS_CLK_CNTL,
-+		.shift = 0,
-+		.width = 7,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ts_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "xtal" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_ts = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_TS_CLK_CNTL,
-+		.bit_idx = 8,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "ts",
-+		.ops = &clk_regmap_gate_ops,
-+		.parent_names = (const char *[]){ "ts_div" },
-+		.num_parents = 1,
-+	},
-+};
-+
- /* Everything Else (EE) domain gates */
- static MESON_GATE(g12a_ddr,			HHI_GCLK_MPEG0,	0);
- static MESON_GATE(g12a_dos,			HHI_GCLK_MPEG0,	1);
-@@ -2615,6 +2642,8 @@ static struct clk_hw_onecell_data g12a_hw_onecell_data = {
- 		[CLKID_PCIE_PLL_DCO_DIV2]	= &g12a_pcie_pll_dco_div2.hw,
- 		[CLKID_PCIE_PLL_OD]		= &g12a_pcie_pll_od.hw,
- 		[CLKID_PCIE_PLL]		= &g12a_pcie_pll.hw,
-+		[CLKID_TS_DIV]			= &g12a_ts_div.hw,
-+		[CLKID_TS]			= &g12a_ts.hw,
- 		[NR_CLKS]			= NULL,
- 	},
- 	.num = NR_CLKS,
-@@ -2803,6 +2832,8 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
- 	&g12a_cpu_clk_trace,
- 	&g12a_pcie_pll_od,
- 	&g12a_pcie_pll_dco,
-+	&g12a_ts_div,
-+	&g12a_ts,
- };
- 
- static const struct meson_eeclkc_data g12a_clkc_data = {
-diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
-index 1393a09730a6..5633c72e432d 100644
---- a/drivers/clk/meson/g12a.h
-+++ b/drivers/clk/meson/g12a.h
-@@ -189,8 +189,9 @@
- #define CLKID_PCIE_PLL_DCO			198
- #define CLKID_PCIE_PLL_DCO_DIV2			199
- #define CLKID_PCIE_PLL_OD			200
-+#define CLKID_TS_DIV				202
- 
--#define NR_CLKS					202
-+#define NR_CLKS					204
- 
- /* include the CLKIDs that have been made part of the DT binding */
- #include <dt-bindings/clock/g12a-clkc.h>
+ #endif /* __G12A_CLKC_H */
 -- 
 2.17.1
 
