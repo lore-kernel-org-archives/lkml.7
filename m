@@ -2,186 +2,140 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UPPERCASE_50_75 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A8C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C575C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22042133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90722133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CKK7J7rj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDKFa3 (ORCPT
+        id S1726711AbfDKFcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 01:30:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31666 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726104AbfDKFa2 (ORCPT
+        Thu, 11 Apr 2019 01:32:20 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:17299 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfDKFcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 01:30:28 -0400
-X-UUID: 894e44cfe7774dc282987b2503549c1b-20190411
-X-UUID: 894e44cfe7774dc282987b2503549c1b-20190411
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1024539937; Thu, 11 Apr 2019 13:30:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 11 Apr 2019 13:30:16 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 11 Apr 2019 13:30:16 +0800
-Message-ID: <1554960616.4768.1.camel@mtksdaap41>
-Subject: Re: [PATCH v2 07/25] drm/mediatek: move rdma sout from
- mtk_ddp_mout_en into mtk_ddp_sout_sel
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Thu, 11 Apr 2019 13:30:16 +0800
-In-Reply-To: <1553667561-25447-8-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-8-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 11 Apr 2019 01:32:20 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x3B5WFeX025608
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:32:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x3B5WFeX025608
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554960736;
+        bh=jXlFVG4S2JW5MRoJEjXHRxG1pxHks11F7LB4CFGFPxo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CKK7J7rjQMivDAsCLJrjrTJUv5HhaXi+gwqmkC2B1g/uHWiUP08ukzschapvN+fLU
+         z6Yo56CW4wL+494ssrBd5AGVw+JPqwxGY24Q74j1UuJXlt9AjN/VASbcX9byKiDfe0
+         evsmEQIJsXDXqdZRxx1IycLoJGgrVwKaDvgimTbRjia3ApAPG3jRHVtK9hYPhslR77
+         7Z1ZePZKILuBUwi+cgL8Nyw4p7HDmn+03n9vFCaBKjdA3m4ZaAQL7SZPcF1Tn6ehyV
+         bqJOzql0yZPHIYFDKSiaFQv7jnPF1GQtuEdVc4157qzg/aTWKGC3ELfT9BPytd6LJ4
+         WBNtjOkgwjdng==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id l17so1613430uar.4
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 22:32:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAWicfAfb1DU2eJQTA4UmcEhbNAMv+XvtNC8F+ioJAhyESWt2PNQ
+        ZfYKElKW1DXlqhI4nAP8zpK6AVo5fMYjarAdbgQ=
+X-Google-Smtp-Source: APXvYqymR2W4mS+YHe1V4XeBDaiiQCpb2Ns7xIWTRSbPGFEXGuvGxHi7Bs+mdsGn7UJYaLx4JzIXY6RfY1vWWBrsolw=
+X-Received: by 2002:ab0:65c7:: with SMTP id n7mr25201260uaq.3.1554960735124;
+ Wed, 10 Apr 2019 22:32:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <20190411005634.8495-1-okaya@kernel.org>
+In-Reply-To: <20190411005634.8495-1-okaya@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 11 Apr 2019 14:31:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=G7-nXr=pT2EYExGNkCcOcd2NH1haaBMt+JsyhX2Z8Q@mail.gmail.com>
+Message-ID: <CAK7LNAS=G7-nXr=pT2EYExGNkCcOcd2NH1haaBMt+JsyhX2Z8Q@mail.gmail.com>
+Subject: Re: [PATCH v3] init: Do not select DEBUG_KERNEL by default
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Changbin Du <changbin.du@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On Thu, Apr 11, 2019 at 9:59 AM Sinan Kaya <okaya@kernel.org> wrote:
+>
+> We can't seem to have a kernel with CONFIG_EXPERT set but
+> CONFIG_DEBUG_KERNEL unset these days.
+>
+> While some of the features under the CONFIG_EXPERT require
+> CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
+>
+> It looks like CONFIG_KALLSYMS_ALL is the only feature that
+> requires CONFIG_DEBUG_KERNEL.
 
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch move rdma sout from mtk_ddp_mout_en into mtk_ddp_sout_sel
-> rdma only has single output, but no multi output,
-> all these rdma->dsi/dpi usecase should move to mtk_ddp_sout_sel
+Which part of KALLSYMS_ALL code requires CONFIG_DEBUG_KERNEL?
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+
+> Select CONFIG_EXPERT when CONFIG_DEBUG_KERNEL is chosen but
+> you can still choose CONFIG_EXPERT without CONFIG_DEBUG_KERNEL.
+>
+> Signed-off-by: Sinan Kaya <okaya@kernel.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 90 +++++++++++++++++-----------------
->  1 file changed, 45 insertions(+), 45 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index e4dafe0..5ae13b0 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -281,51 +281,6 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
->  		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
->  		value = OD1_MOUT_EN_RDMA1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> -		value = RDMA0_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DSI3;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> -		value = RDMA1_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI0;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DPI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI1;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI2;
-> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> -		value = RDMA2_SOUT_DSI3;
->  	} else {
->  		value = 0;
->  	}
-> @@ -406,6 +361,51 @@ static unsigned int mtk_ddp_sout_sel(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
->  		*addr = DISP_REG_CONFIG_DSI_SEL;
->  		value = DSI_SEL_IN_RDMA;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
-> +		value = RDMA0_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
-> +		value = RDMA1_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_SOUT_DSI3;
->  	} else {
->  		value = 0;
->  	}
+>  init/Kconfig      | 2 --
+>  lib/Kconfig.debug | 1 +
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 4592bf7997c0..37e10a8391a3 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1206,8 +1206,6 @@ config BPF
+>
+>  menuconfig EXPERT
+>         bool "Configure standard kernel features (expert users)"
+> -       # Unhide debug options, to make the on-by-default options visible
+> -       select DEBUG_KERNEL
+>         help
+>           This option allows certain base kernel options and settings
+>            to be disabled or tweaked. This is for specialized
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 0d9e81779e37..9fbf3499ec8d 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -434,6 +434,7 @@ config MAGIC_SYSRQ_SERIAL
+>
+>  config DEBUG_KERNEL
+>         bool "Kernel debugging"
+> +       default EXPERT
+>         help
+>           Say Y here if you are developing drivers or trying to debug and
+>           identify kernel problems.
+> --
+> 2.21.0
+>
 
 
+--
+Best Regards
+
+Masahiro Yamada
