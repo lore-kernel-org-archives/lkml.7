@@ -2,149 +2,156 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6888FC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC76C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352A720643
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uDmzKIhs"
+	by mail.kernel.org (Postfix) with ESMTP id 5E023217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfDKQe3 (ORCPT
+        id S1726886AbfDKQee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:34:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34972 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfDKQe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:34:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w1so8223955wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TQOe65o2IadhbVE9tWUiz1K2F/QKC/DM3r1AT+nkV0o=;
-        b=uDmzKIhs7Txo3Jgk+h11zpBn8rPeQ7jauF8c6k95isdKlnuFplP63TEcnj4WzBZHTd
-         6dXwscSWvsxqnBJE70y/pbYea3aX25aklhcY/mH0alBxSj3WAoSYFRDy9eJ8JjXmENqs
-         4GuYMkueBOoSq9b4g+1p03D/iKUV3L4YB7yk9rYz0aoq7PzoZGzE1LYAyvglYvbO/Ozb
-         UY5RZwfWRNOjQrkMrOJlV85gFrVthW7AFwHyibjSMDoXeynbDGLDG0rxDM+316uz6qQW
-         c7yOujTWEfXLfzRkRqr3lUrXbGKL2eI57n2J9tm6evrcrLOr63x9pdp+OIDT75WXwaJV
-         PJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TQOe65o2IadhbVE9tWUiz1K2F/QKC/DM3r1AT+nkV0o=;
-        b=aOqBqO1H4sQngXWf3niYnwFwwuDfeAgHwImaMsfEYN7z8RJJMP7RuL1Xr7xAxl43EB
-         LqYCfNVUl7vPLyjnfHTanCQKJ3YjRSLBuwGjiNw+XqSw79J+syIbH8E5ntbtf3Rdb3Es
-         3i6gDSUWxM3VnLO4YonWqlFSamvyNu7QvDb5zkN1Ft+dFXWW1+UaAeZlsCMVCiKAeOIA
-         sWUFWPH4jU+PLoKwivC5hhvdpGzEs0EMrXj4DJ4ndf7V2omSIDB5qvVqdYLcEVr+p0Ov
-         kcpTRsAFt+/+4nHFz2cNhmWGhR+8FsF/IkKDUT9hzhDl6qMmDQFzucbxB9WK5b93cGLq
-         SrCA==
-X-Gm-Message-State: APjAAAXyuPd6KK1AILtvU2wqTPckJKNf8Bk/Kvi7dWRVRj3yMEzmkAQM
-        xNwDhWejAZFk/AFPRjaPDj2FXA==
-X-Google-Smtp-Source: APXvYqx/Um95xHSe2Fl93bDPu1mwY+PiLIRNXVYYJnwr7v3npoOt611zjDssFQDggEmCo/GezWKcyA==
-X-Received: by 2002:adf:f050:: with SMTP id t16mr27520805wro.198.1555000467041;
-        Thu, 11 Apr 2019 09:34:27 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id b9sm9513137wmc.9.2019.04.11.09.34.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:34:26 -0700 (PDT)
-Subject: Re: [PATCH 00/12] clocksource: improve Atmel TCB timer driver
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <20190403141120.32754-1-alexandre.belloni@bootlin.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <580bf140-1e00-517d-628a-952128ebe4fe@linaro.org>
-Date:   Thu, 11 Apr 2019 18:34:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 12:34:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45974 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726564AbfDKQea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:34:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAEDE374;
+        Thu, 11 Apr 2019 09:34:29 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E94C3F59C;
+        Thu, 11 Apr 2019 09:34:28 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 17:34:25 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+Message-ID: <20190411163423.GJ3567@e103592.cambridge.arm.com>
+References: <20190208165513.8435-1-julien.grall@arm.com>
+ <20190404105233.GD3567@e103592.cambridge.arm.com>
+ <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
+ <20190405150722.GE3567@e103592.cambridge.arm.com>
+ <899713e0-2d32-04a0-b2f2-3493f7299033@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190403141120.32754-1-alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <899713e0-2d32-04a0-b2f2-3493f7299033@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Alexandre,
-
-except the comment for 3/12, the series looks good to me.
-
-
-
-On 03/04/2019 16:11, Alexandre Belloni wrote:
-> Hi,
+On Thu, Apr 11, 2019 at 04:58:41PM +0100, Julien Grall wrote:
+> Hi Dave,
 > 
-> This series immproves the Atmel TCB clocksource driver to address the
-> most urgent shortcomings:
->  - the current tcb_clksrc driver is probed too late to be able to be used at
->    boot and we now have SoCs that don't have a PIT. They currently are not able
->    to boot an upstream kernel.
->  - using the PIT doesn't work well with preempt-rt because its interrupt is
->    shared (in particular with the UART) and their interrupt flags are
->    incompatible). This also happen with the threadedirq command line
->    switch.
->  - there is currently no high resolution sched_clock.
+> On 4/5/19 4:07 PM, Dave Martin wrote:
+> >On Fri, Apr 05, 2019 at 10:02:45AM +0100, Julien Grall wrote:
+> >>>>+#ifdef CONFIG_KERNEL_MODE_NEON
+> >>>>+
+> >>>>  /*
+> >>>>   * may_use_simd - whether it is allowable at this time to issue SIMD
+> >>>>   *                instructions or access the SIMD register file
+> >>>>diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> >>>>index 5ebe73b69961..b7e5dac26190 100644
+> >>>>--- a/arch/arm64/kernel/fpsimd.c
+> >>>>+++ b/arch/arm64/kernel/fpsimd.c
+> >>>>@@ -90,7 +90,8 @@
+> >>>>   * To prevent this from racing with the manipulation of the task's FPSIMD state
+> >>>>   * from task context and thereby corrupting the state, it is necessary to
+> >>>>   * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
+> >>>>- * flag with local_bh_disable() unless softirqs are already masked.
+> >>>>+ * flag with kernel_neon_{disable, enable}. This will still allow softirqs to
+> >>>>+ * run but prevent them to use FPSIMD.
+> >>>>   *
+> >>>>   * For a certain task, the sequence may look something like this:
+> >>>>   * - the task gets scheduled in; if both the task's fpsimd_cpu field
+> >>>>@@ -142,6 +143,9 @@ extern void __percpu *efi_sve_state;
+> >>>>  #endif /* ! CONFIG_ARM64_SVE */
+> >>>>+static void kernel_neon_disable(void);
+> >>>>+static void kernel_neon_enable(void);
+> >>>
+> >>>I find these names a bit confusing: _disable() actualy enables FPSIMD/SVE
+> >>>context access for the current context (i.e., makes it safe).
+> >>>
+> >>>Since these also disable/enable preemption, perhaps we can align them
+> >>>with the existing get_cpu()/put_cpu(), something like:
+> >>>
+> >>>void get_cpu_fpsimd_context();
+> >>>vold put_cpu_fpsimd_context();
+> >>>
+> >>>If you consider it's worth adding the checking helper I alluded to
+> >>>above, it could then be called something like:
+> >>>
+> >>>bool have_cpu_fpsimd_context();
+> >>
+> >>I am not sure where you suggested a checking helper above. Do you refer to
+> >>exposing kernel_neon_busy even for !CONFIG_KERNEL_MODE_NEON?
+> >
+> >Hmmm, looks like I got my reply out of order here.
+> >
+> >I meant the helper (if any) to check
+> >!preemptible() && !__this_cpu_read(kernel_neon_busy).
 > 
-> The plan is to get those changes upstream as soon as possible as they
-> arre fixing real issues that people are facing. There are further
-> changes needed on the clocksource driver to try to stop wasting a TCB
-> channel.
-> the PWM TCB driver will also be changed to actually used the reviewed
-> binding and this will allow to get rif of atmel_tclib.
+> I guess you are using && instead of || because some of the caller may not
+> call get_cpu_fpsimd_context() before but still disable preemption, right?
 > 
-> Alexandre Belloni (12):
->   ARM: at91: move SoC specific definitions to SoC folder
->   misc: atmel_tclib: drop AVR32 support
->   misc: atmel_tclib: move definitions to header file
->   clocksource/drivers/tcb_clksrc: stop depending on atmel_tclib
->   clocksource/drivers/tcb_clksrc: Use tcb as sched_clock
->   ARM: at91: Implement clocksource selection
->   clocksource/drivers/tcb_clksrc: move Kconfig option
->   clocksource/drivers/timer-atmel-pit: rework Kconfig option
->   clocksource/drivers/tcb_clksrc: Rename the file for consistency
->   ARM: configs: at91: unselect PIT
->   misc: atmel_tclib: do not probe already used TCBs
->   clocksource/drivers/timer-atmel-tcb: Use ARRAY_SIZE instead of  
->     hardcoded size
+> Wouldn't it be better to have all the user calling get_cpu_fpsimd_context()
+> and put_cpu_fpsimd_context()?
 > 
->  arch/arm/configs/at91_dt_defconfig            |   1 +
->  arch/arm/configs/sama5_defconfig              |   1 +
->  arch/arm/mach-at91/Kconfig                    |  23 ++++
->  drivers/clocksource/Kconfig                   |  12 +-
->  drivers/clocksource/Makefile                  |   2 +-
->  .../{tcb_clksrc.c => timer-atmel-tcb.c}       | 123 ++++++++++++------
->  drivers/misc/Kconfig                          |  24 ----
->  drivers/misc/atmel_tclib.c                    |  37 +-----
->  drivers/pwm/pwm-atmel-tcb.c                   |   2 +-
->  .../atmel_tc.h => soc/at91/atmel_tcb.h}       |  25 +++-
->  10 files changed, 146 insertions(+), 104 deletions(-)
->  rename drivers/clocksource/{tcb_clksrc.c => timer-atmel-tcb.c} (81%)
->  rename include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} (95%)
+> This has the advantage to uniformize how the way FPSIMD is protected and
+> also...
+
+My expectation is that all users would have called
+get_cpu_fpsimd_context().
+
+The reason for writing the check that way is that we can't meaningfully
+inspect percpu variables unless we are non-preemptible already.  The &&
+means we don't do the percpu read at all is the case where preemptible()
+is true.
+
+Or do you think my logic is wrong somewhere?  (It's possible...)
+
+> >Looks like you inferred what I meant later on anyway.
+> >
+> >>
+> >>>
+> >>>>+
+> >>>>  /*
+> >>>>   * Call __sve_free() directly only if you know task can't be scheduled
+> >>>>   * or preempted.
+> >>>>@@ -213,11 +217,11 @@ static void sve_free(struct task_struct *task)
+> >>>>   * thread_struct is known to be up to date, when preparing to enter
+> >>>>   * userspace.
+> >>>>   *
+> >>>>- * Softirqs (and preemption) must be disabled.
+> >>>>+ * Preemption must be disabled.
+> >>>
+> >>>[*] That's not enough: we need to be in kernel_neon_disable()...
+> >>>_enable() (i.e., kernel_neon_busy needs to be true to prevent softirqs
+> >>>messing with the FPSIMD state).
+> >>
+> >>How about not mentioning preemption at all and just say:
+> >>
+> >>"The fpsimd context should be acquired before hand".
+> >>
+> >>This would help if we ever decide to protect critical section differently.
+> >
+> >Yes, or even better, name the function used to do this (i.e.,
+> >kernel_neon_disable() or get_cpu_fpsimd_context() or whatever it's
+> >called).
 > 
+> ... would make the comments simpler because we would have only one possible
+> case to care.
 
+Agreed
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+---Dave
