@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE756C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42CCC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B722217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1142075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554946506;
-	bh=pP0adzQJYEmmbL9Fik7yUg0fBVMfa0GZ/DCt5crizMk=;
+	s=default; t=1554946536;
+	bh=c4K8njIMFdnvbVZyGm+0SUf0XrmcLsRoTWxaADKng9k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gkx5uj5K6LuGzWZTC344yywr+qh5MVvN1zzImN31CEeO1XizRMiWf9wBRkfK19cFo
-	 NNUlU6z5yGIko2K7pa4FlxltvHrqqqBQN9BiD6RZTczK0s5WdqyQubY5NgpIvZeq51
-	 xUMne7ult+YnucmJHX6UknpYV+ysrQrhUlIsKUO4=
+	b=FfYCdk0WqAHCsZNGu/LcTXDo9QDf0/65+zVbKZTreN728wnG3NJJ8iyYA3SJ6pdSR
+	 GQGCWFpIrACkYTcU9cA7w0Kx4lmccjLyBXbQhqy5KJUmrNIxBZOrKu2hxui73OcD5p
+	 Nm7sKJpiq4oANoulOQAT8fKnx1k9jFBiVk02amYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfDKBfF (ORCPT
+        id S1726676AbfDKBfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
+        Wed, 10 Apr 2019 21:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKBfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:35:05 -0400
+        id S1726014AbfDKBfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:35:34 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7E7120674;
-        Thu, 11 Apr 2019 01:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905F720674;
+        Thu, 11 Apr 2019 01:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554946504;
-        bh=pP0adzQJYEmmbL9Fik7yUg0fBVMfa0GZ/DCt5crizMk=;
+        s=default; t=1554946533;
+        bh=c4K8njIMFdnvbVZyGm+0SUf0XrmcLsRoTWxaADKng9k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eMMkQid+lF4E6U1nqhSIOy7gXeSX2NVsfqUkh+tWjRd33u6AiX2c9L44LGsfwVFcZ
-         800cPiZpYLQRv7Cq62PKMnq2MYp/D/FYN515oXuG80hT6GyD3lFPQ8Ki7zpPqZQwoh
-         qxpPHqJ8ve6i7ho9BvxZ32CaswVB+DA3tFrRlVO0=
-Date:   Thu, 11 Apr 2019 09:34:50 +0800
+        b=Dkhon4vIh8wN4h63Y9trwAs90MxyORGU7DHvJklF9zvLXRxsJp9o6LyjDjyo2VN7H
+         stGpWOMeTZuNWjyMyImlHDzeAUPYio3RG3LXqz+oiANgLcT+YUc8YnGkG4VDZrFu9v
+         8B2ltg91dbkk6fKBqoRarTFMt3POV2SZeR9qaW5A=
+Date:   Thu, 11 Apr 2019 09:35:20 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Peng Ma <peng.ma@nxp.com>
 Cc:     axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com,
         leoyang.li@nxp.com, linux-ide@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [v7 2/3] arm64: dts: lx2160a: add sata node support
-Message-ID: <20190411013448.GC26817@dragon>
-References: <20190312015019.30628-1-peng.ma@nxp.com>
- <20190312015019.30628-2-peng.ma@nxp.com>
+        devicetree@vger.kernel.org, andy.tang@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] arm64: dts: ls1028a: Corrected the SATA ecc address.
+Message-ID: <20190411013519.GD26817@dragon>
+References: <20190311072014.36565-1-peng.ma@nxp.com>
+ <20190311072014.36565-2-peng.ma@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312015019.30628-2-peng.ma@nxp.com>
+In-Reply-To: <20190311072014.36565-2-peng.ma@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 09:50:18AM +0800, Peng Ma wrote:
-> Add SATA device nodes for fsl-lx2160a and enable support
-> for QDS and RDB boards.
+On Mon, Mar 11, 2019 at 03:20:13PM +0800, Peng Ma wrote:
+> Ls1028a SATA ecc address with more than 32 bit, so we should corrrect the
+> address.
 > 
 > Signed-off-by: Peng Ma <peng.ma@nxp.com>
 
