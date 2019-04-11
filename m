@@ -2,169 +2,83 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F704C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17D3C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248492184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D602146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaIquvyL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EysabDsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfDKUyN (ORCPT
+        id S1727113AbfDKUzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:54:13 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33798 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfDKUyN (ORCPT
+        Thu, 11 Apr 2019 16:55:01 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44178 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfDKUzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:54:13 -0400
-Received: by mail-yb1-f195.google.com with SMTP id a3so2785976ybr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mjcGkq0ThHXR8z8Gn+yNWN//rh9kKOgwfdqe4C4W07c=;
-        b=iaIquvyLqd7wLNVw1PX9hcVTfBK0jdts+OLXHRzY8EMNbzaYuo+dE1I1AGN5IHQh8f
-         adWzezztXAyzEIvK9/FIWyE56RWVsAhwE8RaZuwpNzmYTQgI9HW1LrGw9MLBdrStJ3MG
-         19hoLZBZVZxwE3jhTkmssKN2b2lJjaqiMzFz+M2TfRVkvvJfm4jYtthsixa6bFr2thK6
-         yU0wl2QS/HRVFSyAzp4RX8dfZ2Gh+1EB2nG9/OD1Loym5ZzXi3VlgxulbQzfcNrygP1m
-         Lp2fgAwPvZqEMQnWYAbqU5LO9bDXklO/6kD3gmlEWDnMceIdNafu248Hpz/GM6dvOUdT
-         ewdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mjcGkq0ThHXR8z8Gn+yNWN//rh9kKOgwfdqe4C4W07c=;
-        b=OKLhpG7XDAk7UIcs4ERdhZVrpKWzEPyiFa6yKnm4ciT6JWl6QgQgHNaVeuuP6huppY
-         0IZ0IfeF86qcrOnHIxtDfu8HDshqYJM/VOJ5h+4Vek+pCR4bVuOG7+81AEdv9V0B6pyT
-         28ELZn6c38DwzhICPkr5MaYFCheInNlCLSZPFSorQyd77rSdlC0uX8RPghL6Xe0nMMOo
-         DyTGoKNSfKN5yTFULo5TbC8WeQjLzjMp1fGEOxEP1t33XvJtqPmeeJpL4m19k6N3rMaJ
-         q+O3tWQ1cL9SdKbY61nmdx36MdCe/IFNu+z7wPAd+AxaJrlC53SaNAC/DLxBzEFrTlyd
-         W00A==
-X-Gm-Message-State: APjAAAV3bwKpeN+76NDL6He1DzoG6L4jFVO95IE8t3pv7cQlDeV7Bq9C
-        nns4Pj3ismlPl/Qm4BBEz5GBAAjcwvthkGZRt+q8Bg==
-X-Google-Smtp-Source: APXvYqyNXODOXnsXBh6Ic9JgOpk1LrGIazsxDmYWmIrQQEBp50RmzfENOooW5jzzjboHz4qQDS/7T75uvNedJWIK+0A=
-X-Received: by 2002:a25:8106:: with SMTP id o6mr44113476ybk.53.1555016051682;
- Thu, 11 Apr 2019 13:54:11 -0700 (PDT)
+        Thu, 11 Apr 2019 16:55:01 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BKsmdr046222;
+        Thu, 11 Apr 2019 15:54:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555016088;
+        bh=zj/9ejsCGMMYU8zejw5RjLTSg0ML9zjqfxpe6p3PRE4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EysabDsfjx3yyIgbYzqCWKrA6KeCsyoMu0VKWEvzakxzZC5Ch988y3lMqqSB7MLw/
+         lvdMWcorFxNhEJ/3N2mbnaBdhXQfwIUgaChpdOibuomw8+vlVilONpSAjZJ+xz1Lek
+         Jp2LPm2F7THzYoBtrNqjVBnAioUfRcE+62oKhAl4=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BKsmCX070693
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Apr 2019 15:54:48 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
+ Apr 2019 15:54:48 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 11 Apr 2019 15:54:48 -0500
+Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BKsl9k078431;
+        Thu, 11 Apr 2019 15:54:47 -0500
+Subject: Re: [PATCH v2 6/7] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <marek.behun@nic.cz>, <rdunlap@infradead.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20190411193848.23140-1-dmurphy@ti.com>
+ <20190411193848.23140-7-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1a56bd5d-0c3f-a898-f0fe-24134ffc304d@ti.com>
+Date:   Thu, 11 Apr 2019 15:54:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
- <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
- <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
- <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
- <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
- <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
- <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
- <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com> <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 11 Apr 2019 13:53:59 -0700
-Message-ID: <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, kernelci@groups.io,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190411193848.23140-7-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:22 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Apr 11, 2019 at 1:08 PM Guenter Roeck <groeck@google.com> wrote:
-> >
-> > On Thu, Apr 11, 2019 at 10:35 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Thu, Apr 11, 2019 at 9:42 AM Guenter Roeck <groeck@google.com> wrote:
-> > > >
-> > > > On Thu, Apr 11, 2019 at 9:19 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > On Thu, Mar 7, 2019 at 7:43 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > > I went ahead and acquired one of these boards to see if I can can
-> > > > > > debug this locally.
-> > > > >
-> > > > > Hi! Any progress on this? Might it be possible to unblock this series
-> > > > > for v5.2 by adding a temporary "not on ARM" flag?
-> > > > >
-> > > >
-> > > > Can someone send me a pointer to the series in question ? I would like
-> > > > to run it through my testbed.
-> > >
-> > > It's already in -mm and linux-next (",mm: shuffle initial free memory
-> > > to improve memory-side-cache utilization") but it gets enabled with
-> > > CONFIG_SHUFFLE_PAGE_ALLOCATOR=y (which was made the default briefly in
-> > > -mm which triggered problems on ARM as was reverted).
-> > >
-> >
-> > Boot tests report
-> >
-> > Qemu test results:
-> >     total: 345 pass: 345 fail: 0
-> >
-> > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
-> > and the known crashes fixed.
->
-> In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
-> kernel command line option "page_alloc.shuffle=1"
->
-> ...so I doubt you are running with shuffling enabled. Another way to
-> double check is:
->
->    cat /sys/module/page_alloc/parameters/shuffle
+Hello
 
-Yes, you are right. Because, with it enabled, I see:
+On 4/11/19 2:38 PM, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and the LP5018
+> RGB LED device driver.  The LP5036/3024/18 can control RGB LEDs individually
 
-Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
-console=ttyAMA0,115200 page_alloc.shuffle=1
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-page_alloc_shuffle+0x12c/0x1ac
-static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-before call to jump_label_init()
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper Not tainted
-5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-Hardware name: ARM Integrator/CP (Device Tree)
-[<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-[<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-[<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-[<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-[<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-(page_alloc_shuffle+0x12c/0x1ac)
-[<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-[<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-[<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
-[<c0ac3c00>] (start_kernel) from [<00000000>] (  (null))
+s/LP5036/3024/18->LP5036/30/24/18
 
-I'll re-run the test, but I suspect it will drown in warnings.
+Dan
 
-Guenter
+<snip>
