@@ -2,188 +2,138 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325B5C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34725C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74EE2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554987812;
-	bh=9XTYCCyJm+fbwpelfocSJVzlq8fNSgae63WzueN6KF0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TPQANigEVutwnS4+7DdEDHYrAWN6FfqsexAab1D3zTKC2IT/mrnBccgr9CfCyH8at
-	 1qEMUPwyuLxi4QjwEhDDFZ9FH1VKjzhiwxSeg4b8VMTG0cn81qGLJp3D4c7m39aZ0U
-	 GNBuCvpZ1PzRea3QOX/i+stMqE4Tdnw6+vUQd454=
+	by mail.kernel.org (Postfix) with ESMTP id DF2C92133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:04:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bVbeQ6xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfDKNDa (ORCPT
+        id S1726723AbfDKNEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKNDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:03:30 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDE2A21850;
-        Thu, 11 Apr 2019 13:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554987808;
-        bh=9XTYCCyJm+fbwpelfocSJVzlq8fNSgae63WzueN6KF0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cofgem3ndsI06Xs8x9qplIdwBEHqQGWHYEGTrm4Pb1L+0DKpYnn5YRtBA4z/o0IX0
-         DYb44pquD02iUawKhlqwAVd5Iy5UhSkRcMC0d5tEZIfBJJFg7wkXzgoYJQz7Y1FUXb
-         1aV3HYbm+AS+4rkS45nVbCIx7x72o62GdzY5abzU=
-Received: by mail-qt1-f170.google.com with SMTP id k14so6970200qtb.0;
-        Thu, 11 Apr 2019 06:03:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAVEFQYJxWBxCxJX0tTre9R6r3RD2GyCFc7qlBGaEZEIXBAzdbEI
-        wWuN3ITOL9RRniaWGFyjxxu4M/qBNKil3dLfzQ==
-X-Google-Smtp-Source: APXvYqyKqshKFZvGidjWRZTIr5iIb0RBzNZgkIQWM4X1rEDTWqFLfA3D0CJ7vYpeef7un8R0LKvwiPuXkBMKWGZ1LW4=
-X-Received: by 2002:ac8:3f6f:: with SMTP id w44mr39624776qtk.59.1554987807959;
- Thu, 11 Apr 2019 06:03:27 -0700 (PDT)
+        Thu, 11 Apr 2019 09:04:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55300 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKNEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:04:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aD933i4Wj9PjridmEAUhVomweZfmpjsmm/0HQqxO1Y8=; b=bVbeQ6xrMruQYyuLRfvKrsppY
+        cXKFfQPN8NRMELmecJvA8Q5/+lQJ/f3d6aLTgjnTRdqALrJiRl6cmVaCBX27/xSlyBOMzJn0nrQBp
+        ZIZn6wyI7MdTi+yBPdPLM6fVZAJbBEy+OoA+7aMqjM8gbAoJOUWGKV4zxIs7QEA5icn15m+hQJDtJ
+        3fKd9Aq1CfOQtmPEjKkRW4P51i7IH8Qq1AlEzVazGAhMdKr6TnDO+TWMtwC+TWrV1ozTYvOlhl99B
+        qQgkZ2LJimzzvRoFzkaXudyOn7Q40kDUXA7aPBqtEsywZBH9KcYIdxiWDnAnh+HKlYRF2PPLH0Mri
+        I2TeTaBdA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEZNc-0002ZD-HK; Thu, 11 Apr 2019 13:04:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 49E8229AABF40; Thu, 11 Apr 2019 15:04:34 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 15:04:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mark.rutland@arm.com, mingo@kernel.org, acme@redhat.com,
+        tglx@linutronix.de, brueckner@linux.ibm.com,
+        torvalds@linux-foundation.org, alexander.shishkin@linux.intel.com,
+        heiko.carstens@de.ibm.com, tmricht@linux.ibm.com,
+        schwidefsky@de.ibm.com, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, jolsa@redhat.com, hpa@zytor.com
+Cc:     linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:perf/urgent] perf/core: Fix perf_event_disable_inatomic()
+ race
+Message-ID: <20190411130434.GD11158@hirez.programming.kicks-ass.net>
+References: <tip-86071b11317550d994b55ce5e31aa06bcad783b5@git.kernel.org>
 MIME-Version: 1.0
-References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411084304.5072-6-paul.walmsley@sifive.com>
-In-Reply-To: <20190411084304.5072-6-paul.walmsley@sifive.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 11 Apr 2019 08:03:04 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ-tF081FoK3_O6vR-MUjefvEqTGWKRpW7K33nzav8eXA@mail.gmail.com>
-Message-ID: <CAL_JsqJ-tF081FoK3_O6vR-MUjefvEqTGWKRpW7K33nzav8eXA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] riscv: dts: add initial board data for the SiFive
- HiFive Unleashed
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        Paul Walmsley <paul@pwsan.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tip-86071b11317550d994b55ce5e31aa06bcad783b5@git.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 3:43 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> Add initial board data for the SiFive HiFive Unleashed A00.
->
-> Currently the data populated in this DT file describes the board
-> DRAM configuration and the external clock sources that supply the
-> PRCI.
->
-> This second version adds onboard SPI device data, fixes the board's
-> memory size, and adds changes based on comments from Rob Herring
-> <robh+dt@kernel.org>.
->
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/riscv/boot/dts/sifive/Makefile           |  2 +
->  .../dts/sifive/hifive-unleashed-a00-fu540.dts | 69 +++++++++++++++++++
->  2 files changed, 71 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/sifive/Makefile
->  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
->
-> diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-> new file mode 100644
-> index 000000000000..fb825db888df
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sifive/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> new file mode 100644
-> index 000000000000..9d35e811a3aa
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: (Apache-2.0 OR GPL-2.0+)
-> +/* Copyright (c) 2018-2019 SiFive, Inc */
-> +
-> +/dts-v1/;
-> +
-> +#include "fu540-c000.dtsi"
-> +
-> +/* Clock frequency (in Hz) of the PCB crystal for rtcclk */
-> +#define RTCCLK_FREQ            1000000
-> +
-> +/ {
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +       model = "SiFive HiFive Unleashed A00 (FU540-C000)";
-> +       compatible = "sifive,hifive-unleashed-a00-fu540",
-> +               "sifive,hifive-unleashed-fu540",
-> +               "sifive,fu540-c000", "sifive-fu540";
+On Wed, Apr 10, 2019 at 05:13:54AM -0700, tip-bot for Peter Zijlstra wrote:
+> Commit-ID:  86071b11317550d994b55ce5e31aa06bcad783b5
+> Gitweb:     https://git.kernel.org/tip/86071b11317550d994b55ce5e31aa06bcad783b5
+> Author:     Peter Zijlstra <peterz@infradead.org>
+> AuthorDate: Thu, 4 Apr 2019 15:03:00 +0200
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Wed, 10 Apr 2019 13:47:09 +0200
+> 
+> perf/core: Fix perf_event_disable_inatomic() race
+> 
+> Thomas-Mich Richter reported he triggered a WARN()ing from event_function_local()
+> on his s390. The problem boils down to:
+> 
+> 	CPU-A				CPU-B
+> 
+> 	perf_event_overflow()
+> 	  perf_event_disable_inatomic()
+> 	    @pending_disable = 1
+> 	    irq_work_queue();
+> 
+> 	sched-out
+> 	  event_sched_out()
+> 	    @pending_disable = 0
+> 
+> 					sched-in
+> 					perf_event_overflow()
+> 					  perf_event_disable_inatomic()
+> 					    @pending_disable = 1;
+> 					    irq_work_queue(); // FAILS
+> 
+> 	irq_work_run()
+> 	  perf_pending_event()
+> 	    if (@pending_disable)
+> 	      perf_event_disable_local(); // WHOOPS
+> 
+> The problem exists in generic, but s390 is particularly sensitive
+> because it doesn't implement arch_irq_work_raise(), nor does it call
+> irq_work_run() from it's PMU interrupt handler (nor would that be
+> sufficient in this case, because s390 also generates
+> perf_event_overflow() from pmu::stop). Add to that the fact that s390
+> is a virtual architecture and (virtual) CPU-A can stall long enough
+> for the above race to happen, even if it would self-IPI.
+> 
+> Adding a irq_work_sync() to event_sched_in() would work for all hardare
+> PMUs that properly use irq_work_run() but fails for software PMUs.
+> 
+> Instead encode the CPU number in @pending_disable, such that we can
+> tell which CPU requested the disable. This then allows us to detect
+> the above scenario and even redirect the IPI to make up for the failed
+> queue.
 
-This doesn't match your schema which has 3 entries. Really, 4 entries
-is kind of pointless typically. Usually, just a board and SoC
-compatible are enough.
+Ingo, could you please fold in the below delta? It turns out I
+overlooked two insteances :-(
 
-> +
-> +       chosen {
-> +       };
-> +
-> +       cpus {
-> +               timebase-frequency = <RTCCLK_FREQ>;
-> +       };
-> +
-> +       memory@80000000 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x80000000 0x2 0x00000000>;
-> +       };
-> +
-> +       soc {
-> +       };
-> +
-> +       hfclk: hfclk {
-> +               #clock-cells = <0>;
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <33333333>;
-> +               clock-output-names = "hfclk";
-> +       };
-> +
-> +       rtcclk: rtcclk {
-> +               #clock-cells = <0>;
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <RTCCLK_FREQ>;
-> +               clock-output-names = "rtcclk";
-> +       };
-> +};
-> +
-> +&qspi0 {
-> +       flash@0 {
-> +               compatible = "issi,is25wp256d", "jedec,spi-nor";
-> +               reg = <0>;
-> +               spi-max-frequency = <50000000>;
-> +               m25p,fast-read;
-> +               spi-tx-bus-width = <4>;
-> +               spi-rx-bus-width = <4>;
-> +       };
-> +};
-> +
-> +&qspi2 {
-> +       status = "okay";
-> +       mmc@0 {
-> +               compatible = "mmc-spi-slot";
-> +               reg = <0>;
-> +               spi-max-frequency = <20000000>;
-> +               voltage-ranges = <3300 3300>;
-> +               disable-wp;
-> +       };
-> +};
-> --
-> 2.20.1
->
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -392,7 +392,7 @@ void *perf_aux_output_begin(struct perf_
+ 		 * store that will be enabled on successful return
+ 		 */
+ 		if (!handle->size) { /* A, matches D */
+-			event->pending_disable = 1;
++			event->pending_disable = smp_processor_id();
+ 			perf_output_wakeup(handle);
+ 			local_set(&rb->aux_nest, 0);
+ 			goto err_put;
+@@ -480,7 +480,7 @@ void perf_aux_output_end(struct perf_out
+ 
+ 	if (wakeup) {
+ 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
+-			handle->event->pending_disable = 1;
++			handle->event->pending_disable = smp_processor_id();
+ 		perf_output_wakeup(handle);
+ 	}
+ 
