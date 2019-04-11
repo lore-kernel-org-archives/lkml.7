@@ -2,134 +2,136 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09903C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F4EC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF01320818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCZxgyF+"
+	by mail.kernel.org (Postfix) with ESMTP id 924D02083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfDKPJp (ORCPT
+        id S1726678AbfDKPMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:09:45 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:45886 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfDKPJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:09:45 -0400
-Received: by mail-yw1-f65.google.com with SMTP id j128so2164707ywg.12;
-        Thu, 11 Apr 2019 08:09:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Tqx8ZuggGN72tgSa9PsmG5waNYm7PqHVS8d44MpgSeY=;
-        b=WCZxgyF+D2l1qMIuu1RuobVTBWmhViF6PdquQnYqW1ttQSbYxnDKGfHn56oQxCofCV
-         Wa3cH+bt1Xa27sj99lzlX665WxKJIGuOawEuK/6jdl+OdDgu7nvOMQhNPmLt41zHmMFG
-         mB23w1pbJY1uWsPJ73gSHb+XrHvY4oYkHH6+mw2XSFvPOmxhBOqy7heNjA4SBqYqRmze
-         lBckhm+5wv3jrEGs/AY1GwT+6KIgQQeuhc3LkrmNj9qn+j2rxUn+IsYE20zcybEfnOyd
-         1TC9HjUUdm1qP0EuAw0Oshwamwp1+m8bWdm/rW+WJlGHI+kaJMmLm3kGscVWXpGAnRtb
-         SoBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Tqx8ZuggGN72tgSa9PsmG5waNYm7PqHVS8d44MpgSeY=;
-        b=sx6Pk/DXHGeBGEFHvDigI6fi337EeB1H8d/Lo8UiVglz67dNtU5pFDhAasnkwN6a2M
-         sqo2C8a3LLwcrTuZXqQ7EZhM6ypaygjtv3KbLjBWGIIw9/Y3GkrOTTwLqeDFxUAT2js3
-         /PcLFybuq9GdcYwe3rWmxFPWpPp9aUQn7ao9VUsw3YpOLY8TFacTvLCVivXysmQtp95I
-         n4hcp7Lhl83V4/NQRQ9XmoptkknOR/bLU1hI1hgwUsQYsa1PpKLkniKOMI5On7eqj/c1
-         DjV10rucu0ilqq50kjmqULITnS8stm2vy03KOFWJKmSifJSE3FI7V42M4fz5En9kaYIp
-         lR6Q==
-X-Gm-Message-State: APjAAAWrSSY8hmrR2xVQ67YIe/+W/k+a8hQKADV74JvQJuvB4sM/h/cP
-        h5G+7PVo6Kqfs1PCmhZCv7BXCOLxdwX1BiTYl2k=
-X-Google-Smtp-Source: APXvYqxvGycB2zkL1JRB6/rw812IdfHdVK8vIym8jl/N0ImTtGOM3KWXobGfWX7POqAYioULdmkM57U8AfzSTKUZig8=
-X-Received: by 2002:a81:7895:: with SMTP id t143mr40159711ywc.156.1554995384250;
- Thu, 11 Apr 2019 08:09:44 -0700 (PDT)
+        Thu, 11 Apr 2019 11:12:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44602 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfDKPMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 11:12:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B2CC15AD;
+        Thu, 11 Apr 2019 08:12:15 -0700 (PDT)
+Received: from [10.37.12.69] (unknown [10.37.12.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0007F3F68F;
+        Thu, 11 Apr 2019 08:12:12 -0700 (PDT)
+Subject: Re: [RFC PATCH] arm64/fpsimd: Don't disable softirq when touching
+ FPSIMD/SVE state
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rt-users@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20190208165513.8435-1-julien.grall@arm.com>
+ <20190404105233.GD3567@e103592.cambridge.arm.com>
+ <a46f9fd4-dd31-c892-aec1-ae69072be92d@arm.com>
+ <20190405143942.xtpq5443qbc4gziy@linutronix.de>
+ <dabf5b36-d22e-e8a3-c01f-6b0f5b3be710@arm.com>
+ <20190405154259.3g3fv72miizm64hc@linutronix.de>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <1af20802-7e3f-6f93-bec0-0d625533ce4a@arm.com>
+Date:   Thu, 11 Apr 2019 16:12:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190411105720.32357-1-peron.clem@gmail.com> <20190411123223.zyumngnlwhlvk6mf@flea>
- <2219012.spPdo1bsEq@jernej-laptop>
-In-Reply-To: <2219012.spPdo1bsEq@jernej-laptop>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 11 Apr 2019 17:09:20 +0200
-Message-ID: <CAJiuCcejA16mKVHeKEf-YmzNsS-w=mjrzbG4hR3DoepiZr_J8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
-To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190405154259.3g3fv72miizm64hc@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Sebastian,
 
-On Thu, 11 Apr 2019 at 17:01, Jernej =C5=A0krabec <jernej.skrabec@siol.net>=
- wrote:
->
-> Hi!
->
-> Dne =C4=8Detrtek, 11. april 2019 ob 14:32:23 CEST je Maxime Ripard napisa=
-l(a):
-> > On Thu, Apr 11, 2019 at 12:57:12PM +0200, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > Hi,
-> > >
-> > > The Allwinner H6 has a Mali-T720 MP2. The drivers are
-> > > out-of-tree so this series only introduce the dt-bindings.
-> > >
-> > > The first patch is from Neil Amstrong and has been already
-> > > merged in linux-amlogic. It is required for this series.
-> > >
-> > > The second patch is from Icenowy Zheng where I changed the
-> > > order has required by Rob Herring.
-> > > See: https://patchwork.kernel.org/patch/10699829/
-> > >
-> > > The GPU opp table was taken from Jernej =C5=A0krabec's patch
-> > > on LibreELEC.tv.
-> >
-> > One valuable information here would be which stack did you use,
-> > panfrost and mesa or the ARM stack? If so, with which driver and which
-> > blob?
-All of this work has be done by Jernej so he could answer better than me.
+On 4/5/19 4:42 PM, Sebastian Andrzej Siewior wrote:
+> On 2019-04-05 16:17:50 [+0100], Julien Grall wrote:
+>> Hi,
+> Hi,
+> 
+>>> A per-CPU lock? It has to be a raw_spinlock_t because a normal
+>>> spin_lock() / local_lock() would allow scheduling and might be taken as
+>>> part of the context switch or soon after.
+>> raw_spinlock_t would not work here without disabling preemption. Otherwise
+>> you may end up to recurse on the lock and therefore deadlock. But then it
+>> raise the question of the usefulness of the lock here.
+>>
+>> However, I don't really understand why allowing the scheduling would be a
+>> problem here. Is it a concern because we will waste cycle trying to
+>> restore/save a context that will be scratched as soon as we release the
+>> lock?
+> 
+> If you hold the lock within the kernel thread and every kernel thread
+> acquires it before doing any SIMD operations then you are good. It could
+> be a sleeping lock. What happens if you hold the lock, are scheduled out
+> and a user task is about to be scheduled? How do you force the kernel
+> thread out / give up the FPU registers?
 
-He uses the ARM stack r22p0-01rel0 + patches
-https://github.com/LibreELEC/LibreELEC.tv/commit/5273f889964c42e88fe0228929=
-0c3c6cb6086770
+You would need the thread out to finish running the critical section 
+before the next thread to run. I was under the impression with sleeping 
+lock, the priority of the thread out would get bumped to finish quickly 
+the critical section.
 
-Blob are also from Jernej too (taken from ???) :
-https://github.com/jernejsk/H6-mali-userspace
+I agree it means that you will waste time restoring registers that will 
+get trashed right after you leave the critical sections. This is 
+probably not really efficient.
 
-Regards,
-Clement
+Anyway, that was only a suggestion I haven't fully thought through. I 
+have no plan to do more work than this patch in the fpsimd context switch.
 
->
-> I'm using similar binding (different clock and interrupt names, but other=
-wise
-> same) for quiet some time now on LibreELEC with ARM proprietary userspace=
- and
-> kernel space driver (32-bit GBM version) and it works well.
->
-> It's true that I'm using OPP table, but most (if not all) of the time GPU=
- is
-> set to lowest setting as there is not much to do when rendering GUI.
->
-> Best regards,
-> Jernej
->
->
+> 
+> That preempt_disable() + local_bh_disable() might not be the pretties
+> thing but how bad is it actually?
+
+ From the measurement I did on non-RT, it is beneficial to keep the 
+softirq enabled (see [1]).
+
+I don't have platform where FPSIMD is used in softirqs (or at least not 
+by default). So for testing purpose, I wrote a tasklet (based on 
+hrtimer) using the FPSIMD registers every 1ms if it is allowed (i.e 
+may_use_simd() returns true). I let it run for a while and notice that 
+the tasklet will be executed only 0.15% of the time when !may_use_simd().
+
+Furthermore, from what I understood in this thread, there are few 
+limited use cases where FPSIMD will be used in softirqs. So it seems 
+better to me to avoid disabling softirqs at least in non-RT.
+
+For the RT, aren't all the softirqs handled in a thread? So what would 
+be the benefits to disable softirqs if we already disable preemption?
+
+In any case, this patch introduces new helpers (get_cpu_fpsimd_context 
+and put_cpu_fpsimd_context) to delimit regions using the HW FPSIMD. So 
+it would be easy to modify the behavior if we wanted too.
+
+> Latency wise you can't schedule(). From RT point of view you need to
+> enable preemption while going from page to page because of the possible
+> kmap() or kmalloc() (on baldy aligned src/dst) with the crypto's
+> page-walk code.
+
+Make sense. However I don't think we can keep enable the preemption with 
+the current implementation of FPSIMD context switch. I noticed you 
+disabled crypto for Arm64 because of allocations, I have a todo to look 
+at what we can do.
+
+Cheers,
+
+[1] https://marc.info/?l=linux-rt-users&m=155499183812211&w=2
+
+> 
+> Sebastian
+> 
+
+-- 
+Julien Grall
