@@ -2,69 +2,106 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8158CC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415032184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634452133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="b4PHaMd3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5tcpxay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfDKNtI (ORCPT
+        id S1726842AbfDKNuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:49:08 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53106 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfDKNtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:49:07 -0400
-Received: from zn.tnic (p200300EC2F0ABD00B0506403E4AFEFF4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bd00:b050:6403:e4af:eff4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A1B241EC0A8F;
-        Thu, 11 Apr 2019 15:49:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554990546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sPs7o/G+UQ9SWhBybAWOHU16f+ESKLmeQTXgWc3iDEk=;
-        b=b4PHaMd3lnkYsUM1bgRqQpAU0BjQTZG4mrY2vo3r/XTyATwlWo9GzdJQg5Uk0FVIQzCNxO
-        wBET439tMUuIG+2jfr900avOm6DbkE6Afa0/oIA0XFcQNZlf6h2/u+Q+Q8Vx7Wbp9xlAi+
-        htaC6dnmnonH11DjTCjI3GUEJ2wyvRc=
-Date:   Thu, 11 Apr 2019 15:49:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Zhao, Yakui" <yakui.zhao@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: Re: [RFC PATCH v3 2/4] x86: Add the support of ACRN guest
-Message-ID: <20190411134900.GG30080@zn.tnic>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
- <1554711131-21514-3-git-send-email-yakui.zhao@intel.com>
- <20190408143952.GF15689@zn.tnic>
- <ab54d5a4-4f4c-9401-2e98-f0ac09d023b1@intel.com>
+        Thu, 11 Apr 2019 09:50:12 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34683 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfDKNuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:50:11 -0400
+Received: by mail-lj1-f194.google.com with SMTP id j89so5614604ljb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v4R2nON0fldrx5nngWEL1/9mxMORAgC13VD1L1J+hqE=;
+        b=n5tcpxayQJWVkfmz544eU/QxZK23icq8z6nor0EUpI65AyurqVGjsnpdLWxaCxrcLw
+         zjGEz4yTq6YL6JsBMgLRjeQvUISwUYiq3cGX4defR+9JDRL9oUi1fP5f3VkAqv2jJdCt
+         b4R3K97mIvt2UZbz/xy++6ZCOTaeA2FwXQYtMEyIBFryDI5TBsWLmgrJkRVJlqdU660k
+         ec5F6TdsVxE0ISKhTkUIgrZywqdiEaf1CFzrb0XZoAHmc5aT7uFYmxyIuSlKUw5Q8LQ7
+         Gu1z2iCwKcG0jc5W8074pW/NPBS5jthqetXQgvk6peGEPn9PDB9+zbQ4UpYamYdOn1GA
+         agsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v4R2nON0fldrx5nngWEL1/9mxMORAgC13VD1L1J+hqE=;
+        b=THOkFg2zcFI0ezGGuBHaGtMoJSq+/UDyhFr+kG64IuWZI76cvN/8opwU3IbnrK9vHK
+         EUuCzWtr9PkqRY1TkDxOzXkKakt4I1CBnWEaYWip6UMUhBI4WTbiAIwLpZrilV/YY9SY
+         Srh3z3M4PTuOrk4nieYFHTOxTnZC+BWUu3be3o9z+Z3i/a9y2U3yE4eGCqVw9vxqlzuD
+         v3wrXjW+IvZTFVTONc5abqkGVsK81tQwKUB+OXeHy3zEHPcuhCnQC/RyMvE0AFXIeFyD
+         9Img9thTJjsH9aqmRxAJrKg4WtuqcplAtmDnijGYRM598X+6QwLLwYzNZLqQE6je70JJ
+         2vIQ==
+X-Gm-Message-State: APjAAAVYUFN0zixDQnlTGlRd1RQ3GtXDr85bnW5z2FEhEbC8/E8MXtO6
+        pZoh9nXUh8GF0uHvq1V1OdJVZWp+pGkJoBd6zSgdzg==
+X-Google-Smtp-Source: APXvYqwgecgntexEoE1X1kv52LpK3MtvkI2UElw9fMlfchiLismJczoNQzXXJi3WahoUKyoYK+094DukwKoS4Ym6w/o=
+X-Received: by 2002:a2e:808e:: with SMTP id i14mr28032166ljg.103.1554990609376;
+ Thu, 11 Apr 2019 06:50:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ab54d5a4-4f4c-9401-2e98-f0ac09d023b1@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190410103926.8781-1-alexandre.belloni@bootlin.com> <20190410103926.8781-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190410103926.8781-2-alexandre.belloni@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 11 Apr 2019 15:49:58 +0200
+Message-ID: <CACRpkdZfdxNwU_9h3PtcJkAE++QZnC_JifoqNfLwJyqj_ofJuA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: lpc32xx: document interrupt bindings
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 05:15:48PM +0800, Zhao, Yakui wrote:
-> Currently the x2apic is not enabled in the first step.
-> Next step it needs to check the cpu info reported by ACRN hypervisor to
-> determine whether the x2apic should be supported.
+Hi Alexandre,
 
-What "cpu info"? CPUID or something ACRN-specific?
+thanks for your patch!
 
--- 
-Regards/Gruss,
-    Boris.
+On Wed, Apr 10, 2019 at 12:39 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> Some of the LPC32xx gpios are wired directly to one of the interrupt
+> controllers while port 0 and port 1 share the same interrupt for their
+> interrupt capable gpios.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+(...)
+
+> +- interrupts: Should be the interrupt shared by port 0 and port 1 and the
+> +  interrupts for individual pins from port 3.
+> +- interrupt-names : Should be the names of irq resources. The shared port
+> +  interrupt is named "p01", the other use the pin names.
+
+The recent design pattern with hierarchical interrupts such as this one
+is to simply hardcode the relationship between parent interrupt controller
+and child interrupt controller in the driver.
+
+However you should add interrupt-controller and possibly
+interrupt-parent to the bindings and example.
+
+More comments in patch 2.
+
+Yours,
+Linus Walleij
