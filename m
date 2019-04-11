@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC98C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED701C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72C20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB4C20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zQba8l1Y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bRq/VLV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfDKP3C (ORCPT
+        id S1726875AbfDKP3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:29:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48468 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfDKP3C (ORCPT
+        Thu, 11 Apr 2019 11:29:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34502 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKP3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:29:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BFStA2130009;
-        Thu, 11 Apr 2019 10:28:55 -0500
+        Thu, 11 Apr 2019 11:29:14 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BFT9BY096808;
+        Thu, 11 Apr 2019 10:29:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554996535;
-        bh=qqMaKGSPhmxv8H/I0FbgYy7OqIMZ1lOCyw+l6N2GXm0=;
+        s=ti-com-17Q1; t=1554996549;
+        bh=/oWsUX/TQkDCHmCWM5p+MGYnMYDfH2HdHUX98BFV1MU=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zQba8l1YfdJ5Rh5/wg+tXct0YKmGdS/CfJnZc08/8guv/dKWB7hVYso5U8UCEyMjn
-         6KpbvhZ0GRaFHW94KLJOCQb0XiPPu4zJUUbxp+H30B1rHgabi0UVE4hNAia02vJFy9
-         3xBxGUvTI+tBDfKgPII6DoH9L17xBMo58YOA/pq0=
+        b=bRq/VLV7G5D3cit7ygSSzAxwCnjkjBwOWA6tZiclSpT7A//D9DP/JpSas8b6I/Aar
+         cqrGAXdBQsX2pMNU9pStXvCmxAtJC+1JDB1gSQIWR9lBm2ytrmEbjpCsq7wKf/3D07
+         BUBIJtyu4vT2ZFMH62sWK0Eu050TRqbbga8fl24o=
 Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BFStYr044349
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BFT9ft103810
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Apr 2019 10:28:55 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+        Thu, 11 Apr 2019 10:29:09 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
  (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
- Apr 2019 10:28:54 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 10:29:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 11 Apr 2019 10:28:54 -0500
+ Frontend Transport; Thu, 11 Apr 2019 10:29:08 -0500
 Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BFSsVB009640;
-        Thu, 11 Apr 2019 10:28:54 -0500
-Subject: Re: [PATCH v3 11/25] leds: lp8860: Use generic support for composing
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BFT8t6010458;
+        Thu, 11 Apr 2019 10:29:08 -0500
+Subject: Re: [PATCH v3 15/25] leds: lm3601x: Use generic support for composing
  LED names
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         <linux-leds@vger.kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <pavel@ucw.cz>, <robh@kernel.org>
 References: <20190331175501.23471-1-jacek.anaszewski@gmail.com>
- <20190331175501.23471-12-jacek.anaszewski@gmail.com>
+ <20190331175501.23471-16-jacek.anaszewski@gmail.com>
 From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4c454bbc-62b2-8607-893c-5e126cba31ad@ti.com>
-Date:   Thu, 11 Apr 2019 10:28:54 -0500
+Message-ID: <e8f068fd-531d-aca5-960f-a64d6797d19d@ti.com>
+Date:   Thu, 11 Apr 2019 10:29:08 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190331175501.23471-12-jacek.anaszewski@gmail.com>
+In-Reply-To: <20190331175501.23471-16-jacek.anaszewski@gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -78,107 +78,128 @@ On 3/31/19 12:54 PM, Jacek Anaszewski wrote:
 > Switch to using generic LED support for composing LED class
 > device name.
 >
-> While at it, avoid iterating through available child of nodes
-> in favor of obtaining single expected child node using single
-> call to of_get_next_available_child().
->
 > Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 > Cc: Dan Murphy <dmurphy@ti.com>
 > ---
->  drivers/leds/leds-lp8860.c | 35 ++++++++++++++++-------------------
->  1 file changed, 16 insertions(+), 19 deletions(-)
+>  drivers/leds/leds-lm3601x.c | 38 +++++++++++++++++---------------------
+>  1 file changed, 17 insertions(+), 21 deletions(-)
 >
-> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-> index 39c72a908f3b..10364068da53 100644
-> --- a/drivers/leds/leds-lp8860.c
-> +++ b/drivers/leds/leds-lp8860.c
-> @@ -22,7 +22,6 @@
->  #include <linux/of_gpio.h>
->  #include <linux/gpio/consumer.h>
+> diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
+> index 081aa71e43a3..d81884c406c3 100644
+> --- a/drivers/leds/leds-lm3601x.c
+> +++ b/drivers/leds/leds-lm3601x.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
 >  #include <linux/slab.h>
 > -#include <uapi/linux/uleds.h>
 >  
->  #define LP8860_DISP_CL1_BRT_MSB		0x00
->  #define LP8860_DISP_CL1_BRT_LSB		0x01
-> @@ -87,6 +86,8 @@
->  
->  #define LP8860_CLEAR_FAULTS		0x01
->  
-> +#define LP8860_NAME			"lp8860"
-> +
->  /**
->   * struct lp8860_led -
->   * @lock - Lock for reading/writing the device
-> @@ -96,7 +97,6 @@
->   * @eeprom_regmap - EEPROM register map
->   * @enable_gpio - VDDIO/EN gpio to enable communication interface
->   * @regulator - LED supply regulator pointer
-> - * @label - LED label
->   */
->  struct lp8860_led {
+>  #define LM3601X_LED_IR		0x0
+>  #define LM3601X_LED_TORCH	0x1
+> @@ -90,8 +89,6 @@ struct lm3601x_led {
+>  	struct regmap *regmap;
 >  	struct mutex lock;
-> @@ -106,7 +106,6 @@ struct lp8860_led {
->  	struct regmap *eeprom_regmap;
->  	struct gpio_desc *enable_gpio;
->  	struct regulator *regulator;
-> -	char label[LED_MAX_NAME_SIZE];
+>  
+> -	char led_name[LED_MAX_NAME_SIZE];
+> -
+>  	unsigned int flash_timeout;
+>  	unsigned int last_flag;
+>  
+> @@ -322,10 +319,12 @@ static const struct led_flash_ops flash_ops = {
+>  	.fault_get		= lm3601x_flash_fault_get,
 >  };
 >  
->  struct lp8860_eeprom_reg {
-> @@ -387,25 +386,19 @@ static int lp8860_probe(struct i2c_client *client,
->  	struct lp8860_led *led;
->  	struct device_node *np = client->dev.of_node;
->  	struct device_node *child_node;
-> -	const char *name;
+> -static int lm3601x_register_leds(struct lm3601x_led *led)
+> +static int lm3601x_register_leds(struct lm3601x_led *led,
+> +				 struct fwnode_handle *fwnode)
+>  {
+>  	struct led_classdev *led_cdev;
+>  	struct led_flash_setting *setting;
 > +	struct led_init_data init_data;
 >  
->  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
->  	if (!led)
->  		return -ENOMEM;
+>  	led->fled_cdev.ops = &flash_ops;
 >  
-> -	for_each_available_child_of_node(np, child_node) {
-> -		led->led_dev.default_trigger = of_get_property(child_node,
-> -						    "linux,default-trigger",
-> -						    NULL);
-> -
-> -		ret = of_property_read_string(child_node, "label", &name);
-> -		if (!ret)
-> -			snprintf(led->label, sizeof(led->label), "%s:%s",
-> -				 id->name, name);
-> -		else
-> -			snprintf(led->label, sizeof(led->label),
-> -				"%s::display_cluster", id->name);
-> -	}
-> +	child_node = of_get_next_available_child(np, NULL);
-> +	if (!child_node)
-> +		return -EINVAL;
+> @@ -342,20 +341,25 @@ static int lm3601x_register_leds(struct lm3601x_led *led)
+>  	setting->val = led->flash_current_max;
+>  
+>  	led_cdev = &led->fled_cdev.led_cdev;
+> -	led_cdev->name = led->led_name;
+>  	led_cdev->brightness_set_blocking = lm3601x_brightness_set;
+>  	led_cdev->max_brightness = DIV_ROUND_UP(led->torch_current_max,
+>  						LM3601X_TORCH_REG_DIV);
+>  	led_cdev->flags |= LED_DEV_CAP_FLASH;
+>  
+> -	return led_classdev_flash_register(&led->client->dev, &led->fled_cdev);
+> +	init_data.fwnode = fwnode;
+> +	init_data.led_hw_name = led->client->name;
+> +	init_data.default_label = (led->led_mode == LM3601X_LED_TORCH) ?
+> +					"torch" : "infrared";
 > +
-> +	led->led_dev.default_trigger = of_get_property(child_node,
-> +					    "linux,default-trigger",
-> +					    NULL);
+> +	return led_classdev_flash_register_ext(&led->client->dev,
+> +						&led->fled_cdev, &init_data);
+>  }
 >  
->  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
->  						   "enable", GPIOD_OUT_LOW);
-> @@ -420,7 +413,6 @@ static int lp8860_probe(struct i2c_client *client,
->  		led->regulator = NULL;
+> -static int lm3601x_parse_node(struct lm3601x_led *led)
+> +static int lm3601x_parse_node(struct lm3601x_led *led,
+> +			      struct fwnode_handle **fwnode)
+>  {
+>  	struct fwnode_handle *child = NULL;
+>  	int ret = -ENODEV;
+> -	const char *name;
 >  
+>  	child = device_get_next_child_node(&led->client->dev, child);
+>  	if (!child) {
+> @@ -376,17 +380,6 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+>  		goto out_err;
+>  	}
+>  
+> -	ret = fwnode_property_read_string(child, "label", &name);
+> -	if (ret) {
+> -		if (led->led_mode == LM3601X_LED_TORCH)
+> -			name = "torch";
+> -		else
+> -			name = "infrared";
+> -	}
+> -
+> -	snprintf(led->led_name, sizeof(led->led_name),
+> -		"%s:%s", led->client->name, name);
+> -
+>  	ret = fwnode_property_read_u32(child, "led-max-microamp",
+>  					&led->torch_current_max);
+>  	if (ret) {
+> @@ -411,6 +404,8 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+>  		goto out_err;
+>  	}
+>  
+> +	*fwnode = child;
+> +
+>  out_err:
+>  	fwnode_handle_put(child);
+>  	return ret;
+> @@ -419,6 +414,7 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+>  static int lm3601x_probe(struct i2c_client *client)
+>  {
+>  	struct lm3601x_led *led;
+> +	struct fwnode_handle *fwnode;
+>  	int ret;
+>  
+>  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+> @@ -428,7 +424,7 @@ static int lm3601x_probe(struct i2c_client *client)
 >  	led->client = client;
-> -	led->led_dev.name = led->label;
->  	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
+>  	i2c_set_clientdata(client, led);
+>  
+> -	ret = lm3601x_parse_node(led);
+> +	ret = lm3601x_parse_node(led, &fwnode);
+>  	if (ret)
+>  		return -ENODEV;
+>  
+> @@ -442,7 +438,7 @@ static int lm3601x_probe(struct i2c_client *client)
 >  
 >  	mutex_init(&led->lock);
-> @@ -447,7 +439,12 @@ static int lp8860_probe(struct i2c_client *client,
->  	if (ret)
->  		return ret;
 >  
-> -	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
-> +	init_data.fwnode = of_fwnode_handle(child_node);
-> +	init_data.led_hw_name = LP8860_NAME;
-> +	init_data.default_label = ":display_cluster";
-> +
-> +	ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
-> +					     &init_data);
->  	if (ret) {
->  		dev_err(&client->dev, "led register err: %d\n", ret);
->  		return ret;
+> -	return lm3601x_register_leds(led);
+> +	return lm3601x_register_leds(led, fwnode);
+>  }
+>  
+>  static int lm3601x_remove(struct i2c_client *client)
 Tested-by: Dan Murphy <dmurphy@ti.com>
