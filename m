@@ -2,94 +2,94 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2711C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA2EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846D22184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D842073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfDKMc1 (ORCPT
+        id S1726732AbfDKMca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:32:27 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:56595 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfDKMc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:32:27 -0400
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id A0652100015;
-        Thu, 11 Apr 2019 12:32:23 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 14:32:23 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
-Message-ID: <20190411123223.zyumngnlwhlvk6mf@flea>
-References: <20190411105720.32357-1-peron.clem@gmail.com>
+        Thu, 11 Apr 2019 08:32:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41538 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726536AbfDKMc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:32:28 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7E4E0BFF5522A0FE345B;
+        Thu, 11 Apr 2019 20:32:21 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
+ 20:32:13 +0800
+Subject: Re: [PATCH v3 1/4] x86: kdump: move reserve_crashkernel_low() into
+ kexec_core.c
+To:     Ingo Molnar <mingo@kernel.org>
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
+ <20190409102819.121335-2-chenzhou10@huawei.com>
+ <20190410070914.GA10935@gmail.com>
+CC:     <wangkefeng.wang@huawei.com>, <horms@verge.net.au>,
+        <ard.biesheuvel@linaro.org>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
+        <rppt@linux.ibm.com>, <linux-mm@kvack.org>,
+        <takahiro.akashi@linaro.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
+        <tglx@linutronix.de>, <akpm@linux-foundation.org>,
+        <linux-arm-kernel@lists.infradead.org>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <31b41dcc-0d16-d1d0-bff9-dec3e77515c1@huawei.com>
+Date:   Thu, 11 Apr 2019 20:32:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zrsa4o7ncejxr5ko"
-Content-Disposition: inline
-In-Reply-To: <20190411105720.32357-1-peron.clem@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190410070914.GA10935@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ingo,
 
---zrsa4o7ncejxr5ko
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2019/4/10 15:09, Ingo Molnar wrote:
+> 
+> * Chen Zhou <chenzhou10@huawei.com> wrote:
+> 
+>> In preparation for supporting more than one crash kernel regions
+>> in arm64 as x86_64 does, move reserve_crashkernel_low() into
+>> kexec/kexec_core.c.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>  arch/x86/include/asm/kexec.h |  3 ++
+>>  arch/x86/kernel/setup.c      | 66 +++++---------------------------------------
+>>  include/linux/kexec.h        |  1 +
+>>  kernel/kexec_core.c          | 53 +++++++++++++++++++++++++++++++++++
+>>  4 files changed, 64 insertions(+), 59 deletions(-)
+> 
+> No objections for this to be merged via the ARM tree, as long as x86 
+> functionality is kept intact.
 
-On Thu, Apr 11, 2019 at 12:57:12PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi,
->
-> The Allwinner H6 has a Mali-T720 MP2. The drivers are
-> out-of-tree so this series only introduce the dt-bindings.
->
-> The first patch is from Neil Amstrong and has been already
-> merged in linux-amlogic. It is required for this series.
->
-> The second patch is from Icenowy Zheng where I changed the
-> order has required by Rob Herring.
-> See: https://patchwork.kernel.org/patch/10699829/
->
-> The GPU opp table was taken from Jernej =C5=A0krabec's patch
-> on LibreELEC.tv.
+This patch has no affect on x86.
 
-One valuable information here would be which stack did you use,
-panfrost and mesa or the ARM stack? If so, with which driver and which
-blob?
+Thanks,
+Chen Zhou
 
-Maxime
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> 
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zrsa4o7ncejxr5ko
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8z1wAKCRDj7w1vZxhR
-xUcFAQCWhS/cQ6R1xFf2IGIgem0D0kS1e2/jPbELkWiZ6GbMvwEA+pEado7SnGLV
-9Sz+buLljJzJUsfHPIFMSkg4tdc6Igg=
-=6reV
------END PGP SIGNATURE-----
-
---zrsa4o7ncejxr5ko--
