@@ -2,95 +2,200 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802B6C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB9AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5889020850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8220693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfDKJd2 (ORCPT
+        id S1726691AbfDKJhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:33:28 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:52194 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfDKJd1 (ORCPT
+        Thu, 11 Apr 2019 05:37:11 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38573 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfDKJhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:33:27 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3B9XDUk029154
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 11 Apr 2019 18:33:13 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B9XDp0031676;
-        Thu, 11 Apr 2019 18:33:13 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B9WSae023303;
-        Thu, 11 Apr 2019 18:33:13 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.136] [10.38.151.136]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-4203798; Thu, 11 Apr 2019 18:33:01 +0900
-Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
- BPXC08GP.gisp.nec.co.jp ([10.38.151.136]) with mapi id 14.03.0319.002; Thu,
- 11 Apr 2019 18:33:00 +0900
-From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
-To:     Boris Petkov <bp@alien8.de>
-CC:     Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqAgACP04CAAAH9AIAABdcAgAAJ5YCAAAJaAIAAAziA
-Date:   Thu, 11 Apr 2019 09:32:59 +0000
-Message-ID: <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
- <20190410171431.GE26580@zn.tnic>
- <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
- <20190411080927.GA30080@zn.tnic>
- <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
- <20190411083738.GC30080@zn.tnic>
- <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
- <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
-In-Reply-To: <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DD781517903E8748BAA9ACA21ED95C78@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Thu, 11 Apr 2019 05:37:10 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7C4711BF204;
+        Thu, 11 Apr 2019 09:37:05 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v9 0/4] media: cedrus: Add H264 decoding support
+Date:   Thu, 11 Apr 2019 11:36:59 +0200
+Message-Id: <cover.dec5630d6b289e0a50e1880be436050471a05269.1554975396.git-series.maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8xMS8xOSA2OjIxIFBNLCBCb3JpcyBQZXRrb3Ygd3JvdGU6DQo+IE9uIEFwcmlsIDExLCAy
-MDE5IDExOjEzOjAzIEFNIEdNVCswMjowMCwgSnVuaWNoaSBOb211cmEgPGotbm9tdXJhQGNlLmpw
-Lm5lYy5jb20+IHdyb3RlOg0KPj4gT24gNC8xMS8xOSA1OjM3IFBNLCBCb3Jpc2xhdiBQZXRrb3Yg
-d3JvdGU6DQo+Pj4gT24gVGh1LCBBcHIgMTEsIDIwMTkgYXQgMDg6MTY6NDVBTSArMDAwMCwgSnVu
-aWNoaSBOb211cmEgd3JvdGU6DQo+Pj4+IGtleGVjX2dldF9yc2RwX2FkZHIoKSBtaWdodCBmYWls
-IG9uIGtleGVjLWJvb3RlZCBrZXJuZWwsIGUuZy4gaWYgdGhlDQo+Pj4+IHNldHVwX2RhdGEgd2Fz
-IGludmFsaWQuIEluIHN1Y2ggYSBjYXNlLCBmYWxsaW5nIGJhY2sgdG8NCj4+IGVmaV9nZXRfcnNk
-cF9hZGRyKCkNCj4+Pj4gd2lsbCBoaXQgdGhlIHByb2JsZW0gb2YgYWNjZXNzaW5nIGludmFsaWQg
-dGFibGUgcG9pbnRlciBhZ2Fpbi4NCj4+Pg0KPj4+IFRoZW4geW91IG5lZWQgdG8gZG8gdGhpczoN
-Cj4+Pg0KPj4+IAlpZiAoa2V4ZWNlZCBrZXJuZWwpIHsNCj4+PiAJCWFkZHIgPSBrZXhlY19nZXRf
-cnNkcF9hZGRyKCk7DQo+Pj4gCQlpZiAoIWFkZHIpIHsNCj4+PiAJCQkvKiBjYW5ub3QgZ2V0IGFk
-ZHJlc3MgKi8NCj4+PiAJCQlyZXR1cm4gLTE7DQo+Pj4gCQl9DQo+Pj4NCj4+PiAJCXJldHVybiBh
-ZGRyOw0KPj4+IAl9DQo+Pj4NCj4+PiBhbmQgdGhlIGNhbGxpbmcgZnVuY3Rpb24gZ2V0X3JzZHBf
-YWRkcigpIG11c3QgY2hlY2sgdGhlIHJldHVybiB2YWx1ZQ0KPj4gYW5kDQo+Pj4gaWYgaXQgaXMg
-bm90IDAsIHJldHVybiBpbW1lZGlhdGVseS4NCj4+DQo+PiBEbyB5b3UgbWVhbiBtYWtpbmcgZ2V0
-X3JzZHBfYWRkcigpIGxpa2UgdGhpcz8NCj4gDQo+IERvZXMgdGhhdCBsb29rIGxpa2Ugd2hhdCBJ
-J3ZlIHR5cGVkIGFib3ZlPw0KDQpOby4gQnV0IHRoYXQncyB3aHkgSSBhc2tlZCB0aGUgcXVlc3Rp
-b24uIERvIHlvdSBtZWFuIHB1dHRpbmcNCnRoZSBhYm92ZSBjb2RlIGluIGVmaV9nZXRfcnNkcF9h
-ZGRyKCk/DQoNCi0tIA0KSnVuJ2ljaGkgTm9tdXJhLCBORUMgQ29ycG9yYXRpb24gLyBORUMgU29s
-dXRpb24gSW5ub3ZhdG9ycywgTHRkLg==
+Hi,
 
+Here is a new version of the H264 decoding support in the cedrus
+driver.
+
+As you might already know, the cedrus driver relies on the Request
+API, and is a reverse engineered driver for the video decoding engine
+found on the Allwinner SoCs.
+
+This work has been possible thanks to the work done by the people
+behind libvdpau-sunxi found here:
+https://github.com/linux-sunxi/libvdpau-sunxi/
+
+I've tested the various ABI using this gdb script:
+http://code.bulix.org/jl4se4-505620?raw
+
+And this test script:
+http://code.bulix.org/8zle4s-505623?raw
+
+The application compiled is quite trivial:
+http://code.bulix.org/e34zp8-505624?raw
+
+The output is:
+arm64:	builds/arm64-test-v4l2-h264-structures
+	SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+x86:	builds/x86-test-v4l2-h264-structures
+	SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+arm:	builds/arm-test-v4l2-h264-structures
+	SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+x64:	builds/x64-test-v4l2-h264-structures
+	SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+
+Let me know if there's any flaw using that test setup, or if you have
+any comments on the patches.
+
+Maxime
+
+Changes from v8:
+  - Moved the format into a private header and split the controls, format
+    and format doc into three commits
+  - Changed the name of the variables in v4l2_ctrl_ptr
+  - Added a note in the format documentation to mention that the format is
+    not stable yet
+  - Fixed the label of the format documentation
+  - Fixed a reference in the format documentation
+  - Added tags
+  - Rebase on current next
+
+Changes from v7:
+  - Changed the _slice_param and _decode_param to _params
+
+Changes from v6:
+  - Rebased on next
+  - Renamed the timestamp DPB field to reference_ts
+  - Fixed the collision of control type values
+  - Removed unused fields
+  - Fixed the structure layout that was broken on x86 by reducing the
+    num_slices and nal_ref_idc to 16 bits instead of 32
+
+Changes from v5:
+  - Made the references to the H264 spec more explicit
+  - Added a flag for the IDR pic
+  - Fixed typos
+  - Rebased on v5.1-rc1
+
+Changes from v4:
+  - Changed the luma and chroma weight and offset from s8 to s16
+  - Adjusted chroma and luma denominators masks in the driver
+  - Casted the luma and chroma offset to prevent an overflow
+  - ALways write the interrupt status register
+  - Fix a bug in the sram write routine that would write something even if
+    the length was 0
+  - Make the scaling lists mandatory
+  - Made the reference list order explicit in the documentation
+  - Made the fact that the slice structure can be an array
+  - Renamed the slice format to V4L2_PIX_FMT_H264_SLICE_RAW
+  - Rebased on Hans' tag br-v5.1s
+
+Changes from v3:
+  - Reintroduced long term reference flag and documented it
+  - Reintroduced ref_pic_list_p0/b0/b1 and documented it
+  - Documented the DPB flags
+  - Treat the scaling matrix as optional in the driver, as documented
+  - Free the neighbor buffer
+  - Increase the control IDs by a large margin to be safe of collisions
+  - Reorder the fields documentation according to the structure layout
+  - Change the tag documentation by the timestamp
+  - Convert the sram array to size_t
+  - Simplify the buffer retrieval from timestamp
+  - Rebase
+
+Changes from v2:
+  - Simplified _cedrus_write_ref_list as suggested by Jernej
+  - Set whether the frame is used as reference using nal_ref_idc
+  - Respect chroma_format_idc
+  - Fixes for the scaling list and prediction tables
+  - Wrote the documentation for the flags
+  - Added a bunch of defines to the driver bit fields
+  - Reworded the controls and data format descriptions as suggested
+    by Hans
+  - Reworked the controls' structure field size to avoid padding
+  - Removed the long term reference flag
+  - Reintroduced the neighbor info buffer
+  - Removed the ref_pic_list_p0/b0/b1 arrays that are redundant with the
+    one in the DPB
+  - used the timestamps instead of tags
+  - Rebased on 5.0-rc1
+
+Changes from v1:
+  - Rebased on 4.20
+  - Did the documentation for the userspace API
+  - Used the tags instead of buffer IDs
+  - Added a comment to explain why we still needed the swdec trigger
+  - Reworked the MV col buffer in order to have one slot per frame
+  - Removed the unused neighbor info buffer
+  - Made sure to have the same structure offset and alignments across
+    32 bits and 64 bits architecture
+
+Maxime Ripard (3):
+  media: pixfmt: Add H264 Slice format
+  media: pixfmt: Add H264_SLICE_RAW format documentation
+  media: cedrus: Add H264 decoding support
+
+Pawel Osciak (1):
+  media: uapi: Add H264 low-level decoder API compound controls.
+
+ Documentation/media/uapi/v4l/biblio.rst            |   9 +-
+ Documentation/media/uapi/v4l/ext-ctrls-codec.rst   | 569 ++++++++++++++-
+ Documentation/media/uapi/v4l/pixfmt-compressed.rst |  25 +-
+ Documentation/media/uapi/v4l/vidioc-queryctrl.rst  |  30 +-
+ Documentation/media/videodev2.h.rst.exceptions     |   5 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  42 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +-
+ drivers/staging/media/sunxi/cedrus/Makefile        |   3 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c        |  31 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.h        |  38 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_dec.c    |  13 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c   | 574 ++++++++++++++-
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c     |   4 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_regs.h   |  91 ++-
+ drivers/staging/media/sunxi/cedrus/cedrus_video.c  |   9 +-
+ include/media/h264-ctrls.h                         | 197 +++++-
+ include/media/v4l2-ctrls.h                         |  13 +-
+ 17 files changed, 1651 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+ create mode 100644 include/media/h264-ctrls.h
+
+base-commit: 2f4c4d833153517c7791318f8608cf5c212cef68
+-- 
+git-series 0.9.1
