@@ -2,106 +2,112 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCBC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438A4C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634452133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5tcpxay"
+	by mail.kernel.org (Postfix) with ESMTP id 1B74C2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfDKNuM (ORCPT
+        id S1726844AbfDKNup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:50:12 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34683 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfDKNuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:50:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j89so5614604ljb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v4R2nON0fldrx5nngWEL1/9mxMORAgC13VD1L1J+hqE=;
-        b=n5tcpxayQJWVkfmz544eU/QxZK23icq8z6nor0EUpI65AyurqVGjsnpdLWxaCxrcLw
-         zjGEz4yTq6YL6JsBMgLRjeQvUISwUYiq3cGX4defR+9JDRL9oUi1fP5f3VkAqv2jJdCt
-         b4R3K97mIvt2UZbz/xy++6ZCOTaeA2FwXQYtMEyIBFryDI5TBsWLmgrJkRVJlqdU660k
-         ec5F6TdsVxE0ISKhTkUIgrZywqdiEaf1CFzrb0XZoAHmc5aT7uFYmxyIuSlKUw5Q8LQ7
-         Gu1z2iCwKcG0jc5W8074pW/NPBS5jthqetXQgvk6peGEPn9PDB9+zbQ4UpYamYdOn1GA
-         agsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v4R2nON0fldrx5nngWEL1/9mxMORAgC13VD1L1J+hqE=;
-        b=THOkFg2zcFI0ezGGuBHaGtMoJSq+/UDyhFr+kG64IuWZI76cvN/8opwU3IbnrK9vHK
-         EUuCzWtr9PkqRY1TkDxOzXkKakt4I1CBnWEaYWip6UMUhBI4WTbiAIwLpZrilV/YY9SY
-         Srh3z3M4PTuOrk4nieYFHTOxTnZC+BWUu3be3o9z+Z3i/a9y2U3yE4eGCqVw9vxqlzuD
-         v3wrXjW+IvZTFVTONc5abqkGVsK81tQwKUB+OXeHy3zEHPcuhCnQC/RyMvE0AFXIeFyD
-         9Img9thTJjsH9aqmRxAJrKg4WtuqcplAtmDnijGYRM598X+6QwLLwYzNZLqQE6je70JJ
-         2vIQ==
-X-Gm-Message-State: APjAAAVYUFN0zixDQnlTGlRd1RQ3GtXDr85bnW5z2FEhEbC8/E8MXtO6
-        pZoh9nXUh8GF0uHvq1V1OdJVZWp+pGkJoBd6zSgdzg==
-X-Google-Smtp-Source: APXvYqwgecgntexEoE1X1kv52LpK3MtvkI2UElw9fMlfchiLismJczoNQzXXJi3WahoUKyoYK+094DukwKoS4Ym6w/o=
-X-Received: by 2002:a2e:808e:: with SMTP id i14mr28032166ljg.103.1554990609376;
- Thu, 11 Apr 2019 06:50:09 -0700 (PDT)
+        Thu, 11 Apr 2019 09:50:45 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:35534 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbfDKNuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:50:44 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id BFC3460A29;
+        Thu, 11 Apr 2019 15:50:42 +0200 (CEST)
+From:   Rolf Eike Beer <eb@emlix.com>
+To:     nicolas.dichtel@6wind.com
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
+        yamada.masahiro@socionext.com, peterz@infradead.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux] objtool: fix pkg-config query in case of cross-compilation
+Date:   Thu, 11 Apr 2019 15:50:38 +0200
+Message-ID: <8596683.VRQu17hJsJ@devpool35>
+Organization: emlix GmbH
+In-Reply-To: <cc009072-64d4-4be3-0bb2-20be4d5c357f@6wind.com>
+References: <20190411083940.3911-1-nicolas.dichtel@6wind.com> <4208204.4d101oJ1v5@devpool35> <cc009072-64d4-4be3-0bb2-20be4d5c357f@6wind.com>
 MIME-Version: 1.0
-References: <20190410103926.8781-1-alexandre.belloni@bootlin.com> <20190410103926.8781-2-alexandre.belloni@bootlin.com>
-In-Reply-To: <20190410103926.8781-2-alexandre.belloni@bootlin.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 11 Apr 2019 15:49:58 +0200
-Message-ID: <CACRpkdZfdxNwU_9h3PtcJkAE++QZnC_JifoqNfLwJyqj_ofJuA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: lpc32xx: document interrupt bindings
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="nextPart25922085.1yZWV1yWd9"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+--nextPart25922085.1yZWV1yWd9
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-thanks for your patch!
+Am Donnerstag, 11. April 2019, 11:26:12 CEST schrieb Nicolas Dichtel:
+> Le 11/04/2019 =C3=A0 10:52, Rolf Eike Beer a =C3=A9crit :
+> > Am Donnerstag, 11. April 2019, 10:39:40 CEST schrieb Nicolas Dichtel:
+> >> In case of cross-compilation, there may be two pkg-config tools, one f=
+or
+> >> the host and one for the target. Enable to override the default name.
+> >>=20
+> >> Fixes: 056d28d135bc ("objtool: Query pkg-config for libelf location")
+> >> Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+> >=20
+> > If you do that, you have to fix a lot of other places, too. This starts=
+ in
+> > scripts/kconfig/ and also includes e.g. tools/testing/.
+> >=20
+> > Usually you have pkg-config for host and ${target_platform}-pkg-config =
+for
+> > the
+> My use case was for buildroot, which define pkg-config and host-pkgconf. =
+In
+> fact, I've just seen that a buildroot patch was accepted for this problem:
+> https://patchwork.ozlabs.org/patch/1081379/
 
-On Wed, Apr 10, 2019 at 12:39 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
+I agree that it makes sense to have both host and target pkg-config=20
+configurable. But IMHO that must happen in a central place (i.e. ./Makefile=
+),=20
+and it has to be used everywhere. Currently PKG_CONFIG is defined at multip=
+le=20
+places, sometimes host, sometimes target, and often pkg-config is called=20
+directly, also mixing both usages.
 
-> Some of the LPC32xx gpios are wired directly to one of the interrupt
-> controllers while port 0 and port 1 share the same interrupt for their
-> interrupt capable gpios.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-(...)
+So, IMHO, if you want to fix this: fix it once and for all in the whole=20
+kernel, not just one place. What I have introduced was just the same as=20
+kconfig is using to find the dependencies for some of the *config variants,=
+ so=20
+this usecase would break for you anyway, although I don't think anyone in=20
+buildroot will notice this.
 
-> +- interrupts: Should be the interrupt shared by port 0 and port 1 and the
-> +  interrupts for individual pins from port 3.
-> +- interrupt-names : Should be the names of irq resources. The shared port
-> +  interrupt is named "p01", the other use the pin names.
+Eike
+=2D-=20
+Rolf Eike Beer, emlix GmbH, http://www.emlix.com
+=46on +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
+Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
+Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
+=2E: DE 205 198 055
 
-The recent design pattern with hierarchical interrupts such as this one
-is to simply hardcode the relationship between parent interrupt controller
-and child interrupt controller in the driver.
+emlix - smart embedded open source
+--nextPart25922085.1yZWV1yWd9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-However you should add interrupt-controller and possibly
-interrupt-parent to the bindings and example.
+-----BEGIN PGP SIGNATURE-----
 
-More comments in patch 2.
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCXK9GLgAKCRCr5FH7Xu2t
+/IMzA/9KVFJHOFsFzEsPSePEIO0p72hbQiOatEVw4FNMH7nv39WZhSAHaJbCKm/G
+nWUazMsIdG4bnaAY4yYisROyKtxHwAvbntrJWZjBTNidxTylLpPbFEeB9tR70sHN
+I/wkPPJu6Qjd6Nho1i7wCkzH9h+UAvJcoLoO1eDDQ3v/8GWtcg==
+=d+N0
+-----END PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+--nextPart25922085.1yZWV1yWd9--
+
+
+
