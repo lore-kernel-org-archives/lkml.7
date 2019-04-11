@@ -2,154 +2,158 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC76C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B18AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E352186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:31:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EU8l7n5j"
+	by mail.kernel.org (Postfix) with ESMTP id 0807D2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfDKVbs (ORCPT
+        id S1727050AbfDKVcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:31:48 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33338 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDKVbs (ORCPT
+        Thu, 11 Apr 2019 17:32:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726872AbfDKVcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:31:48 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k14so8998791qtb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3OqG8bpvaiUhwKE/BjM7CPLdVnvy5MPJ5aI4Qoz+FGA=;
-        b=EU8l7n5jrbaWT2rnF5SCnjzHOtqGp+detg+64WnL25G/HHKCHiFxcpQjAI9iMFsUVr
-         aQznuQJq1S2biRCBSk4PlYxEgwPFOi32NJjhYXVRjG4/LHiqtoRPLb2F05y5xEwJZPDQ
-         jck9lw413exw9RYdeq2xhfp/RiqdXR+R2F8SWqH0pbo1g9bZvQwwGzxqCTUODemukeaX
-         vRr0a8oKHpzRx6LE6rkoClK+6l0lm9AACZK5xkuDi+RkyJPBpBIgtFcb8daAk2Zhieb4
-         wLvdQFoeCp5SIkjHKULM1jlarkaoVvXDsqBS9JupMhIQPE4Rv30Lek2gqF2A+AQ8AHWq
-         8WIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3OqG8bpvaiUhwKE/BjM7CPLdVnvy5MPJ5aI4Qoz+FGA=;
-        b=Hvt53rT863zI6d1UHtgSTxHiYhs/0KLq35DAhVbsGI9U1Pt9uJ9zQNcsKKSD16+5aW
-         AS9enEgrJr9KjMlC9AJEPruxku4M2pkuNAAey7Y6NIRThUBSK63HoY7A3IWudS+USwTD
-         kwdvc5iUJ3p8/Qqw5SwxRGTJGzki032PM6gZ/NSc9hfTyw69H7kcSsp2ntY+yMJhzSti
-         ZWmPOnLbCD6iBPM49pA76whEe0QJ8exrdh8xqJXxvw7zdsjTWQNcUfyclOnI01t3UxQs
-         xOPBa8mJdu7xK2o+zSiLeKgQvvzsaIIyX1wwpH44dBM8sShAwA/ZJ7+HpNUWrg/PpAGj
-         +rxQ==
-X-Gm-Message-State: APjAAAUyyW8cpIFuwHneYFTTmCtFuJpy837AnWM5fDl5vCVcpmDQpXux
-        yoGZDROiNX5cBDeO++bfY1Efig==
-X-Google-Smtp-Source: APXvYqwUQeZO4niaQIliUfDO/bTDu2EtxF2q3U/X8Wy4Miirz3W0LXYoWnUZnbNSCo/cbvWCXJ/p5A==
-X-Received: by 2002:a0c:afd4:: with SMTP id t20mr43584794qvc.128.1555018306182;
-        Thu, 11 Apr 2019 14:31:46 -0700 (PDT)
-Received: from Qians-MBP.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e128sm13871914qkd.79.2019.04.11.14.31.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 14:31:45 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@suse.com, osalvador@suse.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/hotplug: treat CMA pages as unmovable
-Date:   Thu, 11 Apr 2019 17:31:24 -0400
-Message-Id: <20190411213124.8254-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Thu, 11 Apr 2019 17:32:02 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BLEjWI118901
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:32:01 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rtc2wbvg6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:32:00 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 11 Apr 2019 22:32:00 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 22:31:55 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BLVsN230343340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 21:31:54 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 801A4B2065;
+        Thu, 11 Apr 2019 21:31:54 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 627C0B2066;
+        Thu, 11 Apr 2019 21:31:54 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 21:31:54 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DE25C16C36C6; Thu, 11 Apr 2019 14:31:55 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 14:31:55 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        rcu@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        kernel-team@android.com, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH] module: Make srcu_struct ptr array as read-only
+Reply-To: paulmck@linux.ibm.com
+References: <20190411202421.131779-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411202421.131779-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041121-0068-0000-0000-000003B3E9FB
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010911; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01187707; UDB=6.00622151; IPR=6.00968471;
+ MB=3.00026399; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 21:31:58
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041121-0069-0000-0000-000048200CAB
+Message-Id: <20190411213155.GD14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When offlining a memory block that contains reserved CMA areas, it will
-set those page blocks migration type as MIGRATE_ISOLATE. Then, onlining
-will set them as MIGRATE_MOVABLE. As the results, those page blocks lose
-their original types, i.e., MIGRATE_CMA, and then it causes troubles
-like accounting for CMA areas becomes inconsist,
+On Thu, Apr 11, 2019 at 04:24:21PM -0400, Joel Fernandes (Google) wrote:
+> Since commit title ("srcu: Allocate per-CPU data for DEFINE_SRCU() in
+> modules"), modules that call DEFINE_{STATIC,}SRCU will have a new array
+> of srcu_struct pointers, which is used by srcu code to initialize and
+> clean up these structures and save valuable per-cpu reserved space.
+> 
+> There is no reason for this array of pointers to be writable, and can
+> cause security or other hidden bugs. Mark these are read-only after the
+> module init has completed.
+> 
+> Tested with the following diff to ensure array not writable:
+> 
+> (diff is a bit reduced to avoid patch command getting confused)
+>  a/kernel/module.c
+>  b/kernel/module.c
+>   -3506,6 +3506,14  static noinline int do_init_module [snip]
+>  	rcu_assign_pointer(mod->kallsyms, &mod->core_kallsyms);
+>  #endif
+>  	module_enable_ro(mod, true);
+> +
+> +	if (mod->srcu_struct_ptrs) {
+> +		// Check if srcu_struct_ptrs access is possible
+> +		char x = *(char *)mod->srcu_struct_ptrs;
+> +		*(char *)mod->srcu_struct_ptrs = 0;
+> +		*(char *)mod->srcu_struct_ptrs = x;
+> +	}
+> +
+>  	mod_tree_remove_init(mod);
+>  	disable_ro_nx(&mod->init_layout);
+>  	module_arch_freeing_init(mod);
+> 
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: paulmck@linux.vnet.ibm.com
+> Cc: rostedt@goodmis.org
+> Cc: mathieu.desnoyers@efficios.com
+> Cc: rcu@vger.kernel.org
+> Cc: kernel-hardening@lists.openwall.com
+> Cc: kernel-team@android.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
- # grep cma /proc/vmstat
- nr_free_cma 205824
+Queued for testing and further review, thank you, Joel!
 
- # cat /sys/kernel/debug/cma/cma-kvm_cma/count
- 209920
+							Thanx, Paul
 
-Also, kmemleak still think those memory address are reserved but have
-already been used by the buddy allocator after onlining.
-
-Offlined Pages 4096
-kmemleak: Cannot insert 0xc000201f7d040008 into the object search tree
-(overlaps existing)
-Call Trace:
-[c00000003dc2faf0] [c000000000884b2c] dump_stack+0xb0/0xf4 (unreliable)
-[c00000003dc2fb30] [c000000000424fb4] create_object+0x344/0x380
-[c00000003dc2fbf0] [c0000000003d178c] __kmalloc_node+0x3ec/0x860
-[c00000003dc2fc90] [c000000000319078] kvmalloc_node+0x58/0x110
-[c00000003dc2fcd0] [c000000000484d9c] seq_read+0x41c/0x620
-[c00000003dc2fd60] [c0000000004472bc] __vfs_read+0x3c/0x70
-[c00000003dc2fd80] [c0000000004473ac] vfs_read+0xbc/0x1a0
-[c00000003dc2fdd0] [c00000000044783c] ksys_read+0x7c/0x140
-[c00000003dc2fe20] [c00000000000b108] system_call+0x5c/0x70
-kmemleak: Kernel memory leak detector disabled
-kmemleak: Object 0xc000201cc8000000 (size 13757317120):
-kmemleak:   comm "swapper/0", pid 0, jiffies 4294937297
-kmemleak:   min_count = -1
-kmemleak:   count = 0
-kmemleak:   flags = 0x5
-kmemleak:   checksum = 0
-kmemleak:   backtrace:
-     cma_declare_contiguous+0x2a4/0x3b0
-     kvm_cma_reserve+0x11c/0x134
-     setup_arch+0x300/0x3f8
-     start_kernel+0x9c/0x6e8
-     start_here_common+0x1c/0x4b0
-kmemleak: Automatic memory scanning thread ended
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/page_alloc.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d96ca5bc555b..896db9241fa6 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8015,14 +8015,18 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
- 	 * can still lead to having bootmem allocations in zone_movable.
- 	 */
- 
--	/*
--	 * CMA allocations (alloc_contig_range) really need to mark isolate
--	 * CMA pageblocks even when they are not movable in fact so consider
--	 * them movable here.
--	 */
--	if (is_migrate_cma(migratetype) &&
--			is_migrate_cma(get_pageblock_migratetype(page)))
--		return false;
-+	if (is_migrate_cma(get_pageblock_migratetype(page))) {
-+		/*
-+		 * CMA allocations (alloc_contig_range) really need to mark
-+		 * isolate CMA pageblocks even when they are not movable in fact
-+		 * so consider them movable here.
-+		 */
-+		if (is_migrate_cma(migratetype))
-+			return false;
-+
-+		pr_warn("page: %px is in CMA", page);
-+		return true;
-+	}
- 
- 	pfn = page_to_pfn(page);
- 	for (found = 0, iter = 0; iter < pageblock_nr_pages; iter++) {
--- 
-2.20.1 (Apple Git-117)
+> ---
+> This single patch superceded the patches at:
+> https://lore.kernel.org/patchwork/patch/1060298/
+> https://lore.kernel.org/patchwork/patch/1060298/
+> 
+>  include/linux/srcutree.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
+> index 8af1824c46a8..9cfcc8a756ae 100644
+> --- a/include/linux/srcutree.h
+> +++ b/include/linux/srcutree.h
+> @@ -123,7 +123,7 @@ struct srcu_struct {
+>  #ifdef MODULE
+>  # define __DEFINE_SRCU(name, is_static)					\
+>  	is_static struct srcu_struct name;				\
+> -	struct srcu_struct *__srcu_struct_##name			\
+> +	struct srcu_struct * const __srcu_struct_##name			\
+>  		__section("___srcu_struct_ptrs") = &name
+>  #else
+>  # define __DEFINE_SRCU(name, is_static)					\
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
 
