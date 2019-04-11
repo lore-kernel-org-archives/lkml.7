@@ -2,103 +2,223 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406ADC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989DC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12ABD2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465B22083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfDKQQM (ORCPT
+        id S1726702AbfDKQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:16:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52912 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726603AbfDKQQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:16:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A5ED6AC3D;
-        Thu, 11 Apr 2019 16:16:10 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-serial@vger.kernel.org, gregkh@linuxfoundation.org,
-        Paul Walmsley <paul@pwsan.com>, Jiri Slaby <jslaby@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v4 2/2] tty: serial: add driver for the SiFive UART
-References: <20190411090027.8670-1-paul.walmsley@sifive.com>
-        <20190411090027.8670-3-paul.walmsley@sifive.com>
-X-Yow:  Four thousand different MAGNATES, MOGULS & NABOBS are romping in my
- gothic solarium!!
-Date:   Thu, 11 Apr 2019 18:16:09 +0200
-In-Reply-To: <20190411090027.8670-3-paul.walmsley@sifive.com> (Paul Walmsley's
-        message of "Thu, 11 Apr 2019 02:00:30 -0700")
-Message-ID: <mvmtvf4ecvq.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 11 Apr 2019 12:18:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57744 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKQSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:18:02 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hEcOl-00029w-EL
+        for linux-kernel@vger.kernel.org; Thu, 11 Apr 2019 16:17:59 +0000
+Received: by mail-pl1-f197.google.com with SMTP id v5so4391105plo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:17:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=pdshwTx/pfd5OCAw4/o5Jg8UfEuVpurlXeHPmIBSah0=;
+        b=Rs5jaDUepQg3HTzmQB8tNF26IDRjwdKkI6Z8tBQKMEZJSC5Jat48jfv0cvLWWtxwq1
+         6YKavGFwFCewPS8ik4svOdN7tJNzh+m03znqkVqRP1ohmByj0bKM8KU12NB4EThdRz8f
+         DB0YYKkcpOJjak+UXdaxNHa8yp+8Zh4FufqMqSeZqEmNAlceUe19XugTVgRpGo6FifQn
+         UYdNxA9ixEdZCt5zTJwmMq2cgNVlJhSKoivk6SnsHMl6ClH9oC1IcMloX3IUCyL7pncp
+         KY4GWlf0pND6Qdg/ghV0M80OjZ5Tkepbx+40d/AtYpOyYIRHJfQ9+zNIEksaQNEx0FpY
+         6rmg==
+X-Gm-Message-State: APjAAAXWPU2yw5a3C4qLGbv5kB0id0Jl3XAjQ8rajpYbAKiDTwGInCSw
+        D3WxILJxNSToFVaOBMTrtt8WEatDlIofS0WFTEKBoma5OIaMrx+9eXx2GSKIjgKAvUnzbDZVSsb
+        v754Z7OmVNTkjnWOjaCA8Yc4Ph7r2sI6FLecay/2SGg==
+X-Received: by 2002:a63:2a8f:: with SMTP id q137mr46818674pgq.31.1554999477503;
+        Thu, 11 Apr 2019 09:17:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy94GtVLLbCjSHoeMQkRlLNf6G+xDgFaBrnJkTCA+hbxgLGLfVHrSCuz3H3ucf1ntjWVyq+YA==
+X-Received: by 2002:a63:2a8f:: with SMTP id q137mr46818624pgq.31.1554999477106;
+        Thu, 11 Apr 2019 09:17:57 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-e18e-6428-b232-8eaa.dynamic-ip6.hinet.net (2001-b011-380f-14b9-e18e-6428-b232-8eaa.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:e18e:6428:b232:8eaa])
+        by smtp.gmail.com with ESMTPSA id j19sm28512252pfr.155.2019.04.11.09.17.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 09:17:56 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <LbZjy9p--3-1@tutanota.com>
+Date:   Fri, 12 Apr 2019 00:17:52 +0800
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Swboyd <swboyd@chromium.org>,
+        Bigeasy <bigeasy@linutronix.de>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <B7A141A3-613C-4EB8-8BB4-F845A0AC8F23@canonical.com>
+References: <20190325125704.6585-1-hotwater438@tutanota.com>
+ <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
+ <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com>
+ <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
+ <abe3eccb-1490-e088-1fd8-6af4dc1bd2ec@redhat.com> <LbI7kio--3-1@tutanota.com>
+ <a58ebeb8-10fd-29d0-1562-4ed8d84f2239@redhat.com> <LbZjy9p--3-1@tutanota.com>
+To:     hotwater438@tutanota.com
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Apr 11 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Hi,
 
-> +static void sifive_serial_set_termios(struct uart_port *port,
-> +				      struct ktermios *termios,
-> +				      struct ktermios *old)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +	unsigned long flags;
-> +	u32 v, old_v;
-> +	int rate;
-> +	char nstop;
-> +
-> +	if ((termios->c_cflag & CSIZE) != CS8) {
-> +		dev_err(ssp->port.dev, "only 8-bit words supported\n");
-> +		return;
-> +	}
-> +
-> +	/* Set number of stop bits */
-> +	nstop = (termios->c_cflag & CSTOPB) ? 2 : 1;
-> +	__ssp_set_stop_bits(ssp, nstop);
-> +
-> +	/* Set line rate */
-> +	rate = uart_get_baud_rate(port, termios, old, 0, ssp->clkin_rate / 16);
-> +	__ssp_update_baud_rate(ssp, rate);
-> +
-> +	spin_lock_irqsave(&ssp->port.lock, flags);
-> +
-> +	/*
-> +	 * Update the per-port timeout.
-> +	 */
-> +	uart_update_timeout(port, termios->c_cflag, rate);
-> +
-> +	ssp->port.read_status_mask = 0;
-> +	if (termios->c_iflag & INPCK) {
-> +		dev_err(ssp->port.dev, "INPCK flag not supported\n");
-> +		goto ssst_out;
-> +	}
-> +	if (termios->c_iflag & (BRKINT | PARMRK)) {
-> +		dev_err(ssp->port.dev, "BRKINT/PARMRK flag not supported\n");
-> +		goto ssst_out;
-> +	}
+at 05:18, <hotwater438@tutanota.com> <hotwater438@tutanota.com> wrote:
 
-I don't think it is a good idea to print something while the port is
-locked.
+> Hi.
+>
+> 1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+> 2) Very quickly/briefly touch the touchpad once
+> 3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+> 4) Subtract result from 1. from result from 3, this difference is
+> the value we are interested in. E.g. my testing got 254 and 257, so
+> a difference of 3.
+> I've tested that, main diffs are 30, 24, 16 (the most frequent), 2 (the  
+> least frequent).
+>
+> I was using 4.19.13 kernel, because I use ParrotOS (which happens to be  
+> Debian distribution).
+> But I've installed experimental 5.0.0 kernel and I can't say right now if  
+> suspend problem is resolved (i have to rebuild latest kernel with patch).
 
-And I think set_termios is supposed to apply all applicable settings,
-even if some of them are not supported.
+Can you try below fix?
 
-Andreas.
+This can solve what commit 1475af255e18 ("HID: i2c-hid: Ignore input report  
+if there's no data present on Elan touchpanels”) tries to workaround.
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c  
+b/drivers/pinctrl/intel/pinctrl-intel.c
+index c19a4c45f7bb..30e3664f1ae5 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -957,6 +957,10 @@ static void intel_gpio_irq_mask_unmask(struct irq_data  
+*d, bool mask)
+                 reg = community->regs + community->ie_offset + gpp * 4;
+ 
+                 raw_spin_lock_irqsave(&pctrl->lock, flags);
++
++               if (!mask)
++                       writel(BIT(gpp_offset), community->regs +  
+community->is_offset + gpp * 4);
++
+                 value = readl(reg);
+                 if (mask)
+                         value &= ~BIT(gpp_offset);
+
+
+>
+> Regards,
+> Vladislav.
+>
+> Apr 3, 2019, 2:18 PM by hdegoede@redhat.com:
+> Hi,
+>
+> On 31-03-19 11:50, hotwater438@tutanota.com wrote:
+> Hi. I've done everything you said, here are results:
+>
+> Vladislav can you check the output of /cat/interrupts on a kernel
+> without the patch and while *not* using the touchpad; and check
+> if the amount of touchpads-interrupts still keeps increasing in this
+> case?
+>
+> IWI or IRQ work interrupts keep increasing with speed at least 3  
+> interrupts/s.
+>
+> I'm really only interested in the touchpad related IRQs, so e.g. the line
+> about "intel-gpio 129 ELAN1200:00", if you're seeing 3 interrupts/s on
+> some others that is fine, so I take it the ELAN1200:00 interrupt count
+> does not increase on an *unpatched* kernel, unless you use the touchpad?
+> Also when I am moving touchpad IR-IO-APIC 14-fasteoi INT345D:00 get's  
+> triggered and increased.
+>
+> That is the GPIO controller interrupt, so that one increasing is normal.
+>
+> If I understand things correctly then this all means that the IRQ indeed
+> is a normal level IRQ and Dmitry is likely correct that there is an
+> pinctrl / gpiochip driver problem here.
+>
+> Can you try the following with an *unpatched* kernel? :
+>
+> 1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+> 2) Very quickly/briefly touch the touchpad once
+> 3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+> 4) Subtract result from 1. from result from 3, this difference is
+> the value we are interested in. E.g. my testing got 254 and 257, so
+> a difference of 3.
+>
+> The goal here is to get an as low as possible difference. Feel free
+> to repeat this a couple of times.
+>
+> On an Apollo Lake laptop with an I2C hid mt touchpad I can get the
+> amount of interrupts triggered for a single touch down to 3,
+> given the huge interrupt counts of 130000+ reported in:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1543769
+>
+> I expect you to get a much bigger smallest possible difference
+> between 2 "cat /proc/interrupts | grep ELAN" commands, note a
+> difference of 0 means your touch did not register.
+>
+> Assuming you indeed see much more interrupts for a very quick
+> touch + release, then we indeed have an interrupt handling problem
+> we need to investigate further.
+> I don't know if it's important or not, but for some reason these  
+> interrupts keep popping only on CPU2 (i have 4cpu processor).
+>
+> That does not matter.
+> 1) Suspending the machine by selecting suspend from a menu in your
+> desktop environment, or by briefly pressing the power-button, do
+> not close the lid
+> 2) As soon as the system starts suspending and while it is suspended, move
+> your finger around the touchpad
+> 3) Wake the system up with the powerbutton while moving your finger around
+> 4) Check if the touchpad still works after this
+>
+> It works, but as it seems, looses edge. JournalCTL is being flooded with  
+> i2c_hid_get_input: incomplete report (16/65535)
+>
+> That is probably a different issue. If you loose the edge IRQ, then the  
+> touchpad
+> would stop working without any messages. I believe that the suspend /  
+> resume
+> issue may be fixed by:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=52cf93e63ee672a92f349edc6ddad86ec8808fd8
+>
+> Does your kernel have this commit? (please always use the latest kernel  
+> while
+> testing).
+> Also a thing to notice, that after manually removing and modprobing  
+> i2c_hid module, it says next in journalctl:
+>
+> i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using  
+> dummy regulator
+> i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using  
+> dummy regulator
+>
+> Those messages can safely be ignored.
+>
+> Regards,
+>
+> Hans
+
