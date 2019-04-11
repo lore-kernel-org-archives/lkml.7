@@ -2,186 +2,131 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E115C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51060C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22902133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A8221871
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="NVF6Vt5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfDKM7h (ORCPT
+        id S1726753AbfDKM74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:59:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54778 "EHLO mga14.intel.com"
+        Thu, 11 Apr 2019 08:59:56 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51654 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfDKM7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:59:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 05:59:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
-   d="scan'208";a="141902751"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Apr 2019 05:59:34 -0700
-Date:   Thu, 11 Apr 2019 20:43:50 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fpga: dfl: Add lockdep classes for pdata->lock
-Message-ID: <20190411124350.GB19198@hao-dev>
-References: <20190410215339.8074-1-swood@redhat.com>
+        id S1726073AbfDKM7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:59:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1554987592; bh=lswr7DRqlLLV3PFM/c9mstWRgIri4aJp4GC+V78od+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NVF6Vt5iaEicBm2rfGaHzI/8nB9Pammvp+qkX1Y3XlATJDSgnaJEn322PWbS+c7Zz
+         UiVPaDEyGD9kaCG/xuNlKPQftvCuul6esUicafOxToSvkgkuAFAVARCpOYhuqKmu84
+         e07Ns17+p5w52srrCO0XsMiOBETJqUmnTXDDtu0c=
+Date:   Thu, 11 Apr 2019 14:59:51 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sun8i: a83t: Add device node for CSI
+ (Camera Sensor Interface)
+Message-ID: <20190411125951.zkbubk3kqmtiidkr@core.my.home>
+Mail-Followup-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20190408165744.11672-1-wens@kernel.org>
+ <20190408165744.11672-5-wens@kernel.org>
+ <20190409075804.4zrwjil7ie2gjigu@flea>
+ <CAGb2v64CYV68Q0a7x5p-XabS74vaQWP3paPopodmqQPTOrq2gQ@mail.gmail.com>
+ <20190409082818.z33mq2qrxethldzf@flea>
+ <20190409220040.3sx456gefmjq3t3g@core.my.home>
+ <4c9aa6a850d76533ff693a44ef95b68241836751.camel@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190410215339.8074-1-swood@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <4c9aa6a850d76533ff693a44ef95b68241836751.camel@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
-
-
-On Wed, Apr 10, 2019 at 04:53:39PM -0500, Scott Wood wrote:
-> struct dfl_feature_platform_data (and it's mutex) is used
-> by both fme and port devices, and when lockdep is enabled it
-> complains about nesting between these locks.  Tell lockdep about
-> the difference so it can track each class separately.
+On Thu, Apr 11, 2019 at 02:47:52PM +0200, Paul Kocialkowski wrote:
+> > > > > If we expect a single enpoint, then we don't need the address-cells
+> > > > > and size-cells properties.
+> > > > 
+> > > > I wouldn't bet on anything. The way the Q8 tablets did front/back cameras
+> > > > is kind of genius if not very hacky. They have two "identical" sensors
+> > > > on the same I2C bus and CSI bus, with shared reset line but separate
+> > > > shutdown lines. Since they are identical, they also have the same I2C
+> > > > address. I haven't figured out how to model this in the device tree.
+> > > > 
+> > > > The point is, it's perfectly possible to have two or more sensors use
+> > > > the same controller, provided only one be active at a time.
+> > > 
+> > > Right, but I guess the common case would be to have a single sensor,
+> > > where that wouldn't be needed.
+> > > 
+> > > In odd cases, we can always specify it in the DTS, and if it becomes
+> > > common enough, we can move it to the DTSI.
+> > 
+> > I'm planning on having two sensors there, in a less arcane setup,
+> > though - no shared resets, and different I2C addresses.
+> > 
+> > Anyway, I can confirm that CSI driver works fine on A83T with just
+> > a DTSI patch, even without the clock patch in this series. I've been
+> > running it for quite a while that way without any issues (different
+> > camera chip than the ones being used by wens).
 > 
-> Here's the lockdep complaint:
-> [  409.680668] WARNING: possible recursive locking detected
-> [  409.685983] 5.1.0-rc3.fpga+ #1 Tainted: G            E
-> [  409.691469] --------------------------------------------
-> [  409.696779] fpgaconf/9348 is trying to acquire lock:
-> [  409.701746] 00000000a443fe2e (&pdata->lock){+.+.}, at: port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.710006]
-> [  409.710006] but task is already holding lock:
-> [  409.715837] 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
-> [  409.724012]
-> [  409.724012] other info that might help us debug this:
-> [  409.730535]  Possible unsafe locking scenario:
-> [  409.730535]
-> [  409.736457]        CPU0
-> [  409.738910]        ----
-> [  409.741360]   lock(&pdata->lock);
-> [  409.744679]   lock(&pdata->lock);
-> [  409.747999]
-> [  409.747999]  *** DEADLOCK ***
-> [  409.747999]
-> [  409.753920]  May be due to missing lock nesting notation
-> [  409.753920]
-> [  409.760704] 4 locks held by fpgaconf/9348:
-> [  409.764805]  #0: 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
-> [  409.773408]  #1: 00000000213c8a66 (&region->mutex){+.+.}, at: fpga_region_program_fpga+0x24/0x200 [fpga_region]
-> [  409.783489]  #2: 00000000fe63afb9 (&mgr->ref_mutex){+.+.}, at: fpga_mgr_lock+0x15/0x40 [fpga_mgr]
-> [  409.792354]  #3: 000000000b2285c5 (&bridge->mutex){+.+.}, at: __fpga_bridge_get+0x26/0xa0 [fpga_bridge]
-> [  409.801740]
-> [  409.801740] stack backtrace:
-> [  409.806102] CPU: 45 PID: 9348 Comm: fpgaconf Kdump: loaded Tainted: G            E     5.1.0-rc3.fpga+ #1
-> [  409.815658] Hardware name: Intel Corporation S2600BT/S2600BT, BIOS SE5C620.86B.01.00.0763.022420181017 02/24/2018
-> [  409.825911] Call Trace:
-> [  409.828369]  dump_stack+0x5e/0x8b
-> [  409.831686]  __lock_acquire+0xf3d/0x10e0
-> [  409.835612]  ? find_held_lock+0x3c/0xa0
-> [  409.839451]  lock_acquire+0xbc/0x1d0
-> [  409.843030]  ? port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.847823]  ? port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.852616]  __mutex_lock+0x86/0x970
-> [  409.856195]  ? port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.860989]  ? port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.865777]  ? __mutex_unlock_slowpath+0x4b/0x290
-> [  409.870486]  port_enable_set+0x24/0x60 [dfl_afu]
-> [  409.875106]  fpga_bridges_disable+0x36/0x50 [fpga_bridge]
-> [  409.880502]  fpga_region_program_fpga+0xea/0x200 [fpga_region]
-> [  409.886338]  fme_pr_ioctl+0x13e/0x330 [dfl_fme]
-> [  409.890870]  fme_ioctl+0x66/0xe0 [dfl_fme]
-> [  409.894973]  do_vfs_ioctl+0xa9/0x720
-> [  409.898548]  ? lockdep_hardirqs_on+0xf0/0x1a0
-> [  409.902907]  ksys_ioctl+0x60/0x90
-> [  409.906225]  __x64_sys_ioctl+0x16/0x20
-> [  409.909981]  do_syscall_64+0x5a/0x220
-> [  409.913644]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  409.918698] RIP: 0033:0x7f9d31b9b8d7
-> [  409.922276] Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
-> [  409.941020] RSP: 002b:00007ffe4cae0d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-> [  409.948588] RAX: ffffffffffffffda RBX: 00007f9d32ade6a0 RCX: 00007f9d31b9b8d7
-> [  409.955719] RDX: 00007ffe4cae0df0 RSI: 000000000000b680 RDI: 0000000000000003
-> [  409.962852] RBP: 0000000000000003 R08: 00007f9d2b70a177 R09: 00007ffe4cae0e40
-> [  409.969984] R10: 00007ffe4cae0160 R11: 0000000000000202 R12: 00007ffe4cae0df0
-> [  409.977115] R13: 000000000000b680 R14: 0000000000000000 R15: 00007ffe4cae0f60
+> That's quite nice to hear! I would be interested in getting some
+> insight on which sensors are known to work and which are broken or have
+> limitations.
 > 
-> Signed-off-by: Scott Wood <swood@redhat.com>
+> Would you happen to have a list of the sensors that you tested and
+> whether you encountered such issues with them?
 
-Acked-by: Wu Hao <hao.wu@intel.com>
+I wrote the driver for the sensor I'm using, so the issues were mostly
+during the development. It's Himax HM5065 sensor (not yet upstream).
 
+If you try using other mainline sensors, the issues you'll face will mostly
+be configuring the buses (CSI, I2C) correctly in DTS, or lack of support
+for some VSYNC/HSYNC combinations on the sensor driver side. Luckily, CSI
+controller is quite flexible, and will accomodate lack of configurability
+on the sensor side.
 
-Thanks
-Hao
+regards,
+  o.
 
-> ---
->  drivers/fpga/dfl.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> Cheers,
 > 
-> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> index 2c09e502e721..56dd39dcdcdf 100644
-> --- a/drivers/fpga/dfl.c
-> +++ b/drivers/fpga/dfl.c
-> @@ -40,6 +40,13 @@ enum dfl_fpga_devt_type {
->  	DFL_FPGA_DEVT_MAX,
->  };
->  
-> +static struct lock_class_key dfl_pdata_keys[DFL_ID_MAX];
-> +
-> +static const char *dfl_pdata_key_strings[DFL_ID_MAX] = {
-> +	"dfl-fme-pdata",
-> +	"dfl-port-pdata",
-> +};
-> +
->  /**
->   * dfl_dev_info - dfl feature device information.
->   * @name: name string of the feature platform device.
-> @@ -443,11 +450,16 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
->  	struct platform_device *fdev = binfo->feature_dev;
->  	struct dfl_feature_platform_data *pdata;
->  	struct dfl_feature_info *finfo, *p;
-> +	static enum dfl_id_type type;
->  	int ret, index = 0;
->  
->  	if (!fdev)
->  		return 0;
->  
-> +	type = feature_dev_id_type(fdev);
-> +	if (WARN_ON_ONCE(type >= DFL_ID_MAX))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * we do not need to care for the memory which is associated with
->  	 * the platform device. After calling platform_device_unregister(),
-> @@ -463,6 +475,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
->  	pdata->num = binfo->feature_num;
->  	pdata->dfl_cdev = binfo->cdev;
->  	mutex_init(&pdata->lock);
-> +	lockdep_set_class_and_name(&pdata->lock, &dfl_pdata_keys[type],
-> +				   dfl_pdata_key_strings[type]);
->  
->  	/*
->  	 * the count should be initialized to 0 to make sure
-> @@ -497,7 +511,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
->  
->  	ret = platform_device_add(binfo->feature_dev);
->  	if (!ret) {
-> -		if (feature_dev_id_type(binfo->feature_dev) == PORT_ID)
-> +		if (type == PORT_ID)
->  			dfl_fpga_cdev_add_port_dev(binfo->cdev,
->  						   binfo->feature_dev);
->  		else
+> Paul
+> 
 > -- 
-> 1.8.3.1
+> Paul Kocialkowski, Bootlin
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+> 
