@@ -2,107 +2,74 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BDFC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07863C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15670217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:10:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgxE64cQ"
+	by mail.kernel.org (Postfix) with ESMTP id D156F21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbfDKHKV (ORCPT
+        id S1726898AbfDKHLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:10:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57966 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726256AbfDKHKT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:10:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BH1XfV9lX8mv0vZZfb/r1whXJ7P0F9d0T0VxH2VuinE=; b=dgxE64cQ6A+/mwdPbA4gjOlNVq
-        4/JAGaHsaZng988IFld7edSpB3tV/qq1pl2yI0AWocfCB13tMg+jtHnxby83Ccit6tuJu+BSKzIbI
-        96m/ak4OkTmEmvvS7QQDl97u+b6bE34KUgJ0X49zELhAoDgg2mOpiJKdpwQnGlkuX8aNruQCCplKS
-        qe2GvA2LAaDn0b6YzxcTzVKdLUWa/IgiMw1TdBej/rsWIuJzMlLDZWmW/5VnNmS3bYTu/0/1QQyJm
-        FKGuff/1+xdQmJhOuCDlqXqIRonttGrvGfGP9niLzXjZ6KDYNpnwavAvy8GU/k2uG6PAA8loXa4B3
-        SE1hzq5g==;
-Received: from 089144214194.atnat0023.highway.a1.net ([89.144.214.194] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hETqh-0006ou-Rg; Thu, 11 Apr 2019 07:10:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dma-mapping: remove dma_max_pfn
-Date:   Thu, 11 Apr 2019 09:09:48 +0200
-Message-Id: <20190411070948.29564-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190411070948.29564-1-hch@lst.de>
-References: <20190411070948.29564-1-hch@lst.de>
+        Thu, 11 Apr 2019 03:11:15 -0400
+Received: from mx.socionext.com ([202.248.49.38]:31638 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfDKHLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:11:15 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 11 Apr 2019 16:11:13 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id C0DF16117D;
+        Thu, 11 Apr 2019 16:11:13 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 11 Apr 2019 16:11:13 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 805A340372;
+        Thu, 11 Apr 2019 16:11:13 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 685B4120487;
+        Thu, 11 Apr 2019 16:11:13 +0900 (JST)
+Subject: Re: [PATCH 0/3] Bugfix and cleanup the timer driver for Milbeaut M10V
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Takao Orito <orito.takao@socionext.com>,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+References: <1553483149-8922-1-git-send-email-sugaya.taichi@socionext.com>
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Message-ID: <30226b29-bee5-6410-6ddc-5943c834dc15@socionext.com>
+Date:   Thu, 11 Apr 2019 16:11:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1553483149-8922-1-git-send-email-sugaya.taichi@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These days the DMA mapping code must bounce buffer for any not supported
-address, and if they driver needs to optimize for natively supported
-ranged it should use dma_get_required_mask.
+This is ping..
+Does anyone have any comments?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm/include/asm/dma-mapping.h | 7 -------
- include/linux/dma-mapping.h        | 7 -------
- 2 files changed, 14 deletions(-)
 
-diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index 03ba90ffc0f8..7e0486ad1318 100644
---- a/arch/arm/include/asm/dma-mapping.h
-+++ b/arch/arm/include/asm/dma-mapping.h
-@@ -89,13 +89,6 @@ static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
- }
- #endif
- 
--/* The ARM override for dma_max_pfn() */
--static inline unsigned long dma_max_pfn(struct device *dev)
--{
--	return dma_to_pfn(dev, *dev->dma_mask);
--}
--#define dma_max_pfn(dev) dma_max_pfn(dev)
--
- /* do not use this function in a driver */
- static inline bool is_device_dma_coherent(struct device *dev)
- {
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 75e60be91e5f..6976d36c05de 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -729,13 +729,6 @@ static inline int dma_set_seg_boundary(struct device *dev, unsigned long mask)
- 	return -EIO;
- }
- 
--#ifndef dma_max_pfn
--static inline unsigned long dma_max_pfn(struct device *dev)
--{
--	return (*dev->dma_mask >> PAGE_SHIFT) + dev->dma_pfn_offset;
--}
--#endif
--
- static inline int dma_get_cache_alignment(void)
- {
- #ifdef ARCH_DMA_MINALIGN
--- 
-2.20.1
+On 2019/03/25 12:05, Sugaya Taichi wrote:
+> This series fixes a bug and cleanup code about timer driver for
+> Milbeaut M10V.
+> Since it is difficult to separate, it is integrated into a series.
+> 
+> Sugaya Taichi (3):
+>    clocksource/drivers/timer-milbeaut: Fix to enable one-shot timer
+>    clocksource/drivers/timer-milbeaut: Add shutdown function
+>    clocksource/drivers/timer-milbeaut: Cleanup common register accesses
+> 
+>   drivers/clocksource/timer-milbeaut.c | 66 +++++++++++++++++++++++++-----------
+>   1 file changed, 47 insertions(+), 19 deletions(-)
+> 
 
