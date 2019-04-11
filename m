@@ -2,81 +2,69 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42939C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AADC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188D3206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95043206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfDKOdg (ORCPT
+        id S1726783AbfDKOeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:33:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39408 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726145AbfDKOdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:33:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B656AF50;
-        Thu, 11 Apr 2019 14:33:34 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Joshua Kinard <kumba@gentoo.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] rtc: ds1685: fix crash caused by referencing wrong device struct
-Date:   Thu, 11 Apr 2019 16:33:21 +0200
-Message-Id: <20190411143323.20945-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
+        Thu, 11 Apr 2019 10:34:44 -0400
+Received: from verein.lst.de ([213.95.11.211]:36076 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbfDKOen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 10:34:43 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 150ED68AFE; Thu, 11 Apr 2019 16:34:31 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 16:34:30 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mmc: let the dma map ops handle bouncing
+Message-ID: <20190411143430.GA17371@lst.de>
+References: <20190411070948.29564-1-hch@lst.de> <20190411070948.29564-2-hch@lst.de> <CAPDyKFqHrvz_5taNTx7k6Skx=Ox+9XgQHHz0LZyr4QNV9orvRw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqHrvz_5taNTx7k6Skx=Ox+9XgQHHz0LZyr4QNV9orvRw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sysfs entries added by rtc_add_group are called with the rtc device
-as argument and not the underlying device. Fixed by using the dev->parent
+On Thu, Apr 11, 2019 at 11:00:56AM +0200, Ulf Hansson wrote:
+> >         blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, mq->queue);
+> >         if (mmc_can_erase(card))
+> >                 mmc_queue_setup_discard(mq->queue, card);
+> >
+> > -       blk_queue_bounce_limit(mq->queue, limit);
+> > +       if (!mmc_dev(host)->dma_mask || !*mmc_dev(host)->dma_mask)
+> > +               blk_queue_bounce_limit(mq->queue, BLK_BOUNCE_HIGH);
+> 
+> So this means we are not going to set a bounce limit for the queue, in
+> case we have a dma mask.
+> 
+> Why isn't that needed no more? Whats has changed?
 
-Fixes: cfb74916e2ec ("rtc: ds1685: use rtc_add_group")
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/rtc/rtc-ds1685.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
-index 2710f2594c42..2f5194df239e 100644
---- a/drivers/rtc/rtc-ds1685.c
-+++ b/drivers/rtc/rtc-ds1685.c
-@@ -1004,7 +1004,7 @@ static ssize_t
- ds1685_rtc_sysfs_battery_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
--	struct ds1685_priv *rtc = dev_get_drvdata(dev);
-+	struct ds1685_priv *rtc = dev_get_drvdata(dev->parent);
- 	u8 ctrld;
- 
- 	ctrld = rtc->read(rtc, RTC_CTRL_D);
-@@ -1024,7 +1024,7 @@ static ssize_t
- ds1685_rtc_sysfs_auxbatt_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
--	struct ds1685_priv *rtc = dev_get_drvdata(dev);
-+	struct ds1685_priv *rtc = dev_get_drvdata(dev->parent);
- 	u8 ctrl4a;
- 
- 	ds1685_rtc_switch_to_bank1(rtc);
-@@ -1046,7 +1046,7 @@ static ssize_t
- ds1685_rtc_sysfs_serial_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
- {
--	struct ds1685_priv *rtc = dev_get_drvdata(dev);
-+	struct ds1685_priv *rtc = dev_get_drvdata(dev->parent);
- 	u8 ssn[8];
- 
- 	ds1685_rtc_switch_to_bank1(rtc);
--- 
-2.13.7
-
+On most architectures it was never needed, the major hold out was x86-32
+with PAE.  In general the dma_mask tells the DMA API layer what is
+supported, and if the physical addressing doesn't support that it has to
+use bounce buffering like swiotlb (or dmabounce on arm32).  A couple
+month ago I finally fixes x86-32 to also properly set up swiotlb,
+and remove the block layerer bounce buffering that wasn't for highmem
+(which is about having a kernel mapping, not addressing), and ISA DMA
+(which is not handled like everything else, but we'll get there).
+But for some reason I missed mmc back then, so mmc right now is the
+only remaining user of address based block layer bouncing.
