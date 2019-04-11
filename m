@@ -6,108 +6,80 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58250C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2712CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA4B2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A7A2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555015484;
-	bh=q66BQqnKckskSTecJ/LlsnJkkia2OlBOrQQyyB1+l1g=;
+	s=default; t=1555015595;
+	bh=cg6vcRjYqVcEyWsUirUouCQgdhJHP6oU47vPazrG16U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XDVvy22o/+8idYP1hbigAdHcwI7ms0znlme+MOPJDZzxIpd+8UNSPwOwqirEg1Mge
-	 iBsXUgHiiZx4RDXPvvbTDibkXszozls0jpQZbht1HmCvMG1vs7iMhHyOUfqp2+SB8s
-	 XCPyB1RU0ZIrCc5MizBRsQ+kqSaxOysrxvvZ/qoU=
+	b=hns2UOVwIwCVxayxIyYHnu/7s/r3XEC2+MM4xG0iuAW7fIEurnqEZZ+6QGnlmC66P
+	 4JA+4WUs2OZtJ2Wj0m2Q1BoSRO3nBNgzmULrdJlNwXD/CA+w+XCGDr2fdfH4uXIsnD
+	 3m6LH5J7ZVR6rJ00185elPJ+9GJgFkTwsogJldv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfDKUom (ORCPT
+        id S1726965AbfDKUqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:44:42 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46760 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKUol (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:44:41 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x188so6097559oia.13;
-        Thu, 11 Apr 2019 13:44:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tLlC6X7IovyMMzQ0jkSm2PAnsWWLeJJTqcPx8mAOfwM=;
-        b=jqwq1YNLE0bC/rlhg6ZmqZp09WTh5ccy872gzJo/jbeZCsHy3OunDLLy9uC5Y8eCoc
-         WmFYlWqP073wWjHtA+4i7LjRwvy0fqXgVFL3cKWWrZDEr/IkShPDvjfUH+fksh9xrf3I
-         NOgm0GWq99GpjAvZpWp2FAs4Lf0VFQzzhwnyNOlbAuoeZF34DTCuU3E0nE3crW6+m0SM
-         lkPyVooJkTK6p/AjYY99iQpTjXAmLzmlzC4pPAzCbIulbGMqk57E1YHDLcjIx/8RFr1Q
-         bswVY97OviCwGFSdEaYKApw5dXPBM2fh/BXPC30ffmb2z5wg3zoq3K6bvasvAQ1lxuay
-         r7MA==
-X-Gm-Message-State: APjAAAUKXkpEXOpYWYPhUL6qdY8VVwVnVuUyvvhjqWM87fyRqbxnPjnr
-        k1jfyThs3RvDfLjXzr7510GNy/P2XHxj5r/sbgo=
-X-Google-Smtp-Source: APXvYqyfZP+w+RFpgS9CgC/HXHhWnweUGlZbSPPOESFhgFzTYWiDGGLbTYFsWAfxtedmIgCPSM86fhuPZAS5UCP0F/g=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr7698757oib.95.1555015480675;
- Thu, 11 Apr 2019 13:44:40 -0700 (PDT)
+        Thu, 11 Apr 2019 16:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfDKUqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:46:33 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4BF82184B;
+        Thu, 11 Apr 2019 20:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555015593;
+        bh=cg6vcRjYqVcEyWsUirUouCQgdhJHP6oU47vPazrG16U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jtD7GF5rER/OrGa9DxdXzr5+UQgoejPF9vThO0T7hyIRhF7eByt0EpFY4dNuVH1X5
+         Q/wFvGXbcMbgB3/Qo1J8Fw2TxfmPjd1jItDrOKWvwcyISbOseuF+wqqVg+4ZYGks2R
+         yLuczRS9XH5DZl7sN/Dyuc8azFqv9ZNRwWZW9HC8=
+Received: by mail-ed1-f47.google.com with SMTP id d1so6415909edd.13;
+        Thu, 11 Apr 2019 13:46:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXFCtuLRUIqPwuP8LeaNAmVg+Qbq3Ur/NfEDVOXqtEd4FEtJdb
+        otYF8uYET4NIjcBDMcJ0N3hqNICD/46xFwf88EA=
+X-Google-Smtp-Source: APXvYqwdGi+g08MWa/C8/lAdqwPsfRMx4ENOMIEfpA370lVui7XWA1RgILRRJI/7i7izFCFfDUzbSXJDpDBdWiNKg5Y=
+X-Received: by 2002:a17:906:69d6:: with SMTP id g22mr4079340ejs.124.1555015591393;
+ Thu, 11 Apr 2019 13:46:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190411181733.21437-1-ulf.hansson@linaro.org>
-In-Reply-To: <20190411181733.21437-1-ulf.hansson@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 11 Apr 2019 22:44:29 +0200
-Message-ID: <CAJZ5v0hVkgF2MYUh4VkXN0L2ZtxMoC8bUV6CY7=fAnSHRLpqUA@mail.gmail.com>
-Subject: Re: [PATCH v14 4/4] PM / Domains: Add genpd governor for CPUs
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-11-git-send-email-hao.wu@intel.com> <20190402155018.GA1453@archbook>
+In-Reply-To: <20190402155018.GA1453@archbook>
+From:   Alan Tull <atull@kernel.org>
+Date:   Thu, 11 Apr 2019 15:45:54 -0500
+X-Gmail-Original-Message-ID: <CANk1AXRuA=hWOSxV-z9h3oz1VQVTVy8tYe2pgi4qN0fz9u2fyw@mail.gmail.com>
+Message-ID: <CANk1AXRuA=hWOSxV-z9h3oz1VQVTVy8tYe2pgi4qN0fz9u2fyw@mail.gmail.com>
+Subject: Re: [PATCH 10/17] fpga: dfl: afu: export __port_enable/disable function.
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Wu Hao <hao.wu@intel.com>, Alan Tull <atull@kernel.org>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 8:17 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> After some preceding changes, PM domains managed by genpd may contain
-> CPU devices, so idle state residency values should be taken into
-> account during the state selection process. [The residency value is
-> the minimum amount of time to be spent by a CPU (or a group of CPUs)
-> in an idle state in order to save more energy than could be saved
-> by picking up a shallower idle state.]
->
-> For this purpose, add a new genpd governor, pm_domain_cpu_gov, to be
-> used for selecting idle states of PM domains with CPU devices attached
-> either directly or through subdomains.
->
-> The new governor computes the minimum expected idle duration for all
-> online CPUs attached to a PM domain and its subdomains.  Next, it
-> finds the deepest idle state whose target residency is within the
-> expected idle duration and selects it as the target idle state of
-> the domain.
->
-> It should be noted that the minimum expected idle duration computation
-> is based on the closest timer event information stored in the per-CPU
-> variables cpuidle_devices for all of the CPUs in the domain.  That
-> needs to be revisited in future, as obviously there are other reasons
-> why a CPU may be woken up from idle.
->
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> [ rjw: Changelog ]
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Apr 2, 2019 at 10:50 AM Moritz Fischer <mdf@kernel.org> wrote:
 
-Applied instead of the previous version, thanks!
+Hi Hao,
+
+>
+> On Mon, Mar 25, 2019 at 11:07:37AM +0800, Wu Hao wrote:
+> > As these two functions are used by other private features. e.g.
+> > in error reporting private feature, it requires to check port status
+> > and reset port for error clearing.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+
+Acked-by: Alan Tull <atull@kernel.org>
+
+Thanks,
+Alan
