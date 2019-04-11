@@ -2,81 +2,93 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A82BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F400C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9DD2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U9vfwt42"
+	by mail.kernel.org (Postfix) with ESMTP id 0D0F4217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfDKJNg (ORCPT
+        id S1727023AbfDKJNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:13:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33360 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDKJNg (ORCPT
+        Thu, 11 Apr 2019 05:13:52 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:47553 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDKJNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:13:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CQFYrD8VWl5Gfv+Cb3DnJ71MhRi7HJxQOWx6pkykjnw=; b=U9vfwt42lm0LL9vkIW2TLFsA+
-        80uGYX5ACF1yjNM8XaK3oryw06zMBtffAqXc37YchaNjr7j86p2DIK/baiDUFRtr3U//RRy/KEOqp
-        ij3LLcE2rYrQT7rV2g7kqWrQvIbSK5OHKG3kOaj0X6F8Wb6t8bKWbegAPEZGFgZF70OTbte0CJBb4
-        BtTAwzzS408c3cKVx7z98vSeRq2syXLM12NxrGlI1EjwTNwPLyoRQX4LQqQtn1IxbkQDI4gP9+6qr
-        1NZSZIehUw6gwmdpdnh4whgP51xtdyiNWhI3dlVfbFOCvtfCXFITPQqt2+foWLdBqmSI8cwrjERB7
-        X7hioJPxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEVlv-0000MN-Bk; Thu, 11 Apr 2019 09:13:27 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C18712029E070; Thu, 11 Apr 2019 11:13:24 +0200 (CEST)
-Date:   Thu, 11 Apr 2019 11:13:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [RFC patch 40/41] stacktrace: Remove obsolete functions
-Message-ID: <20190411091324.GE4038@hirez.programming.kicks-ass.net>
-References: <20190410102754.387743324@linutronix.de>
- <20190410103647.205989744@linutronix.de>
- <20190411033320.64zafrthhsm2ohdm@treble>
+        Thu, 11 Apr 2019 05:13:52 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3B9DZe2013554
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 11 Apr 2019 18:13:35 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B9DZ51015426;
+        Thu, 11 Apr 2019 18:13:35 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B99eWv007463;
+        Thu, 11 Apr 2019 18:13:35 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.136] [10.38.151.136]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-4202875; Thu, 11 Apr 2019 18:13:04 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC08GP.gisp.nec.co.jp ([10.38.151.136]) with mapi id 14.03.0319.002; Thu,
+ 11 Apr 2019 18:13:03 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqAgACP04CAAAH9AIAABdcAgAAJ5YA=
+Date:   Thu, 11 Apr 2019 09:13:03 +0000
+Message-ID: <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
+References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+ <20190410171431.GE26580@zn.tnic>
+ <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+ <20190411080927.GA30080@zn.tnic>
+ <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+ <20190411083738.GC30080@zn.tnic>
+In-Reply-To: <20190411083738.GC30080@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <50D1F48D00732841994A423F797DD49D@gisp.nec.co.jp>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411033320.64zafrthhsm2ohdm@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 10:33:20PM -0500, Josh Poimboeuf wrote:
-> On Wed, Apr 10, 2019 at 12:28:34PM +0200, Thomas Gleixner wrote:
+T24gNC8xMS8xOSA1OjM3IFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IE9uIFRodSwgQXBy
+IDExLCAyMDE5IGF0IDA4OjE2OjQ1QU0gKzAwMDAsIEp1bmljaGkgTm9tdXJhIHdyb3RlOg0KPj4g
+a2V4ZWNfZ2V0X3JzZHBfYWRkcigpIG1pZ2h0IGZhaWwgb24ga2V4ZWMtYm9vdGVkIGtlcm5lbCwg
+ZS5nLiBpZiB0aGUNCj4+IHNldHVwX2RhdGEgd2FzIGludmFsaWQuIEluIHN1Y2ggYSBjYXNlLCBm
+YWxsaW5nIGJhY2sgdG8gZWZpX2dldF9yc2RwX2FkZHIoKQ0KPj4gd2lsbCBoaXQgdGhlIHByb2Js
+ZW0gb2YgYWNjZXNzaW5nIGludmFsaWQgdGFibGUgcG9pbnRlciBhZ2Fpbi4NCj4gDQo+IFRoZW4g
+eW91IG5lZWQgdG8gZG8gdGhpczoNCj4gDQo+IAlpZiAoa2V4ZWNlZCBrZXJuZWwpIHsNCj4gCQlh
+ZGRyID0ga2V4ZWNfZ2V0X3JzZHBfYWRkcigpOw0KPiAJCWlmICghYWRkcikgew0KPiAJCQkvKiBj
+YW5ub3QgZ2V0IGFkZHJlc3MgKi8NCj4gCQkJcmV0dXJuIC0xOw0KPiAJCX0NCj4gDQo+IAkJcmV0
+dXJuIGFkZHI7DQo+IAl9DQo+IA0KPiBhbmQgdGhlIGNhbGxpbmcgZnVuY3Rpb24gZ2V0X3JzZHBf
+YWRkcigpIG11c3QgY2hlY2sgdGhlIHJldHVybiB2YWx1ZSBhbmQNCj4gaWYgaXQgaXMgbm90IDAs
+IHJldHVybiBpbW1lZGlhdGVseS4NCg0KRG8geW91IG1lYW4gbWFraW5nIGdldF9yc2RwX2FkZHIo
+KSBsaWtlIHRoaXM/DQoNCmFjcGlfcGh5c2ljYWxfYWRkcmVzcyBnZXRfcnNkcF9hZGRyKHZvaWQp
+DQp7DQogICAgICAgIGFjcGlfcGh5c2ljYWxfYWRkcmVzcyBwYTsNCisgICAgICAgc3RydWN0IGVm
+aV9zZXR1cF9kYXRhICplc2Q7DQoNCiAgICAgICAgcGEgPSBnZXRfYWNwaV9yc2RwKCk7DQoNCiAg
+ICAgICAgaWYgKCFwYSkNCiAgICAgICAgICAgICAgICBwYSA9IGJvb3RfcGFyYW1zLT5hY3BpX3Jz
+ZHBfYWRkcjsNCg0KKyAgICAgICBlc2QgPSAoc3RydWN0IGVmaV9zZXR1cF9kYXRhICopIGVmaV9n
+ZXRfa2V4ZWNfc2V0dXBfZGF0YV9hZGRyKCk7DQorICAgICAgIGlmIChlc2QpDQorCQlyZXR1cm4g
+a2V4ZWNfZ2V0X3JzZHBfYWRkcihlc2QpOw0KDQogICAgICAgIGlmICghcGEpDQogICAgICAgICAg
+ICAgICAgcGEgPSBlZmlfZ2V0X3JzZHBfYWRkcigpOw0KDQoNCg0KLS0gDQpKdW4naWNoaSBOb211
+cmEsIE5FQyBDb3Jwb3JhdGlvbiAvIE5FQyBTb2x1dGlvbiBJbm5vdmF0b3JzLCBMdGQu
 
-> > +struct stack_trace {
-> > +	unsigned int nr_entries, max_entries;
-> > +	unsigned long *entries;
-> > +	int skip;	/* input argument: How many entries to skip */
-> > +};
-> 
-> I was a bit surprised to see struct stack_trace still standing at the
-> end of the patch set, but I guess 41 patches is enough :-)  Do we want
-> to eventually remove the struct altogether?
-> 
-> I was also hoping to see the fragile "skipnr" go away in favor of
-> something less dependent on compiler optimizations, but I'm not sure how
-> feasible that would be.
-
-It will die, but that only takes another nr_arch+1 patches.
