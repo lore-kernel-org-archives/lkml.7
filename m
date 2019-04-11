@@ -2,130 +2,115 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DB9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E0AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3014220693
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B48420693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X+MWK/nB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qi1JUTyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfDKRMu (ORCPT
+        id S1726676AbfDKRSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:12:50 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42240 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKRMu (ORCPT
+        Thu, 11 Apr 2019 13:18:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52197 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfDKRSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:12:50 -0400
-Received: by mail-vs1-f66.google.com with SMTP id f15so3924152vsk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:12:49 -0700 (PDT)
+        Thu, 11 Apr 2019 13:18:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so7697661wmf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xbVhfxmGF0URsGvyR2UkMeD56y0+dvwTkthYL3Uleek=;
-        b=X+MWK/nBnYRuHCbAkw7FFJUhs/b+TfhegS9ar0HHGiRvNTE24iJdfV77fs7sYwIhTZ
-         7AHrBpobPL1qYM+8x2quOZno9dt9UpqI2l8hmRsmDhe1fOBt6/7WS57SQLr7A8czn+6I
-         DKvlexZH15Z1OSRBWpQ565uNRY1P8uBJ+lh2w=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YU4pt8v1ib9daIqRADi7BjOhLgd2e+YgnUqd1UEAUao=;
+        b=Qi1JUTyJf8xSMMJjZ/Rqc8mykBoujCwm8OyHhkYLaVp4U3nx4hB5KfDAGasZtB2ESH
+         PEtmXWeZDK0l3PAKb098WunYQ+2Ha9bl1I8zNNn4dB/VRwiVbdwblfWFGvlQLk8VcCN3
+         upmRAEqLbfbXj4fOk0drOnP9SJF/gnnfdyfwraHx9BbESMA3S9939zuVzGHKli95iO5E
+         mzJqgDerPSnni7L7MqcLR96tjG1eScME6WGaoWe0QA9hc30D56Evlz84/Gidi2/w/rOX
+         P9eFCRGZbCPHQjUTksZa3f/G0LhcEeuF28PY0aOGZmFye62gtfHg0qe9QHOAbR0yXbZc
+         H7SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xbVhfxmGF0URsGvyR2UkMeD56y0+dvwTkthYL3Uleek=;
-        b=d4bi3FZcGnNYcztihtA3fnCZNdQvPhDCezDBMKEshKvugIb8IO7YUohLPy/WmArj3y
-         at0nD7b+LxBXRCqkuG2xnom0wM8bx4ev/qbFU7Akib4bELOE3p39GvWvm2UqtGFUW+kx
-         k3tmupaEcOnOL++nVwg9JU7VvL4weKUcrjiYXu12Ip8aJVi85Spd3IwUk784A1C7ieoQ
-         qa2OOdogdHWDeGxoDZzOOKwi8Yy4AgCiJrj3luWY1+4lunuf11RT4iWU9+fsdwMlMjCo
-         lpv4bQuUAaHkRA2sCDLvNJrPYhbCJmoLPdAc5Wi8MU89cHMtr+HkAGrOXtxinRcnv3jp
-         tWkw==
-X-Gm-Message-State: APjAAAXkRbnB04CJmkOk+xUHhjzx48jnPK79sPuziZIuNGzg3iND0z8Q
-        CuYZTVbxd/jWGDxvU1/Tn/lUnkN+/i0=
-X-Google-Smtp-Source: APXvYqzzQ7DLV1Das05aO6sYEFx7xJUSu0V1oZKFzjRRoiprKQaR1+zybXXU8M09XagBO8MiChg7FA==
-X-Received: by 2002:a67:e9c8:: with SMTP id q8mr26496511vso.120.1555002767353;
-        Thu, 11 Apr 2019 10:12:47 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id y18sm2822883vsm.10.2019.04.11.10.12.46
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YU4pt8v1ib9daIqRADi7BjOhLgd2e+YgnUqd1UEAUao=;
+        b=Qd+/rQMzDE0xlHNZH3Xn6Ztiq2hoB+bs6tMvvXvBlVAMBef7vV6ArTa+Av3iuBj5OV
+         rpGXLrToAEzdhb6xD0JrfApfv1bFtFjbDB3rG0Z5rWUgV0hDy6m5Jfk7rda6dRSxmmEr
+         9Ot2Js3+YrLcLxYyH9LIeTbF5/kTRYVBZPfALYGXv/MQ5zP+UcluznTgdT7DYfXC/pSH
+         cKBP8NwwNNUJu9tZJJl/0y6CpSvmSpI+cOS4WuLREq7LxfYpmK3rjfbnDNw+/UO4hQiU
+         R2IGXv2ChZXRp0XYAvGAKSQrLPQtWI6gFb/WN4v1VrH/w1H7yAFtpUmyR2odCW1U+y+j
+         RaCQ==
+X-Gm-Message-State: APjAAAWLtz54exb1o5U4fKpzCSvWG1Ztcn3gaGPVGjgYSzs7nWVqQb5b
+        2BaiWsXjZykHe0V+cfAjDqBRuA==
+X-Google-Smtp-Source: APXvYqzA0F7UTO+IFvUALqG96IX1CGD0fL49SLxLo5xu9DMG2oFz1Q1b7LkHAZ+NkJwNZOKiJy3r8Q==
+X-Received: by 2002:a1c:7a03:: with SMTP id v3mr7983294wmc.58.1555003080775;
+        Thu, 11 Apr 2019 10:18:00 -0700 (PDT)
+Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
+        by smtp.googlemail.com with ESMTPSA id w9sm11743768wmi.0.2019.04.11.10.17.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 10:12:47 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id l17so1541667vke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:12:46 -0700 (PDT)
-X-Received: by 2002:a1f:ab8d:: with SMTP id u135mr25497993vke.80.1555002445937;
- Thu, 11 Apr 2019 10:07:25 -0700 (PDT)
+        Thu, 11 Apr 2019 10:18:00 -0700 (PDT)
+Subject: Re: [PATCH 4/7] clocksource/arm_arch_timer: Direcly assign
+ set_next_event workaround
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Russell King <linux@arm.linux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Valentin Schneider <valentin.schneider@arm.com>
+References: <20190408154907.223536-1-marc.zyngier@arm.com>
+ <20190408154907.223536-5-marc.zyngier@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <0d051de8-35a9-61bd-5ac0-7180f19f7c01@linaro.org>
+Date:   Thu, 11 Apr 2019 19:17:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190410161612.18545-1-keescook@chromium.org> <20190410161612.18545-4-keescook@chromium.org>
- <CAK7LNAQpm5Tz_Fo0rSq00emB7BLnfYB-+mwXd9GiMKAqKCfkrA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQpm5Tz_Fo0rSq00emB7BLnfYB-+mwXd9GiMKAqKCfkrA@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 11 Apr 2019 10:07:14 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJYPO7buixedop=8e_e+Pf-4nmkz-iS3EV5CXC0obKpdA@mail.gmail.com>
-Message-ID: <CAGXu5jJYPO7buixedop=8e_e+Pf-4nmkz-iS3EV5CXC0obKpdA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kbuild: Implement Clang's stack initialization
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexander Popov <alpopov@ptsecurity.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190408154907.223536-5-marc.zyngier@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:06 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Thu, Apr 11, 2019 at 1:16 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > CONFIG_INIT_STACK_ALL turns on stack initialization based on
-> > -ftrivial-auto-var-init in Clang builds and on
-> > -fplugin-arg-structleak_plugin-byref-all in GCC builds.
->
-> Is CONFIG_INIT_STACK_ALL wired up to GCC plugin in any way?
-> I could not understand it from the code.
+On 08/04/2019 17:49, Marc Zyngier wrote:
+> When a given timer is affected by an erratum and requires an
+> alternative implementation of set_next_event, we do a rather
+> complicated dance to detect and call the workaround on each
+> set_next_event call.
+> 
+> This is clearly idiotic, as we can perfectly detect whether
+> this CPU requires a workaround while setting up the clock event
+> device.
+> 
+> This only requires the CPU-specific detection to be done a bit
+> earlier, and we can then safely override the set_next_event pointer
+> if we have a workaround associated to that CPU.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 
-No, it's only available under Clang. Clang is all-or-nothing, and the
-GCC plugin has a degrees up to "all passed by reference" which isn't
-truly "all" (i.e. Clang will initialize variables that aren't passed
-by reference and trigger a compiler warning about being
-uninitialized.)
+Do you want me to take the patch ?
 
-> >  choice
-> >         prompt "Initialize kernel stack variables at function entry"
-> >         depends on CC_HAS_AUTO_VAR_INIT || GCC_PLUGINS
-> > +       default INIT_STACK_ALL if CC_HAS_AUTO_VAR_INIT
->
-> Why should this be enabled by default?
-> Ins't it a performance regression
-> since it inserts instructions in function prologue?
+Otherwise:
 
-There are very few users of Clang right now (mainly Android), so I
-figured it'd be nice to start Clang builds from a "protected by
-default" here, especially given Linus's thoughts on making this always
-happen[1]. I don't want to do it for GCC yet, since that would likely
-come as a huge surprise to everyone else. :) But I'm happy to change
-this, of course.
+Acked-by; Daniel Lezcano <daniel.lezcano@linaro.org>
 
--Kees
 
-[1] https://lkml.kernel.org/r/CA+55aFykZL+cSBJjBBts7ebEFfyGPdMzTmLSxKnT_29=j942dA@mail.gmail.com
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
---
-Kees Cook
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
