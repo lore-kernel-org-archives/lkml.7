@@ -2,128 +2,210 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41969C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7EC20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DE420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="KrxWIEik"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mH9Z66Di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfDKStc (ORCPT
+        id S1726778AbfDKSwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:49:32 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41968 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfDKSta (ORCPT
+        Thu, 11 Apr 2019 14:52:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35925 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfDKSwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:49:30 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g6so2176586edc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:49:28 -0700 (PDT)
+        Thu, 11 Apr 2019 14:52:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id f6so6283464iop.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DMnZhta68iAX33CpRchMA+yMZHDHOGcPtQBVqQabrNw=;
-        b=KrxWIEikxDdZvLu8UnFVjW0EcG/PU1SormZHDInUdtOAg+J8UeRfz2zXDqrYBYevOn
-         JwyWhZgYwU6QtoPuE0mXZ1Oe5eYGnMUIagbCpUNbdwOBGj5GuTN3H7Op5ODJ3yxVBy4a
-         HJv3vGEEQWldc4EKVLOm7+5le7P2BEiIWuDF1OhwdjSym2xlj9kWG98u6Ge2wHvP8QAZ
-         tWipMQtzFYHT0eFwweBjtWhr2X29dn3Z6GXvM4PStsLb8BJAl2VsSyrgiCcO2JqfpiLQ
-         mZIfb9bKl4Awxr45GpXcPVoobD3hUoYj2Adz7S2v77C2kyg4y/sYDgRpJl/SvI0brDXa
-         u9JQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q9LCv6hvKvVV7ugfmYyfukiH7BzQUtUryPXyxFdbIQ4=;
+        b=mH9Z66DiPJdu4zjz7xq5WPrJBbeNAxbp7LYDENdORPWcjHBZbkWHfiUtffqPDob7I3
+         4ztFOCPXbAf0W6WKRb3cZ5DX6h+TXLIcHwuXDUs+Jn1+mbKQfKfPZbeKfLQulaXHTlp4
+         CE8YsMCqZdjH++Ugf5oXRQYhnXthmrLgOAIZk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DMnZhta68iAX33CpRchMA+yMZHDHOGcPtQBVqQabrNw=;
-        b=kC7NCuNa6NRwC627uX1Nq/mktIBzzi3qI0SMgGP4qIzdrEM8lJxNeY5ufH3HdbMN76
-         g5pkDFbrhHKNJbKuc44zOQQE9du8Vo3w5klov9QvJLtdCVr7KmQyFsZouwiiVkqe+tgT
-         eihtx3TmYWmziTPNZCaBF51HIA7KRBh+IO3AWXFjxzFqqlkicndKdRErxSDd1jnTFqtm
-         WT1B4eAFJagSuaynslNVUb2BIjfRmjyX2jSfNzbs315W2Cn1YD1qYQpkQo0vSTvuEBx+
-         T2jMocscLtZ3luWa7SLArvlCfY/iTATSPwfjfVNnEXvgzfqdvEdRlj5oEXj4j6fujVZF
-         z4vA==
-X-Gm-Message-State: APjAAAX/SJosUmFYxHQY+1RjBQp1fDjQJHFPbFjNzbC77/iStQ0o5X/Z
-        ffThgeU7iL6/Adeo/niJNLe1Bw==
-X-Google-Smtp-Source: APXvYqxGXfYCaCRlvVgksxX9b5Eab0yr+jZV0UQmnyepRxSCDJinf+ClgjALBi9ceksiejLlB/1QXw==
-X-Received: by 2002:a17:906:e285:: with SMTP id gg5mr27392064ejb.229.1555008568161;
-        Thu, 11 Apr 2019 11:49:28 -0700 (PDT)
-Received: from localhost.localdomain ([80.233.32.123])
-        by smtp.gmail.com with ESMTPSA id b10sm1285130edi.28.2019.04.11.11.49.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q9LCv6hvKvVV7ugfmYyfukiH7BzQUtUryPXyxFdbIQ4=;
+        b=TxHQLbYv6GkRHPDlkm9eYZVYWlERemgtPM4fdRAgYDiNuChkS2KkZapmOHT/botiEM
+         Ize9n2wFnOEs3p7Zprrww78ik7pxqq/CN8pxix3ElhG58hxZQrcE/SrAEt8RJSf/ZPAs
+         EHx+c8HwGJ1i/JBQboSbrSjYsv3CMLsTWyucg4J9yBoQmJNTNhxgWtfn6/YNWeEc+TbV
+         kgNwST5+EiettyJj7jyN/vcX0wzFmPLytGldFpPtsndUFqNApnOTah7ASo+rZqvsHelj
+         O5SF5UZmxFA2giS7JU+mZHzsAREvhp6s1IkwLwLAFMOhWVmUvSWUiICXZ2yMYXyj/zVQ
+         CsdQ==
+X-Gm-Message-State: APjAAAVz15hLdah5FumZ49jlkWZdaL1JGp/PJLLGQDsgLNSjabuWOntp
+        Fd0wgHjjcZ22KyL8XFuTnTaOaw==
+X-Google-Smtp-Source: APXvYqxhH06QztR2QBgwqXdZWbTNOWPDU2EvkxHNM60n/3gsKdJw2G0+oFzF/Ipceb04bvYLtsH9IA==
+X-Received: by 2002:a6b:c909:: with SMTP id z9mr32966003iof.244.1555008756639;
+        Thu, 11 Apr 2019 11:52:36 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id t78sm2891373itb.39.2019.04.11.11.52.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 11:49:27 -0700 (PDT)
-From:   Tom Murphy <tmurphy@arista.com>
-To:     iommu@lists.linux-foundation.org
-Cc:     dima@arista.com, jamessewart@arista.com, murphyt7@tcd.ie,
-        Tom Murphy <tmurphy@arista.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH 9/9] iommu/amd: Add allocated domain to global list earlier
-Date:   Thu, 11 Apr 2019 19:47:38 +0100
-Message-Id: <20190411184741.27540-10-tmurphy@arista.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411184741.27540-1-tmurphy@arista.com>
-References: <20190411184741.27540-1-tmurphy@arista.com>
+        Thu, 11 Apr 2019 11:52:35 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-usb@vger.kernel.org
+Cc:     groeck@chromium.org, oneukum@suse.com, djkurtz@chromium.org,
+        zwisler@chromium.org, Raul E Rangel <rrangel@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH v2] usb/hcd: Send a uevent signaling that the host controller has died
+Date:   Thu, 11 Apr 2019 12:52:11 -0600
+Message-Id: <20190411185211.235940-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_ops_domain_free() expects domain to be in a global list.
-Arguably, could be called before protection_domain_init().
+This change will send a CHANGE event to udev with the DEAD environment
+variable set when the HC dies. I chose this instead of any of the other
+udev events because it's representing a state change in the host
+controller. The only other event that might have fit was OFFLINE, but
+that seems to be used for hot-removal and it implies the device could
+come ONLINE again.
 
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Tom Murphy <tmurphy@arista.com>
+By notifying user space the appropriate policies can be applied.
+i.e.,
+ * Collect error logs.
+ * Notify the user that USB is no longer functional.
+ * Perform a graceful reboot.
+
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
- drivers/iommu/amd_iommu.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+I wasn't able to find any good examples of other drivers sending a dead
+notification.
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 02b351834a3b..bfb021d656aa 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1801,8 +1801,12 @@ static struct protection_domain *dma_ops_domain_alloc(void)
- 	if (!domain)
- 		return NULL;
+Use an EVENT= format
+https://github.com/torvalds/linux/blob/master/drivers/acpi/dock.c#L302
+https://github.com/torvalds/linux/blob/master/drivers/net/wireless/ath/wil6210/interrupt.c#L497
+
+Uses SDEV_MEDIA_CHANGE=
+https://github.com/torvalds/linux/blob/master/drivers/scsi/scsi_lib.c#L2318
+
+Uses ERROR=1.
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/7f6d8aec5803aac44192f03dce5637b66cda7abf/drivers/input/touchscreen/atmel_mxt_ts.c#1581
+I'm not a fan because it doesn't signal what the error was.
+
+We could change the DEAD=1 event to maybe ERROR=1?
+
+Also where would be a good place to document this?
+
+Also thanks for the review. This is my first kernel patch so forgive me
+if I get the workflow wrong.
+
+Changes in v2:
+- Check that the root hub still exists before sending the uevent.
+- Ensure died_work has completed before deallocating.
+
+ drivers/usb/core/hcd.c  | 32 ++++++++++++++++++++++++++++++++
+ include/linux/usb/hcd.h |  1 +
+ 2 files changed, 33 insertions(+)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 975d7c1288e3..7835f1a3647d 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2343,6 +2343,27 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+ 	return status;
+ }
  
--	if (protection_domain_init(domain))
--		goto free_domain;
-+	if (protection_domain_init(domain)) {
-+		kfree(domain);
-+		return NULL;
-+	}
 +
-+	add_domain_to_list(domain);
++/**
++ * hcd_died_work - Workqueue routine for root-hub has died.
++ * @hcd: primary host controller for this root hub.
++ *
++ * Do not call with the shared_hcd.
++ * */
++static void hcd_died_work(struct work_struct *work)
++{
++	struct usb_hcd *hcd = container_of(work, struct usb_hcd, died_work);
++
++	mutex_lock(&usb_bus_idr_lock);
++
++	if (hcd->self.root_hub)
++		/* Notify user space that the host controller has died */
++		kobject_uevent_env(&hcd->self.root_hub->dev.kobj, KOBJ_CHANGE,
++				   (char *[]){ "DEAD=1", NULL });
++
++	mutex_unlock(&usb_bus_idr_lock);
++}
++
+ /* Workqueue routine for root-hub remote wakeup */
+ static void hcd_resume_work(struct work_struct *work)
+ {
+@@ -2488,6 +2509,13 @@ void usb_hc_died (struct usb_hcd *hcd)
+ 			usb_kick_hub_wq(hcd->self.root_hub);
+ 		}
+ 	}
++
++	/* Handle the case where this function gets called with a shared HCD */
++	if (usb_hcd_is_primary_hcd(hcd))
++		schedule_work(&hcd->died_work);
++	else
++		schedule_work(&hcd->primary_hcd->died_work);
++
+ 	spin_unlock_irqrestore (&hcd_root_hub_lock, flags);
+ 	/* Make sure that the other roothub is also deallocated. */
+ }
+@@ -2555,6 +2583,8 @@ struct usb_hcd *__usb_create_hcd(const struct hc_driver *driver,
+ 	INIT_WORK(&hcd->wakeup_work, hcd_resume_work);
+ #endif
  
- 	domain->mode = PAGE_MODE_3_LEVEL;
- 	domain->pt_root = (void *)get_zeroed_page(GFP_KERNEL);
-@@ -1824,8 +1828,6 @@ static struct protection_domain *dma_ops_domain_alloc(void)
- 	/* Initialize reserved ranges */
- 	iommu_dma_copy_reserved_iova(&reserved_iova_ranges, &domain->domain);
++	INIT_WORK(&hcd->died_work, hcd_died_work);
++
+ 	hcd->driver = driver;
+ 	hcd->speed = driver->flags & HCD_MASK;
+ 	hcd->product_desc = (driver->product_desc) ? driver->product_desc :
+@@ -2908,6 +2938,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ #ifdef CONFIG_PM
+ 	cancel_work_sync(&hcd->wakeup_work);
+ #endif
++	cancel_work_sync(&hcd->died_work);
+ 	mutex_lock(&usb_bus_idr_lock);
+ 	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
+ 	mutex_unlock(&usb_bus_idr_lock);
+@@ -2968,6 +2999,7 @@ void usb_remove_hcd(struct usb_hcd *hcd)
+ #ifdef CONFIG_PM
+ 	cancel_work_sync(&hcd->wakeup_work);
+ #endif
++	cancel_work_sync(&hcd->died_work);
  
--	add_domain_to_list(domain);
--
- 	return domain;
+ 	mutex_lock(&usb_bus_idr_lock);
+ 	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index 695931b03684..ae51d5bd1dfc 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -98,6 +98,7 @@ struct usb_hcd {
+ #ifdef CONFIG_PM
+ 	struct work_struct	wakeup_work;	/* for remote wakeup */
+ #endif
++	struct work_struct	died_work;	/* for dying */
  
- free_cookie:
+ 	/*
+ 	 * hardware info/state
 -- 
-2.17.1
+2.21.0.392.gf8f6787159e-goog
 
