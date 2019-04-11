@@ -2,106 +2,97 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDB9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204EBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDEC2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E405E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="V/AOBYRD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hntl32Sk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfDKJAn (ORCPT
+        id S1726917AbfDKJBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:00:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36809 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfDKJAn (ORCPT
+        Thu, 11 Apr 2019 05:01:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40208 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfDKJBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:00:43 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 85so3215317pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=frJX+t0qve0rvf3r8LM28APcFZPyTl1bsa5j7cIVrPw=;
-        b=V/AOBYRDlQbzjRGJCoP0AO747lJxK1E0b6yBordaP73mSpH13q3xrnrhAo7zANOhKq
-         /kc9soi71g+8qig/5AewWyq8bnGL+nWI8OMm6oV3nv/CAVOp4y2Ysr+jaifggz6iYR4X
-         u1s/NkK2pvi4yorUXuQcc6i4Vo8NLsAcopOSZSSO9VU4m9kLz5zHlDO65iBEs8LZNo+E
-         GJ9l6L4XHo6zJtu2ouKu3dxI+ZrveejgVIBT5tFmYRzrbwmCTYZ78HDWdwi0kgdWlIfK
-         4WRYq/O4GXKfNAr9Qz9AAA6meGFpnzsxVDisACP6wMAWtoGmlCQ9kJkx1oKaxcuKh/fD
-         twHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=frJX+t0qve0rvf3r8LM28APcFZPyTl1bsa5j7cIVrPw=;
-        b=JRtMF0APaFKNTjLUrxf4ftZef1ck9wybZuiEpL/RrJHNJZkrkWeqCJBH3fno+5oaQg
-         nrO83Ws7oZ8ZeAVsL5tJpzZl7sy1uXt2GgWAi92+m0zMS7w7GxNoMMlCzTMNXcEk1dY6
-         Rmo3SEVaHcDNit9EVqaZzj5I0FN4C2c08+frrWG3xyu0hbSB4YwVaZDJMUVN+leP8SmB
-         hVf/+lWcaTf0F6gTBhDiSNg94zX4IhD0K0850GKtbdblQ/1ygwY8H6Oaxaui2VFnUOtx
-         JqznZbxyGeJczj8VHKX4d6PC+th5pIsGsR2W/xFZ4WyvrC3sbM/+QoUu202ulCgHuGKu
-         izMw==
-X-Gm-Message-State: APjAAAV6lalTSiREyI09vbzePx2ygUQzWuD3T/3rdDgYbm29h9hx8kSS
-        L76XT+wOp6OVAbA99RDrqOzd+u61gjw=
-X-Google-Smtp-Source: APXvYqwnwryDuYaJoeuBpmKcv+V+hzo4KNfAncAHXRXUeIU/yiGJDhxdzCOlWP+yC+Do3J51O4H8Pw==
-X-Received: by 2002:a62:70c6:: with SMTP id l189mr49304294pfc.139.1554973242222;
-        Thu, 11 Apr 2019 02:00:42 -0700 (PDT)
-Received: from viisi.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id m2sm64317272pgr.74.2019.04.11.02.00.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 02:00:41 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-serial@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH v4 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
-Date:   Thu, 11 Apr 2019 02:00:26 -0700
-Message-Id: <20190411090027.8670-1-paul.walmsley@sifive.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 11 Apr 2019 05:01:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uLk5Lt/7u9SSuSoo5JHD01HsvL3KPbuFB2ScCD2RXZI=; b=Hntl32SkejER9RbTcw4PdyKEl
+        BkeACRc6qBHUvZ65MtSHQaq/6tN9JwiBjSFVefCB944MYa1/vlHU6q3mdJRtjWwbS3SU1Z2neo70r
+        po4Y9utBv+eiUkGL+CjDvZzAwSpi8qMoO24CGT/zMpok15XJjxalzk7kurCnm1AN+kW2HifDqDFmG
+        /aV6H+/Xec0SmkwPr78hnjwGLua8jd6QV1TR+bNVRraZOYwxkgGnZyBaSk7uKwDKWsYZYUutdZ6Pf
+        PCPikBfWJ9WHz9SuxzmXmkSWIRoULHCvPVe2ryFUF9oZKyg2nd5KOvUX2KQ16f1zco+IgQ7KhlGEG
+        BuuUXrJSg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEVZq-00018K-Kr; Thu, 11 Apr 2019 09:00:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 796A529AA8DD3; Thu, 11 Apr 2019 11:00:56 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 11:00:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V5 08/12] perf/x86/intel: Add Icelake support
+Message-ID: <20190411090056.GK14281@hirez.programming.kicks-ass.net>
+References: <20190402194509.2832-1-kan.liang@linux.intel.com>
+ <20190402194509.2832-9-kan.liang@linux.intel.com>
+ <20190408150654.GV12232@hirez.programming.kicks-ass.net>
+ <4ff8fec9-fb41-b11d-b7ed-4c716b558adc@linux.intel.com>
+ <688804aa-b6eb-0f19-828c-99b901bbe554@linux.intel.com>
+ <20190410194720.GC11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410194720.GC11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds a serial driver, with console support, for the
-UART IP block present on the SiFive FU540 SoC.  The programming
-model is straightforward, but unique.
+On Wed, Apr 10, 2019 at 09:47:20PM +0200, Peter Zijlstra wrote:
+> Sure, those are actually forced 0 with the existing thing.
+> 
+> I'll go fold smething like back in. Thanks!
 
-Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
-open-source FSBL (with appropriate patches to the DT data).
+> > @@ -3472,7 +3475,7 @@ icl_get_event_constraints(struct cpu_hw_events *cpuc,
+> > int idx,
+> >  	 * Force instruction:ppp in Fixed counter 0
+> >  	 */
+> >  	if ((event->attr.precise_ip == 3) &&
+> > -	    (event->hw.config == X86_CONFIG(.event=0xc0)))
+> > +	    (EVENT_CONFIG(event->hw.config) == X86_CONFIG(.event=0xc0)))
+> >  		return &fixed_counter0_constraint;
+> > 
+> >  	return hsw_get_event_constraints(cpuc, idx, event);
 
-This fourth version incorporates a few more comments from the lists.
+Staring at that I came up with the below; how does that look?
 
-The patches in this series can also be found, with the PRCI patches,
-DT patches, and DT prerequisite patch, at:
+Note: FIXED_EVENT_CONSTRAINT(0x00c0, 0) has FIXED_EVENT_FLAGS for
+->cmask and includes the correct event code.
 
-https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
-
-
-- Paul
-
-
-Paul Walmsley (2):
-  dt-bindings: serial: add documentation for the SiFive UART driver
-  tty: serial: add driver for the SiFive UART
-
- .../bindings/serial/sifive-serial.txt         |   33 +
- drivers/tty/serial/Kconfig                    |   24 +
- drivers/tty/serial/Makefile                   |    1 +
- drivers/tty/serial/sifive.c                   | 1067 +++++++++++++++++
- include/uapi/linux/serial_core.h              |    3 +
- 5 files changed, 1128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
- create mode 100644 drivers/tty/serial/sifive.c
-
--- 
-2.20.1
-
+---
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3433,7 +3433,7 @@ icl_get_event_constraints(struct cpu_hw_
+ 	 * Force instruction:ppp in Fixed counter 0
+ 	 */
+ 	if ((event->attr.precise_ip == 3) &&
+-	    (event->hw.config == X86_CONFIG(.event=0xc0)))
++	    constraint_match(&fixed_counter0_constraint, event->hw.config))
+ 		return &fixed_counter0_constraint;
+ 
+ 	return hsw_get_event_constraints(cpuc, idx, event);
