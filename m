@@ -2,328 +2,178 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F4C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EBDC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E60A20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9742184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="U4qUTd4s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/OHgrTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfDKUCu (ORCPT
+        id S1726712AbfDKUGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:02:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54710 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKUCt (ORCPT
+        Thu, 11 Apr 2019 16:06:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42407 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfDKUGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:02:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so8274139wml.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:02:47 -0700 (PDT)
+        Thu, 11 Apr 2019 16:06:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p6so4012042pgh.9
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=1BmaUiVc5tqO/JRNx08TNGC03SMqvGWlWsQ4IUnSQe4=;
-        b=U4qUTd4s2iJHh9Qa7lPPUtdckEj4VLk+x/xMcsD1vendeUrYZFwzKnOpQWuY379qe2
-         HGPOrjot2Yt3yI97mpxR5vo7NPygWbAUbXo7pY3gm62nkJQrKN6nlck7WqNVQ3wcUrsc
-         /c+Xz7v+fLtFlHW+C+IyzEClA+/TRNVXAwvk6xB3dwsYWQDOB8yLDNfuhlttrTqvlgbB
-         crGqpqljGG/VqciB00JQn7nraIagz0f2F05t/tdEKxgzBWHkVaUrd2S+3o2URVu7r8l+
-         ExY3+9xQ6DiVKsqwiE6L3dbZ9RVf/+MiiK5wH/+0c6aOZ2mf2FzcL1G1CaTDOpTEDsKV
-         Uqqg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fj1uFWvOmJpD3UmwZi5Xp9F4935177QKEo3naEvsMCw=;
+        b=J/OHgrTKyFI9Y77YJxiuMPWMpYIzOExlqLdh8POog4dA7cKfdhfQ1HuNcOsn7Rrre2
+         46LGFu7DfyIQsHWDV9cS5KjBpwztEjT/nIE+cKdDNd6upYqeK3azCNEK4qmH7Bp19vmE
+         s/IA06fBnWCIIEtv1izx71K0us2vnc2jjd+YYwJYsA8VnijbAa32kTV5wiqSuJkiAQEI
+         lk7pKo18qefedOqgdXJoPEIkM54a9It3OzlgJnwZ8xSwW9Y8xsdjAQ3nz62+PRXHLHly
+         g60xGwr66U9Uq6W5QRXBX9aLr47AHGpukXDTAsiaKSOnIf6rR9zYzeQIOsbFHcqif7FB
+         6j0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=1BmaUiVc5tqO/JRNx08TNGC03SMqvGWlWsQ4IUnSQe4=;
-        b=ftsf+6YFTEFhY7BzVu1IpYWKsVf9veU9CC5LdUjnxGPJIjJlUKw9rRH/6QCfgpkIYi
-         qTMTFDaZpiSEUgLSAcpweMeu2WC4kh0o8zd76GExiJYgCAAfYSxGUghekw7CDWtxWU+M
-         L0qCClI9JDh8cQ0JlEAbFN5odEXnmc/zbOb4F3ymFBmpsWWkO6u4Krkvk0I9NJ4YVMWJ
-         3oE+ggoJCNnqUjtg3tIzWYHHcnix9bPxtgLGdN6WcA0hqg7qU5HBkkImsmnKCzLBPdlW
-         1pczZNhl4+3Q3EEywku325xcoZtj49BiID9jShqQrE3P1dpMPkG++DrJhvdbvV2s25nZ
-         YK1w==
-X-Gm-Message-State: APjAAAWmElgEdSaMf2Ff8cob2uaSs/5bg4/JB1oJqeEiGYV3UnlcOHKd
-        lEg6+SsIfaOwgnBgQe+o7mCEZw==
-X-Google-Smtp-Source: APXvYqxG9tH6JuNDhWIhB5WxjpE8THlF0T6eE3Cv22x182Ke+vu00qmBM0w5nH1l7bH33DrWsBHocQ==
-X-Received: by 2002:a1c:e0d6:: with SMTP id x205mr8250590wmg.28.1555012967067;
-        Thu, 11 Apr 2019 13:02:47 -0700 (PDT)
-Received: from [192.168.88.118] (x4db77fd8.dyn.telefonica.de. [77.183.127.216])
-        by smtp.gmail.com with ESMTPSA id y133sm9483592wmd.2.2019.04.11.13.02.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 13:02:46 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 22:02:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190411200059.GA75190@google.com>
-References: <20190411175043.31207-1-joel@joelfernandes.org> <20190411200059.GA75190@google.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fj1uFWvOmJpD3UmwZi5Xp9F4935177QKEo3naEvsMCw=;
+        b=NFwUPZUnxmYncpUv5VxCpV/OYzNp894TwMCxs/v29qenq4u6AFhS6BTrKhwk17HV8w
+         uyoVfBfX2OLY9bqCejoBV1xrCUQuicM9U0n2/5pJSLvuaQLhM7oSi9WtOpwvXQwqoNrC
+         fu2VKrxvXjVehLaTC5XhgvNPDkuPQ3WA+cMZVsal3adx6M0bpRNUeCVOOyjT5RvJsIWy
+         TG+a4Qn1HDs/fUYfc+71RBRgtIifLIVPq0b+TsD/OgmPkSb3WDoaMLAfUg42Q5P9CeAX
+         O+gKmlnxcKSQlqd5ni5hoSQezdAj9E3ulaB6B8mc0jRq3THwfi54sMHtudh4E1FUaWWK
+         6DEA==
+X-Gm-Message-State: APjAAAXg+ygwpKc7kRha3aDXUFa/31tp7dsVNKI2UfgZlA8Ld2/LwnW4
+        9OxOYH/nGETdO7GIWHUY77GTF636H/k=
+X-Google-Smtp-Source: APXvYqy+PNsMy6Awjlvd8g/cUqHjsuEpim1CbzmDSsniW2DWsC0cgMme7H9N8p4taRY1KpQ5lEyENw==
+X-Received: by 2002:a63:6a42:: with SMTP id f63mr48235058pgc.207.1555013168534;
+        Thu, 11 Apr 2019 13:06:08 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id x24sm53749580pfn.128.2019.04.11.13.06.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 13:06:07 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 13:06:03 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Message-ID: <20190411200602.GA13170@Asurada-Nvidia.nvidia.com>
+References: <cover.1554975348.git.shengjiu.wang@nxp.com>
+ <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-CC:     luto@amacapital.net, rostedt@goodmis.org, dancol@google.com,
-        jannh@google.com, surenb@google.com, torvalds@linux-foundation.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>, Nadav Amit <namit@vmware.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        Tycho Andersen <tycho@tycho.ws>
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <DA36DE02-73C2-4C9E-9761-27B3EBC6FED2@brauner.io>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 11, 2019 10:00:59 PM GMT+02:00, Joel Fernandes <joel@joelfernandes=
-=2Eorg> wrote:
->On Thu, Apr 11, 2019 at 01:50:42PM -0400, Joel Fernandes (Google)
->wrote:
->> pidfd are /proc/pid directory file descriptors referring to a task
->group
->> leader=2E Android low memory killer (LMK) needs pidfd polling support
->to
->> replace code that currently checks for existence of /proc/pid for
->> knowing a process that is signalled to be killed has died, which is
->both
->> racy and slow=2E The pidfd poll approach is race-free, and also allows
->the
->> LMK to do other things (such as by polling on other fds) while
->awaiting
->> the process being killed to die=2E
->
->It appears to me that the "pidfd" now will be an anon inode fd, and not
->based
->on /proc/, based on discussions with Linus=2E So I'll rework the patches
->accordingly=2E However that is relatively independent of this patch so
->this
->version can also be reviewed before I send out the reworked version=2E
+On Thu, Apr 11, 2019 at 09:39:06AM +0000, S.j. Wang wrote:
+  
+> +/*
+> + * Select the pre-processing and post-processing options
 
-Thank you very much, Joel=2E
-I'm off this week and traveling but I'll try to give it a look asap=2E
+By aligning with other function comments:
+/**
+ * Select the pre-processing and post-processing options
 
-Christian
+> + *
+> + * Fsin: input sample rate
+> + * Fsout: output sample rate
 
->
->thanks,
->
-> - Joel
->
->>=20
->> It prevents a situation where a PID is reused between when LMK sends
->a
->> kill signal and checks for existence of the PID, since the wrong PID
->is
->> now possibly checked for existence=2E
->>=20
->> In this patch, we follow the same mechanism used uhen the parent of
->the
->> task group is to be notified, that is when the tasks waiting on a
->poll
->> of pidfd are also awakened=2E
->>=20
->> We have decided to include the waitqueue in struct pid for the
->following
->> reasons:
->> 1=2E The wait queue has to survive for the lifetime of the poll=2E
->Including
->> it in task_struct would not be option in this case because the task
->can
->> be reaped and destroyed before the poll returns=2E
->>=20
->> 2=2E By including the struct pid for the waitqueue means that during
->> de_exec, the thread doing de_thread() automatically gets the new
->> waitqueue/pid even though its task_struct is different=2E
->>=20
->> Appropriate test cases are added in the second patch to provide
->coverage
->> of all the cases the patch is handling=2E
->>=20
->> Andy had a similar patch [1] in the past which was a good reference
->> however this patch tries to handle different situations properly
->related
->> to thread group existence, and how/where it notifies=2E And also solves
->> other bugs (existence of taks_struct)=2E  Daniel had a similar patch
->[2]
->> recently which this patch supercedes=2E
->>=20
->> [1] https://lore=2Ekernel=2Eorg/patchwork/patch/345098/
->> [2]
->https://lore=2Ekernel=2Eorg/lkml/20181029175322=2E189042-1-dancol@google=
-=2Ecom/
->>=20
->> Cc: luto@amacapital=2Enet
->> Cc: rostedt@goodmis=2Eorg
->> Cc: dancol@google=2Ecom
->> Cc: christian@brauner=2Eio
->> Cc: jannh@google=2Ecom
->> Cc: surenb@google=2Ecom
->> Cc: torvalds@linux-foundation=2Eorg
->> Co-developed-by: Daniel Colascione <dancol@google=2Ecom>
->> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes=2Eorg>
->>=20
->> ---
->>  fs/proc/base=2Ec      | 39 +++++++++++++++++++++++++++++++++++++++
->>  include/linux/pid=2Eh |  3 +++
->>  kernel/exit=2Ec       |  1 -
->>  kernel/pid=2Ec        |  2 ++
->>  kernel/signal=2Ec     | 14 ++++++++++++++
->>  5 files changed, 58 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/fs/proc/base=2Ec b/fs/proc/base=2Ec
->> index 6a803a0b75df=2E=2E879900082647 100644
->> --- a/fs/proc/base=2Ec
->> +++ b/fs/proc/base=2Ec
->> @@ -3069,8 +3069,47 @@ static int proc_tgid_base_readdir(struct file
->*file, struct dir_context *ctx)
->>  				   tgid_base_stuff, ARRAY_SIZE(tgid_base_stuff));
->>  }
->> =20
->> +static unsigned int proc_tgid_base_poll(struct file *file, struct
->poll_table_struct *pts)
->> +{
->> +	int poll_flags =3D 0;
->> +	struct task_struct *task;
->> +	struct pid *pid;
->> +
->> +	task =3D get_proc_task(file->f_path=2Edentry->d_inode);
->> +
->> +	WARN_ON_ONCE(task && !thread_group_leader(task));
->> +
->> +	/*
->> +	 * tasklist_lock must be held because to avoid racing with
->> +	 * changes in exit_state and wake up=2E Basically to avoid:
->> +	 *
->> +	 * P0: read exit_state =3D 0
->> +	 * P1: write exit_state =3D EXIT_DEAD
->> +	 * P1: Do a wake up - wq is empty, so do nothing
->> +	 * P0: Queue for polling - wait forever=2E
->> +	 */
->> +	read_lock(&tasklist_lock);
->> +	if (!task)
->> +		poll_flags =3D POLLIN | POLLRDNORM | POLLERR;
->> +	else if (task->exit_state =3D=3D EXIT_DEAD)
->> +		poll_flags =3D POLLIN | POLLRDNORM;
->> +	else if (task->exit_state =3D=3D EXIT_ZOMBIE &&
->thread_group_empty(task))
->> +		poll_flags =3D POLLIN | POLLRDNORM;
->> +
->> +	if (!poll_flags) {
->> +		pid =3D proc_pid(file->f_path=2Edentry->d_inode);
->> +		poll_wait(file, &pid->wait_pidfd, pts);
->> +	}
->> +	read_unlock(&tasklist_lock);
->> +
->> +	if (task)
->> +		put_task_struct(task);
->> +	return poll_flags;
->> +}
->> +
->>  static const struct file_operations proc_tgid_base_operations =3D {
->>  	=2Eread		=3D generic_read_dir,
->> +	=2Epoll		=3D proc_tgid_base_poll,
->>  	=2Eiterate_shared	=3D proc_tgid_base_readdir,
->>  	=2Ellseek		=3D generic_file_llseek,
->>  };
->> diff --git a/include/linux/pid=2Eh b/include/linux/pid=2Eh
->> index b6f4ba16065a=2E=2E2e0dcbc6d14e 100644
->> --- a/include/linux/pid=2Eh
->> +++ b/include/linux/pid=2Eh
->> @@ -3,6 +3,7 @@
->>  #define _LINUX_PID_H
->> =20
->>  #include <linux/rculist=2Eh>
->> +#include <linux/wait=2Eh>
->> =20
->>  enum pid_type
->>  {
->> @@ -60,6 +61,8 @@ struct pid
->>  	unsigned int level;
->>  	/* lists of tasks that use this pid */
->>  	struct hlist_head tasks[PIDTYPE_MAX];
->> +	/* wait queue for pidfd pollers */
->> +	wait_queue_head_t wait_pidfd;
->>  	struct rcu_head rcu;
->>  	struct upid numbers[1];
->>  };
->> diff --git a/kernel/exit=2Ec b/kernel/exit=2Ec
->> index 2166c2d92ddc=2E=2Ec386ec52687d 100644
->> --- a/kernel/exit=2Ec
->> +++ b/kernel/exit=2Ec
->> @@ -181,7 +181,6 @@ static void delayed_put_task_struct(struct
->rcu_head *rhp)
->>  	put_task_struct(tsk);
->>  }
->> =20
->> -
->>  void release_task(struct task_struct *p)
->>  {
->>  	struct task_struct *leader;
->> diff --git a/kernel/pid=2Ec b/kernel/pid=2Ec
->> index 20881598bdfa=2E=2E5c90c239242f 100644
->> --- a/kernel/pid=2Ec
->> +++ b/kernel/pid=2Ec
->> @@ -214,6 +214,8 @@ struct pid *alloc_pid(struct pid_namespace *ns)
->>  	for (type =3D 0; type < PIDTYPE_MAX; ++type)
->>  		INIT_HLIST_HEAD(&pid->tasks[type]);
->> =20
->> +	init_waitqueue_head(&pid->wait_pidfd);
->> +
->>  	upid =3D pid->numbers + ns->level;
->>  	spin_lock_irq(&pidmap_lock);
->>  	if (!(ns->pid_allocated & PIDNS_ADDING))
->> diff --git a/kernel/signal=2Ec b/kernel/signal=2Ec
->> index f98448cf2def=2E=2Ee3781703ef7e 100644
->> --- a/kernel/signal=2Ec
->> +++ b/kernel/signal=2Ec
->> @@ -1800,6 +1800,17 @@ int send_sigqueue(struct sigqueue *q, struct
->pid *pid, enum pid_type type)
->>  	return ret;
->>  }
->> =20
->> +static void do_wakeup_pidfd_pollers(struct task_struct *task)
->> +{
->> +	struct pid *pid;
->> +
->> +	lockdep_assert_held(&tasklist_lock);
->> +
->> +	pid =3D get_task_pid(task, PIDTYPE_PID);
->> +	wake_up_all(&pid->wait_pidfd);
->> +	put_pid(pid);
->> +}
->> +
->>  /*
->>   * Let a parent know about the death of a child=2E
->>   * For a stopped/continued status change, use
->do_notify_parent_cldstop instead=2E
->> @@ -1823,6 +1834,9 @@ bool do_notify_parent(struct task_struct *tsk,
->int sig)
->>  	BUG_ON(!tsk->ptrace &&
->>  	       (tsk->group_leader !=3D tsk || !thread_group_empty(tsk)));
->> =20
->> +	/* Wake up all pidfd waiters */
->> +	do_wakeup_pidfd_pollers(tsk);
->> +
->>  	if (sig !=3D SIGCHLD) {
->>  		/*
->>  		 * This is only possible if parent =3D=3D real_parent=2E
->> --=20
->> 2=2E21=2E0=2E392=2Egf8f6787159e-goog
->>=20
+I would suggest to use inrate and outrate to keep naming consistent.
 
+> + * pre_proc: return value for pre-processing option
+> + * post_proc: return value for post-processing option
+> + */
+> +static int fsl_asrc_sel_proc(int Fsin, int Fsout, int *pre_proc, int *post_proc)
+> +{
+> +	bool det_out_op2_cond;
+> +	bool det_out_op0_cond;
+
+By looking at the comments below. Probably better to rename them
+	bool post_proc_cond2, post_proc_cond0;
+
+> +	/* Codition for selection of post-processing */
+
+"Codition" -> "Conditions"
+
+> +	det_out_op2_cond = (((Fsin * 15 > Fsout * 16) & (Fsout < 56000)) |
+> +					((Fsin > 56000) & (Fsout < 56000)));
+
+Combining Daniel's comments + indentation alignment:
+	det_out_op2_cond = (Fsin * 15 > Fsout * 16 && Fsout < 56000) ||
+			   (Fsin > 56000 && Fsout < 56000);
+
+> +	det_out_op0_cond = (Fsin * 23 < Fsout * 8);
+> +
+> +	/*
+> +	 * unsupported case: Tsout>16.125*Tsin, and Tsout>8.125*Tsin.
+
+Funny thing is that there'd be no point in checking the 16.125, if
+Tsout is bigger than 8.125 times of Tsin, i.e. only one condition:
+	Tsout > 8.125 * Tsin
+
+> +	 * Tsout>16.125*Tsin -> Fsin * 8 > 129 * Fsout
+> +	 * Tsout>8.125*Tsin  -> Fsin * 8 > 65 * Fsout
+> +	 * Tsout>4.125*Tsin  -> Fsin * 8 > 33 * Fsout
+> +	 * Tsout>1.875*Tsin  -> Fsin * 8 > 15 * Fsout
+
+Took me a while to understand what it is saying....
+
+Better to write like this:
+	/* Does not support cases: Tsout > 8.125 * Tsin */
+	if (Fsin * 8 > 65 * Fsout) {
+		pair_err("Does not support %d > 8.125 * %d\n", Fsout, Fsin);
+		return -EINVAL;
+	}
+
+	/* Otherwise, select pre_proc between [0, 2] */
+	if (Fsin * 8 > 33 * Fsout)
+> +		*pre_proc = 2;
+> +	else if (Fsin * 8 > 15 * Fsout) {
+> +		if (Fsin > 152000)
+> +			*pre_proc = 2;
+> +		else
+> +			*pre_proc = 1;
+> +	} else if (Fsin < 76000)
+> +		*pre_proc = 0;
+> +	else if (Fsin > 152000)
+> +		*pre_proc = 2;
+> +	else
+> +		*pre_proc = 1;
+
+<== Would look better by moving post_cond calculations here.
+
+> +	if (det_out_op2_cond)
+> +		*post_proc = 2;
+> +	else if (det_out_op0_cond)
+> +		*post_proc = 0;
+> +	else
+> +		*post_proc = 1;
+
+And we could remove this check below:
+> +	/* unsupported options */
+> +	if (*pre_proc == 4 || *pre_proc == 5)
+> +		return -EINVAL;
+
+So basically we are doing:
+	1) Error out unsupported cases
+	2) Select pre_proc
+	3) Calculate conditions for post_proc
+	4) Select post_proc
+
+Thanks
