@@ -2,115 +2,313 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1968AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957BAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E370E217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5660421841
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfDKHno (ORCPT
+        id S1726914AbfDKHrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:43:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbfDKHnm (ORCPT
+        Thu, 11 Apr 2019 03:47:15 -0400
+Received: from regular1.263xmail.com ([211.150.70.201]:40844 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKHrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:43:42 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B7hSxM073026
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:40 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rt0ynhkp0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:43:39 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Thu, 11 Apr 2019 08:41:00 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Apr 2019 08:40:58 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B7eue857671698
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 07:40:56 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0FBDAE053;
-        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 424DDAE051;
-        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.145.74.176])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Apr 2019 07:40:56 +0000 (GMT)
-Date:   Thu, 11 Apr 2019 09:40:55 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Ingo Franzki <ifranzki@de.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/12] s390: zcrypt: initialize variables before_use
-In-Reply-To: <CAK8P3a1-1axfWq5Y1pK9XORMdsbmZyq75p+V5Do71hNRowct+g@mail.gmail.com>
-References: <20190408212648.2407234-1-arnd@arndb.de>
-        <20190408212648.2407234-5-arnd@arndb.de>
-        <8875e0b6-00b4-884d-fd6a-a5a144543559@linux.ibm.com>
-        <20190410175946.0e6d2b00@mschwideX1>
-        <CAK8P3a1-1axfWq5Y1pK9XORMdsbmZyq75p+V5Do71hNRowct+g@mail.gmail.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 11 Apr 2019 03:47:15 -0400
+Received: from zhangqing?rock-chips.com (unknown [192.168.167.227])
+        by regular1.263xmail.com (Postfix) with ESMTP id 6237C213;
+        Thu, 11 Apr 2019 15:47:02 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from [172.16.12.236] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P30808T139664108582656S1554968819709234_;
+        Thu, 11 Apr 2019 15:47:01 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <2b9bb47e36087b4ebe357ba5ef503818>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: huangtao@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH v1 1/3] thermal: rockchip: add pinctrl control
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, heiko@sntech.de
+Cc:     rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
+References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
+ <1554100985-11385-2-git-send-email-zhangqing@rock-chips.com>
+ <30325add-d75a-6775-50c0-d2d2274ff81e@linaro.org>
+From:   "elaine.zhang" <zhangqing@rock-chips.com>
+Organization: rockchip
+Message-ID: <db977a75-195f-4c98-ef84-aa186b484e0d@rock-chips.com>
+Date:   Thu, 11 Apr 2019 15:46:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041107-0020-0000-0000-0000032E9E70
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041107-0021-0000-0000-00002180CD0C
-Message-Id: <20190411094055.5884244c@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=897 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904110055
+In-Reply-To: <30325add-d75a-6775-50c0-d2d2274ff81e@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019 20:57:21 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+hi,
 
-> On Wed, Apr 10, 2019 at 5:59 PM Martin Schwidefsky
-> <schwidefsky@de.ibm.com> wrote:
-> > On Tue, 9 Apr 2019 11:54:30 +0200 Harald Freudenberger <freude@linux.ibm.com> wrote:  
-> > > On 08.04.19 23:26, Arnd Bergmann wrote:  
-> > > >             }  
-> > > Thanks Arnd, but as Nathan already wrote, I'd prefer to have the
-> > > variable initialized with 0 instead of -1.
-> > > If you agree with this, I'll rewrite the patch and apply it to our
-> > > internal git and it will appear at kernel org with the next s390 code merge then.  
-> >
-> > Do we agreement on func_coed=0 for this one ?  
-> 
-> Yes, I think that was the consensus.
-> 
->        Arnd
-> 
+在 2019/4/4 上午11:03, Daniel Lezcano 写道:
+> On 01/04/2019 08:43, Elaine Zhang wrote:
+>> Based on the TSADC Tshut mode to select pinctrl,
+>> instead of setting pinctrl based on architecture
+>> (Not depends on pinctrl setting by "init" or "default").
+>> And it requires setting the tshut polarity before select pinctrl.
+> I'm not sure to fully read the description. Can you rephrase/elaborate
+> the changelog?
+Example:
+         tsadc: tsadc@ff250000 {
+                     compatible = "rockchip,rk3328-tsadc";
+                     .....
+                 pinctrl-names = "init", "default", "sleep";
+                     pinctrl-0 = <&otp_gpio>;
+                     pinctrl-1 = <&otp_out>;
+                     pinctrl-2 = <&otp_gpio>;
+                     status = "disabled";
+                 .....
+             };
+         &tsadc {
+                 rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
+                 status = "okay";
+         };
+     Application on the product, hope tsadc overtemperature reset cru to 
+restart.
+     But when pinctrl is initialized, it will setting pinctrl by "init" 
+and "default".
+     So the pinctrl will set iomux to "otp_out", which may be make 
+system crash.
+     tsadc gpio iomux:
+     "otp_gpio" : just normal gpio, keep default level.
+     "otp_out" : tsadc shut down io, when overtemperature,this io may be 
+trigger high
+     level or low level(depend on the tsadc polarity).
 
-Ok, committed with func_code=0.
+     After correction:
+     if rockchip,hw-tshut-mode = <0>; (tsadc overtemperature reset cru 
+to restart)
+     select pinctrl to otp_gpio
+     if rockchip,hw-tshut-mode = <1>;(tsadc overtemperature IO triggers 
+output at high or low levels)
+     select pinctrl to otp_out.
+     Actively select iomux based on rockchip,hw-tshut-mode,
+     rather than relying on the pinctrl framework to select iomux.
+>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>> ---
+>>   drivers/thermal/rockchip_thermal.c | 61 +++++++++++++++++++++++++++++++-------
+>>   1 file changed, 50 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+>> index 9c7643d62ed7..faa6c7792155 100644
+>> --- a/drivers/thermal/rockchip_thermal.c
+>> +++ b/drivers/thermal/rockchip_thermal.c
+>> @@ -34,7 +34,7 @@
+>>    */
+>>   enum tshut_mode {
+>>   	TSHUT_MODE_CRU = 0,
+>> -	TSHUT_MODE_GPIO,
+>> +	TSHUT_MODE_OTP,
+> Why do you change the enum name? The impact on the patch is much higher,
+> no ?
 
--- 
-blue skies,
-   Martin.
+I just want to make it a little bit more intuitive to understand the 
+definition of mode.
 
-"Reality continues to ruin my life." - Calvin.
+TSHUT_MODE_CRU: pinctrl select iomux to otp_gpio,the io is normal io.
+TSHUT_MODE_OTP: pinctrl select iomux to otp_out, the io is tsadc shut io.
+
+>
+>>   };
+>>   
+>>   /**
+>> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+>>   	int tshut_temp;
+>>   	enum tshut_mode tshut_mode;
+>>   	enum tshut_polarity tshut_polarity;
+>> +	struct pinctrl *pinctrl;
+>> +	struct pinctrl_state *gpio_state;
+>> +	struct pinctrl_state *otp_state;
+>>   };
+>>   
+>>   /**
+>> @@ -807,7 +810,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	u32 val;
+>>   
+>>   	val = readl_relaxed(regs + TSADCV2_INT_EN);
+>> -	if (mode == TSHUT_MODE_GPIO) {
+>> +	if (mode == TSHUT_MODE_OTP) {
+>>   		val &= ~TSADCV2_SHUT_2CRU_SRC_EN(chn);
+>>   		val |= TSADCV2_SHUT_2GPIO_SRC_EN(chn);
+>>   	} else {
+>> @@ -822,7 +825,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+>>   	.chn_num = 1, /* one channel for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -846,7 +849,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
+>>   	.chn_num = 1, /* one channel for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -871,7 +874,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 2, /* gpu sensor is channel 2 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -919,7 +922,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -944,7 +947,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -969,7 +972,7 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
+>>   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
+>>   	.chn_num = 2, /* two channels for tsadc */
+>>   
+>> -	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
+>> +	.tshut_mode = TSHUT_MODE_OTP, /* default TSHUT via GPIO give PMIC */
+>>   	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+>>   	.tshut_temp = 95000,
+>>   
+>> @@ -1080,6 +1083,20 @@ static int rockchip_thermal_get_temp(void *_sensor, int *out_temp)
+>>   	.set_trips = rockchip_thermal_set_trips,
+>>   };
+>>   
+>> +static void thermal_pinctrl_select_otp(struct rockchip_thermal_data *thermal)
+>> +{
+>> +	if (!IS_ERR(thermal->pinctrl) && !IS_ERR_OR_NULL(thermal->otp_state))
+>> +		pinctrl_select_state(thermal->pinctrl,
+>> +				     thermal->otp_state);
+>> +}
+>> +
+>> +static void thermal_pinctrl_select_gpio(struct rockchip_thermal_data *thermal)
+>> +{
+>> +	if (!IS_ERR(thermal->pinctrl) && !IS_ERR_OR_NULL(thermal->gpio_state))
+>> +		pinctrl_select_state(thermal->pinctrl,
+>> +				     thermal->gpio_state);
+>> +}
+> You should not have to create a couple of specific functions just to
+> check the pinctrl pointers are set. The caller should do that.
+Because there are several places where the call is made,create a couple 
+of specific functions reduce a lot of duplicated code.
+>
+>>   static int rockchip_configure_from_dt(struct device *dev,
+>>   				      struct device_node *np,
+>>   				      struct rockchip_thermal_data *thermal)
+>> @@ -1103,7 +1120,7 @@ static int rockchip_configure_from_dt(struct device *dev,
+>>   	if (of_property_read_u32(np, "rockchip,hw-tshut-mode", &tshut_mode)) {
+>>   		dev_warn(dev,
+>>   			 "Missing tshut mode property, using default (%s)\n",
+>> -			 thermal->chip->tshut_mode == TSHUT_MODE_GPIO ?
+>> +			 thermal->chip->tshut_mode == TSHUT_MODE_OTP ?
+>>   				"gpio" : "cru");
+>>   		thermal->tshut_mode = thermal->chip->tshut_mode;
+>>   	} else {
+>> @@ -1242,6 +1259,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>>   		return error;
+>>   	}
+>>   
+>> +	thermal->chip->control(thermal->regs, false);
+>> +
+>>   	error = clk_prepare_enable(thermal->clk);
+>>   	if (error) {
+>>   		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+>> @@ -1267,6 +1286,24 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>>   	thermal->chip->initialize(thermal->grf, thermal->regs,
+>>   				  thermal->tshut_polarity);
+>>   
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP) {
+>> +		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+>> +		if (IS_ERR(thermal->pinctrl))
+>> +			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+>> +
+>> +		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+>> +							   "gpio");
+>> +		if (IS_ERR_OR_NULL(thermal->gpio_state))
+>> +			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+>> +
+>> +		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+>> +							  "otpout");
+>> +		if (IS_ERR_OR_NULL(thermal->otp_state))
+>> +			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> What is the meaning for the rest of the code if the lookup fails for any
+> of those ?
+If the lookup fails for any of those， The pinctrl is no longer set and 
+remains in its default state(otp_gpio normal io).
+>
+>> +		thermal_pinctrl_select_otp(thermal);
+>> +	}
+>> +
+>>   	for (i = 0; i < thermal->chip->chn_num; i++) {
+>>   		error = rockchip_thermal_register_sensor(pdev, thermal,
+>>   						&thermal->sensors[i],
+>> @@ -1338,7 +1375,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
+>>   	clk_disable(thermal->pclk);
+>>   	clk_disable(thermal->clk);
+>>   
+>> -	pinctrl_pm_select_sleep_state(dev);
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP)
+>> +		thermal_pinctrl_select_gpio(thermal);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -1383,7 +1421,8 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
+>>   	for (i = 0; i < thermal->chip->chn_num; i++)
+>>   		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+>>   
+>> -	pinctrl_pm_select_default_state(dev);
+>> +	if (thermal->tshut_mode == TSHUT_MODE_OTP)
+>> +		thermal_pinctrl_select_otp(thermal);
+>>   
+>>   	return 0;
+>>   }
+>>
+>
+
 
