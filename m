@@ -2,278 +2,331 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DBBC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286D1C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80892133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4DB217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:08:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ATdbIpdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfDKAGP (ORCPT
+        id S1726777AbfDKAIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 20:06:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57380 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725982AbfDKAGO (ORCPT
+        Wed, 10 Apr 2019 20:08:49 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:45340 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbfDKAIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 20:06:14 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ANwuhT147153
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 20:06:13 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsr63wm0v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 20:06:13 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 11 Apr 2019 01:06:12 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Apr 2019 01:06:10 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B0692K34144408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 00:06:09 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02988B2068;
-        Thu, 11 Apr 2019 00:06:09 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA2FAB2064;
-        Thu, 11 Apr 2019 00:06:08 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 11 Apr 2019 00:06:08 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CDA3C16C3648; Wed, 10 Apr 2019 17:06:10 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:06:10 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Alleged fix for writer stall on -rcu branch dev
-Reply-To: paulmck@linux.ibm.com
-References: <20190409221426.GA11212@linux.ibm.com>
- <20190410181538.3ocva5lmh7ghrisr@linutronix.de>
- <20190410184105.GR14111@linux.ibm.com>
- <20190410191918.g2yqnsmuqukmzdfe@linutronix.de>
- <20190410203302.GT14111@linux.ibm.com>
+        Wed, 10 Apr 2019 20:08:48 -0400
+Received: by mail-ua1-f67.google.com with SMTP id c13so1405724uao.12
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 17:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k0Pr44I/8jyPRB6iMrL85HcsI4De11NYcXoUK7ei0g8=;
+        b=ATdbIpdrHtS8i+RaZklMqs+t8yuWML3WfCPY/dLAn1dLao1f7BGVUKXn7+oATj1Ae9
+         8juhzZqrtDHKqXvxTfw0/SjWIodQtDFXADIZCqq+Xd6LEejBz1zI5583eqVl6Jye5x5y
+         +UCVncHQ2m0xtzlBwJg7YeBmEGOWluL2UvH+ZCy8EDzIssPho9ien8SKC5vb1THan+RL
+         1aWpOk9Bs8DEgl7GHgw7KYB3kEDrXxysuEAy74OpEEj5W9ENCrBOkuyc3xEMcrT6qvjD
+         9gE+S4QY+mvPc/72iqb8xCpXzCuDf5NF/tr30D14F7vLeUlG2USCHhhwkQKYPoKfa48a
+         f8eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k0Pr44I/8jyPRB6iMrL85HcsI4De11NYcXoUK7ei0g8=;
+        b=uNj4jqNOpxlE+j8ujAJ8h3uGiT87A2+eEngWQ2y88SQrHo8YDfcQRB8i+8U1RGNTIS
+         RJfWoEQ9715RvIRQ8mtVSAUNvYvWt1PYopVvrH6hPDMWwyK2JzzjaLSNI/TQgnOGQULh
+         lg/QTTkrm0P6xU3ujz2nzKUKMW368YyYjyenShP8ZN3BLzKzA9oj55aWTFwSVt+9y0X9
+         kuV4Fo9qlzs0L8fJy9gqc274pdeQFb5HY4UUPEVSbE7HMKlr53OPgJZOL4qQ0Fj+P31u
+         VH39AozIg81DRwAFV9wy4q1lnrX/bvxLZRXb6PyZD/NAXu0L2c6oSP8tUExV124a2KSP
+         +TWQ==
+X-Gm-Message-State: APjAAAW9FVHCIVqWO6rqTMZOqEfFAok0hUCdjdPv6J6ryE/xDwJwpNjF
+        a7SofWxnRNTNP5HfWFIxoaR2vspb43efLnd2tnVsvQ==
+X-Google-Smtp-Source: APXvYqwSzNL9m/dnTvyTC3RMiHb8uhrubSBlsXNZ5iWmufxHJ7XJOMuwoxRgVPKI5ca6egw/jTlnOmV7SAQVUJDTdZI=
+X-Received: by 2002:ab0:5970:: with SMTP id o45mr18539180uad.126.1554941326886;
+ Wed, 10 Apr 2019 17:08:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410203302.GT14111@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19041100-0064-0000-0000-000003C936B4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010905; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01187284; UDB=6.00621895; IPR=6.00968048;
- MB=3.00026384; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 00:06:11
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041100-0065-0000-0000-00003D04E308
-Message-Id: <20190411000610.GA3867@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-10_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904100157
+References: <20190410234045.29846-1-christian@brauner.io> <20190410234045.29846-6-christian@brauner.io>
+In-Reply-To: <20190410234045.29846-6-christian@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 10 Apr 2019 17:08:35 -0700
+Message-ID: <CAKOZuetKjhWM6Pqi4GfPCSDwzYZY4Digu3h3ThXv1jqwV2Qm6A@mail.gmail.com>
+Subject: Re: [RFC-2 PATCH 4/4] samples: show race-free pidfd metadata access
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 01:33:02PM -0700, Paul E. McKenney wrote:
-> On Wed, Apr 10, 2019 at 09:19:18PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-04-10 11:41:05 [-0700], Paul E. McKenney wrote:
-> > > On Wed, Apr 10, 2019 at 08:15:38PM +0200, Sebastian Andrzej Siewior wrote:
-> > > > On 2019-04-09 15:14:26 [-0700], Paul E. McKenney wrote:
-> > > > > Hello, Sebastian,
-> > > > Hi Paul,
-> > > > 
-> > > > > A few commits later, I finally have something that might work.  ;-)
-> > > > 
-> > > > Okay. I started with 33e04e4512797b5e0242f452d0027b096d43d006. The first
-> > > > batch of 18 completed and this
-> > > > 	https://breakpoint.cc/console-tree1.2.log
-> > > 
-> > > Another new one on me!  ;-)
-> > > 
-> > > It looks like CPU 11 got stuck in the cpu_stopper_thread trying to
-> > > offline CPU 6.  Unfortunately, CPU 6 is not in the list receiving an
-> > > NMI, perhaps because it looked like it was already offline.  It does
-> > > eventually finish going offline quite some time later.
-> > > 
-> > > Perhaps my forward-progress testing is interacting badly with CPU
-> > > hotplug, but only very occasionally?
-> > 
-> > Somehow, yes.
-> > 
-> > [ 8433.835292] Unregister pv shared memory for cpu 6
-> > [ 8433.864122] smpboot: CPU 6 is now offline
-> > 
-> > CPU6 is offline.
-> > 
-> > [ 8434.934765] smpboot: Booting Node 0 Processor 6 APIC 0x6
-> > [ 8434.950632] kvm-clock: cpu 6, msr 17155a181, secondary cpu clock
-> > [ 8434.989124] KVM setup async PF for cpu 6
-> > [ 8434.990801] kvm-stealtime: cpu 6, msr 17b195380
-> > 
-> > CPU6 is booting again.
-> > 
-> > [ 8436.035269] Unregister pv shared memory for cpu 6
-> > 
-> > going down again
-> > 
-> > [ 8462.032468] rcu: INFO: rcu_preempt self-detected stall on CPU
-> > [ 8462.037385] rcu: 	11-...!: (25587 ticks this GP) idle=57e/1/0x4000000000000002 softirq=418067/418067 fqs=1 last_accelerate: 2456/89e6, Nonlazy posted: .LD
-> > 
-> > 25587 ticks is ~25secs with HZ=1k. And the stall occurred on CPU11,
-> > correct?
-> 
-> Yes to both.
-> 
-> > [ 8525.041031] smpboot: CPU 6 is now offline
-> > 
-> > 63 secs later, the CPU is down. So that is too long.
-> 
-> Ah, I did miss the down-then-up, thank you!
-> 
-> > > Something for me to look at, anyway!
-> > 
-> > There is also
-> > [ 8556.907804] WARNING: CPU: 35 PID: 833 at /home/bigeasy/linux-rt/kernel/rcu/rcutorture.c:1827 rcu_torture_fwd_prog+0x5c4/0x630
-> > 
-> > but I'm not sure what it is :)
-> 
-> The forward-progress test exceeded eight seconds, but pushed fewer
-> than 100 callbacks through the system.  One way that could happen is
-> if the forward-progress kthread was delayed during that eight seconds.
-> Another is if grace periods were insanely fast (which they are not).
-> 
-> > > > I should have been alone on that server but I can't guarantee it. I try
-> > > > to throw the rcu-torture at a little smaller box and check how it goes.
-> > > 
-> > > Even if you were not alone, I would guess that preempting a runnable
-> > > process for 92 seconds would have been a visible event on the host.
-> > 
-> > 92 seconds?! Okay, that should have been visible on the host side. And I
-> > see nothing in dmesg on the host side.
-> > But why 92? 25 for RCU stall + 63 between starting to go down and
-> > finishing?
-> 
-> Because I missed the momentary up-then-down that you spotted.  Your 63
-> seconds is correct.
-> 
-> > > But maybe not?  The watchdog timer is still 120 seconds?  Or does your
-> > > host set it to 22 seconds?
-> > 
-> > I didn't fiddle with it and host runs 4.19.12-1~bpo9+1. So it should be
-> > the default value.
-> 
-> Which I believe to be 22 seconds.  Hmmm...
-> 
-> Either way, thank you very much for the testing!!!
+Thanks for providing this example. A new nits below.
 
-[ Adding LKML back -- I think we dropped it due to an attachment? ]
+On Wed, Apr 10, 2019 at 4:43 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> This is an sample program to show userspace how to get race-free access to
+> process metadata from a pidfd.
+> It is really not that difficult and instead of burdening the kernel with
+> this task by using fds to /proc/<pid> we can simply add a helper to libc
+> that does it for the user.
+>
+> Signed-off-by: Christian Brauner <christian@brauner.io>
+> Signed-off-by: Jann Horn <jann@thejh.net>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+> Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
+> Cc: "Dmitry V. Levin" <ldv@altlinux.org>
+> Cc: Andy Lutomirsky <luto@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Aleksa Sarai <cyphar@cyphar.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>  samples/Makefile               |   2 +-
+>  samples/pidfd/Makefile         |   6 ++
+>  samples/pidfd/pidfd-metadata.c | 169 +++++++++++++++++++++++++++++++++
+>  3 files changed, 176 insertions(+), 1 deletion(-)
+>  create mode 100644 samples/pidfd/Makefile
+>  create mode 100644 samples/pidfd/pidfd-metadata.c
+>
+> diff --git a/samples/Makefile b/samples/Makefile
+> index b1142a958811..fadadb1c3b05 100644
+> --- a/samples/Makefile
+> +++ b/samples/Makefile
+> @@ -3,4 +3,4 @@
+>  obj-$(CONFIG_SAMPLES)  += kobject/ kprobes/ trace_events/ livepatch/ \
+>                            hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
+>                            configfs/ connector/ v4l/ trace_printk/ \
+> -                          vfio-mdev/ statx/ qmi/ binderfs/
+> +                          vfio-mdev/ statx/ qmi/ binderfs/ pidfd/
+> diff --git a/samples/pidfd/Makefile b/samples/pidfd/Makefile
+> new file mode 100644
+> index 000000000000..0ff97784177a
+> --- /dev/null
+> +++ b/samples/pidfd/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +hostprogs-y := pidfd-metadata
+> +always := $(hostprogs-y)
+> +HOSTCFLAGS_pidfd-metadata.o += -I$(objtree)/usr/include
+> +all: pidfd-metadata
+> diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
+> new file mode 100644
+> index 000000000000..c46c6c34a012
+> --- /dev/null
+> +++ b/samples/pidfd/pidfd-metadata.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#define _GNU_SOURCE
+> +#include <err.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <inttypes.h>
+> +#include <limits.h>
+> +#include <sched.h>
+> +#include <signal.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/stat.h>
+> +#include <sys/syscall.h>
+> +#include <sys/types.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
+> +
+> +#ifndef CLONE_PIDFD
+> +#define CLONE_PIDFD 0x00001000
+> +#endif
+> +
+> +static int raw_clone_pidfd(void)
+> +{
+> +       unsigned long flags = CLONE_PIDFD;
+> +
+> +#if defined(__s390x__) || defined(__s390__) || defined(__CRIS__)
+> +       /* On s390/s390x and cris the order of the first and second arguments
+> +         * of the system call is reversed.
+> +         */
+> +       return (int)syscall(__NR_clone, NULL, flags | SIGCHLD);
+> +#elif defined(__sparc__) && defined(__arch64__)
+> +       {
+> +               /*
+> +                 * sparc64 always returns the other process id in %o0, and a
+> +                 * boolean flag whether this is the child or the parent in %o1.
+> +                 * Inline assembly is needed to get the flag returned in %o1.
+> +                 */
+> +               int in_child;
+> +               int child_pid;
+> +               asm volatile("mov %2, %%g1\n\t"
+> +                            "mov %3, %%o0\n\t"
+> +                            "mov 0 , %%o1\n\t"
+> +                            "t 0x6d\n\t"
+> +                            "mov %%o1, %0\n\t"
+> +                            "mov %%o0, %1"
+> +                            : "=r"(in_child), "=r"(child_pid)
+> +                            : "i"(__NR_clone), "r"(flags | SIGCHLD)
+> +                            : "%o1", "%o0", "%g1");
+> +
+> +               if (in_child)
+> +                       return 0;
+> +               else
+> +                       return child_pid;
+> +       }
+> +#elif defined(__ia64__)
+> +       /* On ia64 the stack and stack size are passed as separate arguments. */
+> +       return (int)syscall(__NR_clone, flags | SIGCHLD, NULL, prctl_arg(0));
+> +#else
+> +       return (int)syscall(__NR_clone, flags | SIGCHLD, NULL);
+> +#endif
+> +}
+> +
+> +static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
+> +                                       unsigned int flags)
+> +{
+> +       return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
+> +}
+> +
+> +static int pidfd_metadata_fd(int pidfd)
+> +{
+> +       int procfd, ret;
+> +       char path[100];
+> +       FILE *f;
+> +       size_t n = 0;
+> +       char *line = NULL;
+> +
+> +       snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", pidfd);
+> +
+> +       f = fopen(path, "re");
+> +       if (!f)
+> +               return -1;
+> +
+> +       ret = 0;
+> +       while (getline(&line, &n, f) != -1) {
+> +               char *numstr;
+> +               size_t len;
+> +
+> +               if (strncmp(line, "Pid:\t", 5))
+> +                       continue;
+> +
+> +               numstr = line + 5;
+> +               len = strlen(numstr);
+> +               if (len > 0 && numstr[len - 1] == '\n')
+> +                       numstr[len - 1] = '\0';
+> +               ret = snprintf(path, sizeof(path), "/proc/%s", numstr);
+> +               break;
+> +       }
+> +       free(line);
+> +       fclose(f);
+> +
+> +       if (!ret) {
+> +               errno = ENOENT;
+> +               warn("Failed to parse pid from fdinfo\n");
+> +               return -1;
+> +       }
+> +
+> +       procfd = open(path, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+> +       if (procfd < 0) {
+> +               warn("Failed to open %s\n", path);
+> +               return -1;
+> +       }
+> +
+> +       /*
+> +        * Verify that the pid has not been recycled and our /proc/<pid> handle
+> +        * is still valid.
+> +        */
+> +       if (sys_pidfd_send_signal(pidfd, 0, NULL, 0) < 0) {
+> +               /* process does not exist */
+> +               if (errno == ESRCH) {
+> +                       warn("The pid was recycled\n");
 
-One area of some concern is RCU_KTHREAD_YIELDING and the rcuc kthreads.
-This shouldn't be a big deal for the intended use case (real-time
-workloads with lightish load), but a two-jiffy delay could allow quite a
-few callbacks to build up when doing forward-progress testing.  But not
-a problem for use_softirq runs, which is what you were running.
+ITYM that the process was reaped.
 
-But it might be that I need to either skip the forward-progress testing
-if !use_softirq, skip the RCU_KTHREAD_YIELDING step if there are too
-many callbacks, or some such.  Either way, though, I would need at least
-a cond_resched() on each pass through the rcu_cpu_kthread() function.
+> +                       close(procfd);
+> +                       return -1;
+> +               }
+> +
+> +               /* just not allowed to signal it */
 
-Thoughts from a real-time perspective?
+I'd look for EPERM specifically instead of just assuming that any
+error indicates that a permission failure. I'd also explicitly state
+that EPERM still implies process existence.
 
-Oooh...  But in both use_softirq and !use_softirq runs, if the CPU to be
-offlined has a huge number of callbacks pending (assuming callbacks are
-not offloaded), there could be quite the delay imposed on the offlining
-of that CPU.  Now 63 seconds seems a bit much, but there can be tens
-of millions of callbacks queued up to be invoked.  It -could- happen,
-I suppose, though I would guess more like a couple of seconds.
-
-Maybe I need to ignore the ignoring of blimit for a CPU that is going
-offline...  The theory is that the callbacks will just get dumped on
-some other CPU if the CPU is going away, and on the other hand invoking
-callbacks sparingly would help the CPU come back all the way online
-more quickly.  Unless one of the callbacks on that CPU was the one from
-the synchronize_rcu() in the CPU-hotplug offline path.  :-/
-
-So I could start going slow on callbacks on the outgoing CPU as soon as
-that synchronize_rcu() completes.  Horribly fragile, given the possibility
-of synchronize_rcu() in other CPU-hotplug notifiers, though.  Plus it
-looks like sched_cpu_deactivate() is about the first thing that happens
-when removing a CPU.
-
-But you know...  Ignoring the world while invoking up to LONG_MAX RCU
-callbacks back to back probably never was an optimal plan.  So if that
-splat is at all reproducible, could you please give the patch below a try?
-
-I have just touch-tested this on TREE01 and TREE04.  I will be testing
-the rest of the scenarios overnight, Pacific Time.
-
-Of course, if you have more failures, please let me know!
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 3245c1860cb30f85ae42c25209217bac25104faf
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Wed Apr 10 17:01:39 2019 -0700
-
-    rcu: Set a maximum limit for back-to-back callback invocation
-    
-    Currently, if a CPU has more than 10,000 callbacks pending, it will
-    increase rdp->blimit to LONG_MAX.  If you are lucky, LONG_MAX is only
-    about two billion, but this is still a bit too many callbacks to invoke
-    back-to-back while otherwise ignoring the world.
-    
-    This commit therefore sets a maximum limit of DEFAULT_MAX_RCU_BLIMIT,
-    which is set to 10,000, for rdp->blimit.
-    
-    Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index f53befdeecc1..afeb2751c94f 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -401,7 +401,8 @@ static int rcu_is_cpu_rrupt_from_idle(void)
- 	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
- }
- 
--#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch. */
-+#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
-+#define DEFAULT_MAX_RCU_BLIMIT 10000 /* ... even during callback flood. */
- static long blimit = DEFAULT_RCU_BLIMIT;
- #define DEFAULT_RCU_QHIMARK 10000 /* If this many pending, ignore blimit. */
- static long qhimark = DEFAULT_RCU_QHIMARK;
-@@ -2134,7 +2135,7 @@ static void rcu_do_batch(struct rcu_data *rdp)
- 
- 	/* Reinstate batch limit if we have worked down the excess. */
- 	count = rcu_segcblist_n_cbs(&rdp->cblist);
--	if (rdp->blimit == LONG_MAX && count <= qlowmark)
-+	if (rdp->blimit >= DEFAULT_MAX_RCU_BLIMIT && count <= qlowmark)
- 		rdp->blimit = blimit;
- 
- 	/* Reset ->qlen_last_fqs_check trigger if enough CBs have drained. */
-@@ -2464,7 +2465,7 @@ static void __call_rcu_core(struct rcu_data *rdp, struct rcu_head *head,
- 			rcu_accelerate_cbs_unlocked(rdp->mynode, rdp);
- 		} else {
- 			/* Give the grace period a kick. */
--			rdp->blimit = LONG_MAX;
-+			rdp->blimit = DEFAULT_MAX_RCU_BLIMIT;
- 			if (rcu_state.n_force_qs == rdp->n_force_qs_snap &&
- 			    rcu_segcblist_first_pend_cb(&rdp->cblist) != head)
- 				rcu_force_quiescent_state();
-
+> +       }
+> +
+> +       return procfd;
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +       int procfd, ret = EXIT_FAILURE;
+> +       ssize_t bytes;
+> +       char buf[4096] = { 0 };
+> +
+> +       int pidfd = raw_clone_pidfd();
+> +       if (pidfd < 0)
+> +               return -1;
+> +
+> +       if (pidfd == 0) {
+> +               printf("%d\n", getpid());
+> +               exit(EXIT_SUCCESS);
+> +       }
+> +
+> +       procfd = pidfd_metadata_fd(pidfd);
+> +       close(pidfd);
+> +       if (procfd < 0)
+> +               goto out;
+> +
+> +       int statusfd = openat(procfd, "status", O_RDONLY | O_CLOEXEC);
+> +       close(procfd);
+> +       if (statusfd < 0)
+> +               goto out;
+> +
+> +       bytes = read(statusfd, buf, sizeof(buf));
+> +       if (bytes > 0)
+> +               bytes = write(STDOUT_FILENO, buf, bytes);
+> +       close(statusfd);
+> +
+> +out:
+> +       (void)wait(NULL);
+> +       if (bytes < 0 || ret)
+> +               exit(EXIT_FAILURE);
+> +
+> +       exit(EXIT_SUCCESS);
+> +}
+> --
+> 2.21.0
+>
