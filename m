@@ -2,138 +2,120 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E025C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D97C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2142184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="d/RYmzN6"
+	by mail.kernel.org (Postfix) with ESMTP id 8DFD72184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfDKIvH (ORCPT
+        id S1727105AbfDKIwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:51:07 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:58321 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbfDKIvE (ORCPT
+        Thu, 11 Apr 2019 04:52:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36141 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfDKIwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:51:04 -0400
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x3B8okCr023453;
-        Thu, 11 Apr 2019 17:50:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3B8okCr023453
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554972647;
-        bh=F5UI1sOsF59TtjXlusyUA329j5S/sWWuTeBpDyNH8dk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=d/RYmzN6ST5N/YsSzVgPcQzH3cyMqb8TuE5NCl98a5Pywu8I2QhoF1yIJsnDNWvN3
-         s1eZAkZj6g1zGj6dTA8hu8KD0QUKzqDE5Bo0smp5Ir6SOhAIDz560UGV/0LNSUDdAv
-         kigIIlBa0f3Bk4Dr/DZo/RLNdOJOouhRLFm+lHWi9BPPhCTLO8UKyycuc2DYAQvCHN
-         L9gu0/jcZ/P6gzqEOLh/KG9vmLuMIztEqyiqaDmTJ9823wo6P+Q4RMTlNLrPNf84D3
-         BiPs80CJ79s/xtTfvLBtKnAvhvPJn3QHCT5WTPDa9Yrr9HrE3YcB8NhVqzTnSGnWM1
-         zEYA7NEhb0V4Q==
-X-Nifty-SrcIP: [209.85.221.177]
-Received: by mail-vk1-f177.google.com with SMTP id s80so1197332vke.6;
-        Thu, 11 Apr 2019 01:50:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAUZTjqQ14TMhFukVZB2QSpWcw0Ygt7KjvpqHW8LxqAWVYg+Rnn0
-        ilh8ofUSzwQUIiYr3AegKvKvqQQrAYBiUBKwpic=
-X-Google-Smtp-Source: APXvYqzwcW+9zJIIvdmhRqXhqVxtLBKGueKPNN9kaKRMJ559bumruRRn0ZJt5oR6zgA2KIvhg+Gtre24QbvHZQdMfc8=
-X-Received: by 2002:a1f:793:: with SMTP id 141mr14474270vkh.31.1554972646242;
- Thu, 11 Apr 2019 01:50:46 -0700 (PDT)
+        Thu, 11 Apr 2019 04:52:22 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so6195922qtn.3;
+        Thu, 11 Apr 2019 01:52:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zy5eU/X8uvoizIixQhEjfBDwS0KODN980Otb5tvnTB8=;
+        b=LzZdlU29O1VSiwgoVEi3jetHYh+a6ghndQ2U0exx01dIBMZMo7gTPUBQCE7sd76Sx/
+         2d1jKD67Lwu6CKfJui+qhO4ZBqZMtvaiyb3cJNSYrmmnP3zs9d21WfRRkR8S6Gjq0Cwk
+         ceuzGWmwkqSqwXTyrwCpvMlVR339SGhDEhOC9L6JALeMiiRjLB8Lpx9/KGczy74+sXIm
+         3LQU3BrW0hkQk5XwZ3R1zLB39xlT5upO3BOUawYoPA+oqnmtBUSRbCMW1q/8SJprRmBh
+         bvPWXn9LBRYmBAsRziYPgFmL74GqppWD66E/vXShiQa1/sD6h18RcT55EZqp/RZ3dw+S
+         KZ+g==
+X-Gm-Message-State: APjAAAX1HRlLkkehPBF+3aC7ULOd5sG4O2THPTs+DtWzDmy/uco04Ppa
+        TLkYeCd4iefaI7Ror6A3qhah4D6mIzBfJdTUVYk=
+X-Google-Smtp-Source: APXvYqwJoZVV1mebIzfAeQabt4hOsUc56+8AT7clKkoNQp48IGLslRYLfw8NmpVZk4urczYAHfNrbk/q+ogwTghrAcY=
+X-Received: by 2002:ac8:8b9:: with SMTP id v54mr41886760qth.64.1554972741726;
+ Thu, 11 Apr 2019 01:52:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410161612.18545-1-keescook@chromium.org> <20190410161612.18545-2-keescook@chromium.org>
-In-Reply-To: <20190410161612.18545-2-keescook@chromium.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 11 Apr 2019 17:50:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
-Message-ID: <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] Kconfig: Create "kernel hardening" config area
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexander Popov <alpopov@ptsecurity.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <20190410201300.3528984-1-arnd@arndb.de> <20190410201300.3528984-2-arnd@arndb.de>
+ <CAKwvOdk-tfsZRVaOr8Suv5C146F-w3jUA-Rx0n2OxkVy+L8tCg@mail.gmail.com>
+In-Reply-To: <CAKwvOdk-tfsZRVaOr8Suv5C146F-w3jUA-Rx0n2OxkVy+L8tCg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 11 Apr 2019 10:52:05 +0200
+Message-ID: <CAK8P3a0cdvxkoRPOF7moxZ1W2059OEJeOGAFPfSemMH1_g=YPg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] s390: boot, purgatory: pass $(CLANG_FLAGS) where needed
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:16 AM Kees Cook <keescook@chromium.org> wrote:
-> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> index 74271dba4f94..01874ef0f883 100644
-> --- a/scripts/gcc-plugins/Kconfig
-> +++ b/scripts/gcc-plugins/Kconfig
-> @@ -13,10 +13,11 @@ config HAVE_GCC_PLUGINS
->           An arch should select this symbol if it supports building with
->           GCC plugins.
+On Thu, Apr 11, 2019 at 12:14 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> On Wed, Apr 10, 2019 at 1:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > The purgatory and boot Makefiles do not inherit the original cflags,
+> > so clang falls back to the default target architecture when building it,
+> > typically this would be x86 when cross-compiling.
+> >
+> > Add $(CLANG_FLAGS) everywhere so we pass the correct --target=s390x-linux
+> > option when cross-compiling.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/s390/Makefile           | 5 +++--
+> >  arch/s390/purgatory/Makefile | 1 +
+> >  2 files changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+> > index 9c079a506325..443990791099 100644
+> > --- a/arch/s390/Makefile
+> > +++ b/arch/s390/Makefile
+> > @@ -17,12 +17,13 @@ KBUILD_CFLAGS_MODULE += -fPIC
+> >  KBUILD_AFLAGS  += -m64
+> >  KBUILD_CFLAGS  += -m64
+> >  aflags_dwarf   := -Wa,-gdwarf-2
+> > -KBUILD_AFLAGS_DECOMPRESSOR := -m64 -D__ASSEMBLY__
+> > +KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+> >  KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
+> > -KBUILD_CFLAGS_DECOMPRESSOR := -m64 -O2
+> > +KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
+> >  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+> >  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+> >  KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
 >
-> -menuconfig GCC_PLUGINS
-> -       bool "GCC plugins"
-> +config GCC_PLUGINS
-> +       bool
+> Thanks for the respin with Nathan's suggestion.
+>
+> > +KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning,pointer-sign)
+>
+> What's up with this ^ ?  Seems like the top level sets it (without
+> cc-disable-warning :( ), but then KBUILD_CFLAGS_DECOMPRESSOR discards
+> it.  Does Clang actually flag code in this arch (that GCC doesn't)?
 
+Oops, that should have been a separate patch.
 
-This will flatten the plugin config options.
+I think what happens is that clang warns more aggressively about pointer sign
+bugs than gcc in some cases, and some of those cases happen in s390
+header files that are included by both the kernel and the decompressor.
 
-If you want to keep the current menu structure, you can do:
+The full warning log without this change is rather long, see
+https://pastebin.com/KG9xaTNB
 
-menu "GCC plugins"
-...
-endmenu
+I also tried patching the code to avoid the warnings, but I'm not entirely
+happy with that result either, see
+https://pastebin.com/pSMz5eZA
 
-
-
-
-Another side-effect is Kbuild will descend into scripts/gcc-plugins/
-even when no plugin is selected.
-It is not a big build speed regression, though.
-
-
-
-> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> new file mode 100644
-> index 000000000000..8223a8ab1a12
-> --- /dev/null
-> +++ b/security/Kconfig.hardening
-> @@ -0,0 +1,94 @@
-> +menu "Kernel hardening options"
-> +
-> +config GCC_PLUGIN_STRUCTLEAK
-> +       bool
-> +       depends on GCC_PLUGIN_STRUCTLEAK_USER || GCC_PLUGIN_STRUCTLEAK_BYREF || GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
-
-
-I think this 'depends on' is unnecessary.
-
-
-> +menu "Memory initialization"
-> +
-> +choice
-> +       prompt "Initialize kernel stack variables at function entry"
-> +       depends on CC_HAS_AUTO_VAR_INIT || GCC_PLUGINS
-
-Nit:
-CC_HAS_AUTO_VAR_INIT does not exist at this point.
-I will be added by 3/3.
-
-
--- 
-Best Regards
-Masahiro Yamada
+     Arnd
