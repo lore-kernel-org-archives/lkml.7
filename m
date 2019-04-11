@@ -2,118 +2,157 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691CBC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E4620850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555016845;
-	bh=1WxsmPxgYFxfxyDeHj3NXLYPUnp1vIsLPqrhQYu2efI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=loR+8huHQW0d/BVcGQ56ETyVd6Vz2TG2JEXPtZvgTEdCrSwHqwAO8bTP9XPHA+chD
-	 4B1S4Yae4SmZSddNyAVWnBIdRt9+LnWPDturlnqOtIto75VVX/jS8WUt4lsr/qkFMb
-	 3FUlpnNYtdOwc+6gbD5JbGcobp7w7o6bJSKt4adY=
+	by mail.kernel.org (Postfix) with ESMTP id 23A9A20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwWIdpSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfDKVHY (ORCPT
+        id S1726832AbfDKVHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:07:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52414 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726664AbfDKVHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:07:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7481ACC6;
-        Thu, 11 Apr 2019 21:07:21 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 23:07:20 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: iwlwifi: BUG: unable to handle kernel paging request at
- ffffc90000e1c808
-Message-ID: <20190411210404.GC4743@dhcp22.suse.cz>
+        Thu, 11 Apr 2019 17:07:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36401 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726629AbfDKVHe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 17:07:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 85so4094442pgc.3;
+        Thu, 11 Apr 2019 14:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8QoNjccgba2liRazhiXGtqN9gYFAnXX0AWzdPDl8NkQ=;
+        b=NwWIdpSgYRaMTZTU9y+/4NO/PZdDflMH5TZPEoovewndnSXv5wWys54Yv27xbBieIE
+         0H5Jv5+eLbeJuiZ7J8oqVPneGeCPFudUnsSQontJdKa4nPMHpNjarTPzirb+rG2QXbo2
+         wOt5VeshQ2fFU/P32wnfYhu5ekPXKTJkppCVYDBebWW1ySafeFVWXY99rIq2Nv/Jd86G
+         7BXjb70htCT8tRke6nbOb6faHMZ8CqJcZkooUj4fSh0+ErHTwHH7t7lu/hv65siFEyUV
+         74RxRXd1glNl/mrGIAJ91+fAdSRxxPWjjrXq55wtIUWxKQg4ZohhC8uJcC0FiBVpkZXZ
+         6uAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8QoNjccgba2liRazhiXGtqN9gYFAnXX0AWzdPDl8NkQ=;
+        b=KnTlMFATA159IobWxJyVib8WluKFcWFwwbO2Gbt9mLuh6jntoPtHSkjiyTHWYNYE6k
+         vlR5uoePX345YvYKioTnXIhLCSLug5+P3SVI6Xv6ISQkGL/wYFSNfyPwbrti/pbDsg5L
+         Vaz4Js3IDIbPujld8GqSIUZtrZYeDbB2oUnhblwO8oq6JKpfZCfWeKShTKenbEy+WEIa
+         jClAwATCfws1EHPyiPovNF0v/rSvWJ1EvX1ljriPw8akWoJ1Bv8pkz7AijMXHhO/C8d1
+         5tdUsHjKy4iD7dDop3dE+m4+wSLgVq9sKow6gql0Ql5WELhe/W/SuCO9C437+jQHEQtY
+         5PHQ==
+X-Gm-Message-State: APjAAAXmfbFr3X50epqlDc5U98Dz7Ono738GmtU9hqUSDJ0B2rm2wnqR
+        5r8W1eXyHpcpVK8AKylJtvs=
+X-Google-Smtp-Source: APXvYqxu2TSmC4/JxGq7Qq4fzyWNHJUPxpDT+BVQpAKIQ8eBBRLGjWm8DqgaMIkYpmUCgWHaQrKP7g==
+X-Received: by 2002:a63:e845:: with SMTP id a5mr50493631pgk.246.1555016853736;
+        Thu, 11 Apr 2019 14:07:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p3sm56709579pfn.167.2019.04.11.14.07.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 14:07:32 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 14:07:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
+Message-ID: <20190411210731.GA29378@roeck-us.net>
+References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+ <20190411124324.3ed62fad@lwn.net>
+ <20190411174357.251904f5@coco.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190411174357.251904f5@coco.lan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I have just encountered the following splat with 5.1-rc4. Is this a
-known problem? Greping throug older logs show that "Error sending SCAN_CFG_CMD"
-is not new. In older kernels it was followed by "Start IWL Error Log Dump:"
-but it oopsed now. I was running 5.0 previously. Let me know if you need
-more information.
+On Thu, Apr 11, 2019 at 05:43:57PM -0300, Mauro Carvalho Chehab wrote:
+> Em Thu, 11 Apr 2019 12:43:24 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+> 
+> > On Wed, 10 Apr 2019 16:22:37 -0300
+> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > 
+> > > This series converts the contents of Documentation/hwmon to ReST
+> > > format.
+> > > 
+> > > PS.: I opted to group the conversion files per groups of maintainer
+> > > set, as, if I were to generate one patch per file, it would give around
+> > > 160 patches.
+> > > 
+> > > I also added those patches to my development tree at:
+> > > 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=hwmon
+> > > 
+> > > If you want to see the results, they're at:
+> > > 	https://www.infradead.org/~mchehab/hwmon/  
+> > 
+> > This set seems generally good and could probably be applied as-is.  But I
+> > have to ask...is there a reason to not take the last step and actually
+> > bring this stuff into the Sphinx doc tree?
+> > 
+> > We seem to be mostly documenting sysfs files and such.  I am *guessing*
+> > that perhaps the set should move to Documentation/admin-guide/hwmon?  Or
+> > have I misunderstood the intended audience here?
+> 
+> :-)
+> 
+> Yeah, I'd say that 80% of the contents there are user-faced.
+> 
+> Yet, the main issue with this (and other driver subsystems) is that there's
+> a mix of userspace and Kernelspace stuff. One somewhat simple case is
+> the abituguru: it has a "datasheet" file:
+> 
+> 	abituguru-datasheet
+> 
+> This contains programming information for the corresponding drivers,
+> while abituguru and abituguru3 contains mostly userspace
+> stuff (still, it also contains the I2C address, with shouldn't mean
+> anything for the user).
+> 
+> However, if you take a look at w83781d, you'll see a mix of both
+> userspace and driver developer info there... it has a chapter called
+> "Data sheet updates", for example, with is probably meaningless for
+> anyone but the hwmon driver developers.
+> 
+> That's, btw, a pattern that happens a lot inside device driver
+> documents on almost all subsystems I checked: driver-specific
+> documentation is usually not split into user-facing/kernel-facing.
+> 
+> While nobody does such split, IMHO, the best would be to keep the
+> information outside Documentation/admin-guide. But hey! You're
+> the Doc maintainer. If you prefer to move, I'm perfectly fine
+> with that.
+> 
 
-[ 3076.724445] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-[ 3076.724449] iwlwifi 0000:01:00.0: Current CMD queue read_ptr 38 write_ptr 39
-[ 3076.724468] BUG: unable to handle kernel paging request at ffffc90000e1c808
-[ 3076.724469] #PF error: [normal kernel read fault]
-[ 3076.724470] PGD 245924067 P4D 245924067 PUD 245925067 PMD 24441e067 PTE 0
-[ 3076.724473] Oops: 0000 [#1] PREEMPT SMP PTI
-[ 3076.724475] CPU: 2 PID: 10490 Comm: kworker/2:0 Not tainted 5.1.0-rc4-00003-gfd008d1a7a20 #50
-[ 3076.724476] Hardware name: Dell Inc. Latitude E7470/0T6HHJ, BIOS 1.5.3 04/18/2016
-[ 3076.724500] Workqueue: events iwl_mvm_tcm_work [iwlmvm]
-[ 3076.724506] RIP: 0010:iwl_trans_pcie_read32+0xe/0x11 [iwlwifi]
-[ 3076.724508] Code: f6 48 03 b7 28 a2 00 00 88 16 c3 0f 1f 44 00 00 89 f6 48 03 b7 28 a2 00 00 89 16 c3 0f 1f 44 00 00 89 f6 48 03 b7 28 a2 00 00 <8b> 06 c3 0f 1f 44 00 00 48 8b 47 10 83 78 48 13 19 c0 25 00 00 10
-[ 3076.724509] RSP: 0000:ffffc9000622fcb0 EFLAGS: 00010282
-[ 3076.724510] RAX: ffffffffa024ce32 RBX: ffff888243000018 RCX: 0000000000000003
-[ 3076.724512] RDX: 0000000008000005 RSI: ffffc90000e1c808 RDI: ffff888243000018
-[ 3076.724513] RBP: ffff888243009154 R08: 0000000000000001 R09: ffffffff824e062f
-[ 3076.724514] R10: 0000000000000000 R11: ffffc9000622f9e7 R12: 00000001000a97a6
-[ 3076.724514] R13: 0000000000000006 R14: ffff888242af4000 R15: ffff88824300a268
-[ 3076.724516] FS:  0000000000000000(0000) GS:ffff888245f00000(0000) knlGS:0000000000000000
-[ 3076.724517] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3076.724518] CR2: ffffc90000e1c808 CR3: 000000010131c003 CR4: 00000000003606e0
-[ 3076.724519] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 3076.724520] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 3076.724521] Call Trace:
-[ 3076.724527]  iwl_trans_sync_nmi+0xac/0x18a [iwlwifi]
-[ 3076.724533]  iwl_trans_pcie_send_hcmd+0x2e1/0x3b2 [iwlwifi]
-[ 3076.724536]  ? wait_woken+0x6d/0x6d
-[ 3076.724542]  iwl_trans_send_cmd+0x99/0xb4 [iwlwifi]
-[ 3076.724547]  iwl_mvm_send_cmd+0x2a/0x5c [iwlmvm]
-[ 3076.724554]  iwl_mvm_config_scan+0x38b/0x3c2 [iwlmvm]
-[ 3076.724560]  ? iwl_mvm_update_low_latency+0xbb/0xbb [iwlmvm]
-[ 3076.724565]  iwl_mvm_recalc_tcm+0x473/0x48c [iwlmvm]
-[ 3076.724569]  process_one_work+0x1e2/0x32b
-[ 3076.724571]  ? pwq_unbound_release_workfn+0xc9/0xc9
-[ 3076.724573]  worker_thread+0x1d8/0x2a3
-[ 3076.724574]  kthread+0x114/0x11c
-[ 3076.724576]  ? kthread_park+0x76/0x76
-[ 3076.724579]  ret_from_fork+0x3a/0x50
-[ 3076.724581] Modules linked in: tun ctr ccm binfmt_misc snd_hda_codec_hdmi arc4 snd_hda_codec_realtek snd_hda_codec_generic i915 i2c_algo_bit iosf_mbi snd_hda_intel iwlmvm drm_kms_helper uvcvideo snd_hda_codec videobuf2_vmalloc cfbfillrect mac80211 videobuf2_memops videobuf2_v4l2 snd_hda_core syscopyarea videobuf2_common cfbimgblt sysfillrect snd_pcm_oss videodev snd_mixer_oss sysimgblt coretemp iwlwifi fb_sys_fops hwmon cfbcopyarea x86_pkg_temp_thermal fb snd_pcm fbdev kvm_intel media drm kvm drm_panel_orientation_quirks snd_timer irqbypass i2c_i801 cfg80211 snd i2c_core video backlight
-[ 3076.724596] CR2: ffffc90000e1c808
-[ 3076.724598] ---[ end trace da5234017dd6ffd3 ]---
-[ 3076.724603] RIP: 0010:iwl_trans_pcie_read32+0xe/0x11 [iwlwifi]
-[ 3076.724605] Code: f6 48 03 b7 28 a2 00 00 88 16 c3 0f 1f 44 00 00 89 f6 48 03 b7 28 a2 00 00 89 16 c3 0f 1f 44 00 00 89 f6 48 03 b7 28 a2 00 00 <8b> 06 c3 0f 1f 44 00 00 48 8b 47 10 83 78 48 13 19 c0 25 00 00 10
-[ 3076.724606] RSP: 0000:ffffc9000622fcb0 EFLAGS: 00010282
-[ 3076.724607] RAX: ffffffffa024ce32 RBX: ffff888243000018 RCX: 0000000000000003
-[ 3076.724608] RDX: 0000000008000005 RSI: ffffc90000e1c808 RDI: ffff888243000018
-[ 3076.724609] RBP: ffff888243009154 R08: 0000000000000001 R09: ffffffff824e062f
-[ 3076.724610] R10: 0000000000000000 R11: ffffc9000622f9e7 R12: 00000001000a97a6
-[ 3076.724611] R13: 0000000000000006 R14: ffff888242af4000 R15: ffff88824300a268
-[ 3076.724612] FS:  0000000000000000(0000) GS:ffff888245f00000(0000) knlGS:0000000000000000
-[ 3076.724613] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3076.724614] CR2: ffffc90000e1c808 CR3: 000000010131c003 CR4: 00000000003606e0
-[ 3076.724615] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 3076.724616] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 3077.332767] iwlwifi 0000:01:00.0: Queue 0 is inactive on fifo 2 and stuck for 2500 ms. SW [38, 39] HW [162, 162] FH TRB=0x0a5a5a5a2
-[ 3084.756712] iwlwifi 0000:01:00.0: Queue 10 is inactive on fifo 2 and stuck for 10000 ms. SW [81, 89] HW [162, 162] FH TRB=0x0a5a5a5a2
-[ 3097.044641] iwlwifi 0000:01:00.0: Queue 11 is inactive on fifo 2 and stuck for 10000 ms. SW [203, 204] HW [162, 162] FH TRB=0x0a5a5a5a2
+Same here, but please don't move the files which are kernel facing only.
 
--- 
-Michal Hocko
-SUSE Labs
+How do you want to handle this series ? Do you expect it to be pushed
+through hwmon, or through Documentation, or do you plan to push yourself ?
+
+If the series isn't pushed through hwmon, we'll likely have a couple of
+conflicts against hwmon-next.
+
+Thanks,
+Guenter
