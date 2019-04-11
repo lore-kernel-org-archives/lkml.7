@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5142EC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8425E20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD0120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Kz0209+s"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eQ4Yac+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDKStL (ORCPT
+        id S1726954AbfDKStQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:49:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44030 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfDKStI (ORCPT
+        Thu, 11 Apr 2019 14:49:16 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45813 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726931AbfDKStN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:49:08 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w3so6123507edu.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:49:07 -0700 (PDT)
+        Thu, 11 Apr 2019 14:49:13 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o26so6113049edv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0ptM0TW5MEf0wZjhcNVg+kVepdW4r8Z6tyROfJJShQo=;
-        b=Kz0209+sKNZfmB0yWwNPjjrMA+GYb4rsz3YQ+7qzCBKV0K8VKU+rELf+Zl1rDwGfGG
-         UDqhVf2LzXA6K1Mp+V7RE4dqFrJsHX5w+JbTNVOgDNMqnsvq1/Svzxa1O30Nwx4bNza7
-         xhOejAKAbe35ytPwR0TZVkNIacGaIechwtfh4zN2DCFIKQ4M9BguB3dgKppQ9rukI4fk
-         jwu4Kh6E1Kp4KE4cvVyzWTm9dLB+7BauhZN2nsIMnKgsjVX0U/GpqN2Ak+4MJtwQ7Rct
-         vag21Of0Bv8JJEz+PXrI7LQkFSMnYl4wWcIJZDQCt3rzHh/G7O3Wjvfv8J/dr1KSZ6iE
-         ULLA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lX2MVOfiam4gxtJM5rz0M+xQIQGKu992FM3+lagPerc=;
+        b=eQ4Yac+opjGEBMpNwcIhE+BWp72NvMbMpxtmojUTpE9/rOYjMILcbpoRJOSkm78WBk
+         Aff06hpFM7720IPoJiqJyT63C+/E8qw6EX81NozIpVIX1tteropdJH6LFlD3Eh/+bnxp
+         TqdoMoiwgIxQtWMiOGAc90uv+qOUf34JAI/T0ybJD/E7UmC1cFWzDvL9PTwU99FOa2Cq
+         uBtmAEg9IcB2Z+rtiVJG0Mt+tgtzmiJ3TreKGg24TfCmsdd0CwQJXJinK6O+48LvF5v/
+         TMCo/yA7WVatb4O5GCP0DxBkXEFa1ZseoyB+vX5EoAJETdaxDHDXc+uPIuWnEbhC9q2H
+         SvUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0ptM0TW5MEf0wZjhcNVg+kVepdW4r8Z6tyROfJJShQo=;
-        b=QibtQlw7C4EfV36ZQooN+ANxCJVXXCH31fPF5dOpBQvZfJOmYtPtYuSY3FhkCVsxPb
-         VUKhzvx1mecA/eCfewncxET3rAYWlZIcduiYmSDkttCUSjJw4FbB44tMKmczIaHPX5dX
-         eiO0u5EMm/6IiGjL1QxOCUVGh3J1dSqanWP1ltoOUi5iGS9umk8K53uI8ObWy33cWzAQ
-         7ay33C1/FSyAI1k83XgxodAMjDA9L9j/jrQcQR+6M0x84VzAIEn0grI+1wXynAQzbCYd
-         J68PBxzcVKSo/X7p24Ln6dj3zLvH9O0ci4iRHZkbbGXsugfIeRdH3OYVghLxy8n425lF
-         Aidg==
-X-Gm-Message-State: APjAAAXipFlZCV2wCLY/u5WSCZ+aKuVEk5iiBDlqXGAxdHkA3+pEbaHW
-        ISFyFoEXQH6mTcV1kn9rmBRONw==
-X-Google-Smtp-Source: APXvYqxPgBo+MMzWroNLnpmi2H77XJDBCOGidMozjjYD68K8alQvz4uZiMPtc7ZU8Kl0PrPPn+MeYg==
-X-Received: by 2002:a05:6402:558:: with SMTP id i24mr26522920edx.51.1555008547040;
-        Thu, 11 Apr 2019 11:49:07 -0700 (PDT)
+         :references:mime-version:content-transfer-encoding;
+        bh=lX2MVOfiam4gxtJM5rz0M+xQIQGKu992FM3+lagPerc=;
+        b=JYUs+PAnwKD9cNyiKHmKNm6EH4tABXjPLBY1WQp3mfKikWYVE3I9e3gHPFOliTEd2G
+         qnaUfBK/NXQy5KK6FpbSRPSkbrSPTflgTIC7RxgoPyU7DZGwPEywX6/djjf1fig1pEBq
+         SePf0Do05EYgEWIAQMKBxV8P5buTvm/K1WyY5n/TGF3cp6xUkLXl3WDsUZOv6T8MkwvI
+         RzNB7NbeOrZo6vza2t9iir2dFOgFI2QaMRbv/Oc4OYuNNugKok0dGtRc22GtaD1jHQ08
+         3eVaT7g4UfFTUna42gBAC3t2rlCDKAM47VwH+zJpYdiILFsVol2yRJRz5oWcBh93SZcM
+         eJaw==
+X-Gm-Message-State: APjAAAXGiOE3Jse7bFHZp1pb7EOIRF8u6XOKpq7dpsFpD1Ag4mS7iQIi
+        J7MFMyRyzThDvZAcSJc6Hxv/Aw==
+X-Google-Smtp-Source: APXvYqw1ZpBKkZJS1pdF6BGZGDt7JAfIqiI9pMC84S3fxuGG7Kvy3jG4mkJy+S81q/cfVwljARoScw==
+X-Received: by 2002:aa7:d954:: with SMTP id l20mr32634023eds.156.1555008551931;
+        Thu, 11 Apr 2019 11:49:11 -0700 (PDT)
 Received: from localhost.localdomain ([80.233.32.123])
-        by smtp.gmail.com with ESMTPSA id b10sm1285130edi.28.2019.04.11.11.49.04
+        by smtp.gmail.com with ESMTPSA id b10sm1285130edi.28.2019.04.11.11.49.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 11:49:06 -0700 (PDT)
+        Thu, 11 Apr 2019 11:49:11 -0700 (PDT)
 From:   Tom Murphy <tmurphy@arista.com>
 To:     iommu@lists.linux-foundation.org
 Cc:     dima@arista.com, jamessewart@arista.com, murphyt7@tcd.ie,
@@ -66,66 +67,98 @@ Cc:     dima@arista.com, jamessewart@arista.com, murphyt7@tcd.ie,
         Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
         Andy Gross <andy.gross@linaro.org>,
         David Brown <david.brown@linaro.org>,
+        Rob Clark <robdclark@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org,
         linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH 5/9] iommu/amd: Implement .flush_np_cache
-Date:   Thu, 11 Apr 2019 19:47:34 +0100
-Message-Id: <20190411184741.27540-6-tmurphy@arista.com>
+Subject: [PATCH 6/9] iommu/amd: Implement map_atomic
+Date:   Thu, 11 Apr 2019 19:47:35 +0100
+Message-Id: <20190411184741.27540-7-tmurphy@arista.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190411184741.27540-1-tmurphy@arista.com>
 References: <20190411184741.27540-1-tmurphy@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement flush_np_cache for the AMD iommu driver. This allows the amd
-iommu non present cache to be flushed if amd_iommu_np_cache is set.
+Instead of using a spin lock I removed the mutex lock from both the
+amd_iommu_map and amd_iommu_unmap path as well. iommu_map doesn’t lock
+while mapping and so if iommu_map is called by two different threads on
+the same iova region it results in a race condition even with the locks.
+So the locking in amd_iommu_map and amd_iommu_unmap doesn't add any real
+protection. The solution to this is for whatever manages the allocated
+iova’s externally to make sure iommu_map isn’t called twice on the same
+region at the same time.
 
 Signed-off-by: Tom Murphy <tmurphy@arista.com>
 ---
- drivers/iommu/amd_iommu.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/iommu/amd_iommu.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index b319e51c379b..2d4ee10626b4 100644
+index 2d4ee10626b4..b45e0e033adc 100644
 --- a/drivers/iommu/amd_iommu.c
 +++ b/drivers/iommu/amd_iommu.c
-@@ -1319,6 +1319,18 @@ static void domain_flush_devices(struct protection_domain *domain)
- 		device_flush_dte(dev_data);
+@@ -3089,12 +3089,12 @@ static int amd_iommu_attach_device(struct iommu_domain *dom,
+ 	return ret;
  }
  
-+static void amd_iommu_flush_np_cache(struct iommu_domain *domain,
-+		unsigned long iova, size_t size)
+-static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
+-			 phys_addr_t paddr, size_t page_size, int iommu_prot)
++static int __amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
++			 phys_addr_t paddr, size_t page_size, int iommu_prot,
++			 gfp_t gfp)
+ {
+ 	struct protection_domain *domain = to_pdomain(dom);
+ 	int prot = 0;
+-	int ret;
+ 
+ 	if (domain->mode == PAGE_MODE_NONE)
+ 		return -EINVAL;
+@@ -3104,11 +3104,21 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
+ 	if (iommu_prot & IOMMU_WRITE)
+ 		prot |= IOMMU_PROT_IW;
+ 
+-	mutex_lock(&domain->api_lock);
+-	ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
+-	mutex_unlock(&domain->api_lock);
++	return iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
++}
+ 
+-	return ret;
++static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
++			 phys_addr_t paddr, size_t page_size, int iommu_prot)
 +{
-+	struct protection_domain *dom = to_pdomain(domain);
-+
-+	if (unlikely(amd_iommu_np_cache)) {
-+		domain_flush_pages(dom, iova, size);
-+		domain_flush_complete(dom);
-+	}
++	return __amd_iommu_map(dom, iova, paddr, page_size, iommu_prot,
++			GFP_KERNEL);
 +}
 +
-+
- /****************************************************************************
-  *
-  * The functions below are used the create the page table mappings for
-@@ -3263,6 +3275,7 @@ const struct iommu_ops amd_iommu_ops = {
- 	.flush_iotlb_all = amd_iommu_flush_iotlb_all,
- 	.iotlb_range_add = amd_iommu_iotlb_range_add,
- 	.iotlb_sync = amd_iommu_flush_iotlb_all,
-+	.flush_np_cache = amd_iommu_flush_np_cache,
- };
++static int amd_iommu_map_atomic(struct iommu_domain *dom, unsigned long iova,
++			 phys_addr_t paddr, size_t page_size, int iommu_prot)
++{
++	return __amd_iommu_map(dom, iova, paddr, page_size, iommu_prot,
++			GFP_ATOMIC);
+ }
  
- /*****************************************************************************
+ static size_t amd_iommu_unmap(struct iommu_domain *dom, unsigned long iova,
+@@ -3262,6 +3272,7 @@ const struct iommu_ops amd_iommu_ops = {
+ 	.attach_dev = amd_iommu_attach_device,
+ 	.detach_dev = amd_iommu_detach_device,
+ 	.map = amd_iommu_map,
++	.map_atomic = amd_iommu_map_atomic,
+ 	.unmap = amd_iommu_unmap,
+ 	.iova_to_phys = amd_iommu_iova_to_phys,
+ 	.add_device = amd_iommu_add_device,
 -- 
 2.17.1
 
