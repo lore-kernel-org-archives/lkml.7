@@ -2,181 +2,250 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72990C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A8EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429CF2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5repd78"
+	by mail.kernel.org (Postfix) with ESMTP id 7A8F520818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfDKKN7 (ORCPT
+        id S1726712AbfDKKQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:13:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39306 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfDKKN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:13:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j9so6557781wrn.6;
-        Thu, 11 Apr 2019 03:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AHwzttuhA7DO8ITpRLUHkH5/Yi142wVjw+S5wWHn5Mw=;
-        b=L5repd78WBjyQvpurU3hL0bVuHnIM25uaTn1PO00nQEr+1NqkDAt7HvPHkz5HcUOGj
-         a2SdQyxJRMEzY3I95ipFh9gk0H+u1ly0RQo278NIvqaVIvPl50saWYQxMT1e8LllpN/O
-         /PdYonYa8wuJWu400H42TPVLCabjIqSj26ErzvDqOfeexUzWmZe/mvbQxaQ/uBtqM9LJ
-         N5gAhmpk2/CYZfs2WWki2WODcQ0ycbWzJC/TjZrnzirF6JrVw4GMZgxnRqU7SRgxchaH
-         uMHscXse0Wu1j0vW263xlulQEzS/ADIdkN5FgufLiq19nivJClmXIGEYOmFcjTJ5YfBR
-         fMMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AHwzttuhA7DO8ITpRLUHkH5/Yi142wVjw+S5wWHn5Mw=;
-        b=swiuRydR7wOYyo2suiMb8KyC+47b5fnPn1VDiULkINBj/Fg1sK31eNQfefRdzjS1qw
-         Tr56bsP1bkg6U3ii71stMYbLk4ef347m3KnPejTOJfVunCK4AJF6WBVvI+BMbeQiOXoW
-         VKlIVruFz2goCCzmGd9fdTe9APwWG1bkdluNXDp8e1z9JiAwXTNzs6tXVUmA6c91gFxg
-         4a6TnUa2JlQTvlitDQf03fqIgRFg4s6YZON4PYmKRG1LhywJM42bQljnrQ3spZ4+H2tY
-         3ZYBQGJA7easq8IMd9AZTk4Ns+3Bt0E0R1D4NksGD4elXNSNYJfDUDKgnaw/aDtnaKUf
-         n0hg==
-X-Gm-Message-State: APjAAAXFttXcBAOooH5iAp/2xIJEVOFUI6n5Zo2plLNf2v9Ncsp8Y7D8
-        pip3wJt7VuSa7XjwmWSo+v0=
-X-Google-Smtp-Source: APXvYqwgHrK8lcFw9rpObVZuOhITVqtXNc+HEQiwPVHWt657Nb0/iTxapCzCWX0KdA0AvqjV3pO1vw==
-X-Received: by 2002:adf:ec0a:: with SMTP id x10mr30441884wrn.193.1554977635656;
-        Thu, 11 Apr 2019 03:13:55 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id o15sm34817870wrj.59.2019.04.11.03.13.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Apr 2019 03:13:54 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 12:13:53 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, lorenzo.pieralisi@arm.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2 01/16] PCI: Add #defines for PCIe spec r4.0 features
-Message-ID: <20190411101353.GE4633@ulmo>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-2-git-send-email-vidyas@nvidia.com>
+        Thu, 11 Apr 2019 06:16:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726104AbfDKKQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:16:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 13B8FAFBE;
+        Thu, 11 Apr 2019 10:16:40 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id AAA011E429B; Thu, 11 Apr 2019 12:16:39 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 12:16:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL
+ writeback
+Message-ID: <20190411101639.GB1119@quack2.suse.cz>
+References: <20190409114922.30095-1-amir73il@gmail.com>
+ <20190409154303.GB1426@quack2.suse.cz>
+ <CAOQ4uxi7X_Ge14Ek_BR=es8mLYbkM3vMOJE5+_Doon1OD5p0yA@mail.gmail.com>
+ <20190410091012.GH1426@quack2.suse.cz>
+ <CAOQ4uxiOR5cTi8O+Lzq1=YNDRgZF=FbT2-rbqtP937=dmOp1WA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZInfyf7laFu/Kiw7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554407683-31580-2-git-send-email-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAOQ4uxiOR5cTi8O+Lzq1=YNDRgZF=FbT2-rbqtP937=dmOp1WA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 10-04-19 13:42:23, Amir Goldstein wrote:
+> On Wed, Apr 10, 2019 at 12:10 PM Jan Kara <jack@suse.cz> wrote:
+> >
+> > On Tue 09-04-19 21:01:54, Amir Goldstein wrote:
+> > > On Tue, Apr 9, 2019 at 6:43 PM Jan Kara <jack@suse.cz> wrote:
+> > > > On Tue 09-04-19 14:49:22, Amir Goldstein wrote:
+> > > > > Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
+> > > > > writeback") claims that sync_file_range(2) syscall was "created for
+> > > > > userspace to be able to issue background writeout and so waiting for
+> > > > > in-flight IO is undesirable there" and changes the writeback (back) to
+> > > > > WB_SYNC_NONE.
+> > > > >
+> > > > > This claim is only partially true. Is is true for users that use the flag
+> > > > > SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
+> > > > > the reason for changing to WB_SYNC_NONE writeback.
+> > > > >
+> > > > > However, that claim is not true for users that use that flag combination
+> > > > > SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.  Those users explicitly
+> > > > > requested to wait for in-flight IO as well as to writeback of dirty
+> > > > > pages.  sync_file_range(2) man page describes this flag combintaion as
+> > > > > "write-for-data-integrity operation", although some may argue against
+> > > > > this definition.
+> > > > >
+> > > > > Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT and use
+> > > > > the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
+> > > > > writeback, to perform the range sync request.
+> > > > >
+> > > > > One intended use case for this API is creating a dependency between
+> > > > > a new file's content and its link into the namepsace without requiring
+> > > > > journal commit and flushing of disk volatile caches:
+> > > > >
+> > > > >   fd = open(".", O_TMPFILE | O_RDWR);
+> > > > >   write(fd, newdata, count);
+> > > > >   sync_file_range(fd, SYNC_FILE_RANGE_WRITE_AND_WAIT, 0, 0);
+> > > > >   linkat(AT_EMPTY_PATH, fd, AT_FDCWD, newfile);
+> > > > >
+> > > > > For many local filesystems, ext4 and xfs included, the sequence above
+> > > > > will guaranty that after crash, either 'newfile' exists with 'newdata'
+> > > > > content or 'newfile' does not exists.  For some applications, this
+> > > > > guaranty is strong enough and the effects of sync_file_range(2), even
+> > > > > with WB_SYNC_ALL, are far less intrusive to other writers in the system
+> > > > > than the effects of fdatasync(2).
+> > > >
+> > > > I agree that this paragraph is true but I don't want any userspace program
+> > > > rely on this. We've been through this when ext3 got converted to ext4 and
+> > > > it has caused a lot of complaints. Ext3 had provided rather strong data vs
+> > > > metadata ordering due to the way journalling was implemented. Then ext4
+> > > > came, implemented delayed allocation and somewhat changed how journalling
+> > > > works and suddently userspace programmers were caught by surprise their code
+> > > > working by luck stopped working. And they were complaining that when their
+> > > > code worked without fsync(2) before, it should work after it as well. So it
+> > > > took a lot of explaining that their applications are broken and Ted has
+> > > > also implemented some workarounds to make at least the most common mistakes
+> > > > silently fixed by the kernel most of the time.
+> > > >
+> > > > So I'm against providing 90% data integrity guarantees because there'll be
+> > > > many people who'll think they can get away with it and then complain when
+> > > > they won't once our implementation changes.
+> > > >
+> > > > Rather I'd modify the manpage to not say that SYNC_FILE_RANGE_WAIT_BEFORE
+> > > > | SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WAIT_AFTER is a
+> > > > write-for-data-integrity.
+> > >
+> > > OK. I do agree that manpage is misleading and that the language describing
+> > > this flag combination should be toned down. I do not object to adding more
+> > > and more disclaimers about this API not being a data integrity API.
+> >
+> > I don't think we need more disclaimers, I'd just reword that
+> > "write-for-data-integrity" bit.
+> >
+> > > But the requirement I have is a real life workload and fdatasync(2) is not at
+> > > all a viable option when application is creating many files per second.
+> > >
+> > > I need to export the functionality of data writeback to userspace.
+> > > Objecting to expose this functionality via the interface that has been
+> > > documented to expose it for years and used to expose it in the
+> > > past (until the Fixes commit) is a bit weird IMO, even though I do
+> > > completely relate to your concern.
+> > >
+> > > I don't mind removing the "intended use case" part of commit message
+> > > if that helps reducing the chance that people misunderstand
+> > > the guaranties of the API.
+> > >
+> > > Another thing I could do is introduce a new flag for sync_file_range()
+> > > that will really mean what I want it to mean (all data will be written back
+> > > and all related inode metadata changes will be committed to journal
+> > > before the next inode metadata change is committed). For the sake of
+> > > argument let's call it SYNC_FILE_RANGE_DATA_DEPENDENCY.
+> >
+> > So there are two parts to your requirements:
+> >
+> > 1) Data writeback for all file pages has been submitted (+ completed).
+> > 2) What happens with related metadata.
+> >
+> > sync_file_range() is fine for 1) although I agree that WB_SYNC_NONE mode
+> > can still end up skipping some pages due to unrelated writeback / lock
+> > contention so having sync_file_range() mode doing WB_SYNC_ALL writeback
+> > makes some sense to me.
+> >
+> 
+> OK. does it make enough sense for you to ACK my patch if the
+> commit message was toned down to:
+> 
+> Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
+> writeback") claims that sync_file_range(2) syscall was "created for
+> userspace to be able to issue background writeout and so waiting for
+> in-flight IO is undesirable there" and changes the writeback (back) to
+> WB_SYNC_NONE.
+> 
+> This claim is only partially true. It is true for users that use the flag
+> SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
+> the reason for changing to WB_SYNC_NONE writeback.
+> 
+> However, that claim is not true for users that use that flag combination
+> SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.
+> Those users explicitly requested to wait for in-flight IO as well as to
+> writeback of dirty pages.
+> 
+> Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT
+> and use the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
+> writeback, to perform the range sync request.
+> 
+> Fixes: 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE")
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 
---ZInfyf7laFu/Kiw7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I'd be fine with that.
 
-On Fri, Apr 05, 2019 at 01:24:28AM +0530, Vidya Sagar wrote:
-> Add #defines for the Data Link Feature and Physical Layer 16.0 GT/s
-> features.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes from [v1]:
-> * None
->=20
->  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 5c98133f2c94..3e01b55d548d 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -705,7 +705,9 @@
->  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
->  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
->  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
-> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
-> =20
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> @@ -1045,4 +1047,22 @@
->  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOL=
-D_Scale */
->  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
-> =20
-> +/* Data Link Feature */
-> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Featu=
-re Supported */
-> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchan=
-ge Enable */
-> +#define PCI_DLF_STS		0x08	/* Status Register */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Fea=
-ture Supported */
-> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Fe=
-ature Support Valid */
-> +
-> +/* Physical Layer 16.0 GT/s */
-> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
-> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
-> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
-> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status R=
-egister */
-> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch=
- Status Register */
-> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatc=
-h Status Register */
-> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
-> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+> > What happens with 2) is pretty much up to the filesystem. You are speaking
+> > about the journal but that is very much a filesystem specific detail.
+> > What if the filesystem doesn't have journal at all? E.g. ext2? We cannot
+> > really expose a generic API that silently fails to work based on fs
+> > internal details.
+> >
+> > I guess I fail to see what kind of guarantees from the fs you're looking
+> > for? When you speak about journal, I guess you're looking for some kind of
+> > ordering but it's hard to be sure about exact requirements. So can you
+> > please spell those out? Once we know requirements, we can speak about the
+> > API.
+> >
+> 
+> The requirement is quite easy to explain with an example, less easy to
+> generalize. I illustrated the requirement with the example:
+> O_TMPFILE;write();DATA_BARRIER;linkat()
+>
+> The requirement of the DATA_BARRIER operation is that if the effects
+> of linkat() are observed after crash, then the effects of write() must also
+> be observed after crash.
 
-This looks correct comparing to the specification. However, this leaves
-out some definitions, so I'm wondering if perhaps this should include
-all field definitions. There are also extended capabilities between the
-current maximum 0x1F and 0x25. Perhaps those should be added as well. I
-guess this could always be done as a follow-up.
+OK, understood and I agree this makes sense to ask for... And you're not
+the only one. Application programmers often *assume* that if they do
+write(file_new), rename(file_new, file), they will either see old or new
+file contents after a crash. They are wrong but ext4 has heuristics to
+detect such behavior and at least initiate writeback on rename to make time
+window when data loss can happen smaller. Because there was lot of
+controversy around this when users were transitioning from ext3 (where this
+worked) to ext4. If there was API with decent performance to achieve this,
+I guess at least some applications would start using it.
+ 
+> At this point one may say that fdatasync(2) meets the requirements
+> of a DATA_BARRIER operation, so I need to introduce a non-requirement.
+> The non-requirement is that DATA_BARRIER operation does not need
+> to be a DATA_INTEGRITY operation, meaning that after crash, there
+> is no requirement to be able to find or access the written data.
 
-Perhaps it'd be better to change the subject to more accurately reflect
-that you're only adding a couple of PCIe 4.0 features.
+Well, I guess your other real requirement is good performance ;) How that's
+achieved is internal to the filesystem.
 
-Other than that:
+> Now it should be clear to filesystem developers why the DATA_BARRIER
+> requirement is easier to meet with far less performance penalty than
+> fdatasync(2) on xfs and ext4.
 
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+Well, it won't be free either but yes, you can save a transaction commit
+/ disk cache flush compared to fdatasync(2).
 
---ZInfyf7laFu/Kiw7
-Content-Type: application/pgp-signature; name="signature.asc"
+> Here is a clumsy attempt to generalize the guaranty of such operation,
+> without referring to internal fs implementation details:
+> "Make sure that all file data hits persistent storage before the next
+>  file metadata change hits persistent storage".
+> 
+> Does that make sense to you?
+> Is the requirement clear?
+> 
+> How does this sound for an API:
+> sync_file_range(fd, SYNC_FILE_RANGE_WRITE_DATA_BARRIER, 0, 0);
+> 
+> which individual filesystems could support or EOPNOTSUPP
+> via the ->fsync() file_operation?
 
------BEGIN PGP SIGNATURE-----
+Yes, this sounds workable to me but there are also other options - e.g.
+somehow pass the information to linkat() / rename() / whatever that the
+ordering is required. This might be easier for some filesystems to
+implement. So it might be good to make a short session at LSF/MM about this
+so that developers of other filesystems can say what interface they would
+be able to implement...
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyvE14ACgkQ3SOs138+
-s6Ggng/+LPX1tyWJWnSyBg/qhlXoB8rVsvcfYiZxFfoQUU9ypVHSw3HF57mMi1hp
-mDEp6vuvrpBKQEl2BCLP4lAUsL0KapZQPW9Ox+94aKa+Y9V8Z3w7xOqQmWIC47To
-lhh3sH9dY0Bwc3Oi9frJx/mBDV5OgDTMxA5a5oo5jizm/gJsWXiJnB8CqIYWcAhs
-J5RsXBVT4Y5frrTW9M2zOFKW4b56hW8jieWjKZrbNfAh88CABo4VZMfGV95oJN0P
-ADPAS3Bz9UsUleL/WN+kslx9I6stKOMN8dZTFio+sGSTnOEZXy72mBcyRMwjCOxc
-G3JUtQE77u6I0h3h6Xomt/NBbAcfDxbJoQpUkt5MlfGZRXVaAixIS4UDjmJ895Vd
-UwmhagN2T1eoukMk5Fz+hJ3yHcIWIMKeFAybQn8v3TBZQJCaCm6xuuDcfYqlLSP+
-5TX2a+r5Z7hbRWo28pqgb0I3V2DZwLPwbTslm1ZJQO7nhbiaXAhZcWwsgGzwDX15
-hiu6uQquNVkE2DjuPoXxQhhF+fRlwpFRdTMpK4OLH2GM8eZ4Z3djOif4Bfgd6Qzd
-52ITNFL99A058QQ8Z1d8OaHe6fDOxufZhC7eR5kqrWl8/oWyzHsNgeqmYOVmm7lz
-axjfiVTvpjdtFjrYCIzba2USCqyzQjZWS96YmuQHgA4WLwBOAzc=
-=Wz/A
------END PGP SIGNATURE-----
-
---ZInfyf7laFu/Kiw7--
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
