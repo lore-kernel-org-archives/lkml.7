@@ -2,128 +2,129 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3127BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E8DC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE82620850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D666D2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="EgQOslsc"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="fu0pN7Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfDKJbF (ORCPT
+        id S1727250AbfDKJba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:31:05 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35663 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbfDKJad (ORCPT
+        Thu, 11 Apr 2019 05:31:30 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:31118 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfDKJb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:30:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w1so6391146wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=joOQiQILwSUQpc0pTrHcK/ya5VvWQmcmFsscTsVp5Yw=;
-        b=EgQOslscCdg9QNMZU/Bmy89sWYhpPCz71b3AUgk9nLqxNHNg1pI/E5AN+sMPGwj0no
-         dLLWajdIxgW6ZXMt0sD9MPDdhZey85TqREKHcEoQ5dItHGElCuMk+LDOKuV0CiuYAS3Z
-         qx0krI14O7/bgOxhziDK099EixwkG4mR7RvOaXhf8yz/FGfnzV9o1QRcXvGpBpm9HvKN
-         QlkJJ+JuuKpMyz4xOoSW03IcBBKcAz/HV9yKR4VnkBh4QcItjeS181kTJAURjl1ruz6A
-         fkRxdxAgWImttXyvzhGfBpaEkZfdasotYPRLd/S7Pk19gH2BqHsm+Y1HzgRQ45Xgmfo9
-         K3ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=joOQiQILwSUQpc0pTrHcK/ya5VvWQmcmFsscTsVp5Yw=;
-        b=apg4NrJzmm+UGAwYxmnbVwuK12VMStfS2erFwM9B3/4Wj59//hGPn+Ix9tgycDkq/S
-         fatUFVrROA5/BaC3sbtEDUDg0SYZ/hqPIMlQ630KVvGK1L6gY/bqYJHTXl8AB5hc4ygC
-         rHhuwGdOeHCIUmzwBBXMD1fbUDKiyWnQWGv984HiJQ6QSg7VIVyfFqvX4955cjAxawSd
-         KXjbzgHHjAtGYRx20lv28FGm1aeFq6Yv18MPhRMajUDlzIbI20Ot7FOTyZaeD4Qo11H/
-         hqvuq2Z/K6YE2eD4x9SKfem8On0Qt9OWG3gz/DevT6LRLjNPepEg5ozuNvfsOg3CIOyo
-         KZvg==
-X-Gm-Message-State: APjAAAUqkMJ5vGgReIMiEIbznlRsD+6zRvRPsTKGX5TOdF/MQM7yJxCp
-        /xITSJbLSu6co2zyUB8yjJVX2w==
-X-Google-Smtp-Source: APXvYqyUOAE+neN/xsO+xoLZUe6zOOYX4bRL3Bf0Vlw1KF3Q1rQEfh4MaSvn1jgF2DVc2WcCsdXfAw==
-X-Received: by 2002:a5d:6988:: with SMTP id g8mr30852625wru.117.1554975032038;
-        Thu, 11 Apr 2019 02:30:32 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id a9sm37517228wrt.29.2019.04.11.02.30.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 02:30:31 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 2/6] usb: ohci-da8xx: let the regulator framework keep track of use count
-Date:   Thu, 11 Apr 2019 11:30:20 +0200
-Message-Id: <20190411093024.23555-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190411093024.23555-1-brgl@bgdev.pl>
-References: <20190411093024.23555-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 11 Apr 2019 05:31:29 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x3B9TtpK023735;
+        Thu, 11 Apr 2019 18:29:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x3B9TtpK023735
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554974996;
+        bh=cR0BcHB4II9sS744pV1/BqkrB8S9Q7JJv9+ER0XDJFk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fu0pN7NkSbPJLn/v4mXFTFZbCP3+SPB7p45YW3PlI2ryHu0+LPTrisRF1CuvsBAef
+         OhbiS2EbdFH/VHjjfgnNNLe8Umg8dVmXjhZGRQ1Ui7FiiFI/J8DyS0cpEYunKtlIza
+         st77sUTH2Gbl/ExXVDfdmoDME09IPOO+wWavoqaG4qSetLiGitszsoMpCKTTmq87gp
+         RNjpZMGbbF07k9KHQAJgKh6CFhsplu/JO3lwa1jiWWDbB16ZplobwmUXDbg5ufgSoN
+         EQcn8w7vrfK+aPyYBvEGFX4tm3YjsKKNmcfVLO2/SGHTrry8AFV4024J46+OcdHWKU
+         Fv1WrXvDDCP1w==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [PATCH] ARM: vdso: use $(LD) instead of $(CC) to link VDSO
+Date:   Thu, 11 Apr 2019 18:29:33 +0900
+Message-Id: <20190411092933.6413-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+We use $(LD) to link vmlinux, modules, decompressors, etc.
 
-There's no reason to have a separate variable to keep track of the
-regulator state. The regulator core already does that. Remove
-reg_enabled from struct da8xx_ohci_hcd.
+VDSO is the only exceptional case where $(CC) is used as the linker
+driver, but I do not know why we need to do so. VDSO uses a special
+linker script, and does not link standard libraries at all.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+I changed the Makefile to use $(LD) rather than $(CC). I confirmed
+the same vdso.so.raw was still produced.
+
+Users will be able to use their favorite linker (e.g. lld instead of
+of bfd) by passing LD= from the command line.
+
+My plan is to rewrite all VDSO Makefiles to use $(LD), then delete
+cc-ldoption.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/usb/host/ohci-da8xx.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index ca8a94f15ac0..209a262b5565 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -40,7 +40,6 @@ struct da8xx_ohci_hcd {
- 	struct phy *usb11_phy;
- 	struct regulator *vbus_reg;
- 	struct notifier_block nb;
--	unsigned int reg_enabled;
- 	struct gpio_desc *vbus_gpio;
- 	struct gpio_desc *oc_gpio;
- };
-@@ -100,21 +99,18 @@ static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
- 	if (!da8xx_ohci->vbus_reg)
- 		return 0;
+ arch/arm/vdso/Makefile | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
+index f4efff9d3afb..fadf554d9391 100644
+--- a/arch/arm/vdso/Makefile
++++ b/arch/arm/vdso/Makefile
+@@ -10,12 +10,12 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+ ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
+ ccflags-y += -DDISABLE_BRANCH_PROFILING
  
--	if (on && !da8xx_ohci->reg_enabled) {
-+	if (on) {
- 		ret = regulator_enable(da8xx_ohci->vbus_reg);
- 		if (ret) {
- 			dev_err(dev, "Failed to enable regulator: %d\n", ret);
- 			return ret;
- 		}
--		da8xx_ohci->reg_enabled = 1;
+-VDSO_LDFLAGS := -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
+-VDSO_LDFLAGS += -Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096
+-VDSO_LDFLAGS += -nostdlib -shared
+-VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+-VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--build-id)
+-VDSO_LDFLAGS += $(call cc-ldoption, -fuse-ld=bfd)
++ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
++	    -z max-page-size=4096 -z common-page-size=4096 \
++	    -nostdlib -shared \
++	    $(call ld-option, --hash-style=sysv) \
++	    $(call ld-option, --build-id) \
++	    -T
+ 
+ obj-$(CONFIG_VDSO) += vdso.o
+ extra-$(CONFIG_VDSO) += vdso.lds
+@@ -37,8 +37,8 @@ KCOV_INSTRUMENT := n
+ $(obj)/vdso.o : $(obj)/vdso.so
+ 
+ # Link rule for the .so file
+-$(obj)/vdso.so.raw: $(src)/vdso.lds $(obj-vdso) FORCE
+-	$(call if_changed,vdsold)
++$(obj)/vdso.so.raw: $(obj)/vdso.lds $(obj-vdso) FORCE
++	$(call if_changed,ld)
+ 
+ $(obj)/vdso.so.dbg: $(obj)/vdso.so.raw $(obj)/vdsomunge FORCE
+ 	$(call if_changed,vdsomunge)
+@@ -48,11 +48,6 @@ $(obj)/%.so: OBJCOPYFLAGS := -S
+ $(obj)/%.so: $(obj)/%.so.dbg FORCE
+ 	$(call if_changed,objcopy)
+ 
+-# Actual build commands
+-quiet_cmd_vdsold = VDSO    $@
+-      cmd_vdsold = $(CC) $(c_flags) $(VDSO_LDFLAGS) \
+-                   -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
 -
--	} else if (!on && da8xx_ohci->reg_enabled) {
-+	} else {
- 		ret = regulator_disable(da8xx_ohci->vbus_reg);
- 		if (ret) {
- 			dev_err(dev, "Failed  to disable regulator: %d\n", ret);
- 			return ret;
- 		}
--		da8xx_ohci->reg_enabled = 0;
- 	}
+ quiet_cmd_vdsomunge = MUNGE   $@
+       cmd_vdsomunge = $(objtree)/$(obj)/vdsomunge $< $@
  
- 	return 0;
 -- 
-2.21.0
+2.17.1
 
