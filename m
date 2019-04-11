@@ -2,119 +2,413 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44669C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A492083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB02E2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C97W+qdw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9TsdG/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfDKPhV (ORCPT
+        id S1726889AbfDKPhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:37:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36928 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfDKPhV (ORCPT
+        Thu, 11 Apr 2019 11:37:38 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44595 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfDKPhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:37:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oOURSwCQzYHjCoWuviV6JN5WKBACWN2+BGUQwrDDGG0=; b=C97W+qdwrd8dhyPJgG/FxIeLYe
-        CQG3TprFv+xhLUyhGfb/srjOOgEoVfkPG9RCTKEFufhJcmGtygI4mdM2T9+NcQnrxOJ1bvOx34A41
-        ccUwv3WnXeENs7OJKxEzi3PGjH0xL4Gyy4dropbDug2ceUy6GbZpQiL1mOvMuIR93ON8nv1Ofp74t
-        cGUS3k35OuZkrx0uY++e1WL24UCe2iDrBkdo49b0orF0Dt1ffTrDTejzg9bBR+6NLMHBL5o4EWNaY
-        slsSoBg8NEven8+M9Lqq4TTot9X7lYbx6xWJSAzcfr0I4fS7K6exwJueCHpOGxJxyyk14B1MFGOmX
-        xOfeKVxg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEblP-0003XR-Ep; Thu, 11 Apr 2019 15:37:19 +0000
-Subject: Re: [GIT PULL] <global> global spelling corrections for v5.1.0-rc5
-To:     Kenny Van de Maele <kenny.vandemaele@inuits.eu>,
-        torvalds@linux-foundation.org
-Cc:     torvalds@osdl.org, linux-kernel@vger.kernel.org
-References: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
- <0885bbf9-ccb1-280e-dde1-ffa40282df09@infradead.org>
- <a07c9008ece0a7584cd1e1762d57673ee3de8fed.camel@inuits.eu>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b75168c1-c99e-abd8-fc22-c26c7927d9ce@infradead.org>
-Date:   Thu, 11 Apr 2019 08:37:18 -0700
+        Thu, 11 Apr 2019 11:37:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y7so7938151wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 08:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Sd3LnrKhw2tgRz9UNxG9ueVkl/OGNG8X97V5bhmMYJo=;
+        b=G9TsdG/Ka00yJl1oBZp8PO7meV43mJOaeXKaKpapB4ON2tinI4MNO/E8+h7G0vrb0t
+         qUQFZisE2OaU1bgfju5aUVYd60J905ry0u4IeduwL0+w17/qCF20rRI4bGiSCSjijtWl
+         T/e/dbs2B7fLTPes4cak/C2CETIonVJKQ6QYrmMePSZBhZua5ly2GL1U6UIgwq1MEZJ0
+         xVcZVxRkRVx8+GrYdVgas9bx42vXyQ4uq8tYuMUpMlIL3fIqJ+LxGQJBte96vgANBhCL
+         nW7w4FQJFeMKRHIDTBQcEON+C4Ge74pAu680fPSMePI1DX3BhlNnvXGSfY1mvCE/9Y/J
+         kvmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Sd3LnrKhw2tgRz9UNxG9ueVkl/OGNG8X97V5bhmMYJo=;
+        b=WWtwykRxT2S3mCM4N71WOtvvPqs8a+fyCR2Pyz9LLMEc2KddvNQo8efYXNZiyqIGdZ
+         wf9eH5yoD8ILwkzzYtwCgzHYr3ICKEN+BxU07Y2o9BmoEs+mJNw27AIfvVXyuMCXPfoC
+         mdZHbn4McV2WxUyDFofzXxbN+tm2ZP5VDbO+kCN06x+T0JRuJYWzuuuGjfkM4D8dVUxF
+         cRhISfQmES+ta0GJ/5lfM32+fCEm4AHhXOVDCjWE0+ZwTo6JBW4dvjFJXnkh1A/O2wrS
+         +8SLwOtXGJT9lzV4r5yhJGFywDHjy92gkZqj2wEht8APehiaz+kffQNWrCjotjbq/e07
+         Xlmg==
+X-Gm-Message-State: APjAAAUzCgTbEye/IWbW4JARr2VzcoOB335Kdc+X3WXWxXG7Rqa+IGdB
+        79KwuZi/gi31pXeTppKYr1E=
+X-Google-Smtp-Source: APXvYqwtMEtT4dS3qukTOOdURue+J9uCF5r2+kpnQTWaZGtwA/aW0LNjLSPmbDLOCdtKFpenrvmsmw==
+X-Received: by 2002:adf:fa86:: with SMTP id h6mr30649869wrr.67.1554997055809;
+        Thu, 11 Apr 2019 08:37:35 -0700 (PDT)
+Received: from ?IPv6:::1? (lan.nucleusys.com. [92.247.61.126])
+        by smtp.gmail.com with ESMTPSA id h12sm37449691wrq.95.2019.04.11.08.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 08:37:35 -0700 (PDT)
+Subject: [PATCH 3/4] z3fold: add structure for buddy handles
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oleksiy.Avramchenko@sony.com, Dan Streetman <ddstreet@ieee.org>
+References: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
+Message-ID: <f7f18a12-4a4c-04eb-2099-1ba83fd9e61d@gmail.com>
+Date:   Thu, 11 Apr 2019 17:37:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a07c9008ece0a7584cd1e1762d57673ee3de8fed.camel@inuits.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 8:00 AM, Kenny Van de Maele wrote:
-> On Thu, 2019-04-11 at 07:58 -0700, Randy Dunlap wrote:
->> On 4/11/19 2:12 AM, Kenny Van de Maele wrote:
->>> are available in the Git repository at:
->>>
->>>   git://github.com/vdmkenny/linux-spelling-fix.git tags/common-
->>> spelling-fixes-5.1.0-rc5
->>>
->>> for you to fetch changes up to
->>> 6ee0055f3414a64133228e82004ea60d0e659d6d:
->>>
->>>   fix common spelling mistakes (2019-04-11 10:22:24 +0200)
->>>
->>> ----------------------------------------------------------------
->>> This PR contains a set of global spelling fixes of commonly miss-
->>> spelled
->>
->> misspelled
-> 
-> Bad joke :)
-> 
->>
->>
->> Is there a way for me to review the diff on github?
-> 
-> https://github.com/vdmkenny/linux-spelling-fix/commit/6ee0055f3414a64133228e82004ea60d0e659d6d
-> 
->>
->> thanks.
->>
->>
->>> words. Mostly documentation and comments were impacted, but a few
->>> lines
->>> of code were affected as well.
->>>
->>> ----------------------------------------------------------------
->>> Kenny Van de Maele (1):
->>>       fix common spelling mistakes
->>
->>
+For z3fold to be able to move its pages per request of the memory
+subsystem, it should not use direct object addresses in handles.
+Instead, it will create abstract handles (3 per page) which will
+contain pointers to z3fold objects. Thus, it will be possible to
+change these pointers when z3fold page is moved.
 
+Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
+---
+  mm/z3fold.c | 185 ++++++++++++++++++++++++++++++++++++++++------------
+  1 file changed, 145 insertions(+), 40 deletions(-)
 
-recheck this one also:
-
- drivers/net/wireless/intel/iwlwifi/fw/api/time-event.h
-@@ -204,7 +204,7 @@ enum {
- * notification the status is always success. There is no start/end fragment
- * notification for monolithic events.
- *
-- * @TE_V2_DEFAULT_POLICY: independent, social, present, unoticable
-+ * @TE_V2_DEFAULT_POLICY: independent, social, present, unoticeable
- * @TE_V2_NOTIF_HOST_EVENT_START: request/receive notification on event start
- * @TE_V2_NOTIF_HOST_EVENT_END:request/receive notification on event end
- * @TE_V2_NOTIF_INTERNAL_EVENT_START: internal FW use
-
-
-
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 29a4f1249bef..bebc10083f1c 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -34,6 +34,29 @@
+  #include <linux/spinlock.h>
+  #include <linux/zpool.h>
+  
++/*
++ * NCHUNKS_ORDER determines the internal allocation granularity, effectively
++ * adjusting internal fragmentation.  It also determines the number of
++ * freelists maintained in each pool. NCHUNKS_ORDER of 6 means that the
++ * allocation granularity will be in chunks of size PAGE_SIZE/64. Some chunks
++ * in the beginning of an allocated page are occupied by z3fold header, so
++ * NCHUNKS will be calculated to 63 (or 62 in case CONFIG_DEBUG_SPINLOCK=y),
++ * which shows the max number of free chunks in z3fold page, also there will
++ * be 63, or 62, respectively, freelists per pool.
++ */
++#define NCHUNKS_ORDER	6
++
++#define CHUNK_SHIFT	(PAGE_SHIFT - NCHUNKS_ORDER)
++#define CHUNK_SIZE	(1 << CHUNK_SHIFT)
++#define ZHDR_SIZE_ALIGNED round_up(sizeof(struct z3fold_header), CHUNK_SIZE)
++#define ZHDR_CHUNKS	(ZHDR_SIZE_ALIGNED >> CHUNK_SHIFT)
++#define TOTAL_CHUNKS	(PAGE_SIZE >> CHUNK_SHIFT)
++#define NCHUNKS		((PAGE_SIZE - ZHDR_SIZE_ALIGNED) >> CHUNK_SHIFT)
++
++#define BUDDY_MASK	(0x3)
++#define BUDDY_SHIFT	2
++#define SLOTS_ALIGN	(0x40)
++
+  /*****************
+   * Structures
+  *****************/
+@@ -47,9 +70,19 @@ enum buddy {
+  	FIRST,
+  	MIDDLE,
+  	LAST,
+-	BUDDIES_MAX
++	BUDDIES_MAX = LAST
+  };
+  
++struct z3fold_buddy_slots {
++	/*
++	 * we are using BUDDY_MASK in handle_to_buddy etc. so there should
++	 * be enough slots to hold all possible variants
++	 */
++	unsigned long slot[BUDDY_MASK + 1];
++	unsigned long pool; /* back link + flags */
++};
++#define HANDLE_FLAG_MASK	(0x03)
++
+  /*
+   * struct z3fold_header - z3fold page metadata occupying first chunks of each
+   *			z3fold page, except for HEADLESS pages
+@@ -58,7 +91,7 @@ enum buddy {
+   * @page_lock:		per-page lock
+   * @refcount:		reference count for the z3fold page
+   * @work:		work_struct for page layout optimization
+- * @pool:		pointer to the pool which this page belongs to
++ * @slots:		pointer to the structure holding buddy slots
+   * @cpu:		CPU which this page "belongs" to
+   * @first_chunks:	the size of the first buddy in chunks, 0 if free
+   * @middle_chunks:	the size of the middle buddy in chunks, 0 if free
+@@ -70,7 +103,7 @@ struct z3fold_header {
+  	spinlock_t page_lock;
+  	struct kref refcount;
+  	struct work_struct work;
+-	struct z3fold_pool *pool;
++	struct z3fold_buddy_slots *slots;
+  	short cpu;
+  	unsigned short first_chunks;
+  	unsigned short middle_chunks;
+@@ -79,28 +112,6 @@ struct z3fold_header {
+  	unsigned short first_num:2;
+  };
+  
+-/*
+- * NCHUNKS_ORDER determines the internal allocation granularity, effectively
+- * adjusting internal fragmentation.  It also determines the number of
+- * freelists maintained in each pool. NCHUNKS_ORDER of 6 means that the
+- * allocation granularity will be in chunks of size PAGE_SIZE/64. Some chunks
+- * in the beginning of an allocated page are occupied by z3fold header, so
+- * NCHUNKS will be calculated to 63 (or 62 in case CONFIG_DEBUG_SPINLOCK=y),
+- * which shows the max number of free chunks in z3fold page, also there will
+- * be 63, or 62, respectively, freelists per pool.
+- */
+-#define NCHUNKS_ORDER	6
+-
+-#define CHUNK_SHIFT	(PAGE_SHIFT - NCHUNKS_ORDER)
+-#define CHUNK_SIZE	(1 << CHUNK_SHIFT)
+-#define ZHDR_SIZE_ALIGNED round_up(sizeof(struct z3fold_header), CHUNK_SIZE)
+-#define ZHDR_CHUNKS	(ZHDR_SIZE_ALIGNED >> CHUNK_SHIFT)
+-#define TOTAL_CHUNKS	(PAGE_SIZE >> CHUNK_SHIFT)
+-#define NCHUNKS		((PAGE_SIZE - ZHDR_SIZE_ALIGNED) >> CHUNK_SHIFT)
+-
+-#define BUDDY_MASK	(0x3)
+-#define BUDDY_SHIFT	2
+-
+  /**
+   * struct z3fold_pool - stores metadata for each z3fold pool
+   * @name:	pool name
+@@ -113,6 +124,7 @@ struct z3fold_header {
+   *		added buddy.
+   * @stale:	list of pages marked for freeing
+   * @pages_nr:	number of z3fold pages in the pool.
++ * @c_handle:	cache for z3fold_buddy_slots allocation
+   * @ops:	pointer to a structure of user defined operations specified at
+   *		pool creation time.
+   * @compact_wq:	workqueue for page layout background optimization
+@@ -130,6 +142,7 @@ struct z3fold_pool {
+  	struct list_head lru;
+  	struct list_head stale;
+  	atomic64_t pages_nr;
++	struct kmem_cache *c_handle;
+  	const struct z3fold_ops *ops;
+  	struct zpool *zpool;
+  	const struct zpool_ops *zpool_ops;
+@@ -164,11 +177,65 @@ static int size_to_chunks(size_t size)
+  
+  static void compact_page_work(struct work_struct *w);
+  
++static inline struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool)
++{
++	struct z3fold_buddy_slots *slots = kmem_cache_alloc(pool->c_handle,
++							GFP_KERNEL);
++
++	if (slots) {
++		memset(slots->slot, 0, sizeof(slots->slot));
++		slots->pool = (unsigned long)pool;
++	}
++
++	return slots;
++}
++
++static inline struct z3fold_pool *slots_to_pool(struct z3fold_buddy_slots *s)
++{
++	return (struct z3fold_pool *)(s->pool & ~HANDLE_FLAG_MASK);
++}
++
++static inline struct z3fold_buddy_slots *handle_to_slots(unsigned long handle)
++{
++	return (struct z3fold_buddy_slots *)(handle & ~(SLOTS_ALIGN - 1));
++}
++
++static inline void free_handle(unsigned long handle)
++{
++	struct z3fold_buddy_slots *slots;
++	int i;
++	bool is_free;
++
++	if (handle & (1 << PAGE_HEADLESS))
++		return;
++
++	WARN_ON(*(unsigned long *)handle == 0);
++	*(unsigned long *)handle = 0;
++	slots = handle_to_slots(handle);
++	is_free = true;
++	for (i = 0; i <= BUDDY_MASK; i++) {
++		if (slots->slot[i]) {
++			is_free = false;
++			break;
++		}
++	}
++
++	if (is_free) {
++		struct z3fold_pool *pool = slots_to_pool(slots);
++
++		kmem_cache_free(pool->c_handle, slots);
++	}
++}
++
+  /* Initializes the z3fold header of a newly allocated z3fold page */
+  static struct z3fold_header *init_z3fold_page(struct page *page,
+  					struct z3fold_pool *pool)
+  {
+  	struct z3fold_header *zhdr = page_address(page);
++	struct z3fold_buddy_slots *slots = alloc_slots(pool);
++
++	if (!slots)
++		return NULL;
+  
+  	INIT_LIST_HEAD(&page->lru);
+  	clear_bit(PAGE_HEADLESS, &page->private);
+@@ -185,7 +252,7 @@ static struct z3fold_header *init_z3fold_page(struct page *page,
+  	zhdr->first_num = 0;
+  	zhdr->start_middle = 0;
+  	zhdr->cpu = -1;
+-	zhdr->pool = pool;
++	zhdr->slots = slots;
+  	INIT_LIST_HEAD(&zhdr->buddy);
+  	INIT_WORK(&zhdr->work, compact_page_work);
+  	return zhdr;
+@@ -215,33 +282,57 @@ static inline void z3fold_page_unlock(struct z3fold_header *zhdr)
+  	spin_unlock(&zhdr->page_lock);
+  }
+  
++/* Helper function to build the index */
++static inline int __idx(struct z3fold_header *zhdr, enum buddy bud)
++{
++	return (bud + zhdr->first_num) & BUDDY_MASK;
++}
++
+  /*
+   * Encodes the handle of a particular buddy within a z3fold page
+   * Pool lock should be held as this function accesses first_num
+   */
+  static unsigned long encode_handle(struct z3fold_header *zhdr, enum buddy bud)
+  {
+-	unsigned long handle;
++	struct z3fold_buddy_slots *slots;
++	unsigned long h = (unsigned long)zhdr;
++	int idx = 0;
+  
+-	handle = (unsigned long)zhdr;
+-	if (bud != HEADLESS) {
+-		handle |= (bud + zhdr->first_num) & BUDDY_MASK;
+-		if (bud == LAST)
+-			handle |= (zhdr->last_chunks << BUDDY_SHIFT);
+-	}
+-	return handle;
++	/*
++	 * For a headless page, its handle is its pointer with the extra
++	 * PAGE_HEADLESS bit set
++	 */
++	if (bud == HEADLESS)
++		return h | (1 << PAGE_HEADLESS);
++
++	/* otherwise, return pointer to encoded handle */
++	idx = __idx(zhdr, bud);
++	h += idx;
++	if (bud == LAST)
++		h |= (zhdr->last_chunks << BUDDY_SHIFT);
++
++	slots = zhdr->slots;
++	slots->slot[idx] = h;
++	return (unsigned long)&slots->slot[idx];
+  }
+  
+  /* Returns the z3fold page where a given handle is stored */
+-static struct z3fold_header *handle_to_z3fold_header(unsigned long handle)
++static inline struct z3fold_header *handle_to_z3fold_header(unsigned long handle)
+  {
+-	return (struct z3fold_header *)(handle & PAGE_MASK);
++	unsigned long addr = handle;
++
++	if (!(addr & (1 << PAGE_HEADLESS)))
++		addr = *(unsigned long *)handle;
++
++	return (struct z3fold_header *)(addr & PAGE_MASK);
+  }
+  
+  /* only for LAST bud, returns zero otherwise */
+  static unsigned short handle_to_chunks(unsigned long handle)
+  {
+-	return (handle & ~PAGE_MASK) >> BUDDY_SHIFT;
++	unsigned long addr = *(unsigned long *)handle;
++
++	return (addr & ~PAGE_MASK) >> BUDDY_SHIFT;
+  }
+  
+  /*
+@@ -251,13 +342,18 @@ static unsigned short handle_to_chunks(unsigned long handle)
+   */
+  static enum buddy handle_to_buddy(unsigned long handle)
+  {
+-	struct z3fold_header *zhdr = handle_to_z3fold_header(handle);
+-	return (handle - zhdr->first_num) & BUDDY_MASK;
++	struct z3fold_header *zhdr;
++	unsigned long addr;
++
++	WARN_ON(handle & (1 << PAGE_HEADLESS));
++	addr = *(unsigned long *)handle;
++	zhdr = (struct z3fold_header *)(addr & PAGE_MASK);
++	return (addr - zhdr->first_num) & BUDDY_MASK;
+  }
+  
+  static inline struct z3fold_pool *zhdr_to_pool(struct z3fold_header *zhdr)
+  {
+-	return zhdr->pool;
++	return slots_to_pool(zhdr->slots);
+  }
+  
+  static void __release_z3fold_page(struct z3fold_header *zhdr, bool locked)
+@@ -583,6 +679,11 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+  	pool = kzalloc(sizeof(struct z3fold_pool), gfp);
+  	if (!pool)
+  		goto out;
++	pool->c_handle = kmem_cache_create("z3fold_handle",
++				sizeof(struct z3fold_buddy_slots),
++				SLOTS_ALIGN, 0, NULL);
++	if (!pool->c_handle)
++		goto out_c;
+  	spin_lock_init(&pool->lock);
+  	spin_lock_init(&pool->stale_lock);
+  	pool->unbuddied = __alloc_percpu(sizeof(struct list_head)*NCHUNKS, 2);
+@@ -613,6 +714,8 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+  out_unbuddied:
+  	free_percpu(pool->unbuddied);
+  out_pool:
++	kmem_cache_destroy(pool->c_handle);
++out_c:
+  	kfree(pool);
+  out:
+  	return NULL;
+@@ -626,6 +729,7 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+   */
+  static void z3fold_destroy_pool(struct z3fold_pool *pool)
+  {
++	kmem_cache_destroy(pool->c_handle);
+  	destroy_workqueue(pool->release_wq);
+  	destroy_workqueue(pool->compact_wq);
+  	kfree(pool);
+@@ -818,6 +922,7 @@ static void z3fold_free(struct z3fold_pool *pool, unsigned long handle)
+  		return;
+  	}
+  
++	free_handle(handle);
+  	if (kref_put(&zhdr->refcount, release_z3fold_page_locked_list)) {
+  		atomic64_dec(&pool->pages_nr);
+  		return;
 -- 
-~Randy
+2.17.1
+
