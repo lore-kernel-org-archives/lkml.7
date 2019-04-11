@@ -2,112 +2,133 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D192C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C5CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A66221841
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9VbMSkT"
+	by mail.kernel.org (Postfix) with ESMTP id E66F821841
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfDKFHC (ORCPT
+        id S1726761AbfDKFHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 01:07:02 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33350 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfDKFHB (ORCPT
+        Thu, 11 Apr 2019 01:07:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54330 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725783AbfDKFHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 01:07:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t16so2794079plo.0;
-        Wed, 10 Apr 2019 22:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lSALp5rePL6mY7r/pqcUzoJ2ZuxIV7HQ3tqr5InLjgY=;
-        b=u9VbMSkT+Bhx0J2vDV4QOeUoAYv/4iQ1xu0/6bztiU9k+qj4uxjKE0rK7zmyNc9ZiC
-         ZvBec+OuWRauVqgW+8AXtnN335cIDroGt5H+chQfFNsj7swhcsN+2mBVT/38Iy45cVqR
-         Fbs/Op9jAinrF3Vz/2pZDvkH/LHYQ+EBd7KKXvsmqvd6wLM2Ft9H/T5LqhNsKlQYp5cj
-         S9d+AeO701S0qMH62zk0cnhBXCKGKuKDJBdH9h+xiFsbW+8JP0HLb3vP8AJsd9g9/1vw
-         Ao6ZDxPFHOhuJClOgH4ATWJsTkX9a6i/p/eup+F3F+2wrYmLjwIbUUeW9eT0fZYdPBLe
-         pECQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lSALp5rePL6mY7r/pqcUzoJ2ZuxIV7HQ3tqr5InLjgY=;
-        b=PPXDj8ZhXhO4hmWRbzHLe+8bN5TX/7H2M0zWVMsy28oeA8duCtAspJl35JUZCL0oBJ
-         Ujcv3hw7ynUbG5m738EApoOiXVb2rhCyG/AZwDdZVKBdXj4X8UHUn7qQwIcN7WWrbEiC
-         y+f4+mHlCQf8WhulyvPXY3zhGNA/VwNndW+nZp0wUHiJ/gayiFoPtr79xj7Hv2NGeVUR
-         5xZnYdxFm9vVtxtYre9LAsUt+mwUbbWXxy0auAElhcx2nS9JGqHHWMXdO5vOt4E1Gw8O
-         i9qIbGWzb8cl1U2RzgFCyau7Q9Vrl4EKnUkBGp548qR5xgTaUAG1ioj2ngibchRgVVcw
-         rNOw==
-X-Gm-Message-State: APjAAAXef5DLdoTyQffPY5tKoUgBe/dFDwTpGx0+tq5+EhJw2jEITjdn
-        cLz+2ZN9c4gtu6Im9JEovU4=
-X-Google-Smtp-Source: APXvYqyjY81uKJV+apK/Di2E6lTBAva0jxWTERVWnUwpbJuiU7IPflmRcQx5Xiv4XJdalA8g4GRY0A==
-X-Received: by 2002:a17:902:7883:: with SMTP id q3mr48273077pll.60.1554959221080;
-        Wed, 10 Apr 2019 22:07:01 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id e126sm89891573pfh.35.2019.04.10.22.06.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 22:07:00 -0700 (PDT)
-Subject: Re: [PATCH] of: fix expression using sizeof(void)
-To:     xiaojiangfeng <xiaojiangfeng@huawei.com>, robh+dt@kernel.org,
-        robh@kernel.org, grant.likely@secretlab.ca
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1554947255-80031-1-git-send-email-xiaojiangfeng@huawei.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d15a80a2-4a32-4475-3044-33b8e8696405@gmail.com>
-Date:   Wed, 10 Apr 2019 22:06:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 11 Apr 2019 01:07:10 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B4xsLo014455
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:07:09 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rswg0uqsf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:07:08 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Thu, 11 Apr 2019 06:07:06 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 06:07:03 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B572XI50069724
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 05:07:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B224AE059;
+        Thu, 11 Apr 2019 05:07:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD1C2AE045;
+        Thu, 11 Apr 2019 05:07:00 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.73.26])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 05:07:00 +0000 (GMT)
+X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/15] Refactor pgalloc stuff
+In-Reply-To: <cover.1554321743.git.christophe.leroy@c-s.fr>
+References: <cover.1554321743.git.christophe.leroy@c-s.fr>
+Date:   Thu, 11 Apr 2019 10:36:59 +0530
 MIME-Version: 1.0
-In-Reply-To: <1554947255-80031-1-git-send-email-xiaojiangfeng@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19041105-0020-0000-0000-0000032E9247
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041105-0021-0000-0000-00002180C04A
+Message-Id: <87wok13zbg.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/10/19 6:47 PM, xiaojiangfeng wrote:
-> problem detected by sparse:
-> drivers/of/fdt.c:1094:34: warning: expression using sizeof(void)
-> 
-> Signed-off-by: xiaojiangfeng <xiaojiangfeng@huawei.com>
-> ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 4734223..75c6c55 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1091,7 +1091,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->  	/* Retrieve command line */
->  	p = of_get_flat_dt_prop(node, "bootargs", &l);
->  	if (p != NULL && l > 0)
-> -		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-> +		strlcpy(data, p, COMMAND_LINE_SIZE);
->  
->  	/*
->  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
-> 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-The fuller discussion is in the thread where you first attempted to fix an
-issue with the line of code and I reported a sparse error against this line.
+> This series converts book3e64 to pte_fragment and refactor
+> things that are common among subarches.
+>
+> Christophe Leroy (15):
+>   powerpc/mm: drop __bad_pte()
+>   powerpc/mm: define __pud_free_tlb() at all time on nohash/64
+>   powerpc/mm: convert Book3E 64 to pte_fragment
+>   powerpc/mm: move pgtable_t in asm/mmu.h
+>   powerpc/mm: get rid of nohash/32/mmu.h and nohash/64/mmu.h
+>   powerpc/Kconfig: select PPC_MM_SLICES from subarch type
+>   powerpc/book3e: move early_alloc_pgtable() to init section
+>   powerpc/mm: don't use pte_alloc_kernel() until slab is available on
+>     PPC32
+>   powerpc/mm: inline pte_alloc_one_kernel() and pte_alloc_one() on PPC32
+>   powerpc/mm: refactor pte_alloc_one() and pte_free() families
+>     definition.
+>   powerpc/mm: refactor definition of pgtable_cache[]
+>   powerpc/mm: Only keep one version of pmd_populate() functions on
+>     nohash/32
+>   powerpc/mm: refactor pgtable freeing functions on nohash
+>   powerpc/mm: refactor pmd_pgtable()
+>   powerpc/mm: refactor pgd_alloc() and pgd_free() on nohash
+>
+>  arch/powerpc/include/asm/book3s/32/mmu-hash.h |   4 -
+>  arch/powerpc/include/asm/book3s/32/pgalloc.h  |  41 ---------
+>  arch/powerpc/include/asm/book3s/64/mmu.h      |   8 --
+>  arch/powerpc/include/asm/book3s/64/pgalloc.h  |  49 ----------
+>  arch/powerpc/include/asm/mmu.h                |   3 +
+>  arch/powerpc/include/asm/mmu_context.h        |   6 --
+>  arch/powerpc/include/asm/nohash/32/mmu.h      |  25 ------
+>  arch/powerpc/include/asm/nohash/32/pgalloc.h  | 123 ++------------------------
+>  arch/powerpc/include/asm/nohash/64/mmu.h      |  12 ---
+>  arch/powerpc/include/asm/nohash/64/pgalloc.h  | 117 +-----------------------
+>  arch/powerpc/include/asm/nohash/mmu.h         |  16 +++-
+>  arch/powerpc/include/asm/nohash/pgalloc.h     |  56 ++++++++++++
+>  arch/powerpc/include/asm/pgalloc.h            |  51 +++++++++++
+>  arch/powerpc/mm/Makefile                      |   4 +-
+>  arch/powerpc/mm/mmu_context.c                 |   2 +-
+>  arch/powerpc/mm/pgtable-book3e.c              |   4 +-
+>  arch/powerpc/mm/pgtable_32.c                  |  42 +++++----
+>  arch/powerpc/platforms/Kconfig.cputype        |   4 +-
+>  18 files changed, 165 insertions(+), 402 deletions(-)
+>  delete mode 100644 arch/powerpc/include/asm/nohash/32/mmu.h
+>  delete mode 100644 arch/powerpc/include/asm/nohash/64/mmu.h
+>
+> -- 
+> 2.13.3
 
-After digging deeper, your first patch is valid, removing min() here is not
-the correct approach.  I will add my Reviewed-by to the first patch and I
-will pursue the sparse warning separately.
+Looks good. You can add for the series
 
-Thanks,
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com> 
 
-Frank
