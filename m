@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE672C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA3EC10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B842133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8282217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfDKD5e (ORCPT
+        id S1726895AbfDKD5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:57:34 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:50213 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbfDKD5b (ORCPT
+        Wed, 10 Apr 2019 23:57:30 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:58477 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfDKD51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:57:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TP0I5rB_1554955031;
+        Wed, 10 Apr 2019 23:57:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TP0I5rB_1554955031;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TP0I5rB_1554955031)
           by smtp.aliyun-inc.com(127.0.0.1);
           Thu, 11 Apr 2019 11:57:22 +0800
@@ -32,9 +32,9 @@ To:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
         ying.huang@intel.com, ziy@nvidia.com
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [v2 PATCH 3/9] mm: numa: promote pages to DRAM when it gets accessed twice
-Date:   Thu, 11 Apr 2019 11:56:53 +0800
-Message-Id: <1554955019-29472-4-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [v2 PATCH 2/9] mm: page_alloc: make find_next_best_node find return cpuless node
+Date:   Thu, 11 Apr 2019 11:56:52 +0800
+Message-Id: <1554955019-29472-3-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -43,324 +43,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NUMA balancing would promote the pages to DRAM once it is accessed, but
-it might be just one off access.  To reduce migration thrashing and
-memory bandwidth pressure, just promote the page which gets accessed
-twice by extending page_check_references() to support second reference
-algorithm for anonymous page.
-
-The page_check_reference() would walk all mapped pte or pmd to check if
-the page is referenced or not, but such walk sounds unnecessary to NUMA
-balancing since NUMA balancing would have pte or pmd referenced bit set
-all the time, so anonymous page would have at least one referenced pte
-or pmd.  And, distinguish with page reclaim path via scan_control,
-scan_control would be NULL in NUMA balancing path.
-
-This approach is not definitely the optimal one to distinguish the
-hot or cold pages accurately.  It may need much more sophisticated
-algorithm to distinguish hot or cold pages accurately.
+Need find the cloest cpuless node to demote DRAM pages.  Add
+"cpuless" parameter to find_next_best_node() to skip DRAM node on
+demand.
 
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- mm/huge_memory.c |  11 ++++++
- mm/internal.h    |  80 ++++++++++++++++++++++++++++++++++++++
- mm/memory.c      |  21 ++++++++++
- mm/vmscan.c      | 116 ++++++++++++++++---------------------------------------
- 4 files changed, 146 insertions(+), 82 deletions(-)
+ mm/internal.h   | 11 +++++++++++
+ mm/page_alloc.c | 14 ++++++++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 404acdc..0b18ac45 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1590,6 +1590,17 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	}
- 
- 	/*
-+	 * Promote the page when it gets NUMA fault twice.
-+	 * It is safe to set page flag since the page is locked now.
-+	 */
-+	if (!node_state(page_nid, N_CPU_MEM) &&
-+	    page_check_references(page, NULL) != PAGEREF_PROMOTE) {
-+		put_page(page);
-+		page_nid = NUMA_NO_NODE;
-+		goto clear_pmdnuma;
-+	}
-+
-+	/*
- 	 * Migrate the THP to the requested node, returns with page unlocked
- 	 * and access rights restored.
- 	 */
 diff --git a/mm/internal.h b/mm/internal.h
-index a514808..bee4d6c 100644
+index 9eeaf2b..a514808 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -89,8 +89,88 @@ static inline void set_page_refcounted(struct page *page)
- /*
-  * in mm/vmscan.c:
-  */
-+struct scan_control {
-+	/* How many pages shrink_list() should reclaim */
-+	unsigned long nr_to_reclaim;
-+
-+	/*
-+	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
-+	 * are scanned.
-+	 */
-+	nodemask_t	*nodemask;
-+
-+	/*
-+	 * The memory cgroup that hit its limit and as a result is the
-+	 * primary target of this reclaim invocation.
-+	 */
-+	struct mem_cgroup *target_mem_cgroup;
-+
-+	/* Writepage batching in laptop mode; RECLAIM_WRITE */
-+	unsigned int may_writepage:1;
-+
-+	/* Can mapped pages be reclaimed? */
-+	unsigned int may_unmap:1;
-+
-+	/* Can pages be swapped as part of reclaim? */
-+	unsigned int may_swap:1;
-+
-+	/* e.g. boosted watermark reclaim leaves slabs alone */
-+	unsigned int may_shrinkslab:1;
-+
-+	/*
-+	 * Cgroups are not reclaimed below their configured memory.low,
-+	 * unless we threaten to OOM. If any cgroups are skipped due to
-+	 * memory.low and nothing was reclaimed, go back for memory.low.
-+	 */
-+	unsigned int memcg_low_reclaim:1;
-+	unsigned int memcg_low_skipped:1;
-+
-+	unsigned int hibernation_mode:1;
-+
-+	/* One of the zones is ready for compaction */
-+	unsigned int compaction_ready:1;
-+
-+	/* Allocation order */
-+	s8 order;
-+
-+	/* Scan (total_size >> priority) pages at once */
-+	s8 priority;
-+
-+	/* The highest zone to isolate pages for reclaim from */
-+	s8 reclaim_idx;
-+
-+	/* This context's GFP mask */
-+	gfp_t gfp_mask;
-+
-+	/* Incremented by the number of inactive pages that were scanned */
-+	unsigned long nr_scanned;
-+
-+	/* Number of pages freed so far during a call to shrink_zones() */
-+	unsigned long nr_reclaimed;
-+
-+	struct {
-+		unsigned int dirty;
-+		unsigned int unqueued_dirty;
-+		unsigned int congested;
-+		unsigned int writeback;
-+		unsigned int immediate;
-+		unsigned int file_taken;
-+		unsigned int taken;
-+	} nr;
-+};
-+
-+enum page_references {
-+	PAGEREF_RECLAIM,
-+	PAGEREF_RECLAIM_CLEAN,
-+	PAGEREF_KEEP,
-+	PAGEREF_ACTIVATE,
-+	PAGEREF_PROMOTE = PAGEREF_ACTIVATE,
-+};
-+
- extern int isolate_lru_page(struct page *page);
- extern void putback_lru_page(struct page *page);
-+enum page_references page_check_references(struct page *page,
-+					   struct scan_control *sc);
- 
- /*
-  * in mm/rmap.c:
-diff --git a/mm/memory.c b/mm/memory.c
-index 47fe250..01c1ead 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3680,6 +3680,27 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 		goto out;
- 	}
- 
-+	/*
-+	 * Promote the page when it gets NUMA fault twice.
-+	 * Need lock the page before check its references.
-+	 */
-+	if (!node_state(page_nid, N_CPU_MEM)) {
-+		if (!trylock_page(page)) {
-+			put_page(page);
-+			target_nid = NUMA_NO_NODE;
-+			goto out;
-+		}
-+
-+		if (page_check_references(page, NULL) != PAGEREF_PROMOTE) {
-+			unlock_page(page);
-+			put_page(page);
-+			target_nid = NUMA_NO_NODE;
-+			goto out;
-+		}
-+
-+		unlock_page(page);
-+	}
-+
- 	/* Migrate to the requested node */
- 	migrated = migrate_misplaced_page(page, vma, target_nid);
- 	if (migrated) {
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index a5ad0b3..0504845 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -63,76 +63,6 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/vmscan.h>
- 
--struct scan_control {
--	/* How many pages shrink_list() should reclaim */
--	unsigned long nr_to_reclaim;
--
--	/*
--	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
--	 * are scanned.
--	 */
--	nodemask_t	*nodemask;
--
--	/*
--	 * The memory cgroup that hit its limit and as a result is the
--	 * primary target of this reclaim invocation.
--	 */
--	struct mem_cgroup *target_mem_cgroup;
--
--	/* Writepage batching in laptop mode; RECLAIM_WRITE */
--	unsigned int may_writepage:1;
--
--	/* Can mapped pages be reclaimed? */
--	unsigned int may_unmap:1;
--
--	/* Can pages be swapped as part of reclaim? */
--	unsigned int may_swap:1;
--
--	/* e.g. boosted watermark reclaim leaves slabs alone */
--	unsigned int may_shrinkslab:1;
--
--	/*
--	 * Cgroups are not reclaimed below their configured memory.low,
--	 * unless we threaten to OOM. If any cgroups are skipped due to
--	 * memory.low and nothing was reclaimed, go back for memory.low.
--	 */
--	unsigned int memcg_low_reclaim:1;
--	unsigned int memcg_low_skipped:1;
--
--	unsigned int hibernation_mode:1;
--
--	/* One of the zones is ready for compaction */
--	unsigned int compaction_ready:1;
--
--	/* Allocation order */
--	s8 order;
--
--	/* Scan (total_size >> priority) pages at once */
--	s8 priority;
--
--	/* The highest zone to isolate pages for reclaim from */
--	s8 reclaim_idx;
--
--	/* This context's GFP mask */
--	gfp_t gfp_mask;
--
--	/* Incremented by the number of inactive pages that were scanned */
--	unsigned long nr_scanned;
--
--	/* Number of pages freed so far during a call to shrink_zones() */
--	unsigned long nr_reclaimed;
--
--	struct {
--		unsigned int dirty;
--		unsigned int unqueued_dirty;
--		unsigned int congested;
--		unsigned int writeback;
--		unsigned int immediate;
--		unsigned int file_taken;
--		unsigned int taken;
--	} nr;
--};
--
- #ifdef ARCH_HAS_PREFETCH
- #define prefetch_prev_lru_page(_page, _base, _field)			\
- 	do {								\
-@@ -1002,21 +932,32 @@ void putback_lru_page(struct page *page)
- 	put_page(page);		/* drop ref from isolate */
+@@ -292,6 +292,17 @@ static inline bool is_data_mapping(vm_flags_t flags)
+ 	return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
  }
  
--enum page_references {
--	PAGEREF_RECLAIM,
--	PAGEREF_RECLAIM_CLEAN,
--	PAGEREF_KEEP,
--	PAGEREF_ACTIVATE,
--};
--
--static enum page_references page_check_references(struct page *page,
--						  struct scan_control *sc)
-+/*
-+ * Called by NUMA balancing to implement access twice check for
-+ * promoting pages from cpuless nodes.
-+ *
-+ * The sc would be NULL in NUMA balancing path.
-+ */
-+enum page_references page_check_references(struct page *page,
-+					   struct scan_control *sc)
++#ifdef CONFIG_NUMA
++extern int find_next_best_node(int node, nodemask_t *used_node_mask,
++			       bool cpuless);
++#else
++static inline int find_next_best_node(int node, nodemask_t *used_node_mask,
++				      bool cpuless)
++{
++	return 0;
++}
++#endif
++
+ /* mm/util.c */
+ void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		struct vm_area_struct *prev, struct rb_node *rb_parent);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 7cd88a4..bda17c2 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5362,6 +5362,7 @@ int numa_zonelist_order_handler(struct ctl_table *table, int write,
+  * find_next_best_node - find the next node that should appear in a given node's fallback list
+  * @node: node whose fallback list we're appending
+  * @used_node_mask: nodemask_t of already used nodes
++ * @cpuless: find next best cpuless node
+  *
+  * We use a number of factors to determine which is the next node that should
+  * appear on a given node's fallback list.  The node should not have appeared
+@@ -5373,7 +5374,8 @@ int numa_zonelist_order_handler(struct ctl_table *table, int write,
+  *
+  * Return: node id of the found node or %NUMA_NO_NODE if no node is found.
+  */
+-static int find_next_best_node(int node, nodemask_t *used_node_mask)
++int find_next_best_node(int node, nodemask_t *used_node_mask,
++			bool cpuless)
  {
- 	int referenced_ptes, referenced_page;
- 	unsigned long vm_flags;
-+	struct mem_cgroup *memcg = sc ? sc->target_mem_cgroup : NULL;
-+
-+	if (sc)
-+		referenced_ptes = page_referenced(page, 1, memcg, &vm_flags);
-+	else
-+		/*
-+		 * The page should always has at least one referenced pte
-+		 * in NUMA balancing path since NUMA balancing set referenced
-+		 * bit by default in PAGE_NONE.
-+		 * So, it sounds unnecessary to walk rmap to get the number of
-+		 * referenced ptes.  This also help avoid potential ptl
-+		 * deadlock for huge pmd.
-+		 */
-+		referenced_ptes = 1;
+ 	int n, val;
+ 	int min_val = INT_MAX;
+@@ -5381,13 +5383,18 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+ 	const struct cpumask *tmp = cpumask_of_node(0);
  
--	referenced_ptes = page_referenced(page, 1, sc->target_mem_cgroup,
--					  &vm_flags);
- 	referenced_page = TestClearPageReferenced(page);
+ 	/* Use the local node if we haven't already */
+-	if (!node_isset(node, *used_node_mask)) {
++	if (!node_isset(node, *used_node_mask) &&
++	    !cpuless) {
+ 		node_set(node, *used_node_mask);
+ 		return node;
+ 	}
  
- 	/*
-@@ -1027,8 +968,19 @@ static enum page_references page_check_references(struct page *page,
- 		return PAGEREF_RECLAIM;
+ 	for_each_node_state(n, N_MEMORY) {
  
- 	if (referenced_ptes) {
--		if (PageSwapBacked(page))
-+		if (PageSwapBacked(page)) {
-+			if (!sc) {
-+				if (referenced_page)
-+					return PAGEREF_ACTIVATE;
++		/* Find next best cpuless node */
++		if (cpuless && (node_state(n, N_CPU)))
++			continue;
 +
-+				SetPageReferenced(page);
-+
-+				return PAGEREF_KEEP;
-+			}
-+
- 			return PAGEREF_ACTIVATE;
-+		}
-+
+ 		/* Don't want a node to appear more than once */
+ 		if (node_isset(n, *used_node_mask))
+ 			continue;
+@@ -5419,7 +5426,6 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+ 	return best_node;
+ }
+ 
+-
+ /*
+  * Build zonelists ordered by node and zones within node.
+  * This results in maximum locality--normal zone overflows into local
+@@ -5481,7 +5487,7 @@ static void build_zonelists(pg_data_t *pgdat)
+ 	nodes_clear(used_mask);
+ 
+ 	memset(node_order, 0, sizeof(node_order));
+-	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
++	while ((node = find_next_best_node(local_node, &used_mask, false)) >= 0) {
  		/*
- 		 * All mapped pages start out with page table
- 		 * references from the instantiating fault, so we need
+ 		 * We don't want to pressure a particular node.
+ 		 * So adding penalty to the first node in same
 -- 
 1.8.3.1
 
