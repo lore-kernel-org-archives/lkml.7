@@ -2,117 +2,153 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E546C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95771C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F8B2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MXyowxng"
+	by mail.kernel.org (Postfix) with ESMTP id 6EDDB2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDKLBy (ORCPT
+        id S1726727AbfDKLDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:01:54 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46854 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfDKLBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:01:53 -0400
-Received: by mail-vs1-f68.google.com with SMTP id e2so3186588vsc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 04:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CDqohFlSwNc4TTMK6tjkDhfZYXNScmh7dJMV8w8OofE=;
-        b=MXyowxngEtoxsW3zLCAmpPTfB5kTJhmvNlieokm4Rh7Xd0JiLxvq1o9w4BM46jY7EW
-         GfpoAVa/enhvgC/Q9AH4YhxwZaJPN907wJKCt+2Gt6waAGGJmWDIFTPnwDgexlUtVV9u
-         EUz9kek8m9X3cTH6kMBZWMi5VgDgRN7CtHYHwaUvhQw0DrUhVqguJa49vi+rA7nfbQAa
-         PgAuyUBXJQeuT5VftE1e/ifQgVyfdhMMO5r2qMuUOQJJfUvc+ucWAG4rfM3gkCdYwHMU
-         P/o7yGHHQQ2DkXvLaPOCroV6XOwJsJbJC+8I0VfpPKS18blyokdal1Xie7+196/SRYrm
-         tEYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CDqohFlSwNc4TTMK6tjkDhfZYXNScmh7dJMV8w8OofE=;
-        b=Jgo0KmclGVcTXgjHRx6V7m1Fdp2Q7zqHa8xJ8wjtuarsO1O33mVJG8Jhta8fmPdD1Y
-         mDcbAfh2iMeTFt0GAd8hLzp75ROlQEnJMv7xhYZBJT61ryTitGtMnlF77wAyUWUt59sp
-         RBa2rOat9LA/iBjPr0sFIqQduuBWJ5CbIU5EC2jWD/h6sGxlDzrROzqaDjGv15cA7l2E
-         /BLEGau0OSmh+xEVFxGdla84RLhO2DxxG2QUxWvXql+d7JGO5uQaew4oxbW0quy9GMNa
-         lqFsNpz2gph56G1uGbqDa9ciLyprXocQoLOEeRHGkj+AlF2lGK1NWdXtwJUre1FRdrfX
-         klGw==
-X-Gm-Message-State: APjAAAWaPPP6NLKy9BIFeR9H0EvdVVlXa4+elTPNfwG30b2AxA0XVJBN
-        vD343i6OiRNjZh28lw0YJKRoBbYA+Yqt9T7CQFY9FQ==
-X-Google-Smtp-Source: APXvYqyHFcQXX0WlvAi6y6D/hRb/QlOoiWJoAmYdjDDxSHAsYm9zAJ6faLyKKK/FmTJUYTWx4fsog/iWQm8TGsY1IRo=
-X-Received: by 2002:a67:fa95:: with SMTP id f21mr26912415vsq.180.1554980512968;
- Thu, 11 Apr 2019 04:01:52 -0700 (PDT)
+        Thu, 11 Apr 2019 07:03:13 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40564 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfDKLDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 07:03:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FBA4374;
+        Thu, 11 Apr 2019 04:03:12 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 976113F59C;
+        Thu, 11 Apr 2019 04:03:10 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 12:03:04 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RESEND][PATCH v2] firmware/psci: add support for SYSTEM_RESET2
+Message-ID: <20190411110302.GA55959@lakrids.cambridge.arm.com>
+References: <20190411103346.22462-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
-References: <20190411025904.188152-1-yuehaibing@huawei.com>
-In-Reply-To: <20190411025904.188152-1-yuehaibing@huawei.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 11 Apr 2019 13:01:17 +0200
-Message-ID: <CAPDyKFq8icX27w2FaLgTWtdV1MicfVO+rG_5sZT9n-5pT7iAWg@mail.gmail.com>
-Subject: Re: [PATCH -next] memstick: remove set but not used variable 'data'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Will Deacon <will.deacon@arm.com>, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>, Hannes Reinecke <hare@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411103346.22462-1-sudeep.holla@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 at 04:48, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/memstick/host/jmb38x_ms.c: In function 'jmb38x_ms_issue_cmd':
-> drivers/memstick/host/jmb38x_ms.c:371:17: warning:
->  variable 'data' set but not used [-Wunused-but-set-variable]
->
-> It's never used since introduction and can be removed.
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Applied for next (to my mmc tree), thanks!
-
-Next time, please post to linux-mmc as well.
-
-Kind regards
-Uffe
-
-
+On Thu, Apr 11, 2019 at 11:33:46AM +0100, Sudeep Holla wrote:
+> PSCI v1.1 introduced SYSTEM_RESET2 to allow both architectural resets
+> where the semantics are described by the PSCI specification itself as
+> well as vendor-specific resets. Currently only system warm reset
+> semantics is defined as part of architectural resets by the specification.
+> 
+> This patch implements support for SYSTEM_RESET2 by making using of
+> reboot_mode passed by the reboot infrastructure in the kernel.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  drivers/memstick/host/jmb38x_ms.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
-> index e3a5af65dbce..acec09813419 100644
-> --- a/drivers/memstick/host/jmb38x_ms.c
-> +++ b/drivers/memstick/host/jmb38x_ms.c
-> @@ -368,7 +368,6 @@ static int jmb38x_ms_transfer_data(struct jmb38x_ms_host *host)
->  static int jmb38x_ms_issue_cmd(struct memstick_host *msh)
+>  drivers/firmware/psci.c   | 21 +++++++++++++++++++++
+>  include/uapi/linux/psci.h |  2 ++
+>  2 files changed, 23 insertions(+)
+> 
+> Resending [1] based on the request. I hope to get some testing this time.
+> Last time Xilinx asked multiple times but never got any review or testing
+> https://lore.kernel.org/lkml/1525257003-8608-1-git-send-email-sudeep.holla@arm.com/
+> 
+> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> index c80ec1d03274..91748725534e 100644
+> --- a/drivers/firmware/psci.c
+> +++ b/drivers/firmware/psci.c
+> @@ -88,6 +88,7 @@ static u32 psci_function_id[PSCI_FN_MAX];
+>  				PSCI_1_0_EXT_POWER_STATE_TYPE_MASK)
+> 
+>  static u32 psci_cpu_suspend_feature;
+> +static bool psci_system_reset2_supported;
+> 
+>  static inline bool psci_has_ext_power_state(void)
 >  {
->         struct jmb38x_ms_host *host = memstick_priv(msh);
-> -       unsigned char *data;
->         unsigned int data_len, cmd, t_val;
->
->         if (!(STATUS_HAS_MEDIA & readl(host->addr + STATUS))) {
-> @@ -400,8 +399,6 @@ static int jmb38x_ms_issue_cmd(struct memstick_host *msh)
->                         cmd |= TPC_WAIT_INT;
->         }
->
-> -       data = host->req->data;
-> -
->         if (!no_dma)
->                 host->cmd_flags |= DMA_DATA;
->
->
->
+> @@ -253,6 +254,15 @@ static int get_set_conduit_method(struct device_node *np)
+> 
+>  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+>  {
+> +	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> +	    psci_system_reset2_supported)
+> +		/*
+> +		 * reset_type[31] = 0 (architectural)
+> +		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+> +		 * cookie = 0 (ignored by the implementation)
+> +		 */
+> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
+
+Since the comment and invocation span multiple lines, could we please
+wrap them in braces?
+
+Other than that, this looks good to me, so:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+... I assume that Aaro will give this some testing.
+
+Thanks,
+Mark.
+
+> +
+>  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+>  }
+> 
+> @@ -451,6 +461,16 @@ static const struct platform_suspend_ops psci_suspend_ops = {
+>  	.enter          = psci_system_suspend_enter,
+>  };
+> 
+> +static void __init psci_init_system_reset2(void)
+> +{
+> +	int ret;
+> +
+> +	ret = psci_features(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2));
+> +
+> +	if (ret != PSCI_RET_NOT_SUPPORTED)
+> +		psci_system_reset2_supported = true;
+> +}
+> +
+>  static void __init psci_init_system_suspend(void)
+>  {
+>  	int ret;
+> @@ -588,6 +608,7 @@ static int __init psci_probe(void)
+>  		psci_init_smccc();
+>  		psci_init_cpu_suspend();
+>  		psci_init_system_suspend();
+> +		psci_init_system_reset2();
+>  	}
+> 
+>  	return 0;
+> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+> index b3bcabe380da..5b0ba0062541 100644
+> --- a/include/uapi/linux/psci.h
+> +++ b/include/uapi/linux/psci.h
+> @@ -49,8 +49,10 @@
+> 
+>  #define PSCI_1_0_FN_PSCI_FEATURES		PSCI_0_2_FN(10)
+>  #define PSCI_1_0_FN_SYSTEM_SUSPEND		PSCI_0_2_FN(14)
+> +#define PSCI_1_1_FN_SYSTEM_RESET2		PSCI_0_2_FN(18)
+> 
+>  #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
+> +#define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
+> 
+>  /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
+>  #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
+> --
+> 2.17.1
+> 
