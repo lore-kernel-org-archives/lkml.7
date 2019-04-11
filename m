@@ -2,145 +2,134 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34A0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A72C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDF62184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtK9KpmG"
+	by mail.kernel.org (Postfix) with ESMTP id 455AF2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfDKX1Y (ORCPT
+        id S1727114AbfDKX3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:27:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52251 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfDKX1V (ORCPT
+        Thu, 11 Apr 2019 19:29:12 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:51984 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfDKX3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:27:21 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a184so8826833wma.2;
-        Thu, 11 Apr 2019 16:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/lbmnj1rLjQX0s5PohleCzRZ9gqTtd7gfwSug1zEu/Y=;
-        b=LtK9KpmGjIiB33Vvtm1Jq2Kyjv0eMbMK+y8pzNetIlgS6n9PMPE79+c8Cg4TJ2dbnC
-         KpV1nWM+zrLqxGRtkOMdsfolm8Vp6N4Osn8JYIJSuNwooMrcM1ZioUJ5fE0F/Bz9sDVs
-         hnlEjBuqHknX1SaQGAtyR86/HHGJrS5Dc1WSXo3Qf3r1WrjuS7nocHz4QgmWiLuqbHBC
-         trP4HmOKfPEaX3AGv9tnFIOD1GC0HsvOmOk0ZOfd7T4EZ5uAN4RsCkUGifmL8qUshfRm
-         AEbXGXdtTrZPaehbG28GHKPNPy8DnFIZ0yqBQZH2dkaKDlSgnBygVBYdPN75SxwuWFHt
-         wbCQ==
+        Thu, 11 Apr 2019 19:29:12 -0400
+Received: by mail-it1-f200.google.com with SMTP id y127so7457707itb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:29:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/lbmnj1rLjQX0s5PohleCzRZ9gqTtd7gfwSug1zEu/Y=;
-        b=UvItZe8cMfqX0aiHI4kCyQ3voxHMJj1aR2faX0cJY8spQ33b6vodQ70+ywBomPbLNw
-         bSmswfa/Dc2RJtjKtWhO1X+TRUzB8hkYQSeA1HhZxBbTg2lo40eZYIo5QqbuQCR2n24e
-         JVnGdmLNL9yaeYwZ4Z0zPiD6R8odWGCaguxh4j4gkliGq4/BKx404reoPYjtEjLAAx0/
-         GadIBOjEd5bEGEaQ1CCHTlIAWC7wPy6FB1P36kCIzZw4GQ3IUqvueLG3/VxQhpGi0AKa
-         K5osRW3gEcVunjMmoxzvb4gpunWivNrET4S364qZAAqXIRoOiYR7sJxt08gcDNf7bCrR
-         rG4Q==
-X-Gm-Message-State: APjAAAWD+ncakxxGdYomI/BsUbcaCM2841w03NN/q1QRY8FAYD+bPOrk
-        qF464li1pcTqYnIViHZCjW8=
-X-Google-Smtp-Source: APXvYqzJyM4x/CBFyK4kJB2ZrWNFiVb26+6ChkUAusDvQlTrygrfq3Gu147C02/ZxZQ6XzM76sI2NA==
-X-Received: by 2002:a05:600c:21d3:: with SMTP id x19mr8578973wmj.2.1555025238891;
-        Thu, 11 Apr 2019 16:27:18 -0700 (PDT)
-Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id g132sm6355642wme.3.2019.04.11.16.27.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 16:27:18 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com, claudiu.manoil@nxp.com
-Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, davem@davemloft.net,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Fri, 12 Apr 2019 02:23:15 +0300
-Message-Id: <20190411232315.19588-2-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411232315.19588-1-olteanv@gmail.com>
-References: <20190411232315.19588-1-olteanv@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=c9eqkMlMXJKYNsd2gPtF4r6eghDdcc2KpRiU+4OfLtA=;
+        b=iSJM02zXDg/qSbo8hV6gj+labGT0yfwqwKdtAQfSBBvAFqO09IdoNYr75w58NS96KN
+         1rfoZY/PGgs3+WW1T0RHrrd7gRr0Cc6W0tIKvJOIqrNba0CYPBBQ4ApiCFnhSpQ3A41T
+         xGlThkPiy+7zmMY4ubqsSstG+447kdnsngTp6UYsVdXpWoblHwhSW0g6Vv05JhR5xlfc
+         N6KZKhO55cuLrY4EeL6DJ7BkK5os8BYVXE5ETsZ87toWdbO7iqdQAjvzndOAjVEQAD3U
+         /3OFFbJOqfZLSsB/tdchMbL43sv3YNQSXhZXwmMUonbzq9kIKCibIHsEF8yfqqCBRMlu
+         uTxQ==
+X-Gm-Message-State: APjAAAWtoiQl7G37Z/oWvB2pm5XawixdO+XWk/rBjotridIgurQEpHwC
+        WFLBJoOBXsH3Pz9g3me8iAehaZoLBHO2cVRlkL6cib9fpfxM
+X-Google-Smtp-Source: APXvYqy99V5GU2vWlocx20k91er73FCjR6HmV9VIemH+UtGtveSh31T4ne5l6gixkmcvWs6Id/bZCV71qEyidyVg+njbN+RUdrra
+MIME-Version: 1.0
+X-Received: by 2002:a6b:4402:: with SMTP id r2mr999941ioa.30.1555025351684;
+ Thu, 11 Apr 2019 16:29:11 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 16:29:11 -0700
+In-Reply-To: <000000000000d9f094057a17b97b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b439370586498dff@google.com>
+Subject: Re: WARNING in rollback_registered_many (2)
+From:   syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>
+To:     Larry.Finger@lwfinger.net, andreyknvl@google.com,
+        avagin@virtuozzo.com, davem@davemloft.net,
+        devel@driverdev.osuosl.org, ebiederm@xmission.com,
+        edumazet@google.com, florian.c.schilhabel@googlemail.com,
+        gregkh@linuxfoundation.org, kai.heng.feng@canonical.com,
+        ktkhai@virtuozzo.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, straube.linux@gmail.com,
+        syzkaller-bugs@googlegroups.com, tyhicks@canonical.com,
+        willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+syzbot has found a reproducer for the following crash on:
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
+HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d552b7200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+dashboard link: https://syzkaller.appspot.com/bug?extid=40918e4d826fb2ff9b96
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a4c1af200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121b274b200000
 
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 97e1fb7ea932..9b1fe99d55b1 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -145,7 +145,7 @@
- };
- 
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -225,6 +225,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 1a2a9509d9c2..89eab1fd1f7f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -709,6 +709,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
--- 
-2.17.1
+usb 1-1: r8712u: MAC Address from efuse = 00:e0:4c:87:00:00
+usb 1-1: r8712u: Loading firmware from "rtlwifi/rtl8712u.bin"
+usb 1-1: USB disconnect, device number 2
+usb 1-1: Direct firmware load for rtlwifi/rtl8712u.bin failed with error -2
+usb 1-1: r8712u: Firmware request failed
+WARNING: CPU: 0 PID: 575 at net/core/dev.c:8152  
+rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 575 Comm: kworker/0:4 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  panic+0x29d/0x5f2 kernel/panic.c:214
+  __warn.cold+0x20/0x48 kernel/panic.c:571
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+Code: 05 00 00 31 ff 44 89 fe e8 5a 15 f3 f4 45 84 ff 0f 85 49 ff ff ff e8  
+1c 14 f3 f4 0f 1f 44 00 00 e8 12 14 f3 f4 e8 0d 14 f3 f4 <0f> 0b 4c 89 e7  
+e8 33 72 f2 f6 31 ff 41 89 c4 89 c6 e8 27 15 f3 f4
+RSP: 0018:ffff88809d087698 EFLAGS: 00010293
+RAX: ffff88809d058000 RBX: ffff888096240000 RCX: ffffffff8c7eb146
+RDX: 0000000000000000 RSI: ffffffff8c7eb163 RDI: 0000000000000001
+RBP: ffff88809d0877c8 R08: ffff88809d058000 R09: fffffbfff2708111
+R10: fffffbfff2708110 R11: ffffffff93840887 R12: ffff888096240070
+R13: dffffc0000000000 R14: ffff88809d087758 R15: 0000000000000000
+  rollback_registered+0xf7/0x1c0 net/core/dev.c:8228
+  unregister_netdevice_queue net/core/dev.c:9275 [inline]
+  unregister_netdevice_queue+0x1dc/0x2b0 net/core/dev.c:9268
+  unregister_netdevice include/linux/netdevice.h:2655 [inline]
+  unregister_netdev+0x1d/0x30 net/core/dev.c:9316
+  r871xu_dev_remove+0xe7/0x223 drivers/staging/rtl8712/usb_intf.c:604
+  usb_unbind_interface+0x1c9/0x980 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1082 [inline]
+  device_release_driver_internal+0x436/0x4f0 drivers/base/dd.c:1113
+  bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
+  device_del+0x467/0xb90 drivers/base/core.c:2269
+  usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1235
+  usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
+  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
