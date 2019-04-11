@@ -2,124 +2,95 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648E4C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802B6C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326FD2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oh7gGm4N"
+	by mail.kernel.org (Postfix) with ESMTP id 5889020850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfDKJdF (ORCPT
+        id S1726867AbfDKJd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:33:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34940 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfDKJdF (ORCPT
+        Thu, 11 Apr 2019 05:33:28 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:52194 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfDKJd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:33:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w1so6401861wrp.2;
-        Thu, 11 Apr 2019 02:33:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6chxqTQA0tMNzqAdAf+8Od+wwKgavbgPcOMaHBLDHFI=;
-        b=oh7gGm4N9qZEisKWoHppa6HBu6mxFTTLM2nFKxkowSCHLeHT0CG8ipKy13/LKYFwko
-         7pvPuHVe2XNXHfgAMwGpl8D+wdiPlD4yOirdDUS1rl7NpPWrwQg7yFYkDFWWzRwGEcZ4
-         iWuirpAaU+uqqpEbEY0XcXcItTj0Y/IwLcTvyFGp2GeDQQ59GovJwRf1sK6aUs6XF+RA
-         bEpg3a1bemYSCMWLf2UxxO3aYaA/6mQrgPsPnrDRPAeM3QgzwTNQBP5bP+ao6xYOupQY
-         pcvjk4r+fTrhTVWMoQc8ypKGfQmwzT0AG4ljwZJxUHtfCjMSDPgok1Ht4st8J2twxIDQ
-         aNzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6chxqTQA0tMNzqAdAf+8Od+wwKgavbgPcOMaHBLDHFI=;
-        b=FGgP/xjQC3pUPaQfJQSU8VfiQP9OU9a2WODh/TuguzkMeTmq5EkfBiZkRRIiugFxJF
-         dSqFR0aJ/8ZmxkFl7/JGUlrD4DvS6TAIwWj/lrQN9KwNawm4zFre24ld0aTmu9tHXjAe
-         1RiyCBBaWn6VtQxVblVULyQKTQHDyJGJvjSGg5f6DB988tS36BAs8vq/5zlpZCtdS5Z5
-         bfW4274VZbFhKXWoOBaKoQh/jOpBf5S/ZOgRGmJP33BzXAW4rTrl4oJ+3qIH2p7zR0sV
-         9vZgFPF64C2CYwKkVmEcCbOT6q6LVlLWe+e9L56mtSP0EpbGzuYGgvcJ62DYKQ8yDTVa
-         j1nA==
-X-Gm-Message-State: APjAAAVLSeSbTdwD1v70GM31+iw5x2xB6tWkVG16Na9RBwBa+I3mHx3R
-        6eR/m5ssXwtJNlQ9+mAriZ8=
-X-Google-Smtp-Source: APXvYqwL1Vr4CowdXmpTZTniMokTR1dMdNbVm+P4PlUsnPzO43Z+xg0CXHRJkrny2Vt6m1gFEm8bVQ==
-X-Received: by 2002:adf:eb89:: with SMTP id t9mr30098179wrn.109.1554975183444;
-        Thu, 11 Apr 2019 02:33:03 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id y1sm108629493wrd.34.2019.04.11.02.33.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Apr 2019 02:33:02 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 11:33:01 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     jonathanh@nvidia.com, digetx@gmail.com, jroedel@suse.de,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH -next] memory: tegra: Make terga20_mc_reset_ops static
-Message-ID: <20190411093301.GC4633@ulmo>
-References: <20190410140450.31604-1-yuehaibing@huawei.com>
+        Thu, 11 Apr 2019 05:33:27 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3B9XDUk029154
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 11 Apr 2019 18:33:13 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B9XDp0031676;
+        Thu, 11 Apr 2019 18:33:13 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B9WSae023303;
+        Thu, 11 Apr 2019 18:33:13 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.136] [10.38.151.136]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-4203798; Thu, 11 Apr 2019 18:33:01 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC08GP.gisp.nec.co.jp ([10.38.151.136]) with mapi id 14.03.0319.002; Thu,
+ 11 Apr 2019 18:33:00 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Boris Petkov <bp@alien8.de>
+CC:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqAgACP04CAAAH9AIAABdcAgAAJ5YCAAAJaAIAAAziA
+Date:   Thu, 11 Apr 2019 09:32:59 +0000
+Message-ID: <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
+References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+ <20190410171431.GE26580@zn.tnic>
+ <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+ <20190411080927.GA30080@zn.tnic>
+ <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+ <20190411083738.GC30080@zn.tnic>
+ <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
+ <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+In-Reply-To: <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DD781517903E8748BAA9ACA21ED95C78@gisp.nec.co.jp>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
-Content-Disposition: inline
-In-Reply-To: <20190410140450.31604-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gNC8xMS8xOSA2OjIxIFBNLCBCb3JpcyBQZXRrb3Ygd3JvdGU6DQo+IE9uIEFwcmlsIDExLCAy
+MDE5IDExOjEzOjAzIEFNIEdNVCswMjowMCwgSnVuaWNoaSBOb211cmEgPGotbm9tdXJhQGNlLmpw
+Lm5lYy5jb20+IHdyb3RlOg0KPj4gT24gNC8xMS8xOSA1OjM3IFBNLCBCb3Jpc2xhdiBQZXRrb3Yg
+d3JvdGU6DQo+Pj4gT24gVGh1LCBBcHIgMTEsIDIwMTkgYXQgMDg6MTY6NDVBTSArMDAwMCwgSnVu
+aWNoaSBOb211cmEgd3JvdGU6DQo+Pj4+IGtleGVjX2dldF9yc2RwX2FkZHIoKSBtaWdodCBmYWls
+IG9uIGtleGVjLWJvb3RlZCBrZXJuZWwsIGUuZy4gaWYgdGhlDQo+Pj4+IHNldHVwX2RhdGEgd2Fz
+IGludmFsaWQuIEluIHN1Y2ggYSBjYXNlLCBmYWxsaW5nIGJhY2sgdG8NCj4+IGVmaV9nZXRfcnNk
+cF9hZGRyKCkNCj4+Pj4gd2lsbCBoaXQgdGhlIHByb2JsZW0gb2YgYWNjZXNzaW5nIGludmFsaWQg
+dGFibGUgcG9pbnRlciBhZ2Fpbi4NCj4+Pg0KPj4+IFRoZW4geW91IG5lZWQgdG8gZG8gdGhpczoN
+Cj4+Pg0KPj4+IAlpZiAoa2V4ZWNlZCBrZXJuZWwpIHsNCj4+PiAJCWFkZHIgPSBrZXhlY19nZXRf
+cnNkcF9hZGRyKCk7DQo+Pj4gCQlpZiAoIWFkZHIpIHsNCj4+PiAJCQkvKiBjYW5ub3QgZ2V0IGFk
+ZHJlc3MgKi8NCj4+PiAJCQlyZXR1cm4gLTE7DQo+Pj4gCQl9DQo+Pj4NCj4+PiAJCXJldHVybiBh
+ZGRyOw0KPj4+IAl9DQo+Pj4NCj4+PiBhbmQgdGhlIGNhbGxpbmcgZnVuY3Rpb24gZ2V0X3JzZHBf
+YWRkcigpIG11c3QgY2hlY2sgdGhlIHJldHVybiB2YWx1ZQ0KPj4gYW5kDQo+Pj4gaWYgaXQgaXMg
+bm90IDAsIHJldHVybiBpbW1lZGlhdGVseS4NCj4+DQo+PiBEbyB5b3UgbWVhbiBtYWtpbmcgZ2V0
+X3JzZHBfYWRkcigpIGxpa2UgdGhpcz8NCj4gDQo+IERvZXMgdGhhdCBsb29rIGxpa2Ugd2hhdCBJ
+J3ZlIHR5cGVkIGFib3ZlPw0KDQpOby4gQnV0IHRoYXQncyB3aHkgSSBhc2tlZCB0aGUgcXVlc3Rp
+b24uIERvIHlvdSBtZWFuIHB1dHRpbmcNCnRoZSBhYm92ZSBjb2RlIGluIGVmaV9nZXRfcnNkcF9h
+ZGRyKCk/DQoNCi0tIA0KSnVuJ2ljaGkgTm9tdXJhLCBORUMgQ29ycG9yYXRpb24gLyBORUMgU29s
+dXRpb24gSW5ub3ZhdG9ycywgTHRkLg==
 
---L6iaP+gRLNZHKoI4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 10, 2019 at 10:04:50PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
->=20
-> Fix sparse warning:
->=20
-> drivers/memory/tegra/tegra20.c:277:33: warning:
->  symbol 'terga20_mc_reset_ops' was not declared. Should it be static?
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/memory/tegra/tegra20.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Applied thanks. I noticed that you use a slightly different name in your
-git author settings and your email setup. The only difference seems to
-be a space between the first and last name, so you may want to look into
-that to avoid having any inconsistencies.
-
-Thierry
-
---L6iaP+gRLNZHKoI4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyvCcsACgkQ3SOs138+
-s6H3CxAAqu3KSq5VHxMoNXIIzmtxcijOO3c3p+9Lv1rYg6PrOWy1Pk9w8i76n4Bm
-/GJn3cFbXh6w2fXd4ZovGYD//1RBjl4W4DIxn+3RFzGhV2VStkGRdm26IJqk7+A8
-aizexYsa1pvboxmY9csoHl4nF2mCabO4MGVG9c3Y9Or+/K3wQXH6ivTxHi0m7y6Z
-jHQCCz8mSgCiYQvG71vVQGY18N4UZuC/cSwPNTLdeq/8yydPKqD300WZSQkp27Ed
-W9LLiqK4WCsRbzgkXkhv/7KBT2aqzD5T7OK18sMx9HOajkAqKarUzNJ19VPjG4t4
-Hy+Q4L+iPJ3hHzx348BmPjb1/tVC/tHwKGQ4DRu68zaIo6dQEkmEXcYP1y3PJtBM
-HrtLayZT1ISz6ynta3Im9UEErLZq4/W7NkEUMvTxPYrDIzQaAmCLtz3pRKYi1KsA
-X0Dku5z1fQE2NnKQyNZ8/kqcuRfG4EIe9UtCV01Mafo1M16uO670lhoRdc83vYS5
-5CJqEKYshH0DBMLfTaD21MNRtWbguGrdflw7/IF/fgDE4bz16zaFC/O01M+B3f+Q
-z46XFks4O8wHGW4/Q+pZ9HRAcuI3oQtW+fm+5l08IcgKAn1FeD9lkQO9XnSCbRnK
-qMswaMr5gRP+pmoQn01oBYo+fjS26sK3SS5jbN8OuX040ebSWi4=
-=AsFa
------END PGP SIGNATURE-----
-
---L6iaP+gRLNZHKoI4--
