@@ -2,74 +2,75 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45FC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED93C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B4C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554950585;
-	bh=dFs87/I5FzSAKmfefEU/2kxGJKT+FUKq0QrvX8wspck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yQ4z/SBvKXt9g5B9CVtOZpSg+9XNDD+yROJGoe5avFJjKhEysoGRDhAKP04g3eN/m
-	 pNYUY+dZJ0Z3pAF7r01T6FAJXLTvzLvVWVXPi8wGr/sUFZn/EtfJPgYFEmRc+bXtB+
-	 V2dIgsyWPnLiC1Z2w46uyu8Nr6G2chnSgw2o6TSc=
+	by mail.kernel.org (Postfix) with ESMTP id D1DD0206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfDKCnE (ORCPT
+        id S1726771AbfDKCpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfDKCnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:43:04 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BC2217D9;
-        Thu, 11 Apr 2019 02:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554950583;
-        bh=dFs87/I5FzSAKmfefEU/2kxGJKT+FUKq0QrvX8wspck=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CRHDzfUSrkXr4n9W4H3po3dQplC0qiYdnWfkPKeOX++hc37AgkObCOyRt/3lDafEw
-         y+K2N9sltJyfr1QDVS3iSf1Z1yuS+qCgIeAh1RbNEo/S9MaeufBxhOr44llXli7suy
-         RrnZxAkiIBlHBuixi2ziOqDHdyjEB6/rXvHybGgE=
-Date:   Thu, 11 Apr 2019 10:42:51 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] ARM: dts: imx6: RDU2: Use new CODEC reset pin name
-Message-ID: <20190411024250.GL26817@dragon>
-References: <20190329181313.21009-1-afd@ti.com>
+        Wed, 10 Apr 2019 22:45:33 -0400
+Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:38146 "EHLO
+        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbfDKCpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 22:45:33 -0400
+Received: by mail.osadl.at (Postfix, from userid 1001)
+        id 025E35C2DC5; Thu, 11 Apr 2019 04:44:44 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 04:44:44 +0200
+From:   Nicholas Mc Guire <der.herr@hofr.at>
+To:     Adham.Abozaeid@microchip.com
+Cc:     hofrat@osadl.org, Ajay.Kathat@microchip.com,
+        gregkh@linuxfoundation.org, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] staging: wilc1000: give usleep_range a range
+Message-ID: <20190411024444.GA5487@osadl.at>
+References: <1554552067-15421-1-git-send-email-hofrat@osadl.org>
+ <d38b17d8-5b0f-5b5e-2933-0626700e8546@microchip.com>
+ <20190409013656.GA22293@osadl.at>
+ <0360e5c6-28c8-db9e-1e8d-80445fe433c0@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190329181313.21009-1-afd@ti.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <0360e5c6-28c8-db9e-1e8d-80445fe433c0@microchip.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 01:13:10PM -0500, Andrew F. Davis wrote:
-> The correct DT property for specifying a GPIO used for reset
-> is "reset-gpios", the driver now accepts this name, use it here.
+On Wed, Apr 10, 2019 at 06:31:21PM +0000, Adham.Abozaeid@microchip.com wrote:
+> Hi Nicolas
 > 
-> Note the GPIO polarity in the driver was ignored before and always
-> assumed to be active low, when all the DTs are fixed we will start
-> respecting the specified polarity. Switch polarity in DT to the
-> currently assumed one, this way when the driver changes the
-> behavior will not change.
+> On 4/8/19 6:36 PM, Nicholas Mc Guire wrote:
+> > On Mon, Apr 08, 2019 at 09:10:00PM +0000, Adham.Abozaeid@microchip.com wrote:
+> >> Hi Nicholas
+> >>
+> >> On 4/6/19 5:01 AM, Nicholas Mc Guire wrote:
+> >>> External E-Mail
+> >>>
+> >>>
+> >>> Someone that knows the motivation for setting the time to 2 millisecond
+> >>> might need to check if the 2 milliseconds where seen as tollerable max or
+> >>> min - I'm assuming it was the min so extending.
+> >> 2 msec is the time the chip takes to wake up from sleep.
+> >>
+> >> Increasing the maximum to 5 msec will impact the throughput since this call is on the transmit path.
+> >>
+> > ok - would it be tollerable to make it 2 - 2.5 ms ?
+> > even that would allow for the hrtimer subsystem to optimize
+> > a lot. In any case the min==max case gives you very little
+> > if you run a test-case with usleep_range(1000,1000) and
+> > a loop with usleep_range(1000,2000) and look at the distribution
+> > you will have a hard time seeing any difference.
 > 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> yes, I believe 2.5 shouldn't be a problem.
+>
+thanks - will send out a V2 then shortly.
 
-I fixed up the prefix to use board name, and applied patch #1 ~ #3.
-
-Shawn
+thx!
+hofrat 
