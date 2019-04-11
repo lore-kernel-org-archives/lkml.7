@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC861C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60497C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D702075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDCA217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554946650;
-	bh=J8pUOLTKBemhrk0Zj1JI1ARtgpoGFACctaNq/z2zqYg=;
+	s=default; t=1554946659;
+	bh=QST2rICE03GzjrPv+qF8ko/sziq4XgcB8b1i/FMRnA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IekVDMfGiurxGVC4k8L9QzOwKKH14FwKfMT5IHeFuFGv1LyyZj3+BTYU721CQmtAY
-	 Td6PQrC76N/5oBFmoZMiqrVC389grarX4CEOGBVsc0dPsZxSTM1trDX84lZyH3FYZW
-	 CzJs28k3hurMrapGddy+Z2uUqJGD97tsheTsPwno=
+	b=MPf1E2xtsul55vmLY1hnmUyOuEHBVjGMu7PbpbmNBP41TyHyUfGD5aanna/TNfXI7
+	 +z32fhDQ37OzXhOepPWbjgWAfJdRb7meS8p5I+gZApfAVIc+HHed+7/s9IFXeUfl9L
+	 Y10jc/YY611dRYiHyBUZ+Zt6p0A00szF9Xb1mSM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfDKBh3 (ORCPT
+        id S1727279AbfDKBhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:37:29 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56339 "EHLO
+        Wed, 10 Apr 2019 21:37:37 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:60327 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726612AbfDKBh1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726612AbfDKBhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:37:27 -0400
+        Wed, 10 Apr 2019 21:37:35 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 59C58B79A;
-        Wed, 10 Apr 2019 21:37:26 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 42902E381;
+        Wed, 10 Apr 2019 21:37:34 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 10 Apr 2019 21:37:26 -0400
+  by compute3.internal (MEProxy); Wed, 10 Apr 2019 21:37:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Tq6hWwswYs/S8V9g57LOLmjTNN0NoV+f6Q5VLbbSnZY=; b=2CRQThrQ
-        eRsRFpQwkExGuy4vU8Wmq+XtUbO/D19tvIhEaDKMVcNYwDQ46PNrEAI8EH8/HKx7
-        FTIM1nhNO2pXs4zZKFKogUkU1Z6hCDQD9Zwn4jUDztIlyNa/kBlLxB10AXVs2B9r
-        /COdMWuyRClZFWnN24mFPzhXKsiV+cU9aItt0t4fyZzSfQ4e8YWiQMv8tm9xFVu+
-        DXPS5uvMffVixFrAjqTvzdxbdvXap+uO7hpIIAIu+cHzXJyRdYn3Wew5OKX41vf9
-        sRPV41XoTj7YNB0Tj+ixOAUbqElipOaRs0ZJSRekdMJGWlQ6nyG5gZCye3z//aPn
-        2fQUbHpFdTBFkw==
-X-ME-Sender: <xms:VpquXMGS26eFg6i-es3Z8Mh3hisNGC2C1S9fAsmsqMgAh3NK2gIGsQ>
+        fm2; bh=Tz/SWwtx1/b22exijoLQtrMgYyhU13VuaiIWZg1apv8=; b=iznmAI5R
+        H9ikZ/IxUJRwg4UQ92VO03JXfnlZj/iJfMtu17QXBLgQtDR+f3u8p8GbVAW4r4hH
+        08v3gkNkv38cluYvTeXyzLFFXG0OzdiLGj3jlV2ZZ28XdENqLZ1JLLrhvmBQshH/
+        5bM5YLEi3slnOVkF5xyu61ADUXeWqagDwbQfuOe8N/GS7Mvsj5JHnpG/tZHIAnVw
+        8t2VvNfUEibKktEdhsSi0OyPGlKNIXP5jqluRhFYljLTi9ETNX655jayoAL5Pefo
+        UMYCAIDzi8LbZgTnM8nsew0lwwBbvhg3w+andcwCcEpb/OflKCy+zQl5Qt5hMTEw
+        bNhRvkWL8TzgdQ==
+X-ME-Sender: <xms:XpquXLTfO_DCWnZoFxnJLHuFl1tkD_Z29m74o1SynRw0yxxkr-KNLg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudekgdegvdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -51,13 +51,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudekgdegvdcutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudejuddrudelrdduleegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
     ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:VpquXB8u36Lty0pKwbuPGBrpMgmuYVY9KZDjm07gm79pm7Dq4MLy_w>
-    <xmx:VpquXMjiKuctTUwsZZF5d5GT0XNgcScCg-0nVv93o40zIaFVfsr_fw>
-    <xmx:VpquXH_V71LveNuTW3SNdBCUpHRhEAx0GBiCvSabhy7Hw0whIyvmXg>
-    <xmx:VpquXNLrgar-UUH1BZVBzzI8LezKEIfe0xO-WnSCgAqpWkQ257vaVw>
+X-ME-Proxy: <xmx:XpquXKs_o7x4LvcYUIxG90FGXBLlOVDNw8V040LKW-i994uPuSVhTA>
+    <xmx:XpquXDL_yu9XbCU6j23_CznDVFUBaMPcHUeaZd25EPia4RHWlG5vXA>
+    <xmx:XpquXPnukGHvNVNQW4zc-G1tnIfwjpQwaBlUG-Iy-xsMX2FlLF-LmA>
+    <xmx:XpquXOHR_FLICvEA9aNI3PGLWIa9jgwAcXPlr5PKB0HHsGfkUhB4Yg>
 Received: from eros.localdomain (124-171-19-194.dyn.iinet.net.au [124.171.19.194])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5A211E408B;
-        Wed, 10 Apr 2019 21:37:18 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 655DDE4332;
+        Wed, 10 Apr 2019 21:37:26 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -80,9 +80,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Hugh Dickins <hughd@google.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 13/15] dcache: Provide a dentry constructor
-Date:   Thu, 11 Apr 2019 11:34:39 +1000
-Message-Id: <20190411013441.5415-14-tobin@kernel.org>
+Subject: [RFC PATCH v3 14/15] dcache: Implement partial shrink via Slab Movable Objects
+Date:   Thu, 11 Apr 2019 11:34:40 +1000
+Message-Id: <20190411013441.5415-15-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411013441.5415-1-tobin@kernel.org>
 References: <20190411013441.5415-1-tobin@kernel.org>
@@ -93,73 +93,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support object migration on the dentry cache we need to have
-a determined object state at all times. Without a constructor the object
-would have a random state after allocation.
+The dentry slab cache is susceptible to internal fragmentation.  Now
+that we have Slab Movable Objects we can attempt to defragment the
+dcache.  Dentry objects are inherently _not_ relocatable however under
+some conditions they can be free'd.  This is the same as shrinking the
+dcache but instead of shrinking the whole cache we only attempt to free
+those objects that are located in partially full slab pages.  There is
+no guarantee that this will reduce the memory usage of the system, it is
+a compromise between fragmented memory and total cache shrinkage with
+the hope that some memory pressure can be alleviated.
 
-Provide a dentry constructor.
+This is implemented using the newly added Slab Movable Objects
+infrastructure.  The dcache 'migration' function is intentionally _not_
+called 'd_migrate' because we only free, we do not migrate.  Call it
+'d_partial_shrink' to make explicit that no reallocation is done.
+
+Implement isolate and 'migrate' functions for the dentry slab cache.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- fs/dcache.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ fs/dcache.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index aac41adf4743..606cfca20d42 100644
+index 606cfca20d42..5c707ed9ab5a 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1603,6 +1603,16 @@ void d_invalidate(struct dentry *dentry)
- }
- EXPORT_SYMBOL(d_invalidate);
+@@ -30,6 +30,7 @@
+ #include <linux/bit_spinlock.h>
+ #include <linux/rculist_bl.h>
+ #include <linux/list_lru.h>
++#include <linux/backing-dev.h>
+ #include "internal.h"
+ #include "mount.h"
  
-+static void dcache_ctor(void *p)
+@@ -3068,6 +3069,74 @@ void d_tmpfile(struct dentry *dentry, struct inode *inode)
+ }
+ EXPORT_SYMBOL(d_tmpfile);
+ 
++/*
++ * d_isolate() - Dentry isolation callback function.
++ * @s: The dentry cache.
++ * @v: Vector of pointers to the objects to isolate.
++ * @nr: Number of objects in @v.
++ *
++ * The slab allocator is holding off frees. We can safely examine
++ * the object without the danger of it vanishing from under us.
++ */
++static void *d_isolate(struct kmem_cache *s, void **v, int nr)
 +{
-+	struct dentry *dentry = p;
++	struct dentry *dentry;
++	int i;
 +
-+	/* Mimic lockref_mark_dead() */
-+	dentry->d_lockref.count = -128;
++	for (i = 0; i < nr; i++) {
++		dentry = v[i];
++		__dget(dentry);
++	}
 +
-+	spin_lock_init(&dentry->d_lock);
++	return NULL;		/* No need for private data */
 +}
 +
- /**
-  * __d_alloc	-	allocate a dcache entry
-  * @sb: filesystem it will belong to
-@@ -1658,7 +1668,7 @@ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
- 
- 	dentry->d_lockref.count = 1;
- 	dentry->d_flags = 0;
--	spin_lock_init(&dentry->d_lock);
++/*
++ * d_partial_shrink() - Dentry migration callback function.
++ * @s: The dentry cache.
++ * @v: Vector of pointers to the objects to migrate.
++ * @nr: Number of objects in @v.
++ * @node: The NUMA node where new object should be allocated.
++ * @private: Returned by d_isolate() (currently %NULL).
++ *
++ * Dentry objects _can not_ be relocated and shrinking the whole dcache
++ * can be expensive.  This is an effort to free dentry objects that are
++ * stopping slab pages from being free'd without clearing the whole dcache.
++ *
++ * This callback is called from the SLUB allocator object migration
++ * infrastructure in attempt to free up slab pages by freeing dentry
++ * objects from partially full slabs.
++ */
++static void d_partial_shrink(struct kmem_cache *s, void **v, int nr,
++		      int node, void *_unused)
++{
++	struct dentry *dentry;
++	LIST_HEAD(dispose);
++	int i;
 +
- 	seqcount_init(&dentry->d_seq);
- 	dentry->d_inode = NULL;
- 	dentry->d_parent = dentry;
-@@ -3091,14 +3101,17 @@ static void __init dcache_init_early(void)
- 
- static void __init dcache_init(void)
++	for (i = 0; i < nr; i++) {
++		dentry = v[i];
++		spin_lock(&dentry->d_lock);
++		dentry->d_lockref.count--;
++
++		if (dentry->d_lockref.count > 0 ||
++		    dentry->d_flags & DCACHE_SHRINK_LIST) {
++			spin_unlock(&dentry->d_lock);
++			continue;
++		}
++
++		if (dentry->d_flags & DCACHE_LRU_LIST)
++			d_lru_del(dentry);
++
++		d_shrink_add(dentry, &dispose);
++
++		spin_unlock(&dentry->d_lock);
++	}
++
++	if (!list_empty(&dispose))
++		shrink_dentry_list(&dispose);
++}
++
+ static __initdata unsigned long dhash_entries;
+ static int __init set_dhash_entries(char *str)
  {
--	/*
--	 * A constructor could be added for stable state like the lists,
--	 * but it is probably not worth it because of the cache nature
--	 * of the dcache.
--	 */
--	dentry_cache = KMEM_CACHE_USERCOPY(dentry,
--		SLAB_RECLAIM_ACCOUNT|SLAB_PANIC|SLAB_MEM_SPREAD|SLAB_ACCOUNT,
--		d_iname);
-+	slab_flags_t flags =
-+		SLAB_RECLAIM_ACCOUNT | SLAB_PANIC | SLAB_MEM_SPREAD | SLAB_ACCOUNT;
-+
-+	dentry_cache =
-+		kmem_cache_create_usercopy("dentry",
-+					   sizeof(struct dentry),
-+					   __alignof__(struct dentry),
-+					   flags,
-+					   offsetof(struct dentry, d_iname),
-+					   sizeof_field(struct dentry, d_iname),
-+					   dcache_ctor);
+@@ -3113,6 +3182,8 @@ static void __init dcache_init(void)
+ 					   sizeof_field(struct dentry, d_iname),
+ 					   dcache_ctor);
  
++	kmem_cache_setup_mobility(dentry_cache, d_isolate, d_partial_shrink);
++
  	/* Hash may have been set up in dcache_init_early */
  	if (!hashdist)
+ 		return;
 -- 
 2.21.0
 
