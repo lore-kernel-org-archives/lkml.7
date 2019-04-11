@@ -2,147 +2,100 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1430FC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42A6C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D604220850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EE920850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:25:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YkZoFEdj"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Cxh/P7Po"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfDKOYd (ORCPT
+        id S1726738AbfDKOY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:24:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37666 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKOYd (ORCPT
+        Thu, 11 Apr 2019 10:24:59 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:61880 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfDKOY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:24:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0PQ6u1lryoiBwiTNLXSuUsVuukUeEcpBs3lJidBSw3Q=; b=YkZoFEdj+mDuWhZR9lu1QPt7i
-        6Kmzt3Km4bC7+HUCiUzk3r37FaGfNsSg9Ctx9QheZfUEeXpIo/Mvsknm5NHITXgfdIubs8eP8E/zh
-        h5a7LtGMbUmDhhR+x53KB4CiCTq6KmZEvnmo53dTypGeOXui1vvd7YWD1l5izNjZNKOyVqobe9e0n
-        3jrghxOzP++KF80XlRSkJxcmtiJFrSidFS8GJOE5bSuJdeyABOMfMI83cqpnddlUJS4PU7GOsgi1o
-        mCrvxvs6ivXGxtpoWVwjIfaDMCUWzxR/DJXjyEV4J3zTbTqhK+eY/EYiWDly4HothfgUj+JUE3Otu
-        3LOIEPsvA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEacy-0006u7-LD; Thu, 11 Apr 2019 14:24:32 +0000
-Date:   Thu, 11 Apr 2019 07:24:32 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mao Han <han_mao@c-sky.com>
-Cc:     linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 1/3] riscv: Add perf callchain support
-Message-ID: <20190411142432.GB8343@infradead.org>
-References: <cover.1554961908.git.han_mao@c-sky.com>
- <195185ea63240ed396026505d96d1f6449963482.1554961908.git.han_mao@c-sky.com>
+        Thu, 11 Apr 2019 10:24:58 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x3BEOrFb017487;
+        Thu, 11 Apr 2019 23:24:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3BEOrFb017487
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554992694;
+        bh=+1aaN2g5fGIPYt15Gmzb0ZZaU/lOwLJRq+hcEmAcUUY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Cxh/P7PoQAEdldkAasOyvg2p41VfTLFL6c65bxy+otOwSIXASDTA5B6RW/VIqP7V2
+         s700BYRaa4BWrjcB0Z9+dgFWWcWNfiR92BIdHciWHc6Fn3C3ZOl13Ui9QI7cd9bsso
+         OiqY5c5a629cyNAk56ZmUbg0Q3DmFbUcFghZ+ycu6qSlcEMNcJ/+c4Dq43o2Gi7xC0
+         X2WwGNcYn8vGQFzRlodeQ24P+DrGu2yQ7nXLQvVTA1loNlh2hn+SiWjXdJhEEYHIaQ
+         ngXFC4HMG+7lwri5S8oLPrIG5P2kurm4OXweFTLoHo3FPJYQd/jGo/D8cUPWOGhLAN
+         VhdTecv9BjFAw==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id a190so3600588vsd.0;
+        Thu, 11 Apr 2019 07:24:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPQuHjnjrCQmhQd41WBAZIZFvXpk9WAk6DHCq4mYkoEZvRAeXj
+        dDIMFzdxyYE1yhvY965A8xkpaHTW5tf3SeUWXAA=
+X-Google-Smtp-Source: APXvYqw2Pak4Wm0rPBRo9+17F8EAI0l5I8adikX9qm5nj5XZWYkCDWSEzbZDVQWXvcBUuczgHSVHL42lfgfkxN+KWeY=
+X-Received: by 2002:a67:fbcc:: with SMTP id o12mr29256418vsr.60.1554992693153;
+ Thu, 11 Apr 2019 07:24:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <195185ea63240ed396026505d96d1f6449963482.1554961908.git.han_mao@c-sky.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1554631398-29297-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1554631398-29297-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 11 Apr 2019 23:24:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATZOhGAF0d5fvwHb4ATYYdtkmZNjtSMvcM+bv8CsPWfhw@mail.gmail.com>
+Message-ID: <CAK7LNATZOhGAF0d5fvwHb4ATYYdtkmZNjtSMvcM+bv8CsPWfhw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: remove unneeded dependency for include/config/kernel.release
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> --- /dev/null
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -0,0 +1,122 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+On Sun, Apr 7, 2019 at 7:03 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> This is unneeded since commit 43fee2b23895 ("kbuild: do not redirect
+> the first prerequisite for filechk").
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Please use normal /* */ Style comment for everything but the SPDX
-tags.
+Applied to linux-kbuild.
 
-> +static int unwind_frame_kernel(struct stackframe *frame)
-> +{
-> +	int graph = 0;
-> +
-> +	/* 0x3 means misalignment */
-> +	if (!kstack_end((void *)frame->fp) &&
-> +	    !((unsigned long)frame->fp & 0x3) &&
-> +	    ((unsigned long)frame->fp >= TASK_SIZE)) {
-> +		frame->ra = ((struct stackframe *)frame->fp - 1)->ra;
-> +		frame->fp = ((struct stackframe *)frame->fp - 1)->fp;
-> +		/* make sure CONFIG_FUNCTION_GRAPH_TRACER is turned on */
-> +		if (__kernel_text_address(frame->ra))
-> +			frame->ra = ftrace_graph_ret_addr(NULL, &graph,
-> +							frame->ra, NULL);
-> +		return 0;
-> +	} else {
-> +		return -EPERM;
-> +	}
 
-Please do early exists for all the error conditions.  Also no casts
-are needed for using ->fp as a scalar value, and we should probably
-just do a struct copy instead of copying both values individually.
+> ---
+>
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 895022b..10643c3 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1067,7 +1067,7 @@ filechk_kernel.release = \
+>         echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
+>
+>  # Store (new) KERNELRELEASE string in include/config/kernel.release
+> -include/config/kernel.release: $(srctree)/Makefile FORCE
+> +include/config/kernel.release: FORCE
+>         $(call filechk,kernel.release)
+>
+>  # Additional helpers built in scripts/
+> --
+> 2.7.4
+>
 
-The function should look something like:
 
-static int unwind_frame_kernel(struct stackframe *frame)
-{
-	if (!kstack_end((void *)frame->fp))
-		return -EPERM;
-	if ((frame->fp & 0x3 || frame->fp >= TASK_SIZE)
-		return -EPERM;
-
-	*frame = *((struct stackframe *)frame->fp - 1);
-	if (__kernel_text_address(frame->ra)) {
-		int graph = 0;
-
-		frame->ra = ftrace_graph_ret_addr(NULL, &graph, frame->ra,
-				NULL);
-	}
-	return 0;
-}
-
-> +static void notrace walk_stackframe(struct stackframe *fr,
-> +			struct perf_callchain_entry_ctx *entry)
-> +{
-> +	while (1) {
-> +		int ret;
-> +
-> +		perf_callchain_store(entry, fr->ra);
-> +
-> +		ret = unwind_frame_kernel(fr);
-> +		if (ret < 0)
-> +			break;
-> +	}
-> +}
-
-Why not:
-
-	do {
-		perf_callchain_store(entry, fr->ra);
-	} while (unwind_frame_kernel(fr) >= 0);
-
-> +/*
-> + * Get the return address for a single stackframe and return a pointer to the
-> + * next frame tail.
-> + */
-> +static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
-> +			unsigned long fp, unsigned long reg_ra)
-> +{
-> +	struct stackframe buftail;
-> +	unsigned long ra = 0;
-> +	unsigned long *user_frame_tail = (unsigned long *)(fp - sizeof(struct stackframe));
-
-Overly long line.
-
-> +	fp = user_backtrace(entry, fp, regs->ra);
-> +	while ((entry->nr < entry->max_stack) &&
-> +		fp && !((unsigned long)fp & 0x3))
-> +		fp = user_backtrace(entry, fp, 0);
-
-Please don't indent the condition continuation and the loop body
-by the same amount.
+-- 
+Best Regards
+Masahiro Yamada
