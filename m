@@ -2,153 +2,325 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615A3C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB7C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A48221852
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A0B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0b9VJRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfDKOCa convert rfc822-to-8bit (ORCPT
+        id S1726629AbfDKOJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:02:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35004 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfDKOC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:02:29 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A5D53DBE7;
-        Thu, 11 Apr 2019 14:02:23 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BF490108F821;
-        Thu, 11 Apr 2019 14:02:16 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/2] mm/memcontrol: Finer-grained memory control
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Aaron Lu <aaron.lu@intel.com>
-References: <20190410191321.9527-1-longman@redhat.com>
- <20190410195443.GL10383@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
- XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
- jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
- r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
- CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
- 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
- VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
- evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
- Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
- h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
- bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
- FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
- oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
- ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
- fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
- 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
- rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
- 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
- 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
- 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
- QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
- TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
- Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
- yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
- lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
- drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
- M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
- 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
- MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
- bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
- qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
- AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
- 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
- GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
- jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
- 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
- 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
- yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
- 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
- Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
- wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
- weim8xU=
-Organization: Red Hat
-Message-ID: <daef5f22-0bc2-a637-fa3d-833205623fb6@redhat.com>
-Date:   Thu, 11 Apr 2019 10:02:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 11 Apr 2019 10:09:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39027 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKOJ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 10:09:56 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a96so3476608pla.6;
+        Thu, 11 Apr 2019 07:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6PPjleAfV7xHDBq3M8dTEGwescQ1aUf43BZfhxZhFtY=;
+        b=U0b9VJRAgbnEySeWezMMKCR9n0G7KzFPBVsoijp+ZJ1ZSGtZ7anFCc8jN9PkgQLSl5
+         P8CIzyGijQ70UmOmHnMa4yX1OrXT6E2j12n/JJzuc2p/tv/cvR548kMddzqCyQn4WBHQ
+         lLO+ZL/r5X0GMjgZdAx4WkgSAxsvBxW3j8xcVgBeRVY95Pk3IhkA6ITo8bLnZKeE7QWZ
+         Xn+eFAS0l4wwx4PBKoAYkr2hkvxOKtL3ehZalq9E0aGR9+F9RyLncYNOLVlhifNkUkqR
+         c700b2dhAOWHvgk4lUK850a/uirxKfanzTADSBpgH9dgFPl/eXMp0MnDXweOtJxF5/yo
+         wNKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6PPjleAfV7xHDBq3M8dTEGwescQ1aUf43BZfhxZhFtY=;
+        b=MkoR7K7gpGzudLrkD6MCVhYgsfZwIt5UizR0qWNb2SPKEuboyh4yKs8oSGKv6IlUhg
+         573R7ANfwhvmMm7Kq7ddrNGGvV4q7TXtc7qxV8qujRIDNOm22ipLCNX2vyATs65v/PVj
+         thrtCVnkx3UqlBo36RTQXXCwhphB1hIRPBrC+NHMsoHrRUyd14LjIoH8j6VLVU8PFfcA
+         BVS4w1AGZV3akPVwRfbBX8t64F/M71225/JlKvmBGA3RSr4qAO/sHohLL3XDuv55lkGX
+         c1rjeAJu2wegqYeyfIpNFIBP03e0YRGo848gFOHIq1JPAfr4jsz81W5RIJJX4kEzQBaY
+         EGiw==
+X-Gm-Message-State: APjAAAX92RiDFCuOIk++ocoPuXamYUiJPucLCo3gpIDMGcOjvq2THYWK
+        bm7Z0gBADdRy4i2hjK3XMiTl8FwBFcBw5Zr8wbk=
+X-Google-Smtp-Source: APXvYqylppYs8AvY5pR2BZLfrJ3gk1eJUG6q+Vg6x+Ffy3+FY/vIAUPKqcTJvLp6jf1MqZRl6hPdMTLJ/e9hInpMfG8=
+X-Received: by 2002:a17:902:e091:: with SMTP id cb17mr51505715plb.222.1554991795139;
+ Thu, 11 Apr 2019 07:09:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190410195443.GL10383@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 11 Apr 2019 14:02:29 +0000 (UTC)
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1554602585-6853-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <1554602585-6853-1-git-send-email-lsun@mellanox.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 11 Apr 2019 17:09:43 +0300
+Message-ID: <CAHp75Vdo2oJ8umHh4J_9a3cFQHO3Nk3ss+HAJpaXUT=kHZhCng@mail.gmail.com>
+Subject: Re: [PATCH v14] platform/mellanox: Add TmFifo driver for Mellanox
+ BlueField Soc
+To:     Liming Sun <lsun@mellanox.com>
+Cc:     David Woods <dwoods@mellanox.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/10/2019 03:54 PM, Michal Hocko wrote:
-> On Wed 10-04-19 15:13:19, Waiman Long wrote:
->> The current control mechanism for memory cgroup v2 lumps all the memory
->> together irrespective of the type of memory objects. However, there
->> are cases where users may have more concern about one type of memory
->> usage than the others.
->>
->> We have customer request to limit memory consumption on anonymous memory
->> only as they said the feature was available in other OSes like Solaris.
-> Please be more specific about a usecase.
-
-From that customer's point of view, page cache is more like common goods
-that can typically be shared by a number of different groups. Depending
-on which groups touch the pages first, it is possible that most of those
-pages can be disproportionately attributed to one group than the others.
-Anonymous memory, on the other hand, are not shared and so can more
-correctly represent the memory footprint of an application. Of course,
-there are certainly cases where an application can have large private
-files that can consume a lot of cache pages. These are probably not the
-case for the applications used by that customer.
-
+On Sun, Apr 7, 2019 at 5:03 AM Liming Sun <lsun@mellanox.com> wrote:
 >
->> To allow finer-grained control of memory, this patchset 2 new control
->> knobs for memory controller:
->>  - memory.subset.list for specifying the type of memory to be under control.
->>  - memory.subset.high for the high limit of memory consumption of that
->>    memory type.
-> Please be more specific about the semantic.
->
-> I am really skeptical about this feature to be honest, though.
->
+> This commit adds the TmFifo platform driver for Mellanox BlueField
+> Soc. TmFifo is a shared FIFO which enables external host machine
+> to exchange data with the SoC via USB or PCIe. The driver is based
+> on virtio framework and has console and network access enabled.
 
-Please see patch 1 which has a more detailed description. This is just
-an overview for the cover letter.
+Thanks for an update, my comments below.
 
->> For simplicity, the limit is not hierarchical and applies to only tasks
->> in the local memory cgroup.
-> This is a no-go to begin with.
+> +/**
+> + * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
+> + * @vdev: virtio device, in which the vdev.id.device field has the
+> + *        VIRTIO_ID_xxx id to distinguish the virtual device.
+> + * @status: status of the device
+> + * @features: supported features of the device
+> + * @vrings: array of tmfifo vrings of this device
+> + * @config.cons: virtual console config -
+> + *               select if vdev.id.device is VIRTIO_ID_CONSOLE
+> + * @config.net: virtual network config -
+> + *              select if vdev.id.device is VIRTIO_ID_NET
+> + * @tx_buf: tx buffer used to buffer data before writing into the FIFO
+> + */
+> +struct mlxbf_tmfifo_vdev {
+> +       struct virtio_device vdev;
+> +       u8 status;
+> +       u64 features;
+> +       struct mlxbf_tmfifo_vring vrings[MLXBF_TMFIFO_VRING_MAX];
+> +       union {
+> +               struct virtio_console_config cons;
+> +               struct virtio_net_config net;
+> +       } config;
+> +       struct circ_buf tx_buf;
+> +};
 
-The reason for doing that is to introduce as little overhead as
-possible. We can certainly make it hierarchical, but it will complicate
-the code and increase runtime overhead. Another alternative is to limit
-this feature to only leaf memory cgroups. That should be enough to cover
-what the customer is asking for and leave room for future hierarchical
-extension, if needed.
+(1)
 
-Cheers,
-Longman
+> +/**
+> + * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
+> + * @type: message type
+> + * @len: payload length
+> + * @data: 64-bit data used to write the message header into the TmFifo register.
+> + *
+> + * This message header is a union of struct and u64 data. The 'struct' has
+> + * type and length field which are used to encode & decode the message. The
+> + * 'data' field is used to read/write the message header from/to the FIFO.
+> + */
+> +union mlxbf_tmfifo_msg_hdr {
+> +       struct {
+> +               u8 type;
+> +               __be16 len;
+> +               u8 unused[5];
+> +       } __packed;
+> +       u64 data;
+> +};
 
+This union misses a type. See, for example, above structure (1) where
+union is used correctly.
+
+> +/* Allocate vrings for the FIFO. */
+> +static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
+> +                                    struct mlxbf_tmfifo_vdev *tm_vdev)
+> +{
+> +       struct mlxbf_tmfifo_vring *vring;
+> +       struct device *dev;
+> +       dma_addr_t dma;
+> +       int i, size;
+> +       void *va;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
+> +               vring = &tm_vdev->vrings[i];
+> +               vring->fifo = fifo;
+> +               vring->num = MLXBF_TMFIFO_VRING_SIZE;
+> +               vring->align = SMP_CACHE_BYTES;
+> +               vring->index = i;
+> +               vring->vdev_id = tm_vdev->vdev.id.device;
+> +               dev = &tm_vdev->vdev.dev;
+> +
+> +               size = vring_size(vring->num, vring->align);
+> +               va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
+> +               if (!va) {
+
+> +                       dev_err(dev->parent, "dma_alloc_coherent failed\n");
+> +                       mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
+
+First do things, then report about what has been done.
+
+> +                       return -ENOMEM;
+> +               }
+> +
+> +               vring->va = va;
+> +               vring->dma = dma;
+> +       }
+> +
+> +       return 0;
+> +}
+
+> +/* Interrupt handler. */
+> +static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
+> +{
+> +       struct mlxbf_tmfifo_irq_info *irq_info = arg;
+> +
+
+> +       if (irq_info->index < MLXBF_TM_MAX_IRQ &&
+
+On which circumstances this is possible?
+
+> +           !test_and_set_bit(irq_info->index, &irq_info->fifo->pend_events))
+> +               schedule_work(&irq_info->fifo->work);
+> +
+> +       return IRQ_HANDLED;
+> +}
+
+> +static void mlxbf_tmfifo_release_pending_pkt(struct mlxbf_tmfifo_vring *vring)
+> +{
+> +       struct vring_desc *desc_head;
+> +       u32 len = 0;
+> +
+> +       if (vring->desc_head) {
+> +               desc_head = vring->desc_head;
+> +               len = vring->pkt_len;
+> +       } else {
+> +               desc_head = mlxbf_tmfifo_get_next_desc(vring);
+
+> +               if (desc_head)
+
+Redundant...
+
+> +                       len = mlxbf_tmfifo_get_pkt_len(vring, desc_head);
+
+...this is NULL-aware AFAICS.
+
+> +       }
+> +
+> +       if (desc_head)
+> +               mlxbf_tmfifo_release_desc(vring, desc_head, len);
+> +
+> +       vring->pkt_len = 0;
+> +       vring->desc = NULL;
+> +       vring->desc_head = NULL;
+> +}
+
+> +/* The notify function is called when new buffers are posted. */
+> +static bool mlxbf_tmfifo_virtio_notify(struct virtqueue *vq)
+> +{
+> +       struct mlxbf_tmfifo_vring *vring = vq->priv;
+> +       struct mlxbf_tmfifo_vdev *tm_vdev;
+> +       struct mlxbf_tmfifo *fifo;
+> +       unsigned long flags;
+> +
+> +       fifo = vring->fifo;
+> +
+> +       /*
+> +        * Virtio maintains vrings in pairs, even number ring for Rx
+> +        * and odd number ring for Tx.
+> +        */
+
+> +       if (!(vring->index & BIT(0))) {
+
+Perhaps positive conditional is better.
+
+> +               if (test_and_set_bit(MLXBF_TM_RX_HWM_IRQ, &fifo->pend_events))
+> +                       return true;
+> +       } else {
+> +               /*
+> +                * Console could make blocking call with interrupts disabled.
+> +                * In such case, the vring needs to be served right away. For
+> +                * other cases, just set the TX LWM bit to start Tx in the
+> +                * worker handler.
+> +                */
+> +               if (vring->vdev_id == VIRTIO_ID_CONSOLE) {
+> +                       spin_lock_irqsave(&fifo->spin_lock, flags);
+> +                       tm_vdev = fifo->vdev[VIRTIO_ID_CONSOLE];
+> +                       mlxbf_tmfifo_console_output(tm_vdev, vring);
+> +                       spin_unlock_irqrestore(&fifo->spin_lock, flags);
+> +               } else if (test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
+> +                                           &fifo->pend_events)) {
+> +                       return true;
+> +               }
+> +       }
+> +
+> +       schedule_work(&fifo->work);
+> +
+> +       return true;
+> +}
+
+> +/* Read the value of a configuration field. */
+> +static void mlxbf_tmfifo_virtio_get(struct virtio_device *vdev,
+> +                                   unsigned int offset,
+> +                                   void *buf,
+> +                                   unsigned int len)
+> +{
+> +       struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
+> +
+
+> +       if (offset + len > sizeof(tm_vdev->config))
+> +               return;
+
+This doesn't protect against too big len and offset.
+Same for other similar checks.
+
+> +
+> +       memcpy(buf, (u8 *)&tm_vdev->config + offset, len);
+> +}
+
+> +/* Read the configured network MAC address from efi variable. */
+> +static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
+> +{
+> +       efi_guid_t guid = EFI_GLOBAL_VARIABLE_GUID;
+> +       unsigned long size = ETH_ALEN;
+> +       efi_status_t status;
+> +       u8 buf[ETH_ALEN];
+> +
+
+> +       status = efi.get_variable(mlxbf_tmfifo_efi_name, &guid, NULL, &size,
+> +                                 buf);
+
+Use one line.
+
+> +       if (status == EFI_SUCCESS && size == ETH_ALEN)
+> +               ether_addr_copy(mac, buf);
+> +       else
+> +               ether_addr_copy(mac, mlxbf_tmfifo_net_default_mac);
+> +}
+
+> +/* Probe the TMFIFO. */
+> +static int mlxbf_tmfifo_probe(struct platform_device *pdev)
+> +{
+
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       fifo->rx_base = devm_ioremap_resource(dev, res);
+
+There is new helper devm_platform_ioremap_resource().
+Please, use it instead.
+
+> +       if (IS_ERR(fifo->rx_base))
+> +               return PTR_ERR(fifo->rx_base);
+
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       fifo->tx_base = devm_ioremap_resource(dev, res);
+
+Ditto.
+
+> +       if (IS_ERR(fifo->tx_base))
+> +               return PTR_ERR(fifo->tx_base);
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
