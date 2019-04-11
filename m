@@ -2,132 +2,157 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4A2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD0CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA5D2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fEgO+XK1"
+	by mail.kernel.org (Postfix) with ESMTP id 1F3812146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfDKQyx (ORCPT
+        id S1726765AbfDKQ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:54:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46013 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfDKQyw (ORCPT
+        Thu, 11 Apr 2019 12:56:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:48363 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfDKQ4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:54:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s15so8250374wra.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cOPpYZ3H0MfSv2c9lP19htg6l7OxmezHtSYFlHqm1UU=;
-        b=fEgO+XK1as3Z1ARlG/p809yfJJrV/4vTjcSHcrjqur3X5wDIwo8kCIGgLMCR/T/RE7
-         JCcKGqLNte/YPw1IOGMrt0ckjOKvXwxnNWBzr1DMzDRQTicjRfaU9ZaBWcJZJC6b+NQC
-         IwW8l1E2rpIcEIAPtPayK/MvxALsohFBGstFYmh3kDT67vKFq/HuGdRhmophtHY2vdkH
-         XedXJx11QcfMRzVsG0FQdEKiVPjuoDWIszEkyufFTnQNZWPXLFD+T2G/9h0wennRhgMV
-         HPrjg0AbBZ+Ho2DvRE6lnWrcL0+P9zXkDxID2rO1CPO/n384OMvlUa73JoAN0siG+u8f
-         pjeQ==
+        Thu, 11 Apr 2019 12:56:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id 186so5377107iox.15
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:56:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cOPpYZ3H0MfSv2c9lP19htg6l7OxmezHtSYFlHqm1UU=;
-        b=TcEgeSVTb/tSpTZgsopcs839GxDADxUnylb6Ft2GnxrCNPs/jX8mO1I95sEspQhdBi
-         iW3gy94oCaRg+Duw625BRC8q5uJ63KuJkox8MLN0Lns1eAQaGCzHxe48Ns79OqFNbvL1
-         mG3bvmEfVp4QJdk2PoWYYL0v5uRUrakXwzgoJyy3QkYh9kaS4KQlJZFjFKcUUjOTkkQr
-         fYVVi9dBw/u8pG1Ydi97BaPJcXv5zsuWvj7ulHeoxmc6rKDKgFpJRLy+FU8KXcbIxdr9
-         AZDnKCyx89vA1F8Ef+/ZEXjq7FUdnIcHoLYWilYpOutPOgEI6uYQrswJZDWLE5MCQhVh
-         TiKg==
-X-Gm-Message-State: APjAAAXmK2647an89E4XcEBb7sA7MyNgbyjZWj//HdoEt6eMhaD/cn4R
-        HeDk5FIT0Rkir366AbVHo5M88tWJavk=
-X-Google-Smtp-Source: APXvYqzxeM5u5pIVhTsvKsMqIBrH2illPdq3axdBpz3E+n8nzrtGegGuKG19noMTlgSUB9ulYXnkMw==
-X-Received: by 2002:a5d:6646:: with SMTP id f6mr9784948wrw.68.1555001690222;
-        Thu, 11 Apr 2019 09:54:50 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id y6sm41552051wru.9.2019.04.11.09.54.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:54:49 -0700 (PDT)
-Subject: Re: [PATCH v3 05/13] thermal: qoriq: Embed per-sensor data into
- struct qoriq_tmu_data
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-6-andrew.smirnov@gmail.com>
- <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
- <CAHQ1cqEJbXKdoqqwKjkD_yPjv52Y9w+XOOKxqFpPN23q-qnFaw@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4a61e24a-fbb5-30f6-691a-0376fbca7b46@linaro.org>
-Date:   Thu, 11 Apr 2019 18:54:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=lLqElqC0m4XZ0+jrm0tolRXN3tBjnF42xKr6PQb6rUg=;
+        b=Hh1loLRwlDXBs1W8RKMFmVdNdYJps7zx++GycIeRMnhkLip+Bx8c/AGCJ+1QTX2Ku0
+         mBUQrciKQ/OjgcKwBrjt7GU8gG52dCI360z0mvByIEkk7C0bVUUgvu9iZLcFpAvKpdRJ
+         q4KvQwyqI8y+AYzhW5fXpsPmicaQ7Q5zF/5sYIBaD4fR9cuDDr2T9x2gKCiVP/f0gcsk
+         bcLh01ld8D6LiwuNi4wNYuXfB2NaOnKlga9gXGZeF3UMpJVYcm2eCd37m54C9Ro2ag4S
+         m88LcqCJB20yhouWOfX9ih/XiKO57hAslvAbb4Izihd1b7nFyegeyI33HBA29vZwo6EP
+         yicQ==
+X-Gm-Message-State: APjAAAXzN5B2LUaMW4TMtOlXrwLjQqYshLMH4OZEzesTsfRtgeUCYEsm
+        5XNJww7VjCK8K7LhRLXVXAVeweEqv56jTvG8w3MuQ7msIWrb
+X-Google-Smtp-Source: APXvYqzy46TzZftNoE9hRg0nfs7bLbQBgSG/JPpnjZVk//QGpp2Vvk13ReEkr4pPfthDbqx/9bxVg1tJRjTvLz2dhkEVDJSJXaKl
 MIME-Version: 1.0
-In-Reply-To: <CAHQ1cqEJbXKdoqqwKjkD_yPjv52Y9w+XOOKxqFpPN23q-qnFaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:6f0e:: with SMTP id k14mr8672894ioc.11.1555001770075;
+ Thu, 11 Apr 2019 09:56:10 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 09:56:10 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000216cff05864410ea@google.com>
+Subject: INFO: task hung in snd_seq_kernel_client_ctl
+From:   syzbot <syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, perex@perex.cz,
+        syzkaller-bugs@googlegroups.com, tiwai@suse.com, tiwai@suse.de,
+        zsm@chromium.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/04/2019 20:00, Andrey Smirnov wrote:
-> On Thu, Apr 4, 2019 at 12:57 AM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->> On 01/04/2019 06:14, Andrey Smirnov wrote:
->>> Embed per-sensor data into struct qoriq_tmu_data so we can drop the
->>> code allocating it. This also allows us to get rid of per-sensor back
->>> reference to struct qoriq_tmu_data since now its address can be
->>> caluclated using container_of().
->>
->> This seems to be a repeating pattern, drivers are forced to put a back
->> pointer in the thermal sensor structure to regain access to the
->> container structure in the get_temp callback.
->>
->> It would make sense to pass the sensor id to the get_temp callback as we
->> register with the sensor id.
->>
-> 
-> I'll rebase this series on the two patches you submitted.
+Hello,
 
-Well I should have added the RFC tag because I was not able to test with
-a platform.
+syzbot found the following crash on:
 
-[ ... ]
+HEAD commit:    2f4c4d83 Add linux-next specific files for 20190411
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1261f42d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bfc6a0294e6babef
+dashboard link: https://syzkaller.appspot.com/bug?extid=47ded6c0f23016cde310
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130cecb7200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c0efab200000
 
->> Why not replace the little_endian boolean by a couple of callback
->> read/write and assign them to ioread32|ioread32be at init time.
->>
->> That will kill the tmu_read and tmu_write functions and from there you
->> can figure out how to remove the qdata backpointer. In addition, it will
->> save a few instructions to test the boolean.
->>
-> 
-> I am sure you've seen it by now, but little_endian is going away in
-> this series in regmap conversion patch.
+The bug was bisected to:
 
-Right :)
+commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32
+Author: Takashi Iwai <tiwai@suse.de>
+Date:   Tue Apr 9 15:35:22 2019 +0000
+
+     ALSA: seq: Protect in-kernel ioctl calls with mutex
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=178552b7200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=144552b7200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=104552b7200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
+Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
+
+INFO: task syz-executor971:9265 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4-next-20190411 #23
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor971 D28264  9265   9263 0x80000002
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  snd_seq_kernel_client_ctl+0xe5/0x170 sound/core/seq/seq_clientmgr.c:2345
+  snd_seq_oss_control sound/core/seq/oss/seq_oss_device.h:157 [inline]
+  snd_seq_oss_writeq_clear+0xe0/0x140 sound/core/seq/oss/seq_oss_writeq.c:85
+  snd_seq_oss_writeq_delete+0x20/0x40 sound/core/seq/oss/seq_oss_writeq.c:69
+  free_devinfo+0x66/0xc0 sound/core/seq/oss/seq_oss_init.c:406
+  port_delete+0xe8/0x1c0 sound/core/seq/seq_ports.c:272
+  snd_seq_delete_port+0x266/0x330 sound/core/seq/seq_ports.c:301
+  snd_seq_ioctl_delete_port+0xba/0x190 sound/core/seq/seq_clientmgr.c:1321
+  snd_seq_kernel_client_ctl+0x112/0x170 sound/core/seq/seq_clientmgr.c:2346
+  snd_seq_event_port_detach+0xba/0x100 sound/core/seq/seq_ports.c:705
+  delete_port+0x87/0xd0 sound/core/seq/oss/seq_oss_init.c:354
+  snd_seq_oss_release+0xf5/0x150 sound/core/seq/oss/seq_oss_init.c:433
+  odev_release+0x54/0x80 sound/core/seq/oss/seq_oss.c:153
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+  do_group_exit+0x135/0x370 kernel/exit.c:980
+  __do_sys_exit_group kernel/exit.c:991 [inline]
+  __se_sys_exit_group kernel/exit.c:989 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43ed98
+Code: Bad RIP value.
+RSP: 002b:00007fff4f4de2a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ed98
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be5a8 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+INFO: lockdep is turned off.
+NMI backtrace for cpu 1
+CPU: 1 PID: 1038 Comm: khungtaskd Not tainted 5.1.0-rc4-next-20190411 #23
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+  kthread+0x357/0x430 kernel/kthread.c:254
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
