@@ -2,178 +2,140 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BA6C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598CCC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AA620818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F8521773
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agUBoBwB"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hqiF9XR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfDKAbd (ORCPT
+        id S1726827AbfDKAdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 20:31:33 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:49287 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfDKAbd (ORCPT
+        Wed, 10 Apr 2019 20:33:06 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:17163 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDKAdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 20:31:33 -0400
-Received: by mail-qt1-f202.google.com with SMTP id f15so3956285qtk.16
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 17:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=xjs1svdJGaWis4ufgIMZP5hXjuYMKhCw0cBzYAGLyMA=;
-        b=agUBoBwBj4xqdTmLQHczdAFX/old7ot4YrWZUAHLbg8eEgmC+7vsSCHkc6jx+SmcFp
-         U4+U0MKTAeZkSbCHMiW07/VaaqRIUsgfnojKN2TaLVcT+8pK+tGqpOKm3tt3xbkCd4Xp
-         av5eep0mJjx85gltV3QaDlSQ5SMrwzywohDzPfZVIiy+eqApQp8nC53z0p+CAUcRzhs5
-         IoUl7eyw1pno1LNK6z6wUpMN6kkMfmqk3z6uqoIPTu/cxYVixZFComsUKS6l2/bXrI8K
-         GL7pJCxckG4fcNFys26FdmqEOHXcn7uDl6C0Ec+wjF7VYEU4hYQt6DkIDGHRP79OSbhx
-         L/zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=xjs1svdJGaWis4ufgIMZP5hXjuYMKhCw0cBzYAGLyMA=;
-        b=VmNz8gc7SRcGHy7t5fV1JqEoAbL+ogErmYeibvW2Jqh3iROi9WJfKipa1Zxfe0dbMw
-         m2sghEvPb+C1DBeQgCfL2QIl1V337ByHWr8TGphfguLGnlevo61wc/qIQRJ3oW8RWskr
-         CAYEOWCCm1Xsnd/6ewInX40sKCmBzd4W55+EnKH52NiQZgOWtlKhrAWiI56OmZgjOFPf
-         OjrUZlSprcqKm7Y+Eog/Hc/P3gyNFeTtxW29zIoNPLNFTKPPXq9sUW5Pez1gCSJCdb2l
-         8IYNkhmpOHPVt9f0knvzf8Gg0m2wFyUfoiO4rEMNYf+H6SsFqdTgYafbav9yD8KAPO3E
-         zrlw==
-X-Gm-Message-State: APjAAAWB04pz3DYROMm0+CKv/qF2ogiQzlSBD3id78+P1FDsY4Q6oU5p
-        qGu6v0cyvHZ4epoixbhfNDUuystxZqzL
-X-Google-Smtp-Source: APXvYqzwWKR48+ul3nTqlDPsoRiLt2SL+DD/vCMf9CWovKHCsFVWD7qZp9WBHS01DVP65LeQnTjHo69GKFhh
-X-Received: by 2002:ac8:3623:: with SMTP id m32mr5819876qtb.6.1554942692263;
- Wed, 10 Apr 2019 17:31:32 -0700 (PDT)
-Date:   Wed, 10 Apr 2019 17:31:07 -0700
-In-Reply-To: <20190411003107.52044-1-rajatja@google.com>
-Message-Id: <20190411003107.52044-3-rajatja@google.com>
-Mime-Version: 1.0
-References: <20190313222124.229371-1-rajatja@google.com> <20190411003107.52044-1-rajatja@google.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v4 3/3] platform/x86: intel_pmc_core: Instantiate pmc_core
- device on legacy platforms
-From:   Rajat Jain <rajatja@google.com>
-To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rafael J <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Rajat Jain <rajatja@google.com>, furquan@google.com,
-        evgreen@google.com, rajatxjain@gmail.com
+        Wed, 10 Apr 2019 20:33:06 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x3B0WwlL028763;
+        Thu, 11 Apr 2019 09:32:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x3B0WwlL028763
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554942779;
+        bh=i+LyFugYRsMsRKj5tpFQqnuRxx8s4uixGuB3ZKdR1fg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hqiF9XR+odZ8FifL+v/BrYDdr2aUbZrGT60A0hmMyWnqBPdtOYEa3Yh5ElRvV5f1C
+         O8icpHlR4abzvmAf6KWmTZ8UzmROSU92HdgcsCycYh4tmlUuQYj+oNGiwrghMReMxg
+         Q2rPUmIMNBW8E2d3vXyyBPX5ojKNrgAvWQIQIBkYOmKM707XX7g/h3zu0Xk7qsniKC
+         Wm1vNnG0w3CJeP7fi4Iv/2rijAy1/+YCVMTHuuk+Hjjk3XMLq3sncipr4zY9Dlz14K
+         4IK3WgPXQ4PmbCWVIve5605zOpN2XJJCKTz+yGoWWAmMa3JsKHrD4YuUi1Pu9IbAxd
+         HG80BvFoGV2VQ==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id d8so2486055vsp.2;
+        Wed, 10 Apr 2019 17:32:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAUg0tlYS07RwVim4vBJA/1O4GgVbsfYP9+iMhqtxOor1xLlTJqh
+        Gp0ELKxV8cwuS8VLpUl/fXzUixLE+T1jaMM2Ggk=
+X-Google-Smtp-Source: APXvYqxaLIx03ehW7G8KrJPwZ0yT2Nln13A7AJe0ZdEsIW+PI7jiRJQXndvJLIrWAomB0F9lhCnM7Q6D2xUrAucW7T0=
+X-Received: by 2002:a67:fbcc:: with SMTP id o12mr27346942vsr.60.1554942777514;
+ Wed, 10 Apr 2019 17:32:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190410155058.9437-2-joe.lawrence@redhat.com>
+In-Reply-To: <20190410155058.9437-2-joe.lawrence@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 11 Apr 2019 09:32:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ_=bp0VTOze7ckfXSwFy0m_g6OYPxS5K-ac7jjoutB+A@mail.gmail.com>
+Message-ID: <CAK7LNAQ_=bp0VTOze7ckfXSwFy0m_g6OYPxS5K-ac7jjoutB+A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] livepatch: Create and include UAPI headers
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add code to instantiate the pmc_core platform device and thus attach to
-the driver, if the ACPI device for the same ("INT33A1") is not present
-in a system where it should be. This was discussed here:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+On Thu, Apr 11, 2019 at 12:52 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
+>
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+>
+> Define klp prefixes in include/uapi/linux/livepatch.h, and use them for
+> replacing hard-coded values in kernel/livepatch/core.c.
+>
+> Update MAINTAINERS.
+>
+> Note: Add defines to uapi as these are also to be used by a newly
+> introduced klp-convert script.
+>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  MAINTAINERS                    |  1 +
+>  include/linux/livepatch.h      |  1 +
+>  include/uapi/linux/livepatch.h | 17 +++++++++++++++++
+>  kernel/livepatch/core.c        |  4 ++--
+>  4 files changed, 21 insertions(+), 2 deletions(-)
+>  create mode 100644 include/uapi/linux/livepatch.h
 
-Change-Id: I62e0909b010c13614feec36e2c72aed984b61734
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v4: Rename file, remove dummy arg, 1 conditional per if statement,
-    simplify init / exit calls..
-v3: (first version of *this* patch -to go with rest of v3 patchset)
-v2: (does not exist)
-v1: (does not exist)
 
- drivers/platform/x86/Makefile                 |  2 +-
- .../platform/x86/intel_pmc_core_plat_drv.c    | 60 +++++++++++++++++++
- 2 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/intel_pmc_core_plat_drv.c
 
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 86cb76677bc8..7041a88c34c7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
- obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
- 				   intel_telemetry_pltdrv.o \
- 				   intel_telemetry_debugfs.o
--obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
-+obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_drv.o
- obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-diff --git a/drivers/platform/x86/intel_pmc_core_plat_drv.c b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-new file mode 100644
-index 000000000000..7f5af5bd7f1f
---- /dev/null
-+++ b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Intel PMC Core platform init
-+ * Copyright (c) 2019, Google Inc.
-+ * Author - Rajat Jain
-+ *
-+ * This code instantiates platform devices for intel_pmc_core driver, only
-+ * on supported platforms that may not have the ACPI devices in the ACPI tables.
-+ * No new platforms should be added here, because we expect that new platforms
-+ * should all have the ACPI device, which is the preferred way of enumeration.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
-+static struct platform_device pmc_core_device = {
-+	.name = "pmc_core",
-+};
-+
-+/*
-+ * intel_pmc_core_platform_ids is the list of platforms where we want to
-+ * instantiate the platform_device if not already instantiated. This is
-+ * different than intel_pmc_core_ids in intel_pmc_core.c which is the
-+ * list of platforms that the driver supports for pmc_core device. The
-+ * other list may grow, but this list should not.
-+ */
-+static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
-+	INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
-+	INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
-+	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
-+	{}
-+};
-+MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
-+
-+static int __init pmc_core_platform_init(void)
-+{
-+	/* Skip creating the platform device if ACPI already has a device */
-+	if (acpi_dev_present("INT33A1", NULL, -1))
-+		return -ENODEV;
-+
-+	if (!x86_match_cpu(intel_pmc_core_platform_ids))
-+		return -ENODEV;
-+
-+	return platform_device_register(&pmc_core_device);
-+}
-+
-+static void __exit pmc_core_platform_exit(void)
-+{
-+	platform_device_unregister(&pmc_core_device);
-+}
-+
-+module_init(pmc_core_platform_init);
-+module_exit(pmc_core_platform_exit);
+> diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
+> new file mode 100644
+> index 000000000000..bb86243de805
+> --- /dev/null
+> +++ b/include/uapi/linux/livepatch.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+
+
+In my understanding, UAPI headers should be licensed under:
+
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+
+
+> +
+> +/*
+> + * livepatch.h - Kernel Live Patching Core
+> + *
+> + * Copyright (C) 2016 Josh Poimboeuf <jpoimboe@redhat.com>
+> + */
+> +
+> +#ifndef _UAPI_LIVEPATCH_H
+> +#define _UAPI_LIVEPATCH_H
+> +
+> +#include <linux/types.h>
+
+
+Why is this include needed?
+
+> +#define KLP_RELA_PREFIX                ".klp.rela."
+> +#define KLP_SYM_PREFIX         ".klp.sym."
+
+These do not depend on <linux/types.h>
+
+
+
+> +
+> +#endif /* _UAPI_LIVEPATCH_H */
+
+
+
 -- 
-2.21.0.392.gf8f6787159e-goog
-
+Best Regards
+Masahiro Yamada
