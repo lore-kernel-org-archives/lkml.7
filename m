@@ -2,125 +2,111 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EA3C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E38C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3DB217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tw5NrQAD"
+	by mail.kernel.org (Postfix) with ESMTP id 10DBC217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554982330;
+	bh=8qBkcwk+TchEptzBwBB4C57DDcjNiJn5LTYIWEDDYVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wgEtyTpqtcsL5ZrnwaO8z2pJdR3HIggSPtGlc35L3IXNGby+VEmaYYldmKZ5mcZS3
+	 sUy8+AoVheBJaSBhQThki7YqYw4EUUQBfs+EIlnjgQeS0MhAWUDId4bVhT8OAI1MXK
+	 9EscqINo/Tr8XXyJdV1XYmQAySFiY45eRzWpaH0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbfDKLbx (ORCPT
+        id S1726881AbfDKLcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:31:53 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42345 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfDKLbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:31:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w23so4404153lfc.9;
-        Thu, 11 Apr 2019 04:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eobaGoWYk57pOxmjBz1z37XKx5tEVnBH0OcE4Z9OEcw=;
-        b=Tw5NrQADK5KlSnOZvSE7YnKTY+29BX95CXv/Kua502MlpLLK0/C+0JBTtL/uI0Fj1j
-         ch3zvwMy6wognmnTGkn52xIzOnNK6YmYubZFnteXOWdvHJoPKs2DxE2tEL+KvRqUMjJU
-         lO/ZMbFQD207eFCy/Lx5grQVw6Oni6wpx+ZfHhM6dLkV0mRDBXivR/ptya0GDgs6iEQr
-         TEz35P73LM4TjViDkiNvHik+SjU8ZFCbTIHSUmWGHDMwuhFgLkVkAwT8lTOowGD/+cML
-         DF8toIWUnBYgt3c+UL1M7ThRJ16Vsk+w3FXDDI4QS3SKfyjT3fHS6XLK+2tOt/jpl3dW
-         6Odw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eobaGoWYk57pOxmjBz1z37XKx5tEVnBH0OcE4Z9OEcw=;
-        b=i33DIvx7DKV27cGOWd1pZ5PD4xpRyLWivZEZ5c5pAYoRBvBJ8nSb0ueZHNKGinykTz
-         A8ODVa8to81Yu6VLc574sp+AXK9n9wdjMi7a/9xdvt5IqNKRVwIGdh3zx/d57WUeWyVZ
-         DwHAE4v80apcruWEk6UkF/uNuGSeZZiZ2PIS/OOif5ux8wx/lHoZY9QMY/aNU+J9bsaN
-         ZRH9Zo8K3gKGFhFLDkoOzCJYqSgV0tME4ZPExhlMtGtE5HJ8QQyD+qaHDvhg/Bf9L/02
-         VGYA6cxdkTCgRvyUyIYI9T5AisWkoTYCfuqGd3OgOEoFqquDgYhS6uKgIy1NEe6WketM
-         psTQ==
-X-Gm-Message-State: APjAAAVFzEJCjpRVrJjAOPiaSrrUn36FxGtRM5QJAUgDG3MnOWME6v3u
-        K545uNMH58VKo/6ZHpEvwsni2dTH
-X-Google-Smtp-Source: APXvYqyejN1Eo+KO5BiLHFu3Y/6c40xrUVuMeExKQJjHjWw0XCrOeOW3nkHWbIhx8IJamUi4faRsjg==
-X-Received: by 2002:ac2:420b:: with SMTP id y11mr27199272lfh.104.1554982310220;
-        Thu, 11 Apr 2019 04:31:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id p14sm434877lfk.6.2019.04.11.04.31.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 04:31:49 -0700 (PDT)
-Subject: Re: [PATCH] gpu: host1x: fix compile error when IOMMU API is not
- available
-To:     Mikko Perttunen <cyndis@kapsi.fi>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Stefan Agner <stefan@agner.ch>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, linux-tegra-owner@vger.kernel.org
-References: <4c3d021c73c001f633803e364cfbc6ace3381205.1554936354.git.stefan@agner.ch>
- <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
- <20190411083017.GB4633@ulmo> <c73bb650-7175-150b-a678-c707e5f0e7e7@kapsi.fi>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ff7e06b6-587c-6098-92ab-ff2fbab6e651@gmail.com>
-Date:   Thu, 11 Apr 2019 14:31:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 07:32:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59120 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726599AbfDKLcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 07:32:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 36B57AC5B;
+        Thu, 11 Apr 2019 11:32:07 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 13:32:06 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
+ find_memory_block()
+Message-ID: <20190411113206.GU10383@dhcp22.suse.cz>
+References: <20190410101455.17338-1-david@redhat.com>
+ <20190411084141.GQ10383@dhcp22.suse.cz>
+ <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
+ <20190411105617.GS10383@dhcp22.suse.cz>
+ <711db571-ee39-eb64-4551-baaa5b562579@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c73bb650-7175-150b-a678-c707e5f0e7e7@kapsi.fi>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <711db571-ee39-eb64-4551-baaa5b562579@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.04.2019 13:06, Mikko Perttunen пишет:
-> On 11.4.2019 11.30, Thierry Reding wrote:
->> On Thu, Apr 11, 2019 at 09:23:13AM +0100, Ben Dooks wrote:
->>>
->>>
->>> On 2019-04-10 23:47, Stefan Agner wrote:
->>>> In case the IOMMU API is not available compiling host1x fails with
->>>> the following error:
->>>>    In file included from drivers/gpu/host1x/hw/host1x06.c:27:
->>>>    drivers/gpu/host1x/hw/channel_hw.c: In function
->>>> ‘host1x_channel_set_streamid’:
->>>>    drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit
->>>> declaration of function
->>>>      ‘dev_iommu_fwspec_get’; did you mean ‘iommu_fwspec_free’?
->>>> [-Werror=implicit-function-declaration]
->>>>    struct iommu_fwspec *spec =
->>>> dev_iommu_fwspec_get(channel->dev->parent);
->>>>                                ^~~~~~~~~~~~~~~~~~~~
->>>>                                iommu_fwspec_free
->>>>
->>>> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
->>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>
->>> would it be better to provide something like this i nthe header that
->>> defines dev_iommu_fwspec_get() to be:
->>>
->>> static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
->>> { return NULL; }
->>>
->>> although returning an PTR_ERR would have been better.
->>
->> I don't think there's really a large number of failures here. Either
->> your device has an IOMMU fwspec or it doesn't.
->>
->> But yes, I think it'd be better to have the above static inline dummy in
->> iommu.h, but I'll apply this for now in the hopes of getting it in
->> before v5.1 final.
+On Thu 11-04-19 13:18:07, David Hildenbrand wrote:
+> On 11.04.19 12:56, Michal Hocko wrote:
+> > On Thu 11-04-19 11:11:05, David Hildenbrand wrote:
+> >> On 11.04.19 10:41, Michal Hocko wrote:
+> >>> On Wed 10-04-19 12:14:55, David Hildenbrand wrote:
+> >>>> While current node handling is probably terribly broken for memory block
+> >>>> devices that span several nodes (only possible when added during boot,
+> >>>> and something like that should be blocked completely), properly put the
+> >>>> device reference we obtained via find_memory_block() to get the nid.
+> >>>
+> >>> The changelog could see some improvements I believe. (Half) stating
+> >>> broken status of multinode memblock is not really useful without a wider
+> >>> context so I would simply remove it. More to the point, it would be much
+> >>> better to actually describe the actual problem and the user visible
+> >>> effect.
+> >>>
+> >>> "
+> >>> d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug") has started
+> >>> using find_memory_block to get a nodeid for the beginnig of the onlined
+> >>> pfn range. The commit has missed that the memblock contains a reference
+> >>> counted object and a missing put_device will leak the kobject behind
+> >>> which ADD THE USER VISIBLE EFFECT HERE.
+> >>> "
+> >>
+> >> I don't think mentioning the commit a second time is really needed.
+> >>
+> >> "
+> >> Right now we are using find_memory_block() to get the node id for the
+> >> pfn range to online. We are missing to drop a reference to the memory
+> >> block device. While the device still gets unregistered via
+> >> device_unregister(), resulting in no user visible problem, the device is
+> >> never released via device_release(), resulting in a memory leak. Fix
+> >> that by properly using a put_device().
+> >> "
+> > 
+> > OK, sounds good to me. I was not sure about all the sysfs machinery
+> > and the kobj dependencies but if there are no sysfs files leaking and
+> > crashing upon a later access then a leak of a small amount of memory
+> > that is not user controlable then this is not super urgent.
+> > 
+> > Thanks!
 > 
-> A similar patch was already sent before by someone. That one also programs the bypass stream ID (0x7f) even if IOMMU is disabled. We should pick that patch instead.
+> I think it can be triggered by onlining/offlining memory in a loop. 
 
-For the record.. here is that patch https://patchwork.ozlabs.org/patch/1052364/
+which is a privileged operation so the impact is limited.
+
+> But as you said, only leaks of small amount of memory.
+
+Yes, as long as there are no other side sysfs related effects.
+-- 
+Michal Hocko
+SUSE Labs
