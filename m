@@ -2,127 +2,104 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AD1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234F2C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7053217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:25:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Vm1c2vvm"
+	by mail.kernel.org (Postfix) with ESMTP id E549E21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfDKOZx (ORCPT
+        id S1726677AbfDKO2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:25:53 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:41021 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfDKOZx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:25:53 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x3BEPMKu008825;
-        Thu, 11 Apr 2019 23:25:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x3BEPMKu008825
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554992723;
-        bh=Oz6/GxcmTwOhGaU/CWLEo5ZIfjWtthtUuZlYPfs1pNc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vm1c2vvmJFUQuWxaY6zEHQ/bfyijC72PKPwYKIwo1Rnqi5jc+T4bq6B1GUIkUtJBv
-         Fyxd2ZiTEuwmRYpx97LK+z6u3CZc00IHY+u3HT/osERmwj1uGWCVpODKTj8cRkNXcK
-         zAA1/o3WpiX/PT+oR8INSibIbAuifGIoGfAay4NDc55iIxdzIK0gXlQCV2lOiVSnWf
-         6CPCKux9BJNFU/zLhYQE1gcqSohK+NONsmv55532ab42hjuVWOo6UkJ2wyiMnDDmjW
-         GsaWXcQtgSpQwWMVbKK9UBpB45eZiFIksEeR5rcAmEqhGLtMJyJAsxObmGU9onM7AR
-         i6epsnaBxBY0Q==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id t15so2077804uao.5;
-        Thu, 11 Apr 2019 07:25:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAVrW/RcplIwcnDMvbjJjJmLhZVewp7g+Sk+Gtj6eJixOMZmilRU
-        6QaHdWxcGDm3Nv8OU/oFqBZKeZyiRxJR8nqcsv8=
-X-Google-Smtp-Source: APXvYqzWsLQlEUCpnjSKWRhDJNqHOkttk5/5cMvS9bi6zkPMHX1o4vaxI2H6RBJGrVhlAyvw+oJWmRukDWMUwKbq+wo=
-X-Received: by 2002:ab0:1c1b:: with SMTP id a27mr4509997uaj.60.1554992722468;
- Thu, 11 Apr 2019 07:25:22 -0700 (PDT)
+        Thu, 11 Apr 2019 10:28:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46544 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfDKO2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 10:28:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 07:28:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
+   d="scan'208";a="141894098"
+Received: from tqlu-mobl.amr.corp.intel.com (HELO [10.251.9.147]) ([10.251.9.147])
+  by orsmga003.jf.intel.com with ESMTP; 11 Apr 2019 07:28:03 -0700
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
+        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, keith.busch@intel.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
+        ying.huang@intel.com, ziy@nvidia.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <36901495-1891-7e08-b978-955af02f3d57@intel.com>
+Date:   Thu, 11 Apr 2019 07:28:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1554633831-10303-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 11 Apr 2019 23:24:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQawsF2PC9VJ8PTHY1fNEAVvg6dm8soQ9rXwboYFxJQrw@mail.gmail.com>
-Message-ID: <CAK7LNAQawsF2PC9VJ8PTHY1fNEAVvg6dm8soQ9rXwboYFxJQrw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: check arch/$(SRCARCH)/include/generated before
- out-of-tree build
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 7, 2019 at 7:44 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> After cross-compiling the kernel, "make mrproper" should be executed
-> with the proper ARCH= option. Otherwise, stale objects will remain
-> under arch/$(SRCARCH)/.
->
-> One bad scenario is like this:
->
->   $ make ARCH=arm defconfig all   # cross-compile the kernel for arm
->   $ make mrproper                 # mrproper for host-arch (i.e. x86)
->   $ make ARCH=arm O=build_dir defconfig all
->
-> If you miss ARCH= for mrproper and cross-compile the kernel with O=
-> and ARCH= options, Kbuild will happily start to build, but may fail
-> due to stale objects in the srctree.
->
-> If $(srctree)/arch/$(SRCARCH)/include/generated/ exists, let's stop
-> the out-of-tree build. To detect this, mrproper should clean only
-> arch/$(SRCARCH)/include/generated/.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+This isn't so much another aproach, as it it some tweaks on top of
+what's there.  Right?
 
+This set seems to present a bunch of ideas, like "promote if accessed
+twice".  Seems like a good idea, but I'm a lot more interested in seeing
+data about it being a good idea.  What workloads is it good for?  Bad for?
 
-Applied to linux-kbuild.
-
-> ---
->
->  Makefile | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 10643c3..17945ce 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1091,7 +1091,9 @@ PHONY += prepare archprepare prepare1 prepare3
->  prepare3: include/config/kernel.release
->  ifneq ($(srctree),.)
->         @$(kecho) '  Using $(srctree) as source for kernel'
-> -       $(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
-> +       $(Q)if [ -f $(srctree)/.config -o \
-> +                -d $(srctree)/include/config -o \
-> +                -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
->                 echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
->                 echo >&2 "  in the '$(srctree)' directory.";\
->                 /bin/false; \
-> @@ -1350,7 +1352,7 @@ CLEAN_DIRS  += $(MODVERDIR) include/ksym
->
->  # Directories & files removed with 'make mrproper'
->  MRPROPER_DIRS  += include/config usr/include include/generated          \
-> -                 arch/*/include/generated .tmp_objdiff
-> +                 arch/$(SRCARCH)/include/generated .tmp_objdiff
->  MRPROPER_FILES += .config .config.old .version \
->                   Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS \
->                   signing_key.pem signing_key.priv signing_key.x509     \
-> --
-> 2.7.4
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+These look like fun to play with, but I'd be really curious what you
+think needs to be done before we start merging these ideas.
