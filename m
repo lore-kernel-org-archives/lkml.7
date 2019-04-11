@@ -2,378 +2,8143 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04205C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F095C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6EE2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889F02146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ke2c9bLK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfnQ7fhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfDKXGb (ORCPT
+        id S1726857AbfDKXIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:06:31 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:35198 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfDKXGa (ORCPT
+        Thu, 11 Apr 2019 19:08:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38172 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbfDKXIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:06:30 -0400
-Received: by mail-vk1-f196.google.com with SMTP id g24so1763289vki.2;
-        Thu, 11 Apr 2019 16:06:30 -0700 (PDT)
+        Thu, 11 Apr 2019 19:08:15 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so7071989ljg.5;
+        Thu, 11 Apr 2019 16:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CLFbW1nhbyjK7HWZe42mGTtySZrIF/0QHZFpUtcQNlc=;
-        b=ke2c9bLK0pgpTPaXi36Hl2xQryjgTp9ih0+g67pSRpM90knXI3FvRQQa81w9+Z+yqc
-         cG9r1F3KA93NrtJPwa+NKeBN2KoofKQ469N7vKqIwUoBJ5fkos7aFPnfFGvSoe+VOjZj
-         Q2ED+npNzW/F/qj14h7FLqfmiPBRqymK+19qc31t77ywa7dnriU2gY1MH30QWQId/fuW
-         FD+Yi0mqFwY/x6vkYzrDEbGdUDIsedokQY/dncIqNox5MIKrMP5YxKIKyAfWxO4T9FcO
-         nCLAluE+0okjnhlEoxAnRyYFzXzJClu+IA+tkw67j9/CAGtFZI0PdbtJUE2GbyFyZalT
-         zOSw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VXX3QwvovgdCFygT6hoQ58/6D4O4whTwwGfQtl9v0N0=;
+        b=WfnQ7fhhHd7kbfR8SXi8sNYoqP8VwwVU+yjR8rHVmQcphxn493dWSp9NLWwVyjg3zc
+         DgZaeOmzgHuUoQ4ucGelimaSM3QvDD4gyOmJp5oHpa1+diULZ0nJE5rfkmhgXvCpViud
+         VVeDV/rS1RYzYqTsyO8bbFOQ3ZX4dHaJlkaQy7Hfz9D69YOqS6nVC+0+K+MfkLiyfzJV
+         1NSYaWLs+EmRbt3XnwgeAdetah91iBUmDLpJijxSrq3tly7APgXZyKrJkrXLqO+/lcs9
+         qK2pp9wpl9VsAWp6NDzcJMCYWufzWOVnccGcw2I5aWADtTJihcUMGryE938PJbpDXgjX
+         9ofQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CLFbW1nhbyjK7HWZe42mGTtySZrIF/0QHZFpUtcQNlc=;
-        b=YO0uKnrj2s6jfE6lwH01X2M+cif2cPocZGhKvhd+WqdWmoDZVD2niLbSDtgI+1bg9r
-         pZWJSqd3JOy9C2WYk7ZBBwoDORBsdJJaQd8QU2OmtGYIPyfRJ3jGuQLUFUuFn+DYKTYQ
-         2uNlh1sZI7hIUndm0dFUu59jc8i6Cofu3jcovawmHs529rK1Chz2HEH0ETNPE3FcNMnB
-         hvnD3E4HyAUwkNFMsG6mVmNppZo108/w+5Xz0ap5woyp0jzDNz1xgX/GX7H46ol7dUXJ
-         HFzwRj6OiCM+U33B2MNm0/Z+9Xr7VK8mciQi/AgESLBwdPqe4V1a+VPzfy6QFf2G2okk
-         ULlQ==
-X-Gm-Message-State: APjAAAVfyGlUfMG8GtY6F5yhohYpUDT5YeqpBNwIrVU/kqzJETgGz/WD
-        27X6zfelxegb9cqdAe6XE9/eSoHGXtjQ61L8OfM=
-X-Google-Smtp-Source: APXvYqwodJimm3nhJNcHiHNVCbLQtEO5ZmPl8qfgBIJNiQC3dXpijpgdjQxcnUWRJnhnhIU4D0fi04Q3VP/3PmSxihk=
-X-Received: by 2002:a1f:1384:: with SMTP id 126mr28448570vkt.71.1555023989338;
- Thu, 11 Apr 2019 16:06:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VXX3QwvovgdCFygT6hoQ58/6D4O4whTwwGfQtl9v0N0=;
+        b=LJ4uCOG0gU8gJEjI5vjDBArQZnSKlI8UzuyaOttP5DsvCwsExfNirH6zTXoQaoC08Q
+         7UOLTs08x0j7+08U91cWMoCBHfb8yz6jhaoVGG/8lvComJJrgAK9r7WXpmVagju62U5y
+         XGti0+4WWNTj/qCuxFpxMdoX2S7Qarf9m77nxcv/llFBo6i9rxhR9zBZHvDvRYOlgv/9
+         C0tyRIT/QgbMVDXdM3RLf02UvZKlVzrAknhuR5eLxqQw1saNpfRjAXQ006wRbhZwyskq
+         IDBrHTPFOk4siakJm+M8z6InpEUovqqt6/FhZR+E9oWkLG7ESoPGT9GaonjWNKYUJI1+
+         kw6w==
+X-Gm-Message-State: APjAAAW/06lg059/bzYW3XyB5YuA4pbwYcvVFa20Ra5bCptDj94AxP5n
+        CKI9KEkO6W69w42kYfveWjU=
+X-Google-Smtp-Source: APXvYqxzJJVHSho//vQ/t23WUPv59dHyokgRdgBdPV8iqnVFzsq1Ajwp7vd/f1Nnbmn3L0sEjZifDg==
+X-Received: by 2002:a2e:9812:: with SMTP id a18mr25023502ljj.146.1555024075555;
+        Thu, 11 Apr 2019 16:07:55 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id k2sm7680181lfb.62.2019.04.11.16.07.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 16:07:54 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] ARM: dts: tegra124: nyan-big: Add timings for ram codes 4 and 6
+Date:   Fri, 12 Apr 2019 02:07:13 +0300
+Message-Id: <20190411230713.32379-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190409202335.4190-1-lyude@redhat.com> <CACAvsv5woW9wr3JaKSOSSX8v4NACv5ubVyCoO9q9+OumspwsZQ@mail.gmail.com>
- <430ed8f2ecaf0706c81de0b4d787b9604e07cf0f.camel@redhat.com>
-In-Reply-To: <430ed8f2ecaf0706c81de0b4d787b9604e07cf0f.camel@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Fri, 12 Apr 2019 09:04:58 +1000
-Message-ID: <CACAvsv6Crk_0vX-g8E99CEeZ2a6c4QDLsDhf7zE_r=bFySmjpg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/nouveau/i2c: Disable i2c bus access after ->fini()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     nouveau@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Ben Skeggs <bskeggs@redhat.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 at 03:37, Lyude Paul <lyude@redhat.com> wrote:
->
-> On Thu, 2019-04-11 at 08:48 +1000, Ben Skeggs wrote:
-> > On Wed, 10 Apr 2019 at 06:23, Lyude Paul <lyude@redhat.com> wrote:
-> > > For a while, we've had the problem of i2c bus access not grabbing
-> > > a runtime PM ref when it's being used in userspace by i2c-dev, resulting
-> > > in nouveau spamming the kernel log with errors if anything attempts to
-> > > access the i2c bus while the GPU is in runtime suspend. An example:
-> > >
-> > > [  130.078386] nouveau 0000:01:00.0: i2c: aux 000d: begin idle timeout
-> > > ffffffff
-> > >
-> > > Since the GPU is in runtime suspend, the MMIO region that the i2c bus is
-> > > on isn't accessible. On x86, the standard behavior for accessing an
-> > > unavailable MMIO region is to just return ~0.
-> > >
-> > > Except, that turned out to be a lie. While computers with a clean
-> > > concious will return ~0 in this scenario, some machines will actually
-> > > completely hang a CPU on certian bad MMIO accesses. This was witnessed
-> > > with someone's Lenovo ThinkPad P50, where sensors-detect attempting to
-> > > access the i2c bus while the GPU was suspended would result in a CPU
-> > > hang:
-> > >
-> > >   CPU: 5 PID: 12438 Comm: sensors-detect Not tainted 5.0.0-
-> > > 0.rc4.git3.1.fc30.x86_64 #1
-> > >   Hardware name: LENOVO 20EQS64N17/20EQS64N17, BIOS N1EET74W (1.47 )
-> > > 11/21/2017
-> > >   RIP: 0010:ioread32+0x2b/0x30
-> > >   Code: 81 ff ff ff 03 00 77 20 48 81 ff 00 00 01 00 76 05 0f b7 d7 ed c3
-> > >   48 c7 c6 e1 0c 36 96 e8 2d ff ff ff b8 ff ff ff ff c3 8b 07 <c3> 0f 1f
-> > >   40 00 49 89 f0 48 81 fe ff ff 03 00 76 04 40 88 3e c3 48
-> > >   RSP: 0018:ffffaac3c5007b48 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
-> > >   RAX: 0000000001111000 RBX: 0000000001111000 RCX: 0000043017a97186
-> > >   RDX: 0000000000000aaa RSI: 0000000000000005 RDI: ffffaac3c400e4e4
-> > >   RBP: ffff9e6443902c00 R08: ffffaac3c400e4e4 R09: ffffaac3c5007be7
-> > >   R10: 0000000000000004 R11: 0000000000000001 R12: ffff9e6445dd0000
-> > >   R13: 000000000000e4e4 R14: 00000000000003c4 R15: 0000000000000000
-> > >   FS:  00007f253155a740(0000) GS:ffff9e644f600000(0000)
-> > > knlGS:0000000000000000
-> > >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > >   CR2: 00005630d1500358 CR3: 0000000417c44006 CR4: 00000000003606e0
-> > >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >   Call Trace:
-> > >    g94_i2c_aux_xfer+0x326/0x850 [nouveau]
-> > >    nvkm_i2c_aux_i2c_xfer+0x9e/0x140 [nouveau]
-> > >    __i2c_transfer+0x14b/0x620
-> > >    i2c_smbus_xfer_emulated+0x159/0x680
-> > >    ? _raw_spin_unlock_irqrestore+0x1/0x60
-> > >    ? rt_mutex_slowlock.constprop.0+0x13d/0x1e0
-> > >    ? __lock_is_held+0x59/0xa0
-> > >    __i2c_smbus_xfer+0x138/0x5a0
-> > >    i2c_smbus_xfer+0x4f/0x80
-> > >    i2cdev_ioctl_smbus+0x162/0x2d0 [i2c_dev]
-> > >    i2cdev_ioctl+0x1db/0x2c0 [i2c_dev]
-> > >    do_vfs_ioctl+0x408/0x750
-> > >    ksys_ioctl+0x5e/0x90
-> > >    __x64_sys_ioctl+0x16/0x20
-> > >    do_syscall_64+0x60/0x1e0
-> > >    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > >   RIP: 0033:0x7f25317f546b
-> > >   Code: 0f 1e fa 48 8b 05 1d da 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
-> > >   ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
-> > >   f0 ff ff 73 01 c3 48 8b 0d ed d9 0c 00 f7 d8 64 89 01 48
-> > >   RSP: 002b:00007ffc88caab68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > >   RAX: ffffffffffffffda RBX: 00005630d0fe7260 RCX: 00007f25317f546b
-> > >   RDX: 00005630d1598e80 RSI: 0000000000000720 RDI: 0000000000000003
-> > >   RBP: 00005630d155b968 R08: 0000000000000001 R09: 00005630d15a1da0
-> > >   R10: 0000000000000070 R11: 0000000000000246 R12: 00005630d1598e80
-> > >   R13: 00005630d12f3d28 R14: 0000000000000720 R15: 00005630d12f3ce0
-> > >   watchdog: BUG: soft lockup - CPU#5 stuck for 23s! [sensors-detect:12438]
-> > >
-> > > Yikes! While I wanted to try to make it so that accessing an i2c bus on
-> > > nouveau would wake up the GPU as needed, airlied pointed out that pretty
-> > > much any usecase for userspace accessing an i2c bus on a GPU (mainly for
-> > > the DDC brightness control that some displays have) is going to only be
-> > > useful while there's at least one display enabled on the GPU anyway, and
-> > > the GPU never sleeps while there's displays running.
-> > >
-> > > Since teaching the i2c bus to wake up the GPU on userspace accesses is a
-> > > good deal more difficult than it might seem, mostly due to the fact that
-> > > we have to use the i2c bus during runtime resume of the GPU, we instead
-> > > opt for the easiest solution: don't let userspace access i2c busses on
-> > > the GPU at all while it's in runtime suspend.
-> > >
-> > > Changes since v1:
-> > > * Also disable i2c busses that run over DP AUX
-> > I've updated my tree with the v2 version of the patch.  I haven't
-> > investigated too thoroughly, but shouldn't it be possible to move this
-> > check into a single place (pad_acquire()?) for both i2c/aux?
->
-> That should be fine as long as we don't use pads independently of their i2c
-> busses (e.g. within nvkm for thermal sensors or the like), but I didn't take
-> the time to check whether that's true or not. Do you know?
-No, only i2c/aux are externally exposed.  So, it should be fine to do then.
+Add timings for ram codes 4 and 6 and timing for 528mHz of ram code 1,
+which appears to be missed due to the clock driver bug that is fixed now.
 
->
-> >
-> > Thanks,
-> > Ben.
-> >
-> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > >  .../gpu/drm/nouveau/include/nvkm/subdev/i2c.h |  2 ++
-> > >  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c | 26 ++++++++++++++++++-
-> > >  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h |  2 ++
-> > >  .../gpu/drm/nouveau/nvkm/subdev/i2c/base.c    | 15 +++++++++++
-> > >  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c | 21 ++++++++++++++-
-> > >  drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h |  1 +
-> > >  6 files changed, 65 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> > > b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> > > index eef54e9b5d77..7957eafa5f0e 100644
-> > > --- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> > > +++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-> > > @@ -38,6 +38,7 @@ struct nvkm_i2c_bus {
-> > >         struct mutex mutex;
-> > >         struct list_head head;
-> > >         struct i2c_adapter i2c;
-> > > +       u8 enabled;
-> > >  };
-> > >
-> > >  int nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *);
-> > > @@ -57,6 +58,7 @@ struct nvkm_i2c_aux {
-> > >         struct mutex mutex;
-> > >         struct list_head head;
-> > >         struct i2c_adapter i2c;
-> > > +       u8 enabled;
-> > >
-> > >         u32 intr;
-> > >  };
-> > > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> > > b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> > > index 4c1f547da463..b4e7404fe660 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> > > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
-> > > @@ -105,9 +105,15 @@ nvkm_i2c_aux_acquire(struct nvkm_i2c_aux *aux)
-> > >  {
-> > >         struct nvkm_i2c_pad *pad = aux->pad;
-> > >         int ret;
-> > > +
-> > >         AUX_TRACE(aux, "acquire");
-> > >         mutex_lock(&aux->mutex);
-> > > -       ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-> > > +
-> > > +       if (aux->enabled)
-> > > +               ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_AUX);
-> > > +       else
-> > > +               ret = -EIO;
-> > > +
-> > >         if (ret)
-> > >                 mutex_unlock(&aux->mutex);
-> > >         return ret;
-> > > @@ -145,6 +151,24 @@ nvkm_i2c_aux_del(struct nvkm_i2c_aux **paux)
-> > >         }
-> > >  }
-> > >
-> > > +void
-> > > +nvkm_i2c_aux_init(struct nvkm_i2c_aux *aux)
-> > > +{
-> > > +       AUX_TRACE(aux, "init");
-> > > +       mutex_lock(&aux->mutex);
-> > > +       aux->enabled = true;
-> > > +       mutex_unlock(&aux->mutex);
-> > > +}
-> > > +
-> > > +void
-> > > +nvkm_i2c_aux_fini(struct nvkm_i2c_aux *aux)
-> > > +{
-> > > +       AUX_TRACE(aux, "fini");
-> > > +       mutex_lock(&aux->mutex);
-> > > +       aux->enabled = false;
-> > > +       mutex_unlock(&aux->mutex);
-> > > +}
-> > > +
-> > >  int
-> > >  nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *func,
-> > >                   struct nvkm_i2c_pad *pad, int id,
-> > > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> > > b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> > > index 7d56c4ba693c..08f6b2ee64ab 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> > > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
-> > > @@ -16,6 +16,8 @@ int nvkm_i2c_aux_ctor(const struct nvkm_i2c_aux_func *,
-> > > struct nvkm_i2c_pad *,
-> > >  int nvkm_i2c_aux_new_(const struct nvkm_i2c_aux_func *, struct
-> > > nvkm_i2c_pad *,
-> > >                       int id, struct nvkm_i2c_aux **);
-> > >  void nvkm_i2c_aux_del(struct nvkm_i2c_aux **);
-> > > +void nvkm_i2c_aux_init(struct nvkm_i2c_aux *);
-> > > +void nvkm_i2c_aux_fini(struct nvkm_i2c_aux *);
-> > >  int nvkm_i2c_aux_xfer(struct nvkm_i2c_aux *, bool retry, u8 type,
-> > >                       u32 addr, u8 *data, u8 *size);
-> > >
-> > > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> > > b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> > > index 4f197b15acf6..ecacb22834d7 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> > > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-> > > @@ -160,8 +160,18 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev, bool
-> > > suspend)
-> > >  {
-> > >         struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-> > >         struct nvkm_i2c_pad *pad;
-> > > +       struct nvkm_i2c_bus *bus;
-> > > +       struct nvkm_i2c_aux *aux;
-> > >         u32 mask;
-> > >
-> > > +       list_for_each_entry(aux, &i2c->aux, head) {
-> > > +               nvkm_i2c_aux_fini(aux);
-> > > +       }
-> > > +
-> > > +       list_for_each_entry(bus, &i2c->bus, head) {
-> > > +               nvkm_i2c_bus_fini(bus);
-> > > +       }
-> > > +
-> > >         if ((mask = (1 << i2c->func->aux) - 1), i2c->func->aux_stat) {
-> > >                 i2c->func->aux_mask(i2c, NVKM_I2C_ANY, mask, 0);
-> > >                 i2c->func->aux_stat(i2c, &mask, &mask, &mask, &mask);
-> > > @@ -180,6 +190,7 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
-> > >         struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-> > >         struct nvkm_i2c_bus *bus;
-> > >         struct nvkm_i2c_pad *pad;
-> > > +       struct nvkm_i2c_aux *aux;
-> > >
-> > >         list_for_each_entry(pad, &i2c->pad, head) {
-> > >                 nvkm_i2c_pad_init(pad);
-> > > @@ -189,6 +200,10 @@ nvkm_i2c_init(struct nvkm_subdev *subdev)
-> > >                 nvkm_i2c_bus_init(bus);
-> > >         }
-> > >
-> > > +       list_for_each_entry(aux, &i2c->aux, head) {
-> > > +               nvkm_i2c_aux_init(aux);
-> > > +       }
-> > > +
-> > >         return 0;
-> > >  }
-> > >
-> > > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> > > b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> > > index 807a2b67bd64..ed50cc3736b9 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> > > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-> > > @@ -110,6 +110,19 @@ nvkm_i2c_bus_init(struct nvkm_i2c_bus *bus)
-> > >         BUS_TRACE(bus, "init");
-> > >         if (bus->func->init)
-> > >                 bus->func->init(bus);
-> > > +
-> > > +       mutex_lock(&bus->mutex);
-> > > +       bus->enabled = true;
-> > > +       mutex_unlock(&bus->mutex);
-> > > +}
-> > > +
-> > > +void
-> > > +nvkm_i2c_bus_fini(struct nvkm_i2c_bus *bus)
-> > > +{
-> > > +       BUS_TRACE(bus, "fini");
-> > > +       mutex_lock(&bus->mutex);
-> > > +       bus->enabled = false;
-> > > +       mutex_unlock(&bus->mutex);
-> > >  }
-> > >
-> > >  void
-> > > @@ -126,9 +139,15 @@ nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *bus)
-> > >  {
-> > >         struct nvkm_i2c_pad *pad = bus->pad;
-> > >         int ret;
-> > > +
-> > >         BUS_TRACE(bus, "acquire");
-> > >         mutex_lock(&bus->mutex);
-> > > -       ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-> > > +
-> > > +       if (bus->enabled)
-> > > +               ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-> > > +       else
-> > > +               ret = -EIO;
-> > > +
-> > >         if (ret)
-> > >                 mutex_unlock(&bus->mutex);
-> > >         return ret;
-> > > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> > > b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> > > index bea0dd33961e..465464bba58b 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> > > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-> > > @@ -18,6 +18,7 @@ int nvkm_i2c_bus_new_(const struct nvkm_i2c_bus_func *,
-> > > struct nvkm_i2c_pad *,
-> > >                       int id, struct nvkm_i2c_bus **);
-> > >  void nvkm_i2c_bus_del(struct nvkm_i2c_bus **);
-> > >  void nvkm_i2c_bus_init(struct nvkm_i2c_bus *);
-> > > +void nvkm_i2c_bus_fini(struct nvkm_i2c_bus *);
-> > >
-> > >  int nvkm_i2c_bit_xfer(struct nvkm_i2c_bus *, struct i2c_msg *, int);
-> > >
-> > > --
-> > > 2.20.1
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> --
-> Cheers,
->         Lyude Paul
->
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi | 7917 ++++++++++++++----
+ 1 file changed, 6272 insertions(+), 1645 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi b/arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi
+index 9af21fe93a5c..fb6b3e1a0b1f 100644
+--- a/arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi
++++ b/arch/arm/boot/dts/tegra124-nyan-big-emc.dtsi
+@@ -1,5 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ / {
++	apbmisc@70000800 {
++		nvidia,long-ram-code;
++	};
++
+ 	clock@60006000 {
+ 		emc-timings-1 {
+ 			nvidia,ram-code = <1>;
+@@ -52,7 +56,154 @@
+ 				clocks = <&tegra_car TEGRA124_CLK_PLL_M>;
+ 				clock-names = "emc-parent";
+ 			};
+-			/* TODO: Add 528MHz frequency */
++			timing-528000000 {
++				clock-frequency = <528000000>;
++				nvidia,parent-clock-frequency = <528000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-600000000 {
++				clock-frequency = <600000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-792000000 {
++				clock-frequency = <792000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++		};
++
++		emc-timings-4 {
++			nvidia,ram-code = <4>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-20400000 {
++				clock-frequency = <20400000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-40800000 {
++				clock-frequency = <40800000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-68000000 {
++				clock-frequency = <68000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-102000000 {
++				clock-frequency = <102000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-204000000 {
++				clock-frequency = <204000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-300000000 {
++				clock-frequency = <300000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C>;
++				clock-names = "emc-parent";
++			};
++			timing-396000000 {
++				clock-frequency = <396000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M>;
++				clock-names = "emc-parent";
++			};
++			timing-528000000 {
++				clock-frequency = <528000000>;
++				nvidia,parent-clock-frequency = <528000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-600000000 {
++				clock-frequency = <600000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C_UD>;
++				clock-names = "emc-parent";
++			};
++			timing-792000000 {
++				clock-frequency = <792000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
++		};
++
++		emc-timings-6 {
++			nvidia,ram-code = <6>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-20400000 {
++				clock-frequency = <20400000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-40800000 {
++				clock-frequency = <40800000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-68000000 {
++				clock-frequency = <68000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-102000000 {
++				clock-frequency = <102000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-204000000 {
++				clock-frequency = <204000000>;
++				nvidia,parent-clock-frequency = <408000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_P>;
++				clock-names = "emc-parent";
++			};
++			timing-300000000 {
++				clock-frequency = <300000000>;
++				nvidia,parent-clock-frequency = <600000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_C>;
++				clock-names = "emc-parent";
++			};
++			timing-396000000 {
++				clock-frequency = <396000000>;
++				nvidia,parent-clock-frequency = <792000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M>;
++				clock-names = "emc-parent";
++			};
++			timing-528000000 {
++				clock-frequency = <528000000>;
++				nvidia,parent-clock-frequency = <528000000>;
++				clocks = <&tegra_car TEGRA124_CLK_PLL_M_UD>;
++				clock-names = "emc-parent";
++			};
+ 			timing-600000000 {
+ 				clock-frequency = <600000000>;
+ 				nvidia,parent-clock-frequency = <600000000>;
+@@ -94,149 +245,149 @@
+ 				nvidia,emc-zcal-interval = <0x00000000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000000
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000c
+-					0x0000000d
+-					0x0000000f
+-					0x00000060
+-					0x00000000
+-					0x00000018
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x00000007
+-					0x0000000f
+-					0x00000005
+-					0x00000005
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000000
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000064
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000007
+-					0x00000000
+-					0x00000042
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000f2f3
+-					0x800001c5
+-					0x0000000a
++					0x00000000 /* EMC_RC */
++					0x00000003 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000060 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000018 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000005 /* EMC_TXSR */
++					0x00000005 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000064 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000007 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x800001c5 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -262,149 +413,149 @@
+ 				nvidia,emc-zcal-interval = <0x00000000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000000
+-					0x00000005
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000000
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000c
+-					0x0000000d
+-					0x0000000f
+-					0x0000009a
+-					0x00000000
+-					0x00000026
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x00000007
+-					0x0000000f
+-					0x00000006
+-					0x00000006
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000000
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x000000a0
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x0000000b
+-					0x00000000
+-					0x00000042
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000f2f3
+-					0x8000023a
+-					0x0000000a
++					0x00000000 /* EMC_RC */
++					0x00000005 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x0000009a /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000026 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000006 /* EMC_TXSR */
++					0x00000006 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x000000a0 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x0000000b /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000023a /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -430,149 +581,149 @@
+ 				nvidia,emc-zcal-interval = <0x00000000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000001
+-					0x0000000a
+-					0x00000000
+-					0x00000001
+-					0x00000000
+-					0x00000004
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000000
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000c
+-					0x0000000d
+-					0x0000000f
+-					0x00000134
+-					0x00000000
+-					0x0000004d
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x00000008
+-					0x0000000f
+-					0x0000000c
+-					0x0000000c
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000000
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x0000013f
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000015
+-					0x00000000
+-					0x00000042
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000f2f3
+-					0x80000370
+-					0x0000000a
++					0x00000001 /* EMC_RC */
++					0x0000000a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000001 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000134 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000004d /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000008 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000000c /* EMC_TXSR */
++					0x0000000c /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000013f /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000015 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000370 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -598,149 +749,149 @@
+ 				nvidia,emc-zcal-interval = <0x00000000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000003
+-					0x00000011
+-					0x00000000
+-					0x00000002
+-					0x00000000
+-					0x00000004
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000000
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000c
+-					0x0000000d
+-					0x0000000f
+-					0x00000202
+-					0x00000000
+-					0x00000080
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x0000000f
+-					0x0000000f
+-					0x00000013
+-					0x00000013
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000001
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000213
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000022
+-					0x00000000
+-					0x00000042
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000f2f3
+-					0x8000050e
+-					0x0000000a
++					0x00000003 /* EMC_RC */
++					0x00000011 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000002 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000202 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000080 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000f /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000013 /* EMC_TXSR */
++					0x00000013 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000001 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000213 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000022 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000050e /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -766,149 +917,149 @@
+ 				nvidia,emc-zcal-interval = <0x00000000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000004
+-					0x0000001a
+-					0x00000000
+-					0x00000003
+-					0x00000001
+-					0x00000004
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000001
+-					0x00000001
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x0000000c
+-					0x0000000d
+-					0x0000000f
+-					0x00000304
+-					0x00000000
+-					0x000000c1
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x00000018
+-					0x0000000f
+-					0x0000001c
+-					0x0000001c
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000003
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x0000031c
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x000fc000
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x0000fc00
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000033
+-					0x00000000
+-					0x00000042
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000f2f3
+-					0x80000713
+-					0x0000000a
++					0x00000004 /* EMC_RC */
++					0x0000001a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000003 /* EMC_RAS */
++					0x00000001 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000001 /* EMC_RD_RCD */
++					0x00000001 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000304 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000000c1 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000018 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000001c /* EMC_TXSR */
++					0x0000001c /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000003 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000031c /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000033 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000713 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -934,149 +1085,149 @@
+ 				nvidia,emc-zcal-interval = <0x00020000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000009
+-					0x00000035
+-					0x00000000
+-					0x00000007
+-					0x00000002
+-					0x00000005
+-					0x0000000a
+-					0x00000003
+-					0x0000000b
+-					0x00000002
+-					0x00000002
+-					0x00000003
+-					0x00000003
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000006
+-					0x00000002
+-					0x00000000
+-					0x00000004
+-					0x00000006
+-					0x00010000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000003
+-					0x0000000d
+-					0x0000000f
+-					0x00000011
+-					0x00000607
+-					0x00000000
+-					0x00000181
+-					0x00000002
+-					0x00000002
+-					0x00000001
+-					0x00000000
+-					0x00000032
+-					0x0000000f
+-					0x00000038
+-					0x00000038
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000007
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000638
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x106aa298
+-					0x002c00a0
+-					0x00008000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00064000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00004000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00090000
+-					0x00090000
+-					0x00094000
+-					0x00094000
+-					0x00009400
+-					0x00009000
+-					0x00009000
+-					0x00009000
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000303
+-					0x81f1f108
+-					0x07070004
+-					0x0000003f
+-					0x016eeeee
+-					0x51451400
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000066
+-					0x00000000
+-					0x00000100
+-					0x000c000c
+-					0x00000000
+-					0x00000003
+-					0x0000d2b3
+-					0x80000d22
+-					0x0000000a
++					0x00000009 /* EMC_RC */
++					0x00000035 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000007 /* EMC_RAS */
++					0x00000002 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000002 /* EMC_RD_RCD */
++					0x00000002 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000004 /* EMC_EINPUT */
++					0x00000006 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000003 /* EMC_QRST */
++					0x0000000d /* EMC_QSAFE */
++					0x0000000f /* EMC_RDV */
++					0x00000011 /* EMC_RDV_MASK */
++					0x00000607 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000181 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000032 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000038 /* EMC_TXSR */
++					0x00000038 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000007 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000638 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00090000 /* EMC_DLL_XFORM_DQ0 */
++					0x00090000 /* EMC_DLL_XFORM_DQ1 */
++					0x00094000 /* EMC_DLL_XFORM_DQ2 */
++					0x00094000 /* EMC_DLL_XFORM_DQ3 */
++					0x00009400 /* EMC_DLL_XFORM_DQ4 */
++					0x00009000 /* EMC_DLL_XFORM_DQ5 */
++					0x00009000 /* EMC_DLL_XFORM_DQ6 */
++					0x00009000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000066 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000d2b3 /* EMC_CFG_PIPE */
++					0x80000d22 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -1102,149 +1253,149 @@
+ 				nvidia,emc-zcal-interval = <0x00020000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x0000000d
+-					0x0000004c
+-					0x00000000
+-					0x00000009
+-					0x00000003
+-					0x00000004
+-					0x00000008
+-					0x00000002
+-					0x00000009
+-					0x00000003
+-					0x00000003
+-					0x00000002
+-					0x00000002
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000005
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x00000007
+-					0x00020000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000001
+-					0x0000000e
+-					0x00000010
+-					0x00000012
+-					0x000008e4
+-					0x00000000
+-					0x00000239
+-					0x00000001
+-					0x00000008
+-					0x00000001
+-					0x00000000
+-					0x0000004a
+-					0x0000000e
+-					0x00000051
+-					0x00000200
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000009
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000924
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x104ab098
+-					0x002c00a0
+-					0x00008000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00098000
+-					0x00098000
+-					0x00000000
+-					0x00098000
+-					0x00098000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00060000
+-					0x00060000
+-					0x00060000
+-					0x00060000
+-					0x00006000
+-					0x00006000
+-					0x00006000
+-					0x00006000
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000101
+-					0x81f1f108
+-					0x07070004
+-					0x00000000
+-					0x016eeeee
+-					0x51451420
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x00000096
+-					0x00000000
+-					0x00000100
+-					0x0174000c
+-					0x00000000
+-					0x00000003
+-					0x000052a3
+-					0x800012d7
+-					0x00000009
++					0x0000000d /* EMC_RC */
++					0x0000004c /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000009 /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000007 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x0000000e /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x000008e4 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000239 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000004a /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x00000051 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000009 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000924 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00060000 /* EMC_DLL_XFORM_DQ0 */
++					0x00060000 /* EMC_DLL_XFORM_DQ1 */
++					0x00060000 /* EMC_DLL_XFORM_DQ2 */
++					0x00060000 /* EMC_DLL_XFORM_DQ3 */
++					0x00006000 /* EMC_DLL_XFORM_DQ4 */
++					0x00006000 /* EMC_DLL_XFORM_DQ5 */
++					0x00006000 /* EMC_DLL_XFORM_DQ6 */
++					0x00006000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000096 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0174000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x800012d7 /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -1270,149 +1421,317 @@
+ 				nvidia,emc-zcal-interval = <0x00020000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000012
+-					0x00000065
+-					0x00000000
+-					0x0000000c
+-					0x00000004
+-					0x00000005
+-					0x00000008
+-					0x00000002
+-					0x0000000a
+-					0x00000004
+-					0x00000004
+-					0x00000002
+-					0x00000002
+-					0x00000000
+-					0x00000003
+-					0x00000003
+-					0x00000005
+-					0x00000002
+-					0x00000000
+-					0x00000001
+-					0x00000008
+-					0x00020000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x0000000f
+-					0x00000010
+-					0x00000012
+-					0x00000bd1
+-					0x00000000
+-					0x000002f4
+-					0x00000001
+-					0x00000008
+-					0x00000001
+-					0x00000000
+-					0x00000063
+-					0x0000000f
+-					0x0000006b
+-					0x00000200
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x0000000d
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x00000c11
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x104ab098
+-					0x002c00a0
+-					0x00008000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00030000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00070000
+-					0x00070000
+-					0x00000000
+-					0x00070000
+-					0x00070000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00048000
+-					0x00048000
+-					0x00048000
+-					0x00048000
+-					0x00004800
+-					0x00004800
+-					0x00004800
+-					0x00004800
+-					0x10000280
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc081
+-					0x00000101
+-					0x81f1f108
+-					0x07070004
+-					0x00000000
+-					0x016eeeee
+-					0x51451420
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0000003f
+-					0x000000c6
+-					0x00000000
+-					0x00000100
+-					0x015b000c
+-					0x00000000
+-					0x00000003
+-					0x000052a3
+-					0x8000188b
+-					0x00000009
++					0x00000012 /* EMC_RC */
++					0x00000065 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x0000000c /* EMC_RAS */
++					0x00000004 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000a /* EMC_W2P */
++					0x00000004 /* EMC_RD_RCD */
++					0x00000004 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000001 /* EMC_EINPUT */
++					0x00000008 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000000 /* EMC_QRST */
++					0x0000000f /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x00000bd1 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000002f4 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000063 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000006b /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x0000000d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000c11 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x00004800 /* EMC_DLL_XFORM_DQ4 */
++					0x00004800 /* EMC_DLL_XFORM_DQ5 */
++					0x00004800 /* EMC_DLL_XFORM_DQ6 */
++					0x00004800 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x000000c6 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x015b000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x8000188b /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000941>;
++				nvidia,emc-mrs-wait-cnt = <0x013a000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0123133d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000018 /* EMC_RC */
++					0x00000088 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000011 /* EMC_RAS */
++					0x00000006 /* EMC_RP */
++					0x00000006 /* EMC_R2W */
++					0x00000009 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000d /* EMC_W2P */
++					0x00000006 /* EMC_RD_RCD */
++					0x00000006 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000007 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000009 /* EMC_EINPUT_DURATION */
++					0x00040000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000010 /* EMC_QSAFE */
++					0x00000013 /* EMC_RDV */
++					0x00000015 /* EMC_RDV_MASK */
++					0x00000fd6 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000003f5 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000b /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000084 /* EMC_AR2PDEN */
++					0x00000012 /* EMC_RW2PDEN */
++					0x0000008f /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000013 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001017 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe01200b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x013a000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000042a0 /* EMC_CFG_PIPE */
++					0x80002062 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000b /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -1438,149 +1757,149 @@
+ 				nvidia,emc-zcal-interval = <0x00020000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x0000001c
+-					0x0000009a
+-					0x00000000
+-					0x00000013
+-					0x00000007
+-					0x00000007
+-					0x0000000b
+-					0x00000003
+-					0x00000010
+-					0x00000007
+-					0x00000007
+-					0x00000002
+-					0x00000002
+-					0x00000000
+-					0x00000005
+-					0x00000005
+-					0x0000000a
+-					0x00000002
+-					0x00000000
+-					0x00000003
+-					0x0000000b
+-					0x00070000
+-					0x00000003
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000002
+-					0x00000012
+-					0x00000016
+-					0x00000018
+-					0x00001208
+-					0x00000000
+-					0x00000482
+-					0x00000002
+-					0x0000000d
+-					0x00000001
+-					0x00000000
+-					0x00000096
+-					0x00000015
+-					0x000000a2
+-					0x00000200
+-					0x00000004
+-					0x00000005
+-					0x00000004
+-					0x00000015
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x00001249
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x104ab098
+-					0xe00e00b1
+-					0x00008000
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00048000
+-					0x00048000
+-					0x00000000
+-					0x00048000
+-					0x00048000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000004
+-					0x00000004
+-					0x00000002
+-					0x00000005
+-					0x00000006
+-					0x00000003
+-					0x00000006
+-					0x00000005
+-					0x00000004
+-					0x00000004
+-					0x00000002
+-					0x00000005
+-					0x00000006
+-					0x00000003
+-					0x00000006
+-					0x00000005
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x0000000e
+-					0x100002a0
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc085
+-					0x00000101
+-					0x81f1f108
+-					0x07070004
+-					0x00000000
+-					0x016eeeee
+-					0x51451420
+-					0x00514514
+-					0x00514514
+-					0x51451400
+-					0x0606003f
+-					0x00000000
+-					0x00000000
+-					0x00000100
+-					0x0128000c
+-					0x00000000
+-					0x00000003
+-					0x000040a0
+-					0x800024aa
+-					0x0000000e
++					0x0000001c /* EMC_RC */
++					0x0000009a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000013 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000007 /* EMC_R2W */
++					0x0000000b /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000010 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x0000000a /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000003 /* EMC_EINPUT */
++					0x0000000b /* EMC_EINPUT_DURATION */
++					0x00070000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000002 /* EMC_QRST */
++					0x00000012 /* EMC_QSAFE */
++					0x00000016 /* EMC_RDV */
++					0x00000018 /* EMC_RDV_MASK */
++					0x00001208 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000482 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000d /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000096 /* EMC_AR2PDEN */
++					0x00000015 /* EMC_RW2PDEN */
++					0x000000a2 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001249 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe00e00b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0128000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000040a0 /* EMC_CFG_PIPE */
++					0x800024aa /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000e /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+@@ -1606,365 +1925,4673 @@
+ 				nvidia,emc-zcal-interval = <0x00020000>;
+ 
+ 				nvidia,emc-configuration = <
+-					0x00000025
+-					0x000000cc
+-					0x00000000
+-					0x0000001a
+-					0x00000009
+-					0x00000008
+-					0x0000000d
+-					0x00000004
+-					0x00000013
+-					0x00000009
+-					0x00000009
+-					0x00000003
+-					0x00000002
+-					0x00000000
+-					0x00000006
+-					0x00000006
+-					0x0000000b
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x0000000d
+-					0x00080000
+-					0x00000004
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000001
+-					0x00000014
+-					0x00000018
+-					0x0000001a
+-					0x000017e2
+-					0x00000000
+-					0x000005f8
+-					0x00000003
+-					0x00000011
+-					0x00000001
+-					0x00000000
+-					0x000000c6
+-					0x00000018
+-					0x000000d6
+-					0x00000200
+-					0x00000005
+-					0x00000006
+-					0x00000005
+-					0x0000001d
+-					0x00000000
+-					0x00000008
+-					0x00000008
+-					0x00001822
+-					0x00000000
+-					0x80000005
+-					0x00000000
+-					0x104ab198
+-					0xe00700b1
+-					0x00008000
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000005
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00034000
+-					0x00034000
+-					0x00000000
+-					0x00034000
+-					0x00034000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000000
+-					0x00000008
+-					0x00000008
+-					0x00000005
+-					0x00000009
+-					0x00000009
+-					0x00000007
+-					0x00000009
+-					0x00000008
+-					0x00000008
+-					0x00000008
+-					0x00000005
+-					0x00000009
+-					0x00000009
+-					0x00000007
+-					0x00000009
+-					0x00000008
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x0000000a
+-					0x100002a0
+-					0x00000000
+-					0x00111111
+-					0x00000000
+-					0x00000000
+-					0x77ffc085
+-					0x00000101
+-					0x81f1f108
+-					0x07070004
+-					0x00000000
+-					0x016eeeee
+-					0x61861820
+-					0x00514514
+-					0x00514514
+-					0x61861800
+-					0x0606003f
+-					0x00000000
+-					0x00000000
+-					0x00000100
+-					0x00f8000c
+-					0x00000007
+-					0x00000004
+-					0x00004080
+-					0x80003012
+-					0x0000000f
++					0x00000025 /* EMC_RC */
++					0x000000cc /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x0000001a /* EMC_RAS */
++					0x00000009 /* EMC_RP */
++					0x00000008 /* EMC_R2W */
++					0x0000000d /* EMC_W2R */
++					0x00000004 /* EMC_R2P */
++					0x00000013 /* EMC_W2P */
++					0x00000009 /* EMC_RD_RCD */
++					0x00000009 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x0000000b /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x0000000d /* EMC_EINPUT_DURATION */
++					0x00080000 /* EMC_PUTERM_EXTRA */
++					0x00000004 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000014 /* EMC_QSAFE */
++					0x00000018 /* EMC_RDV */
++					0x0000001a /* EMC_RDV_MASK */
++					0x000017e2 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000005f8 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000003 /* EMC_PDEX2WR */
++					0x00000011 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x000000c6 /* EMC_AR2PDEN */
++					0x00000018 /* EMC_RW2PDEN */
++					0x000000d6 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000006 /* EMC_TCKESR */
++					0x00000005 /* EMC_TPD */
++					0x0000001d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000008 /* EMC_TCLKSTABLE */
++					0x00000008 /* EMC_TCLKSTOP */
++					0x00001822 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x80000005 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab198 /* EMC_FBIO_CFG5 */
++					0xe00700b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00000005 /* EMC_DLL_XFORM_DQS0 */
++					0x00000005 /* EMC_DLL_XFORM_DQS1 */
++					0x00000005 /* EMC_DLL_XFORM_DQS2 */
++					0x00000005 /* EMC_DLL_XFORM_DQS3 */
++					0x00000005 /* EMC_DLL_XFORM_DQS4 */
++					0x00000005 /* EMC_DLL_XFORM_DQS5 */
++					0x00000005 /* EMC_DLL_XFORM_DQS6 */
++					0x00000005 /* EMC_DLL_XFORM_DQS7 */
++					0x00000005 /* EMC_DLL_XFORM_DQS8 */
++					0x00000005 /* EMC_DLL_XFORM_DQS9 */
++					0x00000005 /* EMC_DLL_XFORM_DQS10 */
++					0x00000005 /* EMC_DLL_XFORM_DQS11 */
++					0x00000005 /* EMC_DLL_XFORM_DQS12 */
++					0x00000005 /* EMC_DLL_XFORM_DQS13 */
++					0x00000005 /* EMC_DLL_XFORM_DQS14 */
++					0x00000005 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000a /* EMC_DLL_XFORM_DQ0 */
++					0x0000000a /* EMC_DLL_XFORM_DQ1 */
++					0x0000000a /* EMC_DLL_XFORM_DQ2 */
++					0x0000000a /* EMC_DLL_XFORM_DQ3 */
++					0x0000000a /* EMC_DLL_XFORM_DQ4 */
++					0x0000000a /* EMC_DLL_XFORM_DQ5 */
++					0x0000000a /* EMC_DLL_XFORM_DQ6 */
++					0x0000000a /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x61861820 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x61861800 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x00f8000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000007 /* EMC_CTT */
++					0x00000004 /* EMC_CTT_DURATION */
++					0x00004080 /* EMC_CFG_PIPE */
++					0x80003012 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000f /* EMC_QPOP */
+ 				>;
+ 			};
+-
+ 		};
+-	};
+-
+-	memory-controller@70019000 {
+-		emc-timings-1 {
+-			nvidia,ram-code = <1>;
+ 
++		emc-timings-4 {
++			nvidia,ram-code = <4>;
+ 
+ 			timing-12750000 {
+ 				clock-frequency = <12750000>;
+ 
+-				nvidia,emem-configuration = <
+-					0x40040001
+-					0x8000000a
+-					0x00000001
+-					0x00000001
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000003
+-					0x00000006
+-					0x06030203
+-					0x000a0402
+-					0x77e30303
+-					0x70000f03
+-					0x001f0000
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000 /* EMC_RC */
++					0x00000004 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000060 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000018 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000005 /* EMC_TXSR */
++					0x00000005 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000064 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x00008000 /* EMC_DLL_XFORM_DQ4 */
++					0x00008000 /* EMC_DLL_XFORM_DQ5 */
++					0x00008000 /* EMC_DLL_XFORM_DQ6 */
++					0x00008000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000007 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x800001c5 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+ 			timing-20400000 {
+ 				clock-frequency = <20400000>;
+ 
+-				nvidia,emem-configuration = <
+-					0x40020001
+-					0x80000012
+-					0x00000001
+-					0x00000001
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000003
+-					0x00000006
+-					0x06030203
+-					0x000a0402
+-					0x76230303
+-					0x70000f03
+-					0x001f0000
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000 /* EMC_RC */
++					0x00000007 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x0000009a /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000026 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000008 /* EMC_TXSR */
++					0x00000008 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x000000a0 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x00008000 /* EMC_DLL_XFORM_DQ4 */
++					0x00008000 /* EMC_DLL_XFORM_DQ5 */
++					0x00008000 /* EMC_DLL_XFORM_DQ6 */
++					0x00008000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x0000000b /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000023a /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+ 			timing-40800000 {
+ 				clock-frequency = <40800000>;
+ 
+-				nvidia,emem-configuration = <
+-					0xa0000001
+-					0x80000017
+-					0x00000001
+-					0x00000001
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000003
+-					0x00000006
+-					0x06030203
+-					0x000a0402
+-					0x74a30303
+-					0x70000f03
+-					0x001f0000
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000001 /* EMC_RC */
++					0x0000000e /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000001 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000134 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000004d /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000c /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000000f /* EMC_TXSR */
++					0x0000000f /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000013f /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x00008000 /* EMC_DLL_XFORM_DQ4 */
++					0x00008000 /* EMC_DLL_XFORM_DQ5 */
++					0x00008000 /* EMC_DLL_XFORM_DQ6 */
++					0x00008000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000015 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000370 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+ 			timing-68000000 {
+ 				clock-frequency = <68000000>;
+ 
+-				nvidia,emem-configuration = <
+-					0x00000001
+-					0x8000001e
+-					0x00000001
+-					0x00000001
+-					0x00000002
+-					0x00000000
+-					0x00000002
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000003
+-					0x00000006
+-					0x06030203
+-					0x000a0402
+-					0x74230403
+-					0x70000f03
+-					0x001f0000
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000003 /* EMC_RC */
++					0x00000017 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000002 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000202 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000080 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000015 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000019 /* EMC_TXSR */
++					0x00000019 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000001 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000213 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x00008000 /* EMC_DLL_XFORM_DQ4 */
++					0x00008000 /* EMC_DLL_XFORM_DQ5 */
++					0x00008000 /* EMC_DLL_XFORM_DQ6 */
++					0x00008000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000022 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000050e /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+ 			timing-102000000 {
+ 				clock-frequency = <102000000>;
+ 
+-				nvidia,emem-configuration = <
+-					0x08000001
+-					0x80000026
+-					0x00000001
+-					0x00000001
+-					0x00000003
+-					0x00000000
+-					0x00000002
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000003
+-					0x00000006
+-					0x06030203
+-					0x000a0403
+-					0x73c30504
+-					0x70000f03
+-					0x001f0000
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000004 /* EMC_RC */
++					0x00000023 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000003 /* EMC_RAS */
++					0x00000001 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000001 /* EMC_RD_RCD */
++					0x00000001 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000304 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000000c1 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000021 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000025 /* EMC_TXSR */
++					0x00000025 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000003 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000031c /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00080000 /* EMC_DLL_XFORM_DQ0 */
++					0x00080000 /* EMC_DLL_XFORM_DQ1 */
++					0x00080000 /* EMC_DLL_XFORM_DQ2 */
++					0x00080000 /* EMC_DLL_XFORM_DQ3 */
++					0x00008000 /* EMC_DLL_XFORM_DQ4 */
++					0x00008000 /* EMC_DLL_XFORM_DQ5 */
++					0x00008000 /* EMC_DLL_XFORM_DQ6 */
++					0x00008000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000033 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000713 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
+ 				>;
+ 			};
+ 
+ 			timing-204000000 {
+ 				clock-frequency = <204000000>;
+ 
+-				nvidia,emem-configuration = <
+-					0x01000003
+-					0x80000040
+-					0x00000001
+-					0x00000001
+-					0x00000005
+-					0x00000002
+-					0x00000004
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000003
+-					0x00000002
+-					0x00000004
+-					0x00000006
+-					0x06040203
+-					0x000a0405
+-					0x73840a06
+-					0x70000f03
+-					0x001f0000
+-				>;
+-			};
+-
+-			timing-300000000 {
+-				clock-frequency = <300000000>;
+-
+-				nvidia,emem-configuration = <
+-					0x08000004
+-					0x80000040
+-					0x00000001
+-					0x00000002
+-					0x00000007
+-					0x00000004
+-					0x00000005
+-					0x00000001
+-					0x00000002
+-					0x00000007
+-					0x00000002
+-					0x00000002
+-					0x00000004
+-					0x00000006
+-					0x06040202
+-					0x000b0607
+-					0x77450e08
+-					0x70000f03
+-					0x001f0000
+-				>;
+-			};
+-
+-			timing-396000000 {
+-				clock-frequency = <396000000>;
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x0000088d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100003>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000e000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000009 /* EMC_RC */
++					0x00000047 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000006 /* EMC_RAS */
++					0x00000002 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000005 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000002 /* EMC_RD_RCD */
++					0x00000002 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000004 /* EMC_EINPUT */
++					0x00000006 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000003 /* EMC_QRST */
++					0x0000000d /* EMC_QSAFE */
++					0x0000000f /* EMC_RDV */
++					0x00000011 /* EMC_RDV_MASK */
++					0x00000607 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000181 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000044 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000004a /* EMC_TXSR */
++					0x0000004a /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000007 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000638 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00090000 /* EMC_DLL_XFORM_DQ0 */
++					0x00090000 /* EMC_DLL_XFORM_DQ1 */
++					0x00094000 /* EMC_DLL_XFORM_DQ2 */
++					0x00094000 /* EMC_DLL_XFORM_DQ3 */
++					0x00009400 /* EMC_DLL_XFORM_DQ4 */
++					0x00009000 /* EMC_DLL_XFORM_DQ5 */
++					0x00009000 /* EMC_DLL_XFORM_DQ6 */
++					0x00009000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000066 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x000e000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000d2b3 /* EMC_CFG_PIPE */
++					0x80000d22 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x000008d5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100002>;
++				nvidia,emc-mode-2 = <0x00200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00000321>;
++				nvidia,emc-mrs-wait-cnt = <0x0117000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000000d /* EMC_RC */
++					0x00000067 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000009 /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000007 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x0000000e /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x000008e4 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000239 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000065 /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x0000006c /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000009 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000924 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00060000 /* EMC_DLL_XFORM_DQ0 */
++					0x00060000 /* EMC_DLL_XFORM_DQ1 */
++					0x00060000 /* EMC_DLL_XFORM_DQ2 */
++					0x00060000 /* EMC_DLL_XFORM_DQ3 */
++					0x00006000 /* EMC_DLL_XFORM_DQ4 */
++					0x00006000 /* EMC_DLL_XFORM_DQ5 */
++					0x00006000 /* EMC_DLL_XFORM_DQ6 */
++					0x00006000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000096 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0117000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x800012d7 /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x00000895>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100002>;
++				nvidia,emc-mode-2 = <0x00200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00000521>;
++				nvidia,emc-mrs-wait-cnt = <0x00f5000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000011 /* EMC_RC */
++					0x00000089 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x0000000c /* EMC_RAS */
++					0x00000004 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000a /* EMC_W2P */
++					0x00000004 /* EMC_RD_RCD */
++					0x00000004 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000001 /* EMC_EINPUT */
++					0x00000008 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000000 /* EMC_QRST */
++					0x0000000f /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x00000bd1 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000002f4 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000087 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000008f /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x0000000d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000c11 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x00004800 /* EMC_DLL_XFORM_DQ4 */
++					0x00004800 /* EMC_DLL_XFORM_DQ5 */
++					0x00004800 /* EMC_DLL_XFORM_DQ6 */
++					0x00004800 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x000000c6 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x00f5000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x8000188b /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100002>;
++				nvidia,emc-mode-2 = <0x00200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00000941>;
++				nvidia,emc-mrs-wait-cnt = <0x00c8000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0123133d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000018 /* EMC_RC */
++					0x000000b7 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000010 /* EMC_RAS */
++					0x00000006 /* EMC_RP */
++					0x00000006 /* EMC_R2W */
++					0x00000009 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000d /* EMC_W2P */
++					0x00000006 /* EMC_RD_RCD */
++					0x00000006 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000007 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000009 /* EMC_EINPUT_DURATION */
++					0x00040000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000010 /* EMC_QSAFE */
++					0x00000013 /* EMC_RDV */
++					0x00000015 /* EMC_RDV_MASK */
++					0x00000fd6 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000003f5 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000b /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x000000b4 /* EMC_AR2PDEN */
++					0x00000012 /* EMC_RW2PDEN */
++					0x000000bf /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000013 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001017 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe01200b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x00c8000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000042a0 /* EMC_CFG_PIPE */
++					0x80002062 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000b /* EMC_QPOP */
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100002>;
++				nvidia,emc-mode-2 = <0x00200010>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00000b61>;
++				nvidia,emc-mrs-wait-cnt = <0x00b0000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0121113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000001b /* EMC_RC */
++					0x000000d0 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000013 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000007 /* EMC_R2W */
++					0x0000000b /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000010 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x0000000a /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000003 /* EMC_EINPUT */
++					0x0000000b /* EMC_EINPUT_DURATION */
++					0x00070000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000002 /* EMC_QRST */
++					0x00000012 /* EMC_QSAFE */
++					0x00000016 /* EMC_RDV */
++					0x00000018 /* EMC_RDV_MASK */
++					0x00001208 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000482 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000d /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x000000cc /* EMC_AR2PDEN */
++					0x00000015 /* EMC_RW2PDEN */
++					0x000000d8 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001249 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe00e00b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x00b0000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000040a0 /* EMC_CFG_PIPE */
++					0x800024aa /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000e /* EMC_QPOP */
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0080089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x00100002>;
++				nvidia,emc-mode-2 = <0x00200418>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x00000d71>;
++				nvidia,emc-mrs-wait-cnt = <0x006f000e>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040000>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0120113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000024 /* EMC_RC */
++					0x00000114 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000019 /* EMC_RAS */
++					0x0000000a /* EMC_RP */
++					0x00000008 /* EMC_R2W */
++					0x0000000d /* EMC_W2R */
++					0x00000004 /* EMC_R2P */
++					0x00000013 /* EMC_W2P */
++					0x0000000a /* EMC_RD_RCD */
++					0x0000000a /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x0000000b /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x0000000d /* EMC_EINPUT_DURATION */
++					0x00080000 /* EMC_PUTERM_EXTRA */
++					0x00000004 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000014 /* EMC_QSAFE */
++					0x00000018 /* EMC_RDV */
++					0x0000001a /* EMC_RDV_MASK */
++					0x000017e2 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000005f8 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000003 /* EMC_PDEX2WR */
++					0x00000011 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000010d /* EMC_AR2PDEN */
++					0x00000018 /* EMC_RW2PDEN */
++					0x0000011e /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000006 /* EMC_TCKESR */
++					0x00000005 /* EMC_TPD */
++					0x0000001d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000008 /* EMC_TCLKSTABLE */
++					0x00000008 /* EMC_TCLKSTOP */
++					0x00001822 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x80000005 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab198 /* EMC_FBIO_CFG5 */
++					0xe00700b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x007fc007 /* EMC_DLL_XFORM_DQS0 */
++					0x007fc008 /* EMC_DLL_XFORM_DQS1 */
++					0x007f400c /* EMC_DLL_XFORM_DQS2 */
++					0x007fc007 /* EMC_DLL_XFORM_DQS3 */
++					0x007f4006 /* EMC_DLL_XFORM_DQS4 */
++					0x007f8004 /* EMC_DLL_XFORM_DQS5 */
++					0x007f8005 /* EMC_DLL_XFORM_DQS6 */
++					0x007f8004 /* EMC_DLL_XFORM_DQS7 */
++					0x007fc007 /* EMC_DLL_XFORM_DQS8 */
++					0x007fc008 /* EMC_DLL_XFORM_DQS9 */
++					0x007f400c /* EMC_DLL_XFORM_DQS10 */
++					0x007fc007 /* EMC_DLL_XFORM_DQS11 */
++					0x007f4006 /* EMC_DLL_XFORM_DQS12 */
++					0x007f8004 /* EMC_DLL_XFORM_DQS13 */
++					0x007f8005 /* EMC_DLL_XFORM_DQS14 */
++					0x007f8004 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00034000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x61861820 /* EMC_XM2DQSPADCTRL3 */
++					0x00492492 /* EMC_XM2DQSPADCTRL4 */
++					0x00492492 /* EMC_XM2DQSPADCTRL5 */
++					0x61861800 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x006f000e /* EMC_MRS_WAIT_CNT2 */
++					0x00000007 /* EMC_CTT */
++					0x00000004 /* EMC_CTT_DURATION */
++					0x00004080 /* EMC_CFG_PIPE */
++					0x80003012 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000f /* EMC_QPOP */
++				>;
++			};
++		};
++
++		emc-timings-6 {
++			nvidia,ram-code = <6>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000 /* EMC_RC */
++					0x00000003 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000060 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000018 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000005 /* EMC_TXSR */
++					0x00000005 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000064 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000007 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x800001c5 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000000 /* EMC_RC */
++					0x00000005 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000000 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x0000009a /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000026 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000007 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000006 /* EMC_TXSR */
++					0x00000006 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x000000a0 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x0000000b /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000023a /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000001 /* EMC_RC */
++					0x0000000a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000001 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000134 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x0000004d /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000008 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000000c /* EMC_TXSR */
++					0x0000000c /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000000 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000013f /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000015 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000370 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000003 /* EMC_RC */
++					0x00000011 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000002 /* EMC_RAS */
++					0x00000000 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000000 /* EMC_RD_RCD */
++					0x00000000 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000202 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000080 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000000f /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000013 /* EMC_TXSR */
++					0x00000013 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000001 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000213 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000022 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x8000050e /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x000008c5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00000000>;
++
++				nvidia,emc-configuration = <
++					0x00000004 /* EMC_RC */
++					0x0000001a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000003 /* EMC_RAS */
++					0x00000001 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000001 /* EMC_RD_RCD */
++					0x00000001 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000005 /* EMC_EINPUT */
++					0x00000005 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000004 /* EMC_QRST */
++					0x0000000c /* EMC_QSAFE */
++					0x0000000d /* EMC_RDV */
++					0x0000000f /* EMC_RDV_MASK */
++					0x00000304 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000000c1 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000018 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000001c /* EMC_TXSR */
++					0x0000001c /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000003 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x0000031c /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ0 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ1 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ2 */
++					0x000fc000 /* EMC_DLL_XFORM_DQ3 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ4 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ5 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ6 */
++					0x0000fc00 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000033 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000042 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000f2f3 /* EMC_CFG_PIPE */
++					0x80000713 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000008>;
++				nvidia,emc-cfg = <0x73240000>;
++				nvidia,emc-cfg-2 = <0x0000088d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100003>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80001221>;
++				nvidia,emc-mrs-wait-cnt = <0x000c000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0130b118>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000009 /* EMC_RC */
++					0x00000035 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000007 /* EMC_RAS */
++					0x00000002 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x0000000a /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x0000000b /* EMC_W2P */
++					0x00000002 /* EMC_RD_RCD */
++					0x00000002 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000003 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x00000006 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000004 /* EMC_EINPUT */
++					0x00000006 /* EMC_EINPUT_DURATION */
++					0x00010000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000003 /* EMC_QRST */
++					0x0000000d /* EMC_QSAFE */
++					0x0000000f /* EMC_RDV */
++					0x00000011 /* EMC_RDV_MASK */
++					0x00000607 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000181 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x00000002 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000032 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x00000038 /* EMC_TXSR */
++					0x00000038 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000007 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000638 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x106aa298 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00064000 /* EMC_DLL_XFORM_DQS0 */
++					0x00064000 /* EMC_DLL_XFORM_DQS1 */
++					0x00064000 /* EMC_DLL_XFORM_DQS2 */
++					0x00064000 /* EMC_DLL_XFORM_DQS3 */
++					0x00064000 /* EMC_DLL_XFORM_DQS4 */
++					0x00064000 /* EMC_DLL_XFORM_DQS5 */
++					0x00064000 /* EMC_DLL_XFORM_DQS6 */
++					0x00064000 /* EMC_DLL_XFORM_DQS7 */
++					0x00064000 /* EMC_DLL_XFORM_DQS8 */
++					0x00064000 /* EMC_DLL_XFORM_DQS9 */
++					0x00064000 /* EMC_DLL_XFORM_DQS10 */
++					0x00064000 /* EMC_DLL_XFORM_DQS11 */
++					0x00064000 /* EMC_DLL_XFORM_DQS12 */
++					0x00064000 /* EMC_DLL_XFORM_DQS13 */
++					0x00064000 /* EMC_DLL_XFORM_DQS14 */
++					0x00064000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00004000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00090000 /* EMC_DLL_XFORM_DQ0 */
++					0x00090000 /* EMC_DLL_XFORM_DQ1 */
++					0x00094000 /* EMC_DLL_XFORM_DQ2 */
++					0x00094000 /* EMC_DLL_XFORM_DQ3 */
++					0x00009400 /* EMC_DLL_XFORM_DQ4 */
++					0x00009000 /* EMC_DLL_XFORM_DQ5 */
++					0x00009000 /* EMC_DLL_XFORM_DQ6 */
++					0x00009000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000303 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x0000003f /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451400 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000066 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x000c000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x0000d2b3 /* EMC_CFG_PIPE */
++					0x80000d22 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000a /* EMC_QPOP */
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x000008d5>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000321>;
++				nvidia,emc-mrs-wait-cnt = <0x0174000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040128>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000000d /* EMC_RC */
++					0x0000004c /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000009 /* EMC_RAS */
++					0x00000003 /* EMC_RP */
++					0x00000004 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x00000009 /* EMC_W2P */
++					0x00000003 /* EMC_RD_RCD */
++					0x00000003 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000007 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x0000000e /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x000008e4 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000239 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x0000004a /* EMC_AR2PDEN */
++					0x0000000e /* EMC_RW2PDEN */
++					0x00000051 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000009 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000924 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00098000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00060000 /* EMC_DLL_XFORM_DQ0 */
++					0x00060000 /* EMC_DLL_XFORM_DQ1 */
++					0x00060000 /* EMC_DLL_XFORM_DQ2 */
++					0x00060000 /* EMC_DLL_XFORM_DQ3 */
++					0x00006000 /* EMC_DLL_XFORM_DQ4 */
++					0x00006000 /* EMC_DLL_XFORM_DQ5 */
++					0x00006000 /* EMC_DLL_XFORM_DQ6 */
++					0x00006000 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000096 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0174000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x800012d7 /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73340000>;
++				nvidia,emc-cfg-2 = <0x00000895>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200000>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000521>;
++				nvidia,emc-mrs-wait-cnt = <0x015b000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x01231339>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000012 /* EMC_RC */
++					0x00000065 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x0000000c /* EMC_RAS */
++					0x00000004 /* EMC_RP */
++					0x00000005 /* EMC_R2W */
++					0x00000008 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000a /* EMC_W2P */
++					0x00000004 /* EMC_RD_RCD */
++					0x00000004 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000005 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000001 /* EMC_EINPUT */
++					0x00000008 /* EMC_EINPUT_DURATION */
++					0x00020000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000000 /* EMC_QRST */
++					0x0000000f /* EMC_QSAFE */
++					0x00000010 /* EMC_RDV */
++					0x00000012 /* EMC_RDV_MASK */
++					0x00000bd1 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000002f4 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000001 /* EMC_PDEX2WR */
++					0x00000008 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000063 /* EMC_AR2PDEN */
++					0x0000000f /* EMC_RW2PDEN */
++					0x0000006b /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x0000000d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000005 /* EMC_TCLKSTABLE */
++					0x00000005 /* EMC_TCLKSTOP */
++					0x00000c11 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0x002c00a0 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00030000 /* EMC_DLL_XFORM_DQS0 */
++					0x00030000 /* EMC_DLL_XFORM_DQS1 */
++					0x00030000 /* EMC_DLL_XFORM_DQS2 */
++					0x00030000 /* EMC_DLL_XFORM_DQS3 */
++					0x00030000 /* EMC_DLL_XFORM_DQS4 */
++					0x00030000 /* EMC_DLL_XFORM_DQS5 */
++					0x00030000 /* EMC_DLL_XFORM_DQS6 */
++					0x00030000 /* EMC_DLL_XFORM_DQS7 */
++					0x00030000 /* EMC_DLL_XFORM_DQS8 */
++					0x00030000 /* EMC_DLL_XFORM_DQS9 */
++					0x00030000 /* EMC_DLL_XFORM_DQS10 */
++					0x00030000 /* EMC_DLL_XFORM_DQS11 */
++					0x00030000 /* EMC_DLL_XFORM_DQS12 */
++					0x00030000 /* EMC_DLL_XFORM_DQS13 */
++					0x00030000 /* EMC_DLL_XFORM_DQS14 */
++					0x00030000 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00070000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS15 */
++					0x00048000 /* EMC_DLL_XFORM_DQ0 */
++					0x00048000 /* EMC_DLL_XFORM_DQ1 */
++					0x00048000 /* EMC_DLL_XFORM_DQ2 */
++					0x00048000 /* EMC_DLL_XFORM_DQ3 */
++					0x00004800 /* EMC_DLL_XFORM_DQ4 */
++					0x00004800 /* EMC_DLL_XFORM_DQ5 */
++					0x00004800 /* EMC_DLL_XFORM_DQ6 */
++					0x00004800 /* EMC_DLL_XFORM_DQ7 */
++					0x10000280 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc081 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0000003f /* EMC_DSR_VTTGEN_DRV */
++					0x000000c6 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x015b000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000052a3 /* EMC_CFG_PIPE */
++					0x8000188b /* EMC_DYN_SELF_REF_CONTROL */
++					0x00000009 /* EMC_QPOP */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200008>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000941>;
++				nvidia,emc-mrs-wait-cnt = <0x013a000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0123133d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000018 /* EMC_RC */
++					0x00000088 /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000011 /* EMC_RAS */
++					0x00000006 /* EMC_RP */
++					0x00000006 /* EMC_R2W */
++					0x00000009 /* EMC_W2R */
++					0x00000002 /* EMC_R2P */
++					0x0000000d /* EMC_W2P */
++					0x00000006 /* EMC_RD_RCD */
++					0x00000006 /* EMC_WR_RCD */
++					0x00000002 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000003 /* EMC_WDV */
++					0x00000003 /* EMC_WDV_MASK */
++					0x00000007 /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x00000009 /* EMC_EINPUT_DURATION */
++					0x00040000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000010 /* EMC_QSAFE */
++					0x00000013 /* EMC_RDV */
++					0x00000015 /* EMC_RDV_MASK */
++					0x00000fd6 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000003f5 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000b /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000084 /* EMC_AR2PDEN */
++					0x00000012 /* EMC_RW2PDEN */
++					0x0000008f /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000013 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001017 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe01200b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00050000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000000 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000001 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x013a000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000042a0 /* EMC_CFG_PIPE */
++					0x80002062 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000b /* EMC_QPOP */
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0000089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200010>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000b61>;
++				nvidia,emc-mrs-wait-cnt = <0x0128000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040008>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0121113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x0000001c /* EMC_RC */
++					0x0000009a /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x00000013 /* EMC_RAS */
++					0x00000007 /* EMC_RP */
++					0x00000007 /* EMC_R2W */
++					0x0000000b /* EMC_W2R */
++					0x00000003 /* EMC_R2P */
++					0x00000010 /* EMC_W2P */
++					0x00000007 /* EMC_RD_RCD */
++					0x00000007 /* EMC_WR_RCD */
++					0x00000003 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000005 /* EMC_WDV */
++					0x00000005 /* EMC_WDV_MASK */
++					0x0000000a /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000003 /* EMC_EINPUT */
++					0x0000000b /* EMC_EINPUT_DURATION */
++					0x00070000 /* EMC_PUTERM_EXTRA */
++					0x00000003 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000002 /* EMC_QRST */
++					0x00000012 /* EMC_QSAFE */
++					0x00000016 /* EMC_RDV */
++					0x00000018 /* EMC_RDV_MASK */
++					0x00001208 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x00000482 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000002 /* EMC_PDEX2WR */
++					0x0000000d /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x00000096 /* EMC_AR2PDEN */
++					0x00000015 /* EMC_RW2PDEN */
++					0x000000a2 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000004 /* EMC_TCKE */
++					0x00000005 /* EMC_TCKESR */
++					0x00000004 /* EMC_TPD */
++					0x00000015 /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000006 /* EMC_TCLKSTABLE */
++					0x00000006 /* EMC_TCLKSTOP */
++					0x00001249 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x00000000 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab098 /* EMC_FBIO_CFG5 */
++					0xe00e00b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x0000000a /* EMC_DLL_XFORM_DQS0 */
++					0x0000000a /* EMC_DLL_XFORM_DQS1 */
++					0x0000000a /* EMC_DLL_XFORM_DQS2 */
++					0x0000000a /* EMC_DLL_XFORM_DQS3 */
++					0x0000000a /* EMC_DLL_XFORM_DQS4 */
++					0x0000000a /* EMC_DLL_XFORM_DQS5 */
++					0x0000000a /* EMC_DLL_XFORM_DQS6 */
++					0x0000000a /* EMC_DLL_XFORM_DQS7 */
++					0x0000000a /* EMC_DLL_XFORM_DQS8 */
++					0x0000000a /* EMC_DLL_XFORM_DQS9 */
++					0x0000000a /* EMC_DLL_XFORM_DQS10 */
++					0x0000000a /* EMC_DLL_XFORM_DQS11 */
++					0x0000000a /* EMC_DLL_XFORM_DQS12 */
++					0x0000000a /* EMC_DLL_XFORM_DQS13 */
++					0x0000000a /* EMC_DLL_XFORM_DQS14 */
++					0x0000000a /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR0 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR3 */
++					0x00048000 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000004 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000002 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000003 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000006 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x51451420 /* EMC_XM2DQSPADCTRL3 */
++					0x00514514 /* EMC_XM2DQSPADCTRL4 */
++					0x00514514 /* EMC_XM2DQSPADCTRL5 */
++					0x51451400 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x0128000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000000 /* EMC_CTT */
++					0x00000003 /* EMC_CTT_DURATION */
++					0x000040a0 /* EMC_CFG_PIPE */
++					0x800024aa /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000e /* EMC_QPOP */
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emc-auto-cal-config = <0xa1430000>;
++				nvidia,emc-auto-cal-config2 = <0x00000000>;
++				nvidia,emc-auto-cal-config3 = <0x00000000>;
++				nvidia,emc-auto-cal-interval = <0x001fffff>;
++				nvidia,emc-bgbias-ctl0 = <0x00000000>;
++				nvidia,emc-cfg = <0x73300000>;
++				nvidia,emc-cfg-2 = <0x0080089d>;
++				nvidia,emc-ctt-term-ctrl = <0x00000802>;
++				nvidia,emc-mode-1 = <0x80100002>;
++				nvidia,emc-mode-2 = <0x80200418>;
++				nvidia,emc-mode-4 = <0x00000000>;
++				nvidia,emc-mode-reset = <0x80000d71>;
++				nvidia,emc-mrs-wait-cnt = <0x00f8000c>;
++				nvidia,emc-sel-dpd-ctrl = <0x00040000>;
++				nvidia,emc-xm2dqspadctrl2 = <0x0120113d>;
++				nvidia,emc-zcal-cnt-long = <0x00000042>;
++				nvidia,emc-zcal-interval = <0x00020000>;
++
++				nvidia,emc-configuration = <
++					0x00000025 /* EMC_RC */
++					0x000000cc /* EMC_RFC */
++					0x00000000 /* EMC_RFC_SLR */
++					0x0000001a /* EMC_RAS */
++					0x00000009 /* EMC_RP */
++					0x00000008 /* EMC_R2W */
++					0x0000000d /* EMC_W2R */
++					0x00000004 /* EMC_R2P */
++					0x00000013 /* EMC_W2P */
++					0x00000009 /* EMC_RD_RCD */
++					0x00000009 /* EMC_WR_RCD */
++					0x00000004 /* EMC_RRD */
++					0x00000002 /* EMC_REXT */
++					0x00000000 /* EMC_WEXT */
++					0x00000006 /* EMC_WDV */
++					0x00000006 /* EMC_WDV_MASK */
++					0x0000000b /* EMC_QUSE */
++					0x00000002 /* EMC_QUSE_WIDTH */
++					0x00000000 /* EMC_IBDLY */
++					0x00000002 /* EMC_EINPUT */
++					0x0000000d /* EMC_EINPUT_DURATION */
++					0x00080000 /* EMC_PUTERM_EXTRA */
++					0x00000004 /* EMC_PUTERM_WIDTH */
++					0x00000000 /* EMC_PUTERM_ADJ */
++					0x00000000 /* EMC_CDB_CNTL_1 */
++					0x00000000 /* EMC_CDB_CNTL_2 */
++					0x00000000 /* EMC_CDB_CNTL_3 */
++					0x00000001 /* EMC_QRST */
++					0x00000014 /* EMC_QSAFE */
++					0x00000018 /* EMC_RDV */
++					0x0000001a /* EMC_RDV_MASK */
++					0x000017e2 /* EMC_REFRESH */
++					0x00000000 /* EMC_BURST_REFRESH_NUM */
++					0x000005f8 /* EMC_PRE_REFRESH_REQ_CNT */
++					0x00000003 /* EMC_PDEX2WR */
++					0x00000011 /* EMC_PDEX2RD */
++					0x00000001 /* EMC_PCHG2PDEN */
++					0x00000000 /* EMC_ACT2PDEN */
++					0x000000c6 /* EMC_AR2PDEN */
++					0x00000018 /* EMC_RW2PDEN */
++					0x000000d6 /* EMC_TXSR */
++					0x00000200 /* EMC_TXSRDLL */
++					0x00000005 /* EMC_TCKE */
++					0x00000006 /* EMC_TCKESR */
++					0x00000005 /* EMC_TPD */
++					0x0000001d /* EMC_TFAW */
++					0x00000000 /* EMC_TRPAB */
++					0x00000008 /* EMC_TCLKSTABLE */
++					0x00000008 /* EMC_TCLKSTOP */
++					0x00001822 /* EMC_TREFBW */
++					0x00000000 /* EMC_FBIO_CFG6 */
++					0x80000005 /* EMC_ODT_WRITE */
++					0x00000000 /* EMC_ODT_READ */
++					0x104ab198 /* EMC_FBIO_CFG5 */
++					0xe00700b1 /* EMC_CFG_DIG_DLL */
++					0x00008000 /* EMC_CFG_DIG_DLL_PERIOD */
++					0x00000009 /* EMC_DLL_XFORM_DQS0 */
++					0x00000009 /* EMC_DLL_XFORM_DQS1 */
++					0x00000009 /* EMC_DLL_XFORM_DQS2 */
++					0x00000007 /* EMC_DLL_XFORM_DQS3 */
++					0x00000006 /* EMC_DLL_XFORM_DQS4 */
++					0x00000006 /* EMC_DLL_XFORM_DQS5 */
++					0x007fc009 /* EMC_DLL_XFORM_DQS6 */
++					0x00000006 /* EMC_DLL_XFORM_DQS7 */
++					0x00000009 /* EMC_DLL_XFORM_DQS8 */
++					0x00000009 /* EMC_DLL_XFORM_DQS9 */
++					0x00000009 /* EMC_DLL_XFORM_DQS10 */
++					0x00000007 /* EMC_DLL_XFORM_DQS11 */
++					0x00000006 /* EMC_DLL_XFORM_DQS12 */
++					0x00000007 /* EMC_DLL_XFORM_DQS13 */
++					0x00000009 /* EMC_DLL_XFORM_DQS14 */
++					0x00000007 /* EMC_DLL_XFORM_DQS15 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE0 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE1 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE2 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE3 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE4 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE6 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE7 */
++					0x00034002 /* EMC_DLL_XFORM_ADDR0 */
++					0x00034002 /* EMC_DLL_XFORM_ADDR1 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR2 */
++					0x00034002 /* EMC_DLL_XFORM_ADDR3 */
++					0x00034002 /* EMC_DLL_XFORM_ADDR4 */
++					0x00000000 /* EMC_DLL_XFORM_ADDR5 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE8 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE9 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE10 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE11 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE12 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE13 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE14 */
++					0x00000000 /* EMC_DLL_XFORM_QUSE15 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS0 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS1 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS2 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS3 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS4 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS5 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS6 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS7 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS8 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS9 */
++					0x00000005 /* EMC_DLI_TRIM_TXDQS10 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS11 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS12 */
++					0x00000007 /* EMC_DLI_TRIM_TXDQS13 */
++					0x00000009 /* EMC_DLI_TRIM_TXDQS14 */
++					0x00000008 /* EMC_DLI_TRIM_TXDQS15 */
++					0x0000000e /* EMC_DLL_XFORM_DQ0 */
++					0x0000000e /* EMC_DLL_XFORM_DQ1 */
++					0x0000000e /* EMC_DLL_XFORM_DQ2 */
++					0x0000000e /* EMC_DLL_XFORM_DQ3 */
++					0x0000000e /* EMC_DLL_XFORM_DQ4 */
++					0x0000000e /* EMC_DLL_XFORM_DQ5 */
++					0x0000000e /* EMC_DLL_XFORM_DQ6 */
++					0x0000000e /* EMC_DLL_XFORM_DQ7 */
++					0x100002a0 /* EMC_XM2CMDPADCTRL */
++					0x00000000 /* EMC_XM2CMDPADCTRL4 */
++					0x00111111 /* EMC_XM2CMDPADCTRL5 */
++					0x00000000 /* EMC_XM2DQPADCTRL2 */
++					0x00000000 /* EMC_XM2DQPADCTRL3 */
++					0x77ffc085 /* EMC_XM2CLKPADCTRL */
++					0x00000101 /* EMC_XM2CLKPADCTRL2 */
++					0x81f1f108 /* EMC_XM2COMPPADCTRL */
++					0x07070004 /* EMC_XM2VTTGENPADCTRL */
++					0x00000000 /* EMC_XM2VTTGENPADCTRL2 */
++					0x016eeeee /* EMC_XM2VTTGENPADCTRL3 */
++					0x61861820 /* EMC_XM2DQSPADCTRL3 */
++					0x004d34d3 /* EMC_XM2DQSPADCTRL4 */
++					0x004d34d3 /* EMC_XM2DQSPADCTRL5 */
++					0x61861800 /* EMC_XM2DQSPADCTRL6 */
++					0x0606003f /* EMC_DSR_VTTGEN_DRV */
++					0x00000000 /* EMC_TXDSRVTTGEN */
++					0x00000000 /* EMC_FBIO_SPARE */
++					0x00000100 /* EMC_ZCAL_WAIT_CNT */
++					0x00f8000c /* EMC_MRS_WAIT_CNT2 */
++					0x00000007 /* EMC_CTT */
++					0x00000004 /* EMC_CTT_DURATION */
++					0x00004080 /* EMC_CFG_PIPE */
++					0x80003012 /* EMC_DYN_SELF_REF_CONTROL */
++					0x0000000f /* EMC_QPOP */
++				>;
++			};
++		};
++	};
++
++	memory-controller@70019000 {
++		emc-timings-1 {
++			nvidia,ram-code = <1>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emem-configuration = <
++					0x40040001 /* MC_EMEM_ARB_CFG */
++					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x77e30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emem-configuration = <
++					0x40020001 /* MC_EMEM_ARB_CFG */
++					0x80000012 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x76230303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emem-configuration = <
++					0xa0000001 /* MC_EMEM_ARB_CFG */
++					0x80000017 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x74a30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001 /* MC_EMEM_ARB_CFG */
++					0x8000001e /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x74230403 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x08000001 /* MC_EMEM_ARB_CFG */
++					0x80000026 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0403 /* MC_EMEM_ARB_DA_COVERS */
++					0x73c30504 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x01000003 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000004 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0405 /* MC_EMEM_ARB_DA_COVERS */
++					0x73840a06 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emem-configuration = <
++					0x08000004 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000007 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000005 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000007 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000b0607 /* MC_EMEM_ARB_DA_COVERS */
++					0x77450e08 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000005 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000007 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000d0709 /* MC_EMEM_ARB_DA_COVERS */
++					0x7586120a /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000007 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000d /* MC_EMEM_ARB_TIMING_RC */
++					0x00000008 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000009 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x0010090d /* MC_EMEM_ARB_DA_COVERS */
++					0x7428180e /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emem-configuration = <
++					0x00000009 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000e /* MC_EMEM_ARB_TIMING_RC */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000b /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000007 /* MC_EMEM_ARB_TIMING_W2R */
++					0x07050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00130b0e /* MC_EMEM_ARB_DA_COVERS */
++					0x73a91b0f /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emem-configuration = <
++					0x0e00000b /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000013 /* MC_EMEM_ARB_TIMING_RC */
++					0x0000000c /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000f /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000c /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++					0x08060202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00160d13 /* MC_EMEM_ARB_DA_COVERS */
++					0x734c2414 /* MC_EMEM_ARB_MISC0 */
++					0x70000f02 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++		};
++
++		emc-timings-4 {
++			nvidia,ram-code = <4>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emem-configuration = <
++					0x40040001 /* MC_EMEM_ARB_CFG */
++					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x77e30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emem-configuration = <
++					0x40020001 /* MC_EMEM_ARB_CFG */
++					0x80000012 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x77430303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emem-configuration = <
++					0xa0000001 /* MC_EMEM_ARB_CFG */
++					0x80000017 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x75e30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001 /* MC_EMEM_ARB_CFG */
++					0x8000001e /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0502 /* MC_EMEM_ARB_DA_COVERS */
++					0x75430403 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x08000001 /* MC_EMEM_ARB_CFG */
++					0x80000026 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0503 /* MC_EMEM_ARB_DA_COVERS */
++					0x74e30504 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x01000003 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000004 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0504 /* MC_EMEM_ARB_DA_COVERS */
++					0x74a40a05 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emem-configuration = <
++					0x08000004 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000007 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000005 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000007 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000b0607 /* MC_EMEM_ARB_DA_COVERS */
++					0x77450e08 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000005 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000007 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000d0709 /* MC_EMEM_ARB_DA_COVERS */
++					0x7586120a /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000007 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000c /* MC_EMEM_ARB_TIMING_RC */
++					0x00000007 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000009 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x0010090c /* MC_EMEM_ARB_DA_COVERS */
++					0x7488180d /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-600000000 {
++				clock-frequency = <600000000>;
++
++				nvidia,emem-configuration = <
++					0x00000009 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000e /* MC_EMEM_ARB_TIMING_RC */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000b /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000007 /* MC_EMEM_ARB_TIMING_W2R */
++					0x07050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00130b0e /* MC_EMEM_ARB_DA_COVERS */
++					0x74691b0f /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-792000000 {
++				clock-frequency = <792000000>;
++
++				nvidia,emem-configuration = <
++					0x0e00000b /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000013 /* MC_EMEM_ARB_TIMING_RC */
++					0x0000000c /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000f /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000c /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++					0x08060202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00170e13 /* MC_EMEM_ARB_DA_COVERS */
++					0x746c2414 /* MC_EMEM_ARB_MISC0 */
++					0x70000f02 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++		};
++
++		emc-timings-6 {
++			nvidia,ram-code = <6>;
++
++			timing-12750000 {
++				clock-frequency = <12750000>;
++
++				nvidia,emem-configuration = <
++					0x40040001 /* MC_EMEM_ARB_CFG */
++					0x8000000a /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x77e30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-20400000 {
++				clock-frequency = <20400000>;
++
++				nvidia,emem-configuration = <
++					0x40020001 /* MC_EMEM_ARB_CFG */
++					0x80000012 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x76230303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-40800000 {
++				clock-frequency = <40800000>;
++
++				nvidia,emem-configuration = <
++					0xa0000001 /* MC_EMEM_ARB_CFG */
++					0x80000017 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x74a30303 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-68000000 {
++				clock-frequency = <68000000>;
++
++				nvidia,emem-configuration = <
++					0x00000001 /* MC_EMEM_ARB_CFG */
++					0x8000001e /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0402 /* MC_EMEM_ARB_DA_COVERS */
++					0x74230403 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-102000000 {
++				clock-frequency = <102000000>;
++
++				nvidia,emem-configuration = <
++					0x08000001 /* MC_EMEM_ARB_CFG */
++					0x80000026 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000000 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000002 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06030203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0403 /* MC_EMEM_ARB_DA_COVERS */
++					0x73c30504 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-204000000 {
++				clock-frequency = <204000000>;
++
++				nvidia,emem-configuration = <
++					0x01000003 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000004 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000003 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040203 /* MC_EMEM_ARB_DA_TURNS */
++					0x000a0405 /* MC_EMEM_ARB_DA_COVERS */
++					0x73840a06 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-300000000 {
++				clock-frequency = <300000000>;
++
++				nvidia,emem-configuration = <
++					0x08000004 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000007 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000005 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000007 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000b0607 /* MC_EMEM_ARB_DA_COVERS */
++					0x77450e08 /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-396000000 {
++				clock-frequency = <396000000>;
++
++				nvidia,emem-configuration = <
++					0x0f000005 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RC */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RAS */
++					0x00000007 /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000008 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000004 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06040202 /* MC_EMEM_ARB_DA_TURNS */
++					0x000d0709 /* MC_EMEM_ARB_DA_COVERS */
++					0x7586120a /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
++				>;
++			};
++
++			timing-528000000 {
++				clock-frequency = <528000000>;
+ 
+ 				nvidia,emem-configuration = <
+-					0x0f000005
+-					0x80000040
+-					0x00000001
+-					0x00000002
+-					0x00000009
+-					0x00000005
+-					0x00000007
+-					0x00000001
+-					0x00000002
+-					0x00000008
+-					0x00000002
+-					0x00000002
+-					0x00000004
+-					0x00000006
+-					0x06040202
+-					0x000d0709
+-					0x7586120a
+-					0x70000f03
+-					0x001f0000
++					0x0f000007 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000d /* MC_EMEM_ARB_TIMING_RC */
++					0x00000008 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000a /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000001 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x00000009 /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_W2R */
++					0x06050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x0010090d /* MC_EMEM_ARB_DA_COVERS */
++					0x7428180e /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
+ 				>;
+ 			};
+ 
+@@ -1972,25 +6599,25 @@
+ 				clock-frequency = <600000000>;
+ 
+ 				nvidia,emem-configuration = <
+-					0x00000009
+-					0x80000040
+-					0x00000003
+-					0x00000004
+-					0x0000000e
+-					0x00000009
+-					0x0000000b
+-					0x00000001
+-					0x00000003
+-					0x0000000b
+-					0x00000002
+-					0x00000002
+-					0x00000005
+-					0x00000007
+-					0x07050202
+-					0x00130b0e
+-					0x73a91b0f
+-					0x70000f03
+-					0x001f0000
++					0x00000009 /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RP */
++					0x0000000e /* MC_EMEM_ARB_TIMING_RC */
++					0x00000009 /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000b /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000b /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000005 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000007 /* MC_EMEM_ARB_TIMING_W2R */
++					0x07050202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00130b0e /* MC_EMEM_ARB_DA_COVERS */
++					0x73a91b0f /* MC_EMEM_ARB_MISC0 */
++					0x70000f03 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
+ 				>;
+ 			};
+ 
+@@ -1998,25 +6625,25 @@
+ 				clock-frequency = <792000000>;
+ 
+ 				nvidia,emem-configuration = <
+-					0x0e00000b
+-					0x80000040
+-					0x00000004
+-					0x00000005
+-					0x00000013
+-					0x0000000c
+-					0x0000000f
+-					0x00000002
+-					0x00000003
+-					0x0000000c
+-					0x00000002
+-					0x00000002
+-					0x00000006
+-					0x00000008
+-					0x08060202
+-					0x00160d13
+-					0x734c2414
+-					0x70000f02
+-					0x001f0000
++					0x0e00000b /* MC_EMEM_ARB_CFG */
++					0x80000040 /* MC_EMEM_ARB_OUTSTANDING_REQ */
++					0x00000004 /* MC_EMEM_ARB_TIMING_RCD */
++					0x00000005 /* MC_EMEM_ARB_TIMING_RP */
++					0x00000013 /* MC_EMEM_ARB_TIMING_RC */
++					0x0000000c /* MC_EMEM_ARB_TIMING_RAS */
++					0x0000000f /* MC_EMEM_ARB_TIMING_FAW */
++					0x00000002 /* MC_EMEM_ARB_TIMING_RRD */
++					0x00000003 /* MC_EMEM_ARB_TIMING_RAP2PRE */
++					0x0000000c /* MC_EMEM_ARB_TIMING_WAP2PRE */
++					0x00000002 /* MC_EMEM_ARB_TIMING_R2R */
++					0x00000002 /* MC_EMEM_ARB_TIMING_W2W */
++					0x00000006 /* MC_EMEM_ARB_TIMING_R2W */
++					0x00000008 /* MC_EMEM_ARB_TIMING_W2R */
++					0x08060202 /* MC_EMEM_ARB_DA_TURNS */
++					0x00160d13 /* MC_EMEM_ARB_DA_COVERS */
++					0x734c2414 /* MC_EMEM_ARB_MISC0 */
++					0x70000f02 /* MC_EMEM_ARB_MISC1 */
++					0x001f0000 /* MC_EMEM_ARB_RING1_THROTTLE */
+ 				>;
+ 			};
+ 		};
+-- 
+2.21.0
+
