@@ -2,115 +2,83 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831DDC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D68AC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDF42184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:14:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A8Cv4QVl"
+	by mail.kernel.org (Postfix) with ESMTP id 300852146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555013779;
+	bh=JOtCFg0doBLjq4X/eQlclJA/YGvreDJl+MF1NoEmd8Q=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=C+HmEo50FXgg+k/lVam8YMvqes0SD2xis4uV6EZX+5YtMCa68+f/YPWY4lECB7ybY
+	 VzgwV8ax3E2XgtAiSiSI7kkU4bpp3ql3z+TQI0RjAiJsZgg9Q31TO1VA4JCny96O9+
+	 cfr7hulDzlOCg7jKp7dkSCu7Dy0cpx7y8F8pMPlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfDKUOr (ORCPT
+        id S1726830AbfDKUQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:14:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36700 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKUOq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:14:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h18so8209231wml.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mfgYVEL0NtELnzvBqf/CA5vN8U+yudOWgv+okoGfuDE=;
-        b=A8Cv4QVldwj/mU215BXnCL1BEw/YfZEiEw4zOHbLYijk4QQ4mqiZNZ7aNj6v6YAeX+
-         DsPerV6eZlexu46ETmaJBODBiXoJU4isYwhPeu9naNgTB+Iv34Vu5r1tEt3JAZE0qS5z
-         ku4+bcu2iLSLZrg7RAG8cP5/bXNIVpDVBTTuExV+GzlZE91+a3IJuUtbmQDBG6Qwj/Mx
-         LP/p+METLB9sWWlpOez5TRXcpLT0rkjcIdwul10zjbHajZD3/h5FolUgUXf1STM8eqDb
-         I+BjTvRZg1ZBq1sgTMZUtvM7JC+MQW2Rh11Ws9fmN364K0Bxm/bxSU2rjTpo0wNwQ3DP
-         9ULw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mfgYVEL0NtELnzvBqf/CA5vN8U+yudOWgv+okoGfuDE=;
-        b=nNaoHSDu33UUALOmcoewe76kD4l7kJDLNMJ70sFdBR7a/O7UlOzEjnpJpIU4Uysids
-         mJ1av1Bw24QtVRGWPENOG3Cfe08JWVKSXfMexr9xlwa8iQLoEsCd74Mx7rotcvvSASUz
-         i98uQyGWYOM0cHkDggPdS4MJ5oj5m8ssmDpQeyAi0coq5H//QNeMPNhKxLY5j+R9MWs8
-         B18fno5AuGnTozCqUdM9uRZDGxbQxLCqWkaj32MalZFM1SDnZAZlRJsoJNdAUHmcLGFj
-         3kAs21ozFocTCI/gm/UAqKhEBuBKXPaVPLXrOCpyi07YhtF8N3m7eFoawua3/s6+uzcP
-         8kvQ==
-X-Gm-Message-State: APjAAAXhlzjNuzodCgDuT0wh5ZhhGYXQhQMTm0IGFCuXTa17jgqYveBE
-        JH7Vk82UXD8My2YcbGi/ELjCMg==
-X-Google-Smtp-Source: APXvYqwpWGbLQZqjS4mBUKVJK7P7MJghvEXlnvSMNNt4lyD4Ql2GNeMD4XLOjY8a4lA+BTs2Ny3ZeQ==
-X-Received: by 2002:a7b:cb16:: with SMTP id u22mr7977250wmj.60.1555013684798;
-        Thu, 11 Apr 2019 13:14:44 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id i28sm110206567wrc.32.2019.04.11.13.14.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 13:14:44 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Bugfix and cleanup the timer driver for Milbeaut M10V
-To:     "Sugaya, Taichi" <sugaya.taichi@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>
-References: <1553483149-8922-1-git-send-email-sugaya.taichi@socionext.com>
- <30226b29-bee5-6410-6ddc-5943c834dc15@socionext.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <8b1c127e-6a19-fb1c-4643-981c50656dc6@linaro.org>
-Date:   Thu, 11 Apr 2019 22:14:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 16:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbfDKUQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:16:17 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFE920850;
+        Thu, 11 Apr 2019 20:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555013777;
+        bh=JOtCFg0doBLjq4X/eQlclJA/YGvreDJl+MF1NoEmd8Q=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=qMe8oQCv/OsQ8cPpVB+MSv8EKP3JfxczfSVxn7DzzOX9hF5Om/eqD099W9setkTgn
+         zqjsFtv6dMzcEbdvs2BAC4RdvxWHDGVQZ/5BHKVIraJW+65zOztY87aO9cCjwjJ7xF
+         /FQEddusEAJrv3s0AAeyfNMy1QlTX9IzjUOQZFx0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <30226b29-bee5-6410-6ddc-5943c834dc15@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190305050546.23431-3-weiyi.lu@mediatek.com>
+References: <20190305050546.23431-1-weiyi.lu@mediatek.com> <20190305050546.23431-3-weiyi.lu@mediatek.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 1/9] clk: mediatek: Disable tuner_en before change PLL rate
+Cc:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        srv_heupstream@mediatek.com, stable@vger.kernel.org,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>
+Message-ID: <155501377617.20095.15654973603515721887@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Thu, 11 Apr 2019 13:16:16 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 09:11, Sugaya, Taichi wrote:
-> This is ping..
-> Does anyone have any comments?
+Quoting Weiyi Lu (2019-03-04 21:05:38)
+> From: Owen Chen <owen.chen@mediatek.com>
+>=20
+> PLLs with tuner_en bit, such as APLL1, need to disable
+> tuner_en before apply new frequency settings, or the new frequency
+> settings (pcw) will not be applied.
+> The tuner_en bit will be disabled during changing PLL rate
+> and be restored after new settings applied.
+>=20
+> Fixes: e2f744a82d725 (clk: mediatek: Add MT2712 clock support)
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
 
-Other than the missing Fixes tag, the patches look good to me.
-
-
-
-> On 2019/03/25 12:05, Sugaya Taichi wrote:
->> This series fixes a bug and cleanup code about timer driver for
->> Milbeaut M10V.
->> Since it is difficult to separate, it is integrated into a series.
->>
->> Sugaya Taichi (3):
->>    clocksource/drivers/timer-milbeaut: Fix to enable one-shot timer
->>    clocksource/drivers/timer-milbeaut: Add shutdown function
->>    clocksource/drivers/timer-milbeaut: Cleanup common register accesses
->>
->>   drivers/clocksource/timer-milbeaut.c | 66
->> +++++++++++++++++++++++++-----------
->>   1 file changed, 47 insertions(+), 19 deletions(-)
->>
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Applied to clk-next
 
