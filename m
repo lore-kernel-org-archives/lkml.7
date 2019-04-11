@@ -2,350 +2,151 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FCAC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8FDC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3127F20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oy7MsbYY"
+	by mail.kernel.org (Postfix) with ESMTP id B56C8217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfDKHjS (ORCPT
+        id S1726838AbfDKHnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:39:18 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:51789 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfDKHjR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:39:17 -0400
-Received: by mail-it1-f196.google.com with SMTP id s3so8064156itk.1;
-        Thu, 11 Apr 2019 00:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ERuBTtbDlEbbEKaWU/YOyCQrXKi+w+wz5W0Hcw8YGlQ=;
-        b=Oy7MsbYYZyerOzLFm9eA4RJRHUMldcw5fLflysKA80Sx+42647K2gxuA99FTGzwDRR
-         URseC3Cks7dazlGk99BWl2y/7YCWPYRASHusMQVklfXZin0IxxLslTXeH3Ea0gwd7xzU
-         N5hhUgaPGC0tGWIOjXqE3cSQl6ay2/4ite4QdZ7419ndGokziBjsFxaRNRFdMvrs0L0S
-         N4Fbjk/eEdJ4BMw1tEt8LicWluqvQ3aoBwN0hQDt5KVbzvQoGVhnIAu6Hmq6VjLMWd3R
-         3AAmOlYeh7av3PvYZ9AHxY1Uuxkn7cLiUn5C65pm7qbZeDuA12kaomDUHTZP26KncKc0
-         GeWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ERuBTtbDlEbbEKaWU/YOyCQrXKi+w+wz5W0Hcw8YGlQ=;
-        b=UXe36qdfwDwKO+Ybo36Drx6Ip6xCIWkj0iEt/MkS2dKYeWnYu1hgoli0krWLK5OW+C
-         kaFBWxvuG0LkAhLk0zH2L1G1fEmAi/8SOmeSb31KWPd9+iH1wMJ3HFIiGnFEGBE4UP08
-         ouDQKYr1w4+ADMbuGJsoaPtMxLJjaTPk2PXPWKo1zZwOtjntVgd9pTliYNgtYyGgo7jT
-         rk+TiPeh6BothQnYBKa6zWsrnAP8aN3x/RErQK578eoIHiZmiHaZBTfC26FOQCvuUTeF
-         7TN+O3eIoOkH34+qdtVyAvk/iSufco1jSShcgfG1WKZABX7lOGYmbUEX8i0qRG6pDKAo
-         ZkTQ==
-X-Gm-Message-State: APjAAAUlk8Q/Ly79c2HVN8+q+yoZ17yJymN2TTLfR620n5/Gxogphvka
-        vdCfVZPt5KOf+FkW+6HrkKfUidKmRh4vH/VR7ng=
-X-Google-Smtp-Source: APXvYqwH3eoTQZ8UdVHjWlKByNJkOtma4Emr64h1Y0IXWKUm+UI8hr872JMLZXS/XZ7LDFx6Cm7tpt1F5eT0/j4g0GE=
-X-Received: by 2002:a02:8508:: with SMTP id g8mr34905264jai.68.1554968355929;
- Thu, 11 Apr 2019 00:39:15 -0700 (PDT)
+        Thu, 11 Apr 2019 03:43:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726104AbfDKHnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:43:39 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 52BF599CD303C71DD8AD;
+        Thu, 11 Apr 2019 15:43:36 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 11 Apr
+ 2019 15:43:28 +0800
+Subject: Re: Some new bio merging behaviors in __bio_try_merge_page
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        Jens Axboe <axboe@kernel.dk>, Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <85c5fa1a-a506-e26f-c354-1554d47d8b2b@huawei.com>
+ <20190411070807.GA421@ming.t460p>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <cb392476-a00e-09ce-fa6b-9e088242ecc6@huawei.com>
+Date:   Thu, 11 Apr 2019 15:43:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <CGME20190404172257epcas1p20d789242a2353dc8e9ffd7f435dc5eee@epcas1p2.samsung.com>
- <20190404171735.12815-1-s.nawrocki@samsung.com> <20190404171735.12815-9-s.nawrocki@samsung.com>
-In-Reply-To: <20190404171735.12815-9-s.nawrocki@samsung.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Thu, 11 Apr 2019 13:09:04 +0530
-Message-ID: <CANAwSgTPeSZS_Tcy2ucO5OUQjoY1ta5+7TpAer1CHV2tQTOcrw@mail.gmail.com>
-Subject: Re: [PATCH RFC 8/8] ARM: dts: exynos: Add ASV tables for exynos5422/5800
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190411070807.GA421@ming.t460p>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
 
-As per my knowledge HK soc introduce this table to support
-overclocking of cpufreq for Odroid XU3 XU4 family for boards.
 
-ARM Cortex-A15 Quad CPU (Eagle) 1800 to 2000
-ARM Cortex-A7 Quard CPU (Kingfisher) 1400 to 1500
+On 2019/4/11 15:08, Ming Lei wrote:
+> Hi Gao Xiang,
+> 
+> On Thu, Apr 11, 2019 at 01:47:49PM +0800, Gao Xiang wrote:
+>> Hi Ming,
+>>
+>> I found a erofs issue after commit 07173c3ec276
+>> ("block: enable multipage bvecs") is merged. It seems that
+>> it tries to merge more physical continuous pages in one iovec.
+>>
+>> However it breaks the current erofs_read_raw_page logic since it uses
+>> nr_iovecs of bio_alloc to limit the maximum number of physical
+> 
+> I believe you can do the limit outside easily, such as by checking
+> how many pages have been added to the bio.
 
-For Exynos5422  below table
-asv-table-[0-3]  AVS range from 200 to 2100
-asv-table-[100-103] AVS range from 200 to 1500.
+Yes, I agree that. However, I noticed that bio_add_page is exported as
+EXPORT_SYMBOL. I have no idea how many out-of-tree drivers break as well.
 
-Are these setting stable for this board to cover clock the cpu now.
+Is there no way to take old behavior into consideration in the block layer as well?
 
-Can you also enable support for this clk-exynos5420.c
-For example exynos5800_eglclk_d and exynos5420_kfcclk_d table.
+> 
+>> continuous blocks as well. It was practicable since the old
+>> __bio_try_merge_page only tries to merge in the same page.
+>> it is a kAPI behavior change which also affects bio_alloc...
+>>
+>> ...
+>> 231                 err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
+>> 232                 if (unlikely(err))
+>> 233                         goto err_out;
+>> ...
+>> 284                 /* max # of continuous pages */
+>> 285                 if (nblocks > DIV_ROUND_UP(map.m_plen, PAGE_SIZE))
+>> 286                         nblocks = DIV_ROUND_UP(map.m_plen, PAGE_SIZE);
+>> 287                 if (nblocks > BIO_MAX_PAGES)
+>> 288                         nblocks = BIO_MAX_PAGES;
+>> 289
+>> 290                 bio = erofs_grab_bio(sb, blknr, nblocks, sb,
+>> 291                                      read_endio, false);
+> 
+> Previously this bio is allowed to add at most 'nblocks' pages, however,
+> now we are allowed to add at most 'nblocks' io vecs, instead of pages.
+> 
+>> 292                 if (IS_ERR(bio)) {
+>> 293                         err = PTR_ERR(bio);
+>> 294                         bio = NULL;
+>> 295                         goto err_out;
+>> 296                 }
+>> 297         }
+>> 298
+>> 299         err = bio_add_page(bio, page, PAGE_SIZE, 0);
+>> 300         /* out of the extent or bio is full */
+>> 301         if (err < PAGE_SIZE)
+>> 302                 goto submit_bio_retry;
+>> ...
+>>
+>> After commit 07173c3ec276 ("block: enable multipage bvecs"), erofs could
+>> read more beyond what erofs_map_blocks assigns, and out-of-bound data could
+>> be read and it breaks tail-end inline determination.
+> 
+> I don't understand why, could you explain a bit why erofs reads more?
 
-Also can you update exynos5420.dtsi  following opp table
-For example cluster_a15_opp_table and cluster_a7_opp_table opt binding.
+In current erofs, file could be break in two parts (non tail-end and tail-end blocks).
+Considering this on-disk layout,
+ ________________________________________________________________
+|     non tail-end data              |   meta data               |
+|____________________________________|_(inode) + non-inline data_|
+                          ^          ^
+                          |          |        
+                          bio start  \-- what nr_iovecs indicates as well:
+                                         the end of the non tail-end data.
 
-To make this work synchronously with AVS.
+Before this commit, it will stop just before the next meta data. However,
+if the new bio merging behavior is introduced, it could add pages more than
+nr_iovecs, thus meta data will be read as the normal data...
 
-Best Regards
--Anand
 
-On Thu, 4 Apr 2019 at 22:55, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> This patch ASV (Adaptive Supply Voltage) table entries for
-> Exynos5422/5800 SoC.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5.dtsi    |   2 +-
->  arch/arm/boot/dts/exynos5800.dtsi | 207 ++++++++++++++++++++++++++++++
->  2 files changed, 208 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index 67f9b4504a42..22eb951c614c 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -35,7 +35,7 @@
->                 #size-cells = <1>;
->                 ranges;
->
-> -               chipid@10000000 {
-> +               chipid: chipid@10000000 {
->                         compatible = "samsung,exynos4210-chipid";
->                         reg = <0x10000000 0x100>;
->                 };
-> diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-> index 57d3b319fd65..5358865f5c0b 100644
-> --- a/arch/arm/boot/dts/exynos5800.dtsi
-> +++ b/arch/arm/boot/dts/exynos5800.dtsi
-> @@ -16,6 +16,213 @@
->         compatible = "samsung,exynos5800", "samsung,exynos5";
->  };
->
-> +&chipid {
-> +       asv {
-> +               compatible = "samsung,exynos-asv-v1";
-> +               asv-table-0 {
-> +                       /* ARM 0, 1 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x0>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12   ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1800 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1700 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
-> +                               <1600 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000  987500>,
-> +                               <1500 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500 1000000  987500  975000  962500  950000>,
-> +                               <1400 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  975000  962500  950000  937500  925000>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +               asv-table-2 {
-> +                       /* ARM 2 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x2>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1262500 1250000 1250000 1237500 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
-> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
-> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
-> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +               asv-table-3 {
-> +                       /* ARM 3 */
-> +                       samsung,asv-table-size = <20 15>;
-> +                       samsung,asv-table-id = <0x3>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
-> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1900 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
-> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
-> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
-> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
-> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
-> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
-> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
-> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                    /* ASV0...13 */
-> +                       samsung,asv-common-data = <700 900000>,
-> +                                                 <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-4 {
-> +                       /* ARM BIN2 */
-> +                       samsung,asv-table-size = <17 15>;
-> +                       samsung,asv-table-id = <0x4>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1800 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1150000 1137500 1125000 1112500 1100000>,
-> +                               <1700 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1600 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
-> +                               <1500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000 987500>,
-> +                               <1400 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000 987500  975000  962500>,
-> +                               <1300 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 987500  1000000 987500  975000  962500  950000>,
-> +                               <1200 1062500 1050000 1037500 1025000 1012500 1000000 987500  975000  962500  975000  962500  950000  937500  925000>,
-> +                               <1100 1037500 1025000 1012500 1000000 987500  975000  962500  950000  937500  950000  937500  925000  912500  900000>,
-> +                               <1000 1012500 1000000  987500  975000 962500  950000  937500  925000  912500  925000  912500  900000  900000  900000>,
-> +                               < 900  987500  975000  962500  950000 937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 800  962500  950000  937500  925000 912500  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 700  937500  925000  912500  900000 900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                      /* ASV0...13 */
-> +                       samsung,asv-common-data = <600 900000>,
-> +                                                 <500 900000>,
-> +                                                 <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +
-> +               asv-table-100 {
-> +                       /* KFC 0, 1 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x100>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-102 {
-> +                       /* KFC 2 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x102>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-103 {
-> +                       /* KFC 3 */
-> +                       samsung,asv-table-size = <14 15>;
-> +                       samsung,asv-table-id = <0x103>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
-> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
-> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
-> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
-> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
-> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
-> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
-> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
-> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <400 900000>,
-> +                                                 <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +
-> +               asv-table-104 {
-> +                       /* KFC BIN2 */
-> +                       samsung,asv-table-size = <12 15>;
-> +                       samsung,asv-table-id = <0x104>;
-> +                       samsung,asv-data =
-> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
-> +                               <1300 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500>,
-> +                               <1200 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500>,
-> +                               <1100 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000>,
-> +                               <1000 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500>,
-> +                               < 900 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000>,
-> +                               < 800 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000>,
-> +                               < 700 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000>,
-> +                               < 600  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 500  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
-> +                               < 400  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
-> +                                                     /* ASV0...13 */
-> +                       samsung,asv-common-data = <300 900000>,
-> +                                                 <200 900000>;
-> +               };
-> +       };
-> +};
-> +
->  &clock {
->         compatible = "samsung,exynos5800-clock";
->  };
-> --
-> 2.17.1
->
+> 
+> The amount depends on how many pages you added to the bio.
+> 
+>>
+>> I can change the logic in erofs. However, out of curiosity, I have no idea
+>> if some other places also are designed like this.
+>>
+>> IMO, it's better to provide a total count which indicates how many real
+>> pages have been added in this bio. some thoughts?
+> 
+> As I mentioned, you may count how many pages added to bio, or you still
+> can get the number via bio_segments(bio).
+
+It is unsuitable to introduce bio_segments for each bio_add_page...
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Ming
+> 
