@@ -2,102 +2,98 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535DBC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057BC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2E62070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F1B22070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfDKHOG (ORCPT
+        id S1726890AbfDKHOO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:14:06 -0400
-Received: from regular1.263xmail.com ([211.150.70.203]:36436 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfDKHOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:14:05 -0400
-X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Apr 2019 03:14:02 EDT
-Received: from jiaolitao?raisecom.com (unknown [192.168.167.131])
-        by regular1.263xmail.com (Postfix) with ESMTP id 9E34A3BE;
-        Thu, 11 Apr 2019 15:06:30 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED: 0
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [36.106.21.148])
-        by smtp.263.net (postfix) whith ESMTP id P22649T139665665033984S1554966384531579_;
-        Thu, 11 Apr 2019 15:06:30 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <c3eb433156a4333e59d77d3acf8de74e>
-X-RL-SENDER: jiaolitao@raisecom.com
-X-SENDER: 006714@raisecom.com
-X-LOGIN-NAME: jiaolitao@raisecom.com
-X-FST-TO: davem@davemloft.net
-X-SENDER-IP: 36.106.21.148
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Litao Jiao <jiaolitao@raisecom.com>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, idosch@mellanox.com, roopa@cumulusnetworks.com,
-        sbrivio@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiaolitao@raisecom.com
-Subject: [PATCH] vxlan: using hash_lock to protect one budegt in vxlan_flush
-Date:   Thu, 11 Apr 2019 15:06:09 +0800
-Message-Id: <1554966369-16259-1-git-send-email-jiaolitao@raisecom.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 11 Apr 2019 03:14:14 -0400
+Received: from smtp.asem.it ([151.1.184.197]:59119 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbfDKHON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:14:13 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003806042.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:14:07 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Thu, 11
+ Apr 2019 09:14:06 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Thu, 11 Apr 2019 09:14:06 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
+Thread-Topic: [PATCH 2/2] spi: pxa2xx: use a module softdep for dw_dmac
+Thread-Index: AQHU75yQbkDNn+rZPkCFgi0S9cPL1qY1OMwAgAAnBxCAAAN6AIABJ5/A
+Date:   Thu, 11 Apr 2019 07:14:06 +0000
+Message-ID: <7ad025c8049e4e828ce75ef1e41dcbfd@asem.it>
+References: <1554900696-28858-1-git-send-email-f.suligoi@asem.it>
+ <1554900696-28858-2-git-send-email-f.suligoi@asem.it>
+ <20190410125612.GR6106@sirena.org.uk>
+ <6eeaf42f4d3f42c58546c429194213b8@asem.it>
+ <20190410152820.GT6106@sirena.org.uk>
+In-Reply-To: <20190410152820.GT6106@sirena.org.uk>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SGHeloLookup-Result: hardfail smtp.helo=webmail.asem.it (does not match 172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B020A.5CAEE93F.002F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hash_lock will hold long time in vxlan_flush when stopping the
-vxlan device in which there has lots of vxlan fdb entries;it would
-affect the bh process in local cpu; and other cpu would wait for
-a long time in vxlan_snoop until the hash_lock is released;so
-using hash_lock to protect one budegt in vxlan_flush could
-reduce the continuous holding time of the lock.
+> > I think that the problem could be related to how the DMA channel is
+> requested.
+> > At the moment the function used are:
+> 
+> > pxa2xx_spi_dma_setup --> dma_request_slave_channel_compat -->
+> > --> __dma_request_slave_channel_compat --> dma_request_slave_channel -->
+> > --> dma_request_chan
+> 
+> > Actually the final function "dma_request_chan" return
+> > the channel number or "-EPROBE_DEFER" if it's not ready.
+> > But this information ("-EPROBE_DEFER") is lost in the penultimate
+> function
+> > "dma_request_slave_channel", which return only the chann, if all is ok,
+> or
+> > NULL, in case of errors.
+> > So the deferral mechanism is not used.
+> 
+> Right, yes - that analysis seems correct.  The interfaces seem a bit
+> weird here but fixing them looks like the most complete and robust fix.
 
-Signed-off-by: Litao Jiao <jiaolitao@raisecom.com>
----
- drivers/net/vxlan.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Ok Mark, I'll fix this problem as soon as I can, using EPROBE_DEFER.
+For now, in my application, I use the patch that I already sent,
+with the "softdep" workaround:
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index d76dfed..306703e 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2816,9 +2816,10 @@ static void vxlan_flush(struct vxlan_dev *vxlan, bool do_all)
- {
- 	unsigned int h;
- 
--	spin_lock_bh(&vxlan->hash_lock);
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		struct hlist_node *p, *n;
-+
-+		spin_lock_bh(&vxlan->hash_lock);
- 		hlist_for_each_safe(p, n, &vxlan->fdb_head[h]) {
- 			struct vxlan_fdb *f
- 				= container_of(p, struct vxlan_fdb, hlist);
-@@ -2828,8 +2829,8 @@ static void vxlan_flush(struct vxlan_dev *vxlan, bool do_all)
- 			if (!is_zero_ether_addr(f->eth_addr))
- 				vxlan_fdb_destroy(vxlan, f, true, true);
- 		}
-+		spin_unlock_bh(&vxlan->hash_lock);
- 	}
--	spin_unlock_bh(&vxlan->hash_lock);
- }
- 
- /* Cleanup timer and forwarding table on shutdown */
--- 
-1.9.1
+MODULE_SOFTDEP("pre: dw_dmac");
 
+I tested it a lot, with more than 2000 cold reboot (automatic
+switch on/off using a controlled power supply) and it always worked good.
 
+Thanks for your help!
 
+Flavio
