@@ -2,114 +2,89 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EEEC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E5EC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442DB20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:13:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="atSosEhg"
+	by mail.kernel.org (Postfix) with ESMTP id BD22420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfDKINo (ORCPT
+        id S1726624AbfDKIS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:13:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46458 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfDKINn (ORCPT
+        Thu, 11 Apr 2019 04:18:29 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:40463 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfDKIS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:13:43 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3B845Jc131842;
-        Thu, 11 Apr 2019 08:13:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=CxALe2+dMErVQcQun0unMbr1R8fjHmrE6/VoYNtRrJQ=;
- b=atSosEhgum2VewBWb8dX4kK0AAVcOdcnuzktvxfJYnszgcTcxmfKtOWdbLa8w8GQvi7I
- h+DBJMqbdqOgcc42ZAAW20+1b9h7Crx4i4nFCTVwFoZBXXK5J2Ic7bLaiAaK+muNizfX
- FeCQhWfQh+J/g9QH1t64jwwaXBq6brtajOfbp4PmySpWbvteK95bZNDLoIdpH7L5AGxY
- GxiM2YCUsrjBwoUVGBo61YBK5Myz6MWc3t7hVSn02RSOVrXufKI1U2b0bhN4atAP6evq
- oDYG6vNM276jqSaK0ZL2LhwuBp6rv0AMK6QYcmdGegAm2ooIhdziiI+XSSOfrQ2gEzep 1A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2rpmrqf9ty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 08:13:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3B8D0tq156829;
-        Thu, 11 Apr 2019 08:13:38 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2rph7tm81e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Apr 2019 08:13:38 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3B8Dbmx019557;
-        Thu, 11 Apr 2019 08:13:37 GMT
-Received: from kadam (/41.202.241.15)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Apr 2019 01:13:36 -0700
-Date:   Thu, 11 Apr 2019 11:13:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Madhumthia Prabakaran <madhumithabiw@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8723bs: Remove typedef in struct sdio_data
-Message-ID: <20190411081328.GF31633@kadam>
-References: <20190409161617.29871-1-madhumithabiw@gmail.com>
- <20190410064954.GE6095@kadam>
- <20190410194908.GA13242@madhuleo>
+        Thu, 11 Apr 2019 04:18:29 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3B8I9fg016167
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 11 Apr 2019 17:18:09 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B8I9gO023088;
+        Thu, 11 Apr 2019 17:18:09 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3B8I8dX018471;
+        Thu, 11 Apr 2019 17:18:09 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.137] [10.38.151.137]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-4203940; Thu, 11 Apr 2019 17:16:46 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC09GP.gisp.nec.co.jp ([10.38.151.137]) with mapi id 14.03.0319.002; Thu,
+ 11 Apr 2019 17:16:45 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqAgACP04CAAAH9AA==
+Date:   Thu, 11 Apr 2019 08:16:45 +0000
+Message-ID: <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+ <20190410171431.GE26580@zn.tnic>
+ <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+ <20190411080927.GA30080@zn.tnic>
+In-Reply-To: <20190411080927.GA30080@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C0BA2FCD5BBA63458B0F49155501E2A7@gisp.nec.co.jp>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410194908.GA13242@madhuleo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904110059
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904110058
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 02:49:09PM -0500, Madhumthia Prabakaran wrote:
-> On Wed, Apr 10, 2019 at 09:49:54AM +0300, Dan Carpenter wrote:
-> > On Tue, Apr 09, 2019 at 11:16:17AM -0500, Madhumitha Prabakaran wrote:
-> > > diff --git a/drivers/staging/rtl8723bs/include/drv_types.h b/drivers/staging/rtl8723bs/include/drv_types.h
-> > > index bafb2c30e7fb..b0623c936940 100644
-> > > --- a/drivers/staging/rtl8723bs/include/drv_types.h
-> > > +++ b/drivers/staging/rtl8723bs/include/drv_types.h
-> > > @@ -220,7 +220,7 @@ struct registry_priv
-> > >  #define BSSID_SZ(field)   sizeof(((struct wlan_bssid_ex *) 0)->field)
-> > >  
-> > >  #include <drv_types_sdio.h>
-> > > -#define INTF_DATA SDIO_DATA
-> > > +#define INTF_DATA struct sdio_data
-> > >  
-> > 
-> > Just get rid of INTF_DATA data as well.  It's only used once a bit lower
-> > in the file.  (Get rid of the ifdef around it).
-> 
-> But, reference of INTF_DATA is also included in file 
-> ./drivers/staging/rtl8723bs/include/drv_types.h:487:
-> return &dvobj->intf_data.func->dev;
-> 
-
-Actually, I maybe misunderstood your email.  I'm not sure what you mean
-about "&dvobj->intf_data.func->dev;".  I just meant to replace
-INTF_DATA with "struct sdio_data".
-
-regards,
-dan carpenter
+T24gNC8xMS8xOSA1OjA5IFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IE9uIFdlZCwgQXBy
+IDEwLCAyMDE5IGF0IDExOjM0OjUxUE0gKzAwMDAsIEp1bmljaGkgTm9tdXJhIHdyb3RlOg0KPj4g
+QnV0IGVmaV9nZXRfcnNkcF9hZGRyKCkgbmVlZHMgdG8gY2hlY2sgd2hldGhlciB0aGUga2VybmVs
+IHdhcw0KPj4ga2V4ZWMgYm9vdGVkIHRvIGF2b2lkIGFjY2Vzc2luZyBpbnZhbGlkIEVGSSB0YWJs
+ZSBhZGRyZXNzLg0KPj4gZWZpX2dldF9rZXhlY19zZXR1cF9kYXRhX2FkZHIoKSBpcyB0aGUgb25s
+eSBtZXRob2QgSSBrbm93DQo+PiB0byBjaGVjayBpZiBpdCB3YXMga2V4ZWMtYm9vdGVkLg0KPiAN
+Cj4gWW91ciB2MyBoYWQgdGhlIHJpZ2h0IGFwcHJvYWNoIC0geW91IGZpcnN0IGNoZWNrIGlmIHlv
+dSBjYW4gZ2V0IHRoZQ0KPiBhZGRyZXNzIGFzIGEga2V4ZWMtZWQga2VybmVsLiBJZiB5b3UgZG8s
+IHlvdSB1c2UgdGhhdCBvbmUgYW5kIGNvbnRpbnVlDQo+IHRoZSBub3JtYWwgcGF0aC4NCj4gDQo+
+IElmIHlvdSBkb24ndCwgeW91IGZhbGwgYmFjayB0byBlZmlfZ2V0X3JzZHBfYWRkcigpIGFuZCBn
+ZXQgaXQgZGlyZWN0bHkNCj4gZnJvbSBFRkkuDQo+IA0KPiBBbmQgdGhlbiBjYXJ2ZSBvdXQgdGhl
+IGZ1bmN0aW9uYWxpdHkgeW91IG5lZWQgdG8gY2FsbCBtdWx0aXBsZSB0aW1lcyBpbg0KPiBoZWxw
+ZXIgZnVuY3Rpb25zIGxpa2UgX19lZmlfZ2V0X3JzZHBfYWRkcigpLg0KPiANCj4gV2h5IGRvZXNu
+J3QgdGhhdCB3b3JrIGFueW1vcmU/DQoNCmtleGVjX2dldF9yc2RwX2FkZHIoKSBtaWdodCBmYWls
+IG9uIGtleGVjLWJvb3RlZCBrZXJuZWwsIGUuZy4gaWYgdGhlDQpzZXR1cF9kYXRhIHdhcyBpbnZh
+bGlkLiBJbiBzdWNoIGEgY2FzZSwgZmFsbGluZyBiYWNrIHRvIGVmaV9nZXRfcnNkcF9hZGRyKCkN
+CndpbGwgaGl0IHRoZSBwcm9ibGVtIG9mIGFjY2Vzc2luZyBpbnZhbGlkIHRhYmxlIHBvaW50ZXIg
+YWdhaW4uDQoNCi0tIA0KSnVuJ2ljaGkgTm9tdXJhLCBORUMgQ29ycG9yYXRpb24gLyBORUMgU29s
+dXRpb24gSW5ub3ZhdG9ycywgTHRkLg==
 
