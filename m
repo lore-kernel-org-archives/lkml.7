@@ -2,139 +2,124 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616ACC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F00C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA02217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7563D2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="mZVlWLhb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M77lrMxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfDKKqq (ORCPT
+        id S1726815AbfDKKrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:46:46 -0400
-Received: from mail.kapsi.fi ([91.232.154.25]:34089 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfDKKqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:46:45 -0400
-X-Greylist: delayed 2412 seconds by postgrey-1.27 at vger.kernel.org; Thu, 11 Apr 2019 06:46:43 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6KQUjfncdrsA3T/gypZ6l17eb8a3qRti+BhvKSXNdXY=; b=mZVlWLhb07aa7ksCnolUZx/KZP
-        P2sM6MGNBKIx+x3ivo/T5kfwRdKcndI8xA3pn2wuGnSl8suFvQTomU6Y9eeXffi2+FB57Dqvom0rX
-        PqMrC5ilXQ+7HlucyFkeBh4YrjM55C7KBQ3wuUobixC4F3faLZUAxtoF9IoUZqv3Clx1bHf7EtFNO
-        YYEyST9kshknN3psuK5Ms6zFX5hhDUjSQWMeMzgmQPmJx7NamQNOFBxkkolLbVEgomxN+SlA8zDB2
-        TcXApbAl3mf9gtQ7nPn29o8Czxxoy65nSWAClgy/GK7k+p3COnbFDP6Axj48boYzQ4VW8D5yDwn0v
-        YsUSgCwg==;
-Received: from [193.209.96.43] (helo=[10.21.26.179])
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <cyndis@kapsi.fi>)
-        id 1hEWbF-0002t6-0W; Thu, 11 Apr 2019 13:06:29 +0300
-Subject: Re: [PATCH] gpu: host1x: fix compile error when IOMMU API is not
- available
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, digetx@gmail.com,
-        linux-tegra-owner@vger.kernel.org
-References: <4c3d021c73c001f633803e364cfbc6ace3381205.1554936354.git.stefan@agner.ch>
- <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
- <20190411083017.GB4633@ulmo>
-From:   Mikko Perttunen <cyndis@kapsi.fi>
-Message-ID: <c73bb650-7175-150b-a678-c707e5f0e7e7@kapsi.fi>
-Date:   Thu, 11 Apr 2019 13:06:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 11 Apr 2019 06:47:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56081 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726588AbfDKKri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:47:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o25so6090428wmf.5;
+        Thu, 11 Apr 2019 03:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZwhAx+QnGniZO7ghVRiFuf4mvV7+VICXC3x0clxm7ls=;
+        b=M77lrMxKYrgpS1XnhqpDZB0JXI7TQg5GPnmSt4TErmBc3J2xeq/uCtgRqQq8KxrJ7g
+         vny42RsUs3ewLzKDaqih/oYO2YzPi6r0ovFTiFBoNviWGAETx8k3d2CJWS3897Ve2NyM
+         FzDAqgt6+NJJG+EmNvEy8a3i+YQiihSB/M/eH7L6p5YaRFnfI+wL6rURx4AVsB5/tRMk
+         DeSTtWluC4bKhkr4nSlChkfvRXUTIHLuNGG7Hkp5WUBmoOIT6BdbdsBLIb63pi+6qwDC
+         0vYk8kL0/8W3gAm/fh8ehQMrbkfUGaeNnuLelslJ7EDSbbUurjzzZqhTvPeZXXr6JZsE
+         nw6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZwhAx+QnGniZO7ghVRiFuf4mvV7+VICXC3x0clxm7ls=;
+        b=YJ4iuJoAm6CRgFWpQsULlHQ7lsnsLMlxkYWsCfg0bf6XgdVbTKLGn2HF3OWFLWs6RR
+         1Xr5vRyPEbyy5Rr5qOk5jqpW748VyfUbfJwFR+QHs2xXHHUdLxA+FmEsjhUtJiEdyBl+
+         ONIxEqe0cjir8UQapJflWEQQhcW9NcFQ0P5L+xbDnHQSOy1DEX7nEhPSuJfvpeBFvBOJ
+         /7hSl8M8Gc+ffcHCiv+R1OeeG/tgldNa9YlaGjiM4iq77HdqKjf78gQl6h4wrRaj9B37
+         aVtrp913IIATXKBypP5BOyy4fasE6kOzR6vleAznzpxBdUQvvFXyKQXxRsRkARM5AZGD
+         lQpA==
+X-Gm-Message-State: APjAAAUDqpsMP1uaOxNghS+1hAbtKGM9Mz2F2i75QjwvgivDgmWRaSB1
+        gxG8G+HANIzDuFyo+xI5NVlx8AVHBH73lQ==
+X-Google-Smtp-Source: APXvYqzX26vtj0jqewyPzLVVEUATgJgwbRsMtQLdoxISsfwR5f5CHl0sNLVm3HcmNLD7nE/dewaAPQ==
+X-Received: by 2002:a1c:a711:: with SMTP id q17mr6347416wme.111.1554979656547;
+        Thu, 11 Apr 2019 03:47:36 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
+        by smtp.gmail.com with ESMTPSA id k4sm54987587wro.33.2019.04.11.03.47.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 03:47:36 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
+Date:   Thu, 11 Apr 2019 12:57:12 +0200
+Message-Id: <20190411105720.32357-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190411083017.GB4633@ulmo>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 193.209.96.43
-X-SA-Exim-Mail-From: cyndis@kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.4.2019 11.30, Thierry Reding wrote:
-> On Thu, Apr 11, 2019 at 09:23:13AM +0100, Ben Dooks wrote:
->>
->>
->> On 2019-04-10 23:47, Stefan Agner wrote:
->>> In case the IOMMU API is not available compiling host1x fails with
->>> the following error:
->>>    In file included from drivers/gpu/host1x/hw/host1x06.c:27:
->>>    drivers/gpu/host1x/hw/channel_hw.c: In function
->>> ‘host1x_channel_set_streamid’:
->>>    drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit
->>> declaration of function
->>>      ‘dev_iommu_fwspec_get’; did you mean ‘iommu_fwspec_free’?
->>> [-Werror=implicit-function-declaration]
->>>    struct iommu_fwspec *spec =
->>> dev_iommu_fwspec_get(channel->dev->parent);
->>>                                ^~~~~~~~~~~~~~~~~~~~
->>>                                iommu_fwspec_free
->>>
->>> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
->>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>
->> would it be better to provide something like this i nthe header that
->> defines dev_iommu_fwspec_get() to be:
->>
->> static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
->> { return NULL; }
->>
->> although returning an PTR_ERR would have been better.
-> 
-> I don't think there's really a large number of failures here. Either
-> your device has an IOMMU fwspec or it doesn't.
-> 
-> But yes, I think it'd be better to have the above static inline dummy in
-> iommu.h, but I'll apply this for now in the hopes of getting it in
-> before v5.1 final.
+Hi,
 
-A similar patch was already sent before by someone. That one also 
-programs the bypass stream ID (0x7f) even if IOMMU is disabled. We 
-should pick that patch instead.
+The Allwinner H6 has a Mali-T720 MP2. The drivers are
+out-of-tree so this series only introduce the dt-bindings.
+
+The first patch is from Neil Amstrong and has been already
+merged in linux-amlogic. It is required for this series.
+
+The second patch is from Icenowy Zheng where I changed the
+order has required by Rob Herring.
+See: https://patchwork.kernel.org/patch/10699829/
+
+The GPU opp table was taken from Jernej Škrabec's patch
+on LibreELEC.tv.
 
 Thanks,
-Mikko
+Clement
 
-> 
-> Thierry >
->>
->>> ---
->>>   drivers/gpu/host1x/hw/channel_hw.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/host1x/hw/channel_hw.c
->>> b/drivers/gpu/host1x/hw/channel_hw.c
->>> index 27101c04a827..4030d64916f0 100644
->>> --- a/drivers/gpu/host1x/hw/channel_hw.c
->>> +++ b/drivers/gpu/host1x/hw/channel_hw.c
->>> @@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct
->>> host1x_job *job)
->>>
->>>   static void host1x_channel_set_streamid(struct host1x_channel *channel)
->>>   {
->>> -#if HOST1X_HW >= 6
->>> +#if IS_ENABLED(CONFIG_IOMMU_API) &&  HOST1X_HW >= 6
->>>   	struct iommu_fwspec *spec =
->>> dev_iommu_fwspec_get(channel->dev->parent);
->>>   	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Changes in v2 (Thanks to Maxime Ripard):
+ - Drop GPU OPP Table
+ - Add clocks and clock-names in required
+
+Clément Péron (7):
+  dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+  dt-bindings: gpu: mali-midgard: Add h6 mali gpu compatible
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for Pine H64
+  arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+
+Neil Armstrong (1):
+  dt-bindings: gpu: mali-midgard: Add resets property
+
+ .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
+ 6 files changed, 61 insertions(+)
+
+-- 
+2.17.1
+
