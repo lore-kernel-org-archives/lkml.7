@@ -2,168 +2,155 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05BCC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB2AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7205E2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WiQfuvdP"
+	by mail.kernel.org (Postfix) with ESMTP id D88D720818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfDKPk0 (ORCPT
+        id S1726720AbfDKPmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:40:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41113 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfDKPkY (ORCPT
+        Thu, 11 Apr 2019 11:42:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726391AbfDKPmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:40:24 -0400
-Received: by mail-qk1-f195.google.com with SMTP id o129so3722391qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 08:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9lsZK+fg8QrQe5rlaRvnhW288eucc61zftb6COYu8kA=;
-        b=WiQfuvdPQ3fmmPmgu6+WituIM2WrVo7v4toZoeCTpVyyz1beAo2fFpUmw6soiTxaut
-         mK2ZcV4PjbjwO6oj26alucoPvcd4O/LCoDSJAwdjJPJYi3EVlcG4OEYmJA+KnundTjIM
-         OK11bhw9Oxv9a4/a6kQwf9vWwirxogT4UDrEkZEg4kz65oqBzspArTSogFsc507CCxdT
-         yfTTUNNbBM0RQpZZSUd/V/J/WHGtt9LTbAFYB+rNwxiDWDh0Wne8mJpLQrARCBvK7/V/
-         i8JLhYNHgzzDDp+C8N/ekkFWntH6nPv6aVO0nqikPYIqtS1Yl/7fGROWUDJq4hnlnkoC
-         LWxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9lsZK+fg8QrQe5rlaRvnhW288eucc61zftb6COYu8kA=;
-        b=AOGHdZj9M9dWRC+3Yr7Co39BHi+rXz5V1vyEnSNpuWWlOAv5OeEdS71lU9Ftd0xv+/
-         fsaQbThLZ6AMrLI4gGLsVA7y3xvUB9Ud5lz+b5m/p8pv/PgKAz5pDzIvSx1LxIiqhcLk
-         Vbt3cNG6MMU9bquTJqxYcszmjMp2QWD1agmyBwELorp8ukJA3rqWJVWHu9VYWhajHxnG
-         JOgxHPqLP0zNPESRlGPBRwHf5wSFncV7deKseuGX7UQFl9NifziQbBd6WMIQpEuQ6ow6
-         N+E/gxUwcVS/0DYzuRplNSDSRzUNi79ylGeyb7ociwV2caxO8oBn38oyCyOPgZVbh9gM
-         oX+A==
-X-Gm-Message-State: APjAAAXp2M+HVDlFyohPsgiHe2koAje4Eax++0TcYKZLuyx3joOlVVmg
-        owhMZftZOZo7XUiCKsA7Ywzx5H9yJIhKiN/DsNw=
-X-Google-Smtp-Source: APXvYqw03+fErRk3PH82WRl4wcYYNpqkimjknc1ftZgK866EY57k+aGMknjzBR8o/CUowHObGy6UUWtqDmu2UocPzAA=
-X-Received: by 2002:a37:7381:: with SMTP id o123mr37898715qkc.96.1554997223582;
- Thu, 11 Apr 2019 08:40:23 -0700 (PDT)
+        Thu, 11 Apr 2019 11:42:44 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BFaRWG008630
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:42:43 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rt6huqqde-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:42:42 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 11 Apr 2019 16:42:41 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 16:42:39 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BFgcMI35258410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 15:42:38 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 291C1B2067;
+        Thu, 11 Apr 2019 15:42:38 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B0E4B205F;
+        Thu, 11 Apr 2019 15:42:38 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 15:42:37 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 35BC116C36C6; Thu, 11 Apr 2019 08:42:39 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 08:42:39 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH 0/4] Allow CPU0 to be nohz full
+Reply-To: paulmck@linux.ibm.com
+References: <20190404120704.18479-1-npiggin@gmail.com>
+ <alpine.DEB.2.21.1904041635190.1685@nanos.tec.linutronix.de>
+ <1554393113.wbjxx9ccdx.astroid@bobo.none>
+ <alpine.DEB.2.21.1904051952160.1802@nanos.tec.linutronix.de>
+ <1554800737.v126tflazd.astroid@bobo.none>
 MIME-Version: 1.0
-References: <20190403135123.8723-1-enric.balletbo@collabora.com> <CABXOdTe3sYq2bKPEajHu9LzMLXhEbABQAAGc8OfcYU3Z9LY7xQ@mail.gmail.com>
-In-Reply-To: <CABXOdTe3sYq2bKPEajHu9LzMLXhEbABQAAGc8OfcYU3Z9LY7xQ@mail.gmail.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Thu, 11 Apr 2019 17:40:12 +0200
-Message-ID: <CAFqH_52r_uL2BARRnTdKAxtnTwKsnQRE7T3QSH+pEp7bgKNrpA@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_proto: Also return invalid
- command in cros_ec_cmd_xfer_status
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>, kernel@collabora.com,
-        Dmitry Torokhov <dtor@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554800737.v126tflazd.astroid@bobo.none>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041115-0060-0000-0000-0000032BA1DF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010909; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01187590; UDB=6.00622081; IPR=6.00968353;
+ MB=3.00026395; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 15:42:41
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041115-0061-0000-0000-000048EA0408
+Message-Id: <20190411154239.GA29448@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=439 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 09, 2019 at 07:21:54PM +1000, Nicholas Piggin wrote:
+> Thomas Gleixner's on April 6, 2019 3:54 am:
+> > On Fri, 5 Apr 2019, Nicholas Piggin wrote:
+> >> Thomas Gleixner's on April 5, 2019 12:36 am:
+> >> > On Thu, 4 Apr 2019, Nicholas Piggin wrote:
+> >> > 
+> >> >> I've been looking at ways to fix suspend breakage with CPU0 as a
+> >> >> nohz CPU. I started looking at various things like allowing CPU0
+> >> >> to take over do_timer again temporarily or allowing nohz full
+> >> >> to be stopped at runtime (that is quite a significant change for
+> >> >> little real benefit). The problem then was having the housekeeping
+> >> >> CPU go offline.
+> >> >> 
+> >> >> So I decided to try just allowing the freeze to occur on non-zero
+> >> >> CPU. This seems to be a lot simpler to get working, but I guess
+> >> >> some archs won't be able to deal with this? Would it be okay to
+> >> >> make it opt-in per arch?
+> >> > 
+> >> > It needs to be opt in. x86 will fall on its nose with that.
+> >> 
+> >> Okay I can add that.
+> >> 
+> >> > Now the real interesting question is WHY do we need that at all?
+> >> 
+> >> Why full nohz for CPU0? Basically this is how their job system was
+> >> written and used, testing nohz full was a change that came much later 
+> >> as an optimisation.
+> >> 
+> >> I don't think there is a fundamental reason an equivalent system
+> >> could not be made that uses a different CPU for housekeeping, but I
+> >> was assured the change would be quite difficult for them.
+> >> 
+> >> If we can support it, it seems nice if you can take a particular
+> >> configuration and just apply nohz_full to your application processors
+> >> without any other changes.
+> > 
+> > This wants an explanation in the patches.
+> 
+> Okay.
+> 
+> > And patch 4 has in the changelog:
+> > 
+> >    nohz_full has been successful at significantly reducing jitter for a
+> >    large supercomputer customer, but their job control system requires CPU0
+> >    to be for housekeeping.
+> > 
+> > which just makes me dazed and confused :)
+> > 
+> > Other than some coherent explanation and making it opt in, I don't think
+> > there is a fundamental issue with that.
+> 
+> I will try to make the changelogs less jibberish then :)
 
-Missatge de Guenter Roeck <groeck@google.com> del dia dc., 3 d=E2=80=99abr.
-2019 a les 18:27:
->
-> On Wed, Apr 3, 2019 at 6:51 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> >
-> > The commit 9798ac6d32c1 ("mfd: cros_ec: Add cros_ec_cmd_xfer_status()
-> > helper") was introduced to remove duplicated code in several users of
-> > the cros_ec_cmd_xfer function. The idea behind that commit is mask all
-> > the EC errors as protocol error when the EC command fails, what is
-> > really useful because as a user you probably don't care of the exact
-> > error reported by the EC, you only want to know if the command succeede=
-d
-> > or not.
-> >
-> > That works for most of the errors returned by the EC, but we might be
-> > also interested on report the EC_RES_INVALID_COMMAND, which happens whe=
-n
-> > the command is not supported by the EC. An use case for this is when yo=
-u
-> > need to show/hide a sysfs attribute for a specific command and you don'=
-t
-> > have a EC feature flag that tells you that the command is supported or
-> > not.
-> >
+Maybe this is all taken care of now, but do the various clocks stay
+synchronized with wall-clock time if all CPUs are in nohz_full mode?
+At one time, at least one CPU needed to keep its scheduler-clock
+interrupt going in order to keep things in sync.
 
-Actually, I discarded this patch, I assumed wrongly that this patch
-will avoid some boilerplate on the above cases but that's not true
-because there is no difference between check that ret =3D=3D -EINVAL or
-check that msg->result =3D=3D EC_RES_INVALID_COMMAND.
+The ppc timebase register might make it possible to do this without any
+scheduler-clock interrupts, but figured I should check.  ;-)
 
-> > While here, also document properly the cros_ec_cmd_xfer_status
-> > function.
-> >
+							Thanx, Paul
 
-Also, this function was properly documented in the header, so that is
-not needed, my bad.
-
-Thanks,
- Enric
-
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->
-> Reviewed-by: Guenter Roeck <groeck@chromium.org>
->
-> > ---
-> >
-> >  drivers/platform/chrome/cros_ec_proto.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform=
-/chrome/cros_ec_proto.c
-> > index 97a068dff192..a4e0d3a6d891 100644
-> > --- a/drivers/platform/chrome/cros_ec_proto.c
-> > +++ b/drivers/platform/chrome/cros_ec_proto.c
-> > @@ -478,6 +478,16 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev=
-,
-> >  }
-> >  EXPORT_SYMBOL(cros_ec_cmd_xfer);
-> >
-> > +/**
-> > + * cros_ec_cmd_xfer_status() - Send EC command.
-> > + * @ec_dev: EC device.
-> > + * @msg: EC message data for request and response.
-> > + *
-> > + * Return:
-> > + * 0 - OK
-> > + * -EINVAL - Invalid command.
-> > + * -EPROTO - Protocol error.
-> > + */
-> >  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
-> >                             struct cros_ec_command *msg)
-> >  {
-> > @@ -486,6 +496,11 @@ int cros_ec_cmd_xfer_status(struct cros_ec_device =
-*ec_dev,
-> >         ret =3D cros_ec_cmd_xfer(ec_dev, msg);
-> >         if (ret < 0) {
-> >                 dev_err(ec_dev->dev, "Command xfer error (err:%d)\n", r=
-et);
-> > +       } else if (msg->result =3D=3D EC_RES_INVALID_COMMAND) {
-> > +               dev_dbg(ec_dev->dev,
-> > +                       "Command %d not supported for this device\n",
-> > +                       msg->command);
-> > +               return -EINVAL;
-> >         } else if (msg->result !=3D EC_RES_SUCCESS) {
-> >                 dev_dbg(ec_dev->dev, "Command result (err: %d)\n", msg-=
->result);
-> >                 return -EPROTO;
-> > --
-> > 2.20.1
-> >
