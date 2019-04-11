@@ -2,122 +2,476 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7DBC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF25C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A80217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYtmQxHz"
+	by mail.kernel.org (Postfix) with ESMTP id 5DDC4217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfDKDyS (ORCPT
+        id S1726813AbfDKDz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:54:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54700 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfDKDyS (ORCPT
+        Wed, 10 Apr 2019 23:55:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726615AbfDKDz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:54:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so4778353wml.4;
-        Wed, 10 Apr 2019 20:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4Z91ixljCpwssb/9kTZtnCZqne0XLiVRXDj2DxnE/CA=;
-        b=RYtmQxHzkdNJTKDZ6BIM5SBlKzSiC8auWfjYHGLeql6SAvE+dA0yU14zI6eFvu0lET
-         Sh1sC7wSjyh+leGGQLGtkjFrZAGYZS5hJ9mHpJkvea5ri1KKp5pEZgP/3vzCG/zQOjNF
-         hcMVjfaB+NGbCJyLlYO+1WyElshyurzPJUoSZM6/D1Xlpc6EmkMYT9cDB0wA0Fl3L0K2
-         rYP/YwziW24uyWmtV/Uhk8DOUgV9p/yQF5cSRcAwdYNGt1fgPUHL7ulJtiQBwKVuTEHN
-         +lHFtoJRZIMVKhSvt8K4Cja7HS6cYqFpI8bRkVCEwxaxTlRePZEnXBtWk+I4yYsNLyYo
-         AndQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4Z91ixljCpwssb/9kTZtnCZqne0XLiVRXDj2DxnE/CA=;
-        b=Wgh4U5jD0ziQWDMXadOzKnmq8PEZuqVWdq52bZPUWiZVQHHHw8BUkIZEe8GT0pBbYr
-         L5FFJu5lCYRlhypvR9SPWgf0lmFDztzsftqs9glZuLwigSLlcAHEBJlGiUNos03ehlY3
-         IIEv7nZ2q/sf8wwnAYa7KTnUDQtjBqxZsSK0Dd70F4M3R+YmOssUSiiB2BTyNHHxdyT+
-         APmOW6ZLd2jUG5kJ5mIZsY2Wv5vOU5W9B4WPZMyHZT4nEM6QESQ0n0Twp7O0Uxp5LpYQ
-         n2QQgyR54MZh3d08ivzKup9pIFUAY1+ORsewPDrYf4p4biWuq+oCiNHeMajjNmKsNhJC
-         ZWSg==
-X-Gm-Message-State: APjAAAWGtg+EvVqoTcMoKAdfC4U4D2Q0/sAcGxqUhhQMn9lRHOD56ONT
-        y6rygTkZIGmzBbr3ezyyomg=
-X-Google-Smtp-Source: APXvYqyCPdGIEbZ2W5kUs+6ZO0p9l4h2SBwf2wdxN0RJhwr8XNiwuxPfPOXBzlRpzZMhqC34hGm7Xg==
-X-Received: by 2002:a1c:2087:: with SMTP id g129mr4911807wmg.114.1554954855949;
-        Wed, 10 Apr 2019 20:54:15 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2da5:5700:805e:d3ab:f95:5de])
-        by smtp.gmail.com with ESMTPSA id f1sm3125591wml.28.2019.04.10.20.54.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Apr 2019 20:54:14 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Elena Reshetova <elena.reshetova@intel.com>,
-        Krystian Radlak <kradlak@exida.com>,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] fs: drop unused fput_atomic definition
-Date:   Thu, 11 Apr 2019 05:53:52 +0200
-Message-Id: <20190411035352.19407-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 10 Apr 2019 23:55:56 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B3sU9q016499
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 23:55:54 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rsx3c01qj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 23:55:54 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <shilpa.bhat@linux.vnet.ibm.com>;
+        Thu, 11 Apr 2019 04:55:52 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 04:55:51 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B3toqt20119574
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 03:55:50 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED5CA11C04C;
+        Thu, 11 Apr 2019 03:55:49 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64F2211C04A;
+        Thu, 11 Apr 2019 03:55:48 +0000 (GMT)
+Received: from oc4502181600.ibm.com (unknown [9.199.36.192])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 03:55:48 +0000 (GMT)
+From:   Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ego@linux.vnet.ibm.com,
+        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Subject: [PATCH V3] powernv: sensor-groups: Add debugfs file to enable/disable sensor groups
+Date:   Thu, 11 Apr 2019 09:24:46 +0530
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19041103-0020-0000-0000-0000032E8D53
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041103-0021-0000-0000-00002180BB19
+Message-Id: <1554954886-24460-1-git-send-email-shilpa.bhat@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit d7065da03822 ("get rid of the magic around f_count in aio") added
-fput_atomic to include/linux/fs.h, motivated by its use in __aio_put_req()
-in fs/aio.c.
+This patch provides support to disable and enable platform specific
+sensor groups like performance, utilization and frequency which are
+not supported in hwmon.
 
-Later, commit 3ffa3c0e3f6e ("aio: now fput() is OK from interrupt context;
-get rid of manual delayed __fput()") removed the only use of fput_atomic
-in __aio_put_req(), but did not remove the since then unused fput_atomic
-definition in include/linux/fs.h.
-
-We curate this now and finally remove the unused definition.
-
-This issue was identified during a code review due to a coccinelle warning
-from the atomic_as_refcounter.cocci rule pointing to the use of atomic_t
-in fput_atomic.
-
-Suggested-by: Krystian Radlak <kradlak@exida.com>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
 ---
-v1:
-  - sent on 2018-01-12, got no response
-    https://lore.kernel.org/lkml/20190112055430.5860-1-lukas.bulwahn@gmail.com/
+Changes from V2:
+- Rebase on master
 
-v1 resend:
-  - rebased to v5.1-rc4
+Changes from V1:
+- As per Michael Ellerman's suggestion, adding the "enable" files to debugfs.
+  The original code had been written in mind to accomodate the "enable" file
+  in the same path as "clear" attribute. As this is not required anymore
+  the code is cleaned up to bifurcate the functions adding "enable" and
+  "clear" attribute.
 
-  - added Jens to recipient list as he touched the place lately closeby
-    in commit 091141a42e15 ("fs: add fget_many() and fput_many()")
+ .../powerpc/platforms/powernv/opal-sensor-groups.c | 292 ++++++++++++++-------
+ 1 file changed, 194 insertions(+), 98 deletions(-)
 
-  - compile-tested with defconfig on v5.1-rc4 and next-20190410
-
-
- include/linux/fs.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd28e7679089..79b2f43b945d 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -969,7 +969,6 @@ static inline struct file *get_file(struct file *f)
- #define get_file_rcu_many(x, cnt)	\
- 	atomic_long_add_unless(&(x)->f_count, (cnt), 0)
- #define get_file_rcu(x) get_file_rcu_many((x), 1)
--#define fput_atomic(x)	atomic_long_add_unless(&(x)->f_count, -1, 1)
- #define file_count(x)	atomic_long_read(&(x)->f_count)
+diff --git a/arch/powerpc/platforms/powernv/opal-sensor-groups.c b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
+index 1796092..1208538 100644
+--- a/arch/powerpc/platforms/powernv/opal-sensor-groups.c
++++ b/arch/powerpc/platforms/powernv/opal-sensor-groups.c
+@@ -15,22 +15,21 @@
+ #include <linux/kobject.h>
+ #include <linux/slab.h>
  
- #define	MAX_NON_LFS	((1UL<<31) - 1)
++#include <asm/debugfs.h>
+ #include <asm/opal.h>
+ 
+-DEFINE_MUTEX(sg_mutex);
++#define SENSOR_GROUPS_DIR_STR	"sensor_groups"
+ 
+ static struct kobject *sg_kobj;
+ 
+-struct sg_attr {
+-	u32 handle;
+-	struct kobj_attribute attr;
+-};
+-
+ static struct sensor_group {
+-	char name[20];
++	struct kobj_attribute sattr;
+ 	struct attribute_group sg;
+-	struct sg_attr *sgattrs;
+-} *sgs;
++	struct mutex mutex;
++	char name[20];
++	u32 handle;
++	u32 enable;
++} *sgroups;
+ 
+ int sensor_group_enable(u32 handle, bool enable)
+ {
+@@ -60,10 +59,12 @@ int sensor_group_enable(u32 handle, bool enable)
+ }
+ EXPORT_SYMBOL_GPL(sensor_group_enable);
+ 
+-static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
+-			const char *buf, size_t count)
++static ssize_t sgroup_clear_store(struct kobject *kobj,
++				  struct kobj_attribute *attr,
++				  const char *buf, size_t count)
+ {
+-	struct sg_attr *sattr = container_of(attr, struct sg_attr, attr);
++	struct sensor_group *sgroup = container_of(attr, struct sensor_group,
++						   sattr);
+ 	struct opal_msg msg;
+ 	u32 data;
+ 	int ret, token;
+@@ -81,11 +82,11 @@ static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 		return token;
+ 	}
+ 
+-	ret = mutex_lock_interruptible(&sg_mutex);
++	ret = mutex_lock_interruptible(&sgroup->mutex);
+ 	if (ret)
+ 		goto out_token;
+ 
+-	ret = opal_sensor_group_clear(sattr->handle, token);
++	ret = opal_sensor_group_clear(sgroup->handle, token);
+ 	switch (ret) {
+ 	case OPAL_ASYNC_COMPLETION:
+ 		ret = opal_async_wait_response(token, &msg);
+@@ -106,135 +107,230 @@ static ssize_t sg_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	}
+ 
+ out:
+-	mutex_unlock(&sg_mutex);
++	mutex_unlock(&sgroup->mutex);
+ out_token:
+ 	opal_async_release_token(token);
+ 	return ret;
+ }
+ 
+-static struct sg_ops_info {
+-	int opal_no;
+-	const char *attr_name;
+-	ssize_t (*store)(struct kobject *kobj, struct kobj_attribute *attr,
+-			const char *buf, size_t count);
+-} ops_info[] = {
+-	{ OPAL_SENSOR_GROUP_CLEAR, "clear", sg_store },
+-};
++static int find_nr_groups(struct device_node *sensor_group_node, int opal_no)
++{
++	struct device_node *node;
++	int count = 0;
++
++	for_each_child_of_node(sensor_group_node, node) {
++		u32 sgid, op;
++
++		if (of_device_is_compatible(node, "ibm,opal-sensor"))
++			continue;
++
++		if (of_property_read_u32(node, "ops", &op))
++			continue;
++
++		if (op != opal_no)
++			continue;
++
++		if (of_property_read_u32(node, "sensor-group-id", &sgid))
++			continue;
++		count++;
++	}
+ 
+-static void add_attr(int handle, struct sg_attr *attr, int index)
++	return count;
++}
++
++#ifdef CONFIG_DEBUG_FS
++static int sgroup_enable_get(void *data, u64 *val)
+ {
+-	attr->handle = handle;
+-	sysfs_attr_init(&attr->attr.attr);
+-	attr->attr.attr.name = ops_info[index].attr_name;
+-	attr->attr.attr.mode = 0220;
+-	attr->attr.store = ops_info[index].store;
++	struct sensor_group *sgroup = (struct sensor_group *)data;
++	int rc;
++
++	rc = mutex_lock_interruptible(&sgroup->mutex);
++	if (rc)
++		return rc;
++
++	*val = sgroup->enable;
++	mutex_unlock(&sgroup->mutex);
++
++	return 0;
+ }
+ 
+-static int add_attr_group(const __be32 *ops, int len, struct sensor_group *sg,
+-			   u32 handle)
++static int sgroup_enable_set(void *data, u64 val)
+ {
+-	int i, j;
+-	int count = 0;
++	struct sensor_group *sgroup = (struct sensor_group *)data;
++	int rc;
++
++	if (val != 0 && val != 1)
++		return -EINVAL;
+ 
+-	for (i = 0; i < len; i++)
+-		for (j = 0; j < ARRAY_SIZE(ops_info); j++)
+-			if (be32_to_cpu(ops[i]) == ops_info[j].opal_no) {
+-				add_attr(handle, &sg->sgattrs[count], j);
+-				sg->sg.attrs[count] =
+-					&sg->sgattrs[count].attr.attr;
+-				count++;
+-			}
++	rc = mutex_lock_interruptible(&sgroup->mutex);
++	if (rc)
++		return rc;
+ 
+-	return sysfs_create_group(sg_kobj, &sg->sg);
++	if (val != sgroup->enable) {
++		rc = sensor_group_enable(sgroup->handle, val);
++		if (!rc)
++			sgroup->enable = val;
++	}
++
++	mutex_unlock(&sgroup->mutex);
++	return rc;
+ }
+ 
+-static int get_nr_attrs(const __be32 *ops, int len)
++DEFINE_DEBUGFS_ATTRIBUTE(sensor_debugfs_ops, sgroup_enable_get,
++			 sgroup_enable_set, "%llx\n");
++static struct dentry *sensor_debugfs_parent;
++static struct sensor_group *dgroups;
++
++static void add_debugfs_attrs(struct device_node *sensor_group_node)
+ {
+-	int i, j;
+-	int nr_attrs = 0;
++	struct device_node *node;
++	int i = 0, count;
++
++	count = find_nr_groups(sensor_group_node, OPAL_SENSOR_GROUP_ENABLE);
++	if (!count)
++		return;
++
++	dgroups = kcalloc(count, sizeof(*dgroups), GFP_KERNEL);
++	if (!dgroups)
++		return;
++
++	sensor_debugfs_parent = debugfs_create_dir(SENSOR_GROUPS_DIR_STR,
++						   powerpc_debugfs_root);
+ 
+-	for (i = 0; i < len; i++)
+-		for (j = 0; j < ARRAY_SIZE(ops_info); j++)
+-			if (be32_to_cpu(ops[i]) == ops_info[j].opal_no)
+-				nr_attrs++;
++	if (!sensor_debugfs_parent)
++		goto out_dgroups;
+ 
+-	return nr_attrs;
++	for_each_child_of_node(sensor_group_node, node) {
++		struct dentry *group;
++		u32 op, sgid, chipid;
++
++		if (of_device_is_compatible(node, "ibm,opal-sensor"))
++			continue;
++
++		if (of_property_read_u32(node, "ops", &op))
++			continue;
++
++		if (op != OPAL_SENSOR_GROUP_ENABLE)
++			continue;
++
++		if (of_property_read_u32(node, "sensor-group-id", &sgid))
++			continue;
++
++		if (!of_property_read_u32(node, "ibm,chip-id", &chipid))
++			sprintf(dgroups[i].name, "%s%d", node->name, chipid);
++		else
++			sprintf(dgroups[i].name, "%s", node->name);
++
++		dgroups[i].handle = sgid;
++		dgroups[i].enable = 1;
++		mutex_init(&dgroups[i].mutex);
++		group = debugfs_create_dir(dgroups[i].name,
++					   sensor_debugfs_parent);
++		if (!group) {
++			of_node_put(node);
++			goto out_debugfs;
++		}
++
++		if (!debugfs_create_file("enable", 0664, group, &dgroups[i],
++					 &sensor_debugfs_ops)) {
++			of_node_put(node);
++			goto out_debugfs;
++		}
++		i++;
++	}
++
++	return;
++
++out_debugfs:
++	debugfs_remove_recursive(sensor_debugfs_parent);
++out_dgroups:
++	kfree(dgroups);
+ }
++#endif /* CONFIG_DEBUG_FS */
+ 
+ void __init opal_sensor_groups_init(void)
+ {
+-	struct device_node *sg, *node;
+-	int i = 0;
++	struct device_node *sensor_group_node, *node;
++	int i = 0, count;
+ 
+-	sg = of_find_compatible_node(NULL, NULL, "ibm,opal-sensor-group");
+-	if (!sg) {
++	sensor_group_node = of_find_compatible_node(NULL, NULL,
++						    "ibm,opal-sensor-group");
++	if (!sensor_group_node) {
+ 		pr_devel("Sensor groups node not found\n");
+ 		return;
+ 	}
+ 
+-	sgs = kcalloc(of_get_child_count(sg), sizeof(*sgs), GFP_KERNEL);
+-	if (!sgs)
+-		return;
++	count = find_nr_groups(sensor_group_node, OPAL_SENSOR_GROUP_CLEAR);
++	if (!count)
++		goto out_node_put;
++
++	sgroups = kcalloc(count, sizeof(*sgroups), GFP_KERNEL);
++	if (!sgroups)
++		goto out_node_put;
+ 
+-	sg_kobj = kobject_create_and_add("sensor_groups", opal_kobj);
++	sg_kobj = kobject_create_and_add(SENSOR_GROUPS_DIR_STR, opal_kobj);
+ 	if (!sg_kobj) {
+ 		pr_warn("Failed to create sensor group kobject\n");
+-		goto out_sgs;
++		goto out_sgroups;
+ 	}
+ 
+-	for_each_child_of_node(sg, node) {
+-		const __be32 *ops;
+-		u32 sgid, len, nr_attrs, chipid;
++	for_each_child_of_node(sensor_group_node, node) {
++		u32 sgid, chipid, op;
+ 
+-		ops = of_get_property(node, "ops", &len);
+-		if (!ops)
++		if (of_property_read_u32(node, "ops", &op))
+ 			continue;
+ 
+-		nr_attrs = get_nr_attrs(ops, len);
+-		if (!nr_attrs)
++		if (op != OPAL_SENSOR_GROUP_CLEAR)
+ 			continue;
+ 
+-		sgs[i].sgattrs = kcalloc(nr_attrs, sizeof(*sgs[i].sgattrs),
+-					 GFP_KERNEL);
+-		if (!sgs[i].sgattrs)
+-			goto out_sgs_sgattrs;
+-
+-		sgs[i].sg.attrs = kcalloc(nr_attrs + 1,
+-					  sizeof(*sgs[i].sg.attrs),
+-					  GFP_KERNEL);
+-
+-		if (!sgs[i].sg.attrs) {
+-			kfree(sgs[i].sgattrs);
+-			goto out_sgs_sgattrs;
+-		}
+-
+-		if (of_property_read_u32(node, "sensor-group-id", &sgid)) {
+-			pr_warn("sensor-group-id property not found\n");
+-			goto out_sgs_sgattrs;
+-		}
++		if (of_property_read_u32(node, "sensor-group-id", &sgid))
++			continue;
+ 
+ 		if (!of_property_read_u32(node, "ibm,chip-id", &chipid))
+-			sprintf(sgs[i].name, "%pOFn%d", node, chipid);
++			sprintf(sgroups[i].name, "%pOFn%d", node, chipid);
+ 		else
+-			sprintf(sgs[i].name, "%pOFn", node);
++			sprintf(sgroups[i].name, "%pOFn", node);
++
++		sgroups[i].sg.attrs = kzalloc(sizeof(struct attribute *) * 2,
++					      GFP_KERNEL);
++		if (!sgroups[i].sg.attrs) {
++			of_node_put(node);
++			goto out_sg_attrs;
++		}
+ 
+-		sgs[i].sg.name = sgs[i].name;
+-		if (add_attr_group(ops, len, &sgs[i], sgid)) {
++		sgroups[i].sg.name = sgroups[i].name;
++		sgroups[i].handle = sgid;
++		sysfs_attr_init(sgroups[i].sattr.attr);
++		sgroups[i].sattr.attr.name = "clear";
++		sgroups[i].sattr.attr.mode = 0220;
++		sgroups[i].sattr.store = sgroup_clear_store;
++		sgroups[i].sg.attrs[0] = &sgroups[i].sattr.attr;
++		sgroups[i].sg.attrs[1] = NULL;
++		mutex_init(&sgroups[i].mutex);
++
++		if (sysfs_create_group(sg_kobj, &sgroups[i].sg)) {
+ 			pr_warn("Failed to create sensor attribute group %s\n",
+-				sgs[i].sg.name);
+-			goto out_sgs_sgattrs;
++				sgroups[i].sg.name);
++			kfree(sgroups[i].sg.attrs);
++			of_node_put(node);
++			goto out_sg_attrs;
+ 		}
++
+ 		i++;
+ 	}
+ 
+-	return;
++#ifdef CONFIG_DEBUG_FS
++	add_debugfs_attrs(sensor_group_node);
++#endif /* CONFIG_DEBUG_FS */
+ 
+-out_sgs_sgattrs:
+-	while (--i >= 0) {
+-		kfree(sgs[i].sgattrs);
+-		kfree(sgs[i].sg.attrs);
+-	}
++	goto out_node_put;
++
++out_sg_attrs:
++	while (i-- > 0)
++		kfree(sgroups[i].sg.attrs);
+ 	kobject_put(sg_kobj);
+-out_sgs:
+-	kfree(sgs);
++out_sgroups:
++	kfree(sgroups);
++out_node_put:
++	of_node_put(sensor_group_node);
+ }
 -- 
-2.17.1
+1.8.3.1
 
