@@ -2,84 +2,127 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F73C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D32C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C04B21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BN1j3Fmf"
+	by mail.kernel.org (Postfix) with ESMTP id 5B67C2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfDKIJp (ORCPT
+        id S1726646AbfDKIKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:09:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55204 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfDKIJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:09:44 -0400
-Received: from zn.tnic (p200300EC2F0ABD00803D8A3D4BEC4F6D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bd00:803d:8a3d:4bec:4f6d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 78AB41EC04B9;
-        Thu, 11 Apr 2019 10:09:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554970183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=z8304YD94RCjlMSAF19W30BX/NBhw56qlzcYzCUrbBQ=;
-        b=BN1j3FmfQ0/khzILjomCxEeke76qPL2Rz35iiAr+2BdYmUkH3xhs9smafXLHuyCqTPNQTf
-        Ab379qO0FrLaPmvhaiWRmaInNOJIfsK92kM6pvquKNTffFrS3RKvyeY7cmhnr6yWR8cugu
-        Cmaezy1q31jvGHtzLx3CH+iCrjJJOpI=
-Date:   Thu, 11 Apr 2019 10:09:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190411080927.GA30080@zn.tnic>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
- <20190410171431.GE26580@zn.tnic>
- <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+        Thu, 11 Apr 2019 04:10:01 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49343 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfDKIKA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 04:10:00 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9E98720007;
+        Thu, 11 Apr 2019 08:09:55 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 10:09:55 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        rjw@rjwysocki.net, davem@davemloft.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Message-ID: <20190411080955.ysp3wreifwqrpn3n@flea>
+References: <20190410174139.20012-1-tiny.windzz@gmail.com>
+ <20190410174139.20012-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ljbikfewuqsnslmi"
 Content-Disposition: inline
-In-Reply-To: <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190410174139.20012-2-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 11:34:51PM +0000, Junichi Nomura wrote:
-> But efi_get_rsdp_addr() needs to check whether the kernel was
-> kexec booted to avoid accessing invalid EFI table address.
-> efi_get_kexec_setup_data_addr() is the only method I know
-> to check if it was kexec-booted.
 
-Your v3 had the right approach - you first check if you can get the
-address as a kexec-ed kernel. If you do, you use that one and continue
-the normal path.
+--ljbikfewuqsnslmi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If you don't, you fall back to efi_get_rsdp_addr() and get it directly
-from EFI.
+Hi,
 
-And then carve out the functionality you need to call multiple times in
-helper functions like __efi_get_rsdp_addr().
+On Wed, Apr 10, 2019 at 01:41:38PM -0400, Yangtao Li wrote:
+> For some SoCs, the CPU frequency subset and voltage value of each OPP
+> varies based on the silicon variant in use. The sunxi-cpufreq-nvmem
+> driver reads the efuse value from the SoC to provide the OPP framework
+> with required information.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Why doesn't that work anymore?
+The driver has a bunch of checkpatch warnings, please fix them
+(running checkpatch with --strict).
 
--- 
-Regards/Gruss,
-    Boris.
+> ---
+>  MAINTAINERS                           |   7 +
+>  drivers/cpufreq/Kconfig.arm           |  10 ++
+>  drivers/cpufreq/Makefile              |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c  |   2 +
+>  drivers/cpufreq/sunxi-cpufreq-nvmem.c | 232 ++++++++++++++++++++++++++
+>  5 files changed, 252 insertions(+)
+>  create mode 100644 drivers/cpufreq/sunxi-cpufreq-nvmem.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 391405091c6b..bfd18ba6aa1a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -667,6 +667,13 @@ S:	Maintained
+>  F:	Documentation/i2c/busses/i2c-ali1563
+>  F:	drivers/i2c/busses/i2c-ali1563.c
+>
+> +ALLWINNER CPUFREQ DRIVER
+> +M:	Yangtao Li <tiny.windzz@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/opp/sunxi-nvmem-cpufreq.txt
+> +F:	drivers/cpufreq/sunxi-cpufreq-nvmem.c
+> +
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Please use a less generic name for the driver as well. It's called
+sunxi, but applies to a single SoC (for now).
+
+> +struct sunxi_cpufreq_soc_data {
+> +	u32 (*efuse_xlate)(const struct sunxi_cpufreq_soc_data *soc_data,
+> +			   u32 efuse);
+> +	u32 nvmem_mask;
+> +	u32 nvmem_shift;
+> +};
+
+What cases do you have? You're mentionning that it might apply to more
+SoCs, which ones? How is the data stored on those SoCs (and why do you
+need this particular abstraction)?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ljbikfewuqsnslmi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK72UwAKCRDj7w1vZxhR
+xddWAP4/ozszJEsxyLl3PcSuUQNUmGNPTI5/EZoFHMnPIMM1+gEA26Mdnj9YBQVs
+HKxva/PTNG3RNdsvgtKweCHQ+Qrllww=
+=diSg
+-----END PGP SIGNATURE-----
+
+--ljbikfewuqsnslmi--
