@@ -2,183 +2,97 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89D7C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD84C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DA92083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BDjeyhYE"
+	by mail.kernel.org (Postfix) with ESMTP id 742E32173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfDKTOt (ORCPT
+        id S1726676AbfDKTRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:14:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35419 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfDKTOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:14:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y197so8025640wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 12:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Sjgv+GTqzYYYEeYktG8EM218JZ1lIdpdQ+xHnyDK8sQ=;
-        b=BDjeyhYEB9/73Pt/L8UtgjqBXTkhti+6OPdAQGKZu/wUJWX5fuYRSvHxtFPoNYK8G0
-         HS3Hgs6n4kBOqjSegpS4EKjAjqsmjRVatypIIwAtMdm4kkB0zmlShvUyFN77ewv3FbBT
-         rGqWgQvGoHAkUIIV3WGFY4LAFJTen8glHdNSUJpyOF/wZAlHP0RLOLTf+C85iZuioFkb
-         qnGHzlWKh8LYbuDrfNZK7OMUMfVjIrR1YJYu1Aal1znh/y9hKNG10oFNS9raShVu4ZV0
-         lBG55psPKyUEDnxFlzjxelogInrLIs4xD0zHwcl07yVQV0szQmwS9hv4HECUY5vv5E5L
-         d2WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Sjgv+GTqzYYYEeYktG8EM218JZ1lIdpdQ+xHnyDK8sQ=;
-        b=Hn4/65pDoduzqAE9Z4nL3NpOPrO0wPjyKMdNQZWvmxN2dQPL4Gw4UUitdMZZKPevnZ
-         7vmYK2pI7D2BtQesseIE9dHEtzEtQkBiAl+2HO2b7d4nhIHBGPbUuc16K+lqgnqv6psn
-         aWXNHY5h0VaRmBUG02fcGniJVmiZWNlrGoBIpuy4577IWf34CShSQqCUl/1gDSUPOowI
-         vBHnq8943JzrXdLeeKrR/8xAiVvZb0ExledKS1R2PwNSS4DD709ggH8IPGrO3rlb0JcP
-         7cDwGPG0QrDHJuR+QZThrsrrVPxutvkIrLI1UOyihsfioAWKdyLPzSTVbIMf3RZYtSg8
-         /msw==
-X-Gm-Message-State: APjAAAWclfy3oAhU0kybwFfJ++3AJG1BYnGMVNLP+pRB3rl1+h03Q9dW
-        4HReYHfDi7SsGQGah2hOgp+2Jw==
-X-Google-Smtp-Source: APXvYqxkQKdnZ0L8z5xBYB7bt/ExshN7qriHIvv/xfy/O8OPzXsc/EKVrJqrllzjmWn2KC1PUo2xjA==
-X-Received: by 2002:a1c:5f42:: with SMTP id t63mr7525678wmb.94.1555010086734;
-        Thu, 11 Apr 2019 12:14:46 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id o2sm31400238wrs.89.2019.04.11.12.14.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 12:14:46 -0700 (PDT)
-Subject: Re: [PATCH v5] arm64: dts: ls1088a: add one more thermal zone node
-To:     Yuantian Tang <andy.tang@nxp.com>, shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rui.zhang@intel.com, edubezval@gmail.com
-References: <20190411083236.9377-1-andy.tang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <915c86d8-d00e-f1e1-e7f5-24bc225c8e42@linaro.org>
-Date:   Thu, 11 Apr 2019 21:14:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thu, 11 Apr 2019 15:17:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:48126 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726577AbfDKTRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 15:17:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15EEF374;
+        Thu, 11 Apr 2019 12:17:44 -0700 (PDT)
+Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A2D43F59C;
+        Thu, 11 Apr 2019 12:17:42 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add rk3399 UART DMAs
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190321162244.10080-1-katsuhiro@katsuster.net>
+ <14265087.Gbs4YZABJo@phil> <69d5d0fd-00c3-36ae-596e-1b9f9452a07a@arm.com>
+ <2463729.IUJ8mRE5Ts@phil> <8d164cfe-c345-aa45-aaf3-11983f9142e5@arm.com>
+Message-ID: <2e5a1468-9a65-9cc5-f96c-272faeb92ec9@arm.com>
+Date:   Thu, 11 Apr 2019 20:17:36 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190411083236.9377-1-andy.tang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <8d164cfe-c345-aa45-aaf3-11983f9142e5@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 10:32, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-> sensor is used to monitor the temperature of core and SoC platform is for
-> platform. The current dts only support the first sensor.
-> This patch adds the second sensor node to dts to enable it.
+On 2019-04-11 2:48 pm, Robin Murphy wrote:
+> On 11/04/2019 13:46, Heiko Stuebner wrote:
+>> Hi Robin,
+>>
+>> Am Samstag, 30. März 2019, 00:24:16 CEST schrieb Robin Murphy:
+>>> On 2019-03-27 12:00 pm, Heiko Stuebner wrote:
+>>>> Hi,
+>>>>
+>>>> Am Dienstag, 26. März 2019, 14:49:16 CET schrieb Katsuhiro Suzuki:
+>>>>> Hello Robin,
+>>>>>
+>>>>> Sorry for inconvenience. Since I don't adhere enabling DMA for UARTs,
+>>>>> please revert my patch if you need.
+>>>>
+>>>> I've dropped the patch from my queue now.
+>>>>
+>>>>> BTW, there are DMA properties in RK3328 device-tree like as this 
+>>>>> patch.
+>>>>> RK3328 UART DMA could not work correctly too...??
+>>>>
+>>>> I remember Rockcihip dma-controllers having issues with burst-sizes
+>>>> and flushing (there is a no-flushp option in pl330), so it's
+>>>> possible that all share the same error up to rk3399 and rk3328
+>>>>
+>>>> But so far no-one has shouted regarding the rk3328.
+>>>
+>>> Let me be the first, then, I guess :)
+>>>
+>>> I found an easy way to observe the problem on my 3399, and I've just
+>>> fired up my 3328 box with a 5.0 distro kernel to find that it behaves
+>>> the same. Basically just dump a large pile of text into 'less' on the
+>>> serial console, and scroll through line-by-line - certain lines get
+>>> dropped except for a few characters at the end.
+>>>
+>>> I'll see if I can narrow it down a bit, starting with trying
+>>> broken-flushp...
+>>
+>> did you manage to find time for that test you wanted to do?
 > 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
-> v5:
-> 	- update the thermal zone name due to the length limitation
-> 	- remove cooling map in platform zone
-> v4:
-> 	- use hyphen instead of underscore in node name
-> v3:
-> 	- use more descriptive name for each zone
-> v2:
-> 	- Add more information about sensors to description
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   28 ++++++++++++++++++++---
->  1 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index de93b42..de39672 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->  	};
->  
->  	thermal-zones {
-> -		cpu_thermal: cpu-thermal {
-> +		core-cluster {
->  			polling-delay-passive = <1000>;
->  			polling-delay = <5000>;
->  			thermal-sensors = <&tmu 0>;
->  
->  			trips {
-> -				cpu_alert: cpu-alert {
-> +				core_cluster_alert: core-cluster-alert {
->  					temperature = <85000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit: cpu-crit {
-> +				core_cluster_crit: core-cluster-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -150,7 +150,7 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert>;
-> +					trip = <&core_cluster_alert>;
->  					cooling-device =
->  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> @@ -163,6 +163,26 @@
->  				};
->  			};
->  		};
-> +
-> +		platform {
-> +			polling-delay-passive = <1000>;
-> +			polling-delay = <5000>;
-> +			thermal-sensors = <&tmu 1>;
-> +
-> +			trips {
-> +				platform-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				platform-crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
+> Sadly not - I got somewhat distracted by the ethernet thing, and since 
+> then I've had too much else going on to follow up on any of my 'for fun' 
+> projects :(
 
+Urgh, and it turns out what I thought were dropped characters seems to 
+just be my console handling line wrapping weirdly, so now I have no idea 
+if RK3328 actually has an issue, and coming up with a reliable 
+reproducer for RK3399 is going to take some thought...
 
-Unfortunately, the documentation says the thermal zone node must contain
-a "cooling-maps" entry.
-
-It makes sense as if there is no cooling device, there is no action to
-be taken thus polling the temperature just add noise to the system.
-
-
-
->  	};
->  
->  	timer {
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Robin.
