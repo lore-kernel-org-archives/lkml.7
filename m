@@ -2,81 +2,124 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2E4C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACAFC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C9421852
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401DB2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfDKMqT convert rfc822-to-8bit (ORCPT
+        id S1726770AbfDKMr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:46:19 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58096 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfDKMqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:46:18 -0400
-Received: from wf0380.dip.tu-dresden.de ([141.76.181.124] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEZ5r-0007ws-Or; Thu, 11 Apr 2019 14:46:15 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add rk3399 UART DMAs
-Date:   Thu, 11 Apr 2019 14:46:15 +0200
-Message-ID: <2463729.IUJ8mRE5Ts@phil>
-In-Reply-To: <69d5d0fd-00c3-36ae-596e-1b9f9452a07a@arm.com>
-References: <20190321162244.10080-1-katsuhiro@katsuster.net> <14265087.Gbs4YZABJo@phil> <69d5d0fd-00c3-36ae-596e-1b9f9452a07a@arm.com>
+        Thu, 11 Apr 2019 08:47:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6727 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726656AbfDKMr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:47:29 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9EA6360F8D3040CCEE90;
+        Thu, 11 Apr 2019 20:47:24 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 11 Apr 2019 20:47:18 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>,
+        Xiang Chen <chenxiang66@hisilicon.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 1/9] scsi: hisi_sas: add host reset interface for test
+Date:   Thu, 11 Apr 2019 20:46:36 +0800
+Message-ID: <1554986804-233706-2-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1554986804-233706-1-git-send-email-john.garry@huawei.com>
+References: <1554986804-233706-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-Am Samstag, 30. März 2019, 00:24:16 CEST schrieb Robin Murphy:
-> On 2019-03-27 12:00 pm, Heiko Stuebner wrote:
-> > Hi,
-> > 
-> > Am Dienstag, 26. März 2019, 14:49:16 CET schrieb Katsuhiro Suzuki:
-> >> Hello Robin,
-> >>
-> >> Sorry for inconvenience. Since I don't adhere enabling DMA for UARTs,
-> >> please revert my patch if you need.
-> > 
-> > I've dropped the patch from my queue now.
-> > 
-> >> BTW, there are DMA properties in RK3328 device-tree like as this patch.
-> >> RK3328 UART DMA could not work correctly too...??
-> > 
-> > I remember Rockcihip dma-controllers having issues with burst-sizes
-> > and flushing (there is a no-flushp option in pl330), so it's
-> > possible that all share the same error up to rk3399 and rk3328
-> > 
-> > But so far no-one has shouted regarding the rk3328.
-> 
-> Let me be the first, then, I guess :)
-> 
-> I found an easy way to observe the problem on my 3399, and I've just 
-> fired up my 3328 box with a 5.0 distro kernel to find that it behaves 
-> the same. Basically just dump a large pile of text into 'less' on the 
-> serial console, and scroll through line-by-line - certain lines get 
-> dropped except for a few characters at the end.
-> 
-> I'll see if I can narrow it down a bit, starting with trying 
-> broken-flushp...
+Add host reset interface to make it easier for testing the host
+reset feature.
 
-did you manage to find time for that test you wanted to do?
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 13 +++++++++++++
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  1 +
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |  1 +
+ 4 files changed, 16 insertions(+)
 
-Heiko
-
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 14bac4966c87..a1eaddcf740d 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2234,6 +2234,19 @@ void hisi_sas_kill_tasklets(struct hisi_hba *hisi_hba)
+ }
+ EXPORT_SYMBOL_GPL(hisi_sas_kill_tasklets);
+ 
++int hisi_sas_host_reset(struct Scsi_Host *shost, int reset_type)
++{
++	struct hisi_hba *hisi_hba = shost_priv(shost);
++
++	if (reset_type != SCSI_ADAPTER_RESET)
++		return -EOPNOTSUPP;
++
++	queue_work(hisi_hba->wq, &hisi_hba->rst_work);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(hisi_sas_host_reset);
++
+ struct scsi_transport_template *hisi_sas_stt;
+ EXPORT_SYMBOL_GPL(hisi_sas_stt);
+ 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 293807443480..078ddd3871f2 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -1823,6 +1823,7 @@ static struct scsi_host_template sht_v1_hw = {
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
+ 	.shost_attrs		= host_attrs_v1_hw,
++	.host_reset             = hisi_sas_host_reset,
+ };
+ 
+ static const struct hisi_sas_hw hisi_sas_v1_hw = {
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 89160ab3efb0..33b72c7f72c5 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -3599,6 +3599,7 @@ static struct scsi_host_template sht_v2_hw = {
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
+ 	.shost_attrs		= host_attrs_v2_hw,
++	.host_reset		= hisi_sas_host_reset,
+ };
+ 
+ static const struct hisi_sas_hw hisi_sas_v2_hw = {
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 086695a4099f..e8323d038d53 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -2678,6 +2678,7 @@ static struct scsi_host_template sht_v3_hw = {
+ 	.ioctl			= sas_ioctl,
+ 	.shost_attrs		= host_attrs_v3_hw,
+ 	.tag_alloc_policy	= BLK_TAG_ALLOC_RR,
++	.host_reset             = hisi_sas_host_reset,
+ };
+ 
+ static const struct hisi_sas_hw hisi_sas_v3_hw = {
+-- 
+2.17.1
 
