@@ -2,145 +2,113 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B57DC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D45C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399D22133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554967090;
-	bh=N3JJ6GHeWofRNi0ytMPW66vRQ7p6/GRlZ1WUaRoFIRA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rW61m8MasM1etH9pAQ4fO44Lzg8MEZiHCrJfXzkFM+ujuo2zyJMSRODzCdndhafru
-	 qyZwczmN6NrPih7dFCq6JoW+n6U2iV0PFIue6g7kL76O9+r4S3o2QC347UOVPjQezc
-	 W7Bwi9qkxm9Gsjvch/w3w3lBHQxSnQBo/x+36TlA=
+	by mail.kernel.org (Postfix) with ESMTP id CE4B52184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="38UGEhJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDKHSJ (ORCPT
+        id S1726767AbfDKHW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:18:09 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45137 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfDKHSI (ORCPT
+        Thu, 11 Apr 2019 03:22:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59254 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKHW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:18:08 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o26so4227923edv.12;
-        Thu, 11 Apr 2019 00:18:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=sxLUb3lPp2thkzMjyNxBIAlI8R1FCrrSQGthadoEupg=;
-        b=K5yScFqNR0ORSVt8G8ao5SnTXPitNnELIvHcSxEZzuiQiNpo9tLY8jg8eRoFPjACD1
-         mozmHcVIRZlRXFA6SBz+hY2+qAfOyGwdRNLiuk4PDQ3AYJDr+99wE/HFyavNpXWqTqik
-         cyv1HLNDEcaBBmf92+HVYtjDQdbH5gFq7H816TIma3KkpTZ7yB2kWHQZhnr/frrFvJ5S
-         ULanpOQJF3zgNS2VQf3Tu5YcIz/Lk1hUyDfKsujHSeJSOPAjAfNAevkYsQHfdlW5xqkN
-         jp6+/NjCyaP9TSGkM9Z9Dx9UqjMx20g8qOqGlgaCTHHfSX8xw2vKrwaKThP/8f5ZSn/E
-         waVw==
-X-Gm-Message-State: APjAAAVOZnvLm6lWXmF4XGgHgByA07cucsWPdSGtRTfIx2Sl/Qc+D1KD
-        POUIYSe0wj8RlYn2HLLke6vcmFfm
-X-Google-Smtp-Source: APXvYqzAh073JfR0LjTdwJyBJeI1cXz/A0S8TY1JnfXJiRLmjJSPG+D4wV70qE8k6otNuOt/7rBuMw==
-X-Received: by 2002:a05:6402:688:: with SMTP id f8mr30724450edy.189.1554967085553;
-        Thu, 11 Apr 2019 00:18:05 -0700 (PDT)
-Received: from linux-x5ow.site (nat.nue.novell.com. [2620:113:80c0:5::2222])
-        by smtp.gmail.com with ESMTPSA id n16sm5888030ejb.28.2019.04.11.00.18.04
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 00:18:04 -0700 (PDT)
-Subject: Re: [PATCH 02/23] watchdog: mena21_wdt: Use 'dev' instead of
- dereferencing it repeatedly
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1554830641-9247-1-git-send-email-linux@roeck-us.net>
- <1554830641-9247-3-git-send-email-linux@roeck-us.net>
-From:   Johannes Thumshirn <jth@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jth@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <34d100ba-07ab-6b1f-a635-603f6f282e54@kernel.org>
-Date:   Thu, 11 Apr 2019 09:18:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 11 Apr 2019 03:22:29 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3B7EL2l091664;
+        Thu, 11 Apr 2019 07:22:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=gwXOzqYsTJdgXggtN8KTNGl+0QEJJchUS+eWs+lkNlU=;
+ b=38UGEhJ8dKjNWUv4p5mmKMgDjgKqWZ1R8RqQm+5n95o/KOOfq2wPnhnjtzVor03wu0HN
+ 6TQpqkbujkiO+i8WNqnhKcHI9ToXw89vdgwoXA8hhY9IBVjgeDkwRZPkrumbTYPfmt89
+ HnlzpvhJeTU6SuiiwZWfImXBhxUOUgsCviaNfv+WrZkn8x/iE/EBQWh8jG4A179LwScx
+ qChKskoRKds1bnQgjFadEB2a9TYULU2XEEYQhtOmx8juyfCmVzO9NnzREKDmQ8CutCgj
+ GT7cBcwjqcVqwUC14M/i+icCI73rsqnf2RKCiptqL8+StrO3CPPQD92Lk/+oBGkM+luR yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2rpmrqf2x6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 07:22:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3B7LwdY134930;
+        Thu, 11 Apr 2019 07:22:21 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2rpkeka375-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 07:22:21 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3B7MJuk024389;
+        Thu, 11 Apr 2019 07:22:20 GMT
+Received: from kadam (/41.202.241.15)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 11 Apr 2019 00:22:19 -0700
+Date:   Thu, 11 Apr 2019 10:22:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Madhumthia Prabakaran <madhumithabiw@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8723bs: Remove typedef in struct sdio_data
+Message-ID: <20190411072208.GI6095@kadam>
+References: <20190409161617.29871-1-madhumithabiw@gmail.com>
+ <20190410064954.GE6095@kadam>
+ <20190410194908.GA13242@madhuleo>
 MIME-Version: 1.0
-In-Reply-To: <1554830641-9247-3-git-send-email-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410194908.GA13242@madhuleo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904110051
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9223 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904110051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 19:23, Guenter Roeck wrote:
-> Introduce local variable 'struct device *dev' and use it instead of
-> dereferencing it repeatedly.
+On Wed, Apr 10, 2019 at 02:49:09PM -0500, Madhumthia Prabakaran wrote:
+> On Wed, Apr 10, 2019 at 09:49:54AM +0300, Dan Carpenter wrote:
+> > On Tue, Apr 09, 2019 at 11:16:17AM -0500, Madhumitha Prabakaran wrote:
+> > > diff --git a/drivers/staging/rtl8723bs/include/drv_types.h b/drivers/staging/rtl8723bs/include/drv_types.h
+> > > index bafb2c30e7fb..b0623c936940 100644
+> > > --- a/drivers/staging/rtl8723bs/include/drv_types.h
+> > > +++ b/drivers/staging/rtl8723bs/include/drv_types.h
+> > > @@ -220,7 +220,7 @@ struct registry_priv
+> > >  #define BSSID_SZ(field)   sizeof(((struct wlan_bssid_ex *) 0)->field)
+> > >  
+> > >  #include <drv_types_sdio.h>
+> > > -#define INTF_DATA SDIO_DATA
+> > > +#define INTF_DATA struct sdio_data
+> > >  
+> > 
+> > Just get rid of INTF_DATA data as well.  It's only used once a bit lower
+> > in the file.  (Get rid of the ifdef around it).
 > 
-> The conversion was done automatically with coccinelle using the
-> following semantic patches. The semantic patches and the scripts
-> used to generate this commit log are available at
-> https://github.com/groeck/coccinelle-patches
+> But, reference of INTF_DATA is also included in file 
+> ./drivers/staging/rtl8723bs/include/drv_types.h:487:
+> return &dvobj->intf_data.func->dev;
 > 
-> Cc: Johannes Thumshirn <morbidrsa@gmail.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
 
-FWIW,
-Reviewed-by: Johannes Thumshirn <jth@kernel.org>
+Yes.  That's what I meant.  Get rid of that one and the ifdefs around
+it.
+
+regards,
+dan carpenter
+
