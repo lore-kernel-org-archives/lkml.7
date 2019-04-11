@@ -2,84 +2,84 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C98EC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEAFC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633692146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25C921850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfDKXJ0 (ORCPT
+        id S1726936AbfDKXOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:09:26 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:58338 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfDKXJZ (ORCPT
+        Thu, 11 Apr 2019 19:14:54 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59864 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726646AbfDKXOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:09:25 -0400
-Received: from 79.184.255.221.ipv4.supernova.orange.pl (79.184.255.221) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id abc5ed8e33eacacb; Fri, 12 Apr 2019 01:09:23 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Yue Haibing <yuehaibing@huawei.com>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: merrifield: Fix build err without CONFIG_ACPI
-Date:   Fri, 12 Apr 2019 01:09:17 +0200
-Message-ID: <2719325.nu6fPkO1U5@kreacher>
-In-Reply-To: <20190405145009.GD9224@smile.fi.intel.com>
-References: <20190404103925.25652-1-yuehaibing@huawei.com> <20190405142112.26592-1-yuehaibing@huawei.com> <20190405145009.GD9224@smile.fi.intel.com>
+        Thu, 11 Apr 2019 19:14:54 -0400
+Received: from dread.disaster.area (pa49-195-160-97.pa.nsw.optusnet.com.au [49.195.160.97])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 9F97C105E6F9;
+        Fri, 12 Apr 2019 09:14:44 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hEiu3-0008Sw-S5; Fri, 12 Apr 2019 09:14:43 +1000
+Date:   Fri, 12 Apr 2019 09:14:43 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     jglisse@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ernesto A =?iso-8859-1?Q?=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>, Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH v1 12/15] fs/direct-io: keep track of wether a page is
+ coming from GUP or not
+Message-ID: <20190411231443.GD1695@dread.disaster.area>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-13-jglisse@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190411210834.4105-13-jglisse@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=UJetJGXy c=1 sm=1 tr=0 cx=a_idp_d
+        a=EHa8gIBQe3daEtuMEU8ptg==:117 a=EHa8gIBQe3daEtuMEU8ptg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=oexKYjalfGEA:10
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=eWkzej_naR1Ak5NVtaAA:9
+        a=wPNLvfGTeEIA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, April 5, 2019 4:50:09 PM CEST Andy Shevchenko wrote:
-> On Fri, Apr 05, 2019 at 10:21:12PM +0800, Yue Haibing wrote:
-> > From: YueHaibing <yuehaibing@huawei.com>
-> > 
-> > When building CONFIG_ACPI is not set
-> > gcc warn this:
-> > 
-> > drivers/gpio/gpio-merrifield.c: In function
-> > mrfld_gpio_get_pinctrl_dev_name: drivers/gpio/gpio-merrifield.c:388:19:
-> > error: dereferencing pointer to incomplete type struct acpi_device> 
-> >    put_device(&adev->dev);
-> >    
-> >                    ^
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Fixes:d00d2109c367 ("gpio: merrifield: Convert to use
-> > acpi_dev_get_first_match_dev()") Signed-off-by: YueHaibing
-> > <yuehaibing@huawei.com>
+On Thu, Apr 11, 2019 at 05:08:31PM -0400, jglisse@redhat.com wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
 > 
-> Thank you for an update, I have a comment below, but before sending v3, let
-> Rafael to have a chance to look at it.
+> We want to keep track of how we got a reference on page when doing DIO,
+> ie wether the page was reference through GUP (get_user_page*) or not.
+> For that this patch rework the way page reference is taken and handed
+> over between DIO code and BIO. Instead of taking a reference for page
+> that have been successfuly added to a BIO we just steal the reference
+> we have when we lookup the page (either through GUP or for ZERO_PAGE).
 > 
-> >  #ifdef CONFIG_ACPI
-> >  extern int acpi_platform_notify(struct device *dev, enum kobject_action
-> >  action);> 
-> > +
-> > +static inline void put_acpi_device(struct acpi_device *adev)
-> > +{
-> > +	put_device(&adev->dev);
-> > +}
-> 
-> This should probably go to acpi_bus.h under acpi_dev_get_first_match_dev().
-> And talking to Mika we agreed that naming would be better as acpi_dev_put().
+> So this patch keep track of wether the reference has been stolen by the
+> BIO or not. This avoids a bunch of get_page()/put_page() so this limit
+> the number of atomic operations.
 
-Agreed on both accounts.
+Is the asme set of changes appropriate for the fs/iomap.c direct IO
+path (i.e. XFS)?
 
-Thanks!
-
-
-
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
