@@ -2,82 +2,109 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A077BC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E24C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEC52184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3098C2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="t6HVnbos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfDKK4s (ORCPT
+        id S1726794AbfDKK5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:56:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44542 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726517AbfDKK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:56:47 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D86701A69786D7FA9083;
-        Thu, 11 Apr 2019 18:56:45 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 11 Apr
- 2019 18:56:37 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <yuchao0@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH] staging: erofs: fix unexpected out-of-bound data access
-Date:   Thu, 11 Apr 2019 18:55:55 +0800
-Message-ID: <20190411105555.133551-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 11 Apr 2019 06:57:10 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:37958 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfDKK5K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:57:10 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id E0A695C025A;
+        Thu, 11 Apr 2019 12:57:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1554980227;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fS6LpPjEpfYrPcydTCdPI5FsuCGhHMg8YJ3B6ys1UrI=;
+        b=t6HVnbosdcljje5KzdmLmrWCjYDdSFhy9fA1ti4hBOzVaAw6d4ID95EdUhQyWKPmblMZWg
+        WxPbcwb/IpdSBZZpSg1bIVar5F7y7k+qCtyCOBygN3GEWMGi7M5T9vSspWeVf4KMjaAU0N
+        dFS9VH01PTq+t08aZuiYIvqJH2/YnYU=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 11 Apr 2019 12:57:07 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     thierry.reding@gmail.com, digetx@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra-owner@vger.kernel.org
+Subject: Re: [PATCH] gpu: host1x: fix compile error when IOMMU API is not
+ available
+In-Reply-To: <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
+References: <4c3d021c73c001f633803e364cfbc6ace3381205.1554936354.git.stefan@agner.ch>
+ <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
+Message-ID: <53b179ccdc64326438a1335db9ecd916@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unexpected out-of-bound data will be read in erofs_read_raw_page
-after commit 07173c3ec276 ("block: enable multipage bvecs") since
-one iovec could have multiple pages.
+On 11.04.2019 10:23, Ben Dooks wrote:
+> On 2019-04-10 23:47, Stefan Agner wrote:
+>> In case the IOMMU API is not available compiling host1x fails with
+>> the following error:
+>>   In file included from drivers/gpu/host1x/hw/host1x06.c:27:
+>>   drivers/gpu/host1x/hw/channel_hw.c: In function ‘host1x_channel_set_streamid’:
+>>   drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit
+>> declaration of function
+>>     ‘dev_iommu_fwspec_get’; did you mean ‘iommu_fwspec_free’?
+>> [-Werror=implicit-function-declaration]
+>>   struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+>>                               ^~~~~~~~~~~~~~~~~~~~
+>>                               iommu_fwspec_free
+>>
+>> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> 
+> would it be better to provide something like this i nthe header that
+> defines dev_iommu_fwspec_get() to be:
+> 
+> static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device
+> *dev) { return NULL; }
+> 
+> although returning an PTR_ERR would have been better.
+> 
 
-Let's fix as what Ming's pointed out in the previous email.
+The problem is that the code also accesses fields of struct iommu_fwspec
+which are not defined in the !CONFIG_IOMMU_API case.
 
-Suggested-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
+--
+Stefan
 
-It should be fixed from linux-5.1-rc after multi-page bvec feature.
-
-Thanks,
-Gao Xiang
-
- drivers/staging/erofs/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 0714061ba888..c64ec76643d4 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 	*last_block = current_block;
- 
- 	/* shift in advance in case of it followed by too many gaps */
--	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
-+	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
- 		/* err should reassign to 0 after submitting */
- 		err = 0;
- 		goto submit_bio_out;
--- 
-2.17.1
-
+>> ---
+>>  drivers/gpu/host1x/hw/channel_hw.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/host1x/hw/channel_hw.c
+>> b/drivers/gpu/host1x/hw/channel_hw.c
+>> index 27101c04a827..4030d64916f0 100644
+>> --- a/drivers/gpu/host1x/hw/channel_hw.c
+>> +++ b/drivers/gpu/host1x/hw/channel_hw.c
+>> @@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct
+>> host1x_job *job)
+>>
+>>  static void host1x_channel_set_streamid(struct host1x_channel *channel)
+>>  {
+>> -#if HOST1X_HW >= 6
+>> +#if IS_ENABLED(CONFIG_IOMMU_API) &&  HOST1X_HW >= 6
+>>  	struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+>>  	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
