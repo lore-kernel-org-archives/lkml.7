@@ -2,139 +2,76 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2574CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26275C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC72217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTb1EOoy"
+	by mail.kernel.org (Postfix) with ESMTP id EC72320850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfDKPfy (ORCPT
+        id S1726796AbfDKPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:35:54 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46748 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfDKPfy (ORCPT
+        Thu, 11 Apr 2019 11:36:52 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:33821 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfDKPgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:35:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t17so7913476wrw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 08:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=eracmwt7PPl4AZZBoOATyO/9W4GSvbRyS4J/dbiNmIA=;
-        b=ZTb1EOoyk2g0YosWNn4VcVrp37Q37OEm3YVArlwvPoQFaE1YLjccap5kzXUaRAtmIh
-         iptk4qUXxUluaeBul5VtytYijzh5GrqUvh4aHjKLU4MbcHNab9IlXjLoRh84P/zFC8Q6
-         QfkJJuVplNXhj6gFHj6tCAQLE1XiE6TI79mQaNPa5N4OsmBwId4hG2sG48LpcY7PgqDP
-         7au/fLKxLOEJIwaiyvVYzqwEEhw4LQPRLrlVxZBA3uOqm/QXMaeFMdjO7BfsSGJ94Cox
-         Fk9uKwaVDpqVdJStUt/WQBS/ZTDc2V60tVb9YN6NI6bMxrp8AzPcg6O0CJEAdaCIt8Cl
-         5NCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=eracmwt7PPl4AZZBoOATyO/9W4GSvbRyS4J/dbiNmIA=;
-        b=txCGhUHyNZtG4nj1kanUmLe56f5EHCcIMVjXZSlvJANmzx2UgJl0gCiY+ohvXYtaIr
-         1VCCnOmc6VB2oBIlpQLI/4fRtD2/hS8BYKidkP0VWlWJkMYHzUMpafkNE97KFziR8PQ5
-         ycU+FagUfGLtxdshcht131AKfIpO3syGt546dClJ0LkNejoFwiRiL5KiFFRCmp/KhpUM
-         NkSto6qMYmROSiU5zg9Kf34xlM9bCXYR3DpGdy51jMwY8Xc5GYLoLnsNl5wpgcSB8RfT
-         S+GzyArp3cc8P5BGFnXsV9jZlVW1YIM9jPN+hGzpY8yd+DoaTO86DsgahuTK8DFYAP8L
-         CtuQ==
-X-Gm-Message-State: APjAAAWYDvW0kd5pBYVdJpgN2jfYZM9DwSJwZB3kjMPXYL1KPTCQsTcJ
-        LqIgi1yvyzeFwW1qymkntGs=
-X-Google-Smtp-Source: APXvYqwdB4n0/82+wCQjWn8g2IEax8X5UaRW6x7ipGPP/Fo56zhXp7uZIX+UZNz9jOWSuzaFN8e2xg==
-X-Received: by 2002:adf:db05:: with SMTP id s5mr33095860wri.247.1554996952020;
-        Thu, 11 Apr 2019 08:35:52 -0700 (PDT)
-Received: from ?IPv6:::1? (lan.nucleusys.com. [92.247.61.126])
-        by smtp.gmail.com with ESMTPSA id 7sm130817888wrc.81.2019.04.11.08.35.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 08:35:51 -0700 (PDT)
-Subject: [PATCH 2/4] z3fold: improve compression by extending search
-From:   Vitaly Wool <vitalywool@gmail.com>
-To:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oleksiy.Avramchenko@sony.com, Dan Streetman <ddstreet@ieee.org>
-References: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
-Message-ID: <c1a85d7d-d372-6d8f-5bd1-8e124c335d6a@gmail.com>
-Date:   Thu, 11 Apr 2019 17:35:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 11:36:52 -0400
+X-Originating-IP: 109.213.33.177
+Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 635EA2000B;
+        Thu, 11 Apr 2019 15:36:48 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] watchdog: pnx4008: readout watchddog state
+Date:   Thu, 11 Apr 2019 17:36:46 +0200
+Message-Id: <20190411153646.32228-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current z3fold implementation only searches this CPU's page
-lists for a fitting page to put a new object into. This patch adds
-quick search for very well fitting pages (i. e. those having
-exactly the required number of free space) on other CPUs too,
-before allocating a new page for that object.
+Readout the enabled state so it is possible to get the pre-userspace
+handler working. Also, avoid disabling the watchdog when nowayout is set to
+ensure the watchdog continues working and triggers if there is an issue
+later in the boot or if userspace fails to start.
 
-Signed-off-by: Vitaly Wool <vitaly.vul@sony.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-  mm/z3fold.c | 36 ++++++++++++++++++++++++++++++++++++
-  1 file changed, 36 insertions(+)
+ drivers/watchdog/pnx4008_wdt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 7a59875d880c..29a4f1249bef 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -522,6 +522,42 @@ static inline struct z3fold_header *__z3fold_alloc(struct z3fold_pool *pool,
-  	}
-  	put_cpu_ptr(pool->unbuddied);
-  
-+	if (!zhdr) {
-+		int cpu;
+diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
+index 8e261799c84e..9e3714e3814c 100644
+--- a/drivers/watchdog/pnx4008_wdt.c
++++ b/drivers/watchdog/pnx4008_wdt.c
+@@ -209,7 +209,11 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
+ 	watchdog_set_nowayout(&pnx4008_wdd, nowayout);
+ 	watchdog_set_restart_priority(&pnx4008_wdd, 128);
+ 
+-	pnx4008_wdt_stop(&pnx4008_wdd);	/* disable for now */
++	if (readl(WDTIM_CTRL(wdt_base)) & COUNT_ENAB)
++		set_bit(WDOG_HW_RUNNING, &pnx4008_wdd.status);
 +
-+		/* look for _exact_ match on other cpus' lists */
-+		for_each_online_cpu(cpu) {
-+			struct list_head *l;
-+
-+			unbuddied = per_cpu_ptr(pool->unbuddied, cpu);
-+			spin_lock(&pool->lock);
-+			l = &unbuddied[chunks];
-+
-+			zhdr = list_first_entry_or_null(READ_ONCE(l),
-+						struct z3fold_header, buddy);
-+
-+			if (!zhdr || !z3fold_page_trylock(zhdr)) {
-+				spin_unlock(&pool->lock);
-+				zhdr = NULL;
-+				continue;
-+			}
-+			list_del_init(&zhdr->buddy);
-+			zhdr->cpu = -1;
-+			spin_unlock(&pool->lock);
-+
-+			page = virt_to_page(zhdr);
-+			if (test_bit(NEEDS_COMPACTING, &page->private)) {
-+				z3fold_page_unlock(zhdr);
-+				zhdr = NULL;
-+				if (can_sleep)
-+					cond_resched();
-+				continue;
-+			}
-+			kref_get(&zhdr->refcount);
-+			break;
-+		}
-+	}
-+
-  	return zhdr;
-  }
-  
++	if (!nowayout)
++		pnx4008_wdt_stop(&pnx4008_wdd);	/* disable for now */
+ 
+ 	ret = watchdog_register_device(&pnx4008_wdd);
+ 	if (ret < 0) {
 -- 
-2.17.1
+2.20.1
 
