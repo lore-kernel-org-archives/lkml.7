@@ -2,133 +2,105 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA4C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33FFC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCE82146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41FA2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rY1aYdap"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="EqTRBwrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfDKRSk (ORCPT
+        id S1726923AbfDKRTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:18:40 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34470 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfDKRSj (ORCPT
+        Thu, 11 Apr 2019 13:19:12 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:44180 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfDKRTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:18:39 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k21so5946878otf.1;
-        Thu, 11 Apr 2019 10:18:39 -0700 (PDT)
+        Thu, 11 Apr 2019 13:19:12 -0400
+Received: by mail-yb1-f194.google.com with SMTP id u187so2492646ybg.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=7Ki5J1hlR1CKmSVR40eUi0RlHc65Eh3Ti4NIk/5ozpw=;
-        b=rY1aYdapKEu++r6F+HvBd7YGdCWjEWFqygiTsolAG6Y85TMn80tup2IDd++pd2OB74
-         ylaQHV0SobbRHNJ+63KD2DJXmARALDqB9Xt8LqCN+Ml+popV1Kvd6G5FwInRQeEUJKJl
-         v6Ytt1BOOHtiDPgDjo5897toxSTP/m/Ni/41qGiraLCbcK7zCG40Eyd6ibL5B6pbvb4W
-         X0tB7WvYhwREw40yZIgO6uKRtLOoWzgj5dlcbiierLBGDbOpMtfdHMNngznNEQFmUrX/
-         KYl4vxULHQ6kmaQDnH7f2Z5nxqOIr5PZEhh/z80JNjyNmnjf2JvVvrHB8MvY5ZQkY9jn
-         XzSw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cyJyq9xBxqcKv8h0VQs22akH4SgmjPKIUCFKPUkzKqQ=;
+        b=EqTRBwrHJfArZzz19rJ1yu0nWJBZrywhQAaYqkIgR+Eemxw9LBes2KIk9kITGbiSPH
+         K23cbLMim+6mGbba7xndiogldsHAPk9PSrRK94PzAiOXZcQKHv/42dzB+WkLLRxH1DGg
+         2SIoDRKdmDs4UYYrYghG6NoocONFk5ugNSSsL9/QpbUldzzsAyXUHT8Sul5Xbsx5tpF/
+         EqMvnrchcl4/8l0CukILEamDQz8NU5spc+HA1OLo7K0h6ykbR8b45xxj7NumciQQLroX
+         iUNG4kw04OasQi1BECafxLzBmzY8IGmnVDpgyGYfQRDnJwJgY4rNX3nU2M3+CwAdO3kc
+         t6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7Ki5J1hlR1CKmSVR40eUi0RlHc65Eh3Ti4NIk/5ozpw=;
-        b=nAZ8sF5VuAOwZtRzBkx3a4T57xq4AIyTZksQ4V9v7FjyYXtVE2TCTKqbuvDbJkgxw+
-         yLkgBj0eBvh1XYFxB3cbuz39bb2KSlwlgWsy6L5yH9vAyc7qqgHLwmwQuOBGkujGhUFp
-         a6xFvJNEM+TwpOLo6okMCTyrTls/bWOshWT161R2OUdGxxN2ZT8QoP2i2cdsX0K5FLwl
-         d8zUscDM7yTBRc0AWTPCDw+S7yuf5efd1HNYMKWbEt1ISz6FzRYlN3bS6E7naScP3vel
-         YqgaopoWIdAjB/ON3N8nqL4Zc3MfVW69qLHGSsym4TcYlVAiIVMRtgMDxlZ9YZ3pb3h5
-         mrng==
-X-Gm-Message-State: APjAAAXxBVnnprAuME1EHg3G0wZWtElvJqNU9BjYIzrr2SyJZ8K/6jNd
-        wCqLplrG5tDrLFjgyWipMxN4N74+
-X-Google-Smtp-Source: APXvYqwZ+R6HEAGJPHmj+sI4c8YTSYl797qPL9IgJ3zojoXJDhL0+WPylrCcJJUZC7K67aakGGmeRw==
-X-Received: by 2002:a9d:3b04:: with SMTP id z4mr31321999otb.1.1555003118598;
-        Thu, 11 Apr 2019 10:18:38 -0700 (PDT)
-Received: from [192.168.1.249] (cpe-70-114-247-242.austin.res.rr.com. [70.114.247.242])
-        by smtp.googlemail.com with ESMTPSA id x202sm15357183oix.54.2019.04.11.10.18.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 10:18:37 -0700 (PDT)
-Subject: Re: [PATCH v9 05/10] X.509: parse public key parameters from x509 for
- akcipher
-To:     Vitaly Chikunov <vt@altlinux.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411155122.13245-1-vt@altlinux.org>
- <20190411155122.13245-6-vt@altlinux.org>
-From:   Denis Kenzior <denkenz@gmail.com>
-Message-ID: <48828e0e-0aef-dece-e7ad-4c0ea9cefbe7@gmail.com>
-Date:   Thu, 11 Apr 2019 12:18:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cyJyq9xBxqcKv8h0VQs22akH4SgmjPKIUCFKPUkzKqQ=;
+        b=k+zb8vTYu5bF+kZXR5J3Z/klI+rfip/ZZUMO3M7x0tVTaveXJftYB7X2dzp0uQlLDm
+         wtT3tZ2Tru1GJ0w9otRoTW1PVhnIPmkNoFy3OBBobAk5x6vz6y6S4Gb59pO2sgDdTspY
+         sosrHPMjjiMO1em9QU/GNhwrugKB0WaFsbak7gBhQZK9symyc4q7M08vLcoBm7pYSt82
+         dn355ULb1vuzShiof5eEqFF4xfRXTZg3Lyo55P9qOxC1s6s/Z3w4D/Odq58R35apGvtE
+         lIeEXn++Evp0CBA9lISDDhonj9dglEG1M1IANMdMGgnwojW1R2egH3QY1D0cRVhOMsoD
+         f4bQ==
+X-Gm-Message-State: APjAAAVUNZ7Hm6iYkFZjVdsMqf2YuJXYrIuHdooixYvrsAoA+6kulI35
+        w7ps5q9NvMQZye7wPw6CoI0rhA==
+X-Google-Smtp-Source: APXvYqzn4RYWtX/ATfNEwEVd98+0YcQHPTse8AbadNFkg/MSQ1oUxMXbh2lHxc0VJKkNgADH4uoNNw==
+X-Received: by 2002:a25:2d45:: with SMTP id s5mr41609862ybe.272.1555003151188;
+        Thu, 11 Apr 2019 10:19:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::3:2a81])
+        by smtp.gmail.com with ESMTPSA id h3sm15971243ywa.61.2019.04.11.10.19.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 10:19:10 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 13:19:09 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
+        rientjes@google.com, willy@infradead.org,
+        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
+        penguin-kernel@i-love.sakura.ne.jp, ebiederm@xmission.com,
+        shakeelb@google.com, christian@brauner.io, minchan@kernel.org,
+        timmurray@google.com, dancol@google.com, joel@joelfernandes.org,
+        jannh@google.com, linux-mm@kvack.org,
+        lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
+Message-ID: <20190411171909.GB5136@cmpxchg.org>
+References: <20190411014353.113252-1-surenb@google.com>
+ <20190411105111.GR10383@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190411155122.13245-6-vt@altlinux.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411105111.GR10383@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
+On Thu, Apr 11, 2019 at 12:51:11PM +0200, Michal Hocko wrote:
+> I would question whether we really need this at all? Relying on the exit
+> speed sounds like a fundamental design problem of anything that relies
+> on it. Sure task exit might be slow, but async mm tear down is just a
+> mere optimization this is not guaranteed to really help in speading
+> things up. OOM killer uses it as a guarantee for a forward progress in a
+> finite time rather than as soon as possible.
 
-On 04/11/2019 10:51 AM, Vitaly Chikunov wrote:
-> Some public key algorithms (like EC-DSA) keep in parameters field
-> important data such as digest and curve OIDs (possibly more for
-> different EC-DSA variants). Thus, just setting a public key (as
-> for RSA) is not enough.
-> 
-> Append parameters into the key stream for akcipher_set_{pub,priv}_key.
-> Appended data is: (u32) algo OID, (u32) parameters length, parameters
-> data.
-> 
-> This does not affect current akcipher API nor RSA ciphers (they could
-> ignore it). Idea of appending parameters to the key stream is by Herbert
-> Xu.
-> 
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Denis Kenzior <denkenz@gmail.com>
-> Cc: keyrings@vger.kernel.org
-> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> ---
->   crypto/asymmetric_keys/asym_tpm.c         |  9 +++-
->   crypto/asymmetric_keys/public_key.c       | 72 ++++++++++++++++++++++++-------
->   crypto/asymmetric_keys/x509.asn1          |  2 +-
->   crypto/asymmetric_keys/x509_cert_parser.c | 31 +++++++++++++
->   crypto/testmgr.c                          | 24 +++++++++--
->   crypto/testmgr.h                          |  5 +++
->   include/crypto/akcipher.h                 | 18 ++++----
->   include/crypto/public_key.h               |  4 ++
->   8 files changed, 136 insertions(+), 29 deletions(-)
-> 
+I don't think it's flawed, it's just optimizing the user experience as
+best as it can. You don't want to kill things prematurely, but once
+there is pressure you want to rectify it quickly. That's valid.
 
-Looks good to me.
+We have a tool that does this, side effect or not, so I think it's
+fair to try to make use of it when oom killing from userspace (which
+we explictily support with oom_control in cgroup1 and memory.high in
+cgroup2, and it's not just an Android thing).
 
-Reviewed-by: Denis Kenzior <denkenz@gmail.com>
+The question is how explicit a contract we want to make with
+userspace, and I would much prefer to not overpromise on a best-effort
+thing like this, or even making the oom reaper ABI.
 
-By the way:
-
-> @@ -400,11 +401,12 @@ static inline int crypto_akcipher_set_pub_key(struct crypto_akcipher *tfm,
->    * crypto_akcipher_set_priv_key() - Invoke set private key operation
->    *
->    * Function invokes the algorithm specific set key function, which knows
-> - * how to decode and interpret the encoded key
-> + * how to decode and interpret the encoded keya and parameters
-
-Seems to be a stray 'a' after 'key'?
-
-Regards,
--Denis
+If unconditionally reaping killed tasks is too expensive, I'd much
+prefer a simple kill hint over an explicit task reclaim interface.
