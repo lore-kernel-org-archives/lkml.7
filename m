@@ -2,143 +2,247 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214AAC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8961EC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED7E2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555006541;
-	bh=CYpuz4kSFGt3ReVvAdShqeumca74RVzqor2qC337P/w=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=Z8imuSKOImKHWU65tSfWX74kBI5oyZlSz6A/0qDPgUlInERhFUAU64X2FCkNJ/PCH
-	 zwk4VnAM77My6k0siFYCyavkCLILTTaCsKebKqJbYx5o9ULOQaeIsIYPp4RezQzss+
-	 vDd8B3Nn0ZYWAfuhQlgT2y1upmNJ3XPPkZyjl7KI=
+	by mail.kernel.org (Postfix) with ESMTP id 516AC2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 18:17:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNmdNA0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfDKSPj (ORCPT
+        id S1726708AbfDKSRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 14:15:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33414 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKSPj (ORCPT
+        Thu, 11 Apr 2019 14:17:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40763 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfDKSRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 14:15:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k14so8289841qtb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:15:38 -0700 (PDT)
+        Thu, 11 Apr 2019 14:17:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a28so5441816lfo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 11:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TVgurs4GiZUYMCyRAOgHBG6ClH9hAVLK6w8uzS9DNis=;
-        b=GEc2j/2xhzfpicBPi6SMEwiPnM45uwzCZqrp+AOKZ7AMieV+rFT5hinylJbaZFZOb8
-         h9rCaGy4khD2r/4TbZ3vLJya5tY+hW6mxg8dYwyG+7ZRtk3LxaSyofZkXdguuTQlD793
-         nj+yPRtAJc3RdSHLWh4i2cmw/jQHZEqHXhFEKyRZfwQ/kyAWPLkcWI4fJjIrrmOpelXF
-         Cj0Wa6LvgfBM6Yg1ccXg09utXzNrqBAVgVf1yJJC34DyCW+vSAq6qvgEas9rPqkgS5X6
-         FKVqULURWjRl8z9cnHDo9kkG+rqLPZ8zoZLLMJ/r71PawPghB/vW3QLNtcHNuij0acVb
-         sEMg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pf7QbFgAhcYW1LW0/5PkllmLvAODcFP2rewRBiSGZHI=;
+        b=zNmdNA0riuf18zmSkT7G9Qx0jX7jsxoGGM/+DgLaKSfnMVOvTHOMMKH9y+NmA7eA07
+         0eIpvywenadsD4RjFSkCTF6GoQDu8Edwtm+CKhJ6y+PoO1+hNGcJpJ0EM4+2LUqGjwmW
+         n4fU6KjMJxN75eq61398vodHLyEYfJLj/YjT9/S0gYFvr0WchaExF9Y/JYZFF/rOk2/g
+         oVrI55JCqd2mZVfmwo7oDevmL1c6jh8ZhPQjZPl3g1tiwjPGhB98Ux0XboRQ9zHZ4WWh
+         kkWz3Zs8LaAREk40JttskePAP145ypSMzIpBAIjlJvgZVAJVzL+uQOSeSpY1lR68Jg41
+         Yiow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TVgurs4GiZUYMCyRAOgHBG6ClH9hAVLK6w8uzS9DNis=;
-        b=PL5ZK3bgx6aV01z2Cu6lbCA0erPUAT27LqGXjrm5Ct/tIEfDbGdSk6h2R97ZTB/Um/
-         g8xx6nkSohj8U/pdjjmbu6DF0ElmZ+LSuhFWvwFkHmR+ANNwuEivu+S847Y5DYBoWHmd
-         PU/NKmIoLwlUdLcDuIwoKPdiTI/vQOCYdG7GtkFo3LWy41ACUXB9KofPP0nxHKOWCvzs
-         AjhChIRX9k4bgFuuwy4TqVGnsumiUlaBf5XFjcNp+0ofR+a3D8veSs3V1+nTHM46pLtW
-         5GRm6n+gUWFhmrZ/rNnA4hmSXXASFmCL52S/l2F3LmMGaEbrTKCPX7jB3uHPMG+Xp4CR
-         /DgQ==
-X-Gm-Message-State: APjAAAWZv0pXe3ngtf3k0lTF2G7tWIIh/d2adwQevNHzQ737A1MuYL2G
-        42JQfZcGZVZBegaerPcb5NM=
-X-Google-Smtp-Source: APXvYqzv1rCPsXgrZWzmBNIPeGDVdFr+SIcu6khPUQQ/uF4OUThORkd6rdqfcP4l4a1aKNmfpWmjDQ==
-X-Received: by 2002:ac8:2246:: with SMTP id p6mr42032186qtp.225.1555006538066;
-        Thu, 11 Apr 2019 11:15:38 -0700 (PDT)
-Received: from [10.84.150.23] ([167.220.149.23])
-        by smtp.gmail.com with ESMTPSA id v58sm25999568qtv.66.2019.04.11.11.15.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pf7QbFgAhcYW1LW0/5PkllmLvAODcFP2rewRBiSGZHI=;
+        b=lg9t8UEKpXlUxziPzT7ZcEcaRtR666CT+fKorIIITFhZnycTvou5E+SfF86B8PHpNL
+         vF/OhkcWQJXtIWmp+noq8h2r4RU3+rowwbhKCgZn/e1PoipvR42A1n0X1Awm05x0rbl7
+         8/s6EeGrJ3lZ1DJKv3dDJy90HoRsZS949f/s1CKbP4DkDAbzYGNfGPF2Q+UQ224gAV5J
+         SAYYaaaUE8f1ujIJFdnh0jUNcXPNzSrzkGHyYCQYvan4MH3l32/wQop+gv0COMmeCgZn
+         Jg+4Kta2NugVOb2UW6+ulITU/w2LCEocj4DwLSB3lYzx/m0FfGqogyKAIHEtJDK12ow/
+         P6Bg==
+X-Gm-Message-State: APjAAAUb1LJRoMft0XXlyNrn2yb7bfeSoKZ0HfXPyldhPDIhTxXIpHZg
+        nCz5jzXVrY5wvwqyne6HL0ZjHQ==
+X-Google-Smtp-Source: APXvYqwEGuLmkApqIn6LxQZ4v+k520TCQHVuG0cD0K4tdPNQtoJDRox1x9GFJsn1Etr6xdO4nvYxZg==
+X-Received: by 2002:ac2:4ad1:: with SMTP id m17mr10432536lfp.129.1555006660332;
+        Thu, 11 Apr 2019 11:17:40 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id d13sm1555715lfa.40.2019.04.11.11.17.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 11:15:37 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v3] init: Do not select DEBUG_KERNEL by default
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Changbin Du <changbin.du@intel.com>
-References: <20190411005634.8495-1-okaya@kernel.org>
- <CAK7LNAS=G7-nXr=pT2EYExGNkCcOcd2NH1haaBMt+JsyhX2Z8Q@mail.gmail.com>
- <c8babeca-2d24-4265-0477-0634d87efa70@kernel.org>
- <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
-Message-ID: <ac79dcfc-50cc-01d4-758c-8c0881ab0d2e@kernel.org>
-Date:   Thu, 11 Apr 2019 14:15:36 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAK7LNARB54R5OfADaxzO=Mu8LucCd7wPVS4Yys8cfCKUpYc6Cg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 11 Apr 2019 11:17:39 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v14 4/4] PM / Domains: Add genpd governor for CPUs
+Date:   Thu, 11 Apr 2019 20:17:33 +0200
+Message-Id: <20190411181733.21437-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/2019 1:48 AM, Masahiro Yamada wrote:
->> I was going by what Kconfig tells me
->>
->> Symbol: KALLSYMS_ALL [=n]
->>    Depends on: DEBUG_KERNEL [=n] && KALLSYMS [=y]
-> Lots of features have 'depends on DEBUG_KERNEL'.
-> What is special about KALLSYMS_ALL here?
+After some preceding changes, PM domains managed by genpd may contain
+CPU devices, so idle state residency values should be taken into
+account during the state selection process. [The residency value is
+the minimum amount of time to be spent by a CPU (or a group of CPUs)
+in an idle state in order to save more energy than could be saved
+by picking up a shallower idle state.]
 
-I had to do some learning about KALLSYSM_ALL. Based on my limited
-searching, KALLSYMS_ALL allows you to locate the symbol location
-at runtime from the kernel.
+For this purpose, add a new genpd governor, pm_domain_cpu_gov, to be
+used for selecting idle states of PM domains with CPU devices attached
+either directly or through subdomains.
 
-Without KALLSYM_ALL, you can only locate the kernel code only. With
-KALLSYMS_ALL, you can locate the symbols for any data structure
-including kernel modules.
+The new governor computes the minimum expected idle duration for all
+online CPUs attached to a PM domain and its subdomains.  Next, it
+finds the deepest idle state whose target residency is within the
+expected idle duration and selects it as the target idle state of
+the domain.
 
-I'm not a KALLSYMS person but based on my search, I'd consider
-KALLSYMS_ALL a debug feature as it is today.
+It should be noted that the minimum expected idle duration computation
+is based on the closest timer event information stored in the per-CPU
+variables cpuidle_devices for all of the CPUs in the domain.  That
+needs to be revisited in future, as obviously there are other reasons
+why a CPU may be woken up from idle.
 
-kernel/kallsyms.c:              else if (IS_ENABLED(CONFIG_KALLSYMS_ALL))
-kernel/livepatch/Kconfig:       depends on KALLSYMS_ALL
-kernel/module.c:#ifdef CONFIG_KALLSYMS_ALL
-kernel/module.c:#ifndef CONFIG_KALLSYMS_ALL
+Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[ rjw: Changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-lib/Kconfig.debug:      select KALLSYMS_ALL
-     config LOCKDEP
-             bool
-             depends on DEBUG_KERNEL && LOCK_DEBUGGING_SUPPORT
-             select KALLSYMS
-             select KALLSYMS_ALL
+Changes in v4:
+	- Fix build error when CONFIG_CPU_IDLE is unset.
 
-lib/Kconfig.debug:      select KALLSYMS_ALL
-     config LATENCYTOP
-             bool "Latency measuring infrastructure"
-             select KALLSYMS
-             select KALLSYMS_ALL
+---
+ drivers/base/power/domain_governor.c | 67 +++++++++++++++++++++++++++-
+ include/linux/pm_domain.h            |  4 ++
+ 2 files changed, 70 insertions(+), 1 deletion(-)
 
-scripts/link-vmlinux.sh:        if [ -n "${CONFIG_KALLSYMS_ALL}" ]; then
+diff --git a/drivers/base/power/domain_governor.c b/drivers/base/power/domain_governor.c
+index 4d07e38a8247..7912bc957244 100644
+--- a/drivers/base/power/domain_governor.c
++++ b/drivers/base/power/domain_governor.c
+@@ -10,6 +10,9 @@
+ #include <linux/pm_domain.h>
+ #include <linux/pm_qos.h>
+ #include <linux/hrtimer.h>
++#include <linux/cpuidle.h>
++#include <linux/cpumask.h>
++#include <linux/ktime.h>
+ 
+ static int dev_update_qos_constraint(struct device *dev, void *data)
+ {
+@@ -210,8 +213,10 @@ static bool default_power_down_ok(struct dev_pm_domain *pd)
+ 	struct generic_pm_domain *genpd = pd_to_genpd(pd);
+ 	struct gpd_link *link;
+ 
+-	if (!genpd->max_off_time_changed)
++	if (!genpd->max_off_time_changed) {
++		genpd->state_idx = genpd->cached_power_down_state_idx;
+ 		return genpd->cached_power_down_ok;
++	}
+ 
+ 	/*
+ 	 * We have to invalidate the cached results for the masters, so
+@@ -236,6 +241,7 @@ static bool default_power_down_ok(struct dev_pm_domain *pd)
+ 		genpd->state_idx--;
+ 	}
+ 
++	genpd->cached_power_down_state_idx = genpd->state_idx;
+ 	return genpd->cached_power_down_ok;
+ }
+ 
+@@ -244,6 +250,65 @@ static bool always_on_power_down_ok(struct dev_pm_domain *domain)
+ 	return false;
+ }
+ 
++#ifdef CONFIG_CPU_IDLE
++static bool cpu_power_down_ok(struct dev_pm_domain *pd)
++{
++	struct generic_pm_domain *genpd = pd_to_genpd(pd);
++	struct cpuidle_device *dev;
++	ktime_t domain_wakeup, next_hrtimer;
++	s64 idle_duration_ns;
++	int cpu, i;
++
++	/* Validate dev PM QoS constraints. */
++	if (!default_power_down_ok(pd))
++		return false;
++
++	if (!(genpd->flags & GENPD_FLAG_CPU_DOMAIN))
++		return true;
++
++	/*
++	 * Find the next wakeup for any of the online CPUs within the PM domain
++	 * and its subdomains. Note, we only need the genpd->cpus, as it already
++	 * contains a mask of all CPUs from subdomains.
++	 */
++	domain_wakeup = ktime_set(KTIME_SEC_MAX, 0);
++	for_each_cpu_and(cpu, genpd->cpus, cpu_online_mask) {
++		dev = per_cpu(cpuidle_devices, cpu);
++		if (dev) {
++			next_hrtimer = READ_ONCE(dev->next_hrtimer);
++			if (ktime_before(next_hrtimer, domain_wakeup))
++				domain_wakeup = next_hrtimer;
++		}
++	}
++
++	/* The minimum idle duration is from now - until the next wakeup. */
++	idle_duration_ns = ktime_to_ns(ktime_sub(domain_wakeup, ktime_get()));
++	if (idle_duration_ns <= 0)
++		return false;
++
++	/*
++	 * Find the deepest idle state that has its residency value satisfied
++	 * and by also taking into account the power off latency for the state.
++	 * Start at the state picked by the dev PM QoS constraint validation.
++	 */
++	i = genpd->state_idx;
++	do {
++		if (idle_duration_ns >= (genpd->states[i].residency_ns +
++		    genpd->states[i].power_off_latency_ns)) {
++			genpd->state_idx = i;
++			return true;
++		}
++	} while (--i >= 0);
++
++	return false;
++}
++
++struct dev_power_governor pm_domain_cpu_gov = {
++	.suspend_ok = default_suspend_ok,
++	.power_down_ok = cpu_power_down_ok,
++};
++#endif
++
+ struct dev_power_governor simple_qos_governor = {
+ 	.suspend_ok = default_suspend_ok,
+ 	.power_down_ok = default_power_down_ok,
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index a6e251fe9deb..bc82e74560ee 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -118,6 +118,7 @@ struct generic_pm_domain {
+ 	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
+ 	bool max_off_time_changed;
+ 	bool cached_power_down_ok;
++	bool cached_power_down_state_idx;
+ 	int (*attach_dev)(struct generic_pm_domain *domain,
+ 			  struct device *dev);
+ 	void (*detach_dev)(struct generic_pm_domain *domain,
+@@ -202,6 +203,9 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+ 
+ extern struct dev_power_governor simple_qos_governor;
+ extern struct dev_power_governor pm_domain_always_on_gov;
++#ifdef CONFIG_CPU_IDLE
++extern struct dev_power_governor pm_domain_cpu_gov;
++#endif
+ #else
+ 
+ static inline struct generic_pm_domain_data *dev_gpd_data(struct device *dev)
+-- 
+2.17.1
 
