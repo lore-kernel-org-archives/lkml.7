@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10473C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F73C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537F62184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E2F20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="F2Wp4yv6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="kTqCVK7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfDKJah (ORCPT
+        id S1727148AbfDKJaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:30:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33674 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbfDKJac (ORCPT
+        Thu, 11 Apr 2019 05:30:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43796 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfDKJae (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:30:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so6420675wrp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:30:31 -0700 (PDT)
+        Thu, 11 Apr 2019 05:30:34 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k17so1698880wrx.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=45dzSBv6+V3bbvrapzfFB+qo0X2yeBTBy+CINkubKnc=;
-        b=F2Wp4yv6asyb2BA6lvYd9DEU9QXvgg8ODxLuMyCJdkhul/PM6u0kx7a2L4X69Q6g5T
-         qzXxrxHAD0vUNqXdrkcnWeM+oHmUycWMFIOdKAUZKDEPStSVWsaF1d3woBBUIYeuAKV/
-         dCfmplXj8/lNSFBEyEER/zDFpHh9YUcs3Oe1XjPKNoT4ehz37qenSfLmTbvcZkNT75x/
-         q/Rz1GmLIR3YVsQv1dwjZDIiFGrb9Myz1zkF5oeqQlBcD2njKx42CHUl/0xjGswlMBmA
-         1vWvO2J7hPawcvwxO7xlBTcBrcjHRpLE2djlIKEKebpAmSa0zSxvqVBF0nip/AbKDhGw
-         wzsw==
+        bh=gLM5OGxjE0bCxoX8JlJuO36BhilSPuFc/F1r8G6fLDQ=;
+        b=kTqCVK7KW2nICs9vZ+KD+6b+DSOAtYDAxd86WeMhviCAJ5AzDCPp54RhmjT6bIRh19
+         HRFMGkRlpJts4gmBdMQY1SY/DZe1leK7jg9x+LBo78FLcJxzYGWvYUJA3o/CeP6B7If7
+         1bgQ7hQIXj8lIuZn7A9v69OzDJ3a1KHVEL4QWCpj6AltXKu/zU7FpVJeXEI52IUV0D5P
+         pGCCi+IcQr3uIqPX3SVNJrCm6vdRovYoX40RmU0qAqMgvq0y40ON2qmDnF8sm9e2iRFE
+         S3GS9JBqjq25/qyVNtIhsYPtitZ1i6Pe2Xz0EKmK3hDB9my1C6desP/0xkBu8xsR1BAr
+         RoDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=45dzSBv6+V3bbvrapzfFB+qo0X2yeBTBy+CINkubKnc=;
-        b=hrYPIcgy+8S2Djh3FXlxALSHCrW3z/JB7QEJN8u4C7kOOA0Zq4xogfFyk2pfkvrXCZ
-         kWCemOlTCVUaES4M8SUe4pat5dZzfFHY+QR4Vbaltvzk/rlD3aw0AehxbZknC6mCjlKZ
-         KytrHJ6Zem1Ciby+G7yVXtUS1f7mT2yy55A6kcj2RDvmHBcywYMlJ45bln+aJC40SDZZ
-         Qfh14TrJC/R0GXQ2YV2VRp87RU+aAhWejaA+qS0aD0OxswipJQoANGD6pz84226Z7hwx
-         czTZrqnRktGNQTXFbTKeMX8zifu4hS3ibQiQX7mZAtXyUTTut4requYRnB75w4MY8Zcb
-         PYbA==
-X-Gm-Message-State: APjAAAWMavgFfyhBrzHV0KewIhkk9TYsJAox00W+NO7z/7mu+K4J2o8I
-        M5JnAj8m0EC47sAaPpyzJFkNtQ==
-X-Google-Smtp-Source: APXvYqzc/aNfb+Y/Bypvvo7Sn36VeXfGLTON3iEYLNkSDqwq6nsm+Rkfv/hwJdevkoX9lofmykaTPw==
-X-Received: by 2002:adf:f88c:: with SMTP id u12mr30025478wrp.235.1554975030331;
-        Thu, 11 Apr 2019 02:30:30 -0700 (PDT)
+        bh=gLM5OGxjE0bCxoX8JlJuO36BhilSPuFc/F1r8G6fLDQ=;
+        b=nQGQVYXGvgQXFBRYU9HrliHxLgRJ0yrNPWKe2m8iTjBiXvYRzDw+BpARcGbM67X8u1
+         RO0a8z/I5r0V+Ebgy8S8E51lu+qlslUDPERgPeBZLo20LQ0zoAT+cHRoZQHnttbHTalO
+         qZXBcggW0B7+eZ6fwyULqqp9NDyx3KVm35JkjEqoLwzrpFdJdK97dnWHik8oaiRjgsTW
+         Z4x2Kjsc7usoOeRs7RSiHOxJrvaj4zMPhRxoG7eCOWaknVNvaQ8slDF6+7ekg9bkdlaW
+         L6cfWA/YzNyQmZJUUWjiVvkfgBAGA0Kq6r2Lk4ody1hk+Uq3sffGjPvFiSa7u0x9+AIo
+         YeGA==
+X-Gm-Message-State: APjAAAUxGLKiOqh9XPAMxo8HpZQpRKah6H/Q5iFdzLYSGYpPhL90w/2P
+        g+/9UEZuiNAGi+CvH2y3p32s9g==
+X-Google-Smtp-Source: APXvYqyHM8EWTB/2wtehfWQZl0eBdijqY2jIKEOZfGb6/5GYPgQzV9nBvd7auUSU0dkB6PodjxgjQQ==
+X-Received: by 2002:a05:6000:12c8:: with SMTP id l8mr29648948wrx.80.1554975033237;
+        Thu, 11 Apr 2019 02:30:33 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id a9sm37517228wrt.29.2019.04.11.02.30.28
+        by smtp.gmail.com with ESMTPSA id a9sm37517228wrt.29.2019.04.11.02.30.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 02:30:29 -0700 (PDT)
+        Thu, 11 Apr 2019 02:30:32 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Alan Stern <stern@rowland.harvard.edu>,
@@ -63,9 +63,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 1/6] ARM: davinci: add missing sentinels to GPIO lookup tables
-Date:   Thu, 11 Apr 2019 11:30:19 +0200
-Message-Id: <20190411093024.23555-2-brgl@bgdev.pl>
+Subject: [PATCH v4 3/6] usb: ohci-da8xx: disable the regulator if the overcurrent irq fired
+Date:   Thu, 11 Apr 2019 11:30:21 +0200
+Message-Id: <20190411093024.23555-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411093024.23555-1-brgl@bgdev.pl>
 References: <20190411093024.23555-1-brgl@bgdev.pl>
@@ -78,87 +78,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Some GPIO lookup tables defined in davinci board files are missing
-array sentinels. If an entry for given device cannot be found, this
-will cause a kernel panic.
+Historically the power supply management in this driver has been handled
+in two separate places in parallel. Device-tree users simply defined an
+appropriate regulator, while two boards with no DT support (da830-evm and
+omapl138-hawk) passed functions defined in their respective board files
+over platform data. These functions simply used legacy GPIO calls to
+watch the oc GPIO for interrupts and disable the vbus GPIO when the irq
+fires.
+
+Commit d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
+updated these GPIO calls to the modern API and moved them inside the
+driver.
+
+This however is not the optimal solution for the vbus GPIO which should
+be modeled as a fixed regulator that can be controlled with a GPIO.
+
+In order to keep the overcurrent protection available once we move the
+board files to using fixed regulators we need to disable the enable_reg
+regulator when the overcurrent indicator interrupt fires. Since we
+cannot call regulator_disable() from interrupt context, we need to
+switch to using a oneshot threaded interrupt.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/board-da830-evm.c     | 2 ++
- arch/arm/mach-davinci/board-da850-evm.c     | 1 +
- arch/arm/mach-davinci/board-dm355-evm.c     | 1 +
- arch/arm/mach-davinci/board-dm644x-evm.c    | 1 +
- arch/arm/mach-davinci/board-omapl138-hawk.c | 1 +
- 5 files changed, 6 insertions(+)
+ drivers/usb/host/ohci-da8xx.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index ff097ecfa451..e3d74e43c47d 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -58,6 +58,7 @@ static struct gpiod_lookup_table da830_evm_usb_gpio_lookup = {
- 	.table = {
- 		GPIO_LOOKUP("davinci_gpio", ON_BD_USB_DRV, "vbus", 0),
- 		GPIO_LOOKUP("davinci_gpio", ON_BD_USB_OVC, "oc", 0),
-+		{ }
- 	},
- };
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 209a262b5565..6158408b1ea0 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -202,12 +202,24 @@ static int ohci_da8xx_regulator_event(struct notifier_block *nb,
+ 	return 0;
+ }
  
-@@ -156,6 +157,7 @@ static struct gpiod_lookup_table mmc_gpios_table = {
- 			    GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP("davinci_gpio", DA830_MMCSD_WP_PIN, "wp",
- 			    GPIO_ACTIVE_LOW),
-+		{ }
- 	},
- };
+-static irqreturn_t ohci_da8xx_oc_handler(int irq, void *data)
++static irqreturn_t ohci_da8xx_oc_thread(int irq, void *data)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = data;
++	struct device *dev = da8xx_ohci->hcd->self.controller;
++	int ret;
  
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 1fdc9283a8c5..4ee65a8a3b80 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -784,6 +784,7 @@ static struct gpiod_lookup_table mmc_gpios_table = {
- 			    GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP("davinci_gpio", DA850_MMCSD_WP_PIN, "wp",
- 			    GPIO_ACTIVE_HIGH),
-+		{ }
- 	},
- };
+-	if (gpiod_get_value(da8xx_ohci->oc_gpio))
+-		gpiod_set_value(da8xx_ohci->vbus_gpio, 0);
++	if (gpiod_get_value_cansleep(da8xx_ohci->oc_gpio)) {
++		if (da8xx_ohci->vbus_gpio) {
++			gpiod_set_value_cansleep(da8xx_ohci->vbus_gpio, 0);
++		} else if (da8xx_ohci->vbus_reg) {
++			ret = regulator_disable(da8xx_ohci->vbus_reg);
++			if (ret)
++				dev_err(dev,
++					"Failed to disable regulator: %d\n",
++					ret);
++		}
++			
++	}
  
-diff --git a/arch/arm/mach-davinci/board-dm355-evm.c b/arch/arm/mach-davinci/board-dm355-evm.c
-index 64d81fc86f14..5113273fda69 100644
---- a/arch/arm/mach-davinci/board-dm355-evm.c
-+++ b/arch/arm/mach-davinci/board-dm355-evm.c
-@@ -121,6 +121,7 @@ static struct gpiod_lookup_table i2c_recovery_gpiod_table = {
- 			    GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
- 		GPIO_LOOKUP("davinci_gpio", DM355_I2C_SCL_PIN, "scl",
- 			    GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
-+		{ }
- 	},
- };
+ 	return IRQ_HANDLED;
+ }
+@@ -434,8 +446,9 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+ 		if (oc_irq < 0)
+ 			goto err;
  
-diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
-index de15f782816e..9d87d4e440ea 100644
---- a/arch/arm/mach-davinci/board-dm644x-evm.c
-+++ b/arch/arm/mach-davinci/board-dm644x-evm.c
-@@ -663,6 +663,7 @@ static struct gpiod_lookup_table i2c_recovery_gpiod_table = {
- 			    GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
- 		GPIO_LOOKUP("davinci_gpio", DM644X_I2C_SCL_PIN, "scl",
- 			    GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
-+		{ }
- 	},
- };
- 
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index 0896af2bed24..e244c8648594 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -303,6 +303,7 @@ static struct gpiod_lookup_table hawk_usb_gpio_lookup = {
- 	.table = {
- 		GPIO_LOOKUP("davinci_gpio", DA850_USB1_VBUS_PIN, "vbus", 0),
- 		GPIO_LOOKUP("davinci_gpio", DA850_USB1_OC_PIN, "oc", 0),
-+		{ }
- 	},
- };
- 
+-		error = devm_request_irq(dev, oc_irq, ohci_da8xx_oc_handler,
+-				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
++		error = devm_request_threaded_irq(dev, oc_irq, NULL,
++				ohci_da8xx_oc_thread, IRQF_TRIGGER_RISING |
++				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+ 				"OHCI over-current indicator", da8xx_ohci);
+ 		if (error)
+ 			goto err;
 -- 
 2.21.0
 
