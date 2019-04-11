@@ -2,92 +2,191 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625D0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ED3C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F3A217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5579D217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ixT9WUjK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6PaIzPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDKJVe (ORCPT
+        id S1726699AbfDKJXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:21:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38326 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfDKJVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:21:33 -0400
-Received: from [10.119.185.175] (x2f7f9af.dyn.telefonica.de [2.247.249.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EEC991EC01B6;
-        Thu, 11 Apr 2019 11:21:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1554974490;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ArcHdxASerKPWBHzWz02Yr3opgXM61uRU/36Wc0nFAw=;
-        b=ixT9WUjKH0lmoUFef7fiK6hzXaoNvNWejhhGm7xfF7LWG0kQo5E8VkdCFKC3HjKBpTcHwK
-        qdQiHNcX3ZMKanLpkkeLc2VDO9V77snHlvZHOGUy6DjoUwoCrM4EyysMRnZGHCyjIAPkGV
-        KALBz1jW2TqOO6OjDQvewlXGVcL3E6k=
-Date:   Thu, 11 Apr 2019 11:21:28 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp> <20190410171431.GE26580@zn.tnic> <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com> <20190411080927.GA30080@zn.tnic> <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com> <20190411083738.GC30080@zn.tnic> <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernel
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-CC:     Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Boris Petkov <bp@alien8.de>
-Message-ID: <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+        Thu, 11 Apr 2019 05:23:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37189 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfDKJXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 05:23:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so6349698wrm.4;
+        Thu, 11 Apr 2019 02:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=kVsDuVaQ1P5DI79Yh0ljTcsAgVr3j7VRkr1svK0ihwY=;
+        b=o6PaIzPsABSV0wlPwVBI94Q24kiYodcrCS6s8nHPKVmb9kJuBd32CFLfJWzATKoNm3
+         qwZX3HMj1G4BynJskTQzWCQNKJOUIGhSDZJvrlwAtaaILtZ6bGr8xX/ovrbgxA6hX2w1
+         ausfuJKNR180eNN/tq7Wl7K4Iao2gWjEgPrdNm/m7uosagPGl3CxpvrbEtCoKLBLGAO2
+         PcFr0DlxJ7MLZ9XXw/sqZz10g3be+FjIuQ9pvgwsc49brlym+mnhZU6p6S8hu0R6I3si
+         Ym5cAUgDUvR6pC+McR2fV5fNnglKRZGfdbLP6VD7GSRQdHCFbFuFrO7psO8nQ711bvaC
+         6sWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=kVsDuVaQ1P5DI79Yh0ljTcsAgVr3j7VRkr1svK0ihwY=;
+        b=Cd28DBOKrkRjPiwsfc0dkFpHlCwyCqDiBhyIckibcQHpgeKvglxVQgAQ52QNcersM4
+         6FjUXGWzkevQfj7H3BcXTyCgguN+r/gM6lSULjdhIE/GGVO/VyhNo7rkYRlnpsaos7JV
+         neZi6He3tLP89ydZusGw7gXvt2DzHBbGTvQ1pyK0R/PObwLs0ungbv2tk5QvAu4jEyvN
+         vVWFUX9C6a6oowBI2j5ssjD3hCHqkVGdtbkC/I77l+nCFy6ddj4MyJxzx+Ia0l5tA+5N
+         yV0QvtVr8YSeH/XkormPNmuIWQiLu2GtopMHB+xFFb9tModYYRGxft5UVGpDw8pmpopT
+         0pVw==
+X-Gm-Message-State: APjAAAUKgM2jBuJxSDGXoXVnUPRYxjnYdKj5iSvRVNApmHYfU7dJkUa1
+        bOg+14qPIIV59fOodhzfTr8j+Fuy
+X-Google-Smtp-Source: APXvYqx0Z2oV6JccDu7yit64tDjzjQMlH6GmHJnUZPdsxh5aLKHomr1ElOGVFY7S46XzzR19F0RQyg==
+X-Received: by 2002:a5d:6349:: with SMTP id b9mr27831908wrw.62.1554974601083;
+        Thu, 11 Apr 2019 02:23:21 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id h84sm6976920wmf.15.2019.04.11.02.23.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 02:23:20 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Andrew Honig <ahonig@google.com>
+Subject: [PATCH] KVM: fix spectrev1 gadgets
+Date:   Thu, 11 Apr 2019 11:23:19 +0200
+Message-Id: <1554974599-29573-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 11, 2019 11:13:03 AM GMT+02:00, Junichi Nomura <j-nomura@ce=2Ejp=
-=2Enec=2Ecom> wrote:
->On 4/11/19 5:37 PM, Borislav Petkov wrote:
->> On Thu, Apr 11, 2019 at 08:16:45AM +0000, Junichi Nomura wrote:
->>> kexec_get_rsdp_addr() might fail on kexec-booted kernel, e=2Eg=2E if t=
-he
->>> setup_data was invalid=2E In such a case, falling back to
->efi_get_rsdp_addr()
->>> will hit the problem of accessing invalid table pointer again=2E
->>=20
->> Then you need to do this:
->>=20
->> 	if (kexeced kernel) {
->> 		addr =3D kexec_get_rsdp_addr();
->> 		if (!addr) {
->> 			/* cannot get address */
->> 			return -1;
->> 		}
->>=20
->> 		return addr;
->> 	}
->>=20
->> and the calling function get_rsdp_addr() must check the return value
->and
->> if it is not 0, return immediately=2E
->
->Do you mean making get_rsdp_addr() like this?
+These were found with smatch, and then generalized when applicable.
 
-Does that look like what I've typed above?
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/lapic.c     |  4 +++-
+ include/linux/kvm_host.h | 10 ++++++----
+ virt/kvm/irqchip.c       |  5 +++--
+ virt/kvm/kvm_main.c      |  6 ++++--
+ 4 files changed, 16 insertions(+), 9 deletions(-)
 
---=20
-Sent from a small device: formatting sux and brevity is inevitable=2E 
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 991fdf7fc17f..9bf70cf84564 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -138,6 +138,7 @@ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
+ 		if (offset <= max_apic_id) {
+ 			u8 cluster_size = min(max_apic_id - offset + 1, 16U);
+ 
++			offset = array_index_nospec(offset, map->max_apic_id + 1);
+ 			*cluster = &map->phys_map[offset];
+ 			*mask = dest_id & (0xffff >> (16 - cluster_size));
+ 		} else {
+@@ -901,7 +902,8 @@ static inline bool kvm_apic_map_get_dest_lapic(struct kvm *kvm,
+ 		if (irq->dest_id > map->max_apic_id) {
+ 			*bitmap = 0;
+ 		} else {
+-			*dst = &map->phys_map[irq->dest_id];
++			u32 dest_id = array_index_nospec(irq->dest_id, map->max_apic_id + 1);
++			*dst = &map->phys_map[dest_id];
+ 			*bitmap = 1;
+ 		}
+ 		return true;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 9d55c63db09b..640a03642766 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -28,6 +28,7 @@
+ #include <linux/irqbypass.h>
+ #include <linux/swait.h>
+ #include <linux/refcount.h>
++#include <linux/nospec.h>
+ #include <asm/signal.h>
+ 
+ #include <linux/kvm.h>
+@@ -513,10 +514,10 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+ 
+ static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
+ {
+-	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu, in case
+-	 * the caller has read kvm->online_vcpus before (as is the case
+-	 * for kvm_for_each_vcpu, for example).
+-	 */
++	int num_vcpus = atomic_read(&kvm->online_vcpus);
++	i = array_index_nospec(i, num_vcpus);
++
++	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+ 	smp_rmb();
+ 	return kvm->vcpus[i];
+ }
+@@ -600,6 +601,7 @@ int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+ 
+ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+ {
++	as_id = array_index_nospec(as_id, KVM_ADDRESS_SPACE_NUM);
+ 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
+ 			lockdep_is_held(&kvm->slots_lock) ||
+ 			!refcount_read(&kvm->users_count));
+diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+index 3547b0d8c91e..79e59e4fa3dc 100644
+--- a/virt/kvm/irqchip.c
++++ b/virt/kvm/irqchip.c
+@@ -144,18 +144,19 @@ static int setup_routing_entry(struct kvm *kvm,
+ {
+ 	struct kvm_kernel_irq_routing_entry *ei;
+ 	int r;
++	u32 gsi = array_index_nospec(ue->gsi, KVM_MAX_IRQ_ROUTES);
+ 
+ 	/*
+ 	 * Do not allow GSI to be mapped to the same irqchip more than once.
+ 	 * Allow only one to one mapping between GSI and non-irqchip routing.
+ 	 */
+-	hlist_for_each_entry(ei, &rt->map[ue->gsi], link)
++	hlist_for_each_entry(ei, &rt->map[gsi], link)
+ 		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
+ 			return -EINVAL;
+ 
+-	e->gsi = ue->gsi;
++	e->gsi = gsi;
+ 	e->type = ue->type;
+ 	r = kvm_set_routing_entry(kvm, e, ue);
+ 	if (r)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 55fe8e20d8fd..dc8edc97ba85 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2977,12 +2977,14 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	struct kvm_device_ops *ops = NULL;
+ 	struct kvm_device *dev;
+ 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
++	int type;
+ 	int ret;
+ 
+ 	if (cd->type >= ARRAY_SIZE(kvm_device_ops_table))
+ 		return -ENODEV;
+ 
+-	ops = kvm_device_ops_table[cd->type];
++	type = array_index_nospec(cd->type, ARRAY_SIZE(kvm_device_ops_table));
++	ops = kvm_device_ops_table[type];
+ 	if (ops == NULL)
+ 		return -ENODEV;
+ 
+@@ -2997,7 +2999,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	dev->kvm = kvm;
+ 
+ 	mutex_lock(&kvm->lock);
+-	ret = ops->create(dev, cd->type);
++	ret = ops->create(dev, type);
+ 	if (ret < 0) {
+ 		mutex_unlock(&kvm->lock);
+ 		kfree(dev);
+-- 
+1.8.3.1
+
