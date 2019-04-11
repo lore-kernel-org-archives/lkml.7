@@ -4,64 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E0C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4900DC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75405217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16019217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cq25d18D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sXot5j6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfDKNjO (ORCPT
+        id S1726732AbfDKNka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:39:14 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45647 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKNjN (ORCPT
+        Thu, 11 Apr 2019 09:40:30 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43347 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfDKNk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:39:13 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y6so5534267ljd.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:39:12 -0700 (PDT)
+        Thu, 11 Apr 2019 09:40:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id g7so4727569lfh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 06:40:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4n970sNmM78f9cVQpUJA48QdfoCTSqP3bdkBrlTp+go=;
-        b=Cq25d18Dp8VNkOW/Ns791+NCirCzCDyU7jLJwG3fhqoimX9vzje3tZEpKlNh78vtvW
-         g1VGeW6unprMDB0MpDuu8OyafiVueWhTCcW13KNERl1r+B5rEGrR4sKoqVqbDS/a3Nmq
-         KBeOMcNcuNT4lopsHjXZ48VnQm2YYdf3QH0I9D7dvSXlVIs8vmNsT4K4WaSfZ+vqE2xp
-         LoSh8HbbFy2So5NBd0djuxk4sAb/sk0x09QCUCJoL6HS2cP5VTdsWzb1aAuiuoFGJZLE
-         JTN4rbwFiWxjh0Nkk6GwbT9rTf0/CuhqGumpO8ruI+L8uOu/qLIDGuXLVi+Mj2M218cz
-         jHVQ==
+        bh=2yWMzf+z1Jk9L/7ameJjD6k33YuMN+IHwR0h4etbCwc=;
+        b=sXot5j6ZgCj+Zk2b2KUNu0gk2aqRXWqwGQ4v7T6eTqwwbf9QprCTUET/5btJ0xTI2U
+         8upRZfo12QzEVGYUUWsiAwJrvcgirsbjRA3cHs5SKrSEkBi5dE6eJe1Cqe6hMs6mdq9x
+         uCGwKP09Vt+LAIGM4sd77PiqLBrVvjIx5+iT4dMLA/XpzYeY8Lul9ODIajVMKAGSznWN
+         f/8of7207uUpMTxHHzqOfhPi0q2YYVqN9zbsSMMkx5Js9n4z6UgrTW0FT0TyQNk2U3OS
+         nplbjqvs9Zk8LI5ibQ21Im3onT0TyoKpyC3ydUdzPPpvq7k0/QuUvn0W68Hef4wAKZfW
+         Fomw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4n970sNmM78f9cVQpUJA48QdfoCTSqP3bdkBrlTp+go=;
-        b=ARs/4yBBc9OaAH7bWQgfpHSGKO2rXigRxjghW70PXxokiooNK0fXeO3TN+3zBwsapd
-         XFtdPyJDNk6dpfIleTwnG8AhHfL6z9exvMqRU1ZLIvnY/UVaWJFh6mfNO7QZf7dhhTuo
-         78fq98wZHTocTwROqHfmsfa718k5qjaHQ8b5sdnJ/qyKltVPPvSFcZybh4Q5FaiIhNQk
-         MIVUA473QKD3lQ8eX/+n/uSMthT6btHlbKQPcMhZwQOCpf4Qg/gyHxx1Du6dBLji4MtO
-         FxnMNgsIBBOuAVCpUftkk4lKCxVs2FeOfmrKigHKh8dTFgdul/+tkx8CaS77aoH+meoD
-         9kiA==
-X-Gm-Message-State: APjAAAXykHL/opAGuvMjWjoMo9uL+9T0yC/T4PTUAIS7Jt0l+MtFp3H9
-        i3NQZ5PV2BOvUrnHyM766u69+6zg85tRumImJ/s9cQ==
-X-Google-Smtp-Source: APXvYqwE6U6rQsN6xUJKLSqrSmzIraPuNPOZy0/6YUIwnC3oNILXbO/9Xe8VbJsLu5IQ7uaOi4jKNwsNF01+dCvxhQI=
-X-Received: by 2002:a2e:3512:: with SMTP id z18mr25969221ljz.25.1554989951785;
- Thu, 11 Apr 2019 06:39:11 -0700 (PDT)
+        bh=2yWMzf+z1Jk9L/7ameJjD6k33YuMN+IHwR0h4etbCwc=;
+        b=StaXrrOtpU3V+ulZyXc88JHuv0Qjxp/SKPRViM48bTaullbORodLX0kTbFUORfVlEF
+         vL4gv0f55aRuLaO/Y+Gf1ZN6I9m/dICx7Am+9+74G7OD5EVLcOkj/MB3WLrUWOzR71cD
+         fvn3KC6EsJJcSNAWfn4t6nOsHQ4fX166S+aElNU3iHLz1cY/xMmIr/82KoYieHHb1OXv
+         M+lhQiNsvc/mw/1JBqjrrMuDtER/Ue3caS+6ELXzJdOmdYjhQDtYCR/VBPy/TwCvznf1
+         tq9O3pu1MWNZDO9pnHJar4EoMoEFyny6sGzZr4qVXwZ3/33wRiwLmNdLDCgKpSHP3xl9
+         1AQg==
+X-Gm-Message-State: APjAAAVZ4u4VeqZNpqRNqVbj/F86CCGtU6Ua5QrVFWGx6mYofR7sRn7f
+        yU/R50/Ysg74/VRb44uZ+v79aLecURtEohSU80LY6g==
+X-Google-Smtp-Source: APXvYqxwSZVo7dW1p5oRMZGimWlK7DPwxBs36OWM69yh+7zC27Excnyf9qOqxSjEhZedDkjiY8YfvlKFeU4F9c77J8M=
+X-Received: by 2002:ac2:4285:: with SMTP id m5mr26481123lfh.103.1554990027800;
+ Thu, 11 Apr 2019 06:40:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190409195945.20725-1-alexandre.belloni@bootlin.com> <20190409195945.20725-3-alexandre.belloni@bootlin.com>
-In-Reply-To: <20190409195945.20725-3-alexandre.belloni@bootlin.com>
+References: <e7ca1df3b3159d6e1c65c6a2a9f01a7ecabcc821.1554882235.git.baolin.wang@linaro.org>
+In-Reply-To: <e7ca1df3b3159d6e1c65c6a2a9f01a7ecabcc821.1554882235.git.baolin.wang@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 11 Apr 2019 15:38:59 +0200
-Message-ID: <CACRpkdYum4vpTYDaME2tAd492Rbni7OBuF6LCD+C4+rk7Ye32Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rtc: ab3100: convert to SPDX identifier
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Thu, 11 Apr 2019 15:40:16 +0200
+Message-ID: <CACRpkdY5kKRMkTV8-d_CgF75J3cOA+v2Hv2w4K7FqtDy+ABDmg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: eic: sprd: Fix incorrect irq type setting for the
+ sync EIC
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,14 +72,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 10:00 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
+On Wed, Apr 10, 2019 at 9:48 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 
-> Use SPDX-License-Identifier instead of the custom license line.
+> When setting sync EIC as IRQ_TYPE_EDGE_BOTH type, we missed to set the
+> SPRD_EIC_SYNC_INTMODE register to 0, which means detecting edge signals.
 >
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Thus this patch fixes the issue.
+>
+> Fixes: 25518e024e3a ("gpio: Add Spreadtrum EIC driver support")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
