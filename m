@@ -2,81 +2,71 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346CEC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96466C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A25217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7C2217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfDKBvc (ORCPT
+        id S1726599AbfDKB6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:51:32 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2524 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfDKBvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:51:32 -0400
-Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 42CCB7DAFB5C248C3242;
-        Thu, 11 Apr 2019 09:51:30 +0800 (CST)
-Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.151]) by
- DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
- 14.03.0415.000; Thu, 11 Apr 2019 09:51:26 +0800
-From:   xiaojiangfeng <xiaojiangfeng@huawei.com>
-To:     Frank Rowand <frowand.list@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?UmU6IFxcIOetlOWkjTogW1BBVENIXSBvZjogZGVsIHJlZHVuZGFudCB0eXBl?=
- =?utf-8?Q?_conversion?=
-Thread-Topic: =?utf-8?B?XFwg562U5aSNOiBbUEFUQ0hdIG9mOiBkZWwgcmVkdW5kYW50IHR5cGUgY29u?=
- =?utf-8?Q?version?=
-Thread-Index: AdTwCQoU8Jmrv994RDuEBnLEvo5c2w==
-Date:   Thu, 11 Apr 2019 01:51:26 +0000
-Message-ID: <BE69D0C4DC96EF4BA3F03246F234C4BD01FDE17F@dggeml512-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.65.87.206]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 10 Apr 2019 21:58:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:21883 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfDKB6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:58:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Apr 2019 18:58:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,335,1549958400"; 
+   d="scan'208";a="160133957"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2019 18:58:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hEOzL-0001S3-Tt; Thu, 11 Apr 2019 09:58:51 +0800
+Date:   Thu, 11 Apr 2019 09:58:50 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Mike Marshall <hubcap@omnibond.com>
+Cc:     kbuild-all@01.org, Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org
+Subject: [hubcap:for-next 20/22] fs/orangefs/file.c:574:5: sparse: symbol
+ 'orangefs_file_open' was not declared. Should it be static?
+Message-ID: <201904110915.9jPFP0Co%lkp@intel.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TXkgcGxlYXN1cmUuDQoNCkkgYW0gdmVyeSBuZXcgdG8gc3BhcnNlLg0KDQpJIGd1ZXNzIHRoZSB3
-YXJuaW5nIGlzIGNhdXNlZCBieSB0aGUgbWFjcm8gbWluLg0KDQpUaGVuIEkgc3VibWl0dGVkIG15
-IGNoYW5nZXMuDQoNClRoYW5rcyBmb3IgY29kZSByZXZpZXcuDQoNCg0KLS0tLS3pgq7ku7bljp/k
-u7YtLS0tLQ0K5Y+R5Lu25Lq6OiBGcmFuayBSb3dhbmQgW21haWx0bzpmcm93YW5kLmxpc3RAZ21h
-aWwuY29tXSANCuWPkemAgeaXtumXtDogMjAxOeW5tDTmnIgxMeaXpSAyOjUwDQrmlLbku7bkuro6
-IHhpYW9qaWFuZ2ZlbmcgPHhpYW9qaWFuZ2ZlbmdAaHVhd2VpLmNvbT47IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgcm9iaEBrZXJuZWwub3JnDQrmioTpgIE6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQrkuLvpopg6IFJlOiBbUEFUQ0hdIG9mOiBk
-ZWwgcmVkdW5kYW50IHR5cGUgY29udmVyc2lvbg0KDQpPbiA0LzEwLzE5IDE6MjkgQU0sIHhpYW9q
-aWFuZ2Zlbmcgd3JvdGU6DQo+IFRoZSB0eXBlIG9mIHZhcmlhYmxlIGwgaW4gZWFybHlfaW5pdF9k
-dF9zY2FuX2Nob3NlbiBpcyBpbnQsIHRoZXJlIGlzIA0KPiBubyBuZWVkIHRvIGNvbnZlcnQgdG8g
-aW50Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogeGlhb2ppYW5nZmVuZyA8eGlhb2ppYW5nZmVuZ0Bo
-dWF3ZWkuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvb2YvZmR0LmMgfCAyICstDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL29mL2ZkdC5jIGIvZHJpdmVycy9vZi9mZHQuYyBpbmRleCANCj4gNDczNDIyMy4u
-ZGU4OTNjOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYw0KPiArKysgYi9kcml2ZXJz
-L29mL2ZkdC5jDQo+IEBAIC0xMDkxLDcgKzEwOTEsNyBAQCBpbnQgX19pbml0IGVhcmx5X2luaXRf
-ZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwNCj4g
-IAkvKiBSZXRyaWV2ZSBjb21tYW5kIGxpbmUgKi8NCj4gIAlwID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
-cChub2RlLCAiYm9vdGFyZ3MiLCAmbCk7DQo+ICAJaWYgKHAgIT0gTlVMTCAmJiBsID4gMCkNCj4g
-LQkJc3RybGNweShkYXRhLCBwLCBtaW4oKGludClsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAr
-CQlzdHJsY3B5KGRhdGEsIHAsIG1pbihsLCBDT01NQU5EX0xJTkVfU0laRSkpOw0KPiAgDQo+ICAJ
-LyoNCj4gIAkgKiBDT05GSUdfQ01ETElORSBpcyBtZWFudCB0byBiZSBhIGRlZmF1bHQgaW4gY2Fz
-ZSBub3RoaW5nIGVsc2UNCj4gDQoNClRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhlIHJlZHVuZGFudCBj
-YXN0Lg0KDQpUaGVyZSBpcyBhIHNlY29uZCBwcm9ibGVtIGRldGVjdGVkIGJ5IHNwYXJzZSBvbiB0
-aGF0IGxpbmU6DQoNCiAgZHJpdmVycy9vZi9mZHQuYzoxMDk0OjM0OiB3YXJuaW5nOiBleHByZXNz
-aW9uIHVzaW5nIHNpemVvZih2b2lkKQ0KDQpDYW4geW91IHBsZWFzZSBmaXggYm90aCBpc3N1ZXM/
-DQoNClRoYW5rcywNCg0KRnJhbmsNCg==
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux for-next
+head:   6055a739910e69f8f76120d48e7ae74a13b1fdda
+commit: 9a959aaffd7090810eade53e4d960614405f57c6 [20/22] orangefs: remember count when reading.
+reproduce:
+        # apt-get install sparse
+        git checkout 9a959aaffd7090810eade53e4d960614405f57c6
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> fs/orangefs/file.c:574:5: sparse: symbol 'orangefs_file_open' was not declared. Should it be static?
+   fs/orangefs/file.c:580:5: sparse: symbol 'orangefs_flush' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
