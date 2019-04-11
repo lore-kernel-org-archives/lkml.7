@@ -2,212 +2,123 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E32C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D4C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B042184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554961296;
-	bh=AdnMGIM+zhpk/AkMMfHhD20tBsmxleW3asrU9KtW8Gc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vaLVxOEmtXwGpn6X4R2y0weoRXNAml2AO1oRQJ41Qh/2I/rrnhGbOqiFziqc3ZNQ0
-	 J01qmZ5FzgjuMlKmIHdOpktLUs/ksLZJdsI1Z0JzRUGj/6Mh0H1PTIJenj1WKetI9l
-	 VkIc/qL1pl0xwuNiZE1jq9671QJdABH275w3CsRQ=
+	by mail.kernel.org (Postfix) with ESMTP id E0F112133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfDKFlf (ORCPT
+        id S1726771AbfDKFlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 01:41:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfDKFle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 01:41:34 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77CE72133D;
-        Thu, 11 Apr 2019 05:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554961293;
-        bh=AdnMGIM+zhpk/AkMMfHhD20tBsmxleW3asrU9KtW8Gc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rh5xwZnp5NtzdWY12ZClWowEtz2If+pz5H1YPGtq5iAN4hd9v2j5LBMyN4hDRcC2B
-         KEkPhf+wxZis6qATkiruJu7Kvh+SOqmhTu52iEOjdqAcCYRSUKChGI/RZP2hKAfwx7
-         vTKjBisVFCSA38vNvsD6cN8iNJ25yiU8dgzw4Zdg=
-Date:   Thu, 11 Apr 2019 08:41:30 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     jglisse@redhat.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>, Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, kvm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 7/8] mm/mmu_notifier: pass down vma and reasons why
- mmu notifier is happening v2
-Message-ID: <20190411054130.GY3201@mtr-leonro.mtl.com>
-References: <20190326164747.24405-1-jglisse@redhat.com>
- <20190326164747.24405-8-jglisse@redhat.com>
- <20190410234124.GE22989@iweiny-DESK2.sc.intel.com>
+        Thu, 11 Apr 2019 01:41:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56762 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbfDKFlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 01:41:50 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B5cYCS029861
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:41:49 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rswfgcwv3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:41:48 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Thu, 11 Apr 2019 06:41:46 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 06:41:43 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B5fgAT51642474
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 05:41:42 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EDE1A4059;
+        Thu, 11 Apr 2019 05:41:42 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F22A7A404D;
+        Thu, 11 Apr 2019 05:41:40 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.73.26])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 05:41:40 +0000 (GMT)
+X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 03/27] powerpc/mm: don't BUG() in slice_mask_for_size()
+In-Reply-To: <f67363798e1ffb7603cd6619cb867563e4126d9a.1553076180.git.christophe.leroy@c-s.fr>
+References: <cover.1553076180.git.christophe.leroy@c-s.fr> <f67363798e1ffb7603cd6619cb867563e4126d9a.1553076180.git.christophe.leroy@c-s.fr>
+Date:   Thu, 11 Apr 2019 11:11:39 +0530
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="DoqoDKVG8/W9HA34"
-Content-Disposition: inline
-In-Reply-To: <20190410234124.GE22989@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19041105-0016-0000-0000-0000026D9812
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041105-0017-0000-0000-000032C9CAE7
+Message-Id: <87lg0h3xpo.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
---DoqoDKVG8/W9HA34
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 10, 2019 at 04:41:57PM -0700, Ira Weiny wrote:
-> On Tue, Mar 26, 2019 at 12:47:46PM -0400, Jerome Glisse wrote:
-> > From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> >
-> > CPU page table update can happens for many reasons, not only as a result
-> > of a syscall (munmap(), mprotect(), mremap(), madvise(), ...) but also
-> > as a result of kernel activities (memory compression, reclaim, migratio=
-n,
-> > ...).
-> >
-> > Users of mmu notifier API track changes to the CPU page table and take
-> > specific action for them. While current API only provide range of virtu=
-al
-> > address affected by the change, not why the changes is happening
-> >
-> > This patch is just passing down the new informations by adding it to the
-> > mmu_notifier_range structure.
-> >
-> > Changes since v1:
-> >     - Initialize flags field from mmu_notifier_range_init() arguments
-> >
-> > Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: linux-mm@kvack.org
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Andrea Arcangeli <aarcange@redhat.com>
-> > Cc: Peter Xu <peterx@redhat.com>
-> > Cc: Felix Kuehling <Felix.Kuehling@amd.com>
-> > Cc: Jason Gunthorpe <jgg@mellanox.com>
-> > Cc: Ross Zwisler <zwisler@kernel.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Cc: Christian Koenig <christian.koenig@amd.com>
-> > Cc: Ralph Campbell <rcampbell@nvidia.com>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: kvm@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  include/linux/mmu_notifier.h | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-> > index 62f94cd85455..0379956fff23 100644
-> > --- a/include/linux/mmu_notifier.h
-> > +++ b/include/linux/mmu_notifier.h
-> > @@ -58,10 +58,12 @@ struct mmu_notifier_mm {
-> >  #define MMU_NOTIFIER_RANGE_BLOCKABLE (1 << 0)
-> >
-> >  struct mmu_notifier_range {
-> > +	struct vm_area_struct *vma;
-> >  	struct mm_struct *mm;
-> >  	unsigned long start;
-> >  	unsigned long end;
-> >  	unsigned flags;
-> > +	enum mmu_notifier_event event;
-> >  };
-> >
-> >  struct mmu_notifier_ops {
-> > @@ -363,10 +365,12 @@ static inline void mmu_notifier_range_init(struct=
- mmu_notifier_range *range,
-> >  					   unsigned long start,
-> >  					   unsigned long end)
-> >  {
-> > +	range->vma =3D vma;
-> > +	range->event =3D event;
-> >  	range->mm =3D mm;
-> >  	range->start =3D start;
-> >  	range->end =3D end;
-> > -	range->flags =3D 0;
-> > +	range->flags =3D flags;
+> When no mask is found for the page size, WARN() and return NULL
+> instead of BUG()ing.
 >
-> Which of the "user patch sets" uses the new flags?
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/mm/slice.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 >
-> I'm not seeing that user yet.  In general I don't see anything wrong with=
- the
-> series and I like the idea of telling drivers why the invalidate has fire=
-d.
->
-> But is the flags a future feature?
+> diff --git a/arch/powerpc/mm/slice.c b/arch/powerpc/mm/slice.c
+> index aec91dbcdc0b..011d470ea340 100644
+> --- a/arch/powerpc/mm/slice.c
+> +++ b/arch/powerpc/mm/slice.c
+> @@ -165,7 +165,8 @@ static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
+>  	if (psize == MMU_PAGE_16G)
+>  		return &mm->context.mask_16g;
+>  #endif
+> -	BUG();
+> +	WARN_ON(true);
+> +	return NULL;
+>  }
 
-It seems that it is used in HMM ODP patch.
-https://patchwork.kernel.org/patch/10894281/
 
-Thanks
+Same here. There are not catching runtime errors. We should never find
+that true. This is to catch mistakes during development changes. Switch
+to VM_BUG_ON?
 
->
-> For the series:
->
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->
-> Ira
->
-> >  }
-> >
-> >  #define ptep_clear_flush_young_notify(__vma, __address, __ptep)		\
-> > --
-> > 2.20.1
-> >
 
---DoqoDKVG8/W9HA34
-Content-Type: application/pgp-signature; name="signature.asc"
+>  #elif defined(CONFIG_PPC_8xx)
+>  static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
+> @@ -178,7 +179,8 @@ static struct slice_mask *slice_mask_for_size(struct mm_struct *mm, int psize)
+>  	if (psize == MMU_PAGE_8M)
+>  		return &mm->context.mask_8m;
+>  #endif
+> -	BUG();
+> +	WARN_ON(true);
+> +	return NULL;
+>  }
+>  #else
+>  #error "Must define the slice masks for page sizes supported by the platform"
+> -- 
+> 2.13.3
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcrtOKAAoJEORje4g2clin4zsP/AmYfZt5oiQTeSP4Xjgwykq0
-CzkUmZpJm/vc8F5iiy8PVa00rdya2SH+kRF4wx01H0qC4YfOwxuQTDAekUbrMeHM
-huKKVZbzds16MerDumdudWGmW+u2m9Qmt1MoDp7zcZ6kLHCtnQ3y905427D/M4yu
-MdQd0LVxa05sk2Tb1D8krE9NkrHMR6nEGfHXE9AE3eSQf9WfqFjFHXGfvxDRylDR
-XW/sjkdogpVrONpQ/ZbCPFroOoZS98CLfU894RO9DB/d7kTtWFiSsj3Uh+QR1p64
-JWsVhxIERsBYE5PeJ6Y3amF0IXJi8SqiKxIAgi9Qs2xmBIbZBIUP0Snk982qLKzg
-Arr7ShCqlg3Zuecwho9onbe3epsZkH9gdLqUqEOe8LXXlRGZ7GVmI6tkNg09SXNY
-g7EsDhTMZ8qKGmpzel1qIK/o63ushKp+gtIrBxDLWBF6x61BIni1BkeJdxeKuB/3
-OIoN1uETEA10OBIuCT4nH4t5S43CnaGx7B4gN8AY501XXjdeTMUmweO1bRhlwfaX
-Ty/xN767bs3Jm9rFjBtAFpx9KYcUc+dOLQESqHvXDk8dL1A2ptljOBLqExzxdSqT
-euS5qt4NsdH1vnhJRBFdhGKaIW9DG/t3s0mNKeP1nC62BGbdCfN7hZrKjetGhNxI
-JppWRIdYbztvSoppOAp/
-=pROR
------END PGP SIGNATURE-----
-
---DoqoDKVG8/W9HA34--
