@@ -2,124 +2,189 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FAEC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB72C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806D42084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16142184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIzBGpzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfDKLPf (ORCPT
+        id S1726709AbfDKLPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:15:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:45322 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726517AbfDKLPe (ORCPT
+        Thu, 11 Apr 2019 07:15:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38600 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbfDKLPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:15:34 -0400
-X-UUID: 8a95690d9ef04b0e97aaef039f788acd-20190411
-X-UUID: 8a95690d9ef04b0e97aaef039f788acd-20190411
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1834034331; Thu, 11 Apr 2019 19:15:26 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 11 Apr 2019 19:15:19 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 11 Apr 2019 19:15:19 +0800
-Message-ID: <1554981319.31170.2.camel@mtksdaap41>
-Subject: Re: [PATCH v2 16/25] drm/mediatek: add ddp write register common api
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Thu, 11 Apr 2019 19:15:19 +0800
-In-Reply-To: <1553667561-25447-17-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-17-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 11 Apr 2019 07:15:42 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d13so4858275edr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 04:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vMzOF4uSDEO2czI0u54xXAsMS0XJszj2itVS4kGxliE=;
+        b=aIzBGpzEc+WkohNa9Z2aqEpD+O1b6cnlEt1JZ42UBLnEPAK5ueo66UUwQ/3uDaeSxt
+         CAv2HaWP/4BrjgujYwvqBHpvBGVdlhfbPFql+Z+kidt4EmeC9c3R5JWjhJwCZq6vvVsV
+         NMGmkGZGS/pJIs9cLnp70uyDsdBbaUJ6FO99Z9J6H0rHhGTVTQm1WauPAj3TkDZzt+1P
+         +sZNna9PN0nRvNcrayjq8YJqAp48Y8GJatpCKBuqbyzvKiDiPq+zhDnrqkVUe8smF7jN
+         +iRWRhJJ+ypexp5qB6xmmLttXirrM1lU/AuZY3UD+lL0P9Ptzvk7BX7pF3A5h1IY3K8z
+         Jvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vMzOF4uSDEO2czI0u54xXAsMS0XJszj2itVS4kGxliE=;
+        b=jkhIzllDhDCBWeBrb5vhmcl6BerjNJu6LxONili6bEsrKhsOSnBFY8MjyRnjPrE4E1
+         CAyAYkE3LZYWtsvyztJiQYb9Md8FWmGfisJNlba1hbbTuuMHWW4F0s9+VALmdBQUni6V
+         pBSceI9F8rhcDbj+U/tEzyAkWlbAYhk2eqkSJKo6Wi4Z0LAG06yG3VvhDJpjaUqFU6Qf
+         k3LhFjS0iuNkhXG18nfBGF/aXOiaQ0GO8rTYGO0MFIratPLeZ7zuwQH/vz2DeczidUAj
+         KILiAkcDcgfgUmjeUkwRxdqi7vdcG0FiknpKsfxGrWRQEZY4ou0587zQdpq410VF3uxL
+         p9lw==
+X-Gm-Message-State: APjAAAXjTfIOGYQGVTIhPkKEllRmg2+MoSgdaSVZbWOzq6L5u/7V79XH
+        D1krT5lLick7cjlgOy8mYeNKJM01PuG/48/+Ou8=
+X-Google-Smtp-Source: APXvYqwtFkdXzzznOt+LGqMT+WWQHuvaK5bL+8ulM1daZktTxcAkO+p9DA5+QKyNnw1BtNmN9qlbJ53aybHPgPqK3GI=
+X-Received: by 2002:a05:6402:12d5:: with SMTP id k21mr16320470edx.75.1554981339790;
+ Thu, 11 Apr 2019 04:15:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 4E69FC553BCEE32A74450CFBB64481A06BC9D0C54E487B007EA3E378B139BF762000:8
-X-MTK:  N
+References: <cover.1554975348.git.shengjiu.wang@nxp.com> <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
+In-Reply-To: <a04859bff36ba26cb4cb51ff092a3f2e2eca455d.1554975348.git.shengjiu.wang@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 11 Apr 2019 14:15:28 +0300
+Message-ID: <CAEnQRZAQk1w79uqFCBCkFy=4_FQvxetfPsS10c+AMddJpc1VNg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+Hi Shengjiu,
 
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add ddp write register common api
-> this is preparation patch for ovl/ovl_2l direct link
-> usecase.
-> in that case, we need this funtion to set one bit of ovl_2l
-> register
+Mostly looking good. See few comments inline:
 
-The reason is so strange. You could grep 'readl' in mediatek drm driver,
-and you would find that many place need this function. 
+<snip>
 
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 11 +++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  4 ++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> index afd6ca2..72288b4 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -84,6 +84,17 @@
->  #define DITHER_ADD_LSHIFT_G(x)			(((x) & 0x7) << 4)
->  #define DITHER_ADD_RSHIFT_G(x)			(((x) & 0x7) << 0)
->  
-> +void mtk_ddp_write_mask(unsigned int value,
-> +			struct mtk_ddp_comp *comp,
-> +			unsigned int offset,
-> +			unsigned int mask)
+> +/*
+> + * Select the pre-processing and post-processing options
+> + *
+> + * Fsin: input sample rate
+> + * Fsout: output sample rate
+> + * pre_proc: return value for pre-processing option
+> + * post_proc: return value for post-processing option
+> + */
+> +static int fsl_asrc_sel_proc(int Fsin, int Fsout, int *pre_proc, int *post_proc)
+
+Lets be naming consistent here: Fsin -> fs_in, Fsout -> fs_out.
+
 > +{
-> +	unsigned int tmp = readl(comp->regs + offset);
+> +       bool det_out_op2_cond;
+> +       bool det_out_op0_cond;
 > +
-> +	tmp = (tmp & ~mask) | (value & mask);
+> +       /* Codition for selection of post-processing */
+> +       det_out_op2_cond = (((Fsin * 15 > Fsout * 16) & (Fsout < 56000)) |
+> +                                       ((Fsin > 56000) & (Fsout < 56000)));
+Remove outer parenthesis. Also should here be a logical or (||)
+instead of bitwise or (|)?
+Same for && vs &.
 
-Why not just place this calculation into writel()?
+> +       det_out_op0_cond = (Fsin * 23 < Fsout * 8);
 
-Regards,
-CK
-
-> +	writel(tmp, comp->regs + offset);
+Remove outer parenthesis.
+> +
+> +       /*
+> +        * unsupported case: Tsout>16.125*Tsin, and Tsout>8.125*Tsin.
+> +        * Tsout>16.125*Tsin -> Fsin * 8 > 129 * Fsout
+> +        * Tsout>8.125*Tsin  -> Fsin * 8 > 65 * Fsout
+> +        * Tsout>4.125*Tsin  -> Fsin * 8 > 33 * Fsout
+> +        * Tsout>1.875*Tsin  -> Fsin * 8 > 15 * Fsout
+> +        */
+> +       if (Fsin * 8 > 129 * Fsout)
+> +               *pre_proc = 5;
+> +       else if (Fsin * 8 > 65 * Fsout)
+> +               *pre_proc = 4;
+> +       else if (Fsin * 8 > 33 * Fsout)
+> +               *pre_proc = 2;
+> +       else if (Fsin * 8 > 15 * Fsout) {
+> +               if (Fsin > 152000)
+> +                       *pre_proc = 2;
+> +               else
+> +                       *pre_proc = 1;
+> +       } else if (Fsin < 76000)
+> +               *pre_proc = 0;
+> +       else if (Fsin > 152000)
+> +               *pre_proc = 2;
+> +       else
+> +               *pre_proc = 1;
+> +
+> +       if (det_out_op2_cond)
+> +               *post_proc = 2;
+> +       else if (det_out_op0_cond)
+> +               *post_proc = 0;
+> +       else
+> +               *post_proc = 1;
+> +
+> +       /* unsupported options */
+> +       if (*pre_proc == 4 || *pre_proc == 5)
+> +               return -EINVAL;
+> +
+> +       return 0;
 > +}
 > +
->  void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
->  		    unsigned int CFG)
->  {
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 20e8061..ed715ff 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -198,5 +198,9 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
->  void mtk_ddp_comp_unregister(struct drm_device *drm, struct mtk_ddp_comp *comp);
->  void mtk_dither_set(struct mtk_ddp_comp *comp, unsigned int bpc,
->  		    unsigned int CFG);
-> +void mtk_ddp_write_mask(unsigned int value,
-> +			struct mtk_ddp_comp *comp,
-> +			unsigned int offset,
-> +			unsigned int mask);
->  
->  #endif /* MTK_DRM_DDP_COMP_H */
-
-
+>  /**
+>   * Request ASRC pair
+>   *
+> @@ -239,8 +278,10 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>         u32 inrate, outrate, indiv, outdiv;
+>         u32 clk_index[2], div[2];
+>         int in, out, channels;
+> +       int pre_proc, post_proc;
+>         struct clk *clk;
+>         bool ideal;
+> +       int ret;
+>
+>         if (!config) {
+>                 pair_err("invalid pair config\n");
+> @@ -289,6 +330,12 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>                 return -EINVAL;
+>         }
+>
+> +       ret = fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
+> +       if (ret) {
+> +               pair_err("No supported pre-processing options\n");
+> +               return ret;
+> +       }
+> +
+>         /* Validate input and output clock sources */
+>         clk_index[IN] = clk_map[IN][config->inclk];
+>         clk_index[OUT] = clk_map[OUT][config->outclk];
+> @@ -380,8 +427,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+>         /* Apply configurations for pre- and post-processing */
+>         regmap_update_bits(asrc_priv->regmap, REG_ASRCFG,
+>                            ASRCFG_PREMODi_MASK(index) | ASRCFG_POSTMODi_MASK(index),
+> -                          ASRCFG_PREMOD(index, process_option[in][out][0]) |
+> -                          ASRCFG_POSTMOD(index, process_option[in][out][1]));
+> +                          ASRCFG_PREMOD(index, pre_proc) |
+> +                          ASRCFG_POSTMOD(index, post_proc));
+>
+>         return fsl_asrc_set_ideal_ratio(pair, inrate, outrate);
+>  }
+> --
+> 1.9.1
+>
