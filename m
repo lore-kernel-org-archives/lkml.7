@@ -2,203 +2,135 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050E5C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFAFC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF62120818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB2D217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 03:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jlAnuO3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfDKDm6 (ORCPT
+        id S1726727AbfDKDqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 23:42:58 -0400
-Received: from regular1.263xmail.com ([211.150.70.195]:42066 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKDm5 (ORCPT
+        Wed, 10 Apr 2019 23:46:30 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59994 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDKDqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 23:42:57 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.41])
-        by regular1.263xmail.com (Postfix) with ESMTP id 628369C2;
-        Thu, 11 Apr 2019 11:42:52 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P24419T140373282043648S1554954170386687_;
-        Thu, 11 Apr 2019 11:42:51 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <7c090b46a2986083d3b27dd2daba841f>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: linux-arm-kernel@lists.infradead.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH 2/3] clk: rockchip: Make rkpwm a critical clock on rk3288
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Caesar Wang <caesar.wang@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20190409204707.150347-1-dianders@chromium.org>
- <20190409204707.150347-3-dianders@chromium.org>
- <50b744cd-b8d9-79ca-ba2d-6765808aa5e5@rock-chips.com>
- <CAD=FV=Vyy4bNJV=t2yALP3dAnm0-QsR55F5B==uUoi-Tp6b7Vg@mail.gmail.com>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <43b5ef8c-4617-bdc5-7109-35eac228b8f9@rock-chips.com>
-Date:   Thu, 11 Apr 2019 11:42:49 +0800
+        Wed, 10 Apr 2019 23:46:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uKfRStAyrP58fhGtk2XSLwMywPdjGRfGVFF6P6t+7cs=; b=jlAnuO3f3hip6CyPfh3KqSSD9y
+        hicJm6QXXI55iLK2eLLFkRUkBZv5Q6zpXTy6KwYQ3vfUr49qcq3T4W9+ivpJrAbZlJN7sIhBjgwuc
+        UVy21ln9uhd9DhLrJyLQN5VT2iHbJTb+Kapd8BZmnbw9E6DpjbCLXd1sWB/00FkaZsMPKww1XRkJ2
+        hKOOaHUZOE0ruZS5bSMBPaAzDqe2c6qxEIVC87xa3qaHPB34zM9gcEOc8rKw1J+QJJCvJTzFXFMwP
+        Q/tr8DHYtUvu7/naeO9J8BJ0PAqGNZj/cxDX9WnAEr1ORe6eIJG1JNdVnVhOIyZuSi64GiOFnaHSV
+        mc/aAfBA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEQdY-0006Ue-9z; Thu, 11 Apr 2019 03:44:28 +0000
+Subject: Re: [PATCH v2] init: Do not select DEBUG_KERNEL by default
+To:     Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Sinan Kaya <okaya@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Changbin Du <changbin.du@intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Ingo Molnar <mingo@kernel.org>
+References: <20190410224213.20651-1-okaya@kernel.org>
+ <CAGXu5jKzBGRr7LjFVdpvHhSFV7C7kuj-6VphhtLsMEoetr_R7g@mail.gmail.com>
+ <135E84E9-F068-44CB-B4F6-A5AC2F4CDE3D@joshtriplett.org>
+ <CAGXu5jLc_Z=TiNsMd40GN8-0D117RVbdD7Hy4MzjPQNbFf=bcg@mail.gmail.com>
+ <FF2E07CA-99D7-4F9C-B281-425897535C84@joshtriplett.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cf16f27b-4c76-8577-ac0e-9b4238aee89e@infradead.org>
+Date:   Wed, 10 Apr 2019 20:44:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Vyy4bNJV=t2yALP3dAnm0-QsR55F5B==uUoi-Tp6b7Vg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <FF2E07CA-99D7-4F9C-B281-425897535C84@joshtriplett.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
+On 4/10/19 8:02 PM, Josh Triplett wrote:
+> On April 10, 2019 4:24:18 PM PDT, Kees Cook <keescook@chromium.org> wrote:
+>> On Wed, Apr 10, 2019 at 4:22 PM Josh Triplett <josh@joshtriplett.org>
+>> wrote:
+>>>
+>>> On April 10, 2019 3:58:55 PM PDT, Kees Cook <keescook@chromium.org>
+>> wrote:
+>>>> On Wed, Apr 10, 2019 at 3:42 PM Sinan Kaya <okaya@kernel.org> wrote:
+>>>>>
+>>>>> We can't seem to have a kernel with CONFIG_EXPERT set but
+>>>>> CONFIG_DEBUG_KERNEL unset these days.
+>>>>>
+>>>>> While some of the features under the CONFIG_EXPERT require
+>>>>> CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
+>>>>>
+>>>>> It looks like CONFIG_KALLSYMS_ALL is the only feature that
+>>>>> requires CONFIG_DEBUG_KERNEL.
+>>>>>
+>>>>> Select CONFIG_EXPERT when CONFIG_DEBUG is chosen but you can
+>>>>
+>>>> Typo: CONFIG_DEBUG_KERNEL
+>>>>
+>>>>> still choose CONFIG_EXPERT without CONFIG_DEBUG.
+>>>>
+>>>> same.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Sinan Kaya <okaya@kernel.org>
+>>>>
+>>>> But with those fixed, looks good to me. Adding Josh (and others) to
+>> CC
+>>>> since he originally added the linkage to EXPERT in commit
+>>>> f505c553dbe2.
+>>>
+>>> CONFIG_DEBUG_KERNEL shouldn't affect code generation in any way; it
+>> should only make more options appear in kconfig. I originally added
+>> this to ensure that features you might want to *disable* aren't hidden,
+>> as part of the tinification effort.
+>>>
+>>> What specific problem does having CONFIG_DEBUG_KERNEL enabled cause
+>> for you? I'd still prefer to have a single switch for "don't hide
+>> things I might want to disable", rather than several.
+>>
+>> See earlier in the thread: code generation depends on
+>> CONFIG_DEBUG_KERNEL now unfortunately.
+> 
+> Then let's fix *that*, and get checkpatch to help enforce it in the future. EXPERT doesn't affect code generation, and neither should this.
+> 
 
-在 2019/4/10 下午11:25, Doug Anderson 写道:
-> Hi,
->
-> On Tue, Apr 9, 2019 at 11:42 PM elaine.zhang <zhangqing@rock-chips.com> wrote:
->> hi,
->>
->> 在 2019/4/10 上午4:47, Douglas Anderson 写道:
->>> Most rk3288-based boards are derived from the EVB and thus use a PWM
->>> regulator for the logic rail.  However, most rk3288-based boards don't
->>> specify the PWM regulator in their device tree.  We'll deal with that
->>> by making it critical.
->>>
->>> NOTE: it's important to make it critical and not just IGNORE_UNUSED
->>> because all PWMs in the system share the same clock.  We don't want
->>> another PWM user to turn the clock on and off and kill the logic rail.
->>>
->>> This change is in preparation for actually having the PWMs in the
->>> rk3288 device tree actually point to the proper PWM clock.  Up until
->>> now they've all pointed to the clock for the old IP block and they've
->>> all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
->>> clock rates for both clocks were the same.
->>>
->>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->>> ---
->>>
->>>    drivers/clk/rockchip/clk-rk3288.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
->>> index 06287810474e..c3321eade23e 100644
->>> --- a/drivers/clk/rockchip/clk-rk3288.c
->>> +++ b/drivers/clk/rockchip/clk-rk3288.c
->>> @@ -697,7 +697,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
->>>        GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
->>>        GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
->>>        GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
->>> -     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
->>> +     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
->>>
->>>        /* ddrctrl [DDR Controller PHY clock] gates */
->>>        GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
->>> @@ -837,6 +837,7 @@ static const char *const rk3288_critical_clocks[] __initconst = {
->>>        "pclk_alive_niu",
->>>        "pclk_pd_pmu",
->>>        "pclk_pmu_niu",
->>> +     "pclk_rkpwm",
->> pwm have device node, can enable and disable it in the pwm drivers.
->>
->> pwm regulator use pwm node as:
->>
->> pwms = <&pwm2 0 25000 1>
->>
->> when set Logic voltage:
->>
->> pwm_regulator_set_voltage()
->>
->>       --> pwm_apply_state()
->>
->>           -->clk_enable()
->>
->>           -->pwm_enable()
->>
->>           -->pwm_config()
->>
->>           -->pinctrl_select()
->>
->>           --....
->>
->> For mark pclk_rkpwm as critical,do you have any questions, or provides
->> some log or more information.
-> Right, if we actually specify the PWM used for the PWM regulator in
-> the device tree then there is no need to mark it as a critical clock.
-> In fact rk3288-veyron devices boot absolutely fine without marking
-> this clock as critical.  Actually, it seems like the way the PWM
-> framework works (IIRC it was designed this way specifically to support
-> PWM regulators) is that even just specifying that pwm1 is "okay" is
-> enough to keep the clock on even if the PWM regulator isn't specified.
->
-> ...however...
->
-> Take a look at, for instance, the rk3288-evb device tree file.
-> Nowhere in there does it specify that the PWM used for the PWM
-> regulator should be on.  Presumably that means that if we don't mark
-> the clock as critical then rk3288-evb will fail to boot.  That's easy
-> for me to fix since I have the rk3288-evb schematics, but what about
-> other rk3288 boards?  We could make educated guesses about each of
-> them and/or fix things are we hear about breakages.
->
-> ...but...
->
-> All the above would only be worth doing if we thought someone would
-> get some benefit out of it.  I'd bet that pretty much all rk3288-based
-> boards use a PWM regulator.  Thus, in reality, everyone will want the
-> rkpwm clock on all the time anyway.  In that case going through all
-> that extra work / potentially breaking other boards doesn't seem worth
-> it.  Just mark the clock as critical.
-
-I have no problem with changing it like this, but I think it is better 
-to modify dts:
-
-vdd_log: vdd-log {
-         compatible = "pwm-regulator";
-         rockchip,pwm_id = <2>; //for rk uboot
-         rockchip,pwm_voltage = <900000>; // for rk uboot
-         pwms = <&pwm2 0 25000 1>;
-         regulator-name = "vdd_log";
-         regulator-min-microvolt = <800000>;//hw logic min voltage
-         regulator-max-microvolt = <1400000>;//hw logic max voltage
-         regulator-always-on;
-         regulator-boot-on;
-     };
-
-Maybe we did not push the modification of this part in rk3288-evb, I 
-will push to deal with this.(rk3229-evb.dts and rk3399 has been already 
-pushed)
->
->
->
->
-> -Doug
->
->
->
+checkpatch is not an enforcer.  It takes maintainers to do that.
 
 
+-- 
+~Randy
