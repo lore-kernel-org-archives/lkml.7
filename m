@@ -2,490 +2,350 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD9C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FCAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C6821850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3127F20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:39:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oy7MsbYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfDKHiL (ORCPT
+        id S1726968AbfDKHjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:38:11 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:47665 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726145AbfDKHiL (ORCPT
+        Thu, 11 Apr 2019 03:39:18 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51789 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKHjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:38:11 -0400
-Received: from [IPv6:2001:983:e9a7:1:4cd3:53c0:7e2b:d8bc] ([IPv6:2001:983:e9a7:1:4cd3:53c0:7e2b:d8bc])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id EUHehwvoZUjKfEUHfhl2in; Thu, 11 Apr 2019 09:38:07 +0200
-Subject: Re: [RFC PATCH 18/20] lib: image-formats: Add v4l2 formats support
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-References: <cover.92acdec88ee4c280cb74e08ea22f0075e5fa055c.1553032382.git-series.maxime.ripard@bootlin.com>
- <c97024b97d3261dcf41aad3c8bc1c5d9906f33c9.1553032382.git-series.maxime.ripard@bootlin.com>
- <3f5748a6422d2f7eb11601bad297df870ff5952b.camel@ndufresne.ca>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5385672c-cfee-7bc4-9c2e-e4d8d964b748@xs4all.nl>
-Date:   Thu, 11 Apr 2019 09:38:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 11 Apr 2019 03:39:17 -0400
+Received: by mail-it1-f196.google.com with SMTP id s3so8064156itk.1;
+        Thu, 11 Apr 2019 00:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ERuBTtbDlEbbEKaWU/YOyCQrXKi+w+wz5W0Hcw8YGlQ=;
+        b=Oy7MsbYYZyerOzLFm9eA4RJRHUMldcw5fLflysKA80Sx+42647K2gxuA99FTGzwDRR
+         URseC3Cks7dazlGk99BWl2y/7YCWPYRASHusMQVklfXZin0IxxLslTXeH3Ea0gwd7xzU
+         N5hhUgaPGC0tGWIOjXqE3cSQl6ay2/4ite4QdZ7419ndGokziBjsFxaRNRFdMvrs0L0S
+         N4Fbjk/eEdJ4BMw1tEt8LicWluqvQ3aoBwN0hQDt5KVbzvQoGVhnIAu6Hmq6VjLMWd3R
+         3AAmOlYeh7av3PvYZ9AHxY1Uuxkn7cLiUn5C65pm7qbZeDuA12kaomDUHTZP26KncKc0
+         GeWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ERuBTtbDlEbbEKaWU/YOyCQrXKi+w+wz5W0Hcw8YGlQ=;
+        b=UXe36qdfwDwKO+Ybo36Drx6Ip6xCIWkj0iEt/MkS2dKYeWnYu1hgoli0krWLK5OW+C
+         kaFBWxvuG0LkAhLk0zH2L1G1fEmAi/8SOmeSb31KWPd9+iH1wMJ3HFIiGnFEGBE4UP08
+         ouDQKYr1w4+ADMbuGJsoaPtMxLJjaTPk2PXPWKo1zZwOtjntVgd9pTliYNgtYyGgo7jT
+         rk+TiPeh6BothQnYBKa6zWsrnAP8aN3x/RErQK578eoIHiZmiHaZBTfC26FOQCvuUTeF
+         7TN+O3eIoOkH34+qdtVyAvk/iSufco1jSShcgfG1WKZABX7lOGYmbUEX8i0qRG6pDKAo
+         ZkTQ==
+X-Gm-Message-State: APjAAAUlk8Q/Ly79c2HVN8+q+yoZ17yJymN2TTLfR620n5/Gxogphvka
+        vdCfVZPt5KOf+FkW+6HrkKfUidKmRh4vH/VR7ng=
+X-Google-Smtp-Source: APXvYqwH3eoTQZ8UdVHjWlKByNJkOtma4Emr64h1Y0IXWKUm+UI8hr872JMLZXS/XZ7LDFx6Cm7tpt1F5eT0/j4g0GE=
+X-Received: by 2002:a02:8508:: with SMTP id g8mr34905264jai.68.1554968355929;
+ Thu, 11 Apr 2019 00:39:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3f5748a6422d2f7eb11601bad297df870ff5952b.camel@ndufresne.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfJhH7vSblYToem5OelvjVz+/mChL5HpqiSCgyq7Jx6AbMUDMU7EZ2rqVIZwfeE0C3GIUQhD2EVUMXCLZ9N+19nTAxlpNOCCbtT4td2J5XYn/ukVtmDNL
- Q3Z2VVLjGh6A2GjpHv/g4mIWaM3Iq+K9MlZ6KwOVE1FSuWaSUty/pjHPCK1A2V8i1bUYE084oEQ12LtCLgTnMvhdw4V+bNR3HnRAWChW3BHsCvAxLZalo/IH
- +75KSSxQqe1PCewJ9KFCF4WqANMe3emDySVE451uqayqy4PZy5TvOaOeog8l9vZCoUANKwvQK0E/0TW2TVMVfQPbSvM96o3EyQp6UUrmcaYsZY4TsSwRl4oz
- mBCTQkKk5a7FchmsAF0JjYiVejqbgFBZAyMKHOrNNT2rxvhGUC9B67lS+4Qrmu2dNBwuVBakFqtQaVVzmeAyVY450GMQyGCjRd55Hc9yldPBO89frn+D9F73
- JMXz5ngkvS42V8CX3PnN3eQb/iF/TMrgmshsPwjAmrL0RFb6n+h9r+hHSIx+n4nz0Xs9ZiGsC40oWqQIUGqITFEAJTl6iWGUj1zQ2QQnO7fBo4/M33xqojFr
- 2ag86YuG3svteU8JbStfmuTbUq0sAhehuZYYfT+KuYFYkSmrKdeI/0rkimofm7JpeNWkBKcjxfdFm1fGiHB23CggsLMXvyletaTz7kgPepx+/o2NSuCavHqF
- cuwH+6wE5QHRuFjLbcin4SfAMWbhnXj29qGRrdXKoM/buEWKyCHVlOB4i6kqxVDh/+bxt5c+WiwdFF5DC701afTUiZ6JdKiBm3va05Fa0HrytR7LO0L8jQ==
+References: <CGME20190404172257epcas1p20d789242a2353dc8e9ffd7f435dc5eee@epcas1p2.samsung.com>
+ <20190404171735.12815-1-s.nawrocki@samsung.com> <20190404171735.12815-9-s.nawrocki@samsung.com>
+In-Reply-To: <20190404171735.12815-9-s.nawrocki@samsung.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Thu, 11 Apr 2019 13:09:04 +0530
+Message-ID: <CANAwSgTPeSZS_Tcy2ucO5OUQjoY1ta5+7TpAer1CHV2tQTOcrw@mail.gmail.com>
+Subject: Re: [PATCH RFC 8/8] ARM: dts: exynos: Add ASV tables for exynos5422/5800
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 8:55 PM, Nicolas Dufresne wrote:
-> Le mardi 19 mars 2019 à 22:57 +0100, Maxime Ripard a écrit :
->> V4L2 uses different fourcc's than DRM, and has a different set of formats.
->> For now, let's add the v4l2 fourcc's for the already existing formats.
-> 
-> Hopefully I get the fixup right this time, see inline.
-> 
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->> ---
->>  include/linux/image-formats.h |  9 +++++-
->>  lib/image-formats.c           | 67 ++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 76 insertions(+)
->>
->> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
->> index 53fd73a71b3d..fbc3a4501ebd 100644
->> --- a/include/linux/image-formats.h
->> +++ b/include/linux/image-formats.h
->> @@ -26,6 +26,13 @@ struct image_format_info {
->>  	};
->>  
->>  	/**
->> +	 * @v4l2_fmt:
->> +	 *
->> +	 * V4L2 4CC format identifier (V4L2_PIX_FMT_*)
->> +	 */
->> +	u32 v4l2_fmt;
->> +
->> +	/**
->>  	 * @depth:
->>  	 *
->>  	 * Color depth (number of bits per pixel excluding padding bits),
->> @@ -222,6 +229,8 @@ image_format_info_is_yuv_sampling_444(const struct image_format_info *info)
->>  
->>  const struct image_format_info *__image_format_drm_lookup(u32 drm);
->>  const struct image_format_info *image_format_drm_lookup(u32 drm);
->> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
->> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2);
->>  unsigned int image_format_plane_cpp(const struct image_format_info *format,
->>  				    int plane);
->>  unsigned int image_format_plane_width(int width,
->> diff --git a/lib/image-formats.c b/lib/image-formats.c
->> index 9b9a73220c5d..39f1d38ae861 100644
->> --- a/lib/image-formats.c
->> +++ b/lib/image-formats.c
->> @@ -8,6 +8,7 @@
->>  static const struct image_format_info formats[] = {
->>  	{
->>  		.drm_fmt = DRM_FORMAT_C8,
->> +		.v4l2_fmt = V4L2_PIX_FMT_GREY,
->>  		.depth = 8,
->>  		.num_planes = 1,
->>  		.cpp = { 1, 0, 0 },
->> @@ -15,6 +16,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_RGB332,
->> +		.v4l2_fmt = V4L2_PIX_FMT_RGB332,
->>  		.depth = 8,
->>  		.num_planes = 1,
->>  		.cpp = { 1, 0, 0 },
->> @@ -29,6 +31,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_XRGB4444,
->> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB444,
-> 
-> Not completely sure, looks like in the V4L2 variant, the padding is on
-> the 4 MSB of the second byte, which makes it incompatible. There is no
-> other equivalent.
-> 
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -57,6 +60,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_ARGB4444,
->> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB444,
-> 
-> Similarly.
-> 
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -89,6 +93,7 @@ static const struct image_format_info formats[] = {
->>  		.has_alpha = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_XRGB1555,
->> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB555,
-> 
-> Same swapping, can't find a match.
-> 
->>  		.depth = 15,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -117,6 +122,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_ARGB1555,
->> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB555,
-> 
-> Same.
-> 
->>  		.depth = 15,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -149,6 +155,7 @@ static const struct image_format_info formats[] = {
->>  		.has_alpha = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_RGB565,
->> +		.v4l2_fmt = V4L2_PIX_FMT_RGB565,
-> 
-> -> V4L2_PIX_FMT_RGB565X
-> 
-> Was added later, as what you expect is not compatible.
+Hi Sylwester,
 
-All these 16-bit V4L2 pixelformats are ancient, but they are (to my knowledge)
-correct w.r.t. the documented layout of the bits in memory. I.e., that's what
-the hardware will give you.
+As per my knowledge HK soc introduce this table to support
+overclocking of cpufreq for Odroid XU3 XU4 family for boards.
 
-I think if there is no equivalence between the drm and v4l2 fourcc's, then
-you need two entries in this table, one for drm (v4l2_fmt == 0), one for v4l2
-(drm_fmt == 0).
+ARM Cortex-A15 Quad CPU (Eagle) 1800 to 2000
+ARM Cortex-A7 Quard CPU (Kingfisher) 1400 to 1500
 
-> 
->>  		.depth = 16,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -163,6 +170,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_RGB888,
->> +		.v4l2_fmt = V4L2_PIX_FMT_RGB24,
-> 
-> -> V4L2_PIX_FMT_BGR24
-> 
->>  		.depth = 24,
->>  		.num_planes = 1,
->>  		.cpp = { 3, 0, 0 },
->> @@ -170,6 +178,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_BGR888,
->> +		.v4l2_fmt = V4L2_PIX_FMT_BGR24,
-> 
-> -> V4L2_PIX_FMT_RGB24
-> 
->>  		.depth = 24,
->>  		.num_planes = 1,
->>  		.cpp = { 3, 0, 0 },
->> @@ -177,6 +186,7 @@ static const struct image_format_info formats[] = {
->>  		.vsub = 1,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_XRGB8888,
->> +		.v4l2_fmt = V4L2_PIX_FMT_XRGB32,
-> 
-> -> V4L2_PIX_FMT_XBGR32
-> 
->>  		.depth = 24,
->>  		.num_planes = 1,
->>  		.cpp = { 4, 0, 0 },
->> @@ -281,6 +291,7 @@ static const struct image_format_info formats[] = {
->>  		.has_alpha = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_ARGB8888,
->> +		.v4l2_fmt = V4L2_PIX_FMT_ARGB32,
-> 
-> -> V4L2_PIX_FMT_ABGR32
-> 
->>  		.depth = 32,
->>  		.num_planes = 1,
->>  		.cpp = { 4, 0, 0 },
->> @@ -361,6 +372,7 @@ static const struct image_format_info formats[] = {
->>  		.has_alpha = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YUV410,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YUV410,
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -369,6 +381,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YVU410,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YVU410,
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -393,6 +406,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YUV420,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YUV420M,
-> 
-> There is two valid matches in V4L2 for this format, not sure how this
-> will be handled. The M variant is to be used with MPLANE v4l2_buffer
-> when num_planes is bigger then 1.
+For Exynos5422  below table
+asv-table-[0-3]  AVS range from 200 to 2100
+asv-table-[100-103] AVS range from 200 to 1500.
 
-We should use the non-multiplanar variant (without the M). At least for now.
+Are these setting stable for this board to cover clock the cpu now.
 
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -401,6 +415,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YVU420,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YVU420M,
-> 
-> Same.
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -409,6 +424,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YUV422,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YUV422M,
-> 
-> Same.
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -417,6 +433,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YVU422,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YVU422M,
-> 
-> Same. 
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -425,6 +442,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YUV444,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YUV444M,
-> 
-> Same.
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -433,6 +451,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YVU444,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YVU444M,
-> 
-> Same.
-> 
->>  		.depth = 0,
->>  		.num_planes = 3,
->>  		.cpp = { 1, 1, 1 },
->> @@ -441,6 +460,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV12,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV12,
-> 
-> V4L2_PIX_FMT_NV12M is the mplane variant. Depending on how you handle,
-> which should be concistant picking one up.
-> 
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -449,6 +469,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV21,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV21,
-> 
-> Same, NV12M for mplane.
-> 
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -457,6 +478,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV16,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV16,
-> 
-> Same, NV16M.
-> 
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -465,6 +487,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV61,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV61,
-> 
-> Same, NV61M.
-> 
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -473,6 +496,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV24,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV24,
-> 
-> For extra fun, the M variant has not been added yet.
+Can you also enable support for this clk-exynos5420.c
+For example exynos5800_eglclk_d and exynos5420_kfcclk_d table.
 
-Note that it has been the practice in V4L2 to avoid adding pixelformats unless
-they are in use by a V4L2 driver. So that's why some combinations do not exist.
+Also can you update exynos5420.dtsi  following opp table
+For example cluster_a15_opp_table and cluster_a7_opp_table opt binding.
 
-If we are creating a common library then I think we should change that rule
-to: "unless they are in use by a DRM or V4L2 driver". And when new formats are
-added, and they exists already for DRM or V4L2, then we should use the same
-fourcc for the other subsystem.
+To make this work synchronously with AVS.
 
-I.e. if pixelformat V4L2_PIX_FMT_FOO was already defined, then add a:
+Best Regards
+-Anand
 
-#define DRM_FORMAT_FOO V4L2_PIX_FMT_FOO
-
-rather than creating a new fourcc.
-
-We could even start looking at redoing the whole scheme in a unified way, but
-that's something for the (far) future.
-
-This is already a big step forward.
-
-Regards,
-
-	Hans
-
-> 
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -481,6 +505,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_NV42,
->> +		.v4l2_fmt = V4L2_PIX_FMT_NV42,
->>  		.depth = 0,
->>  		.num_planes = 2,
->>  		.cpp = { 1, 2, 0 },
->> @@ -489,6 +514,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YUYV,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YUYV,
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -497,6 +523,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_YVYU,
->> +		.v4l2_fmt = V4L2_PIX_FMT_YVYU,
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -505,6 +532,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_UYVY,
->> +		.v4l2_fmt = V4L2_PIX_FMT_UYVY,
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -513,6 +541,7 @@ static const struct image_format_info formats[] = {
->>  		.is_yuv = true,
->>  	}, {
->>  		.drm_fmt = DRM_FORMAT_VYUY,
->> +		.v4l2_fmt = V4L2_PIX_FMT_VYUY,
->>  		.depth = 0,
->>  		.num_planes = 1,
->>  		.cpp = { 2, 0, 0 },
->> @@ -632,6 +661,44 @@ const struct image_format_info *image_format_drm_lookup(u32 drm)
->>  EXPORT_SYMBOL(image_format_drm_lookup);
->>  
->>  /**
->> + * __image_format_v4l2_lookup - query information for a given format
->> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
->> + *
->> + * The caller should only pass a supported pixel format to this function.
->> + *
->> + * Returns:
->> + * The instance of struct image_format_info that describes the pixel format, or
->> + * NULL if the format is unsupported.
->> + */
->> +const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2)
->> +{
->> +	return __image_format_lookup(v4l2_fmt, v4l2);
->> +}
->> +EXPORT_SYMBOL(__image_format_v4l2_lookup);
->> +
->> +/**
->> + * image_format_v4l2_lookup - query information for a given format
->> + * @v4l2: V4L2 fourcc pixel format (V4L2_PIX_FMT_*)
->> + *
->> + * The caller should only pass a supported pixel format to this function.
->> + * Unsupported pixel formats will generate a warning in the kernel log.
->> + *
->> + * Returns:
->> + * The instance of struct image_format_info that describes the pixel format, or
->> + * NULL if the format is unsupported.
->> + */
->> +const struct image_format_info *image_format_v4l2_lookup(u32 v4l2)
->> +{
->> +	const struct image_format_info *format;
->> +
->> +	format = __image_format_v4l2_lookup(v4l2);
->> +
->> +	WARN_ON(!format);
->> +	return format;
->> +}
->> +EXPORT_SYMBOL(image_format_v4l2_lookup);
->> +
->> +/**
->>   * image_format_plane_cpp - determine the bytes per pixel value
->>   * @format: pointer to the image_format
->>   * @plane: plane index
-
+On Thu, 4 Apr 2019 at 22:55, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>
+> This patch ASV (Adaptive Supply Voltage) table entries for
+> Exynos5422/5800 SoC.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi    |   2 +-
+>  arch/arm/boot/dts/exynos5800.dtsi | 207 ++++++++++++++++++++++++++++++
+>  2 files changed, 208 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> index 67f9b4504a42..22eb951c614c 100644
+> --- a/arch/arm/boot/dts/exynos5.dtsi
+> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> @@ -35,7 +35,7 @@
+>                 #size-cells = <1>;
+>                 ranges;
+>
+> -               chipid@10000000 {
+> +               chipid: chipid@10000000 {
+>                         compatible = "samsung,exynos4210-chipid";
+>                         reg = <0x10000000 0x100>;
+>                 };
+> diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
+> index 57d3b319fd65..5358865f5c0b 100644
+> --- a/arch/arm/boot/dts/exynos5800.dtsi
+> +++ b/arch/arm/boot/dts/exynos5800.dtsi
+> @@ -16,6 +16,213 @@
+>         compatible = "samsung,exynos5800", "samsung,exynos5";
+>  };
+>
+> +&chipid {
+> +       asv {
+> +               compatible = "samsung,exynos-asv-v1";
+> +               asv-table-0 {
+> +                       /* ARM 0, 1 */
+> +                       samsung,asv-table-size = <20 15>;
+> +                       samsung,asv-table-id = <0x0>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12   ASV13 */
+> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
+> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1900 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1162500 1150000 1137500 1125000 1112500>,
+> +                               <1800 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
+> +                               <1700 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
+> +                               <1600 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000  987500>,
+> +                               <1500 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500 1000000  987500  975000  962500  950000>,
+> +                               <1400 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  975000  962500  950000  937500  925000>,
+> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
+> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
+> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
+> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                    /* ASV0...13 */
+> +                       samsung,asv-common-data = <700 900000>,
+> +                                                 <600 900000>,
+> +                                                 <500 900000>,
+> +                                                 <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +               asv-table-2 {
+> +                       /* ARM 2 */
+> +                       samsung,asv-table-size = <20 15>;
+> +                       samsung,asv-table-id = <0x2>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
+> +                               <2000 1312500 1312500 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1900 1262500 1250000 1250000 1237500 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
+> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
+> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
+> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
+> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
+> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
+> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
+> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
+> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
+> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                    /* ASV0...13 */
+> +                       samsung,asv-common-data = <700 900000>,
+> +                                                 <600 900000>,
+> +                                                 <500 900000>,
+> +                                                 <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +               asv-table-3 {
+> +                       /* ARM 3 */
+> +                       samsung,asv-table-size = <20 15>;
+> +                       samsung,asv-table-id = <0x3>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <2100 1362500 1362500 1350000 1337500 1325000 1312500 1300000 1275000 1262500 1250000 1237500 1225000 1212500 1200000>,
+> +                               <2000 1312500 1312500 1300000 1287500 1275000 1262500 1250000 1237500 1225000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1900 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1175000 1162500 1150000 1137500 1125000>,
+> +                               <1800 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1125000 1112500 1100000 1087500 1075000>,
+> +                               <1700 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1087500 1075000 1062500 1050000 1037500>,
+> +                               <1600 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1050000 1037500 1025000 1012500 1000000>,
+> +                               <1500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000  987500  975000  962500>,
+> +                               <1400 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  987500  975000  962500  950000  937500>,
+> +                               <1300 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  962500  950000  937500  925000  912500>,
+> +                               <1200 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  937500  925000  912500  900000  900000>,
+> +                               <1100 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000>,
+> +                               <1000  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 900  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 800  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                    /* ASV0...13 */
+> +                       samsung,asv-common-data = <700 900000>,
+> +                                                 <600 900000>,
+> +                                                 <500 900000>,
+> +                                                 <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +
+> +               asv-table-4 {
+> +                       /* ARM BIN2 */
+> +                       samsung,asv-table-size = <17 15>;
+> +                       samsung,asv-table-id = <0x4>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <1800 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1150000 1137500 1125000 1112500 1100000>,
+> +                               <1700 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1112500 1100000 1087500 1075000 1062500>,
+> +                               <1600 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1075000 1062500 1050000 1037500 1025000>,
+> +                               <1500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1037500 1025000 1012500 1000000 987500>,
+> +                               <1400 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 1012500 1000000 987500  975000  962500>,
+> +                               <1300 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000 987500  1000000 987500  975000  962500  950000>,
+> +                               <1200 1062500 1050000 1037500 1025000 1012500 1000000 987500  975000  962500  975000  962500  950000  937500  925000>,
+> +                               <1100 1037500 1025000 1012500 1000000 987500  975000  962500  950000  937500  950000  937500  925000  912500  900000>,
+> +                               <1000 1012500 1000000  987500  975000 962500  950000  937500  925000  912500  925000  912500  900000  900000  900000>,
+> +                               < 900  987500  975000  962500  950000 937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 800  962500  950000  937500  925000 912500  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 700  937500  925000  912500  900000 900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                      /* ASV0...13 */
+> +                       samsung,asv-common-data = <600 900000>,
+> +                                                 <500 900000>,
+> +                                                 <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +
+> +
+> +               asv-table-100 {
+> +                       /* KFC 0, 1 */
+> +                       samsung,asv-table-size = <14 15>;
+> +                       samsung,asv-table-id = <0x100>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
+> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
+> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
+> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
+> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
+> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
+> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
+> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                     /* ASV0...13 */
+> +                       samsung,asv-common-data = <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +
+> +               asv-table-102 {
+> +                       /* KFC 2 */
+> +                       samsung,asv-table-size = <14 15>;
+> +                       samsung,asv-table-id = <0x102>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
+> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
+> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
+> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
+> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
+> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
+> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
+> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                     /* ASV0...13 */
+> +                       samsung,asv-common-data = <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +
+> +               asv-table-103 {
+> +                       /* KFC 3 */
+> +                       samsung,asv-table-size = <14 15>;
+> +                       samsung,asv-table-id = <0x103>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <1500 1300000 1300000 1300000 1287500 1287500 1287500 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500>,
+> +                               <1400 1275000 1262500 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500>,
+> +                               <1300 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500>,
+> +                               <1200 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500>,
+> +                               <1100 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000>,
+> +                               <1000 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500>,
+> +                               < 900 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000>,
+> +                               < 800 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000>,
+> +                               < 700  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 600  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 500  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                     /* ASV0...13 */
+> +                       samsung,asv-common-data = <400 900000>,
+> +                                                 <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +
+> +               asv-table-104 {
+> +                       /* KFC BIN2 */
+> +                       samsung,asv-table-size = <12 15>;
+> +                       samsung,asv-table-id = <0x104>;
+> +                       samsung,asv-data =
+> +                                     /* ASV0  ASV1    ASV2    ASV3    ASV4    ASV5    ASV6    ASV7    ASV8    ASV9    ASV10   ASV11   ASV12  ASV13 */
+> +                               <1300 1250000 1237500 1225000 1212500 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500>,
+> +                               <1200 1200000 1187500 1175000 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500>,
+> +                               <1100 1162500 1150000 1137500 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000>,
+> +                               <1000 1125000 1112500 1100000 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500>,
+> +                               < 900 1087500 1075000 1062500 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000>,
+> +                               < 800 1050000 1037500 1025000 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000>,
+> +                               < 700 1012500 1000000  987500  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000>,
+> +                               < 600  975000  962500  950000  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 500  937500  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>,
+> +                               < 400  925000  912500  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000  900000>;
+> +                                                     /* ASV0...13 */
+> +                       samsung,asv-common-data = <300 900000>,
+> +                                                 <200 900000>;
+> +               };
+> +       };
+> +};
+> +
+>  &clock {
+>         compatible = "samsung,exynos5800-clock";
+>  };
+> --
+> 2.17.1
+>
