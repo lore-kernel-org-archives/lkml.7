@@ -2,154 +2,189 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EB8C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AE82083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ij4qDino"
+	by mail.kernel.org (Postfix) with ESMTP id AB1C52083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfDKTSY (ORCPT
+        id S1726714AbfDKTUT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:18:24 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18688 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfDKTSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:18:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5caf93030000>; Thu, 11 Apr 2019 12:18:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 11 Apr 2019 12:18:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 11 Apr 2019 12:18:22 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Apr
- 2019 19:18:22 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 11 Apr
- 2019 19:18:22 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 11 Apr 2019 19:18:22 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.48]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5caf92fe0000>; Thu, 11 Apr 2019 12:18:22 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <skomatineni@nvidia.com>, <talho@nvidia.com>, <anrao@nvidia.com>,
-        <bbiswas@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-Subject: [PATCH V4] mmc: tegra: add sdhci tegra suspend and resume
-Date:   Thu, 11 Apr 2019 12:18:19 -0700
-Message-ID: <1555010299-19141-1-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Thu, 11 Apr 2019 15:20:19 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:32858 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726538AbfDKTUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 15:20:18 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hEfF4-0001Hj-1F; Thu, 11 Apr 2019 21:20:10 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "elaine.zhang" <zhangqing@rock-chips.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Caesar Wang <caesar.wang@rock-chips.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/3] clk: rockchip: Make rkpwm a critical clock on rk3288
+Date:   Thu, 11 Apr 2019 21:20:09 +0200
+Message-ID: <3228689.801YVuiu6B@diego>
+In-Reply-To: <CAD=FV=VYYU1ZJfCaNdM--B_8jRRDR3prbmMzj2_3UJO9NbeaPw@mail.gmail.com>
+References: <20190409204707.150347-1-dianders@chromium.org> <43b5ef8c-4617-bdc5-7109-35eac228b8f9@rock-chips.com> <CAD=FV=VYYU1ZJfCaNdM--B_8jRRDR3prbmMzj2_3UJO9NbeaPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555010307; bh=EzqXe8EIS6+c4hrJgaK3KbfTxED6BK/NCfoTo6wKTvk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=ij4qDino/ShdScl/+BV4NYsWUDixFhJfs7nJWXDGEuR2EjRIODeo1FEOMwukP4Nw8
-         ei0ee0auglJLZj4lwFvtgUjQoSIO5bOWgz9LtBXR+s2F9TuBxXPtl4FuwQVUqEgB5/
-         qcZOqa1Qe15zF92MlgtSxx8E60WTp3sRpc/rUJhj2rCQ3Ho+kxuRMNx9aPgs3zf8/2
-         P+6qNPV5WPwDoBFj3u9r4RgRLN8P2FihjGlJT4N0rRIn/I660wR0zyUZR38YDC3ZgH
-         apKDDwzVXKe7fhceH9dZwtxes7PglTh0Qn/ZXjZtrbiea3AqX7boZbkqoAxAJKnL+U
-         NPQuu3qIO5eNA==
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds suspend and resume PM ops for tegra SDHCI.
+Hi Doug, Elaine,
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 58 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+Am Donnerstag, 11. April 2019, 16:42:23 CEST schrieb Doug Anderson:
+> On Wed, Apr 10, 2019 at 8:42 PM elaine.zhang <zhangqing@rock-chips.com> wrote:
+> > 在 2019/4/10 下午11:25, Doug Anderson 写道:
+> > > On Tue, Apr 9, 2019 at 11:42 PM elaine.zhang <zhangqing@rock-chips.com> wrote:
+> > >> 在 2019/4/10 上午4:47, Douglas Anderson 写道:
+> > >>> Most rk3288-based boards are derived from the EVB and thus use a PWM
+> > >>> regulator for the logic rail.  However, most rk3288-based boards don't
+> > >>> specify the PWM regulator in their device tree.  We'll deal with that
+> > >>> by making it critical.
+> > >>>
+> > >>> NOTE: it's important to make it critical and not just IGNORE_UNUSED
+> > >>> because all PWMs in the system share the same clock.  We don't want
+> > >>> another PWM user to turn the clock on and off and kill the logic rail.
+> > >>>
+> > >>> This change is in preparation for actually having the PWMs in the
+> > >>> rk3288 device tree actually point to the proper PWM clock.  Up until
+> > >>> now they've all pointed to the clock for the old IP block and they've
+> > >>> all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
+> > >>> clock rates for both clocks were the same.
+> > >>>
+> > >>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > >>> ---
+> > >>>
+> > >>>    drivers/clk/rockchip/clk-rk3288.c | 3 ++-
+> > >>>    1 file changed, 2 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+> > >>> index 06287810474e..c3321eade23e 100644
+> > >>> --- a/drivers/clk/rockchip/clk-rk3288.c
+> > >>> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> > >>> @@ -697,7 +697,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+> > >>>        GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
+> > >>>        GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
+> > >>>        GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
+> > >>> -     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
+> > >>> +     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
+> > >>>
+> > >>>        /* ddrctrl [DDR Controller PHY clock] gates */
+> > >>>        GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
+> > >>> @@ -837,6 +837,7 @@ static const char *const rk3288_critical_clocks[] __initconst = {
+> > >>>        "pclk_alive_niu",
+> > >>>        "pclk_pd_pmu",
+> > >>>        "pclk_pmu_niu",
+> > >>> +     "pclk_rkpwm",
+> > >> pwm have device node, can enable and disable it in the pwm drivers.
+> > >>
+> > >> pwm regulator use pwm node as:
+> > >>
+> > >> pwms = <&pwm2 0 25000 1>
+> > >>
+> > >> when set Logic voltage:
+> > >>
+> > >> pwm_regulator_set_voltage()
+> > >>
+> > >>       --> pwm_apply_state()
+> > >>
+> > >>           -->clk_enable()
+> > >>
+> > >>           -->pwm_enable()
+> > >>
+> > >>           -->pwm_config()
+> > >>
+> > >>           -->pinctrl_select()
+> > >>
+> > >>           --....
+> > >>
+> > >> For mark pclk_rkpwm as critical,do you have any questions, or provides
+> > >> some log or more information.
+> > > Right, if we actually specify the PWM used for the PWM regulator in
+> > > the device tree then there is no need to mark it as a critical clock.
+> > > In fact rk3288-veyron devices boot absolutely fine without marking
+> > > this clock as critical.  Actually, it seems like the way the PWM
+> > > framework works (IIRC it was designed this way specifically to support
+> > > PWM regulators) is that even just specifying that pwm1 is "okay" is
+> > > enough to keep the clock on even if the PWM regulator isn't specified.
+> > >
+> > > ...however...
+> > >
+> > > Take a look at, for instance, the rk3288-evb device tree file.
+> > > Nowhere in there does it specify that the PWM used for the PWM
+> > > regulator should be on.  Presumably that means that if we don't mark
+> > > the clock as critical then rk3288-evb will fail to boot.  That's easy
+> > > for me to fix since I have the rk3288-evb schematics, but what about
+> > > other rk3288 boards?  We could make educated guesses about each of
+> > > them and/or fix things are we hear about breakages.
+> > >
+> > > ...but...
+> > >
+> > > All the above would only be worth doing if we thought someone would
+> > > get some benefit out of it.  I'd bet that pretty much all rk3288-based
+> > > boards use a PWM regulator.  Thus, in reality, everyone will want the
+> > > rkpwm clock on all the time anyway.  In that case going through all
+> > > that extra work / potentially breaking other boards doesn't seem worth
+> > > it.  Just mark the clock as critical.
+> >
+> > I have no problem with changing it like this, but I think it is better
+> > to modify dts:
+> >
+> > vdd_log: vdd-log {
+> >          compatible = "pwm-regulator";
+> >          rockchip,pwm_id = <2>; //for rk uboot
+> >          rockchip,pwm_voltage = <900000>; // for rk uboot
+> >          pwms = <&pwm2 0 25000 1>;
+> >          regulator-name = "vdd_log";
+> >          regulator-min-microvolt = <800000>;//hw logic min voltage
+> >          regulator-max-microvolt = <1400000>;//hw logic max voltage
+> >          regulator-always-on;
+> >          regulator-boot-on;
+> >      };
+> >
+> > Maybe we did not push the modification of this part in rk3288-evb, I
+> > will push to deal with this.(rk3229-evb.dts and rk3399 has been already
+> > pushed)
+> 
+> Heiko: do you have advice for how you'd like this to proceed?  We
+> could certainly land patch #3 in this series without patch #2 and then
+> pick up the pieces as we find boards that no longer boot.  As I've
+> argued I'm not sure that's worth the effort, but I'll leave it up to
+> you.
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index eafaaefab4a6..f608417ae967 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1611,11 +1611,67 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	int ret;
-+
-+	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-+		ret = cqhci_suspend(host->mmc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = sdhci_suspend_host(host);
-+	if (ret) {
-+		cqhci_resume(host->mmc);
-+		return ret;
-+	}
-+
-+	clk_disable_unprepare(pltfm_host->clk);
-+	return 0;
-+}
-+
-+static int __maybe_unused sdhci_tegra_resume(struct device *dev)
-+{
-+	struct sdhci_host *host = dev_get_drvdata(dev);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	int ret;
-+
-+	ret = clk_prepare_enable(pltfm_host->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = sdhci_resume_host(host);
-+	if (ret)
-+		goto disable_clk;
-+
-+	if (host->mmc->caps2 & MMC_CAP2_CQE) {
-+		ret = cqhci_resume(host->mmc);
-+		if (ret)
-+			goto suspend_host;
-+	}
-+
-+	return 0;
-+
-+suspend_host:
-+	sdhci_suspend_host(host);
-+disable_clk:
-+	clk_disable_unprepare(pltfm_host->clk);
-+	return ret;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
-+			 sdhci_tegra_resume);
-+
- static struct platform_driver sdhci_tegra_driver = {
- 	.driver		= {
- 		.name	= "sdhci-tegra",
- 		.of_match_table = sdhci_tegra_dt_match,
--		.pm	= &sdhci_pltfm_pmops,
-+		.pm	= &sdhci_tegra_dev_pm_ops,
- 	},
- 	.probe		= sdhci_tegra_probe,
- 	.remove		= sdhci_tegra_remove,
--- 
-2.7.4
+So I've skimmed through a number of rk3288 device-schematics and
+at least there pwm-based logic-regulator is only part of some of the
+rk808-based designs. All the act8846-based boards use one of its
+regulator-outputs for the logic supply. So this matters for at least the
+veyron-boards and the rk3288-evb ... but not the phycore.
+
+But it also is part of a vital system for veyron and they won't really like
+if somewhere during probe the pwm-clock gets turned off ;-) .
+
+So I tend to agree with Doug and will just apply the make-critical patch.
+If Stephen's "handoff" clock-type [critical until a driver claims it]
+materializes some-time, we can switch to that.
+
+
+Heiko
+
 
