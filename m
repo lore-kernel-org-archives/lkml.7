@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5781C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6308C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0260217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86401217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIN27jXp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tELmZcya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfDKPef (ORCPT
+        id S1726936AbfDKPem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:34:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34447 "EHLO
+        Thu, 11 Apr 2019 11:34:42 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52414 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfDKPe1 (ORCPT
+        with ESMTP id S1726646AbfDKPeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:34:27 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r186so2227467wmf.1;
-        Thu, 11 Apr 2019 08:34:26 -0700 (PDT)
+        Thu, 11 Apr 2019 11:34:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a184so7285366wma.2;
+        Thu, 11 Apr 2019 08:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r9wE08WFWjh0xFwSx2AERYeUXb2IDNuVR3sIckyG8ws=;
-        b=eIN27jXpw+XRgfDAFyLMlvsSe3oU+9B4e0qJy69pPF/npzb20zfqz9XB9nZY2RH6bL
-         5R5xRZAyLgawFzsvgny+ODIdjTvTWSPmOCxLg8RdylblsMOP8z05jKT9O450sBBJiTjb
-         Jx8en6T/1lX6d0Bn3GkYzfW2Mn1nuOdteWX5H0vga6gm+QH+h0+F+LTnuR5LYhr1lcKr
-         /3+oLEfix1GjGF8ZbiXHHwCmgK3uAr43fmvG0pv/VLOUMtsgBn+Tmm52FSH2j0JIIQUs
-         1ag0NsXCDo2LkkVIuVrvWUqBeC9jdqCvsqndPuW2DwGc3YdrkqRW2Ah5kKx1U/k9T+/v
-         KhRQ==
+        bh=sOdMFyKk56d0w/J3QLL7NnLqGzBT/BCupV2Zgzm7Gwk=;
+        b=tELmZcyaPQzofEmpxbiQDhIybi2i/HblazXBf079I0m2PqR/XL7o4I0UdLwfjvlORK
+         CjH8IxsbX8KXOp1EYE5RaI6VzkDXV3ziVudIFMFJ8lUNA+pf8VWPx2TjAqlU4iZPSgHy
+         eouPPTmtS84GnDDlS7nYUfVu0gEUfqAQ6zSfcxKsUxR7BrkwU7TAfNWwi9DsSLCmVA/j
+         zf0Ze1kdn6yEDCV9r1prdNagobudg7Jt2xuwgWr9D3BBEzO0f7G/yRJ1mu62VhIp5cHc
+         yhHqSupfEVn0OdY9WIZHVAztZbk5J0VtSVa+gJ4tkvO0/hyw0KrzVScIQFeSAtUamb2m
+         9fUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r9wE08WFWjh0xFwSx2AERYeUXb2IDNuVR3sIckyG8ws=;
-        b=E9tD4N5dXB3VkM5RaQuwUTpXZiAczUM5vG3Xkoz5rM5vPDcHT8DTAnevNYTqb1SEBm
-         sc6jmpbPgri+BB2dMQka3D4PaB4EBCpB/GfeUz5zacyNyt/Z8UkEdI5uDNrTm7wz2xZx
-         4hwQvCohm486+cE9kH7QLYjuHCU7zeY8DomQDmZ/8tDJZd4XJBuqd7rzLPT9zQYza5oO
-         ooaiEbpssi7mFrucj0Y5gi863Z5THcqYsjsAGJcK0e6Ff0R3XbDP9nPXhnizCEtBf6VV
-         zwkv1yV6sfrmxr9S8x6iU7UkReR3xsDjSBaR8TXW5qi09QiY5IK1WZyYyQwyKfOzvZBj
-         oDFw==
-X-Gm-Message-State: APjAAAVDjOKs8TojGQ9ACegHWeq0Fs0KkgUxKjenHyi2vWlI+a24u5QE
-        83yx/ZPOay7QTSDKEvQxkIg=
-X-Google-Smtp-Source: APXvYqwXNsVvKYOVESNy97iJrAdFkYCGIXe2DT53s1nwBao8iv383NGWsBSdo5HS7t5NFhzH/sX98Q==
-X-Received: by 2002:a7b:c309:: with SMTP id k9mr7119885wmj.45.1554996865923;
-        Thu, 11 Apr 2019 08:34:25 -0700 (PDT)
+        bh=sOdMFyKk56d0w/J3QLL7NnLqGzBT/BCupV2Zgzm7Gwk=;
+        b=oSkw43GPzjMiHalEv+iTwajPpS34sQN1rN3HTYtyPYZR+dXXyWchv6LWAZKVPz8HRz
+         aVHDpf4TWuW53C9G6WsXD37ofN7+AInxtvWcyI3AS6o7Sfw6W75tkncJmqk4mAhMXgYL
+         XyhI0d+6PVJQHvTxpxUUUJJ5qd6n8HNO7ElBCMnyaHfcVAMvGsmcnbWseOru0nt8zTvD
+         pQYFuN/C1eCLQz8ZyzPW3D7wBdJJNY6RTLjcZUaa+bLMY/WdeSmYAJtG/Wjf5pAbWuik
+         kVz/fJ9x5DPIntdKYGB/UTN8dtaeivZ3/U3x7k5QM5z7/hQ2c5SMNTLptz5i/zwZgOnW
+         2j5g==
+X-Gm-Message-State: APjAAAVmo04vA1x9sSgqKqlUlHgL2qbtMHaQtJApuvE2ZWga2gMFSvRd
+        XaJL8lEAKaz9Y21B2a4w67M=
+X-Google-Smtp-Source: APXvYqxB5zsZhTq5iN8RGvrjpyV2z5T6MlX9Z8fYy30Oe/1dROj4JgP5us/PNYPPYwDN3vj7QLXhHA==
+X-Received: by 2002:a7b:c111:: with SMTP id w17mr7161627wmi.6.1554996863911;
+        Thu, 11 Apr 2019 08:34:23 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id e12sm38327342wrt.94.2019.04.11.08.34.25
+        by smtp.gmail.com with ESMTPSA id e12sm38327342wrt.94.2019.04.11.08.34.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 08:34:25 -0700 (PDT)
+        Thu, 11 Apr 2019 08:34:23 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 3/3] arm64: defconfig: Enable Sunxi watchdog
-Date:   Thu, 11 Apr 2019 17:45:34 +0200
-Message-Id: <20190411154534.25563-4-peron.clem@gmail.com>
+Subject: [PATCH v2 1/3] arm64: dts: allwinner: h6: add watchdog node
+Date:   Thu, 11 Apr 2019 17:45:32 +0200
+Message-Id: <20190411154534.25563-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190411154534.25563-1-peron.clem@gmail.com>
 References: <20190411154534.25563-1-peron.clem@gmail.com>
@@ -77,28 +77,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SUNXI_WATCHDOG option is required to make the
-watchdog available on Allwinner H6.
+Allwinner H6 has a watchog identical to A64 one.
 
-Enable this option as a module.
+Declare it in the device tree but leave it disable
+with a comment as it is broken on some H6 revisions.
+
+Test has been performs on 3 boards.
+
+Chen-Yu Tsai boards:
+Pine H64 - H6 V200-AWIN H6448BA 7782 => OK
+OrangePi Lite 2 - H6 V200-AWIN H8068BA 61C2 => KO
+
+Clément Péron board:
+Beelink GS1 - H6 V200-AWIN H7309BA 6842 => KO
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c39033c1a..c266d6babbcc 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -426,6 +426,7 @@ CONFIG_UNIPHIER_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_ARM_SP805_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
-+CONFIG_SUNXI_WATCHDOG=m
- CONFIG_IMX2_WDT=y
- CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index e0dc4a05c1ba..5c2f5451227b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -208,6 +208,15 @@
+ 			reg = <0x03006000 0x400>;
+ 		};
+ 
++		watchdog: watchdog@30090a0 {
++			compatible = "allwinner,sun50i-a64-wdt",
++				     "allwinner,sun6i-a31-wdt";
++			reg = <0x030090a0 0x20>;
++			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++			/* Broken on some H6 rev */
++			status = "disabled";
++		};
++
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
 -- 
 2.17.1
 
