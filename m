@@ -2,134 +2,91 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAF0C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14122C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AD92077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFDD2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Q3uBcTGn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fmbZedcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfDKO4s (ORCPT
+        id S1726685AbfDKO6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:56:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36091 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfDKO4r (ORCPT
+        Thu, 11 Apr 2019 10:58:12 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36510 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfDKO6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:56:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o74so5489372ota.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 07:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q39WY1QwbNiopzjiE9clWXmypKuvpRyCVeYXAVT0ZNM=;
-        b=Q3uBcTGnIjZa7/KTp2qiPOTYOZa2YOHA6wen6rcf4+KfoSQ0dYkzRF2BB3Hh9J2hV5
-         1WBEO7/TSq9DfFY0FU6SEBYDgiByc7D+9QK6Os47nmX4kd7vSs5p0pZVuhMDKFPnhkVp
-         oD4wLyF6G1hd93q1lXUNEZYVQVdvlRk1We0zXgcvjD2Ot+YWI9AjPTndAx7YBokeV1fZ
-         ctpp4sE7+T/qGAEjWerHgwvW+3YBraMDq/4HNGPh7AtRvvMtqu1zk5yP07hribDH8Jb+
-         nyZtJUGLAAxZcI9GzgiobzP4HXPPNL+stbL0F3dlu1oxNrRIZqBzxUp5n1X0A+I5ZFl8
-         B6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q39WY1QwbNiopzjiE9clWXmypKuvpRyCVeYXAVT0ZNM=;
-        b=PWBM2x9Zj6col8DPXI1cRAYBnffCrKS81Eg2b0ui7r45cgBJLcOzeSJ7dBKxA17dtH
-         OpGp13ki86Lk4cgT8/MTT3SrS5VmwcDgGE6L+A4g+BopmT9WnYZESyTY97kKjnXHYCm/
-         SPtuL6ARX5eDkBTqJ7BfOMwEkavLADdirq+Emzg95ZxggAhajTQ3nIwKDH87r2X8hkdf
-         UqUSLhVbTCQI2f6lZ6CWs4jvqIlmShQJ0nBlW+c+w5SWyH49pZ/Ez8u4x0DbitT0eieY
-         nyEod8BuU1HQ6hxFCjZy5t9Kw0PDyS5rlBbCH3m0eCwVG3Z6D8n8vviMQLr9Pw0Rc+NT
-         IGBw==
-X-Gm-Message-State: APjAAAVRni8pFB6+KfMAobVS/X2GY4q4Foj7FoVnrP5xeu2oDsStTItv
-        ycXMbyPSWYIr+tVeaFkLdsEYCUBbi4qoQDWkwy6Rlw==
-X-Google-Smtp-Source: APXvYqzvG/DsITk24XWD/XR4qg9tvxLhxXa18JIum6UEPT4QFmqdzUuqxzJ5VPbogGv+LebEcpWY095S2YoG/n/LrP8=
-X-Received: by 2002:a9d:6a88:: with SMTP id l8mr32863157otq.260.1554994607197;
- Thu, 11 Apr 2019 07:56:47 -0700 (PDT)
+        Thu, 11 Apr 2019 10:58:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ShZSBivlfqPAGQJ7/AM1/Rc6/8iy5yc9fdVIkozN0Do=; b=fmbZedcvFP9t/lDrVvmPt5v4Wg
+        tIzRLn6zE+jvaSvmi4dY7GAJXmYLaAJ/UMc3b9uyisjbhzRay/uSoDx7ghTPQuYrwbHQ+G3iwlAWf
+        PtMrqEAAdiEXOBV2nTskIHest87JuNhLoA/LpFApRp3f7tCR56KMn++Lr9ZNt97iDzVq49rYhrk++
+        B41vBOkAlV2/qPXLGaid+/RyGqwht2/2pQGLnvzaxO0IjhbfcmSPzqTH9QTiixt7H5Gk69K8AfLsF
+        KVT6qA6jLo1751OZB4jtG/SA2fxRYCx/PWSdTCoSCtVITIrCXJ+WGhtLs9SY2nAku1TWg0tFlirt6
+        bCok1hCw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEb9U-0002eU-33; Thu, 11 Apr 2019 14:58:08 +0000
+Subject: Re: [GIT PULL] <global> global spelling corrections for v5.1.0-rc5
+To:     Kenny Van de Maele <kenny.vandemaele@inuits.eu>,
+        torvalds@linux-foundation.org
+Cc:     torvalds@osdl.org, linux-kernel@vger.kernel.org
+References: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0885bbf9-ccb1-280e-dde1-ffa40282df09@infradead.org>
+Date:   Thu, 11 Apr 2019 07:58:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-4-pagupta@redhat.com>
-In-Reply-To: <20190410040826.24371-4-pagupta@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 11 Apr 2019 07:56:36 -0700
-Message-ID: <CAPcyv4gXwE2k3JU94GPav0xn2LEgR6-7ZEVYyTHFRjCfTYjerw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] libnvdimm: add dax_dev sync flag
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval.shaia@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 9, 2019 at 9:10 PM Pankaj Gupta <pagupta@redhat.com> wrote:
->
-> This patch adds 'DAXDEV_SYNC' flag which is set
-> for nd_region doing synchronous flush. This later
-> is used to disable MAP_SYNC functionality for
-> ext4 & xfs filesystem for devices don't support
-> synchronous flush.
->
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  drivers/dax/bus.c            |  2 +-
->  drivers/dax/super.c          | 13 ++++++++++++-
->  drivers/md/dm.c              |  2 +-
->  drivers/nvdimm/pmem.c        |  3 ++-
->  drivers/nvdimm/region_devs.c |  7 +++++++
->  include/linux/dax.h          |  9 +++++++--
->  include/linux/libnvdimm.h    |  1 +
->  7 files changed, 31 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 2109cfe80219..431bf7d2a7f9 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -388,7 +388,7 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
->          * No 'host' or dax_operations since there is no access to this
->          * device outside of mmap of the resulting character device.
->          */
-> -       dax_dev = alloc_dax(dev_dax, NULL, NULL);
-> +       dax_dev = alloc_dax(dev_dax, NULL, NULL, true);
+On 4/11/19 2:12 AM, Kenny Van de Maele wrote:
+> are available in the Git repository at:
+> 
+>   git://github.com/vdmkenny/linux-spelling-fix.git tags/common-
+> spelling-fixes-5.1.0-rc5
+> 
+> for you to fetch changes up to
+> 6ee0055f3414a64133228e82004ea60d0e659d6d:
+> 
+>   fix common spelling mistakes (2019-04-11 10:22:24 +0200)
+> 
+> ----------------------------------------------------------------
+> This PR contains a set of global spelling fixes of commonly miss-
+> spelled
 
-I find apis that take a boolean as unreadable. What does 'true' mean?
-It wastes time to go look at the function definition vs something
-like:
+misspelled
 
-    alloc_dax(dev_dax, NULL, NULL, DAXDEV_F_SYNC);
+
+Is there a way for me to review the diff on github?
+
+thanks.
+
+
+> words. Mostly documentation and comments were impacted, but a few lines
+> of code were affected as well.
+> 
+> ----------------------------------------------------------------
+> Kenny Van de Maele (1):
+>       fix common spelling mistakes
+
+
+-- 
+~Randy
