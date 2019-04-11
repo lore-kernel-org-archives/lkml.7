@@ -2,152 +2,153 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B401C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C91AC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2FC20869
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555026875;
-	bh=iDk7VPNMjyytc6vtXDUph5TANBR9kngZfJ1wQSMo1RE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DOliM6CUYSqu/E+u1tR1YPQU+F/Toj23QOC/nDbcySw1bl+hnfSh7X+dn2YSB9a8C
-	 5aJaV14XnLnFf6VHs48OhlC88kE+htusKwBTIG2Gr/pdO7KeL4mHsWUAsELBIdUWFx
-	 R/cVh6yb2rLLXr4b7RVw/gfa+mIqDIGui1p4KGfA=
+	by mail.kernel.org (Postfix) with ESMTP id 1CE0020869
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:56:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AR/I+Mdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfDKXye (ORCPT
+        id S1727191AbfDKX4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:54:34 -0400
-Received: from casper.infradead.org ([85.118.1.10]:47202 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfDKXyd (ORCPT
+        Thu, 11 Apr 2019 19:56:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33604 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfDKX4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:54:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5+tH/MOpUFSidIY9WhSFyEPUDHOXXaJKp7Fz0cd8hdM=; b=ePP6Db/DLudz1vlMEo/ff/KUH5
-        OqIIhxDmQ5npakBG0WwaLJRr/hxePnhmsXGFwPXcxVRFB2xCAa1wjqQFPEgJ8E4iFw+Z3OmsG3tVQ
-        FRti79d0KGc3O0/B1/F1j3HZk8C/gWPCHLOlyVvkbEJ3Wel9ntoME3ghT9JVauUcmnTu7Bo1SlJPP
-        8KF0sbpgUTXpRCaDIUl9dfzF1WMVTubdsMz0W9ACuGbff+7jKZ2hQHvRheIRgivLzVJtqUHfgghuD
-        K9eFeM+TdFLYi9bZ1i2IOC559xIxUykO5u/frgkzO6gFr0YH3TeZ7iQynn2f2tU5Rs3d7wyZlDJqO
-        82tOS35Q==;
-Received: from 201.86.162.146.dynamic.adsl.gvt.net.br ([201.86.162.146] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEjWT-0006at-9F; Thu, 11 Apr 2019 23:54:25 +0000
-Date:   Thu, 11 Apr 2019 20:54:17 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
-Message-ID: <20190411205417.187f9565@coco.lan>
-In-Reply-To: <20190411210731.GA29378@roeck-us.net>
-References: <cover.1554923967.git.mchehab+samsung@kernel.org>
-        <20190411124324.3ed62fad@lwn.net>
-        <20190411174357.251904f5@coco.lan>
-        <20190411210731.GA29378@roeck-us.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 11 Apr 2019 19:56:24 -0400
+Received: by mail-io1-f66.google.com with SMTP id b6so6988716iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 16:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hldxkxWM3hSqdi6yUY+bXZzasV3q/AnL0PcDXeuAe2Y=;
+        b=AR/I+MdprCMMsP0tjcaBky1V5iO/iuzLCoAfpprEdYZYH1IJIfgkC0Bkhipb87XjfN
+         wPxmgHLCQsNedKKEQ278nIK0bEZvMo+ytjWwvHrptdevh3Bp+C9wTMHQRAtjM+fqXbhD
+         iea/DIC2GAf1Bs+3fNNv9UTlWNzCxdcr9Wt6I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hldxkxWM3hSqdi6yUY+bXZzasV3q/AnL0PcDXeuAe2Y=;
+        b=I76OwQ4RKGA804/uO5F5+AW5Su8o50C9O0hgrMmEk7jHpNDZRhgvo+QpCEYfDHfGpa
+         8qe/0E4szATEHDhN0coeWl0ZWrqqmsalBm0SWvkZ8Z6L5ma2v+Ac2EJlYthvIvjvSPMb
+         vS4ry3Gpeu0WzbljLqHyNtRez8gtyHk/XFlnHmEHte3qN8B37tKKZK2zm0FRczubL189
+         s/5UP+LKb2uxS489dGQDvQam8fKgAMLCspyVBwNdY0EKQVF+IoC/E9KrXfHA7WAfu2jE
+         D3VE6kunkd4+5Gn21xLhiVfAkQD+sfbsHpu3F4sUwEQnC9mOX8gsFR2rnWLOz09S/Msu
+         ypVQ==
+X-Gm-Message-State: APjAAAVvsgkk8z82aJDfLlnx42AD84kpziUsVFuIT97mcUsIYuwyiwpB
+        aozT8Uat6mIx0QMPVQ+gJpoxYg==
+X-Google-Smtp-Source: APXvYqzwkL0Nr7zSHCnp3E5tsxjcdKOXF317UTTYtN+glCFLanz52R1s1EXg6p6rBuY4PKYLfqo83Q==
+X-Received: by 2002:a5e:cb01:: with SMTP id p1mr37832216iom.100.1555026983663;
+        Thu, 11 Apr 2019 16:56:23 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id e81sm3493392itc.3.2019.04.11.16.56.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 11 Apr 2019 16:56:22 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org, sre@kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        lamzin@google.com, bartfab@google.com, derat@google.com,
+        groeck@google.com, dtor@google.com, sjg@chromium.org,
+        jchwong@chromium.org, Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v2 1/2] power_supply: Add more charge types and CHARGE_CONTROL_* properties
+Date:   Thu, 11 Apr 2019 17:56:17 -0600
+Message-Id: <20190411235618.84750-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 11 Apr 2019 14:07:31 -0700
-Guenter Roeck <linux@roeck-us.net> escreveu:
+Add "Standard", "Adaptive", and "Custom" modes to the charge_type
+property, to expand the existing "Trickle" and "Fast" modes.
+In addition, add POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD
+and POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD properties, to expand
+the existing CHARGE_CONTROL_* properties. I am adding them in order
+to support a new Chrome OS device, but these properties should be
+general enough that they can be used on other devices.
 
-> On Thu, Apr 11, 2019 at 05:43:57PM -0300, Mauro Carvalho Chehab wrote:
-> > Em Thu, 11 Apr 2019 12:43:24 -0600
-> > Jonathan Corbet <corbet@lwn.net> escreveu:
-> >   
-> > > On Wed, 10 Apr 2019 16:22:37 -0300
-> > > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> > >   
-> > > > This series converts the contents of Documentation/hwmon to ReST
-> > > > format.
-> > > > 
-> > > > PS.: I opted to group the conversion files per groups of maintainer
-> > > > set, as, if I were to generate one patch per file, it would give around
-> > > > 160 patches.
-> > > > 
-> > > > I also added those patches to my development tree at:
-> > > > 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=hwmon
-> > > > 
-> > > > If you want to see the results, they're at:
-> > > > 	https://www.infradead.org/~mchehab/hwmon/    
-> > > 
-> > > This set seems generally good and could probably be applied as-is.  But I
-> > > have to ask...is there a reason to not take the last step and actually
-> > > bring this stuff into the Sphinx doc tree?
-> > > 
-> > > We seem to be mostly documenting sysfs files and such.  I am *guessing*
-> > > that perhaps the set should move to Documentation/admin-guide/hwmon?  Or
-> > > have I misunderstood the intended audience here?  
-> > 
-> > :-)
-> > 
-> > Yeah, I'd say that 80% of the contents there are user-faced.
-> > 
-> > Yet, the main issue with this (and other driver subsystems) is that there's
-> > a mix of userspace and Kernelspace stuff. One somewhat simple case is
-> > the abituguru: it has a "datasheet" file:
-> > 
-> > 	abituguru-datasheet
-> > 
-> > This contains programming information for the corresponding drivers,
-> > while abituguru and abituguru3 contains mostly userspace
-> > stuff (still, it also contains the I2C address, with shouldn't mean
-> > anything for the user).
-> > 
-> > However, if you take a look at w83781d, you'll see a mix of both
-> > userspace and driver developer info there... it has a chapter called
-> > "Data sheet updates", for example, with is probably meaningless for
-> > anyone but the hwmon driver developers.
-> > 
-> > That's, btw, a pattern that happens a lot inside device driver
-> > documents on almost all subsystems I checked: driver-specific
-> > documentation is usually not split into user-facing/kernel-facing.
-> > 
-> > While nobody does such split, IMHO, the best would be to keep the
-> > information outside Documentation/admin-guide. But hey! You're
-> > the Doc maintainer. If you prefer to move, I'm perfectly fine
-> > with that.
-> >   
-> 
-> Same here, but please don't move the files which are kernel facing only.
-> 
-> How do you want to handle this series ? Do you expect it to be pushed
-> through hwmon, or through Documentation, or do you plan to push yourself ?
-> 
-> If the series isn't pushed through hwmon, we'll likely have a couple of
-> conflicts against hwmon-next.
+The meaning of "Standard" is obvious, but "Adaptive" and "Custom" are
+more tricky: "Adaptive" means that the charge controller uses some
+custom algorithm to change the charge type automatically, with no
+configuration needed. "Custom" means that the charge controller uses the
+POWER_SUPPLY_PROP_CHARGE_CONTROL_* properties as configuration for some
+other algorithm. For example, in the use case that I am supporting,
+this means the battery begins charging when the percentage
+level drops below POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD and
+charging ceases when the percentage level goes above
+POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD.
 
-Guenter,
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+---
+ drivers/power/supply/power_supply_sysfs.c |  4 +++-
+ include/linux/power_supply.h              | 10 ++++++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-I won't be pushing it myself. IMO, it makes more sense to apply it at
-hwmon-next, except if it would cause some conflicts against docs-next.
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index dce24f596160..6104a3f03d46 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -56,7 +56,7 @@ static const char * const power_supply_status_text[] = {
+ };
+ 
+ static const char * const power_supply_charge_type_text[] = {
+-	"Unknown", "N/A", "Trickle", "Fast"
++	"Unknown", "N/A", "Trickle", "Fast", "Standard", "Adaptive", "Custom"
+ };
+ 
+ static const char * const power_supply_health_text[] = {
+@@ -274,6 +274,8 @@ static struct device_attribute power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(constant_charge_voltage_max),
+ 	POWER_SUPPLY_ATTR(charge_control_limit),
+ 	POWER_SUPPLY_ATTR(charge_control_limit_max),
++	POWER_SUPPLY_ATTR(charge_control_start_threshold),
++	POWER_SUPPLY_ATTR(charge_control_end_threshold),
+ 	POWER_SUPPLY_ATTR(input_current_limit),
+ 	POWER_SUPPLY_ATTR(energy_full_design),
+ 	POWER_SUPPLY_ATTR(energy_empty_design),
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 2f9c201a54d1..d59205170232 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -40,11 +40,15 @@ enum {
+ 	POWER_SUPPLY_STATUS_FULL,
+ };
+ 
++/* What algorithm is the charger using? */
+ enum {
+ 	POWER_SUPPLY_CHARGE_TYPE_UNKNOWN = 0,
+ 	POWER_SUPPLY_CHARGE_TYPE_NONE,
+-	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,
+-	POWER_SUPPLY_CHARGE_TYPE_FAST,
++	POWER_SUPPLY_CHARGE_TYPE_TRICKLE,	/* slow speed */
++	POWER_SUPPLY_CHARGE_TYPE_FAST,		/* fast speed */
++	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
++	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
++	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
+ };
+ 
+ enum {
+@@ -121,6 +125,8 @@ enum power_supply_property {
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
+ 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
+ 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+ 	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
+-- 
+2.20.1
 
-Regards,
-Mauro
