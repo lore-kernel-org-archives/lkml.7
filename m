@@ -2,326 +2,182 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7192DC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C098BC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281D42133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9602A2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfDKMR7 (ORCPT
+        id S1726708AbfDKMWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:17:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57392 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbfDKMR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:17:59 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B924959CB1E64FCBE285;
-        Thu, 11 Apr 2019 20:17:56 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
- 20:17:46 +0800
-Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
- regions
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190409102819.121335-1-chenzhou10@huawei.com>
- <20190409102819.121335-4-chenzhou10@huawei.com>
- <20190410130917.GC17196@rapoport-lnx>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <ebiederm@xmission.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <akpm@linux-foundation.org>,
-        <ard.biesheuvel@linaro.org>, <horms@verge.net.au>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <137bef2e-8726-fd8f-1cb0-7592074f7870@huawei.com>
-Date:   Thu, 11 Apr 2019 20:17:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 11 Apr 2019 08:22:25 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40543 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDKMWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:22:25 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id EB7CA60005;
+        Thu, 11 Apr 2019 12:22:17 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 14:22:17 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 04/11] pinctrl: sunxi: Support I/O bias voltage
+ setting on H6
+Message-ID: <20190411122217.w2fdxymxehc2tm5c@flea>
+References: <20190411101951.30223-1-megous@megous.com>
+ <20190411101951.30223-5-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20190410130917.GC17196@rapoport-lnx>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mws5lc35x3cnuznz"
+Content-Disposition: inline
+In-Reply-To: <20190411101951.30223-5-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
 
-This overall looks well.
-Replacing memblock_cap_memory_range() with memblock_cap_memory_ranges() was what i wanted
-to do in v1, sorry for don't express that clearly.
+--mws5lc35x3cnuznz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But there are some issues as below. After fixing this, it can work correctly.
+Hi,
 
-On 2019/4/10 21:09, Mike Rapoport wrote:
-> Hi,
-> 
-> On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
->> After commit (arm64: kdump: support reserving crashkernel above 4G),
->> there may be two crash kernel regions, one is below 4G, the other is
->> above 4G.
->>
->> Crash dump kernel reads more than one crash kernel regions via a dtb
->> property under node /chosen,
->> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
->>  include/linux/memblock.h |  6 +++++
->>  mm/memblock.c            |  7 ++---
->>  3 files changed, 66 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 3bebddf..0f18665 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->>  
->> +/* at most two crash kernel regions, low_region and high_region */
->> +#define CRASH_MAX_USABLE_RANGES	2
->> +#define LOW_REGION_IDX			0
->> +#define HIGH_REGION_IDX			1
->> +
->>  /*
->>   * reserve_crashkernel() - reserves memory for crash kernel
->>   *
->> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  		const char *uname, int depth, void *data)
->>  {
->>  	struct memblock_region *usablemem = data;
->> -	const __be32 *reg;
->> -	int len;
->> +	const __be32 *reg, *endp;
->> +	int len, nr = 0;
->>  
->>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>  		return 0;
->> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>  		return 1;
->>  
->> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +	endp = reg + (len / sizeof(__be32));
->> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +
->> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->> +			break;
->> +	}
->>  
->>  	return 1;
->>  }
->>  
->>  static void __init fdt_enforce_memory_region(void)
->>  {
->> -	struct memblock_region reg = {
->> -		.size = 0,
->> -	};
->> +	int i, cnt = 0;
->> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
-> 
-> I only now noticed that fdt_enforce_memory_region() uses memblock_region to
-> pass the ranges around. If we'd switch to memblock_type instead, the
-> implementation of memblock_cap_memory_ranges() would be really
-> straightforward. Can you check if the below patch works for you? 
-> 
->>From e476d584098e31273af573e1a78e308880c5cf28 Mon Sep 17 00:00:00 2001
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> Date: Wed, 10 Apr 2019 16:02:32 +0300
-> Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
-> 
-> The memblock_cap_memory_range() removes all the memory except the range
-> passed to it. Extend this function to recieve memblock_type with the
-> regions that should be kept. This allows switching to simple iteration over
-> memblock arrays with 'for_each_mem_range' to remove the unneeded memory.
-> 
-> Enable use of this function in arm64 for reservation of multile regions for
-> the crash kernel.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On Thu, Apr 11, 2019 at 12:19:44PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> H6 SoC has a "pio group withstand voltage mode" register (datasheet
+> description), that needs to be used to select either 1.8V or 3.3V I/O mode,
+> based on what voltage is powering the respective pin banks and is thus used
+> for I/O signals.
+>
+> Add support for configuring this register according to the voltage of the
+> pin bank regulator (if enabled).
+>
+> This is similar to the support for I/O bias voltage setting patch for A80
+> and the same concerns apply. See:
+>
+>   commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 > ---
->  arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
->  include/linux/memblock.h |  2 +-
->  mm/memblock.c            | 45 ++++++++++++++++++++++-----------------------
->  3 files changed, 47 insertions(+), 34 deletions(-)
-> 
->  
-> -void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
-> +void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 11 +++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 +++++
+>  3 files changed, 17 insertions(+)
+>
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> index ef4268cc6227..3cc1121589c9 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+> @@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
+>  	.irq_banks = 4,
+>  	.irq_bank_map = h6_irq_bank_map,
+>  	.irq_read_needs_mux = true,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+>  };
+>
+>  static int h6_pinctrl_probe(struct platform_device *pdev)
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index 98c4de5f4019..0cbca30b75dc 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -614,6 +614,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  					 unsigned pin,
+>  					 struct regulator *supply)
 >  {
-> -	int start_rgn, end_rgn;
-> -	int i, ret;
-> -
-> -	if (!size)
-> -		return;
-> -
-> -	ret = memblock_isolate_range(&memblock.memory, base, size,
-> -						&start_rgn, &end_rgn);
-> -	if (ret)
-> -		return;
-> -
-> -	/* remove all the MAP regions */
-> -	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
-> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> -			memblock_remove_region(&memblock.memory, i);
-> +	phys_addr_t start, end;
-> +	u64 i;
->  
-> -	for (i = start_rgn - 1; i >= 0; i--)
-> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> -			memblock_remove_region(&memblock.memory, i);
-> +	/* truncate memory while skipping NOMAP regions */
-> +	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
-> +			   MEMBLOCK_NONE, &start, &end, NULL)
-> +		memblock_remove(start, end);
-
-1. use memblock_remove(start, size) instead of memblock_remove(start, end).
-
-2. There is a another hidden issue. We couldn't mix __next_mem_range()(called by for_each_mem_range) operation
-with remove operation because __next_mem_range() records the index of last time. If we do remove between
-__next_mem_range(), the index may be mess.
-
-Therefore, we could do remove operation after for_each_mem_range like this, solution A:
- void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
- {
--	phys_addr_t start, end;
--	u64 i;
-+	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-+	phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-+	u64 i, nr = 0;
-
- 	/* truncate memory while skipping NOMAP regions */
- 	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
--			   MEMBLOCK_NONE, &start, &end, NULL)
--		memblock_remove(start, end);
-+			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
-+		nr++;
-+	for (i = 0; i < nr; i++)
-+		memblock_remove(start[i], end[i] - start[i]);
-
- 	/* truncate the reserved regions */
-+	nr = 0;
- 	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
--			   MEMBLOCK_NONE, &start, &end, NULL)
--		memblock_remove_range(&memblock.reserved, start, end);
-+			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
-+		nr++;
-+	for (i = 0; i < nr; i++)
-+		memblock_remove_range(&memblock.reserved, start[i],
-+				end[i] - start[i]);
- }
-
-But a warning occurs when compiling:
-  CALL    scripts/atomic/check-atomics.sh
-  CALL    scripts/checksyscalls.sh
-  CHK     include/generated/compile.h
-  CC      mm/memblock.o
-mm/memblock.c: In function ‘memblock_cap_memory_ranges’:
-mm/memblock.c:1635:1: warning: the frame size of 36912 bytes is larger than 2048 bytes [-Wframe-larger-than=]
- }
-
-another solution is my implementation in v1, solution B:
-+void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
-+{
-+   int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
-+   int i, j, ret, nr = 0;
-+   memblock_region *regs = regions_to_keep->regions;
-+
-+   nr = regions_to_keep -> cnt;
-+   if (!nr)
-+       return;
-+
-+   /* remove all the MAP regions */
-+   for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
-+       if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+           memblock_remove_region(&memblock.memory, i);
-+
-+   for (i = nr - 1; i > 0; i--)
-+       for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
-+           if (!memblock_is_nomap(&memblock.memory.regions[j]))
-+               memblock_remove_region(&memblock.memory, j);
-+
-+   for (i = start_rgn[0] - 1; i >= 0; i--)
-+       if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+           memblock_remove_region(&memblock.memory, i);
-+
-+   /* truncate the reserved regions */
-+   memblock_remove_range(&memblock.reserved, 0, regs[0].base);
-+
-+   for (i = nr - 1; i > 0; i--)
-+       memblock_remove_range(&memblock.reserved,
-+               regs[i - 1].base + regs[i - 1].size,
-+		regs[i].base - regs[i - 1].base - regs[i - 1].size);
-+
-+   memblock_remove_range(&memblock.reserved,
-+           regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
-+}
-
-solution A: 	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-		phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
-start, end is physical addr
-
-solution B: 	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
-start_rgn, end_rgn is rgn index		
-
-Solution B do less remove operations and with no warning comparing to solution A.
-I think solution B is better, could you give some suggestions?
-
->  
->  	/* truncate the reserved regions */
-> -	memblock_remove_range(&memblock.reserved, 0, base);
-> -	memblock_remove_range(&memblock.reserved,
-> -			base + size, PHYS_ADDR_MAX);
-> +	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
-> +			   MEMBLOCK_NONE, &start, &end, NULL)
-> +		memblock_remove_range(&memblock.reserved, start, end);
-
-There are the same issues as above.
-
->  }
->  
->  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->  {
-> +	struct memblock_region rgn = {
-> +		.base = 0,
-> +	};
+> +	unsigned short bank = pin / PINS_PER_BANK;
+> +	unsigned long flags;
+>  	u32 val, reg;
+>  	int uV;
+>
+> @@ -651,6 +653,15 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
+>  		reg &= ~IO_BIAS_MASK;
+>  		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
+>  		return 0;
+> +	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
+> +		val = uV <= 1800000 ? 1 : 0;
 > +
-> +	struct memblock_type region_to_keep = {
-> +		.cnt = 1,
-> +		.max = 1,
-> +		.regions = &rgn,
-> +	};
+> +		raw_spin_lock_irqsave(&pctl->lock, flags);
+> +		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		reg &= ~(1 << bank);
+> +		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
+> +		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> +		return 0;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> index 4bfc8a6d9dce..36186906f0a7 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> @@ -95,11 +95,16 @@
+>  #define PINCTRL_SUN7I_A20	BIT(7)
+>  #define PINCTRL_SUN8I_R40	BIT(8)
+>
+> +#define PIO_POW_MOD_SEL_REG	0x340
 > +
->  	phys_addr_t max_addr;
->  
->  	if (!limit)
-> @@ -1646,7 +1644,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->  	if (max_addr == PHYS_ADDR_MAX)
->  		return;
->  
-> -	memblock_cap_memory_range(0, max_addr);
-> +	region_to_keep.regions[0].size = max_addr;
-> +	memblock_cap_memory_ranges(&region_to_keep);
->  }
->  
->  static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
-> 
+>  enum sunxi_desc_bias_voltage {
+>  	BIAS_VOLTAGE_NONE,
+>  	/* Bias voltage configuration is done through
+>  	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
+>  	BIAS_VOLTAGE_GRP_CONFIG,
+> +	/* Bias voltage is set through PIO_POW_MOD_SEL_REG
+> +	 * register, as seen on H6 SoC, for example. */
 
-Thanks,
-Chen Zhou
+That's not the proper comment style.
 
+Once fixed, this patch and the previous is
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mws5lc35x3cnuznz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8xeQAKCRDj7w1vZxhR
+xWvjAP46hiOW43nCSwz10qU3oJnsRBgguyH8ik0BowV5fqwLLgD+KtM6Ut15FdNw
+frnSSwR9ga/LJaCzkpi1pe3nrV3rogI=
+=qMMs
+-----END PGP SIGNATURE-----
+
+--mws5lc35x3cnuznz--
