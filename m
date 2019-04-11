@@ -2,162 +2,108 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79585C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1E9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4762420818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE402082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oZ9wgp47"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RuVYDtl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfDKRGB (ORCPT
+        id S1726895AbfDKRJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:06:01 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:34419 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbfDKRGA (ORCPT
+        Thu, 11 Apr 2019 13:09:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36242 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfDKRJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:06:00 -0400
-Received: by mail-ua1-f65.google.com with SMTP id c6so2287369uan.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:05:59 -0700 (PDT)
+        Thu, 11 Apr 2019 13:09:20 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h18so7618957wml.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:09:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AbcJ3mmCOAVKf4I0SG7Bw7/SmKO1DKpNw86RlNMfNJg=;
-        b=oZ9wgp47WacWgWVPILd180QXmBlpI7VT2L9ZsJepWnhslekvHyUFmNBqvIw3Ji1idU
-         VRxCUXxa2Qj7pYMOHc6hi+hkbiJY0NtSfhiTCzlCkvj3RqgK9eVBa/WEPqRsDbhs5r2a
-         taivyVnQmAdHCPbqehX3usNhFGmP0CgqnAfng=
+        bh=8IUsO6EPkitkkKfslQlrk9jdhyI8ls4f5Jkizx1ufco=;
+        b=RuVYDtl/y7612dj4+IKeQW/slL0xo/AO6Znlwf7Hk3P2RrSWmjQpRS6ixXs2G8hWnM
+         5vNuGTVOdUPuWKgMoRIQuxNiBv180LSi9UhCLLCvBuYRUxBZU7hgts7AytfwciBQfvID
+         jNGtv1XyjoNg3XEeUO4Lm+sNUnngJXrgwttFghcHeGnyP7g3J54xsvTnfdAXR7TSq13V
+         /eHOw3id/WZuF8E0KF/QLG4QrEmm8VM0Pt/cWI3F5or+WfokXQI5ztNCx5QllAG4A8C1
+         /XUA0jFNJ7OFtjlKRcbiK+3MEx7G65bNVtOWntS+GPkswQlfwl03iFmFUz0AI42MD7NW
+         ErQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AbcJ3mmCOAVKf4I0SG7Bw7/SmKO1DKpNw86RlNMfNJg=;
-        b=OTk/RYI3ICEr0KiRf5DyJhhrUNa7O6O4EVAkfuNWC84aAEEna1gz+IH4QY2JfCz1uR
-         wj0ZYD/FLy8Ipy5/Gkam27hAImw/lvfqfzbcd6bS6b65UCYrwlzgLm0POnsXFc2RUeoq
-         Zo53yRLfH4VradcPtWijfvD7WgR3vNz6MT5SIap7tGDFSj798kqnSEE5qjaZnaqacQmT
-         Dpzs+wViRkVs07jKs9E1+hh7zNcy7Cz2650vSi6tbQ73B7ey4qTeSXY6z2lzU/4wzbKS
-         /WlrOKp/6t8DmfmI9FxsgHyxvNPuXqXPMF0XuWQLL3ItWOPb1PCcx43Qwvv277jzaG1Y
-         VSUQ==
-X-Gm-Message-State: APjAAAUonP1mi55Ev1LzB3BpdAzVV33kEnc6SeZ9pGFZYz9TfoHBzFNb
-        6iEh+GNDntvY07o5rv5Hra++jE1LOwk=
-X-Google-Smtp-Source: APXvYqz+d0nBmH5QRtRRizrTs3eEcl12rh5soasajnE90Wm1At8aNpR736x5tKHzS8/5V6wflXLFIA==
-X-Received: by 2002:ab0:7350:: with SMTP id k16mr25824031uap.44.1555002359152;
-        Thu, 11 Apr 2019 10:05:59 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id p135sm11097078vkd.8.2019.04.11.10.05.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 10:05:58 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id j184so3902013vsd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:05:58 -0700 (PDT)
-X-Received: by 2002:a67:7816:: with SMTP id t22mr27463532vsc.115.1555001955557;
- Thu, 11 Apr 2019 09:59:15 -0700 (PDT)
+        bh=8IUsO6EPkitkkKfslQlrk9jdhyI8ls4f5Jkizx1ufco=;
+        b=rYSJ5qt5i/oLQAN+vlroaZwHHQ7cgav8lJYDOLEhXShOk18kx7ImrThry1HhOhLRnp
+         /bYFFrXVOKPxS4ITNhF2q16sWT0mTaMOAwO1FA+qMv199m5Hbj1vbDmWVSMdwjkcGYC8
+         /EQkuaAg5XG/v58ZXcSS2DYj5cFsBbdEk6x0xOXHzizeR0u+Ts49uaz7fzaaMIa8pDjv
+         P2ByjpmnlPe0nSjuzOPqcIt7Ve9VHiP7/iP4IRWxYlCBR9M1wqNH3omIJdhue00qJKUT
+         tPtk/N3J2ZzMMMzvtDFDtAziFMbhx98iIULy2ik7QZEGJwqg1yQQvZ5yfStoxDkzBEum
+         XDow==
+X-Gm-Message-State: APjAAAUPcwocwPeu2c/bmegMCTxwyTPJdjCZ5ylTsP6ch5sSIHnuroOV
+        nMtTGpOnUbfzc7/uh1Cvj8Z5+oF4qteEluw7uQyw9Q==
+X-Google-Smtp-Source: APXvYqxCOHI/Gb4CSvdUX/vm83ezHcctTmbLcpiwE5HrPevLzsRkqOTIvPC7LtxSX6FYCDdaSzHtCjw1Y83jhMor1P0=
+X-Received: by 2002:a1c:c00b:: with SMTP id q11mr7791999wmf.38.1555002557981;
+ Thu, 11 Apr 2019 10:09:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190410161612.18545-1-keescook@chromium.org> <20190410161612.18545-2-keescook@chromium.org>
- <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
-In-Reply-To: <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 11 Apr 2019 09:59:04 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+S1He+2sR+cvjV=2xAcCHQoRv942+OAEDprMmB=TF4Bw@mail.gmail.com>
-Message-ID: <CAGXu5j+S1He+2sR+cvjV=2xAcCHQoRv942+OAEDprMmB=TF4Bw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] Kconfig: Create "kernel hardening" config area
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Alexander Popov <alpopov@ptsecurity.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
+ <20190411153313.GE22763@bombadil.infradead.org>
+In-Reply-To: <20190411153313.GE22763@bombadil.infradead.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 11 Apr 2019 10:09:06 -0700
+Message-ID: <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, mhocko@suse.com,
+        David Rientjes <rientjes@google.com>,
+        yuzhoujian@didichuxing.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        ebiederm@xmission.com, Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:51 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> On Thu, Apr 11, 2019 at 1:16 AM Kees Cook <keescook@chromium.org> wrote:
-> > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> > index 74271dba4f94..01874ef0f883 100644
-> > --- a/scripts/gcc-plugins/Kconfig
-> > +++ b/scripts/gcc-plugins/Kconfig
-> > @@ -13,10 +13,11 @@ config HAVE_GCC_PLUGINS
-> >           An arch should select this symbol if it supports building with
-> >           GCC plugins.
-> >
-> > -menuconfig GCC_PLUGINS
-> > -       bool "GCC plugins"
-> > +config GCC_PLUGINS
-> > +       bool
+> On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
+> > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
+> > pidfd_send_signal() syscall to allow expedited memory reclaim of the
+> > victim process. The usage of this flag is currently limited to SIGKILL
+> > signal and only to privileged users.
 >
->
-> This will flatten the plugin config options.
->
-> If you want to keep the current menu structure, you can do:
->
-> menu "GCC plugins"
-> ...
-> endmenu
+> What is the downside of doing expedited memory reclaim?  ie why not do it
+> every time a process is going to die?
 
-Ah, excellent point. I'll fix this.
-
-> Another side-effect is Kbuild will descend into scripts/gcc-plugins/
-> even when no plugin is selected.
-> It is not a big build speed regression, though.
-
-I suspect the plugins Kconfig may disppear eventually with the options
-spread around other Kconfigs (since now the plugin capability is known
-at config time).
-
-> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> > new file mode 100644
-> > index 000000000000..8223a8ab1a12
-> > --- /dev/null
-> > +++ b/security/Kconfig.hardening
-> > @@ -0,0 +1,94 @@
-> > +menu "Kernel hardening options"
-> > +
-> > +config GCC_PLUGIN_STRUCTLEAK
-> > +       bool
-> > +       depends on GCC_PLUGIN_STRUCTLEAK_USER || GCC_PLUGIN_STRUCTLEAK_BYREF || GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
->
->
-> I think this 'depends on' is unnecessary.
-
-Okay, I'll drop it.
-
->
->
-> > +menu "Memory initialization"
-> > +
-> > +choice
-> > +       prompt "Initialize kernel stack variables at function entry"
-> > +       depends on CC_HAS_AUTO_VAR_INIT || GCC_PLUGINS
->
-> Nit:
-> CC_HAS_AUTO_VAR_INIT does not exist at this point.
-> I will be added by 3/3.
-
-Oops, yes, I split this chunk in the wrong place. I will fix it.
-
-Thanks!
-
--- 
-Kees Cook
+I think with an implementation that does not use/abuse oom-reaper
+thread this could be done for any kill. As I mentioned oom-reaper is a
+limited resource which has access to memory reserves and should not be
+abused in the way I do in this reference implementation.
+While there might be downsides that I don't know of, I'm not sure it's
+required to hurry every kill's memory reclaim. I think there are cases
+when resource deallocation is critical, for example when we kill to
+relieve resource shortage and there are kills when reclaim speed is
+not essential. It would be great if we can identify urgent cases
+without userspace hints, so I'm open to suggestions that do not
+involve additional flags.
