@@ -2,181 +2,145 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B204C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDB2C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B222084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vv7ynCE2"
+	by mail.kernel.org (Postfix) with ESMTP id 579932084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfDKJHO (ORCPT
+        id S1726780AbfDKJJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:07:14 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:42222 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfDKJHF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:07:05 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x3B9705Y017234
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 18:07:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3B9705Y017234
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554973621;
-        bh=mYf69teb1w40PjpdABpc04QokK96/tr8qjs1lzvWhQ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vv7ynCE20ulJzkSpVTvK7VbIVwqFn3q5mvIRAB3XDfGLQcJzp+5qPXnoACIMSodMn
-         UtkqcuEReYV9eikX1jDNMOf0q26hHDclxFq0avJnAljhunQUEi3YFgID1jwMlW5UT2
-         4dBqZd6bZBJxvwVofr/Ic09qB93xWmR1Z8g+PiUV5+9+uFmaUpbS02kgUA39f3boXJ
-         XHJl8XSvuijoupgGTBjRbR1zVkQ9CTcYS/a9ONmdNDE0DfSPPEdxwk0iBlTddnzULs
-         bFnsfOzVEjJ+ndh1R9wYnI7425i6XRjd3wOTyxOJRIUT4h06RxIkKZrXmzWVTEQElK
-         rrzC+GGxJRxHA==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id n4so3056799vsm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:07:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAV90KlBBQh2Yg9Y1722rJioomnn/CV7pZvYw7B8B1XRIi/HpYeb
-        Y0Hlgzc2p1fPUwJcUC/8adx3KhcGTiZO2X7wcME=
-X-Google-Smtp-Source: APXvYqw8QU1IunP9m0CAvDkHqxqQRA/Qjb/nH35g0v378SoiwVbAww1OliBtAJ2is7fjp8lYbzJpRkqx0uGvQZtrJ54=
-X-Received: by 2002:a67:818e:: with SMTP id c136mr27077719vsd.65.1554973619704;
- Thu, 11 Apr 2019 02:06:59 -0700 (PDT)
+        Thu, 11 Apr 2019 05:09:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:38382 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfDKJJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 05:09:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AC5880D;
+        Thu, 11 Apr 2019 02:09:03 -0700 (PDT)
+Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE0CC3F718;
+        Thu, 11 Apr 2019 02:09:01 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 10:08:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Honghui Zhang <honghui.zhang@mediatek.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v3 PATCH] PCI: mediatek: get optional clock by
+ devm_clk_get_optional()
+Message-ID: <20190411090856.GA6227@red-moon>
+References: <c4579e5a72f169808a9ad4aefdd7bf7b75d10d61.1554879079.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-References: <20190323015227.245455-1-dianders@chromium.org>
-In-Reply-To: <20190323015227.245455-1-dianders@chromium.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 11 Apr 2019 18:06:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
-Message-ID: <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in kdb summary
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4579e5a72f169808a9ad4aefdd7bf7b75d10d61.1554879079.git.chunfeng.yun@mediatek.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
-
-
-On Sat, Mar 23, 2019 at 10:55 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> If you drop into kdb and type "summary", it prints out a line that
-> says this:
->
->   ccversion  CCVERSION
->
-> ...and I don't mean that it actually prints out the version of the C
-> compiler.  It literally prints out the string "CCVERSION".
->
-> The version of the C Compiler is already printed at boot up and it
-> doesn't seem useful to replicate this in kdb.  Let's just delete it.
-> We can also delete the bit of the Makefile that called the C compiler
-> in an attempt to pass this into kdb.  This will remove one extra call
-> to the C compiler at Makefile parse time and (very slightly) speed up
-> builds.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-
-I know you add lots of Cc: lines
-when you pick up patches, but I think
-your script can be improved.
-
-You added "Cc: Douglas Anderson <dianders@chromium.org>",
-but Douglas is the author.
-I think the author should be excluded from Cc.
-
-
-
-
-This commit looks as follows in linux-next:
-
-commit 685dc1264544c947d26963dcf1ac982d3408f444
-Author: Douglas Anderson <dianders@chromium.org>
-Date:   Wed Apr 10 11:02:35 2019 +1000
-
-    kdb: det rid of broken attempt to print CCVERSION in kdb summary
-
-    If you drop into kdb and type "summary", it prints out a line that says
-    this:
-
-      ccversion  CCVERSION
-
-    ...and I don't mean that it actually prints out the version of the C
-    compiler.  It literally prints out the string "CCVERSION".
-
-    The version of the C Compiler is already printed at boot up and it doesn't
-    seem useful to replicate this in kdb.  Let's just delete it.  We can also
-    delete the bit of the Makefile that called the C compiler in an attempt to
-    pass this into kdb.  This will remove one extra call to the C compiler at
-    Makefile parse time and (very slightly) speed up builds.
-
-    Link: http://lkml.kernel.org/r/20190323015227.245455-1-dianders@chromium.org
-    Signed-off-by: Douglas Anderson <dianders@chromium.org>
-    Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-    Cc: Douglas Anderson <dianders@chromium.org>
-    Cc: Jason Wessel <jason.wessel@windriver.com>
-    Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-    Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-    Cc: Kees Cook <keescook@chromium.org>
-    Cc: Johannes Weiner <hannes@cmpxchg.org>
-    Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-    Cc: Nicholas Mc Guire <hofrat@osadl.org>,
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-
-
-
+On Wed, Apr 10, 2019 at 02:54:16PM +0800, Chunfeng Yun wrote:
+> Use devm_clk_get_optional() to get optional clock
+> 
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Honghui Zhang <honghui.zhang@mediatek.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> Acked-by: Honghui Zhang <honghui.zhang@mediatek.com>
 > ---
->
->  kernel/debug/kdb/Makefile   | 1 -
->  kernel/debug/kdb/kdb_main.c | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/kernel/debug/kdb/Makefile b/kernel/debug/kdb/Makefile
-> index d4fc58f4b88d..efac857c5511 100644
-> --- a/kernel/debug/kdb/Makefile
-> +++ b/kernel/debug/kdb/Makefile
-> @@ -6,7 +6,6 @@
->  # Copyright (c) 2009 Wind River Systems, Inc. All Rights Reserved.
->  #
->
-> -CCVERSION      := $(shell $(CC) -v 2>&1 | sed -ne '$$p')
->  obj-y := kdb_io.o kdb_main.o kdb_support.o kdb_bt.o gen-kdb_cmds.o kdb_bp.o kdb_debugger.o
->  obj-$(CONFIG_KDB_KEYBOARD)    += kdb_keyboard.o
->
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 82a3b32a7cfc..fc96dbf8d9de 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -2522,7 +2522,6 @@ static int kdb_summary(int argc, const char **argv)
->         kdb_printf("machine    %s\n", init_uts_ns.name.machine);
->         kdb_printf("nodename   %s\n", init_uts_ns.name.nodename);
->         kdb_printf("domainname %s\n", init_uts_ns.name.domainname);
-> -       kdb_printf("ccversion  %s\n", __stringify(CCVERSION));
->
->         now = __ktime_get_real_seconds();
->         time64_to_tm(now, 0, &tm);
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+> v3: add Acked-by Ryder and Honghui
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 50 ++++++++------------------
+>  1 file changed, 15 insertions(+), 35 deletions(-)
 
+Applied to pci/mediatek for v5.2, thanks.
 
--- 
-Best Regards
-Masahiro Yamada
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 0b6c72804e03..adb6cb15daa2 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -915,49 +915,29 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  
+>  	/* sys_ck might be divided into the following parts in some chips */
+>  	snprintf(name, sizeof(name), "ahb_ck%d", slot);
+> -	port->ahb_ck = devm_clk_get(dev, name);
+> -	if (IS_ERR(port->ahb_ck)) {
+> -		if (PTR_ERR(port->ahb_ck) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		port->ahb_ck = NULL;
+> -	}
+> +	port->ahb_ck = devm_clk_get_optional(dev, name);
+> +	if (IS_ERR(port->ahb_ck))
+> +		return PTR_ERR(port->ahb_ck);
+>  
+>  	snprintf(name, sizeof(name), "axi_ck%d", slot);
+> -	port->axi_ck = devm_clk_get(dev, name);
+> -	if (IS_ERR(port->axi_ck)) {
+> -		if (PTR_ERR(port->axi_ck) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		port->axi_ck = NULL;
+> -	}
+> +	port->axi_ck = devm_clk_get_optional(dev, name);
+> +	if (IS_ERR(port->axi_ck))
+> +		return PTR_ERR(port->axi_ck);
+>  
+>  	snprintf(name, sizeof(name), "aux_ck%d", slot);
+> -	port->aux_ck = devm_clk_get(dev, name);
+> -	if (IS_ERR(port->aux_ck)) {
+> -		if (PTR_ERR(port->aux_ck) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		port->aux_ck = NULL;
+> -	}
+> +	port->aux_ck = devm_clk_get_optional(dev, name);
+> +	if (IS_ERR(port->aux_ck))
+> +		return PTR_ERR(port->aux_ck);
+>  
+>  	snprintf(name, sizeof(name), "obff_ck%d", slot);
+> -	port->obff_ck = devm_clk_get(dev, name);
+> -	if (IS_ERR(port->obff_ck)) {
+> -		if (PTR_ERR(port->obff_ck) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		port->obff_ck = NULL;
+> -	}
+> +	port->obff_ck = devm_clk_get_optional(dev, name);
+> +	if (IS_ERR(port->obff_ck))
+> +		return PTR_ERR(port->obff_ck);
+>  
+>  	snprintf(name, sizeof(name), "pipe_ck%d", slot);
+> -	port->pipe_ck = devm_clk_get(dev, name);
+> -	if (IS_ERR(port->pipe_ck)) {
+> -		if (PTR_ERR(port->pipe_ck) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		port->pipe_ck = NULL;
+> -	}
+> +	port->pipe_ck = devm_clk_get_optional(dev, name);
+> +	if (IS_ERR(port->pipe_ck))
+> +		return PTR_ERR(port->pipe_ck);
+>  
+>  	snprintf(name, sizeof(name), "pcie-rst%d", slot);
+>  	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
+> -- 
+> 2.21.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
