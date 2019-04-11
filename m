@@ -2,119 +2,78 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E197CC10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE52FC10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE25D2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 00:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554944206;
-	bh=io5NEAQfgAvMGRdPDhryXPbaw+3JlIwYudWgeTMhcp8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bR8LVFmv5CBDOvmRiKbXgIrTvEgcufhjW2nRPKhVyHqykK225DxSC03mKRmBIvtx3
-	 NPr+jQVIahuBR4MnR1bwtyz+63ulVhih52rWEMqklbhe6E/1K29OdUYFLD0Dr8BeRL
-	 hbhs6D8HiKT8d2KstpQaMJaoJWtIsPCzsswGIevA=
+	by mail.kernel.org (Postfix) with ESMTP id A33D0217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfDKA4n (ORCPT
+        id S1726812AbfDKBBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 20:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfDKA4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 20:56:43 -0400
-Received: from sinanubuntu1604.mkjiurmyylmellclgttazegk5f.bx.internal.cloudapp.net (unknown [23.96.42.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9FFF2133D;
-        Thu, 11 Apr 2019 00:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554944202;
-        bh=io5NEAQfgAvMGRdPDhryXPbaw+3JlIwYudWgeTMhcp8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LD4t0a48krGc3L2oc9vnK+7kJnQJdIQaKrEbsta/oH80dlZSQNOvQ0knWHwqIh3yJ
-         xhjlzL/N1225mHbL9LkRXyDwiYKg9qgl7EZPi0edaRzFJBMEK+obt85934ynFGPlR4
-         3FC/FfZxU+S9U3VMQTmL9v6PIoSHTWC3CExrhNv8=
-From:   Sinan Kaya <okaya@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     josh@joshtriplett.org, Sinan Kaya <okaya@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Changbin Du <changbin.du@intel.com>
-Subject: [PATCH v3] init: Do not select DEBUG_KERNEL by default
-Date:   Thu, 11 Apr 2019 00:56:31 +0000
-Message-Id: <20190411005634.8495-1-okaya@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 10 Apr 2019 21:01:01 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:58899 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDKBBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 10 Apr 2019 21:01:01 -0400
+Received: by mail-it1-f198.google.com with SMTP id j203so4189040itb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 18:01:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=tv6qffGYPBYILk02p1FMdoKuMlPTDm5i51uvShtRcdg=;
+        b=PYWCtFVwlzLch7pvvLvTAC5p2zXCw4xOPzKtiVAwXSaxZjmBQVBWz+fOL1kikuZIvM
+         5svHM55GBYjPj726J/TTwS7Ygc+WFwQXSMJVETVvVQU+lXmYJtD+ukgZeWswPSwmmBIb
+         BA2YIQ0QX+sFBO1Nga+J1VE6mujgo1kOBi1NJ9f66cK7+IQKKmAF5b8epFXHjm+Tu+yB
+         zGUhZm4+2jqgcAKLaRFbBz1xMJYhche6Jc+WfNQste8bOJ68ehdNMAAPqa2FVz9zkPSO
+         jAWc6oB5uw0+q77EzG7y/TckfmLrB2/ZyioJL4tP5Idy7KBiL65dqOPy90YaaI8luC33
+         PFZQ==
+X-Gm-Message-State: APjAAAVXwlZBwM1N3JXv49o7rv5/xU1K+eHYV3JgyKmDaDsu4oxKn0cY
+        2LPLQ1u6SduNuvKMnzptgmvCiiFMG1L1BxBsj90V+VYU9k6k
+X-Google-Smtp-Source: APXvYqxCZLGueWq5+oTUJrVwXdp0ypnCtB9uKcBjYF7CAUuJhz4sOdX1+9dO3GIL47zrKLAQa5u9dFaPzSh25WO+CAWv07XsXDdf
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a24:3d8e:: with SMTP id n136mr1715965itn.3.1554944460297;
+ Wed, 10 Apr 2019 18:01:00 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 18:01:00 -0700
+In-Reply-To: <00000000000065a79f057a095de8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033a06b058636b877@google.com>
+Subject: Re: WARNING in usb_submit_urb (4)
+From:   syzbot <syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com>
+To:     Thinh.Nguyen@synopsys.com, andreyknvl@google.com,
+        felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mmarek@suse.com, shuah@kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can't seem to have a kernel with CONFIG_EXPERT set but
-CONFIG_DEBUG_KERNEL unset these days.
+syzbot has bisected this bug to:
 
-While some of the features under the CONFIG_EXPERT require
-CONFIG_DEBUG_KERNEL, it doesn't apply for all features.
+commit c470abd4fde40ea6a0846a2beab642a578c0b8cd
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Feb 19 22:34:00 2017 +0000
 
-It looks like CONFIG_KALLSYMS_ALL is the only feature that
-requires CONFIG_DEBUG_KERNEL.
+     Linux 4.10
 
-Select CONFIG_EXPERT when CONFIG_DEBUG_KERNEL is chosen but
-you can still choose CONFIG_EXPERT without CONFIG_DEBUG_KERNEL.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b415ed200000
+start commit:   e12e00e3 Merge tag 'kbuild-fixes-v4.20' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f215f21f041a0d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=7634edaea4d0b341c625
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ce6fbd400000
 
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- init/Kconfig      | 2 --
- lib/Kconfig.debug | 1 +
- 2 files changed, 1 insertion(+), 2 deletions(-)
+Reported-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+Fixes: c470abd4fde4 ("Linux 4.10")
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 4592bf7997c0..37e10a8391a3 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1206,8 +1206,6 @@ config BPF
- 
- menuconfig EXPERT
- 	bool "Configure standard kernel features (expert users)"
--	# Unhide debug options, to make the on-by-default options visible
--	select DEBUG_KERNEL
- 	help
- 	  This option allows certain base kernel options and settings
-           to be disabled or tweaked. This is for specialized
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 0d9e81779e37..9fbf3499ec8d 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -434,6 +434,7 @@ config MAGIC_SYSRQ_SERIAL
- 
- config DEBUG_KERNEL
- 	bool "Kernel debugging"
-+	default EXPERT
- 	help
- 	  Say Y here if you are developing drivers or trying to debug and
- 	  identify kernel problems.
--- 
-2.21.0
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
