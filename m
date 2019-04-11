@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60119C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89DBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0A02133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776412073F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfDKM1L (ORCPT
+        id S1727250AbfDKM16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:27:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6164 "EHLO huawei.com"
+        Thu, 11 Apr 2019 08:27:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6152 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726847AbfDKM0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:26:47 -0400
+        id S1726706AbfDKM0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:26:46 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 484FDB0AB556A3C1FD45;
+        by Forcepoint Email with ESMTP id 14163E0A8FC379DAF7EE;
         Thu, 11 Apr 2019 20:26:43 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 11 Apr 2019 20:26:33 +0800
+ 14.3.408.0; Thu, 11 Apr 2019 20:26:34 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: fix VLAN initialization to be compatible with port base insert VLAN
-Date:   Thu, 11 Apr 2019 20:25:20 +0800
-Message-ID: <1554985531-1827-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 06/12] net: hns3: add hns3_gro_complete for HW GRO process
+Date:   Thu, 11 Apr 2019 20:25:25 +0800
+Message-ID: <1554985531-1827-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554985531-1827-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554985531-1827-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,189 +46,302 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch fixes VLAN initialization, in order to be compatible
-with VLAN inserted base on port.
+When a GRO packet is received by driver, the cwr field in the
+struct tcphdr need to be checked to decide whether to set the
+SKB_GSO_TCP_ECN for skb_shinfo(skb)->gso_type.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+So this patch adds hns3_gro_complete to do that, and add the
+hns3_handle_bdinfo to handle the hns3_gro_complete and
+hns3_rx_checksum.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  7 ++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 79 +++++++++++++++-------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    | 21 ++++--
- 3 files changed, 77 insertions(+), 30 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 198 +++++++++++++++---------
+ 1 file changed, 123 insertions(+), 75 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 38b430f..f21932c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -147,6 +147,13 @@ enum hnae3_flr_state {
- 	HNAE3_FLR_DONE,
- };
- 
-+enum hnae3_port_base_vlan_state {
-+	HNAE3_PORT_BASE_VLAN_DISABLE,
-+	HNAE3_PORT_BASE_VLAN_ENABLE,
-+	HNAE3_PORT_BASE_VLAN_MODIFY,
-+	HNAE3_PORT_BASE_VLAN_NOCHANGE,
-+};
-+
- struct hnae3_vector_info {
- 	u8 __iomem *io_addr;
- 	int vector;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 11d9739..cd7318b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1358,6 +1358,8 @@ static int hclge_alloc_vport(struct hclge_dev *hdev)
- 		vport->back = hdev;
- 		vport->vport_id = i;
- 		vport->mps = HCLGE_MAC_DEFAULT_FRAME;
-+		vport->port_base_vlan_cfg.state = HNAE3_PORT_BASE_VLAN_DISABLE;
-+		vport->rxvlan_cfg.rx_vlan_offload_en = true;
- 		INIT_LIST_HEAD(&vport->vlan_list);
- 		INIT_LIST_HEAD(&vport->uc_mac_list);
- 		INIT_LIST_HEAD(&vport->mc_mac_list);
-@@ -6680,6 +6682,51 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
- 	return status;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 51e4ada..c30f19e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2331,6 +2331,44 @@ static void hns3_nic_reuse_page(struct sk_buff *skb, int i,
+ 	}
  }
  
-+static int hclge_vlan_offload_cfg(struct hclge_vport *vport,
-+				  u16 port_base_vlan_state,
-+				  u16 vlan_tag)
++static int hns3_gro_complete(struct sk_buff *skb)
 +{
-+	int ret;
++	__be16 type = skb->protocol;
++	struct tcphdr *th;
++	int depth = 0;
 +
-+	if (port_base_vlan_state == HNAE3_PORT_BASE_VLAN_DISABLE) {
-+		vport->txvlan_cfg.accept_tag1 = true;
-+		vport->txvlan_cfg.insert_tag1_en = false;
-+		vport->txvlan_cfg.default_tag1 = 0;
-+	} else {
-+		vport->txvlan_cfg.accept_tag1 = false;
-+		vport->txvlan_cfg.insert_tag1_en = true;
-+		vport->txvlan_cfg.default_tag1 = vlan_tag;
++	while (type == htons(ETH_P_8021Q)) {
++		struct vlan_hdr *vh;
++
++		if ((depth + VLAN_HLEN) > skb_headlen(skb))
++			return -EFAULT;
++
++		vh = (struct vlan_hdr *)(skb->data + depth);
++		type = vh->h_vlan_encapsulated_proto;
++		depth += VLAN_HLEN;
 +	}
 +
-+	vport->txvlan_cfg.accept_untag1 = true;
-+	/* accept_tag2 and accept_untag2 are not supported on
-+	 * pdev revision(0x20), new revision support them. The
-+	 * This two fields can not be configured by user.
-+	 */
-+	vport->txvlan_cfg.accept_tag2 = true;
-+	vport->txvlan_cfg.accept_untag2 = true;
-+	vport->txvlan_cfg.insert_tag2_en = false;
-+	vport->txvlan_cfg.default_tag2 = 0;
-+
-+	if (port_base_vlan_state == HNAE3_PORT_BASE_VLAN_DISABLE) {
-+		vport->rxvlan_cfg.strip_tag1_en = false;
-+		vport->rxvlan_cfg.strip_tag2_en =
-+				vport->rxvlan_cfg.rx_vlan_offload_en;
++	if (type == htons(ETH_P_IP)) {
++		depth += sizeof(struct iphdr);
++	} else if (type == htons(ETH_P_IPV6)) {
++		depth += sizeof(struct ipv6hdr);
 +	} else {
-+		vport->rxvlan_cfg.strip_tag1_en =
-+				vport->rxvlan_cfg.rx_vlan_offload_en;
-+		vport->rxvlan_cfg.strip_tag2_en = true;
++		netdev_err(skb->dev,
++			   "Error: FW GRO supports only IPv4/IPv6, not 0x%04x, depth: %d\n",
++			   be16_to_cpu(type), depth);
++		return -EFAULT;
 +	}
-+	vport->rxvlan_cfg.vlan1_vlan_prionly = false;
-+	vport->rxvlan_cfg.vlan2_vlan_prionly = false;
 +
-+	ret = hclge_set_vlan_tx_offload_cfg(vport);
-+	if (ret)
-+		return ret;
++	th = (struct tcphdr *)(skb->data + depth);
++	skb_shinfo(skb)->gso_segs = NAPI_GRO_CB(skb)->count;
++	if (th->cwr)
++		skb_shinfo(skb)->gso_type |= SKB_GSO_TCP_ECN;
 +
-+	return hclge_set_vlan_rx_offload_cfg(vport);
++	skb->ip_summed = CHECKSUM_UNNECESSARY;
++
++	return 0;
 +}
 +
- static int hclge_set_vlan_protocol_type(struct hclge_dev *hdev)
+ static void hns3_rx_checksum(struct hns3_enet_ring *ring, struct sk_buff *skb,
+ 			     u32 l234info, u32 bd_base_info)
  {
- 	struct hclge_rx_vlan_type_cfg_cmd *rx_req;
-@@ -6770,34 +6817,14 @@ static int hclge_init_vlan_config(struct hclge_dev *hdev)
- 		return ret;
+@@ -2345,12 +2383,6 @@ static void hns3_rx_checksum(struct hns3_enet_ring *ring, struct sk_buff *skb,
+ 	if (!(netdev->features & NETIF_F_RXCSUM))
+ 		return;
  
- 	for (i = 0; i < hdev->num_alloc_vport; i++) {
--		vport = &hdev->vport[i];
--		vport->txvlan_cfg.accept_tag1 = true;
--		vport->txvlan_cfg.accept_untag1 = true;
+-	/* We MUST enable hardware checksum before enabling hardware GRO */
+-	if (skb_shinfo(skb)->gso_size) {
+-		skb->ip_summed = CHECKSUM_UNNECESSARY;
+-		return;
+-	}
 -
--		/* accept_tag2 and accept_untag2 are not supported on
--		 * pdev revision(0x20), new revision support them. The
--		 * value of this two fields will not return error when driver
--		 * send command to fireware in revision(0x20).
--		 * This two fields can not configured by user.
--		 */
--		vport->txvlan_cfg.accept_tag2 = true;
--		vport->txvlan_cfg.accept_untag2 = true;
+ 	/* check if hardware has done checksum */
+ 	if (!(bd_base_info & BIT(HNS3_RXD_L3L4P_B)))
+ 		return;
+@@ -2569,8 +2601,9 @@ static int hns3_add_frag(struct hns3_enet_ring *ring, struct hns3_desc *desc,
+ 	return 0;
+ }
+ 
+-static void hns3_set_gro_param(struct sk_buff *skb, u32 l234info,
+-			       u32 bd_base_info)
++static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
++				     struct sk_buff *skb, u32 l234info,
++				     u32 bd_base_info)
+ {
+ 	u16 gro_count;
+ 	u32 l3_type;
+@@ -2578,12 +2611,11 @@ static void hns3_set_gro_param(struct sk_buff *skb, u32 l234info,
+ 	gro_count = hnae3_get_field(l234info, HNS3_RXD_GRO_COUNT_M,
+ 				    HNS3_RXD_GRO_COUNT_S);
+ 	/* if there is no HW GRO, do not set gro params */
+-	if (!gro_count)
+-		return;
++	if (!gro_count) {
++		hns3_rx_checksum(ring, skb, l234info, bd_base_info);
++		return 0;
++	}
+ 
+-	/* tcp_gro_complete() will copy NAPI_GRO_CB(skb)->count
+-	 * to skb_shinfo(skb)->gso_segs
+-	 */
+ 	NAPI_GRO_CB(skb)->count = gro_count;
+ 
+ 	l3_type = hnae3_get_field(l234info, HNS3_RXD_L3ID_M,
+@@ -2593,13 +2625,13 @@ static void hns3_set_gro_param(struct sk_buff *skb, u32 l234info,
+ 	else if (l3_type == HNS3_L3_TYPE_IPV6)
+ 		skb_shinfo(skb)->gso_type = SKB_GSO_TCPV6;
+ 	else
+-		return;
++		return -EFAULT;
+ 
+ 	skb_shinfo(skb)->gso_size = hnae3_get_field(bd_base_info,
+ 						    HNS3_RXD_GRO_SIZE_M,
+ 						    HNS3_RXD_GRO_SIZE_S);
+-	if (skb_shinfo(skb)->gso_size)
+-		tcp_gro_complete(skb);
++
++	return  hns3_gro_complete(skb);
+ }
+ 
+ static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
+@@ -2624,16 +2656,85 @@ static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
+ 	skb_set_hash(skb, le32_to_cpu(desc->rx.rss_hash), rss_type);
+ }
+ 
+-static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
+-			     struct sk_buff **out_skb)
++static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb,
++			      struct hns3_desc *desc)
+ {
+ 	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
++	u32 bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
++	u32 l234info = le32_to_cpu(desc->rx.l234_info);
+ 	enum hns3_pkt_l2t_type l2_frame_type;
++	unsigned int len;
++	int ret;
++
++	/* Based on hw strategy, the tag offloaded will be stored at
++	 * ot_vlan_tag in two layer tag case, and stored at vlan_tag
++	 * in one layer tag case.
++	 */
++	if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX) {
 +		u16 vlan_tag;
++
++		if (hns3_parse_vlan_tag(ring, desc, l234info, &vlan_tag))
++			__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
++					       vlan_tag);
++	}
++
++	if (unlikely(!(bd_base_info & BIT(HNS3_RXD_VLD_B)))) {
++		u64_stats_update_begin(&ring->syncp);
++		ring->stats.non_vld_descs++;
++		u64_stats_update_end(&ring->syncp);
++
++		return -EINVAL;
++	}
++
++	if (unlikely(!desc->rx.pkt_len || (l234info & (BIT(HNS3_RXD_TRUNCAT_B) |
++				  BIT(HNS3_RXD_L2E_B))))) {
++		u64_stats_update_begin(&ring->syncp);
++		if (l234info & BIT(HNS3_RXD_L2E_B))
++			ring->stats.l2_err++;
++		else
++			ring->stats.err_pkt_len++;
++		u64_stats_update_end(&ring->syncp);
++
++		return -EFAULT;
++	}
++
++	len = skb->len;
++
++	/* Do update ip stack process */
++	skb->protocol = eth_type_trans(skb, netdev);
++
++	/* This is needed in order to enable forwarding support */
++	ret = hns3_set_gro_and_checksum(ring, skb, l234info, bd_base_info);
++	if (unlikely(ret)) {
++		u64_stats_update_begin(&ring->syncp);
++		ring->stats.rx_err_cnt++;
++		u64_stats_update_end(&ring->syncp);
++		return ret;
++	}
++
++	l2_frame_type = hnae3_get_field(l234info, HNS3_RXD_DMAC_M,
++					HNS3_RXD_DMAC_S);
++
++	u64_stats_update_begin(&ring->syncp);
++	ring->stats.rx_pkts++;
++	ring->stats.rx_bytes += len;
++
++	if (l2_frame_type == HNS3_L2_TYPE_MULTICAST)
++		ring->stats.rx_multicast++;
++
++	u64_stats_update_end(&ring->syncp);
++
++	ring->tqp_vector->rx_group.total_bytes += len;
++	return 0;
++}
++
++static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
++			     struct sk_buff **out_skb)
++{
+ 	struct sk_buff *skb = ring->skb;
+ 	struct hns3_desc_cb *desc_cb;
+ 	struct hns3_desc *desc;
+ 	u32 bd_base_info;
+-	u32 l234info;
+ 	int length;
+ 	int ret;
  
--		vport->txvlan_cfg.insert_tag1_en = false;
--		vport->txvlan_cfg.insert_tag2_en = false;
--		vport->txvlan_cfg.default_tag1 = 0;
--		vport->txvlan_cfg.default_tag2 = 0;
--
--		ret = hclge_set_vlan_tx_offload_cfg(vport);
--		if (ret)
--			return ret;
--
--		vport->rxvlan_cfg.strip_tag1_en = false;
--		vport->rxvlan_cfg.strip_tag2_en = true;
--		vport->rxvlan_cfg.vlan1_vlan_prionly = false;
--		vport->rxvlan_cfg.vlan2_vlan_prionly = false;
-+		vport = &hdev->vport[i];
-+		vlan_tag = vport->port_base_vlan_cfg.vlan_info.vlan_tag;
- 
--		ret = hclge_set_vlan_rx_offload_cfg(vport);
-+		ret = hclge_vlan_offload_cfg(vport,
-+					     vport->port_base_vlan_cfg.state,
-+					     vlan_tag);
- 		if (ret)
- 			return ret;
+@@ -2693,62 +2794,12 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
+ 		       ALIGN(ring->pull_len, sizeof(long)));
  	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index b57ac4b..4c7ea9f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -807,10 +807,11 @@ struct hclge_tx_vtag_cfg {
  
- /* VPort level vlan tag configuration for RX direction */
- struct hclge_rx_vtag_cfg {
--	bool strip_tag1_en;	/* Whether strip inner vlan tag */
--	bool strip_tag2_en;	/* Whether strip outer vlan tag */
--	bool vlan1_vlan_prionly;/* Inner VLAN Tag up to descriptor Enable */
--	bool vlan2_vlan_prionly;/* Outer VLAN Tag up to descriptor Enable */
-+	u8 rx_vlan_offload_en;	/* Whether enable rx vlan offload */
-+	u8 strip_tag1_en;	/* Whether strip inner vlan tag */
-+	u8 strip_tag2_en;	/* Whether strip outer vlan tag */
-+	u8 vlan1_vlan_prionly;	/* Inner VLAN Tag up to descriptor Enable */
-+	u8 vlan2_vlan_prionly;	/* Outer VLAN Tag up to descriptor Enable */
- };
+-	l234info = le32_to_cpu(desc->rx.l234_info);
+-	bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
+-
+-	/* Based on hw strategy, the tag offloaded will be stored at
+-	 * ot_vlan_tag in two layer tag case, and stored at vlan_tag
+-	 * in one layer tag case.
+-	 */
+-	if (netdev->features & NETIF_F_HW_VLAN_CTAG_RX) {
+-		u16 vlan_tag;
+-
+-		if (hns3_parse_vlan_tag(ring, desc, l234info, &vlan_tag))
+-			__vlan_hwaccel_put_tag(skb,
+-					       htons(ETH_P_8021Q),
+-					       vlan_tag);
+-	}
+-
+-	if (unlikely(!(bd_base_info & BIT(HNS3_RXD_VLD_B)))) {
+-		u64_stats_update_begin(&ring->syncp);
+-		ring->stats.non_vld_descs++;
+-		u64_stats_update_end(&ring->syncp);
+-
+-		dev_kfree_skb_any(skb);
+-		return -EINVAL;
+-	}
+-
+-	if (unlikely((!desc->rx.pkt_len) ||
+-		     (l234info & (BIT(HNS3_RXD_TRUNCAT_B) |
+-				  BIT(HNS3_RXD_L2E_B))))) {
+-		u64_stats_update_begin(&ring->syncp);
+-		if (l234info & BIT(HNS3_RXD_L2E_B))
+-			ring->stats.l2_err++;
+-		else
+-			ring->stats.err_pkt_len++;
+-		u64_stats_update_end(&ring->syncp);
+-
++	ret = hns3_handle_bdinfo(ring, skb, desc);
++	if (unlikely(ret)) {
+ 		dev_kfree_skb_any(skb);
+-		return -EFAULT;
++		return ret;
+ 	}
  
- struct hclge_rss_tuple_cfg {
-@@ -829,6 +830,17 @@ enum HCLGE_VPORT_STATE {
- 	HCLGE_VPORT_STATE_MAX
- };
+-
+-	l2_frame_type = hnae3_get_field(l234info, HNS3_RXD_DMAC_M,
+-					HNS3_RXD_DMAC_S);
+-	u64_stats_update_begin(&ring->syncp);
+-	if (l2_frame_type == HNS3_L2_TYPE_MULTICAST)
+-		ring->stats.rx_multicast++;
+-
+-	ring->stats.rx_pkts++;
+-	ring->stats.rx_bytes += skb->len;
+-	u64_stats_update_end(&ring->syncp);
+-
+-	ring->tqp_vector->rx_group.total_bytes += skb->len;
+-
+-	/* This is needed in order to enable forwarding support */
+-	hns3_set_gro_param(skb, l234info, bd_base_info);
+-
+-	hns3_rx_checksum(ring, skb, l234info, bd_base_info);
+ 	*out_skb = skb;
+ 	hns3_set_rx_skb_rss_type(ring, skb);
  
-+struct hclge_vlan_info {
-+	u16 vlan_proto; /* so far support 802.1Q only */
-+	u16 qos;
-+	u16 vlan_tag;
-+};
-+
-+struct hclge_port_base_vlan_config {
-+	u16 state;
-+	struct hclge_vlan_info vlan_info;
-+};
-+
- struct hclge_vport {
- 	u16 alloc_tqps;	/* Allocated Tx/Rx queues */
+@@ -2760,7 +2811,6 @@ int hns3_clean_rx_ring(
+ 		void (*rx_fn)(struct hns3_enet_ring *, struct sk_buff *))
+ {
+ #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
+-	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
+ 	int recv_pkts, recv_bds, clean_count, err;
+ 	int unused_count = hns3_desc_unused(ring) - ring->pending_buf;
+ 	struct sk_buff *skb = ring->skb;
+@@ -2797,8 +2847,6 @@ int hns3_clean_rx_ring(
+ 			continue;
+ 		}
  
-@@ -845,6 +857,7 @@ struct hclge_vport {
- 	u16 bw_limit;		/* VSI BW Limit (0 = disabled) */
- 	u8  dwrr;
- 
-+	struct hclge_port_base_vlan_config port_base_vlan_cfg;
- 	struct hclge_tx_vtag_cfg  txvlan_cfg;
- 	struct hclge_rx_vtag_cfg  rxvlan_cfg;
- 
+-		/* Do update ip stack process */
+-		skb->protocol = eth_type_trans(skb, netdev);
+ 		rx_fn(ring, skb);
+ 		recv_bds += ring->pending_buf;
+ 		clean_count += ring->pending_buf;
 -- 
 2.7.4
 
