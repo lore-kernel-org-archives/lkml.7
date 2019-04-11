@@ -2,113 +2,81 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B42C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BF8C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DA32133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D52206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 12:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfDKMNW (ORCPT
+        id S1726728AbfDKMOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 08:13:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38950 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726073AbfDKMNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 08:13:21 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8C56641F068B8E92FEB3;
-        Thu, 11 Apr 2019 20:13:18 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
- 20:13:10 +0800
-Subject: Re: [PATCH] driver core: Postpone DMA tear-down until after devres
- release for probe failure
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-References: <1553767685-27077-1-git-send-email-john.garry@huawei.com>
- <703aca1f-9475-b50d-624a-5f1ceea2c3b2@huawei.com>
- <20190403081433.GA13222@kroah.com>
- <3e1f3e2e-a1d3-ecaf-0931-44b4c10faffe@huawei.com>
- <cd21fd51-dc71-a9f1-abbb-965e8c2e7801@huawei.com>
- <d2504066-3d1a-176f-0f7e-7f86431ef88c@huawei.com>
- <198058c6-63c6-ac3c-62b7-438e5e3b3f0e@arm.com>
-CC:     <rafael@kernel.org>, <linuxarm@huawei.com>,
-        <chenxiang66@hisilicon.com>, <geert@linux-m68k.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh@kernel.org>,
-        <hch@lst.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b66fa725-30d6-8816-3a4d-5bd711302afc@huawei.com>
-Date:   Thu, 11 Apr 2019 13:13:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 11 Apr 2019 08:14:02 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:54470 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfDKMOB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 08:14:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id c17so4662768iom.21
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 05:14:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=cR60vCMLhHRTpswjZfhooIP8Hma1vPgin0AXvYMDh0s=;
+        b=OeBy5l0OO9UJe54JmqY8x/3USvUgmKo8qvFkTr6Vt4p00ND0NUDDJrlH6Kp4N6OgPx
+         Ed9qflugsb1HBujscdiq2Fu+Uj4mqLs5JNd9aMp3BythbQLt1KC6Shr3DBkGcn9JSsuN
+         ATu1bXPY+d1iS0sPQePcbJMTkuvYrAXIWqdFNU0HsrU3msqmnuIavfI9nCSJzN5opVOY
+         50SbZpGYCkCGMnmU+CSE0JBO5ksE6F0fg844Z1s9LJ7jEMJCuX5CL6ZcDvOy+R3Vknx0
+         s2Y+chN/kocgFWoDQA/kRvZEinYYeqOZPGGSxuNDEPpLgbCX25IL2mSZL+gAyFep/P3I
+         LJgA==
+X-Gm-Message-State: APjAAAW9gYFReLS413h38hT9pHuQcoSL4KT+xkva6a5w00k6tWT3nLxx
+        49WdcEN8wQwPbmBZivOrkaY3r91pWf4l3o1VgNDU0tJ3+teb
+X-Google-Smtp-Source: APXvYqzK1P71Q/BRcrCT6iNrGNC8OrRFpihfnoYN3tGWPzEpTjqOgdt44TUuZDljqoC9+mI4MT7gzGGh5pO17DnrV81P4PMA4l0i
 MIME-Version: 1.0
-In-Reply-To: <198058c6-63c6-ac3c-62b7-438e5e3b3f0e@arm.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a24:cac6:: with SMTP id k189mr1833557itg.24.1554984840761;
+ Thu, 11 Apr 2019 05:14:00 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 05:14:00 -0700
+In-Reply-To: <000000000000b7fd51058370d0d9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000109c700586401f48@google.com>
+Subject: Re: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+From:   syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>
+To:     benh@kernel.crashing.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 12:01, Robin Murphy wrote:
->>>>>>>
->>>>>>> The crash occurs for the same reason.
->>>>>>>
->>>>>>> In this case, on the really_probe() failure path, we are still
->>>>>>> clearing
->>>>>>> the DMA ops prior to releasing the device's managed memories.
->>>>>>>
->>>>>>> This patch fixes this issue by reordering the DMA ops teardown
->>>>>>> and the
->>>>>>> call to devres_release_all() on the failure path.
->>>>>>>
->>>>>>> Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
->>>>>>> Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
->>>>>>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>>>
->>>>> So does this "fix" 376991db4b64?  If so, should this be added to the
->>>>> patch and also backported to the stable trees?
->>>>
->>>> Hi Greg,
->>>>
->>>> No, I don't think so. I'd say it supplements it. Here I'm trying to fix
->>>> up another path in which we tear down the DMA ops prior to releasing
->>>> the
->>>> device's resources.
->>>>
->>>> I didn't add a fixes tag as 376991db4b64 didn't have one either. It
->>>> will
->>>> need to be backported to stable, I figure the same as 376991db4b64.
->>>
->>
->> Hi Greg,
->>
->> I still think that we should consider merging this patch.
->
-> Bah, sorry, I thought I'd replied to this thread already, but apparently
-> not :(
->
-> I don't have a particularly strong opinion, but at the moment I am
-> leaning slightly towards this being a parallel fix for another part of
-> 09515ef5ddad, rather than a specific fix of the other fix. Either way,
-> you can have a:
+syzbot has bisected this bug to:
 
-I'd say a parallel fix of 09515ef5ddad.
+commit 726e41097920a73e4c7c33385dcc0debb1281e18
+Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date:   Tue Jul 10 00:29:10 2018 +0000
 
->
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->
+     drivers: core: Remove glue dirs from sysfs earlier
 
-cheers Robin
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15f69eaf200000
+start commit:   771acc7e Bluetooth: btusb: request wake pin with NOAUTOEN
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17f69eaf200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f69eaf200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
+dashboard link: https://syzkaller.appspot.com/bug?extid=91fd909b6e62ebe06131
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11770a8f200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128c945b200000
 
-> Thanks,
-> Robin.
+Reported-by: syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com
+Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
