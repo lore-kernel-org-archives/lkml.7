@@ -2,72 +2,190 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6854AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15B6C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3FC2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7F12077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zi4I18XM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfDKOp0 (ORCPT
+        id S1726690AbfDKOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:45:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48658 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726121AbfDKOp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:45:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF9F4AE1D;
-        Thu, 11 Apr 2019 14:45:24 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
-References: <20181020101045.15991-1-paul.walmsley@sifive.com>
-        <mvmr2bkxntv.fsf@suse.de>
-        <alpine.DEB.2.21.9999.1904110151030.5868@viisi.sifive.com>
-X-Yow:  I have nostalgia for the late Sixties!  In 1969 I left my laundry with
- a hippie!!  During an unauthorized Tupperware party it was chopped &
- diced!
-Date:   Thu, 11 Apr 2019 16:45:24 +0200
-In-Reply-To: <alpine.DEB.2.21.9999.1904110151030.5868@viisi.sifive.com> (Paul
-        Walmsley's message of "Thu, 11 Apr 2019 01:54:05 -0700 (PDT)")
-Message-ID: <mvm1s28fvnf.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Thu, 11 Apr 2019 10:52:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34853 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfDKOwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 10:52:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m10so5497076otp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 07:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HrHI1yUQh4ijcB7YHVwA9JPy3wKlBzvWJG6Efesd/f0=;
+        b=zi4I18XMGtYXeCFOI7IgUdbB0EOZdbnJeoa3l20X2Gqlcl0YR55UhU5luYmUa6cHU5
+         EqcmShYr64nYFlNtn7Rd+1lIJH9XABBmZCQPUOavNMLs+0n9I8m1OuY2+KD0JtN93YcX
+         3rvvNLyeug/w5aNDC5fj4CjwQPXARfaplfRzq12KFQ4x2cbAHrzA+mENqSKh1c617RSg
+         xlJAToPXjpLqe1zcSJodjCgmY5dhUdHQiVkQchFEI36jgwV1c+a/Zf73ibOfskPgdlC8
+         PjhIrDB/UX3hLAtfZ9Gz/P0KisQxQ6VH57FKrSFjl+UerDKSD8YHx1TPbaLhBc3i7fUT
+         dpzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HrHI1yUQh4ijcB7YHVwA9JPy3wKlBzvWJG6Efesd/f0=;
+        b=eeq/lTIdPs9Id4qnE0YaYyfEpcbNvSIEvGPboUJS9rKb5jpbyYLOMeHQmqwpUYPkCM
+         wRwQY4hugMGNupgIJGLAUmYry29+wDY0dZb3xUN7v5wopCPrd8s41/8a17PRnBu4x83L
+         Mzkn6ilK8A7d2lVdS8WCdwdra88EeMJgNXuahNVwnrZJiqY5rRF8szk3eX0iRMOKhV1g
+         u1vNv03Dg24ZI8NqdLMowOpmbuF25FGeWbY/3UZiPVd64x7R/sHDThJTMd6yFPt1u7Cw
+         LyGBFM/PUTEr3MZQ5Y0HnkdeUZtDv7haMqL1zIpcUmFOWs8OJN7IRhqo/M3rdtlZK/bP
+         3xLw==
+X-Gm-Message-State: APjAAAVDWRf9cDVAjoJF7hv2A2wzjTZzzQRlUOnXhRQST9oqHAZAPjl4
+        OfdlGyZZboFbaJk/mz84T9sL9tu+qpS3iwC39nLa/g==
+X-Google-Smtp-Source: APXvYqzmftlTRUTwhQDYzvgypbDnyLvMFUn2U/nKPouHN/rEyYp+JGo6QjH+KjaSpQBo5LMn3j6ZwzdKIOwlKbwUyTU=
+X-Received: by 2002:a9d:3f4b:: with SMTP id m69mr32615377otc.246.1554994319729;
+ Thu, 11 Apr 2019 07:51:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
+In-Reply-To: <20190410040826.24371-2-pagupta@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 11 Apr 2019 07:51:48 -0700
+Message-ID: <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval.shaia@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Apr 11 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
-
-> On Wed, 6 Mar 2019, Andreas Schwab wrote:
+On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
 >
->> Trying to log in on the serial console causes the system to freeze.  The
->> last message is:
->> 
->> [  115.597858] sifive-serial 10010000.serial: BRKINT/PARMRK flag not supported
+> This patch adds functionality to perform flush from guest
+> to host over VIRTIO. We are registering a callback based
+> on 'nd_region' type. virtio_pmem driver requires this special
+> flush function. For rest of the region types we are registering
+> existing flush function. Report error returned by host fsync
+> failure to userspace.
 >
-> Have not seen that problem.
+> This also handles asynchronous flush requests from the block layer
+> by creating a child bio and chaining it with parent bio.
+>
+> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> ---
+[..]
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index b4ef7d9ff22e..fb1041ab32a6 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -295,7 +295,9 @@ static ssize_t deep_flush_store(struct device *dev, struct device_attribute *att
+>                 return rc;
+>         if (!flush)
+>                 return -EINVAL;
+> -       nvdimm_flush(nd_region);
+> +       rc = nvdimm_flush(nd_region, NULL, false);
+> +       if (rc)
+> +               return rc;
+>
+>         return len;
+>  }
+> @@ -1085,6 +1087,11 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
+>         dev->of_node = ndr_desc->of_node;
+>         nd_region->ndr_size = resource_size(ndr_desc->res);
+>         nd_region->ndr_start = ndr_desc->res->start;
+> +       if (ndr_desc->flush)
+> +               nd_region->flush = ndr_desc->flush;
+> +       else
+> +               nd_region->flush = generic_nvdimm_flush;
+> +
+>         nd_device_register(dev);
+>
+>         return nd_region;
+> @@ -1125,11 +1132,36 @@ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
+>  }
+>  EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
+>
+> +int nvdimm_flush(struct nd_region *nd_region, struct bio *bio, bool async)
+> +{
 
-# stty sane -F /dev/ttySIF0
-<crash>
+I don't quite see the point of the 'async' argument. All the usages of
+this routine are either
 
-Andreas.
+nvdimm_flush(nd_region, bio, true)
+...or:
+nvdimm_flush(nd_region, NULL, false)
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+...so why not gate async behavior on the presence of the 'bio' argument?
+
+
+> +       int rc = 0;
+> +
+> +       /* Create child bio for asynchronous flush and chain with
+> +        * parent bio. Otherwise directly call nd_region flush.
+> +        */
+> +       if (async && bio->bi_iter.bi_sector != -1) {
+> +
+> +               struct bio *child = bio_alloc(GFP_ATOMIC, 0);
+> +
+> +               if (!child)
+> +                       return -ENOMEM;
+> +               bio_copy_dev(child, bio);
+> +               child->bi_opf = REQ_PREFLUSH;
+> +               child->bi_iter.bi_sector = -1;
+> +               bio_chain(child, bio);
+> +               submit_bio(child);
+
+I understand how this works, but it's a bit too "magical" for my
+taste. I would prefer that all flush implementations take an optional
+'bio' argument rather than rely on the make_request implementation to
+stash the bio away on a driver specific list.
+
+> +       } else {
+> +               if (nd_region->flush(nd_region))
+> +                       rc = -EIO;
+
+Given the common case wants to be fast and synchronous I think we
+should try to avoid retpoline overhead by default. So something like
+this:
+
+if (nd_region->flush == generic_nvdimm_flush)
+    rc = generic_nvdimm_flush(...);
