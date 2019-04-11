@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B292C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47728C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BC32084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101DF2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLV8eGoS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBXlxXu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfDKWEj (ORCPT
+        id S1727191AbfDKWEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:04:39 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38863 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKWEa (ORCPT
+        Thu, 11 Apr 2019 18:04:47 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40750 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfDKWE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:04:30 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u24so5889615lfg.5;
-        Thu, 11 Apr 2019 15:04:29 -0700 (PDT)
+        Thu, 11 Apr 2019 18:04:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q66so6976640ljq.7;
+        Thu, 11 Apr 2019 15:04:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6GANWBDVM2KX1F8CGIb5rvHRK0fnuEyNN/3002XmRQg=;
-        b=mLV8eGoS9WVHaiAT/cTt29GwqAoiuaAZq1E6zRvLUfwjBRYGj08VnG8Ii7zNX2oQZh
-         OSktjqGL27hacGSfZUg9pHPCM4L38IHgjy1fZod2iYvKOgrsQ24Nc5VfJBMP9dAJ2V5u
-         2xAwsydlnGvWby5UlXbaLryzGyvUETYlnzPx+BZ9KkAo6kq5+GJHdKIVpvgeL5yXrjIC
-         xvJaV9MX/cfALSbuYaeP0gV44hXQgX6O49/v4z633OXQ5yKjcM7tZRzVmUVANEQoSZpe
-         RQrWPhNib+gLT21/96mmOyNLefSesN1TGIe/t2ET6ZyepdgZ/0kctQpgGV+mnOBA/CWn
-         RuyA==
+        bh=SUHPgW7dZuGazhrcakTZtDm+HbJ3DjUZGyh8GwQB52k=;
+        b=rBXlxXu1ngSTXolx+1g1Qbtc98vDj83c9p3TnOhgzb1aJsdBct67YPD7Z9Uv479cln
+         eEzqaQFWcqcZ70IAgZgfp7xpzirscZPo85WNsbKhOb2mUn0P8rLiGAbuA1FTHB3rCwJe
+         oZgUnRSyFHQ8DWdb6+CvD2E5Hyyxq8sVXGbCGKHGHfqJTS7R9e/UzA8rIkUgqrA6Rp0t
+         51005Vuyz67R+P9V6TyUNBJDdEVtjbKOfY2Li7tuxpjAL/t5XuuRMRGAx3NXcKhdrUU+
+         xNxTDzGd6ZgY1Vm+HD/Wg8jIzqJNfeJ+L6CE4/GR2bArLb9do9WDEW68hkYK2+bHkFew
+         SuYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6GANWBDVM2KX1F8CGIb5rvHRK0fnuEyNN/3002XmRQg=;
-        b=jmtlBxAopjkMFhoQy1oDYc6+tISBxAeXbSN346hetIZE+oiTUF+SO81nB4QDItLBKo
-         sipm503HpVs6cmc7QzKoEucnT4TOMo0ReFqWC87wQd/rrtEIvDOKekGNu0hu6Gb6T81b
-         9ad9E8Ec29qKvdX1VL/cTzNgltCg/FoPM1u61Q3sXMV5BSHV8WNgXIP6R0nPGy6gbbnw
-         CaqrK0sLhCeM0GDReSK/l2yJmga99CUs6529wJ+zLGQ7Mim2jTIMheJWvhB/+EwwcAx6
-         fiUf6v7SW+cdi/EaVWBVOxkJ/ub2bc3YDH4Nx3Q9VLfqLAhorbrwIUUZXuPUp18y+iYa
-         sTKA==
-X-Gm-Message-State: APjAAAWbo5pQfvZjTBv/+z0G0Zu45BCHPTgLIUuhyMiu87I6XXeYunuU
-        aa+mYydqnQNpUbufJxUZmWA=
-X-Google-Smtp-Source: APXvYqzMW6BwV6mmbIecSGpQekgBuTWyxqmkLx0KiSbcF9v/Xset+oMq/gGAgEfrOTIZ6ya3qCG3Og==
-X-Received: by 2002:ac2:50d8:: with SMTP id h24mr27193823lfm.7.1555020268360;
-        Thu, 11 Apr 2019 15:04:28 -0700 (PDT)
+        bh=SUHPgW7dZuGazhrcakTZtDm+HbJ3DjUZGyh8GwQB52k=;
+        b=Pf19nd5F/KmEHomdF3/Er7QamoLoP2tKK6Q2VVmsTgoKudXgDduPKKFTX0u4l/5eCB
+         JputHijRJCK4wIgUKwERj/VI1CeB2pKE/cIizL2LoZNCI/Olf7MfoknMpgvDNPax0O+2
+         T+GktUVKwHweGvsiOXnsvf+neuGliQcJdK7yAtK1PXZIf0FGt47k5Pw/xv89vOsH1uJT
+         5VzBOYK5iizUYoFyejVDHORu/lRUH7okRD0XFFRbMOsBRBMAUCqHvzhOJpOCL2qiF+3R
+         pmhbgaWsyc/sy2+UZXDXCFsOCo7XaUnhz2ga5553BqCq6drxFOKnMS6V+uQdsTjjL8nu
+         4d0Q==
+X-Gm-Message-State: APjAAAXpt18GDXy0qiQBZ+Q2q39+bch29ZAs/0tKSHBCslenk/JUEvZN
+        4k81EYu6Yp0vgJ//oB8oGb4=
+X-Google-Smtp-Source: APXvYqy7gf7R3PaXZFHz6LIH8cHWlCsEVHbWo+4ffZQ7CYDryxGOfUgBP5k2b1hOMP/WjCm0Hu7ikw==
+X-Received: by 2002:a2e:9703:: with SMTP id r3mr18999423lji.88.1555020265933;
+        Thu, 11 Apr 2019 15:04:25 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id e18sm7887808ljb.12.2019.04.11.15.04.27
+        by smtp.gmail.com with ESMTPSA id e18sm7887808ljb.12.2019.04.11.15.04.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 15:04:27 -0700 (PDT)
+        Thu, 11 Apr 2019 15:04:25 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
         Prashant Gaikwad <pgaikwad@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
         Joseph Lo <josephl@nvidia.com>
 Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] clk: tegra: divider: Mark Memory Controller clock as read-only
-Date:   Fri, 12 Apr 2019 01:02:30 +0300
-Message-Id: <20190411220230.21726-6-digetx@gmail.com>
+Subject: [PATCH v1 3/5] clk: tegra: emc: Fix EMC max-rate clamping
+Date:   Fri, 12 Apr 2019 01:02:28 +0300
+Message-Id: <20190411220230.21726-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411220230.21726-1-digetx@gmail.com>
 References: <20190411220230.21726-1-digetx@gmail.com>
@@ -79,28 +79,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Memory Controller clock rate can't be simply changed and nothing in
-kernel need to change the rate, hence let's make the clock read-only.
+When a clk user requests rate that is higher than the maximum possible,
+the rate shall be clamped to the maximum and not to the current value.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clk/tegra/clk-divider.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/tegra/clk-emc.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index 205fe8ff63f0..f891bbb0d06d 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -175,6 +175,7 @@ struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
- 				  void __iomem *reg, spinlock_t *lock)
- {
- 	return clk_register_divider_table(NULL, name, parent_name,
--					  CLK_IS_CRITICAL, reg, 16, 1, 0,
--					  mc_div_table, lock);
-+					  CLK_IS_CRITICAL |
-+					  CLK_DIVIDER_READ_ONLY,
-+					  reg, 16, 1, 0, mc_div_table, lock);
- }
+diff --git a/drivers/clk/tegra/clk-emc.c b/drivers/clk/tegra/clk-emc.c
+index 28068584ff6e..9a0179235939 100644
+--- a/drivers/clk/tegra/clk-emc.c
++++ b/drivers/clk/tegra/clk-emc.c
+@@ -121,7 +121,7 @@ static int emc_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
+ 	struct tegra_clk_emc *tegra;
+ 	u8 ram_code = tegra_read_ram_code();
+ 	struct emc_timing *timing = NULL;
+-	int i, k;
++	int i, k, t;
+ 
+ 	tegra = container_of(hw, struct tegra_clk_emc, hw);
+ 
+@@ -130,12 +130,17 @@ static int emc_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
+ 			break;
+ 	}
+ 
+-	for (i = k; i < tegra->num_timings; i++) {
+-		if (tegra->timings[i].ram_code != ram_code)
++	for (t = k; t < tegra->num_timings; t++) {
++		if (tegra->timings[t].ram_code != ram_code)
+ 			break;
++	}
+ 
++	for (i = k; i < t; i++) {
+ 		timing = tegra->timings + i;
+ 
++		if (timing->rate < req->rate && i != t - 1)
++			continue;
++
+ 		if (timing->rate > req->max_rate) {
+ 			i = max(i, k + 1);
+ 			req->rate = tegra->timings[i - 1].rate;
+@@ -145,10 +150,8 @@ static int emc_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
+ 		if (timing->rate < req->min_rate)
+ 			continue;
+ 
+-		if (timing->rate >= req->rate) {
+-			req->rate = timing->rate;
+-			return 0;
+-		}
++		req->rate = timing->rate;
++		return 0;
+ 	}
+ 
+ 	if (timing) {
 -- 
 2.21.0
 
