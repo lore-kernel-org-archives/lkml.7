@@ -2,91 +2,102 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14122C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28FBC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFDD2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fmbZedcv"
+	by mail.kernel.org (Postfix) with ESMTP id 89494217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 14:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfDKO6M (ORCPT
+        id S1726728AbfDKO7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 10:58:12 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36510 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfDKO6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 10:58:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ShZSBivlfqPAGQJ7/AM1/Rc6/8iy5yc9fdVIkozN0Do=; b=fmbZedcvFP9t/lDrVvmPt5v4Wg
-        tIzRLn6zE+jvaSvmi4dY7GAJXmYLaAJ/UMc3b9uyisjbhzRay/uSoDx7ghTPQuYrwbHQ+G3iwlAWf
-        PtMrqEAAdiEXOBV2nTskIHest87JuNhLoA/LpFApRp3f7tCR56KMn++Lr9ZNt97iDzVq49rYhrk++
-        B41vBOkAlV2/qPXLGaid+/RyGqwht2/2pQGLnvzaxO0IjhbfcmSPzqTH9QTiixt7H5Gk69K8AfLsF
-        KVT6qA6jLo1751OZB4jtG/SA2fxRYCx/PWSdTCoSCtVITIrCXJ+WGhtLs9SY2nAku1TWg0tFlirt6
-        bCok1hCw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEb9U-0002eU-33; Thu, 11 Apr 2019 14:58:08 +0000
-Subject: Re: [GIT PULL] <global> global spelling corrections for v5.1.0-rc5
-To:     Kenny Van de Maele <kenny.vandemaele@inuits.eu>,
-        torvalds@linux-foundation.org
-Cc:     torvalds@osdl.org, linux-kernel@vger.kernel.org
-References: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0885bbf9-ccb1-280e-dde1-ffa40282df09@infradead.org>
-Date:   Thu, 11 Apr 2019 07:58:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 11 Apr 2019 10:59:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:48448 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfDKO7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 10:59:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 07:59:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,337,1549958400"; 
+   d="scan'208";a="163411880"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2019 07:59:14 -0700
+Date:   Thu, 11 Apr 2019 09:00:57 -0600
+From:   Keith Busch <keith.busch@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>
+Subject: Re: [PATCH] hmat: Register attributes for memory hot add
+Message-ID: <20190411150057.GA7247@localhost.localdomain>
+References: <20190409214415.3722-1-keith.busch@intel.com>
+ <CAJZ5v0gOuHSoMd6dnGKN5fW1xKF89b2ak0F4mo+07FBpFUCP6A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gOuHSoMd6dnGKN5fW1xKF89b2ak0F4mo+07FBpFUCP6A@mail.gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 2:12 AM, Kenny Van de Maele wrote:
-> are available in the Git repository at:
+On Thu, Apr 11, 2019 at 04:42:45PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Apr 9, 2019 at 11:42 PM Keith Busch <keith.busch@intel.com> wrote:
+> > -static __init void hmat_register_targets(void)
+> > +static void hmat_register_targets(void)
+> >  {
+> >         struct memory_target *target;
+> >
+> >         list_for_each_entry(target, &targets, node) {
+> > +               if (!node_online(pxm_to_node(target->memory_pxm)))
+> > +                       continue;
+> > +
+> >                 hmat_register_target_initiators(target);
+> >                 hmat_register_target_perf(target);
+> > +               target->registered = true;
+> >         }
+> >  }
+> >
+> > +static int hmat_callback(struct notifier_block *self,
+> > +                        unsigned long action, void *arg)
+> > +{
+> > +       struct memory_notify *mnb = arg;
+> > +       int pxm, nid = mnb->status_change_nid;
+> > +       struct memory_target *target;
+> > +
+> > +       if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
+> > +               return NOTIFY_OK;
+> > +
+> > +       pxm = node_to_pxm(nid);
+> > +       target = find_mem_target(pxm);
+> > +       if (!target || target->registered)
+> > +               return NOTIFY_OK;
+> > +
+> > +       hmat_register_target_initiators(target);
+> > +       hmat_register_target_perf(target);
+> > +       target->registered = true;
+> > +
+> > +       return NOTIFY_OK;
+> > +}
 > 
->   git://github.com/vdmkenny/linux-spelling-fix.git tags/common-
-> spelling-fixes-5.1.0-rc5
+> This appears to assume that there will never be any races between the
+> two functions above.
 > 
-> for you to fetch changes up to
-> 6ee0055f3414a64133228e82004ea60d0e659d6d:
-> 
->   fix common spelling mistakes (2019-04-11 10:22:24 +0200)
-> 
-> ----------------------------------------------------------------
-> This PR contains a set of global spelling fixes of commonly miss-
-> spelled
+> It this guaranteed to be the case?
 
-misspelled
+The hmat_init() will call this directly before registering the memory
+notifier callback, so those two paths should be 'ok'.
 
-
-Is there a way for me to review the diff on github?
-
-thanks.
-
-
-> words. Mostly documentation and comments were impacted, but a few lines
-> of code were affected as well.
-> 
-> ----------------------------------------------------------------
-> Kenny Van de Maele (1):
->       fix common spelling mistakes
-
-
--- 
-~Randy
+I may have assumed memory notification callbacks were single threaded,
+but after taking a quick look, I think I do need additional locking for
+this to be safe. I'll get that fixed up, thanks for the catch.
