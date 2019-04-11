@@ -2,38 +2,37 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79867C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BFCC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE3A2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898F22184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oyGTc0BW"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MhZ0fr/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfDKKUA (ORCPT
+        id S1726830AbfDKKUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:20:00 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48360 "EHLO vps.xff.cz"
+        Thu, 11 Apr 2019 06:20:02 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48320 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726588AbfDKKT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726026AbfDKKT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 11 Apr 2019 06:19:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977994; bh=unyXzRpGhfWJQ+WLXU6ly2jmSYKOT8hB+V2vSbRnR30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyGTc0BWzGcUxj5sXpJl9xAtrzl8WhcR6Nw7cxnwn+GA/FqkDQ9AfM1A/joxea4cJ
-         TH4kjKGpOH/bZekEOz0mDJp5kEJqrtUKInT97MFB2NLiEvytdT6CtJo9cAOYD9QbFp
-         EfaJQ6G7HGkx6tEaCZDJjezPOCM7UPA+ISgvN+CA=
+        t=1554977994; bh=bN0P1L9l1XpY6c48XfUiL8gk+6ngeuIIwHpcEsC+Meo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MhZ0fr/ppGOJxv3I3/LxpAIy8Jnzcm/Evm8Xn7CV7SW/q6aX9ewmpw50h9gywEZMl
+         WxWHn8n26JlfUD824TMmXqhLVIqkO5Sbc8msbaPqUBC2Fy7sB9VPpROc7geM9lFvRu
+         6E+bAZirjliqN4iflerU484zihhqpxc/UdbVu0YI=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
+Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -53,13 +52,10 @@ Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org,
-        Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v3 01/11] net: stmmac: sun8i: add support for Allwinner H6 EMAC
-Date:   Thu, 11 Apr 2019 12:19:41 +0200
-Message-Id: <20190411101951.30223-2-megous@megous.com>
-In-Reply-To: <20190411101951.30223-1-megous@megous.com>
-References: <20190411101951.30223-1-megous@megous.com>
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
+Subject: [PATCH v3 00/11] Add support for Orange Pi 3
+Date:   Thu, 11 Apr 2019 12:19:40 +0200
+Message-Id: <20190411101951.30223-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,54 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Ondrej Jirman <megous@megous.com>
 
-The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY" on
-H6 is on a co-packaged AC200 chip, and it's not really internal (it's
-connected via RMII at PA GPIO bank).
+This series implements support for Xunlong Orange Pi 3 board.
 
-Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
+Unfortunately, this board needs some small driver patches, so I have
+split the boards DT patch into chunks that require patches for drivers
+in various subsystems.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c    | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Suggested merging plan/dependencies:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 195669f550f0..20c19afb8316 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -147,6 +147,20 @@ static const struct emac_variant emac_variant_a64 = {
- 	.tx_delay_max = 7,
- };
- 
-+static const struct emac_variant emac_variant_h6 = {
-+	.default_syscon_value = 0x50000,
-+	.syscon_field = &sun8i_syscon_reg_field,
-+	/* The "Internal PHY" of H6 is not on the die. It's on the
-+	 * co-packaged AC200 chip instead.
-+	 */
-+	.soc_has_internal_phy = false,
-+	.support_mii = true,
-+	.support_rmii = true,
-+	.support_rgmii = true,
-+	.rx_delay_max = 31,
-+	.tx_delay_max = 7,
-+};
-+
- #define EMAC_BASIC_CTL0 0x00
- #define EMAC_BASIC_CTL1 0x04
- #define EMAC_INT_STA    0x08
-@@ -1210,6 +1224,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
- 		.data = &emac_variant_r40 },
- 	{ .compatible = "allwinner,sun50i-a64-emac",
- 		.data = &emac_variant_a64 },
-+	{ .compatible = "allwinner,sun50i-h6-emac",
-+		.data = &emac_variant_h6 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sun8i_dwmac_match);
+- Pinctrl and stmmac patches are needed for ethernet support.
+  (patches 1-5)
+- HDMI support was changed, please review. (patches 6-8)
+- brcmfmac patch 9, fixing firmware file selection, can be merged
+  now, after review, as it doesn't depend on anything (please
+  review :))
+- mmc1 pinconf (patch 10) can probably be merged now, too (it will
+  certainly be used soon by all the other WiFi featuring boards
+  based on H6)
+- WiFi dts patch will have to wait for H6 RTC patches, which in turn
+  depend on ChenYu's RTC series, to be merged. That will take a
+  while yet. I'm just keeping it in the series for completness.
+  (patch 11)
+
+This patch is also needed to not get segfault on boot (it was already
+merged): 
+  https://lkml.org/lkml/2019/4/5/856
+
+Changes in v2:
+- added dt-bindings documentation for the board's compatible string
+  (suggested by Clement)
+- addressed checkpatch warnings and code formatting issues (on Maxime's
+  suggestions)
+- stmmac: dropped useless parenthesis, reworded description of the patch
+  (suggested by Sergei)
+- drop useles dev_info() about the selected io bias voltage
+- docummented io voltage bias selection variant macros
+- wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
+  because wifi depends on H6 RTC support that's not merged yet (suggested
+  by Clement)
+- added missing signed-of-bys
+- changed &usb2otg dr_mode to otg, and added a note about VBUS
+- improved wording of HDMI driver's DDC power supply patch
+
+Changes in v3:
+- dropped already applied patches
+- changed pinctrl I/O bias selection constants to enum and renamed
+- added /omit-if-no-ref/ to mmc1_pins
+- made mmc1_pins default pinconf for mmc1 in H6 dtsi
+- move ddc-supply to HDMI connector node, updated patch descriptions,
+  changed dt-bindings docs
+
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Icenowy Zheng (2):
+  net: stmmac: sun8i: add support for Allwinner H6 EMAC
+  net: stmmac: sun8i: force select external PHY when no internal one
+
+Ondrej Jirman (9):
+  pinctrl: sunxi: Prepare for alternative bias voltage setting methods
+  pinctrl: sunxi: Support I/O bias voltage setting on H6
+  arm64: dts: allwinner: orange-pi-3: Enable ethernet
+  dt-bindings: display: hdmi-connector: Add DDC power supply
+  drm: sun4i: Add support for enabling DDC I2C bus power to dw_hdmi glue
+  arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+  brcmfmac: Loading the correct firmware for brcm43456
+  arm64: dts: allwinner: h6: Add MMC1 pins
+  [DO NOT MERGE] arm64: dts: allwinner: orange-pi-3: Enable WiFi
+
+ .../display/connector/hdmi-connector.txt      |   1 +
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 127 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  11 ++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  60 ++++++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   2 +
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c |  21 +++
+ .../broadcom/brcm80211/brcmfmac/sdio.c        |   4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c     |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  56 +++++---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  14 +-
+ 11 files changed, 275 insertions(+), 24 deletions(-)
+
 -- 
 2.21.0
 
