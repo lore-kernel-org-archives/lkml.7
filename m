@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EF1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B944CC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A69A2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8799C2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nwZd6++K"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aIpiEc2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfDKTjP (ORCPT
+        id S1726920AbfDKTj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:39:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50458 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbfDKTjL (ORCPT
+        Thu, 11 Apr 2019 15:39:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36164 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDKTjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:39:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcojE097029;
-        Thu, 11 Apr 2019 14:38:50 -0500
+        Thu, 11 Apr 2019 15:39:13 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcqXC061867;
+        Thu, 11 Apr 2019 14:38:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555011530;
-        bh=QoTwq2TsQYQs9cX+gn9lCOTA2QWZqg19+qvdESPHsWs=;
+        s=ti-com-17Q1; t=1555011532;
+        bh=4iYtDYDNVNI0hoN0zLGA9gCKJuyiDxoBbBvazWpBlPQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nwZd6++KXRKaon+uOjEU8v9HdCIx5DNy1g2vOSm64g81CEbIqNDwqtQXzdgJbP0Ex
-         HXK8jFpriE3POwvYyrjdKyqZeNS49eAxmGyOfpPE4PM1QxMjYKIbHdCCk8cJuMoRsP
-         ulIWrBk3/ce8gEK0u7Yg/WljI3aQlReNIs6xVBE8=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BJcoXd025672
+        b=aIpiEc2vUhhmRSAVHjc+si2H7by6SchUgz0EeimI/dSuIjhBAw0OUOPAK8nNDC7hz
+         vlPSqNws+Dso24Pyzz9LcBMoCBGof5nVGFNrrxDiy8mHph3RFBZUFdVpJd2xIRU02b
+         MpYFwPkEr9BQC07hT3n/jZjqtXRRfUXsbVPtah2U=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3BJcpGa120630
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Apr 2019 14:38:50 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 11 Apr 2019 14:38:52 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
- Apr 2019 14:38:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 14:38:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 11 Apr 2019 14:38:50 -0500
+ Frontend Transport; Thu, 11 Apr 2019 14:38:51 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcnPi021025;
-        Thu, 11 Apr 2019 14:38:50 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3BJcpA7103620;
+        Thu, 11 Apr 2019 14:38:51 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
         <marek.behun@nic.cz>, <rdunlap@infradead.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 1/7] leds: multicolor: Add sysfs interface definition
-Date:   Thu, 11 Apr 2019 14:38:42 -0500
-Message-ID: <20190411193848.23140-2-dmurphy@ti.com>
+Subject: [PATCH v2 6/7] dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+Date:   Thu, 11 Apr 2019 14:38:47 -0500
+Message-ID: <20190411193848.23140-7-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 In-Reply-To: <20190411193848.23140-1-dmurphy@ti.com>
 References: <20190411193848.23140-1-dmurphy@ti.com>
@@ -68,112 +68,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation of LED Multicolor LED class specific
-sysfs attributes.
+Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and the LP5018
+RGB LED device driver.  The LP5036/3024/18 can control RGB LEDs individually
+or as part of a control bank group.  These devices have the ability
+to adjust the mixing control for the RGB LEDs to obtain different colors
+independent of the overall brightness of the LED grouping.
+
+Datasheet:
+http://www.ti.com/lit/ds/symlink/lp5024.pdf
+http://www.ti.com/lit/ds/symlink/lp5036.pdf
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../ABI/testing/sysfs-class-led-multicolor    | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ .../devicetree/bindings/leds/leds-lp50xx.txt  | 142 ++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
 new file mode 100644
-index 000000000000..5583ecaa3170
+index 000000000000..48ea7f164ce6
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
-@@ -0,0 +1,91 @@
-+What:		/sys/class/leds/<led>/colors/sync_enable
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		Writing a 1 to this file will enable the synchronization of all
-+		the defined color LEDs within the LED node.  Brightness values
-+		for each LED will be stored and written when sync is set to 1.
-+		Writing a 0 to this file will disable syncing and allow
-+		individual control of the LEDs brightness settings.
++++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+@@ -0,0 +1,142 @@
++* Texas Instruments - LP5018/24/30/36 RGB LED driver
 +
-+What:		/sys/class/leds/<led>/colors/sync
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	write only
-+		Writing a 1 to this file while sync_enable is set to 1 will
-+		write the current brightness values to all defined LEDs within
-+		the LED node.  All LEDs defined will be configured based
-+		on the brightness that has been requested.
++The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
++a LED group or control them individually.
 +
-+		If sync_enable is set to 0 then writing a 1 to sync has no
-+		affect on the LEDs.
++The difference in these RGB LED drivers is the number of supported RGB modules.
 +
-+What:		/sys/class/leds/<led>/colors/<led_color>/brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read/write
-+		The led_color directory is dynamically created based on the
-+		colors defined by the registrar of the class.
-+		The led_color can be but not limited to red, green, blue,
-+		white, amber, yellow and violet.  Drivers can also declare a
-+		LED color for presentation.  There is one directory per color
-+		presented.  The brightness file is created under each
-+		led_color directory and controls the individual LED color
-+		setting.
++Required parent properties:
++	- compatible:
++		"ti,lp5018"
++		"ti,lp5024"
++		"ti,lp5030"
++		"ti,lp5036"
++	- reg :  I2C slave address
++		lp5018/24 - 0x28
++		lp5030/36 - 0x30
++	- #address-cells : 1
++	- #size-cells : 0
 +
-+		If sync is enabled then	writing the brightness value of the LED
-+		is deferred until a 1 is written to
-+		/sys/class/leds/<led>/color/sync.  If syncing is
-+		disabled then the LED brightness value will be written
-+		immediately to the LED driver.
++Optional parent properties:
++	- enable-gpios : gpio pin to enable/disable the device.
++	- vled-supply : LED supply
 +
-+		The value of the color is from 0 to
-+		/sys/class/leds/<led>/colors/<led_color>/max_brightness.
++Required child properties:
++	- #address-cells : 1
++	- #size-cells : 0
++	- reg : This is the LED module number.
++	- color : see Documentation/devicetree/bindings/leds/common.txt
++	- function : see Documentation/devicetree/bindings/leds/common.txt
 +
-+What:		/sys/class/leds/<led>/colors/<led_color>/max_brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Dan Murphy <dmurphy@ti.com>
-+Description:	read only
-+		Maximum brightness level for the LED color, default is
-+		255 (LED_FULL).
++Required child properties only is LED modules will be banked:
++	- ti,led-bank : This property denotes the LED module numbers that will
++			be controlled as a single RGB cluster.  Each LED module
++			number will be controlled by a single LED class instance.
++			There can only be one instance of the ti,led-bank
++			property for each device node.
 +
-+		If the LED does not support different brightness levels, this
-+		should be 1.
++Required grandchildren properties:
++	- reg : A single entry denoting the LED module that controls
++		the RGB cluster.
++	- color : see Documentation/devicetree/bindings/leds/leds-multicolor.txt
++	- led-sources : see Documentation/devicetree/bindings/leds/common.txt
 +
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read/write
-+		This directory contains the defined color models that are read
-+		from the firmware node.  The model color will be the read from
-+		the firmware node.  The model names should be a color that the
-+		LED cluster can produce.
++The LED outputs associated with the LED modules are defined in Table 1 of the
++corresponding data sheets.
 +
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>/brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read/write
-+		Writing this file will initiate a synchronized write to the LED
-+		cluster to produce the color output defined in the firmware node.
++LP5018 - 6 Total RGB cluster LED outputs 0-5
++LP5024 - 8 Total RGB cluster LED outputs 0-7
++LP5030 - 10 Total RGB cluster LED outputs 0-9
++LP5036 - 12 Total RGB cluster LED outputs 0-11
 +
-+		This value cannot exceed <model_color>/max_brightness.
-+		Writing a 0 to this file will cause the LED cluster to turn off.
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
 +
-+		The sync and sync_enable files do not have an affect on this as
-+		this is a real time update of the LED cluster.
++Examples:
++led-controller@29 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vmmcsd_fixed>;
 +
-+What:		/sys/class/leds/<led>/brightness_model/<model_color>/max_brightness
-+Date:		April 2019
-+KernelVersion:	5.2
-+Contact:	Jacek Anaszewski <j.anaszewski@samsung.com>
-+Description:	read
-+		Reading this file will return the maximum number of brightness
-+		levels that are defined in the firmware node for the model color.
-+		It should be assumed that the levels are from 1 -> max_brightness
-+		and the LED cluster brightness is increasing.
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <2>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STANDBY;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_STATUS;
++		
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++};
++
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lp5024.pdf
++http://www.ti.com/lit/ds/symlink/lp5036.pdf
 -- 
 2.21.0.5.gaeb582a983
 
