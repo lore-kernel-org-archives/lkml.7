@@ -2,142 +2,400 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UPPERCASE_50_75 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591ECC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CCAC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1BE20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D6B2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="iOwaAnI7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCVVkybz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfDKVwY (ORCPT
+        id S1726825AbfDKVzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:52:24 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:39624 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKVwY (ORCPT
+        Thu, 11 Apr 2019 17:55:53 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37562 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfDKVzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:52:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555019589; x=1586555589;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ilspfxUHJKcoo3sL9+0K8u6s2ce0sqEfsxwX6p5DqYo=;
-  b=iOwaAnI7jFGx4A7eeqCs/+x4zH2VoRsO7Y2Gwt3lRyikdPyA+8heZCWw
-   kmgS1wQN16DTejAWfdQlgrw99E9xixlI8tFkUbjmfnm06MnDU+fBDnah2
-   cRlwt+w/2DiHt6F92qRugWaLOadQbERWyZq2FnwG2gTjIRrRKkb1UcCwQ
-   HOX6qp8bmNNXKmK0g2lmmnfq1de88x746g2mZbAyCd2W1GkyPs8QUPXDq
-   V7xawNNjBqR4fOqxY/ooLDFHhzlJWL+sn139596Bz/kJc3Cleo4Nz5dcM
-   5USueCvbb8ELQQpOcN93QOusSlFN6+o0n0YDUKHDGFDxc/4kxvt2OMN45
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,338,1549900800"; 
-   d="scan'208";a="204596614"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Apr 2019 05:53:08 +0800
-IronPort-SDR: Vf1AI95NOxe8bWCPoJcuL9LLdrl+6bskEiyvU6qixfNosPCw0h4oWFl8NW6eupJ5UGAAhisAYV
- coOExppayc22ERMryjf34c9Fa33+cQpC/TTEfGld16zj51+JvKh4g0tL2riCieEwYqJU//NWHN
- VqCOpDgC0INIbw3Dd+aNrKYFDbi6ct+6uf5i46hXR2dAneKBQvPrt/IPxrPAgArmrQ32Ez0Cvw
- 3yhKdwPxGK6iojatOTCtQeFCPWxtuM273gV29TOQvWwPFhw2lQ7VuJWXfPmjDGQ+Bw8vdCp7U2
- /TSGAkT/NnbkwTVzEc23t1UE
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 11 Apr 2019 14:29:16 -0700
-IronPort-SDR: mlk5eErLAOCUZGN+IRjlNKCz8j2zAdKDBGCygi4RdMre8e99ja9Gd541fsaqmrlOzrkavfte9T
- s0nTr6Q6z0gVyKEjvJ4OlmJSqrLDYJ2lFzQ3+x2vsvBtLThfBUMWwp0GG8piU01MPhKXD+aidl
- oilvUtv0O3JSrt8whRKKvDdl9/0FBLsitzxaG46ImNMT/LGkkA/ItAM6hFMGcYven/LrxO5zd5
- CBWsFS2JypM6p6e/o2qnKbCtXZxvVBmgEQOHVPXLpZYDAquSd+kxIa+wOqrWvcu08tGdqPmJl/
- +zY=
-Received: from usa001883.ad.shared (HELO [10.86.51.17]) ([10.86.51.17])
-  by uls-op-cesaip01.wdc.com with ESMTP; 11 Apr 2019 14:52:23 -0700
-Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
- DT source data
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
- <20190411114616.GA10032@infradead.org>
- <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
-Date:   Thu, 11 Apr 2019 14:52:22 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 11 Apr 2019 17:55:53 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c1so4487748qkk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 14:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=f/XpraRoSuo3LyBkJuCGWKCHNRf3xfkHPWKLDZxOxec=;
+        b=WCVVkybzUpVg0XihLRO0j6m2yu78z/3mKWSbIn8NiLqOlTGarU1dgvIrzfk8CRtm0F
+         6jSMLydBTmpHsv22ixQxA1G9lkBlH8OPcUzhx9GX1t/CgKLXwY/uuSLemOcRFWSlkLm2
+         ytsam9jkbDMWCtnFqcFo3sw1YNFCcYQr+/nSOp+AW0OSkJOgsWp+PePnPbPgUtLMAo60
+         3IYNt5GLrDVQ/0l2agyczwb+nTUQjleIBSbpnfYZeOFK8bnToct4z3BjdK0mMe32Xnqs
+         5qkqZuH41iqzx26earujAQmCIq3SL6lowsddgtW6UbvSQM8vBFrsJKckHkcHQd1LO2gz
+         AXYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f/XpraRoSuo3LyBkJuCGWKCHNRf3xfkHPWKLDZxOxec=;
+        b=lfZV3OlRlLByrMaDzaG2/xpLeMO2HLP9WPAleW1fhoj+xMnTwDVFByBsTd1UWjBRV0
+         OI+UGwBnhVYXdMv2qLEg0xl4mS+9L5WmJUnVoGhU4SuZGp6OebPHDMZMbY43oxsi55Qa
+         mTLNOBSrhUMA/sG1FAoVHdTwqXnBYxbA0Gal9Vil0s5qdMa9iBxDr0HoZJiPO5m48wS3
+         XHHtfYsmZBdmqH4AavC/Azkiqz91XfWioylytHNoJZtlyv0QrGejs+PIrqLZnfZ6Qdmh
+         srmayQpdBtm1ceJsZjDGOImLjoT4fz2EJEQxS22+wIuN3Pfp9dUpAoiGYXvcOrOEKdNP
+         9Skw==
+X-Gm-Message-State: APjAAAWiCb2qbj5VKYYI8tplQWrk/16RGHVwBcCHv+ryYKzUOOmv5la0
+        4sEiRJW1GG8YMsLE4y7FQs4OyS26ZeXnOARkhecsNA==
+X-Google-Smtp-Source: APXvYqyinCj3ERd2tMEW2Hm9VcglxYYOgCubocDC+750KhLgxRkBndESbr9qfK7L8wapQWMV4AoOt5v0EjcQ4mrpS6o=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr41624011qke.234.1555019751689;
+ Thu, 11 Apr 2019 14:55:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190410202409.241507-1-rrangel@chromium.org>
+In-Reply-To: <20190410202409.241507-1-rrangel@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 11 Apr 2019 23:55:40 +0200
+Message-ID: <CAFqH_51mo7VzwOYZTCus1mdyaQYW1=ipc7yqYd+LD2YdiNySrQ@mail.gmail.com>
+Subject: Re: [PATCH] cros_ec: Add trace event to trace EC commands
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, zwisler@chromium.org,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 2:12 PM, Paul Walmsley wrote:
-> On Thu, 11 Apr 2019, Christoph Hellwig wrote:
-> 
->> On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
->>> Similar to ARM64, add support for building DTB files from DT source
->>> data for RISC-V boards.
->>>
->>> This patch starts with the infrastructure needed for SiFive boards.
->>> Boards from other vendors would add support here in a similar form.
->>
->> What do we build it for?  We'd really need something like this:
->>
->> http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
->> http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
->>
->> To actually use the DT files.
-> 
-> Those patches might be useful - I have not reviewed them closely - but
-> they are not necessary.
-> 
-> The FSBL already supplies a DTB to Linux.  I assume the U-boot port works
-> the same way.
-> 
+Hi,
 
-I am bit confused here. I thought the idea behind putting the the DTS in 
-kernel so that Kernel don't need to depend on DT passed from boot 
-loaders. Currently, DTB passed from FSBL is modified by OpenSBI/BBL 
-before passing to U-Boot or Linux.
+Many thanks for sending this patch upstream. Looks really interesting.
+Some few comments below ...
 
-If Linux kernel can boot from the DTS contained within its source code 
-as is, that would be much more helpful.
+Please prefix the patch with "chrome/platform: cros_ec_proto: ..."
 
-> I haven't switched to U-boot yet for these driver tests, so I personally
-> have been using the open-source FSBL (freedom-u540-c000-bootloader) with
-> the following trivial patches applied:
-> 
-> https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
+Missatge de Raul E Rangel <rrangel@chromium.org> del dia dc., 10
+d=E2=80=99abr. 2019 a les 22:25:
+>
+> This is useful to see which EC commands are being executed and when.
+>
+> To enable:
+>
+>     echo 'cros_ec:*' >> /sys/kernel/debug/tracing/set_event
+>
+> Example:
+>
+>     /* cros_ec_cmd: version: 0, command: GET_VERSION */
+>     /* cros_ec_cmd: version: 0, command: GET_PROTOCOL_INFO */
+>     /* cros_ec_cmd: version: 1, command: GET_CMD_VERSIONS */
+>     /* cros_ec_cmd: version: 1, command: USB_PD_CONTROL */
+>
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> ---
+>
+>  drivers/platform/chrome/Makefile        |   4 +-
+>  drivers/platform/chrome/cros_ec_proto.c |   4 +
+>  drivers/platform/chrome/cros_ec_trace.c | 163 ++++++++++++++++++++++++
+>  drivers/platform/chrome/cros_ec_trace.h |  51 ++++++++
+>  4 files changed, 221 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_trace.c
+>  create mode 100644 drivers/platform/chrome/cros_ec_trace.h
+>
+> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/M=
+akefile
+> index 1e2f0029b597..e542268454a4 100644
+> --- a/drivers/platform/chrome/Makefile
+> +++ b/drivers/platform/chrome/Makefile
+> @@ -3,12 +3,14 @@
+>  obj-$(CONFIG_CHROMEOS_LAPTOP)          +=3D chromeos_laptop.o
+>  obj-$(CONFIG_CHROMEOS_PSTORE)          +=3D chromeos_pstore.o
+>  obj-$(CONFIG_CHROMEOS_TBMC)            +=3D chromeos_tbmc.o
+> +# tell define_trace.h where to find the cros ec trace header
+> +CFLAGS_cros_ec_trace.o:=3D               -I$(src)
+>  obj-$(CONFIG_CROS_EC_I2C)              +=3D cros_ec_i2c.o
+>  obj-$(CONFIG_CROS_EC_SPI)              +=3D cros_ec_spi.o
+>  cros_ec_lpcs-objs                      :=3D cros_ec_lpc.o cros_ec_lpc_re=
+g.o
+>  cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC) +=3D cros_ec_lpc_mec.o
+>  obj-$(CONFIG_CROS_EC_LPC)              +=3D cros_ec_lpcs.o
+> -obj-$(CONFIG_CROS_EC_PROTO)            +=3D cros_ec_proto.o
+> +obj-$(CONFIG_CROS_EC_PROTO)            +=3D cros_ec_proto.o cros_ec_trac=
+e.o
+>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)   +=3D cros_kbd_led_backlight.o
+>  obj-$(CONFIG_CROS_EC_LIGHTBAR)         +=3D cros_ec_lightbar.o
+>  obj-$(CONFIG_CROS_EC_VBC)              +=3D cros_ec_vbc.o
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/c=
+hrome/cros_ec_proto.c
+> index 97a068dff192..3d02c8259ac6 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/slab.h>
+>  #include <asm/unaligned.h>
+>
+> +#include "cros_ec_trace.h"
+> +
+>  #define EC_COMMAND_RETRIES     50
+>
+>  static int prepare_packet(struct cros_ec_device *ec_dev,
+> @@ -51,6 +53,8 @@ static int send_command(struct cros_ec_device *ec_dev,
+>         int ret;
+>         int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command=
+ *msg);
+>
+> +       trace_cros_ec_cmd(msg);
+> +
+>         if (ec_dev->proto_version > 2)
+>                 xfer_fxn =3D ec_dev->pkt_xfer;
+>         else
+> diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/c=
+hrome/cros_ec_trace.c
+> new file mode 100644
+> index 000000000000..799c8e2bfd22
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_trace.c
+> @@ -0,0 +1,163 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Trace events for the ChromeOS Embedded Controller
+> + *
+> + * Copyright 2019 Google LLC.
+> + */
+
+Use the c++ style here to be coherent with the other cros_ec_*.c files
+
+> +
+> +#define ec_cmds \
+> +       {EC_CMD_PROTO_VERSION, "PROTO_VERSION"}, \
+> +       {EC_CMD_HELLO, "HELLO"}, \
+> +       {EC_CMD_GET_VERSION, "GET_VERSION"}, \
+> +       {EC_CMD_READ_TEST, "READ_TEST"}, \
+> +       {EC_CMD_GET_BUILD_INFO, "GET_BUILD_INFO"}, \
+> +       {EC_CMD_GET_CHIP_INFO, "GET_CHIP_INFO"}, \
+> +       {EC_CMD_GET_BOARD_VERSION, "GET_BOARD_VERSION"}, \
+> +       {EC_CMD_READ_MEMMAP, "READ_MEMMAP"}, \
+> +       {EC_CMD_GET_CMD_VERSIONS, "GET_CMD_VERSIONS"}, \
+> +       {EC_CMD_GET_COMMS_STATUS, "GET_COMMS_STATUS"}, \
+> +       {EC_CMD_TEST_PROTOCOL, "TEST_PROTOCOL"}, \
+> +       {EC_CMD_GET_PROTOCOL_INFO, "GET_PROTOCOL_INFO"}, \
+> +       {EC_CMD_GSV_PAUSE_IN_S5, "GSV_PAUSE_IN_S5"}, \
+> +       {EC_CMD_GET_FEATURES, "GET_FEATURES"}, \
+> +       {EC_CMD_GET_SKU_ID, "GET_SKU_ID"}, \
+> +       {EC_CMD_SET_SKU_ID, "SET_SKU_ID"}, \
+> +       {EC_CMD_FLASH_INFO, "FLASH_INFO"}, \
+> +       {EC_CMD_FLASH_READ, "FLASH_READ"}, \
+> +       {EC_CMD_FLASH_WRITE, "FLASH_WRITE"}, \
+> +       {EC_CMD_FLASH_ERASE, "FLASH_ERASE"}, \
+> +       {EC_CMD_FLASH_PROTECT, "FLASH_PROTECT"}, \
+> +       {EC_CMD_FLASH_REGION_INFO, "FLASH_REGION_INFO"}, \
+> +       {EC_CMD_VBNV_CONTEXT, "VBNV_CONTEXT"}, \
+> +       {EC_CMD_FLASH_SPI_INFO, "FLASH_SPI_INFO"}, \
+> +       {EC_CMD_FLASH_SELECT, "FLASH_SELECT"}, \
+> +       {EC_CMD_PWM_GET_FAN_TARGET_RPM, "PWM_GET_FAN_TARGET_RPM"}, \
+> +       {EC_CMD_PWM_SET_FAN_TARGET_RPM, "PWM_SET_FAN_TARGET_RPM"}, \
+> +       {EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT, "PWM_GET_KEYBOARD_BACKLIGHT"}=
+, \
+> +       {EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT, "PWM_SET_KEYBOARD_BACKLIGHT"}=
+, \
+> +       {EC_CMD_PWM_SET_FAN_DUTY, "PWM_SET_FAN_DUTY"}, \
+> +       {EC_CMD_PWM_SET_DUTY, "PWM_SET_DUTY"}, \
+> +       {EC_CMD_PWM_GET_DUTY, "PWM_GET_DUTY"}, \
+> +       {EC_CMD_LIGHTBAR_CMD, "LIGHTBAR_CMD"}, \
+> +       {EC_CMD_LED_CONTROL, "LED_CONTROL"}, \
+> +       {EC_CMD_VBOOT_HASH, "VBOOT_HASH"}, \
+> +       {EC_CMD_MOTION_SENSE_CMD, "MOTION_SENSE_CMD"}, \
+> +       {EC_CMD_FORCE_LID_OPEN, "FORCE_LID_OPEN"}, \
+> +       {EC_CMD_CONFIG_POWER_BUTTON, "CONFIG_POWER_BUTTON"}, \
+> +       {EC_CMD_USB_CHARGE_SET_MODE, "USB_CHARGE_SET_MODE"}, \
+> +       {EC_CMD_PSTORE_INFO, "PSTORE_INFO"}, \
+> +       {EC_CMD_PSTORE_READ, "PSTORE_READ"}, \
+> +       {EC_CMD_PSTORE_WRITE, "PSTORE_WRITE"}, \
+> +       {EC_CMD_RTC_GET_VALUE, "RTC_GET_VALUE"}, \
+> +       {EC_CMD_RTC_GET_ALARM, "RTC_GET_ALARM"}, \
+> +       {EC_CMD_RTC_SET_VALUE, "RTC_SET_VALUE"}, \
+> +       {EC_CMD_RTC_SET_ALARM, "RTC_SET_ALARM"}, \
+> +       {EC_CMD_PORT80_READ, "PORT80_READ"}, \
+> +       {EC_CMD_VSTORE_INFO, "VSTORE_INFO"}, \
+> +       {EC_CMD_VSTORE_READ, "VSTORE_READ"}, \
+> +       {EC_CMD_VSTORE_WRITE, "VSTORE_WRITE"}, \
+> +       {EC_CMD_THERMAL_SET_THRESHOLD, "THERMAL_SET_THRESHOLD"}, \
+> +       {EC_CMD_THERMAL_GET_THRESHOLD, "THERMAL_GET_THRESHOLD"}, \
+> +       {EC_CMD_THERMAL_AUTO_FAN_CTRL, "THERMAL_AUTO_FAN_CTRL"}, \
+> +       {EC_CMD_TMP006_GET_CALIBRATION, "TMP006_GET_CALIBRATION"}, \
+> +       {EC_CMD_TMP006_SET_CALIBRATION, "TMP006_SET_CALIBRATION"}, \
+> +       {EC_CMD_TMP006_GET_RAW, "TMP006_GET_RAW"}, \
+> +       {EC_CMD_MKBP_STATE, "MKBP_STATE"}, \
+> +       {EC_CMD_MKBP_INFO, "MKBP_INFO"}, \
+> +       {EC_CMD_MKBP_SIMULATE_KEY, "MKBP_SIMULATE_KEY"}, \
+> +       {EC_CMD_MKBP_SET_CONFIG, "MKBP_SET_CONFIG"}, \
+> +       {EC_CMD_MKBP_GET_CONFIG, "MKBP_GET_CONFIG"}, \
+> +       {EC_CMD_KEYSCAN_SEQ_CTRL, "KEYSCAN_SEQ_CTRL"}, \
+> +       {EC_CMD_GET_NEXT_EVENT, "GET_NEXT_EVENT"}, \
+> +       {EC_CMD_KEYBOARD_FACTORY_TEST, "KEYBOARD_FACTORY_TEST"}, \
+> +       {EC_CMD_TEMP_SENSOR_GET_INFO, "TEMP_SENSOR_GET_INFO"}, \
+> +       {EC_CMD_ACPI_READ, "ACPI_READ"}, \
+> +       {EC_CMD_ACPI_WRITE, "ACPI_WRITE"}, \
+> +       {EC_CMD_ACPI_BURST_ENABLE, "ACPI_BURST_ENABLE"}, \
+> +       {EC_CMD_ACPI_BURST_DISABLE, "ACPI_BURST_DISABLE"}, \
+> +       {EC_CMD_ACPI_QUERY_EVENT, "ACPI_QUERY_EVENT"}, \
+> +       {EC_CMD_HOST_EVENT_GET_B, "HOST_EVENT_GET_B"}, \
+> +       {EC_CMD_HOST_EVENT_GET_SMI_MASK, "HOST_EVENT_GET_SMI_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_GET_SCI_MASK, "HOST_EVENT_GET_SCI_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_SET_SMI_MASK, "HOST_EVENT_SET_SMI_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_SET_SCI_MASK, "HOST_EVENT_SET_SCI_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_CLEAR, "HOST_EVENT_CLEAR"}, \
+> +       {EC_CMD_HOST_EVENT_GET_WAKE_MASK, "HOST_EVENT_GET_WAKE_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_SET_WAKE_MASK, "HOST_EVENT_SET_WAKE_MASK"}, \
+> +       {EC_CMD_HOST_EVENT_CLEAR_B, "HOST_EVENT_CLEAR_B"}, \
+> +       {EC_CMD_SWITCH_ENABLE_BKLIGHT, "SWITCH_ENABLE_BKLIGHT"}, \
+> +       {EC_CMD_SWITCH_ENABLE_WIRELESS, "SWITCH_ENABLE_WIRELESS"}, \
+> +       {EC_CMD_GPIO_SET, "GPIO_SET"}, \
+> +       {EC_CMD_GPIO_GET, "GPIO_GET"}, \
+> +       {EC_CMD_I2C_READ, "I2C_READ"}, \
+> +       {EC_CMD_I2C_WRITE, "I2C_WRITE"}, \
+> +       {EC_CMD_CHARGE_CONTROL, "CHARGE_CONTROL"}, \
+> +       {EC_CMD_CONSOLE_SNAPSHOT, "CONSOLE_SNAPSHOT"}, \
+> +       {EC_CMD_CONSOLE_READ, "CONSOLE_READ"}, \
+> +       {EC_CMD_BATTERY_CUT_OFF, "BATTERY_CUT_OFF"}, \
+> +       {EC_CMD_USB_MUX, "USB_MUX"}, \
+> +       {EC_CMD_LDO_SET, "LDO_SET"}, \
+> +       {EC_CMD_LDO_GET, "LDO_GET"}, \
+> +       {EC_CMD_POWER_INFO, "POWER_INFO"}, \
+> +       {EC_CMD_I2C_PASSTHRU, "I2C_PASSTHRU"}, \
+> +       {EC_CMD_HANG_DETECT, "HANG_DETECT"}, \
+> +       {EC_CMD_CHARGE_STATE, "CHARGE_STATE"}, \
+> +       {EC_CMD_CHARGE_CURRENT_LIMIT, "CHARGE_CURRENT_LIMIT"}, \
+> +       {EC_CMD_EXTERNAL_POWER_LIMIT, "EXTERNAL_POWER_LIMIT"}, \
+> +       {EC_CMD_OVERRIDE_DEDICATED_CHARGER_LIMIT, \
+> +               "OVERRIDE_DEDICATED_CHARGER_LIMIT"}, \
+> +       {EC_CMD_HOST_EVENT, "HOST_EVENT"}, \
+> +       {EC_CMD_HIBERNATION_DELAY, "HIBERNATION_DELAY"}, \
+> +       {EC_CMD_HOST_SLEEP_EVENT, "HOST_SLEEP_EVENT"}, \
+> +       {EC_CMD_DEVICE_EVENT, "DEVICE_EVENT"}, \
+> +       {EC_CMD_SB_READ_WORD, "SB_READ_WORD"}, \
+> +       {EC_CMD_SB_WRITE_WORD, "SB_WRITE_WORD"}, \
+> +       {EC_CMD_SB_READ_BLOCK, "SB_READ_BLOCK"}, \
+> +       {EC_CMD_SB_WRITE_BLOCK, "SB_WRITE_BLOCK"}, \
+> +       {EC_CMD_BATTERY_VENDOR_PARAM, "BATTERY_VENDOR_PARAM"}, \
+> +       {EC_CMD_SB_FW_UPDATE, "SB_FW_UPDATE"}, \
+> +       {EC_CMD_ENTERING_MODE, "ENTERING_MODE"}, \
+> +       {EC_CMD_I2C_PASSTHRU_PROTECT, "I2C_PASSTHRU_PROTECT"}, \
+> +       {EC_CMD_REBOOT, "REBOOT"}, \
+> +       {EC_CMD_REBOOT_EC, "REBOOT_EC"}, \
+> +       {EC_CMD_GET_PANIC_INFO, "GET_PANIC_INFO"}, \
+> +       {EC_CMD_RESEND_RESPONSE, "RESEND_RESPONSE"}, \
+> +       {EC_CMD_VERSION0, "VERSION0"}, \
+> +       {EC_CMD_PD_EXCHANGE_STATUS, "PD_EXCHANGE_STATUS"}, \
+> +       {EC_CMD_USB_PD_CONTROL, "USB_PD_CONTROL"}, \
+> +       {EC_CMD_USB_PD_PORTS, "USB_PD_PORTS"}, \
+> +       {EC_CMD_USB_PD_POWER_INFO, "USB_PD_POWER_INFO"}, \
+> +       {EC_CMD_PD_HOST_EVENT_STATUS, "PD_HOST_EVENT_STATUS"}, \
+> +       {EC_CMD_USB_PD_FW_UPDATE, "USB_PD_FW_UPDATE"}, \
+> +       {EC_CMD_USB_PD_RW_HASH_ENTRY, "USB_PD_RW_HASH_ENTRY"}, \
+> +       {EC_CMD_USB_PD_DEV_INFO, "USB_PD_DEV_INFO"}, \
+> +       {EC_CMD_USB_PD_DISCOVERY, "USB_PD_DISCOVERY"}, \
+> +       {EC_CMD_PD_CHARGE_PORT_OVERRIDE, "PD_CHARGE_PORT_OVERRIDE"}, \
+> +       {EC_CMD_PD_GET_LOG_ENTRY, "PD_GET_LOG_ENTRY"}, \
+> +       {EC_CMD_USB_PD_GET_AMODE, "USB_PD_GET_AMODE"}, \
+> +       {EC_CMD_USB_PD_SET_AMODE, "USB_PD_SET_AMODE"}, \
+> +       {EC_CMD_PD_WRITE_LOG_ENTRY, "PD_WRITE_LOG_ENTRY"}, \
+> +       {EC_CMD_PD_CONTROL, "PD_CONTROL"}, \
+> +       {EC_CMD_USB_PD_MUX_INFO, "USB_PD_MUX_INFO"}, \
+> +       {EC_CMD_PD_CHIP_INFO, "PD_CHIP_INFO"}, \
+> +       {EC_CMD_RWSIG_CHECK_STATUS, "RWSIG_CHECK_STATUS"}, \
+> +       {EC_CMD_RWSIG_ACTION, "RWSIG_ACTION"}, \
+> +       {EC_CMD_CR51_BASE, "CR51_BASE"}, \
+> +       {EC_CMD_CR51_LAST, "CR51_LAST"}, \
+> +       {EC_CMD_FP_PASSTHRU, "FP_PASSTHRU"}, \
+> +       {EC_CMD_FP_SENSOR_CONFIG, "FP_SENSOR_CONFIG"}, \
+> +       {EC_CMD_FP_MODE, "FP_MODE"}, \
+> +       {EC_CMD_FP_INFO, "FP_INFO"}, \
+> +       {EC_CMD_FP_FRAME, "FP_FRAME"}, \
+> +       {EC_CMD_TP_SELF_TEST, "TP_SELF_TEST"}, \
+> +       {EC_CMD_TP_FRAME_INFO, "TP_FRAME_INFO"}, \
+> +       {EC_CMD_TP_FRAME_SNAPSHOT, "TP_FRAME_SNAPSHOT"}, \
+> +       {EC_CMD_TP_FRAME_GET, "TP_FRAME_GET"}, \
+> +       {EC_CMD_BATTERY_GET_STATIC, "BATTERY_GET_STATIC"}, \
+> +       {EC_CMD_BATTERY_GET_DYNAMIC, "BATTERY_GET_DYNAMIC"}, \
+> +       {EC_CMD_CHARGER_CONTROL, "CHARGER_CONTROL"}, \
+> +       {EC_CMD_BOARD_SPECIFIC_BASE, "BOARD_SPECIFIC_BASE"}, \
+> +       {EC_CMD_BOARD_SPECIFIC_LAST, "BOARD_SPECIFIC_LAST"}
+> +
+
+I don't like this define, though I'm not sure we can get rid of it
+because I don't know too much about the trace infrastructure. Can this
+be a struct instead? Also, my worry is how we will maintain *sync*
+this with the supported commands defined in cros_ec_command.h. I think
+that can be error-prone.
+
+> +#define CREATE_TRACE_POINTS
+> +#include "cros_ec_trace.h"
+> diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/c=
+hrome/cros_ec_trace.h
+> new file mode 100644
+> index 000000000000..86ef52f96fd4
+> --- /dev/null
+> +++ b/drivers/platform/chrome/cros_ec_trace.h
+> @@ -0,0 +1,51 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Trace events for the ChromeOS Embedded Controller
+> + *
+> + * Copyright 2019 Google LLC.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cros_ec
+> +
+> +#if !defined(_CROS_EC_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _CROS_EC_TRACE_H_
+> +
+> +#include <linux/types.h>
+> +#include <linux/mfd/cros_ec.h>
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +DECLARE_EVENT_CLASS(cros_ec_cmd_class,
+> +       TP_PROTO(struct cros_ec_command *cmd),
+> +       TP_ARGS(cmd),
+> +       TP_STRUCT__entry(
+> +               __field(uint32_t, version)
+> +               __field(uint32_t, command)
+> +       ),
+> +       TP_fast_assign(
+> +               __entry->version =3D cmd->version;
+> +               __entry->command =3D cmd->command;
+> +       ),
+> +       TP_printk("version: %u, command: %s", __entry->version,
+> +                 __print_symbolic(__entry->command, ec_cmds))
+> +);
+> +
+> +
+> +DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
+> +       TP_PROTO(struct cros_ec_command *cmd),
+> +       TP_ARGS(cmd)
+> +);
+> +
+> +
+> +#endif /* _CROS_EC_TRACE_H_ */
+> +
+> +/* this part must be outside header guard */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE cros_ec_trace
+> +
+> +#include <trace/define_trace.h>
+> --
+> 2.21.0.392.gf8f6787159e-goog
 >
 
-
-> The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output,
-> e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
-> 
-> 
-
-This assumes that FSBL has to be rebuilt every time I want to change the 
-DT. I was hoping to avoid that.
-
-Regards,
-Atish
-
-> - Paul
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-
+Thanks,
+ Enric
