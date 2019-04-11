@@ -2,127 +2,110 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196ECC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43F920850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA1C20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfDKVC3 (ORCPT
+        id S1726798AbfDKVDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:02:29 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:60466 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDKVC2 (ORCPT
+        Thu, 11 Apr 2019 17:03:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42872 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726655AbfDKVDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:02:28 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hEgpc-0002tG-Ba; Thu, 11 Apr 2019 21:02:00 +0000
-Date:   Thu, 11 Apr 2019 22:02:00 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v3 14/15] dcache: Implement partial shrink via Slab
- Movable Objects
-Message-ID: <20190411210200.GH2217@ZenIV.linux.org.uk>
-References: <20190411013441.5415-1-tobin@kernel.org>
- <20190411013441.5415-15-tobin@kernel.org>
- <20190411023322.GD2217@ZenIV.linux.org.uk>
- <20190411024821.GB6941@eros.localdomain>
- <20190411044746.GE2217@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411044746.GE2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 11 Apr 2019 17:03:38 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BKpHLY119483
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:03:36 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rtbqmuk1h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:03:36 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 11 Apr 2019 22:03:35 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 22:03:31 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BL3RBB33947792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 21:03:27 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B076EAE05F;
+        Thu, 11 Apr 2019 21:03:27 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DCC5AE05C;
+        Thu, 11 Apr 2019 21:03:27 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.endicott.ibm.com (unknown [9.60.75.235])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 11 Apr 2019 21:03:27 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH 0/7] s390: vfio-ap: dynamic configuration support
+Date:   Thu, 11 Apr 2019 17:03:17 -0400
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19041121-2213-0000-0000-000003752B8C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010910; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01187698; UDB=6.00622145; IPR=6.00968461;
+ MB=3.00026399; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 21:03:33
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041121-2214-0000-0000-00005DFD1D0D
+Message-Id: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=847 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 05:47:46AM +0100, Al Viro wrote:
+This patch series extends the crypto adapter pass-through support to 
+provide safeguards against inadvertent sharing of AP resources between
+guests and/or the host, and to implement more of the s390 AP
+architecture related to provisioning and dynamic configuration of
+AP resources.
 
-> Note, BTW, that umount coming between isolate and drop is not a problem;
-> it call shrink_dcache_parent() on the root.  And if shrink_dcache_parent()
-> finds something on (another) shrink list, it won't put it to the shrink
-> list of its own, but it will make note of that and repeat the scan in
-> such case.  So if we find something with zero refcount and not on
-> shrink list, we can move it to our shrink list and be sure that its
-> superblock won't go away under us...
+Tony Krowiak (7):
+  s390: zcrypt: driver callback to indicate resource in use
+  s390: vfio-ap: implement in-use callback for vfio_ap driver
+  s390: vfio-ap: allow assignment of unavailable AP resources to mdev
+    device
+  s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
+  s390: vfio-ap: wait for queue empty on queue reset
+  s390: vfio-ap: handle dynamic config/deconfig of AP adapter
+  s390: vfio-ap: update documentation
 
-Aaaarrgghhh...  No, we can't.  Look: we get one candidate dentry in isolate
-phase.  We put it into shrink list.  umount(2) comes and calls
-shrink_dcache_for_umount(), which calls shrink_dcache_parent(root).
-In the meanwhile, shrink_dentry_list() is run and does __dentry_kill() on
-that one dentry.  Fine, it's gone - before shrink_dcache_parent() even
-sees it.  Now shrink_dentry_list() holds a reference to its parent and
-is about to drop it in
-                dentry = parent;
-                while (dentry && !lockref_put_or_lock(&dentry->d_lockref))
-                        dentry = dentry_kill(dentry);
-And dropped it will be, but... shrink_dcache_parent() has finished the
-scan, without finding *anything* with zero refcount - the thing that used
-to be on the shrink list was already gone before shrink_dcache_parent()
-has gotten there and the reference to parent was not dropped yet.  So
-shrink_dcache_for_umount() plows past shrink_dcache_parent(), walks the
-tree and complains loudly about "busy" dentries (that parent we hadn't
-finished dropping), and then we proceed with filesystem shutdown.
-In the meanwhile, dentry_kill() finally gets to killing dentry and
-triggers an unexpected late call of ->d_iput() on a filesystem that
-has already been far enough into shutdown - far enough to destroy the
-data structures needed for that sucker.
+ Documentation/s390/vfio-ap.txt        | 147 +++++++++++----
+ arch/s390/include/asm/kvm_host.h      |   2 +
+ arch/s390/kvm/kvm-s390.c              |  37 ++++
+ drivers/s390/crypto/ap_bus.c          | 138 ++++++++++++++-
+ drivers/s390/crypto/ap_bus.h          |   3 +
+ drivers/s390/crypto/vfio_ap_drv.c     |  39 +++-
+ drivers/s390/crypto/vfio_ap_ops.c     | 324 +++++++++++++++-------------------
+ drivers/s390/crypto/vfio_ap_private.h |   2 +
+ 8 files changed, 471 insertions(+), 221 deletions(-)
 
-The reason we don't hit that problem with regular memory shrinker is
-this:
-                unregister_shrinker(&s->s_shrink);
-                fs->kill_sb(s);
-in deactivate_locked_super().  IOW, shrinker for this fs is gone
-before we get around to shutdown.  And so are all normal sources
-of dentry eviction for that fs.
+-- 
+2.7.4
 
-Your earlier variants all suffer the same problem - picking a page
-shared by dentries from several superblocks can run into trouble
-if it overlaps with umount of one of those.
-
-Fuck...  One variant of solution would be to have per-superblock
-struct kmem_cache to be used for dentries of that superblock.
-However,
-	* we'd need to prevent them getting merged
-	* it would add per-superblock memory costs (for struct
-kmem_cache and associated structures)
-	* it might mean more pages eaten by the dentries -
-on average half a page per superblock (more if there are very
-few dentries on that superblock)
-
-OTOH, it might actually improve the memory footprint - all
-dentries sharing a page would be from the same superblock,
-so the use patterns might be more similar, which might
-lower the fragmentation...
-
-Hell knows...  I'd like to hear an opinion from VM folks on
-that one.  Comments?
