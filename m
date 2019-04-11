@@ -2,84 +2,99 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2712CC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF9C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A7A2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555015595;
-	bh=cg6vcRjYqVcEyWsUirUouCQgdhJHP6oU47vPazrG16U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hns2UOVwIwCVxayxIyYHnu/7s/r3XEC2+MM4xG0iuAW7fIEurnqEZZ+6QGnlmC66P
-	 4JA+4WUs2OZtJ2Wj0m2Q1BoSRO3nBNgzmULrdJlNwXD/CA+w+XCGDr2fdfH4uXIsnD
-	 3m6LH5J7ZVR6rJ00185elPJ+9GJgFkTwsogJldv0=
+	by mail.kernel.org (Postfix) with ESMTP id A78752146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS9KcqR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfDKUqe (ORCPT
+        id S1727039AbfDKUsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfDKUqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:46:33 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4BF82184B;
-        Thu, 11 Apr 2019 20:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555015593;
-        bh=cg6vcRjYqVcEyWsUirUouCQgdhJHP6oU47vPazrG16U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jtD7GF5rER/OrGa9DxdXzr5+UQgoejPF9vThO0T7hyIRhF7eByt0EpFY4dNuVH1X5
-         Q/wFvGXbcMbgB3/Qo1J8Fw2TxfmPjd1jItDrOKWvwcyISbOseuF+wqqVg+4ZYGks2R
-         yLuczRS9XH5DZl7sN/Dyuc8azFqv9ZNRwWZW9HC8=
-Received: by mail-ed1-f47.google.com with SMTP id d1so6415909edd.13;
-        Thu, 11 Apr 2019 13:46:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXFCtuLRUIqPwuP8LeaNAmVg+Qbq3Ur/NfEDVOXqtEd4FEtJdb
-        otYF8uYET4NIjcBDMcJ0N3hqNICD/46xFwf88EA=
-X-Google-Smtp-Source: APXvYqwdGi+g08MWa/C8/lAdqwPsfRMx4ENOMIEfpA370lVui7XWA1RgILRRJI/7i7izFCFfDUzbSXJDpDBdWiNKg5Y=
-X-Received: by 2002:a17:906:69d6:: with SMTP id g22mr4079340ejs.124.1555015591393;
- Thu, 11 Apr 2019 13:46:31 -0700 (PDT)
+        Thu, 11 Apr 2019 16:48:52 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41795 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726588AbfDKUsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:48:52 -0400
+Received: by mail-qk1-f194.google.com with SMTP id o129so4354337qke.8;
+        Thu, 11 Apr 2019 13:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MFxx8aXhh0G/CS6goo7udzq09ZCw/FPJwQJNH7tq1kU=;
+        b=GS9KcqR50oOE6DZenl/eg2vjZV9mXtAQl3FhcV8lXa5DSQjBr8sriYOzsBIgNUay04
+         EEkqYcTyqlfKHxsNJaGFolfJSa+BRb8AfT6C5EZRZlAeZI+S2Jxq2OqorJa2pMT1KfLi
+         j3WED/jwBH4sHdeCFRHadMRVbYv/EEIqrCdBbZIgWnErgYIpbuK17yN5kCOs+O/0r7xR
+         BCuJnlnzFcsmbgYa7OAP/v+jicgedYArQSFQVz/OtH/KpC2dUQ9rlPoewIEzbpO8RVgv
+         M22jEIGZ97J4WQ4HcZH8MZlwxxGijlvEnLKkvYg/RkSLcKvJb9SC6NtSecGtlkkI/Rx+
+         PXyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MFxx8aXhh0G/CS6goo7udzq09ZCw/FPJwQJNH7tq1kU=;
+        b=NTpQ7c4nLRTdcW8/u3JxVBxVfMNRwFT9dY2J+5YDazHjXDJIDVdB9vFcuLcNtAZJds
+         U01v/kEgcEZ5zJtsRsBwCax0EVRWuzlQCURenV9ElE/6I+VNW0ubBwxny7WDl/O5HyeI
+         +LeziseYMnnLYWLw1MuRw8FRGvim736ERUUQHCvQmK3afY/KMNOZ1iDcIKVc36kQwYKB
+         qcqZySzlNoBXbVyH1MmD0Ydu9PapdbTKP3yyMp9LXlc8cv8KoTz5rvXKsRkw/tJ33YH/
+         uueJDghsn2fyZlcAdzQV2aKbZwiRhEq2yqvUU0zED3JWnJ5fknWLYerk7A/axBppUJU2
+         WlWQ==
+X-Gm-Message-State: APjAAAXiEG8EekUrTmSCsN4FXMgv57TeIvyy2cJC0iPEZug6uVFUdQXA
+        Lziu221kg3K7O97iwu5/37/xmvOVO14IT9FsXUY=
+X-Google-Smtp-Source: APXvYqxwQLpGHtJsQPkPcAXLOJqtbc3Kfhu5iIYHmKQgrUf26yhZfXRnMdMyjBzS3i7Nd+tOiwXfcuWo2eObcqVMc8k=
+X-Received: by 2002:a05:620a:16c5:: with SMTP id a5mr42060684qkn.212.1555015730985;
+ Thu, 11 Apr 2019 13:48:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-11-git-send-email-hao.wu@intel.com> <20190402155018.GA1453@archbook>
-In-Reply-To: <20190402155018.GA1453@archbook>
-From:   Alan Tull <atull@kernel.org>
-Date:   Thu, 11 Apr 2019 15:45:54 -0500
-X-Gmail-Original-Message-ID: <CANk1AXRuA=hWOSxV-z9h3oz1VQVTVy8tYe2pgi4qN0fz9u2fyw@mail.gmail.com>
-Message-ID: <CANk1AXRuA=hWOSxV-z9h3oz1VQVTVy8tYe2pgi4qN0fz9u2fyw@mail.gmail.com>
-Subject: Re: [PATCH 10/17] fpga: dfl: afu: export __port_enable/disable function.
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Wu Hao <hao.wu@intel.com>, Alan Tull <atull@kernel.org>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+References: <3c15d21d2b6896e76e8801dc07de2bae1dadceb1.1554827560.git.joe@perches.com>
+ <20190410181901.1e40252e@mschwideX1>
+In-Reply-To: <20190410181901.1e40252e@mschwideX1>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 11 Apr 2019 13:48:39 -0700
+Message-ID: <CAPhsuW54C34tB82-g0uzyt-pWnYh616=fR9cGT6hp5t0L5h+HA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] s390: Convert IS_ENABLED uses to __is_defined
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-s390@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 10:50 AM Moritz Fischer <mdf@kernel.org> wrote:
+On Wed, Apr 10, 2019 at 11:43 AM Martin Schwidefsky
+<schwidefsky@de.ibm.com> wrote:
+>
+> On Tue,  9 Apr 2019 09:33:12 -0700
+> Joe Perches <joe@perches.com> wrote:
+>
+> > IS_ENABLED should be reserved for CONFIG_<FOO> uses so convert
+> > the uses of IS_ENABLED with a #define to __is_defined.
+> >
+> > Signed-off-by: Joe Perches <joe@perches.com>
 
-Hi Hao,
+Acked-by: Song Liu <songliubraving@fb.com>
 
 >
-> On Mon, Mar 25, 2019 at 11:07:37AM +0800, Wu Hao wrote:
-> > As these two functions are used by other private features. e.g.
-> > in error reporting private feature, it requires to check port status
-> > and reset port for error clearing.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Moritz Fischer <mdf@kernel.org>
-
-Acked-by: Alan Tull <atull@kernel.org>
-
-Thanks,
-Alan
+> That makes a lot of sense. Added to s390/linux:features. Thanks.
+>
+> --
+> blue skies,
+>    Martin.
+>
+> "Reality continues to ruin my life." - Calvin.
+>
