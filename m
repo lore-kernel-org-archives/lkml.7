@@ -2,1261 +2,431 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA7C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B79DC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CCC2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KysJ4/vz"
+	by mail.kernel.org (Postfix) with ESMTP id 530B42075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfDKVOx (ORCPT
+        id S1726830AbfDKVRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:14:53 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:39097 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfDKVOw (ORCPT
+        Thu, 11 Apr 2019 17:17:35 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58057 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfDKVRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555017292; x=1586553292;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=UcOSSHhvSlr3nIKfZj24CCbVP9dUwP2q4bMOm8ecAUk=;
-  b=KysJ4/vzhyfajgy/KiZZmEFWx/B36t/ZHarqhU+38SBn0LZXkzo8kZ+g
-   HysVdvC6dqMZQf6eGk9b0Z2FZjSB7a4RH60UKbq7kqXz+RL0zBcWWOf7P
-   fHPFY7ArBWaIM2LLHSmniBqL8n5IvbcX/gEUF2w4OiAo72x45Sz/CIFwi
-   8GQlqLTU0qUN4V7R/Rw1AP/GrcvgRgWbLrJmHaEpbP7tXk1C+5V4OEpbz
-   YBsIEMbnZxsJA/KOmu4RL8JGR5WzCm63En6dC/dQy9904VvUxo3BpU9zi
-   j4UD9O54NZ0KV9cabXV7y/HJTWgfvFfHnuoz0SIJgaEhImHLEbxeVINCj
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,338,1549900800"; 
-   d="scan'208";a="110668824"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Apr 2019 05:14:52 +0800
-IronPort-SDR: NOrFjk+KrBiG70OLIrjU2tdAuTpTnrYzxW2mL9StXAqKxuauVQSLP3hKJsOh0ScTDs8VJ741fO
- 0YX4Ewms/ssBhjXgnW7OrsoSSecCNxiUm4wBc/Xnv5nZkcQpnsRRXKsCEDGTtHmYA4isRx02Qn
- pOW6vQVKyhCsz5cxL0hond8/peaBFBUCLv1gd8ii5l0Ue086nqZQRD9Pgto0xMyplnhFuDAhTd
- wLXrWfgJpXyLTHW9mrca9zFIvVc0vAP6fGIvrBgwMlNH8QD/1wcEX0SaJFyYls+eabdXbN2V3s
- 3Nax8nLcZfnZV/6fNOzfZZOc
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 11 Apr 2019 13:51:43 -0700
-IronPort-SDR: empd2OF3zEiXNdscveSbHnkL8Xo5VTOxNwUKrSnn6274aiNNxrZma5xRfKSgsm+ldTP0krSvOd
- J/ei7eNPln2Jnf4CXQjRvu2upGEwdTd/OHvDFK96Ru/ubwlgZtDQNDTCo3NvVL/WGrkgFumzWk
- qZD6MZMeAt/nj5Uz0zw10RxDn9Thz6SnIQLZBEN/3R4m1iUcmAwkAsKib06qr4PyrOK5WG0usR
- s3HMsHH71khBLsnGX3BcqHgAcdmHQe9Irl6RIqcohZSMePxHHV/dOSZXIN+L3uvsnb6050cvRF
- Yc0=
-Received: from usa001883.ad.shared (HELO [10.86.51.17]) ([10.86.51.17])
-  by uls-op-cesaip02.wdc.com with ESMTP; 11 Apr 2019 14:14:48 -0700
-Subject: Re: [PATCH v4 2/2] tty: serial: add driver for the SiFive UART
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     Paul Walmsley <paul@pwsan.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Jiri Slaby <jslaby@suse.com>
-References: <20190411090027.8670-1-paul.walmsley@sifive.com>
- <20190411090027.8670-3-paul.walmsley@sifive.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <17178b05-d3e2-99ed-eeb5-b4f60c5ff608@wdc.com>
-Date:   Thu, 11 Apr 2019 14:14:47 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 11 Apr 2019 17:17:34 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 59A0E40002;
+        Thu, 11 Apr 2019 21:17:28 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 23:17:27 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] MIPS: SGI-IP27: fix readb/writeb addressing
+Message-ID: <20190411211727.GN3578@piout.net>
+References: <20190409154610.6735-1-tbogendoerfer@suse.de>
+ <20190409154610.6735-4-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20190411090027.8670-3-paul.walmsley@sifive.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409154610.6735-4-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 2:02 AM, Paul Walmsley wrote:
-> Add a serial driver for the SiFive UART, found on SiFive FU540 devices
-> (among others).
+On 09/04/2019 17:46:07+0200, Thomas Bogendoerfer wrote:
+> Our chosen byte swapping, which is what firmware already uses, is to
+> do readl/writel by normal lw/sw intructions (data invariance). This
+> also means we need to mangle addresses for u8 and u16 accesses. The
+> mangling for 16bit has been done aready, but 8bit one was missing.
+> Correcting this causes different addresses for accesses to the
+> SuperIO and local bus of the IOC3 chip. This is fixed by changing
+> byte order in ioc3 and m48rtc_rtc structs.
 > 
-> The underlying serial IP block is relatively basic, and currently does
-> not support serial break detection.  Further information on the IP
-> block can be found in the documentation and Chisel sources:
-> 
->      https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> 
->      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-> 
-> This driver was written in collaboration with Wesley Terpstra
-> <wesley@sifive.com>.
-> 
-> Tested on a SiFive HiFive Unleashed A00 board, using BBL and the open-
-> source FSBL (using a DT file based on what's targeted for mainline).
-> 
-> This revision incorporates changes based on comments by Emil Renner
-> Berthing <kernel@esmil.dk>.
-> 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: linux-serial@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+
+Considering this is probably the only platform to have that RTC and that
+is probably not worth having a better fix for a platform this old:
+
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
 > ---
->   drivers/tty/serial/Kconfig       |   24 +
->   drivers/tty/serial/Makefile      |    1 +
->   drivers/tty/serial/sifive.c      | 1067 ++++++++++++++++++++++++++++++
->   include/uapi/linux/serial_core.h |    3 +
->   4 files changed, 1095 insertions(+)
->   create mode 100644 drivers/tty/serial/sifive.c
+>  arch/mips/include/asm/mach-ip27/mangle-port.h |   2 +-
+>  arch/mips/include/asm/sn/ioc3.h               | 198 +++++++++++++-------------
+>  arch/mips/sgi-ip27/ip27-console.c             |   5 +-
+>  drivers/rtc/rtc-m48t35.c                      |  11 ++
+>  drivers/tty/serial/8250/8250_ioc3.c           |   4 +-
+>  5 files changed, 114 insertions(+), 106 deletions(-)
 > 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 72966bc0ac76..561e053b690a 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1095,6 +1095,30 @@ config SERIAL_OMAP_CONSOLE
->   	  your boot loader about how to pass options to the kernel at
->   	  boot time.)
->   
-> +config SERIAL_SIFIVE
-> +	tristate "SiFive UART support"
-> +	depends on OF
-> +	select SERIAL_CORE
-> +	help
-> +	  Select this option if you are building a kernel for a device that
-> +	  contains a SiFive UART IP block.  This type of UART is present on
-> +	  SiFive FU540 SoCs, among others.
-> +
-> +config SERIAL_SIFIVE_CONSOLE
-> +	bool "Console on SiFive UART"
-> +	depends on SERIAL_SIFIVE=y
-> +	select SERIAL_CORE_CONSOLE
-> +	help
-> +	  Select this option if you would like to use a SiFive UART as the
-> +	  system console.
-> +
-> +	  Even if you say Y here, the currently visible virtual console
-> +	  (/dev/tty0) will still be used as the system console by default, but
-> +	  you can alter that using a kernel command line option such as
-> +	  "console=ttySIFx". (Try "man bootparam" or see the documentation of
-> +	  your boot loader about how to pass options to the kernel at
-> +	  boot time.)
-> +
->   config SERIAL_LANTIQ
->   	bool "Lantiq serial driver"
->   	depends on LANTIQ
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index 40b702aaa85e..2aff1d07d08b 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -92,6 +92,7 @@ obj-$(CONFIG_SERIAL_PIC32)	+= pic32_uart.o
->   obj-$(CONFIG_SERIAL_MPS2_UART)	+= mps2-uart.o
->   obj-$(CONFIG_SERIAL_OWL)	+= owl-uart.o
->   obj-$(CONFIG_SERIAL_RDA)	+= rda-uart.o
-> +obj-$(CONFIG_SERIAL_SIFIVE)	+= sifive.o
->   
->   # GPIOLIB helpers for modem control lines
->   obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
-> diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-> new file mode 100644
-> index 000000000000..7401cfed0f48
-> --- /dev/null
-> +++ b/drivers/tty/serial/sifive.c
-> @@ -0,0 +1,1067 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * SiFive UART driver
-> + * Copyright (C) 2018 Paul Walmsley <paul@pwsan.com>
-> + * Copyright (C) 2018 SiFive
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * Based partially on:
-> + * - drivers/tty/serial/pxa.c
-> + * - drivers/tty/serial/amba-pl011.c
-> + * - drivers/tty/serial/uartlite.c
-> + * - drivers/tty/serial/omap-serial.c
-> + * - drivers/pwm/pwm-sifive.c
-> + *
-> + * See the following sources for further documentation:
-> + * - Chapter 19 "Universal Asynchronous Receiver/Transmitter (UART)" of
-> + *   SiFive FE310-G000 v2p3
-> + * - The tree/master/src/main/scala/devices/uart directory of
-> + *   https://github.com/sifive/sifive-blocks/
-> + *
-> + * The SiFive UART design is not 8250-compatible.  The following common
-> + * features are not supported:
-> + * - Word lengths other than 8 bits
-> + * - Break handling
-> + * - Parity
-> + * - Flow control
-> + * - Modem signals (DSR, RI, etc.)
-> + * On the other hand, the design is free from the baggage of the 8250
-> + * programming model.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/console.h>
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/serial_core.h>
-> +#include <linux/serial_reg.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_flip.h>
-> +
-> +/*
-> + * Register offsets
-> + */
-> +
-> +/* TXDATA */
-> +#define SIFIVE_SERIAL_TXDATA_OFFS		0x0
-> +#define SIFIVE_SERIAL_TXDATA_FULL_SHIFT		31
-> +#define SIFIVE_SERIAL_TXDATA_FULL_MASK		(1 << SIFIVE_SERIAL_TXDATA_FULL_SHIFT)
-> +#define SIFIVE_SERIAL_TXDATA_DATA_SHIFT		0
-> +#define SIFIVE_SERIAL_TXDATA_DATA_MASK		(0xff << SIFIVE_SERIAL_TXDATA_DATA_SHIFT)
-> +
-> +/* RXDATA */
-> +#define SIFIVE_SERIAL_RXDATA_OFFS		0x4
-> +#define SIFIVE_SERIAL_RXDATA_EMPTY_SHIFT	31
-> +#define SIFIVE_SERIAL_RXDATA_EMPTY_MASK		(1 << SIFIVE_SERIAL_RXDATA_EMPTY_SHIFT)
-> +#define SIFIVE_SERIAL_RXDATA_DATA_SHIFT		0
-> +#define SIFIVE_SERIAL_RXDATA_DATA_MASK		(0xff << SIFIVE_SERIAL_RXDATA_DATA_SHIFT)
-> +
-> +/* TXCTRL */
-> +#define SIFIVE_SERIAL_TXCTRL_OFFS		0x8
-> +#define SIFIVE_SERIAL_TXCTRL_TXCNT_SHIFT	16
-> +#define SIFIVE_SERIAL_TXCTRL_TXCNT_MASK		(0x7 << SIFIVE_SERIAL_TXCTRL_TXCNT_SHIFT)
-> +#define SIFIVE_SERIAL_TXCTRL_NSTOP_SHIFT	1
-> +#define SIFIVE_SERIAL_TXCTRL_NSTOP_MASK		(1 << SIFIVE_SERIAL_TXCTRL_NSTOP_SHIFT)
-> +#define SIFIVE_SERIAL_TXCTRL_TXEN_SHIFT		0
-> +#define SIFIVE_SERIAL_TXCTRL_TXEN_MASK		(1 << SIFIVE_SERIAL_TXCTRL_TXEN_SHIFT)
-> +
-> +/* RXCTRL */
-> +#define SIFIVE_SERIAL_RXCTRL_OFFS		0xC
-> +#define SIFIVE_SERIAL_RXCTRL_RXCNT_SHIFT	16
-> +#define SIFIVE_SERIAL_RXCTRL_RXCNT_MASK		(0x7 << SIFIVE_SERIAL_TXCTRL_TXCNT_SHIFT)
-> +#define SIFIVE_SERIAL_RXCTRL_RXEN_SHIFT		0
-> +#define SIFIVE_SERIAL_RXCTRL_RXEN_MASK		(1 << SIFIVE_SERIAL_RXCTRL_RXEN_SHIFT)
-> +
-> +/* IE */
-> +#define SIFIVE_SERIAL_IE_OFFS			0x10
-> +#define SIFIVE_SERIAL_IE_RXWM_SHIFT		1
-> +#define SIFIVE_SERIAL_IE_RXWM_MASK		(1 << SIFIVE_SERIAL_IE_RXWM_SHIFT)
-> +#define SIFIVE_SERIAL_IE_TXWM_SHIFT		0
-> +#define SIFIVE_SERIAL_IE_TXWM_MASK		(1 << SIFIVE_SERIAL_IE_TXWM_SHIFT)
-> +
-> +/* IP */
-> +#define SIFIVE_SERIAL_IP_OFFS			0x14
-> +#define SIFIVE_SERIAL_IP_RXWM_SHIFT		1
-> +#define SIFIVE_SERIAL_IP_RXWM_MASK		(1 << SIFIVE_SERIAL_IP_RXWM_SHIFT)
-> +#define SIFIVE_SERIAL_IP_TXWM_SHIFT		0
-> +#define SIFIVE_SERIAL_IP_TXWM_MASK		(1 << SIFIVE_SERIAL_IP_TXWM_SHIFT)
-> +
-> +/* DIV */
-> +#define SIFIVE_SERIAL_DIV_OFFS			0x18
-> +#define SIFIVE_SERIAL_DIV_DIV_SHIFT		0
-> +#define SIFIVE_SERIAL_DIV_DIV_MASK		(0xffff << SIFIVE_SERIAL_IP_DIV_SHIFT)
-> +
-> +/*
-> + * Config macros
-> + */
-> +
-> +/*
-> + * SIFIVE_SERIAL_MAX_PORTS: maximum number of UARTs on a device that can
-> + *                          host a serial console
-> + */
-> +#define SIFIVE_SERIAL_MAX_PORTS			8
-> +
-> +/*
-> + * SIFIVE_DEFAULT_BAUD_RATE: default baud rate that the driver should
-> + *                           configure itself to use
-> + */
-> +#define SIFIVE_DEFAULT_BAUD_RATE		115200
-> +
-> +/* SIFIVE_SERIAL_NAME: our driver's name that we pass to the operating system */
-> +#define SIFIVE_SERIAL_NAME			"sifive-serial"
-> +
-> +/* SIFIVE_TTY_PREFIX: tty name prefix for SiFive serial ports */
-> +#define SIFIVE_TTY_PREFIX			"ttySIF"
-> +
-> +/* SIFIVE_TX_FIFO_DEPTH: depth of the TX FIFO (in bytes) */
-> +#define SIFIVE_TX_FIFO_DEPTH			8
-> +
-> +/* SIFIVE_RX_FIFO_DEPTH: depth of the TX FIFO (in bytes) */
-> +#define SIFIVE_RX_FIFO_DEPTH			8
-> +
-> +#if (SIFIVE_TX_FIFO_DEPTH != SIFIVE_RX_FIFO_DEPTH)
-> +#error Driver does not support configurations with different TX, RX FIFO sizes
-> +#endif
-> +
-> +/*
-> + *
-> + */
-> +
-
-Remove it if no comment here ?
-
-Regards,
-Atish
-> +/**
-> + * sifive_serial_port - driver-specific data extension to struct uart_port
-> + * @port: struct uart_port embedded in this struct
-> + * @dev: struct device *
-> + * @ier: shadowed copy of the interrupt enable register
-> + * @clkin_rate: input clock to the UART IP block.
-> + * @baud_rate: UART serial line rate (e.g., 115200 baud)
-> + * @clk_notifier: clock rate change notifier for upstream clock changes
-> + *
-> + * Configuration data specific to this SiFive UART.
-> + */
-> +struct sifive_serial_port {
-> +	struct uart_port	port;
-> +	struct device		*dev;
-> +	unsigned char		ier;
-> +	unsigned long		clkin_rate;
-> +	unsigned long		baud_rate;
-> +	struct clk		*clk;
-> +	struct notifier_block	clk_notifier;
-> +};
-> +
-> +/*
-> + * Structure container-of macros
-> + */
-> +
-> +#define port_to_sifive_serial_port(p) (container_of((p), \
-> +						    struct sifive_serial_port, \
-> +						    port))
-> +
-> +#define notifier_to_sifive_serial_port(nb) (container_of((nb), \
-> +							 struct sifive_serial_port, \
-> +							 clk_notifier))
-> +
-> +/*
-> + * Forward declarations
-> + */
-> +static void sifive_serial_stop_tx(struct uart_port *port);
-> +
-> +/*
-> + * Internal functions
-> + */
-> +
-> +/**
-> + * __ssp_early_writel() - write to a SiFive serial port register (early)
-> + * @port: pointer to a struct uart_port record
-> + * @offs: register address offset from the IP block base address
-> + * @v: value to write to the register
-> + *
-> + * Given a pointer @port to a struct uart_port record, write the value
-> + * @v to the IP block register address offset @offs.  This function is
-> + * intended for early console use.
-> + *
-> + * Context: Intended to be used only by the earlyconsole code.
-> + */
-> +static void __ssp_early_writel(u32 v, u16 offs, struct uart_port *port)
-> +{
-> +	writel_relaxed(v, port->membase + offs);
-> +}
-> +
-> +/**
-> + * __ssp_early_readl() - read from a SiFive serial port register (early)
-> + * @port: pointer to a struct uart_port record
-> + * @offs: register address offset from the IP block base address
-> + *
-> + * Given a pointer @port to a struct uart_port record, read the
-> + * contents of the IP block register located at offset @offs from the
-> + * IP block base and return it.  This function is intended for early
-> + * console use.
-> + *
-> + * Context: Intended to be called only by the earlyconsole code or by
-> + *          __ssp_readl() or __ssp_writel() (in this driver)
-> + *
-> + * Returns: the register value read from the UART.
-> + */
-> +static u32 __ssp_early_readl(struct uart_port *port, u16 offs)
-> +{
-> +	return readl_relaxed(port->membase + offs);
-> +}
-> +
-> +/**
-> + * __ssp_writel() - write to a SiFive serial port register
-> + * @v: value to write to the register
-> + * @offs: register address offset from the IP block base address
-> + * @ssp: pointer to a struct sifive_serial_port record
-> + *
-> + * Write the value @v to the IP block register located at offset @offs from the
-> + * IP block base, given a pointer @ssp to a struct sifive_serial_port record.
-> + *
-> + * Context: Any context.
-> + */
-> +static void __ssp_writel(u32 v, u16 offs, struct sifive_serial_port *ssp)
-> +{
-> +	__ssp_early_writel(v, offs, &ssp->port);
-> +}
-> +
-> +/**
-> + * __ssp_readl() - read from a SiFive serial port register
-> + * @ssp: pointer to a struct sifive_serial_port record
-> + * @offs: register address offset from the IP block base address
-> + *
-> + * Read the contents of the IP block register located at offset @offs from the
-> + * IP block base, given a pointer @ssp to a struct sifive_serial_port record.
-> + *
-> + * Context: Any context.
-> + *
-> + * Returns: the value of the UART register
-> + */
-> +static u32 __ssp_readl(struct sifive_serial_port *ssp, u16 offs)
-> +{
-> +	return __ssp_early_readl(&ssp->port, offs);
-> +}
-> +
-> +/**
-> + * sifive_serial_is_txfifo_full() - is the TXFIFO full?
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Read the transmit FIFO "full" bit, returning a non-zero value if the
-> + * TX FIFO is full, or zero if space remains.  Intended to be used to prevent
-> + * writes to the TX FIFO when it's full.
-> + *
-> + * Returns: SIFIVE_SERIAL_TXDATA_FULL_MASK (non-zero) if the transmit FIFO
-> + * is full, or 0 if space remains.
-> + */
-> +static int sifive_serial_is_txfifo_full(struct sifive_serial_port *ssp)
-> +{
-> +	return __ssp_readl(ssp, SIFIVE_SERIAL_TXDATA_OFFS) &
-> +		SIFIVE_SERIAL_TXDATA_FULL_MASK;
-> +}
-> +
-> +/**
-> + * __ssp_transmit_char() - enqueue a byte to transmit onto the TX FIFO
-> + * @ssp: pointer to a struct sifive_serial_port
-> + * @ch: character to transmit
-> + *
-> + * Enqueue a byte @ch onto the transmit FIFO, given a pointer @ssp to the
-> + * struct sifive_serial_port * to transmit on.  Caller should first check to
-> + * ensure that the TXFIFO has space; see sifive_serial_is_txfifo_full().
-> + *
-> + * Context: Any context.
-> + */
-> +static void __ssp_transmit_char(struct sifive_serial_port *ssp, int ch)
-> +{
-> +	__ssp_writel(ch, SIFIVE_SERIAL_TXDATA_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_transmit_chars() - enqueue multiple bytes onto the TX FIFO
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Transfer up to a TX FIFO size's worth of characters from the Linux serial
-> + * transmit buffer to the SiFive UART TX FIFO.
-> + *
-> + * Context: Any context.  Expects @ssp->port.lock to be held by caller.
-> + */
-> +static void __ssp_transmit_chars(struct sifive_serial_port *ssp)
-> +{
-> +	struct circ_buf *xmit = &ssp->port.state->xmit;
-> +	int count;
-> +
-> +	if (ssp->port.x_char) {
-> +		__ssp_transmit_char(ssp, ssp->port.x_char);
-> +		ssp->port.icount.tx++;
-> +		ssp->port.x_char = 0;
-> +		return;
-> +	}
-> +	if (uart_circ_empty(xmit) || uart_tx_stopped(&ssp->port)) {
-> +		sifive_serial_stop_tx(&ssp->port);
-> +		return;
-> +	}
-> +	count = SIFIVE_TX_FIFO_DEPTH;
-> +	do {
-> +		__ssp_transmit_char(ssp, xmit->buf[xmit->tail]);
-> +		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-> +		ssp->port.icount.tx++;
-> +		if (uart_circ_empty(xmit))
-> +			break;
-> +	} while (--count > 0);
-> +
-> +	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-> +		uart_write_wakeup(&ssp->port);
-> +
-> +	if (uart_circ_empty(xmit))
-> +		sifive_serial_stop_tx(&ssp->port);
-> +}
-> +
-> +/**
-> + * __ssp_enable_txwm() - enable transmit watermark interrupts
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Enable interrupt generation when the transmit FIFO watermark is reached
-> + * on the SiFive UART referred to by @ssp.
-> + */
-> +static void __ssp_enable_txwm(struct sifive_serial_port *ssp)
-> +{
-> +	if (ssp->ier & SIFIVE_SERIAL_IE_TXWM_MASK)
-> +		return;
-> +
-> +	ssp->ier |= SIFIVE_SERIAL_IE_TXWM_MASK;
-> +	__ssp_writel(ssp->ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_enable_rxwm() - enable receive watermark interrupts
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Enable interrupt generation when the receive FIFO watermark is reached
-> + * on the SiFive UART referred to by @ssp.
-> + */
-> +static void __ssp_enable_rxwm(struct sifive_serial_port *ssp)
-> +{
-> +	if (ssp->ier & SIFIVE_SERIAL_IE_RXWM_MASK)
-> +		return;
-> +
-> +	ssp->ier |= SIFIVE_SERIAL_IE_RXWM_MASK;
-> +	__ssp_writel(ssp->ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_disable_txwm() - disable transmit watermark interrupts
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Disable interrupt generation when the transmit FIFO watermark is reached
-> + * on the UART referred to by @ssp.
-> + */
-> +static void __ssp_disable_txwm(struct sifive_serial_port *ssp)
-> +{
-> +	if (!(ssp->ier & SIFIVE_SERIAL_IE_TXWM_MASK))
-> +		return;
-> +
-> +	ssp->ier &= ~SIFIVE_SERIAL_IE_TXWM_MASK;
-> +	__ssp_writel(ssp->ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_disable_rxwm() - disable receive watermark interrupts
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Disable interrupt generation when the receive FIFO watermark is reached
-> + * on the UART referred to by @ssp.
-> + */
-> +static void __ssp_disable_rxwm(struct sifive_serial_port *ssp)
-> +{
-> +	if (!(ssp->ier & SIFIVE_SERIAL_IE_RXWM_MASK))
-> +		return;
-> +
-> +	ssp->ier &= ~SIFIVE_SERIAL_IE_RXWM_MASK;
-> +	__ssp_writel(ssp->ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_receive_char() - receive a byte from the UART
-> + * @ssp: pointer to a struct sifive_serial_port
-> + * @is_empty: char pointer to return whether the RX FIFO is empty
-> + *
-> + * Try to read a byte from the SiFive UART RX FIFO, referenced by
-> + * @ssp, and to return it.  Also returns the RX FIFO empty bit in
-> + * the char pointed to by @ch.  The caller must pass the byte back to the
-> + * Linux serial layer if needed.
-> + *
-> + * Returns: the byte read from the UART RX FIFO.
-> + */
-> +static char __ssp_receive_char(struct sifive_serial_port *ssp, char *is_empty)
-> +{
-> +	u32 v;
-> +	u8 ch;
-> +
-> +	v = __ssp_readl(ssp, SIFIVE_SERIAL_RXDATA_OFFS);
-> +
-> +	if (!is_empty)
-> +		WARN_ON(1);
-> +	else
-> +		*is_empty = (v & SIFIVE_SERIAL_RXDATA_EMPTY_MASK) >>
-> +			SIFIVE_SERIAL_RXDATA_EMPTY_SHIFT;
-> +
-> +	ch = (v & SIFIVE_SERIAL_RXDATA_DATA_MASK) >>
-> +		SIFIVE_SERIAL_RXDATA_DATA_SHIFT;
-> +
-> +	return ch;
-> +}
-> +
-> +/**
-> + * __ssp_receive_chars() - receive multiple bytes from the UART
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Receive up to an RX FIFO's worth of bytes from the SiFive UART referred
-> + * to by @ssp and pass them up to the Linux serial layer.
-> + *
-> + * Context: Expects ssp->port.lock to be held by caller.
-> + */
-> +static void __ssp_receive_chars(struct sifive_serial_port *ssp)
-> +{
-> +	unsigned char ch;
-> +	char is_empty;
-> +	int c;
-> +
-> +	for (c = SIFIVE_RX_FIFO_DEPTH; c > 0; --c) {
-> +		ch = __ssp_receive_char(ssp, &is_empty);
-> +		if (is_empty)
-> +			break;
-> +
-> +		ssp->port.icount.rx++;
-> +		uart_insert_char(&ssp->port, 0, 0, ch, TTY_NORMAL);
-> +	}
-> +
-> +	spin_unlock(&ssp->port.lock);
-> +	tty_flip_buffer_push(&ssp->port.state->port);
-> +	spin_lock(&ssp->port.lock);
-> +}
-> +
-> +/**
-> + * __ssp_update_div() - calculate the divisor setting by the line rate
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Calculate the appropriate value of the clock divisor for the UART
-> + * and target line rate referred to by @ssp and write it into the
-> + * hardware.
-> + */
-> +static void __ssp_update_div(struct sifive_serial_port *ssp)
-> +{
-> +	u16 div;
-> +
-> +	div = DIV_ROUND_UP(ssp->clkin_rate, ssp->baud_rate) - 1;
-> +
-> +	__ssp_writel(div, SIFIVE_SERIAL_DIV_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_update_baud_rate() - set the UART "baud rate"
-> + * @ssp: pointer to a struct sifive_serial_port
-> + * @rate: new target bit rate
-> + *
-> + * Calculate the UART divisor value for the target bit rate @rate for the
-> + * SiFive UART described by @ssp and program it into the UART.  There may
-> + * be some error between the target bit rate and the actual bit rate implemented
-> + * by the UART due to clock ratio granularity.
-> + */
-> +static void __ssp_update_baud_rate(struct sifive_serial_port *ssp,
-> +				   unsigned int rate)
-> +{
-> +	if (ssp->baud_rate == rate)
-> +		return;
-> +
-> +	ssp->baud_rate = rate;
-> +	__ssp_update_div(ssp);
-> +}
-> +
-> +/**
-> + * __ssp_set_stop_bits() - set the number of stop bits
-> + * @ssp: pointer to a struct sifive_serial_port
-> + * @nstop: 1 or 2 (stop bits)
-> + *
-> + * Program the SiFive UART referred to by @ssp to use @nstop stop bits.
-> + */
-> +static void __ssp_set_stop_bits(struct sifive_serial_port *ssp, char nstop)
-> +{
-> +	u32 v;
-> +
-> +	if (nstop < 1 || nstop > 2) {
-> +		WARN_ON(1);
-> +		return;
-> +	}
-> +
-> +	v = __ssp_readl(ssp, SIFIVE_SERIAL_TXCTRL_OFFS);
-> +	v &= ~SIFIVE_SERIAL_TXCTRL_NSTOP_MASK;
-> +	v |= (nstop - 1) << SIFIVE_SERIAL_TXCTRL_NSTOP_SHIFT;
-> +	__ssp_writel(v, SIFIVE_SERIAL_TXCTRL_OFFS, ssp);
-> +}
-> +
-> +/**
-> + * __ssp_wait_for_xmitr() - wait for an empty slot on the TX FIFO
-> + * @ssp: pointer to a struct sifive_serial_port
-> + *
-> + * Delay while the UART TX FIFO referred to by @ssp is marked as full.
-> + *
-> + * Context: Any context.
-> + */
-> +static void __maybe_unused __ssp_wait_for_xmitr(struct sifive_serial_port *ssp)
-> +{
-> +	while (sifive_serial_is_txfifo_full(ssp))
-> +		udelay(1); /* XXX Could probably be more intelligent here */
-> +}
-> +
-> +/*
-> + * Linux serial API functions
-> + */
-> +
-> +static void sifive_serial_stop_tx(struct uart_port *port)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_disable_txwm(ssp);
-> +}
-> +
-> +static void sifive_serial_stop_rx(struct uart_port *port)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_disable_rxwm(ssp);
-> +}
-> +
-> +static void sifive_serial_start_tx(struct uart_port *port)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_enable_txwm(ssp);
-> +}
-> +
-> +static irqreturn_t sifive_serial_irq(int irq, void *dev_id)
-> +{
-> +	struct sifive_serial_port *ssp = dev_id;
-> +	u32 ip;
-> +
-> +	spin_lock(&ssp->port.lock);
-> +
-> +	ip = __ssp_readl(ssp, SIFIVE_SERIAL_IP_OFFS);
-> +	if (!ip) {
-> +		spin_unlock(&ssp->port.lock);
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	if (ip & SIFIVE_SERIAL_IP_RXWM_MASK)
-> +		__ssp_receive_chars(ssp);
-> +	if (ip & SIFIVE_SERIAL_IP_TXWM_MASK)
-> +		__ssp_transmit_chars(ssp);
-> +
-> +	spin_unlock(&ssp->port.lock);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static unsigned int sifive_serial_tx_empty(struct uart_port *port)
-> +{
-> +	return TIOCSER_TEMT;
-> +}
-> +
-> +static unsigned int sifive_serial_get_mctrl(struct uart_port *port)
-> +{
-> +	return TIOCM_CAR | TIOCM_CTS | TIOCM_DSR;
-> +}
-> +
-> +static void sifive_serial_set_mctrl(struct uart_port *port, unsigned int mctrl)
-> +{
-> +	/* IP block does not support these signals */
-> +}
-> +
-> +static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
-> +{
-> +	/* IP block does not support sending a break */
-> +}
-> +
-> +static int sifive_serial_startup(struct uart_port *port)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_enable_rxwm(ssp);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sifive_serial_shutdown(struct uart_port *port)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_disable_rxwm(ssp);
-> +	__ssp_disable_txwm(ssp);
-> +}
-> +
-> +/**
-> + * sifive_serial_clk_notifier() - clock post-rate-change notifier
-> + * @nb: pointer to the struct notifier_block, from the notifier code
-> + * @event: event mask from the notifier code
-> + * @data: pointer to the struct clk_notifier_data from the notifier code
-> + *
-> + * On the V0 SoC, the UART IP block is derived from the CPU clock source
-> + * after a synchronous divide-by-two divider, so any CPU clock rate change
-> + * requires the UART baud rate to be updated.  This presumably could corrupt any
-> + * serial word currently being transmitted or received.  It would probably
-> + * be better to stop receives and transmits, then complete the baud rate
-> + * change, then re-enable them.
-> + */
-> +static int sifive_serial_clk_notifier(struct notifier_block *nb,
-> +				      unsigned long event, void *data)
-> +{
-> +	struct clk_notifier_data *cnd = data;
-> +	struct sifive_serial_port *ssp = notifier_to_sifive_serial_port(nb);
-> +
-> +	if (event == POST_RATE_CHANGE && ssp->clkin_rate != cnd->new_rate) {
-> +		ssp->clkin_rate = cnd->new_rate;
-> +		__ssp_update_div(ssp);
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static void sifive_serial_set_termios(struct uart_port *port,
-> +				      struct ktermios *termios,
-> +				      struct ktermios *old)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +	unsigned long flags;
-> +	u32 v, old_v;
-> +	int rate;
-> +	char nstop;
-> +
-> +	if ((termios->c_cflag & CSIZE) != CS8) {
-> +		dev_err(ssp->port.dev, "only 8-bit words supported\n");
-> +		return;
-> +	}
-> +
-> +	/* Set number of stop bits */
-> +	nstop = (termios->c_cflag & CSTOPB) ? 2 : 1;
-> +	__ssp_set_stop_bits(ssp, nstop);
-> +
-> +	/* Set line rate */
-> +	rate = uart_get_baud_rate(port, termios, old, 0, ssp->clkin_rate / 16);
-> +	__ssp_update_baud_rate(ssp, rate);
-> +
-> +	spin_lock_irqsave(&ssp->port.lock, flags);
-> +
-> +	/*
-> +	 * Update the per-port timeout.
-> +	 */
-> +	uart_update_timeout(port, termios->c_cflag, rate);
-> +
-> +	ssp->port.read_status_mask = 0;
-> +	if (termios->c_iflag & INPCK) {
-> +		dev_err(ssp->port.dev, "INPCK flag not supported\n");
-> +		goto ssst_out;
-> +	}
-> +	if (termios->c_iflag & (BRKINT | PARMRK)) {
-> +		dev_err(ssp->port.dev, "BRKINT/PARMRK flag not supported\n");
-> +		goto ssst_out;
-> +	}
-> +
-> +	/*
-> +	 * ignore all characters if CREAD is not set
-> +	 */
-> +	v = __ssp_readl(ssp, SIFIVE_SERIAL_RXCTRL_OFFS);
-> +	old_v = v;
-> +	if ((termios->c_cflag & CREAD) == 0)
-> +		v &= SIFIVE_SERIAL_RXCTRL_RXEN_MASK;
-> +	else
-> +		v |= SIFIVE_SERIAL_RXCTRL_RXEN_MASK;
-> +	if (v != old_v)
-> +		__ssp_writel(v, SIFIVE_SERIAL_RXCTRL_OFFS, ssp);
-> +
-> +ssst_out:
-> +	spin_unlock_irqrestore(&ssp->port.lock, flags);
-> +}
-> +
-> +static void sifive_serial_release_port(struct uart_port *port)
-> +{
-> +}
-> +
-> +static int sifive_serial_request_port(struct uart_port *port)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void sifive_serial_config_port(struct uart_port *port, int flags)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	ssp->port.type = PORT_SIFIVE_V0;
-> +}
-> +
-> +static int sifive_serial_verify_port(struct uart_port *port,
-> +				     struct serial_struct *ser)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static const char *sifive_serial_type(struct uart_port *port)
-> +{
-> +	return port->type == PORT_SIFIVE_V0 ? "SiFive UART v0" : NULL;
-> +}
-> +
-> +/*
-> + * Early console support
-> + */
-> +
-> +#ifdef CONFIG_SERIAL_EARLYCON
-> +static void early_sifive_serial_putc(struct uart_port *port, int c)
-> +{
-> +	while (__ssp_early_readl(port, SIFIVE_SERIAL_TXDATA_OFFS) &
-> +	       SIFIVE_SERIAL_TXDATA_FULL_MASK)
-> +		cpu_relax();
-> +
-> +	__ssp_early_writel(c, SIFIVE_SERIAL_TXDATA_OFFS, port);
-> +}
-> +
-> +static void early_sifive_serial_write(struct console *con, const char *s,
-> +				      unsigned int n)
-> +{
-> +	struct earlycon_device *dev = con->data;
-> +	struct uart_port *port = &dev->port;
-> +
-> +	uart_console_write(port, s, n, early_sifive_serial_putc);
-> +}
-> +
-> +static int __init early_sifive_serial_setup(struct earlycon_device *dev,
-> +					    const char *options)
-> +{
-> +	struct uart_port *port = &dev->port;
-> +
-> +	if (!port->membase)
-> +		return -ENODEV;
-> +
-> +	dev->con->write = early_sifive_serial_write;
-> +
-> +	return 0;
-> +}
-> +
-> +OF_EARLYCON_DECLARE(sifive, "sifive,uart0", early_sifive_serial_setup);
-> +OF_EARLYCON_DECLARE(sifive, "sifive,fu540-c000-uart0",
-> +		    early_sifive_serial_setup);
-> +#endif /* CONFIG_SERIAL_EARLYCON */
-> +
-> +/*
-> + * Linux console interface
-> + */
-> +
-> +#ifdef CONFIG_SERIAL_SIFIVE_CONSOLE
-> +
-> +static struct sifive_serial_port *sifive_serial_console_ports[SIFIVE_SERIAL_MAX_PORTS];
-> +
-> +static void sifive_serial_console_putchar(struct uart_port *port, int ch)
-> +{
-> +	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-> +
-> +	__ssp_wait_for_xmitr(ssp);
-> +	__ssp_transmit_char(ssp, ch);
-> +}
-> +
-> +static void sifive_serial_console_write(struct console *co, const char *s,
-> +					unsigned int count)
-> +{
-> +	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
-> +	unsigned long flags;
-> +	unsigned int ier;
-> +	int locked = 1;
-> +
-> +	if (!ssp)
-> +		return;
-> +
-> +	local_irq_save(flags);
-> +	if (ssp->port.sysrq)
-> +		locked = 0;
-> +	else if (oops_in_progress)
-> +		locked = spin_trylock(&ssp->port.lock);
-> +	else
-> +		spin_lock(&ssp->port.lock);
-> +
-> +	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
-> +	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +
-> +	uart_console_write(&ssp->port, s, count, sifive_serial_console_putchar);
-> +
-> +	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-> +
-> +	if (locked)
-> +		spin_unlock(&ssp->port.lock);
-> +	local_irq_restore(flags);
-> +}
-> +
-> +static int __init sifive_serial_console_setup(struct console *co, char *options)
-> +{
-> +	struct sifive_serial_port *ssp;
-> +	int baud = SIFIVE_DEFAULT_BAUD_RATE;
-> +	int bits = 8;
-> +	int parity = 'n';
-> +	int flow = 'n';
-> +
-> +	if (co->index < 0 || co->index >= SIFIVE_SERIAL_MAX_PORTS)
-> +		return -ENODEV;
-> +
-> +	ssp = sifive_serial_console_ports[co->index];
-> +	if (!ssp)
-> +		return -ENODEV;
-> +
-> +	if (options)
-> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
-> +
-> +	return uart_set_options(&ssp->port, co, baud, parity, bits, flow);
-> +}
-> +
-> +static struct uart_driver sifive_serial_uart_driver;
-> +
-> +static struct console sifive_serial_console = {
-> +	.name		= SIFIVE_TTY_PREFIX,
-> +	.write		= sifive_serial_console_write,
-> +	.device		= uart_console_device,
-> +	.setup		= sifive_serial_console_setup,
-> +	.flags		= CON_PRINTBUFFER,
-> +	.index		= -1,
-> +	.data		= &sifive_serial_uart_driver,
-> +};
-> +
-> +static int __init sifive_console_init(void)
-> +{
-> +	register_console(&sifive_serial_console);
-> +	return 0;
-> +}
-> +
-> +console_initcall(sifive_console_init);
-> +
-> +static void __ssp_add_console_port(struct sifive_serial_port *ssp)
-> +{
-> +	sifive_serial_console_ports[ssp->port.line] = ssp;
-> +}
-> +
-> +static void __ssp_remove_console_port(struct sifive_serial_port *ssp)
-> +{
-> +	sifive_serial_console_ports[ssp->port.line] = 0;
-> +}
-> +
-> +#define SIFIVE_SERIAL_CONSOLE	(&sifive_serial_console)
-> +
+> diff --git a/arch/mips/include/asm/mach-ip27/mangle-port.h b/arch/mips/include/asm/mach-ip27/mangle-port.h
+> index f6e4912ea062..7771ae0f3971 100644
+> --- a/arch/mips/include/asm/mach-ip27/mangle-port.h
+> +++ b/arch/mips/include/asm/mach-ip27/mangle-port.h
+> @@ -8,7 +8,7 @@
+>  #ifndef __ASM_MACH_IP27_MANGLE_PORT_H
+>  #define __ASM_MACH_IP27_MANGLE_PORT_H
+>  
+> -#define __swizzle_addr_b(port)	(port)
+> +#define __swizzle_addr_b(port)	((port) ^ 3)
+>  #define __swizzle_addr_w(port)	((port) ^ 2)
+>  #define __swizzle_addr_l(port)	(port)
+>  #define __swizzle_addr_q(port)	(port)
+> diff --git a/arch/mips/include/asm/sn/ioc3.h b/arch/mips/include/asm/sn/ioc3.h
+> index 69069f420930..059885d736de 100644
+> --- a/arch/mips/include/asm/sn/ioc3.h
+> +++ b/arch/mips/include/asm/sn/ioc3.h
+> @@ -10,35 +10,35 @@
+>  
+>  /* serial port register map */
+>  struct ioc3_serialregs {
+> -	uint32_t	sscr;
+> -	uint32_t	stpir;
+> -	uint32_t	stcir;
+> -	uint32_t	srpir;
+> -	uint32_t	srcir;
+> -	uint32_t	srtr;
+> -	uint32_t	shadow;
+> +	u32	sscr;
+> +	u32	stpir;
+> +	u32	stcir;
+> +	u32	srpir;
+> +	u32	srcir;
+> +	u32	srtr;
+> +	u32	shadow;
+>  };
+>  
+>  /* SUPERIO uart register map */
+>  struct ioc3_uartregs {
+> +	u8	iu_lcr;
+>  	union {
+> -		char	rbr;	/* read only, DLAB == 0 */
+> -		char	thr;	/* write only, DLAB == 0 */
+> -		char	dll;	/* DLAB == 1 */
+> -	} u1;
+> +		u8	iir;	/* read only */
+> +		u8	fcr;	/* write only */
+> +	};
+>  	union {
+> -		char	ier;	/* DLAB == 0 */
+> -		char	dlm;	/* DLAB == 1 */
+> -	} u2;
+> +		u8	ier;	/* DLAB == 0 */
+> +		u8	dlm;	/* DLAB == 1 */
+> +	};
+>  	union {
+> -		char	iir;	/* read only */
+> -		char	fcr;	/* write only */
+> -	} u3;
+> -	char	iu_lcr;
+> -	char	iu_mcr;
+> -	char	iu_lsr;
+> -	char	iu_msr;
+> -	char	iu_scr;
+> +		u8	rbr;	/* read only, DLAB == 0 */
+> +		u8	thr;	/* write only, DLAB == 0 */
+> +		u8	dll;	/* DLAB == 1 */
+> +	} u1;
+> +	u8	iu_scr;
+> +	u8	iu_msr;
+> +	u8	iu_lsr;
+> +	u8	iu_mcr;
+>  };
+>  
+>  #define iu_rbr u1.rbr
+> @@ -50,122 +50,122 @@ struct ioc3_uartregs {
+>  #define iu_fcr u3.fcr
+>  
+>  struct ioc3_sioregs {
+> -	char	fill[0x141];	/* starts at 0x141 */
+> +	u8	fill[0x141];	/* starts at 0x141 */
+>  
+> -	char	uartc;
+> -	char	kbdcg;
+> +	u8	kbdcg;
+> +	u8	uartc;
+>  
+> -	char	fill0[0x150 - 0x142 - 1];
+> +	u8	fill0[0x151 - 0x142 - 1];
+>  
+> -	char	pp_data;
+> -	char	pp_dsr;
+> -	char	pp_dcr;
+> +	u8	pp_dcr;
+> +	u8	pp_dsr;
+> +	u8	pp_data;
+>  
+> -	char	fill1[0x158 - 0x152 - 1];
+> +	u8	fill1[0x159 - 0x153 - 1];
+>  
+> -	char	pp_fifa;
+> -	char	pp_cfgb;
+> -	char	pp_ecr;
+> +	u8	pp_ecr;
+> +	u8	pp_cfgb;
+> +	u8	pp_fifa;
+>  
+> -	char	fill2[0x168 - 0x15a - 1];
+> +	u8	fill2[0x16a - 0x15b - 1];
+>  
+> -	char	rtcad;
+> -	char	rtcdat;
+> +	u8	rtcdat;
+> +	u8	rtcad;
+>  
+> -	char	fill3[0x170 - 0x169 - 1];
+> +	u8	fill3[0x170 - 0x16b - 1];
+>  
+>  	struct ioc3_uartregs	uartb;	/* 0x20170  */
+>  	struct ioc3_uartregs	uarta;	/* 0x20178  */
+>  };
+>  
+>  struct ioc3_ethregs {
+> -	uint32_t	emcr;		/* 0x000f0  */
+> -	uint32_t	eisr;		/* 0x000f4  */
+> -	uint32_t	eier;		/* 0x000f8  */
+> -	uint32_t	ercsr;		/* 0x000fc  */
+> -	uint32_t	erbr_h;		/* 0x00100  */
+> -	uint32_t	erbr_l;		/* 0x00104  */
+> -	uint32_t	erbar;		/* 0x00108  */
+> -	uint32_t	ercir;		/* 0x0010c  */
+> -	uint32_t	erpir;		/* 0x00110  */
+> -	uint32_t	ertr;		/* 0x00114  */
+> -	uint32_t	etcsr;		/* 0x00118  */
+> -	uint32_t	ersr;		/* 0x0011c  */
+> -	uint32_t	etcdc;		/* 0x00120  */
+> -	uint32_t	ebir;		/* 0x00124  */
+> -	uint32_t	etbr_h;		/* 0x00128  */
+> -	uint32_t	etbr_l;		/* 0x0012c  */
+> -	uint32_t	etcir;		/* 0x00130  */
+> -	uint32_t	etpir;		/* 0x00134  */
+> -	uint32_t	emar_h;		/* 0x00138  */
+> -	uint32_t	emar_l;		/* 0x0013c  */
+> -	uint32_t	ehar_h;		/* 0x00140  */
+> -	uint32_t	ehar_l;		/* 0x00144  */
+> -	uint32_t	micr;		/* 0x00148  */
+> -	uint32_t	midr_r;		/* 0x0014c  */
+> -	uint32_t	midr_w;		/* 0x00150  */
+> +	u32	emcr;		/* 0x000f0  */
+> +	u32	eisr;		/* 0x000f4  */
+> +	u32	eier;		/* 0x000f8  */
+> +	u32	ercsr;		/* 0x000fc  */
+> +	u32	erbr_h;		/* 0x00100  */
+> +	u32	erbr_l;		/* 0x00104  */
+> +	u32	erbar;		/* 0x00108  */
+> +	u32	ercir;		/* 0x0010c  */
+> +	u32	erpir;		/* 0x00110  */
+> +	u32	ertr;		/* 0x00114  */
+> +	u32	etcsr;		/* 0x00118  */
+> +	u32	ersr;		/* 0x0011c  */
+> +	u32	etcdc;		/* 0x00120  */
+> +	u32	ebir;		/* 0x00124  */
+> +	u32	etbr_h;		/* 0x00128  */
+> +	u32	etbr_l;		/* 0x0012c  */
+> +	u32	etcir;		/* 0x00130  */
+> +	u32	etpir;		/* 0x00134  */
+> +	u32	emar_h;		/* 0x00138  */
+> +	u32	emar_l;		/* 0x0013c  */
+> +	u32	ehar_h;		/* 0x00140  */
+> +	u32	ehar_l;		/* 0x00144  */
+> +	u32	micr;		/* 0x00148  */
+> +	u32	midr_r;		/* 0x0014c  */
+> +	u32	midr_w;		/* 0x00150  */
+>  };
+>  
+>  struct ioc3_serioregs {
+> -	uint32_t	km_csr;		/* 0x0009c  */
+> -	uint32_t	k_rd;		/* 0x000a0  */
+> -	uint32_t	m_rd;		/* 0x000a4  */
+> -	uint32_t	k_wd;		/* 0x000a8  */
+> -	uint32_t	m_wd;		/* 0x000ac  */
+> +	u32	km_csr;		/* 0x0009c  */
+> +	u32	k_rd;		/* 0x000a0  */
+> +	u32	m_rd;		/* 0x000a4  */
+> +	u32	k_wd;		/* 0x000a8  */
+> +	u32	m_wd;		/* 0x000ac  */
+>  };
+>  
+>  /* Register layout of IOC3 in configuration space.  */
+>  struct ioc3 {
+>  	/* PCI Config Space registers  */
+> -	uint32_t	pci_id;		/* 0x00000  */
+> -	uint32_t	pci_scr;	/* 0x00004  */
+> -	uint32_t	pci_rev;	/* 0x00008  */
+> -	uint32_t	pci_lat;	/* 0x0000c  */
+> -	uint32_t	pci_addr;	/* 0x00010  */
+> -	uint32_t	pci_err_addr_l;	/* 0x00014  */
+> -	uint32_t	pci_err_addr_h;	/* 0x00018  */
+> -
+> -	uint32_t	sio_ir;		/* 0x0001c  */
+> -	uint32_t	sio_ies;	/* 0x00020  */
+> -	uint32_t	sio_iec;	/* 0x00024  */
+> -	uint32_t	sio_cr;		/* 0x00028  */
+> -	uint32_t	int_out;	/* 0x0002c  */
+> -	uint32_t	mcr;		/* 0x00030  */
+> +	u32	pci_id;		/* 0x00000  */
+> +	u32	pci_scr;	/* 0x00004  */
+> +	u32	pci_rev;	/* 0x00008  */
+> +	u32	pci_lat;	/* 0x0000c  */
+> +	u32	pci_addr;	/* 0x00010  */
+> +	u32	pci_err_addr_l;	/* 0x00014  */
+> +	u32	pci_err_addr_h;	/* 0x00018  */
+> +
+> +	u32	sio_ir;		/* 0x0001c  */
+> +	u32	sio_ies;	/* 0x00020  */
+> +	u32	sio_iec;	/* 0x00024  */
+> +	u32	sio_cr;		/* 0x00028  */
+> +	u32	int_out;	/* 0x0002c  */
+> +	u32	mcr;		/* 0x00030  */
+>  
+>  	/* General Purpose I/O registers  */
+> -	uint32_t	gpcr_s;		/* 0x00034  */
+> -	uint32_t	gpcr_c;		/* 0x00038  */
+> -	uint32_t	gpdr;		/* 0x0003c  */
+> -	uint32_t	gppr[16];	/* 0x00040  */
+> +	u32	gpcr_s;		/* 0x00034  */
+> +	u32	gpcr_c;		/* 0x00038  */
+> +	u32	gpdr;		/* 0x0003c  */
+> +	u32	gppr[16];	/* 0x00040  */
+>  
+>  	/* Parallel Port Registers  */
+> -	uint32_t	ppbr_h_a;	/* 0x00080  */
+> -	uint32_t	ppbr_l_a;	/* 0x00084  */
+> -	uint32_t	ppcr_a;		/* 0x00088  */
+> -	uint32_t	ppcr;		/* 0x0008c  */
+> -	uint32_t	ppbr_h_b;	/* 0x00090  */
+> -	uint32_t	ppbr_l_b;	/* 0x00094  */
+> -	uint32_t	ppcr_b;		/* 0x00098  */
+> +	u32	ppbr_h_a;	/* 0x00080  */
+> +	u32	ppbr_l_a;	/* 0x00084  */
+> +	u32	ppcr_a;		/* 0x00088  */
+> +	u32	ppcr;		/* 0x0008c  */
+> +	u32	ppbr_h_b;	/* 0x00090  */
+> +	u32	ppbr_l_b;	/* 0x00094  */
+> +	u32	ppcr_b;		/* 0x00098  */
+>  
+>  	/* Keyboard and Mouse Registers	 */
+>  	struct ioc3_serioregs	serio;
+>  
+>  	/* Serial Port Registers  */
+> -	uint32_t	sbbr_h;		/* 0x000b0  */
+> -	uint32_t	sbbr_l;		/* 0x000b4  */
+> +	u32	sbbr_h;		/* 0x000b0  */
+> +	u32	sbbr_l;		/* 0x000b4  */
+>  	struct ioc3_serialregs	port_a;
+>  	struct ioc3_serialregs	port_b;
+>  
+>  	/* Ethernet Registers */
+>  	struct ioc3_ethregs	eth;
+> -	uint32_t	pad1[(0x20000 - 0x00154) / 4];
+> +	u32	pad1[(0x20000 - 0x00154) / 4];
+>  
+>  	/* SuperIO Registers  XXX */
+>  	struct ioc3_sioregs	sregs;	/* 0x20000 */
+> -	uint32_t	pad2[(0x40000 - 0x20180) / 4];
+> +	u32	pad2[(0x40000 - 0x20180) / 4];
+>  
+>  	/* SSRAM Diagnostic Access */
+> -	uint32_t	ssram[(0x80000 - 0x40000) / 4];
+> +	u32	ssram[(0x80000 - 0x40000) / 4];
+>  
+>  	/* Bytebus device offsets
+>  	   0x80000 -   Access to the generic devices selected with   DEV0
+> @@ -598,8 +598,4 @@ struct ioc3_etxd {
+>  
+>  #define MIDR_DATA_MASK		0x0000ffff
+>  
+> -#if defined(CONFIG_SGI_IP27) || defined(CONFIG_SGI_IP30)
+> -extern int bridge_alloc_irq(struct pci_dev *dev);
+> -#endif
+> -
+>  #endif /* MIPS_SN_IOC3_H */
+> diff --git a/arch/mips/sgi-ip27/ip27-console.c b/arch/mips/sgi-ip27/ip27-console.c
+> index 6bdb48d41276..5886bee89d06 100644
+> --- a/arch/mips/sgi-ip27/ip27-console.c
+> +++ b/arch/mips/sgi-ip27/ip27-console.c
+> @@ -35,6 +35,7 @@ void prom_putchar(char c)
+>  {
+>  	struct ioc3_uartregs *uart = console_uart();
+>  
+> -	while ((uart->iu_lsr & 0x20) == 0);
+> -	uart->iu_thr = c;
+> +	while ((readb(&uart->iu_lsr) & 0x20) == 0)
+> +		;
+> +	writeb(c, &uart->iu_thr);
+>  }
+> diff --git a/drivers/rtc/rtc-m48t35.c b/drivers/rtc/rtc-m48t35.c
+> index 0cf6507de3c7..05f0d91366af 100644
+> --- a/drivers/rtc/rtc-m48t35.c
+> +++ b/drivers/rtc/rtc-m48t35.c
+> @@ -24,6 +24,16 @@
+>  
+>  struct m48t35_rtc {
+>  	u8	pad[0x7ff8];    /* starts at 0x7ff8 */
+> +#ifdef CONFIG_SGI_IP27
+> +	u8	hour;
+> +	u8	min;
+> +	u8	sec;
+> +	u8	control;
+> +	u8	year;
+> +	u8	month;
+> +	u8	date;
+> +	u8	day;
 > +#else
-> +
-> +#define SIFIVE_SERIAL_CONSOLE	NULL
-> +
-> +static void __ssp_add_console_port(struct sifive_serial_port *ssp)
-> +{}
-> +static void __ssp_remove_console_port(struct sifive_serial_port *ssp)
-> +{}
-> +
+>  	u8	control;
+>  	u8	sec;
+>  	u8	min;
+> @@ -32,6 +42,7 @@ struct m48t35_rtc {
+>  	u8	date;
+>  	u8	month;
+>  	u8	year;
 > +#endif
-> +
-> +static const struct uart_ops sifive_serial_uops = {
-> +	.tx_empty	= sifive_serial_tx_empty,
-> +	.set_mctrl	= sifive_serial_set_mctrl,
-> +	.get_mctrl	= sifive_serial_get_mctrl,
-> +	.stop_tx	= sifive_serial_stop_tx,
-> +	.start_tx	= sifive_serial_start_tx,
-> +	.stop_rx	= sifive_serial_stop_rx,
-> +	.break_ctl	= sifive_serial_break_ctl,
-> +	.startup	= sifive_serial_startup,
-> +	.shutdown	= sifive_serial_shutdown,
-> +	.set_termios	= sifive_serial_set_termios,
-> +	.type		= sifive_serial_type,
-> +	.release_port	= sifive_serial_release_port,
-> +	.request_port	= sifive_serial_request_port,
-> +	.config_port	= sifive_serial_config_port,
-> +	.verify_port	= sifive_serial_verify_port,
-> +};
-> +
-> +static struct uart_driver sifive_serial_uart_driver = {
-> +	.owner		= THIS_MODULE,
-> +	.driver_name	= SIFIVE_SERIAL_NAME,
-> +	.dev_name	= SIFIVE_TTY_PREFIX,
-> +	.nr		= SIFIVE_SERIAL_MAX_PORTS,
-> +	.cons		= SIFIVE_SERIAL_CONSOLE,
-> +};
-> +
-> +static int sifive_serial_probe(struct platform_device *pdev)
-> +{
-> +	struct sifive_serial_port *ssp;
-> +	struct resource *mem;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	int irq, id, r;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "could not acquire interrupt\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(base)) {
-> +		dev_err(&pdev->dev, "could not acquire device memory\n");
-> +		return PTR_ERR(base);
-> +	}
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&pdev->dev, "unable to find controller clock\n");
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	id = of_alias_get_id(pdev->dev.of_node, "serial");
-> +	if (id < 0) {
-> +		dev_err(&pdev->dev, "missing aliases entry\n");
-> +		return id;
-> +	}
-> +
-> +#ifdef CONFIG_SERIAL_SIFIVE_CONSOLE
-> +	if (id > SIFIVE_SERIAL_MAX_PORTS) {
-> +		dev_err(&pdev->dev, "too many UARTs (%d)\n", id);
-> +		return -EINVAL;
-> +	}
-> +#endif
-> +
-> +	ssp = devm_kzalloc(&pdev->dev, sizeof(*ssp), GFP_KERNEL);
-> +	if (!ssp)
-> +		return -ENOMEM;
-> +
-> +	ssp->port.dev = &pdev->dev;
-> +	ssp->port.type = PORT_SIFIVE_V0;
-> +	ssp->port.iotype = UPIO_MEM;
-> +	ssp->port.irq = irq;
-> +	ssp->port.fifosize = SIFIVE_TX_FIFO_DEPTH;
-> +	ssp->port.ops = &sifive_serial_uops;
-> +	ssp->port.line = id;
-> +	ssp->port.mapbase = mem->start;
-> +	ssp->port.membase = base;
-> +	ssp->dev = &pdev->dev;
-> +	ssp->clk = clk;
-> +	ssp->clk_notifier.notifier_call = sifive_serial_clk_notifier;
-> +
-> +	r = clk_notifier_register(ssp->clk, &ssp->clk_notifier);
-> +	if (r) {
-> +		dev_err(&pdev->dev, "could not register clock notifier: %d\n",
-> +			r);
-> +		goto probe_out1;
-> +	}
-> +
-> +	/* Set up clock divider */
-> +	ssp->clkin_rate = clk_get_rate(ssp->clk);
-> +	ssp->baud_rate = SIFIVE_DEFAULT_BAUD_RATE;
-> +	__ssp_update_div(ssp);
-> +
-> +	platform_set_drvdata(pdev, ssp);
-> +
-> +	/* Enable transmits and set the watermark level to 1 */
-> +	__ssp_writel((1 << SIFIVE_SERIAL_TXCTRL_TXCNT_SHIFT) |
-> +		     SIFIVE_SERIAL_TXCTRL_TXEN_MASK,
-> +		     SIFIVE_SERIAL_TXCTRL_OFFS, ssp);
-> +
-> +	/* Enable receives and set the watermark level to 0 */
-> +	__ssp_writel((0 << SIFIVE_SERIAL_RXCTRL_RXCNT_SHIFT) |
-> +		     SIFIVE_SERIAL_RXCTRL_RXEN_MASK,
-> +		     SIFIVE_SERIAL_RXCTRL_OFFS, ssp);
-> +
-> +	r = request_irq(ssp->port.irq, sifive_serial_irq, ssp->port.irqflags,
-> +			dev_name(&pdev->dev), ssp);
-> +	if (r) {
-> +		dev_err(&pdev->dev, "could not attach interrupt: %d\n", r);
-> +		goto probe_out2;
-> +	}
-> +
-> +	__ssp_add_console_port(ssp);
-> +
-> +	r = uart_add_one_port(&sifive_serial_uart_driver, &ssp->port);
-> +	if (r != 0) {
-> +		dev_err(&pdev->dev, "could not add uart: %d\n", r);
-> +		goto probe_out3;
-> +	}
-> +
-> +	return 0;
-> +
-> +probe_out3:
-> +	__ssp_remove_console_port(ssp);
-> +	free_irq(ssp->port.irq, ssp);
-> +probe_out2:
-> +	clk_notifier_unregister(ssp->clk, &ssp->clk_notifier);
-> +probe_out1:
-> +	return r;
-> +}
-> +
-> +static int sifive_serial_remove(struct platform_device *dev)
-> +{
-> +	struct sifive_serial_port *ssp = platform_get_drvdata(dev);
-> +
-> +	__ssp_remove_console_port(ssp);
-> +	uart_remove_one_port(&sifive_serial_uart_driver, &ssp->port);
-> +	free_irq(ssp->port.irq, ssp);
-> +	clk_notifier_unregister(ssp->clk, &ssp->clk_notifier);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sifive_serial_of_match[] = {
-> +	{ .compatible = "sifive,fu540-c000-uart0" },
-> +	{ .compatible = "sifive,uart0" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sifive_serial_of_match);
-> +
-> +static struct platform_driver sifive_serial_platform_driver = {
-> +	.probe		= sifive_serial_probe,
-> +	.remove		= sifive_serial_remove,
-> +	.driver		= {
-> +		.name	= SIFIVE_SERIAL_NAME,
-> +		.of_match_table = of_match_ptr(sifive_serial_of_match),
-> +	},
-> +};
-> +
-> +static int __init sifive_serial_init(void)
-> +{
-> +	int r;
-> +
-> +	r = uart_register_driver(&sifive_serial_uart_driver);
-> +	if (r)
-> +		goto init_out1;
-> +
-> +	r = platform_driver_register(&sifive_serial_platform_driver);
-> +	if (r)
-> +		goto init_out2;
-> +
-> +	return 0;
-> +
-> +init_out2:
-> +	uart_unregister_driver(&sifive_serial_uart_driver);
-> +init_out1:
-> +	return r;
-> +}
-> +
-> +static void __exit sifive_serial_exit(void)
-> +{
-> +	platform_driver_unregister(&sifive_serial_platform_driver);
-> +	uart_unregister_driver(&sifive_serial_uart_driver);
-> +}
-> +
-> +module_init(sifive_serial_init);
-> +module_exit(sifive_serial_exit);
-> +
-> +MODULE_DESCRIPTION("SiFive UART serial driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Paul Walmsley <paul@pwsan.com>");
-> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
-> index 6009ee2c2e99..2191fa691770 100644
-> --- a/include/uapi/linux/serial_core.h
-> +++ b/include/uapi/linux/serial_core.h
-> @@ -287,4 +287,7 @@
->   /* RDA UART */
->   #define PORT_RDA	118
->   
-> +/* SiFive UART */
-> +#define PORT_SIFIVE_V0	119
-> +
->   #endif /* _UAPILINUX_SERIAL_CORE_H */
+>  };
+>  
+>  #define M48T35_RTC_SET		0x80
+> diff --git a/drivers/tty/serial/8250/8250_ioc3.c b/drivers/tty/serial/8250/8250_ioc3.c
+> index 2be6ed2967e0..4c405f1b9c67 100644
+> --- a/drivers/tty/serial/8250/8250_ioc3.c
+> +++ b/drivers/tty/serial/8250/8250_ioc3.c
+> @@ -23,12 +23,12 @@ struct ioc3_8250_data {
+>  
+>  static unsigned int ioc3_serial_in(struct uart_port *p, int offset)
+>  {
+> -	return readb(p->membase + offset);
+> +	return readb(p->membase + (offset ^ 3));
+>  }
+>  
+>  static void ioc3_serial_out(struct uart_port *p, int offset, int value)
+>  {
+> -	writeb(value, p->membase + offset);
+> +	writeb(value, p->membase + (offset ^ 3));
+>  }
+>  
+>  static int serial8250_ioc3_probe(struct platform_device *pdev)
+> -- 
+> 2.13.7
 > 
 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
