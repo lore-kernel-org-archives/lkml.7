@@ -2,180 +2,142 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA727C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3B2C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9595F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A692082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="N2faBdda"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cfBtLJFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfDKRvz (ORCPT
+        id S1726720AbfDKRw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:51:55 -0400
-Received: from mail.efficios.com ([167.114.142.138]:58322 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfDKRvy (ORCPT
+        Thu, 11 Apr 2019 13:52:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46674 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfDKRw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:51:54 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 6F7D71D3480;
-        Thu, 11 Apr 2019 13:51:53 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id eK_xt-1xLeHD; Thu, 11 Apr 2019 13:51:52 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id B4B6F1D3475;
-        Thu, 11 Apr 2019 13:51:52 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B4B6F1D3475
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1555005112;
-        bh=vhsxrFXy1X+SwRp8Dcw0sUAHq25a6H/X/S6ETRMKmM8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=N2faBddanJGu+zOA1uaw3QGNH9GpsSKBZT2BEu6Wdm7CvHLphg5Lix0Q7fwQXVxfu
-         qafceUxF4ZbXjKnxrUPHeZrbuG6TRhbuWJ9tdIt/fBfGXMYaGgu+f08wrLWSD0NgsA
-         ZUDxUnHXU3o0RfjlLNZv4irfWbEr0CXduZuARUI2IWTjoVzQmOWwCBIkHBz3VEggFn
-         uaFrN3BlsAEDNCLG6quGwO9gXsxhpowp9fIRY+1VsHHodaTwsM6BaiAcSqxbaenmSo
-         xsRUkWXfJJTlHv/z3LEjWJI2WL4+8NOHpS1ij1Mzh/4h5cWucbaZm7NDtDtsYatOQh
-         2wqE65TKdb8Pg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id oLaKaNOVLNiE; Thu, 11 Apr 2019 13:51:52 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 9178C1D346E;
-        Thu, 11 Apr 2019 13:51:52 -0400 (EDT)
-Date:   Thu, 11 Apr 2019 13:51:52 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>,
-        peter maydell <peter.maydell@linaro.org>,
-        richard earnshaw <richard.earnshaw@arm.com>
-Message-ID: <1469455003.811.1555005112414.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190411164219.GE29081@fuggles.cambridge.arm.com>
-References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com> <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com> <20190411164219.GE29081@fuggles.cambridge.arm.com>
-Subject: Re: rseq/arm32: choosing rseq code signature
+        Thu, 11 Apr 2019 13:52:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t17so8462908wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 10:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UWmf2gFVGYdGp3+zu1SOeQRU5dF4/Q9osFeNuzPV66M=;
+        b=cfBtLJFewyMKRnYYnw21vINnPqrk2z7GXrfM4YvSVrWBgQq+nJOjapX/bWa5GUvuYY
+         H3toxmQkRamCTdWSc8N3hDwzQdehoe+ScCzHOv6ZBgAJX3biWy24vKWv0lNW4hrPaXaO
+         qBo1S2X8vw7dHA2BxIBEuMUibMJqCRACcBwW8wcxJ2Yqwv+asIld9QHvEQnMVQOJPgWy
+         bp+m/WK6Dg+OZiuHifUQQfGgY6JUUuTSwDSXRs3EJl8COHu1SeN09A6JrgzaeNx/3XHH
+         XRcffG/t68HskedwzTcwrH5utbMjIhnZI1NtOUdPNt4GKX40dNXqMl0hOKzAz/WV4qKE
+         NwdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UWmf2gFVGYdGp3+zu1SOeQRU5dF4/Q9osFeNuzPV66M=;
+        b=iD9v6rORghsfkZANlPDFrsAF8IV3JXJPW+AziasgJbDs4m+rt+u8Ze54JlifmA0YT2
+         LsPfXXFrGe/HkrvWZBrs1zbnNdf8Yph4zXJl75/nxZrqCvih+PezQps+mOHBn7a+vaxk
+         L489L/4E5+7C1C8QGrY9txtlWrJlV+xKZTrIXcY6AQvBc93JHWGl+kS5JmfIHT+pnU1t
+         ApUw8tE7izQ3vov/++fgg/vd0zuRNX2a2dAKcPF3gABpkOoPCXjdA8CB4Ij3t0lYiuOu
+         FpF1pYpIIJad+TYDzqEgeYedlYCmyN5J0hQfjGrp8ojSy3gBmU5a5GHtWtEFIKnUePwa
+         69Mw==
+X-Gm-Message-State: APjAAAUROdC8s2OHUDB4kTwu+aYE99YSgldiCZYjUrh5YeATzUAswmkF
+        f5vP7Aie5kUmc5Qw7XxtMfMKTK8YYtb7ibFQRmjZGg==
+X-Google-Smtp-Source: APXvYqwhl9r+dJ0Z/fammLyczcHvRtwhpBRx/JMX+uk7Nbkdaz4yEC6SKsx9MC9/KkL3DGJtwTYbXhZG31qaO53ZZtA=
+X-Received: by 2002:adf:dc8e:: with SMTP id r14mr8296918wrj.118.1555005176426;
+ Thu, 11 Apr 2019 10:52:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/arm32: choosing rseq code signature
-Thread-Index: OaESARLi4wUkWowqO71sUhY1Y3b8bw==
+References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
+ <20190411153313.GE22763@bombadil.infradead.org> <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+ <CAKOZuetFU4tXE27bxA86zzDfNSCbw83p8fPxfkQ_d_Em0C04Sg@mail.gmail.com> <20190411173649.GF22763@bombadil.infradead.org>
+In-Reply-To: <20190411173649.GF22763@bombadil.infradead.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 11 Apr 2019 10:52:45 -0700
+Message-ID: <CAJuCfpG1P42qnDmGZLGkYy+mkS7QjfYUjGGpEBa9UGgLt5=q4Q@mail.gmail.com>
+Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        yuzhoujian@didichuxing.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 11, 2019, at 12:42 PM, Will Deacon will.deacon@arm.com wrote:
+On Thu, Apr 11, 2019 at 10:36 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Apr 11, 2019 at 10:33:32AM -0700, Daniel Colascione wrote:
+> > On Thu, Apr 11, 2019 at 10:09 AM Suren Baghdasaryan <surenb@google.com> wrote:
+> > > On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
+> > > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
+> > > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
+> > > > > victim process. The usage of this flag is currently limited to SIGKILL
+> > > > > signal and only to privileged users.
+> > > >
+> > > > What is the downside of doing expedited memory reclaim?  ie why not do it
+> > > > every time a process is going to die?
+> > >
+> > > I think with an implementation that does not use/abuse oom-reaper
+> > > thread this could be done for any kill. As I mentioned oom-reaper is a
+> > > limited resource which has access to memory reserves and should not be
+> > > abused in the way I do in this reference implementation.
+> > > While there might be downsides that I don't know of, I'm not sure it's
+> > > required to hurry every kill's memory reclaim. I think there are cases
+> > > when resource deallocation is critical, for example when we kill to
+> > > relieve resource shortage and there are kills when reclaim speed is
+> > > not essential. It would be great if we can identify urgent cases
+> > > without userspace hints, so I'm open to suggestions that do not
+> > > involve additional flags.
+> >
+> > I was imagining a PI-ish approach where we'd reap in case an RT
+> > process was waiting on the death of some other process. I'd still
+> > prefer the API I proposed in the other message because it gets the
+> > kernel out of the business of deciding what the right signal is. I'm a
+> > huge believer in "mechanism, not policy".
+>
+> It's not a question of the kernel deciding what the right signal is.
+> The kernel knows whether a signal is fatal to a particular process or not.
+> The question is whether the killing process should do the work of reaping
+> the dying process's resources sometimes, always or never.  Currently,
+> that is never (the process reaps its own resources); Suren is suggesting
+> sometimes, and I'm asking "Why not always?"
 
-> Hi Mathieu,
-> 
-> On Wed, Apr 10, 2019 at 04:29:19PM -0400, Mathieu Desnoyers wrote:
->> ----- On Apr 9, 2019, at 3:32 PM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->> > We are about to include the code signature required prior to restartable
->> > sequences abort handlers into glibc, which will make this ABI choice final.
->> > We need architecture maintainer input on that signature value.
->> > 
->> > That code signature is placed before each abort handler, so the kernel can
->> > validate that it is indeed jumping to an abort handler (and not some
->> > arbitrary attacker-chosen code). The signature is never executed.
->> > 
->> > The current discussion thread on the glibc mailing list leads us towards
->> > using a trap with uncommon immediate operand, which simplifies integration
->> > with disassemblers, emulators, makes it easier to debug if the control
->> > flow gets redirected there by mistake, and is nicer for some architecture's
->> > speculative execution.
->> > 
->> > We can have different signatures for each sub-architecture, as long as they
->> > don't have to co-exist within the same process. We can special-case with
->> > #ifdef for each sub-architecture and endianness if need be. If the architecture
->> > has instruction set extensions that can co-exist with the architecture
->> > instruction set within the same process (e.g. thumb for arm), we need to take
->> > into account to which instruction the chosen signature value would map (and
->> > possibly decide if we need to extend rseq to support many signatures).
->> > 
->> > Here is an example of rseq signature definition template:
->> > 
->> > /*
->> > * TODO: document trap instruction objdump output on each sub-architecture
->> > * instruction sets, as well as instruction set extensions.
->> > */
->> > #define RSEQ_SIG 0x########
->> > 
->> > Ideally we'd need a patch on top of the Linux kernel
->> > tools/testing/selftests/rseq/rseq-arm.h file that updates
->> > the signature value, so I can then pick it up for the glibc
->> > patchset.
->> 
->> Would the following diff work for you ? If so, can I get your
->> acked-by ?
-> 
-> I had a quick chat with Richard and Peter (CC'd), since they're much more
-> familiar with the A32 instruction set than I am and also have a better view
-> of what might already be in use.
-> 
-> Peter suggests that anything of the form 0xe7fxdefx should trap in both A32
-> and T32, although it does assemble to UDF; B <imm11> in T16. I'm not sure we
-> should get too obsessed with trying to encode a signature that universally
-> decodes to a trap.
+If there are no downsides of doing this always (like using some
+resources that can be utilized in a better way) then by all means,
+let's do it unconditionally. My current implementation is not one of
+such cases :)
 
-That's a nice trick.
-
-> 
-> Whatever you choose, it would be worth checking that it doesn't clash with
-> other allocations such as software breakpoints in GDB.
-
-GDB seems to have [1] :
-
-#define ARM_LE_BREAKPOINT {0xFE,0xDE,0xFF,0xE7}
-#define ARM_BE_BREAKPOINT {0xE7,0xFF,0xDE,0xFE}
-#define THUMB_LE_BREAKPOINT {0xbe,0xbe}
-#define THUMB_BE_BREAKPOINT {0xbe,0xbe}
-
-None of which match the value you hint at.
-
-So I could pick "0xe7f5def3", which would map to the following comment:
-
-/*
- * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
- * value 0x5de3. This traps if user-space reaches this instruction by mistake,
- * and the uncommon operand ensures the kernel does not move the instruction
- * pointer to attacker-controlled code on rseq abort.
- *
- * The instruction pattern in the A32 instruction set is:
- *
- * e7f5def3    udf    #24035    ; 0x5de3
- *
- * This translates to the following instruction pattern in the T16 instruction
- * set:
- *
- * little endian:
- * def3        udf    #243      ; 0xf3
- * e7f5        b.n    <7f5>
- *
- * big endian:
- * e7f5        b.n    <7f5>
- * def3        udf    #243      ; 0xf3
- */
-#define RSEQ_SIG        0xe7f5def3
-
-Thoughts ?
-
-Thanks!
-
-Mathieu
-
-[1] https://github.com/bminor/binutils-gdb/blob/master/gdb/arm-tdep.c#L7705-L7742
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+I think with implementation when killing process is doing the reaping
+of the victim's mm this can be done unconditionally because we don't
+use resources which might otherwise be used in a better way. Overall I
+like Daniel's idea of the process that requested killing and is
+waiting for the victim to die helping in reaping its memory. It kind
+of naturally elevates the priority of the reaping if the priority of
+the waiting process is higher than victim's priority (a kind of
+priority inheritance).
