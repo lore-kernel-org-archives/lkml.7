@@ -2,189 +2,166 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EB8C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A89C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1C52083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23EE2083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 19:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PNGCAm3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfDKTUT convert rfc822-to-8bit (ORCPT
+        id S1726796AbfDKTVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 15:20:19 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:32858 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbfDKTUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 15:20:18 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEfF4-0001Hj-1F; Thu, 11 Apr 2019 21:20:10 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "elaine.zhang" <zhangqing@rock-chips.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Caesar Wang <caesar.wang@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/3] clk: rockchip: Make rkpwm a critical clock on rk3288
-Date:   Thu, 11 Apr 2019 21:20:09 +0200
-Message-ID: <3228689.801YVuiu6B@diego>
-In-Reply-To: <CAD=FV=VYYU1ZJfCaNdM--B_8jRRDR3prbmMzj2_3UJO9NbeaPw@mail.gmail.com>
-References: <20190409204707.150347-1-dianders@chromium.org> <43b5ef8c-4617-bdc5-7109-35eac228b8f9@rock-chips.com> <CAD=FV=VYYU1ZJfCaNdM--B_8jRRDR3prbmMzj2_3UJO9NbeaPw@mail.gmail.com>
+        Thu, 11 Apr 2019 15:21:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45917 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfDKTVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 15:21:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s15so8773308wra.12
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 12:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gDMZcoKquUSIkDhjy8NKXTspfQYszazqfgEtb90sjjE=;
+        b=PNGCAm3qblaX5Kd8ZJhSCM8xzO/gyUjtC3VQs37Vk89AaaO/SrjguNSRFS7IcgWJ16
+         gGahdjk3fEyF8WntAzCkCEGfJF4536Tb9wVhIWew8B5l/ri0Dr4xLJNQRIF7Gr9fwAR6
+         dGnwA2DxOkH//pHVW2W0/eYVf9TVBxakzEI6W8Es6ztJ2XWBXoC/BStscHaY2N/sF7qq
+         5fYH7TJ0OBshqs4h6MSmL4GDFbB3teP5YeHjhDFxcqNJTdOo0hqJEENtxI9IQ7ojdFmP
+         +zxqMfuA+n37BeufKWawiJCguA2fEQB/EmAmdFB05PoQpwJT0lsOQ8lpxWaS2BNKZ897
+         dgww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gDMZcoKquUSIkDhjy8NKXTspfQYszazqfgEtb90sjjE=;
+        b=gMFhA7AfyGBX0rySoSGg+jDmsTgt70LLbS3UceTyVKYxNzyeZipUZrfmovdHbQKv6P
+         OAy9E+W3sX48vtx3GkStnqm46E0dte7I+OHFi+w/uOvW3bJBQ7rRvUlnqwqfWz41Tz9X
+         fA+93Alj2mb6tkHIBCFwrVMLANXxwjPL7/j4oa65NXSI6HQ8Ik8cZN3WVDz9HWuhyJus
+         13T49r2OxzS2kjLMhb64dY6tIMeRNSK6Tu1sboE4T/l4hJOHhTgLC8SD0lOLhk7pf3/f
+         V+uEy1AoSntPD+hnCpRhOBqa6cC9fY3SXOf2PuwGk/FhHzrW4YWtsfI3C7jun/kiDjy+
+         bcEA==
+X-Gm-Message-State: APjAAAWhVNP35I5/+FpokR/xP7LXBkd11vnuvKWfNl8I2t8mLXtQ7g1K
+        KVnqWLrLWVNxaHkOxTWKmalCxg==
+X-Google-Smtp-Source: APXvYqwnzYn1gBiUYHGw3o3LDcGDK0bZ1KlzRTfLKdcj8C0p/xbJzlB8aAG3MR5JhAb3ybBCA0r7dw==
+X-Received: by 2002:adf:f1cc:: with SMTP id z12mr18496696wro.180.1555010458599;
+        Thu, 11 Apr 2019 12:20:58 -0700 (PDT)
+Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
+        by smtp.googlemail.com with ESMTPSA id z140sm15577020wmc.27.2019.04.11.12.20.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 12:20:57 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Ladislav Michl <ladis@linux-mips.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Keerthy <j-keerthy@ti.com>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+ <20190327081142.GA11034@lenoch> <20190404141730.GE49658@atomide.com>
+ <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+ <20190410200748.GN2839@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b8a177ee-0058-2730-4c95-56834f6bafd4@linaro.org>
+Date:   Thu, 11 Apr 2019 21:20:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190410200748.GN2839@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug, Elaine,
-
-Am Donnerstag, 11. April 2019, 16:42:23 CEST schrieb Doug Anderson:
-> On Wed, Apr 10, 2019 at 8:42 PM elaine.zhang <zhangqing@rock-chips.com> wrote:
-> > 在 2019/4/10 下午11:25, Doug Anderson 写道:
-> > > On Tue, Apr 9, 2019 at 11:42 PM elaine.zhang <zhangqing@rock-chips.com> wrote:
-> > >> 在 2019/4/10 上午4:47, Douglas Anderson 写道:
-> > >>> Most rk3288-based boards are derived from the EVB and thus use a PWM
-> > >>> regulator for the logic rail.  However, most rk3288-based boards don't
-> > >>> specify the PWM regulator in their device tree.  We'll deal with that
-> > >>> by making it critical.
-> > >>>
-> > >>> NOTE: it's important to make it critical and not just IGNORE_UNUSED
-> > >>> because all PWMs in the system share the same clock.  We don't want
-> > >>> another PWM user to turn the clock on and off and kill the logic rail.
-> > >>>
-> > >>> This change is in preparation for actually having the PWMs in the
-> > >>> rk3288 device tree actually point to the proper PWM clock.  Up until
-> > >>> now they've all pointed to the clock for the old IP block and they've
-> > >>> all worked due to the fact that rkpwm was IGNORE_UNUSED and that the
-> > >>> clock rates for both clocks were the same.
-> > >>>
-> > >>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > >>> ---
-> > >>>
-> > >>>    drivers/clk/rockchip/clk-rk3288.c | 3 ++-
-> > >>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> > >>>
-> > >>> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> > >>> index 06287810474e..c3321eade23e 100644
-> > >>> --- a/drivers/clk/rockchip/clk-rk3288.c
-> > >>> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> > >>> @@ -697,7 +697,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
-> > >>>        GATE(PCLK_TZPC, "pclk_tzpc", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 3, GFLAGS),
-> > >>>        GATE(PCLK_UART2, "pclk_uart2", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 9, GFLAGS),
-> > >>>        GATE(PCLK_EFUSE256, "pclk_efuse_256", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 10, GFLAGS),
-> > >>> -     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 11, GFLAGS),
-> > >>> +     GATE(PCLK_RKPWM, "pclk_rkpwm", "pclk_cpu", 0, RK3288_CLKGATE_CON(11), 11, GFLAGS),
-> > >>>
-> > >>>        /* ddrctrl [DDR Controller PHY clock] gates */
-> > >>>        GATE(0, "nclk_ddrupctl0", "ddrphy", CLK_IGNORE_UNUSED, RK3288_CLKGATE_CON(11), 4, GFLAGS),
-> > >>> @@ -837,6 +837,7 @@ static const char *const rk3288_critical_clocks[] __initconst = {
-> > >>>        "pclk_alive_niu",
-> > >>>        "pclk_pd_pmu",
-> > >>>        "pclk_pmu_niu",
-> > >>> +     "pclk_rkpwm",
-> > >> pwm have device node, can enable and disable it in the pwm drivers.
-> > >>
-> > >> pwm regulator use pwm node as:
-> > >>
-> > >> pwms = <&pwm2 0 25000 1>
-> > >>
-> > >> when set Logic voltage:
-> > >>
-> > >> pwm_regulator_set_voltage()
-> > >>
-> > >>       --> pwm_apply_state()
-> > >>
-> > >>           -->clk_enable()
-> > >>
-> > >>           -->pwm_enable()
-> > >>
-> > >>           -->pwm_config()
-> > >>
-> > >>           -->pinctrl_select()
-> > >>
-> > >>           --....
-> > >>
-> > >> For mark pclk_rkpwm as critical,do you have any questions, or provides
-> > >> some log or more information.
-> > > Right, if we actually specify the PWM used for the PWM regulator in
-> > > the device tree then there is no need to mark it as a critical clock.
-> > > In fact rk3288-veyron devices boot absolutely fine without marking
-> > > this clock as critical.  Actually, it seems like the way the PWM
-> > > framework works (IIRC it was designed this way specifically to support
-> > > PWM regulators) is that even just specifying that pwm1 is "okay" is
-> > > enough to keep the clock on even if the PWM regulator isn't specified.
-> > >
-> > > ...however...
-> > >
-> > > Take a look at, for instance, the rk3288-evb device tree file.
-> > > Nowhere in there does it specify that the PWM used for the PWM
-> > > regulator should be on.  Presumably that means that if we don't mark
-> > > the clock as critical then rk3288-evb will fail to boot.  That's easy
-> > > for me to fix since I have the rk3288-evb schematics, but what about
-> > > other rk3288 boards?  We could make educated guesses about each of
-> > > them and/or fix things are we hear about breakages.
-> > >
-> > > ...but...
-> > >
-> > > All the above would only be worth doing if we thought someone would
-> > > get some benefit out of it.  I'd bet that pretty much all rk3288-based
-> > > boards use a PWM regulator.  Thus, in reality, everyone will want the
-> > > rkpwm clock on all the time anyway.  In that case going through all
-> > > that extra work / potentially breaking other boards doesn't seem worth
-> > > it.  Just mark the clock as critical.
-> >
-> > I have no problem with changing it like this, but I think it is better
-> > to modify dts:
-> >
-> > vdd_log: vdd-log {
-> >          compatible = "pwm-regulator";
-> >          rockchip,pwm_id = <2>; //for rk uboot
-> >          rockchip,pwm_voltage = <900000>; // for rk uboot
-> >          pwms = <&pwm2 0 25000 1>;
-> >          regulator-name = "vdd_log";
-> >          regulator-min-microvolt = <800000>;//hw logic min voltage
-> >          regulator-max-microvolt = <1400000>;//hw logic max voltage
-> >          regulator-always-on;
-> >          regulator-boot-on;
-> >      };
-> >
-> > Maybe we did not push the modification of this part in rk3288-evb, I
-> > will push to deal with this.(rk3229-evb.dts and rk3399 has been already
-> > pushed)
+On 10/04/2019 22:07, Tony Lindgren wrote:
+> Hi,
 > 
-> Heiko: do you have advice for how you'd like this to proceed?  We
-> could certainly land patch #3 in this series without patch #2 and then
-> pick up the pieces as we find boards that no longer boot.  As I've
-> argued I'm not sure that's worth the effort, but I'll leave it up to
-> you.
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
+>> can you ask for an acked-by before pulling a patch in your tree?
+> 
+> I certainly do ask and wait for acks where possible :)
 
-So I've skimmed through a number of rk3288 device-schematics and
-at least there pwm-based logic-regulator is only part of some of the
-rk808-based designs. All the act8846-based boards use one of its
-regulator-outputs for the logic supply. So this matters for at least the
-veyron-boards and the rk3288-evb ... but not the phycore.
+Ok, I may have missed them.
 
-But it also is part of a vital system for veyron and they won't really like
-if somewhere during probe the pwm-clock gets turned off ;-) .
+> Note that I have not applied this patch. I just added
+> Keerthy to Cc on this thread so maybe you misread the
+> message earlier. My comment "seems like no other
+> takers" was for Ladislav regarding somebody picking up
+> his earlier work, not for picking up this patch :)
 
-So I tend to agree with Doug and will just apply the make-critical patch.
-If Stephen's "handoff" clock-type [critical until a driver claims it]
-materializes some-time, we can switch to that.
+Actually I was referring to the commit 592ea6bd1fad. Anyway as stated
+above I could have miss your call.
+
+> In any case, I've been waiting for you guys to pick up
+> the patch, here's my ack if you're waiting for it:
+> 
+> Acked-by: Tony Lindgren <tony@atomide.com>
+
+The patch does not apply. Is it aligned with tip/timers/core ?
+
+>> On 04/04/2019 16:17, Tony Lindgren wrote:
+>>> * Ladislav Michl <ladis@linux-mips.org> [190327 08:12]:
+>>>> Hello Nathan,
+>>>>
+>>>> On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
+>>>>> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
+>>>>> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
+>>>>> static because its prototype was not defined in a header. Unfortunately,
+>>>>> this causes a build warning on multi_v7_defconfig because this function
+>>>>> is not used anywhere in this translation unit:
+>>>>>
+>>>>> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
+>>>>> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
+>>>>>
+>>>>> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
+>>>>> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
+>>>>> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
+>>>>> Make unexported functions static"), which is probably where this should
+>>>>> have happened.
+>>>>
+>>>> Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
+>>>> capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
+>>>> function being removed here). It is a part of an attempt to add event capture
+>>>> for OMAP. Of course I would like this functionality to be implemented, but
+>>>> as I do not have a time to continue, I cannot really object removing this
+>>>> function.
+>>>>
+>>>> Just in case you'd be interested in finishing this task ;-)
+>>>
+>>> Well seems like no other takers :) We can always find the missing
+>>> function in git history when needed, so I suggest we apply this.
+>>>
+>>> Adding Keerthy to Cc as he just posted a similar patch.
+>>>
+>>> Regards,
+>>>
+>>> Tony
+>>>
+>>
+>>
+>> -- 
+>>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
 
 
-Heiko
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
