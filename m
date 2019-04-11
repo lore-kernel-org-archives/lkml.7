@@ -6,64 +6,80 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793B1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C18FC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420202075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597232146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555015277;
-	bh=iUG93rEwjau9iO4ygIK55CfqQTZgMkWN6io2r8HZ+OA=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=QaeptLpnUHkBHTKFlT9iZhvt1nPoIuWPXJAQKgCwo7vi+qBaLSz5iQWtoqqcrXUBi
-	 1zytUq0BaJOt2k/9Wc84LlteBHlSNwgalwmsH+jvkkU4PoYyWC5do6uB40E6sxrThL
-	 tNq1LnsgOdj5bQkF6My/2jrWLeVay2uoRP7dy05U=
+	s=default; t=1555015336;
+	bh=eDElxih9zBKhayq8q0iHrybWnG2bEC3whDfJAjheOQk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ah4EQNpEZ5kFFtHvJj/Osw3WbOcZuEDYF125FdcnaiiLSpTnz2hOaSWvyV/rx0aV8
+	 D3KItpVo7iamwW2t/iU0aujjB8A8vwCdqseICA2T2TCLeaIscYvWd+6Z4blIVaK3z5
+	 TMJW5GpDC7828Qs04DLQZzPVzfWPLl/p1sjSaj64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDKUlQ (ORCPT
+        id S1726967AbfDKUmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59472 "EHLO mail.kernel.org"
+        Thu, 11 Apr 2019 16:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbfDKUlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:41:14 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726655AbfDKUmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:42:14 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D50BA2184B;
-        Thu, 11 Apr 2019 20:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75B62146F;
+        Thu, 11 Apr 2019 20:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555015273;
-        bh=iUG93rEwjau9iO4ygIK55CfqQTZgMkWN6io2r8HZ+OA=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=errk3Lo9CDUFil8Lv/wZ17uJIkT54XXyTo7bPS/XtdhiYK3jesiHaDNr6u/Xz1nDP
-         ssJbAOdKb4AC+vogYf6YQF9Y3wyxY6VBU4UpDcysSeLdqM0jh5mCzRNF9o0BppekZk
-         wpMp8oyZwm4rGirdlTFwyddK3WfndYkDPL0f+eVw=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1555015334;
+        bh=eDElxih9zBKhayq8q0iHrybWnG2bEC3whDfJAjheOQk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hW2C1Da662NiUUMR7RXwdTlB+oVby/s9jYOfT19+HZKiMvZKRy46Mf3swzoQw7r5T
+         pk/392CaEU3/EMaZe6PctzGV/8/uErbVrGQ8b44xLnl5vFZ0LKk7JIjQD8mwO1kdKM
+         LJM5aEd3PZ/le10YlvBA4nAuaDPtCIIQzOWmfrVM=
+Received: by mail-ed1-f50.google.com with SMTP id d13so6434139edr.5;
+        Thu, 11 Apr 2019 13:42:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAVd+64t+bDlRCESnkqi0c8q5SSAadXTl9tvDOowe6jAvxQmAMvb
+        Wz/exVzG6SVgdLKePz4bRlYZKhlK0x2/qe4qGLA=
+X-Google-Smtp-Source: APXvYqzU9T2gwNvY+HquzuQ6qgYhh92N+lCBbXOCVcFiM0WJz/cVpKXOVWu5kMDsU6vxqz4qB2eG/USW5eSadImuEzk=
+X-Received: by 2002:a17:906:25ce:: with SMTP id n14mr20450002ejb.115.1555015332479;
+ Thu, 11 Apr 2019 13:42:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190319140536.27945-2-paul@crapouillou.net>
-References: <20190319140536.27945-1-paul@crapouillou.net> <20190319140536.27945-2-paul@crapouillou.net>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: ingenic: jz4725b: Add UDC PHY clock
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>
-Message-ID: <155501527313.20095.14993764415449049274@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Thu, 11 Apr 2019 13:41:13 -0700
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-13-git-send-email-hao.wu@intel.com> <20190402150719.GB15773@archbook>
+In-Reply-To: <20190402150719.GB15773@archbook>
+From:   Alan Tull <atull@kernel.org>
+Date:   Thu, 11 Apr 2019 15:41:36 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQdFy9c7i54zk4yqzqK-vxm009bXKrgvyCR64h3rDwwRA@mail.gmail.com>
+Message-ID: <CANk1AXQdFy9c7i54zk4yqzqK-vxm009bXKrgvyCR64h3rDwwRA@mail.gmail.com>
+Subject: Re: [PATCH 12/17] fpga: dfl: afu: add STP (SignalTap) support
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Wu Hao <hao.wu@intel.com>, Alan Tull <atull@kernel.org>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Cercueil (2019-03-19 07:05:36)
-> Add clock for the USB Device Controller PHY.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+On Tue, Apr 2, 2019 at 10:07 AM Moritz Fischer <mdf@kernel.org> wrote:
+>
+> Hi Wu,
+>
+> On Mon, Mar 25, 2019 at 11:07:39AM +0800, Wu Hao wrote:
+> > STP (SignalTap) is one of the private features under the port for
+> > debugging. This patch adds private feature driver support for it
+> > to allow userspace applications to mmap related mmio region and
+> > provide STP service.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
 
-Applied to clk-next
+Acked-by: Alan Tull <atull@kernel.org>
 
+Thanks,
+Alan
