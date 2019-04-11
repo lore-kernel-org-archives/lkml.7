@@ -2,199 +2,199 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD5CC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C3EC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314C92075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ccd6EU6a"
+	by mail.kernel.org (Postfix) with ESMTP id F26DE2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 17:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfDKRAw (ORCPT
+        id S1727015AbfDKRBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 13:00:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38207 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfDKRAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 13:00:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k11so8322878wro.5;
-        Thu, 11 Apr 2019 10:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cbvlBAsgmPq0wjmomYJoGS+b4tJiSIC7oCGIAQBbd7c=;
-        b=Ccd6EU6a5WjkuTHIFIyrlSdUhoW/I/CLfdyU535V3DX7bvrJB+JXDGNTN3mks4u0Gs
-         J0RVh8jjYOw/HDIXcyD39mvYUwZ+E8Ug1YDPeOieh5EeZjnM1dZKyKG2Rq17a0Mz3wVy
-         LibGy87EvYIY+hvUwXP5nfNDr+WQdvXIF5n99Vjx1Q/ItQXmJMdq1jxnuddiJSHr+nVB
-         fXlUaNL1iO+/rlKERs56f+OtEPj73Vj4w+Y6dC2YYpOlMQowmK6Y/jYx9qHzifZScueN
-         cqduKct7ujQ8g186ZtRFCSd5LcpDbcjkDLMoTGGJDTLD0gcgbsvOWPSnf7mlECFX7qWq
-         ppJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cbvlBAsgmPq0wjmomYJoGS+b4tJiSIC7oCGIAQBbd7c=;
-        b=XN69+ePlc2Oo9Kj9Wkkoah5lg+QcrWHrV9A4SC6Kb31/jbGAIyxUMQMqd42xHAWh3I
-         ZFOJTmlrONHNFZVWUVSr88FC+WfxJijj3u3HxmsYGrquDjfTr7dzO/3i/tOvQVe4q3Ew
-         ehVv52r+Dbw7kLCw/3zTvky0fP3zaVo5AdU9lBxFb0VyL6uLM4PeV/o0hhU1tyF8mZfe
-         l+r+TMUJeXtSBo/HmcY5dnluwEcHjLplamV6KwZgYoTmsP7yzf7kvQCwWq442b5jgvQW
-         PioAIv3u8JSkib9KhsBYN+RLfy81IRrLKkg6SN0pADYpYsCRHHofi8tx5J/FgdQs7+GE
-         0VGQ==
-X-Gm-Message-State: APjAAAXM9HG/+aj+aWMPcFijEeaG9UxDEHawSJuRPrVJsrydTULGAaYq
-        LtdbyaHT3v7FDN1P4VXeMLc=
-X-Google-Smtp-Source: APXvYqwrJROnJ32SBXYKya9JKylyFA28nM2YwSh7np6B+3CCVnWy3wfueDzSzw85ynI6Z5EBS5ckeQ==
-X-Received: by 2002:adf:e4c2:: with SMTP id v2mr31414912wrm.124.1555002049706;
-        Thu, 11 Apr 2019 10:00:49 -0700 (PDT)
-Received: from localhost.localdomain ([5.102.238.208])
-        by smtp.gmail.com with ESMTPSA id r6sm5071353wmc.11.2019.04.11.10.00.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 10:00:48 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writeback
-Date:   Thu, 11 Apr 2019 20:00:42 +0300
-Message-Id: <20190411170042.16111-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 11 Apr 2019 13:01:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41894 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726585AbfDKRBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 13:01:02 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D309E88ADF;
+        Thu, 11 Apr 2019 17:00:59 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 800B612A68;
+        Thu, 11 Apr 2019 17:00:56 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 13:00:54 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?iso-8859-1?Q?Krcm=E1r?= <rkrcmar@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 7/8] mm/mmu_notifier: pass down vma and reasons why
+ mmu notifier is happening v2
+Message-ID: <20190411170054.GB4266@redhat.com>
+References: <20190326164747.24405-1-jglisse@redhat.com>
+ <20190326164747.24405-8-jglisse@redhat.com>
+ <20190410234124.GE22989@iweiny-DESK2.sc.intel.com>
+ <20190411143918.GA4266@redhat.com>
+ <2807E5FD2F6FDA4886F6618EAC48510E79CAEBED@CRSMSX101.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79CAEBED@CRSMSX101.amr.corp.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 11 Apr 2019 17:01:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE
-writeback") claims that sync_file_range(2) syscall was "created for
-userspace to be able to issue background writeout and so waiting for
-in-flight IO is undesirable there" and changes the writeback (back) to
-WB_SYNC_NONE.
+On Thu, Apr 11, 2019 at 03:21:08PM +0000, Weiny, Ira wrote:
+> > On Wed, Apr 10, 2019 at 04:41:57PM -0700, Ira Weiny wrote:
+> > > On Tue, Mar 26, 2019 at 12:47:46PM -0400, Jerome Glisse wrote:
+> > > > From: Jérôme Glisse <jglisse@redhat.com>
+> > > >
+> > > > CPU page table update can happens for many reasons, not only as a
+> > > > result of a syscall (munmap(), mprotect(), mremap(), madvise(), ...)
+> > > > but also as a result of kernel activities (memory compression,
+> > > > reclaim, migration, ...).
+> > > >
+> > > > Users of mmu notifier API track changes to the CPU page table and
+> > > > take specific action for them. While current API only provide range
+> > > > of virtual address affected by the change, not why the changes is
+> > > > happening
+> > > >
+> > > > This patch is just passing down the new informations by adding it to
+> > > > the mmu_notifier_range structure.
+> > > >
+> > > > Changes since v1:
+> > > >     - Initialize flags field from mmu_notifier_range_init()
+> > > > arguments
+> > > >
+> > > > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: linux-mm@kvack.org
+> > > > Cc: Christian König <christian.koenig@amd.com>
+> > > > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> > > > Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> > > > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> > > > Cc: Jan Kara <jack@suse.cz>
+> > > > Cc: Andrea Arcangeli <aarcange@redhat.com>
+> > > > Cc: Peter Xu <peterx@redhat.com>
+> > > > Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+> > > > Cc: Jason Gunthorpe <jgg@mellanox.com>
+> > > > Cc: Ross Zwisler <zwisler@kernel.org>
+> > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > Cc: Michal Hocko <mhocko@kernel.org>
+> > > > Cc: Christian Koenig <christian.koenig@amd.com>
+> > > > Cc: Ralph Campbell <rcampbell@nvidia.com>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Cc: kvm@vger.kernel.org
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Cc: linux-rdma@vger.kernel.org
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > ---
+> > > >  include/linux/mmu_notifier.h | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/include/linux/mmu_notifier.h
+> > > > b/include/linux/mmu_notifier.h index 62f94cd85455..0379956fff23
+> > > > 100644
+> > > > --- a/include/linux/mmu_notifier.h
+> > > > +++ b/include/linux/mmu_notifier.h
+> > > > @@ -58,10 +58,12 @@ struct mmu_notifier_mm {  #define
+> > > > MMU_NOTIFIER_RANGE_BLOCKABLE (1 << 0)
+> > > >
+> > > >  struct mmu_notifier_range {
+> > > > +	struct vm_area_struct *vma;
+> > > >  	struct mm_struct *mm;
+> > > >  	unsigned long start;
+> > > >  	unsigned long end;
+> > > >  	unsigned flags;
+> > > > +	enum mmu_notifier_event event;
+> > > >  };
+> > > >
+> > > >  struct mmu_notifier_ops {
+> > > > @@ -363,10 +365,12 @@ static inline void
+> > mmu_notifier_range_init (struct mmu_notifier_range *range,
+> > > >  					   unsigned long start,
+> > > >  					   unsigned long end)
+> > > >  {
+> > > > +	range->vma = vma;
+> > > > +	range->event = event;
+> > > >  	range->mm = mm;
+> > > >  	range->start = start;
+> > > >  	range->end = end;
+> > > > -	range->flags = 0;
+> > > > +	range->flags = flags;
+> > >
+> > > Which of the "user patch sets" uses the new flags?
+> > >
+> > > I'm not seeing that user yet.  In general I don't see anything wrong
+> > > with the series and I like the idea of telling drivers why the invalidate has
+> > fired.
+> > >
+> > > But is the flags a future feature?
+> > >
+> > 
+> > I believe the link were in the cover:
+> > 
+> > https://lkml.org/lkml/2019/1/23/833
+> > https://lkml.org/lkml/2019/1/23/834
+> > https://lkml.org/lkml/2019/1/23/832
+> > https://lkml.org/lkml/2019/1/23/831
+> > 
+> > I have more coming for HMM but i am waiting after 5.2 once amdgpu HMM
+> > patch are merge upstream as it will change what is passed down to driver
+> > and it would conflict with non merged HMM driver (like amdgpu today).
+> > 
+> 
+> Unfortunately this does not answer my question.  Yes I saw the links to the patches which use this in the header.  Furthermore, I checked the links again, I still do not see a use of range->flags nor a use of the new flags parameter to mmu_notifier_range_init().
+> 
+> I still gave a reviewed by because I'm not saying it is wrong I'm just trying to understand what use drivers have of this flag.
+> 
+> So again I'm curious what is the use case of these flags and the use case of exposing it to the users of MMU notifiers?
 
-This claim is only partially true. It is true for users that use the flag
-SYNC_FILE_RANGE_WRITE by itself, as does PostgreSQL, the user that was
-the reason for changing to WB_SYNC_NONE writeback.
+Oh sorry did miss the exact question, not enough coffee. The
+flags is use for BLOCKABLE i converted the bool blockable to
+an int flags field so that we can have flags in the future.
+The first user is probably gonna be for restoring the KVM
+change_pte() optimization.
 
-However, that claim is not true for users that use that flag combination
-SYNC_FILE_RANGE_{WAIT_BEFORE|WRITE|_WAIT_AFTER}.
-Those users explicitly requested to wait for in-flight IO as well as to
-writeback of dirty pages.
+https://lkml.org/lkml/2019/2/19/754
+https://lkml.org/lkml/2019/2/20/1087
 
-Re-brand that flag combination as SYNC_FILE_RANGE_WRITE_AND_WAIT
-and use the helper filemap_write_and_wait_range(), that uses WB_SYNC_ALL
-writeback, to perform the full range sync request.
+I droped the CHANGE_PTE flags from this version as i need to
+harass the KVM people some more for them to review this as
+today the change_pte() optimization does not work so today
+the change_pte() callback are useless and just wasting CPU
+cycles.
 
-Fixes: 23d0127096cb ("fs/sync.c: make sync_file_range(2) use WB_SYNC_NONE")
-Acked-by: Jan Kara <jack@suse.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
-
-Andrew,
-
-Oops found a braino in my patch. Here is v3.
-
-You may find the discussion on V1 here:
-https://lore.kernel.org/lkml/20190409114922.30095-1-amir73il@gmail.com/
-
-Thanks,
-Amir.
-
-Changes since v2:
-- Return after filemap_write_and_wait_range()
-
-Changes since v1:
-- Remove non-guaranties of the API from commit message
-- Added ACK by Jan
-
- fs/sync.c               | 24 +++++++++++++++++-------
- include/uapi/linux/fs.h |  3 +++
- 2 files changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/fs/sync.c b/fs/sync.c
-index b54e0541ad89..3a923652d720 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -18,8 +18,8 @@
- #include <linux/backing-dev.h>
- #include "internal.h"
- 
--#define VALID_FLAGS (SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE| \
--			SYNC_FILE_RANGE_WAIT_AFTER)
-+#define VALID_FLAGS (SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WRITE_AND_WAIT | \
-+		     SYNC_FILE_RANGE_WAIT_BEFORE | SYNC_FILE_RANGE_WAIT_AFTER)
- 
- /*
-  * Do the filesystem syncing work. For simple filesystems
-@@ -235,9 +235,9 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
- }
- 
- /*
-- * sys_sync_file_range() permits finely controlled syncing over a segment of
-+ * ksys_sync_file_range() permits finely controlled syncing over a segment of
-  * a file in the range offset .. (offset+nbytes-1) inclusive.  If nbytes is
-- * zero then sys_sync_file_range() will operate from offset out to EOF.
-+ * zero then ksys_sync_file_range() will operate from offset out to EOF.
-  *
-  * The flag bits are:
-  *
-@@ -254,7 +254,7 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
-  * Useful combinations of the flag bits are:
-  *
-  * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE: ensures that all pages
-- * in the range which were dirty on entry to sys_sync_file_range() are placed
-+ * in the range which were dirty on entry to ksys_sync_file_range() are placed
-  * under writeout.  This is a start-write-for-data-integrity operation.
-  *
-  * SYNC_FILE_RANGE_WRITE: start writeout of all dirty pages in the range which
-@@ -266,10 +266,13 @@ SYSCALL_DEFINE1(fdatasync, unsigned int, fd)
-  * earlier SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE operation to wait
-  * for that operation to complete and to return the result.
-  *
-- * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER:
-+ * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT_AFTER
-+ * (a.k.a. SYNC_FILE_RANGE_WRITE_AND_WAIT):
-  * a traditional sync() operation.  This is a write-for-data-integrity operation
-  * which will ensure that all pages in the range which were dirty on entry to
-- * sys_sync_file_range() are committed to disk.
-+ * ksys_sync_file_range() are written to disk.  It should be noted that disk
-+ * caches are not flushed by this call, so there are no guarantees here that the
-+ * data will be available on disk after a crash.
-  *
-  *
-  * SYNC_FILE_RANGE_WAIT_BEFORE and SYNC_FILE_RANGE_WAIT_AFTER will detect any
-@@ -338,6 +341,13 @@ int ksys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
- 
- 	mapping = f.file->f_mapping;
- 	ret = 0;
-+	if ((flags & SYNC_FILE_RANGE_WRITE_AND_WAIT) ==
-+		     SYNC_FILE_RANGE_WRITE_AND_WAIT) {
-+		/* Unlike SYNC_FILE_RANGE_WRITE alone uses WB_SYNC_ALL */
-+		ret = filemap_write_and_wait_range(mapping, offset, endbyte);
-+		goto out_put;
-+	}
-+
- 	if (flags & SYNC_FILE_RANGE_WAIT_BEFORE) {
- 		ret = file_fdatawait_range(f.file, offset, endbyte);
- 		if (ret < 0)
-diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-index 121e82ce296b..59c71fa8c553 100644
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -320,6 +320,9 @@ struct fscrypt_key {
- #define SYNC_FILE_RANGE_WAIT_BEFORE	1
- #define SYNC_FILE_RANGE_WRITE		2
- #define SYNC_FILE_RANGE_WAIT_AFTER	4
-+#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
-+					 SYNC_FILE_RANGE_WAIT_BEFORE | \
-+					 SYNC_FILE_RANGE_WAIT_AFTER)
- 
- /*
-  * Flags for preadv2/pwritev2:
--- 
-2.17.1
-
+Cheers,
+Jérôme
