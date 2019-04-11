@@ -2,74 +2,85 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BF1C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F43C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0972133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505972184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 07:25:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bCMROc3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfDKHZE (ORCPT
+        id S1726951AbfDKHZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 03:25:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37242 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfDKHZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 03:25:04 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C7A0F285B4;
-        Thu, 11 Apr 2019 07:25:03 +0000 (UTC)
-Received: from [10.72.12.119] (ovpn-12-119.pek2.redhat.com [10.72.12.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8303E5D961;
-        Thu, 11 Apr 2019 07:25:01 +0000 (UTC)
-Subject: Re: linux-next: Fixes tag needs some work in the net tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190411165859.63be9174@canb.auug.org.au>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <722cf76e-a092-5760-8224-c4e62bec3d12@redhat.com>
-Date:   Thu, 11 Apr 2019 15:24:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 03:25:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40164 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfDKHZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 03:25:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SiTuSSgF96JPHFaF+F9FdZ1hDfGH+LK06K+iKMdjpd0=; b=bCMROc3UXmvcvYpj91F5n+uhb
+        W3rFsMY+x6thYgQHs6WJF3o9zzcGuWt8NiBEE5ZnITidQDPuPRq6eRYC3v5QywJIcmA9RO6K/FWfY
+        vmQvi3mZs6526oujo53LV3m9BJ8QRcPWZIUqolSohWMo6PpvvTIg8aV0J/AyWNnGjR7Zbz/03vb9c
+        r3Vh7SSijmht5Yx/JkQeK2h2fr53e0CD1Y4ZAP+JbUnBw/iO8xErcQOXvqiP7sw6zxOCY8WFNXRkw
+        DRBm2SNMQEx8UlSCHICydKqln01SqlLM3cLebZu0RTeGy4nEn+hsaIndgAC5qtUlMYY1xEY+EA2p/
+        QJGewmBgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEU5T-0004OM-Dq; Thu, 11 Apr 2019 07:25:31 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E417929AA8DC5; Thu, 11 Apr 2019 09:25:29 +0200 (CEST)
+Date:   Thu, 11 Apr 2019 09:25:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH-tip v3 05/14] locking/rwsem: Remove rwsem_wake() wakeup
+ optimization
+Message-ID: <20190411072529.GA4038@hirez.programming.kicks-ass.net>
+References: <20190410184231.6748-1-longman@redhat.com>
+ <20190410184231.6748-6-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190411165859.63be9174@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 11 Apr 2019 07:25:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410184231.6748-6-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 10, 2019 at 02:42:22PM -0400, Waiman Long wrote:
+> With the commit 59aabfc7e959 ("locking/rwsem: Reduce spinlock contention
+> in wakeup after up_read()/up_write()"), the rwsem_wake() forgoes doing
+> a wakeup if the wait_lock cannot be directly acquired and an optimistic
+> spinning locker is present.  This can help performance by avoiding
+> spinning on the wait_lock when it is contended.
+> 
+> With the later commit 133e89ef5ef3 ("locking/rwsem: Enable lockless
+> waiter wakeup(s)"), the performance advantage of the above optimization
+> diminishes as the average wait_lock hold time become much shorter.
+> 
+> By supporting rwsem lock handoff, we can no longer relies on the fact
+> that the presence of an optimistic spinning locker will ensure that the
+> lock will be acquired by a task soon. This can lead to missed wakeup
+> and application hang. So the commit 59aabfc7e959 ("locking/rwsem:
+> Reduce spinlock contention in wakeup after up_read()/up_write()")
+> will have to be reverted.
 
-On 2019/4/11 下午2:58, Stephen Rothwell wrote:
-> Hi all,
->
-> In commit
->
->    813dbeb656d6 ("vhost: reject zero size iova range")
->
-> Fixes tag
->
->    Fixes: 6b1e6cc7 ("vhost: new device IOTLB API")
->
-> has these problem(s):
->
->    - SHA1 should be at least 12 digits long
->      Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->      or later) just making sure it is not set (or set to "auto").
->
-
-My bad, need I respin or just leave it as is this time?
-
-Thanks
-
+Does it make sense to make this patch #3 in this series? The less code
+there is, the easier to review the other patches.
