@@ -2,240 +2,612 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D764C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728A3C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ACE2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0F42133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 06:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfDKGjC (ORCPT
+        id S1726847AbfDKGk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 02:39:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47677 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfDKGjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 02:39:02 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1hETMO-0002hY-Vg; Thu, 11 Apr 2019 08:38:57 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5] (unknown [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 1479A3F9BE4;
-        Thu, 11 Apr 2019 06:38:54 +0000 (UTC)
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "wg@grandegger.com" <wg@grandegger.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190410062533.31535-1-qiangqing.zhang@nxp.com>
- <39d8ef33-50c3-9b7a-88e1-8ef3a7fbac70@pengutronix.de>
- <DB7PR04MB4618D14BE595F3BDE46CBE17E62E0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <ad4c0921-3275-b466-95b4-a63944d5b71f@pengutronix.de>
- <DB7PR04MB4618D30C746B397F8C5308BAE62F0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXzuQENBFxSzJYBCAC58uHRFEjVVE3J
- 31eyEQT6H1zSFCccTMPO/ewwAnotQWo98Bc67ecmprcnjRjSUKTbyY/eFxS21JnC4ZB0pJKx
- MNwK6zq71wLmpseXOgjufuG3kvCgwHLGf/nkBHXmSINHvW00eFK/kJBakwHEbddq8Dr4ewmr
- G7yr8d6A3CSn/qhOYWhIxNORK3SVo4Io7ExNX/ljbisGsgRzsWvY1JlN4sabSNEr7a8YaqTd
- 2CfFe/5fPcQRGsfhAbH2pVGigr7JddONJPXGE7XzOrx5KTwEv19H6xNe+D/W3FwjZdO4TKIo
- vcZveSDrFWOi4o2Te4O5OB/2zZbNWPEON8MaXi9zABEBAAGJA3IEGAEKACYWIQTBQAugs5ie
- b7x9W1wrXuIRxYrqVAUCXFLMlgIbAgUJAeKNmgFACRArXuIRxYrqVMB0IAQZAQoAHRYhBJrx
- JF84Dn3PPNRrhVrGIaOR5J0gBQJcUsyWAAoJEFrGIaOR5J0grw4H/itil/yryJCvzi6iuZHS
- suSHHOiEf+UQHib1MLP96LM7FmDabjVSmJDpH4TsMu17A0HTG+bPMAdeia0+q9FWSvSHYW8D
- wNhfkb8zojpa37qBpVpiNy7r6BKGSRSoFOv6m/iIoRJuJ041AEKao6djj/FdQF8OV1EtWKRO
- +nE2bNuDCcwHkhHP+FHExdzhKSmnIsMjGpGwIQKN6DxlJ7fN4W7UZFIQdSO21ei+akinBo4K
- O0uNCnVmePU1UzrwXKG2sS2f97A+sZE89vkc59NtfPHhofI3JkmYexIF6uqLA3PumTqLQ2Lu
- bywPAC3YNphlhmBrG589p+sdtwDQlpoH9O7NeBAAg/lyGOUUIONrheii/l/zR0xxr2TDE6tq
- 6HZWdtjWoqcaky6MSyJQIeJ20AjzdV/PxMkd8zOijRVTnlK44bcfidqFM6yuT1bvXAO6NOPy
- pvBRnfP66L/xECnZe7s07rXpNFy72XGNZwhj89xfpK4a9E8HQcOD0mNtCJaz7TTugqBOsQx2
- 45VPHosmhdtBQ6/gjlf2WY9FXb5RyceeSuK4lVrz9uZB+fUHBge/giOSsrqFo/9fWAZsE67k
- 6Mkdbpc7ZQwxelcpP/giB9N+XAfBsffQ8q6kIyuFV4ILsIECCIA4nt1rYmzphv6t5J6PmlTq
- TzW9jNzbYANoOFAGnjzNRyc9i8UiLvjhTzaKPBOkQfhStEJaZrdSWuR/7Tt2wZBBoNTsgNAw
- A+cEu+SWCvdX7vNpsCHMiHtcEmVt5R0Tex1Ky87EfXdnGR2mDi6Iyxi3MQcHez3C61Ga3Baf
- P8UtXR6zrrrlX22xXtpNJf4I4Z6RaLpB/avIXTFXPbJ8CUUbVD2R2mZ/jyzaTzgiABDZspbS
- gw17QQUrKqUog0nHXuaGGA1uvreHTnyBWx5P8FP7rhtvYKhw6XdJ06ns+2SFcQv0Bv6PcSDK
- aRXmnW+OsDthn84x1YkfGIRJEPvvmiOKQsFEiB4OUtTX2pheYmZcZc81KFfJMmE8Z9+LT6Ry
- uSS5AQ0EXFLNDgEIAL14qAzTMCE1PwRrYJRI/RSQGAGF3HLdYvjbQd9Ozzg02K3mNCF2Phb1
- cjsbMk/V6WMxYoZCEtCh4X2GjQG2GDDW4KC9HOa8cTmr9Vcno+f+pUle09TMzWDgtnH92WKx
- d0FIQev1zDbxU7lk1dIqyOjjpyhmR8Put6vgunvuIjGJ/GapHL/O0yjVlpumtmow6eME2muc
- TeJjpapPWBGcy/8VU4LM8xMeMWv8DtQML5ogyJxZ0Smt+AntIzcF9miV2SeYXA3OFiojQstF
- vScN7owL1XiQ3UjJotCp6pUcSVgVv0SgJXbDo5Nv87M2itn68VPfTu2uBBxRYqXQovsR++kA
- EQEAAYkCPAQYAQoAJhYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUs0OAhsMBQkB4o0iAAoJ
- ECte4hHFiupUbioQAJ40bEJmMOF28vFcGvQrpI+lfHJGk9zSrh4F4SlJyOVWV1yWyUAINr8w
- v1aamg2nAppZ16z4nAnGU/47tWZ4P8blLVG8x4SWzz3D7MCy1FsQBTrWGLqWldPhkBAGp2VH
- xDOK4rLhuQWx3H5zd3kPXaIgvHI3EliWaQN+u2xmTQSJN75I/V47QsaPvkm4TVe3JlB7l1Fg
- OmSvYx31YC+3slh89ayjPWt8hFaTLnB9NaW9bLhs3E2ESF9Dei0FRXIt3qnFV/hnETsx3X4h
- KEnXxhSRDVeURP7V6P/z3+WIfddVKZk5ZLHi39fJpxvsg9YLSfStMJ/cJfiPXk1vKdoa+FjN
- 7nGAZyF6NHTNhsI7aHnvZMDavmAD3lK6CY+UBGtGQA3QhrUc2cedp1V53lXwor/D/D3Wo9wY
- iSXKOl4fFCh2Peo7qYmFUaDdyiCxvFm+YcIeMZ8wO5udzkjDtP4lWKAn4tUcdcwMOT5d0I3q
- WATP4wFI8QktNBqF3VY47HFwF9PtNuOZIqeAquKezywUc5KqKdqEWCPx9pfLxBAh3GW2Zfjp
- lP6A5upKs2ktDZOC2HZXP4IJ1GTk8hnfS4ade8s9FNcwu9m3JlxcGKLPq5DnIbPVQI1UUR4F
- QyAqTtIdSpeFYbvH8D7pO4lxLSz2ZyBMk+aKKs6GL5MqEci8OcFW
-Subject: Re: [EXT] Re: [PATCH] can: dev: clean up CAN ctrlmode when close CAN
- device
-Message-ID: <35c15351-5ae1-0826-1b05-95fe53272244@pengutronix.de>
-Date:   Thu, 11 Apr 2019 08:38:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 02:40:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40144 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbfDKGkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 02:40:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 524F7ACC1;
+        Thu, 11 Apr 2019 06:40:22 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Date:   Thu, 11 Apr 2019 16:40:15 +1000
+Cc:     Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash bucket.
+In-Reply-To: <87lg0hxe67.fsf@notabene.neil.brown.name>
+References: <155416000985.9540.14182958463813560577.stgit@noble.brown> <155416006521.9540.5662092375167065834.stgit@noble.brown> <20190410193418.GA32402@roeck-us.net> <87r2a9xt79.fsf@notabene.neil.brown.name> <87lg0hxe67.fsf@notabene.neil.brown.name>
+Message-ID: <87imvlxcxc.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <DB7PR04MB4618D30C746B397F8C5308BAE62F0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="Mw8JsGkOUkVm7EENA0gbDYPdtFyBtXOT4"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Mw8JsGkOUkVm7EENA0gbDYPdtFyBtXOT4
-Content-Type: multipart/mixed; boundary="PblQydVdEdfzsawluoFlTtk65ZIlGeMdZ";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Joakim Zhang <qiangqing.zhang@nxp.com>,
- "wg@grandegger.com" <wg@grandegger.com>,
- "davem@davemloft.net" <davem@davemloft.net>
-Cc: dl-linux-imx <linux-imx@nxp.com>,
- "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <35c15351-5ae1-0826-1b05-95fe53272244@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH] can: dev: clean up CAN ctrlmode when close CAN
- device
-References: <20190410062533.31535-1-qiangqing.zhang@nxp.com>
- <39d8ef33-50c3-9b7a-88e1-8ef3a7fbac70@pengutronix.de>
- <DB7PR04MB4618D14BE595F3BDE46CBE17E62E0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <ad4c0921-3275-b466-95b4-a63944d5b71f@pengutronix.de>
- <DB7PR04MB4618D30C746B397F8C5308BAE62F0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB4618D30C746B397F8C5308BAE62F0@DB7PR04MB4618.eurprd04.prod.outlook.com>
-
---PblQydVdEdfzsawluoFlTtk65ZIlGeMdZ
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On 4/11/19 3:16 AM, Joakim Zhang wrote:
->> Whatever mode you enable via user space use user space to disable them=
+On Thu, Apr 11 2019, NeilBrown wrote:
 
->> again.
->=20
-> Thank you for your detailed explanation. But in flexcan driver, it
-> just set register bit when mode on and do not clear register bit when
-> mode off, e.g. loopback, listennoly, 3 samples....
+> On Thu, Apr 11 2019, NeilBrown wrote:
+>
+>> On Wed, Apr 10 2019, Guenter Roeck wrote:
+>>
+>>> Hi,
+>>>
+> .....
+>>>
+>>> This patch causes my qemu q800 boot test to crash reliably.
+>>>
+> ....
+>>> Code: 4a89 6604 4280 60ea 2c2b 000c 2748 000c <2869> 000c 082c 0003 000=
+2 6728 4878 0014 7620 4873 3800 486e ffec 4eb9 002e 5b88
+>>
+>> Thanks for testing and for the report.
+> .....
+>>
+>> .... and after googling a bit I see that 68000 require 2-byte alignment,
+>> but not 4-byte.  Oh..
+>>
+>> That means there aren't two spare bits in an address, so I cannot use
+>> one for the NULLS and one for a lock bit.  Bother.
+>>
+>> I might be able to find a different way forward, but for now I think we
+>> need to drop this series.
+>
+> I have found a way forward that I like.  It only requires one bit per
+> address to be over-loaded.
+>
+> The following patch implements it and works for me.
+> Could you please confirm that it fixes your problem on m68k ??
 
-Let's see:
+Sorry, that was on the wrong base.
 
-> 	reg =3D priv->read(&regs->ctrl);
+Please try this one, against current net-next.
 
-The ctrl reg is read
-
-> 	reg &=3D ~(FLEXCAN_CTRL_PRESDIV(0xff) |
-> 		 FLEXCAN_CTRL_RJW(0x3) |
-> 		 FLEXCAN_CTRL_PSEG1(0x7) |
-> 		 FLEXCAN_CTRL_PSEG2(0x7) |
-> 		 FLEXCAN_CTRL_PROPSEG(0x7) |
-> 		 FLEXCAN_CTRL_LPB |
-> 		 FLEXCAN_CTRL_SMP |
-> 		 FLEXCAN_CTRL_LOM);
-
-=2E...the loopback mode, 3 sample mode and listen only mode bits are
-masked out....
-
-> 	reg |=3D FLEXCAN_CTRL_PRESDIV(bt->brp - 1) |
-> 		FLEXCAN_CTRL_PSEG1(bt->phase_seg1 - 1) |
-> 		FLEXCAN_CTRL_PSEG2(bt->phase_seg2 - 1) |
-> 		FLEXCAN_CTRL_RJW(bt->sjw - 1) |
-> 		FLEXCAN_CTRL_PROPSEG(bt->prop_seg - 1);
->=20
-> 	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK)
-> 		reg |=3D FLEXCAN_CTRL_LPB;
-> 	if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
-> 		reg |=3D FLEXCAN_CTRL_LOM;
-> 	if (priv->can.ctrlmode & CAN_CTRLMODE_3_SAMPLES)
-> 		reg |=3D FLEXCAN_CTRL_SMP;
-
-=2E..and the bits are set, if enabled by user space...
-
-> 	netdev_dbg(dev, "writing ctrl=3D0x%08x\n", reg);
-> 	priv->write(reg, &regs->ctrl);
-
-=2E..and written to the register.
-
-So all three bits will be unset, if unset by user space, right?
-
-> When we configure mode off after configured mode on in the user
-> space, corresponding bit will not change. Is this should be improved
-> in flexcan driver?
-
-That should work. If it doesn't work, we need a fix.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+NeilBrown
 
 
---PblQydVdEdfzsawluoFlTtk65ZIlGeMdZ--
+diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
+index 460c0eaf6b96..4a30306bcf1d 100644
+=2D-- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -35,12 +35,12 @@
+  * the least significant bit set but otherwise stores the address of
+  * the hash bucket.  This allows us to be be sure we've found the end
+  * of the right list.
+=2D * The value stored in the hash bucket has BIT(2) used as a lock bit.
++ * The value stored in the hash bucket has BIT(0) used as a lock bit.
+  * This bit must be atomically set before any changes are made to
+  * the chain.  To avoid dereferencing this pointer without clearing
+  * the bit first, we use an opaque 'struct rhash_lock_head *' for the
+  * pointer stored in the bucket.  This struct needs to be defined so
+=2D * that rcu_derefernce() works on it, but it has no content so a
++ * that rcu_dereference() works on it, but it has no content so a
+  * cast is needed for it to be useful.  This ensures it isn't
+  * used by mistake with clearing the lock bit first.
+  */
+@@ -87,90 +87,23 @@ struct bucket_table {
+ 	struct rhash_lock_head __rcu *buckets[] ____cacheline_aligned_in_smp;
+ };
+=20
+=2D/*
+=2D * We lock a bucket by setting BIT(1) in the pointer - this is always
+=2D * zero in real pointers and in the nulls marker.
+=2D * bit_spin_locks do not handle contention well, but the whole point
+=2D * of the hashtable design is to achieve minimum per-bucket contention.
+=2D * A nested hash table might not have a bucket pointer.  In that case
+=2D * we cannot get a lock.  For remove and replace the bucket cannot be
+=2D * interesting and doesn't need locking.
+=2D * For insert we allocate the bucket if this is the last bucket_table,
+=2D * and then take the lock.
+=2D * Sometimes we unlock a bucket by writing a new pointer there.  In that
+=2D * case we don't need to unlock, but we do need to reset state such as
+=2D * local_bh. For that we have rht_assign_unlock().  As rcu_assign_pointe=
+r()
+=2D * provides the same release semantics that bit_spin_unlock() provides,
+=2D * this is safe.
+=2D */
+=2D
+=2Dstatic inline void rht_lock(struct bucket_table *tbl,
+=2D			    struct rhash_lock_head **bkt)
+=2D{
+=2D	local_bh_disable();
+=2D	bit_spin_lock(1, (unsigned long *)bkt);
+=2D	lock_map_acquire(&tbl->dep_map);
+=2D}
+=2D
+=2Dstatic inline void rht_lock_nested(struct bucket_table *tbl,
+=2D				   struct rhash_lock_head **bucket,
+=2D				   unsigned int subclass)
+=2D{
+=2D	local_bh_disable();
+=2D	bit_spin_lock(1, (unsigned long *)bucket);
+=2D	lock_acquire_exclusive(&tbl->dep_map, subclass, 0, NULL, _THIS_IP_);
+=2D}
+=2D
+=2Dstatic inline void rht_unlock(struct bucket_table *tbl,
+=2D			      struct rhash_lock_head **bkt)
+=2D{
+=2D	lock_map_release(&tbl->dep_map);
+=2D	bit_spin_unlock(1, (unsigned long *)bkt);
+=2D	local_bh_enable();
+=2D}
+=2D
+=2Dstatic inline void rht_assign_unlock(struct bucket_table *tbl,
+=2D				     struct rhash_lock_head **bkt,
+=2D				     struct rhash_head *obj)
+=2D{
+=2D	struct rhash_head **p =3D (struct rhash_head **)bkt;
+=2D
+=2D	lock_map_release(&tbl->dep_map);
+=2D	rcu_assign_pointer(*p, obj);
+=2D	preempt_enable();
+=2D	__release(bitlock);
+=2D	local_bh_enable();
+=2D}
+=2D
+=2D/*
+=2D * If 'p' is a bucket head and might be locked:
+=2D *   rht_ptr() returns the address without the lock bit.
+=2D *   rht_ptr_locked() returns the address WITH the lock bit.
+=2D */
+=2Dstatic inline struct rhash_head __rcu *rht_ptr(const struct rhash_lock_h=
+ead *p)
+=2D{
+=2D	return (void *)(((unsigned long)p) & ~BIT(1));
+=2D}
+=2D
+=2Dstatic inline struct rhash_lock_head __rcu *rht_ptr_locked(const
+=2D							   struct rhash_head *p)
+=2D{
+=2D	return (void *)(((unsigned long)p) | BIT(1));
+=2D}
+=2D
+ /*
+  * NULLS_MARKER() expects a hash value with the low
+  * bits mostly likely to be significant, and it discards
+  * the msb.
+=2D * We git it an address, in which the bottom 2 bits are
++ * We give it an address, in which the bottom bit is
+  * always 0, and the msb might be significant.
+  * So we shift the address down one bit to align with
+  * expectations and avoid losing a significant bit.
++ *
++ * We never store the NULLS_MARKER in the hash table
++ * itself as we need the lsb for locking.
++ * Instead we store a NULL
+  */
+ #define	RHT_NULLS_MARKER(ptr)	\
+ 	((void *)NULLS_MARKER(((unsigned long) (ptr)) >> 1))
+ #define INIT_RHT_NULLS_HEAD(ptr)	\
+=2D	((ptr) =3D RHT_NULLS_MARKER(&(ptr)))
++	((ptr) =3D NULL)
+=20
+ static inline bool rht_is_a_nulls(const struct rhash_head *ptr)
+ {
+@@ -372,6 +305,108 @@ static inline struct rhash_lock_head __rcu **rht_buck=
+et_insert(
+ 				     &tbl->buckets[hash];
+ }
+=20
++/*
++ * We lock a bucket by setting BIT(0) in the pointer - this is always
++ * zero in real pointers and in the nulls marker.
++ * bit_spin_locks do not handle contention well, but the whole point
++ * of the hashtable design is to achieve minimum per-bucket contention.
++ * A nested hash table might not have a bucket pointer.  In that case
++ * we cannot get a lock.  For remove and replace the bucket cannot be
++ * interesting and doesn't need locking.
++ * For insert we allocate the bucket if this is the last bucket_table,
++ * and then take the lock.
++ * Sometimes we unlock a bucket by writing a new pointer there.  In that
++ * case we don't need to unlock, but we do need to reset state such as
++ * local_bh. For that we have rht_assign_unlock().  As rcu_assign_pointer()
++ * provides the same release semantics that bit_spin_unlock() provides,
++ * this is safe.
++ */
++
++static inline void rht_lock(struct bucket_table *tbl,
++			    struct rhash_lock_head **bkt)
++{
++	local_bh_disable();
++	bit_spin_lock(0, (unsigned long *)bkt);
++	lock_map_acquire(&tbl->dep_map);
++}
++
++static inline void rht_lock_nested(struct bucket_table *tbl,
++				   struct rhash_lock_head **bkt,
++				   unsigned int subclass)
++{
++	local_bh_disable();
++	bit_spin_lock(0, (unsigned long *)bkt);
++	lock_acquire_exclusive(&tbl->dep_map, subclass, 0, NULL, _THIS_IP_);
++}
++
++static inline void rht_unlock(struct bucket_table *tbl,
++			      struct rhash_lock_head **bkt)
++{
++	lock_map_release(&tbl->dep_map);
++	bit_spin_unlock(0, (unsigned long *)bkt);
++	local_bh_enable();
++}
++
++/*
++ * If 'p' is a bucket head and might be locked:
++ *   rht_ptr() returns the address without the lock bit.
++ *   rht_ptr_locked() returns the address WITH the lock bit.
++ */
++static inline struct rhash_head __rcu *rht_ptr(struct rhash_lock_head __rc=
+u * const *bkt,
++					       struct bucket_table *tbl,
++					       unsigned int hash)
++{
++	const struct rhash_lock_head *p =3D
++		rht_dereference_bucket_rcu(*bkt, tbl, hash);
++	if ((((unsigned long)p) & ~BIT(0)) =3D=3D 0)
++		return RHT_NULLS_MARKER(bkt);
++	return (void *)(((unsigned long)p) & ~BIT(0));
++}
++
++/*
++ * This can be called when access is known to be exclusive,
++ * such as when destorying an rhashtable
++ */
++static inline struct rhash_head __rcu *rht_ptr_unprotected(
++	struct rhash_lock_head __rcu * const *bkt)
++{
++	const struct rhash_lock_head *p =3D rcu_dereference_protected(*bkt, true);
++	if (!p)
++		return RHT_NULLS_MARKER(bkt);
++	return (void *)(((unsigned long)p) & ~BIT(0));
++}
++
++static inline struct rhash_lock_head __rcu *rht_ptr_locked(const
++							   struct rhash_head *p)
++{
++	return (void *)(((unsigned long)p) | BIT(0));
++}
++
++static inline void rht_assign_locked(struct rhash_lock_head __rcu **bkt,
++				     struct rhash_head *obj)
++{
++	struct rhash_head __rcu **p =3D (struct rhash_head __rcu **)bkt;
++
++	if (rht_is_a_nulls(obj))
++		obj =3D NULL;
++	rcu_assign_pointer(*p, rht_ptr_locked(obj));
++}
++
++static inline void rht_assign_unlock(struct bucket_table *tbl,
++				     struct rhash_lock_head __rcu **bkt,
++				     struct rhash_head *obj)
++{
++	struct rhash_head __rcu **p =3D (struct rhash_head __rcu **)bkt;
++
++	if (rht_is_a_nulls(obj))
++		obj =3D NULL;
++	lock_map_release(&tbl->dep_map);
++	rcu_assign_pointer(*p, obj);
++	preempt_enable();
++	__release(bitlock);
++	local_bh_enable();
++}
++
+ /**
+  * rht_for_each_from - iterate over hash chain from given head
+  * @pos:	the &struct rhash_head to use as a loop cursor.
+@@ -380,7 +415,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  * @hash:	the hash value / bucket index
+  */
+ #define rht_for_each_from(pos, head, tbl, hash) \
+=2D	for (pos =3D rht_dereference_bucket(head, tbl, hash); \
++	for (pos =3D head; \
+ 	     !rht_is_a_nulls(pos); \
+ 	     pos =3D rht_dereference_bucket((pos)->next, tbl, hash))
+=20
+@@ -391,7 +426,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  * @hash:	the hash value / bucket index
+  */
+ #define rht_for_each(pos, tbl, hash) \
+=2D	rht_for_each_from(pos, rht_ptr(*rht_bucket(tbl, hash)), tbl, hash)
++	rht_for_each_from(pos, rht_ptr(rht_bucket(tbl, hash), tbl, hash))
+=20
+ /**
+  * rht_for_each_entry_from - iterate over hash chain from given head
+@@ -403,7 +438,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  * @member:	name of the &struct rhash_head within the hashable struct.
+  */
+ #define rht_for_each_entry_from(tpos, pos, head, tbl, hash, member)	\
+=2D	for (pos =3D rht_dereference_bucket(head, tbl, hash);		\
++	for (pos =3D head;						\
+ 	     (!rht_is_a_nulls(pos)) && rht_entry(tpos, pos, member);	\
+ 	     pos =3D rht_dereference_bucket((pos)->next, tbl, hash))
+=20
+@@ -416,8 +451,8 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  * @member:	name of the &struct rhash_head within the hashable struct.
+  */
+ #define rht_for_each_entry(tpos, pos, tbl, hash, member)		\
+=2D	rht_for_each_entry_from(tpos, pos, rht_ptr(*rht_bucket(tbl, hash)), \
+=2D				    tbl, hash, member)
++	rht_for_each_entry_from(tpos, pos, rht_ptr(rht_bucket(tbl, hash), \
++						   tbl, hash, member))
+=20
+ /**
+  * rht_for_each_entry_safe - safely iterate over hash chain of given type
+@@ -432,8 +467,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  * remove the loop cursor from the list.
+  */
+ #define rht_for_each_entry_safe(tpos, pos, next, tbl, hash, member)	      \
+=2D	for (pos =3D rht_dereference_bucket(rht_ptr(*rht_bucket(tbl, hash)),   =
+ \
+=2D					  tbl, hash),			      \
++	for (pos =3D rht_ptr(rht_bucket(tbl, hash), tbl, hash)),		      \
+ 	     next =3D !rht_is_a_nulls(pos) ?				      \
+ 		       rht_dereference_bucket(pos->next, tbl, hash) : NULL;   \
+ 	     (!rht_is_a_nulls(pos)) && rht_entry(tpos, pos, member);	      \
+@@ -454,7 +488,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  */
+ #define rht_for_each_rcu_from(pos, head, tbl, hash)			\
+ 	for (({barrier(); }),						\
+=2D	     pos =3D rht_dereference_bucket_rcu(head, tbl, hash);		\
++	     pos =3D head;						\
+ 	     !rht_is_a_nulls(pos);					\
+ 	     pos =3D rcu_dereference_raw(pos->next))
+=20
+@@ -469,10 +503,9 @@ static inline struct rhash_lock_head __rcu **rht_bucke=
+t_insert(
+  * traversal is guarded by rcu_read_lock().
+  */
+ #define rht_for_each_rcu(pos, tbl, hash)			\
+=2D	for (({barrier(); }),						\
+=2D	     pos =3D rht_ptr(rht_dereference_bucket_rcu(			\
+=2D				   *rht_bucket(tbl, hash), tbl, hash));	\
+=2D	     !rht_is_a_nulls(pos);					\
++	for (({barrier(); }),					\
++	     pos =3D rht_ptr(rht_bucket(tbl, hash), tbl, hash);	\
++	     !rht_is_a_nulls(pos);				\
+ 	     pos =3D rcu_dereference_raw(pos->next))
+=20
+ /**
+@@ -490,7 +523,7 @@ static inline struct rhash_lock_head __rcu **rht_bucket=
+_insert(
+  */
+ #define rht_for_each_entry_rcu_from(tpos, pos, head, tbl, hash, member) \
+ 	for (({barrier(); }),						    \
+=2D	     pos =3D rht_dereference_bucket_rcu(head, tbl, hash);		    \
++	     pos =3D head;						    \
+ 	     (!rht_is_a_nulls(pos)) && rht_entry(tpos, pos, member);	    \
+ 	     pos =3D rht_dereference_bucket_rcu(pos->next, tbl, hash))
+=20
+@@ -506,10 +539,10 @@ static inline struct rhash_lock_head __rcu **rht_buck=
+et_insert(
+  * the _rcu mutation primitives such as rhashtable_insert() as long as the
+  * traversal is guarded by rcu_read_lock().
+  */
+=2D#define rht_for_each_entry_rcu(tpos, pos, tbl, hash, member)		   \
+=2D	rht_for_each_entry_rcu_from(tpos, pos,				   \
+=2D					rht_ptr(*rht_bucket(tbl, hash)),   \
+=2D					tbl, hash, member)
++#define rht_for_each_entry_rcu(tpos, pos, tbl, hash, member)		\
++	rht_for_each_entry_rcu_from(tpos, pos,				\
++				    rht_ptr(rht_bucket(tbl, hash),	\
++					    tbl, hash, member))
+=20
+ /**
+  * rhl_for_each_rcu - iterate over rcu hash table list
+@@ -564,8 +597,7 @@ static inline struct rhash_head *__rhashtable_lookup(
+ 	hash =3D rht_key_hashfn(ht, tbl, key, params);
+ 	bkt =3D rht_bucket(tbl, hash);
+ 	do {
+=2D		he =3D rht_ptr(rht_dereference_bucket_rcu(*bkt, tbl, hash));
+=2D		rht_for_each_rcu_from(he, he, tbl, hash) {
++		rht_for_each_rcu_from(he, rht_ptr(bkt, tbl, hash), tbl, hash) {
+ 			if (params.obj_cmpfn ?
+ 			    params.obj_cmpfn(&arg, rht_obj(ht, he)) :
+ 			    rhashtable_compare(&arg, rht_obj(ht, he)))
+@@ -698,7 +730,7 @@ static inline void *__rhashtable_insert_fast(
+ 		return rhashtable_insert_slow(ht, key, obj);
+ 	}
+=20
+=2D	rht_for_each_from(head, rht_ptr(*bkt), tbl, hash) {
++	rht_for_each_from(head, rht_ptr(bkt, tbl, hash), tbl, hash) {
+ 		struct rhlist_head *plist;
+ 		struct rhlist_head *list;
+=20
+@@ -743,7 +775,7 @@ static inline void *__rhashtable_insert_fast(
+ 		goto slow_path;
+=20
+ 	/* Inserting at head of list makes unlocking free. */
+=2D	head =3D rht_ptr(rht_dereference_bucket(*bkt, tbl, hash));
++	head =3D rht_ptr(bkt, tbl, hash);
+=20
+ 	RCU_INIT_POINTER(obj->next, head);
+ 	if (rhlist) {
+@@ -970,7 +1002,7 @@ static inline int __rhashtable_remove_fast_one(
+ 	pprev =3D NULL;
+ 	rht_lock(tbl, bkt);
+=20
+=2D	rht_for_each_from(he, rht_ptr(*bkt), tbl, hash) {
++	rht_for_each_from(he, rht_ptr(bkt, tbl, hash), tbl, hash) {
+ 		struct rhlist_head *list;
+=20
+ 		list =3D container_of(he, struct rhlist_head, rhead);
+@@ -1129,7 +1161,7 @@ static inline int __rhashtable_replace_fast(
+ 	pprev =3D NULL;
+ 	rht_lock(tbl, bkt);
+=20
+=2D	rht_for_each_from(he, rht_ptr(*bkt), tbl, hash) {
++	rht_for_each_from(he, rht_ptr(bkt, tbl, hash), tbl, hash) {
+ 		if (he !=3D obj_old) {
+ 			pprev =3D &he->next;
+ 			continue;
+diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+index a8583af43b59..06fc674feb3d 100644
+=2D-- a/lib/rhashtable.c
++++ b/lib/rhashtable.c
+@@ -59,7 +59,7 @@ int lockdep_rht_bucket_is_held(const struct bucket_table =
+*tbl, u32 hash)
+ 		return 1;
+ 	if (unlikely(tbl->nest))
+ 		return 1;
+=2D	return bit_spin_is_locked(1, (unsigned long *)&tbl->buckets[hash]);
++	return bit_spin_is_locked(0, (unsigned long *)&tbl->buckets[hash]);
+ }
+ EXPORT_SYMBOL_GPL(lockdep_rht_bucket_is_held);
+ #else
+@@ -224,7 +224,7 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
+ 	struct bucket_table *new_tbl =3D rhashtable_last_table(ht, old_tbl);
+ 	int err =3D -EAGAIN;
+ 	struct rhash_head *head, *next, *entry;
+=2D	struct rhash_head **pprev =3D NULL;
++	struct rhash_head __rcu **pprev =3D NULL;
+ 	unsigned int new_hash;
+=20
+ 	if (new_tbl->nest)
+@@ -232,7 +232,8 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
+=20
+ 	err =3D -ENOENT;
+=20
+=2D	rht_for_each_from(entry, rht_ptr(*bkt), old_tbl, old_hash) {
++	rht_for_each_from(entry, rht_ptr(bkt, old_tbl, old_hash),
++			  old_tbl, old_hash) {
+ 		err =3D 0;
+ 		next =3D rht_dereference_bucket(entry->next, old_tbl, old_hash);
+=20
+@@ -249,8 +250,8 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
+=20
+ 	rht_lock_nested(new_tbl, &new_tbl->buckets[new_hash], SINGLE_DEPTH_NESTIN=
+G);
+=20
+=2D	head =3D rht_ptr(rht_dereference_bucket(new_tbl->buckets[new_hash],
+=2D					      new_tbl, new_hash));
++	head =3D rht_ptr(new_tbl->buckets + new_hash,
++		       new_tbl, new_hash);
+=20
+ 	RCU_INIT_POINTER(entry->next, head);
+=20
+@@ -260,7 +261,7 @@ static int rhashtable_rehash_one(struct rhashtable *ht,
+ 		rcu_assign_pointer(*pprev, next);
+ 	else
+ 		/* Need to preserved the bit lock. */
+=2D		rcu_assign_pointer(*bkt, rht_ptr_locked(next));
++		rht_assign_locked(bkt, next);
+=20
+ out:
+ 	return err;
+@@ -487,12 +488,12 @@ static void *rhashtable_lookup_one(struct rhashtable =
+*ht,
+ 		.ht =3D ht,
+ 		.key =3D key,
+ 	};
+=2D	struct rhash_head **pprev =3D NULL;
++	struct rhash_head __rcu **pprev =3D NULL;
+ 	struct rhash_head *head;
+ 	int elasticity;
+=20
+ 	elasticity =3D RHT_ELASTICITY;
+=2D	rht_for_each_from(head, rht_ptr(*bkt), tbl, hash) {
++	rht_for_each_from(head, rht_ptr(bkt, tbl, hash), tbl, hash) {
+ 		struct rhlist_head *list;
+ 		struct rhlist_head *plist;
+=20
+@@ -518,7 +519,7 @@ static void *rhashtable_lookup_one(struct rhashtable *h=
+t,
+ 			rcu_assign_pointer(*pprev, obj);
+ 		else
+ 			/* Need to preserve the bit lock */
+=2D			rcu_assign_pointer(*bkt, rht_ptr_locked(obj));
++			rht_assign_locked(bkt, obj);
+=20
+ 		return NULL;
+ 	}
+@@ -558,7 +559,7 @@ static struct bucket_table *rhashtable_insert_one(struc=
+t rhashtable *ht,
+ 	if (unlikely(rht_grow_above_100(ht, tbl)))
+ 		return ERR_PTR(-EAGAIN);
+=20
+=2D	head =3D rht_ptr(rht_dereference_bucket(*bkt, tbl, hash));
++	head =3D rht_ptr(bkt, tbl, hash);
+=20
+ 	RCU_INIT_POINTER(obj->next, head);
+ 	if (ht->rhlist) {
+@@ -571,7 +572,7 @@ static struct bucket_table *rhashtable_insert_one(struc=
+t rhashtable *ht,
+ 	/* bkt is always the head of the list, so it holds
+ 	 * the lock, which we need to preserve
+ 	 */
+=2D	rcu_assign_pointer(*bkt, rht_ptr_locked(obj));
++	rht_assign_locked(bkt, obj);
+=20
+ 	atomic_inc(&ht->nelems);
+ 	if (rht_grow_above_75(ht, tbl))
+@@ -1140,7 +1141,7 @@ void rhashtable_free_and_destroy(struct rhashtable *h=
+t,
+ 			struct rhash_head *pos, *next;
+=20
+ 			cond_resched();
+=2D			for (pos =3D rht_ptr(rht_dereference(*rht_bucket(tbl, i), ht)),
++			for (pos =3D rht_ptr_unprotected(rht_bucket(tbl, i)),
+ 			     next =3D !rht_is_a_nulls(pos) ?
+ 					rht_dereference(pos->next, ht) : NULL;
+ 			     !rht_is_a_nulls(pos);
+diff --git a/lib/test_rhashtable.c b/lib/test_rhashtable.c
+index 02592c2a249c..7b93cfefe195 100644
+=2D-- a/lib/test_rhashtable.c
++++ b/lib/test_rhashtable.c
+@@ -500,7 +500,7 @@ static unsigned int __init print_ht(struct rhltable *rh=
+lt)
+ 		struct rhash_head *pos, *next;
+ 		struct test_obj_rhl *p;
+=20
+=2D		pos =3D rht_ptr(rht_dereference(tbl->buckets[i], ht));
++		pos =3D rht_ptr_unprotected(tbl->buckets + i);
+ 		next =3D !rht_is_a_nulls(pos) ? rht_dereference(pos->next, ht) : NULL;
+=20
+ 		if (!rht_is_a_nulls(pos)) {
 
---Mw8JsGkOUkVm7EENA0gbDYPdtFyBtXOT4
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAlyu4PUACgkQWsYho5Hk
-nSAM/wf/VLZ2Jptfd/XQecKar70GhTJJOm1fXo1LU35G1IKeOiTOlbWZYOxXiro8
-V79OzEcXezHtGJ6uoPyKfWf4uksZ3EQ+6W21TFecZFID9vAU/rsH7mKhc2I8Zd0N
-gI0k7GyzErFFFdGFDBju2RtIodeUp8Ql3O6vsSwmHko5Hh7fy8Tr8dpN8sLCWtUN
-8nOPmwu6++HAvQWOVBg170Js6FcQzHZGlQBFZu+xVWqRaEgRfEtG8fjqHQueI0Ka
-/eQJltcp6wE8HVQbMxBKj0GTTP24Vwzaxm4Ol1K3BO5toyjaD2opRtgRB1OBXrHS
-b2SyoEIzcBPk7RmbOs8qWRbKg96ikA==
-=gOIv
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyu4U8ACgkQOeye3VZi
+gbn1axAAvO738Sq+vuuwP5ysp8kc5NJoVo6sb0quCbgw/0N6Sp+354WuyniDdnjI
+6VN1ZeMbAW9/+xB8EC/XVXNk6MDKwq9TlkhhB0C/NESowHnVLDi1X3ktaEMhzJrD
+6J9pgUMN7F/pC9ZOxSU5WCjtc5FSpxNUaPSfA/ANmcnBS1Qcsg112JASJh00LQ7b
+eAcIJr0oHjmKC3RF1avfTOm2dkEC5aXPUi4Uw+f/4r59hZ8Sg62jsX+QQHUajrmF
+JmsvBIS/0BDDTyzEnBuVjRAZzqK+ucXWJQ9BFJGJTdzYdjJpGykMVY4p6i+9y4sz
+nQtEozkiwpsv1ikwAQem44eucNJqmxFGX3dj3m3ydJNM4vber2D6IrVGn+fhuuoj
+6LbPYqpDbDe/+Ng9b2uuZf6IVihC0N5O7BmNkceQqDJJWehCpObJRZD7CE++rt1A
+WJajY+uwhmTtSegWnvx2zAPLFrQ455q36Seek2oSbdAqmfGFznu5Vd7FoSd1hpK8
+tepNgCLvN+wWLi420XWCS2URIlVn+rwD5oBHZg8NBwHdXxeWs7oa7r6S0bNbVcH0
+dv4M9rOgwUq5mgeJceWA9yabwyokDqaskQ3vtWwlUX8vYcQRCYPEldlboziE+/Oh
+4GiqsRoUUpcKDzOQtSQN3wF1kIRrsYx3OefFAyKVVkPPSZRnfVo=
+=CITd
 -----END PGP SIGNATURE-----
-
---Mw8JsGkOUkVm7EENA0gbDYPdtFyBtXOT4--
+--=-=-=--
