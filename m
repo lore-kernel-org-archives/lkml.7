@@ -2,191 +2,138 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95322C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E025C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC472184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2142184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="d/RYmzN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfDKIu7 (ORCPT
+        id S1727078AbfDKIvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:50:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50800 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726256AbfDKIu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:50:58 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 073424CF2D10F64DF067;
-        Thu, 11 Apr 2019 16:50:54 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Thu, 11 Apr 2019
- 16:50:46 +0800
-Subject: Re: [PATCH] driver core: Postpone DMA tear-down until after devres
- release for probe failure
-To:     Greg KH <gregkh@linuxfoundation.org>, <robin.murphy@arm.com>
-References: <1553767685-27077-1-git-send-email-john.garry@huawei.com>
- <703aca1f-9475-b50d-624a-5f1ceea2c3b2@huawei.com>
- <20190403081433.GA13222@kroah.com>
- <3e1f3e2e-a1d3-ecaf-0931-44b4c10faffe@huawei.com>
- <cd21fd51-dc71-a9f1-abbb-965e8c2e7801@huawei.com>
-CC:     <rafael@kernel.org>, <linuxarm@huawei.com>,
-        <chenxiang66@hisilicon.com>, <geert@linux-m68k.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh@kernel.org>,
-        <hch@lst.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d2504066-3d1a-176f-0f7e-7f86431ef88c@huawei.com>
-Date:   Thu, 11 Apr 2019 09:50:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 11 Apr 2019 04:51:07 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:58321 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbfDKIvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 04:51:04 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3B8okCr023453;
+        Thu, 11 Apr 2019 17:50:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3B8okCr023453
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554972647;
+        bh=F5UI1sOsF59TtjXlusyUA329j5S/sWWuTeBpDyNH8dk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d/RYmzN6ST5N/YsSzVgPcQzH3cyMqb8TuE5NCl98a5Pywu8I2QhoF1yIJsnDNWvN3
+         s1eZAkZj6g1zGj6dTA8hu8KD0QUKzqDE5Bo0smp5Ir6SOhAIDz560UGV/0LNSUDdAv
+         kigIIlBa0f3Bk4Dr/DZo/RLNdOJOouhRLFm+lHWi9BPPhCTLO8UKyycuc2DYAQvCHN
+         L9gu0/jcZ/P6gzqEOLh/KG9vmLuMIztEqyiqaDmTJ9823wo6P+Q4RMTlNLrPNf84D3
+         BiPs80CJ79s/xtTfvLBtKnAvhvPJn3QHCT5WTPDa9Yrr9HrE3YcB8NhVqzTnSGnWM1
+         zEYA7NEhb0V4Q==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id s80so1197332vke.6;
+        Thu, 11 Apr 2019 01:50:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAUZTjqQ14TMhFukVZB2QSpWcw0Ygt7KjvpqHW8LxqAWVYg+Rnn0
+        ilh8ofUSzwQUIiYr3AegKvKvqQQrAYBiUBKwpic=
+X-Google-Smtp-Source: APXvYqzwcW+9zJIIvdmhRqXhqVxtLBKGueKPNN9kaKRMJ559bumruRRn0ZJt5oR6zgA2KIvhg+Gtre24QbvHZQdMfc8=
+X-Received: by 2002:a1f:793:: with SMTP id 141mr14474270vkh.31.1554972646242;
+ Thu, 11 Apr 2019 01:50:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cd21fd51-dc71-a9f1-abbb-965e8c2e7801@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+References: <20190410161612.18545-1-keescook@chromium.org> <20190410161612.18545-2-keescook@chromium.org>
+In-Reply-To: <20190410161612.18545-2-keescook@chromium.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 11 Apr 2019 17:50:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
+Message-ID: <CAK7LNASLdZKNNM-Gft5bfVxKOG=4Ak-LBMnjb2E-QR4q_5GmEQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] Kconfig: Create "kernel hardening" config area
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Alexander Popov <alpopov@ptsecurity.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emese Revfy <re.emese@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/04/2019 12:17, John Garry wrote:
-> On 03/04/2019 10:20, John Garry wrote:
->> On 03/04/2019 09:14, Greg KH wrote:
->>> On Wed, Apr 03, 2019 at 09:02:36AM +0100, John Garry wrote:
->>>> On 28/03/2019 10:08, John Garry wrote:
->>>>> In commit 376991db4b64 ("driver core: Postpone DMA tear-down until
->>>>> after
->>>>> devres release"), we changed the ordering of tearing down the device
->>>>> DMA
->>>>> ops and releasing all the device's resources; this was because the
->>>>> DMA ops
->>>>> should be maintained until we release the device's managed DMA
->>>>> memories.
->>>>>
->>>>
->>>> Hi all,
->>>>
->>>> A friendly reminder on this patch... I didn't see any update.
->>>>
->>>> I thought that it had some importance.
->>>>
->>>> Thanks,
->>>> John
->>>>
->>>>> However, we have seen another crash on an arm64 system when a
->>>>> device driver probe fails:
->>>>>
->>>>>   hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
->>>>>   scsi host1: hisi_sas_v3_hw
->>>>>   BUG: Bad page state in process swapper/0  pfn:313f5
->>>>>   page:ffff7e0000c4fd40 count:1 mapcount:0
->>>>>   mapping:0000000000000000 index:0x0
->>>>>   flags: 0xfffe00000001000(reserved)
->>>>>   raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
->>>>> 0000000000000000
->>>>>   raw: 0000000000000000 0000000000000000 00000001ffffffff
->>>>> 0000000000000000
->>>>>   page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
->>>>>   bad because of flags: 0x1000(reserved)
->>>>>   Modules linked in:
->>>>>   CPU: 49 PID: 1 Comm: swapper/0 Not tainted
->>>>> 5.1.0-rc1-43081-g22d97fd-dirty #1433
->>>>>   Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
->>>>> RC0 - V1.12.01 01/29/2019
->>>>>   Call trace:
->>>>>   dump_backtrace+0x0/0x118
->>>>>   show_stack+0x14/0x1c
->>>>>   dump_stack+0xa4/0xc8
->>>>>   bad_page+0xe4/0x13c
->>>>>   free_pages_check_bad+0x4c/0xc0
->>>>>   __free_pages_ok+0x30c/0x340
->>>>>   __free_pages+0x30/0x44
->>>>>   __dma_direct_free_pages+0x30/0x38
->>>>>   dma_direct_free+0x24/0x38
->>>>>   dma_free_attrs+0x9c/0xd8
->>>>>   dmam_release+0x20/0x28
->>>>>   release_nodes+0x17c/0x220
->>>>>   devres_release_all+0x34/0x54
->>>>>   really_probe+0xc4/0x2c8
->>>>>   driver_probe_device+0x58/0xfc
->>>>>   device_driver_attach+0x68/0x70
->>>>>   __driver_attach+0x94/0xdc
->>>>>   bus_for_each_dev+0x5c/0xb4
->>>>>   driver_attach+0x20/0x28
->>>>>   bus_add_driver+0x14c/0x200
->>>>>   driver_register+0x6c/0x124
->>>>>   __pci_register_driver+0x48/0x50
->>>>>   sas_v3_pci_driver_init+0x20/0x28
->>>>>   do_one_initcall+0x40/0x25c
->>>>>   kernel_init_freeable+0x2b8/0x3c0
->>>>>   kernel_init+0x10/0x100
->>>>>   ret_from_fork+0x10/0x18
->>>>>   Disabling lock debugging due to kernel taint
->>>>>   BUG: Bad page state in process swapper/0  pfn:313f6
->>>>>   page:ffff7e0000c4fd80 count:1 mapcount:0
->>>>> mapping:0000000000000000 index:0x0
->>>>> [   89.322983] flags: 0xfffe00000001000(reserved)
->>>>>   raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
->>>>> 0000000000000000
->>>>>   raw: 0000000000000000 0000000000000000 00000001ffffffff
->>>>> 0000000000000000
->>>>>
->>>>> The crash occurs for the same reason.
->>>>>
->>>>> In this case, on the really_probe() failure path, we are still
->>>>> clearing
->>>>> the DMA ops prior to releasing the device's managed memories.
->>>>>
->>>>> This patch fixes this issue by reordering the DMA ops teardown and the
->>>>> call to devres_release_all() on the failure path.
->>>>>
->>>>> Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
->>>>> Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
->>>>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>
->>> So does this "fix" 376991db4b64?  If so, should this be added to the
->>> patch and also backported to the stable trees?
->>
->> Hi Greg,
->>
->> No, I don't think so. I'd say it supplements it. Here I'm trying to fix
->> up another path in which we tear down the DMA ops prior to releasing the
->> device's resources.
->>
->> I didn't add a fixes tag as 376991db4b64 didn't have one either. It will
->> need to be backported to stable, I figure the same as 376991db4b64.
+On Thu, Apr 11, 2019 at 1:16 AM Kees Cook <keescook@chromium.org> wrote:
+> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+> index 74271dba4f94..01874ef0f883 100644
+> --- a/scripts/gcc-plugins/Kconfig
+> +++ b/scripts/gcc-plugins/Kconfig
+> @@ -13,10 +13,11 @@ config HAVE_GCC_PLUGINS
+>           An arch should select this symbol if it supports building with
+>           GCC plugins.
 >
-
-Hi Greg,
-
-I still think that we should consider merging this patch.
-
-Thanks,
-John
-
-> So 376991db4b64 required manual backporting to stable, and this patch
-> would require the same:
->
-> https://www.spinics.net/lists/stable/msg289685.html
->
-> Robin, any further comment?
->
-> Thanks,
-> John
->
->
->>> thanks,
->>>
->>> greg k-h
->>>
->>> .
->>>
->>
->
+> -menuconfig GCC_PLUGINS
+> -       bool "GCC plugins"
+> +config GCC_PLUGINS
+> +       bool
 
 
+This will flatten the plugin config options.
+
+If you want to keep the current menu structure, you can do:
+
+menu "GCC plugins"
+...
+endmenu
+
+
+
+
+Another side-effect is Kbuild will descend into scripts/gcc-plugins/
+even when no plugin is selected.
+It is not a big build speed regression, though.
+
+
+
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> new file mode 100644
+> index 000000000000..8223a8ab1a12
+> --- /dev/null
+> +++ b/security/Kconfig.hardening
+> @@ -0,0 +1,94 @@
+> +menu "Kernel hardening options"
+> +
+> +config GCC_PLUGIN_STRUCTLEAK
+> +       bool
+> +       depends on GCC_PLUGIN_STRUCTLEAK_USER || GCC_PLUGIN_STRUCTLEAK_BYREF || GCC_PLUGIN_STRUCTLEAK_BYREF_ALL
+
+
+I think this 'depends on' is unnecessary.
+
+
+> +menu "Memory initialization"
+> +
+> +choice
+> +       prompt "Initialize kernel stack variables at function entry"
+> +       depends on CC_HAS_AUTO_VAR_INIT || GCC_PLUGINS
+
+Nit:
+CC_HAS_AUTO_VAR_INIT does not exist at this point.
+I will be added by 3/3.
+
+
+-- 
+Best Regards
+Masahiro Yamada
