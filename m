@@ -2,121 +2,140 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA7AC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96528C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758D620850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qhnpv2qy"
+	by mail.kernel.org (Postfix) with ESMTP id 6095B20850
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 20:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555013517;
+	bh=Xh2eYhsuJKUwHtedvI6eBb6HmwAvHTRH25HmjYjQbZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eoSm3FVCYezKURa6cbmbyef//HIuEkYGMkOMRB//pBZN0DCliJ+VGC/fF3O7gogj0
+	 nLrGBCP6Y4v8ZawQDpI6G0wVsRziKhp0Qmi6QHVURlv8G3FlYpftWRx77HWRUupc6U
+	 B1FtX2IBWZ+wegQCAvjvCf4xfbXDZIv0aEyckB+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfDKUIm (ORCPT
+        id S1726702AbfDKULz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 16:08:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43496 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726577AbfDKUIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 16:08:42 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k17so4300822wrx.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 13:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=66pJRrVMg8kq0VWEWmjYW7Ug7Cw4i2vMYlb6B7iK0q0=;
-        b=Qhnpv2qyo8zYX6zg1PN7YifcHAi/Rd7VQZVO/GrUv7dM5EKxGzV9pM+3NXqzfb28RA
-         jdHwKaC4HPBJSkOwQImJvMjqDLliIn9vhJLSiepUnoQWY2veWY2yOfdrnmCCT7W+nxON
-         mqDRQixRBbbtN+Q+HWZnVzyVdLRhO05067qVccguRYGQFsbeF0KEHgPnmSG03boyErcE
-         FmbT8IcHYp96oZUlJgCuIZXsi4by6U9tvRh3Re16Km1/LqH62U/OprX9Dhr0QXg3W4UY
-         dfgTnkK0ZVOmnKLeyNo7o2k2ESi6JmY3oX77S4c8zUg1JvIqfX9A8VH43z2BRFoVJmkb
-         CywA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=66pJRrVMg8kq0VWEWmjYW7Ug7Cw4i2vMYlb6B7iK0q0=;
-        b=Q2qOO0R1beljLloz5vTr69jYi7ZhJ1Hzh0xeoxXmykXWGk9yzO77WkslABSKXgltuX
-         AXjtJCZZkX7lRE0ENtKqAU0TtGir5Cqwg/4qvP9o+HVUbz5m5xtG55FeZfLGVpQaq4tc
-         ruwj5rLg6QbSSg0UA9EWS4end/AALH/hYqrUe4ujpIh2uhIFFrVgPUBk1Mjj2spiYeS2
-         o+2HD5DbXyPqgdztF5JELorGZ8tRi6/6J8k3P9SDp8XOWOkm7kHExyJJnMoxFC5QJDCW
-         DznIZ/esHjypxJ9BLr8SapAGtQJmzajd8U1w6lSmz5Y5JIyPrVJ/REpdc0+N3Rxwq9TH
-         ME+Q==
-X-Gm-Message-State: APjAAAVdXNZ3fAsPojRCuiiOPg5stmx4TmQ7sYPNag3/dCuHv01o32ny
-        d/nijOW/YJBfv6hy1shxNwFbYkykhQQ=
-X-Google-Smtp-Source: APXvYqyBf0z7VOUGabtwvXB6Xcu3cQmsNGorUEUn+ly8PmapTwAtJm1N/viMSeFyn8Kij4DxZIba5A==
-X-Received: by 2002:adf:f050:: with SMTP id t16mr28112589wro.198.1555013320003;
-        Thu, 11 Apr 2019 13:08:40 -0700 (PDT)
-Received: from [192.168.8.100] (195.118.130.77.rev.sfr.net. [77.130.118.195])
-        by smtp.googlemail.com with ESMTPSA id x205sm8931576wmg.9.2019.04.11.13.08.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 13:08:39 -0700 (PDT)
-Subject: Re: [PATCH 1/3] clocksource/drivers/timer-milbeaut: Fix to enable
- one-shot timer
-To:     Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>
-References: <1553483149-8922-1-git-send-email-sugaya.taichi@socionext.com>
- <1553483149-8922-2-git-send-email-sugaya.taichi@socionext.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <0488b22d-6e47-768a-6bde-eb2d7196f7e9@linaro.org>
-Date:   Thu, 11 Apr 2019 22:08:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 16:11:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40468 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726615AbfDKULz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 16:11:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1E911AE0F;
+        Thu, 11 Apr 2019 20:11:53 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 22:11:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        yuzhoujian@didichuxing.com, jrdr.linux@gmail.com, guro@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        penguin-kernel@i-love.sakura.ne.jp, ebiederm@xmission.com,
+        shakeelb@google.com, Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [RFC 0/2] opportunistic memory reclaim of a killed process
+Message-ID: <20190411201151.GA4743@dhcp22.suse.cz>
+References: <20190411014353.113252-1-surenb@google.com>
+ <20190411105111.GR10383@dhcp22.suse.cz>
+ <CAJWu+oq45tYxXJpLPLAU=-uZaYRg=OnxMHkgp2Rm0nbShb_eEA@mail.gmail.com>
+ <20190411181243.GB10383@dhcp22.suse.cz>
+ <20190411191430.GA46425@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1553483149-8922-2-git-send-email-sugaya.taichi@socionext.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190411191430.GA46425@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/2019 04:05, Sugaya Taichi wrote:
-> Fix mlb_set_oneshot_state() to enable one-shot timer.
-> The function should stop and start a timer, but "start" statement was
-> dropped. Kick the register to start one-shot timer.
-
-Can you add the "Fixes" tag please.
-
-
-
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> ---
->  drivers/clocksource/timer-milbeaut.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Thu 11-04-19 15:14:30, Joel Fernandes wrote:
+> On Thu, Apr 11, 2019 at 08:12:43PM +0200, Michal Hocko wrote:
+> > On Thu 11-04-19 12:18:33, Joel Fernandes wrote:
+> > > On Thu, Apr 11, 2019 at 6:51 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Wed 10-04-19 18:43:51, Suren Baghdasaryan wrote:
+> > > > [...]
+> > > > > Proposed solution uses existing oom-reaper thread to increase memory
+> > > > > reclaim rate of a killed process and to make this rate more deterministic.
+> > > > > By no means the proposed solution is considered the best and was chosen
+> > > > > because it was simple to implement and allowed for test data collection.
+> > > > > The downside of this solution is that it requires additional “expedite”
+> > > > > hint for something which has to be fast in all cases. Would be great to
+> > > > > find a way that does not require additional hints.
+> > > >
+> > > > I have to say I do not like this much. It is abusing an implementation
+> > > > detail of the OOM implementation and makes it an official API. Also
+> > > > there are some non trivial assumptions to be fullfilled to use the
+> > > > current oom_reaper. First of all all the process groups that share the
+> > > > address space have to be killed. How do you want to guarantee/implement
+> > > > that with a simply kill to a thread/process group?
+> > > 
+> > > Will task_will_free_mem() not bail out in such cases because of
+> > > process_shares_mm() returning true?
+> > 
+> > I am not really sure I understand your question. task_will_free_mem is
+> > just a shortcut to not kill anything if the current process or a victim
+> > is already dying and likely to free memory without killing or spamming
+> > the log. My concern is that this patch allows to invoke the reaper
 > 
-> diff --git a/drivers/clocksource/timer-milbeaut.c b/drivers/clocksource/timer-milbeaut.c
-> index f2019a8..9fd5d08 100644
-> --- a/drivers/clocksource/timer-milbeaut.c
-> +++ b/drivers/clocksource/timer-milbeaut.c
-> @@ -80,6 +80,8 @@ static int mlb_set_state_oneshot(struct clock_event_device *clk)
->  	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
->  
->  	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
-> +	val |= MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_TRG | MLB_TMR_TMCSR_INTE;
-> +	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
->  	return 0;
->  }
->  
+> Got it.
 > 
+> > without guaranteeing the same. So it can only be an optimistic attempt
+> > and then I am wondering how reasonable of an interface this really is.
+> > Userspace send the signal and has no way to find out whether the async
+> > reaping has been scheduled or not.
+> 
+> Could you clarify more what you're asking to guarantee? I cannot picture it.
+> If you mean guaranteeing that "a task is dying anyway and will free its
+> memory on its own", we are calling task_will_free_mem() to check that before
+> invoking the oom reaper.
 
+No, I am talking about the API aspect. Say you kall kill with the flag
+to make the async address space tear down. Now you cannot really
+guarantee that this is safe to do because the target task might
+clone(CLONE_VM) at any time. So this will be known only once the signal
+is sent, but the calling process has no way to find out. So the caller
+has no way to know what is the actual result of the requested operation.
+That is a poor API in my book.
+
+> Could you clarify what is the draback if OOM reaper is invoked in parallel to
+> an exiting task which will free its memory soon? It looks like the OOM reaper
+> is taking all the locks necessary (mmap_sem) in particular and is unmapping
+> pages. It seemed to me to be safe, but I am missing what are the main draw
+> backs of this - other than the intereference with core dump. One could be
+> presumably scalability since the since OOM reaper could be bottlenecked by
+> freeing memory on behalf of potentially several dying tasks.
+
+oom_reaper or any other kernel thread doing the same is a mere
+implementation detail I think. The oom killer doesn't really need the
+oom_reaper to act swiftly because it is there to act as a last resort if
+the oom victim cannot terminate on its own. If you want to offer an
+user space API then you can assume users will like to use it and expect
+a certain behavior but what that is? E.g. what if there are thousands of
+tasks killed this way? Do we care that some of them will not get the
+async treatment? If yes why do we need an API to control that at all?
+
+Am I more clear now?
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Michal Hocko
+SUSE Labs
