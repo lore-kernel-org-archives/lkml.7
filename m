@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43912C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1753C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11ABA20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9160E20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="UZ/3N3NX"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Qto8jyUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfDKKVQ (ORCPT
+        id S1726765AbfDKKT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:21:16 -0400
-Received: from vps.xff.cz ([195.181.215.36]:48474 "EHLO vps.xff.cz"
+        Thu, 11 Apr 2019 06:19:58 -0400
+Received: from vps.xff.cz ([195.181.215.36]:48398 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbfDKKT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:19:59 -0400
+        id S1726677AbfDKKT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 06:19:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1554977996; bh=//Y9g6FyC9JeT0oJjFckG39umOxcy3nQRVaTbv9yQdc=;
+        t=1554977995; bh=VCU/uAG/CGlp0N/Ie+gLjiEg/N8Z0m54HtEJgdiJHWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZ/3N3NXudgSWaEaZ1WVknpjen7QYUsm4mZNrs58RmLQ18Ej7tvtbPgC6oq7sKny9
-         2XVrvVT34Wjo64BNOwZHuiV6o+DGFfcFQ7O1PdrXXffByd+rm0l/veBWY4GstRbEYN
-         c9wniYueWtPlirCLW3VcFr3X1C3sR8EDNRzkeANc=
+        b=Qto8jyULfncNvfKKRwPzZP1JB3/oy4HWo/AuWudxJaoV4XRfbiL6QW2mAHqd/xQu/
+         ZlQByk2qHZGItuf2QKJutUHdaK5OUA3xlj8ylEZUjHZr4LUEsEedHkPh3+bt3x86Qy
+         DSWRXWKxCwJjHfzTsi2ig/zvmIn1HGfGP8ysOz8M=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -53,10 +52,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         linux-wireless@vger.kernel.org,
         brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 04/11] pinctrl: sunxi: Support I/O bias voltage setting on H6
-Date:   Thu, 11 Apr 2019 12:19:44 +0200
-Message-Id: <20190411101951.30223-5-megous@megous.com>
+        brcm80211-dev-list@cypress.com, linux-gpio@vger.kernel.org,
+        Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v3 02/11] net: stmmac: sun8i: force select external PHY when no internal one
+Date:   Thu, 11 Apr 2019 12:19:42 +0200
+Message-Id: <20190411101951.30223-3-megous@megous.com>
 In-Reply-To: <20190411101951.30223-1-megous@megous.com>
 References: <20190411101951.30223-1-megous@megous.com>
 MIME-Version: 1.0
@@ -66,90 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-H6 SoC has a "pio group withstand voltage mode" register (datasheet
-description), that needs to be used to select either 1.8V or 3.3V I/O mode,
-based on what voltage is powering the respective pin banks and is thus used
-for I/O signals.
+The PHY selection bit also exists on SoCs without an internal PHY; if it's
+set to 1 (internal PHY, default value) then the MAC will not make use of
+any PHY such SoCs.
 
-Add support for configuring this register according to the voltage of the
-pin bank regulator (if enabled).
+This problem appears when adapting for H6, which has no real internal PHY
+(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+connected via RMII interface at GPIO bank A).
 
-This is similar to the support for I/O bias voltage setting patch for A80
-and the same concerns apply. See:
+Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+to address the problem of a wrong default value.
 
-  commit 402bfb3c1352 ("Support I/O bias voltage setting on A80")
-
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c |  1 +
- drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 11 +++++++++++
- drivers/pinctrl/sunxi/pinctrl-sunxi.h     |  5 +++++
- 3 files changed, 17 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-index ef4268cc6227..3cc1121589c9 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-@@ -591,6 +591,7 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
- 	.irq_banks = 4,
- 	.irq_bank_map = h6_irq_bank_map,
- 	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
- 
- static int h6_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 98c4de5f4019..0cbca30b75dc 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -614,6 +614,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 					 unsigned pin,
- 					 struct regulator *supply)
- {
-+	unsigned short bank = pin / PINS_PER_BANK;
-+	unsigned long flags;
- 	u32 val, reg;
- 	int uV;
- 
-@@ -651,6 +653,15 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		reg &= ~IO_BIAS_MASK;
- 		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
- 		return 0;
-+	case BIAS_VOLTAGE_PIO_POW_MODE_SEL:
-+		val = uV <= 1800000 ? 1 : 0;
-+
-+		raw_spin_lock_irqsave(&pctl->lock, flags);
-+		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-+		reg &= ~(1 << bank);
-+		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-+		raw_spin_unlock_irqrestore(&pctl->lock, flags);
-+		return 0;
- 	default:
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 20c19afb8316..cb7e7f53be7d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -907,6 +907,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		 * address. No need to mask it again.
+ 		 */
+ 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
++	} else {
++		/* For SoCs without internal PHY the PHY selection bit should be
++		 * set to 0 (external PHY).
++		 */
++		reg &= ~H3_EPHY_SELECT;
  	}
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index 4bfc8a6d9dce..36186906f0a7 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,11 +95,16 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
  
-+#define PIO_POW_MOD_SEL_REG	0x340
-+
- enum sunxi_desc_bias_voltage {
- 	BIAS_VOLTAGE_NONE,
- 	/* Bias voltage configuration is done through
- 	 * Pn_GRP_CONFIG registers, as seen on A80 SoC. */
- 	BIAS_VOLTAGE_GRP_CONFIG,
-+	/* Bias voltage is set through PIO_POW_MOD_SEL_REG
-+	 * register, as seen on H6 SoC, for example. */
-+	BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
- 
- struct sunxi_desc_function {
+ 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
 -- 
 2.21.0
 
