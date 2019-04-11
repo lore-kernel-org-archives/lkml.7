@@ -2,167 +2,151 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF6FC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFF0C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601CF20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B4C20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfDKPua (ORCPT
+        id S1726789AbfDKPvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:50:30 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60441 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKPu3 (ORCPT
+        Thu, 11 Apr 2019 11:51:42 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:44142 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfDKPvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:50:29 -0400
-X-Originating-IP: 90.88.18.121
-Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 2EC812000A;
-        Thu, 11 Apr 2019 15:50:25 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 17:50:25 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for
- H6
-Message-ID: <20190411155025.d5hmbw2jzhp3wyuq@flea>
-References: <20190411105720.32357-1-peron.clem@gmail.com>
- <2797515.ZAugZ1JPiN@jernej-laptop>
- <20190411152752.qlabx7heh74dy2ao@flea>
- <5149757.GgN2G91tE9@jernej-laptop>
+        Thu, 11 Apr 2019 11:51:41 -0400
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 9C38272CC58;
+        Thu, 11 Apr 2019 18:51:37 +0300 (MSK)
+Received: from beacon.altlinux.org (unknown [185.6.174.98])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 6F3E64A4A2A;
+        Thu, 11 Apr 2019 18:51:37 +0300 (MSK)
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 00/10] crypto: add EC-RDSA (GOST 34.10) algorithm
+Date:   Thu, 11 Apr 2019 18:51:12 +0300
+Message-Id: <20190411155122.13245-1-vt@altlinux.org>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ughvejlzbua5n4db"
-Content-Disposition: inline
-In-Reply-To: <5149757.GgN2G91tE9@jernej-laptop>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset changes akcipher API to support ECDSA style signature
+verification, augments x509 parser to make it work with EC-RDSA certificates,
+and, finally, implements EC-RDSA (GOST 34.10) signature verification and its
+integration with IMA.
 
---ughvejlzbua5n4db
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+---
+Changes since v8:
+- asym_tpm: move setting set_pub_key parameters into derive_pub_key, as
+  suggested by Denis Kenzior.
 
-On Thu, Apr 11, 2019 at 05:42:56PM +0200, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 11. april 2019 ob 17:27:52 CEST je Maxime Ripard napisa=
-l(a):
-> > On Thu, Apr 11, 2019 at 05:23:25PM +0200, Jernej =C5=A0krabec wrote:
-> > > Dne =C4=8Detrtek, 11. april 2019 ob 17:20:04 CEST je Cl=C3=A9ment P=
-=C3=A9ron napisal(a):
-> > > > Hi,
-> > > >
-> > > > On Thu, 11 Apr 2019 at 17:05, Jernej =C5=A0krabec <jernej.skrabec@s=
-iol.net>
-> > >
-> > > wrote:
-> > > > > Dne =C4=8Detrtek, 11. april 2019 ob 12:57:16 CEST je Cl=C3=A9ment=
- P=C3=A9ron
-> napisal(a):
-> > > > > > Add the mali gpu node to the H6 device-tree.
-> > > > > >
-> > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > > > > ---
-> > > > > >
-> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++=
-++
-> > > > > >  1 file changed, 14 insertions(+)
-> > > > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > > > > > e0dc4a05c1ba..196753110434 100644
-> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > > @@ -157,6 +157,20 @@
-> > > > > >
-> > > > > >                       allwinner,sram =3D <&ve_sram 1>;
-> > > > > >
-> > > > > >               };
-> > > > > >
-> > > > > > +             gpu: gpu@1800000 {
-> > > > > > +                     compatible =3D "allwinner,sun50i-h6-mali",
-> > > > > > +                                  "arm,mali-t720";
-> > > > > > +                     reg =3D <0x01800000 0x4000>;
-> > > > > > +                     interrupts =3D <GIC_SPI 84
-> > > > >
-> > > > > IRQ_TYPE_LEVEL_HIGH>,
-> > > > >
-> > > > > > +                                  <GIC_SPI 85
-> > > > >
-> > > > > IRQ_TYPE_LEVEL_HIGH>,
-> > > > >
-> > > > > > +                                  <GIC_SPI 83
-> > > > >
-> > > > > IRQ_TYPE_LEVEL_HIGH>;
-> > > > >
-> > > > > > +                     interrupt-names =3D "job", "mmu", "gpu";
-> > > > > > +                     clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_=
-GPU>;
-> > > > > > +                     clock-names =3D "core", "bus";
-> > > > > > +                     resets =3D <&ccu RST_BUS_GPU>;
-> > > > > > +                     status =3D "disabled";
-> > > > >
-> > > > > Usually self sufficient peripherals are enabled by default in DTS=
-I.
-> > > >
-> > > > I follow the other Mali Midgard (rk3399, rk3288) syntax.
-> > > > But I think you're right here, will go for an update I think.
-> > >
-> > > I quickly checked A64 and H5 DTSI and both have GPU enabled by default
-> > > (status property is not set).
-> >
-> > I asked myself the same question, but the H6 seems to have a supply
-> > wired to the GPU, while the H3 and H5 do not. So I'm not sure we want
-> > to enable it on all the boards, even though some might have left out
-> > the GPU supply which will result in a non-working GPU (I assume?)
->
-> It's true that GPU doesn't work at all without power supply. Even worse, =
-ARM
-> kernel driver just hangs whole SoC if it tries to use unpowered GPU.
->
-> I checked few datasheets and almost none of them have GPU power supply, e=
-xcept
-> H5, where GPU is enabled by default in DTSI.
+Changes since v7:
+- Do not check callback validity in akcipher requests, instead define default
+  callbacks on register, suggested by Herbert Xu.
+- Sanity checks in crypto_akcipher_maxsize are removed (not needed).
+- Sanity checks for `dst' and `dst_len' are removed from verify op (not
+  needed in akcipher API and should be checked by a driver).
+- Patch "KEYS: report to keyctl only actually supported key ops" is removed,
+  as it would affect user-space API.
 
-I guess we should fix that then.
+Changes since (v5-v6):
+- set_params API is removed in favor of appending parameters into a key stream,
+  as requested by Herbert Xu.
+- verify op signature de-kmemdup'ed (as requested by David Howells) in separate
+  patch (as requested by Herbert Xu).
+- Add forgotten ASN.1 parser files to EC-RDSA patch.
+- Tested on x86_64.
 
-> Yeah, I guess it's more safe to explicitly enable it in board DT.
+Changes since v5:
+- Comparison of hash algo by enum id instead of text name, as suggested by
+  Thiago Jung Bauermann and Mimi Zohar.
 
-It's also something we do for the CPU, even though the CPU should be
-obviously be powered before starting Linux...
+Changes since RFC (v1-v4):
+- akcipher set_max_size, encrypt, decrypt, sign, verify callbacks may be
+  undefined by the drivers, so their crypto_akcipher_* frontends check for
+  their presence before passing the call.
+- supported_ops flags are set for keyctl, based on the presence of implemented
+  akcipher callbacks.
+- Transition to verify2 API is abandoned because raw RSA does not need
+  sign/verify ops at all, and we can switch to the new verify in one step.
+  For this RSA backends have sign/verify ops removed as they should only
+  be used (and actually used only) via PKCS1 driver.
+- Verify callback requires digest as the input parameter in src SGL, as
+  suggested by Herbert Xu, (instead of a separate parameter, as it was in
+  verify2).
+- For verify op signature is moved into kmalloc'd memory as suggested by
+  Herbert Xu.
+- set_params API should be called before set_{pub,priv}_key, thus set_*_key
+  knows everything it needs to set they key properly. Also, set_params made
+  optional for back compatibility with RSA drivers.
+- Public-key cryptography section is created in Kconfig.
+- ecc.c is made into separate module object, to be used together by ECDH and
+  EC-RDSA.
+- EC-RDSA parameters and public key are parsed using asn1_ber_decoder as
+  suggested by Stephan Mueller and David Howells.
+- Test vectors are added and tests are passing.
+- Curves/parameters definitions are split from ecrdsa.c into ecrdsa_defs.h.
+- Integration with IMA in asymmetric_verify(). Userspace ima-evm-utils already
+  have a patch in the queue to support this. Tested on x86_64.
 
-Maxime
+Vitaly Chikunov (10):
+  crypto: akcipher - default implementations for request callbacks
+  crypto: rsa - unimplement sign/verify for raw RSA backends
+  crypto: akcipher - new verify API for public key algorithms
+  KEYS: do not kmemdup digest in {public,tpm}_key_verify_signature
+  X.509: parse public key parameters from x509 for akcipher
+  crypto: Kconfig - create Public-key cryptography section
+  crypto: ecc - make ecc into separate module
+  crypto: ecrdsa - add EC-RDSA (GOST 34.10) algorithm
+  crypto: ecrdsa - add EC-RDSA test vectors to testmgr
+  integrity: support EC-RDSA signatures for asymmetric_verify
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ crypto/Kconfig                                |  63 ++--
+ crypto/Makefile                               |  10 +-
+ crypto/akcipher.c                             |  14 +
+ crypto/asymmetric_keys/asym_tpm.c             |  43 +--
+ crypto/asymmetric_keys/public_key.c           | 105 ++++---
+ crypto/asymmetric_keys/x509.asn1              |   2 +-
+ crypto/asymmetric_keys/x509_cert_parser.c     |  57 +++-
+ crypto/ecc.c                                  | 417 +++++++++++++++++++++++++-
+ crypto/ecc.h                                  | 153 +++++++++-
+ crypto/ecc_curve_defs.h                       |  15 -
+ crypto/ecrdsa.c                               | 296 ++++++++++++++++++
+ crypto/ecrdsa_defs.h                          | 225 ++++++++++++++
+ crypto/ecrdsa_params.asn1                     |   4 +
+ crypto/ecrdsa_pub_key.asn1                    |   1 +
+ crypto/rsa-pkcs1pad.c                         |  33 +-
+ crypto/rsa.c                                  | 109 -------
+ crypto/testmgr.c                              |  80 +++--
+ crypto/testmgr.h                              | 159 ++++++++++
+ drivers/crypto/caam/caampkc.c                 |   2 -
+ drivers/crypto/ccp/ccp-crypto-rsa.c           |   2 -
+ drivers/crypto/qat/qat_common/qat_asym_algs.c |   2 -
+ include/crypto/akcipher.h                     |  54 ++--
+ include/crypto/public_key.h                   |   4 +
+ include/linux/oid_registry.h                  |  18 ++
+ security/integrity/digsig_asymmetric.c        |  11 +-
+ 25 files changed, 1574 insertions(+), 305 deletions(-)
+ create mode 100644 crypto/ecrdsa.c
+ create mode 100644 crypto/ecrdsa_defs.h
+ create mode 100644 crypto/ecrdsa_params.asn1
+ create mode 100644 crypto/ecrdsa_pub_key.asn1
 
---ughvejlzbua5n4db
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.11.0
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK9iQQAKCRDj7w1vZxhR
-xW8KAQC6G/zptIZMa3Iez/W7WOhXWk54gWQ0gUOe1wOvm5zMFgEAkYt6r8m5dYvW
-QFoyycKpJudgsTM0htXFB3AyjlPEag8=
-=fNBG
------END PGP SIGNATURE-----
-
---ughvejlzbua5n4db--
