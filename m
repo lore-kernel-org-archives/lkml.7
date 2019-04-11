@@ -2,154 +2,126 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4293C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A10C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44282084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52689206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 11:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554981596;
+	bh=z9LxgHDzoaYo2AU+gqlnUhvlog2VbTnMftZO/xOhVis=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=gvLnnPcFJLEOlVosLvhC5AeTpGseUtG3yzw6LmrOFFxiwvjmL7Kv3pGt5AJ5fVudn
+	 6MPJmQbxEgrPwkIDXhUncgWtSt7xpJ5mQDsbALEU0WEnTMZxxs2ciDpEuClKC6Rmzs
+	 +Np7cSNTQCqRRyq2gzkwNMiTR6JFj7Y2SnWqVBEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfDKLSL (ORCPT
+        id S1726702AbfDKLTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 07:18:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33118 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbfDKLSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 07:18:11 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C65137E7B;
-        Thu, 11 Apr 2019 11:18:10 +0000 (UTC)
-Received: from [10.36.118.43] (unknown [10.36.118.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DE4E60BF7;
-        Thu, 11 Apr 2019 11:18:08 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
- find_memory_block()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190410101455.17338-1-david@redhat.com>
- <20190411084141.GQ10383@dhcp22.suse.cz>
- <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
- <20190411105617.GS10383@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <711db571-ee39-eb64-4551-baaa5b562579@redhat.com>
-Date:   Thu, 11 Apr 2019 13:18:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190411105617.GS10383@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 11 Apr 2019 11:18:10 +0000 (UTC)
+        Thu, 11 Apr 2019 07:19:55 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48326 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDKLTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 07:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=JfKdKSW69jjP9EDsRB+iv6YSvZKc1YLqpAGrnwMztbY=; b=kNriQxbFitu6
+        kaftqSw7o+o08Vu/aVO08ZMsv6Pq8uJCovCrd/rPk8kE93FE+rO1P1jFM/W48Yq2+8eWUHEb3bCGy
+        6K09gP47gNgW7oh3KmCnjcxePScwNdaEPSyEQEzjCh7g84tZOw3v0ch6mUSCEadym3+FI7sN13L/u
+        k96wA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hEXkF-00006z-9q; Thu, 11 Apr 2019 11:19:51 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 7B2711126DD5; Thu, 11 Apr 2019 12:19:49 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Applied "regulator: vexpress: Constify regulator_ops" to the regulator tree
+In-Reply-To: <20190410161937.17224-1-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190411111949.7B2711126DD5@debutante.sirena.org.uk>
+Date:   Thu, 11 Apr 2019 12:19:49 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.19 12:56, Michal Hocko wrote:
-> On Thu 11-04-19 11:11:05, David Hildenbrand wrote:
->> On 11.04.19 10:41, Michal Hocko wrote:
->>> On Wed 10-04-19 12:14:55, David Hildenbrand wrote:
->>>> While current node handling is probably terribly broken for memory block
->>>> devices that span several nodes (only possible when added during boot,
->>>> and something like that should be blocked completely), properly put the
->>>> device reference we obtained via find_memory_block() to get the nid.
->>>
->>> The changelog could see some improvements I believe. (Half) stating
->>> broken status of multinode memblock is not really useful without a wider
->>> context so I would simply remove it. More to the point, it would be much
->>> better to actually describe the actual problem and the user visible
->>> effect.
->>>
->>> "
->>> d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug") has started
->>> using find_memory_block to get a nodeid for the beginnig of the onlined
->>> pfn range. The commit has missed that the memblock contains a reference
->>> counted object and a missing put_device will leak the kobject behind
->>> which ADD THE USER VISIBLE EFFECT HERE.
->>> "
->>
->> I don't think mentioning the commit a second time is really needed.
->>
->> "
->> Right now we are using find_memory_block() to get the node id for the
->> pfn range to online. We are missing to drop a reference to the memory
->> block device. While the device still gets unregistered via
->> device_unregister(), resulting in no user visible problem, the device is
->> never released via device_release(), resulting in a memory leak. Fix
->> that by properly using a put_device().
->> "
-> 
-> OK, sounds good to me. I was not sure about all the sysfs machinery
-> and the kobj dependencies but if there are no sysfs files leaking and
-> crashing upon a later access then a leak of a small amount of memory
-> that is not user controlable then this is not super urgent.
-> 
-> Thanks!
+The patch
 
-I think it can be triggered by onlining/offlining memory in a loop. But
-as you said, only leaks of small amount of memory.
+   regulator: vexpress: Constify regulator_ops
 
-Thanks!
+has been applied to the regulator tree at
 
--- 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-David / dhildenb
+From ab54a4d7b0dd5f36cb6c2da83894590bc8bda5a5 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 11 Apr 2019 00:19:37 +0800
+Subject: [PATCH] regulator: vexpress: Constify regulator_ops
+
+vexpress_regulator_ops_ro and vexpress_regulator_ops are never changed,
+make them const.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/vexpress-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/regulator/vexpress-regulator.c b/drivers/regulator/vexpress-regulator.c
+index c810cbbd463f..ca4230fe9e77 100644
+--- a/drivers/regulator/vexpress-regulator.c
++++ b/drivers/regulator/vexpress-regulator.c
+@@ -46,11 +46,11 @@ static int vexpress_regulator_set_voltage(struct regulator_dev *regdev,
+ 	return regmap_write(reg->regmap, 0, min_uV);
+ }
+ 
+-static struct regulator_ops vexpress_regulator_ops_ro = {
++static const struct regulator_ops vexpress_regulator_ops_ro = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
+ };
+ 
+-static struct regulator_ops vexpress_regulator_ops = {
++static const struct regulator_ops vexpress_regulator_ops = {
+ 	.get_voltage = vexpress_regulator_get_voltage,
+ 	.set_voltage = vexpress_regulator_set_voltage,
+ };
+-- 
+2.20.1
+
