@@ -2,133 +2,94 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75D8C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9322C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C069520818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8352F217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfDKPnB convert rfc822-to-8bit (ORCPT
+        id S1726664AbfDKPsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:43:01 -0400
-Received: from mailoutvs33.siol.net ([185.57.226.224]:48843 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726391AbfDKPnA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:43:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7B4C5520AB9;
-        Thu, 11 Apr 2019 17:42:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2dFXOHfEeP2l; Thu, 11 Apr 2019 17:42:57 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 14A86520B99;
-        Thu, 11 Apr 2019 17:42:57 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 9D70E520B0F;
-        Thu, 11 Apr 2019 17:42:56 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
-Date:   Thu, 11 Apr 2019 17:42:56 +0200
-Message-ID: <5149757.GgN2G91tE9@jernej-laptop>
-In-Reply-To: <20190411152752.qlabx7heh74dy2ao@flea>
-References: <20190411105720.32357-1-peron.clem@gmail.com> <2797515.ZAugZ1JPiN@jernej-laptop> <20190411152752.qlabx7heh74dy2ao@flea>
+        Thu, 11 Apr 2019 11:48:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40282 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbfDKPsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 11:48:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C694301BEDF;
+        Thu, 11 Apr 2019 15:48:35 +0000 (UTC)
+Received: from treble (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D88B5D9C4;
+        Thu, 11 Apr 2019 15:48:29 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 10:48:27 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 1/9] livepatch: Create and include UAPI headers
+Message-ID: <20190411154827.v2vkxlc2ecqkxyjv@treble>
+References: <20190410155058.9437-1-joe.lawrence@redhat.com>
+ <20190410155058.9437-2-joe.lawrence@redhat.com>
+ <CAK7LNAQ_=bp0VTOze7ckfXSwFy0m_g6OYPxS5K-ac7jjoutB+A@mail.gmail.com>
+ <141bbc68-95a7-3444-08a5-3794b6dc84ce@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <141bbc68-95a7-3444-08a5-3794b6dc84ce@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 11 Apr 2019 15:48:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 11. april 2019 ob 17:27:52 CEST je Maxime Ripard napisal(a):
-> On Thu, Apr 11, 2019 at 05:23:25PM +0200, Jernej Škrabec wrote:
-> > Dne četrtek, 11. april 2019 ob 17:20:04 CEST je Clément Péron napisal(a):
-> > > Hi,
+On Thu, Apr 11, 2019 at 10:30:45AM -0400, Joe Lawrence wrote:
+> On 4/10/19 8:32 PM, Masahiro Yamada wrote:
+> > On Thu, Apr 11, 2019 at 12:52 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
 > > > 
-> > > On Thu, 11 Apr 2019 at 17:05, Jernej Škrabec <jernej.skrabec@siol.net>
-> > 
-> > wrote:
-> > > > Dne četrtek, 11. april 2019 ob 12:57:16 CEST je Clément Péron 
-napisal(a):
-> > > > > Add the mali gpu node to the H6 device-tree.
-> > > > > 
-> > > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > > ---
-> > > > > 
-> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
-> > > > >  1 file changed, 14 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
-> > > > > e0dc4a05c1ba..196753110434 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > > > @@ -157,6 +157,20 @@
-> > > > > 
-> > > > >                       allwinner,sram = <&ve_sram 1>;
-> > > > >               
-> > > > >               };
-> > > > > 
-> > > > > +             gpu: gpu@1800000 {
-> > > > > +                     compatible = "allwinner,sun50i-h6-mali",
-> > > > > +                                  "arm,mali-t720";
-> > > > > +                     reg = <0x01800000 0x4000>;
-> > > > > +                     interrupts = <GIC_SPI 84
-> > > > 
-> > > > IRQ_TYPE_LEVEL_HIGH>,
-> > > > 
-> > > > > +                                  <GIC_SPI 85
-> > > > 
-> > > > IRQ_TYPE_LEVEL_HIGH>,
-> > > > 
-> > > > > +                                  <GIC_SPI 83
-> > > > 
-> > > > IRQ_TYPE_LEVEL_HIGH>;
-> > > > 
-> > > > > +                     interrupt-names = "job", "mmu", "gpu";
-> > > > > +                     clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
-> > > > > +                     clock-names = "core", "bus";
-> > > > > +                     resets = <&ccu RST_BUS_GPU>;
-> > > > > +                     status = "disabled";
-> > > > 
-> > > > Usually self sufficient peripherals are enabled by default in DTSI.
+> > > From: Josh Poimboeuf <jpoimboe@redhat.com>
 > > > 
-> > > I follow the other Mali Midgard (rk3399, rk3288) syntax.
-> > > But I think you're right here, will go for an update I think.
+> > > Define klp prefixes in include/uapi/linux/livepatch.h, and use them for
+> > > replacing hard-coded values in kernel/livepatch/core.c.
+> > > 
+> > > [ ... snip ... ]
+> >>
+> > > diff --git a/include/uapi/linux/livepatch.h b/include/uapi/linux/livepatch.h
+> > > new file mode 100644
+> > > index 000000000000..bb86243de805
+> > > --- /dev/null
+> > > +++ b/include/uapi/linux/livepatch.h
+> > > @@ -0,0 +1,17 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
 > > 
-> > I quickly checked A64 and H5 DTSI and both have GPU enabled by default
-> > (status property is not set).
+> > 
+> > In my understanding, UAPI headers should be licensed under:
+> > 
+> > /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > 
+> > 
 > 
-> I asked myself the same question, but the H6 seems to have a supply
-> wired to the GPU, while the H3 and H5 do not. So I'm not sure we want
-> to enable it on all the boards, even though some might have left out
-> the GPU supply which will result in a non-working GPU (I assume?)
+> Good eye, that is an interesting licensing detail.  Easy enough to update
+> assuming Josh (original author) is fine with adding the modifier.
 
-It's true that GPU doesn't work at all without power supply. Even worse, ARM 
-kernel driver just hangs whole SoC if it tries to use unpowered GPU.
+Sure.
 
-I checked few datasheets and almost none of them have GPU power supply, except 
-H5, where GPU is enabled by default in DTSI.
+(and sorry, still behind on reviewing the rest of the changes...)
 
-Yeah, I guess it's more safe to explicitly enable it in board DT.
-
-Jernej
-
-
+-- 
+Josh
