@@ -2,85 +2,130 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F26C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC147C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC952184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555021322;
-	bh=abD3u4yTSrT+p4xKIErOvga70MdiFtqQa7xI8OAof+c=;
-	h=Subject:From:To:Date:List-ID:From;
-	b=ytKyXJM/0FSviGn3g1sMeqGW1sEhnzi9OfBbjg4vIZLDZf9n6NNAidcJZXF0KXGeN
-	 2SqZ9WbDUmiln6qWQrPg3KjaL+mbrExLGmTvrpwXIUnefLCyho8jCZzduBI2e0ZZeu
-	 aq+GzuiQtHx5fZ7j3xS4+SliUT6E06fIzhMsimfc=
+	by mail.kernel.org (Postfix) with ESMTP id B09AD2146F
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 22:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O8QifJmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfDKWWB (ORCPT
+        id S1727112AbfDKW00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 18:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726728AbfDKWWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 18:22:00 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DAF2146F;
-        Thu, 11 Apr 2019 22:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555021320;
-        bh=abD3u4yTSrT+p4xKIErOvga70MdiFtqQa7xI8OAof+c=;
-        h=Subject:From:To:Date:From;
-        b=ue9/PAjqDtqyPsG2fYv0S7NqZJSqBEo1JJZb7o2mfpoLVzUsBE8rgHWFBwIt07EfO
-         QbKmytI0wupSRFNFVaZQP+VTpyr5JUmNR0n0DlaBlfzBIqoPTywUDD/Y/2MfiVGRSq
-         LiVUw3oZ/IJcjVrMQbEfDA3nhCZeWY9HxfFM1th0=
-Message-ID: <1555021318.12566.17.camel@kernel.org>
-Subject: [ANNOUNCE] 3.18.138-rt115
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Julia Cartwright <julia@ni.com>
-Date:   Thu, 11 Apr 2019 17:21:58 -0500
+        Thu, 11 Apr 2019 18:26:26 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:33495 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726629AbfDKW00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 18:26:26 -0400
+Received: by mail-vk1-f196.google.com with SMTP id x194so1750724vke.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UoLLVcygV1LfDNeTQawdNC4kbLBy8PL1K4CMsysgYOI=;
+        b=O8QifJmKkEaCqV0Lg7upTka7UzOg3j4RKHYARveM3TStNChlnUbLNvHZD9Q99/dmFQ
+         IH4mILno+UkON4pq+BiHlJH6FQHtK78mj7okhJdz7MnMgVvgHJ6z5X8ituV/3Kacwg7/
+         yh62X6ITMYlQMZYqvJNAKgyiO5B/DQKPZQ6sg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UoLLVcygV1LfDNeTQawdNC4kbLBy8PL1K4CMsysgYOI=;
+        b=FK9r98ID/gxD5pIlZgvyGztLGeTBotpoGb/9aInpEeBjJD+Vo1CtKwZk3QXdREIosf
+         hJQwlDLbiKWbtCLag7j3ROImA+5iO/dHMcV1+dWgfKJrvIey/eEsgcTsnwsb8UrSwqoI
+         4ZKjmtQbDt7QCpyvO6DN45eRz5vgcNlFhcaImZAJJ7/FtQTuKktgEHX239btvauNRjG4
+         kAgNvhtCW0aW2V1FIAu7r6fU8p3ZibODqtB7fGBXNWzEVfx6nOx+y8LDpiLMg0TqZdcL
+         rSgpS2Yb4I4okltxnmbqb6l4ESyFnncX3zFPDeOUNd9UT6o2G/gQgQT7T3czutNPqh7w
+         d35w==
+X-Gm-Message-State: APjAAAXTnZCKOo2q/Utuo/uz9UipH/m1BMo+I5ovKg10JmuChFVmuXHG
+        XOVDftnegvHmHm6e3sHzshg42CE62Jw=
+X-Google-Smtp-Source: APXvYqw1s7Wj+jiRbwSK7eyqTxTv3VeG+6COx7DnsA8OE0Q73McHwJD52pjzg3rkBOV5Lmr2ND6B7g==
+X-Received: by 2002:a1f:1284:: with SMTP id 126mr29196109vks.72.1555021584782;
+        Thu, 11 Apr 2019 15:26:24 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id m23sm59598606vsl.24.2019.04.11.15.26.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Apr 2019 15:26:24 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id f22so4432101vso.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 15:26:24 -0700 (PDT)
+X-Received: by 2002:a67:7816:: with SMTP id t22mr28491004vsc.115.1555021281313;
+ Thu, 11 Apr 2019 15:21:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190410224213.20651-1-okaya@kernel.org> <CAGXu5jKzBGRr7LjFVdpvHhSFV7C7kuj-6VphhtLsMEoetr_R7g@mail.gmail.com>
+ <135E84E9-F068-44CB-B4F6-A5AC2F4CDE3D@joshtriplett.org> <CAGXu5jLc_Z=TiNsMd40GN8-0D117RVbdD7Hy4MzjPQNbFf=bcg@mail.gmail.com>
+ <FF2E07CA-99D7-4F9C-B281-425897535C84@joshtriplett.org> <e901a9cc-f335-fb31-535c-97dce2ca8f5b@kernel.org>
+ <20190411221645.GA8692@localhost>
+In-Reply-To: <20190411221645.GA8692@localhost>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Thu, 11 Apr 2019 15:21:09 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKa4dUuCxc1kPdRGH5qrXeH0y09hnScb41-SQDo_amv8Q@mail.gmail.com>
+Message-ID: <CAGXu5jKa4dUuCxc1kPdRGH5qrXeH0y09hnScb41-SQDo_amv8Q@mail.gmail.com>
+Subject: Re: [PATCH v2] init: Do not select DEBUG_KERNEL by default
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Sinan Kaya <Okaya@kernel.org>, Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Changbin Du <changbin.du@intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
+On Thu, Apr 11, 2019 at 3:16 PM Josh Triplett <josh@joshtriplett.org> wrote:
+>
+> On Wed, Apr 10, 2019 at 11:13:52PM -0400, Sinan Kaya wrote:
+> > On 4/10/2019 11:02 PM, Josh Triplett wrote:
+> > > Then let's fix*that*, and get checkpatch to help enforce it in the future. EXPERT doesn't affect code generation, and neither should this.
+> >
+> > I think we have to do both. We need to go after the users as well as
+> > solve the immediate problem per this patch.
+> >
+> > As Mathieu identified, CONFIG_DEBUG_KERNEL is being used all over the
+> > place and getting subsystem owners to remove let alone add a check
+> > to checkpatch is just going to take time.
+> >
+> > Please let us know if you are OK with this plan.
+>
+> I'm not OK with this plan. Turning on EXPERT should make the options
+> under DEBUG_KERNEL visible; it's a bug that DEBUG_KERNEL affects code
+> generation as well.
+>
+> Proposed alternative plan: let's add a new symbol, something like
+> DEBUG_MISC ("Miscellaneous debug code that should be under a more
+> specific debug option but isn't"), make it depend on DEBUG_KERNEL and be
+> "default DEBUG_KERNEL" but allow itself to be turned off, and then
+> mechanically change the small handful of "#ifdef CONFIG_DEBUG_KERNEL" to
+> "#ifdef CONFIG_DEBUG_MISC".
+>
+> Does that sound like an appropriately rapid solution for this bug?
 
-I'm pleased to announce the 3.18.138-rt115 stable release.
+Sure, that sounds fine to me. Sinan can you take care of that for v4?
 
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v3.18-rt
-  Head SHA1: 0b31ad979fb6e00b1aa16f873c05fa2cb486b00f
-
-Or to build 3.18.138-rt115 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v3.x/patch-3.18.138.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/patch-3.18.138-rt115.patch.xz
-
-
-Enjoy!
-
-   Tom
+-- 
+Kees Cook
