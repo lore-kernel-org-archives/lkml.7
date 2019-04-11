@@ -2,58 +2,58 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F00C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28107C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7563D2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEE52184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M77lrMxK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+CPze15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbfDKKrj (ORCPT
+        id S1726837AbfDKKrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:47:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56081 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbfDKKri (ORCPT
+        Thu, 11 Apr 2019 06:47:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40745 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbfDKKrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:47:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o25so6090428wmf.5;
-        Thu, 11 Apr 2019 03:47:37 -0700 (PDT)
+        Thu, 11 Apr 2019 06:47:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so6085036wmi.5;
+        Thu, 11 Apr 2019 03:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZwhAx+QnGniZO7ghVRiFuf4mvV7+VICXC3x0clxm7ls=;
-        b=M77lrMxKYrgpS1XnhqpDZB0JXI7TQg5GPnmSt4TErmBc3J2xeq/uCtgRqQq8KxrJ7g
-         vny42RsUs3ewLzKDaqih/oYO2YzPi6r0ovFTiFBoNviWGAETx8k3d2CJWS3897Ve2NyM
-         FzDAqgt6+NJJG+EmNvEy8a3i+YQiihSB/M/eH7L6p5YaRFnfI+wL6rURx4AVsB5/tRMk
-         DeSTtWluC4bKhkr4nSlChkfvRXUTIHLuNGG7Hkp5WUBmoOIT6BdbdsBLIb63pi+6qwDC
-         0vYk8kL0/8W3gAm/fh8ehQMrbkfUGaeNnuLelslJ7EDSbbUurjzzZqhTvPeZXXr6JZsE
-         nw6g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=1WIGTjZh4mIwUZpoXVfzkYofixlglZX9sKei53EYiYk=;
+        b=m+CPze15BXpmCnfHe7tC+npflErN9n978bF/GtAZ/nX87YZWIgkaiMAFrwvD1Nrjy+
+         qlVaufbg7pJdUuYiibezwwJXcrv74A9kcUAJzI3Ir4CxYK5U815wQg3BO+aYXb712Zic
+         EO7sNsV7fylxIQ4eTCq5aFi7Tj3AHGdVCjB8dNPf05XaDD0I5YHFoc+m0WfI5wYuP+6O
+         iRfkka8jrKWj3VtFFiXQz1GzO95TsPBeo1xH7lTTR6jbTTw3wUsGelJEupKeedmQs4fL
+         Jc0tWoQK3mtQ/oVVMwJy3m04B0HnJZhHVDZEprSuYTDsCwKTNyv1RRA4BXqmZAdryTxk
+         0afw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZwhAx+QnGniZO7ghVRiFuf4mvV7+VICXC3x0clxm7ls=;
-        b=YJ4iuJoAm6CRgFWpQsULlHQ7lsnsLMlxkYWsCfg0bf6XgdVbTKLGn2HF3OWFLWs6RR
-         1Xr5vRyPEbyy5Rr5qOk5jqpW748VyfUbfJwFR+QHs2xXHHUdLxA+FmEsjhUtJiEdyBl+
-         ONIxEqe0cjir8UQapJflWEQQhcW9NcFQ0P5L+xbDnHQSOy1DEX7nEhPSuJfvpeBFvBOJ
-         /7hSl8M8Gc+ffcHCiv+R1OeeG/tgldNa9YlaGjiM4iq77HdqKjf78gQl6h4wrRaj9B37
-         aVtrp913IIATXKBypP5BOyy4fasE6kOzR6vleAznzpxBdUQvvFXyKQXxRsRkARM5AZGD
-         lQpA==
-X-Gm-Message-State: APjAAAUDqpsMP1uaOxNghS+1hAbtKGM9Mz2F2i75QjwvgivDgmWRaSB1
-        gxG8G+HANIzDuFyo+xI5NVlx8AVHBH73lQ==
-X-Google-Smtp-Source: APXvYqzX26vtj0jqewyPzLVVEUATgJgwbRsMtQLdoxISsfwR5f5CHl0sNLVm3HcmNLD7nE/dewaAPQ==
-X-Received: by 2002:a1c:a711:: with SMTP id q17mr6347416wme.111.1554979656547;
-        Thu, 11 Apr 2019 03:47:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=1WIGTjZh4mIwUZpoXVfzkYofixlglZX9sKei53EYiYk=;
+        b=YVbXiRbR+iw9h1clW+8FHhh6mZRaS1lc6tw9s/CU7HcqQR7M17jwPCGjhw8bbGdFaz
+         O/fgtHqoGjH3l5mPaoOI29hFAC+rERsKzyJYhlLnNPHXG2F6v/AWKTgyOmVywrUya5US
+         rBGpDqIy7bNKKb/K5Tod60uxbeiUraZkRP8VU2+Zs5LXA99Ql9Hu6SqhxpI3dslyfs8q
+         bd59tfLszA5fon4MYWJxVWHHEiMa+gQr+8YNmN4Yx2ljhzMlULkfAHJi/TTs2dss4tYb
+         gVrDjhvusc3r8fX0Bh7Sjbi5U9olPHVpm7OPDzpy8R6E4htq55raix4HjrRUYdPDXF1Y
+         L7/w==
+X-Gm-Message-State: APjAAAVrG6+gdmOr/2fkd8SonEifxV8ozLjO3oohUFIb/RIz5eCMAQn/
+        NOu1SkUKutRkDM/iTBbcd1E=
+X-Google-Smtp-Source: APXvYqypVQbIptRxZbWO4OESOGCBjxgP1jLmEUbZYgewaa0EuMPpeITisCxAjn+XI/8xMN4HpeSQVw==
+X-Received: by 2002:a1c:e912:: with SMTP id q18mr5976460wmc.137.1554979657350;
+        Thu, 11 Apr 2019 03:47:37 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id k4sm54987587wro.33.2019.04.11.03.47.35
+        by smtp.gmail.com with ESMTPSA id k4sm54987587wro.33.2019.04.11.03.47.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 11 Apr 2019 03:47:36 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
@@ -65,61 +65,56 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 0/8] Add Allwinner H6 Mali Midgard GPU
-Date:   Thu, 11 Apr 2019 12:57:12 +0200
-Message-Id: <20190411105720.32357-1-peron.clem@gmail.com>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v2 1/8] dt-bindings: gpu: mali-midgard: Add resets property
+Date:   Thu, 11 Apr 2019 12:57:13 +0200
+Message-Id: <20190411105720.32357-2-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190411105720.32357-1-peron.clem@gmail.com>
+References: <20190411105720.32357-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-The Allwinner H6 has a Mali-T720 MP2. The drivers are
-out-of-tree so this series only introduce the dt-bindings.
+The Amlogic ARM Mali Midgard requires reset controls to power on and
+software reset the GPU, adds these as optional in the bindings.
 
-The first patch is from Neil Amstrong and has been already
-merged in linux-amlogic. It is required for this series.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-The second patch is from Icenowy Zheng where I changed the
-order has required by Rob Herring.
-See: https://patchwork.kernel.org/patch/10699829/
-
-The GPU opp table was taken from Jernej Škrabec's patch
-on LibreELEC.tv.
-
-Thanks,
-Clement
-
-Changes in v2 (Thanks to Maxime Ripard):
- - Drop GPU OPP Table
- - Add clocks and clock-names in required
-
-Clément Péron (7):
-  dt-bindings: gpu: add bus clock for Mali Midgard GPUs
-  dt-bindings: gpu: mali-midgard: Add h6 mali gpu compatible
-  arm64: dts: allwinner: Add ARM Mali GPU node for H6
-  arm64: dts: allwinner: Add mali GPU supply for Pine H64
-  arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
-  arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
-  arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
-
-Neil Armstrong (1):
-  dt-bindings: gpu: mali-midgard: Add resets property
-
- .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
- .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
- 6 files changed, 61 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 18a2cde2e5f3..1b1a74129141 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -37,6 +37,20 @@ Optional properties:
+ - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+   for details.
+ 
++- resets : Phandle of the GPU reset line.
++
++Vendor-specific bindings
++------------------------
++
++The Mali GPU is integrated very differently from one SoC to
++another. In order to accomodate those differences, you have the option
++to specify one more vendor-specific compatible, among:
++
++- "amlogic,meson-gxm-mali"
++  Required properties:
++  - resets : Should contain phandles of :
++    + GPU reset line
++    + GPU APB glue reset line
+ 
+ Example for a Mali-T760:
+ 
 -- 
 2.17.1
 
