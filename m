@@ -2,132 +2,149 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AA5C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46576C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0633C2073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179982075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 16:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554999802;
-	bh=uRaUuNgJy+ETLKY+TrZW6hwLlPxxWHbreqSGUu3Em/M=;
+	s=default; t=1554999911;
+	bh=5ZY6Ux4o/b4SgaHZR1GuMTomVW6gaqvwWf8MJYCI0dw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1AFCe0qnPt+wHTWPRiDZvLevy1H5a6d35lKwza3di6fJ2PN+pkGNorqkVGTPMF6jT
-	 7+9wolUN9UtfS0cbCg2bsNqUFjQsu9gkVikjxigLSYfAbwlyFm4zbCojsnCyGH2wpY
-	 kr53iJS/Bt6/hfC4PqS5jbUJBcptD8O8/mOpUxWI=
+	b=VFOGBl7WA37G48/eQtMng6LTXrwsp0AzmmHTCWrBOV8CA0wLvOzODFmxg+vHeBKBL
+	 RtcMJ/V4mD9EOvODtFzIkktJBMIFg4RTc4bDnMYW+dc90EZlgh+VW4mtneqJYj6vmi
+	 oGw4Kud3dtQPaipHRWVzaAgc6r0+TPHSgQR0fHGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfDKQXU (ORCPT
+        id S1726785AbfDKQZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 12:23:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35539 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfDKQXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 12:23:20 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u21so5197577lfu.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SQG3fAkiUV20bO26Ld6sJCHOpwS1q4hdpfdFqRoHxoM=;
-        b=Z0Q1fOHSPCHOhBg1JKd5iEmmQ0/jsnNt7NEQOMpZAIi6DdydVfjj6QnQaEXX8Gz+7s
-         YA+8bHIkuUumGy6mZX/ZcdzE9pt3vuwrZDx20oUfvX5bVG0wUueotFvbNY6WU+TbLZyz
-         Wi3ZJegqCN6RjJ9Nr2IbBVaSy0zQ/mtMc35l4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SQG3fAkiUV20bO26Ld6sJCHOpwS1q4hdpfdFqRoHxoM=;
-        b=lafeijIsMCaZo1LaSR3p5FJnoB7Z4teiFKy1wyiyLxx6WCeYyZd/yDlv211/vvwAYb
-         ukqM+17+HyQ5BuPuF6S9x54x9gERvJhB6e7Dg28qKLHm45qgM9NmytNpzzGjEOiWRPix
-         c0Ck6vyzFCrTiX7vvccAzXEDmnQ41obeEv6YWcGneI7cJPOq8Wzuk7i3AQCEjU+IyYKX
-         xMRCUvBJTvFv3DZU9Jj4CBMVER5RmJ87g7pDVGS65fb5tPLnZSCadXOLyGqXvlwfrolq
-         c2LxmkhBVWycdslgrhDvPuO0NbSdsxttLhgcpFCDa1Y41BNnes04JgxEu0XKSdUX+8Yc
-         iZmA==
-X-Gm-Message-State: APjAAAWH+wQrdGS9M1uszJqKR4YTY5nXyEM37vXxkXH5hNgNkFMfOysc
-        52tQxckTBHAKJBkCv9GdHhxJSkPD6II=
-X-Google-Smtp-Source: APXvYqyYiwHEQ7PeNuYWQ5whK4CTr6I3/nwCw3fMMWLD6l2NnLzltEXWbiFqsRZDZU4PeZMbR9yAWQ==
-X-Received: by 2002:a19:2d57:: with SMTP id t23mr6437198lft.99.1554999797881;
-        Thu, 11 Apr 2019 09:23:17 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id g24sm7683159lfb.49.2019.04.11.09.23.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 09:23:13 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id o19so838372lfl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 09:23:13 -0700 (PDT)
-X-Received: by 2002:a19:a40b:: with SMTP id q11mr27540073lfc.33.1554999793169;
- Thu, 11 Apr 2019 09:23:13 -0700 (PDT)
+        Thu, 11 Apr 2019 12:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfDKQZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 12:25:09 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E505D21872;
+        Thu, 11 Apr 2019 16:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554999908;
+        bh=5ZY6Ux4o/b4SgaHZR1GuMTomVW6gaqvwWf8MJYCI0dw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SXpAXQvTaCl36WoCz9YvXugpE9tYxXXgzKj8teUtmAvSIZ8LDgS8Uqp4Iu0Df3bcP
+         kx3gAOK2wzWtQClj+N142dDBB6ArHpsMTwBxwrCte0qI0tS2snA6nhG03A58lrZ59O
+         oei7Wr5RRi57AXFumiZFMtvDDeidAfLACZIucUKc=
+Received: by mail-qt1-f170.google.com with SMTP id k14so7850780qtb.0;
+        Thu, 11 Apr 2019 09:25:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAXVA/vpajSun+Yc/SVJt6cYhEd0Zy3CmN6ccpLhmw0t8/zivnMV
+        0ki5RtwG5IoLPnc62j9ci5IATN9UBtksQd0SCA==
+X-Google-Smtp-Source: APXvYqzE0tsPgw0s58ddryR0M9hBIh+DzVt0fXHNwUM3dxgOkROFgx4a8YoH3FTR3cyh8/QKsrPCFxbEc8lhUPg+qtk=
+X-Received: by 2002:ac8:3f6f:: with SMTP id w44mr40633789qtk.59.1554999907079;
+ Thu, 11 Apr 2019 09:25:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com>
- <4c4651e2-167e-bfcc-7b3e-cda118f98a69@rasmusvillemoes.dk> <20190409203807.GA13855@deco.navytux.spb.ru>
- <d8c23d05-8810-13a2-cc50-7a47ff35e90b@rasmusvillemoes.dk> <20190411123816.GA18309@deco.navytux.spb.ru>
-In-Reply-To: <20190411123816.GA18309@deco.navytux.spb.ru>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 11 Apr 2019 09:22:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whJtZt52SnhBGrNMnuxFn3GE9X_e02x8BPxtkqrfyZukw@mail.gmail.com>
-Message-ID: <CAHk-=whJtZt52SnhBGrNMnuxFn3GE9X_e02x8BPxtkqrfyZukw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] fs: stream_open - opener for stream-like files so
- that read and write can run simultaneously without deadlock
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190411105720.32357-1-peron.clem@gmail.com> <2957024.jOddxINRMN@jernej-laptop>
+ <CAJiuCcdo_WAP1_rOcqOcoNkt7rdGb3H_GVMN2DiZnvo_4c=7DA@mail.gmail.com>
+ <2797515.ZAugZ1JPiN@jernej-laptop> <20190411152752.qlabx7heh74dy2ao@flea>
+In-Reply-To: <20190411152752.qlabx7heh74dy2ao@flea>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 11 Apr 2019 11:24:54 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJAwxxZqokOYfxfSu05AxjAtts_vKajGFpDhyvqb2sO5Q@mail.gmail.com>
+Message-ID: <CAL_JsqJAwxxZqokOYfxfSu05AxjAtts_vKajGFpDhyvqb2sO5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 5:38 AM Kirill Smelkov <kirr@nexedi.com> wrote:
+On Thu, Apr 11, 2019 at 10:27 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
 >
-> However file->f_pos writing is still there and it will bug under race
-> detector, e.g. under KTSAN because read and write can be running
-> simultaneously. Maybe it is not only race bug, but also a bit of
-> slowdown as read and write code paths write to the same memory thus
-> needing inter-cpu synchronization if read and write handlers are on
-> different cpus. However for this I'm not sure.
+> On Thu, Apr 11, 2019 at 05:23:25PM +0200, Jernej =C5=A0krabec wrote:
+> > Dne =C4=8Detrtek, 11. april 2019 ob 17:20:04 CEST je Cl=C3=A9ment P=C3=
+=A9ron napisal(a):
+> > > Hi,
+> > >
+> > > On Thu, 11 Apr 2019 at 17:05, Jernej =C5=A0krabec <jernej.skrabec@sio=
+l.net>
+> > wrote:
+> > > > Dne =C4=8Detrtek, 11. april 2019 ob 12:57:16 CEST je Cl=C3=A9ment P=
+=C3=A9ron napisal(a):
+> > > > > Add the mali gpu node to the H6 device-tree.
+> > > > >
+> > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > > ---
+> > > > >
+> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
+> > > > >  1 file changed, 14 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
+> > > > > e0dc4a05c1ba..196753110434 100644
+> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > @@ -157,6 +157,20 @@
+> > > > >
+> > > > >                       allwinner,sram =3D <&ve_sram 1>;
+> > > > >
+> > > > >               };
+> > > > >
+> > > > > +             gpu: gpu@1800000 {
+> > > > > +                     compatible =3D "allwinner,sun50i-h6-mali",
+> > > > > +                                  "arm,mali-t720";
+> > > > > +                     reg =3D <0x01800000 0x4000>;
+> > > > > +                     interrupts =3D <GIC_SPI 84
+> > > >
+> > > > IRQ_TYPE_LEVEL_HIGH>,
+> > > >
+> > > > > +                                  <GIC_SPI 85
+> > > >
+> > > > IRQ_TYPE_LEVEL_HIGH>,
+> > > >
+> > > > > +                                  <GIC_SPI 83
+> > > >
+> > > > IRQ_TYPE_LEVEL_HIGH>;
+> > > >
+> > > > > +                     interrupt-names =3D "job", "mmu", "gpu";
+> > > > > +                     clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_GP=
+U>;
+> > > > > +                     clock-names =3D "core", "bus";
+> > > > > +                     resets =3D <&ccu RST_BUS_GPU>;
+> > > > > +                     status =3D "disabled";
+> > > >
+> > > > Usually self sufficient peripherals are enabled by default in DTSI.
+> > >
+> > > I follow the other Mali Midgard (rk3399, rk3288) syntax.
+> > > But I think you're right here, will go for an update I think.
+> >
+> > I quickly checked A64 and H5 DTSI and both have GPU enabled by default =
+(status
+> > property is not set).
+>
+> I asked myself the same question, but the H6 seems to have a supply
+> wired to the GPU, while the H3 and H5 do not. So I'm not sure we want
+> to enable it on all the boards, even though some might have left out
+> the GPU supply which will result in a non-working GPU (I assume?)
 
-I doubt it's noticeable, but it would probably be good to simply not
-do the write for streams.
+If the default state is enabled, then only devfreq will be disabled
+for panfrost, but it should otherwise work. I guess we could be
+smarter and just do frequency changes if all the OPP voltages are the
+same.
 
-That *could* be done somewhat similarly, with just changing th address
-to be updated, or course.
-
-In fact, we *used* to (long ago) pass in the address of "file->f_pos"
-itself to the low-level read/write routines. We then changed it to do
-that indirection through a local copy of pos (and
-file_pos_read/file_pos_write) because we didn't do the proper locking,
-so different read/write versions could mess with each other (and with
-lseek).
-
-But one of the things that commit 9c225f2655e36 ("vfs: atomic f_pos
-accesses as per POSIX") did was to add the proper locking at least for
-the cases that we care about deeply, so we *could* say that we have
-three cases:
-
- - FMODE_ATOMIC_POS: properly locked,
- - FMODE_STREAM: no pos at all
- - otherwise a "mostly don't care - don't mix!"
-
-and so we could go back to not copying the pos at all, and instead do
-something like
-
-        loff_t *ppos = f.file->f_mode & FMODE_STREAM ? NULL : &file->f_pos;
-        ret = vfs_write(f.file, buf, count, ppos);
-
-and perhaps have a long-term plan to try to get rid of the "don't mix"
-case entirely (ie "if you use f_pos, then we'll do the proper
-locking")
-
-(The above is obviously surrounded by the fdget_pos()/fdput_pos() that
-implements the locking decision).
-
-           Linus
+Rob
