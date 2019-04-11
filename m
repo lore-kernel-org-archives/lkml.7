@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A24C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5781C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD23217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0260217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxZoSA75"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIN27jXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfDKPe3 (ORCPT
+        id S1726918AbfDKPef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:34:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40942 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfDKPe0 (ORCPT
+        Thu, 11 Apr 2019 11:34:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34447 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfDKPe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:34:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z24so7300038wmi.5;
+        Thu, 11 Apr 2019 11:34:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so2227467wmf.1;
         Thu, 11 Apr 2019 08:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SozNhT2OtvD1y/bOycdOEJJ/v75NKtQxo1gdu9KLF8o=;
-        b=dxZoSA75YT9PfcuIAR/lxfUfb3vjmYNwSoUklHaA5x15otrXzSoBi6p2diI2H9TfbD
-         wGLohdtDEQYf+JttyQ7/laI3La0GGphWJHKB+bMbygO/u5lcEe1SOM6e/bL/wW35QOrW
-         pp04z2Ufxc9yIQIVSyXffUbV0PkBuHJobfkSaR0Zvr8vqAQI3kpG3SwfVowk68R3FrB0
-         jy5YyhjozOdKSI+fx6s73mGbY1nNJhkA+6xWgHN0x7FGxc4rgmZfYgk5OW+kbsLgvG6T
-         VDadsRJdnOaHgb7AedQNHBUdtN2qDc5ifjWSLzqMZIihYRQWBpDyCxsDxDdj60SVIcIB
-         IzJw==
+        bh=r9wE08WFWjh0xFwSx2AERYeUXb2IDNuVR3sIckyG8ws=;
+        b=eIN27jXpw+XRgfDAFyLMlvsSe3oU+9B4e0qJy69pPF/npzb20zfqz9XB9nZY2RH6bL
+         5R5xRZAyLgawFzsvgny+ODIdjTvTWSPmOCxLg8RdylblsMOP8z05jKT9O450sBBJiTjb
+         Jx8en6T/1lX6d0Bn3GkYzfW2Mn1nuOdteWX5H0vga6gm+QH+h0+F+LTnuR5LYhr1lcKr
+         /3+oLEfix1GjGF8ZbiXHHwCmgK3uAr43fmvG0pv/VLOUMtsgBn+Tmm52FSH2j0JIIQUs
+         1ag0NsXCDo2LkkVIuVrvWUqBeC9jdqCvsqndPuW2DwGc3YdrkqRW2Ah5kKx1U/k9T+/v
+         KhRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SozNhT2OtvD1y/bOycdOEJJ/v75NKtQxo1gdu9KLF8o=;
-        b=OuKS1/HNMOcLXkbRDbCkC7p9+2ixSldVDf850aQeuFc0TSzjafKugyh3rS1w02Fjpe
-         yOVWV0FFT0DHA7TCPWJWH7+rNPPuIA+1yw/T0OaqADdeBbeWGq6JTGSjFEJZMGcdS1gd
-         C9DkwKkQNQLby7iJL/3uZdoENCuJKJR8bFhEh2Adt/M0WNFt3QZ0nmShrBy/W8e1WZ35
-         F5yYWhauPBQPnMm18n0y8QUbupfaq62s2WdneYs49+t5IPv4FPPxj52NPaRsdlqrpizJ
-         br3Ac2mJOchaZPmjtiPCPWkRKsh8QSawpoND4KDrJjAO5zItrEJfNBB2UPnvW7bneslr
-         eSsA==
-X-Gm-Message-State: APjAAAUht/4NrGZvGHIjqrSV2zxqdfYu+4opJ/Qjh4rLOU6oYavFNCXJ
-        URxi0v6PWXoqgH7BTzPQ0HA=
-X-Google-Smtp-Source: APXvYqzDWIDY4EX535+8pXqQfcs5bOKhLxYyoGXH1kdfsJ3x1nSr+rCWgvvEOWUV37g655S+Wzo+Ng==
-X-Received: by 2002:a1c:a8d3:: with SMTP id r202mr7471219wme.106.1554996865191;
+        bh=r9wE08WFWjh0xFwSx2AERYeUXb2IDNuVR3sIckyG8ws=;
+        b=E9tD4N5dXB3VkM5RaQuwUTpXZiAczUM5vG3Xkoz5rM5vPDcHT8DTAnevNYTqb1SEBm
+         sc6jmpbPgri+BB2dMQka3D4PaB4EBCpB/GfeUz5zacyNyt/Z8UkEdI5uDNrTm7wz2xZx
+         4hwQvCohm486+cE9kH7QLYjuHCU7zeY8DomQDmZ/8tDJZd4XJBuqd7rzLPT9zQYza5oO
+         ooaiEbpssi7mFrucj0Y5gi863Z5THcqYsjsAGJcK0e6Ff0R3XbDP9nPXhnizCEtBf6VV
+         zwkv1yV6sfrmxr9S8x6iU7UkReR3xsDjSBaR8TXW5qi09QiY5IK1WZyYyQwyKfOzvZBj
+         oDFw==
+X-Gm-Message-State: APjAAAVDjOKs8TojGQ9ACegHWeq0Fs0KkgUxKjenHyi2vWlI+a24u5QE
+        83yx/ZPOay7QTSDKEvQxkIg=
+X-Google-Smtp-Source: APXvYqwXNsVvKYOVESNy97iJrAdFkYCGIXe2DT53s1nwBao8iv383NGWsBSdo5HS7t5NFhzH/sX98Q==
+X-Received: by 2002:a7b:c309:: with SMTP id k9mr7119885wmj.45.1554996865923;
         Thu, 11 Apr 2019 08:34:25 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id e12sm38327342wrt.94.2019.04.11.08.34.23
+        by smtp.gmail.com with ESMTPSA id e12sm38327342wrt.94.2019.04.11.08.34.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 08:34:24 -0700 (PDT)
+        Thu, 11 Apr 2019 08:34:25 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -63,9 +63,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 2/3] arm64: dts: allwinner: h6: add r_watchog node
-Date:   Thu, 11 Apr 2019 17:45:33 +0200
-Message-Id: <20190411154534.25563-3-peron.clem@gmail.com>
+Subject: [PATCH v2 3/3] arm64: defconfig: Enable Sunxi watchdog
+Date:   Thu, 11 Apr 2019 17:45:34 +0200
+Message-Id: <20190411154534.25563-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190411154534.25563-1-peron.clem@gmail.com>
 References: <20190411154534.25563-1-peron.clem@gmail.com>
@@ -77,33 +77,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has a r_watchdog similar to A64.
+The SUNXI_WATCHDOG option is required to make the
+watchdog available on Allwinner H6.
 
-Declare it in the device-tree.
+Enable this option as a module.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 5c2f5451227b..66dc684a378e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -622,6 +622,13 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		r_watchdog: watchdog@7020400 {
-+			compatible = "allwinner,sun50i-a64-wdt",
-+				     "allwinner,sun6i-a31-wdt";
-+			reg = <0x07020400 0x20>;
-+			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		r_intc: interrupt-controller@7021000 {
- 			compatible = "allwinner,sun50i-h6-r-intc",
- 				     "allwinner,sun6i-a31-r-intc";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2d9c39033c1a..c266d6babbcc 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -426,6 +426,7 @@ CONFIG_UNIPHIER_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_S3C2410_WATCHDOG=y
++CONFIG_SUNXI_WATCHDOG=m
+ CONFIG_IMX2_WDT=y
+ CONFIG_MESON_GXBB_WATCHDOG=m
+ CONFIG_MESON_WATCHDOG=m
 -- 
 2.17.1
 
