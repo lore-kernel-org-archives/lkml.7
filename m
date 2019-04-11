@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1066C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2752084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA362084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="EUtlKO63"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="eaxUedWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfDKJtx (ORCPT
+        id S1727032AbfDKJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:49:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35787 "EHLO
+        Thu, 11 Apr 2019 05:49:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36638 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKJtu (ORCPT
+        with ESMTP id S1726723AbfDKJtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:49:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w1so6469566wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:49:48 -0700 (PDT)
+        Thu, 11 Apr 2019 05:49:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y13so6482765wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 02:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Xe3zmOtQX79CwAOJYMJZBdjtOgtgwy/PDbrk/AW3QHA=;
-        b=EUtlKO63GfGO67aOehAec8SmGd/nk3JLaWunxIeLqrs03R2drBMWkLb1pOegpiQqGT
-         eyNXOAMg4Z2/6mFQHW1OG9LhxmAJYcB9scdJzEOjDeQC5OB+ETTl657UxPuM7MJz3553
-         hZejMWqQ02gpnX46/xky2+RTeJE3/fGdve6+iT9Rsy8sLqVFAgpnaiog2ahF34ICcz1+
-         MHzskzz1NlBZFNR1q79R3cdbCyyMmleA3A1xGR9BZHP9XhJrJtiPNJe1CYlTfUD4epjm
-         jiZqcHtkI+udR8QLmigJ914twXcdH97S6iUmVGZzMM96gp44GdQ4Zd/Y+zy+j1BoSu4J
-         OhMQ==
+        bh=EbUPiQp2kWySHUg2pHoKdbGhBipl1kAQxXY6evo+BeI=;
+        b=eaxUedWV3P1+PcOHA8Rop3EY6By1dwyCijaXakxZp/oP4pNy/JEh2zKOcee/lcXKPg
+         cZlJJcOEpHdLA5bFYrYYbH73h5wf2rASKLrtxj5/ib/Hpp02PzDG2W25I0CIRLLigD3p
+         //e9ZHsM6Wdtj8brqA+9LLhuDscC+67HAS62UzrUCZR5/SZfM15T7Uua2B7pjP71WTyS
+         bsq8rokvGHt+YbuHyVfAOXBnExnZziGoGCA/tz4/fYQ9LLBgv74CouW1GzmSewVYxDKy
+         akEsA3PHjPsDOQUL86MAnLjjeCNNYv6+IDobpRAjNiXg8O9JdRMPUcICBPe03JoWayky
+         +GaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Xe3zmOtQX79CwAOJYMJZBdjtOgtgwy/PDbrk/AW3QHA=;
-        b=G32OhqFOQcQPsLDfXxM1S5cXt6svFkdll8yNz0O87yQv/SIpYHgdAms2YHjnrH/M95
-         Q9S0udCR2oWfj441GWsfeIYui7MN3uSnA1RZW5L11wyTO/hdQDL4ixSnI349ofKMaHTf
-         N2sHI9uV54K5eUmt7oyPad0nVGkMh+aae9RpL8Vv2uHCjwhqIMJuSdDfSqY0bGeXNE6y
-         qcuA6ype8zKPoXpYfcogsCcZ16i8dtIlLxyd3ln29/y3sk/mXrNsW0k3M1qH5CSYZvYl
-         R4QZQ6FSt/KWgGf+Dij8hvC9lrwR7EWqhET4KkjZvAh+D7T9Tc+KMCfpzBeYKn0wMZCg
-         nzww==
-X-Gm-Message-State: APjAAAW6zxYtfhsmrsXLF2Jyt21cM0Es38gbXN9PcTx82CxDw7lX6u4u
-        2dU7SPjy6rJUZC9MG5WHiF3Iwg==
-X-Google-Smtp-Source: APXvYqwumXD8ejWGGa6gXojFGDwIV6EOoGJqjUJHNLy9yffPzWFblPtKyobOwFTiAttBQcod6p17IQ==
-X-Received: by 2002:a5d:6b10:: with SMTP id v16mr32563689wrw.294.1554976188382;
-        Thu, 11 Apr 2019 02:49:48 -0700 (PDT)
+        bh=EbUPiQp2kWySHUg2pHoKdbGhBipl1kAQxXY6evo+BeI=;
+        b=DatOaOmEMOE03Sri03FaGHRfdMI8RrjV5AAsS0dQ01nmYGCilgzo4A1WpW+W4LDr63
+         N5lSzfe/ij3vkRQhOo3AcfGsXBkaFnxF3lqrCEq2fc/8x2aa+M37klf4IqOidKHNLCNJ
+         +j/mc97osyc3ksFFwu0IQKbIhLVAnLAz23cmvFBIJ8K7S2gzohnfLhqT6rAKT7C0vC34
+         Qu/X14jUArAzZWWFtaZ4RN+RSdsYUJzwX6mKNLkEmseteJbDJZJ7yg7YCX6vUFYJvgJ8
+         L31juTgvTa6jTpiHcbJT0g4s7B4hoUbJCnrot9ZwZl2/BPiiFdWVK6I2YBRwkn+Gqmun
+         bMbQ==
+X-Gm-Message-State: APjAAAXv7n+jq+jfEUo0lnsBkDihiaIcM+T/fyzrHpdSyshhEukgtTt6
+        Bk2lwhQXnDR3iBpU3Ppl8kmdNg==
+X-Google-Smtp-Source: APXvYqwI5SBUMk5lZ+2gjo54JM5EAbnObI4CyZ7nShgZIzrO2++rlJesvE+964Tio+8RfhPbgpPe0g==
+X-Received: by 2002:adf:eb02:: with SMTP id s2mr33041841wrn.29.1554976191924;
+        Thu, 11 Apr 2019 02:49:51 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id s10sm6434066wmh.0.2019.04.11.02.49.47
+        by smtp.gmail.com with ESMTPSA id s10sm6434066wmh.0.2019.04.11.02.49.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 02:49:47 -0700 (PDT)
+        Thu, 11 Apr 2019 02:49:51 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH 1/4] um: remove unused variable
-Date:   Thu, 11 Apr 2019 11:49:41 +0200
-Message-Id: <20190411094944.12245-2-brgl@bgdev.pl>
+Subject: [RESEND PATCH 4/4] um: irq: don't set the chip for all irqs
+Date:   Thu, 11 Apr 2019 11:49:44 +0200
+Message-Id: <20190411094944.12245-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411094944.12245-1-brgl@bgdev.pl>
 References: <20190411094944.12245-1-brgl@bgdev.pl>
@@ -77,27 +77,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The buf variable is unused. Remove it.
+Setting a chip for an interrupt marks it as allocated. Since UM doesn't
+support dynamic interrupt numbers (yet), it means we cannot simply
+increase NR_IRQS and then use the free irqs between LAST_IRQ and NR_IRQS
+with gpio-mockup or iio testing drivers as irq_alloc_descs() will fail
+after not being able to neither find an unallocated range of interrupts
+nor expand the range.
+
+Only call irq_set_chip_and_handler() for irqs until LAST_IRQ.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 ---
- arch/um/kernel/skas/uaccess.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/um/kernel/irq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/um/kernel/skas/uaccess.c b/arch/um/kernel/skas/uaccess.c
-index 7f06fdbc7ee1..bd3cb694322c 100644
---- a/arch/um/kernel/skas/uaccess.c
-+++ b/arch/um/kernel/skas/uaccess.c
-@@ -59,7 +59,6 @@ static pte_t *maybe_map(unsigned long virt, int is_write)
- static int do_op_one_page(unsigned long addr, int len, int is_write,
- 		 int (*op)(unsigned long addr, int len, void *arg), void *arg)
- {
--	jmp_buf buf;
- 	struct page *page;
- 	pte_t *pte;
- 	int n;
+diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
+index f4874b7ec503..598d7b3d9355 100644
+--- a/arch/um/kernel/irq.c
++++ b/arch/um/kernel/irq.c
+@@ -479,7 +479,7 @@ void __init init_IRQ(void)
+ 	irq_set_chip_and_handler(TIMER_IRQ, &SIGVTALRM_irq_type, handle_edge_irq);
+ 
+ 
+-	for (i = 1; i < NR_IRQS; i++)
++	for (i = 1; i < LAST_IRQ; i++)
+ 		irq_set_chip_and_handler(i, &normal_irq_type, handle_edge_irq);
+ 	/* Initialize EPOLL Loop */
+ 	os_setup_epoll();
 -- 
 2.21.0
 
