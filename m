@@ -2,109 +2,118 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E24C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F2EC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3098C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="t6HVnbos"
+	by mail.kernel.org (Postfix) with ESMTP id B9F552133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfDKK5K (ORCPT
+        id S1726823AbfDKK5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:57:10 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:37958 "EHLO
-        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfDKK5K (ORCPT
+        Thu, 11 Apr 2019 06:57:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56463 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726215AbfDKK5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:57:10 -0400
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id E0A695C025A;
-        Thu, 11 Apr 2019 12:57:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1554980227;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fS6LpPjEpfYrPcydTCdPI5FsuCGhHMg8YJ3B6ys1UrI=;
-        b=t6HVnbosdcljje5KzdmLmrWCjYDdSFhy9fA1ti4hBOzVaAw6d4ID95EdUhQyWKPmblMZWg
-        WxPbcwb/IpdSBZZpSg1bIVar5F7y7k+qCtyCOBygN3GEWMGi7M5T9vSspWeVf4KMjaAU0N
-        dFS9VH01PTq+t08aZuiYIvqJH2/YnYU=
+        Thu, 11 Apr 2019 06:57:19 -0400
+X-UUID: 474c8febed2d445b897e13ac48bd3950-20190411
+X-UUID: 474c8febed2d445b897e13ac48bd3950-20190411
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1554356599; Thu, 11 Apr 2019 18:57:11 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 11 Apr 2019 18:57:09 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Apr 2019 18:57:09 +0800
+Message-ID: <1554980229.27008.4.camel@mtksdaap41>
+Subject: Re: [PATCH v2 14/25] drm/medaitek: add layer_nr for ovl private data
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
+        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Thu, 11 Apr 2019 18:57:09 +0800
+In-Reply-To: <1553667561-25447-15-git-send-email-yongqiang.niu@mediatek.com>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-15-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 11 Apr 2019 12:57:07 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     thierry.reding@gmail.com, digetx@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra-owner@vger.kernel.org
-Subject: Re: [PATCH] gpu: host1x: fix compile error when IOMMU API is not
- available
-In-Reply-To: <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
-References: <4c3d021c73c001f633803e364cfbc6ace3381205.1554936354.git.stefan@agner.ch>
- <7371b1573ddd0b127713724ef5051a6f@codethink.co.uk>
-Message-ID: <53b179ccdc64326438a1335db9ecd916@agner.ch>
-X-Sender: stefan@agner.ch
-User-Agent: Roundcube Webmail/1.3.7
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 4A29E8A5A2798424AD776A0006797D6F7DEB842A90BCB0FA8FF5EA40D0713D4C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.2019 10:23, Ben Dooks wrote:
-> On 2019-04-10 23:47, Stefan Agner wrote:
->> In case the IOMMU API is not available compiling host1x fails with
->> the following error:
->>   In file included from drivers/gpu/host1x/hw/host1x06.c:27:
->>   drivers/gpu/host1x/hw/channel_hw.c: In function ‘host1x_channel_set_streamid’:
->>   drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit
->> declaration of function
->>     ‘dev_iommu_fwspec_get’; did you mean ‘iommu_fwspec_free’?
->> [-Werror=implicit-function-declaration]
->>   struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
->>                               ^~~~~~~~~~~~~~~~~~~~
->>                               iommu_fwspec_free
->>
->> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> 
-> would it be better to provide something like this i nthe header that
-> defines dev_iommu_fwspec_get() to be:
-> 
-> static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device
-> *dev) { return NULL; }
-> 
-> although returning an PTR_ERR would have been better.
-> 
+Hi, Yongqiang:
 
-The problem is that the code also accesses fields of struct iommu_fwspec
-which are not defined in the !CONFIG_IOMMU_API case.
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add layer_nr for ovl private data
+> ovl_2l almost same with with ovl hardware, except the
+> layer number for ovl_2l is 2 and ovl is 4.
+> this patch is a preparation for ovl-2l and
+> ovl share the same driver.
 
---
-Stefan
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
->> ---
->>  drivers/gpu/host1x/hw/channel_hw.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/host1x/hw/channel_hw.c
->> b/drivers/gpu/host1x/hw/channel_hw.c
->> index 27101c04a827..4030d64916f0 100644
->> --- a/drivers/gpu/host1x/hw/channel_hw.c
->> +++ b/drivers/gpu/host1x/hw/channel_hw.c
->> @@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct
->> host1x_job *job)
->>
->>  static void host1x_channel_set_streamid(struct host1x_channel *channel)
->>  {
->> -#if HOST1X_HW >= 6
->> +#if IS_ENABLED(CONFIG_IOMMU_API) &&  HOST1X_HW >= 6
->>  	struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
->>  	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index afb313c..a0ab760 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -60,6 +60,7 @@
+>  struct mtk_disp_ovl_data {
+>  	unsigned int addr;
+>  	unsigned int gmc_bits;
+> +	unsigned int layer_nr;
+>  	bool fmt_rgb565_is_0;
+>  };
+>  
+> @@ -137,7 +138,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
+>  
+>  static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
+>  {
+> -	return 4;
+> +	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
+> +
+> +	return ovl->data->layer_nr;
+>  }
+>  
+>  static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
+> @@ -342,12 +345,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+>  static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT2701,
+>  	.gmc_bits = 8,
+> +	.layer_nr = 4,
+>  	.fmt_rgb565_is_0 = false,
+>  };
+>  
+>  static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+>  	.addr = DISP_REG_OVL_ADDR_MT8173,
+>  	.gmc_bits = 8,
+> +	.layer_nr = 4,
+>  	.fmt_rgb565_is_0 = true,
+>  };
+>  
+
+
