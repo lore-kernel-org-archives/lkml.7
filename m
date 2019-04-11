@@ -2,108 +2,140 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C16C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BC7C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6622070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555016645;
-	bh=rBrc//Q8zkoBO+A9SsRSKoG9WGpSqk/8v99bH2iG5No=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DD57mHxEpzPxEFS2JOfMLSDicn2KskBWMAgosan7jC0dL6fpeFKDft2UztSSbQBUe
-	 FlZVAIcKFDGtN7oEHwl21JSXP7GWh9LWq5Idm0z2kWSITcfrR3pm4gFOwKZgmIOCjz
-	 THRwpDBON3XfIoHoKahU1MsjMKT7wdeiqYBjtQ5M=
+	by mail.kernel.org (Postfix) with ESMTP id 3DC532070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbfDKVEE (ORCPT
+        id S1727133AbfDKVEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfDKVED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:04:03 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FE532146F;
-        Thu, 11 Apr 2019 20:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555016203;
-        bh=rBrc//Q8zkoBO+A9SsRSKoG9WGpSqk/8v99bH2iG5No=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wPDQirIsuHS5B2351kVZEj22FJLGqwUYvVMz4uKk743DHmbgBnRF3JgLtTuw8ph0E
-         WaCg0I1PWscaFjRPzGnAO/jGP47dAx4wE2onubgeXY7SL0OS/HYT/Aj0ka7jk2z81K
-         BEUUBQOqppvUjGPpabEkBIQe13AjAl2n+O5HhqSI=
-Date:   Thu, 11 Apr 2019 13:56:41 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: crypto: Kernel memory overwrite attempt detected to spans
- multiple pages
-Message-ID: <20190411205640.GE225654@gmail.com>
-References: <20190410031734.GB7140@sol.localdomain>
- <CAGXu5j+SZ2+Zkc=Vp5CXQUHhiR9f_OOnca684JTRW3T0yXdaNQ@mail.gmail.com>
- <20190410190729.GA120258@gmail.com>
- <CAGXu5j+Gfvj9G6s_UQTw6hE11gJb1edt3BXzpbDQdc_dpcHgag@mail.gmail.com>
- <20190410231156.GB120258@gmail.com>
- <CAGXu5jKg+oN7yUY=N69U93afOVHBPgwz6Osf=eMDPfiwbzEqmw@mail.gmail.com>
- <20190411175823.GC225654@gmail.com>
- <CAGXu5j+u3f3qUVkQO+zYLN7BDh3r7w-W3k3aa+qdAP11k7A1dw@mail.gmail.com>
- <20190411192607.GD225654@gmail.com>
- <CAGXu5jJo0jXhB5Xy0fryrYPy7zN2RhSsMb0r0DPQ91dNR0zPCA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jJo0jXhB5Xy0fryrYPy7zN2RhSsMb0r0DPQ91dNR0zPCA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 11 Apr 2019 17:04:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52698 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726830AbfDKVDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 17:03:40 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BKnqjH095436
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:03:39 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rtc9v261e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:03:38 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 11 Apr 2019 22:03:37 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 22:03:34 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3BL3U5429294784
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 21:03:31 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96B26AE05C;
+        Thu, 11 Apr 2019 21:03:30 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4692DAE05F;
+        Thu, 11 Apr 2019 21:03:30 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.endicott.ibm.com (unknown [9.60.75.235])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 11 Apr 2019 21:03:30 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH 2/7] s390: vfio-ap: implement in-use callback for vfio_ap driver
+Date:   Thu, 11 Apr 2019 17:03:19 -0400
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19041121-0064-0000-0000-000003C9BCC9
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010910; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01187698; UDB=6.00622145; IPR=6.00968461;
+ MB=3.00026399; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 21:03:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041121-0065-0000-0000-00003D07C1D1
+Message-Id: <1555016604-2008-3-git-send-email-akrowiak@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 01:36:37PM -0700, Kees Cook wrote:
-> On Thu, Apr 11, 2019 at 12:26 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > Well, I guess I'll just add __GFP_COMP so I at least don't get spammed with
-> > useless bug reports.
-> 
-> Thanks, I appreciate it.
-> 
-> > But I don't think it's in any way acceptable to change the semantics of the
-> > kernel's page allocator but only under some obscure config option, don't
-> > document it anywhere, ignore the known problems for years, say that the option
-> > is broken anyway so it shouldn't be used, and have to exchange 15 emails to get
-> > anything resembling an explanation.
-> 
-> I understand what you mean, yeah. I'm sorry I wasn't clear about it
-> earlier. What do you think might help the situation as far as
-> documentation?
-> 
+Let's implement the callback to indicate when an APQN
+is in use by the vfio_ap device driver. The callback is
+invoked whenever a change to the apmask or aqmask may
+result in one or APQNs being removed from the driver. The
+vfio_ap device driver will indicate a resource is in use
+if any of the removed APQNs are assigned to any of the matrix
+mdev devices.
 
-Explanation in Documentation/core-api/memory-allocation.rst of when to use
-__GFP_COMP and why.  Where "why" includes the real underlying reason why it's
-designed the way it is, not just "you now need to provide this flag in order to
-stop the hardened usercopy thing from crashing, even though previously it meant
-something else, because that's the way it is."
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_drv.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Also a brief, improved explanation of __GFP_COMP in include/linux/gfp.h.
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index e9824c35c34f..f340a28c1d65 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -139,6 +139,28 @@ static void vfio_ap_matrix_dev_destroy(void)
+ 	root_device_unregister(root_device);
+ }
+ 
++static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
++{
++	bool in_use = false;
++	struct ap_matrix_mdev *matrix_mdev;
++
++	mutex_lock(&matrix_dev->lock);
++
++	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
++		if (bitmap_intersects(matrix_mdev->matrix.apm,
++				      apm, AP_DEVICES) &&
++		    bitmap_intersects(matrix_mdev->matrix.aqm,
++				      aqm, AP_DOMAINS)) {
++			in_use = true;
++			break;
++		}
++	}
++
++	mutex_unlock(&matrix_dev->lock);
++
++	return in_use;
++}
++
+ static int __init vfio_ap_init(void)
+ {
+ 	int ret;
+@@ -154,6 +176,7 @@ static int __init vfio_ap_init(void)
+ 	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
+ 	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
+ 	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
++	vfio_ap_drv.in_use = vfio_ap_resource_in_use;
+ 	vfio_ap_drv.ids = ap_queue_ids;
+ 
+ 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
+-- 
+2.7.4
 
-Also get Documentation/security/self-protection.rst up to date with what's
-actually in the kernel.  Currently it doesn't mention hardened usercopy at all,
-and it's unclear about what's supported now vs. what is future work.
-
-And actually fix the known problems with the pagespan check, not ignore them for
-years.  If not feasible, remove the option.
-
-- Eric
