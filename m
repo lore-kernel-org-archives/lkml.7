@@ -2,105 +2,519 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4DDC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D29C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A924E20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65E420818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BFe4Euni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zOImD6iq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDKKXL (ORCPT
+        id S1726842AbfDKKXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:23:11 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:32476 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfDKKXL (ORCPT
+        Thu, 11 Apr 2019 06:23:20 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39345 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbfDKKXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:23:11 -0400
+        Thu, 11 Apr 2019 06:23:19 -0400
+Received: by mail-ua1-f68.google.com with SMTP id d5so1834830uan.6
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1554978190; x=1586514190;
-  h=from:to:subject:date:message-id:mime-version;
-  bh=ZdwRQPKamKRhDq4hZZRT4OqvNsRINrDHac1Ji29q3kM=;
-  b=BFe4EunidO+S6/DoqdcbX2wQwsfhRZkBifVzTKn3AVVtGsoZoWK2nmuY
-   bJkWWgIcBhhsLYVKtjaebo4b8y6cowr7xQ8Ns+YKKwoGMlEjE/mwoVSyQ
-   ZJQbjbacotZLyIFrq/Wac91JBHbSf3SH4ouI2OtElhbRVA+jh4/pVtNo7
-   g=;
-X-IronPort-AV: E=Sophos;i="5.60,337,1549929600"; 
-   d="scan'208";a="727378066"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Apr 2019 10:23:08 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x3BAN6k2067872
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 11 Apr 2019 10:23:06 GMT
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Apr 2019 10:23:05 +0000
-Received: from udc4a3e82dbc15a031435.hfa14.amazon.com (10.43.160.69) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 11 Apr 2019 10:22:58 +0000
-From:   Talel Shenhar <talel@amazon.com>
-To:     <talel@amazon.com>, <robh@kernel.org>, <edubezval@gmail.com>,
-        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <rui.zhang@intel.com>,
-        <hhhawa@amazon.com>, <ronenk@amazon.com>, <hanochu@amazon.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/2] Amazon's Annapurna Labs Thermal Sensor Driver
-Date:   Thu, 11 Apr 2019 13:22:46 +0300
-Message-ID: <1554978168-17369-1-git-send-email-talel@amazon.com>
-X-Mailer: git-send-email 2.7.4
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ut2L38zekwK6F4ctL2/MifUYYBJ6v3iS5EkFI0GvWqg=;
+        b=zOImD6iqnR8Spb5xDc048niGQlg9wXlnOoO45AWP9uX/auGxtvs4sCK8VY0AtaUuO7
+         jpThta0ow4Vl94aWgMcB8fc/NIyBRcrGuwb5odBotQTIOxujTI9dFrLJJ+Cv4lBsnNWM
+         NSzlcplxWHLkDlQY6feHvzUVtsStNgq9HbrC6wodQKVFp0AaknZbNDzzj3MKbXWVUrB+
+         EL27hBMiR1kLfA35MiZ612e0mhX76DLzM5giGDoEmBUC1josgue5KQNJLhMxbfpPsLlv
+         zNsFs+KvUpp6dYpcbzLAPA5hhC5ZmARpPIF42mDLLflkfed1S8uIWa1z445Jl14RhGvh
+         qIKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ut2L38zekwK6F4ctL2/MifUYYBJ6v3iS5EkFI0GvWqg=;
+        b=lQnULq14eOjTXknp82zPeDaEjLj1nVKiq+5UYcDfcoDxBiQYdPjBxVYSu4kp3lDm5X
+         dK53LxvGQigidEtMEl82ep81KAI4AaxLcCeeD5mlYmIzGNif+o6mXvfFIjsgGIqOsv1E
+         +1XjWTp7QxSqL8beC0KSlHHqV/FQXKoNErsJtZW4vLvNFhH+PaFODx0Lz4tBu9D+IPRP
+         YRKA1DFEfHnmctwaL1W2Dlr9lpeen7i7+PTizVt4djUGnqi5fiZ/DI1wP27OSrr9wOk1
+         9Dt0ZL8z/V/GFyPbZmaGb7TJbhuP4WEA5cl5+a6I9Z+Fb52yeyCQ7dYn6FXNjUSz0ItB
+         pbsg==
+X-Gm-Message-State: APjAAAVbS2c1suZyyGaiYZohClrsuNN3Aai0gThtROapsVK0BwCE99dv
+        Z0cTGGmuTu7MD33GrYsPUg52mUXIX6P51XGXv+kTQw==
+X-Google-Smtp-Source: APXvYqx2B3QF5TuvBPzbS1ck5H1wMwk3LgLGtoXTlwwtTqebyP7sUzJBBZodNaary6NmvFlPG1yWDVAqV7FcqPGx9/E=
+X-Received: by 2002:ab0:7486:: with SMTP id n6mr1684607uap.66.1554978198623;
+ Thu, 11 Apr 2019 03:23:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.69]
-X-ClientProxiedBy: EX13D15UWB001.ant.amazon.com (10.43.161.254) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+References: <1553576300-5895-1-git-send-email-orito.takao@socionext.com>
+In-Reply-To: <1553576300-5895-1-git-send-email-orito.takao@socionext.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 11 Apr 2019 12:22:42 +0200
+Message-ID: <CAPDyKFoydG-PK8v1UdSU7doYanwS5XtzGRa=eikmkq_Boy03Sw@mail.gmail.com>
+Subject: Re: [Milbeaut PATCH v0.4 2/2] mmc: sdhci_f_sdh30: Add support for
+ Milbeaut M10V host controller
+To:     Takao Orito <orito.takao@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jaswinder Singh <jaswinder.singh@linaro.org>,
+        sugaya.taichi@socionext.com, kasai.kazuhiro@socionext.com,
+        kanematsu.shinji@socionext.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces support for Amazon's Annapurna Labs Thermal Sensor
-based on a new simple MMIO thermal driver. This driver is intended to be
-used by other devices as well, which require just a simple MMIO access to
-read temperature. 
+On Tue, 26 Mar 2019 at 05:56, Takao Orito <orito.takao@socionext.com> wrote:
+>
+> SD Host controller on Milbeaut is consist of two controller parts.
+> One is core controller F_SDH30, this is similar to sdhci-fujitsu
+> controller.
+> Another is bridge controller.
+> This bridge controller is not compatible with sdhci-fujitsu controller.
+> This is special for Milbeaut series. This has some functions.
+> For example, reset control, clock enable/select for SDR50/25/12, set
+> property of SD physical pins, retuning control, set capabilityies.
+>
+> This bridge controller requires special procedures at reset or clock
+> enablement or change for further tuning of clock.
+>
+> This new driver uses GPIO descriptor from platform data to switch
+> the power.
+>
+> Signed-off-by: Takao Orito <orito.takao@socionext.com>
 
-Changes since v2:
-=================
-- dt-binding: changed node name from "thermal_z0" to "thermal-z0"
-- dt-binding: changed node name from thermalz0_crit to "critical"
+Looks like you should add a new variant driver instead of extending
+sdhci_f_sdh30.c.
 
-Changes since v1:
-==================
-- removed the "thermal_mmio" compatible string. With v2 version, only
-  specific hardware can bound
-- add initialization function that is mapped based on the specific binding
-  string
-- removed thermal_mmio_readl and thermal_readw, but kept mmio reads in
-  callback function. Left only thermal_mmio_reab which is used by
-  al-thermal
-- removed divider, bias, width which are not needed for al-thermal.
+If there are some registers bits or some other minor things that you
+want to share among these variants, you can always do that via a
+header file.
 
+Kind regards
+Uffe
 
-
-Talel Shenhar (2):
-  dt-bindings: thermal: al-thermal: Add binding documentation
-  thermal: Introduce Amazon's Annapurna Labs Thermal Driver
-
- .../bindings/thermal/amazon,al-thermal.txt         |  33 ++++++
- MAINTAINERS                                        |   6 +
- drivers/thermal/Kconfig                            |  10 ++
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/thermal_mmio.c                     | 129 +++++++++++++++++++++
- 5 files changed, 179 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
- create mode 100644 drivers/thermal/thermal_mmio.c
-
--- 
-2.7.4
-
+> ---
+>  drivers/mmc/host/sdhci_f_sdh30.c | 324 +++++++++++++++++++++++++++++++++++----
+>  1 file changed, 296 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+> index 485f759..994bafd 100644
+> --- a/drivers/mmc/host/sdhci_f_sdh30.c
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
+> @@ -11,12 +11,15 @@
+>   */
+>
+>  #include <linux/acpi.h>
+> -#include <linux/err.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/bits.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/property.h>
+> -#include <linux/clk.h>
+>
+>  #include "sdhci-pltfm.h"
+>
+> @@ -43,14 +46,55 @@
+>
+>  #define F_SDH30_CMD_DAT_DELAY          0x200
+>
+> +/* milbeaut bridge controller register */
+> +#define MLB_SOFT_RESET         0x0200
+> +#define  MLB_SOFT_RESET_RSTX           BIT(0)
+> +
+> +#define MLB_WP_CD_LED_SET      0x0210
+> +#define  MLB_WP_CD_LED_SET_LED_INV  BIT(2)
+> +
+> +#define MLB_CR_SET                     0x0220
+> +#define  MLB_CR_SET_CR_TOCLKUNIT       BIT(24)
+> +#define  MLB_CR_SET_CR_TOCLKFREQ_SFT   (16)
+> +#define  MLB_CR_SET_CR_TOCLKFREQ_MASK  (0x3F << MLB_CR_SET_CR_TOCLKFREQ_SFT)
+> +#define  MLB_CR_SET_CR_BCLKFREQ_SFT    (8)
+> +#define  MLB_CR_SET_CR_BCLKFREQ_MASK   (0xFF << MLB_CR_SET_CR_BCLKFREQ_SFT)
+> +#define  MLB_CR_SET_CR_RTUNTIMER_SFT   (4)
+> +#define  MLB_CR_SET_CR_RTUNTIMER_MASK  (0xF << MLB_CR_SET_CR_RTUNTIMER_SFT)
+> +
+> +#define MLB_SD_TOCLK_I_DIV     16
+> +#define MLB_TOCLKFREQ_UNIT_THRES       16000000
+> +#define MLB_CAL_TOCLKFREQ_MHZ(rate)    (rate / MLB_SD_TOCLK_I_DIV / 1000000)
+> +#define MLB_CAL_TOCLKFREQ_KHZ(rate)    (rate / MLB_SD_TOCLK_I_DIV / 1000)
+> +#define MLB_TOCLKFREQ_MAX      63
+> +#define MLB_TOCLKFREQ_MIN       1
+> +
+> +#define MLB_SD_BCLK_I_DIV      4
+> +#define MLB_CAL_BCLKFREQ(rate) (rate / MLB_SD_BCLK_I_DIV / 1000000)
+> +#define MLB_BCLKFREQ_MAX               255
+> +#define MLB_BCLKFREQ_MIN                 1
+> +
+> +#define MLB_CDR_SET                    0x0230
+> +#define MLB_CDR_SET_CLK2POW16  3
+> +
+>  #define F_SDH30_MIN_CLOCK              400000
+>
+> +struct f_sdh30_config {
+> +       void (*reset)(struct sdhci_host *host, u8 mask);
+> +       void (*init)(struct sdhci_host *host);
+> +       void (*quirk_init)(struct sdhci_host *host);
+> +       void (*prepare_power)(struct sdhci_host *host, unsigned char mode,
+> +                                        unsigned short vdd);
+> +};
+> +
+>  struct f_sdhost_priv {
+>         struct clk *clk_iface;
+>         struct clk *clk;
+>         u32 vendor_hs200;
+>         struct device *dev;
+>         bool enable_cmd_dat_delay;
+> +       struct gpio_desc *power_gpio;
+> +       struct f_sdh30_config *config;
+>  };
+>
+>  static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+> @@ -86,7 +130,46 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+>         return F_SDH30_MIN_CLOCK;
+>  }
+>
+> -static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+> +static void sdhci_milbeaut_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u16 clk;
+> +       u32 ctl;
+> +       ktime_t timeout;
+> +
+> +       clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +       clk = (clk & ~SDHCI_CLOCK_CARD_EN) | SDHCI_CLOCK_INT_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +       sdhci_reset(host, mask);
+> +
+> +       clk |= SDHCI_CLOCK_CARD_EN;
+> +       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +       timeout = ktime_add_ms(ktime_get(), 10);
+> +       while (1) {
+> +               bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +               clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +               if (clk & SDHCI_CLOCK_INT_STABLE)
+> +                       break;
+> +               if (timedout) {
+> +                       pr_err("%s: Internal clock never stabilised.\n",
+> +                               mmc_hostname(host->mmc));
+> +                       sdhci_dumpregs(host);
+> +                       return;
+> +               }
+> +               udelay(10);
+> +       }
+> +
+> +       if (priv->enable_cmd_dat_delay) {
+> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +               ctl |= F_SDH30_CMD_DAT_DELAY;
+> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +       }
+> +}
+> +
+> +static void sdhci_mb86s70_reset(struct sdhci_host *host, u8 mask)
+>  {
+>         struct f_sdhost_priv *priv = sdhci_priv(host);
+>         u32 ctl;
+> @@ -103,6 +186,51 @@ static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+>         }
+>  }
+>
+> +static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +
+> +       priv->config->reset(host, mask);
+> +}
+> +
+> +static void sdhci_milbeaut_power_off(struct f_sdhost_priv *priv)
+> +{
+> +       gpiod_set_value(priv->power_gpio, 0);
+> +       udelay(1000);
+> +}
+> +
+> +static void sdhci_milbeaut_power_on(struct f_sdhost_priv *priv)
+> +{
+> +       gpiod_set_value(priv->power_gpio, 1);
+> +}
+> +
+> +static void sdhci_milbeaut_prepare_power(struct sdhci_host *host,
+> +                       unsigned char mode, unsigned short vdd)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +
+> +       if (!IS_ERR(priv->power_gpio))
+> +               switch (mode) {
+> +               case MMC_POWER_UP:
+> +                       sdhci_milbeaut_power_on(priv);
+> +                       break;
+> +               case MMC_POWER_OFF:
+> +                       sdhci_milbeaut_power_off(priv);
+> +                       return;
+> +               }
+> +}
+> +
+> +static void sdhci_f_sdh30_set_power(struct sdhci_host *host,
+> +                               unsigned char mode, unsigned short vdd)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +
+> +       if (priv->config->prepare_power)
+> +               priv->config->prepare_power(host, mode, vdd);
+> +
+> +       sdhci_set_power(host, mode, vdd);
+> +}
+> +
+>  static const struct sdhci_ops sdhci_f_sdh30_ops = {
+>         .voltage_switch = sdhci_f_sdh30_soft_voltage_switch,
+>         .get_min_clock = sdhci_f_sdh30_get_min_clock,
+> @@ -110,6 +238,156 @@ static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+>         .set_clock = sdhci_set_clock,
+>         .set_bus_width = sdhci_set_bus_width,
+>         .set_uhs_signaling = sdhci_set_uhs_signaling,
+> +       .set_power = sdhci_f_sdh30_set_power,
+> +};
+> +
+> +static void sdhci_milbeaut_bridge_reset(struct sdhci_host *host, int reset_flag)
+> +{
+> +       if (reset_flag)
+> +               sdhci_writel(host, 0, MLB_SOFT_RESET);
+> +       else
+> +               sdhci_writel(host, MLB_SOFT_RESET_RSTX, MLB_SOFT_RESET);
+> +}
+> +
+> +static void sdhci_milbeaut_bridge_init(struct sdhci_host *host, int rate)
+> +{
+> +       u32 val, clk;
+> +
+> +       /* IO_SDIO_CR_SET should be set while reset */
+> +       val = sdhci_readl(host, MLB_CR_SET);
+> +       val &= ~(MLB_CR_SET_CR_TOCLKFREQ_MASK | MLB_CR_SET_CR_TOCLKUNIT |
+> +                               MLB_CR_SET_CR_BCLKFREQ_MASK);
+> +       if (rate >= MLB_TOCLKFREQ_UNIT_THRES) {
+> +               clk = MLB_CAL_TOCLKFREQ_MHZ(rate);
+> +               clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
+> +               val |= MLB_CR_SET_CR_TOCLKUNIT |
+> +                       (clk << MLB_CR_SET_CR_TOCLKFREQ_SFT);
+> +       } else {
+> +               clk = MLB_CAL_TOCLKFREQ_KHZ(rate);
+> +               clk = min_t(u32, MLB_TOCLKFREQ_MAX, clk);
+> +               clk = max_t(u32, MLB_TOCLKFREQ_MIN, clk);
+> +               val |= clk << MLB_CR_SET_CR_TOCLKFREQ_SFT;
+> +       }
+> +
+> +       clk = MLB_CAL_BCLKFREQ(rate);
+> +       clk = min_t(u32, MLB_BCLKFREQ_MAX, clk);
+> +       clk = max_t(u32, MLB_BCLKFREQ_MIN, clk);
+> +       val |=  clk << MLB_CR_SET_CR_BCLKFREQ_SFT;
+> +
+> +       val &= ~MLB_CR_SET_CR_RTUNTIMER_MASK;
+> +
+> +       sdhci_writel(host, val, MLB_CR_SET);
+> +
+> +       sdhci_writel(host, MLB_CDR_SET_CLK2POW16, MLB_CDR_SET);
+> +
+> +       sdhci_writel(host, MLB_WP_CD_LED_SET_LED_INV, MLB_WP_CD_LED_SET);
+> +}
+> +
+> +static void sdhci_milbeaut_vendor_init(struct sdhci_host *host)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u32 ctl;
+> +
+> +       ctl = sdhci_readl(host, F_SDH30_IO_CONTROL2);
+> +       ctl |= F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +       ctl &= ~F_SDH30_MSEL_O_1_8;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +       ctl &= ~F_SDH30_CRES_O_DN;
+> +       sdhci_writel(host, ctl, F_SDH30_IO_CONTROL2);
+> +
+> +       ctl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
+> +       ctl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
+> +                  F_SDH30_AHB_INCR_4;
+> +       ctl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
+> +       sdhci_writew(host, ctl, F_SDH30_AHB_CONFIG);
+> +
+> +       if (priv->enable_cmd_dat_delay) {
+> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +               ctl |= F_SDH30_CMD_DAT_DELAY;
+> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +       }
+> +}
+> +
+> +static void sdhci_milbeaut_init(struct sdhci_host *host)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       int rate = clk_get_rate(priv->clk);
+> +       u16 ctl;
+> +
+> +       sdhci_milbeaut_bridge_reset(host, 0);
+> +
+> +       ctl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +       ctl &= ~(SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN);
+> +       sdhci_writew(host, ctl, SDHCI_CLOCK_CONTROL);
+> +
+> +       sdhci_milbeaut_bridge_reset(host, 1);
+> +
+> +       priv->power_gpio = devm_gpiod_get_optional(priv->dev,
+> +                        "sni,mmc-power", GPIOD_OUT_LOW);
+> +       if (!IS_ERR(priv->power_gpio)) {
+> +               sdhci_milbeaut_power_off(priv);
+> +               msleep(20); /* need for card power off duration */
+> +       }
+> +
+> +       sdhci_milbeaut_bridge_init(host, rate);
+> +       sdhci_milbeaut_bridge_reset(host, 0);
+> +
+> +       sdhci_milbeaut_vendor_init(host);
+> +}
+> +
+> +static void sdhci_mb86s70_init(struct sdhci_host *host)
+> +{
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u32 ctrl, reg;
+> +
+> +       /* init vendor specific regs */
+> +       ctrl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
+> +       ctrl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
+> +               F_SDH30_AHB_INCR_4;
+> +       ctrl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
+> +       sdhci_writew(host, ctrl, F_SDH30_AHB_CONFIG);
+> +
+> +       reg = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +       sdhci_writel(host, reg & ~F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
+> +       msleep(20);
+> +       sdhci_writel(host, reg | F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
+> +
+> +       reg = sdhci_readl(host, SDHCI_CAPABILITIES);
+> +       if (reg & SDHCI_CAN_DO_8BIT)
+> +               priv->vendor_hs200 = F_SDH30_EMMC_HS200;
+> +}
+> +
+> +static void sdhci_milbeaut_quirk_init(struct sdhci_host *host)
+> +{
+> +       host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +                          SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
+> +                          SDHCI_QUIRK_CLOCK_BEFORE_RESET |
+> +                          SDHCI_QUIRK_DELAY_AFTER_POWER;
+> +       host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+> +                       SDHCI_QUIRK2_TUNING_WORK_AROUND |
+> +                       SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
+> +}
+> +
+> +static void sdhci_mb86s70_quirk_init(struct sdhci_host *host)
+> +{
+> +       host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> +                          SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
+> +       host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+> +                       SDHCI_QUIRK2_TUNING_WORK_AROUND;
+> +}
+> +
+> +struct f_sdh30_config mb86s70_config = {
+> +       .reset = sdhci_mb86s70_reset,
+> +       .quirk_init = sdhci_mb86s70_quirk_init,
+> +       .init = sdhci_mb86s70_init,
+> +};
+> +
+> +struct f_sdh30_config milbeaut_config = {
+> +       .reset = sdhci_milbeaut_reset,
+> +       .prepare_power = sdhci_milbeaut_prepare_power,
+> +       .quirk_init = sdhci_milbeaut_quirk_init,
+> +       .init = sdhci_milbeaut_init,
+>  };
+>
+>  static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+> @@ -117,9 +395,8 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+>         struct sdhci_host *host;
+>         struct device *dev = &pdev->dev;
+>         struct resource *res;
+> -       int irq, ctrl = 0, ret = 0;
+> +       int irq, ret = 0;
+>         struct f_sdhost_priv *priv;
+> -       u32 reg = 0;
+>
+>         irq = platform_get_irq(pdev, 0);
+>         if (irq < 0) {
+> @@ -133,14 +410,12 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+>
+>         priv = sdhci_priv(host);
+>         priv->dev = dev;
+> +       priv->config = (struct f_sdh30_config *)of_device_get_match_data(dev);
+> +       if (!priv->config)
+> +               /* this must be matched by ACPI, fall down to mb86s70 compat */
+> +               priv->config = &mb86s70_config;
+>
+> -       host->quirks = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC |
+> -                      SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
+> -       host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+> -                       SDHCI_QUIRK2_TUNING_WORK_AROUND;
+> -
+> -       priv->enable_cmd_dat_delay = device_property_read_bool(dev,
+> -                                               "fujitsu,cmd-dat-delay-select");
+> +       priv->config->quirk_init(host);
+>
+>         ret = mmc_of_parse(host->mmc);
+>         if (ret)
+> @@ -183,21 +458,7 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+>                         goto err_clk;
+>         }
+>
+> -       /* init vendor specific regs */
+> -       ctrl = sdhci_readw(host, F_SDH30_AHB_CONFIG);
+> -       ctrl |= F_SDH30_SIN | F_SDH30_AHB_INCR_16 | F_SDH30_AHB_INCR_8 |
+> -               F_SDH30_AHB_INCR_4;
+> -       ctrl &= ~(F_SDH30_AHB_BIGED | F_SDH30_BUSLOCK_EN);
+> -       sdhci_writew(host, ctrl, F_SDH30_AHB_CONFIG);
+> -
+> -       reg = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> -       sdhci_writel(host, reg & ~F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
+> -       msleep(20);
+> -       sdhci_writel(host, reg | F_SDH30_EMMC_RST, F_SDH30_ESD_CONTROL);
+> -
+> -       reg = sdhci_readl(host, SDHCI_CAPABILITIES);
+> -       if (reg & SDHCI_CAN_DO_8BIT)
+> -               priv->vendor_hs200 = F_SDH30_EMMC_HS200;
+> +       priv->config->init(host);
+>
+>         ret = sdhci_add_host(host);
+>         if (ret)
+> @@ -233,7 +494,14 @@ static int sdhci_f_sdh30_remove(struct platform_device *pdev)
+>
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id f_sdh30_dt_ids[] = {
+> -       { .compatible = "fujitsu,mb86s70-sdhci-3.0" },
+> +       {
+> +               .compatible = "fujitsu,mb86s70-sdhci-3.0",
+> +               .data = &mb86s70_config,
+> +       },
+> +       {
+> +               .compatible = "socionext,milbeaut-m10v-sdhci-3.0",
+> +               .data = &milbeaut_config,
+> +       },
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, f_sdh30_dt_ids);
+> --
+> 1.9.1
+>
+>
