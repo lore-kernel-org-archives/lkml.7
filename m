@@ -2,138 +2,135 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34725C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BF4C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2C92133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1672133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 13:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bVbeQ6xr"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="V+tDxMm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfDKNEo (ORCPT
+        id S1726736AbfDKNFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 09:04:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55300 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKNEn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 09:04:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aD933i4Wj9PjridmEAUhVomweZfmpjsmm/0HQqxO1Y8=; b=bVbeQ6xrMruQYyuLRfvKrsppY
-        cXKFfQPN8NRMELmecJvA8Q5/+lQJ/f3d6aLTgjnTRdqALrJiRl6cmVaCBX27/xSlyBOMzJn0nrQBp
-        ZIZn6wyI7MdTi+yBPdPLM6fVZAJbBEy+OoA+7aMqjM8gbAoJOUWGKV4zxIs7QEA5icn15m+hQJDtJ
-        3fKd9Aq1CfOQtmPEjKkRW4P51i7IH8Qq1AlEzVazGAhMdKr6TnDO+TWMtwC+TWrV1ozTYvOlhl99B
-        qQgkZ2LJimzzvRoFzkaXudyOn7Q40kDUXA7aPBqtEsywZBH9KcYIdxiWDnAnh+HKlYRF2PPLH0Mri
-        I2TeTaBdA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEZNc-0002ZD-HK; Thu, 11 Apr 2019 13:04:36 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 49E8229AABF40; Thu, 11 Apr 2019 15:04:34 +0200 (CEST)
-Date:   Thu, 11 Apr 2019 15:04:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mark.rutland@arm.com, mingo@kernel.org, acme@redhat.com,
-        tglx@linutronix.de, brueckner@linux.ibm.com,
-        torvalds@linux-foundation.org, alexander.shishkin@linux.intel.com,
-        heiko.carstens@de.ibm.com, tmricht@linux.ibm.com,
-        schwidefsky@de.ibm.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, jolsa@redhat.com, hpa@zytor.com
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:perf/urgent] perf/core: Fix perf_event_disable_inatomic()
- race
-Message-ID: <20190411130434.GD11158@hirez.programming.kicks-ass.net>
-References: <tip-86071b11317550d994b55ce5e31aa06bcad783b5@git.kernel.org>
+        Thu, 11 Apr 2019 09:05:25 -0400
+Received: from mail-eopbgr00098.outbound.protection.outlook.com ([40.107.0.98]:40834
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726517AbfDKNFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 09:05:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TAa6UGTfbHb4W2+Tu1eL4fCw5lGBcBeHbNdhQaeDg7U=;
+ b=V+tDxMm0XLNfX2COYptDldKLj1l1by220rJx4zhMlzC4Yy7oshwUb4dHR++6Tu8x5M+8exa8LgnAC5+7oLOoPnTH9TVtElbXDzNbBABAwjhfAK0B1XvStQ+PT62fKSR9+LZbhckdg38VIVmmRquT8s2Y5HNCk9yP2q/uGdA6518=
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com (10.170.247.12) by
+ HE1PR07MB1034.eurprd07.prod.outlook.com (10.162.27.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.8; Thu, 11 Apr 2019 13:05:21 +0000
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6]) by HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6%7]) with mapi id 15.20.1792.007; Thu, 11 Apr 2019
+ 13:05:21 +0000
+From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+CC:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tty: Add NULL TTY driver
+Thread-Topic: [PATCH] tty: Add NULL TTY driver
+Thread-Index: AQHU8GcqXTQLfjbFSk+VcCO84+l+yw==
+Date:   Thu, 11 Apr 2019 13:05:20 +0000
+Message-ID: <20190411130458.GA11390@localhost.localdomain>
+References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+ <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+ <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+ <20190405090043.vnsftwpdm56cx2hr@axis.com>
+ <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
+In-Reply-To: <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
+Accept-Language: pl-PL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0301CA0017.eurprd03.prod.outlook.com
+ (2603:10a6:3:76::27) To HE1PR07MB3337.eurprd07.prod.outlook.com
+ (2603:10a6:7:2d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=krzysztof.adamski@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [131.228.32.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78775249-c1ad-4ad3-a180-08d6be7e5a29
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR07MB1034;
+x-ms-traffictypediagnostic: HE1PR07MB1034:
+x-microsoft-antispam-prvs: <HE1PR07MB10342DC00BAC24FFD9633F48EF2F0@HE1PR07MB1034.eurprd07.prod.outlook.com>
+x-forefront-prvs: 00046D390F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(366004)(346002)(396003)(376002)(199004)(189003)(486006)(86362001)(76176011)(305945005)(7736002)(4326008)(33656002)(26005)(6486002)(2906002)(102836004)(81166006)(25786009)(6506007)(52116002)(14454004)(53546011)(99286004)(71190400001)(9686003)(81156014)(6512007)(5660300002)(478600001)(53936002)(386003)(71200400001)(6436002)(68736007)(1076003)(8676002)(256004)(6916009)(93886005)(54906003)(97736004)(106356001)(186003)(446003)(61506002)(6116002)(66066001)(105586002)(229853002)(8936002)(11346002)(3846002)(476003)(6246003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR07MB1034;H:HE1PR07MB3337.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: E2yKP3VeThYUOeTHN8YoVPBTtWepQQNcoJ+Dq2DWdSWf0UB4Gl67uYkICnfQ+FK112O2oIeDyLWjqmU28W5AqWUzKFHNu8w1k4DKeRj8ow0iH07l48VTjRTb3AFKQo6bWp6IwGHxUIGMC9VB3+5L492Mw+PvyBpJybWqDnf/oD4Nfug2zL0NTq5PPyLEx7ZvZiBYCP22gTrirE/xd3lhnQxoYrKcW89LOC2YWMLmj0Eu8+HCj1xvwvInv8HvZJVaR1kyhqT/Kpu48VQN/fbwej55m3cYJhNFfJmWujqU7H7gA4Re6RQiuNboTi11dkl2OAnXAjkYtWgF4Q1E6vIVcw4KOuPSXxr7pfZpNJh8SAVxXetSgeJ+3jEGvyyXb3WQRVLWWmTdwCxvGeLxGhjm3EgcTm8pBevVz9jbPv4QMv0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5C43D4ACF1EE1649BC9EA1DECB6883F1@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tip-86071b11317550d994b55ce5e31aa06bcad783b5@git.kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78775249-c1ad-4ad3-a180-08d6be7e5a29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 13:05:21.0090
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR07MB1034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 05:13:54AM -0700, tip-bot for Peter Zijlstra wrote:
-> Commit-ID:  86071b11317550d994b55ce5e31aa06bcad783b5
-> Gitweb:     https://git.kernel.org/tip/86071b11317550d994b55ce5e31aa06bcad783b5
-> Author:     Peter Zijlstra <peterz@infradead.org>
-> AuthorDate: Thu, 4 Apr 2019 15:03:00 +0200
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Wed, 10 Apr 2019 13:47:09 +0200
-> 
-> perf/core: Fix perf_event_disable_inatomic() race
-> 
-> Thomas-Mich Richter reported he triggered a WARN()ing from event_function_local()
-> on his s390. The problem boils down to:
-> 
-> 	CPU-A				CPU-B
-> 
-> 	perf_event_overflow()
-> 	  perf_event_disable_inatomic()
-> 	    @pending_disable = 1
-> 	    irq_work_queue();
-> 
-> 	sched-out
-> 	  event_sched_out()
-> 	    @pending_disable = 0
-> 
-> 					sched-in
-> 					perf_event_overflow()
-> 					  perf_event_disable_inatomic()
-> 					    @pending_disable = 1;
-> 					    irq_work_queue(); // FAILS
-> 
-> 	irq_work_run()
-> 	  perf_pending_event()
-> 	    if (@pending_disable)
-> 	      perf_event_disable_local(); // WHOOPS
-> 
-> The problem exists in generic, but s390 is particularly sensitive
-> because it doesn't implement arch_irq_work_raise(), nor does it call
-> irq_work_run() from it's PMU interrupt handler (nor would that be
-> sufficient in this case, because s390 also generates
-> perf_event_overflow() from pmu::stop). Add to that the fact that s390
-> is a virtual architecture and (virtual) CPU-A can stall long enough
-> for the above race to happen, even if it would self-IPI.
-> 
-> Adding a irq_work_sync() to event_sched_in() would work for all hardare
-> PMUs that properly use irq_work_run() but fails for software PMUs.
-> 
-> Instead encode the CPU number in @pending_disable, such that we can
-> tell which CPU requested the disable. This then allows us to detect
-> the above scenario and even redirect the IPI to make up for the failed
-> queue.
+On Fri, Apr 05, 2019 at 02:32:41PM +0200, Enrico Weigelt, metux IT consult =
+wrote:
+>On 05.04.19 11:00, Vincent Whitchurch wrote:
+>> On Fri, Apr 05, 2019 at 10:39:43AM +0200, Enrico Weigelt, metux IT consu=
+lt wrote:
+>>> On 03.04.19 16:11, Vincent Whitchurch wrote:
+>>>
+>>>> Especially on embedded systems, it would be convenient to have a simpl=
+e
+>>>> way to disable the console (both for kernel and userspace) on a system
+>>>> which normally uses it, to free up the UART for other things.
+>>>
+>>> Just symlinking to /dev/null does not work ?
+>>
+>> No, /dev/null does not support the TTY ioctls.
+>
+>hmm, wo (which programs) do you need, that really need them ?
+>
+>>> OTOH, if you're introducing a dummy console, wouldn't a ringbuffer that=
+,
+>>> can be read out later, a better option ?
+>>
+>> There is already a ttyprintk driver in mainline to send these messages
+>> to the printk ring buffer if one is actually intrested in what is
+>> written to the console.  There's no option to enable it via console=3D i=
+n
+>> mainline but I have a patch for that too.
+>
+>Great. IMHO, that would be the better way.
 
-Ingo, could you please fold in the below delta? It turns out I
-overlooked two insteances :-(
+There are (embedded) cases where the kernel ring buffer is stored for
+log inspection and all the logs that are *not* wanted there (like
+interactive debug logs, some progress bar, etc) are send specifically to
+/dev/console to avoid sending them to normal log store (as they are only
+useful when debugging over console). In non-debug mode /dev/console
+becomes /dev/null to speed things up.
 
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -392,7 +392,7 @@ void *perf_aux_output_begin(struct perf_
- 		 * store that will be enabled on successful return
- 		 */
- 		if (!handle->size) { /* A, matches D */
--			event->pending_disable = 1;
-+			event->pending_disable = smp_processor_id();
- 			perf_output_wakeup(handle);
- 			local_set(&rb->aux_nest, 0);
- 			goto err_put;
-@@ -480,7 +480,7 @@ void perf_aux_output_end(struct perf_out
- 
- 	if (wakeup) {
- 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
--			handle->event->pending_disable = 1;
-+			handle->event->pending_disable = smp_processor_id();
- 		perf_output_wakeup(handle);
- 	}
- 
+I would personally benefit from Vincents patch. In fact I found this
+thread because I was considering doing exactly the same for our system.
+
+Krzysztof
