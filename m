@@ -2,105 +2,85 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1147C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A863C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B8921841
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:43:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GYT7PXbt"
+	by mail.kernel.org (Postfix) with ESMTP id 552142184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 08:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfDKIny (ORCPT
+        id S1727185AbfDKIn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 04:43:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33759 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfDKInx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 04:43:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h5so3140205pfo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 01:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3uDRcROgGcVy6omy5p81C7LS9FeeN6XiopSGYFDTY88=;
-        b=GYT7PXbthjwqYq0DLG/UzPHOX+w/ANcASoFvtTw3H/15gT2HSG2WQcXoAhqTW1AcSg
-         pDzJBopIpk/7YJL2wWWBFjS2A6+frZ/4L/myGtJF5wjbDouaKClAhXoTz/peiMqxvMDM
-         iNZkSQtIjxJdZkMSG8lJ7AkhL9KOanQYpKwnQKBfUiZYh7Yr+5/pBmVK3kDaSeFthJ8A
-         vmw/SQbGkWwtmNB/0ZApAPEtYh0SpNtXLxabS9hllFSy5upNYaY5KzYU8m/Y02y+wFaz
-         CbdfbNQVW3XmxWOvLxNqwE6ylPctPUlEhr/PL9GNyzVFyPhZ3mDc6LVZ+Rw1XLKD0Ox2
-         kfnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3uDRcROgGcVy6omy5p81C7LS9FeeN6XiopSGYFDTY88=;
-        b=YHKmAr1Cjb2eKdeHamgEyA47ETlKIA0ZuwK2e6ZUtKCBa041h5mYEHcWUTJxbJh8Xi
-         ae9kL+APmbmh+UwH9QnMPmWkRTfLgmS0BSOGhQOb4fZ2WV9NEdkxrqXdknNhEJhp3A0I
-         5Dzi70x1nyKSdsu5xdqZqWup6zo8XL5gdgsiTc0+rYeOX3tskFq0JLLU0jLpM/EHVqwz
-         lc0hcTCunF8/7RkzTrmc/7bv/MPlEo0lHcAKzQZnivtswFtgputlmuLQJ3tUNBo+OIys
-         MJCk1seGFxVi/8ZvMaTY3T9J8AkVKZ7jTz0I4hrk5XepL0VXD0rYcai2wOmuQY+6Bbdl
-         UqKg==
-X-Gm-Message-State: APjAAAXrIOb7QsMhlLL1RkaQeO/pl3XDbs79+MB2VlBg9lGm9Ytnf7Tk
-        i3xaCVQNycMNfvI0f1sGgFHRNaOwZxQ=
-X-Google-Smtp-Source: APXvYqynHgbPARnw8SqKyrMoIi7d1N9ocPMTUPVNg0szL7boUoJFI746C4foY3XJWkSUDvALMbTJAg==
-X-Received: by 2002:a62:415d:: with SMTP id o90mr48539392pfa.236.1554972232835;
-        Thu, 11 Apr 2019 01:43:52 -0700 (PDT)
-Received: from viisi.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id a3sm61699456pfn.182.2019.04.11.01.43.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 01:43:52 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH 6/6] riscv: defconfig: enable ARCH_SIFIVE
-Date:   Thu, 11 Apr 2019 01:43:04 -0700
-Message-Id: <20190411084304.5072-7-paul.walmsley@sifive.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190411084304.5072-2-paul.walmsley@sifive.com>
-References: <20190411084304.5072-2-paul.walmsley@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 11 Apr 2019 04:43:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34268 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727127AbfDKIn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 04:43:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F9FEAD65;
+        Thu, 11 Apr 2019 08:43:56 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 10:43:56 +0200
+Message-ID: <s5hsguprkxf.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v3 1/5] soundwire: intel: fix inversion in devm_kcalloc parameters
+In-Reply-To: <20190411031701.5926-2-pierre-louis.bossart@linux.intel.com>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+        <20190411031701.5926-2-pierre-louis.bossart@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CONFIG_ARCH_SIFIVE in the RISC-V defconfig so
-DTB files for SiFive boards are generated by default.
+On Thu, 11 Apr 2019 05:16:57 +0200,
+Pierre-Louis Bossart wrote:
+> 
+> the number of elements and size are inverted, fix.
+> 
+> This probably only worked because the number of properties is
+> hard-coded to 1.
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Well, both are mathematically equivalent :)
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 2fd3461e50ab..0fb782c8cc1e 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -12,6 +12,7 @@ CONFIG_CHECKPOINT_RESTORE=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
- CONFIG_BPF_SYSCALL=y
-+CONFIG_ARCH_SIFIVE=y
- CONFIG_SMP=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
--- 
-2.20.1
 
+Takashi
+
+> 
+> Fixes: 71bb8a1b059e ('soundwire: intel: Add Intel Master driver')
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index fd8d034cfec1..8669b314c476 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -796,8 +796,8 @@ static int intel_prop_read(struct sdw_bus *bus)
+>  
+>  	/* BIOS is not giving some values correctly. So, lets override them */
+>  	bus->prop.num_freq = 1;
+> -	bus->prop.freq = devm_kcalloc(bus->dev, sizeof(*bus->prop.freq),
+> -					bus->prop.num_freq, GFP_KERNEL);
+> +	bus->prop.freq = devm_kcalloc(bus->dev, bus->prop.num_freq,
+> +				      sizeof(*bus->prop.freq), GFP_KERNEL);
+>  	if (!bus->prop.freq)
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.17.1
+> 
