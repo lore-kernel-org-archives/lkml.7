@@ -2,157 +2,169 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955B2C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC4C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625AD21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794972184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 21:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmM/YPd6"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="C6aYrfiw";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YalNxcjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfDKVp0 (ORCPT
+        id S1727178AbfDKVpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 17:45:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33672 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfDKVpC (ORCPT
+        Thu, 11 Apr 2019 17:45:52 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:45730 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726682AbfDKVpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 17:45:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z6so2867033wmi.0;
-        Thu, 11 Apr 2019 14:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Nf6OU8Al/mJlL06i5Ldod7GFzDf/F0dAuUkuELsAL+4=;
-        b=mmM/YPd6deyfysNcaGBmW8rDxDvidiY0kHbKWlV2C3owwrB7VAjDjVqA+c2lPmSf3Z
-         yXgoDywG+w651wYVDe0hUMPLRZZxIG+2d1r2Bx2MkL0FUfv48c8/CrN3V/69VX6tOk5A
-         KSm7SB1H+Gstttl5zGhoDQZYKrFH2NFpCuXnMBxTeGe9JSZ/px7Cn4VqXEQFwqgkdLXv
-         vcwNJiMXavDcO76bfMLt0zl5QCyp+gz5djKre5FAFSi3+pKMeBrm7P7iWt0rixEBv9wn
-         fhnXZ67PfKWe25pVJKw7zAk4z+OhI3nzXpR/yjxSGutN7ElVKSwbCTYjWDTC3hn2L1pZ
-         GGgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Nf6OU8Al/mJlL06i5Ldod7GFzDf/F0dAuUkuELsAL+4=;
-        b=MnnF9PluTmoSTXl6fluZbEbBzXtwlx46nZiS75SvvwBYMshVFqvoPGY5ulcvcKcns+
-         O16XPzsNnbevBLGfJLxc6oNNlemL1WQxo715ujim58h53J+2zF/o3l3zMuigen1fkkON
-         +8Z9q4mN07sMPcfp4Xcka/VEdBovwRE5NpTkWFKpboRnUPPiCcfBax6YjYo5IemkvKKg
-         YrX33SMnWAlBuBHvJKL+C1zQeMQhpKN8kRUwJynE8ccn4ZLWXDyQA8+FcFRFdZR4m1m6
-         w69N5MStbeZGS912FCPWCLWnfZuXy5tp6p7/wO95hC5apyurWoga0GA/WOdhLDA5lzM3
-         slkA==
-X-Gm-Message-State: APjAAAW2r5flk1Ss+/tdK1qILvDHAxcLUagkDegAoFHX6reUNpIP3Y6P
-        NSojv0DVGhFducAbZ/NmdHg=
-X-Google-Smtp-Source: APXvYqzWdQdPWN8xVDqibwotfg551teNj8wR8ECuX7KxAlrbIAzVNhlXL1mRVjKDJbcWwIbxENON/Q==
-X-Received: by 2002:a05:600c:ca:: with SMTP id u10mr8419199wmm.122.1555019100299;
-        Thu, 11 Apr 2019 14:45:00 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id a22sm5952961wmj.44.2019.04.11.14.44.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 14:44:59 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 2/4] arm64: dts: allwinner: Add SPDIF node for Allwinner H6
-Date:   Thu, 11 Apr 2019 23:44:20 +0200
-Message-Id: <20190411214422.2267-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190411214422.2267-1-peron.clem@gmail.com>
-References: <20190411214422.2267-1-peron.clem@gmail.com>
+        Thu, 11 Apr 2019 17:45:52 -0400
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3BLXY59026043;
+        Thu, 11 Apr 2019 14:45:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Uycx9w4oxxYGUR9EyzTH5ito/EdyYrW2Wmut8rQPRoo=;
+ b=C6aYrfiwjXz+tFHJ6VbBeye6ERPqa+K8lsGWSxldL4zxM/4wFnpU2sOb4rwkg5PTj+xQ
+ 6NYy+FfAlQGnI17qgn/OBxrjPXZIAIcv68AFlBMAjO9BUwQwyaBGoaNb+AaOR0GhuZZx
+ higHQLN/8igJf+JB45KAgHHAx7QXdfX02x4= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0b-00082601.pphosted.com with ESMTP id 2rt88816wn-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 11 Apr 2019 14:45:12 -0700
+Received: from frc-hub02.TheFacebook.com (2620:10d:c021:18::172) by
+ frc-hub04.TheFacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 11 Apr 2019 14:45:06 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 11 Apr 2019 14:45:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Uycx9w4oxxYGUR9EyzTH5ito/EdyYrW2Wmut8rQPRoo=;
+ b=YalNxcjwAH8q+jgoWxRxXjO9xHptzmENNqdiivZqMSSeD+M+P0X9jn3EjaJnsog+2/VJbvwCl+LpAnVswcc4LIls+3kfHPaqZCeBVJDOLru8Tw3dJmVcud8iGEFxnYOebOkfMbeTM1qbz2Oyv+eZBTaHPY7UBHa5RGSLjtn/FA0=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3238.namprd15.prod.outlook.com (20.179.57.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Thu, 11 Apr 2019 21:45:03 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.016; Thu, 11 Apr 2019
+ 21:45:03 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "David Rientjes" <rientjes@google.com>,
+        "yuzhoujian@didichuxing.com" <yuzhoujian@didichuxing.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Christian Brauner" <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+Thread-Topic: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+Thread-Index: AQHU8Agfba8deeGsZ0iHj8xHvEZD6KY3F6+AgAAaygCAAE0VgA==
+Date:   Thu, 11 Apr 2019 21:45:03 +0000
+Message-ID: <20190411214458.GB31565@tower.DHCP.thefacebook.com>
+References: <20190411014353.113252-1-surenb@google.com>
+ <20190411014353.113252-3-surenb@google.com>
+ <20190411153313.GE22763@bombadil.infradead.org>
+ <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+In-Reply-To: <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR14CA0072.namprd14.prod.outlook.com
+ (2603:10b6:300:81::34) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:3965]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e74d29b9-c262-478a-c75b-08d6bec6f43b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3238;
+x-ms-traffictypediagnostic: BYAPR15MB3238:
+x-microsoft-antispam-prvs: <BYAPR15MB3238A6D79F2AD14C94083F3ABE2F0@BYAPR15MB3238.namprd15.prod.outlook.com>
+x-forefront-prvs: 00046D390F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(366004)(376002)(346002)(199004)(189003)(256004)(25786009)(6916009)(76176011)(53936002)(316002)(8936002)(71200400001)(81156014)(6486002)(7416002)(305945005)(7736002)(99286004)(97736004)(8676002)(4326008)(81166006)(6512007)(102836004)(68736007)(6246003)(14444005)(6116002)(6436002)(54906003)(52116002)(229853002)(33656002)(11346002)(186003)(86362001)(1076003)(53546011)(9686003)(14454004)(476003)(6506007)(105586002)(486006)(386003)(478600001)(106356001)(5660300002)(46003)(93886005)(71190400001)(2906002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3238;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 77AToC3krpjoZ8GjvAzNHNhSjw+fHUKGGcDHXEKEOj5M0FwMitA0PTNkiV3TanQCAdkR4Kd3Qeg3qXMu+WaxRN9cGrpD2+oqThMEPai64Q1/XTIGyVPGo+LO/Lq+GdkNwN1DWxtxSJW9w57pbYHQe1GWFeaeEOxxeF0OXlz9r9JXjg96PRDf0U/8Ga2Se022K67LOaRnL+zsk2De9l0o+dSuRgH2eQhp2xYioDMdGbF1bHqOf8Kgv4hx3Mk82ilX//Kd6EGvbLM+JRZY6IXZBiMUAWuvDe/qM4uHcjnCGoN5/3oFidZ4pUhMvN9liQfG1LTcQMV8ciLUL2drs3Se+Uu3xX1tz2f46QAyw4hS03o0eIfohZHp1n5YsCePGY3oyKEjEuF5YYtxR1EbB2EpLDlxMf528MOYAA5jjcf9HCg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9898E43111BA1D479F58D887B9230D92@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: e74d29b9-c262-478a-c75b-08d6bec6f43b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 21:45:03.2856
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3238
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_13:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
+On Thu, Apr 11, 2019 at 10:09:06AM -0700, Suren Baghdasaryan wrote:
+> On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrot=
+e:
+> >
+> > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
+> > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
+> > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
+> > > victim process. The usage of this flag is currently limited to SIGKIL=
+L
+> > > signal and only to privileged users.
+> >
+> > What is the downside of doing expedited memory reclaim?  ie why not do =
+it
+> > every time a process is going to die?
 
-Add this node in the SoC device-tree and as they are only one pinmuxing
-available set it as default.
+Hello, Suren!
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 39 ++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+I also like the idea to reap always.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index ad2077830f73..5e850b359be5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -83,6 +83,24 @@
- 		method = "smc";
- 	};
- 
-+	sound_spdif {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
-@@ -264,6 +282,11 @@
- 				bias-pull-up;
- 			};
- 
-+			spdif_tx_pin: spdif-tx-pin {
-+				pins = "PH7";
-+				function = "spdif";
-+			};
-+
- 			uart0_ph_pins: uart0-ph-pins {
- 				pins = "PH0", "PH1";
- 				function = "uart0";
-@@ -391,6 +414,22 @@
- 			};
- 		};
- 
-+		spdif: spdif@5093000 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun50i-h6-spdif",
-+				     "allwinner,sun8i-h3-spdif";
-+			reg = <0x05093000 0x400>;
-+			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDIF>;
-+			clock-names = "apb", "spdif";
-+			resets = <&ccu RST_BUS_SPDIF>;
-+			dmas = <&dma 2>;
-+			dma-names = "tx";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spdif_tx_pin>;
-+			status = "disabled";
-+		};
-+
- 		usb2otg: usb@5100000 {
- 			compatible = "allwinner,sun50i-h6-musb",
- 				     "allwinner,sun8i-a33-musb";
--- 
-2.17.1
+> I think with an implementation that does not use/abuse oom-reaper
+> thread this could be done for any kill. As I mentioned oom-reaper is a
+> limited resource which has access to memory reserves and should not be
+> abused in the way I do in this reference implementation.
 
+In most OOM cases it doesn't matter that much which task to reap,
+so I don't think that reusing the oom-reaper thread is bad.
+It should be relatively easy to tweak in a way, that it won't
+wait for mmap_sem if there are other tasks waiting to be reaped.
+Also, the oom code add to the head of the list, and the expedited
+killing to the end, or something like this.
+
+The only think, if we're going to reap all tasks, we probably
+want to have a per-node oom_reaper thread.
+
+Thanks!
