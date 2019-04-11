@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DA4C10F11
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4A3C10F14
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314A0217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5A020674
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 01:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554946583;
-	bh=Au13uthtBTxdLXt18wPgrDh4hPRGQEFmSBEnyh8jQW4=;
+	s=default; t=1554946591;
+	bh=uDKSjBhq2UlkguBtzx815xoUuTpfEcfDqkmxXLF6m+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GAPwKaH1ou0ADBI6tdSYqE84a0MI/QK/r236uNOHx0bMS5owt/WwYltJ+wxsg5oXb
-	 ykyNSzkWjKOGxku+WviqPKT6GDyftFsGLju7oWnIXRDeWtphlTdmxMQUPZCzL/gzcq
-	 BxjTdXfKjnIqOlyxR7k6iDU66pI8CA895GXxTiKI=
+	b=JLB1SCdL26dwAU8zm9C3d+kC4EeEec9Tpa18qGpgn/k4C+2yz4MyUerxitgGYOE1E
+	 P3rqsJ8Lb80ZcHhIInX6cmdPA75BROotNI8h7w+uNogEs/xQuP85dAG2Gyu+dvgdI/
+	 ZW5r1XELO637hfoTxFLMkslKzatLio0ciOx3cUvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfDKBgW (ORCPT
+        id S1726981AbfDKBga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 21:36:22 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:44405 "EHLO
+        Wed, 10 Apr 2019 21:36:30 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:60449 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725982AbfDKBgV (ORCPT
+        by vger.kernel.org with ESMTP id S1725982AbfDKBg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 21:36:21 -0400
+        Wed, 10 Apr 2019 21:36:29 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 831E790FB;
-        Wed, 10 Apr 2019 21:36:20 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6BF279E0B;
+        Wed, 10 Apr 2019 21:36:28 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 10 Apr 2019 21:36:20 -0400
+  by compute3.internal (MEProxy); Wed, 10 Apr 2019 21:36:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=rfKadsTflryLW7911DaQh925XQ0k2Bp3gi/G7eAxyJQ=; b=kQ0Cxmjl
-        8dTQUILa8oACPG3p/uaxtPdNLrSjSP9SADowD78lfTBlKP7pQmJk81YwuUa49ZWx
-        bKQygMv52av1sGOfF8wlUmnbxuEehULvsyH5F+9/pQk7XRWHvXkfIBSB5iJB03hN
-        jml//5oo1S8TQhTyfixv7Lwf3HHUe4oZhtr8t0+nN3bnHwU1Na5pmkqAnLhwRcFd
-        Y/vHgeyh/Zn5ExRDWdMNh1I9naRLHGqyQZAEkxD25Ee7QuK/4QCa2CHXhArK4L1L
-        JKpmwsNcMy0XjODVdV4hxqLXwnLenCOFbm1Bi3j9o8LyM1FMtw1IASJ0oRXVb9T5
-        DYcZtRyp4yeFUg==
-X-ME-Sender: <xms:FJquXHLwDksAUVZfQZutN9E_FjVPWvsEsQobq1Tcky7WhkZo2l665Q>
+        fm2; bh=eB8W4ZifzOOx7n477C9lsHSgteznueDWRYbTVC4RGG4=; b=M1ZFmbQB
+        l8VrI8YC1Yy3XLxmknffwzRwR9dHjgdPqNw7SW5dlaNS06jhwH4zNzXuVthx2fUL
+        NRDYLjer9oO4NVBKj4CkR4392zAiHiB1CSqeQpyjzd9xALYEAEjBq08LklQU16WP
+        YVjqcAE4ZlQsnnzyOLQJMwApnu7pH2ksZ0cu+xL4LhCexZqq4bfzysRBfXQj8rpk
+        sPfdeeDiUQ913PZtQ2LjOjPwFjvBO6QbwLUllIaWdGqo44RTK3xDmmI1SN8c+SvS
+        L5QNg82eT5O4X12af8V/lR5bfVDL37byQhJATJbiTNFxdMQVrVlN1m/+Z4iXP4If
+        RGXmXe7atGnwYA==
+X-ME-Sender: <xms:HJquXMKT8uhJq3BBk5lrurL-MsSovBKQDM2154cbIy7lJgAyUKryUA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudekgdegvdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -51,13 +51,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudekgdegvdcutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudejuddrudelrdduleegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
     ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:FJquXCT-mVnuvsUej0R3G_CCrmy0LDGHmWblwcs14cHiyulns9JJtw>
-    <xmx:FJquXCEK8PHeNQ2-W63kwf4t6eawKwe097L6TwP0OYIzDPENL730HA>
-    <xmx:FJquXKHgGV5H57rpkO7VxrN9hcekfSI9mShRanbxo9t8wk5i6uOq_g>
-    <xmx:FJquXFaAS86MOIA2oD2s8X89YXgM9oX3mUCSnEpUfNrLMVDM9TFSwg>
+X-ME-Proxy: <xmx:HJquXNGzGc9wrmZaTpOq6pjbMuYKLBSTyyhEMtpTiL7nwaEUTT47kg>
+    <xmx:HJquXNBb2CYjqMGh00XZ4u0VHgKiH7WnM8KskqZYHSiIT7WIOn87iQ>
+    <xmx:HJquXH3B3Z2scJ-2amYHQ3DfLU0sR842_HJ6eWIHzqu34qifbeLbMA>
+    <xmx:HJquXNuI0zNE_noLq1BZvCfUftpY5z54KXMZ8-PIY_Hwupo_jcbJgw>
 Received: from eros.localdomain (124-171-19-194.dyn.iinet.net.au [124.171.19.194])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 90EA1E4210;
-        Wed, 10 Apr 2019 21:36:12 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9067EE408B;
+        Wed, 10 Apr 2019 21:36:20 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -80,9 +80,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Hugh Dickins <hughd@google.com>,
         Jonathan Corbet <corbet@lwn.net>, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 05/15] tools/vm/slabinfo: Add remote node defrag ratio output
-Date:   Thu, 11 Apr 2019 11:34:31 +1000
-Message-Id: <20190411013441.5415-6-tobin@kernel.org>
+Subject: [RFC PATCH v3 06/15] tools/vm/slabinfo: Add defrag_used_ratio output
+Date:   Thu, 11 Apr 2019 11:34:32 +1000
+Message-Id: <20190411013441.5415-7-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411013441.5415-1-tobin@kernel.org>
 References: <20190411013441.5415-1-tobin@kernel.org>
@@ -93,42 +93,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add output line for NUMA remote node defrag ratio.
+Add output for the newly added defrag_used_ratio sysfs knob.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- tools/vm/slabinfo.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/vm/slabinfo.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/vm/slabinfo.c b/tools/vm/slabinfo.c
-index cbfc56c44c2f..d2c22f9ee2d8 100644
+index d2c22f9ee2d8..ef4ff93df4cc 100644
 --- a/tools/vm/slabinfo.c
 +++ b/tools/vm/slabinfo.c
 @@ -34,6 +34,7 @@ struct slabinfo {
  	unsigned int sanity_checks, slab_size, store_user, trace;
  	int order, poison, reclaim_account, red_zone;
  	int movable, ctor;
-+	int remote_node_defrag_ratio;
++	int defrag_used_ratio;
+ 	int remote_node_defrag_ratio;
  	unsigned long partial, objects, slabs, objects_partial, objects_total;
  	unsigned long alloc_fastpath, alloc_slowpath;
- 	unsigned long free_fastpath, free_slowpath;
-@@ -377,6 +378,10 @@ static void slab_numa(struct slabinfo *s, int mode)
- 	if (skip_zero && !s->slabs)
- 		return;
+@@ -549,6 +550,8 @@ static void report(struct slabinfo *s)
+ 		printf("** Slabs are destroyed via RCU\n");
+ 	if (s->reclaim_account)
+ 		printf("** Reclaim accounting active\n");
++	if (s->movable)
++		printf("** Defragmentation at %d%%\n", s->defrag_used_ratio);
  
-+	if (mode) {
-+		printf("\nNUMA remote node defrag ratio: %3d\n",
-+		       s->remote_node_defrag_ratio);
-+	}
- 	if (!line) {
- 		printf("\n%-21s:", mode ? "NUMA nodes" : "Slab");
- 		for(node = 0; node <= highest_node; node++)
-@@ -1272,6 +1277,8 @@ static void read_slab_dir(void)
- 			slab->cpu_partial_free = get_obj("cpu_partial_free");
- 			slab->alloc_node_mismatch = get_obj("alloc_node_mismatch");
+ 	printf("\nSizes (bytes)     Slabs              Debug                Memory\n");
+ 	printf("------------------------------------------------------------------------\n");
+@@ -1279,6 +1282,7 @@ static void read_slab_dir(void)
  			slab->deactivate_bypass = get_obj("deactivate_bypass");
-+			slab->remote_node_defrag_ratio =
-+					get_obj("remote_node_defrag_ratio");
+ 			slab->remote_node_defrag_ratio =
+ 					get_obj("remote_node_defrag_ratio");
++			slab->defrag_used_ratio = get_obj("defrag_used_ratio");
  			chdir("..");
  			if (read_slab_obj(slab, "ops")) {
  				if (strstr(buffer, "ctor :"))
