@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A616C10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2D8C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681EC2146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC18E2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 23:03:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfMN7cJh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbHaeRlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfDKXDf (ORCPT
+        id S1727242AbfDKXDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 19:03:35 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39097 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfDKXDb (ORCPT
+        Thu, 11 Apr 2019 19:03:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33835 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfDKXDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 19:03:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z9so5959608lfh.6;
-        Thu, 11 Apr 2019 16:03:29 -0700 (PDT)
+        Thu, 11 Apr 2019 19:03:32 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h5so3056073lfm.1;
+        Thu, 11 Apr 2019 16:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fm0zR05pFfCB61HXo/Y1EppostOOVPX/1as4YANTCFU=;
-        b=GfMN7cJhgWqXJ2wODqqhGP28q1+EXRMte+JgQwj1+cEDB2Prk4xuhK5SrPjxy6h9L8
-         pBT9VbrHLKFUH3CtQaoT5UCaf6zG+ymFWJkxsuxZLAeaNTknm1btDTNIiojeRTJz7EpW
-         IIPw84em5uGGrleXlQ1SvwTPhvGYXPEq3YHsyII/+hVEcViE3fiHV6fjnbdsV/q7gAYH
-         Pe9a3jnySewBr9K/O52msipjN68U4b/2WtS1r6LAGqLCTusOfw0107+lrgmarbmm/GIY
-         xUx7+NrOsMRqXIz353v2MaHcU6L+26NpemmGQy54J+nvyhS62QTt+NKBRKo2phMRCgtg
-         b6PQ==
+        bh=kJaOcv8yY8s6XpsCdIZsOjiKv8ZCsMiUllwDXKnN8to=;
+        b=YbHaeRlRIv88aFIOLsXUt2YWPTNqsVUPQkdhpOm6qnEfHJAr73ly80FHMyP3UppX/e
+         C2L5wGpPanogmxJL8tV3IbrR9N3n8EoKoBaWPByQyoTOwaY9j1ioNaXvxievR/rsr2fa
+         Czdlru+D2e8srF8718GIbdBoW1CGxD/xWwOMnKjmzQ5LY6pBwIlhpVR7mFw9s8zRL4Px
+         O3vg3Fp2OISaLvCRu5ZLD+Dur0etKKVJPM0LPGxFOwEi2QG5DUJQz7HxsDZ+Dl54TTla
+         sd78/4VnFuX4CuJUnlFelQ0wtPdQjGxw++k58b+7M7WQcpX6CncXhl+m3bm8060bGn84
+         WHIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fm0zR05pFfCB61HXo/Y1EppostOOVPX/1as4YANTCFU=;
-        b=VXnXdZ04gV4EoR/kw5HS4ZGUETW73nYYcQcRtXkYciKMN0/BCwwBe75un4+0Z7tOOB
-         9qNIjqJEoIbAlyoj5Iy9/rZ82jUNLXqafxS8X/tujyThFt68fHWqEUOuKIiHMmw5Hyu8
-         BkiQHrnbNPXOkCAVjQKTUNhnmZxvaYj/27qt4NdX/9uwl/cYbby/n7s8fj19IObRuPUh
-         LQc13mM6t4uxq9h41hSvNB/M+n3QDlhJy9JRpTWuPYe/hrKLkcMwVAfYxIFqv0Jj0DFX
-         59ojxGm6GEModbVeCHAR/wwg0aNF5JLpl45I5Q2K3y4q5zk+DlQ8cxIrcaeyV2Y9i/ou
-         Sfvw==
-X-Gm-Message-State: APjAAAVqQaeSqHp+VYatIja4SSLeqGkh6WEy5+n9FTpUnKyg/9ULh2un
-        6waBFwA7HVuDfcovUaDukjg=
-X-Google-Smtp-Source: APXvYqw3CC1e247+pyhLEurYeU4FqvvzOuykfkA9Q887CIEc5bFaA37RaDsjG6jI8HxsvlVIJfEWZw==
-X-Received: by 2002:a19:7702:: with SMTP id s2mr9346217lfc.102.1555023808748;
-        Thu, 11 Apr 2019 16:03:28 -0700 (PDT)
+        bh=kJaOcv8yY8s6XpsCdIZsOjiKv8ZCsMiUllwDXKnN8to=;
+        b=bSDb624RKzjJri36xerWNvg7neE27bTeDEkmqgz87R11FJ3gOlAwdF8LIuh9DG0oDl
+         QiKttVdxu9itKbF4YbGazKu3/jZAo5rVy8e66pMsvAv5tJfJCBcI+ayHRhya8+X6lR0+
+         R2PjTFhsJzvSNMFqEzrKFMp1c6JRhAqYr0wWI/GJZzB4ATmsyMoDN5BuWInR6caQlH6y
+         Fu8LddQ7R6fzLqryiuWcqfrgY40OHPVzbpP49LyFeyARq5+kbqonXDrJTaw/3jicJkNe
+         8kUSj6A5nShGWUFCGqcZWdd75XPUU5J+QaCIcXByhkQP6YgMSMDZRgbcNJQw2RTGFsed
+         7SpQ==
+X-Gm-Message-State: APjAAAV6HXAvvDhlU393biA+DSktB4sQPQfEMh82ulGduBR8CRlapsOM
+        PdfVuRlHUxcUO0hIp8Lqry0=
+X-Google-Smtp-Source: APXvYqy3okFs63Tc1NV3fGd/tvhH0e7iuWy5786M8trplku+x42B1hyWxL7E4TswuhbGBnuyNkCVYA==
+X-Received: by 2002:a19:520e:: with SMTP id m14mr20366975lfb.65.1555023807715;
+        Thu, 11 Apr 2019 16:03:27 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id u19sm7764486lfg.74.2019.04.11.16.03.27
+        by smtp.gmail.com with ESMTPSA id u19sm7764486lfg.74.2019.04.11.16.03.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 16:03:28 -0700 (PDT)
+        Thu, 11 Apr 2019 16:03:27 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,9 +65,9 @@ To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
         Joseph Lo <josephl@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller node
-Date:   Fri, 12 Apr 2019 02:02:21 +0300
-Message-Id: <20190411230221.31362-4-digetx@gmail.com>
+Subject: [PATCH v1 2/3] memory: tegra: Introduce Tegra30 EMC driver
+Date:   Fri, 12 Apr 2019 02:02:20 +0300
+Message-Id: <20190411230221.31362-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190411230221.31362-1-digetx@gmail.com>
 References: <20190411230221.31362-1-digetx@gmail.com>
@@ -78,50 +78,1287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Add External Memory Controller node to the device-tree.
+Introduce driver for the External Memory Controller (EMC) found on Tegra30
+chips, it controls the external DRAM on the board. The purpose of this
+driver is to program memory timing for external memory on the EMC clock
+rate change.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30.dtsi     | 11 +++++++++++
- drivers/memory/tegra/tegra30-emc.c |  3 ++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/memory/tegra/Kconfig       |   10 +
+ drivers/memory/tegra/Makefile      |    1 +
+ drivers/memory/tegra/mc.c          |    3 -
+ drivers/memory/tegra/mc.h          |   30 +-
+ drivers/memory/tegra/tegra30-emc.c | 1105 ++++++++++++++++++++++++++++
+ drivers/memory/tegra/tegra30.c     |   44 ++
+ 6 files changed, 1181 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/memory/tegra/tegra30-emc.c
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..92c4aeafab29 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -732,6 +732,17 @@
- 		#reset-cells = <1>;
- 	};
+diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
+index 34e0b70f5c5f..89c02a368c65 100644
+--- a/drivers/memory/tegra/Kconfig
++++ b/drivers/memory/tegra/Kconfig
+@@ -16,6 +16,16 @@ config TEGRA20_EMC
+ 	  This driver is required to change memory timings / clock rate for
+ 	  external memory.
  
-+	memory-controller@7000f400 {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++config TEGRA30_EMC
++	bool "NVIDIA Tegra30 External Memory Controller driver"
++	default y
++	depends on TEGRA_MC && ARCH_TEGRA_3x_SOC
++	help
++	  This driver is for the External Memory Controller (EMC) found on
++	  Tegra30 chips. The EMC controls the external DRAM on the board.
++	  This driver is required to change memory timings / clock rate for
++	  external memory.
 +
-+		nvidia,memory-controller = <&mc>;
-+	};
+ config TEGRA124_EMC
+ 	bool "NVIDIA Tegra124 External Memory Controller driver"
+ 	default y
+diff --git a/drivers/memory/tegra/Makefile b/drivers/memory/tegra/Makefile
+index 3971a6b7c487..3d23c4261104 100644
+--- a/drivers/memory/tegra/Makefile
++++ b/drivers/memory/tegra/Makefile
+@@ -11,5 +11,6 @@ tegra-mc-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210.o
+ obj-$(CONFIG_TEGRA_MC) += tegra-mc.o
+ 
+ obj-$(CONFIG_TEGRA20_EMC)  += tegra20-emc.o
++obj-$(CONFIG_TEGRA30_EMC)  += tegra30-emc.o
+ obj-$(CONFIG_TEGRA124_EMC) += tegra124-emc.o
+ obj-$(CONFIG_ARCH_TEGRA_186_SOC) += tegra186.o
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 31b47459c84d..52ede43f1e07 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -51,9 +51,6 @@
+ #define MC_EMEM_ADR_CFG 0x54
+ #define MC_EMEM_ADR_CFG_EMEM_NUMDEV BIT(0)
+ 
+-#define MC_TIMING_CONTROL		0xfc
+-#define MC_TIMING_UPDATE		BIT(0)
+-
+ static const struct of_device_id tegra_mc_of_match[] = {
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ 	{ .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index 887a3b07334f..90da9f62ce2b 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -9,20 +9,32 @@
+ #ifndef MEMORY_TEGRA_MC_H
+ #define MEMORY_TEGRA_MC_H
+ 
++#include <linux/bits.h>
+ #include <linux/io.h>
+ #include <linux/types.h>
+ 
+ #include <soc/tegra/mc.h>
+ 
+-#define MC_INT_DECERR_MTS (1 << 16)
+-#define MC_INT_SECERR_SEC (1 << 13)
+-#define MC_INT_DECERR_VPR (1 << 12)
+-#define MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
+-#define MC_INT_INVALID_SMMU_PAGE (1 << 10)
+-#define MC_INT_ARBITRATION_EMEM (1 << 9)
+-#define MC_INT_SECURITY_VIOLATION (1 << 8)
+-#define MC_INT_INVALID_GART_PAGE (1 << 7)
+-#define MC_INT_DECERR_EMEM (1 << 6)
++#define MC_INT_DECERR_MTS				BIT(16)
++#define MC_INT_SECERR_SEC				BIT(13)
++#define MC_INT_DECERR_VPR				BIT(12)
++#define MC_INT_INVALID_APB_ASID_UPDATE			BIT(11)
++#define MC_INT_INVALID_SMMU_PAGE			BIT(10)
++#define MC_INT_ARBITRATION_EMEM				BIT(9)
++#define MC_INT_SECURITY_VIOLATION			BIT(8)
++#define MC_INT_INVALID_GART_PAGE			BIT(7)
++#define MC_INT_DECERR_EMEM				BIT(6)
 +
- 	fuse@7000f800 {
- 		compatible = "nvidia,tegra30-efuse";
- 		reg = <0x7000f800 0x400>;
++#define MC_EMEM_ARB_OUTSTANDING_REQ			0x94
++#define MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK		0x1ff
++#define MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE	BIT(30)
++#define MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE	BIT(31)
++
++#define MC_EMEM_ARB_OVERRIDE				0xe8
++#define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
++
++#define MC_TIMING_CONTROL				0xfc
++#define MC_TIMING_UPDATE				BIT(0)
+ 
+ static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+ {
 diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
-index 38ebdb076ccd..defdb38bde54 100644
---- a/drivers/memory/tegra/tegra30-emc.c
+new file mode 100644
+index 000000000000..38ebdb076ccd
+--- /dev/null
 +++ b/drivers/memory/tegra/tegra30-emc.c
-@@ -980,7 +980,8 @@ static long emc_round_rate(unsigned long rate,
- 	}
+@@ -0,0 +1,1105 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Tegra30 External Memory Controller driver
++ *
++ * Author: Dmitry Osipenko <digetx@gmail.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/clk/tegra.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/sort.h>
++#include <linux/types.h>
++
++#include <soc/tegra/fuse.h>
++
++#include "mc.h"
++
++#define EMC_INTSTATUS				0x000
++#define EMC_INTMASK				0x004
++#define EMC_DBG					0x008
++#define EMC_CFG					0x00c
++#define EMC_REFCTRL				0x020
++#define EMC_TIMING_CONTROL			0x028
++#define EMC_RC					0x02c
++#define EMC_RFC					0x030
++#define EMC_RAS					0x034
++#define EMC_RP					0x038
++#define EMC_R2W					0x03c
++#define EMC_W2R					0x040
++#define EMC_R2P					0x044
++#define EMC_W2P					0x048
++#define EMC_RD_RCD				0x04c
++#define EMC_WR_RCD				0x050
++#define EMC_RRD					0x054
++#define EMC_REXT				0x058
++#define EMC_WDV					0x05c
++#define EMC_QUSE				0x060
++#define EMC_QRST				0x064
++#define EMC_QSAFE				0x068
++#define EMC_RDV					0x06c
++#define EMC_REFRESH				0x070
++#define EMC_BURST_REFRESH_NUM			0x074
++#define EMC_PDEX2WR				0x078
++#define EMC_PDEX2RD				0x07c
++#define EMC_PCHG2PDEN				0x080
++#define EMC_ACT2PDEN				0x084
++#define EMC_AR2PDEN				0x088
++#define EMC_RW2PDEN				0x08c
++#define EMC_TXSR				0x090
++#define EMC_TCKE				0x094
++#define EMC_TFAW				0x098
++#define EMC_TRPAB				0x09c
++#define EMC_TCLKSTABLE				0x0a0
++#define EMC_TCLKSTOP				0x0a4
++#define EMC_TREFBW				0x0a8
++#define EMC_QUSE_EXTRA				0x0ac
++#define EMC_ODT_WRITE				0x0b0
++#define EMC_ODT_READ				0x0b4
++#define EMC_WEXT				0x0b8
++#define EMC_CTT					0x0bc
++#define EMC_MRS_WAIT_CNT			0x0c8
++#define EMC_MRS					0x0cc
++#define EMC_EMRS				0x0d0
++#define EMC_SELF_REF				0x0e0
++#define EMC_MRW					0x0e8
++#define EMC_XM2DQSPADCTRL3			0x0f8
++#define EMC_FBIO_SPARE				0x100
++#define EMC_FBIO_CFG5				0x104
++#define EMC_FBIO_CFG6				0x114
++#define EMC_CFG_RSV				0x120
++#define EMC_AUTO_CAL_CONFIG			0x2a4
++#define EMC_AUTO_CAL_INTERVAL			0x2a8
++#define EMC_AUTO_CAL_STATUS			0x2ac
++#define EMC_STATUS				0x2b4
++#define EMC_CFG_2				0x2b8
++#define EMC_CFG_DIG_DLL				0x2bc
++#define EMC_CFG_DIG_DLL_PERIOD			0x2c0
++#define EMC_CTT_DURATION			0x2d8
++#define EMC_CTT_TERM_CTRL			0x2dc
++#define EMC_ZCAL_INTERVAL			0x2e0
++#define EMC_ZCAL_WAIT_CNT			0x2e4
++#define EMC_ZQ_CAL				0x2ec
++#define EMC_XM2CMDPADCTRL			0x2f0
++#define EMC_XM2DQSPADCTRL2			0x2fc
++#define EMC_XM2DQPADCTRL2			0x304
++#define EMC_XM2CLKPADCTRL			0x308
++#define EMC_XM2COMPPADCTRL			0x30c
++#define EMC_XM2VTTGENPADCTRL			0x310
++#define EMC_XM2VTTGENPADCTRL2			0x314
++#define EMC_XM2QUSEPADCTRL			0x318
++#define EMC_DLL_XFORM_DQS0			0x328
++#define EMC_DLL_XFORM_DQS1			0x32c
++#define EMC_DLL_XFORM_DQS2			0x330
++#define EMC_DLL_XFORM_DQS3			0x334
++#define EMC_DLL_XFORM_DQS4			0x338
++#define EMC_DLL_XFORM_DQS5			0x33c
++#define EMC_DLL_XFORM_DQS6			0x340
++#define EMC_DLL_XFORM_DQS7			0x344
++#define EMC_DLL_XFORM_QUSE0			0x348
++#define EMC_DLL_XFORM_QUSE1			0x34c
++#define EMC_DLL_XFORM_QUSE2			0x350
++#define EMC_DLL_XFORM_QUSE3			0x354
++#define EMC_DLL_XFORM_QUSE4			0x358
++#define EMC_DLL_XFORM_QUSE5			0x35c
++#define EMC_DLL_XFORM_QUSE6			0x360
++#define EMC_DLL_XFORM_QUSE7			0x364
++#define EMC_DLL_XFORM_DQ0			0x368
++#define EMC_DLL_XFORM_DQ1			0x36c
++#define EMC_DLL_XFORM_DQ2			0x370
++#define EMC_DLL_XFORM_DQ3			0x374
++#define EMC_DLI_TRIM_TXDQS0			0x3a8
++#define EMC_DLI_TRIM_TXDQS1			0x3ac
++#define EMC_DLI_TRIM_TXDQS2			0x3b0
++#define EMC_DLI_TRIM_TXDQS3			0x3b4
++#define EMC_DLI_TRIM_TXDQS4			0x3b8
++#define EMC_DLI_TRIM_TXDQS5			0x3bc
++#define EMC_DLI_TRIM_TXDQS6			0x3c0
++#define EMC_DLI_TRIM_TXDQS7			0x3c4
++#define EMC_STALL_THEN_EXE_BEFORE_CLKCHANGE	0x3c8
++#define EMC_STALL_THEN_EXE_AFTER_CLKCHANGE	0x3cc
++#define EMC_UNSTALL_RW_AFTER_CLKCHANGE		0x3d0
++#define EMC_SEL_DPD_CTRL			0x3d8
++#define EMC_PRE_REFRESH_REQ_CNT			0x3dc
++#define EMC_DYN_SELF_REF_CONTROL		0x3e0
++#define EMC_TXSRDLL				0x3e4
++
++#define EMC_STATUS_TIMING_UPDATE_STALLED	BIT(23)
++
++#define EMC_MODE_SET_DLL_RESET			BIT(8)
++#define EMC_MODE_SET_LONG_CNT			BIT(26)
++
++#define EMC_SELF_REF_CMD_ENABLED		BIT(0)
++
++#define EMC_SELF_REF_DEV_SEL_SHIFT		30
++#define DRAM_DEV_SEL_ALL			(0 << EMC_SELF_REF_DEV_SEL_SHIFT)
++#define DRAM_DEV_SEL_0				(2 << EMC_SELF_REF_DEV_SEL_SHIFT)
++#define DRAM_DEV_SEL_1				(1 << EMC_SELF_REF_DEV_SEL_SHIFT)
++#define DRAM_BROADCAST(num) \
++	((num) > 1 ? DRAM_DEV_SEL_ALL : DRAM_DEV_SEL_0)
++
++#define EMC_ZQ_CAL_CMD				BIT(0)
++#define EMC_ZQ_CAL_LONG				BIT(4)
++#define EMC_ZQ_CAL_LONG_CMD_DEV0 \
++	(DRAM_DEV_SEL_0 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
++#define EMC_ZQ_CAL_LONG_CMD_DEV1 \
++	(DRAM_DEV_SEL_1 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
++
++#define EMC_DBG_WRITE_MUX_ACTIVE		BIT(1)
++
++#define EMC_CFG5_QUSE_MODE_SHIFT		13
++#define EMC_CFG5_QUSE_MODE_MASK			(0x7 << EMC_CFG5_QUSE_MODE_SHIFT)
++
++#define EMC_CFG5_QUSE_MODE_INTERNAL_LPBK	2
++#define EMC_CFG5_QUSE_MODE_PULSE_INTERN		3
++
++#define EMC_SEL_DPD_CTRL_QUSE_DPD_ENABLE	BIT(9)
++
++#define EMC_XM2COMPPADCTRL_VREF_CAL_ENABLE	BIT(10)
++
++#define EMC_XM2QUSEPADCTRL_IVREF_ENABLE		BIT(4)
++
++#define EMC_XM2DQSPADCTRL2_VREF_ENABLE		BIT(5)
++#define EMC_XM2DQSPADCTRL3_VREF_ENABLE		BIT(5)
++
++#define EMC_AUTO_CAL_STATUS_ACTIVE		BIT(31)
++
++#define	EMC_FBIO_CFG5_DRAM_TYPE_MASK		0x3
++
++#define EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK	0x3ff
++#define EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT	16
++#define EMC_MRS_WAIT_CNT_LONG_WAIT_MASK \
++	(0x3ff << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT)
++
++#define EMC_REFCTRL_DEV_SEL_MASK		0x3
++#define EMC_REFCTRL_ENABLE			BIT(31)
++#define EMC_REFCTRL_ENABLE_ALL(num) \
++	(((num) > 1 ? 0 : 2) | EMC_REFCTRL_ENABLE)
++#define EMC_REFCTRL_DISABLE_ALL(num)		((num) > 1 ? 0 : 2)
++
++#define EMC_CFG_PERIODIC_QRST			BIT(21)
++#define EMC_CFG_DYN_SREF_ENABLE			BIT(28)
++
++#define EMC_CLKCHANGE_REQ_ENABLE		BIT(0)
++#define EMC_CLKCHANGE_PD_ENABLE			BIT(1)
++#define EMC_CLKCHANGE_SR_ENABLE			BIT(2)
++
++#define EMC_TIMING_UPDATE			BIT(0)
++
++#define EMC_REFRESH_OVERFLOW_INT		BIT(3)
++#define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
++
++enum emc_dram_type {
++	DRAM_TYPE_DDR3,
++	DRAM_TYPE_DDR1,
++	DRAM_TYPE_LPDDR2,
++	DRAM_TYPE_DDR2,
++};
++
++enum emc_dll_change {
++	DLL_CHANGE_NONE,
++	DLL_CHANGE_ON,
++	DLL_CHANGE_OFF
++};
++
++static const u16 emc_timing_registers[] = {
++	[0] = EMC_RC,
++	[1] = EMC_RFC,
++	[2] = EMC_RAS,
++	[3] = EMC_RP,
++	[4] = EMC_R2W,
++	[5] = EMC_W2R,
++	[6] = EMC_R2P,
++	[7] = EMC_W2P,
++	[8] = EMC_RD_RCD,
++	[9] = EMC_WR_RCD,
++	[10] = EMC_RRD,
++	[11] = EMC_REXT,
++	[12] = EMC_WEXT,
++	[13] = EMC_WDV,
++	[14] = EMC_QUSE,
++	[15] = EMC_QRST,
++	[16] = EMC_QSAFE,
++	[17] = EMC_RDV,
++	[18] = EMC_REFRESH,
++	[19] = EMC_BURST_REFRESH_NUM,
++	[20] = EMC_PRE_REFRESH_REQ_CNT,
++	[21] = EMC_PDEX2WR,
++	[22] = EMC_PDEX2RD,
++	[23] = EMC_PCHG2PDEN,
++	[24] = EMC_ACT2PDEN,
++	[25] = EMC_AR2PDEN,
++	[26] = EMC_RW2PDEN,
++	[27] = EMC_TXSR,
++	[28] = EMC_TXSRDLL,
++	[29] = EMC_TCKE,
++	[30] = EMC_TFAW,
++	[31] = EMC_TRPAB,
++	[32] = EMC_TCLKSTABLE,
++	[33] = EMC_TCLKSTOP,
++	[34] = EMC_TREFBW,
++	[35] = EMC_QUSE_EXTRA,
++	[36] = EMC_FBIO_CFG6,
++	[37] = EMC_ODT_WRITE,
++	[38] = EMC_ODT_READ,
++	[39] = EMC_FBIO_CFG5,
++	[40] = EMC_CFG_DIG_DLL,
++	[41] = EMC_CFG_DIG_DLL_PERIOD,
++	[42] = EMC_DLL_XFORM_DQS0,
++	[43] = EMC_DLL_XFORM_DQS1,
++	[44] = EMC_DLL_XFORM_DQS2,
++	[45] = EMC_DLL_XFORM_DQS3,
++	[46] = EMC_DLL_XFORM_DQS4,
++	[47] = EMC_DLL_XFORM_DQS5,
++	[48] = EMC_DLL_XFORM_DQS6,
++	[49] = EMC_DLL_XFORM_DQS7,
++	[50] = EMC_DLL_XFORM_QUSE0,
++	[51] = EMC_DLL_XFORM_QUSE1,
++	[52] = EMC_DLL_XFORM_QUSE2,
++	[53] = EMC_DLL_XFORM_QUSE3,
++	[54] = EMC_DLL_XFORM_QUSE4,
++	[55] = EMC_DLL_XFORM_QUSE5,
++	[56] = EMC_DLL_XFORM_QUSE6,
++	[57] = EMC_DLL_XFORM_QUSE7,
++	[58] = EMC_DLI_TRIM_TXDQS0,
++	[59] = EMC_DLI_TRIM_TXDQS1,
++	[60] = EMC_DLI_TRIM_TXDQS2,
++	[61] = EMC_DLI_TRIM_TXDQS3,
++	[62] = EMC_DLI_TRIM_TXDQS4,
++	[63] = EMC_DLI_TRIM_TXDQS5,
++	[64] = EMC_DLI_TRIM_TXDQS6,
++	[65] = EMC_DLI_TRIM_TXDQS7,
++	[66] = EMC_DLL_XFORM_DQ0,
++	[67] = EMC_DLL_XFORM_DQ1,
++	[68] = EMC_DLL_XFORM_DQ2,
++	[69] = EMC_DLL_XFORM_DQ3,
++	[70] = EMC_XM2CMDPADCTRL,
++	[71] = EMC_XM2DQSPADCTRL2,
++	[72] = EMC_XM2DQPADCTRL2,
++	[73] = EMC_XM2CLKPADCTRL,
++	[74] = EMC_XM2COMPPADCTRL,
++	[75] = EMC_XM2VTTGENPADCTRL,
++	[76] = EMC_XM2VTTGENPADCTRL2,
++	[77] = EMC_XM2QUSEPADCTRL,
++	[78] = EMC_XM2DQSPADCTRL3,
++	[79] = EMC_CTT_TERM_CTRL,
++	[80] = EMC_ZCAL_INTERVAL,
++	[81] = EMC_ZCAL_WAIT_CNT,
++	[82] = EMC_MRS_WAIT_CNT,
++	[83] = EMC_AUTO_CAL_CONFIG,
++	[84] = EMC_CTT,
++	[85] = EMC_CTT_DURATION,
++	[86] = EMC_DYN_SELF_REF_CONTROL,
++	[87] = EMC_FBIO_SPARE,
++	[88] = EMC_CFG_RSV,
++};
++
++struct emc_timing {
++	unsigned long rate;
++
++	u32 data[ARRAY_SIZE(emc_timing_registers)];
++
++	u32 emc_auto_cal_interval;
++	u32 emc_mode_1;
++	u32 emc_mode_2;
++	u32 emc_mode_reset;
++	u32 emc_zcal_cnt_long;
++	u32 emc_cfg_periodic_qrst;
++	u32 emc_cfg_dyn_self_ref;
++};
++
++struct tegra_emc {
++	struct device *dev;
++	struct tegra_mc *mc;
++	struct completion clk_handshake_complete;
++	struct notifier_block clk_nb;
++	struct clk *clk;
++	void __iomem *regs;
++
++	struct emc_timing *timings;
++	unsigned int num_timings;
++
++	u32 mc_override;
++	u32 emc_cfg;
++
++	u32 emc_mode_1;
++	u32 emc_mode_2;
++	u32 emc_mode_reset;
++
++	bool vref_cal_toggle : 1;
++	bool zcal_long : 1;
++	bool dll_on : 1;
++	bool prepared : 1;
++	bool bad_state : 1;
++};
++
++static irqreturn_t tegra_emc_isr(int irq, void *data)
++{
++	struct tegra_emc *emc = data;
++	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
++	u32 status;
++
++	status = readl_relaxed(emc->regs + EMC_INTSTATUS) & intmask;
++	if (!status)
++		return IRQ_NONE;
++
++	/* notify about EMC-CAR handshake completion */
++	if (status & EMC_CLKCHANGE_COMPLETE_INT)
++		complete(&emc->clk_handshake_complete);
++
++	/* notify about HW problem */
++	if (status & EMC_REFRESH_OVERFLOW_INT)
++		dev_err_ratelimited(emc->dev,
++				    "refresh request overflow timeout\n");
++
++	/* clear interrupts */
++	writel_relaxed(status, emc->regs + EMC_INTSTATUS);
++
++	return IRQ_HANDLED;
++}
++
++static struct emc_timing *tegra_emc_find_timing(struct tegra_emc *emc,
++						unsigned long rate)
++{
++	struct emc_timing *timing = NULL;
++	unsigned int i;
++
++	for (i = 0; i < emc->num_timings; i++) {
++		if (emc->timings[i].rate >= rate) {
++			timing = &emc->timings[i];
++			break;
++		}
++	}
++
++	if (!timing) {
++		dev_err(emc->dev, "no timing for rate %lu\n", rate);
++		return NULL;
++	}
++
++	return timing;
++}
++
++static bool emc_dqs_preset(struct tegra_emc *emc, struct emc_timing *timing,
++			   bool *schmitt_to_vref)
++{
++	bool preset = false;
++	u32 val;
++
++	if (timing->data[71] & EMC_XM2DQSPADCTRL2_VREF_ENABLE) {
++		val = readl_relaxed(emc->regs + EMC_XM2DQSPADCTRL2);
++
++		if (!(val & EMC_XM2DQSPADCTRL2_VREF_ENABLE)) {
++			val |= EMC_XM2DQSPADCTRL2_VREF_ENABLE;
++			writel_relaxed(val, emc->regs + EMC_XM2DQSPADCTRL2);
++
++			preset = true;
++		}
++	}
++
++	if (timing->data[78] & EMC_XM2DQSPADCTRL3_VREF_ENABLE) {
++		val = readl_relaxed(emc->regs + EMC_XM2DQSPADCTRL3);
++
++		if (!(val & EMC_XM2DQSPADCTRL3_VREF_ENABLE)) {
++			val |= EMC_XM2DQSPADCTRL3_VREF_ENABLE;
++			writel_relaxed(val, emc->regs + EMC_XM2DQSPADCTRL3);
++
++			preset = true;
++		}
++	}
++
++	if (timing->data[77] & EMC_XM2QUSEPADCTRL_IVREF_ENABLE) {
++		val = readl_relaxed(emc->regs + EMC_XM2QUSEPADCTRL);
++
++		if (!(val & EMC_XM2QUSEPADCTRL_IVREF_ENABLE)) {
++			val |= EMC_XM2QUSEPADCTRL_IVREF_ENABLE;
++			writel_relaxed(val, emc->regs + EMC_XM2QUSEPADCTRL);
++
++			*schmitt_to_vref = true;
++			preset = true;
++		}
++	}
++
++	return preset;
++}
++
++static void emc_seq_update_timing(struct tegra_emc *emc)
++{
++	u32 val;
++	int err;
++
++	writel_relaxed(EMC_TIMING_UPDATE, emc->regs + EMC_TIMING_CONTROL);
++
++	err = readl_relaxed_poll_timeout_atomic(emc->regs + EMC_STATUS, val,
++				!(val & EMC_STATUS_TIMING_UPDATE_STALLED),
++				1, 100);
++	if (err)
++		dev_err(emc->dev, "failed to update timing: %d\n", err);
++}
++
++static int emc_prepare_timing_change(struct tegra_emc *emc, unsigned long rate)
++{
++	struct emc_timing *timing = tegra_emc_find_timing(emc, rate);
++	enum emc_dll_change dll_change;
++	enum emc_dram_type dram_type;
++	bool schmitt_to_vref = false;
++	unsigned int pre_wait = 0;
++	unsigned int dram_num;
++	unsigned int i;
++	bool qrst_used;
++	u32 fbio_cfg5;
++	u32 emc_dbg;
++	u32 val;
++	int err;
++
++	if (!timing || emc->bad_state)
++		return -EINVAL;
++
++	dev_dbg(emc->dev, "%s: using timing rate %lu for requested rate %lu\n",
++		__func__, timing->rate, rate);
++
++	emc->vref_cal_toggle = false;
++	emc->mc_override = mc_readl(emc->mc, MC_EMEM_ARB_OVERRIDE);
++	emc->emc_cfg = readl_relaxed(emc->regs + EMC_CFG);
++	emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
++	qrst_used = false;
++
++	if (emc->dll_on == !!(timing->emc_mode_1 & 0x1))
++		dll_change = DLL_CHANGE_NONE;
++	else if (timing->emc_mode_1 & 0x1)
++		dll_change = DLL_CHANGE_ON;
++	else
++		dll_change = DLL_CHANGE_OFF;
++
++	emc->dll_on = !!(timing->emc_mode_1 & 0x1);
++
++	if (timing->data[80] && !readl_relaxed(emc->regs + EMC_ZCAL_INTERVAL))
++		emc->zcal_long = true;
++	else
++		emc->zcal_long = false;
++
++	fbio_cfg5 = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
++	dram_type = fbio_cfg5 & EMC_FBIO_CFG5_DRAM_TYPE_MASK;
++
++	dram_num = tegra_mc_get_emem_device_count(emc->mc);
++
++	/* disable dynamic self-refresh */
++	if (emc->emc_cfg & EMC_CFG_DYN_SREF_ENABLE) {
++		emc->emc_cfg &= ~EMC_CFG_DYN_SREF_ENABLE;
++		writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
++
++		pre_wait = 5;
++	}
++
++	/* update MC arbiter settings */
++	val = mc_readl(emc->mc, MC_EMEM_ARB_OUTSTANDING_REQ);
++	if (!(val & MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE) ||
++	    ((val & MC_EMEM_ARB_OUTSTANDING_REQ_MAX_MASK) > 0x50)) {
++
++		val = MC_EMEM_ARB_OUTSTANDING_REQ_LIMIT_ENABLE |
++		      MC_EMEM_ARB_OUTSTANDING_REQ_HOLDOFF_OVERRIDE | 0x50;
++		mc_writel(emc->mc, val, MC_EMEM_ARB_OUTSTANDING_REQ);
++		mc_writel(emc->mc, MC_TIMING_UPDATE, MC_TIMING_CONTROL);
++	}
++
++	if (emc->mc_override & MC_EMEM_ARB_OVERRIDE_EACK_MASK)
++		mc_writel(emc->mc,
++			  emc->mc_override & ~MC_EMEM_ARB_OVERRIDE_EACK_MASK,
++			  MC_EMEM_ARB_OVERRIDE);
++
++	/* check DQ/DQS VREF delay */
++	if (emc_dqs_preset(emc, timing, &schmitt_to_vref)) {
++		if (pre_wait < 3)
++			pre_wait = 3;
++	}
++
++	if (pre_wait) {
++		emc_seq_update_timing(emc);
++		udelay(pre_wait);
++	}
++
++	/* disable auto-calibration if VREF mode is switching */
++	if (timing->emc_auto_cal_interval) {
++		val = readl_relaxed(emc->regs + EMC_XM2COMPPADCTRL);
++		val ^= timing->data[74];
++
++		if (val & EMC_XM2COMPPADCTRL_VREF_CAL_ENABLE) {
++			writel_relaxed(0, emc->regs + EMC_AUTO_CAL_INTERVAL);
++
++			err = readl_relaxed_poll_timeout_atomic(
++				emc->regs + EMC_AUTO_CAL_STATUS, val,
++				!(val & EMC_AUTO_CAL_STATUS_ACTIVE), 1, 300);
++			if (err)
++				dev_err(emc->dev,
++					"failed to disable auto-cal: %d\n",
++					err);
++
++			emc->vref_cal_toggle = true;
++		}
++	}
++
++	/* program shadow registers */
++	for (i = 0; i < ARRAY_SIZE(timing->data); i++) {
++		/* EMC_XM2CLKPADCTRL should be programmed separately */
++		if (i != 73)
++			writel_relaxed(timing->data[i],
++				       emc->regs + emc_timing_registers[i]);
++	}
++
++	tegra_mc_write_emem_configuration(emc->mc, timing->rate);
++
++	/* DDR3: predict MRS long wait count */
++	if (dram_type == DRAM_TYPE_DDR3 &&
++	    dll_change == DLL_CHANGE_ON) {
++		u32 cnt = 512;
++
++		if (emc->zcal_long)
++			cnt -= dram_num * 256;
++
++		val = timing->data[82] & EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK;
++		if (cnt < val)
++			cnt = val;
++
++		val = timing->data[82] & ~EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
++		val |= (cnt << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT)
++			& EMC_MRS_WAIT_CNT_LONG_WAIT_MASK;
++
++		writel_relaxed(val, emc->regs + EMC_MRS_WAIT_CNT);
++	}
++
++	/* disable interrupts since read access is prohibited after stalling */
++	writel_relaxed(0x0, emc->regs + EMC_INTMASK);
++
++	/* this read also completes the writes */
++	val = readl_relaxed(emc->regs + EMC_SEL_DPD_CTRL);
++
++	if (!(val & EMC_SEL_DPD_CTRL_QUSE_DPD_ENABLE) && schmitt_to_vref) {
++		u32 cur_mode, new_mode;
++
++		cur_mode = fbio_cfg5 & EMC_CFG5_QUSE_MODE_MASK;
++		cur_mode >>= EMC_CFG5_QUSE_MODE_SHIFT;
++
++		new_mode = timing->data[39] & EMC_CFG5_QUSE_MODE_MASK;
++		new_mode >>= EMC_CFG5_QUSE_MODE_SHIFT;
++
++		if ((cur_mode != EMC_CFG5_QUSE_MODE_PULSE_INTERN &&
++		     cur_mode != EMC_CFG5_QUSE_MODE_INTERNAL_LPBK) ||
++		    (new_mode != EMC_CFG5_QUSE_MODE_PULSE_INTERN &&
++		     new_mode != EMC_CFG5_QUSE_MODE_INTERNAL_LPBK))
++			qrst_used = true;
++	}
++
++	/* flow control marker 1 */
++	writel_relaxed(0x1, emc->regs + EMC_STALL_THEN_EXE_BEFORE_CLKCHANGE);
++
++	/* enable periodic reset */
++	if (qrst_used) {
++		writel_relaxed(emc_dbg | EMC_DBG_WRITE_MUX_ACTIVE,
++			       emc->regs + EMC_DBG);
++		writel_relaxed(emc->emc_cfg | EMC_CFG_PERIODIC_QRST,
++			       emc->regs + EMC_CFG);
++		writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
++	}
++
++	/* disable auto-refresh to save time after clock change */
++	writel_relaxed(EMC_REFCTRL_DISABLE_ALL(dram_num),
++		       emc->regs + EMC_REFCTRL);
++
++	/* turn off DLL and enter self-refresh on DDR3 */
++	if (dram_type == DRAM_TYPE_DDR3) {
++		if (dll_change == DLL_CHANGE_OFF)
++			writel_relaxed(timing->emc_mode_1, emc->regs + EMC_EMRS);
++
++		writel_relaxed(DRAM_BROADCAST(dram_num) |
++			       EMC_SELF_REF_CMD_ENABLED,
++			       emc->regs + EMC_SELF_REF);
++	}
++
++	/* flow control marker 2 */
++	writel_relaxed(0x1, emc->regs + EMC_STALL_THEN_EXE_AFTER_CLKCHANGE);
++
++	/* enable write MUX, update unshadowed pad control */
++	writel_relaxed(emc_dbg | EMC_DBG_WRITE_MUX_ACTIVE, emc->regs + EMC_DBG);
++	writel_relaxed(timing->data[73], emc->regs + EMC_XM2CLKPADCTRL);
++
++	/* restore periodic QRST and disable write MUX */
++	val = emc->emc_cfg & EMC_CFG_PERIODIC_QRST;
++	if (qrst_used || !!timing->emc_cfg_periodic_qrst != !!val) {
++		if (timing->emc_cfg_periodic_qrst)
++			emc->emc_cfg |= EMC_CFG_PERIODIC_QRST;
++		else
++			emc->emc_cfg &= ~EMC_CFG_PERIODIC_QRST;
++
++		writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
++	}
++	writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
++
++	/* exit self-refresh on DDR3 */
++	if (dram_type == DRAM_TYPE_DDR3)
++		writel_relaxed(DRAM_BROADCAST(dram_num),
++			       emc->regs + EMC_SELF_REF);
++
++	/* set DRAM mode registers */
++	if (dram_type == DRAM_TYPE_DDR3) {
++		if (timing->emc_mode_1 != emc->emc_mode_1)
++			writel_relaxed(timing->emc_mode_1, emc->regs + EMC_EMRS);
++		if (timing->emc_mode_2 != emc->emc_mode_2)
++			writel_relaxed(timing->emc_mode_2, emc->regs + EMC_EMRS);
++
++		if (timing->emc_mode_reset != emc->emc_mode_reset ||
++		    dll_change == DLL_CHANGE_ON) {
++			val = timing->emc_mode_reset;
++			if (dll_change == DLL_CHANGE_ON) {
++				val |= EMC_MODE_SET_DLL_RESET;
++				val |= EMC_MODE_SET_LONG_CNT;
++			} else {
++				val &= ~EMC_MODE_SET_DLL_RESET;
++			}
++			writel_relaxed(val, emc->regs + EMC_MRS);
++		}
++	} else {
++		if (timing->emc_mode_2 != emc->emc_mode_2)
++			writel_relaxed(timing->emc_mode_2, emc->regs + EMC_MRW);
++		if (timing->emc_mode_1 != emc->emc_mode_1)
++			writel_relaxed(timing->emc_mode_1, emc->regs + EMC_MRW);
++	}
++
++	emc->emc_mode_1 = timing->emc_mode_1;
++	emc->emc_mode_2 = timing->emc_mode_2;
++	emc->emc_mode_reset = timing->emc_mode_reset;
++
++	/* issue ZCAL command if turning ZCAL on */
++	if (emc->zcal_long) {
++		writel_relaxed(EMC_ZQ_CAL_LONG_CMD_DEV0,
++			       emc->regs + EMC_ZQ_CAL);
++
++		if (dram_num > 1)
++			writel_relaxed(EMC_ZQ_CAL_LONG_CMD_DEV1,
++				       emc->regs + EMC_ZQ_CAL);
++	}
++
++	/* flow control marker 3 */
++	writel_relaxed(0x1, emc->regs + EMC_UNSTALL_RW_AFTER_CLKCHANGE);
++
++	writel_relaxed(EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT,
++		       emc->regs + EMC_INTMASK);
++
++	reinit_completion(&emc->clk_handshake_complete);
++
++	emc->prepared = true;
++
++	return 0;
++}
++
++static int emc_complete_timing_change(struct tegra_emc *emc,
++				      unsigned long rate)
++{
++	struct emc_timing *timing = tegra_emc_find_timing(emc, rate);
++	unsigned int dram_num;
++	long timeout;
++
++	timeout = wait_for_completion_timeout(&emc->clk_handshake_complete,
++					      usecs_to_jiffies(100));
++	if (timeout == 0) {
++		dev_err(emc->dev, "EMC-CAR handshake failed\n");
++		emc->bad_state = true;
++		return -EIO;
++	} else if (timeout < 0) {
++		dev_err(emc->dev, "failed to wait for EMC-CAR handshake: %ld\n",
++			timeout);
++		udelay(100);
++	}
++
++	dram_num = tegra_mc_get_emem_device_count(emc->mc);
++
++	/* re-enable auto-refresh */
++	writel_relaxed(EMC_REFCTRL_ENABLE_ALL(dram_num),
++		       emc->regs + EMC_REFCTRL);
++
++	/* restore auto-calibration */
++	if (emc->vref_cal_toggle)
++		writel_relaxed(timing->emc_auto_cal_interval,
++			       emc->regs + EMC_AUTO_CAL_INTERVAL);
++
++	/* restore dynamic self-refresh */
++	if (timing->emc_cfg_dyn_self_ref) {
++		emc->emc_cfg |= EMC_CFG_DYN_SREF_ENABLE;
++		writel_relaxed(emc->emc_cfg, emc->regs + EMC_CFG);
++	}
++
++	/* set ZCAL wait count */
++	if (emc->zcal_long)
++		writel_relaxed(timing->emc_zcal_cnt_long,
++			       emc->regs + EMC_ZCAL_WAIT_CNT);
++
++	/* update restored timing */
++	udelay(2);
++	emc_seq_update_timing(emc);
++
++	/* restore early ACK */
++	mc_writel(emc->mc, emc->mc_override, MC_EMEM_ARB_OVERRIDE);
++
++	emc->prepared = false;
++
++	return 0;
++}
++
++static int emc_unprepare_timing_change(struct tegra_emc *emc,
++				       unsigned long rate)
++{
++	if (emc->prepared && !emc->bad_state) {
++		/* shouldn't ever happen in practice */
++		dev_err(emc->dev, "timing configuration can't be reverted\n");
++		emc->bad_state = true;
++	}
++
++	return 0;
++}
++
++static int tegra_emc_clk_change_notify(struct notifier_block *nb,
++				       unsigned long msg, void *data)
++{
++	struct tegra_emc *emc = container_of(nb, struct tegra_emc, clk_nb);
++	struct clk_notifier_data *cnd = data;
++	int err;
++
++	switch (msg) {
++	case PRE_RATE_CHANGE:
++		err = emc_prepare_timing_change(emc, cnd->new_rate);
++		break;
++
++	case ABORT_RATE_CHANGE:
++		err = emc_unprepare_timing_change(emc, cnd->old_rate);
++		break;
++
++	case POST_RATE_CHANGE:
++		err = emc_complete_timing_change(emc, cnd->new_rate);
++		break;
++
++	default:
++		return NOTIFY_DONE;
++	}
++
++	return notifier_from_errno(err);
++}
++
++static int load_one_timing_from_dt(struct tegra_emc *emc,
++				   struct emc_timing *timing,
++				   struct device_node *node)
++{
++	u32 value;
++	int err;
++
++	err = of_property_read_u32(node, "clock-frequency", &value);
++	if (err) {
++		dev_err(emc->dev, "timing %pOF: failed to read rate: %d\n",
++			node, err);
++		return err;
++	}
++
++	timing->rate = value;
++
++	err = of_property_read_u32_array(node, "nvidia,emc-configuration",
++					 timing->data,
++					 ARRAY_SIZE(emc_timing_registers));
++	if (err) {
++		dev_err(emc->dev,
++			"timing %pOF: failed to read emc timing data: %d\n",
++			node, err);
++		return err;
++	}
++
++#define EMC_READ_PROP(prop, dtprop) { \
++	err = of_property_read_u32(node, dtprop, &timing->prop); \
++	if (err) { \
++		dev_err(emc->dev, "timing %pOFn: failed to read " #prop ": %d\n", \
++			node, err); \
++		return err; \
++	} \
++}
++
++	EMC_READ_PROP(emc_auto_cal_interval, "nvidia,emc-auto-cal-interval")
++	EMC_READ_PROP(emc_mode_1, "nvidia,emc-mode-1")
++	EMC_READ_PROP(emc_mode_2, "nvidia,emc-mode-2")
++	EMC_READ_PROP(emc_mode_reset, "nvidia,emc-mode-reset")
++	EMC_READ_PROP(emc_zcal_cnt_long, "nvidia,emc-zcal-cnt-long")
++	EMC_READ_PROP(emc_cfg_dyn_self_ref, "nvidia,emc-cfg-dyn-self-ref")
++	EMC_READ_PROP(emc_cfg_periodic_qrst, "nvidia,emc-cfg-periodic-qrst")
++
++#undef EMC_READ_PROP
++
++	dev_dbg(emc->dev, "%s: %pOF: EMC rate %lu\n",
++		__func__, node, timing->rate);
++
++	return 0;
++}
++
++static int cmp_timings(const void *_a, const void *_b)
++{
++	const struct emc_timing *a = _a;
++	const struct emc_timing *b = _b;
++
++	if (a->rate < b->rate)
++		return -1;
++
++	if (a->rate > b->rate)
++		return 1;
++
++	return 0;
++}
++
++static int tegra_emc_load_timings_from_dt(struct tegra_emc *emc,
++					  struct device_node *node)
++{
++	struct device_node *child;
++	struct emc_timing *timing;
++	int child_count;
++	int err;
++
++	child_count = of_get_child_count(node);
++	if (!child_count) {
++		dev_err(emc->dev, "no memory timings in DT node: %pOF\n", node);
++		return -EINVAL;
++	}
++
++	emc->timings = devm_kcalloc(emc->dev, child_count, sizeof(*timing),
++				    GFP_KERNEL);
++	if (!emc->timings)
++		return -ENOMEM;
++
++	emc->num_timings = child_count;
++	timing = emc->timings;
++
++	for_each_child_of_node(node, child) {
++		err = load_one_timing_from_dt(emc, timing++, child);
++		if (err) {
++			of_node_put(child);
++			return err;
++		}
++	}
++
++	sort(emc->timings, emc->num_timings, sizeof(*timing), cmp_timings,
++	     NULL);
++
++	return 0;
++}
++
++static struct device_node *
++tegra_emc_find_node_by_ram_code(struct device *dev)
++{
++	struct device_node *np;
++	u32 value, ram_code;
++	int err;
++
++	ram_code = tegra_read_ram_code();
++
++	for_each_child_of_node(dev->of_node, np) {
++		err = of_property_read_u32(np, "nvidia,ram-code", &value);
++		if (err || value != ram_code)
++			continue;
++
++		return np;
++	}
++
++	dev_err(dev, "no memory timings for RAM code %u found in device-tree\n",
++		ram_code);
++
++	return NULL;
++}
++
++static int emc_setup_hw(struct tegra_emc *emc)
++{
++	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
++	enum emc_dram_type dram_type;
++	u32 fbio_cfg5;
++	u32 emc_cfg;
++
++	fbio_cfg5 = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
++	dram_type = fbio_cfg5 & EMC_FBIO_CFG5_DRAM_TYPE_MASK;
++
++	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
++
++	/* enable EMC and CAR to handshake on PLL divider/source changes */
++	emc_cfg |= EMC_CLKCHANGE_REQ_ENABLE;
++
++	/* configure clock change mode according to DRAM type */
++	switch (dram_type) {
++	case DRAM_TYPE_LPDDR2:
++		emc_cfg |= EMC_CLKCHANGE_PD_ENABLE;
++		emc_cfg &= ~EMC_CLKCHANGE_SR_ENABLE;
++		break;
++
++	default:
++		emc_cfg &= ~EMC_CLKCHANGE_SR_ENABLE;
++		emc_cfg &= ~EMC_CLKCHANGE_PD_ENABLE;
++		break;
++	}
++
++	writel_relaxed(emc_cfg, emc->regs + EMC_CFG_2);
++
++	/* initialize interrupt */
++	writel_relaxed(intmask, emc->regs + EMC_INTMASK);
++	writel_relaxed(intmask, emc->regs + EMC_INTSTATUS);
++
++	return 0;
++}
++
++static long emc_round_rate(unsigned long rate,
++			   unsigned long min_rate,
++			   unsigned long max_rate,
++			   void *arg)
++{
++	struct emc_timing *timing = NULL;
++	struct tegra_emc *emc = arg;
++	unsigned int i;
++
++	for (i = 0; i < emc->num_timings; i++) {
++		if (emc->timings[i].rate < rate && i != emc->num_timings - 1)
++			continue;
++
++		if (emc->timings[i].rate > max_rate) {
++			i = max(i, 1u) - 1;
++
++			if (emc->timings[i].rate < min_rate)
++				break;
++		}
++
++		if (emc->timings[i].rate < min_rate)
++			continue;
++
++		timing = &emc->timings[i];
++		break;
++	}
++
++	if (!timing) {
++		dev_err(emc->dev, "no timing for rate %lu\n", rate);
++		return -EINVAL;
++	}
++
++	return timing->rate;
++}
++
++static int tegra_emc_probe(struct platform_device *pdev)
++{
++	struct platform_device *mc;
++	struct device_node *np;
++	struct tegra_emc *emc;
++	struct resource *res;
++	int irq, err;
++
++	/* driver has nothing to do in a case of memory timing absence */
++	if (of_get_child_count(pdev->dev.of_node) == 0) {
++		dev_info(&pdev->dev,
++			 "EMC device-tree node doesn't have memory timings\n");
++		return 0;
++	}
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(&pdev->dev, "interrupt not specified\n");
++		return irq;
++	}
++
++	np = of_parse_phandle(pdev->dev.of_node, "nvidia,memory-controller", 0);
++	if (!np) {
++		dev_err(&pdev->dev, "could not get memory controller node\n");
++		return -ENOENT;
++	}
++
++	mc = of_find_device_by_node(np);
++	of_node_put(np);
++	if (!mc)
++		return -ENOENT;
++
++	np = tegra_emc_find_node_by_ram_code(&pdev->dev);
++	if (!np)
++		return -EINVAL;
++
++	emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
++	if (!emc) {
++		of_node_put(np);
++		return -ENOMEM;
++	}
++
++	emc->mc = platform_get_drvdata(mc);
++	if (!emc->mc)
++		return -EPROBE_DEFER;
++
++	init_completion(&emc->clk_handshake_complete);
++	emc->clk_nb.notifier_call = tegra_emc_clk_change_notify;
++	emc->dev = &pdev->dev;
++
++	err = tegra_emc_load_timings_from_dt(emc, np);
++	of_node_put(np);
++	if (err)
++		return err;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	emc->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(emc->regs))
++		return PTR_ERR(emc->regs);
++
++	err = emc_setup_hw(emc);
++	if (err)
++		return err;
++
++	err = devm_request_irq(&pdev->dev, irq, tegra_emc_isr, 0,
++			       dev_name(&pdev->dev), emc);
++	if (err) {
++		dev_err(&pdev->dev, "failed to request IRQ#%u: %d\n", irq, err);
++		return err;
++	}
++
++	tegra30_clk_set_emc_round_callback(emc_round_rate, emc);
++
++	emc->clk = clk_get(&pdev->dev, "emc");
++	if (IS_ERR(emc->clk)) {
++		err = PTR_ERR(emc->clk);
++		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
++		goto unset_cb;
++	}
++
++	err = clk_notifier_register(emc->clk, &emc->clk_nb);
++	if (err) {
++		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
++			err);
++		goto put_clk;
++	}
++
++	return 0;
++
++put_clk:
++	clk_put(emc->clk);
++unset_cb:
++	tegra30_clk_set_emc_round_callback(NULL, NULL);
++
++	return err;
++}
++
++static const struct of_device_id tegra_emc_of_match[] = {
++	{ .compatible = "nvidia,tegra30-emc", },
++	{},
++};
++
++static struct platform_driver tegra_emc_driver = {
++	.probe = tegra_emc_probe,
++	.driver = {
++		.name = "tegra30-emc",
++		.of_match_table = tegra_emc_of_match,
++		.suppress_bind_attrs = true,
++	},
++};
++
++static int __init tegra_emc_init(void)
++{
++	return platform_driver_register(&tegra_emc_driver);
++}
++subsys_initcall(tegra_emc_init);
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index bee5314ed404..3905ba95bdbc 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -13,6 +13,48 @@
  
- 	if (!timing) {
--		dev_err(emc->dev, "no timing for rate %lu\n", rate);
-+		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
-+			rate, min_rate, max_rate);
- 		return -EINVAL;
- 	}
+ #include "mc.h"
  
++#define MC_EMEM_ARB_CFG				0x90
++#define MC_EMEM_ARB_OUTSTANDING_REQ		0x94
++#define MC_EMEM_ARB_TIMING_RCD			0x98
++#define MC_EMEM_ARB_TIMING_RP			0x9c
++#define MC_EMEM_ARB_TIMING_RC			0xa0
++#define MC_EMEM_ARB_TIMING_RAS			0xa4
++#define MC_EMEM_ARB_TIMING_FAW			0xa8
++#define MC_EMEM_ARB_TIMING_RRD			0xac
++#define MC_EMEM_ARB_TIMING_RAP2PRE		0xb0
++#define MC_EMEM_ARB_TIMING_WAP2PRE		0xb4
++#define MC_EMEM_ARB_TIMING_R2R			0xb8
++#define MC_EMEM_ARB_TIMING_W2W			0xbc
++#define MC_EMEM_ARB_TIMING_R2W			0xc0
++#define MC_EMEM_ARB_TIMING_W2R			0xc4
++#define MC_EMEM_ARB_DA_TURNS			0xd0
++#define MC_EMEM_ARB_DA_COVERS			0xd4
++#define MC_EMEM_ARB_MISC0			0xd8
++#define MC_EMEM_ARB_MISC1			0xdc
++#define MC_EMEM_ARB_RING1_THROTTLE		0xe0
++
++static const unsigned long tegra30_mc_emem_regs[] = {
++	MC_EMEM_ARB_CFG,
++	MC_EMEM_ARB_OUTSTANDING_REQ,
++	MC_EMEM_ARB_TIMING_RCD,
++	MC_EMEM_ARB_TIMING_RP,
++	MC_EMEM_ARB_TIMING_RC,
++	MC_EMEM_ARB_TIMING_RAS,
++	MC_EMEM_ARB_TIMING_FAW,
++	MC_EMEM_ARB_TIMING_RRD,
++	MC_EMEM_ARB_TIMING_RAP2PRE,
++	MC_EMEM_ARB_TIMING_WAP2PRE,
++	MC_EMEM_ARB_TIMING_R2R,
++	MC_EMEM_ARB_TIMING_W2W,
++	MC_EMEM_ARB_TIMING_R2W,
++	MC_EMEM_ARB_TIMING_W2R,
++	MC_EMEM_ARB_DA_TURNS,
++	MC_EMEM_ARB_DA_COVERS,
++	MC_EMEM_ARB_MISC0,
++	MC_EMEM_ARB_MISC1,
++	MC_EMEM_ARB_RING1_THROTTLE,
++};
++
+ static const struct tegra_mc_client tegra30_mc_clients[] = {
+ 	{
+ 		.id = 0x00,
+@@ -997,6 +1039,8 @@ const struct tegra_mc_soc tegra30_mc_soc = {
+ 	.atom_size = 16,
+ 	.client_id_mask = 0x7f,
+ 	.smmu = &tegra30_smmu_soc,
++	.emem_regs = tegra30_mc_emem_regs,
++	.num_emem_regs = ARRAY_SIZE(tegra30_mc_emem_regs),
+ 	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
+ 		   MC_INT_DECERR_EMEM,
+ 	.reset_ops = &terga_mc_reset_ops_common,
 -- 
 2.21.0
 
