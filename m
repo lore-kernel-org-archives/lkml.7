@@ -2,176 +2,178 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD64C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC953C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6B921850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A09217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 09:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfDKJLM (ORCPT
+        id S1726853AbfDKJMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 05:11:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47122 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfDKJLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 05:11:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 194AFC023C;
-        Thu, 11 Apr 2019 09:11:11 +0000 (UTC)
-Received: from [10.36.118.43] (unknown [10.36.118.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E1EA617136;
-        Thu, 11 Apr 2019 09:11:08 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: Drop memory device reference after
- find_memory_block()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190410101455.17338-1-david@redhat.com>
- <20190411084141.GQ10383@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <0bbe632f-cb85-4a98-0c79-ded11cf39081@redhat.com>
-Date:   Thu, 11 Apr 2019 11:11:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 11 Apr 2019 05:12:46 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:58819 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKJMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 05:12:46 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 207DC60010;
+        Thu, 11 Apr 2019 09:12:40 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 11:12:40 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for H6
+Message-ID: <20190411091240.qzi7266rzhksbxxa@flea>
+References: <20190410232543.13297-1-peron.clem@gmail.com>
+ <20190410232543.13297-5-peron.clem@gmail.com>
+ <20190411072806.yr3z3ei6djjhpo32@flea>
+ <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190411084141.GQ10383@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 11 Apr 2019 09:11:11 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wt4dw26h24e24tyj"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcfGO2+rx=91osok3nnqTWBddMVc_1RS3rh0TbVz4ALvrg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.19 10:41, Michal Hocko wrote:
-> On Wed 10-04-19 12:14:55, David Hildenbrand wrote:
->> While current node handling is probably terribly broken for memory block
->> devices that span several nodes (only possible when added during boot,
->> and something like that should be blocked completely), properly put the
->> device reference we obtained via find_memory_block() to get the nid.
-> 
-> The changelog could see some improvements I believe. (Half) stating
-> broken status of multinode memblock is not really useful without a wider
-> context so I would simply remove it. More to the point, it would be much
-> better to actually describe the actual problem and the user visible
-> effect.
-> 
-> "
-> d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug") has started
-> using find_memory_block to get a nodeid for the beginnig of the onlined
-> pfn range. The commit has missed that the memblock contains a reference
-> counted object and a missing put_device will leak the kobject behind
-> which ADD THE USER VISIBLE EFFECT HERE.
-> "
 
-I don't think mentioning the commit a second time is really needed.
+--wt4dw26h24e24tyj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"
-Right now we are using find_memory_block() to get the node id for the
-pfn range to online. We are missing to drop a reference to the memory
-block device. While the device still gets unregistered via
-device_unregister(), resulting in no user visible problem, the device is
-never released via device_release(), resulting in a memory leak. Fix
-that by properly using a put_device().
-"
+On Thu, Apr 11, 2019 at 09:56:15AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> On Thu, 11 Apr 2019 at 09:28, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Thu, Apr 11, 2019 at 01:25:39AM +0200, Cl=E9ment P=E9ron wrote:
+> > > Add the mali gpu node to the H6 device-tree.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 80 ++++++++++++++++++=
+++
+> > >  1 file changed, 80 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index e0dc4a05c1ba..152b2128aadf 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -17,6 +17,71 @@
+> > >       #address-cells =3D <1>;
+> > >       #size-cells =3D <1>;
+> > >
+> > > +     gpu_opp_table: opp_table1 {
+> > > +             compatible =3D "operating-points-v2";
+> > > +
+> > > +             opp@756000000 {
+> > > +                     opp-hz =3D /bits/ 64 <756000000>;
+> > > +                     opp-microvolt =3D <1040000>;
+> > > +             };
+> > > +             opp@624000000 {
+> > > +                     opp-hz =3D /bits/ 64 <624000000>;
+> > > +                     opp-microvolt =3D <950000>;
+> > > +             };
+> > > +             opp@576000000 {
+> > > +                     opp-hz =3D /bits/ 64 <576000000>;
+> > > +                     opp-microvolt =3D <930000>;
+> > > +             };
+> > > +             opp@540000000 {
+> > > +                     opp-hz =3D /bits/ 64 <540000000>;
+> > > +                     opp-microvolt =3D <910000>;
+> > > +             };
+> > > +             opp@504000000 {
+> > > +                     opp-hz =3D /bits/ 64 <504000000>;
+> > > +                     opp-microvolt =3D <890000>;
+> > > +             };
+> > > +             opp@456000000 {
+> > > +                     opp-hz =3D /bits/ 64 <456000000>;
+> > > +                     opp-microvolt =3D <870000>;
+> > > +             };
+> > > +             opp@432000000 {
+> > > +                     opp-hz =3D /bits/ 64 <432000000>;
+> > > +                     opp-microvolt =3D <860000>;
+> > > +             };
+> > > +             opp@420000000 {
+> > > +                     opp-hz =3D /bits/ 64 <420000000>;
+> > > +                     opp-microvolt =3D <850000>;
+> > > +             };
+> > > +             opp@408000000 {
+> > > +                     opp-hz =3D /bits/ 64 <408000000>;
+> > > +                     opp-microvolt =3D <840000>;
+> > > +             };
+> > > +             opp@384000000 {
+> > > +                     opp-hz =3D /bits/ 64 <384000000>;
+> > > +                     opp-microvolt =3D <830000>;
+> > > +             };
+> > > +             opp@360000000 {
+> > > +                     opp-hz =3D /bits/ 64 <360000000>;
+> > > +                     opp-microvolt =3D <820000>;
+> > > +             };
+> > > +             opp@336000000 {
+> > > +                     opp-hz =3D /bits/ 64 <336000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@312000000 {
+> > > +                     opp-hz =3D /bits/ 64 <312000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@264000000 {
+> > > +                     opp-hz =3D /bits/ 64 <264000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +             opp@216000000 {
+> > > +                     opp-hz =3D /bits/ 64 <216000000>;
+> > > +                     opp-microvolt =3D <810000>;
+> > > +             };
+> > > +     };
+> > > +
+> >
+> > How were those OPPs tested?
+>
+> They are taken from the vendor device tree.
+> https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/arch/arm6=
+4/boot/dts/sunxi/sun50iw6p1.dtsi#L2121
 
-> 
->> Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Arun KS <arunks@codeaurora.org>
->> Cc: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Other than that
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
->> ---
->>  mm/memory_hotplug.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index 5eb4a4c7c21b..328878b6799d 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -854,6 +854,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
->>  	 */
->>  	mem = find_memory_block(__pfn_to_section(pfn));
->>  	nid = mem->nid;
->> +	put_device(&mem->dev);
->>  
->>  	/* associate pfn range with the zone */
->>  	zone = move_pfn_range(online_type, nid, pfn, nr_pages);
->> -- 
->> 2.20.1
-> 
+Please remove them if you haven't tested them then.
 
+Maxime
 
--- 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Thanks,
+--wt4dw26h24e24tyj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-David / dhildenb
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK8FCAAKCRDj7w1vZxhR
+xTKWAQCkcHeJX2zsAy0gS4+huXZb+yrk24lKRns1Ip4dRUB8QgD/Q6ImVqglfwyb
+izJof9k7hFc2NMkMbgoiFC/503I0DAs=
+=rMsx
+-----END PGP SIGNATURE-----
+
+--wt4dw26h24e24tyj--
