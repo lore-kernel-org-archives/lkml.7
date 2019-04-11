@@ -2,211 +2,117 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5E0C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EE3C10F11
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A0A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbuGdjgI"
+	by mail.kernel.org (Postfix) with ESMTP id B9604206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 02:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfDKCrP (ORCPT
+        id S1726828AbfDKCrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 10 Apr 2019 22:47:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33549 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfDKCrO (ORCPT
+        Wed, 10 Apr 2019 22:47:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33456 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726536AbfDKCrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 10 Apr 2019 22:47:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k19so2736115pgh.0;
-        Wed, 10 Apr 2019 19:47:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WPkfQuLclK667SiAGvmJhQ63UQ9GZ00hj/awcwsw5dA=;
-        b=bbuGdjgIxOfTR4MdjXCaLJ0L7kKpDEyIgwD4MzlqLKcqYnMJ/urPhALzznXb/jHoFU
-         0aXS5HR194d9z0fCwHmdvVWADWmjbmcIWDQaTPU6+roEZl8sOzjpr9es1ZFIqTpQJ9XZ
-         us9MgA3LR+pWO4bejnQF02Yja/inAsdPaQ+o7Tgzs5O9hI8W/YLhqXQk11/fpb5D4Tcq
-         Vu9T4N+tWrGeLTj7w1NFAM9ZrRsM6YlRbVpzfBdqQszxuY9tt+1Py27vc/th4trneSK6
-         rsZdlmwFa+9xuFkGsPaxaBOtr/beXKlt+w5RMmAQxVCuaW63oE28jMQfKWAw6Id7GKXe
-         V3mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WPkfQuLclK667SiAGvmJhQ63UQ9GZ00hj/awcwsw5dA=;
-        b=aAr3MfSfMUNnT7JQ3V9UsqV1RbquZ3jOKINevXOHzqaWQ2ITJYYKV+3yzUNhFP4T/f
-         UTbW7CBw1dXwvvJOQqp/BVjJpw1+O6x0FtDi1Owam+N0w/zmNQWkmyfnpiG5UpYCaV5v
-         kNPL6WBgggQacsy1tlhuzUmqhKNDFdWozJdy6rvVZL7X3fUFsy7qoyjMJrDADDyxq9h+
-         JOPC2knn2hU62c8WUqOCQMoueExMpsx84uOpalg19VJbG6EsbHOHQBwxnxgCNxUl1SrA
-         Hy/6Q2Gbw2YJ/A54PcPFPAhVD3hmzyFSUU50SHVPQ4e61BbjZ+mvlNsBBiqGDixOc63I
-         jQHw==
-X-Gm-Message-State: APjAAAWRB3oL4z8MpmZiFn1qSrNzYaDuzdZRHnOQ3AfTUREKMrQhVpnL
-        mrkwruxcYycIPSOjKB8dL8Xik6IhEMKQXEAS/1I=
-X-Google-Smtp-Source: APXvYqz3vRf/nS4aP18oHtyJeLtlxQuWE/cWpaQymroj3f03ZeRiGlhWHXCcnrWp9VnTjVkK90nxxxpVMlWs79DexvQ=
-X-Received: by 2002:aa7:8c13:: with SMTP id c19mr46739064pfd.225.1554950832979;
- Wed, 10 Apr 2019 19:47:12 -0700 (PDT)
+        Wed, 10 Apr 2019 22:47:32 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3B2e110113884
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 22:47:31 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rsstmy3dj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2019 22:47:30 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sukadev@linux.vnet.ibm.com>;
+        Thu, 11 Apr 2019 03:47:30 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 11 Apr 2019 03:47:27 +0100
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3B2lRjT33947888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Apr 2019 02:47:27 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E9079124052;
+        Thu, 11 Apr 2019 02:47:26 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD1FD124053;
+        Thu, 11 Apr 2019 02:47:26 +0000 (GMT)
+Received: from suka-w540.localdomain (unknown [9.70.94.45])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Apr 2019 02:47:26 +0000 (GMT)
+Received: by suka-w540.localdomain (Postfix, from userid 1000)
+        id 40B6D2E14E4; Wed, 10 Apr 2019 18:38:47 -0700 (PDT)
+Date:   Wed, 10 Apr 2019 18:38:46 -0700
+From:   Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: MAINTAINERS: Remove non-existent VAS file
 MIME-Version: 1.0
-References: <20190410193747.25302-1-jglisse@redhat.com>
-In-Reply-To: <20190410193747.25302-1-jglisse@redhat.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 10 Apr 2019 21:47:01 -0500
-Message-ID: <CAH2r5ms-Y3FWhrabPEFt7T8MvC8Pwi1jjPFS7viWWRzx5rbVDw@mail.gmail.com>
-Subject: Re: [PATCH] cifs: fix page reference leak with readv/writev
-To:     jglisse@redhat.com
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Operating-System: Linux 2.0.32 on an i486
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19041102-0064-0000-0000-000003C95B27
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010906; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01187337; UDB=6.00621927; IPR=6.00968102;
+ MB=3.00026384; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-11 02:47:29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041102-0065-0000-0000-00003D054CF8
+Message-Id: <20190411013846.GA5628@us.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-11_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=704 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904110018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-How was this discovered? Does it address a reported user problem?
 
-On Wed, Apr 10, 2019 at 2:38 PM <jglisse@redhat.com> wrote:
->
-> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->
-> CIFS can leak pages reference gotten through GUP (get_user_pages*()
-> through iov_iter_get_pages()). This happen if cifs_send_async_read()
-> or cifs_write_from_iter() calls fail from within __cifs_readv() and
-> __cifs_writev() respectively. This patch move page unreference to
-> cifs_aio_ctx_release() which will happens on all code paths this is
-> all simpler to follow for correctness.
->
-> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: Steve French <sfrench@samba.org>
-> Cc: linux-cifs@vger.kernel.org
-> Cc: samba-technical@lists.samba.org
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Stable <stable@vger.kernel.org>
-> ---
->  fs/cifs/file.c | 15 +--------------
->  fs/cifs/misc.c | 23 ++++++++++++++++++++++-
->  2 files changed, 23 insertions(+), 15 deletions(-)
->
-> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> index 89006e044973..a756a4d3f70f 100644
-> --- a/fs/cifs/file.c
-> +++ b/fs/cifs/file.c
-> @@ -2858,7 +2858,6 @@ static void collect_uncached_write_data(struct cifs=
-_aio_ctx *ctx)
->         struct cifs_tcon *tcon;
->         struct cifs_sb_info *cifs_sb;
->         struct dentry *dentry =3D ctx->cfile->dentry;
-> -       unsigned int i;
->         int rc;
->
->         tcon =3D tlink_tcon(ctx->cfile->tlink);
-> @@ -2922,10 +2921,6 @@ static void collect_uncached_write_data(struct cif=
-s_aio_ctx *ctx)
->                 kref_put(&wdata->refcount, cifs_uncached_writedata_releas=
-e);
->         }
->
-> -       if (!ctx->direct_io)
-> -               for (i =3D 0; i < ctx->npages; i++)
-> -                       put_page(ctx->bv[i].bv_page);
-> -
->         cifs_stats_bytes_written(tcon, ctx->total_len);
->         set_bit(CIFS_INO_INVALID_MAPPING, &CIFS_I(dentry->d_inode)->flags=
-);
->
-> @@ -3563,7 +3558,6 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx=
-)
->         struct iov_iter *to =3D &ctx->iter;
->         struct cifs_sb_info *cifs_sb;
->         struct cifs_tcon *tcon;
-> -       unsigned int i;
->         int rc;
->
->         tcon =3D tlink_tcon(ctx->cfile->tlink);
-> @@ -3647,15 +3641,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ct=
-x)
->                 kref_put(&rdata->refcount, cifs_uncached_readdata_release=
-);
->         }
->
-> -       if (!ctx->direct_io) {
-> -               for (i =3D 0; i < ctx->npages; i++) {
-> -                       if (ctx->should_dirty)
-> -                               set_page_dirty(ctx->bv[i].bv_page);
-> -                       put_page(ctx->bv[i].bv_page);
-> -               }
-> -
-> +       if (!ctx->direct_io)
->                 ctx->total_len =3D ctx->len - iov_iter_count(to);
-> -       }
->
->         /* mask nodata case */
->         if (rc =3D=3D -ENODATA)
-> diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-> index bee203055b30..9bc0d17a9d77 100644
-> --- a/fs/cifs/misc.c
-> +++ b/fs/cifs/misc.c
-> @@ -768,6 +768,11 @@ cifs_aio_ctx_alloc(void)
->  {
->         struct cifs_aio_ctx *ctx;
->
-> +       /*
-> +        * Must use kzalloc to initialize ctx->bv to NULL and ctx->direct=
-_io
-> +        * to false so that we know when we have to unreference pages wit=
-hin
-> +        * cifs_aio_ctx_release()
-> +        */
->         ctx =3D kzalloc(sizeof(struct cifs_aio_ctx), GFP_KERNEL);
->         if (!ctx)
->                 return NULL;
-> @@ -786,7 +791,23 @@ cifs_aio_ctx_release(struct kref *refcount)
->                                         struct cifs_aio_ctx, refcount);
->
->         cifsFileInfo_put(ctx->cfile);
-> -       kvfree(ctx->bv);
-> +
-> +       /*
-> +        * ctx->bv is only set if setup_aio_ctx_iter() was call successfu=
-ly
-> +        * which means that iov_iter_get_pages() was a success and thus t=
-hat
-> +        * we have taken reference on pages.
-> +        */
-> +       if (ctx->bv) {
-> +               unsigned i;
-> +
-> +               for (i =3D 0; i < ctx->npages; i++) {
-> +                       if (ctx->should_dirty)
-> +                               set_page_dirty(ctx->bv[i].bv_page);
-> +                       put_page(ctx->bv[i].bv_page);
-> +               }
-> +               kvfree(ctx->bv);
-> +       }
-> +
->         kfree(ctx);
->  }
->
-> --
-> 2.20.1
->
+The file arch/powerpc/include/uapi/asm/vas.h was considered but
+never merged and should be removed from the MAINTAINERS file.
 
+While here, add missing email address.
 
---=20
-Thanks,
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+---
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Steve
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3671fde..e3bf3d5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7386,13 +7386,12 @@ S:	Supported
+ F:	drivers/net/ethernet/ibm/ibmvnic.*
+ 
+ IBM Power Virtual Accelerator Switchboard
+-M:	Sukadev Bhattiprolu
++M:	Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Supported
+ F:	arch/powerpc/platforms/powernv/vas*
+ F:	arch/powerpc/platforms/powernv/copy-paste.h
+ F:	arch/powerpc/include/asm/vas.h
+-F:	arch/powerpc/include/uapi/asm/vas.h
+ 
+ IBM Power Virtual Ethernet Device Driver
+ M:	Thomas Falcon <tlfalcon@linux.ibm.com>
+-- 
+1.8.3.1
+
