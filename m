@@ -2,127 +2,170 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C25C10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135FCC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09CE217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFD1217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 10:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gm2KZUeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDKKDx (ORCPT
+        id S1726661AbfDKKJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 06:03:53 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:58594 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfDKKDx (ORCPT
+        Thu, 11 Apr 2019 06:09:12 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41538 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKKJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 06:03:53 -0400
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hEWYf-000336-PW from Jiada_Wang@mentor.com ; Thu, 11 Apr 2019 03:03:49 -0700
-Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Thu, 11 Apr 2019 03:03:46 -0700
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after device initialization
-Date:   Thu, 11 Apr 2019 19:03:52 +0900
-Message-ID: <20190411100352.15977-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 11 Apr 2019 06:09:11 -0400
+Received: by mail-vs1-f67.google.com with SMTP id g187so3131320vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 03:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gs7gBcEMLxEryOdWjW4Avj2H/SSxPS3pqT1UcEW92yE=;
+        b=gm2KZUeJtADpieYoif+/2J1KgmK2pz+gIdDIa9fP6A5IyRoEL2Yqea9k/YfOGlMxHE
+         iMzliyzg2R+WT+wED5yH7qzchLZgajiPa9jGCXdBrk1OeMn//SG+XS4Z/DW7WvMoyrox
+         acKOIE8ucBgxiJPibWTzBqcETlRi4NwrUiwwC3uB+cj/Sbyn0uLF5KT4T7k4hR6vVh+H
+         poRr0wSQOeRvr2ytLTNVEDILmSYrkdCJnSw2VAle2/pl2qybjG5TBT0KCNAK8pE7vYc5
+         Z6f4XqWBeJ/dpJ1Fc4SWMFXAX/NnJvk2ODFrEczZaziy0kT7isFRv4KdQafSXLINvwiC
+         EPnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gs7gBcEMLxEryOdWjW4Avj2H/SSxPS3pqT1UcEW92yE=;
+        b=o1mEuN3saiM9zbJvHyGctiXFZOfYDV1uGw/tV/Oxi25khD91jbUrrKo7CdMbPl0Z3r
+         GH0ucVQwIDHpH0Nq72Ij5lWlrXh9EYnhL3PEw+9uW/9XyiEauvyBjju9AuKrwB5MUhBB
+         8ZBAAWGKq8aVOb9sxUMgAijPZDiv1lI6GrKCi5U4fvFbQuTqDVIZgINmll0oTpnVlRwb
+         gKtTZRF9EZsHkgWL1ycE52+1qGJls6rKyM2KEQZn3mUMCsUxp4mSQx/SPL6qgQZoj3XD
+         Fv/2P/KyjjiALMshOAe4YQRGagPcF5ljnsUDxAdpz0kQCstfYPvqdzM+X+1Du9tgI/5T
+         Gt1A==
+X-Gm-Message-State: APjAAAVJfBmkplGV/kp1D0HmGXfRjm4mh+c7EyukAyNL6dwxpzOwLHTi
+        S3jBOFRVeSNqngs77QWAkvlEe4rPyfzN0c4rp90HrA==
+X-Google-Smtp-Source: APXvYqwQuN/AHAqh0OR30343dE20u2exR4h++hFhQLklyS+VS1V6eM7F/0yyOXtOoFfNvqf+Kl4yB0Kbpo6Lr4gH1oI=
+X-Received: by 2002:a67:7c8a:: with SMTP id x132mr26870239vsc.172.1554977350687;
+ Thu, 11 Apr 2019 03:09:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+References: <1554305964-19347-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1554305964-19347-1-git-send-email-skomatineni@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 11 Apr 2019 12:08:34 +0200
+Message-ID: <CAPDyKFpJ6S2oS3Zz+RAwhJG+gdXwwbDUSWTOJdji2wm2AV1Bng@mail.gmail.com>
+Subject: Re: [PATCH V3] mmc: tegra: add sdhci tegra suspend and resume
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>, anrao@nvidia.com,
+        bbiswas@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently IRQ is remain enabled after .remove, later if device is probed,
-IRQ is requested before .thermal_init, this may cause IRQ function be
-triggered but not able to clear IRQ status, thus cause system to hang.
+On Wed, 3 Apr 2019 at 17:39, Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+>
+> This patch adds suspend and resume PM ops for tegra SDHCI.
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 56 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 55 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index eafaaefab4a6..5ec304166566 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -1611,11 +1611,65 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
 
-this patch by moving request of IRQ after device initialization to
-avoid this issue.
+sdhci_suspend_host() exists only if CONFIG_PM is set. Therefore, I
+think it's better to add explicit check for that. So add the ifdef
+like below, and a corresponding #endif, after the implementation of
+sdhci_tegra_resume().
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 22 deletions(-)
+#ifdef CONFIG_PM_SLEEP
 
-diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-index 88fa41cf16e8..4d095d7f9763 100644
---- a/drivers/thermal/rcar_gen3_thermal.c
-+++ b/drivers/thermal/rcar_gen3_thermal.c
-@@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, priv);
- 
--	/*
--	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
--	 * to trigger on the low and high trip points of the current
--	 * temp window at this point.
--	 */
--	for (i = 0; i < 2; i++) {
--		irq = platform_get_irq(pdev, i);
--		if (irq < 0)
--			return irq;
--
--		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
--					 dev_name(dev), i);
--		if (!irqname)
--			return -ENOMEM;
--
--		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
--						rcar_gen3_thermal_irq_thread,
--						IRQF_SHARED, irqname, priv);
--		if (ret)
--			return ret;
--	}
--
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 
-@@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
- 		goto error_unregister;
- 	}
- 
-+	/*
-+	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
-+	 * to trigger on the low and high trip points of the current
-+	 * temp window at this point.
-+	 */
-+	for (i = 0; i < 2; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0) {
-+			ret = irq;
-+			goto error_unregister;
-+		}
-+
-+		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
-+					 dev_name(dev), i);
-+		if (!irqname) {
-+			ret = -ENOMEM;
-+			goto error_unregister;
-+		}
-+
-+		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
-+						rcar_gen3_thermal_irq_thread,
-+						IRQF_SHARED, irqname, priv);
-+		if (ret)
-+			goto error_unregister;
-+	}
-+
- 	rcar_thermal_irq_set(priv, true);
- 
- 	return 0;
--- 
-2.19.2
+> +static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       int ret;
+> +
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +               ret = cqhci_suspend(host->mmc);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret = sdhci_suspend_host(host);
+> +       if (ret) {
+> +               cqhci_resume(host->mmc);
+> +               return ret;
+> +       }
+> +
+> +       clk_disable_unprepare(pltfm_host->clk);
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(pltfm_host->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = sdhci_resume_host(host);
+> +       if (ret)
+> +               goto disable_clk;
+> +
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +               ret = cqhci_resume(host->mmc);
+> +               if (ret)
+> +                       goto suspend_host;
+> +       }
+> +
+> +       return 0;
+> +
+> +suspend_host:
+> +       sdhci_suspend_host(host);
+> +disable_clk:
+> +       clk_disable_unprepare(pltfm_host->clk);
+> +       return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
+> +                        sdhci_tegra_resume);
+> +
+>  static struct platform_driver sdhci_tegra_driver = {
+>         .driver         = {
+>                 .name   = "sdhci-tegra",
+>                 .of_match_table = sdhci_tegra_dt_match,
+> -               .pm     = &sdhci_pltfm_pmops,
+> +               .pm     = &sdhci_tegra_dev_pm_ops,
+>         },
+>         .probe          = sdhci_tegra_probe,
+>         .remove         = sdhci_tegra_remove,
+> --
+> 2.7.4
+>
 
+Otherwise this looks good to me.
+
+Kind regards
+Uffe
