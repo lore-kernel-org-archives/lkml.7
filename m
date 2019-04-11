@@ -2,124 +2,168 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975FC10F13
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E6C10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC90D20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:54:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="GT7TWiiD"
+	by mail.kernel.org (Postfix) with ESMTP id 6FBE020693
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 05:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDKFyc (ORCPT
+        id S1726708AbfDKF5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 01:54:32 -0400
-Received: from mail-eopbgr130083.outbound.protection.outlook.com ([40.107.13.83]:42151
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726686AbfDKFyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 01:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=51Vzfp04Epz7DGAAxjZY4Szn0Da+XZMAW8XtRTOuccc=;
- b=GT7TWiiDZVzQGbM6Vs8xhf7zgr7EFZPKtw1oxQKysLrC4R+6qjk3fzwgUMaL6Z1G1WzqPiGwK1zcFhgmId6wvv6vzSe6BLXBpSNgzEbSS8Gb0wW4wTveDHQSHmBO4IBd/43viYS3tkoPfLsf+TfZPGVsMHRsceVk5NbfIZfjZB8=
-Received: from AM6PR06MB5557.eurprd06.prod.outlook.com (20.178.94.211) by
- AM6PR06MB5365.eurprd06.prod.outlook.com (20.178.90.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.15; Thu, 11 Apr 2019 05:54:14 +0000
-Received: from AM6PR06MB5557.eurprd06.prod.outlook.com
- ([fe80::c0b4:b693:fdc7:e476]) by AM6PR06MB5557.eurprd06.prod.outlook.com
- ([fe80::c0b4:b693:fdc7:e476%4]) with mapi id 15.20.1792.009; Thu, 11 Apr 2019
- 05:54:14 +0000
-From:   Han Nandor <nandor.han@vaisala.com>
-To:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     Han Nandor <nandor.han@vaisala.com>
-Subject: [PATCH v2 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Thread-Topic: [PATCH v2 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Thread-Index: AQHU8Cr+iJj0KCHfwkqXp/XOBkTwEQ==
-Date:   Thu, 11 Apr 2019 05:54:14 +0000
-Message-ID: <20190411055341.9263-3-nandor.han@vaisala.com>
-References: <20190411055341.9263-1-nandor.han@vaisala.com>
-In-Reply-To: <20190411055341.9263-1-nandor.han@vaisala.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0160.eurprd05.prod.outlook.com
- (2603:10a6:7:28::47) To AM6PR06MB5557.eurprd06.prod.outlook.com
- (2603:10a6:20b:9c::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nandor.han@vaisala.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.2
-x-originating-ip: [193.143.230.131]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2333f9a6-bb38-41d6-3f9d-08d6be421deb
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:AM6PR06MB5365;
-x-ms-traffictypediagnostic: AM6PR06MB5365:
-x-tenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-x-microsoft-antispam-prvs: <AM6PR06MB536537836721CA6063F8EBF8852F0@AM6PR06MB5365.eurprd06.prod.outlook.com>
-x-forefront-prvs: 00046D390F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(39850400004)(346002)(376002)(199004)(189003)(2616005)(186003)(6436002)(105586002)(6512007)(6116002)(7736002)(25786009)(3846002)(81156014)(446003)(305945005)(486006)(11346002)(8936002)(53936002)(5660300002)(81166006)(2906002)(71190400001)(71200400001)(50226002)(8676002)(76176011)(66066001)(256004)(99286004)(110136005)(6486002)(107886003)(36756003)(476003)(52116002)(4326008)(106356001)(386003)(97736004)(316002)(102836004)(2201001)(14454004)(6506007)(478600001)(26005)(2501003)(68736007)(1076003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR06MB5365;H:AM6PR06MB5557.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vaisala.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: w1epZkiE84DMb7kH1370DWydONQrtlSYd5zf0WNDYeKD56K6Hqhs+OIsLFbhb23MknC0KkXiAxowoxdtErBpAszyQhHjxABhY5qldwmuFXnMl82ejb8OQZhil/NZ/NJenpNuWBbaUHEIhUkXo28tc8RKIGgeV3kIKeIlBGvguGPMSXAlJ57+4RaaGa6miBDELY5ZV7sk1XNq7yHiAhMCkJjweTLU7mzqpmcGIDfeOwrLGK9EmaqS+lAqFPekKjNg7qZTg1Rxt+kkPgpa+JkSvxVMqOJCSsV5PFsroZ0IqGvEaGoorM9g5BfkiFfmRqmQXj3pGRqQ4+HU7gHRW/RmYTJ4uYQH1vrr7+4l2Z7xrtg1zCaRcAZdiPoSCoHfTwozgdM7jIwgp6SkrYReUqV2z44dw6+UYM/9pS2NhUcJwAU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Apr 2019 01:57:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:30268 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726121AbfDKF5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 01:57:39 -0400
+X-UUID: 67795939d90743a49e1db541127e7994-20190411
+X-UUID: 67795939d90743a49e1db541127e7994-20190411
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1697637039; Thu, 11 Apr 2019 13:57:33 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 11 Apr 2019 13:57:26 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 11 Apr 2019 13:57:26 +0800
+Message-ID: <1554962246.4768.2.camel@mtksdaap41>
+Subject: Re: [PATCH v2 08/25] drm/mediatek: add ddp component CCORR
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
+        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Thu, 11 Apr 2019 13:57:26 +0800
+In-Reply-To: <1553667561-25447-9-git-send-email-yongqiang.niu@mediatek.com>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-9-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2333f9a6-bb38-41d6-3f9d-08d6be421deb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2019 05:54:14.2430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR06MB5365
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: B71A6D989A391FBC943CBE3C8939E504F200958FC95509639B41D6EAC5B9A02D2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBkb2N1bWVudCBmb3IgdGhlIE5WTUVNIGJhc2Vk
-IHJlYm9vdC1tb2RlDQpkcml2ZXIuDQoNClNpZ25lZC1vZmYtYnk6IE5hbmRvciBIYW4gPG5hbmRv
-ci5oYW5AdmFpc2FsYS5jb20+DQotLS0NCiAuLi4vcG93ZXIvcmVzZXQvbnZtZW0tcmVib290LW1v
-ZGUudHh0ICAgICAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDMyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLnR4dA0KDQpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252
-bWVtLXJlYm9vdC1tb2RlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
-bmRleCAwMDAwMDAwMDAwMDAuLjJlMWI4NmMzMWNiMw0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1t
-b2RlLnR4dA0KQEAgLTAsMCArMSwzMiBAQA0KK05WTUVNIHJlYm9vdCBtb2RlIGRyaXZlcg0KKw0K
-K1RoaXMgZHJpdmVyIGdldHMgcmVib290IG1vZGUgbWFnaWMgdmFsdWUgZnJvbSByZWJvb3QtbW9k
-ZSBkcml2ZXINCithbmQgc3RvcmVzIGl0IGluIGEgTlZNRU0gY2VsbCBuYW1lZCAicmVib290LW1v
-ZGUiLiBUaGVuIHRoZSBib290bG9hZGVyDQorY2FuIHJlYWQgaXQgYW5kIHRha2UgZGlmZmVyZW50
-IGFjdGlvbiBhY2NvcmRpbmcgdG8gdGhlIG1hZ2ljDQordmFsdWUgc3RvcmVkLg0KKw0KK1RoaXMg
-RFQgbm9kZSBzaG91bGQgYmUgcmVwcmVzZW50ZWQgYXMgYSBzdWItbm9kZSBvZiBhICJzaW1wbGUt
-bWZkIg0KK25vZGUuDQorDQorUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNvbXBhdGlibGU6IHNo
-b3VsZCBiZSAibnZtZW0tcmVib290LW1vZGUiLg0KKy0gbnZtZW0tY2VsbHM6IEEgcGhhbmRsZSB0
-byB0aGUgcmVib290IG1vZGUgcHJvdmlkZWQgYnkgYSBudm1lbSBkZXZpY2UuDQorLSBudm1lbS1j
-ZWxsLW5hbWVzOiBTaG91bGQgYmUgInJlYm9vdC1tb2RlIi4NCisNCitUaGUgcmVzdCBvZiB0aGUg
-cHJvcGVydGllcyBzaG91bGQgZm9sbG93IHRoZSBnZW5lcmljIHJlYm9vdC1tb2RlIGRlc2NyaXB0
-aW9uDQorZm91bmQgaW4gcmVib290LW1vZGUudHh0DQorDQorRXhhbXBsZToNCisJcmVib290LW1v
-ZGUtbnZtZW1AMCB7DQorCQljb21wYXRpYmxlID0gInNpbXBsZS1tZmQiOw0KKwkJcmVib290LW1v
-ZGUgew0KKwkJCWNvbXBhdGlibGUgPSAibnZtZW0tcmVib290LW1vZGUiOw0KKwkJCW52bWVtLWNl
-bGxzID0gPCZyZWJvb3RfbW9kZT47DQorCQkJbnZtZW0tY2VsbC1uYW1lcyA9ICJyZWJvb3QtbW9k
-ZSI7DQorDQorCQkJbW9kZS1ub3JtYWwgICAgID0gPDB4QUFBQTU1MDE+Ow0KKwkJCW1vZGUtYm9v
-dGxvYWRlciA9IDwweEJCQkI1NTAwPjsNCisJCQltb2RlLXJlY292ZXJ5ICAgPSA8MHhDQ0NDNTUw
-Mj47DQorCQkJbW9kZS10ZXN0ICAgICAgID0gPDB4RERERDU1MDM+Ow0KKwkJfTsNCisJfTsNCi0t
-IA0KMi4xNy4yDQoNCg==
+Hi, Yongqiang:
+
+On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add ddp component CCORR
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 32 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 ++
+>  2 files changed, 34 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 54ca794..310c0b9 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -41,6 +41,12 @@
+>  #define DISP_AAL_EN				0x0000
+>  #define DISP_AAL_SIZE				0x0030
+>  
+> +#define DISP_CCORR_EN				0x0000
+> +#define CCORR_EN				BIT(0)
+> +#define DISP_CCORR_CFG				0x0020
+> +#define CCORR_RELAY_MODE			BIT(0)
+> +#define DISP_CCORR_SIZE				0x0030
+> +
+>  #define DISP_GAMMA_EN				0x0000
+>  #define DISP_GAMMA_CFG				0x0020
+>  #define DISP_GAMMA_SIZE				0x0030
+> @@ -131,6 +137,24 @@ static void mtk_aal_stop(struct mtk_ddp_comp *comp)
+>  	writel_relaxed(0x0, comp->regs + DISP_AAL_EN);
+>  }
+>  
+> +static void mtk_ccorr_config(struct mtk_ddp_comp *comp, unsigned int w,
+> +			     unsigned int h, unsigned int vrefresh,
+> +			     unsigned int bpc)
+> +{
+> +	writel(h << 16 | w, comp->regs + DISP_CCORR_SIZE);
+> +	writel(CCORR_RELAY_MODE, comp->regs + DISP_CCORR_CFG);
+> +}
+> +
+> +static void mtk_ccorr_start(struct mtk_ddp_comp *comp)
+> +{
+> +	writel(CCORR_EN, comp->regs + DISP_CCORR_EN);
+> +}
+> +
+> +static void mtk_ccorr_stop(struct mtk_ddp_comp *comp)
+> +{
+> +	writel_relaxed(0x0, comp->regs + DISP_CCORR_EN);
+> +}
+> +
+>  static void mtk_gamma_config(struct mtk_ddp_comp *comp, unsigned int w,
+>  			     unsigned int h, unsigned int vrefresh,
+>  			     unsigned int bpc)
+> @@ -179,6 +203,12 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+>  	.stop = mtk_aal_stop,
+>  };
+>  
+> +static const struct mtk_ddp_comp_funcs ddp_ccorr = {
+> +	.config = mtk_ccorr_config,
+> +	.start = mtk_ccorr_start,
+> +	.stop = mtk_ccorr_stop,
+> +};
+> +
+>  static const struct mtk_ddp_comp_funcs ddp_gamma = {
+>  	.gamma_set = mtk_gamma_set,
+>  	.config = mtk_gamma_config,
+> @@ -200,6 +230,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+>  	[MTK_DISP_RDMA] = "rdma",
+>  	[MTK_DISP_WDMA] = "wdma",
+>  	[MTK_DISP_COLOR] = "color",
+> +	[MTK_DISP_CCORR] = "ccorr",
+>  	[MTK_DISP_AAL] = "aal",
+>  	[MTK_DISP_GAMMA] = "gamma",
+>  	[MTK_DISP_UFOE] = "ufoe",
+> @@ -221,6 +252,7 @@ struct mtk_ddp_comp_match {
+>  	[DDP_COMPONENT_AAL0]	= { MTK_DISP_AAL,	0, &ddp_aal },
+>  	[DDP_COMPONENT_AAL1]	= { MTK_DISP_AAL,	1, &ddp_aal },
+>  	[DDP_COMPONENT_BLS]	= { MTK_DISP_BLS,	0, NULL },
+> +	[DDP_COMPONENT_CCORR]	= { MTK_DISP_CCORR,	0, &ddp_ccorr },
+>  	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, NULL },
+>  	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, NULL },
+>  	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index 8399229..87ef290 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -28,6 +28,7 @@ enum mtk_ddp_comp_type {
+>  	MTK_DISP_RDMA,
+>  	MTK_DISP_WDMA,
+>  	MTK_DISP_COLOR,
+> +	MTK_DISP_CCORR,
+>  	MTK_DISP_AAL,
+>  	MTK_DISP_GAMMA,
+>  	MTK_DISP_UFOE,
+> @@ -44,6 +45,7 @@ enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_AAL0,
+>  	DDP_COMPONENT_AAL1,
+>  	DDP_COMPONENT_BLS,
+> +	DDP_COMPONENT_CCORR,
+>  	DDP_COMPONENT_COLOR0,
+>  	DDP_COMPONENT_COLOR1,
+>  	DDP_COMPONENT_DPI0,
+
+
