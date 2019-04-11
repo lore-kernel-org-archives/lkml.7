@@ -2,157 +2,167 @@ Return-Path: <SRS0=BPXs=SN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DBDC10F14
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF6FC10F13
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AA220818
-	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e2KWSY/x"
+	by mail.kernel.org (Postfix) with ESMTP id 601CF20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 11 Apr 2019 15:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfDKPt1 (ORCPT
+        id S1726771AbfDKPua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 11:49:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37048 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfDKPt1 (ORCPT
+        Thu, 11 Apr 2019 11:50:30 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60441 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfDKPu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 11:49:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zwCi7Tk9UZYC4peORFWRL8HFRCqi0bSYc5cfFAQe8HE=; b=e2KWSY/x9N1ZKU2Z8JZbpAClfV
-        yynl3gr94JwUFH+uU0hbZXFf++cg7RhddFPW9xSdjbmBUahlRnKj94I3vFmaUpvGeAP/xlOJdF8MM
-        Hw9p6u4X7drjFsXxflwMvQcZlYkJNSrg/mXx5YUGK8R4jPsG6iZoJl4hKTodd9Wul/RYbeV+Y1zEf
-        Y06fvyCHrAZpWyyvm0x17iD2EmqKJBdcbW/xdsGprcsARg9km76PqbDJC/lCvXQ2RKpYnhkQtUReI
-        nCQku23u0xpQxyKPN8WjIWTHa1ECmPMCJYmLa64aa+yVFAbdtBgwklA3ouRSNQo9P6wQ9/GA2OVk1
-        5fnm1kQg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEbx6-0004fx-Bi; Thu, 11 Apr 2019 15:49:24 +0000
-Subject: Re: [GIT PULL] <global> global spelling corrections for v5.1.0-rc5
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Kenny Van de Maele <kenny.vandemaele@inuits.eu>,
-        torvalds@linux-foundation.org
-Cc:     torvalds@osdl.org, linux-kernel@vger.kernel.org
-References: <0b6539fe5b2741b1327119236ea0e401d02003e6.camel@inuits.eu>
- <0885bbf9-ccb1-280e-dde1-ffa40282df09@infradead.org>
-Message-ID: <4def7caf-6726-e373-181e-4fd698ef5b53@infradead.org>
-Date:   Thu, 11 Apr 2019 08:49:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 11 Apr 2019 11:50:29 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 2EC812000A;
+        Thu, 11 Apr 2019 15:50:25 +0000 (UTC)
+Date:   Thu, 11 Apr 2019 17:50:25 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 4/8] arm64: dts: allwinner: Add ARM Mali GPU node for
+ H6
+Message-ID: <20190411155025.d5hmbw2jzhp3wyuq@flea>
+References: <20190411105720.32357-1-peron.clem@gmail.com>
+ <2797515.ZAugZ1JPiN@jernej-laptop>
+ <20190411152752.qlabx7heh74dy2ao@flea>
+ <5149757.GgN2G91tE9@jernej-laptop>
 MIME-Version: 1.0
-In-Reply-To: <0885bbf9-ccb1-280e-dde1-ffa40282df09@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ughvejlzbua5n4db"
+Content-Disposition: inline
+In-Reply-To: <5149757.GgN2G91tE9@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 7:58 AM, Randy Dunlap wrote:
-> On 4/11/19 2:12 AM, Kenny Van de Maele wrote:
->> are available in the Git repository at:
->>
->>   git://github.com/vdmkenny/linux-spelling-fix.git tags/common-
->> spelling-fixes-5.1.0-rc5
->>
->> for you to fetch changes up to
->> 6ee0055f3414a64133228e82004ea60d0e659d6d:
->>
->>   fix common spelling mistakes (2019-04-11 10:22:24 +0200)
->>
->> ----------------------------------------------------------------
->> This PR contains a set of global spelling fixes of commonly miss-
->> spelled
-> 
-> misspelled
-> 
-> 
-> Is there a way for me to review the diff on github?
-> 
-> thanks.
-> 
-> 
->> words. Mostly documentation and comments were impacted, but a few lines
->> of code were affected as well.
 
-For the changes that are in source code language instead of in comments,
-did you re-compile those changes?
+--ughvejlzbua5n4db
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 11, 2019 at 05:42:56PM +0200, Jernej =C5=A0krabec wrote:
+> Dne =C4=8Detrtek, 11. april 2019 ob 17:27:52 CEST je Maxime Ripard napisa=
+l(a):
+> > On Thu, Apr 11, 2019 at 05:23:25PM +0200, Jernej =C5=A0krabec wrote:
+> > > Dne =C4=8Detrtek, 11. april 2019 ob 17:20:04 CEST je Cl=C3=A9ment P=
+=C3=A9ron napisal(a):
+> > > > Hi,
+> > > >
+> > > > On Thu, 11 Apr 2019 at 17:05, Jernej =C5=A0krabec <jernej.skrabec@s=
+iol.net>
+> > >
+> > > wrote:
+> > > > > Dne =C4=8Detrtek, 11. april 2019 ob 12:57:16 CEST je Cl=C3=A9ment=
+ P=C3=A9ron
+> napisal(a):
+> > > > > > Add the mali gpu node to the H6 device-tree.
+> > > > > >
+> > > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > > > ---
+> > > > > >
+> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++=
+++
+> > > > > >  1 file changed, 14 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi index
+> > > > > > e0dc4a05c1ba..196753110434 100644
+> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > > > > @@ -157,6 +157,20 @@
+> > > > > >
+> > > > > >                       allwinner,sram =3D <&ve_sram 1>;
+> > > > > >
+> > > > > >               };
+> > > > > >
+> > > > > > +             gpu: gpu@1800000 {
+> > > > > > +                     compatible =3D "allwinner,sun50i-h6-mali",
+> > > > > > +                                  "arm,mali-t720";
+> > > > > > +                     reg =3D <0x01800000 0x4000>;
+> > > > > > +                     interrupts =3D <GIC_SPI 84
+> > > > >
+> > > > > IRQ_TYPE_LEVEL_HIGH>,
+> > > > >
+> > > > > > +                                  <GIC_SPI 85
+> > > > >
+> > > > > IRQ_TYPE_LEVEL_HIGH>,
+> > > > >
+> > > > > > +                                  <GIC_SPI 83
+> > > > >
+> > > > > IRQ_TYPE_LEVEL_HIGH>;
+> > > > >
+> > > > > > +                     interrupt-names =3D "job", "mmu", "gpu";
+> > > > > > +                     clocks =3D <&ccu CLK_GPU>, <&ccu CLK_BUS_=
+GPU>;
+> > > > > > +                     clock-names =3D "core", "bus";
+> > > > > > +                     resets =3D <&ccu RST_BUS_GPU>;
+> > > > > > +                     status =3D "disabled";
+> > > > >
+> > > > > Usually self sufficient peripherals are enabled by default in DTS=
+I.
+> > > >
+> > > > I follow the other Mali Midgard (rk3399, rk3288) syntax.
+> > > > But I think you're right here, will go for an update I think.
+> > >
+> > > I quickly checked A64 and H5 DTSI and both have GPU enabled by default
+> > > (status property is not set).
+> >
+> > I asked myself the same question, but the H6 seems to have a supply
+> > wired to the GPU, while the H3 and H5 do not. So I'm not sure we want
+> > to enable it on all the boards, even though some might have left out
+> > the GPU supply which will result in a non-working GPU (I assume?)
+>
+> It's true that GPU doesn't work at all without power supply. Even worse, =
+ARM
+> kernel driver just hangs whole SoC if it tries to use unpowered GPU.
+>
+> I checked few datasheets and almost none of them have GPU power supply, e=
+xcept
+> H5, where GPU is enabled by default in DTSI.
 
->> ----------------------------------------------------------------
->> Kenny Van de Maele (1):
->>       fix common spelling mistakes
-> 
-> 
+I guess we should fix that then.
 
-more:
+> Yeah, I guess it's more safe to explicitly enable it in board DT.
 
-drivers/nfc/pn533/pn533.c
-@@ -601,7 +601,7 @@ static int pn533_send_sync_complete(struct pn533 *dev, void *_arg,
- *     as it's been already freed at the beginning of RX path by
- *     async_complete_cb.
- *
-- *  3. valid pointer in case of succesfult RX path
-+ *  3. valid pointer in case of successfult RX path
- *
- *  A caller has to check a return value with IS_ERR macro. If the test pass,
- *  the returned pointer is valid.
+It's also something we do for the CPU, even though the CPU should be
+obviously be powered before starting Linux...
 
+Maxime
 
-and:
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-drivers/scsi/mpt3sas/mpt3sas_scsih.c
-@@ -4768,7 +4768,7 @@ _scsih_normalize_sense(char *sense_buffer, struct sense_info *data)
-}
+--ughvejlzbua5n4db
+Content-Type: application/pgp-signature; name="signature.asc"
 
-/**
-- * _scsih_scsi_ioc_info - translated non-succesfull SCSI_IO request
-+ * _scsih_scsi_ioc_info - translated non-successfull SCSI_IO request
- * @ioc: per adapter object
- * @scmd: pointer to scsi command object
- * @mpi_reply: reply mf payload returned from firmware
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXK9iQQAKCRDj7w1vZxhR
+xW8KAQC6G/zptIZMa3Iez/W7WOhXWk54gWQ0gUOe1wOvm5zMFgEAkYt6r8m5dYvW
+QFoyycKpJudgsTM0htXFB3AyjlPEag8=
+=fNBG
+-----END PGP SIGNATURE-----
 
-and:
-
-ipc/sem.c
-@@ -2092,7 +2092,7 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
-	queue.dupsop = dupsop;
-
-	error = perform_atomic_semop(sma, &queue);
--	if (error == 0) { /* non-blocking succesfull path */
-+	if (error == 0) { /* non-blocking successfull path */
-		DEFINE_WAKE_Q(wake_q);
-
-		/*
-
-
-eh?:
-
-tools/perf/util/parse-events.c
-@@ -767,7 +767,7 @@ split_bpf_config_terms(struct list_head *evt_head_config,
-	/*
-	 * Currectly, all possible user config term
-	 * belong to bpf object. parse_events__is_hardcoded_term()
--	 * happends to be a good flag.
-+	 * happeneds to be a good flag.
-	 *
-	 * See parse_events_config_bpf() and
-	 * config_term_tracepoint().
-
-
-
-but once these changes are fixed, overall this is a good set of corrections.
-
--- 
-~Randy
+--ughvejlzbua5n4db--
