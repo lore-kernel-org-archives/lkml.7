@@ -2,115 +2,80 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002F1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AC1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5152084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF3020850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XMdZ0wRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfDLNli (ORCPT
+        id S1727382AbfDLNmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:41:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:9855 "EHLO mga07.intel.com"
+        Fri, 12 Apr 2019 09:42:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59211 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbfDLNla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:41:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 06:41:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,341,1549958400"; 
-   d="scan'208";a="163824232"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Apr 2019 06:41:23 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 00/13] Software fwnode references
-Date:   Fri, 12 Apr 2019 16:41:09 +0300
-Message-Id: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726965AbfDLNmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:42:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Mk8JPVON+MDwG8aSBi8O+sVKIZFgjgGGzz6954NK8T4=; b=XMdZ0wRSfj70Q+DUVZ7Spk+bXn
+        is3SXeEFPlvIKjg+1cfCbYj3WP1n53ilBSQiNB0T2itB5mhUqwIs3PXoJDFgHL5bEHBJvDaFdMP89
+        7FdBYn59IgWnS5Fr/kHV6p+2TtXwIIyRHoMua0KJmnBkve0QtraOVXvEBXcvlloh860Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hEwS5-0005iY-0D; Fri, 12 Apr 2019 15:42:45 +0200
+Date:   Fri, 12 Apr 2019 15:42:44 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Message-ID: <20190412134244.GC324@lunn.ch>
+References: <20190412130427.13418-1-angus@akkea.ca>
+ <20190412130427.13418-2-angus@akkea.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190412130427.13418-2-angus@akkea.ca>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@1 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
 
-This is the third version of my proposal to add reference handling to
-the software node code. In this version I renamed ACPI_NAME_SIZE to
-ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
-(9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
-the registration of max17047 out of probe, and 10/13 will introduce
-the software nodes.
+Hi Angus
 
-v2 commit message:
+This compatible string is optional. It won't warm, but it is not
+needed.
 
-This is the second version of this series. In this version I'm
-introducing a new helper device_find_child_by_name() as proposed
-by Andy. Andy requested also another helper that could be used for
-chaining the fwnodes, but I decided not to add that now. I would like
-to still think about how we should handle exceptions like if there
-already is a secondary node assigned for a node.
+> +			reg = <1>;
+> +			power-supply = <&reg_3V3_P>;
 
-v1 commit message:
+I don't remember seeing a power-supply property in an Ethernet PHY
+node before. What is using it? The PHY driver? Or the driver core
+code?
 
-This series adds support for software fwnode reference handling. In
-practice it means making fwnode_property_get_reference_args() function
-usable in the drivers also with software nodes. I send the series
-originally as RFC [1].
-
-As the first user for the software node references, I'm converting
-intel_cht_int33fe.c to use them as part of the series.
-
-[1] https://lkml.org/lkml/2019/3/15/457
-
-thanks,
-
-Heikki Krogerus (13):
-  software node: Allow node creation without properties
-  software node: Simplify software_node_release() function
-  software node: Add support for references
-  software node: Implement .get_reference_args fwnode operation
-  driver core: Add helper device_find_child_by_name()
-  ACPI / property: Don't limit named child node matching to data nodes
-  device connection: Find connections also by checking the references
-  usb: typec: Registering real device entries for the muxes
-  platform/x86: intel_cht_int33fe: Register max17047 in its own function
-  platform/x86: intel_cht_int33fe: Provide software nodes for the
-    devices
-  platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
-  platform/x86: intel_cht_int33fe: Link with external dependencies using
-    fwnodes
-  platform/x86: intel_cht_int33fe: Replacing the old connections with
-    references
-
- drivers/acpi/property.c                  |  26 +-
- drivers/base/core.c                      |  31 +++
- drivers/base/devcon.c                    |  28 ++
- drivers/base/swnode.c                    | 180 +++++++++++-
- drivers/platform/x86/intel_cht_int33fe.c | 339 +++++++++++++++++++----
- drivers/usb/typec/bus.h                  |  15 +
- drivers/usb/typec/class.c                |  17 +-
- drivers/usb/typec/mux.c                  | 221 ++++++++++-----
- drivers/usb/typec/mux/pi3usb30532.c      |  46 +--
- include/linux/device.h                   |   2 +
- include/linux/property.h                 |   8 +
- include/linux/usb/typec_mux.h            |  62 ++---
- 12 files changed, 791 insertions(+), 184 deletions(-)
-
--- 
-2.20.1
-
+	Andrew
