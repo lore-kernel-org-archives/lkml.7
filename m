@@ -2,208 +2,177 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA84C10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F3BC10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D3320674
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050D220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="y1RxwfWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfDLBxB (ORCPT
+        id S1727015AbfDLBxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 21:53:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48974 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726678AbfDLBxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 21:53:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95B6FAD03;
-        Fri, 12 Apr 2019 01:52:58 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>
-Date:   Fri, 12 Apr 2019 11:52:08 +1000
-Subject: [PATCH 5/5] rhashtable: use BIT(0) for locking.
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Message-ID: <155503392809.17793.9965831639493335726.stgit@noble.brown>
-In-Reply-To: <155503371949.17793.8266195008003399968.stgit@noble.brown>
-References: <155503371949.17793.8266195008003399968.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 11 Apr 2019 21:53:10 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:34269 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfDLBxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 21:53:08 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3C1qvgj006549;
+        Fri, 12 Apr 2019 10:52:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3C1qvgj006549
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555033979;
+        bh=YW//+yHX89A+r7yyY4s1ei3ztZPoCqp2cO7RWcnpiRM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y1RxwfWA6I3PwD6Ik3F1fZKyk93rnmW4/YKL/bGNeqDrk6WQl+nEy8/H1TriWXYNX
+         l//GHoNWn8DkFsBWgTOtXsnhzld5UaAe0tXUWcfj9qvnXXWQeV8IYTALkLCOyskvAY
+         RgZSvh7gP1rH2h4UmieKWC5noUKOX/psHJ5dhk7oOF2C7JZIv6YcLbJeCHt4X6VRUg
+         //voQSYp7+TRtY1Ic4h/er9lvxdv+Lgccv5ywfjhdPDytMxDr+otG01eRrl+Lwf2sb
+         Z/PsQhSz87pj+zbJLp/DxnXoD+7pEAd7nyUYUjBjkyBmhPtFBuMi0milSK/jg9kAYk
+         KPyLhU3hc5D6Q==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id l17so2726226uar.4;
+        Thu, 11 Apr 2019 18:52:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAUTpizHrFykiiymWfY8uDt3VETF2SR60nDF77EpW+qox8HEDcRf
+        VZtUsULfTXfKeRdYHjHdTF774nx7mSkMoi/mFvM=
+X-Google-Smtp-Source: APXvYqyb7WzcxVpL3dTP1QDJgNk9U1ElDCec2HI4RAL6+duptWrz+8bpxDwjkpBbXJfeTnUVi+GZRWJH6wib6XP8VB4=
+X-Received: by 2002:ab0:348a:: with SMTP id c10mr23454449uar.79.1555033977268;
+ Thu, 11 Apr 2019 18:52:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <HE1PR0701MB2652FC3F5D8E46EA93AF033AFA5F0@HE1PR0701MB2652.eurprd07.prod.outlook.com>
+ <CAK7LNAQEQyEyj_ozkARj8xjDf7EncHeBv0GY8xoP8e_Fn-qaag@mail.gmail.com>
+ <77e11884-f520-d983-3d33-ccc3043ba604@nokia.com> <CAK7LNAR_Py_4_pPEcxd7_ZpicoD6rnjb-iyq=_h893m=7q7kug@mail.gmail.com>
+ <CAOiHx=nnz33DQhZO5o7vK2GBDcFO58D9_y7OgEodcUk4ZYs+KA@mail.gmail.com>
+In-Reply-To: <CAOiHx=nnz33DQhZO5o7vK2GBDcFO58D9_y7OgEodcUk4ZYs+KA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 12 Apr 2019 10:52:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARmLSONRiEw1OAWwUrFKB_aSTT3-Z1q=f2FCyDJHc=xMQ@mail.gmail.com>
+Message-ID: <CAK7LNARmLSONRiEw1OAWwUrFKB_aSTT3-Z1q=f2FCyDJHc=xMQ@mail.gmail.com>
+Subject: Re: [PATCH] modpost: make KBUILD_MODPOST_WARN also configurable for
+ external modules
+To:     Jonas Gorski <jonas.gorski@gmail.com>
+Cc:     "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by Guenter Roeck, the new bit-locking using
-BIT(1) doesn't work on the m68k architecture.  m68k only requires
-2-byte alignment for words and longwords, so there is only one
-unused bit in pointers to structs - We current use two, one for the
-NULLS marker at the end of the linked list, and one for the bit-lock
-in the head of the list.
-
-The two uses don't need to conflict as we never need the head of the
-list to be a NULLS marker - the marker is only needed to check if an
-object has moved to a different table, and the bucket head cannot
-move.  The NULLS marker is only needed in a ->next pointer.
-
-As we already have different types for the bucket head pointer (struct
-rhash_lock_head) and the ->next pointers (struct rhash_head), it is
-fairly easy to treat the lsb differently in each.
-
-So: Initialize buckets heads to NULL, and use the lsb for locking.
-When loading the pointer from the bucket head, if it is NULL (ignoring
-the lock big), report as being the expected NULLS marker.
-When storing a value into a bucket head, if it is a NULLS marker,
-store NULL instead.
-
-And convert all places that used bit 1 for locking, to use bit 0.
-
-Fixes: 8f0db018006a ("rhashtable: use bit_spin_locks to protect hash bucket.")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: NeilBrown <neilb@suse.com>
----
- include/linux/rhashtable.h |   35 ++++++++++++++++++++++++-----------
- lib/rhashtable.c           |    2 +-
- 2 files changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-index 882bc0fcea4b..f7714d3b46bd 100644
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -35,7 +35,7 @@
-  * the least significant bit set but otherwise stores the address of
-  * the hash bucket.  This allows us to be be sure we've found the end
-  * of the right list.
-- * The value stored in the hash bucket has BIT(2) used as a lock bit.
-+ * The value stored in the hash bucket has BIT(0) used as a lock bit.
-  * This bit must be atomically set before any changes are made to
-  * the chain.  To avoid dereferencing this pointer without clearing
-  * the bit first, we use an opaque 'struct rhash_lock_head *' for the
-@@ -91,15 +91,19 @@ struct bucket_table {
-  * NULLS_MARKER() expects a hash value with the low
-  * bits mostly likely to be significant, and it discards
-  * the msb.
-- * We git it an address, in which the bottom 2 bits are
-+ * We give it an address, in which the bottom bit is
-  * always 0, and the msb might be significant.
-  * So we shift the address down one bit to align with
-  * expectations and avoid losing a significant bit.
-+ *
-+ * We never store the NULLS_MARKER in the hash table
-+ * itself as we need the lsb for locking.
-+ * Instead we store a NULL
-  */
- #define	RHT_NULLS_MARKER(ptr)	\
- 	((void *)NULLS_MARKER(((unsigned long) (ptr)) >> 1))
- #define INIT_RHT_NULLS_HEAD(ptr)	\
--	((ptr) = RHT_NULLS_MARKER(&(ptr)))
-+	((ptr) = NULL)
- 
- static inline bool rht_is_a_nulls(const struct rhash_head *ptr)
- {
-@@ -302,8 +306,9 @@ static inline struct rhash_lock_head __rcu **rht_bucket_insert(
- }
- 
- /*
-- * We lock a bucket by setting BIT(1) in the pointer - this is always
-- * zero in real pointers and in the nulls marker.
-+ * We lock a bucket by setting BIT(0) in the pointer - this is always
-+ * zero in real pointers.  The NULLS mark is never stored in the bucket,
-+ * rather we store NULL if the bucket is empty.
-  * bit_spin_locks do not handle contention well, but the whole point
-  * of the hashtable design is to achieve minimum per-bucket contention.
-  * A nested hash table might not have a bucket pointer.  In that case
-@@ -323,7 +328,7 @@ static inline void rht_lock(struct bucket_table *tbl,
- 			    struct rhash_lock_head **bkt)
- {
- 	local_bh_disable();
--	bit_spin_lock(1, (unsigned long *)bkt);
-+	bit_spin_lock(0, (unsigned long *)bkt);
- 	lock_map_acquire(&tbl->dep_map);
- }
- 
-@@ -332,7 +337,7 @@ static inline void rht_lock_nested(struct bucket_table *tbl,
- 				   unsigned int subclass)
- {
- 	local_bh_disable();
--	bit_spin_lock(1, (unsigned long *)bucket);
-+	bit_spin_lock(0, (unsigned long *)bucket);
- 	lock_acquire_exclusive(&tbl->dep_map, subclass, 0, NULL, _THIS_IP_);
- }
- 
-@@ -340,7 +345,7 @@ static inline void rht_unlock(struct bucket_table *tbl,
- 			      struct rhash_lock_head **bkt)
- {
- 	lock_map_release(&tbl->dep_map);
--	bit_spin_unlock(1, (unsigned long *)bkt);
-+	bit_spin_unlock(0, (unsigned long *)bkt);
- 	local_bh_enable();
- }
- 
-@@ -358,7 +363,9 @@ static inline struct rhash_head *rht_ptr(
- 	const struct rhash_lock_head *p =
- 		rht_dereference_bucket_rcu(*bkt, tbl, hash);
- 
--	return (void *)(((unsigned long)p) & ~BIT(1));
-+	if ((((unsigned long)p) & ~BIT(0)) == 0)
-+		return RHT_NULLS_MARKER(bkt);
-+	return (void *)(((unsigned long)p) & ~BIT(0));
- }
- 
- static inline struct rhash_head *rht_ptr_exclusive(
-@@ -367,7 +374,9 @@ static inline struct rhash_head *rht_ptr_exclusive(
- 	const struct rhash_lock_head *p =
- 		rcu_dereference_protected(*bkt, 1);
- 
--	return (void *)(((unsigned long)p) & ~BIT(1));
-+	if (!p)
-+		return RHT_NULLS_MARKER(bkt);
-+	return (void *)(((unsigned long)p) & ~BIT(0));
- }
- 
- static inline void rht_assign_locked(struct rhash_lock_head __rcu **bkt,
-@@ -375,7 +384,9 @@ static inline void rht_assign_locked(struct rhash_lock_head __rcu **bkt,
- {
- 	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
- 
--	rcu_assign_pointer(*p, (void *)((unsigned long)obj | BIT(1)));
-+	if (rht_is_a_nulls(obj))
-+		obj = NULL;
-+	rcu_assign_pointer(*p, (void *)((unsigned long)obj | BIT(0)));
- }
- 
- static inline void rht_assign_unlock(struct bucket_table *tbl,
-@@ -384,6 +395,8 @@ static inline void rht_assign_unlock(struct bucket_table *tbl,
- {
- 	struct rhash_head __rcu **p = (struct rhash_head __rcu **)bkt;
- 
-+	if (rht_is_a_nulls(obj))
-+		obj = NULL;
- 	lock_map_release(&tbl->dep_map);
- 	rcu_assign_pointer(*p, obj);
- 	preempt_enable();
-diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-index 3bae6b05b4ba..ad5ab98328c5 100644
---- a/lib/rhashtable.c
-+++ b/lib/rhashtable.c
-@@ -59,7 +59,7 @@ int lockdep_rht_bucket_is_held(const struct bucket_table *tbl, u32 hash)
- 		return 1;
- 	if (unlikely(tbl->nest))
- 		return 1;
--	return bit_spin_is_locked(1, (unsigned long *)&tbl->buckets[hash]);
-+	return bit_spin_is_locked(0, (unsigned long *)&tbl->buckets[hash]);
- }
- EXPORT_SYMBOL_GPL(lockdep_rht_bucket_is_held);
- #else
+On Tue, Apr 9, 2019 at 7:31 PM Jonas Gorski <jonas.gorski@gmail.com> wrote:
+>
+> Hi,
+>
+> =E6=9C=AC=E5=BD=93=E3=81=AB=E7=94=B3=E3=81=97=E8=A8=B3=E3=81=82=E3=82=8A=
+=E3=81=BE=E3=81=9B=E3=82=93, I got sidetracked and completely forgot about =
+it. I
+> actually still have my old tree with the suggested changes for v2.
+>
+> On Tue, 9 Apr 2019 at 11:01, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Hi.
+> >
+> > On Mon, Apr 8, 2019 at 5:03 PM Wiebe, Wladislav (Nokia - DE/Ulm)
+> > <wladislav.wiebe@nokia.com> wrote:
+> > >
+> > > Hi!
+> > >
+> > > On 07.04.2019 11:04, Masahiro Yamada wrote:
+> > > > (+CC Jonas Gorski)
+> > > >
+> > > >
+> > > > On Tue, Mar 26, 2019 at 6:58 PM Wiebe, Wladislav (Nokia - DE/Ulm)
+> > > > <wladislav.wiebe@nokia.com> wrote:
+> > > >>
+> > > >> Commit ea837f1c0503 ("kbuild: make modpost processing configurable=
+")
+> > > >> was intended to give KBUILD_MODPOST_WARN flexibility to be configu=
+rable.
+> > > >> Right now KBUILD_MODPOST_WARN gets just ignored when KBUILD_EXTMOD=
+ is
+> > > >> set which happens per default when building modules out of the tre=
+e.
+> > > >>
+> > > >> This change gives the opportunity to define module build behaving =
+also
+> > > >> in case of out of tree builds and default will become exit on erro=
+r.
+> > > >> Errors which can be detected by the build should be trapped out of=
+ the box
+> > > >> there, unless somebody wants to notice broken stuff later at runti=
+me.
+> > > >
+> > > > If an external module refers to a symbol
+> > > > provided by another external module,
+> > > > this patch will turn the warning into the error by default,
+> > > > which is probably a bad idea.
+> > >
+> > > Indeed, exactly this should happen. You should fix your external modu=
+le
+> > > dependencies by providing their symbols. Please use e.g.
+> > > KBUILD_EXTRA_SYMBOLS instead of converting errors to warning and hopi=
+ng
+> > > that things will work.
+> >
+> > I know this option.
+> > What I want to say is, this patch changes the behavior, and
+> > may annoy some people.
+> >
+> > > Or how do you want to make sure module A still
+> > > delivers all symbols needed by module B after an update/changes?
+> > > Manually comparing the logs after an update or waiting until it turns
+> > > out broken during run-time? I wouldn't say this is a good idea :-)
+> >
+> > OK, so the commit log should record both the behavior change
+> > and workarounds.
+> >
+> > - If an external module being built refers to symbols
+> >   in another external module, Kbuild previously showed a warning,
+> >   but going forward it will turn it into an error.
+> >
+> > - To work around this, you should pass a symbol table via KBUILD_EXTRA_=
+SYMBOLS,
+> >   or KBUILD_EXTRA_SYMBOLS=3D1 to turn the error into a warning.
+>
+> This sounds like a good middle ground. When you do the effort of
+> setting KBUILD_EXTRA_SYMBOLS, you are likely interested in proper
+> dependency resolution and being notified if it fails.
+>
+> I would probably still use KBUILD_MODPOST_WARN=3D0 to force the warnings
+> as errors, to have it as the central switch for the behaviour. So the
+> behaviour would then become
+>
+> - If KBUILD_MODPOST_WARN is set to any value, set -w accordingly
+> - else, set -w only when building for an external module and
+> KBUILD_EXTRA_SYMBOLS is empty
+>
+> or
+>
+> ifdef KBUILD_MODPOST_WARN
+>     KBUILD_MODPOST_WARN:=3D$(filter-out 0,$(KBUILD_MODPOST_WARN))
+> else
+>     KBUILD_MODPOST_WARN:=3D$(if $(KBUILD_EXTMOD),$(if $(KBUILD_EXTRA_SYMB=
+OLS),,1))
+> endif
 
 
+Sorry, I think this is too complicated.
+
+I applied this since it is simple.
+https://patchwork.kernel.org/patch/10895465/
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
