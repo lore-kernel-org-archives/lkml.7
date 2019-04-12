@@ -6,69 +6,67 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B02C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F41C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD35020652
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E01206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GpYY7mWE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="s7YgT5EP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfDLMLd (ORCPT
+        id S1727335AbfDLMMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 08:11:33 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44309 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLMLd (ORCPT
+        Fri, 12 Apr 2019 08:12:48 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:50283 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfDLMMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 08:11:33 -0400
-Received: by mail-io1-f68.google.com with SMTP id u12so8209117iop.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 05:11:32 -0700 (PDT)
+        Fri, 12 Apr 2019 08:12:48 -0400
+Received: by mail-it1-f195.google.com with SMTP id q14so209526itk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 05:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=4lVqUQZ8y48QeUHWnd/Jy2pgPNXI6ISMHRIV8nefK9c=;
-        b=GpYY7mWE9iTdG9hsqv9Nam+qZnBeJqBYOaVXw01b4hbQzucXgtv4ToL8/uY/riJMjO
-         6jY2S+0X23NNKBVVXlIXeFAqfDcgAsVg25pvN4WtO3Zm3mx2Vgv29M8DrZcxyUyB8Rbf
-         +O9r1e5tunRJq5rhrV2Q7Co0L7nTfi2DA1o/Wjz96viFws8PlrFTja9XHtpeZuGkrbP8
-         jTF6DdY9DB4/DOM2jn9ceoaA4r3I6qBqVj4kjoRlsrJcvhnzc7HBUeeLOXAkQed9mfL8
-         7gGwVc2iElKXC1bi8jdZ7YYaM77SbVqZKPF4ZIvmsQXYstDDSIemXHKMlJCdpVZyLTWl
-         tEbQ==
+        bh=iCZlPziWJiQaKtwiXHrfTEPKeCtsRQH3Jd3O98iuC1s=;
+        b=s7YgT5EP3rQu2Cg6C7wN73bmRQ0ScfW/3NpVUCK8c06tKLBPXP9Nhk7uUeOQXkjRuq
+         ePmaVlc45YI/UfZ48VmQIlC30LxwvkhB990mxwJiVqyI9AVwDazUVlwlq9JdBawEDvG+
+         wjvTSmXMk+5jy3SsfeZCYbY5UPsHUFRpRsGwX85OoYctHMEvfHs2FTtAvO+F8xwHlWoR
+         HoB6IN+UMVoHRssip6iQKtE29yRzqJTWPk3mB7jPhMSRDxnJGyPU3/um+Eepn24tdQmJ
+         B/QfCX4O5ODwlNWyTic2KKbthRbw7z0K11ZmXw9DGKG0YH+2a6oPGKOGTjct9RU9VWnp
+         Yq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4lVqUQZ8y48QeUHWnd/Jy2pgPNXI6ISMHRIV8nefK9c=;
-        b=JAQbOXCsIeY8TI1nwiZh0Xn5lRT2r5r3D7QxWrmPGvgZ2bUOXsPS/7nZqMgDlckaf0
-         cgDZJc75rmQKWe7Dv6uS2+UVqYMLT2P3UdturwjhiohK0Qj6TyVy9yjTDucsoEknMCJp
-         wgiBfZHlyEc5g4sEEQhiVBy54i9KFIxQD/xWB9o2b5l8D2ikzliIZkhqlTD5/SOrn1Ks
-         tf4ywRWfjusgbbYH598f2VDGbBiK+O+gpNssM1cXsrgXG7IVhMInVF1xIqDMccCbOc/l
-         6vie2IxYW8R8z9TkTimLo63SrHkvJU0vSf9f7uo1GOJhiO5XFCFnJdAZnj/jz1LtnRjC
-         nbXg==
-X-Gm-Message-State: APjAAAW7rtCwW+U7isTMh23Tb7ySZlEvD+SNe2TXVJ3MeSos2iJYD3Gc
-        MJDhdzjKAHqOPqw23T6sJ5OcVJxWD6xqJCeKjS+2dQ==
-X-Google-Smtp-Source: APXvYqxPxq1x/9zOQp9qKEZWTEoGMvyP+ChQiY0bRYhaI0VHL1pnKFlfM2Y49iMBK9Dd0OCrc89vVVrIc8HjXPMzX7E=
-X-Received: by 2002:a6b:3b43:: with SMTP id i64mr36049329ioa.121.1555071091916;
- Fri, 12 Apr 2019 05:11:31 -0700 (PDT)
+        bh=iCZlPziWJiQaKtwiXHrfTEPKeCtsRQH3Jd3O98iuC1s=;
+        b=b1zVfIHJo/ICSClZgZCkNNNEIXElPbjbqiT77eL7m1jkx0lIynZmYRpvTKmKXGqBbM
+         rsyqG+pjQPLmYjaKIqy5xDsBUIrVrsQvCiWUWghxzHGXOJRDX4kHruWWjnFr/6HMSwFf
+         1NpcncOHSJQbeAwprPOjpu+kkFtBkjXDK3V+tnDvsOJu7wCvC4BwzRMbYxCbdGziJSAt
+         lJxkql4UF3orZc9UbESIxyFfRO2DhUEIlOgiWm4cpmC+gWRnffTCBUsoYX4K4MUjP3Ip
+         bs8SUbCkqIdp7NMEzxkll65VrULyXz0fUY3sBU13sBD3Z/2BneM3fxpNJBjl7souYja5
+         YrLg==
+X-Gm-Message-State: APjAAAWB8pMC78IjYLRMMfKjOhnGksNMF7+Dcix9xJ3GdkGjnWDk8aOW
+        fUHYG3H1KENg6ZHbe3o0QWKfeNJ7x7Rezfjv22v3OA==
+X-Google-Smtp-Source: APXvYqzOHP+IYJxFiCwQ0uzLbJSpgkERuycBCcso7Q1Mpqb3aKN0E4n6TYgyw1AUpdKF2eUmZiBHTVGYB6+JXaaqmTA=
+X-Received: by 2002:a24:ad2:: with SMTP id 201mr12217784itw.26.1555071167191;
+ Fri, 12 Apr 2019 05:12:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
-In-Reply-To: <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
+References: <20190411093024.23555-1-brgl@bgdev.pl> <20190411093024.23555-4-brgl@bgdev.pl>
+ <4a022050-73ad-cbed-bf30-416abb2196e0@ti.com>
+In-Reply-To: <4a022050-73ad-cbed-bf30-416abb2196e0@ti.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 12 Apr 2019 14:11:21 +0200
-Message-ID: <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
+Date:   Fri, 12 Apr 2019 14:12:36 +0200
+Message-ID: <CAMRc=MeCxEM+q2m55_2LV6C9kLxJqZqtQytNrsdO5AiV6rT8gA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] usb: ohci-da8xx: disable the regulator if the
+ overcurrent irq fired
 To:     Sekhar Nori <nsekhar@ti.com>
 Cc:     Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        Adam Ford <aford173@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -77,93 +75,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
+pt., 12 kwi 2019 o 12:39 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
 >
 > Hi Bartosz,
 >
-> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> > From: David Lechner <david@lechnology.com>
+> On 11/04/19 3:00 PM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> > This adds a cpu node and operating points to the common da850.dtsi file=
-.
+> > Historically the power supply management in this driver has been handle=
+d
+> > in two separate places in parallel. Device-tree users simply defined an
+> > appropriate regulator, while two boards with no DT support (da830-evm a=
+nd
+> > omapl138-hawk) passed functions defined in their respective board files
+> > over platform data. These functions simply used legacy GPIO calls to
+> > watch the oc GPIO for interrupts and disable the vbus GPIO when the irq
+> > fires.
 > >
-> > Additionally, a regulator is added to the LEGO EV3 board along with
-> > some board-specific CPU configuration.
+> > Commit d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
+> > updated these GPIO calls to the modern API and moved them inside the
+> > driver.
 > >
-> > Regulators need to be hooked up on other boards to get them working.
+> > This however is not the optimal solution for the vbus GPIO which should
+> > be modeled as a fixed regulator that can be controlled with a GPIO.
 > >
-> > Signed-off-by: David Lechner <david@lechnology.com>
+> > In order to keep the overcurrent protection available once we move the
+> > board files to using fixed regulators we need to disable the enable_reg
+> > regulator when the overcurrent indicator interrupt fires. Since we
+> > cannot call regulator_disable() from interrupt context, we need to
+> > switch to using a oneshot threaded interrupt.
+> >
 > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> I remember you mentioning about some problems using OCHI and cpufreq
-> together. Are those resolved now? CPU PLL on DA850 can affect other
-> peripheral clock frequencies too. So enabling it should really be a
-> per-board decision.
+> I thought a bit on whether it makes sense to merge this patch into 6/6
+> since that is modifying some code you introduce here. But I think its
+> probably better to keep it separate like you have it now.
+>
+> 6/6 is about dropping support for vbus gpio, where as here you are
+> letting regulator be used for handing overcurrent detected using oci gpio=
+.
+>
+> Having it separate makes it possible to revert dropping support for vbus
+> gpio while keeping this functionality ;)
 >
 
-The problems are still there. I've never been able to find the
-culprit, but it also occurs on TI BSP in the same way (a couple
-cpufreq transitions will make the controller unresponsive).
-
-> No problems with adding OPPs to da850.dtsi, but which of those are
-> enabled on any board should be after some thorough testing and analysis.
->
-> Because of that, I think its also better to split da850.dtsi from board
-> specific changes in this patch.
->
-
-Sure, I'll split it.
-
-> > +     opp_table: opp-table {
-> > +             compatible =3D "operating-points-v2";
-> > +
-> > +             opp_100: opp100-100000000 {
-> > +                     opp-hz =3D /bits/ 64 <100000000>;
-> > +                     opp-microvolt =3D <1000000 950000 1050000>;
-> > +             };
-> > +
-> > +             opp_200: opp110-200000000 {
-> > +                     opp-hz =3D /bits/ 64 <200000000>;
-> > +                     opp-microvolt =3D <1100000 1050000 1160000>;
-> > +             };
-> > +
-> > +             opp_300: opp120-300000000 {
-> > +                     opp-hz =3D /bits/ 64 <300000000>;
-> > +                     opp-microvolt =3D <1200000 1140000 1320000>;
-> > +             };
-> > +
-> > +             /*
-> > +              * Original silicon was 300MHz max, so higher frequencies
-> > +              * need to be enabled on a per-board basis if the chip is
-> > +              * capable.
-> > +              */
-> > +
-> > +             opp_375: opp120-375000000 {
-> > +                     status =3D "disabled";
-> > +                     opp-hz =3D /bits/ 64 <375000000>;
-> > +                     opp-microvolt =3D <1200000 1140000 1320000>;
-> > +             };
-> > +
-> > +             opp_415: opp130-415000000 {
-> > +                     status =3D "disabled";
-> > +                     opp-hz =3D /bits/ 64 <415000000>;
-> > +                     opp-microvolt =3D <1300000 1250000 1350000>;
-> > +             };
-> > +
-> > +             opp_456: opp130-456000000 {
-> > +                     status =3D "disabled";
-> > +                     opp-hz =3D /bits/ 64 <456000000>;
-> > +                     opp-microvolt =3D <1300000 1250000 1350000>;
-> > +             };
->
-> Here, lets stick to OPPs defined in OMAP-L138 data manual (irrespective
-> of what existing board code has). Page 93 of
-> http://www.ti.com/lit/ds/symlink/omap-l138.pdf
->
-
-Will do in the next version.
+These two changes were together in v1, but I too think that having it
+separate keeps the series bisectable.
 
 Bart
 
+> > -static irqreturn_t ohci_da8xx_oc_handler(int irq, void *data)
+> > +static irqreturn_t ohci_da8xx_oc_thread(int irq, void *data)
+> >  {
+> >       struct da8xx_ohci_hcd *da8xx_ohci =3D data;
+> > +     struct device *dev =3D da8xx_ohci->hcd->self.controller;
+> > +     int ret;
+> >
+> > -     if (gpiod_get_value(da8xx_ohci->oc_gpio))
+> > -             gpiod_set_value(da8xx_ohci->vbus_gpio, 0);
+> > +     if (gpiod_get_value_cansleep(da8xx_ohci->oc_gpio)) {
+> > +             if (da8xx_ohci->vbus_gpio) {
+> > +                     gpiod_set_value_cansleep(da8xx_ohci->vbus_gpio, 0=
+);
+> > +             } else if (da8xx_ohci->vbus_reg) {
+> > +                     ret =3D regulator_disable(da8xx_ohci->vbus_reg);
+> > +                     if (ret)
+> > +                             dev_err(dev,
+> > +                                     "Failed to disable regulator: %d\=
+n",
+> > +                                     ret);
+> > +             }
+> > +
+>
+> Unnecessary empty line here, that too one that introduces white space
+> error. Please drop.
+>
 > Thanks,
 > Sekhar
