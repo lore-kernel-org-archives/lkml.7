@@ -2,84 +2,143 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A0FC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A22AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF59820818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA682171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555095985;
+	bh=TPyXzxpNCFg8DH4jzTgBnGYcFVIJNGmCk/REZ+s49IM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=x1+7bgf7wvI339biHTk/RrNKqJXjrsKyol9E86/PY4UMmTEo3KcbtFl7hasjjgZnk
+	 PoV/h3MRNmXT5gX2CmSOASVKd6W54Et9Mhsw89pbhniSu0XziLQn59hGfv8yFfAvFe
+	 WWLqexynp5nZq6vNPwGFLiizxT1EHNJzgPwB2yuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfDLTEl (ORCPT
+        id S1726959AbfDLTGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        Fri, 12 Apr 2019 15:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfDLTEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:04:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726765AbfDLTGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:06:24 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 007CC20818;
-        Fri, 12 Apr 2019 19:04:39 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 15:04:38 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-trace-devel@vger.kernel.org, eballetbo@gmail.com,
-        zwisler@chromium.org, djkurtz@chromium.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH v2] chrome/platform: cros_ec_proto:: Add trace event to
- trace EC commands
-Message-ID: <20190412150438.56ba4429@gandalf.local.home>
-In-Reply-To: <20190412184944.125338-1-rrangel@chromium.org>
-References: <20190412184944.125338-1-rrangel@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9BDC20818;
+        Fri, 12 Apr 2019 19:06:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555095983;
+        bh=TPyXzxpNCFg8DH4jzTgBnGYcFVIJNGmCk/REZ+s49IM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S/e9nKOI8cxbFevPNFW5xNh+F6oqMwRSlZ+IPZsqshZz4Ie3N4yKEHZsMHH4HE7RA
+         amyM9Gn7PtQ9mtPxACvnialX+v0rBQiZFOxU79jzD4LsR5YIHpmep3HgSQssWAWtg5
+         c2yPaHRpWkakk3GtD/fRtMT87XL0qKGQvbdyABKQ=
+Subject: Re: [PATCH] selftests: livepatch use TEST_PROGS for test shell
+ scripts
+To:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190412011823.26884-1-shuah@kernel.org>
+ <alpine.LSU.2.21.1904120901490.773@pobox.suse.cz>
+ <8967c9aa-7eb1-7e6d-a371-f29a2be24c84@kernel.org>
+ <alpine.LSU.2.21.1904121535100.773@pobox.suse.cz>
+ <ad936df6-ab14-6bff-322a-c9d34d23c1f5@kernel.org>
+ <6f97800f-e78f-7d16-32b2-96ee5260321c@redhat.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1e07dae8-6699-6b72-1508-2b6b89d3d92d@kernel.org>
+Date:   Fri, 12 Apr 2019 13:06:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <6f97800f-e78f-7d16-32b2-96ee5260321c@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 12:49:44 -0600
-Raul E Rangel <rrangel@chromium.org> wrote:
+On 4/12/19 12:51 PM, Joe Lawrence wrote:
+> On 4/12/19 1:05 PM, shuah wrote:
+>> On 4/12/19 7:37 AM, Miroslav Benes wrote:
+>>> On Fri, 12 Apr 2019, shuah wrote:
+>>>
+>>>> On 4/12/19 1:03 AM, Miroslav Benes wrote:
+>>>>> On Thu, 11 Apr 2019, Shuah Khan wrote:
+>>>>>
+>>>>>> TEST_PROGS variable is for test shell scripts and common clean target
+>>>>>> in lib.mk doesn't touch them. TEST_GEN_PROGS are removed by it.
+>>>>>>
+>>>>>> Fix it to use TEST_PROGS for test shell scripts and 
+>>>>>> TEST_PROGS_EXTENDED
+>>>>>> for common functions.sh.
+>>>>>>
+>>>>>> Signed-off-by: Shuah Khan <shuah@kernel.org>
+>>>>>> ---
+>>>>>>     tools/testing/selftests/livepatch/Makefile | 3 ++-
+>>>>>>     1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/tools/testing/selftests/livepatch/Makefile
+>>>>>> b/tools/testing/selftests/livepatch/Makefile
+>>>>>> index af4aee79bebb..fd405402c3ff 100644
+>>>>>> --- a/tools/testing/selftests/livepatch/Makefile
+>>>>>> +++ b/tools/testing/selftests/livepatch/Makefile
+>>>>>> @@ -1,6 +1,7 @@
+>>>>>>     # SPDX-License-Identifier: GPL-2.0
+>>>>>> -TEST_GEN_PROGS := \
+>>>>>> +TEST_PROGS_EXTENDED := functions.sh
+>>>>>> +TEST_PROGS := \
+>>>>>>      test-livepatch.sh \
+>>>>>>      test-callbacks.sh \
+>>>>>>      test-shadow-vars.sh
+>>>>>
+>>>>> Hi Shuah,
+>>>>>
+>>>>> thanks for the patch. We have already something similar queued in 
+>>>>> our git
+>>>>> tree. See
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git/commit/?h=for-5.1/upstream-fixes&id=abfe3c4560684864f66641438fee3075de098e89 
+>>>>>
+>>>>>
+>>>>> It is missing TEST_PROGS_EXTENDED though. Should we add it?
+>>>>>
+>>>>
+>>>> Please do. What that does is when selftests are installed, functions.h
+>>>> gets installed as well so the the test can run from installed location.
+>>>>
+>>>> Did I miss reviewing the original? I maintain the framework and try to
+>>>> catch these if patch gets sent to me.
+>>>
+>>> Unfortunately you did and it was our fault. You were not CCed, no one
+>>> noticed and we were a bit trigger happy. Sorry about that. It should not
+>>> have happened.
+>>>
+>>> Would this work for you?
+>>
+>> Looks good to me.
+>>
+> 
+> Hi Shuah,
+> 
+> Thanks for spotting this and apologies for missing your CC on my earlier 
+> patch post.  For future reference, do you prefer a direct CC, 
+> linux-kselftest, or both?
 
-> +#define ec_cmds \
-> +	{EC_CMD_PROTO_VERSION, "PROTO_VERSION"}, \
-> +	{EC_CMD_HELLO, "HELLO"}, \
-> +	{EC_CMD_GET_VERSION, "GET_VERSION"}, \
-> +	{EC_CMD_READ_TEST, "READ_TEST"}, \
-> +	{EC_CMD_GET_BUILD_INFO, "GET_BUILD_INFO"}, \
-> +	{EC_CMD_GET_CHIP_INFO, "GET_CHIP_INFO"}, \
-> +	{EC_CMD_GET_BOARD_VERSION, "GET_BOARD_VERSION"}, \
-> +	{EC_CMD_READ_MEMMAP, "READ_MEMMAP"}, \
-> +	{EC_CMD_GET_CMD_VERSIONS, "GET_CMD_VERSIONS"}, \
-> +	{EC_CMD_GET_COMMS_STATUS, "GET_COMMS_STATUS"}, \
-> +	{EC_CMD_TEST_PROTOCOL, "TEST_PROTOCOL"}, \
-> +	{EC_CMD_GET_PROTOCOL_INFO, "GET_PROTOCOL_INFO"}, \
-> +	{EC_CMD_GSV_PAUSE_IN_S5, "GSV_PAUSE_IN_S5"}, \
-> +	{EC_CMD_GET_FEATURES, "GET_FEATURES"}, \
+No worries. Happy to report the problem. Couldn't have missed it with
+all the deleted lines showing up whenever I ran diff on my changes. :)
 
-Usually, if I have something like this, I would do:
+Direct to or cc to me and cc linux-kselftest list is preferred Same as
+any other patch really, everybody getmaintainer.pl recommends.
 
+thanks,
+-- Shuah
 
-#define ec_cmds \
-	EC(PROTO_VERSION), \
-	EC(HELLO), \
-	EC(GET_VERSION), \
-	EC(READ_TEST), \
-	[...]
-
-Then:
-
-#define EC(a) {EC_CMD_##a, #a}
-
-and then ec_cmds ends up with the same result with much less typing and
-little risk for copy past errors.
-
--- Steve
