@@ -2,46 +2,47 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC06C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E505EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFF720869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB761218AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfDLQ2X (ORCPT
+        id S1727079AbfDLQ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:28:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55781 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfDLQ2U (ORCPT
+        Fri, 12 Apr 2019 12:28:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44661 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfDLQ2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:28:20 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so11974752wmf.5;
-        Fri, 12 Apr 2019 09:28:18 -0700 (PDT)
+        Fri, 12 Apr 2019 12:28:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y7so12691091wrn.11;
+        Fri, 12 Apr 2019 09:28:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UrI5bB1G13TbTmwo7Dd5vwL7pHaypZ+eWIZ1x7jeGtQ=;
-        b=KolmxQBgDFyL0CF86jYL2znQCZUCedOYHeNdh42V3H1LTlY3YMYXUTnRT5yIjXBvII
-         5p43T6WCuKmR+1wchWHcj7IQ3XNKbaQydHlQvk8W83RgnrEq9WMBUrgnrBBqzxF+zErk
-         wTLr0HGIt4r1q78i2pYfqCukcKoLUz8FFD33QWFjfM4VC6QCcoaiYogrumpzoKu9Ylbg
-         ZInO9wkk9W0ELMIt/C7+osPXupZO9Cz3hhSEXPlwm+smST0vW6TaOHhSMpaJgjadZkQ+
-         ImgJSplE9PJoRs5t9YudyY3qmsRpeOt4CUuaMIyPigNC/Yr2R9rZB3Wp8EHbNmV0mXtl
-         l2Vg==
-X-Gm-Message-State: APjAAAWQeL9yee6Ed9QOToAKpBBv0laPe+EJJx4ezNyvv6sGi5s8S0Md
-        Zxnz5cXVQOdYEpMjJg98lM0=
-X-Google-Smtp-Source: APXvYqyhrmmrIDsVkgfAyN3ImITc6ilIu4ERkDjYnzOm0xWHzrSDbm2wj6W1xtc0ioXG1bB3Ejn2bA==
-X-Received: by 2002:a1c:40c3:: with SMTP id n186mr12061893wma.3.1555086497854;
-        Fri, 12 Apr 2019 09:28:17 -0700 (PDT)
+        bh=Div0UcDT5pjkpGEcQMN6iz7N5zQCDWamiD+t9R9sf9I=;
+        b=LOVKk5BPUj1Kz39FkH4xmidf55NA774bljplKzJcJw6ZcU51bLudG16rzPg+0hrWEU
+         TctQLuoBW+Z19+kG8q8rf4s7v18pFeHnUwYPX3VD2IPosoqojeNYfWa/SNdeNM6nJ9A8
+         Tsw3DecnW8luX7JF2A6Iretl4t7R+ORqvGv4Pa/IIZydTGJoLeBciuPIyaGY8XjzEKPm
+         4PD7XAOEtEWusa6hXLWeq2qil72trVBvKH/e4552W5w9s6MVT5eZYFjkTeetDtjq9iLQ
+         fRpeO8pG9yPeSsfkymWu1+1+khyXLVK2lPa4j4vpvX0z/5y28NEbCQFHeFz/SG+NGQxU
+         D9Pw==
+X-Gm-Message-State: APjAAAX40/9bonOtZNe7Ds/I0BPrSjZuXR9M7Dfanq9a9OrCrOxQQ4mT
+        c0WK8fnlRhuTZxw4IEBWcRY=
+X-Google-Smtp-Source: APXvYqwakY049fMljA7Thco0tmgABCLLzpwjGlGc2CmugGQz5U+ShxfX40rS8JKj3sVJF2QEnZXQBQ==
+X-Received: by 2002:a5d:4907:: with SMTP id x7mr33457834wrq.133.1555086499594;
+        Fri, 12 Apr 2019 09:28:19 -0700 (PDT)
 Received: from localhost ([90.85.130.193])
-        by smtp.gmail.com with ESMTPSA id h2sm62334241wro.11.2019.04.12.09.28.17
+        by smtp.gmail.com with ESMTPSA id w11sm118079060wre.15.2019.04.12.09.28.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 09:28:17 -0700 (PDT)
+        Fri, 12 Apr 2019 09:28:19 -0700 (PDT)
 From:   Christina Quast <cquast@hanoverdisplays.com>
 Cc:     Christina Quast <cquast@hanoverdisplays.com>,
         Benoit Cousson <bcousson@baylibre.com>,
@@ -52,9 +53,9 @@ Cc:     Christina Quast <cquast@hanoverdisplays.com>,
         Russell King <linux@armlinux.org.uk>,
         linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/17] ARM: dts: am335x: moxa-uc-2100-common: Replaced register offsets with defines
-Date:   Fri, 12 Apr 2019 18:26:13 +0200
-Message-Id: <20190412162627.24518-4-cquast@hanoverdisplays.com>
+Subject: [PATCH 04/17] ARM: dts: am335x: moxa-uc-2101: Replaced register offsets with defines
+Date:   Fri, 12 Apr 2019 18:26:14 +0200
+Message-Id: <20190412162627.24518-5-cquast@hanoverdisplays.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190412162627.24518-1-cquast@hanoverdisplays.com>
 References: <20190412162627.24518-1-cquast@hanoverdisplays.com>
@@ -70,86 +71,46 @@ The defines are taken from dt-bindings/pinctrl/am33xx.h
 
 Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
 ---
- .../boot/dts/am335x-moxa-uc-2100-common.dtsi  | 42 +++++++++----------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/am335x-moxa-uc-2101.dts | 24 +++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-index 14f781953475..42579140c934 100644
---- a/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
-@@ -33,54 +33,54 @@
- 
- 	i2c0_pins: pinmux_i2c0_pins {
+diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2101.dts b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
+index 48aee6de4cdb..5923b6e7e1cb 100644
+--- a/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
++++ b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
+@@ -31,23 +31,23 @@
+ 	cpsw_default: cpsw_default {
  		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x988, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
--			AM33XX_IOPAD(0x98c, PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
-+			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_INPUT_PULLUP, MUX_MODE0)
+ 			/* Slave 1 */
+-			AM33XX_IOPAD(0x90c, PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
+-			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
+-			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txen.rmii1_txen */
+-			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd1.rmii1_txd1 */
+-			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd0.rmii1_txd0 */
+-			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
+-			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
+-			AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE0)	/* mii1_refclk.rmii1_refclk */
++			AM33XX_PADCONF(AM335X_PIN_MII1_CRS, PIN_INPUT_PULLDOWN, MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
++			AM33XX_PADCONF(AM335X_PIN_MII1_RX_ER, PIN_INPUT_PULLUP, MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
++			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, PIN_OUTPUT_PULLDOWN, MUX_MODE1)	/* mii1_txen.rmii1_txen */
++			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, PIN_OUTPUT_PULLDOWN, MUX_MODE1)	/* mii1_txd1.rmii1_txd1 */
++			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, PIN_OUTPUT_PULLDOWN, MUX_MODE1)	/* mii1_txd0.rmii1_txd0 */
++			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, PIN_INPUT_PULLUP, MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
++			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_INPUT_PULLUP, MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
++			AM33XX_PADCONF(AM335X_PIN_RMII1_REF_CLK, PIN_INPUT_PULLDOWN, MUX_MODE0)
  		>;
  	};
  
- 	push_button_pins: pinmux_push_button {
+ 	spi1_pins: pinmux_spi1 {
  		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x8e4, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_hsync.gpio2_23 */
-+			AM33XX_PADCONF(AM335X_PIN_LCD_HSYNC, PIN_INPUT_PULLDOWN, MUX_MODE7)	/* lcd_hsync.gpio2_23 */
- 		>;
- 	};
- 
- 	uart0_pins: pinmux_uart0_pins {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x970, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
--			AM33XX_IOPAD(0x974, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
-+			AM33XX_PADCONF(AM335X_PIN_UART0_RXD, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_UART0_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
- 		>;
- 	};
- 
- 	davinci_mdio_default: davinci_mdio_default {
- 		pinctrl-single,pins = <
- 			/* MDIO */
--			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
--			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+			AM33XX_PADCONF(AM335X_PIN_MDIO, PIN_INPUT_PULLUP | SLEWCTRL_FAST, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_MDC, PIN_OUTPUT_PULLUP, MUX_MODE0)
- 		>;
- 	};
- 
- 	mmc1_pins_default: pinmux_mmc1_pins {
- 		pinctrl-single,pins = <
- 			/* eMMC */
--			AM33XX_IOPAD(0x800, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad12.mmc1_dat0 */
--			AM33XX_IOPAD(0x804, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad13.mmc1_dat1 */
--			AM33XX_IOPAD(0x808, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad14.mmc1_dat2 */
--			AM33XX_IOPAD(0x80c, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad15.mmc1_dat3 */
--			AM33XX_IOPAD(0x810, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad8.mmc1_dat4 */
--			AM33XX_IOPAD(0x814, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad9.mmc1_dat5 */
--			AM33XX_IOPAD(0x818, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad10.mmc1_dat6 */
--			AM33XX_IOPAD(0x81c, PIN_INPUT_PULLUP | MUX_MODE1)	/* gpmc_ad11.mmc1_dat7 */
--			AM33XX_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_csn2.mmc1_cmd */
--			AM33XX_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_csn1.mmc1_clk */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD0, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad12.mmc1_dat0 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD1, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad13.mmc1_dat1 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD2, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad14.mmc1_dat2 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD3, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad15.mmc1_dat3 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD4, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad8.mmc1_dat4 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD5, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad9.mmc1_dat5 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD6, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad10.mmc1_dat6 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD7, PIN_INPUT_PULLUP, MUX_MODE1)	/* gpmc_ad11.mmc1_dat7 */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN2, PIN_INPUT_PULLUP, MUX_MODE2)	/* gpmc_csn2.mmc1_cmd */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN1, PIN_INPUT_PULLUP, MUX_MODE2)	/* gpmc_csn1.mmc1_clk */
- 		>;
- 	};
- 
- 	spi0_pins: pinmux_spi0 {
- 		pinctrl-single,pins = <
--			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	 /* spi0_sclk.spi0_sclk */
--			AM33XX_IOPAD(0x95c, PIN_INPUT_PULLUP | MUX_MODE0)	 /* spi0_cs0.spi0_cs0 */
--			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	 /* spi0_d0.spi0_d0 */
--			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	 /* spi0_d1.spi0_d1 */
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_SCLK, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS0, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_D0, PIN_INPUT_PULLUP, MUX_MODE0)
-+			AM33XX_PADCONF(AM335X_PIN_SPI0_D1, PIN_INPUT_PULLUP, MUX_MODE0)
+-			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	 /* ecap0_in_pwm0_out.spi1_sclk */
+-			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart1_ctsn.spi1_cs0 */
+-			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_ctsn.spi1_d0 */
+-			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_rtsn.spi1_d1 */
++			AM33XX_PADCONF(AM335X_PIN_ECAP0_IN_PWM0_OUT, PIN_INPUT_PULLUP, MUX_MODE4)	 /* ecap0_in_pwm0_out.spi1_sclk */
++			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE4)	 /* uart1_ctsn.spi1_cs0 */
++			AM33XX_PADCONF(AM335X_PIN_UART0_CTSN, PIN_INPUT_PULLUP, MUX_MODE4)	 /* uart0_ctsn.spi1_d0 */
++			AM33XX_PADCONF(AM335X_PIN_UART0_RTSN, PIN_INPUT_PULLUP, MUX_MODE4)	 /* uart0_rtsn.spi1_d1 */
  		>;
  	};
  };
