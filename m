@@ -2,134 +2,140 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3553C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96248C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB672077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHFiCjiF"
+	by mail.kernel.org (Postfix) with ESMTP id 6307420818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555048046;
+	bh=eANXyXm87iVrWzmhKnUkY9yTAsxJTPN+sYmkJAgKnXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d4K0gP1bLqzQeOhAIZFH6advtIA+vfVnnlpPtx5fWoFAequ4soED2bk/zvtdYvGTC
+	 SmGGrksCiBYrPFZFOgLPiN/JIhwaQ67lglCwUPvZTmOoeQnuta8zAZc1Dyh6mw8/UC
+	 Ycm/pIUHd/kSNJ5FvWzOjq70f3dBeOdv1j/Hrl8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDLFip (ORCPT
+        id S1726794AbfDLFrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 01:38:45 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54548 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfDLFip (ORCPT
+        Fri, 12 Apr 2019 01:47:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45039 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfDLFrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 01:38:45 -0400
-Received: by mail-it1-f196.google.com with SMTP id a190so5343519ite.4
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 22:38:44 -0700 (PDT)
+        Fri, 12 Apr 2019 01:47:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y7so10241322wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 22:47:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xHEBZHc0l3bFwYTk5fYReti+5FO3ym176CcS7WgDG0U=;
-        b=LHFiCjiFfNyVsrihH6WNLeRGo+81LhYX8qh+9xuxZEdr8ykj1kYG4C/o0XWeNKfsgv
-         DRGEzr6lPVkVkg5zWDc0aXsK2jpqGe6PpWKNOYKMpZM2CrseqPL247swdESteWd2hSHo
-         cNJsfIF5nwptLD2oX6E/kCtH25o9rBVPyeBkb3aqFV4FOVA7ufSpLWO82GSDEV/EfTK4
-         PDPF+FdGNQFh/AKt0iTNuLk8v1wrx0L/yfjRp+8d4W/TTGcS2Hg+Mu1w+lahE8WaLseQ
-         zJPPEfG6JyEDjjLV9qONfzpDxJp6GHicJ28d2qi3fseOaxEO8bVwUMUzeKBRBup/iW/u
-         1+SQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0HK10Hof8oLKF93odeobTgirk0suVrKdv8vbW7FEpVY=;
+        b=ccsDnnZ6zNgqkGzBLy7oZyewPjMDjRr3FvINRBT1zeGiwPgvjUZfDMBIWqpUeb5EIe
+         YH3axR1BawkTVT4j/G1Ud2QldG3K05FqSJRYQa/dOa4hHvOzBidG2DtX8wwR95vhRtUB
+         eusQsfNh0xvoPrH/sn502fzs+NSgShOSUzyTqu+v9XWiHCMp0ge89sdIYdim3dJvmjN+
+         qMDCdVcHZ+leLxKoTczTGkJ4uvci/4TXajqgDqd60H5YnbvQDv5qiWGE4yAzFn1ObcJh
+         cxxRS8EWX2jbLpa5IlrE8oirtNdAWdhwHe8keXKyxKU3xYU3B4oc+iXUkjYWYc24jw3r
+         CpuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xHEBZHc0l3bFwYTk5fYReti+5FO3ym176CcS7WgDG0U=;
-        b=DDlZB+1PMSsspx2il+KAVlZrayxJKTxnZcYdhQzgwViSz3J4uxg6zv4HSIjN/+t40z
-         mL9eOAJ+P/thKoWDFykYoMyknBkPGExb7IgTvNZ0nsNUG8QdQLuAAc3lAyLgaQWkbzbq
-         2g/L3CjWwoD7M3u4jNvtr9G2gyYjo1VNt79hkezR/M562xvOmAQMtHR3Tty5C7hU8oOD
-         fC3ChyNANWrTHLkQcfCIDcgUBXz2UP8b2oPaPCQ4ybdyMFBOVfMmGDhRq7ZjWllbbDjq
-         RLH9vT98SDvDRHqUyJxTbYot+WDiXALDSIn+tpHF9a/XMKjLvCNYMbWBNQeijYmychTQ
-         k5yg==
-X-Gm-Message-State: APjAAAXH8brhZR318YWnfAT1sm/iwEX7f3WoG4qf3rFQ6BsJ9v05kBMY
-        Nhe1uM+Cg6NpnvXjcaLPlXWI3FGFv2AMGMr7sHfZyQ==
-X-Google-Smtp-Source: APXvYqwUZtVFQvFpYQpaGAL7Cy3lPOR1C4iDSXGEIVhBDyVA7Oeg/wpcgg8wzmLRQRRJ8kLdwiEsTeEeTev3uTew3DY=
-X-Received: by 2002:a02:6553:: with SMTP id u80mr38602190jab.51.1555047523884;
- Thu, 11 Apr 2019 22:38:43 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0HK10Hof8oLKF93odeobTgirk0suVrKdv8vbW7FEpVY=;
+        b=Gv4mfrYbrOOJtlNLWXocrfH+PBdbNlBhsBqLKD8hedegUKOtt5yUZ6GcvPGpOm15xG
+         GSP1Ab6asK8emKoGvIlwEVR7d/GoA3QoEJA1mWViStb60jiSN6dSUxUbq0hn49oKBiEo
+         vTjseUXQsxkWDGZYAVjSfH3PkK/7kxZKOqjrdTXfom+uN8PUtebEg0YBPOHmH1rr20Aq
+         Ft+8yLyGEUuwI2GGdWzHmhrtAh0V/4VFj+gUdTVnymP/pAU0l7nfjF9uoG270KrX6mhb
+         +ClUG3fAd8d4ew3o5XT0WFNIugbGoTNd9BWr8XZdR9Z9mI6GbKWqeZtlweMndhtky4hv
+         twJg==
+X-Gm-Message-State: APjAAAXeYLSlll10KAkX0m4TSEMpKewy/EbpdRcevb+8/kWEC3e8QyDv
+        7gUHew4fUBfkUZJnRedQic0=
+X-Google-Smtp-Source: APXvYqyyV+uNQqKgCzHKPUS4btI12st/mabjKv8+Y2bB30IiQrltlWGriWo8vLcWUfU5W2QXrh3ygg==
+X-Received: by 2002:a5d:4e87:: with SMTP id e7mr4682767wru.161.1555048042800;
+        Thu, 11 Apr 2019 22:47:22 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id o17sm48689550wrw.73.2019.04.11.22.47.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 22:47:21 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 07:47:19 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Waiman Long <longman@redhat.com>, shenghui <shhuiw@foxmail.com>
+Subject: Re: [PATCH] locking/lockdep: Make lockdep_register_key() ignore
+ 'debug_locks'
+Message-ID: <20190412054719.GA80743@gmail.com>
+References: <20190411172612.39180-1-bvanassche@acm.org>
 MIME-Version: 1.0
-References: <20190411192607.GD225654@gmail.com> <20190411192827.72551-1-ebiggers@kernel.org>
- <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
-In-Reply-To: <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 12 Apr 2019 07:38:32 +0200
-Message-ID: <CACT4Y+a2rVobq+40tH+TgvmVfMOZvFT1y0ZJSRtsZu00EmeVzg@mail.gmail.com>
-Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411172612.39180-1-bvanassche@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:32 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Apr 11, 2019 at 12:31 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > This is needed so that CONFIG_HARDENED_USERCOPY_PAGESPAN=y doesn't
-> > incorrectly report a buffer overflow when the destination of
-> > copy_from_iter() spans the page boundary in the 2-page buffer.
-> >
-> > Fixes: 3f47a03df6e8 ("crypto: testmgr - add testvec_config struct and helper functions")
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> > ---
-> >  crypto/testmgr.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-> > index 0f6bfb6ce6a46..3522c0bed2492 100644
-> > --- a/crypto/testmgr.c
-> > +++ b/crypto/testmgr.c
-> > @@ -156,7 +156,8 @@ static int __testmgr_alloc_buf(char *buf[XBUFSIZE], int order)
-> >         int i;
-> >
-> >         for (i = 0; i < XBUFSIZE; i++) {
-> > -               buf[i] = (char *)__get_free_pages(GFP_KERNEL, order);
-> > +               buf[i] = (char *)__get_free_pages(GFP_KERNEL | __GFP_COMP,
-> > +                                                 order);
->
-> Is there a reason __GFP_COMP isn't automatically included in all page
-> allocations? (Or rather, it seems like the exception is when things
-> should NOT be considered part of the same allocation, so something
-> like __GFP_SINGLE should exist?.)
 
-It would be reasonable if __get_free_pages would automatically mark
-consecutive pages as consecutive.
-When these should not be considered part of the same allocation? Is it
-possible to free them separately? Will that BUG with __GFP_COMP mark?
-I understand that there can be a weak "these are actually the same
-allocation, but I would like to think about them as separate". But
-potentially we can ignore such cases.
+* Bart Van Assche <bvanassche@acm.org> wrote:
 
-> -Kees
->
-> >                 if (!buf[i])
-> >                         goto err_free_buf;
-> >         }
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
->
->
-> --
-> Kees Cook
+> If lockdep_register_key() and lockdep_unregister_key() are called with
+> debug_locks == false then the following warning is reported:
+> 
+> WARNING: CPU: 2 PID: 15145 at kernel/locking/lockdep.c:4920 lockdep_unregister_key+0x1ad/0x240
+> 
+> That warning is reported because lockdep_unregister_key() ignores the
+> value of 'debug_locks' and because the behavior of lockdep_register_key()
+> depends on whether or not 'debug_locks' is set. Fix this inconsistency
+> by making lockdep_register_key() unconditionally register lock keys.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: shenghui <shhuiw@foxmail.com>
+> Reported-by: shenghui <shhuiw@foxmail.com>
+> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use") # v5.1-rc1.
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  kernel/locking/lockdep.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index d2d65bbfae01..a228509b62f1 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -1027,15 +1027,16 @@ void lockdep_register_key(struct lock_class_key *key)
+>  	hash_head = keyhashentry(key);
+>  
+>  	raw_local_irq_save(flags);
+> -	if (!graph_lock())
+> -		goto restore_irqs;
+> +	arch_spin_lock(&lockdep_lock);
+> +	current->lockdep_recursion = 1;
+>  	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+>  		if (WARN_ON_ONCE(k == key))
+>  			goto out_unlock;
+>  	}
+>  	hlist_add_head_rcu(&key->hash_entry, hash_head);
+>  out_unlock:
+> -	graph_unlock();
+> +	current->lockdep_recursion = 0;
+> +	arch_spin_unlock(&lockdep_lock);
+>  restore_irqs:
+>  	raw_local_irq_restore(flags);
+>  }
+
+So why don't we add a debug_locks test to lockdep_unregister_key() 
+instead? The general principle to bring lockdep to a screeching halt when 
+bugs are detected, ASAP.
+
+Thanks,
+
+	Ingo
