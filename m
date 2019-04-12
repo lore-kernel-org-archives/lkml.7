@@ -2,183 +2,128 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5C9C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4618C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7802082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABF72082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sgGW2m0g"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qdWzfBTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfDLGfV (ORCPT
+        id S1726921AbfDLGh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:35:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1685 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726690AbfDLGfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:35:21 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3C6SZm9008304;
-        Fri, 12 Apr 2019 08:34:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=3E6lxmmL+ajK+PkqQYnkBr6M5CvcG1Gzx6458MHp/D4=;
- b=sgGW2m0g+OkAc06QwIMahbU0Y5P9cS/0t7RHlwBaxw5T1I9ioSTJOwZt8MNE8ghkghcy
- 2ewVsLazhcEmFvWweOHukbObWQbU6QAAKJZ90iGmcfSxf03KEQpNTx1WaLTiSWCzhKwz
- aUrtr9K31LH3v5Q0jIY3qW+neGENEO1z6E0Ztef3bFAjKnFkQz8vtZb+Ukkv00PaxFb2
- Jj4QxSB6vNGzQa6CKC0q1LH4sO4mJThAJNemQrIQByxixPckYDpghWYhZVKbQp/r1LUK
- 76PdBYx73lNp6Y4CnUMkQOEduXShPd8JCzmlR/I0A27UQYkb8YQpa+37yEVPwx1foHRA zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rprcftrwk-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 12 Apr 2019 08:34:54 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ADC4438;
-        Fri, 12 Apr 2019 06:34:43 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4F6A211AD;
-        Fri, 12 Apr 2019 06:34:43 +0000 (GMT)
-Received: from SFHDAG7NODE2.st.com (10.75.127.20) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 12 Apr
- 2019 08:34:43 +0200
-Received: from SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090]) by
- SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090%20]) with mapi id
- 15.00.1347.000; Fri, 12 Apr 2019 08:34:42 +0200
-From:   Lionel DEBIEVE <lionel.debieve@st.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        Ludovic BARRE <ludovic.barre@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 1/1] crypto: testmgr - call shash_init in crc32c algo
-Thread-Topic: [PATCH 1/1] crypto: testmgr - call shash_init in crc32c algo
-Thread-Index: AQHU6TRB39TFooeiy0SNdS6nTm4gO6Y3/68A
-Date:   Fri, 12 Apr 2019 06:34:42 +0000
-Message-ID: <58095a24-8d96-fe7e-0c99-461b015184e6@st.com>
-References: <1554123264-24243-1-git-send-email-lionel.debieve@st.com>
- <20190401173056.GD131675@gmail.com>
- <e1f694bd-e0f7-a3f4-426a-894a45c88a30@st.com>
-In-Reply-To: <e1f694bd-e0f7-a3f4-426a-894a45c88a30@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <7FB9AE74DCDC324F891EC099F642EC4F@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Apr 2019 02:37:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41793 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbfDLGh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:37:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gSqj6xLHz9s5c;
+        Fri, 12 Apr 2019 16:37:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555051043;
+        bh=/aL45c6y6k4uVrODejj/SYz5uSufI12V2NBjxR0gdns=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qdWzfBTjLJGHQDaoMWAr7KCYG8YlkH3TTcFCBNQ3l/zChmSF+sVBf1uNxF/pepHTS
+         8bWIMj//k/QUywv6jzW5lQrvlAnEFS8DgGMMFOZXvTIuCxIwD236PXv4+Enhjr5YjX
+         HLe0FUuBAkb8nfDqh6O16Fp1mxiA+YBiaXS+unMhaiUt9GmH6QhTJHjdPTOIFMKUTq
+         QumJH2U0gk/zoo3YbyZjJpYEr+oBOVqPbbUkDH6IOQ+QWyDa8imt4D9kuoQnjPn11U
+         UO5ZZzOiGErXFLNQUYAiDLvZmj0GcsMqai1YIh7YPGvep9xVNKoqB31p1eH7mwSCHF
+         /sOaPQiFKsr4g==
+Date:   Fri, 12 Apr 2019 16:37:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Subject: linux-next: build failure after merge of the netfilter-next tree
+Message-ID: <20190412163720.576c6610@canb.auug.org.au>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_04:,,
- signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/oR8njQFj0U8FUgPgAFadP=D"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+--Sig_/oR8njQFj0U8FUgPgAFadP=D
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 4/1/19 7:30 PM, Eric Biggers wrote:
+Hi all,
 
-> Hi Lionel,
->
-> On Mon, Apr 01, 2019 at 02:54:24PM +0200, Lionel Debieve wrote:
->> In case of device call required in low level driver,
->> the context must be initialized before calling the final
->> function.
->>
->> Signed-off-by: Lionel Debieve<lionel.debieve@st.com>
->> ---
->>   crypto/testmgr.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
->> index 8386038..4a00d7c 100644
->> --- a/crypto/testmgr.c
->> +++ b/crypto/testmgr.c
->> @@ -2181,6 +2181,13 @@ static int alg_test_crc32c(const struct alg_test_=
-desc *desc,
->>   		shash->tfm =3D tfm;
->>   		shash->flags =3D 0;
->>  =20
->> +		err =3D crypto_shash_init(shash);
->> +		if (err) {
->> +			printk(KERN_ERR "alg: crc32c: init failed for "
->> +			       "%s: %d\n", driver, err);
->> +			break;
->> +		}
->> +
->>   		*ctx =3D 420553207;
->>   		err =3D crypto_shash_final(shash, (u8 *)&val);
->>   		if (err) {
->> --=20
->> 2.7.4
->>
-> This defeats the point of the test, which is that crc32c implementations =
-are
-> expected to use the same shash_desc context format and be usable by calli=
-ng
-> crypto_shash_update() directly after initializing the context manually, w=
-ithout
-> a prior crypto_shash_init().  See for example ext4_chksum() in fs/ext4/ex=
-t4.h:
->
-> 	static inline u32 ext4_chksum(struct ext4_sb_info *sbi, u32 crc,
-> 				      const void *address, unsigned int length)
-> 	{
-> 		struct {
-> 			struct shash_desc shash;
-> 			char ctx[4];
-> 		} desc;
->
-> 		BUG_ON(crypto_shash_descsize(sbi->s_chksum_driver)!=3Dsizeof(desc.ctx))=
-;
->
-> 		desc.shash.tfm =3D sbi->s_chksum_driver;
-> 		desc.shash.flags =3D 0;
-> 		*(u32 *)desc.ctx =3D crc;
->
-> 		BUG_ON(crypto_shash_update(&desc.shash, address, length));
->
-> 		return *(u32 *)desc.ctx;
-> 	}
->
-> I think you need to fix the stm32 crc32 driver to not store anything extr=
-a in
-> the shash_desc context, and only use hardware during ->update().
->
-> - Eric
->
-OK, catch your point but refering to the devel-algos.rst documentation, it =
-seems that there is no way
-to bypass the init part. I'm based on a hardware that need a clear initiali=
-zation to be up and running.
-Is the doc not updated? I'm working to optimized data transfer into my hard=
-ware by pushing only 32 bits
-datas and I'm saving the others to be pushed later.
+After merging the netfilter tree, today's linux-next build (powerpc
+ppc44x_defconfig) failed like this:
 
-If we assume that hardware must be only used in the update function, I've t=
-o rework the driver as today,
-HW init is made in the init function too.
+In file included from /home/sfr/next/next/net/bridge/br_input.c:19:
+/home/sfr/next/next/include/net/netfilter/nf_queue.h:16:23: error: field 's=
+tate'
+ has incomplete type
+  struct nf_hook_state state;
+                       ^~~~~
 
-BR
-- Lionel
+Caused by commit
+
+  971502d77faa ("bridge: netfilter: unroll NF_HOOK helper in bridge input p=
+ath")
+
+This build has CONFIG_NETFILTER not set.
+
+I have applied this patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 12 Apr 2019 16:32:47 +1000
+Subject: [PATCH] bridge: only include nf_queue.h if needed
+
+---
+ net/bridge/br_input.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+index e0aacfedcfe1..86dc46f6a68f 100644
+--- a/net/bridge/br_input.c
++++ b/net/bridge/br_input.c
+@@ -16,7 +16,9 @@
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/netfilter_bridge.h>
++#ifdef CONFIG_NETFILTER_FAMILY_BRIDGE
+ #include <net/netfilter/nf_queue.h>
++#endif
+ #include <linux/neighbour.h>
+ #include <net/arp.h>
+ #include <linux/export.h>
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oR8njQFj0U8FUgPgAFadP=D
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlywMiAACgkQAVBC80lX
+0GylpAf+MwFoGn4mG286guZxJhwHgLa4J/ZQuJonNtQPbXxNNzJXpvJkfWZUm7h5
+vQAf+NtuAVoC7vG4zGubdkjXBo6nN+OEQjcoJMLgyou0EjVJDoj47+r02S0LwbZ+
+Flt/9IHsM9nN3qA2Rxdi+gSRv/NFMciwJQwORU8krfWpDRS3L8tArn4vwDoFCIir
+K4y5ITYJ5RhWkA6ML6TGR3dVqCz1IQKJw7W3jTF/MliWhURIRvk8oMsAazOhHc/e
+/vAjvYfb+Kchfc0MgZwEEYdiTgTq8M3mINkqSXmJBxLXjTJ47v8nHXjoTHGty5++
+fgwLWm/A/zhfLYSFiKUJNgqliTzMsg==
+=S0en
+-----END PGP SIGNATURE-----
+
+--Sig_/oR8njQFj0U8FUgPgAFadP=D--
