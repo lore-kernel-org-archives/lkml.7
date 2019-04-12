@@ -2,193 +2,129 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2220EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63235C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68EC2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E8F205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dy58lTdh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfDLH5G (ORCPT
+        id S1727112AbfDLIAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:57:06 -0400
-Received: from m97188.mail.qiye.163.com ([220.181.97.188]:16923 "EHLO
-        m97188.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfDLH5G (ORCPT
+        Fri, 12 Apr 2019 04:00:30 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45757 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfDLIA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:57:06 -0400
-Received: from localhost (unknown [117.48.120.186])
-        by m97188.mail.qiye.163.com (Hmail) with ESMTPA id 5A25796743B;
-        Fri, 12 Apr 2019 15:56:24 +0800 (CST)
-From:   WANG Chao <chao.wang@ucloud.cn>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/kvm: move kvm_load/put_guest_xcr0 into atomic context
-Date:   Fri, 12 Apr 2019 15:55:39 +0800
-Message-Id: <20190412075539.24624-1-chao.wang@ucloud.cn>
-X-Mailer: git-send-email 2.21.0
+        Fri, 12 Apr 2019 04:00:29 -0400
+Received: by mail-ua1-f65.google.com with SMTP id c13so2927646uao.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 01:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GhL6LONnkvIVp0AvYB18vhAHStJG1zjOEGpY9uUIPa0=;
+        b=Dy58lTdhTzUOXZtqFPWtrxYCDOSeXk7qK0RM4+qgGI9Dhjwd9lDd87aQRP9f/U9tS9
+         wUH6BBPXrnVcpajxSRFev12WOeqtnVuGiLMF+OFH8qy6FEL2Fbx+L33fX2CNvk9f5afn
+         tufvfv+bd+76e9sglWxGhZjxbf/42L1KPdT2dHSbGZkaSgQyNKfJ55OdVGGLc8sI/0SC
+         4urWlviPzBxvaR5avGXUxX0HHIOBYuZepumTggW/JNZjw3SsfkygykVFl7K25KeDzlOB
+         eDFNGqKzziJMdEMTGQbv/HfsqqeR+v1EYoXLzoIJv/K4fhBQ3nLGDWd95JjsEaTZzc+t
+         nCig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GhL6LONnkvIVp0AvYB18vhAHStJG1zjOEGpY9uUIPa0=;
+        b=kenPyqrgN+BcMHZDm2hAV1mXI8rglhvX1VR/HYhCNLn117dE5M7FRKtNTfRfSSO7xl
+         4wnyUuquF/YigU+hFZ/7JVMn80UDjANg/NxKFQPfVJg0QW0g3VRqzBj657LwQJ7bYT4d
+         R1MY8wT0cbXzQaNOQd7OVonEngYrJm+PX1OV16IreE9Bhg7bjK87oOb3uSuOvGR76Jxh
+         bbWdXiiCZ6wK/HFqAvDcvO+gvxqlI/B6vckcoJ7CXNAh6JbXz2bXvubx7N9YeL8ZLG9C
+         sVwiKgkImpi5IBNf4ZATyiw04qBh9B4Ssmn66/oyNTzckrJO1whOrW9IbA6GOUxtrx2l
+         l3uQ==
+X-Gm-Message-State: APjAAAXboe/qoiPeMopaIQtwCakBPjTcxEclEFr9Yatrd2Nl1rnfH2uU
+        L0geXYu/jpBVEzevUZPY2v5HnNq9BM7hvYUjPshpyA==
+X-Google-Smtp-Source: APXvYqyNA9gGrxiVDy4z3apKD3I6B0Av50rojHvvN8/Dj124PwRTQ3xgVEKZOzszA3clDyxv7KvZSNuTgCxTzl6ajrA=
+X-Received: by 2002:ab0:7486:: with SMTP id n6mr5073154uap.66.1555056028676;
+ Fri, 12 Apr 2019 01:00:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kIGBQJHllBS1VLV1koWUFJQjdXWS1ZQUlXWQkOFx4IWUFZMjUtOjcyP0
-        FLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Phw6Fhw4FDgzSTIxHToyNhUp
-        LBdPCzxVSlVKTk5OS05OTENPTk9LVTMWGhIXVRgTGhRVDBoVHDsOGBcUDh9VGBVFWVdZEgtZQVlK
-        SkxVT0NVSklLVUpDTVlXWQgBWUFOTUtCNwY+
-X-HM-Tid: 0a6a108c31e120bckuqy5a25796743b
+References: <20190411181733.21437-1-ulf.hansson@linaro.org> <CAJZ5v0hVkgF2MYUh4VkXN0L2ZtxMoC8bUV6CY7=fAnSHRLpqUA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hVkgF2MYUh4VkXN0L2ZtxMoC8bUV6CY7=fAnSHRLpqUA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 12 Apr 2019 09:59:52 +0200
+Message-ID: <CAPDyKFqesUc5PaZGvkMPcpiLUX1cRvFcSCVdv+p6LtpO4QpK3g@mail.gmail.com>
+Subject: Re: [PATCH v14 4/4] PM / Domains: Add genpd governor for CPUs
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-guest xcr0 could leak into host when MCE happens in guest mode. Because
-do_machine_check() could schedule out at a few places.
+On Thu, 11 Apr 2019 at 22:44, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Apr 11, 2019 at 8:17 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > After some preceding changes, PM domains managed by genpd may contain
+> > CPU devices, so idle state residency values should be taken into
+> > account during the state selection process. [The residency value is
+> > the minimum amount of time to be spent by a CPU (or a group of CPUs)
+> > in an idle state in order to save more energy than could be saved
+> > by picking up a shallower idle state.]
+> >
+> > For this purpose, add a new genpd governor, pm_domain_cpu_gov, to be
+> > used for selecting idle states of PM domains with CPU devices attached
+> > either directly or through subdomains.
+> >
+> > The new governor computes the minimum expected idle duration for all
+> > online CPUs attached to a PM domain and its subdomains.  Next, it
+> > finds the deepest idle state whose target residency is within the
+> > expected idle duration and selects it as the target idle state of
+> > the domain.
+> >
+> > It should be noted that the minimum expected idle duration computation
+> > is based on the closest timer event information stored in the per-CPU
+> > variables cpuidle_devices for all of the CPUs in the domain.  That
+> > needs to be revisited in future, as obviously there are other reasons
+> > why a CPU may be woken up from idle.
+> >
+> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > [ rjw: Changelog ]
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Applied instead of the previous version, thanks!
 
-For example:
+Thanks - and sorry for the mess!
 
-kvm_load_guest_xcr0
-...
-kvm_x86_ops->run(vcpu) {
-  vmx_vcpu_run
-    vmx_complete_atomic_exit
-      kvm_machine_check
-        do_machine_check
-          do_memory_failure
-            memory_failure
-              lock_page
+When things have settled, here's the reposted PSCI cleanup series in
+case it slipped through your filters.
+https://patchwork.kernel.org/project/linux-pm/list/?series=103537
 
-In this case, host_xcr0 is 0x2ff, guest vcpu xcr0 is 0xff. After schedule
-out, host cpu has guest xcr0 loaded (0xff).
-
-In __switch_to {
-     switch_fpu_finish
-       copy_kernel_to_fpregs
-         XRSTORS
-
-If any bit i in XSTATE_BV[i] == 1 and xcr0[i] == 0, XRSTORS will
-generate #GP (In this case, bit 9). Then ex_handler_fprestore kicks in
-and tries to reinitialize fpu by restoring init fpu state. Same story as
-last #GP, except we get DOUBLE FAULT this time.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: WANG Chao <chao.wang@ucloud.cn>
----
- arch/x86/kvm/svm.c     |  2 ++
- arch/x86/kvm/vmx/vmx.c |  4 ++++
- arch/x86/kvm/x86.c     | 10 ++++------
- arch/x86/kvm/x86.h     |  2 ++
- 4 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index e0a791c3d4fc..2bf73076de7f 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5621,6 +5621,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	svm->vmcb->save.cr2 = vcpu->arch.cr2;
- 
- 	clgi();
-+	kvm_load_guest_xcr0(vcpu);
- 
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-@@ -5766,6 +5767,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
- 		kvm_before_interrupt(&svm->vcpu);
- 
-+	kvm_put_guest_xcr0(vcpu);
- 	stgi();
- 
- 	/* Any pending NMI will happen here */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ab432a930ae8..3157598c52f1 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6410,6 +6410,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)
- 		vmx_set_interrupt_shadow(vcpu, 0);
- 
-+	kvm_load_guest_xcr0(vcpu);
-+
- 	if (static_cpu_has(X86_FEATURE_PKU) &&
- 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
- 	    vcpu->arch.pkru != vmx->host_pkru)
-@@ -6506,6 +6508,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 			__write_pkru(vmx->host_pkru);
- 	}
- 
-+	kvm_put_guest_xcr0(vcpu);
-+
- 	vmx->nested.nested_run_pending = 0;
- 	vmx->idt_vectoring_info = 0;
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 099b851dabaf..22f66e9a7dc5 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -800,7 +800,7 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw)
- }
- EXPORT_SYMBOL_GPL(kvm_lmsw);
- 
--static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
-+void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE) &&
- 			!vcpu->guest_xcr0_loaded) {
-@@ -810,8 +810,9 @@ static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
- 		vcpu->guest_xcr0_loaded = 1;
- 	}
- }
-+EXPORT_SYMBOL_GPL(kvm_load_guest_xcr0);
- 
--static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
-+void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
- {
- 	if (vcpu->guest_xcr0_loaded) {
- 		if (vcpu->arch.xcr0 != host_xcr0)
-@@ -819,6 +820,7 @@ static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
- 		vcpu->guest_xcr0_loaded = 0;
- 	}
- }
-+EXPORT_SYMBOL_GPL(kvm_put_guest_xcr0);
- 
- static int __kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
- {
-@@ -7865,8 +7867,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		goto cancel_injection;
- 	}
- 
--	kvm_load_guest_xcr0(vcpu);
--
- 	if (req_immediate_exit) {
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 		kvm_x86_ops->request_immediate_exit(vcpu);
-@@ -7919,8 +7919,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	vcpu->mode = OUTSIDE_GUEST_MODE;
- 	smp_wmb();
- 
--	kvm_put_guest_xcr0(vcpu);
--
- 	kvm_before_interrupt(vcpu);
- 	kvm_x86_ops->handle_external_intr(vcpu);
- 	kvm_after_interrupt(vcpu);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 28406aa1136d..aedc5d0d4989 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -347,4 +347,6 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
- 	__this_cpu_write(current_vcpu, NULL);
- }
- 
-+void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
-+void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
- #endif
--- 
-2.21.0
-
+Kind regards
+Uffe
