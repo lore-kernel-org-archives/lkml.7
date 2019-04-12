@@ -2,119 +2,144 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F61C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE43C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1F52171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2vZKP7M"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1E02054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfDLNN1 (ORCPT
+        id S1727306AbfDLNQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:13:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36937 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfDLNN1 (ORCPT
+        Fri, 12 Apr 2019 09:16:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35868 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfDLNQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:13:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 8so5154583pfr.4;
-        Fri, 12 Apr 2019 06:13:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9julFFNnjjmpRPEwh1/7ZmyWUlZl64V1L5pTrjM48n0=;
-        b=W2vZKP7M4kf7G4UubRsddkMr/LDrMMxPetvcBihAXO0pjawdyrD18x95p9nWKLqIpE
-         kb/PUhQSA7jWbzavgm8YyfMfqnQiQT5J+MMN5h3XnMgJXSygzmGuzN5UzGXgtk+dsTz5
-         vyVPKKPeZqgLoTgi6eKGTgCec0XIUKOiv5bXVe/qhsas/HcN68XIoz0FEpQaQSYK4eKF
-         xrFtewY5zZbMWo/pFvdJpssCPh0S03neu0B4sbXKjlM13lEUCWws5pseRQwRKoQNmOoK
-         K0x2o5lUL+OWjtmOQJwQ06kNSEObvJd+MHeMmKQht5bXkoaFg6Z/e+nbKPz/ppL31kCl
-         L1ew==
+        Fri, 12 Apr 2019 09:16:36 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k130so5593280qke.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 06:16:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9julFFNnjjmpRPEwh1/7ZmyWUlZl64V1L5pTrjM48n0=;
-        b=aCngDAn+hr9bcHYBgqw5JiJUeOdKEuULhZFTiGt7NoWR9oLqFPr+awbLK/y4XtUza0
-         9J9xQ/kdY+smchB96MEGy8E7PhNijUxaHo6rhhqdMBERlSx3m77DZIaBeoM7CAFSsMfO
-         bgwFo7UHJmdtr76spI5jBqHJj23CwzSaGP1cyOICniL1k/WdVCzmi/TZGIdDTjqAKmEM
-         mceGEyQq/6ApWhcThii8aNGH8Lx7w2kCtVuXRtA7Bl4QzRpi/XPQwEXdEvPfEe3QodSt
-         ZEt2FVuud391N4GBO/QyoR/Lp9dWpHHpH7gAnRzagKbkMzSe7AZ+1hCJrMYgPcYCxx4Q
-         UP9A==
-X-Gm-Message-State: APjAAAVePfIU/n+fgXd11D7C4GkriDlBpva4gAKPuzdjXgtWqZs973VU
-        vgYajIv1SutYJrrG8vZYzEv9lTgv5cjgWnx2gfI=
-X-Google-Smtp-Source: APXvYqxkuX6py0td5Df1zd06ScNAAg5QEhoQbMz9ORZBsVgWsBMMIG4/0ZC50dtitehPFIh4YmUsJIeEYlF68JT2QNk=
-X-Received: by 2002:a63:fd49:: with SMTP id m9mr53719071pgj.16.1555074806560;
- Fri, 12 Apr 2019 06:13:26 -0700 (PDT)
+        bh=rv7MVICsaxHe7v4HuQI9mAqFB8+mbi20S9Zrx2UdNno=;
+        b=tXMD4A13b6wxNXcpfDAWAjfmlR1NV1Sv6I0ekTztYE+7dakC//V/VRBUNcpIthKdBr
+         T2UI4077KyoKiOKWnunmVHQ7I6Ae6rRlo1mofRNBLMkvhdiyeAYx3+HwDUsUYU7YL2MU
+         PXpOylMzMxmTEy/b6UlAT9EzZeeq/zMRqtaBaZAnn1kUUhiB0M+UqAUzwpO4SVFOYJoQ
+         P1LMBnTcU7/aoAkuOctE1OcWBsXttHPHBaKuQ/mMc5zCCLV3giMHN6Jhyx9g3KOoY1Dq
+         Yrm5WMIUSaLeZaqD9oKIUExTrJJC4GlUZ3+RL8+TGzELqQdeahUJxzHLEX0twPfu6Ks+
+         14/w==
+X-Gm-Message-State: APjAAAVIBzBURcebVmH/FUpFX+V7J0mPPcXpBFZKLXFq1wLw14LR0y1Z
+        sMIj3dYi48uroyp8Qtjhpk3aFCvu1r/Dd9T9isI=
+X-Google-Smtp-Source: APXvYqwD4Be7cRFcGuRr2ojK6lE8ZDJRK05dW0xORM0tgqTl5inG6HsfGHrUpF0lVXYWcasR63Tw276OF2zxBlP3yFw=
+X-Received: by 2002:ae9:f442:: with SMTP id z2mr43096377qkl.172.1555074995289;
+ Fri, 12 Apr 2019 06:16:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190404103925.25652-1-yuehaibing@huawei.com> <20190405142112.26592-1-yuehaibing@huawei.com>
- <20190405145009.GD9224@smile.fi.intel.com> <2719325.nu6fPkO1U5@kreacher>
-In-Reply-To: <2719325.nu6fPkO1U5@kreacher>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 12 Apr 2019 16:13:14 +0300
-Message-ID: <CAHp75VccF9-ax8nJ9qOfAFMvLR19K6NqwyePEf-86r4ifMnJKA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: merrifield: Fix build err without CONFIG_ACPI
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20190318122901.7231-1-brgl@bgdev.pl> <20190318122901.7231-2-brgl@bgdev.pl>
+ <CAK8P3a0EhCRH7O87WSyfHujomQ_Dzz3=BT0SaXF-33Z9g0oSjA@mail.gmail.com> <c1fa9027-3f92-5edd-6e5b-be4889e5363c@ti.com>
+In-Reply-To: <c1fa9027-3f92-5edd-6e5b-be4889e5363c@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 12 Apr 2019 15:16:18 +0200
+Message-ID: <CAK8P3a0xEpCQa=9=-oZDuRNmA7hexbub5k_BdO71Y7ycyV_Szg@mail.gmail.com>
+Subject: Re: [RESEND PATCH 1/2] ARM: davinci: support multiplatform build for
+ ARM v5
+To:     Sekhar Nori <nsekhar@ti.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
+        David Lechner <david@lechnology.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 3:55 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Friday, April 5, 2019 4:50:09 PM CEST Andy Shevchenko wrote:
-> > On Fri, Apr 05, 2019 at 10:21:12PM +0800, Yue Haibing wrote:
-> > > From: YueHaibing <yuehaibing@huawei.com>
-> > >
-> > > When building CONFIG_ACPI is not set
-> > > gcc warn this:
-> > >
-> > > drivers/gpio/gpio-merrifield.c: In function
-> > > mrfld_gpio_get_pinctrl_dev_name: drivers/gpio/gpio-merrifield.c:388:19:
-> > > error: dereferencing pointer to incomplete type struct acpi_device>
-> > >    put_device(&adev->dev);
-> > >
-> > >                    ^
-> > >
-> > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Fixes:d00d2109c367 ("gpio: merrifield: Convert to use
-> > > acpi_dev_get_first_match_dev()") Signed-off-by: YueHaibing
-> > > <yuehaibing@huawei.com>
-> >
-> > Thank you for an update, I have a comment below, but before sending v3, let
-> > Rafael to have a chance to look at it.
-> >
-> > >  #ifdef CONFIG_ACPI
-> > >  extern int acpi_platform_notify(struct device *dev, enum kobject_action
-> > >  action);>
-> > > +
-> > > +static inline void put_acpi_device(struct acpi_device *adev)
-> > > +{
-> > > +   put_device(&adev->dev);
-> > > +}
-> >
-> > This should probably go to acpi_bus.h under acpi_dev_get_first_match_dev().
-> > And talking to Mika we agreed that naming would be better as acpi_dev_put().
+On Tue, Apr 2, 2019 at 1:03 PM Sekhar Nori <nsekhar@ti.com> wrote:
 >
-> Agreed on both accounts.
+> On 25/03/19 6:38 PM, Arnd Bergmann wrote:
+> > On Mon, Mar 18, 2019 at 1:29 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >>
+> >> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >>
+> >> Add modifications necessary to make davinci part of the ARM v5
+> >> multiplatform build.
+> >>
+> >> Move the arch-specific configuration out of arch/arm/Kconfig and
+> >> into mach-davinci/Kconfig. Remove the sub-menu for DaVinci
+> >> implementations (they'll be visible directly under the system type.
+> >> Select all necessary options not already selected by ARCH_MULTI_V5.
+> >> Update davinci_all_defconfig. Explicitly include the mach-specific
+> >> headers in mach-davinci/Makefile.
+> >>
+> >> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > I like this a lot, it gives me some hope that we can eventually
+> > do the same for the remaining ARMv5 platforms that are
+> > not multiplatform yet (s3c24xx, ks8695, w90x900, lpc32xx,
+> > omap1, ep93xx, and maybe even the xscale based ones).
+> >
+> > I have done a lot of randconfig testing with this patch appled now
+> > and not found any issues, great work!
+>
+> Thanks Arnd. Will take this as your Acked-by:
+>
+> The timer conversion patches are pending review/rework. Will queue once
+> those are cleared.
 
-Thanks!
-YueHaibing, please, send v3 with suggested changes.
+Unfortunately, after doing some more randconfig testing, I ended up with
+three build issues:
 
--- 
-With Best Regards,
-Andy Shevchenko
+1. vpbe:
+drivers/media/platform/davinci/vpbe_osd.c:29:10: fatal error:
+'mach/cputype.h' file not found
+#include <mach/cputype.h>
+         ^~~~~~~~~~~~~~~~
+drivers/media/platform/davinci/vpbe_venc.c:26:10: fatal error:
+'mach/hardware.h' file not found
+#include <mach/hardware.h>
+         ^~~~~~~~~~~~~~~~~
+drivers/media/platform/davinci/vpbe_display.c:31:10: fatal error:
+'mach/cputype.h' file not found
+
+2. staging/vpfe:
+In file included from
+/git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:20:
+drivers/staging/media/davinci_vpfe/dm365_isif.h:24:10: fatal error:
+'mach/mux.h' file not found
+
+3.
+    davinci: fix sleep.S build error on ARMv4
+
+    When building a multiplatform kernel that includes armv4 support,
+    the default target CPU does not support the blx instruction,
+    which leads to a build failure:
+
+    arch/arm/mach-davinci/sleep.S: Assembler messages:
+    arch/arm/mach-davinci/sleep.S:56: Error: selected processor does
+not support `blx ip' in ARM mode
+
+    Add a .arch statement in the sources to make this file build.
+
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
+index cd350dee4df3..efcd400b2abb 100644
+--- a/arch/arm/mach-davinci/sleep.S
++++ b/arch/arm/mach-davinci/sleep.S
+@@ -37,6 +37,7 @@
+ #define DEEPSLEEP_SLEEPENABLE_BIT      BIT(31)
+
+        .text
++       .arch   armv5te
+ /*
+  * Move DaVinci into deep sleep state
+  *
+
+
+      Arnd
