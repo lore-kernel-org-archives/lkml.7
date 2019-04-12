@@ -2,166 +2,143 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AB920675
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3202083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNCs3bNd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yJUMwLs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfDLDdJ (ORCPT
+        id S1726770AbfDLD7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 23:33:09 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32825 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfDLDdI (ORCPT
+        Thu, 11 Apr 2019 23:59:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35550 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfDLD7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 23:33:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k19so4508803pgh.0;
-        Thu, 11 Apr 2019 20:33:08 -0700 (PDT)
+        Thu, 11 Apr 2019 23:59:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y197so9210341wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 20:59:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=3C1fGOgvnRDgr2+61i3UruLYNDemZ25874nEdVYBcWA=;
-        b=QNCs3bNdGU0tzYReElByvLX7oAa0r8acXj7J4fXU9V/vNfvPt1TQsdFMDorUnHk3hT
-         ipecVBiSF6JpvMYCk8v0qwL+dbiSLA4nKha50c9uit35EDQEHR/JbxbS6qTt+/B57u0E
-         NI3YS0M7KFl0EWZdOU4rf/o6Y+8pe84AdViYrC0hnGlXAI7Q3plDLAY/BMn/zjk9QDxY
-         kMT4dtwnArAWIBPM6qyKPDao9PkfCXm2nH6MfJyWLCMK7+a1/IGOKaX3KynlaAmN+18a
-         Y9fSfFR9ZrxdXbnSRCeS1tFt50R+DUKmjFJKAmEg+/j+z3gowyzbty2ooycJgc7kbMj2
-         Um/A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FDjbew8/XnEWPCx2JhORMgpWfv6ak7qB7VTQ5Y2QSSQ=;
+        b=yJUMwLs/VuheROMdvbgcxf4aIlTmHjgP0u0OBcJVi/d+ATgieKvDC5dQ9akuiy+0as
+         1SWiHpYd3ln7U9/XZXOiWPacUxeA4m7ZwIagBdles+ZrvSDlTmzTaUl6dM3ji725o9D/
+         xw9PYnbcHoRwWBqHHluLC/I/k+y6vUD2mycjfMOGhH+4e3bOc9yS5uSGQAFodOgnwxAK
+         sNY4u+dATu/fRLitXCIs915unk3mx+at3s+kf8cb4RqsC/ZaE6bv9nbYTxIiPkVx1vDV
+         uzGqJUDVQHxvmLcvsBksSoZ+/X3fb7yHxdoLKCGeividloux9ewo97rgVOUYs1uKvAE2
+         Uuvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3C1fGOgvnRDgr2+61i3UruLYNDemZ25874nEdVYBcWA=;
-        b=GsCGCRdZfXs1zS54BnAicyrwpYSvWbxXYma8thH35+S7WR0yqJL0FDSONjor5mNfIp
-         lGASwXFCbgCLa+QX8+PxP7fAsJLNO2qQtLm5eNKJBcdjXW6qcv+uyU0qHf8Eg7ttQPf8
-         kqluxdHtJdxA+XcIa4hHbPOA/Gv9pKBjIsXAWjKzEFx04+2GU2yRwSw0NYdP/6J9+uJY
-         DR46Nvqp1/33zN/yTs1S5nghDuC9CpUNJKU1/WiMtfopiN8LqtFTSvbLGHyM3vjVYZIQ
-         KhnALe92YUd9HLTOsAZDWhVDTYMPUSLtITjRwkrBcXkQjmVdEK9lYvh4jneeKELFEJ1y
-         2ocQ==
-X-Gm-Message-State: APjAAAVjAfqSKtxzbNQGM7Yu1xd9WeYAkcGKklmiwcZUzyQ51Yg5y1EO
-        em9DhgBllZWphXXEcrIyDNAuD8GteSIROw==
-X-Google-Smtp-Source: APXvYqxXA51zkEYpKKdImox7l1Zgb3hfIvJOZhcMGCAT1g5DovuBJTZhOXmWQkHsWJ8fGEKjj3I6+Q==
-X-Received: by 2002:a63:6e0e:: with SMTP id j14mr50228731pgc.203.1555039987990;
-        Thu, 11 Apr 2019 20:33:07 -0700 (PDT)
-Received: from xy-data.openstacklocal (ecs-159-138-22-150.compute.hwclouds-dns.com. [159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id c25sm57750648pfo.69.2019.04.11.20.33.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 11 Apr 2019 20:33:07 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Young Xiao <YangX92@hotmail.com>
-Subject: [PATCH] ipv6: Prevent overrun when parsing v6 header options
-Date:   Fri, 12 Apr 2019 11:34:08 +0800
-Message-Id: <1555040048-31294-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FDjbew8/XnEWPCx2JhORMgpWfv6ak7qB7VTQ5Y2QSSQ=;
+        b=I3M2WGwjUi6cSqRSJDUAWYFRHXc8x559WryuDbSyC5nUHDjTIM78LnSHSgbNbTgU38
+         MwiLAKN7GHa6dNm9Zb4+i4h9mUZYBCGHgW1PdZjMAQrk0IOGgMh2NZ1XLdiOEPW7iIkW
+         2Jyv60bE6o5bpv5slwSpmyoOgnnwUZNvKqfT3HXZFPz5qocqZKUbOqB8WtcFmss307tv
+         mvHq2j1/b21TxkFQ9HFaRAQsu1Q+afmxnaD14S54mi2tKXylDtbrsHKUQKlc+XvcL9om
+         wdJDEiiNaPVKxpUyy4wqBOtusEffrmFLbW03kI1gpla1v8N2dPzbZhAJm9VPE0goagfQ
+         VbjA==
+X-Gm-Message-State: APjAAAVZCMkhc1mS7tLHmFwOuvNgPr+qWj6aqgtXc07zgHEWZ7OXftFm
+        9VuRTJhU4eavxbx95lbF0QMbps5qm2ED6e5G91d8zA==
+X-Google-Smtp-Source: APXvYqwmNvRI2C5zFcXXGEjgvhsdkSLF3QjkF0eksska2gjzZB75WwT6NhB+7nv2p7FzRVpgPijHAosZyFC7RKRtFr8=
+X-Received: by 2002:a1c:a103:: with SMTP id k3mr9179534wme.8.1555041570364;
+ Thu, 11 Apr 2019 20:59:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190329041409.70138-1-chenyu56@huawei.com> <20190329041409.70138-10-chenyu56@huawei.com>
+ <CALAqxLUQW03waz0LETcnYpc7qhm=RG6RfwbGVZ7MQz00jTZSWQ@mail.gmail.com>
+In-Reply-To: <CALAqxLUQW03waz0LETcnYpc7qhm=RG6RfwbGVZ7MQz00jTZSWQ@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 11 Apr 2019 20:59:17 -0700
+Message-ID: <CALAqxLWf0_73spYd68-bnYZp5evLNjcFwBqevVdHCoziG9paBA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/13] usb: roles: Add usb role switch notifier.
+To:     Yu Chen <chenyu56@huawei.com>
+Cc:     Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Zhuangluan Su <suzhuangluan@hisilicon.com>,
+        Kongfei <kongfei@hisilicon.com>,
+        "Liuyu (R)" <liuyu712@hisilicon.com>, wanghu17@hisilicon.com,
+        butao <butao@hisilicon.com>, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com,
+        Li Pengcheng <lipengcheng8@huawei.com>,
+        songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>,
+        xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <YangX92@hotmail.com>
+On Thu, Apr 11, 2019 at 6:12 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
+> >
+> > This patch adds notifier for drivers want to be informed of the usb role
+> > switch.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>
+> Hey Yu Chen!
+>    Thanks again for sending this patch out! As mentioned in my
+> comments with the other patches, I've got one proposal I wanted to
+> share to try to avoid  state initialization races that I've seen with
+> this patchset.
+>
+> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> > index f45d8df5cfb8..e2caaa665d6e 100644
+> > --- a/drivers/usb/roles/class.c
+> > +++ b/drivers/usb/roles/class.c
+> > @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+> >
+> > +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> > +                                     struct notifier_block *nb)
+> > +{
+> > +       return blocking_notifier_chain_register(&sw->nh, nb);
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
+>
+> As noted earlier, one issue I've seen is that the hisi_hikey_usb
+> driver's notifier may not get called early enough to receive
+> notification of the initial usb state.
+>
+> It seems like on registration here, we should take the lock, read the
+> role state and immediately call the notifier to properly initialize
+> it? I suspect that should close the window for any state races around
+> driver probe timings and
+>
+> Does that make sense? I have roughly prototyped this but need to do
+> additional testing.
 
-The fragmentation code tries to parse the header options in order
-to figure out where to insert the fragment option.  Since nexthdr points
-to an invalid option, the calculation of the size of the network header
-can made to be much larger than the linear section of the skb and data
-is read outside of it.
+So these seem to be working ok.
+First, the notifier call on register change:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=1d312db9763c2449c3cf5b3383b1f33390f8ce7b
 
-This vulnerability is similar to CVE-2017-9074.
+Second, the current_dr_role change for dwc3:
+  https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=b80b536de76eb80f7df0846aa54ac22e2b4ffe4e
 
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
----
- net/ipv6/mip6.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+Feel free to fold/rework those changes into your patch set.
 
-diff --git a/net/ipv6/mip6.c b/net/ipv6/mip6.c
-index 64f0f7b..1b3a6e4 100644
---- a/net/ipv6/mip6.c
-+++ b/net/ipv6/mip6.c
-@@ -263,8 +263,6 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			       u8 **nexthdr)
- {
- 	u16 offset = sizeof(struct ipv6hdr);
--	struct ipv6_opt_hdr *exthdr =
--				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
- 	const unsigned char *nh = skb_network_header(skb);
- 	unsigned int packet_len = skb_tail_pointer(skb) -
- 		skb_network_header(skb);
-@@ -272,7 +270,8 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 
- 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
- 
--	while (offset + 1 <= packet_len) {
-+	while (offset <= packet_len) {
-+		struct ipv6_opt_hdr *exthdr;
- 
- 		switch (**nexthdr) {
- 		case NEXTHDR_HOP:
-@@ -299,12 +298,16 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			return offset;
- 		}
- 
-+		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
-+			return -EINVAL;
-+
-+		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 		offset += ipv6_optlen(exthdr);
- 		*nexthdr = &exthdr->nexthdr;
--		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
-+
- 	}
- 
--	return offset;
-+	return -EINVAL;
- }
- 
- static int mip6_destopt_init_state(struct xfrm_state *x)
-@@ -399,8 +402,6 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			     u8 **nexthdr)
- {
- 	u16 offset = sizeof(struct ipv6hdr);
--	struct ipv6_opt_hdr *exthdr =
--				   (struct ipv6_opt_hdr *)(ipv6_hdr(skb) + 1);
- 	const unsigned char *nh = skb_network_header(skb);
- 	unsigned int packet_len = skb_tail_pointer(skb) -
- 		skb_network_header(skb);
-@@ -408,7 +409,8 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 
- 	*nexthdr = &ipv6_hdr(skb)->nexthdr;
- 
--	while (offset + 1 <= packet_len) {
-+	while (offset <= packet_len) {
-+		struct ipv6_opt_hdr *exthdr;
- 
- 		switch (**nexthdr) {
- 		case NEXTHDR_HOP:
-@@ -434,12 +436,16 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
- 			return offset;
- 		}
- 
-+		if (offset + sizeof(struct ipv6_opt_hdr) > packet_len)
-+			return -EINVAL;
-+
-+		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
-+
- 		offset += ipv6_optlen(exthdr);
- 		*nexthdr = &exthdr->nexthdr;
--		exthdr = (struct ipv6_opt_hdr *)(nh + offset);
- 	}
- 
--	return offset;
-+	return -EINVAL;
- }
- 
- static int mip6_rthdr_init_state(struct xfrm_state *x)
--- 
-1.9.1
-
+thanks
+-john
