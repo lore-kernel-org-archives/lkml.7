@@ -3,37 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BCCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A593FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44B420818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED3320818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfDLWt0 (ORCPT
+        id S1727114AbfDLWuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:49:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36548 "EHLO
+        Fri, 12 Apr 2019 18:50:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36590 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLWt0 (ORCPT
+        with ESMTP id S1726765AbfDLWuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:49:26 -0400
-Received: from [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d] (unknown [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
+        Fri, 12 Apr 2019 18:50:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1FC3A281631;
-        Fri, 12 Apr 2019 23:49:18 +0100 (BST)
-Subject: Re: [PATCH v2 07/15] media: vimc: cap: Add multiplanar formats
+        with ESMTPSA id 76E73260652
+Subject: Re: [PATCH v2 09/15] media: vimc: cap: Allocate and verify mplanar
+ buffers
 To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
         linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         lkcamp@lists.libreplanetbr.org
 References: <20190327151743.18528-1-andrealmeid@collabora.com>
- <20190327151743.18528-8-andrealmeid@collabora.com>
+ <20190327151743.18528-10-andrealmeid@collabora.com>
 From:   Helen Koike <helen.koike@collabora.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=helen.koike@collabora.com; keydata=
@@ -110,12 +108,12 @@ Autocrypt: addr=helen.koike@collabora.com; keydata=
  iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
  46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
  eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <fa00d040-edcb-11b2-d9f7-40ea264684b2@collabora.com>
-Date:   Fri, 12 Apr 2019 19:49:13 -0300
+Message-ID: <55e606ac-1354-e31c-bfb1-2193f4ee7cb9@collabora.com>
+Date:   Fri, 12 Apr 2019 19:49:46 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190327151743.18528-8-andrealmeid@collabora.com>
+In-Reply-To: <20190327151743.18528-10-andrealmeid@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -127,85 +125,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 3/27/19 12:17 PM, André Almeida wrote:
-> Add multiplanar formats to be exposed to the userspace as
-> supported formats. Since we don't want to support multiplanar
-> formats when the driver is in singleplanar mode, we only access
-> the multiplanar formats array if the multiplanar mode is enabled.
+> If the driver is in multiplanar mode, fill the vb2 structures
+> with the planes sizes and verify it the sizes allocated to the
+> planes are enough.
 > 
 > Signed-off-by: André Almeida <andrealmeid@collabora.com>
 
 Acked-by: Helen Koike <helen.koike@collabora.com>
 
 > ---
-> Changes in v2:
-> - Change line break style
-> - Add TODO comment
+> Change in v2:
+> - Use IS_MULTIPLANAR macro
 > 
->  drivers/media/platform/vimc/vimc-capture.c | 34 ++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
+>  drivers/media/platform/vimc/vimc-capture.c | 42 ++++++++++++++++++----
+>  1 file changed, 36 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 5e13c6580aff..a65611be63bb 100644
+> index c344d04ed8ea..57bc2b64b093 100644
 > --- a/drivers/media/platform/vimc/vimc-capture.c
 > +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -32,6 +32,10 @@
->  #define IS_MULTIPLANAR(vcap) \
->  	(vcap->vdev.device_caps & V4L2_CAP_VIDEO_CAPTURE_MPLANE)
->  
-> +/**
-> + * TODO: capture device should only enum formats that all subdevices on
-> + * topology accepts
-> + */
->  static const u32 vimc_cap_supported_pixfmt[] = {
->  	V4L2_PIX_FMT_BGR24,
->  	V4L2_PIX_FMT_RGB24,
-> @@ -58,6 +62,19 @@ static const u32 vimc_cap_supported_pixfmt[] = {
->  	V4L2_PIX_FMT_SRGGB12,
->  };
->  
-> +static const u32 vimc_cap_supported_pixfmt_mp[] = {
-> +	V4L2_PIX_FMT_YUV420M,
-> +	V4L2_PIX_FMT_YVU420M,
-> +	V4L2_PIX_FMT_YUV422M,
-> +	V4L2_PIX_FMT_YVU422M,
-> +	V4L2_PIX_FMT_YUV444M,
-> +	V4L2_PIX_FMT_YVU444M,
-> +	V4L2_PIX_FMT_NV12M,
-> +	V4L2_PIX_FMT_NV21M,
-> +	V4L2_PIX_FMT_NV16M,
-> +	V4L2_PIX_FMT_NV61M,
-> +};
-> +
->  struct vimc_cap_device {
->  	struct vimc_ent_device ved;
->  	struct video_device vdev;
-> @@ -157,13 +174,26 @@ static int _vimc_cap_try_fmt_vid_cap_mp(struct file *file, void *priv,
->  				   format->width, format->height);
->  }
->  
-> +/**
-> + * When multiplanar is true, consider that the vimc_cap_enum_fmt_vid_cap_mp
-> + * is concantenate in the vimc_cap_enum_fmt_vid_cap array. Otherwise, just
-> + * consider the single-planar array
-> + */
->  static int vimc_cap_enum_fmt_vid_cap(struct file *file, void *priv,
->  				     struct v4l2_fmtdesc *f)
+> @@ -505,12 +505,28 @@ static int vimc_cap_queue_setup(struct vb2_queue *vq, unsigned int *nbuffers,
+>  				struct device *alloc_devs[])
 >  {
-> -	if (f->index >= ARRAY_SIZE(vimc_cap_supported_pixfmt))
-> +	struct vimc_cap_device *vcap = video_drvdata(file);
-> +	const unsigned int sp_size = ARRAY_SIZE(vimc_cap_supported_pixfmt);
-> +	const unsigned int mp_size = ARRAY_SIZE(vimc_cap_supported_pixfmt_mp);
+>  	struct vimc_cap_device *vcap = vb2_get_drv_priv(vq);
+> +	const struct v4l2_plane_pix_format *plane_fmt =
+> +		vcap->format.fmt.pix_mp.plane_fmt;
+> +	unsigned int i;
 > +
-> +	if (f->index >= sp_size + (IS_MULTIPLANAR(vcap) ? mp_size : 0))
->  		return -EINVAL;
+> +	if (IS_MULTIPLANAR(vcap)) {
+> +		for (i = 0; i < *nplanes; i++)
+> +			if (sizes[i] < plane_fmt[i].sizeimage)
+> +				return -EINVAL;
+> +	} else if (*nplanes && sizes[0] < vcap->format.fmt.pix.sizeimage)
+> +		return -EINVAL;
+
+I thought checkpatch should complain about the unbalanced braces here
+but it didn't.
+
+Helen
+
 >  
-> -	f->pixelformat = vimc_cap_supported_pixfmt[f->index];
-> +	if (f->index >= sp_size)
-> +		f->pixelformat =
-> +			vimc_cap_supported_pixfmt_mp[f->index - sp_size];
-> +	else
-> +		f->pixelformat = vimc_cap_supported_pixfmt[f->index];
+>  	if (*nplanes)
+> -		return sizes[0] < vcap->format.fmt.pix.sizeimage ? -EINVAL : 0;
+> -	/* We don't support multiplanes for now */
+> -	*nplanes = 1;
+> -	sizes[0] = vcap->format.fmt.pix.sizeimage;
+> +		return 0;
+> +
+> +	if (IS_MULTIPLANAR(vcap)) {
+> +		*nplanes = vcap->format.fmt.pix_mp.num_planes;
+> +		for (i = 0; i < *nplanes; i++)
+> +			sizes[i] = plane_fmt[i].sizeimage;
+> +	} else {
+> +		*nplanes = 1;
+> +		sizes[0] = vcap->format.fmt.pix.sizeimage;
+> +	}
 >  
 >  	return 0;
 >  }
+> @@ -518,9 +534,23 @@ static int vimc_cap_queue_setup(struct vb2_queue *vq, unsigned int *nbuffers,
+>  static int vimc_cap_buffer_prepare(struct vb2_buffer *vb)
+>  {
+>  	struct vimc_cap_device *vcap = vb2_get_drv_priv(vb->vb2_queue);
+> -	unsigned long size = vcap->format.fmt.pix.sizeimage;
+> +	unsigned long size;
+> +	unsigned int i;
+>  
+> -	if (vb2_plane_size(vb, 0) < size) {
+> +	if (IS_MULTIPLANAR(vcap)) {
+> +		for (i = 0; i < vb->num_planes; i++) {
+> +			size = vcap->format.fmt.pix_mp.plane_fmt[i].sizeimage;
+> +			if (vb2_plane_size(vb, i) < size) {
+> +				dev_err(vcap->dev,
+> +					"%s: buffer too small (%lu < %lu)\n",
+> +					vcap->vdev.name, vb2_plane_size(vb, i),
+> +					size);
+> +
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	} else if (vb2_plane_size(vb, 0) < vcap->format.fmt.pix.sizeimage) {
+> +		size = vcap->format.fmt.pix.sizeimage;
+>  		dev_err(vcap->dev, "%s: buffer too small (%lu < %lu)\n",
+>  			vcap->vdev.name, vb2_plane_size(vb, 0), size);
+>  		return -EINVAL;
 > 
