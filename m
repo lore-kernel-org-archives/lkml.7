@@ -2,198 +2,87 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6AFC10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8902C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191012084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBD12084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfDLBAY (ORCPT
+        id S1726730AbfDLBCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 21:00:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6179 "EHLO mga06.intel.com"
+        Thu, 11 Apr 2019 21:02:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2184 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfDLBAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 21:00:24 -0400
+        id S1726656AbfDLBCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 21:02:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 18:00:23 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 18:02:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,339,1549958400"; 
-   d="scan'208";a="163575406"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2019 17:55:19 -0700
-Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
- <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
- <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
- <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
- <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
- <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
- <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
- <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <3507770f-9004-458a-98c3-5c1884ac57ef@linux.intel.com>
-Date:   Fri, 12 Apr 2019 08:55:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+   d="scan'208";a="135081015"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by orsmga006.jf.intel.com with ESMTP; 11 Apr 2019 18:02:06 -0700
+Subject: Re: [RFC PATCH v3 3/4] x86: Use HYPERVISOR_CALLBACK_VECTOR for
+ acrn_guest upcall vector
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
+ <1554711131-21514-4-git-send-email-yakui.zhao@intel.com>
+ <20190408150011.GH15689@zn.tnic>
+ <36ff9827-da90-0736-f0a4-2f38b9c8bf3b@intel.com>
+ <20190411135547.GH30080@zn.tnic>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <1aaea739-ded7-13da-c2d0-54423de0eab0@intel.com>
+Date:   Fri, 12 Apr 2019 09:00:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190411135547.GH30080@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/11 9:02, Li, Aubrey wrote:
-> On 2019/4/10 22:54, Andy Lutomirski wrote:
->> On Tue, Apr 9, 2019 at 8:40 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>
->>> On 2019/4/10 10:36, Li, Aubrey wrote:
->>>> On 2019/4/10 10:25, Andy Lutomirski wrote:
->>>>> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>>
->>>>>> On 2019/4/10 9:58, Andy Lutomirski wrote:
->>>>>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
->>>>>>>>
->>>>>>>> The architecture specific information of the running processes could
->>>>>>>> be useful to the userland. Add support to examine process architecture
->>>>>>>> specific information externally.
->>>>>>>>
->>>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->>>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>>>>> Cc: Andi Kleen <ak@linux.intel.com>
->>>>>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->>>>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
->>>>>>>> Cc: Linux API <linux-api@vger.kernel.org>
->>>>>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
->>>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>>>>>> ---
->>>>>>>>  fs/proc/array.c         | 5 +++++
->>>>>>>>  include/linux/proc_fs.h | 2 ++
->>>>>>>>  2 files changed, 7 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
->>>>>>>> index 2edbb657f859..331592a61718 100644
->>>>>>>> --- a/fs/proc/array.c
->>>>>>>> +++ b/fs/proc/array.c
->>>>>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>>>>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>>>>>>>  }
->>>>>>>>
->>>>>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
->>>>>>>> +{
->>>>>>>> +}
->>>>>>>
->>>>>>> This pointlessly bloats other architectures.  Do this instead in an
->>>>>>> appropriate header:
->>>>>>>
->>>>>>> #ifndef arch_proc_pid_status
->>>>>>> static inline void arch_proc_pid_status(...)
->>>>>>> {
->>>>>>> }
->>>>>>> #endif
->>>>>>>
->>>>>>
->>>>>> I saw a bunch of similar weak functions, is it not acceptable?
->>>>>>
->>>>>> fs/proc$ grep weak *.c
->>>>>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
->>>>>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
->>>>>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
->>>>>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
->>>>>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->>>>>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
->>>>>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
->>>>>> vmcore.c:ssize_t __weak
->>>>>
->>>>> I think they're acceptable, but I don't personally like them.
->>>>>
->>>>
->>>> okay, let me try to see if I can refine it in an appropriate way.
->>>
->>> Hi Andy,
->>>
->>> Is this what you want?
->>>
->>> Thanks,
->>> -Aubrey
->>>
->>> ====================================================================
->>> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
->>> index 2bb3a648fc12..82d77d3aefff 100644
->>> --- a/arch/x86/include/asm/processor.h
->>> +++ b/arch/x86/include/asm/processor.h
->>> @@ -990,5 +990,8 @@ enum l1tf_mitigations {
->>>  };
->>>
->>>  extern enum l1tf_mitigations l1tf_mitigation;
->>> +/* Add support for architecture specific output in /proc/pid/status */
->>> +void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
->>> +#define arch_proc_pid_status arch_proc_pid_status
->>>
->>>  #endif /* _ASM_X86_PROCESSOR_H */
->>> diff --git a/fs/proc/array.c b/fs/proc/array.c
->>> index 2edbb657f859..fd65a6ba2864 100644
->>> --- a/fs/proc/array.c
->>> +++ b/fs/proc/array.c
->>> @@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
->>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
->>>  }
->>>
->>> +/* Add support for architecture specific output in /proc/pid/status */
->>> +#ifndef arch_proc_pid_status
->>> +#define arch_proc_pid_status(m, task)
->>> +#endif
->>> +
->>>  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->>>                         struct pid *pid, struct task_struct *task)
->>>  {
->>> @@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
->>>         task_cpus_allowed(m, task);
->>>         cpuset_task_status_allowed(m, task);
->>>         task_context_switch_counts(m, task);
->>> +       arch_proc_pid_status(m, task);
->>>         return 0;
->>>  }
->>>
->>
->> Yes.  But I still think it would be nicer to separate the arch stuff
->> into its own file.  Others might reasonably disagree with me.
->>
-> I like arch_status, I proposed but no other arch shows interesting in it.
+
+
+On 2019年04月11日 21:55, Borislav Petkov wrote:
+> On Wed, Apr 10, 2019 at 03:57:08PM +0800, Zhao, Yakui wrote:
+>> It is used to avoid that one function declaration has no definition
+>> when asm/acrnhyper.h is included and ACRN_GUEST is not enabled.
 > 
-> I think the problem is similar for x86_status, it does not make sense for
-> those x86 platform without AVX512 to have an empty arch file. I personally
-> don't like [arch]_status because the code may become unclean if more arches
-> added in future.
+> And that is a problem because...?
+
+This is not a problem.
+I take a look at the header file of mshyperv.h and xen/events.h.
+It seems that they have no such extra conditional definition.
+To follow the same style, I will remove it.
+
 > 
-> Maybe it's too early to have a separated arch staff file for now.
+>> Do you have any suggestion about the header order?
+>>>
+>>> linux/ path includes still need to come first, of course.
+> 
+> As said above:
+> 
+> linux/ path first, then asm/
+> 
+> Feel free to look around the tree for inspiration :)
 
-Hi Andy,
+I take a look at the file of vwmare.c/mshyperv.c under the directory of 
+arch/x86/kernel/cpu. It seems that the header file only follows the 
+order of: linux/ path first and then asm/.
 
-Is it acceptable to you if I make the above change and post v15?
+Anyway, I will follow your idea in previous email and use the alphabetic 
+order.
 
-Thanks,
--Aubrey
+Thanks
+> 
