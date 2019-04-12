@@ -2,81 +2,131 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A7CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE427C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1832073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA04B20651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555051771;
+	bh=9NlAKE/RaSODUcIyJzffvEnaRq9LS4Y7iVt5UpO0j/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W3+06w3PL4uBkRMw74FxnnIxi06warZaWDFkn6+s91AZgBZSo7i8vSIS47peHCaF8
+	 UFol1c+nnAJwrlZH6ifdPl3LlnyvcXGc6OAgy5J6gXTiHrvYIbrQcM2wh5AJbAk8tu
+	 P2Sq6gW5GZdAc+u16HV5nDyqtsc3AdRuGAN2uxrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfDLGoC (ORCPT
+        id S1726860AbfDLGta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:44:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:34905 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfDLGoB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:44:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id k2so7043327ioj.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 23:44:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=nvp7ztOb1eozq3DPwMRJnm+OrNK0VnZje3xTWjckm/M=;
-        b=ZNYOu48M5p9qMYlV6Mv9zfpmIynTuBubUgOI5cw2aEgo6miHznzE0YfUGPABBkMZsg
-         lFOgLqjIZ4vvQlHqNlBji2BltR95BWZHgrTn9ZZUgBg8b0ngn+c92LM1Zp6T0oWNfozI
-         R8w9ZtnLPEnce9kBr1ANny1w36LBDQWM7PDuOy/i4axOxxO+9CXOSbVmkG/tvL6l+u6A
-         7uvW5h5zCdjYDJmU5U5slytLtaWncZ2a2bMTiTwBhvzdaeuDq8vGQR9Si+Onb2TuCb+p
-         spGWiz6iiHJHmV0D+d3VyjH7UTDXnZN8B8pT/V9IGNVSx0LeopZ6dNMvOlce/OBVZjbc
-         UEQw==
-X-Gm-Message-State: APjAAAWYUWU80uciUh2th8ogILqym5stvlJpFOSo4Rn+7gItmpXEsRIB
-        Z254ymSpU5MIQoWUbDdcaNIefs0yocbQm5MmTTSw+9Qwd5Gm
-X-Google-Smtp-Source: APXvYqxmW56SWtZY2McV4W+bxn5Ag3GW6Qb2Q3mJnZCdGa1f+Z4xfPcY7s/GS26I/WPCF917ncZHDCxcktJW2P01+l2htdhOSdEp
+        Fri, 12 Apr 2019 02:49:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57538 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbfDLGta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:49:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BB344ADD9;
+        Fri, 12 Apr 2019 06:49:27 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 08:49:25 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        yuzhoujian@didichuxing.com,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
+        lsf-pc@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
+ process killing
+Message-ID: <20190412064925.GB13373@dhcp22.suse.cz>
+References: <20190411014353.113252-1-surenb@google.com>
+ <20190411014353.113252-3-surenb@google.com>
+ <20190411153313.GE22763@bombadil.infradead.org>
+ <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
+ <CAKOZuetFU4tXE27bxA86zzDfNSCbw83p8fPxfkQ_d_Em0C04Sg@mail.gmail.com>
+ <20190411173649.GF22763@bombadil.infradead.org>
+ <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:4645:: with SMTP id j66mr3359001itb.24.1555051441008;
- Thu, 11 Apr 2019 23:44:01 -0700 (PDT)
-Date:   Thu, 11 Apr 2019 23:44:01 -0700
-In-Reply-To: <0000000000002b42040573b8495a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bfb6c405864fa081@google.com>
-Subject: Re: WARNING: refcount bug in igmp_start_timer
-From:   syzbot <syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, benjamin.gaignard@linaro.org,
-        cmetcalf@ezchip.com, daniel.vetter@ffwll.ch,
-        daniel.vetter@intel.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        paulmck@linux.vnet.ibm.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vincent.abriou@st.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Thu 11-04-19 10:47:50, Daniel Colascione wrote:
+> On Thu, Apr 11, 2019 at 10:36 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Thu, Apr 11, 2019 at 10:33:32AM -0700, Daniel Colascione wrote:
+> > > On Thu, Apr 11, 2019 at 10:09 AM Suren Baghdasaryan <surenb@google.com> wrote:
+> > > > On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > > >
+> > > > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
+> > > > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
+> > > > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
+> > > > > > victim process. The usage of this flag is currently limited to SIGKILL
+> > > > > > signal and only to privileged users.
+> > > > >
+> > > > > What is the downside of doing expedited memory reclaim?  ie why not do it
+> > > > > every time a process is going to die?
+> > > >
+> > > > I think with an implementation that does not use/abuse oom-reaper
+> > > > thread this could be done for any kill. As I mentioned oom-reaper is a
+> > > > limited resource which has access to memory reserves and should not be
+> > > > abused in the way I do in this reference implementation.
+> > > > While there might be downsides that I don't know of, I'm not sure it's
+> > > > required to hurry every kill's memory reclaim. I think there are cases
+> > > > when resource deallocation is critical, for example when we kill to
+> > > > relieve resource shortage and there are kills when reclaim speed is
+> > > > not essential. It would be great if we can identify urgent cases
+> > > > without userspace hints, so I'm open to suggestions that do not
+> > > > involve additional flags.
+> > >
+> > > I was imagining a PI-ish approach where we'd reap in case an RT
+> > > process was waiting on the death of some other process. I'd still
+> > > prefer the API I proposed in the other message because it gets the
+> > > kernel out of the business of deciding what the right signal is. I'm a
+> > > huge believer in "mechanism, not policy".
+> >
+> > It's not a question of the kernel deciding what the right signal is.
+> > The kernel knows whether a signal is fatal to a particular process or not.
+> > The question is whether the killing process should do the work of reaping
+> > the dying process's resources sometimes, always or never.  Currently,
+> > that is never (the process reaps its own resources); Suren is suggesting
+> > sometimes, and I'm asking "Why not always?"
+> 
+> FWIW, Suren's initial proposal is that the oom_reaper kthread do the
+> reaping, not the process sending the kill. Are you suggesting that
+> sending SIGKILL should spend a while in signal delivery reaping pages
+> before returning? I thought about just doing it this way, but I didn't
+> like the idea: it'd slow down mass-killing programs like killall(1).
+> Programs expect sending SIGKILL to be a fast operation that returns
+> immediately.
 
-commit fc5e9d63a8db40e9e3a3b180be33d44af8a3cee8
-Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed May 24 14:52:05 2017 +0000
-
-     drm/sti: Drop drm_vblank_cleanup
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f62c2d200000
-start commit:   ae596de1 Compiler Attributes: naked can be shared
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=100e2c2d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f62c2d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
-dashboard link: https://syzkaller.appspot.com/bug?extid=e28037ac1c96d2a86e89
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=178537da400000
-
-Reported-by: syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com
-Fixes: fc5e9d63a8db ("drm/sti: Drop drm_vblank_cleanup")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I was thinking about this as well. And SYNC_SIGKILL would workaround the
+current expectations of how quick the current implementation is. The
+harder part would what is the actual semantic. Does the kill wait until
+the target task is TASK_DEAD or is there an intermediate step that would
+we could call it end of the day and still have a reasonable semantic
+(e.g. the original pid is really not alive anymore).
+-- 
+Michal Hocko
+SUSE Labs
