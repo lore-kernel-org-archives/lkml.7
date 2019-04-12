@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F6AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F4AC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EB820869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BACC20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QotY+7t4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjpWQNb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDLSmZ (ORCPT
+        id S1727103AbfDLSmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:42:25 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37104 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLSmY (ORCPT
+        Fri, 12 Apr 2019 14:42:33 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43064 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfDLSmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:42:24 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f53so7625992ede.4;
-        Fri, 12 Apr 2019 11:42:22 -0700 (PDT)
+        Fri, 12 Apr 2019 14:42:32 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w3so9181561edu.10;
+        Fri, 12 Apr 2019 11:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=16r+PRWDr+o+6fkpTsGrLJvtPpidPQPlk3cAnB+PZiU=;
-        b=QotY+7t43u1bYgHhysJwpuFpCCLIiX70YLFRWUW+qDH8cPqEsUd8xCJviIj5++Z2jI
-         Daq5vVqUgIBbegDBGKarQ4SVO+5KhOGyE+YmjnXJrvefzployJq9FVSG1UACm/iNTfDa
-         gIBCTZp0ycU4nKo+sKgEKURskcPdnRLMNreJBCKQ77aCFzgEN9eiYwJwoXqzsmFCAcnl
-         kMFr3Yg9cznaJU/WktLMt1oMD98yCDafxvLcoooymbp7nGvkQyzT72K+l7NyrNj2UeAG
-         f7N7mwrOSVjDMXK55SUxePEO37m35OBjCYMpugDKYejWvfZcIb8W/9jbORKYDxb92PRn
-         QX6Q==
+        bh=EXPuL6ckvJzPyuWUHr7kIDeR6szA42jLVoVm7a3+Wlc=;
+        b=NjpWQNb1WwFfL4XtNHsqxq8XxmyN0hfjl+hivd72THys1Ew5ZOHsvok2iOcg+vG14q
+         19ziBMIFL8ayUdYky6EefQZvYOFBV/uAd+t6sd7lXhBJwiWn0zcdNY2W+cSoHXzQ7KDI
+         7I4FeMP/htGfCszVyyclaRNcuQpjPYuJ9LxlpieB5ChUiaDIma5NFw6b8+NlJJlPy3BO
+         l66kiz25+1hwLeRUeQgw2Ld6a7VM35wndAvF9rObHs0pizOim20a0BtpR3nf41GXR29W
+         mR9uDDixEhMqrt83kUCj0jLKzcl6G3m5OD37ra1JJTXSl49wweo+CGTsa7d3RiJRtvjo
+         +ToA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=16r+PRWDr+o+6fkpTsGrLJvtPpidPQPlk3cAnB+PZiU=;
-        b=YXeY7DfMtQmQ5H0UlXcemDk7/ZURmgWrAkbElXa32JUH3CLf+PMmy4AcsrEkEfJ+mo
-         bqFHEiVriTD+FTFFnW+LMpF7tj1yqLmmRL1xf0csekcJRY01YBeAE5YlWjF3pQmn26/X
-         WFxjt0VhTMcgGxGFaQuV+J2AaaU4JWjbjpZGNp+kvx4br0mHH+hLqBE6jEUunkzJ04b8
-         azuJb6DKivo+T6T59NdQz9Raz8VekuYBEnRZSZHMDCEH/xBb3Njv1x5Zsbchb6FVZgV4
-         5aqP8uIUZm7AMkyca2o0s21GlRYflJ2HV0T0jBtX1sfvEk1bceBmhdjm5l9OoW8+BhI+
-         FY3Q==
-X-Gm-Message-State: APjAAAW/LpfgP97HoKkPzIucyD3FA1qWLqXnIxd/lcE+qxxMsfrcrO+n
-        VFrxfHk2FH/D733VzWN6J2U=
-X-Google-Smtp-Source: APXvYqwV6srqmcofmGyD4cMry3HAwdiY2v9tF89E1kyCUzgphOa0G71Sv72asnYpENw6ie5XdnKTZQ==
-X-Received: by 2002:a17:906:5949:: with SMTP id g9mr31701651ejr.15.1555094541703;
-        Fri, 12 Apr 2019 11:42:21 -0700 (PDT)
+        bh=EXPuL6ckvJzPyuWUHr7kIDeR6szA42jLVoVm7a3+Wlc=;
+        b=ubbdN5z8LAb4Dcl6cBwOs7VEjfCIi/Sq6oKCd1fLddag2JVQQTyG7O/yEMK6QvlwRD
+         Ha0wNxbFeXYlHj/ei7XwTj/rCduyf42pgE3oM6Xf/vQXnCorNx2Xd0yFEdCrME8NIGuZ
+         xF/WA0TRrtK+ySqHZm7M4+0N0ZhT+VolPHBhh3FCE4+w0qJfJyVvw9BefRPgb3KczILA
+         yEVMnh+eGUDMRAkBBCi7dogcAnPAQkqxYggsN2xSKzdgr5Xhnxqx1xP3mA+IyXaBbamV
+         MWwlBrMVNaE2RnKFdL8l2jcfmYqoII5F1YjIXTtJvm0WqlgfdeKp4OsXFMvWUdkTHEm2
+         iW5g==
+X-Gm-Message-State: APjAAAUVCyDkFnkJ0z1WPFFnGyDO6r16eebdzjpfWDeNojKtsU7eEJx5
+        zGufRU/eiMoSMQZzbHr7Z84=
+X-Google-Smtp-Source: APXvYqych/RXn8wFHUxApCO1Q5JvdUkqoIaV+L+uKLLrc9X45sMfK6O4xPcDBWAQ1eVozEnQ6P0KQw==
+X-Received: by 2002:a50:be88:: with SMTP id b8mr22930423edk.162.1555094549558;
+        Fri, 12 Apr 2019 11:42:29 -0700 (PDT)
 Received: from ziggy.stardust (89.red-2-139-173.staticip.rima-tde.net. [2.139.173.89])
-        by smtp.gmail.com with ESMTPSA id b54sm12197598ede.58.2019.04.12.11.42.20
+        by smtp.gmail.com with ESMTPSA id s44sm8981587edd.49.2019.04.12.11.42.28
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 11:42:20 -0700 (PDT)
-Subject: Re: [PATCH RESEND v6 4/6] i2c: mediatek: Add i2c and apdma sync in
- i2c driver
+        Fri, 12 Apr 2019 11:42:28 -0700 (PDT)
+Subject: Re: [PATCH RESEND v6 5/6] i2c: mediatek: Add i2c support for MediaTek
+ MT8183
 To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
 Cc:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
         robh@kernel.org, leilk.liu@mediatek.com, xinping.qian@mediatek.com,
@@ -67,7 +67,7 @@ Cc:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
         linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
- <1554208560-14817-5-git-send-email-qii.wang@mediatek.com>
+ <1554208560-14817-6-git-send-email-qii.wang@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -163,12 +163,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <b0697798-af4a-7b98-762a-6990711ccb3a@gmail.com>
-Date:   Fri, 12 Apr 2019 20:42:19 +0200
+Message-ID: <ececdd86-1176-1b2b-c662-5fe4857f0472@gmail.com>
+Date:   Fri, 12 Apr 2019 20:42:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1554208560-14817-5-git-send-email-qii.wang@mediatek.com>
+In-Reply-To: <1554208560-14817-6-git-send-email-qii.wang@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -180,87 +180,192 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 02/04/2019 14:35, Qii Wang wrote:
-> When i2c and apdma use different source clocks, we should enable
-> synchronization between them.
+> Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
+> MT8183 has different register offsets. Ltiming_reg is added to
+> adjust low width of SCL. Arb clock and dma_sync are needed.
 > 
 > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
 > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
->  drivers/i2c/busses/i2c-mt65xx.c |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/i2c/busses/i2c-mt65xx.c |   62 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 60 insertions(+), 2 deletions(-)
 > 
+
 
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
 > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index 1a7235e..6137ad7 100644
+> index 6137ad7..745b0d0 100644
 > --- a/drivers/i2c/busses/i2c-mt65xx.c
 > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -77,6 +77,8 @@
->  #define I2C_CONTROL_DIR_CHANGE          (0x1 << 4)
->  #define I2C_CONTROL_ACKERR_DET_EN       (0x1 << 5)
->  #define I2C_CONTROL_TRANSFER_LEN_CHANGE (0x1 << 6)
-> +#define I2C_CONTROL_DMAACK_EN           (0x1 << 8)
-> +#define I2C_CONTROL_ASYNC_MODE          (0x1 << 9)
->  #define I2C_CONTROL_WRAPPER             (0x1 << 0)
+> @@ -133,6 +133,7 @@ enum I2C_REGS_OFFSET {
+>  	OFFSET_DEBUGCTRL,
+>  	OFFSET_TRANSFER_LEN_AUX,
+>  	OFFSET_CLOCK_DIV,
+> +	OFFSET_LTIMING,
+>  };
 >  
->  #define I2C_DRV_NAME		"i2c-mt65xx"
-> @@ -169,6 +171,7 @@ struct mtk_i2c_compatible {
->  	unsigned char aux_len_reg: 1;
+>  static const u16 mt_i2c_regs_v1[] = {
+> @@ -162,6 +163,32 @@ enum I2C_REGS_OFFSET {
+>  	[OFFSET_CLOCK_DIV] = 0x70,
+>  };
+>  
+> +static const u16 mt_i2c_regs_v2[] = {
+> +	[OFFSET_DATA_PORT] = 0x0,
+> +	[OFFSET_SLAVE_ADDR] = 0x4,
+> +	[OFFSET_INTR_MASK] = 0x8,
+> +	[OFFSET_INTR_STAT] = 0xc,
+> +	[OFFSET_CONTROL] = 0x10,
+> +	[OFFSET_TRANSFER_LEN] = 0x14,
+> +	[OFFSET_TRANSAC_LEN] = 0x18,
+> +	[OFFSET_DELAY_LEN] = 0x1c,
+> +	[OFFSET_TIMING] = 0x20,
+> +	[OFFSET_START] = 0x24,
+> +	[OFFSET_EXT_CONF] = 0x28,
+> +	[OFFSET_LTIMING] = 0x2c,
+> +	[OFFSET_HS] = 0x30,
+> +	[OFFSET_IO_CONFIG] = 0x34,
+> +	[OFFSET_FIFO_ADDR_CLR] = 0x38,
+> +	[OFFSET_TRANSFER_LEN_AUX] = 0x44,
+> +	[OFFSET_CLOCK_DIV] = 0x48,
+> +	[OFFSET_SOFTRESET] = 0x50,
+> +	[OFFSET_DEBUGSTAT] = 0xe0,
+> +	[OFFSET_DEBUGCTRL] = 0xe8,
+> +	[OFFSET_FIFO_STAT] = 0xf4,
+> +	[OFFSET_FIFO_THRESH] = 0xf8,
+> +	[OFFSET_DCM_EN] = 0xf88,
+> +};
+> +
+>  struct mtk_i2c_compatible {
+>  	const struct i2c_adapter_quirks *quirks;
+>  	const u16 *regs;
+> @@ -172,6 +199,7 @@ struct mtk_i2c_compatible {
 >  	unsigned char support_33bits: 1;
 >  	unsigned char timing_adjust: 1;
-> +	unsigned char dma_sync: 1;
+>  	unsigned char dma_sync: 1;
+> +	unsigned char ltiming_adjust: 1;
 >  };
 >  
 >  struct mtk_i2c {
-> @@ -218,6 +221,7 @@ struct mtk_i2c {
->  	.aux_len_reg = 1,
+> @@ -195,6 +223,7 @@ struct mtk_i2c {
+>  	enum mtk_trans_op op;
+>  	u16 timing_reg;
+>  	u16 high_speed_reg;
+> +	u16 ltiming_reg;
+>  	unsigned char auto_restart;
+>  	bool ignore_restart_irq;
+>  	const struct mtk_i2c_compatible *dev_comp;
+> @@ -222,6 +251,7 @@ struct mtk_i2c {
 >  	.support_33bits = 1,
 >  	.timing_adjust = 1,
-> +	.dma_sync = 0,
+>  	.dma_sync = 0,
+> +	.ltiming_adjust = 0,
 >  };
 >  
 >  static const struct mtk_i2c_compatible mt6577_compat = {
-> @@ -229,6 +233,7 @@ struct mtk_i2c {
->  	.aux_len_reg = 0,
+> @@ -234,6 +264,7 @@ struct mtk_i2c {
 >  	.support_33bits = 0,
 >  	.timing_adjust = 0,
-> +	.dma_sync = 0,
+>  	.dma_sync = 0,
+> +	.ltiming_adjust = 0,
 >  };
 >  
 >  static const struct mtk_i2c_compatible mt6589_compat = {
-> @@ -240,6 +245,7 @@ struct mtk_i2c {
->  	.aux_len_reg = 0,
+> @@ -246,6 +277,7 @@ struct mtk_i2c {
 >  	.support_33bits = 0,
 >  	.timing_adjust = 0,
-> +	.dma_sync = 0,
+>  	.dma_sync = 0,
+> +	.ltiming_adjust = 0,
 >  };
 >  
 >  static const struct mtk_i2c_compatible mt7622_compat = {
-> @@ -251,6 +257,7 @@ struct mtk_i2c {
->  	.aux_len_reg = 1,
+> @@ -258,6 +290,7 @@ struct mtk_i2c {
 >  	.support_33bits = 0,
 >  	.timing_adjust = 0,
-> +	.dma_sync = 0,
+>  	.dma_sync = 0,
+> +	.ltiming_adjust = 0,
 >  };
 >  
 >  static const struct mtk_i2c_compatible mt8173_compat = {
-> @@ -261,6 +268,7 @@ struct mtk_i2c {
->  	.aux_len_reg = 1,
+> @@ -269,6 +302,19 @@ struct mtk_i2c {
 >  	.support_33bits = 1,
 >  	.timing_adjust = 0,
-> +	.dma_sync = 0,
+>  	.dma_sync = 0,
+> +	.ltiming_adjust = 0,
+> +};
+> +
+> +static const struct mtk_i2c_compatible mt8183_compat = {
+> +	.regs = mt_i2c_regs_v2,
+> +	.pmic_i2c = 0,
+> +	.dcm = 0,
+> +	.auto_restart = 1,
+> +	.aux_len_reg = 1,
+> +	.support_33bits = 1,
+> +	.timing_adjust = 1,
+> +	.dma_sync = 1,
+> +	.ltiming_adjust = 1,
 >  };
 >  
 >  static const struct of_device_id mtk_i2c_of_match[] = {
-> @@ -360,6 +368,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+> @@ -277,6 +323,7 @@ struct mtk_i2c {
+>  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+>  	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+>  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+> +	{ .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
+> @@ -361,6 +408,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
 >  
->  	control_reg = I2C_CONTROL_ACKERR_DET_EN |
->  		      I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
-> +	if (i2c->dev_comp->dma_sync)
-> +		control_reg |= I2C_CONTROL_DMAACK_EN | I2C_CONTROL_ASYNC_MODE;
+>  	mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
+>  	mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
+> +	if (i2c->dev_comp->ltiming_adjust)
+> +		mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
+>  
+>  	/* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
+>  	if (i2c->have_pmic)
+> @@ -460,6 +509,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+>  	unsigned int clk_src;
+>  	unsigned int step_cnt;
+>  	unsigned int sample_cnt;
+> +	unsigned int l_step_cnt;
+> +	unsigned int l_sample_cnt;
+>  	unsigned int target_speed;
+>  	int ret;
+>  
+> @@ -469,11 +520,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+>  	if (target_speed > MAX_FS_MODE_SPEED) {
+>  		/* Set master code speed register */
+>  		ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
+> -					      &step_cnt, &sample_cnt);
+> +					      &l_step_cnt, &l_sample_cnt);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
+> +		i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
+>  
+>  		/* Set the high speed mode register */
+>  		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+> @@ -483,6 +534,10 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+>  
+>  		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
+>  			(sample_cnt << 12) | (step_cnt << 8);
 > +
->  	mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
->  	mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
+> +		if (i2c->dev_comp->ltiming_adjust)
+> +			i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
+> +					   (sample_cnt << 12) | (step_cnt << 9);
+>  	} else {
+>  		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
+>  					      &step_cnt, &sample_cnt);
+> @@ -493,6 +548,9 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
 >  
+>  		/* Disable the high speed transaction */
+>  		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
+> +
+> +		if (i2c->dev_comp->ltiming_adjust)
+> +			i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
+>  	}
+>  
+>  	return 0;
 > 
