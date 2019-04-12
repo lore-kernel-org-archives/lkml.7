@@ -2,93 +2,167 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFF4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CC5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB032083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B3A218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TXtxbDYu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2mjXBhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfDLSQG (ORCPT
+        id S1727057AbfDLSQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:16:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55670 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfDLSQG (ORCPT
+        Fri, 12 Apr 2019 14:16:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38765 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfDLSQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:16:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vLgYVDT49iGyhQ7eAaa1ouryxRYhUiXDgOprm8yEPCE=; b=TXtxbDYuMujQhLK+HaFsZkwEi
-        ExxaqmfppeQtbOkWZPOZ2cCRPEV+S8sfIQnDJF5mi941nvZ00/tSkwtBibSXyg8MOvY6p0k6RpNOX
-        lwozqoFRxl01U59Jze3IxOcOWGtOmBYKsB2T8WdmwPgOlUEXrO9SgyyR0u7KlZ7q854B9M4hg4v6e
-        dLsdE9woWI/1TvbMWk5ksNt2u2XKJK813fNAW3KlIf+VJXfIBQ4iXaVZR18TkYS59DCcSIs66/F12
-        QFW2ldsE539CqlBznmHrmdT7CIG8YLL+WdItNlI19A1O5xBfyJUp7uq9AP/90+GBDJWL7uX3RHsb5
-        FVkbrZiiQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hF0iV-0003m7-Hz; Fri, 12 Apr 2019 18:15:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 69C5029B20C3F; Fri, 12 Apr 2019 20:15:57 +0200 (CEST)
-Date:   Fri, 12 Apr 2019 20:15:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel test robot <lkp@intel.com>, LKP <lkp@01.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nadav Amit <namit@vmware.com>
-Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"): BUG:
- KASAN: stack-out-of-bounds in __change_page_attr_set_clr
-Message-ID: <20190412181557.GC12232@hirez.programming.kicks-ass.net>
-References: <CAHk-=wieBr3G=_ZGoCndi8XnuG1wtkedaGqkWB+=AVq65=_8sQ@mail.gmail.com>
- <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com>
- <20190411193906.GA12232@hirez.programming.kicks-ass.net>
- <20190411195424.GL14281@hirez.programming.kicks-ass.net>
- <20190411211348.GA8451@worktop.programming.kicks-ass.net>
- <20190412105633.GM14281@hirez.programming.kicks-ass.net>
- <5890.1555087830@warthog.procyon.org.uk>
+        Fri, 12 Apr 2019 14:16:31 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g1so6218268qki.5;
+        Fri, 12 Apr 2019 11:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FmUdBgaJZh+Gngkzif7g8W2IFkXxCNDKMNrS5dHh2z0=;
+        b=K2mjXBhWJOJb2vwiEKxfbQwRCEmAu/g5naIL2fHOEtaYMEcMaClcjKoG40AW5t/zCi
+         0vekJYU0FRfKPUOYlXXuwb9vAKQmRWnM3CrpZi2VyPQ7Mz6OpEFBpnwlFXQbAiiAQcxJ
+         zuCYmdheQlJFP1/xOtiMWeDTPBWYDnh8H8eUarU8MrxWXZ07HTRs4txyQtwsk9aO5UTE
+         oiTmSCh/R9fSWVbZujtUhiHNUmRsa4+7uixOx9BIybB49QXi3y2hB2/xEFv0IGyjkim8
+         pNdL6z7yj4INXM4VWsIn/5mvZmqksnJ44IjVw8MAIvpqZEPcYVd3r08GCCpmGlyRIZNn
+         JxxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FmUdBgaJZh+Gngkzif7g8W2IFkXxCNDKMNrS5dHh2z0=;
+        b=fElPPvTmKtbXEqvr4Ghl1STTVnvOLJpNqC0IcdlnZJVd4ZjvkQM9rlspCDM4IvX9FH
+         aLQ16LSC3DEdBjHNyQWVJ95Ho2IUgng63J7FgMhvam66i07fwPyTWSb28g/0eYcusiCM
+         OfYS5YD9qZyrZKrJ8Ayh2z3Ok4h93tbGrdZgPYIG+GpTYGEeowilFNYxx7M0vcJ1Gpx3
+         QLctuYqOKWI8wCy4ihl5BAupWW4KPzvTH/bT+PoYSZsKiS3/KMsdxcTaHjrA6HnOS9Fw
+         GPoCpjJ+snhCN3eZc1Iebpzty3w6DtsnMLKdxtjfqk/y26HRD05rJ5cgty1QAIpSqvFD
+         aJtA==
+X-Gm-Message-State: APjAAAUCtZWEQnKoJF9l3ktIhpDncGe+ccfhkJhm/tFKY3YjvatGv90K
+        O9pV4M09ZFXafZldUGKaXDO7XUXJwc4Nb7WlF6A8AtQr
+X-Google-Smtp-Source: APXvYqzg3+WRNYkw1el8uQySnJ7ld890dG7Qt7n/84w9ekqluxDnBk9/OhpCRHrE81Fp215/Y9XBsYMCuiYVy14dGwo=
+X-Received: by 2002:a05:620a:1597:: with SMTP id d23mr44170928qkk.226.1555092990542;
+ Fri, 12 Apr 2019 11:16:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5890.1555087830@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190412100018.20852-1-alban@kinvolk.io>
+In-Reply-To: <20190412100018.20852-1-alban@kinvolk.io>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Fri, 12 Apr 2019 11:16:19 -0700
+Message-ID: <CAPhsuW7FJ5DWMA9RzO2SH0whcYdTt5oiYHLAMZzSnXTkY0h+wQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 1/2] bpf: sock ops: add netns in bpf context
+To:     Alban Crequy <alban.crequy@gmail.com>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, alban@kinvolk.io,
+        iago@kinvolk.io
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 05:50:30PM +0100, David Howells wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > We should never have stack alignment bigger than 16 bytes.  And
-> > preferably not even that.
-> 
-> At least one arch I know of (FRV) had instructions that could atomically
-> load/store register pairs or register quads, but they had to be pair- or
-> quad-aligned (ie. 8- or 16-byte), which made for more efficient code if you
-> could use them.
-> 
-> I don't know whether any arch we currently support has features like this (I
-> know some have multi-reg load/stores, but they seem to require only
-> word-alignment).
+On Fri, Apr 12, 2019 at 3:02 AM Alban Crequy <alban.crequy@gmail.com> wrote:
+>
+> From: Alban Crequy <alban@kinvolk.io>
+>
+> sockops programs can now access the network namespace inode via
+> (struct bpf_sock_ops)->netns. This can be useful to apply different
+> policies on different network namespaces.
+>
+> In the unlikely case where network namespaces are not compiled in
+> (CONFIG_NET_NS=n), the verifier will not allow access to ->netns.
+>
+> Signed-off-by: Alban Crequy <alban@kinvolk.io>
 
-ARC (iirc) has u64 atomics with natural alignment requirements but
-alignof(u64)=4 due it being a 32bit arch. Which is awkward.
+Acked-by: Song Liu <songliubraving@fb.com>
 
-ARMv7 can also do u64 ops when aligned right, but I forgot if they have
-proper alignment or not.
+> ---
+>  include/uapi/linux/bpf.h |  1 +
+>  net/core/filter.c        | 40 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+)
+>
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 31a27dd337dc..5afaab25f205 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -3069,6 +3069,7 @@ struct bpf_sock_ops {
+>         __u32 sk_txhash;
+>         __u64 bytes_received;
+>         __u64 bytes_acked;
+> +       __u64 netns;
+>  };
+>
+>  /* Definitions for bpf_sock_ops_cb_flags */
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 22eb2edf5573..f5e75b6fecb2 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -6758,6 +6758,14 @@ static bool sock_ops_is_valid_access(int off, int size,
+>                 }
+>         } else {
+>                 switch (off) {
+> +               case offsetof(struct bpf_sock_ops, netns):
+> +#ifdef CONFIG_NET_NS
+> +                       if (size != sizeof(__u64))
+> +                               return false;
+> +#else
+> +                       return false;
+> +#endif
+> +                       break;
+>                 case bpf_ctx_range_till(struct bpf_sock_ops, bytes_received,
+>                                         bytes_acked):
+>                         if (size != sizeof(__u64))
+> @@ -7908,6 +7916,38 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+>                 SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
+>                                           struct sock, type);
+>                 break;
+> +
+> +       case offsetof(struct bpf_sock_ops, netns):
+> +#ifdef CONFIG_NET_NS
+> +               /* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
+> +                * Type: (struct bpf_sock_ops_kern *)
+> +                *       ->(struct sock *)
+> +                *       ->(struct sock_common)
+> +                *       .possible_net_t
+> +                *       .(struct net *)
+> +                *       ->(struct ns_common)
+> +                *       .(unsigned int)
+> +                */
+> +               BUILD_BUG_ON(offsetof(struct sock, __sk_common) != 0);
+> +               BUILD_BUG_ON(offsetof(possible_net_t, net) != 0);
+> +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +                                               struct bpf_sock_ops_kern, sk),
+> +                                     si->dst_reg, si->src_reg,
+> +                                     offsetof(struct bpf_sock_ops_kern, sk));
+> +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +                                               possible_net_t, net),
+> +                                     si->dst_reg, si->dst_reg,
+> +                                     offsetof(struct sock_common, skc_net));
+> +               *insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +                                               struct ns_common, inum),
+> +                                     si->dst_reg, si->dst_reg,
+> +                                     offsetof(struct net, ns) +
+> +                                     offsetof(struct ns_common, inum));
+> +#else
+> +               *insn++ = BPF_MOV64_IMM(si->dst_reg, 0);
+> +#endif
+> +               break;
+> +
+>         }
+>         return insn - insn_buf;
+>  }
+> --
+> 2.20.1
+>
