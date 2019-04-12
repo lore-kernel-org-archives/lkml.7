@@ -2,123 +2,103 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1925C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4277C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25A52184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F33E20651
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="ozdscDFP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i6nn7qoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfDLIEw (ORCPT
+        id S1727338AbfDLIGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:04:52 -0400
-Received: from canardo.mork.no ([148.122.252.1]:56899 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfDLIEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:04:51 -0400
-Received: from miraculix.mork.no ([IPv6:2a02:2121:34e:7a0c:4cff:dff:fef6:bcb])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x3C84Ebf014007
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 12 Apr 2019 10:04:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1555056256; bh=TEkdjUFncQpPGr5cjnaKDc1jJA03Oku+3cZNXWXIdlQ=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=ozdscDFPm0M7yNoNVmhDnMc9RQ5Am6yBi10OnL6WJNVDgnBX39PGx2zDwRYhXUnS+
-         8XPRgRphsnOfRPZ8KjgNEYrgOUYYb3Q2IfDo7AsH30bblIlkU5zrmq4EF8IQm/qBak
-         cb8sXnzkLR5+fc45UWtlrq5YluWkB5IQSejuqtQo=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
-        (envelope-from <bjorn@mork.no>)
-        id 1hErAP-000557-Jz; Fri, 12 Apr 2019 10:04:09 +0200
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Young Xiao <92siuyang@gmail.com>
-Cc:     kbuild-all@01.org, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        greg@kroah.com, mchehab@kernel.org, keescook@chromium.org,
-        hans.verkuil@cisco.com, Young Xiao <YangX92@hotmail.com>
-Subject: Re: [PATCH] USB: s2255 & stkwebcam: fix oops with malicious USB descriptors
-Organization: m
-References: <1555036767-31170-1-git-send-email-92siuyang@gmail.com>
-Date:   Fri, 12 Apr 2019 10:04:09 +0200
-In-Reply-To: <1555036767-31170-1-git-send-email-92siuyang@gmail.com> (Young
-        Xiao's message of "Fri, 12 Apr 2019 10:39:27 +0800")
-Message-ID: <878swf645i.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 12 Apr 2019 04:06:09 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13846 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfDLIGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:06:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb046f50000>; Fri, 12 Apr 2019 01:06:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 12 Apr 2019 01:06:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 12 Apr 2019 01:06:08 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Apr
+ 2019 08:06:08 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 12B3741B40; Fri, 12 Apr 2019 11:06:06 +0300 (EEST)
+Date:   Fri, 12 Apr 2019 11:06:06 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller
+ node
+Message-ID: <20190412080606.GH12975@pdeschrijver-desktop.Nvidia.com>
+References: <20190411230221.31362-1-digetx@gmail.com>
+ <20190411230221.31362-4-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.100.3 at canardo
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190411230221.31362-4-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555056373; bh=SmLTyxJ/kG/C3uULw3dWHbWaOocdnH3aZYPuwV3G89o=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=i6nn7qoBvahm5OVAE5xk4loFB1Nx+i3OcJ9tP6fSxJCs6RDKRUP6XdXWD5C9qfpk/
+         zrMVEKFNTcRB4plYa2Og3/Ov/vUZMwk1P6QL6a72LJEXVkpK7nXZNAguP2e3/Slijp
+         MVXodKDJc6tGrBV7oxpBd54DjDTASvAPj1gVhKLFATKdxlvS8j9xhvFEUe2sUMIN7O
+         aV14QEuNPm76+QKodKkpyFzhwi43r9xG2Cwze8w/dsOOWdujJ/aqzXa55OuaU1q7qS
+         OnYM+VW6bUBmqDCv99jSloBklppXpSXcsNo8droy2BeTiYBKrjwJs4Q7BK8FIb2wA+
+         b9n0C+waXJGZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please mark updated patches with a version number or some other
-indication that it replaces a previous patch.  Including a summary of
-changes is also normal.
-
-And speaking of normal:  We do build test our patches, don't we?
-
-
-Young Xiao <92siuyang@gmail.com> writes:
-
-> From: Young Xiao <YangX92@hotmail.com>
->
-> The driver expects at least one valid endpoint. If given
-> malicious descriptors that specify 0 for the number of endpoints,
-> it will crash in the probe function.
-
-No, it won't.  Did you test this?  Can you provide the oops?
-
-This is perfectly fine as it is:
-
-	dev =3D kzalloc(sizeof(struct s2255_dev), GFP_KERNEL);
+On Fri, Apr 12, 2019 at 02:02:21AM +0300, Dmitry Osipenko wrote:
+> Add Add External Memory Controller node to the device-tree.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 ..
-	for (i =3D 0; i < iface_desc->desc.bNumEndpoints; ++i) {
-		endpoint =3D &iface_desc->endpoint[i].desc;
-		if (!dev->read_endpoint && usb_endpoint_is_bulk_in(endpoint)) {
-			/* we found the bulk in endpoint */
-			dev->read_endpoint =3D endpoint->bEndpointAddress;
-		}
-	}
+> diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+> index 38ebdb076ccd..defdb38bde54 100644
+> --- a/drivers/memory/tegra/tegra30-emc.c
+> +++ b/drivers/memory/tegra/tegra30-emc.c
+> @@ -980,7 +980,8 @@ static long emc_round_rate(unsigned long rate,
+>  	}
+>  
+>  	if (!timing) {
+> -		dev_err(emc->dev, "no timing for rate %lu\n", rate);
+> +		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
+> +			rate, min_rate, max_rate);
+>  		return -EINVAL;
+>  	}
 
-	if (!dev->read_endpoint) {
-		dev_err(&interface->dev, "Could not find bulk-in endpoint\n");
-		goto errorEP;
-	}
+This doesn't seem to belong to this patch?
 
->  drivers/media/usb/stkwebcam/stk-webcam.c | 6 ++++++
+Peter.
 
-I didn't bother looking at this driver to see if your patch there makes
-more sense.  That is your home work now.  Please explain why you believe
-it is.  An actual oops would be good.
-
-<rant>
-Yes, and I do have some objections to this whole "protect against
-malicious devices".  How do you intend to protect against a USB device
-disguising itself as a keyboard or ethernet adapater or whatever?
-Allowing potentionally malicious devices is crazy enough for USB, and it
-gets completely wacko when people start talking about it in the context
-of firewire or PCIe
-
-Fixing bugs in drivers is fine. But it won't make any difference wrt
-security if you connect malicious devices to your system.  Don't do that
-if you want a secure system.
-
-Allocating CVE numbers to arbitrary driver bugs is just adding
-noise. This noise makes it harder for sysadmins and others to to notice
-the really important problems.  No one will care anymore if every kernel
-release fixes thousands of CVEs.  Which is pretty close to the truth if
-you start allocating CVE numbers to any bug with a security impact.
-</rant>
-
-
-
-
-Bj=C3=B8rn
+>  
+> -- 
+> 2.21.0
+> 
