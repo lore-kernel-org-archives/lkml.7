@@ -2,184 +2,164 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBE7C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CC7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABC22083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7832083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMlJb/w/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfDLDVQ (ORCPT
+        id S1726748AbfDLDXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 23:21:16 -0400
-Received: from foss.arm.com ([217.140.101.70]:52638 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfDLDVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 23:21:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8495A15AB;
-        Thu, 11 Apr 2019 20:21:15 -0700 (PDT)
-Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 466CF3F73D;
-        Thu, 11 Apr 2019 20:21:11 -0700 (PDT)
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-Subject: [kvmtool PATCH v9 5/5] KVM: arm/arm64: Add a vcpu feature for pointer authentication
-Date:   Fri, 12 Apr 2019 08:50:36 +0530
-Message-Id: <1555039236-10608-6-git-send-email-amit.kachhap@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
-References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+        Thu, 11 Apr 2019 23:23:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39943 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfDLDXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 23:23:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c207so4424725pfc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 20:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=8aEILMZ75lgTGmzjl2UIwSn0xboviUpKBzB7LC8bgrM=;
+        b=iMlJb/w/AJQ9Sjrywb8YyZ1nedXbOuU6Znx0IuFDrgO7oGFh0cn5vphATqlLJ0nsHZ
+         h1hHDdg4Nmjg8yru3INzZbUpbgB8m+n21Iv4/eQKWD2GWIW/oOmJxZGdzPz/MsKks3Es
+         FJfgc/WrJP8njgGQ0+/ccxF9QRtcHQxrbekwsC2l+JD3T8n59rUTCtgbG45UWbUpjkj1
+         RPv/fDF39S/taqFlVkLE3TUL8pxoTDKeu2Q3Zq/vlThcmNDn9B2ix/8LKEB9L8YWvlp6
+         GrOtF6Zc+tvuSO1Mnb/sN37SpvjRdtClrlsHf4vn+BBS4QXqntCArh5k0laAIWQD7O/D
+         mjuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=8aEILMZ75lgTGmzjl2UIwSn0xboviUpKBzB7LC8bgrM=;
+        b=ZTUjbGJw/MCGBgfMX44ZKdD7eiaxW9+Yebp6/umTfxwqDS6OBUz5AUcuUBzx/+7/DS
+         tM/5QcHFJylQSXprvG/5FEz2EdpcBj1vsFL6WYP4kW9hX0CpByMe5FD0r1Als1jSaq3k
+         x+HQPcZuGeMy1TgfsWo9gJvWvc30LUKKB8787YkV0Lhdygp+/XtnvrbO+lgEkHZNWU6Y
+         ZM6c1NSWyxSGzJzlW1GduhV7LzqhQK7nHw4H8RXzrNcrCsfiGtD7kiMjyoA2jlJT27F/
+         98n9O1fgyBVmwP5UFkgAktVA6yppW9U+mTgpLFNriTfYQrwCrT7nOBv3tzqS4smaX+Tl
+         55OA==
+X-Gm-Message-State: APjAAAXxi2eA4vkoUG3oD+dL0drYnHWpXx18LDAoSt9wTxdoQPo7FK3P
+        zPl/f8rBoVeKjjwuuly1TPg=
+X-Google-Smtp-Source: APXvYqxsGhFr9EI0E2kznx8R8QT/Z628F2+shH0cl+elkMLdDs/FpDmflfMZBly+lNmqhjDqYbu4fw==
+X-Received: by 2002:a65:524a:: with SMTP id q10mr49070326pgp.224.1555039425292;
+        Thu, 11 Apr 2019 20:23:45 -0700 (PDT)
+Received: from localhost (115-64-237-195.tpgi.com.au. [115.64.237.195])
+        by smtp.gmail.com with ESMTPSA id v188sm64490310pgb.7.2019.04.11.20.23.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 20:23:44 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 13:23:38 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: your mail
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190411060536.22409-1-npiggin@gmail.com>
+        <20190411105336.GK4038@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190411105336.GK4038@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1555039052.5o9b9e6rcr.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a runtime capabality for KVM tool to enable Arm64 8.3
-Pointer Authentication in guest kernel. Two vcpu features
-KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] are supplied together to enable
-Pointer Authentication in KVM guest after checking the capability.
+Peter Zijlstra's on April 11, 2019 8:53 pm:
+> Was this supposed to be patch 6/5 of your previous series?
 
-Command line options --enable-ptrauth and --disable-ptrauth are added
-to use this feature. However, if those options are not provided then
-also this feature is enabled if host supports this capability.
+Dang, I screwed up the headers? Thanks for the ping, I will resend.
 
-The macros defined in the headers are not in sync and should be replaced
-from the upstream.
+It is standalone. It seems more suited to the scheduler tree than the
+timers one, but your call.
 
-Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
----
-Changes since v8:
-*  Added option --enable-ptrauth and --disable-ptrauth to use ptrauth. Also
-   enable ptrauth if no option provided and Host supports ptrauth. [Dave Martin]
-* The macro definition are not linear as the kvmtool is not synchronised with the
-  kernel changes present in kvmarm/next tree.
+It is generally of more use when CPU0 is _not_ a housekeeping one,
+and that's where I've done most testing, but I don't see any hard
+dependency.
 
- arm/aarch32/include/kvm/kvm-cpu-arch.h    |  1 +
- arm/aarch64/include/asm/kvm.h             |  2 ++
- arm/aarch64/include/kvm/kvm-config-arch.h |  6 +++++-
- arm/aarch64/include/kvm/kvm-cpu-arch.h    |  2 ++
- arm/include/arm-common/kvm-config-arch.h  |  2 ++
- arm/kvm-cpu.c                             | 11 +++++++++++
- include/linux/kvm.h                       |  2 ++
- 7 files changed, 25 insertions(+), 1 deletion(-)
+Thanks,
+Nick
 
-diff --git a/arm/aarch32/include/kvm/kvm-cpu-arch.h b/arm/aarch32/include/kvm/kvm-cpu-arch.h
-index d28ea67..520ea76 100644
---- a/arm/aarch32/include/kvm/kvm-cpu-arch.h
-+++ b/arm/aarch32/include/kvm/kvm-cpu-arch.h
-@@ -13,4 +13,5 @@
- #define ARM_CPU_ID		0, 0, 0
- #define ARM_CPU_ID_MPIDR	5
- 
-+#define ARM_VCPU_PTRAUTH_FEATURE	0
- #endif /* KVM__KVM_CPU_ARCH_H */
-diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
-index 97c3478..a2546e6 100644
---- a/arm/aarch64/include/asm/kvm.h
-+++ b/arm/aarch64/include/asm/kvm.h
-@@ -102,6 +102,8 @@ struct kvm_regs {
- #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
- #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
- #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
-+#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* CPU uses address pointer authentication */
-+#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* CPU uses generic pointer authentication */
- 
- struct kvm_vcpu_init {
- 	__u32 target;
-diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
-index 04be43d..0279b13 100644
---- a/arm/aarch64/include/kvm/kvm-config-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-config-arch.h
-@@ -8,7 +8,11 @@
- 			"Create PMUv3 device"),				\
- 	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
- 			"Specify random seed for Kernel Address Space "	\
--			"Layout Randomization (KASLR)"),
-+			"Layout Randomization (KASLR)"),		\
-+	OPT_BOOLEAN('\0', "enable-ptrauth", &(cfg)->enable_ptrauth,	\
-+			"Enables pointer authentication"),		\
-+	OPT_BOOLEAN('\0', "disable-ptrauth", &(cfg)->disable_ptrauth,	\
-+			"Disables pointer authentication"),
- 
- #include "arm-common/kvm-config-arch.h"
- 
-diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-index a9d8563..fcc2107 100644
---- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-@@ -17,4 +17,6 @@
- #define ARM_CPU_CTRL		3, 0, 1, 0
- #define ARM_CPU_CTRL_SCTLR_EL1	0
- 
-+#define ARM_VCPU_PTRAUTH_FEATURE	((1UL << KVM_ARM_VCPU_PTRAUTH_ADDRESS) \
-+					| (1UL << KVM_ARM_VCPU_PTRAUTH_GENERIC))
- #endif /* KVM__KVM_CPU_ARCH_H */
-diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
-index 5734c46..1b4287d 100644
---- a/arm/include/arm-common/kvm-config-arch.h
-+++ b/arm/include/arm-common/kvm-config-arch.h
-@@ -10,6 +10,8 @@ struct kvm_config_arch {
- 	bool		aarch32_guest;
- 	bool		has_pmuv3;
- 	u64		kaslr_seed;
-+	bool		enable_ptrauth;
-+	bool		disable_ptrauth;
- 	enum irqchip_type irqchip;
- 	u64		fw_addr;
- };
-diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
-index 7780251..a45a649 100644
---- a/arm/kvm-cpu.c
-+++ b/arm/kvm-cpu.c
-@@ -69,6 +69,17 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
- 	}
- 
- 	/*
-+	 * Always enable Pointer Authentication if requested. If system supports
-+	 * this extension then also enable it by default provided no disable
-+	 * request present.
-+	 */
-+	if ((kvm->cfg.arch.enable_ptrauth) ||
-+		(kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
-+		kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC) &&
-+		!kvm->cfg.arch.disable_ptrauth))
-+			vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
-+
-+	/*
- 	 * If the preferred target ioctl is successful then
- 	 * use preferred target else try each and every target type
- 	 */
-diff --git a/include/linux/kvm.h b/include/linux/kvm.h
-index 6d4ea4b..de1033b 100644
---- a/include/linux/kvm.h
-+++ b/include/linux/kvm.h
-@@ -988,6 +988,8 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_VM_IPA_SIZE 165
- #define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
- #define KVM_CAP_HYPERV_CPUID 167
-+#define KVM_CAP_ARM_PTRAUTH_ADDRESS 169
-+#define KVM_CAP_ARM_PTRAUTH_GENERIC 170
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
--- 
-2.7.4
-
+>=20
+> On Thu, Apr 11, 2019 at 04:05:36PM +1000, Nicholas Piggin wrote:
+>> Date: Tue, 9 Apr 2019 20:23:16 +1000
+>> Subject: [PATCH] kernel/sched: run nohz idle load balancer on HK_FLAG_MI=
+SC
+>>  CPUs
+>>=20
+>> The nohz idle balancer runs on the lowest idle CPU. This can
+>> interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+>> housekeeping CPUs.
+>>=20
+>> HK_FLAG_SCHED is not used for this because it is not set anywhere
+>> at the moment. This could be folded into HK_FLAG_SCHED once that
+>> option is fixed.
+>>=20
+>> The problem was observed with increased jitter on an application
+>> running on CPU0, caused by nohz idle load balancing being run on
+>> CPU1 (an SMT sibling).
+>>=20
+>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>> ---
+>>  kernel/sched/fair.c | 16 ++++++++++------
+>>  1 file changed, 10 insertions(+), 6 deletions(-)
+>>=20
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index fdab7eb6f351..d29ca323214d 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -9522,22 +9522,26 @@ static inline int on_null_domain(struct rq *rq)
+>>   * - When one of the busy CPUs notice that there may be an idle rebalan=
+cing
+>>   *   needed, they will kick the idle load balancer, which then does idl=
+e
+>>   *   load balancing for all the idle CPUs.
+>> + * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED no=
+t set
+>> + *   anywhere yet.
+>>   */
+>> =20
+>>  static inline int find_new_ilb(void)
+>>  {
+>> -	int ilb =3D cpumask_first(nohz.idle_cpus_mask);
+>> +	int ilb;
+>> =20
+>> -	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+>> -		return ilb;
+>> +	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
+>> +			      housekeeping_cpumask(HK_FLAG_MISC)) {
+>> +		if (idle_cpu(ilb))
+>> +			return ilb;
+>> +	}
+>> =20
+>>  	return nr_cpu_ids;
+>>  }
+>> =20
+>>  /*
+>> - * Kick a CPU to do the nohz balancing, if it is time for it. We pick t=
+he
+>> - * nohz_load_balancer CPU (if there is one) otherwise fallback to any i=
+dle
+>> - * CPU (if there is one).
+>> + * Kick a CPU to do the nohz balancing, if it is time for it. We pick a=
+ny
+>> + * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+>>   */
+>>  static void kick_ilb(unsigned int flags)
+>>  {
+>> --=20
+>> 2.20.1
+>>=20
+>=20
+=
