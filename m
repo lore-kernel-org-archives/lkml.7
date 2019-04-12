@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B400C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBE7C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713252083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABC22083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfDLDVM (ORCPT
+        id S1726920AbfDLDVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 23:21:12 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52612 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfDLDVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 23:21:11 -0400
+        Thu, 11 Apr 2019 23:21:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:52638 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726640AbfDLDVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 23:21:15 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D043215AD;
-        Thu, 11 Apr 2019 20:21:10 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8495A15AB;
+        Thu, 11 Apr 2019 20:21:15 -0700 (PDT)
 Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 91E183F59C;
-        Thu, 11 Apr 2019 20:21:06 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 466CF3F73D;
+        Thu, 11 Apr 2019 20:21:11 -0700 (PDT)
 From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Christoffer Dall <christoffer.dall@arm.com>,
@@ -41,9 +41,9 @@ Cc:     Christoffer Dall <christoffer.dall@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v9 4/5] KVM: arm64: Add capability to advertise ptrauth for guest
-Date:   Fri, 12 Apr 2019 08:50:35 +0530
-Message-Id: <1555039236-10608-5-git-send-email-amit.kachhap@arm.com>
+Subject: [kvmtool PATCH v9 5/5] KVM: arm/arm64: Add a vcpu feature for pointer authentication
+Date:   Fri, 12 Apr 2019 08:50:36 +0530
+Message-Id: <1555039236-10608-6-git-send-email-amit.kachhap@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
 References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
@@ -52,70 +52,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch advertises the capability of two cpu feature called address
-pointer authentication and generic pointer authentication. These
-capabilities depend upon system support for pointer authentication and
-VHE mode.
+This patch adds a runtime capabality for KVM tool to enable Arm64 8.3
+Pointer Authentication in guest kernel. Two vcpu features
+KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] are supplied together to enable
+Pointer Authentication in KVM guest after checking the capability.
 
-The current arm64 KVM partially implements pointer authentication and
-support of address/generic authentication are tied together. However,
-separate ABI requirements for both of them is added so that any future
-isolated implementation will not require any ABI changes.
+Command line options --enable-ptrauth and --disable-ptrauth are added
+to use this feature. However, if those options are not provided then
+also this feature is enabled if host supports this capability.
+
+The macros defined in the headers are not in sync and should be replaced
+from the upstream.
 
 Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Cc: kvmarm@lists.cs.columbia.edu
 ---
 Changes since v8:
-*  Keep the capability check same for the 2 vcpu ptrauth features. [Dave Martin]
+*  Added option --enable-ptrauth and --disable-ptrauth to use ptrauth. Also
+   enable ptrauth if no option provided and Host supports ptrauth. [Dave Martin]
+* The macro definition are not linear as the kvmtool is not synchronised with the
+  kernel changes present in kvmarm/next tree.
 
- Documentation/virtual/kvm/api.txt | 2 ++
- arch/arm64/kvm/reset.c            | 5 +++++
- include/uapi/linux/kvm.h          | 2 ++
- 3 files changed, 9 insertions(+)
+ arm/aarch32/include/kvm/kvm-cpu-arch.h    |  1 +
+ arm/aarch64/include/asm/kvm.h             |  2 ++
+ arm/aarch64/include/kvm/kvm-config-arch.h |  6 +++++-
+ arm/aarch64/include/kvm/kvm-cpu-arch.h    |  2 ++
+ arm/include/arm-common/kvm-config-arch.h  |  2 ++
+ arm/kvm-cpu.c                             | 11 +++++++++++
+ include/linux/kvm.h                       |  2 ++
+ 7 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index 9d202f4..56021d0 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -2756,9 +2756,11 @@ Possible features:
- 	- KVM_ARM_VCPU_PTRAUTH_ADDRESS: Enables Address Pointer authentication
- 	  for the CPU and supported only on arm64 architecture.
- 	  Must be requested if KVM_ARM_VCPU_PTRAUTH_GENERIC is also requested.
-+	  Depends on KVM_CAP_ARM_PTRAUTH_ADDRESS.
- 	- KVM_ARM_VCPU_PTRAUTH_GENERIC: Enables Generic Pointer authentication
- 	  for the CPU and supported only on arm64 architecture.
- 	  Must be requested if KVM_ARM_VCPU_PTRAUTH_ADDRESS is also requested.
-+	  Depends on KVM_CAP_ARM_PTRAUTH_GENERIC.
+diff --git a/arm/aarch32/include/kvm/kvm-cpu-arch.h b/arm/aarch32/include/kvm/kvm-cpu-arch.h
+index d28ea67..520ea76 100644
+--- a/arm/aarch32/include/kvm/kvm-cpu-arch.h
++++ b/arm/aarch32/include/kvm/kvm-cpu-arch.h
+@@ -13,4 +13,5 @@
+ #define ARM_CPU_ID		0, 0, 0
+ #define ARM_CPU_ID_MPIDR	5
  
- 	- KVM_ARM_VCPU_SVE: Enables SVE for the CPU (arm64 only).
- 	  Depends on KVM_CAP_ARM_SVE.
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index d13406b..be657f6 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -101,6 +101,11 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_ARM_SVE:
- 		r = system_supports_sve();
- 		break;
-+	case KVM_CAP_ARM_PTRAUTH_ADDRESS:
-+	case KVM_CAP_ARM_PTRAUTH_GENERIC:
-+		r = has_vhe() && system_supports_address_auth() &&
-+				system_supports_generic_auth();
-+		break;
- 	default:
- 		r = 0;
++#define ARM_VCPU_PTRAUTH_FEATURE	0
+ #endif /* KVM__KVM_CPU_ARCH_H */
+diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
+index 97c3478..a2546e6 100644
+--- a/arm/aarch64/include/asm/kvm.h
++++ b/arm/aarch64/include/asm/kvm.h
+@@ -102,6 +102,8 @@ struct kvm_regs {
+ #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
+ #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
+ #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
++#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* CPU uses address pointer authentication */
++#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* CPU uses generic pointer authentication */
+ 
+ struct kvm_vcpu_init {
+ 	__u32 target;
+diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
+index 04be43d..0279b13 100644
+--- a/arm/aarch64/include/kvm/kvm-config-arch.h
++++ b/arm/aarch64/include/kvm/kvm-config-arch.h
+@@ -8,7 +8,11 @@
+ 			"Create PMUv3 device"),				\
+ 	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
+ 			"Specify random seed for Kernel Address Space "	\
+-			"Layout Randomization (KASLR)"),
++			"Layout Randomization (KASLR)"),		\
++	OPT_BOOLEAN('\0', "enable-ptrauth", &(cfg)->enable_ptrauth,	\
++			"Enables pointer authentication"),		\
++	OPT_BOOLEAN('\0', "disable-ptrauth", &(cfg)->disable_ptrauth,	\
++			"Disables pointer authentication"),
+ 
+ #include "arm-common/kvm-config-arch.h"
+ 
+diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+index a9d8563..fcc2107 100644
+--- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
++++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+@@ -17,4 +17,6 @@
+ #define ARM_CPU_CTRL		3, 0, 1, 0
+ #define ARM_CPU_CTRL_SCTLR_EL1	0
+ 
++#define ARM_VCPU_PTRAUTH_FEATURE	((1UL << KVM_ARM_VCPU_PTRAUTH_ADDRESS) \
++					| (1UL << KVM_ARM_VCPU_PTRAUTH_GENERIC))
+ #endif /* KVM__KVM_CPU_ARCH_H */
+diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
+index 5734c46..1b4287d 100644
+--- a/arm/include/arm-common/kvm-config-arch.h
++++ b/arm/include/arm-common/kvm-config-arch.h
+@@ -10,6 +10,8 @@ struct kvm_config_arch {
+ 	bool		aarch32_guest;
+ 	bool		has_pmuv3;
+ 	u64		kaslr_seed;
++	bool		enable_ptrauth;
++	bool		disable_ptrauth;
+ 	enum irqchip_type irqchip;
+ 	u64		fw_addr;
+ };
+diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
+index 7780251..a45a649 100644
+--- a/arm/kvm-cpu.c
++++ b/arm/kvm-cpu.c
+@@ -69,6 +69,17 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
  	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 1d56444..4dc34f8 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -989,6 +989,8 @@ struct kvm_ppc_resize_hpt {
+ 
+ 	/*
++	 * Always enable Pointer Authentication if requested. If system supports
++	 * this extension then also enable it by default provided no disable
++	 * request present.
++	 */
++	if ((kvm->cfg.arch.enable_ptrauth) ||
++		(kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
++		kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC) &&
++		!kvm->cfg.arch.disable_ptrauth))
++			vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
++
++	/*
+ 	 * If the preferred target ioctl is successful then
+ 	 * use preferred target else try each and every target type
+ 	 */
+diff --git a/include/linux/kvm.h b/include/linux/kvm.h
+index 6d4ea4b..de1033b 100644
+--- a/include/linux/kvm.h
++++ b/include/linux/kvm.h
+@@ -988,6 +988,8 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_ARM_VM_IPA_SIZE 165
  #define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
  #define KVM_CAP_HYPERV_CPUID 167
- #define KVM_CAP_ARM_SVE 168
 +#define KVM_CAP_ARM_PTRAUTH_ADDRESS 169
 +#define KVM_CAP_ARM_PTRAUTH_GENERIC 170
  
