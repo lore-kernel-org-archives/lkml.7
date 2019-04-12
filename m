@@ -2,93 +2,140 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1A6C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1269BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0682084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I32dt88p"
+	by mail.kernel.org (Postfix) with ESMTP id DEF3C21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfDLKC2 (ORCPT
+        id S1727170AbfDLKCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:02:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41395 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726914AbfDLKC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:02:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so11123389wrq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 03:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=9Zs17V+7Q5Y7LncnLItMZNJBDJdxDInYfDwePk9CLOc=;
-        b=I32dt88pUCKmVfIQ4jJMEa9xBqnSBOBOeNqfWUDRJa/j6GZUkxFyZvD3pBnYWuTMzX
-         nubpzsMSx/QKv9dakvSn4GqzLt8lamlpxDKvxLm/Me/4mZme7+u49mai3Imm+201EvhI
-         y7tJ1Cg0A8k3+JZ2LCpYOBWyw5YbS0pue17Bc+JP2LJtIs2VcIRcIHEhHBTvDygJVM6d
-         w0Vo5bKZ1qtCVGYK9L1hoVbQzn+8L/V2klZ/3XjsrkLwR3B1TtwXO2/syt5uRD+BRqFX
-         WPDqB1Y8gTo+fwW0Fc3BLruvJXuDuhcRjkoKrNGhRLVSEV0l6tvEDDnzIqCd8IfPJkjC
-         PnDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=9Zs17V+7Q5Y7LncnLItMZNJBDJdxDInYfDwePk9CLOc=;
-        b=Zz0qXsE0trdO4kAY/qmePRb1xrqh4hKT44gl/2HCkjVjM+d5ZPmXAf173LQ/6glYWL
-         aSph5IoXgCVk5JXpLmjUvx/E17Bmu5D2GBjy0ZOF+KDogoaaDXrUHFoYddusDxYzUCV7
-         sUovzQnqqhnAQlm+ddlQ0IqdaRWQsYj7UBpoHqE4GXI2BGpeW9jia6Uc9HzIqQTcsMKm
-         t8xYKi+388h+K1x9Sb3zIGVmg14Yt+9pGtoz7gYvvvpP5naIQLOa1QQP1td1PfVlAXZ3
-         M5KL0VQAaIFF3lflUbB3oMwvPU5rg3xLw3QW6A39/tcGMhhIgiPSA6VfNhXh91ODYQvG
-         aBsQ==
-X-Gm-Message-State: APjAAAVe5+cQ9XgY2qvMSyM7b0xUfABss+tp7+y8OnyJLfv8MCeyBUMs
-        gjBnPVsyd0SF+GW1KZVBL8F7Lw==
-X-Google-Smtp-Source: APXvYqyg3+xxim/zUet/g4yD/5T6+z7+B+1j6pkHJ3bnUx1OXbz9NTSoaPB+PYUcyQjlE8SJpG4YCQ==
-X-Received: by 2002:adf:cd92:: with SMTP id q18mr35745079wrj.134.1555063344334;
-        Fri, 12 Apr 2019 03:02:24 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t14sm5961031wmi.16.2019.04.12.03.02.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 03:02:23 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     jbrunet@baylibre.com, narmstrong@baylibre.com,
-        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 1/2] dt-bindings: clk: g12a-clkc: add Temperature Sensor clock ID
-Date:   Fri, 12 Apr 2019 12:02:20 +0200
-Message-Id: <20190412100221.26740-2-glaroque@baylibre.com>
+        Fri, 12 Apr 2019 06:02:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:56846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfDLKCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 06:02:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F09E15AB;
+        Fri, 12 Apr 2019 03:02:34 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C26833F68F;
+        Fri, 12 Apr 2019 03:02:32 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v3] firmware/psci: add support for SYSTEM_RESET2
+Date:   Fri, 12 Apr 2019 11:02:27 +0100
+Message-Id: <20190412100227.15024-1-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190412100221.26740-1-glaroque@baylibre.com>
-References: <20190412100221.26740-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock id used by temperature sensor for G12A Socs
+PSCI v1.1 introduced SYSTEM_RESET2 to allow both architectural resets
+where the semantics are described by the PSCI specification itself as
+well as vendor-specific resets. Currently only system warm reset
+semantics is defined as part of architectural resets by the specification.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+This patch implements support for SYSTEM_RESET2 by making using of
+reboot_mode passed by the reboot infrastructure in the kernel.
+
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- include/dt-bindings/clock/g12a-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/firmware/psci.c   | 24 +++++++++++++++++++++++-
+ include/uapi/linux/psci.h |  2 ++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index 82c9e0c020b2..cfda463091b7 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -136,5 +136,6 @@
- #define CLKID_VDEC_1				204
- #define CLKID_VDEC_HEVC				207
- #define CLKID_VDEC_HEVCF			210
-+#define CLKID_TS				212
- 
- #endif /* __G12A_CLKC_H */
--- 
+v2->v3:
+	- Added else condition so that if SYSTEM_RESET2 fails, it ends
+	  up doing a system halt
+	- Wrap single statement if..else with braces because of presence
+	  of multiple line comment
+
+diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+index c80ec1d03274..c9ea8f38bd42 100644
+--- a/drivers/firmware/psci.c
++++ b/drivers/firmware/psci.c
+@@ -88,6 +88,7 @@ static u32 psci_function_id[PSCI_FN_MAX];
+ 				PSCI_1_0_EXT_POWER_STATE_TYPE_MASK)
+
+ static u32 psci_cpu_suspend_feature;
++static bool psci_system_reset2_supported;
+
+ static inline bool psci_has_ext_power_state(void)
+ {
+@@ -253,7 +254,17 @@ static int get_set_conduit_method(struct device_node *np)
+
+ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+ {
+-	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
++	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
++	    psci_system_reset2_supported) {
++		/*
++		 * reset_type[31] = 0 (architectural)
++		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
++		 * cookie = 0 (ignored by the implementation)
++		 */
++		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
++	} else {
++		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
++	}
+ }
+
+ static void psci_sys_poweroff(void)
+@@ -451,6 +462,16 @@ static const struct platform_suspend_ops psci_suspend_ops = {
+ 	.enter          = psci_system_suspend_enter,
+ };
+
++static void __init psci_init_system_reset2(void)
++{
++	int ret;
++
++	ret = psci_features(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2));
++
++	if (ret != PSCI_RET_NOT_SUPPORTED)
++		psci_system_reset2_supported = true;
++}
++
+ static void __init psci_init_system_suspend(void)
+ {
+ 	int ret;
+@@ -588,6 +609,7 @@ static int __init psci_probe(void)
+ 		psci_init_smccc();
+ 		psci_init_cpu_suspend();
+ 		psci_init_system_suspend();
++		psci_init_system_reset2();
+ 	}
+
+ 	return 0;
+diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+index b3bcabe380da..5b0ba0062541 100644
+--- a/include/uapi/linux/psci.h
++++ b/include/uapi/linux/psci.h
+@@ -49,8 +49,10 @@
+
+ #define PSCI_1_0_FN_PSCI_FEATURES		PSCI_0_2_FN(10)
+ #define PSCI_1_0_FN_SYSTEM_SUSPEND		PSCI_0_2_FN(14)
++#define PSCI_1_1_FN_SYSTEM_RESET2		PSCI_0_2_FN(18)
+
+ #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
++#define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
+
+ /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
+ #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
+--
 2.17.1
 
