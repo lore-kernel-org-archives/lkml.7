@@ -2,294 +2,122 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8148C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FF1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F84720850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B0952082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:12:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="eLAk2tPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfDLNLj (ORCPT
+        id S1727934AbfDLNMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:11:39 -0400
-Received: from foss.arm.com ([217.140.101.70]:60710 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbfDLNLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:11:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B799374;
-        Fri, 12 Apr 2019 06:11:37 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B38C63F68F;
-        Fri, 12 Apr 2019 06:11:32 -0700 (PDT)
-Subject: Re: [PATCH v5 1/6] iommu: add generic boot option iommu.dma_mode
-To:     John Garry <john.garry@huawei.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-Cc:     Hanjun Guo <guohanjun@huawei.com>
-References: <20190409125308.18304-1-thunder.leizhen@huawei.com>
- <20190409125308.18304-2-thunder.leizhen@huawei.com>
- <010d3cbd-ef74-ad21-c735-0af8b18955e6@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <222946ee-adcc-1311-82a7-6afc9ffbc846@arm.com>
-Date:   Fri, 12 Apr 2019 14:11:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 09:12:10 -0400
+Received: from mail-eopbgr20108.outbound.protection.outlook.com ([40.107.2.108]:15782
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726714AbfDLNMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:12:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ruN11Sy0YBjPXUzCTl4G3Y7Vq8w9BFSn2q2wg2Fo0E0=;
+ b=eLAk2tPkiZtma/xtf+Q6xYcNvZ+J5CZ9b49P/CO7sCfqBi1PWXMDz8TB5zD/I4uBb1KMTB5BuOSJwrpHM/aPWlDBDLvMatbqvR9T35wTdvZ8A/IE69u0f6Ur9fu/KkkrUemeY5KVJI7jFh2TllzTNhCLW0ALUqLOEBMLLXCx2RI=
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com (10.170.247.12) by
+ HE1PR07MB3369.eurprd07.prod.outlook.com (10.170.247.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.11; Fri, 12 Apr 2019 13:12:06 +0000
+Received: from HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6]) by HE1PR07MB3337.eurprd07.prod.outlook.com
+ ([fe80::cd23:d96f:5d94:cee6%7]) with mapi id 15.20.1792.007; Fri, 12 Apr 2019
+ 13:12:06 +0000
+From:   "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+CC:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tty: Add NULL TTY driver
+Thread-Topic: [PATCH] tty: Add NULL TTY driver
+Thread-Index: AQHU8GcuXTQLfjbFSk+VcCO84+l+y6Y4HsMAgAADgoCAAEYbAIAAGW0A
+Date:   Fri, 12 Apr 2019 13:12:05 +0000
+Message-ID: <20190412131156.GB28707@localhost.localdomain>
+References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+ <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+ <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+ <20190405090043.vnsftwpdm56cx2hr@axis.com>
+ <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
+ <20190411130458.GA11390@localhost.localdomain>
+ <c77474fd-96d6-392b-9a54-fd7e6a29b72d@metux.net>
+ <0a50343e-6ebe-f725-82f7-5c127b5ce2e6@nokia.com>
+ <eb11752c-7c20-2a39-d4a7-3be7282b4144@metux.net>
+In-Reply-To: <eb11752c-7c20-2a39-d4a7-3be7282b4144@metux.net>
+Accept-Language: pl-PL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0102CA0021.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:14::34) To HE1PR07MB3337.eurprd07.prod.outlook.com
+ (2603:10a6:7:2d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=krzysztof.adamski@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [131.228.32.185]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 12d542f8-20ca-4aa7-35aa-08d6bf4875f0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR07MB3369;
+x-ms-traffictypediagnostic: HE1PR07MB3369:
+x-microsoft-antispam-prvs: <HE1PR07MB33693EE5278AA622B0E9DEBBEF280@HE1PR07MB3369.eurprd07.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(366004)(39860400002)(199004)(189003)(6486002)(386003)(476003)(71190400001)(26005)(14454004)(93886005)(305945005)(7736002)(6246003)(256004)(186003)(9686003)(99286004)(53936002)(54906003)(106356001)(2906002)(446003)(6116002)(6436002)(97736004)(5660300002)(11346002)(6916009)(486006)(6506007)(3846002)(33656002)(6512007)(105586002)(76176011)(61506002)(4326008)(81166006)(229853002)(316002)(478600001)(71200400001)(8676002)(81156014)(86362001)(52116002)(25786009)(68736007)(102836004)(8936002)(66066001)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR07MB3369;H:HE1PR07MB3337.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: piPwVZ8v0m5Q34Hd/UoyEmLmdi8V2LTAEcIw60jKdWXnbbwHEHbzCI81fsL06FtJV18YaWPrrEmLW8ySG4a9OC1pX50Ly+PVVoVUCTRJcI0FyjtLP1mYkg8mNp8/XjfXps6Ub1N9Zys4uMhsfbtuDWAeu6wE0NGSTzR0UPRvuuIE7q0EYWeOnqGYW+7OxD1s72iPm9ViBFdQtCBlxxHR7dRrFXmqHLJnAIjk2RNZ/cB07h+dIO8uZOpd/OKKSZ9smmZVeECYRbv7EpKOyxVZ+9APB561OWwixH4AG1veisSOJUjc4LAumP7WvNfH7Z4S2ofIQQecVTWPeqRSccZh05Ex87jNKLCItPEmOxccQ3/vKFSl3Uh9tv5HvVDb+RnE2+/23sgX0to+10n3tXatBDGylj3/dpgeo1CDO2E9sUM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BBAE46D9D76A044983E8749303605763@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <010d3cbd-ef74-ad21-c735-0af8b18955e6@huawei.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12d542f8-20ca-4aa7-35aa-08d6bf4875f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 13:12:06.0003
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR07MB3369
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/2019 11:26, John Garry wrote:
-> On 09/04/2019 13:53, Zhen Lei wrote:
->> Currently the IOMMU dma contains 3 modes: passthrough, lazy, strict. The
->> passthrough mode bypass the IOMMU, the lazy mode defer the invalidation
->> of hardware TLBs, and the strict mode invalidate IOMMU hardware TLBs
->> synchronously. The three modes are mutually exclusive. But the current
->> boot options are confused, such as: iommu.passthrough and iommu.strict,
->> because they are no good to be coexist. So add iommu.dma_mode.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  Documentation/admin-guide/kernel-parameters.txt | 19 ++++++++
->>  drivers/iommu/iommu.c                           | 59 
->> ++++++++++++++++++++-----
->>  include/linux/iommu.h                           |  5 +++
->>  3 files changed, 71 insertions(+), 12 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt 
->> b/Documentation/admin-guide/kernel-parameters.txt
->> index 2b8ee90bb64470d..f7766f8ac8b9084 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -1811,6 +1811,25 @@
->>              1 - Bypass the IOMMU for DMA.
->>              unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
->>
->> +    iommu.dma_mode= Configure default dma mode. if unset, use the value
->> +            of CONFIG_IOMMU_DEFAULT_PASSTHROUGH to determine
->> +            passthrough or not.
-> 
-> To me, for unset it's unclear what we default to. So if unset and also 
-> CONFIG_IOMMU_DEFAULT_PASSTHROUGH is not set, do we get lazy or strict 
-> mode? (note: I'm ignoring backwards compatibility and interaction of 
-> iommu.strict and .passthorugh also, more below).
-> 
-> Could we considering introducing config DEFAULT_IOMMU_DMA_MODE, similar 
-> to DEFAULT_IOSCHED?
+On Fri, Apr 12, 2019 at 01:40:56PM +0200, Enrico Weigelt, metux IT consult =
+wrote:
+>On 12.04.19 09:30, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
+>
+>> Well, that depends. If the program doing those writes expects /dev/conso=
+le
+>> to be a tty device, then it cannot be any file.
+>
+>According to Vincent's mail, the actual problem is just systemd.
+>Changing the kernel just for making one specific userland program
+>(which happens to be written by somebody, who even doesn't know the
+>semantics of rm -R) happy, sounds pretty strange for me.
+>
+>I'm not opposed to the general idea of having a dummy tty driver,
+>but please for some actually sane usecases, not just working around
+>broken userland :p
 
-Yes, what I was suggesting was specifically refactoring the Kconfig 
-options into a single choice that controls the default (i.e. no command 
-line option provided) behaviour. AFAICS it should be fairly 
-straightforward to maintain the existing "strict" and "passthrough" 
-options (and legacy arch-specific versions thereof) to override that 
-default without introducing yet another command-line option, which I 
-think we should avoid if possible.
->> +            Note: For historical reasons, ARM64/S390/PPC/X86 have
->> +            their specific options. Currently, only ARM64 support
->> +            this boot option, and hope other ARCHs to use this as
->> +            generic boot option.
->> +        passthrough
->> +            Configure DMA to bypass the IOMMU by default.
->> +        lazy
->> +            Request that DMA unmap operations use deferred
->> +            invalidation of hardware TLBs, for increased
->> +            throughput at the cost of reduced device isolation.
->> +            Will fall back to strict mode if not supported by
->> +            the relevant IOMMU driver.
->> +        strict
->> +            DMA unmap operations invalidate IOMMU hardware TLBs
->> +            synchronously.
->> +
->>      io7=        [HW] IO7 for Marvel based alpha systems
->>              See comment before marvel_specify_io7 in
->>              arch/alpha/kernel/core_marvel.c.
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 109de67d5d727c2..df1ce8e22385b48 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -38,12 +38,13 @@
->>
->>  static struct kset *iommu_group_kset;
->>  static DEFINE_IDA(iommu_group_ida);
->> +
->>  #ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
->> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_IDENTITY;
->> +#define IOMMU_DEFAULT_DMA_MODE        IOMMU_DMA_MODE_PASSTHROUGH
->>  #else
->> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->> +#define IOMMU_DEFAULT_DMA_MODE        IOMMU_DMA_MODE_STRICT
->>  #endif
->> -static bool iommu_dma_strict __read_mostly = true;
->> +static int iommu_default_dma_mode __read_mostly = 
->> IOMMU_DEFAULT_DMA_MODE;
->>
->>  struct iommu_callback_data {
->>      const struct iommu_ops *ops;
->> @@ -147,20 +148,51 @@ static int __init iommu_set_def_domain_type(char 
->> *str)
->>      int ret;
->>
->>      ret = kstrtobool(str, &pt);
->> -    if (ret)
->> -        return ret;
->> +    if (!ret && pt)
->> +        iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
->>
->> -    iommu_def_domain_type = pt ? IOMMU_DOMAIN_IDENTITY : 
->> IOMMU_DOMAIN_DMA;
->> -    return 0;
->> +    return ret;
->>  }
->>  early_param("iommu.passthrough", iommu_set_def_domain_type);
->>
->>  static int __init iommu_dma_setup(char *str)
->>  {
->> -    return kstrtobool(str, &iommu_dma_strict);
->> +    bool strict;
->> +    int ret;
->> +
->> +    ret = kstrtobool(str, &strict);
->> +    if (!ret)
->> +        iommu_default_dma_mode = strict ?
->> +                IOMMU_DMA_MODE_STRICT : IOMMU_DMA_MODE_LAZY;
->> +
->> +    return ret;
->>  }
->>  early_param("iommu.strict", iommu_dma_setup);
->>
->> +static int __init iommu_dma_mode_setup(char *str)
->> +{
->> +    if (!str)
->> +        goto fail;
->> +
->> +    if (!strncmp(str, "passthrough", 11))
->> +        iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
->> +    else if (!strncmp(str, "lazy", 4))
->> +        iommu_default_dma_mode = IOMMU_DMA_MODE_LAZY;
->> +    else if (!strncmp(str, "strict", 6))
->> +        iommu_default_dma_mode = IOMMU_DMA_MODE_STRICT;
->> +    else
->> +        goto fail;
->> +
->> +    pr_info("Force dma mode to be %d\n", iommu_default_dma_mode);
-> 
-> What happens if the cmdline option iommu.dma_mode is passed multiple 
-> times? We get mutliple - possibily conflicting - prints, right?
+I don't want to start a flame but if that userspace would be written by
+somebody else, would that change anything? :) Anyways, historically we
+did not have many convinence usitlities in the kernel and now we do. So
+does the fact that "this might be convinient but is not strictly
+necessary" a blocker to get something into the kernel?
 
-Indeed; we ended up removing such prints for the existing options here, 
-specifically because multiple messages seemed more likely to be 
-confusing than useful.
-
-> And do we need to have backwards compatibility, such that the setting 
-> for iommu.strict or iommu.passthrough trumps iommu.dma_mode, regardless 
-> of order?
-
-As above I think it would be preferable to just keep using the existing 
-options anyway. The current behaviour works out as:
-
-iommu.passthrough |      Y	|	  N
-iommu.strict	  |      x	|    Y         N
-------------------|-------------|---------|--------
-MODE		  | PASSTHROUGH | STRICT  |  LAZY
-
-which seems intuitive enough that a specific dma_mode option doesn't add 
-much value, and would more likely just overcomplicate things for users 
-as well as our implementation.
-
-Robin.
-
->> +
->> +    return 0;
->> +
->> +fail:
->> +    pr_debug("Boot option iommu.dma_mode is incorrect, ignored\n");
->> +    return -EINVAL;
->> +}
->> +early_param("iommu.dma_mode", iommu_dma_mode_setup);
->> +
->>  static ssize_t iommu_group_attr_show(struct kobject *kobj,
->>                       struct attribute *__attr, char *buf)
->>  {
->> @@ -1102,14 +1134,17 @@ struct iommu_group 
->> *iommu_group_get_for_dev(struct device *dev)
->>       */
->>      if (!group->default_domain) {
->>          struct iommu_domain *dom;
->> +        int def_domain_type =
->> +            (iommu_default_dma_mode == IOMMU_DMA_MODE_PASSTHROUGH)
->> +            ? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
->>
->> -        dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
->> -        if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
->> +        dom = __iommu_domain_alloc(dev->bus, def_domain_type);
->> +        if (!dom && def_domain_type != IOMMU_DOMAIN_DMA) {
->>              dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
->>              if (dom) {
->>                  dev_warn(dev,
->>                       "failed to allocate default IOMMU domain of type 
->> %u; falling back to IOMMU_DOMAIN_DMA",
->> -                     iommu_def_domain_type);
->> +                     def_domain_type);
->>              }
->>          }
->>
->> @@ -1117,7 +1152,7 @@ struct iommu_group 
->> *iommu_group_get_for_dev(struct device *dev)
->>          if (!group->domain)
->>              group->domain = dom;
->>
->> -        if (dom && !iommu_dma_strict) {
->> +        if (dom && (iommu_default_dma_mode == IOMMU_DMA_MODE_LAZY)) {
->>              int attr = 1;
->>              iommu_domain_set_attr(dom,
->>                            DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index ffbbc7e39ceeba3..c3f4e3416176496 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -42,6 +42,11 @@
->>   */
->>  #define IOMMU_PRIV    (1 << 5)
->>
->> +
->> +#define IOMMU_DMA_MODE_STRICT        0x0
->> +#define IOMMU_DMA_MODE_LAZY        0x1
->> +#define IOMMU_DMA_MODE_PASSTHROUGH    0x2
->> +
->>  struct iommu_ops;
->>  struct iommu_group;
->>  struct bus_type;
->>
-> 
-> 
+Krzysztof
