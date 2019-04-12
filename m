@@ -2,146 +2,144 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FD7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB35C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E739821872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D737320869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="idTs7woZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mathtm.de header.i=@mathtm.de header.b="knYD2GGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDLFCt (ORCPT
+        id S1726742AbfDLFaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 01:02:49 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:40517 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfDLFCg (ORCPT
+        Fri, 12 Apr 2019 01:30:24 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:29748 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfDLFaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 01:02:36 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A0FFE891AA;
-        Fri, 12 Apr 2019 17:02:31 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1555045351;
-        bh=yxYq12tQ+1PP1TKykeYy3zcJNJhG05iavGcQg6WDqvA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=idTs7woZA8gaO6GdWYLx+UWLBJkrq/+1wF7hUh56ub5ZA2ILTbthLdHiN9+0xG8Ez
-         8eznrZBKl7nsR53+pOXi7Pkh6H0kTJS/r4GcRvfcNOycuNZN2ddqwp8qrXy8G/kF3T
-         ofh3fDHBNlP9Hz3zIxZHfJ7YUW649VTl96f+xs9Nfg16X0MVJiOMdcGRwu2+v6oqrU
-         diFAYlsOz9LnIUAaPfPtWaGmOZCzYfzLiBE6ydEPfKVKolMEPS1o7/I7QGxMGVhoGZ
-         3MGLgxBcgVVzfGKmZxlaanXV5VTDk05gLU3Vf51fl7wRKtvB8v/YxUywlXhEen2zxS
-         4taIVqDA+OuuQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cb01be20002>; Fri, 12 Apr 2019 17:02:31 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id BBBD913EF07;
-        Fri, 12 Apr 2019 17:02:26 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 813441E1D9C; Fri, 12 Apr 2019 17:02:26 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] spi: Make of_find_spi_controller_by_node visible
-Date:   Fri, 12 Apr 2019 17:02:12 +1200
-Message-Id: <20190412050213.17698-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+        Fri, 12 Apr 2019 01:30:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1555047021;
+        s=strato-dkim-0002; d=mathtm.de;
+        h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=XfSW6xM0DEbY9q2haAN5VpOI/HUfZf9Wu++OT5UX1rk=;
+        b=knYD2GGnb/4+ciEdpgDKYwWKKYEvCGeXAqiWB66pVxAWTogJMgF+wrVvV1//ElwVxx
+        HciQ9EQJ/W02vFOAjSSC+LncIDvXXvbcEGU76KbGgcJwyQOwXBmOkS8b9CbNyGxlCy3+
+        fNAC13l+QbDR5SHh62XjbHH3rKw54j0QNIjNBomH5aQUVCf8LfOixdbJsQ8nkvASRLkV
+        5wL3+n6UBcD0Hd6WlVNsZ9Ck3LDSNk57Bik9NyXBtsFqhThihNgscn/BxhJcu9jqOXcA
+        gXj6afjK4vAJCG/5WMqVrKOPu7DgsTR4kGzT30dbr8MK6zxucEn++q1J+/trSZGNdk+w
+        vIqA==
+X-RZG-AUTH: ":OGQLeEG7W/KAXU7xLV2hdHgxFRdqbfEqQfblTbv8grSYpDW1Ean4C8uHphsoybv57wto"
+X-RZG-CLASS-ID: mo00
+Received: from [10.9.21.31]
+        by smtp.strato.de (RZmta 44.18 AUTH)
+        with ESMTPSA id 30ab22v3C5UGGUi
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 12 Apr 2019 07:30:16 +0200 (CEST)
+Subject: Re: disabling secondary CPU hangs / system fails to suspend with
+ kernel 4.19+
+From:   =?UTF-8?Q?Thomas_M=c3=bcller?= <thomas@mathtm.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <5c48095e-028a-404f-aaa1-964f83c83817@mathtm.de>
+ <20190315090950.GT5996@hirez.programming.kicks-ass.net>
+ <cbaafd35-a17d-8331-4cef-281a562b91b5@mathtm.de>
+ <20190315121541.GD6058@hirez.programming.kicks-ass.net>
+ <2b1c85d3-d94b-1593-e30a-a32d97043579@mathtm.de>
+ <20190318115728.GP6058@hirez.programming.kicks-ass.net>
+ <ab509a07-d597-2925-b39a-f1b4e86e5850@mathtm.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thomas@mathtm.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9a345d3c-c17c-95b2-dcbe-af72dee42a1a@mathtm.de>
+Date:   Fri, 12 Apr 2019 07:30:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <ab509a07-d597-2925-b39a-f1b4e86e5850@mathtm.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the static and add of_find_spi_controller_by_node() to spi.h. Also
-move it outside of the CONFIG_OF_DYNAMIC so it is available with just
-CONFIG_OF.
+Hi,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/spi/spi.c       | 7 ++++---
- include/linux/spi/spi.h | 7 +++++++
- 2 files changed, 11 insertions(+), 3 deletions(-)
+good news: starting with 5.0.6 suspend is working again.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 93986f879b09..19929163a45b 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3531,16 +3531,14 @@ struct spi_device *of_find_spi_device_by_node(str=
-uct device_node *node)
- 	return dev ? to_spi_device(dev) : NULL;
- }
- EXPORT_SYMBOL_GPL(of_find_spi_device_by_node);
--#endif /* IS_ENABLED(CONFIG_OF) */
-=20
--#if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static int __spi_of_controller_match(struct device *dev, const void *dat=
-a)
- {
- 	return dev->of_node =3D=3D data;
- }
-=20
- /* the spi controllers are not using spi_bus, so we find it with another=
- way */
--static struct spi_controller *of_find_spi_controller_by_node(struct devi=
-ce_node *node)
-+struct spi_controller *of_find_spi_controller_by_node(struct device_node=
- *node)
- {
- 	struct device *dev;
-=20
-@@ -3555,7 +3553,10 @@ static struct spi_controller *of_find_spi_controll=
-er_by_node(struct device_node
- 	/* reference got in class_find_device */
- 	return container_of(dev, struct spi_controller, dev);
- }
-+EXPORT_SYMBOL_GPL(of_find_spi_controller_by_node);
-+#endif /* IS_ENABLED(CONFIG_OF) */
-=20
-+#if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static int of_spi_notify(struct notifier_block *nb, unsigned long action=
-,
- 			 void *arg)
- {
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 662b336aa2e4..e763290767ea 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -1334,6 +1334,8 @@ spi_transfer_is_last(struct spi_controller *ctlr, s=
-truct spi_transfer *xfer)
- extern struct spi_device *
- of_find_spi_device_by_node(struct device_node *node);
-=20
-+extern struct spi_controller *
-+of_find_spi_controller_by_node(struct device_node *node);
- #else
-=20
- static inline struct spi_device *
-@@ -1342,6 +1344,11 @@ of_find_spi_device_by_node(struct device_node *nod=
-e)
- 	return NULL;
- }
-=20
-+static inline struct spi_controller *
-+of_find_spi_controller_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
- #endif /* IS_ENABLED(CONFIG_OF) */
-=20
- /* Compatibility layer */
---=20
-2.21.0
+Best regards
+Thomas
 
+Am 29.03.19 um 10:22 schrieb Thomas Müller:
+> Hi,
+> 
+> Am 18.03.19 um 12:57 schrieb Peter Zijlstra:
+>> On Fri, Mar 15, 2019 at 09:21:02PM +0100, Thomas Müller wrote:
+>>> I've just re-tested with runlevel 3.
+>>> Not a real VGA console, but at least no Wayland or Gnome to interfere...
+>>>
+>>> `echo 0 > /sys/...` just blocks and no message whatsoever is visible in dmesg.
+>>>
+>>> I've executed `echo 0 > ...` in the background to keep my console functional and I can e.g. echo
+>>> something to /dev/kmsg and it shows up, so reading/updating the log buffer appears to be working
+>>> just fine.
+>>
+>> Damn.. Thanks for trying. I'll see if I can come up with something, but
+>> I'm out of idea for now :/
+>>
+> Any new ideas so far?
+> 
+> For reference:
+> I've just tested a vanilla 5.0.5 with localmodconfig (attached)... same behavior :(
+> 
+> 
+> Best regards
+> Thomas
+> 
