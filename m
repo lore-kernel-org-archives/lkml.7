@@ -2,206 +2,230 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC0FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF4C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCEF2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNn/sMRW"
+	by mail.kernel.org (Postfix) with ESMTP id CFD0B2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfDLO3K (ORCPT
+        id S1727197AbfDLO3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:29:10 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37655 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfDLO3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:29:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbfDLO3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 10:29:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w23so5226913ply.4;
-        Fri, 12 Apr 2019 07:29:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vASg5JkI2W0DXNvLU0zD/DEqrNgshrSx1kIECTH27ws=;
-        b=UNn/sMRWO1iRzHVK73BK17JVxmNrwNvvklz3obwUfUxNmXav8kD0ePMAVNvTMu55na
-         Qlt2z1ayDwKQWlQ7LA4AqStY2KCVR5Iabj6MBBgR/PSzrjCswX886ACNRGxfbnfRo/7L
-         lD41/gnVqw0iFRN4DOkNfW2TR7nfawlpaze1sbv/hhwp/nv6qGZ6ku1TXxa6YehV5Kej
-         /RTNaiCJvN0PWthUG/92qEkV0nE6mrTrm6SV2CaO/7cYuEtuQTzazBlcGlOd3jKTkYCa
-         lOW5MG/gPfmwEQ9vYYEuPFOPsPgStULIExGvYXSBOObxg3YGeOTyZuU+A10GNZ7uHcAi
-         5OTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vASg5JkI2W0DXNvLU0zD/DEqrNgshrSx1kIECTH27ws=;
-        b=ZBFw0u7+lKkSgyvk2xLi2/mqcA1lYlDDXse2wx+MtGfcrczangsTstVyqYHGQCvEeG
-         /in94aLHIUzK4LKhzXeaytVrPxRFF9lSQ0dCc0syAiCOVURlAwygVisEl6+nMbKU4Ww7
-         xG9l9QZ5s4+Hf9AVD/7RU0DBFx62JzuAyfpSFf63la7fI3J2uo5TvfrSpE3zMiRjnXbX
-         M3sHl1jp9Ien20zImyr/qvA4lhXlw5751UYEEGoqsGY/MuYurXwdrpC4KWJ96T1LaJKF
-         2pCqGoLsdE3iAJCEpGEpzQDKdOtMAjTzqgpVJVi9KIDgoeXDJeByXYMrDv0pz5MguiF0
-         DbYQ==
-X-Gm-Message-State: APjAAAXYAPBvCK2nBOFZ5v/ZU9q9Sb74tk5c/u+Hok12RcZ0gU8luczB
-        fvMvY3lEJz+NpbtiNx9fb3/3hioJ
-X-Google-Smtp-Source: APXvYqzNju7gpPlzfagkh2aODJUl6KrPERaiO0okdDz3Gwdr2ak3mGnbQpZJVE8/+YjMEJ0A1w4zvg==
-X-Received: by 2002:a17:902:d83:: with SMTP id 3mr33457160plv.125.1555079348555;
-        Fri, 12 Apr 2019 07:29:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k14sm90412480pfb.125.2019.04.12.07.29.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 07:29:06 -0700 (PDT)
-Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
- <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
- <20190411165742.GA29395@roeck-us.net>
- <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
- <77c56129-d3e7-1518-9d1d-a15a20540269@arm.com>
- <cfde0244-1faf-80cd-b49e-500654e5bad8@roeck-us.net>
- <19616839-f78f-a15f-c7b7-7ef9e7817140@arm.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c9616343-baa0-8bda-9190-720bc08eda88@roeck-us.net>
-Date:   Fri, 12 Apr 2019 07:29:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 04E8C820898F8CC14812;
+        Fri, 12 Apr 2019 22:29:03 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
+ 22:28:58 +0800
+Subject: Re: [PATCH] mtd: nand: Fix build error while
+ CONFIG_MTD_NAND_ECC_SW_BCH is set to module
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+References: <20190410130747.35692-1-yuehaibing@huawei.com>
+ <20190410153920.68267a1a@collabora.com>
+ <20190410155856.655122c8@collabora.com>
+ <8b020124-4008-6081-c04c-eaefb7875878@huawei.com>
+ <20190410162927.17ea678b@collabora.com>
+ <41165c39-da0c-0f15-87f9-4fb588b77dcc@huawei.com>
+ <20190410181843.489a4e33@xps13> <20190410190328.433a954f@collabora.com>
+CC:     <richard@nod.at>, <computersforpeace@gmail.com>,
+        <marek.vasut@gmail.com>, <paul.burton@mips.com>,
+        <bbrezillon@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <79bce66d-6bb5-39f9-6f36-0667dede52fd@huawei.com>
+Date:   Fri, 12 Apr 2019 22:28:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <19616839-f78f-a15f-c7b7-7ef9e7817140@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190410190328.433a954f@collabora.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 6:54 AM, Robin Murphy wrote:
-> On 12/04/2019 14:50, Guenter Roeck wrote:
->> On 4/12/19 4:50 AM, Robin Murphy wrote:
->>> On 12/04/2019 12:07, Stefan Wahren wrote:
->>>> On 11.04.19 18:57, Guenter Roeck wrote:
->>>>> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
->>>>>> -ATTRIBUTE_GROUPS(pwm_fan);
->>>>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
->>>>>> +                     int n)
->>>>>> +{
->>>>>> +    struct device *dev = container_of(kobj, struct device, kobj);
->>>>>> +    struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->>>>>> +    struct device_attribute *devattr;
->>>>>> +
->>>>>> +    /* Hide fan_input in case no interrupt is available  */
->>>>>> +    devattr = container_of(a, struct device_attribute, attr);
->>>>> Field day for static analyzers - devattr is no longer used.
->>>>> No need to resend. I'll let the series rest for a couple of days
->>>>> and then apply to hwmon-next (after removing devattr) unless there are
->>>>> additional comments.
+On 2019/4/11 1:03, Boris Brezillon wrote:
+> On Wed, 10 Apr 2019 18:18:43 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+>> Hi YueHaibing,
+>>
+>> YueHaibing <yuehaibing@huawei.com> wrote on Wed, 10 Apr 2019 23:03:24
+>> +0800:
+>>
+>>> On 2019/4/10 22:29, Boris Brezillon wrote:  
+>>>> On Wed, 10 Apr 2019 22:22:16 +0800
+>>>> YueHaibing <yuehaibing@huawei.com> wrote:
+>>>>     
+>>>>> On 2019/4/10 21:58, Boris Brezillon wrote:    
+>>>>>> On Wed, 10 Apr 2019 15:39:28 +0200
+>>>>>> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+>>>>>>       
+>>>>>>> On Wed, 10 Apr 2019 21:07:47 +0800
+>>>>>>> Yue Haibing <yuehaibing@huawei.com> wrote:
+>>>>>>>      
+>>>>>>>> From: YueHaibing <yuehaibing@huawei.com>
+>>>>>>>>
+>>>>>>>> Fix gcc build error while CONFIG_MTD_NAND_ECC_SW_BCH
+>>>>>>>> is set to module:
+>>>>>>>>
+>>>>>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_cleanup':
+>>>>>>>> (.text+0xef6): undefined reference to `nand_bch_free'
+>>>>>>>> drivers/mtd/nand/raw/nand_base.o: In function `nand_scan_tail':
+>>>>>>>> nand_base.c:(.text+0xa101): undefined reference to `nand_bch_calculate_ecc'
+>>>>>>>> nand_base.c:(.text+0xa120): undefined reference to `nand_bch_correct_data'
+>>>>>>>> nand_base.c:(.text+0xa269): undefined reference to `nand_bch_init'
+>>>>>>>>
+>>>>>>>> CONFIG_MTD_NAND_ECC_SW_BCH should not be set to M,
+>>>>>>>> because MTD_RAW_NAND need it while linked.
+>>>>>>>>
+>>>>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>>>>>> Fixes: 193bd4002644 ("mtd: nand: add software BCH ECC support"        
+>>>>>>>
+>>>>>>> Nope, it's not this one that introduced the regression.
+>>>>>>>
+>>>>>>>
+>>>>>>>      
+>>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>>>> ---
+>>>>>>>>  drivers/mtd/nand/raw/Kconfig | 2 +-
+>>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+>>>>>>>> index 615d738..0500c42 100644
+>>>>>>>> --- a/drivers/mtd/nand/raw/Kconfig
+>>>>>>>> +++ b/drivers/mtd/nand/raw/Kconfig
+>>>>>>>> @@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
+>>>>>>>>  if MTD_RAW_NAND
+>>>>>>>>  
+>>>>>>>>  config MTD_NAND_ECC_SW_BCH
+>>>>>>>> -	tristate "Support software BCH ECC"
+>>>>>>>> +	bool "Support software BCH ECC"
+>>>>>>>>  	select BCH
+>>>>>>>>  	default n
+>>>>>>>>  	help        
+>>>>>>>
+>>>>>>> Should be fixed with the following diff squashed into:
+>>>>>>>
+>>>>>>> 51ef1d0b2095 ("mtd: nand: Clarify Kconfig entry for software BCH ECC algorithm")
+>>>>>>>      
+>>>>>>> --->8---        
+>>>>>>> diff --git a/include/linux/mtd/nand_bch.h b/include/linux/mtd/nand_bch.h
+>>>>>>> index b8106651f807..06ce2b655c13 100644
+>>>>>>> --- a/include/linux/mtd/nand_bch.h
+>>>>>>> +++ b/include/linux/mtd/nand_bch.h
+>>>>>>> @@ -15,7 +15,7 @@ struct mtd_info;
+>>>>>>>  struct nand_chip;
+>>>>>>>  struct nand_bch_control;
+>>>>>>>  
+>>>>>>> -#if defined(CONFIG_MTD_NAND_ECC_BCH)
+>>>>>>> +#if defined(CONFIG_MTD_NAND_ECC_SW_BCH)
+>>>>>>>  
+>>>>>>>  static inline int mtd_nand_has_bch(void) { return 1; }
+>>>>>>>  
+>>>>>>> @@ -39,7 +39,7 @@ struct nand_bch_control *nand_bch_init(struct mtd_info *mtd);
+>>>>>>>   */
+>>>>>>>  void nand_bch_free(struct nand_bch_control *nbc);
+>>>>>>>  
+>>>>>>> -#else /* !CONFIG_MTD_NAND_ECC_BCH */
+>>>>>>> +#else /* !CONFIG_MTD_NAND_ECC_SW_BCH */
+>>>>>>>  
+>>>>>>>  static inline int mtd_nand_has_bch(void) { return 0; }
+>>>>>>>  
+>>>>>>> @@ -64,6 +64,6 @@ static inline struct nand_bch_control *nand_bch_init(struct mtd_info *mtd)
+>>>>>>>  
+>>>>>>>  static inline void nand_bch_free(struct nand_bch_control *nbc) {}
+>>>>>>>  
+>>>>>>> -#endif /* CONFIG_MTD_NAND_ECC_BCH */
+>>>>>>> +#endif /* CONFIG_MTD_NAND_ECC_SW_BCH */
+>>>>>>>  
+>>>>>>>  #endif /* __MTD_NAND_BCH_H__ */      
+>>>>>>
+>>>>>> Sorry, I didn't look at the right branch, this part of the code was
+>>>>>> correct, but we still have a problem to express the RAW_NAND(y) ->
+>>>>>> SW_BCH(y) dependency.      
 >>>>>
->>>> Thank you
->>>
->>> FWIW you can have a
->>>
->>> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->>>
->>> for the whole series. The only minor comment that springs to mind
->>> isn't actually specific to this patch, so is probably best made as
->>> the follow-up below.
->>>
->>> Robin.
->>>
+>>>>> It seems this dependency is not always need,
+>>>>>
+>>>>> case MTD_RAW_NAND set to y works well while CONFIG_MTD_NAND_ECC_SW_BCH is not set.    
+>>>>
+>>>> Yes, I know, but forcing nand_bch to a be a boolean is not the right
+>>>> solution either, hence my suggestion to use 'imply'.    
 >>
->> Any chance you can send the patch below as separate patch ? I track patches
->> using patchwork, and attachments don't show up there.
+>> Why exactly? SW BCH is going to be converted to the generic ECC engine
+>> abstraction and IIRC you told me that it would not be problematic to
+>> turn it into a boolean?
 > 
-> Sure, can do - would you like an explicit R-b on #1 and #2 here for patchwork to pick up as well?
-> That would simplify my life a bit, but I can add that part myself to the patches.
-I primarily like to have the patches in patchwork to make sure they don't get lost
-and that I can pick them up again later if needed.
+> Yes, I told you we should turn it into a boolean and embed the code in
+> the nandcore.o object which can itself be linked as a module or embedded
+> in the kernel image (see above for a version adapted for nand.o). That's
+> not exactly what Yue proposed.
 
-Thanks,
-Guenter
+So is there anothor fix or just to pick my v2 ?
 
-> Robin.
+https://patchwork.ozlabs.org/patch/1083480/
+
 > 
->>
->> Thanks,
->> Guenter
->>
->>> ----->8-----
->>> From: Robin Murphy <robin.murphy@arm.com>
->>> Subject: [PATCH] hwmon: pwm-fan: Report probe errors consistently
->>>
->>> Printing the error code for a failure provides a head-start for
->>> debugging, since it's often sufficient to pinpoint the origin of the
->>> failure. We already do this for some probe-failure messages, so let's
->>> make the rest of them consistent.
->>>
->>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>> ---
->>>   drivers/hwmon/pwm-fan.c | 13 ++++++++-----
->>>   1 file changed, 8 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->>> index 8c4c5eefd4ca..556db4bef743 100644
->>> --- a/drivers/hwmon/pwm-fan.c
->>> +++ b/drivers/hwmon/pwm-fan.c
->>> @@ -330,7 +330,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>>
->>>       ret = pwm_apply_state(ctx->pwm, &state);
->>>       if (ret) {
->>> -        dev_err(&pdev->dev, "Failed to configure PWM\n");
->>> +        dev_err(&pdev->dev, "Failed to configure PWM: %d\n", ret);
->>>           goto err_reg_disable;
->>>       }
->>>
->>> @@ -348,7 +348,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>>           ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
->>>                          pdev->name, ctx);
->>>           if (ret) {
->>> -            dev_err(&pdev->dev, "Can't get interrupt working.\n");
->>> +            dev_err(&pdev->dev,
->>> +                "Failed to request interrupt: %d\n", ret);
->>>               goto err_pwm_disable;
->>>           }
->>>           ctx->sample_start = ktime_get();
->>> @@ -358,8 +359,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>>       hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->>>                                  ctx, pwm_fan_groups);
->>>       if (IS_ERR(hwmon)) {
->>> -        dev_err(&pdev->dev, "Failed to register hwmon device\n");
->>>           ret = PTR_ERR(hwmon);
->>> +        dev_err(&pdev->dev,
->>> +            "Failed to register hwmon device: %d\n", ret);
->>>           goto err_del_timer;
->>>       }
->>>
->>> @@ -373,9 +375,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>>                                 "pwm-fan", ctx,
->>>                                 &pwm_fan_cooling_ops);
->>>           if (IS_ERR(cdev)) {
->>> -            dev_err(&pdev->dev,
->>> -                "Failed to register pwm-fan as cooling device");
->>>               ret = PTR_ERR(cdev);
->>> +            dev_err(&pdev->dev,
->>> +                "Failed to register pwm-fan as cooling device: %d\n",
->>> +                ret);
->>>               goto err_del_timer;
->>>           }
->>>           ctx->cdev = cdev;
->>>
->>
+> --->8---
+> diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+> index 7fcdaf6c279d..f9258d666846 100644
+> --- a/drivers/mtd/devices/Kconfig
+> +++ b/drivers/mtd/devices/Kconfig
+> @@ -207,7 +207,7 @@ comment "Disk-On-Chip Device Drivers"
+>  config MTD_DOCG3
+>         tristate "M-Systems Disk-On-Chip G3"
+>         select BCH
+> -       select BCH_CONST_PARAMS if !CONFIG_MTD_NAND_ECC_SW_BCH
+> +       select BCH_CONST_PARAMS if !MTD_NAND_ECC_SW_BCH
+>         select BITREVERSE
+>         help
+>           This provides an MTD device driver for the M-Systems DiskOnChip
+> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+> index 615d738be411..0500c42f31cb 100644
+> --- a/drivers/mtd/nand/raw/Kconfig
+> +++ b/drivers/mtd/nand/raw/Kconfig
+> @@ -22,7 +22,7 @@ menuconfig MTD_RAW_NAND
+>  if MTD_RAW_NAND
+>  
+>  config MTD_NAND_ECC_SW_BCH
+> -       tristate "Support software BCH ECC"
+> +       bool "Support software BCH ECC"
+>         select BCH
+>         default n
+>         help
+> diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+> index 8bc6faaa3bc7..d644185fa18d 100644
+> --- a/drivers/mtd/nand/raw/Makefile
+> +++ b/drivers/mtd/nand/raw/Makefile
+> @@ -2,7 +2,6 @@
+>  
+>  obj-$(CONFIG_MTD_RAW_NAND)             += nand.o
+>  obj-$(CONFIG_MTD_NAND_ECC_SW_HAMMING)  += nand_ecc.o
+> -obj-$(CONFIG_MTD_NAND_ECC_SW_BCH)      += nand_bch.o
+>  obj-$(CONFIG_MTD_SM_COMMON)            += sm_common.o
+>  
+>  obj-$(CONFIG_MTD_NAND_CAFE)            += cafe_nand.o
+> @@ -68,3 +67,5 @@ nand-objs += nand_macronix.o
+>  nand-objs += nand_micron.o
+>  nand-objs += nand_samsung.o
+>  nand-objs += nand_toshiba.o
+> +nand-objs-$(CONFIG_MTD_NAND_ECC_SW_BCH)        += nand_bch.o
+> +nand-objs += $(nand-objs-y)
+> 
+> 
+> 
+> .
 > 
 
