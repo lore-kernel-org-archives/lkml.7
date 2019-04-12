@@ -2,158 +2,135 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FAFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75163C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1B520818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555058935;
-	bh=z2tHWZjksT0JJz2uitfc2YyqdnMS7uukgVbHT838jwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zx5wvJ5XNBSv7sxyI5qElQgE2TfO4B1bEmgfZRh9vZ3T8/LfYrJ+Zk0BFl6sN0SHV
-	 RVEbimU/he65POuU6PoCkqpO1b68HzhmzEvYGYRli9MuLEXDBZVcd5XLqf389SislU
-	 ukxRVNa+izCjYWSazeQS/yPrkiRU1A+bXctO0glY=
+	by mail.kernel.org (Postfix) with ESMTP id 3F86A20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HJxTvXgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfDLIsy (ORCPT
+        id S1727341AbfDLIuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:48:54 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38293 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfDLIsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:48:54 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e80so7729075ote.5;
-        Fri, 12 Apr 2019 01:48:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vruAS9FVO8+0ZWh8zsjH+XnzNDkt1hKHtgpkktvnD+w=;
-        b=BXbf3zJT4TTIxGOs0Y76tWj3EHb0kaiCw9v5rU9jjOZw1nxXf8NwptKvWxsGDHFuVT
-         FQ8RK8+Q7GhbLQNRhW5Z5VfinLdbbUPQ0XCamCi1CV1tcDJKVfM/SlH9gJoaW7vpchHx
-         /7/6rQSrd3MDVmOCUbbR0oO/ZumkoOfJ0pF/HtYGZrLQH1eS5udZRfgTluIQ0sDg9RyH
-         0AU6K5uIvsuAwJqYAifRi2szkYfJqOVRt9xkP2C9mfsV9qm2xNBv2VDxjCPWO+nnJii+
-         yK9BjxpXJrRd1AJtsCWh9pE1apDINxFOzl6X2tX8WYKEgYsfG2tkjNZgfkGpPVB7hLqg
-         iyZg==
-X-Gm-Message-State: APjAAAXImaEkuuM6scuw7n106cSbc0gQCS6FQM1lLKbxE2mzD3yfkL/6
-        LdF/OgzUmMdBsetHU37ml32xFdxQgSWRAvE7Kik=
-X-Google-Smtp-Source: APXvYqydCjlAcj0h/1qD55yP60CnPcQb7vPuyjLlN06E9St6VPMMDagY6bXeq115CkJL6xL7lFuZTDUeWTsWo8M4khQ=
-X-Received: by 2002:a05:6830:11d0:: with SMTP id v16mr2217956otq.159.1555058933127;
- Fri, 12 Apr 2019 01:48:53 -0700 (PDT)
+        Fri, 12 Apr 2019 04:50:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44488 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbfDLIuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:50:05 -0400
+Received: from zn.tnic (p200300EC2F0884007C96562F0B339423.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:8400:7c96:562f:b33:9423])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B30DD1EC0429;
+        Fri, 12 Apr 2019 10:50:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555059003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=84+oxSxNMAadS6pIeooHpUoN4ue5mzY49h0DiXqMNjY=;
+        b=HJxTvXgW9fUo77/6lRSVxZ/8ZFuPjGqjKfnXXuPPacdq5G2fzTQt3UeFkQ+Vh7XonaJaUZ
+        32cptaiL308lV3r+58yeEpbMQpZgwJR+Emy7qh1HXMTXJJqAYmPM7uxYuMwzw4q/SzxEU3
+        GlzcGQTyGsCEVP17EjiM3dzUTYV1qzU=
+Date:   Fri, 12 Apr 2019 10:49:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190412084956.GC19808@zn.tnic>
+References: <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+ <20190411080927.GA30080@zn.tnic>
+ <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+ <20190411083738.GC30080@zn.tnic>
+ <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
+ <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
+ <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
+ <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
+ <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
 MIME-Version: 1.0
-References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com> <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 12 Apr 2019 10:48:41 +0200
-Message-ID: <CAJZ5v0jTR6TqMxRoRhBzG8Rf8JgGfriuCLsGKBYxjBOZz_7yBA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] software node: Implement .get_reference_args
- fwnode operation
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 5:26 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> This makes it possible to support drivers that use
-> fwnode_property_get_reference_args() function.
->
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/base/swnode.c | 56 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index 39b8f8f35cfe..d6a9b56cb073 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -534,6 +534,61 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
->         return NULL;
->  }
->
-> +static int
-> +software_node_get_reference_args(const struct fwnode_handle *fwnode,
-> +                                const char *propname, const char *nargs_prop,
-> +                                unsigned int nargs, unsigned int index,
-> +                                struct fwnode_reference_args *args)
-> +{
-> +       struct software_node *swnode = to_software_node(fwnode);
-> +       struct software_node_reference *ref;
-> +       const struct property_entry *prop;
-> +       int ret = -ENOENT;
-> +       int i;
-> +
-> +       mutex_lock(&swnode->lock);
-> +
-> +       if (!swnode || list_empty(&swnode->references))
-> +               goto err_unlock;
-> +
-> +       if (nargs_prop) {
-> +               prop = property_entry_get(swnode->properties, nargs_prop);
-> +               if (!prop) {
-> +                       ret = -EINVAL;
-> +                       goto err_unlock;
-> +               }
-> +
-> +               nargs = prop->value.u32_data;
-> +       }
-> +
-> +       if (nargs > NR_FWNODE_REFERENCE_ARGS) {
-> +               ret = -EINVAL;
-> +               goto err_unlock;
-> +       }
-> +
-> +       list_for_each_entry(ref, &swnode->references, list) {
-> +               if (strcmp(ref->name, propname))
-> +                       continue;
-> +
-> +               if (index > (ref->nrefs - 1))
-> +                       break;
-> +
-> +               args->nargs = nargs;
-> +               args->fwnode = software_node_get(ref->args[index].fwnode);
-> +
-> +               for (i = 0; i < nargs; i++)
-> +                       args->args[i] = ref->args[index].args[i];
+On Fri, Apr 12, 2019 at 02:54:17AM +0000, Junichi Nomura wrote:
+> Without #ifdef CONFIG_X86_64, I got compiler warnings on 32bit build
+> about casting u64 to pointer.
 
-If nargs is provided by the caller, can't it be greater than the
-number of args[index].args[] entries?
+Yah, stupid ifdeffery.
 
-> +
-> +               ret = 0;
-> +               break;
-> +       }
-> +
-> +err_unlock:
-> +       mutex_unlock(&swnode->lock);
-> +
-> +       return ret;
-> +}
-> +
->  static const struct fwnode_operations software_node_ops = {
->         .get = software_node_get,
->         .put = software_node_put,
-> @@ -543,6 +598,7 @@ static const struct fwnode_operations software_node_ops = {
->         .get_parent = software_node_get_parent,
->         .get_next_child_node = software_node_get_next_child,
->         .get_named_child_node = software_node_get_named_child_node,
-> +       .get_reference_args = software_node_get_reference_args,
->  };
->
->  /* -------------------------------------------------------------------------- */
+> We need #ifdef CONFIG_EFI to avoid build failure about undefined
+> __efi_get_rsdp_addr().
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index c3020e2d8f67..4b1d4a0a4269 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -46,7 +46,6 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
+ }
+ 
+-#ifdef CONFIG_EFI
+ /*
+  * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+  * ACPI_TABLE_GUID are found, take the former, which has more features.
+@@ -56,6 +55,8 @@ __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+ 		    bool efi_64)
+ {
+ 	acpi_physical_address rsdp_addr = 0;
++
++#ifdef CONFIG_EFI
+ 	int i;
+ 
+ 	/* Get EFI tables from systab. */
+@@ -85,10 +86,9 @@ __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+ 		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+ 			return table;
+ 	}
+-
++#endif
+ 	return rsdp_addr;
+ }
+-#endif
+ 
+ /* EFI/kexec support is 64-bit only. */
+ #ifdef CONFIG_X86_64
+---
+
+> I think that should be the other way around:
+
+No, it shouldn't.
+
+kexec_get_rsdp_addr() must do:
+
+	if (!kexec_kernel)
+		return 0:
+
+        esd = (struct efi_setup_data *)get_kexec_setup_data_addr();
+        if (!esd)
+                return EFI_SETUP_DATA_INVALID;
+
+	...
+
+Now I need to go figure out whether there's a reliable way to know in
+the kexec kernel that it *is* a kexec kernel.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
