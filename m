@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF43C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F94AC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA51E20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7465B206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfDLKdr (ORCPT
+        id S1728413AbfDLKeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:33:47 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:54712 "EHLO
+        Fri, 12 Apr 2019 06:34:02 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:54698 "EHLO
         mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfDLKdo (ORCPT
+        with ESMTP id S1727460AbfDLKdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:33:44 -0400
+        Fri, 12 Apr 2019 06:33:40 -0400
 Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
         (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPA id 7B2EB7B3075;
-        Fri, 12 Apr 2019 07:33:37 -0300 (-03)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id 95A747B307B;
+        Fri, 12 Apr 2019 07:33:35 -0300 (-03)
 From:   Pablo Greco <pgreco@centosproject.org>
 To:     linux-sunxi@googlegroups.com
 Cc:     Pablo Greco <pgreco@centosproject.org>,
@@ -32,14 +32,14 @@ Cc:     Pablo Greco <pgreco@centosproject.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Fix WiFi regulator definitions
-Date:   Fri, 12 Apr 2019 07:33:04 -0300
-Message-Id: <1555065186-8154-6-git-send-email-pgreco@centosproject.org>
+Subject: [PATCH v2 4/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable AHCI
+Date:   Fri, 12 Apr 2019 07:33:03 -0300
+Message-Id: <1555065186-8154-5-git-send-email-pgreco@centosproject.org>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
 References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
 X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: 7B2EB7B3075.A1D9E
+X-SP2Max-MailScanner-ID: 95A747B307B.A1812
 X-SP2Max-MailScanner: Sem Virus encontrado
 X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
         escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
@@ -50,46 +50,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like was done for the bananapi-m2-ultra, add the second wifi/bt
-regulator and mark both as always-on.
+Just like the Bananapi M2 Ultra, enable the ahci controller and
+the two regulators needed to activate it.
 
 Signed-off-by: Pablo Greco <pgreco@centosproject.org>
 ---
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index c37c7ab..78f4a1a 100644
+index 2a5b80b..c37c7ab 100644
 --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -225,12 +225,27 @@
- 	regulator-name = "vcc-wifi-io";
+@@ -99,6 +99,12 @@
+ 	};
  };
  
-+/*
-+ * Our WiFi chip needs both DLDO2 and DLDO3 to be powered at the same
-+ * time, with the two being in sync, to be able to meet maximum power
-+ * consumption during transmits. Since this is not really supported
-+ * right now, just use the two as always on, and we will fix it later.
-+ */
++&ahci {
++	ahci-supply = <&reg_dldo4>;
++	phy-supply = <&reg_eldo3>;
++	status = "okay";
++};
 +
- &reg_dldo2 {
-+	regulator-always-on;
- 	regulator-min-microvolt = <3300000>;
- 	regulator-max-microvolt = <3300000>;
+ &de {
+ 	status = "okay";
+ };
+@@ -225,6 +231,18 @@
  	regulator-name = "vcc-wifi";
  };
  
-+&reg_dldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi-2";
++&reg_dldo4 {
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	regulator-name = "vdd2v5-sata";
 +};
 +
- &reg_dldo4 {
- 	regulator-min-microvolt = <2500000>;
- 	regulator-max-microvolt = <2500000>;
++&reg_eldo3 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vdd1v2-sata";
++};
++
+ &tcon_tv0 {
+ 	status = "okay";
+ };
 -- 
 1.8.3.1
 
