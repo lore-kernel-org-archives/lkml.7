@@ -2,144 +2,85 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE43C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB7C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1E02054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF562054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbfDLNQh (ORCPT
+        id S1727317AbfDLNQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:16:37 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35868 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfDLNQg (ORCPT
+        Fri, 12 Apr 2019 09:16:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:60385 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfDLNQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 09:16:36 -0400
-Received: by mail-qk1-f193.google.com with SMTP id k130so5593280qke.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 06:16:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rv7MVICsaxHe7v4HuQI9mAqFB8+mbi20S9Zrx2UdNno=;
-        b=tXMD4A13b6wxNXcpfDAWAjfmlR1NV1Sv6I0ekTztYE+7dakC//V/VRBUNcpIthKdBr
-         T2UI4077KyoKiOKWnunmVHQ7I6Ae6rRlo1mofRNBLMkvhdiyeAYx3+HwDUsUYU7YL2MU
-         PXpOylMzMxmTEy/b6UlAT9EzZeeq/zMRqtaBaZAnn1kUUhiB0M+UqAUzwpO4SVFOYJoQ
-         P1LMBnTcU7/aoAkuOctE1OcWBsXttHPHBaKuQ/mMc5zCCLV3giMHN6Jhyx9g3KOoY1Dq
-         Yrm5WMIUSaLeZaqD9oKIUExTrJJC4GlUZ3+RL8+TGzELqQdeahUJxzHLEX0twPfu6Ks+
-         14/w==
-X-Gm-Message-State: APjAAAVIBzBURcebVmH/FUpFX+V7J0mPPcXpBFZKLXFq1wLw14LR0y1Z
-        sMIj3dYi48uroyp8Qtjhpk3aFCvu1r/Dd9T9isI=
-X-Google-Smtp-Source: APXvYqwD4Be7cRFcGuRr2ojK6lE8ZDJRK05dW0xORM0tgqTl5inG6HsfGHrUpF0lVXYWcasR63Tw276OF2zxBlP3yFw=
-X-Received: by 2002:ae9:f442:: with SMTP id z2mr43096377qkl.172.1555074995289;
- Fri, 12 Apr 2019 06:16:35 -0700 (PDT)
+Received: from [192.168.1.110] ([77.9.22.14]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MhDN4-1gblT52kvS-00eI4t; Fri, 12 Apr 2019 15:15:57 +0200
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <24771fbe-0c45-78b0-e96b-6ed31ccdcb7f@metux.net>
+Date:   Fri, 12 Apr 2019 15:15:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190318122901.7231-1-brgl@bgdev.pl> <20190318122901.7231-2-brgl@bgdev.pl>
- <CAK8P3a0EhCRH7O87WSyfHujomQ_Dzz3=BT0SaXF-33Z9g0oSjA@mail.gmail.com> <c1fa9027-3f92-5edd-6e5b-be4889e5363c@ti.com>
-In-Reply-To: <c1fa9027-3f92-5edd-6e5b-be4889e5363c@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 12 Apr 2019 15:16:18 +0200
-Message-ID: <CAK8P3a0xEpCQa=9=-oZDuRNmA7hexbub5k_BdO71Y7ycyV_Szg@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/2] ARM: davinci: support multiplatform build for
- ARM v5
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:P1HauobrqeS7Nxy1zjrWPNWz2bBbR9RkUCoH4BP5/j5iRvktL6o
+ WlozQICSoUUD+JW+Nw+weARs7Ye6ZKZS9DR52s3B1bRmlx5FeZ5qioYBfzJpRERLEafjxU9
+ FHLUEUz/JEHu+HcHhtBvGoCvOXVkxgJditdbymnXHEuUQrswxaL9utPXOoHqfCAZqLcHpHN
+ s8xH1Ah8wV2sswdvtG8Qg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pdel6vNP1mA=:lZgvkh+cmAQuHpCDUhmiOc
+ Ls7n8sJuRHw1mPWp38vMQFT9MTtbXgss5ujytTFmju1b8uJuH1Ny6FrsvMSVIvyGMS6vkbe+a
+ 9YifF91xGHQWsFR9gyDbH4JHwulAtlkb0uroPzLyHHoss7fkqrMo566cosLJLYUjKVL8Dtpkx
+ JLBLdg8xvM//RpzzIkQdv4PsPbc8F1C1nVtusbf2avMaLvRyLlCg1UGWr0FKL8APqAZU5MAcM
+ OYfpmYcOfTUAA40DPFyG++vfmZailhjxiJ+bhv4KSPZ15PzB+vVNp0jW6buu8opESzl1yUq5g
+ jqxoGuf3uLRnkxc7fePaJnrC/pHia3HRrw6j8VpFsB1hKERVONsBsZqmF4fM/LnbeETkM3xW4
+ 19aI0Ymrsz92X7XwrpXq+0DaZDBSISnhg/ki1s/gpYeJLzlyOaYV9Gi5pcA5MqVZjKukw7jwS
+ +ZHmFzpHuCwyUkuBIvjxN20gRm/lyRN14vI3sHGVCw9TGTfDP0jUoOggWp1nYPrh7bImLugDN
+ ljh7ix+FC1huXZB7lG8l0WFe+jCNfbxcDdgzDYPUN+5rwxpUyPnH+nS44AQbCdGWrGD4cMWpm
+ i6u18+itSHijJDKZMncHVThgeXG31UDlan//quwlYJ5BMh1o3F7Z/IY+twst0s3uTe7/vz/V0
+ zXh9Pm/ck5nGgymfsaiYLKTjLAZ6UXwz+sf6gANkhdm5Uu3kCS4qNykOrKbQvHnFtjSmZpVKS
+ X4j87XPk2BUv8AaC6HgMPpTvDM51xLIWyYR9hbno3Qy2fK59P8XFMpY3bMA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 1:03 PM Sekhar Nori <nsekhar@ti.com> wrote:
->
-> On 25/03/19 6:38 PM, Arnd Bergmann wrote:
-> > On Mon, Mar 18, 2019 at 1:29 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >>
-> >> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>
-> >> Add modifications necessary to make davinci part of the ARM v5
-> >> multiplatform build.
-> >>
-> >> Move the arch-specific configuration out of arch/arm/Kconfig and
-> >> into mach-davinci/Kconfig. Remove the sub-menu for DaVinci
-> >> implementations (they'll be visible directly under the system type.
-> >> Select all necessary options not already selected by ARCH_MULTI_V5.
-> >> Update davinci_all_defconfig. Explicitly include the mach-specific
-> >> headers in mach-davinci/Makefile.
-> >>
-> >> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > I like this a lot, it gives me some hope that we can eventually
-> > do the same for the remaining ARMv5 platforms that are
-> > not multiplatform yet (s3c24xx, ks8695, w90x900, lpc32xx,
-> > omap1, ep93xx, and maybe even the xscale based ones).
-> >
-> > I have done a lot of randconfig testing with this patch appled now
-> > and not found any issues, great work!
->
-> Thanks Arnd. Will take this as your Acked-by:
->
-> The timer conversion patches are pending review/rework. Will queue once
-> those are cleared.
+On 11.04.19 15:30, Stefan Wahren wrote:
+> This adds RPM support to the pwm-fan driver in order to use with
+> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
+> output signal, which generate a defined number of pulses per revolution.
 
-Unfortunately, after doing some more randconfig testing, I ended up with
-three build issues:
-
-1. vpbe:
-drivers/media/platform/davinci/vpbe_osd.c:29:10: fatal error:
-'mach/cputype.h' file not found
-#include <mach/cputype.h>
-         ^~~~~~~~~~~~~~~~
-drivers/media/platform/davinci/vpbe_venc.c:26:10: fatal error:
-'mach/hardware.h' file not found
-#include <mach/hardware.h>
-         ^~~~~~~~~~~~~~~~~
-drivers/media/platform/davinci/vpbe_display.c:31:10: fatal error:
-'mach/cputype.h' file not found
-
-2. staging/vpfe:
-In file included from
-/git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:20:
-drivers/staging/media/davinci_vpfe/dm365_isif.h:24:10: fatal error:
-'mach/mux.h' file not found
-
-3.
-    davinci: fix sleep.S build error on ARMv4
-
-    When building a multiplatform kernel that includes armv4 support,
-    the default target CPU does not support the blx instruction,
-    which leads to a build failure:
-
-    arch/arm/mach-davinci/sleep.S: Assembler messages:
-    arch/arm/mach-davinci/sleep.S:56: Error: selected processor does
-not support `blx ip' in ARM mode
-
-    Add a .arch statement in the sources to make this file build.
-
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
-index cd350dee4df3..efcd400b2abb 100644
---- a/arch/arm/mach-davinci/sleep.S
-+++ b/arch/arm/mach-davinci/sleep.S
-@@ -37,6 +37,7 @@
- #define DEEPSLEEP_SLEEPENABLE_BIT      BIT(31)
-
-        .text
-+       .arch   armv5te
- /*
-  * Move DaVinci into deep sleep state
-  *
+Wouldn't it be better to have a CONFIG_* flag for keeping the kernel
+image size smaller when this feature isn't needed ?
 
 
-      Arnd
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
