@@ -2,168 +2,93 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B3C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8422FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187DC2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5827E2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfDLNRf (ORCPT
+        id S1726826AbfDLNUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:17:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:60828 "EHLO foss.arm.com"
+        Fri, 12 Apr 2019 09:20:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38303 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbfDLNRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:17:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C902015AD;
-        Fri, 12 Apr 2019 06:17:33 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204E33F68F;
-        Fri, 12 Apr 2019 06:17:29 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 14:17:27 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
- BARRIER EFFECTS" section
-Message-ID: <20190412131727.GB29218@fuggles.cambridge.arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
- <20190405135936.7266-2-will.deacon@arm.com>
- <080d1ec73e3e29d6ffeeeb50b39b613da28afb37.camel@kernel.crashing.org>
- <CAHk-=wgLLOmocrOw2uH9QxsV=SK236gv0Df8SWXGS8c8LAiyCA@mail.gmail.com>
- <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
+        id S1726738AbfDLNUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:20:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 06:20:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,341,1549958400"; 
+   d="scan'208";a="148861152"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Apr 2019 06:20:03 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hEw66-0006ON-5C; Fri, 12 Apr 2019 16:20:02 +0300
+Date:   Fri, 12 Apr 2019 16:20:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Wang Hai <wanghai26@huawei.com>, davem@davemloft.net,
+        idosch@mellanox.com, alexander.h.duyck@intel.com,
+        tyhicks@canonical.com, f.fainelli@gmail.com,
+        viro@zeniv.linux.org.uk, amritha.nambiar@intel.com,
+        joe@perches.com, dmitry.torokhov@gmail.com,
+        stephen@networkplumber.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net-sysfs: Fix memory leak in netdev_register_kobject
+Message-ID: <20190412132002.GU9224@smile.fi.intel.com>
+References: <20190412203634.30392-1-wanghai26@huawei.com>
+ <20190412203634.30392-3-wanghai26@huawei.com>
+ <855b85ea-5af9-9acd-1dbc-17b73703311c@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <855b85ea-5af9-9acd-1dbc-17b73703311c@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:07:09PM +1000, Benjamin Herrenschmidt wrote:
-> On Thu, 2019-04-11 at 15:34 -0700, Linus Torvalds wrote:
-> > On Thu, Apr 11, 2019 at 3:13 PM Benjamin Herrenschmidt
-> > <benh@kernel.crashing.org> wrote:
-> > > 
-> > > Minor nit... I would have said "All readX() and writeX() accesses
-> > > _from
-> > > the same CPU_ to the same peripheral... and then s/the CPU/this
-> > > CPU.
+On Fri, Apr 12, 2019 at 06:03:27AM -0700, Eric Dumazet wrote:
+> On 04/12/2019 01:36 PM, Wang Hai wrote:
+> > When registering struct net_device, it will call
+> >         register_netdevice ->
+> >                 netdev_register_kobject ->
+> >                         device_initialize(dev);
+> >                         dev_set_name(dev, "%s", ndev->name)
+> >                         device_add(dev)
+> >                         register_queue_kobjects(ndev)
 > > 
-> > Maybe talk about "same thread" rather than "same cpu", with the
-> > understanding that scheduling/preemption has to include the
-> > appropriate cross-CPU IO barrier?
+> > In netdev_register_kobject(), if device_add(dev) or
+> > register_queue_kobjects(ndev) failed. Register_netdevice()
+> > will return error, causing netdev_freemem(ndev) to be
+> > called to free net_device, however put_device(&dev->dev)->..->
+> > kobject_cleanup() won't be called, resulting in a memory leak
+> > which is alloced by dev_set_name()
+> > 
+> >
 > 
-> Works for me, but why not spell all this out in the document ? We know,
-> but others might not.
+> 
+> Having two patches with exact same title is rather confusing for bug trackers.
+> 
+> Instead of revert + another_patch, why not just send a cumulative fix ?
 
-Ok, how about the diff below on top of:
+The second patch is a reincarnation of the first version of the fix which has
+been discussed as not a correct approach. But revert should be applied sooner
+as the original commit brought a regression.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/mmiowb
 
-?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I do plan to investigate ioremap_wc() and friends in the future, but it's
-been painful enough just dealing with the common case! I'll almost certainly
-need your help with that too.
 
-Will
-
---->8
-
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index 1660dde75e14..8ce298e09d54 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -2524,26 +2524,30 @@ guarantees:
- 
- 	1. All readX() and writeX() accesses to the same peripheral are ordered
- 	   with respect to each other. This ensures that MMIO register writes by
--	   the CPU to a particular device will arrive in program order.
--
--	2. A writeX() by the CPU to the peripheral will first wait for the
--	   completion of all prior CPU writes to memory. This ensures that
--	   writes by the CPU to an outbound DMA buffer allocated by
--	   dma_alloc_coherent() will be visible to a DMA engine when the CPU
--	   writes to its MMIO control register to trigger the transfer.
--
--	3. A readX() by the CPU from the peripheral will complete before any
--	   subsequent CPU reads from memory can begin. This ensures that reads
--	   by the CPU from an incoming DMA buffer allocated by
--	   dma_alloc_coherent() will not see stale data after reading from the
--	   DMA engine's MMIO status register to establish that the DMA transfer
--	   has completed.
--
--	4. A readX() by the CPU from the peripheral will complete before any
--	   subsequent delay() loop can begin execution. This ensures that two
--	   MMIO register writes by the CPU to a peripheral will arrive at least
--	   1us apart if the first write is immediately read back with readX()
--	   and udelay(1) is called prior to the second writeX():
-+	   the same CPU thread to a particular device will arrive in program
-+	   order.
-+
-+	2. A writeX() by a CPU thread to the peripheral will first wait for the
-+	   completion of all prior writes to memory either issued by the thread
-+	   or issued while holding a spinlock that was subsequently taken by the
-+	   thread. This ensures that writes by the CPU to an outbound DMA
-+	   buffer allocated by dma_alloc_coherent() will be visible to a DMA
-+	   engine when the CPU writes to its MMIO control register to trigger
-+	   the transfer.
-+
-+	3. A readX() by a CPU thread from the peripheral will complete before
-+	   any subsequent reads from memory by the same thread can begin. This
-+	   ensures that reads by the CPU from an incoming DMA buffer allocated
-+	   by dma_alloc_coherent() will not see stale data after reading from
-+	   the DMA engine's MMIO status register to establish that the DMA
-+	   transfer has completed.
-+
-+	4. A readX() by a CPU thread from the peripheral will complete before
-+	   any subsequent delay() loop can begin execution on the same thread.
-+	   This ensures that two MMIO register writes by the CPU to a peripheral
-+	   will arrive at least 1us apart if the first write is immediately read
-+	   back with readX() and udelay(1) is called prior to the second
-+	   writeX():
- 
- 		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
- 		readl(DEVICE_REGISTER_0);
-@@ -2600,8 +2604,10 @@ guarantees:
- 	These will perform appropriately for the type of access they're actually
- 	doing, be it inX()/outX() or readX()/writeX().
- 
--All of these accessors assume that the underlying peripheral is little-endian,
--and will therefore perform byte-swapping operations on big-endian architectures.
-+With the exception of the string accessors (insX(), outsX(), readsX() and
-+writesX()), all of the above assume that the underlying peripheral is
-+little-endian and will therefore perform byte-swapping operations on big-endian
-+architectures.
- 
- 
- ========================================
