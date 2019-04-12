@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152C6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59304C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5F1205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2291F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J5QfN7YQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fCT40XDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfDLJ3V (ORCPT
+        id S1727976AbfDLJ3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:29:21 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53092 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfDLJ3V (ORCPT
+        Fri, 12 Apr 2019 05:29:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40428 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfDLJ3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:29:21 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3C9Sluj118521;
-        Fri, 12 Apr 2019 04:28:47 -0500
+        Fri, 12 Apr 2019 05:29:22 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3C9StTq028565;
+        Fri, 12 Apr 2019 04:28:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555061327;
-        bh=izeTqWIoqRmLAhuZPszVJkQGtEgRoCAJbes+YNYZ65I=;
+        s=ti-com-17Q1; t=1555061335;
+        bh=J2zT+LR12Ogn3aduBhqlwatG9kR5GFN1+eqq1CoI5Co=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=J5QfN7YQY+EArnsDVdJwuT3vMLjTqUCCAP0PJwhH1I2dPB2RiFTE/+mwg7wQ0gzX8
-         UwOLEvQ/yzm5eVNUtUXiEJjsIth+IPogcjB4rfIQEQNogK5kwfexDdV5Ig8X+rv2F0
-         gq+g2FQW7jOn6s2XzkhrETbDLdqYbkS07C0nPKoc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3C9SlAH019967
+        b=fCT40XDJAESeT+vi8/WiHOWIoLvc4UIIS6Fa8BMCgwWTw24UnQUehZgSg8R+HgT3B
+         JBmImljxi2jsA41YwkXhN/ctynQTwm5vUgAsE14zkL6oda0mt1bPBjge8OEuxnuuP6
+         QeQt29YW05cI6ZuhEoBhyUKQOp9IkCbYjwpfaHSU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3C9StM2106610
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Apr 2019 04:28:47 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 12 Apr 2019 04:28:55 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Apr 2019 04:28:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 04:28:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Apr 2019 04:28:47 -0500
+ Frontend Transport; Fri, 12 Apr 2019 04:28:55 -0500
 Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3C9SWmE093202;
-        Fri, 12 Apr 2019 04:28:41 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3C9SWmF093202;
+        Fri, 12 Apr 2019 04:28:48 -0500
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Vignesh Raghavendra <vigneshr@ti.com>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -65,9 +65,9 @@ CC:     <linux-mtd@lists.infradead.org>,
         Mason Yang <masonccyang@mxic.com.tw>,
         <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/5] mtd: cfi_cmdset_0002: Add support for polling status register
-Date:   Fri, 12 Apr 2019 14:59:19 +0530
-Message-ID: <20190412092923.24919-2-vigneshr@ti.com>
+Subject: [PATCH v3 2/5] dt-bindings: mtd: Add binding documentation for HyperFlash
+Date:   Fri, 12 Apr 2019 14:59:20 +0530
+Message-ID: <20190412092923.24919-3-vigneshr@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190412092923.24919-1-vigneshr@ti.com>
 References: <20190412092923.24919-1-vigneshr@ti.com>
@@ -80,209 +80,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HyperFlash devices are compliant with CFI AMD/Fujitsu Extended Command
-Set(0x0002) for flash operations, therefore drivers/mtd/chips/cfi_cmdset_0002.c
-can be used as is. But these devices do not support DQ polling method of
-determining chip ready/good status. These flashes provide Status
-Register whose bits can be polled to know status of flash operation.
-
-Cypress HyperFlash datasheet here[1], talks about CFI Amd/Fujitsu
-Extended Query version 1.5. Bit 0 of "Software Features supported" field
-of CFI Primary Vendor-Specific Extended Query table indicates
-presence/absence of status register and Bit 1 indicates whether or not
-DQ polling is supported. Using these bits, its possible to determine
-whether flash supports DQ polling or need to use Status Register.
-
-Add support for polling Status Register to know device ready/status of
-erase/write operations when DQ polling is not supported.
-Print error messages on erase/program failure by looking at related
-Status Register bits.
-
-[1] https://www.cypress.com/file/213346/download
+Add DT binding documentation for HyperFlash devices.
 
 Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c | 90 +++++++++++++++++++++++++++++
- include/linux/mtd/cfi.h             |  5 ++
- 2 files changed, 95 insertions(+)
+ .../devicetree/bindings/mtd/cypress,hyperflash.txt          | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
 
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index 7b7286b4d81e..55c4d81098d5 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -49,6 +49,16 @@
- #define SST49LF008A		0x005a
- #define AT49BV6416		0x00d6
- 
-+/*
-+ * Status Register bit description. Used by flash devices that don't
-+ * support DQ polling (Eg.: HyperFlash)
-+ */
-+#define CFI_SR_DRB		BIT(7)
-+#define CFI_SR_ESB		BIT(5)
-+#define CFI_SR_PSB		BIT(4)
-+#define CFI_SR_WBASB		BIT(3)
-+#define CFI_SR_SLSB		BIT(1)
+diff --git a/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt b/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+new file mode 100644
+index 000000000000..7fb7d82bb042
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+@@ -0,0 +1,6 @@
++Bindings for HyperFlash NOR flash chips compliant with Cypress HyperBus
++specification and supports Cypress CFI specification 1.5 command set.
 +
- static int cfi_amdstd_read (struct mtd_info *, loff_t, size_t, size_t *, u_char *);
- static int cfi_amdstd_write_words(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
- static int cfi_amdstd_write_buffers(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
-@@ -97,6 +107,48 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
- 	.module		= THIS_MODULE
- };
- 
-+/*
-+ * Use status register to poll for Erase/write completion when DQ is not
-+ * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
-+ * CFI Primary Vendor-Specific Extended Query table 1.5
-+ */
-+static int cfi_use_status_reg(struct cfi_private *cfi)
-+{
-+	struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
-+
-+	return (extp->MinorVersion >= '5') &&
-+		(extp->SoftwareFeatures & 0x3) == 0x1;
-+}
-+
-+static void cfi_check_err_status(struct map_info *map, unsigned long adr)
-+{
-+	struct cfi_private *cfi = map->fldrv_priv;
-+	map_word status;
-+
-+	if (!cfi_use_status_reg(cfi))
-+		return;
-+
-+	cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+			 cfi->device_type, NULL);
-+	status = map_read(map, adr);
-+
-+	if (map_word_bitsset(map, status, CMD(0x3a))) {
-+		unsigned long chipstatus = MERGESTATUS(status);
-+
-+		if (chipstatus & CFI_SR_ESB)
-+			pr_err("%s erase operation failed, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_PSB)
-+			pr_err("%s program operation failed, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_WBASB)
-+			pr_err("%s buffer program command aborted, status %lx\n",
-+			       map->name, chipstatus);
-+		if (chipstatus & CFI_SR_SLSB)
-+			pr_err("%s sector write protected, status %lx\n",
-+			       map->name, chipstatus);
-+	}
-+}
- 
- /* #define DEBUG_CFI_FEATURES */
- 
-@@ -744,8 +796,22 @@ static struct mtd_info *cfi_amdstd_setup(struct mtd_info *mtd)
-  */
- static int __xipram chip_ready(struct map_info *map, unsigned long addr)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word d, t;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		map_word ready = CMD(CFI_SR_DRB);
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		d = map_read(map, addr);
-+
-+		return map_word_andequal(map, d, ready, ready);
-+	}
-+
- 	d = map_read(map, addr);
- 	t = map_read(map, addr);
- 
-@@ -769,8 +835,27 @@ static int __xipram chip_ready(struct map_info *map, unsigned long addr)
-  */
- static int __xipram chip_good(struct map_info *map, unsigned long addr, map_word expected)
- {
-+	struct cfi_private *cfi = map->fldrv_priv;
- 	map_word oldd, curd;
- 
-+	if (cfi_use_status_reg(cfi)) {
-+		map_word ready = CMD(CFI_SR_DRB);
-+		map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
-+		/*
-+		 * For chips that support status register, check device
-+		 * ready bit and Erase/Program status bit to know if
-+		 * operation succeeded.
-+		 */
-+		cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-+				 cfi->device_type, NULL);
-+		curd = map_read(map, addr);
-+
-+		if (map_word_andequal(map, curd, ready, ready))
-+			return !map_word_bitsset(map, curd, err);
-+
-+		return 0;
-+	}
-+
- 	oldd = map_read(map, addr);
- 	curd = map_read(map, addr);
- 
-@@ -1643,6 +1728,7 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip,
- 	/* Did we succeed? */
- 	if (!chip_good(map, adr, datum)) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -1900,6 +1986,7 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
- 	 * See e.g.
- 	 * http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
- 	 */
-+	cfi_check_err_status(map, adr);
- 	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
- 			 cfi->device_type, NULL);
- 	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
-@@ -2106,6 +2193,7 @@ static int do_panic_write_oneword(struct map_info *map, struct flchip *chip,
- 
- 	if (!chip_good(map, adr, datum)) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2315,6 +2403,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-@@ -2411,6 +2500,7 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
- 	/* Did we succeed? */
- 	if (ret) {
- 		/* reset on all failures. */
-+		cfi_check_err_status(map, adr);
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
- 
-diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
-index cbf77168658c..92ac82ac2329 100644
---- a/include/linux/mtd/cfi.h
-+++ b/include/linux/mtd/cfi.h
-@@ -233,6 +233,11 @@ struct cfi_pri_amdstd {
- 	uint8_t  VppMin;
- 	uint8_t  VppMax;
- 	uint8_t  TopBottom;
-+	/* Below field are added from version 1.5 */
-+	uint8_t  ProgramSuspend;
-+	uint8_t  UnlockBypass;
-+	uint8_t  SecureSiliconSector;
-+	uint8_t  SoftwareFeatures;
- } __packed;
- 
- /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
++Required properties:
++- compatible : "cypress,hyperflash", "cfi-flash" for HyperFlash NOR chips
++- reg : Address where flash's memory mapped space
 -- 
 2.21.0
 
