@@ -2,151 +2,167 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6B0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68469C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75F62075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9EB2073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfDLQmC (ORCPT
+        id S1726983AbfDLQnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:42:02 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44881 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLQmC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:42:02 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3CGeT201753340
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 12 Apr 2019 09:40:29 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3CGeSWv1753337;
-        Fri, 12 Apr 2019 09:40:28 -0700
-Date:   Fri, 12 Apr 2019 09:40:28 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Mao Han <tipbot@zytor.com>
-Message-ID: <tip-21e6dfe04861c2c1b529f2759850bc62a80ca050@git.kernel.org>
-Cc:     acme@redhat.com, adrian.hunter@intel.com, peterz@infradead.org,
-        namhyung@kernel.org, tglx@linutronix.de, han_mao@c-sky.com,
-        alexander.shishkin@linux.intel.com, hpa@zytor.com,
-        eranian@google.com, mingo@kernel.org, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org
-Reply-To: jolsa@redhat.com, linux-kernel@vger.kernel.org,
-          alexander.shishkin@linux.intel.com, hpa@zytor.com,
-          mingo@kernel.org, eranian@google.com, namhyung@kernel.org,
-          tglx@linutronix.de, han_mao@c-sky.com, acme@redhat.com,
-          peterz@infradead.org, adrian.hunter@intel.com
-In-Reply-To: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
-References: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf evsel: Use hweight64() instead of
- hweight_long(attr.sample_regs_user)
-Git-Commit-ID: 21e6dfe04861c2c1b529f2759850bc62a80ca050
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 12 Apr 2019 12:43:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbfDLQnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 12:43:06 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 243E53087928;
+        Fri, 12 Apr 2019 16:43:06 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-71.phx2.redhat.com [10.3.117.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 82CDB5D6A9;
+        Fri, 12 Apr 2019 16:43:03 +0000 (UTC)
+Subject: Re: [locking/rwsem] 1b94536f2d: stress-ng.bad-altstack.ops_per_sec
+ -32.7% regression
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, tipbuild@zytor.com, lkp@01.org
+References: <20190412142005.GB24200@shao2-debian>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <40dc40d5-58ff-e5b9-4e33-b0ce08ca0521@redhat.com>
+Date:   Fri, 12 Apr 2019 12:43:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190412142005.GB24200@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 12 Apr 2019 16:43:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  21e6dfe04861c2c1b529f2759850bc62a80ca050
-Gitweb:     https://git.kernel.org/tip/21e6dfe04861c2c1b529f2759850bc62a80ca050
-Author:     Mao Han <han_mao@c-sky.com>
-AuthorDate: Wed, 10 Apr 2019 16:16:43 +0800
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 10 Apr 2019 10:25:28 -0300
+On 04/12/2019 10:20 AM, kernel test robot wrote:
+> Greeting,
+>
+> FYI, we noticed a -32.7% regression of stress-ng.bad-altstack.ops_per_sec due to commit:
+>
+>
+> commit: 1b94536f2debc98260fb17b44f7f262e3336f7e0 ("locking/rwsem: Implement lock handoff to prevent lock starvation")
+> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git WIP.locking/core
+>
+> in testcase: stress-ng
+> on test machine: 272 threads Intel(R) Xeon Phi(TM) CPU 7255 @ 1.10GHz with 112G memory
+> with following parameters:
+>
+> 	nr_threads: 100%
+> 	disk: 1HDD
+> 	testtime: 5s
+> 	class: memory
+> 	cpufreq_governor: performance
+>
+>
+>
+>
+> Details are as below:
+> -------------------------------------------------------------------------------------------------->
+>
+>
+> To reproduce:
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp install job.yaml  # job file is attached in this email
+>         bin/lkp run     job.yaml
+>
+> =========================================================================================
+> class/compiler/cpufreq_governor/disk/kconfig/nr_threads/rootfs/tbox_group/testcase/testtime:
+>   memory/gcc-7/performance/1HDD/x86_64-rhel-7.6/100%/debian-x86_64-2018-04-03.cgz/lkp-knm02/stress-ng/5s
+>
+> commit: 
+>   1bcfe0e4cb ("locking/rwsem: Improve scalability via a new locking scheme")
+>   1b94536f2d ("locking/rwsem: Implement lock handoff to prevent lock starvation")
+>
+> 1bcfe0e4cb0efdba 1b94536f2debc98260fb17b44f7 
+> ---------------- --------------------------- 
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |    
+>           1:4          -25%            :4     dmesg.WARNING:at_ip__mutex_lock/0x
+>            :4           25%           1:4     kmsg.DHCP/BOOTP:Reply_not_for_us_on_eth#,op[#]xid[#]
+>          %stddev     %change         %stddev
+>              \          |                \  
+>      52766 ± 19%     -32.8%      35434 ±  3%  stress-ng.bad-altstack.ops
+>      10521 ± 19%     -32.7%       7081 ±  3%  stress-ng.bad-altstack.ops_per_sec
+>      71472 ± 16%     -37.1%      44986        stress-ng.stackmmap.ops
+>      14281 ± 16%     -37.0%       9001        stress-ng.stackmmap.ops_per_sec
 
-perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
+The lock handoff patch does have the side effect of reducing throughput
+for better fairness when there is extreme contention on a rwsem. I
+believe later patches that enable reader optimistic spinning should
+bring back some of the lost performance.
 
-On 32-bits platform with more than 32 registers, the 64 bits mask is
-truncate to the lower 32 bits and the return value of hweight_long will
-always smaller than 32. When kernel outputs more than 32 registers, but
-the user perf program only counts 32, there will be a data mismatch
-result to overflow check fail.
-
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Fixes: 6a21c0b5c2ab ("perf tools: Add core support for sampling intr machine state regs")
-Fixes: d03f2170546d ("perf tools: Expand perf_event__synthesize_sample()")
-Fixes: 0f6a30150ca2 ("perf tools: Support user regs and stack in sample parsing")
-Link: http://lkml.kernel.org/r/29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/evsel.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 66d066f18b5b..966360844fff 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2368,7 +2368,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 		if (data->user_regs.abi) {
- 			u64 mask = evsel->attr.sample_regs_user;
- 
--			sz = hweight_long(mask) * sizeof(u64);
-+			sz = hweight64(mask) * sizeof(u64);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->user_regs.mask = mask;
- 			data->user_regs.regs = (u64 *)array;
-@@ -2424,7 +2424,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
- 		if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
- 			u64 mask = evsel->attr.sample_regs_intr;
- 
--			sz = hweight_long(mask) * sizeof(u64);
-+			sz = hweight64(mask) * sizeof(u64);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->intr_regs.mask = mask;
- 			data->intr_regs.regs = (u64 *)array;
-@@ -2552,7 +2552,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_REGS_USER) {
- 		if (sample->user_regs.abi) {
- 			result += sizeof(u64);
--			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
-+			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
- 			result += sz;
- 		} else {
- 			result += sizeof(u64);
-@@ -2580,7 +2580,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_REGS_INTR) {
- 		if (sample->intr_regs.abi) {
- 			result += sizeof(u64);
--			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
-+			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
- 			result += sz;
- 		} else {
- 			result += sizeof(u64);
-@@ -2710,7 +2710,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
- 	if (type & PERF_SAMPLE_REGS_USER) {
- 		if (sample->user_regs.abi) {
- 			*array++ = sample->user_regs.abi;
--			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
-+			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
- 			memcpy(array, sample->user_regs.regs, sz);
- 			array = (void *)array + sz;
- 		} else {
-@@ -2746,7 +2746,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
- 	if (type & PERF_SAMPLE_REGS_INTR) {
- 		if (sample->intr_regs.abi) {
- 			*array++ = sample->intr_regs.abi;
--			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
-+			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
- 			memcpy(array, sample->intr_regs.regs, sz);
- 			array = (void *)array + sz;
- 		} else {
+Cheers,
+Longman
