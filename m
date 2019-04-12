@@ -2,144 +2,114 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB35C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2291AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D737320869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE49E20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:31:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mathtm.de header.i=@mathtm.de header.b="knYD2GGn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ZV0xfoo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfDLFaY (ORCPT
+        id S1726777AbfDLFbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 01:30:24 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:29748 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfDLFaY (ORCPT
+        Fri, 12 Apr 2019 01:31:50 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:34836 "EHLO
+        h2641619.stratoserver.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfDLFbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 01:30:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1555047021;
-        s=strato-dkim-0002; d=mathtm.de;
-        h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=XfSW6xM0DEbY9q2haAN5VpOI/HUfZf9Wu++OT5UX1rk=;
-        b=knYD2GGnb/4+ciEdpgDKYwWKKYEvCGeXAqiWB66pVxAWTogJMgF+wrVvV1//ElwVxx
-        HciQ9EQJ/W02vFOAjSSC+LncIDvXXvbcEGU76KbGgcJwyQOwXBmOkS8b9CbNyGxlCy3+
-        fNAC13l+QbDR5SHh62XjbHH3rKw54j0QNIjNBomH5aQUVCf8LfOixdbJsQ8nkvASRLkV
-        5wL3+n6UBcD0Hd6WlVNsZ9Ck3LDSNk57Bik9NyXBtsFqhThihNgscn/BxhJcu9jqOXcA
-        gXj6afjK4vAJCG/5WMqVrKOPu7DgsTR4kGzT30dbr8MK6zxucEn++q1J+/trSZGNdk+w
-        vIqA==
-X-RZG-AUTH: ":OGQLeEG7W/KAXU7xLV2hdHgxFRdqbfEqQfblTbv8grSYpDW1Ean4C8uHphsoybv57wto"
-X-RZG-CLASS-ID: mo00
-Received: from [10.9.21.31]
-        by smtp.strato.de (RZmta 44.18 AUTH)
-        with ESMTPSA id 30ab22v3C5UGGUi
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Fri, 12 Apr 2019 07:30:16 +0200 (CEST)
-Subject: Re: disabling secondary CPU hangs / system fails to suspend with
- kernel 4.19+
-From:   =?UTF-8?Q?Thomas_M=c3=bcller?= <thomas@mathtm.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <5c48095e-028a-404f-aaa1-964f83c83817@mathtm.de>
- <20190315090950.GT5996@hirez.programming.kicks-ass.net>
- <cbaafd35-a17d-8331-4cef-281a562b91b5@mathtm.de>
- <20190315121541.GD6058@hirez.programming.kicks-ass.net>
- <2b1c85d3-d94b-1593-e30a-a32d97043579@mathtm.de>
- <20190318115728.GP6058@hirez.programming.kicks-ass.net>
- <ab509a07-d597-2925-b39a-f1b4e86e5850@mathtm.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thomas@mathtm.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <9a345d3c-c17c-95b2-dcbe-af72dee42a1a@mathtm.de>
-Date:   Fri, 12 Apr 2019 07:30:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 01:31:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=R91wb3xUa5htKq9djRgpWzXjsd8bpzhoUX30u1hy17U=; b=ZV0xfoo2hHvNcGgdNCQ0vi04e
+        iwq3jAFeoHOby8JpoijZjAjM2GWCgQSjK+/2VePXHSwgTRN9ynlFSWILK+vwRDxwxSWJsApQnBHsd
+        oPLui2fxEGB8oO1V4irSvkg+tO0En+BwBOeoCG4PNahPc4dfaw8yVouBsZPQL26bQ4/Mg=;
+Received: from [77.247.85.102] (helo=localhost)
+        by h2641619.stratoserver.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hEomq-00035v-V4; Fri, 12 Apr 2019 07:31:41 +0200
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hEomm-0003aD-Fr; Fri, 12 Apr 2019 07:31:36 +0200
+Date:   Fri, 12 Apr 2019 07:31:24 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero
+ board
+Message-ID: <20190412073124.6f04e105@kemnade.info>
+In-Reply-To: <20190408081404.554zdbcotnidljsl@flea>
+References: <20190301185212.26837-1-andreas@kemnade.info>
+        <20190407222321.11ec297d@kemnade.info>
+        <20190408081404.554zdbcotnidljsl@flea>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <ab509a07-d597-2925-b39a-f1b4e86e5850@mathtm.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Wej8p2Dft83Sj2Tb9NyHpdn"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
 
-good news: starting with 5.0.6 suspend is working again.
+On Mon, 8 Apr 2019 10:14:04 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-Best regards
-Thomas
+> On Sun, Apr 07, 2019 at 10:23:21PM +0200, Andreas Kemnade wrote:
+> > ping
+> >
+> > On Fri,  1 Mar 2019 19:52:12 +0100
+> > Andreas Kemnade <andreas@kemnade.info> wrote:
+> > =20
+> > > The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+> > > with broadcom internals attached to UART1 and some gpios.
+> > > This addition is in line with similar boards
+> > >
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
+>=20
+> I never received that patch, who did you send it to?
+>=20
+Seems that I only have sent you the first version of that patch. Somehow
+I must have left you out during copy and paste of adresses.
 
-Am 29.03.19 um 10:22 schrieb Thomas Müller:
-> Hi,
-> 
-> Am 18.03.19 um 12:57 schrieb Peter Zijlstra:
->> On Fri, Mar 15, 2019 at 09:21:02PM +0100, Thomas Müller wrote:
->>> I've just re-tested with runlevel 3.
->>> Not a real VGA console, but at least no Wayland or Gnome to interfere...
->>>
->>> `echo 0 > /sys/...` just blocks and no message whatsoever is visible in dmesg.
->>>
->>> I've executed `echo 0 > ...` in the background to keep my console functional and I can e.g. echo
->>> something to /dev/kmsg and it shows up, so reading/updating the log buffer appears to be working
->>> just fine.
->>
->> Damn.. Thanks for trying. I'll see if I can come up with something, but
->> I'm out of idea for now :/
->>
-> Any new ideas so far?
-> 
-> For reference:
-> I've just tested a vanilla 5.0.5 with localmodconfig (attached)... same behavior :(
-> 
-> 
-> Best regards
-> Thomas
-> 
+Regards,
+Andreas
+
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAlywIq0ACgkQl4jFM1s/
+ye+X4Q//UYhkarSSxswTQLL7gML8IvH4+OF+6Gbi3CsW86AZ7vq9FElGvcWpXusC
+rQQQGt6oAfA1Nyc1JGTZB3tNoBjAQJ2xqFtLNVbixUNIs+dOeRrBnj3hAmIae0ko
+gqBkKdwGCwvrLk2u4F1B06IES34cV+PO4jZCSrifUIwmu5CqqXo6Wt0kdHMpeViG
+7cIwSF8K3+J0smj0muJgGtHnoPzRm2oQjXImcp4Akb3edVXkAJSVM2Z4cRbJvbzU
+NnBMG9vpB3MXTZp6jwd//vDl4eyIAsIn+RxcAvlpvXiGtTAWqwpSspFrbyw35LcS
+8UTU67ApH13KKs+0+5uSzAd2Q3iBWKUHaGnvxwSYJGu0VcpKLafzbx/UzRGkqWtU
+j/c0tjujvL4DXUUg1LdWSf9w4o1meIaTBkRwR6HYLnWcskvsfDSlqTdmnFwA36Vn
+/NVPSiVFOu0+8e+S/HJhZl2YLEcR6UDCqbh9BBSNfRcOd4awEbGFQcO4114H6e9v
+iGxrJrk2JQuGg0nBn8mVoUlhJNBuYm/Ns+agQso2XrxmVCdPSo7llnzaNPQdz4h6
+2cMNV+T1YynsxAqUjyguWPNxukIiWD79aurbTE27nT3G8BJw4heu7+8W2THVCCge
+SzRidYL5fjKy2hZd8hB8F84u2f//d9C4p2vlREZwJ2kfxzTpFAs=
+=gLI5
+-----END PGP SIGNATURE-----
+
+--Sig_/Wej8p2Dft83Sj2Tb9NyHpdn--
