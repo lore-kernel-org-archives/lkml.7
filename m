@@ -2,188 +2,175 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593D7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D8EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B072084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530B32084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yNspnvg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfDLLa0 (ORCPT
+        id S1727025AbfDLLbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:30:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46520 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbfDLLaZ (ORCPT
+        Fri, 12 Apr 2019 07:31:07 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38538 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLLbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:30:25 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3CBQD73129056
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:30:25 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rtsrhr8gr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:30:24 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 12 Apr 2019 12:30:23 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Apr 2019 12:30:19 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3CBUIS734078942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Apr 2019 11:30:18 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78B7BB2070;
-        Fri, 12 Apr 2019 11:30:18 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E79FB2066;
-        Fri, 12 Apr 2019 11:30:18 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.226.95])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Apr 2019 11:30:18 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id D4D6A16C36C6; Fri, 12 Apr 2019 04:30:18 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 04:30:18 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/4] Allow CPU0 to be nohz full
-Reply-To: paulmck@linux.ibm.com
-References: <20190404120704.18479-1-npiggin@gmail.com>
- <alpine.DEB.2.21.1904041635190.1685@nanos.tec.linutronix.de>
- <1554393113.wbjxx9ccdx.astroid@bobo.none>
- <alpine.DEB.2.21.1904051952160.1802@nanos.tec.linutronix.de>
- <1554800737.v126tflazd.astroid@bobo.none>
- <20190411154239.GA29448@linux.ibm.com>
- <1555037352.52b4w2o4bf.astroid@bobo.none>
+        Fri, 12 Apr 2019 07:31:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3CBUm7j030254;
+        Fri, 12 Apr 2019 06:30:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555068648;
+        bh=Y1rNB6oc6AGCC4SE/0j/FG0THzR6LL5wU9HWi6heXdg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yNspnvg29mP5Uyj/qlWhy2fWNRTDeTBe5w8kGLowHpe6Ncz9nIMyn/91XcnZ0d3qo
+         ffL/JmcE5GkMOu4Z7nMKD6ts/MdoAl0RO98BFSIwL/924IG/L8JWmESZT1JgTyhZJU
+         Py9XBooGN4mPSZGlm4K8jvKjtN8xLD1deabAP1Gc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3CBUm7c124471
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Apr 2019 06:30:48 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
+ Apr 2019 06:30:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 12 Apr 2019 06:30:47 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3CBUdHC005527;
+        Fri, 12 Apr 2019 06:30:41 -0500
+Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to be
+ compiled for ARM64
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-13-kishon@ti.com> <20190411150332.GC6862@red-moon>
+ <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
+ <20190412111156.GE8113@red-moon>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9cb169b1-577a-2345-d4b8-ddef4509f80c@ti.com>
+Date:   Fri, 12 Apr 2019 16:59:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555037352.52b4w2o4bf.astroid@bobo.none>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19041211-0060-0000-0000-0000032C05FB
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010914; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01187982; UDB=6.00622319; IPR=6.00968750;
- MB=3.00026410; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-12 11:30:22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041211-0061-0000-0000-000048ECA284
-Message-Id: <20190412113018.GG14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=637 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904120075
+In-Reply-To: <20190412111156.GE8113@red-moon>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 01:16:01PM +1000, Nicholas Piggin wrote:
-> Paul E. McKenney's on April 12, 2019 1:42 am:
-> > On Tue, Apr 09, 2019 at 07:21:54PM +1000, Nicholas Piggin wrote:
-> >> Thomas Gleixner's on April 6, 2019 3:54 am:
-> >> > On Fri, 5 Apr 2019, Nicholas Piggin wrote:
-> >> >> Thomas Gleixner's on April 5, 2019 12:36 am:
-> >> >> > On Thu, 4 Apr 2019, Nicholas Piggin wrote:
-> >> >> > 
-> >> >> >> I've been looking at ways to fix suspend breakage with CPU0 as a
-> >> >> >> nohz CPU. I started looking at various things like allowing CPU0
-> >> >> >> to take over do_timer again temporarily or allowing nohz full
-> >> >> >> to be stopped at runtime (that is quite a significant change for
-> >> >> >> little real benefit). The problem then was having the housekeeping
-> >> >> >> CPU go offline.
-> >> >> >> 
-> >> >> >> So I decided to try just allowing the freeze to occur on non-zero
-> >> >> >> CPU. This seems to be a lot simpler to get working, but I guess
-> >> >> >> some archs won't be able to deal with this? Would it be okay to
-> >> >> >> make it opt-in per arch?
-> >> >> > 
-> >> >> > It needs to be opt in. x86 will fall on its nose with that.
-> >> >> 
-> >> >> Okay I can add that.
-> >> >> 
-> >> >> > Now the real interesting question is WHY do we need that at all?
-> >> >> 
-> >> >> Why full nohz for CPU0? Basically this is how their job system was
-> >> >> written and used, testing nohz full was a change that came much later 
-> >> >> as an optimisation.
-> >> >> 
-> >> >> I don't think there is a fundamental reason an equivalent system
-> >> >> could not be made that uses a different CPU for housekeeping, but I
-> >> >> was assured the change would be quite difficult for them.
-> >> >> 
-> >> >> If we can support it, it seems nice if you can take a particular
-> >> >> configuration and just apply nohz_full to your application processors
-> >> >> without any other changes.
-> >> > 
-> >> > This wants an explanation in the patches.
-> >> 
-> >> Okay.
-> >> 
-> >> > And patch 4 has in the changelog:
-> >> > 
-> >> >    nohz_full has been successful at significantly reducing jitter for a
-> >> >    large supercomputer customer, but their job control system requires CPU0
-> >> >    to be for housekeeping.
-> >> > 
-> >> > which just makes me dazed and confused :)
-> >> > 
-> >> > Other than some coherent explanation and making it opt in, I don't think
-> >> > there is a fundamental issue with that.
-> >> 
-> >> I will try to make the changelogs less jibberish then :)
-> > 
-> > Maybe this is all taken care of now, but do the various clocks stay
-> > synchronized with wall-clock time if all CPUs are in nohz_full mode?
-> > At one time, at least one CPU needed to keep its scheduler-clock
-> > interrupt going in order to keep things in sync.
+Hi Lorenzo,
+
+On 12/04/19 4:41 PM, Lorenzo Pieralisi wrote:
+> On Fri, Apr 12, 2019 at 02:20:06PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Lorenzo,
+>>
+>> On 11/04/19 8:33 PM, Lorenzo Pieralisi wrote:
+>>> On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
+>>>> hook_fault_code is an ARM32 specific API for hooking into data abort.
+>>>> Since pci-keystone.c will be used for AM65X platforms which is an
+>>>> ARM64 platform,
+>>>
+>>> Hi Kishon,
+>>>
+>>> How is the problem plugged by the fault hook fixed on ARM64 ?
+>>
+>> At least in AM654 platform, I don't see a bus error when PCIe device
+>> is not connected but returns 0xffffffff. So there is no necessary for
+>> hook_fault_code in AM654 platform.
 > 
-> Ah, may not have been clear in the changelog -- the series still 
-> requires at least one CPU present at boot time to be a housekeeper 
-> that keeps things running. So conceptually this doesn't change 
-> anything about runtime behaviour, the main change is the boot-time
-> handoff from CPU0.
+> That can't have much to do with ARM32<->ARM64, it is rather a platform
+> integration issue AFAICS. Russell has a point, this has to be documented
+> I can do it for you but I need additional information.
 
-I did miss that, thank you for the update.
+Right now only ARM32 exports hook_fault_code which was used by K2G (ARM32
+platform) and since AM654 (ARM64 platform) uses the same driver, it'll result
+in compilation error. Also AM654 doesn't require hook_fault_code (or something
+similar) because it doesn't throw bus error on accessing PCIe address space
+when PCI device is not connected).
 
-> > The ppc timebase register might make it possible to do this without any
-> > scheduler-clock interrupts, but figured I should check.  ;-)
+Are you looking for some other information?
+
+Thanks
+Kishon
 > 
-> I dont know all this code too well, but if we really wanted to push 
-> things, I think nohz-full could be more aggressive in shutting down 
-> the tick and possibly even avoiding a housekeeping CPU completely, but 
-> you would have to do that work on user->kernel switch too. Likely the 
-> complexity and overhead is not worthwhile.
-
-There was some RCU functionality that detected when all the
-non-housekeeping CPUs went idle, but it went unused for some years, so
-I reverted it.  This revert commit is at tag sysidle.2017.05.11a in my
--rcu tree.  If it is actually going to be used, I could of course add
-it back.  ;-)
-
-> Other thing is you might be able to avoid the jiffies tick completely
-> and change jiffies to read from timebase register. Lot of interesting
-> things we could try.
-
-Or make userspace use the timebase register to avoid the need for
-in-kernel time adjustments, though the connection to NTP and similar
-would still need to be maintained.  I supposed that the jiffies
-counter could be fixed up on entry to the kernel?
-
-							Thanx, Paul
-
+> Thanks,
+> Lorenzo
+> 
+>> Thanks
+>> Kishon
+>>
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>>
+>>>> allow hook_fault_code to be compiled only for ARM32.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+>>>>  1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+>>>> index dfe54553d832..93296d434f40 100644
+>>>> --- a/drivers/pci/controller/dwc/pci-keystone.c
+>>>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+>>>> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> +#ifdef CONFIG_ARM
+>>>>  /*
+>>>>   * When a PCI device does not exist during config cycles, keystone host gets a
+>>>>   * bus error instead of returning 0xffffffff. This handler always returns 0
+>>>> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
+>>>>  
+>>>>  	return 0;
+>>>>  }
+>>>> +#endif
+>>>>  
+>>>>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
+>>>>  {
+>>>> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+>>>>  	if (ret < 0)
+>>>>  		return ret;
+>>>>  
+>>>> +#ifdef CONFIG_ARM
+>>>>  	/*
+>>>>  	 * PCIe access errors that result into OCP errors are caught by ARM as
+>>>>  	 * "External aborts"
+>>>>  	 */
+>>>>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
+>>>>  			"Asynchronous external abort");
+>>>> +#endif
+>>>>  
+>>>>  	ks_pcie_start_link(pci);
+>>>>  	dw_pcie_wait_for_link(pci);
+>>>> -- 
+>>>> 2.17.1
+>>>>
