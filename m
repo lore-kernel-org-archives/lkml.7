@@ -2,90 +2,73 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143D1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0052CC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11F92084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7502084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfDLKsq (ORCPT
+        id S1727289AbfDLKuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:48:46 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:53505 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726708AbfDLKsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:48:46 -0400
-Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Etjch0Hk1NG8zEtjdhCQ2y; Fri, 12 Apr 2019 12:48:44 +0200
-Subject: Re: [PATCH] Fixed coding style: do not initialise statics to NULL
-To:     Tiago Macedo <tiagohenrique.macedo@gmail.com>,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, lkcamp@lists.libreplanetbr.org,
-        Tiago Macedo <tiagohenrique.macedo@gmai.com>
-References: <20190412024520.26835-1-tiagohenrique.macedo@gmai.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c26613c6-1212-8ccd-e762-c7280509844e@xs4all.nl>
-Date:   Fri, 12 Apr 2019 12:48:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412024520.26835-1-tiagohenrique.macedo@gmai.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIFrXwkTMi4t9No60l1k8PQdFIF6vmKEbv+qm+XaqFQMazI8t4xOiMffSRGFlrYagAY8C+QvFF+X42mHbg7wWFm/sXqW5RS84VWgOAlnAcBMmyNJtKNN
- +fP7vATd77iAwdKtMGbfIFenwLg2NDlUb4NjgKMmVmbrdaEHvQ7MAbqMN/PtnVt5B7B9V4Z7fT94Xh5M+IHA+RLei+5R5HxRipNWiYN9d/pzDeGJb3IT0OLX
- x/W7wqwGPAexOf8hHm1zs82WbWaMv27I2MBOdktoC7A3FVATqd9Tci53G2QoxUw+dtk/0mZZmL3yGkZGtW6Gf/aqZfXYzdEA85B/aYis/fSjY9mY90Mb0r+c
- 7t53yRM5U92DfsgWZQRl5mx5m973hyLIevc9sRgAxMESxoGo2jV7AvZ/bNI4ajmLOQiSR5smboLMMf9CCQs5sHNfyW9RJrJT+FVaeyP3Up5CvWR8/F9gUkBo
- RfkDtA7i40jlCvI8+D5CFENWR8WnDWF4on4FDDwW9Dv692FDHTEiAAhhKj0=
+        Fri, 12 Apr 2019 06:50:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58124 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfDLKuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 06:50:17 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D42E2000CE;
+        Fri, 12 Apr 2019 12:50:15 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 910EA200006;
+        Fri, 12 Apr 2019 12:50:15 +0200 (CEST)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 343D120601;
+        Fri, 12 Apr 2019 12:50:15 +0200 (CEST)
+From:   laurentiu.tudor@nxp.com
+To:     linuxppc-dev@lists.ozlabs.org, oss@buserror.net, mpe@ellerman.id.au
+Cc:     linux-kernel@vger.kernel.org,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] powerpc/booke64: set RI in default MSR
+Date:   Fri, 12 Apr 2019 13:50:09 +0300
+Message-Id: <20190412105009.14221-1-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tiago,
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-On 4/12/19 4:45 AM, Tiago Macedo wrote:
-> The standard guarantees that a pointer with static storage duration
-> and no other initializer will be initialized to be a null pointer.
-> 
-> Signed-off-by: Tiago Macedo <tiagohenrique.macedo@gmai.com>
-> ---
->  drivers/staging/media/zoran/videocodec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/zoran/videocodec.c b/drivers/staging/media/zoran/videocodec.c
-> index c1ee5cb7e66b..cc6e0f1cd7b4 100644
-> --- a/drivers/staging/media/zoran/videocodec.c
-> +++ b/drivers/staging/media/zoran/videocodec.c
-> @@ -51,7 +51,7 @@ struct codec_list {
->  	struct codec_list *next;
->  };
->  
-> -static struct codec_list *codeclist_top = NULL;
-> +static struct codec_list *codeclist_top;
->  
->  /* ================================================= */
->  /* function prototypes of the master/slave interface */
-> 
+Set SI in the default kernel's MSR so that the architected way of
+detecting unrecoverable machine check interrupts has a chance to work.
+This is inline with the MSR setup of the rest of booke powerpc
+architectures configured here.
 
-I dropped this patch since the zoran driver will be removed for 5.2,
-so there is no point in applying this patch.
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: stable@vger.kernel.org
+---
+ arch/powerpc/include/asm/reg_booke.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also, for future reference, please provide the name of the driver that
-you are patching in the subject. I.e. something like this:
+diff --git a/arch/powerpc/include/asm/reg_booke.h b/arch/powerpc/include/asm/reg_booke.h
+index eb2a33d5df26..e382bd6ede84 100644
+--- a/arch/powerpc/include/asm/reg_booke.h
++++ b/arch/powerpc/include/asm/reg_booke.h
+@@ -41,7 +41,7 @@
+ #if defined(CONFIG_PPC_BOOK3E_64)
+ #define MSR_64BIT	MSR_CM
+ 
+-#define MSR_		(MSR_ME | MSR_CE)
++#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
+ #define MSR_KERNEL	(MSR_ | MSR_64BIT)
+ #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
+ #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
+-- 
+2.17.1
 
-[PATCH] zoran: fixed coding style: do not initialise statics to NULL
-
-That helps triage for maintainers.
-
-Regards,
-
-	Hans
