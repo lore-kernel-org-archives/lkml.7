@@ -2,138 +2,100 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E50C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D131FC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92942083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4952171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qSwN+5q7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="hbaPVrQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfDLPGt (ORCPT
+        id S1726912AbfDLPGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 12 Apr 2019 11:06:50 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:54058 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbfDLPGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 11:06:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53742 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfDLPGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:06:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gt85otHoopD1zQt54wlfP+581azjYrMWqZTo5GZEOzY=; b=qSwN+5q7T3thCOSGbfeLvX33b9
-        BVUtIdmvxA4ZRgjOJUgzjREV93IeD+n6CM26sXwRM5JzUqQ1iW5sOI4ZC4T4WP/OHuvddVW9JkRsP
-        afPtFkVrbbLdnBjA4moVg3+5WSX4+RkiT02a2XmeAU+XekvSuC1YrLnLDPrYeGuwbMC/ir41L5L16
-        M40Dlpz1uoRM65//GlMIiWlT3GE04B6cBj4Ajc3IXG5fJh8CrwYHpXlgE1+8EYsRThT6FspP+N1RK
-        Tay9Nn7jnZj1pRwezpCU0M94srrR8flPM95Q0QuzMNLbposA0CsKnsxWnRJjC98cRgjowxOrzChhj
-        H0iQOflw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hExlB-0001hL-Cz; Fri, 12 Apr 2019 15:06:33 +0000
-Date:   Fri, 12 Apr 2019 08:06:33 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Chao Yu <yuchao0@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH] staging: erofs: fix unexpected out-of-bound data access
-Message-ID: <20190412150633.GA20776@infradead.org>
-References: <20190411105555.133551-1-gaoxiang25@huawei.com>
+Received: from localhost.localdomain (91-115-28-155.adsl.highway.telekom.at [91.115.28.155])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id AFA3EC18E6;
+        Fri, 12 Apr 2019 15:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1555081606; bh=xilMGDYcI7Yf/yFk9bgc3wG2Ba5kxUmIJ6hiMqHOhSw=;
+        h=From:To:Cc:Subject:Date;
+        b=hbaPVrQF3R5hUVjKO67GbDG8+iVdL50IWPNvH6mfzCmTUyAus8gNJqtgTr7F84KUl
+         gpznWTkH5teNjW9pJsmzev8Qm3SuxhL9tc4CIIC+FmFEZkPiRFPBIXFDlkcKlgkWdQ
+         9DBeBx6gmN0blypRia9G3YaRG4oGpNqinuUHYNx0=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Rob Herring <robh@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v3 1/3] dt-bindings: input: add GPIO controllable vibrator
+Date:   Fri, 12 Apr 2019 17:06:23 +0200
+Message-Id: <20190412150625.28384-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411105555.133551-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +++ b/drivers/staging/erofs/data.c
-> @@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
->  	*last_block = current_block;
->  
->  	/* shift in advance in case of it followed by too many gaps */
-> -	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
-> +	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
+Provide a simple driver for GPIO controllable vibrators.
+It will be used by the Fairphone 2.
 
-This is still a very odd check.  bi_max_vecs * PAGE_SIZE is rather
-arbitrary… and more importantly bi_max_vecs is not really a public
-field, in fact this is the only place every using it outside the
-core block layer.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ .../bindings/input/gpio-vibrator.txt          | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.txt
 
-I think the logic in this function should be reworked to what we
-do elsewhere in the kernel, that is just add to the bio until
-bio_add_page fails, in which case you submit the bio and start
-a new one.  Then once you are done with your operation just submit
-the bio.  Which unless I'm missing something is what the code does,
-except for the goto loop obsfucation that is trying to hide it.
+diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+new file mode 100644
+index 000000000000..93e5a8e7622d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+@@ -0,0 +1,20 @@
++* GPIO vibrator device tree bindings
++
++Registers a GPIO device as vibrator, where the vibration motor just has the
++capability to turn on or off. If the device is connected to a pwm, you should
++use the pwm-vibrator driver instead.
++
++Required properties:
++- compatible: should contain "gpio-vibrator"
++- enable-gpios: Should contain a GPIO handle
++
++Optional properties:
++- vcc-supply: Phandle for the regulator supplying power
++
++Example from Fairphone 2:
++
++vibrator {
++	compatible = "gpio-vibrator";
++	enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
++	vcc-supply = <&pm8941_l18>;
++};
+-- 
+2.21.0
 
-So why not something like:
-
-
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index 0714061ba888..122714e19079 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -296,20 +296,9 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 		}
- 	}
- 
--	err = bio_add_page(bio, page, PAGE_SIZE, 0);
--	/* out of the extent or bio is full */
--	if (err < PAGE_SIZE)
-+	if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE)
- 		goto submit_bio_retry;
--
- 	*last_block = current_block;
--
--	/* shift in advance in case of it followed by too many gaps */
--	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
--		/* err should reassign to 0 after submitting */
--		err = 0;
--		goto submit_bio_out;
--	}
--
- 	return bio;
- 
- err_out:
-@@ -323,9 +312,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
- 
- 	/* if updated manually, continuous pages has a gap */
- 	if (bio)
--submit_bio_out:
- 		__submit_bio(bio, REQ_OP_READ, 0);
--
- 	return unlikely(err) ? ERR_PTR(err) : NULL;
- }
- 
-@@ -387,8 +374,7 @@ static int erofs_raw_access_readpages(struct file *filp,
- 	}
- 	DBG_BUGON(!list_empty(pages));
- 
--	/* the rare case (end in gaps) */
--	if (unlikely(bio))
-+	if (bio)
- 		__submit_bio(bio, REQ_OP_READ, 0);
- 	return 0;
- }
-
->  		/* err should reassign to 0 after submitting */
->  		err = 0;
->  		goto submit_bio_out;
-> -- 
-> 2.17.1
-> 
----end quoted text---
