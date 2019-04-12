@@ -2,92 +2,77 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE19C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C5FC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE0020850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:05:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t7yIURud"
+	by mail.kernel.org (Postfix) with ESMTP id D8E272171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfDLHF5 (ORCPT
+        id S1727048AbfDLHHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:05:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48198 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfDLHF4 (ORCPT
+        Fri, 12 Apr 2019 03:07:18 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:36064 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726101AbfDLHHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:05:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ohqIoUyux3kWJtgiMUdgYQWefkSRkqRwL0vAokJo07s=; b=t7yIURudTYVwdtwvmqeydntx1
-        I6K9q0gOYRDpZU5U+xZjP6YpsB2v6Ou6Km90AmNd+r+kdfyMdebnvVaTVKSstUYcmihSErWUJM74O
-        8823ctd/18o2spwU2FOh8txEF6bJa0PqgucQYvtGgU4gLo89PcdrGrbgpTjPWHiL0tpyag8TwbZzH
-        CWPObDEGQu96PzJGbEAXT1wiKcaX3rx+apnQQDEI+lG8N0B4IW7kuxHOF+Zso/3+c1x63oVfW/PMf
-        mCji21D++SZ9hWpRBCG+mqtRF4P0vM1mzdmk+D8Pilaj4gE9GNL4SyARjcnUD/krVgXkcBpjuqlq8
-        B9RuAjLMQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEqFv-0000tm-R5; Fri, 12 Apr 2019 07:05:47 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9BD6E203C087C; Fri, 12 Apr 2019 09:05:45 +0200 (CEST)
-Date:   Fri, 12 Apr 2019 09:05:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH-tip v3 02/14] locking/rwsem: Make owner available even if
- !CONFIG_RWSEM_SPIN_ON_OWNER
-Message-ID: <20190412070545.GF11158@hirez.programming.kicks-ass.net>
-References: <20190410184231.6748-1-longman@redhat.com>
- <20190410184231.6748-3-longman@redhat.com>
- <20190411081224.GB4038@hirez.programming.kicks-ass.net>
- <29aca54a-536e-6e46-7e18-658914c34548@redhat.com>
- <20190412070209.GC129493@gmail.com>
+        Fri, 12 Apr 2019 03:07:18 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 5A051634C7F;
+        Fri, 12 Apr 2019 10:06:05 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hEqGE-0003sE-4s; Fri, 12 Apr 2019 10:06:06 +0300
+Date:   Fri, 12 Apr 2019 10:06:06 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Akihiro Tsukada <tskd08@gmail.com>,
+        linux-kernel@vger.kernel.org, Abylay Ospan <aospan@netup.ru>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sergey Kozlov <serjk@netup.ru>, Mike Isely <isely@pobox.com>,
+        Andy Walls <awalls@md.metrocast.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] media: prefix header search paths with $(srctree)/
+Message-ID: <20190412070605.kpzsgyopawwj23qc@valkosipuli.retiisi.org.uk>
+References: <1548399259-17750-1-git-send-email-yamada.masahiro@socionext.com>
+ <1548399259-17750-4-git-send-email-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412070209.GC129493@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1548399259-17750-4-git-send-email-yamada.masahiro@socionext.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 09:02:09AM +0200, Ingo Molnar wrote:
+On Fri, Jan 25, 2019 at 03:54:19PM +0900, Masahiro Yamada wrote:
+> Currently, the Kbuild core manipulates header search paths in a crazy
+> way [1].
 > 
-> * Waiman Long <longman@redhat.com> wrote:
+> To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
+> the search paths in the srctree. Some Makefiles are already written in
+> that way, but not all. The goal of this work is to make the notation
+> consistent, and finally get rid of the gross hacks.
 > 
-> > On 04/11/2019 04:12 AM, Peter Zijlstra wrote:
-> > > On Wed, Apr 10, 2019 at 02:42:19PM -0400, Waiman Long wrote:
-> > >> The owner field in the rw_semaphore structure is used primarily for
-> > >> optimistic spinning. However, identifying the rwsem owner can also be
-> > >> helpful in debugging as well as tracing locking related issues when
-> > >> analyzing crash dump. The owner field may also store state information
-> > >> that can be important to the operation of the rwsem.
-> > >>
-> > >> So the owner field is now made a permanent member of the rw_semaphore
-> > >> structure irrespective of CONFIG_RWSEM_SPIN_ON_OWNER.
-> > > sem->owner is still initialized under CONFIG_RWSEM_SPIN_ON_OWNER.
-> > 
-> > Oh, you are right. I missed that part. I will fix it in the next version.
+> Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
+> ("kbuild: do not drop -I without parameter").
 > 
-> Could you please post the next series against tip:WIP.locking/core, which 
-> is already being dogfood-ed in -tip and which I'm running on my desktop? 
-> I'll backmerge any fixes as needed/requested.
+> [1]: https://patchwork.kernel.org/patch/9632347/
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Urgh, please no, that's going to be hell to review :/
+Thanks, Yamada-san!
+
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+-- 
+Sakari Ailus
