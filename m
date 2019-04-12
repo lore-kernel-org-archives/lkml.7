@@ -2,106 +2,136 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D8C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0340C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09C420652
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A186E20652
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 05:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="QzAfqT25"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3LmHnwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfDLE7I (ORCPT
+        id S1726828AbfDLE77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 00:59:08 -0400
-Received: from mail.andi.de1.cc ([85.214.239.24]:34746 "EHLO
-        h2641619.stratoserver.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfDLE7H (ORCPT
+        Fri, 12 Apr 2019 00:59:59 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41917 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfDLE76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 00:59:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oVCTSjPkwdx6tRas2KGgRjrRoqpSskzQHkdp+NNCgec=; b=QzAfqT25HCNSS1sGe5UNaWSZz0
-        ncK3CuOHetNof7LPKV8VzexdSVRmaz9hSGbf89B0eT6dXJcmbiWUWWAwqfe5ZYa81DO5ghIT5M5mG
-        V4CX/OfeUqw9M0F9i1Sek7lE9/7CJ2U1v+E5vDVhMmEmsCE4u3F1h1oTwrPWFvP6CkQM=;
-Received: from p200300ccfbcd83001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:fbcd:8300:1a3d:a2ff:febf:d33a] helo=aktux)
-        by h2641619.stratoserver.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hEoHB-0002hr-P5; Fri, 12 Apr 2019 06:58:57 +0200
-Received: from andi by aktux with local (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hEoHD-0001LL-Hw; Fri, 12 Apr 2019 06:58:59 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, maxime.ripard@bootlin.com
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Date:   Fri, 12 Apr 2019 06:58:32 +0200
-Message-Id: <20190412045832.5109-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.11.0
+        Fri, 12 Apr 2019 00:59:58 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g6so3198723edc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 21:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=91XWN/M4/HGvUyhbEma1qFooI+deqFFHVesGDBmP478=;
+        b=Z3LmHnwNw/o/6uYLHK6KjPxkc1GNosBxI2jwFDs6ZIJfSJrsYzC300lLQGYZ90Nq+X
+         +JyQLeQMQ80TpqZNB52znc5XgTDYOQRbgaB8+t3+GJK5I6PmIah8BMWHqZMieLInt32s
+         390ugyiQ40mUji9D2VYCnEqX9tLSA5HdS3avxvWoCJv6QQv0RPDj8QhTnDmvm3SigEqL
+         Hm6Ehn4tSH8BveKWfZfKhJ88s+mHbmwZJffOUgm1J8DZDaLQoBIhpELoOgFo+w6Jg3ht
+         jCBq0rTieq/mjE1qlPs0qu/Q9cScFbC/f4lSkSvlQx1Ng2u2sYcOFNTsEpQiRAfu79ey
+         925Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=91XWN/M4/HGvUyhbEma1qFooI+deqFFHVesGDBmP478=;
+        b=hMmQ5NwIHJPMFvi/bGXhEmR5wVtyulOllMJfP1FssvYfqpqqmr9HNSA/LM4kohrDyo
+         esG2+Zz/09ZnRwg8Y7SCk2qDXN7FT/oS9XuVptw00Ky2JdfzHhNeeX/YzhcqpdUKBb6u
+         XhNEKw8g0fLmxTYeDdZlm2i5vgbVWq/KvN9SOvnLzMG6Od2wDtjI5kc+qYNmjvMzCStx
+         dnvWYrLF5q2DNOgQX2QM6NjHRjjvevBgzIjnbb81fOVF7zn9Y1pOcsM+ghL44wPpkq5I
+         0WQcKaE7WYd4DrGQzMtncgu64pdUn4PdXeOaImU9K+T3+hpFf3Il8lHYxPJoJiJEndBM
+         Q1nA==
+X-Gm-Message-State: APjAAAX5TVayVwgmXQyB6W1kdybhfjTaiXGFwI1DNrdCOtE9KyrSiAx1
+        J9KcSPBxxYbdfQ4P59EfJZkg4eE9B98=
+X-Google-Smtp-Source: APXvYqy1v7pPlaTcp8Ysx0fTkBgoouWDYMdsXu2pwJ6c0DsXPro2lKhmqRPmil9nO9wVRfT42WNkFg==
+X-Received: by 2002:a50:f7c8:: with SMTP id i8mr4597658edn.223.1555045197059;
+        Thu, 11 Apr 2019 21:59:57 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id t52sm12160596edd.54.2019.04.11.21.59.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 11 Apr 2019 21:59:56 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 21:59:54 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+Message-ID: <20190412045954.GA30291@archlinux-i9>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+ <20190327081142.GA11034@lenoch>
+ <20190404141730.GE49658@atomide.com>
+ <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+ <20190410200748.GN2839@atomide.com>
+ <b8a177ee-0058-2730-4c95-56834f6bafd4@linaro.org>
+ <20190411205657.GT2839@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411205657.GT2839@atomide.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-with Broadcom internals attached to UART1 and some gpios.
-This addition is in line with similar boards.
+On Thu, Apr 11, 2019 at 01:56:57PM -0700, Tony Lindgren wrote:
+> Hi,
+> 
+> * Daniel Lezcano <daniel.lezcano@linaro.org> [190411 19:21]:
+> > On 10/04/2019 22:07, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
+> > >> can you ask for an acked-by before pulling a patch in your tree?
+> > > 
+> > > I certainly do ask and wait for acks where possible :)
+> > 
+> > Ok, I may have missed them.
+> > 
+> > > Note that I have not applied this patch. I just added
+> > > Keerthy to Cc on this thread so maybe you misread the
+> > > message earlier. My comment "seems like no other
+> > > takers" was for Ladislav regarding somebody picking up
+> > > his earlier work, not for picking up this patch :)
+> > 
+> > Actually I was referring to the commit 592ea6bd1fad. Anyway as stated
+> > above I could have miss your call.
+> 
+> Hmm so commit 592ea6bd1fad was part of the PWM timer series
+> that was posted several times from late 2017 to end of
+> February 2018. I did not get any timer related acks or
+> comments so I applied it together with the PWM timer
+> changes.
+> 
+> I'm guessing you may have accidentally checked out some
+> older deja-vu branch from about a year ago? Commit
+> 592ea6bd1fad is not related to this fix.. :)
+> 
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-changes in v3: spelling fixes
-changes in v2: remove pinctrl things
- arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Just for the record, I said this patch fixes 592ea6bd1fad because
+592ea6bd1fad should have been marked this function as static, which
+would have exposed that this function was unused and it could have
+been removed at that time. I know it is a bit of a stretch for this
+commit (would be more appropriate for 008258d995a6 to have it) but
+that was my logic behind it. Not opposed to having it removed before
+committing.
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-index 1db2541135a7..57432d0500b1 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -69,6 +69,8 @@
- 		compatible = "mmc-pwrseq-simple";
- 		pinctrl-names = "default";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
- };
- 
-@@ -122,7 +124,20 @@
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
- 	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rtc 1>;
-+		clock-names = "lpo";
-+		vbat-supply = <&reg_vcc3v3>;
-+		vddio-supply = <&reg_vcc3v3>;
-+		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-+		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-+		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+	};
-+
- };
- 
- &usb_otg {
--- 
-2.11.0
+Thanks,
+Nathan
 
+> Regards,
+> 
+> Tony
+> 
+> 
+> 
