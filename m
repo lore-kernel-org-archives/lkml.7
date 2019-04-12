@@ -2,248 +2,111 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634DCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5EDC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3161920850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AD52171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:10:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="HGtEDNLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfDLUJe (ORCPT
+        id S1727039AbfDLUKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:09:34 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34985 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfDLUJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:09:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 13:09:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,342,1549958400"; 
-   d="scan'208";a="291124058"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga004.jf.intel.com with ESMTP; 12 Apr 2019 13:09:32 -0700
-Date:   Fri, 12 Apr 2019 13:09:30 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-mm@kvack.org, dan.j.williams@intel.com, jglisse@redhat.com,
-        ohall@gmail.com, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: introduce ARCH_HAS_PTE_DEVMAP
-Message-ID: <20190412200930.GA26371@iweiny-DESK2.sc.intel.com>
-References: <cover.1555093412.git.robin.murphy@arm.com>
- <25525e4dab6ebc49e233f21f7c29821223431647.1555093412.git.robin.murphy@arm.com>
+        Fri, 12 Apr 2019 16:10:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41700 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbfDLUKH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 16:10:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w30so12688440qta.8
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 13:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KL4HVhtEWvgQo7HQOLpi2CSpq8VK+yUMixkba3uKDZg=;
+        b=HGtEDNLthqGLuedDvcWcQ1HekO50r/XS7jrtBnh6XFA8NQFzosqhgjcfVaTaVT21+F
+         w1q4VXl9ZZ9XnyKnnt0oXaOx+G2HR836hSnHm+9tRa5ftCZLstYd0AmiEW69ToQNXSTT
+         UaeyyJp9/M8MV9kQTD8tmlwbXPv2hp1lB+mozU7oDB9/SA4wsWc68mC8tHAWkn5i+TDh
+         om6ankdEU3FtXwv7KGCbZuNEApBQdcCi3mxFmA+66xv+wuiLEvVmNfZmkBNj6XwwGz4f
+         ehrnYoRllpVANXpOkKs+Ru/sR8PkPWgDKm/CRtFatWXmj7YYDjE7crWKlgGZ7hnywrmM
+         XVXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KL4HVhtEWvgQo7HQOLpi2CSpq8VK+yUMixkba3uKDZg=;
+        b=AJfylOZzw5FTOUZWftSI47GGJ97SxWdSqpi67zhWuFgoGspXualTyLOQ/IrbNghyQc
+         G4f0mL9yl4WkcGS4uuEqBkbpHS7+6QXf0fKF3K9dYjjRyMTe5BRbIShBRs9YTsJMAcN+
+         rxafJned5mtP7BibLDxzUJnDI1QgDfdU7jw1bUlSUcl+qtQ4SrXhHT9koDSwBLVwYUs2
+         OuCru5XAZOGKhIRX+4t6XhuY1t+l7BVsIFjSHZkEe15/OfJkmPE1MdLzwDAVXvXfozae
+         h8TtxtV6X2LMKlmVN8wrVKNTWbYvHJiXviJobZgAc3vzCtaJSjImxKdMnb0aEGX0/vGn
+         /KXw==
+X-Gm-Message-State: APjAAAVE+PItAyRReMlriGEgF464AH9hxZ1Z/DVrOKH4OJ5EYer96w7E
+        JsKXVBImBOAs15ENw1mOBGScdg==
+X-Google-Smtp-Source: APXvYqyznUBkQ5ObYucraFFP8fAIuNA92TJl1aJ+E2y+kZ9Z+GajEJUt/00i36XImcgl7jG7D8VsOQ==
+X-Received: by 2002:ac8:3855:: with SMTP id r21mr48809369qtb.264.1555099806611;
+        Fri, 12 Apr 2019 13:10:06 -0700 (PDT)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id h22sm34758855qth.68.2019.04.12.13.10.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 13:10:05 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 16:10:05 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH 3/4] mm: memcontrol: fix recursive statistics correctness
+ & scalabilty
+Message-ID: <20190412201004.GA27187@cmpxchg.org>
+References: <20190412151507.2769-1-hannes@cmpxchg.org>
+ <20190412151507.2769-4-hannes@cmpxchg.org>
+ <CALvZod4xu10+E41YyaamigysZAnDcdA09f5m-hGd72LeJ9VmEg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <25525e4dab6ebc49e233f21f7c29821223431647.1555093412.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CALvZod4xu10+E41YyaamigysZAnDcdA09f5m-hGd72LeJ9VmEg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 07:56:02PM +0100, Robin Murphy wrote:
-> ARCH_HAS_ZONE_DEVICE is somewhat meaningless in itself, and combined
-> with the long-out-of-date comment can lead to the impression than an
-> architecture may just enable it (since __add_pages() now "comprehends
-> device memory" for itself) and expect things to work.
+On Fri, Apr 12, 2019 at 12:55:10PM -0700, Shakeel Butt wrote:
+> We also faced this exact same issue as well and had the similar solution.
 > 
-> In practice, however, ZONE_DEVICE users have little chance of
-> functioning correctly without __HAVE_ARCH_PTE_DEVMAP, so let's clean
-> that up the same way as ARCH_HAS_PTE_SPECIAL and make it the proper
-> dependency so the real situation is clearer.
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Thanks for the review!
 
-> ---
->  arch/powerpc/Kconfig                         | 2 +-
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 1 -
->  arch/x86/Kconfig                             | 2 +-
->  arch/x86/include/asm/pgtable.h               | 4 ++--
->  arch/x86/include/asm/pgtable_types.h         | 1 -
->  include/linux/mm.h                           | 4 ++--
->  include/linux/pfn_t.h                        | 4 ++--
->  mm/Kconfig                                   | 5 ++---
->  mm/gup.c                                     | 2 +-
->  9 files changed, 11 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 5e3d0853c31d..77e1993bba80 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -135,6 +135,7 @@ config PPC
->  	select ARCH_HAS_MMIOWB			if PPC64
->  	select ARCH_HAS_PHYS_TO_DMA
->  	select ARCH_HAS_PMEM_API                if PPC64
-> +	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
->  	select ARCH_HAS_PTE_SPECIAL
->  	select ARCH_HAS_MEMBARRIER_CALLBACKS
->  	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC64
-> @@ -142,7 +143,6 @@ config PPC
->  	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
->  	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
-> -	select ARCH_HAS_ZONE_DEVICE		if PPC_BOOK3S_64
->  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
->  	select ARCH_MIGHT_HAVE_PC_PARPORT
->  	select ARCH_MIGHT_HAVE_PC_SERIO
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index 581f91be9dd4..02c22ac8f387 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -90,7 +90,6 @@
->  #define _PAGE_SOFT_DIRTY	_RPAGE_SW3 /* software: software dirty tracking */
->  #define _PAGE_SPECIAL		_RPAGE_SW2 /* software: special page */
->  #define _PAGE_DEVMAP		_RPAGE_SW1 /* software: ZONE_DEVICE page */
-> -#define __HAVE_ARCH_PTE_DEVMAP
->  
->  /*
->   * Drivers request for cache inhibited pte mapping using _PAGE_NO_CACHE
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5ad92419be19..ffd50f27f395 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -60,6 +60,7 @@ config X86
->  	select ARCH_HAS_KCOV			if X86_64
->  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
->  	select ARCH_HAS_PMEM_API		if X86_64
-> +	select ARCH_HAS_PTE_DEVMAP		if X86_64
->  	select ARCH_HAS_PTE_SPECIAL
->  	select ARCH_HAS_REFCOUNT
->  	select ARCH_HAS_UACCESS_FLUSHCACHE	if X86_64
-> @@ -69,7 +70,6 @@ config X86
->  	select ARCH_HAS_STRICT_MODULE_RWX
->  	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
-> -	select ARCH_HAS_ZONE_DEVICE		if X86_64
->  	select ARCH_HAVE_NMI_SAFE_CMPXCHG
->  	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
->  	select ARCH_MIGHT_HAVE_PC_PARPORT
-> diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-> index 2779ace16d23..89a1f6fd48bf 100644
-> --- a/arch/x86/include/asm/pgtable.h
-> +++ b/arch/x86/include/asm/pgtable.h
-> @@ -254,7 +254,7 @@ static inline int has_transparent_hugepage(void)
->  	return boot_cpu_has(X86_FEATURE_PSE);
->  }
->  
-> -#ifdef __HAVE_ARCH_PTE_DEVMAP
-> +#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
->  static inline int pmd_devmap(pmd_t pmd)
->  {
->  	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
-> @@ -715,7 +715,7 @@ static inline int pte_present(pte_t a)
->  	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
->  }
->  
-> -#ifdef __HAVE_ARCH_PTE_DEVMAP
-> +#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
+> (Unrelated to this patchset) I think there should also a way to get
+> the exact memcg stats. As the machines are getting bigger (more cpus
+> and larger basic page size) the accuracy of stats are getting worse.
+> Internally we have an additional interface memory.stat_exact for that.
+> However I am not sure in the upstream kernel will an additional
+> interface is better or something like /proc/sys/vm/stat_refresh which
+> sync all per-cpu stats.
 
+I was talking to Roman about this earlier as well and he mentioned it
+would be nice to have periodic flushing of the per-cpu caches. The
+global vmstat has something similar. We might be able to hook into
+those workers, but it would likely require some smarts so we don't
+walk the entire cgroup tree every couple of seconds.
 
->  static inline int pte_devmap(pte_t a)
->  {
->  	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
-> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-> index d6ff0bbdb394..b5e49e6bac63 100644
-> --- a/arch/x86/include/asm/pgtable_types.h
-> +++ b/arch/x86/include/asm/pgtable_types.h
-> @@ -103,7 +103,6 @@
->  #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
->  #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
->  #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
-> -#define __HAVE_ARCH_PTE_DEVMAP
->  #else
->  #define _PAGE_NX	(_AT(pteval_t, 0))
->  #define _PAGE_DEVMAP	(_AT(pteval_t, 0))
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index d76dfb7ac617..fe05c94f23e9 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -504,7 +504,7 @@ struct inode;
->  #define page_private(page)		((page)->private)
->  #define set_page_private(page, v)	((page)->private = (v))
->  
-> -#if !defined(__HAVE_ARCH_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
-> +#if !defined(CONFIG_ARCH_HAS_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
->  static inline int pmd_devmap(pmd_t pmd)
->  {
->  	return 0;
-> @@ -1698,7 +1698,7 @@ static inline void sync_mm_rss(struct mm_struct *mm)
->  }
->  #endif
->  
-> -#ifndef __HAVE_ARCH_PTE_DEVMAP
-> +#ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
->  static inline int pte_devmap(pte_t pte)
->  {
->  	return 0;
-> diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-> index 7bb77850c65a..de8bc66b10a4 100644
-> --- a/include/linux/pfn_t.h
-> +++ b/include/linux/pfn_t.h
-> @@ -104,7 +104,7 @@ static inline pud_t pfn_t_pud(pfn_t pfn, pgprot_t pgprot)
->  #endif
->  #endif
->  
-> -#ifdef __HAVE_ARCH_PTE_DEVMAP
-> +#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
->  static inline bool pfn_t_devmap(pfn_t pfn)
->  {
->  	const u64 flags = PFN_DEV|PFN_MAP;
-> @@ -122,7 +122,7 @@ pmd_t pmd_mkdevmap(pmd_t pmd);
->  	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
->  pud_t pud_mkdevmap(pud_t pud);
->  #endif
-> -#endif /* __HAVE_ARCH_PTE_DEVMAP */
-> +#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
->  
->  #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
->  static inline bool pfn_t_special(pfn_t pfn)
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 25c71eb8a7db..fcb7ab08e294 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -655,8 +655,7 @@ config IDLE_PAGE_TRACKING
->  	  See Documentation/admin-guide/mm/idle_page_tracking.rst for
->  	  more details.
->  
-> -# arch_add_memory() comprehends device memory
-> -config ARCH_HAS_ZONE_DEVICE
-> +config ARCH_HAS_PTE_DEVMAP
->  	bool
->  
->  config ZONE_DEVICE
-> @@ -664,7 +663,7 @@ config ZONE_DEVICE
->  	depends on MEMORY_HOTPLUG
->  	depends on MEMORY_HOTREMOVE
->  	depends on SPARSEMEM_VMEMMAP
-> -	depends on ARCH_HAS_ZONE_DEVICE
-> +	depends on ARCH_HAS_PTE_DEVMAP
->  	select XARRAY_MULTI
->  
->  	help
-> diff --git a/mm/gup.c b/mm/gup.c
-> index f84e22685aaa..72a5c7d1e1a7 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1623,7 +1623,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  }
->  #endif /* CONFIG_ARCH_HAS_PTE_SPECIAL */
->  
-> -#if defined(__HAVE_ARCH_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
-> +#if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
->  static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->  		unsigned long end, struct page **pages, int *nr)
->  {
-> -- 
-> 2.21.0.dirty
-> 
+We haven't had any actual problems with the per-cpu fuzziness, mainly
+because the cgroups of interest also grow in size as the machines get
+bigger, and so the relative error doesn't increase.
+
+Are your requirements that the error dissipates over time (waiting for
+a threshold convergence somewhere?) or do you have automation that
+gets decisions wrong due to the error at any given point in time?
