@@ -2,226 +2,187 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E90FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C308C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F47121872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3589220850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RBw3GZAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfDLP0L (ORCPT
+        id S1727002AbfDLP1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:26:11 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42028 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfDLP0L (ORCPT
+        Fri, 12 Apr 2019 11:27:19 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34064 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfDLP1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:26:11 -0400
-Received: by mail-io1-f69.google.com with SMTP id i1so8139329ioq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:26:10 -0700 (PDT)
+        Fri, 12 Apr 2019 11:27:18 -0400
+Received: by mail-qk1-f195.google.com with SMTP id n68so5889303qka.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gI3I5rEECfD9XFm6XVGRhJch/xlr1B+27KW5PF8K648=;
+        b=RBw3GZANAFK2064CxPJDNog+YUbG2CdCJvBkdKUoI8h/xm0q63ys0aAnny4/JHxQEE
+         duVyfObj/RBIcxxIHYoCwnpXLasr5pXRamJ2jCKcQn1uqGxo2opC87N2QkqgQTyeDG5Y
+         bONeu3fRjPGMyrTEVZlTErpmGFKduMpLfRPml+Og3jy5dOcyi527u/UbMN/BLeSUgzxA
+         MNGv1+eS8I2/pwgj8KqFYUufIObJBs9v6via956zF0k++O43ZvHgXHQGJI5WibmZ+0kD
+         4w/lGSsbbsOlfxc/5fSDhkKqkQ9ZRXagMm9clIM0ZQ8DZ+tjO3mpD9vFmrZXd0nx7xTo
+         2XMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nDaFKC51wjVgHRBwEGOQJqWb5B+azud/kYNJfqssm2w=;
-        b=p3cXXJNwwPyCf0JPYJDll1b/lLUpCtpN8LZYGF/yhkxZEKHvtJ2kpVsMN6C4ET2DH/
-         OEIM6mrb2IIY3TZuq1RXuldO5VogsbnErLHU+CN5EkHbsgo0nxzWqsr6TSZv9M8UNWs3
-         3A5HW5gXLh95VyKhwvpekB+jZdkANVRAZqRjfV5w5cyVL4GyfBiGnhwOMpQYA+RDSB81
-         63D96wpaoiA4Dsrd8iJyUITjU4mO4GMwcWdORH7l3UWFZernTeVoG+6wx8GwQKPDNYof
-         POcD2Son6ZM9V5G4XM4d6vqqlO0v8OkR1k4+gKIner3v5ST6VcQg6bUyB5Xy1p0VOSbn
-         G66w==
-X-Gm-Message-State: APjAAAX/vGD6DuOcQXJBexjoqFK54BY62J2iMOtmJ3SU2JNEnoySJ9uy
-        q+FIWQzFCHOlBewGi+JewgGeaC0nVBnNOh2vA0kxOeSoxGDN
-X-Google-Smtp-Source: APXvYqw9ztCAZmKh/fqZzf09IjVm9iPY1QX8wrIhXmU5z3dXHvkxCYyhWMA7r9GO0RxiBSdTEu7QEhYKXXN3AEk32AymmZyGbdq8
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gI3I5rEECfD9XFm6XVGRhJch/xlr1B+27KW5PF8K648=;
+        b=uVKUVhgmlUxd0uMjWjPOESryNQEGAenZehWnJYMafyuabn8Igf179/wBcEwuDcqizn
+         RFLmyYPSGIWx3GqSZhMa5CR04Eob31QJ8vA86as0NI00fmtkQgV+WrqwS1y9GuxxxbZe
+         aBPoVu/INyfrbNX3ZX4+4r4LRHcGtptowkZUOnigbgTaKECN9OaoIcg9JN0ZxpylPK0u
+         TXgIKkqp1f+T/h/HyNHexchXC4QsEGrv2OOJodlfNKkVZk4XHonZy14uo1JXvs+QZTF5
+         cDw/ONFxQdRYA6R6MzVzZQGN9zOcre2YZNt5QKnto+ZND2T7/XWRt2aAM0K5scZ2tcS9
+         y33g==
+X-Gm-Message-State: APjAAAUdnfvLhldZnbiBfTndkgEPLzan3tWQd3HNLZbWLluOTuTR/dG4
+        r792wddgEVc6wIUL3rh7UatFkQ==
+X-Google-Smtp-Source: APXvYqxU/FJM7ihb4hHUYSMmynCQXmOGtBn1vGcf2c2lY3S/Vkjt5tA3VUzbAW+IhrHDV8BN9jYTTg==
+X-Received: by 2002:a37:6087:: with SMTP id u129mr45337840qkb.300.1555082836866;
+        Fri, 12 Apr 2019 08:27:16 -0700 (PDT)
+Received: from Qians-MBP.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s17sm27104517qtc.15.2019.04.12.08.27.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 08:27:16 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] mm/hotplug: treat CMA pages as unmovable
+Date:   Fri, 12 Apr 2019 11:26:59 -0400
+Message-Id: <20190412152659.3916-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-X-Received: by 2002:a24:9884:: with SMTP id n126mr3600370itd.30.1555082770203;
- Fri, 12 Apr 2019 08:26:10 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 08:26:10 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001d4f78058656ecfb@google.com>
-Subject: INFO: trying to register non-static key in vmk80xx_detach
-From:   syzbot <syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com>
-To:     abbotti@mev.co.uk, andreyknvl@google.com,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+has_unmovable_pages() is used by allocating CMA and gigantic pages as
+well as the memory hotplug. The later doesn't know how to offline CMA
+pool properly now, but if an unused (free) CMA page is encountered, then
+has_unmovable_pages() happily considers it as a free memory and
+propagates this up the call chain. Memory offlining code then frees the
+page without a proper CMA tear down which leads to an accounting issues.
+Moreover if the same memory range is onlined again then the memory never
+gets back to the CMA pool.
 
-syzbot found the following crash on:
+State after memory offline:
+ # grep cma /proc/vmstat
+ nr_free_cma 205824
 
-HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ecc1af200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+ # cat /sys/kernel/debug/cma/cma-kvm_cma/count
+ 209920
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Also, kmemleak still think those memory address are reserved but have
+already been used by the buddy allocator after onlining.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
-
-usb 3-1: config 0 interface 134 has no altsetting 0
-usb 3-1: New USB device found, idVendor=10cf, idProduct=8065,  
-bcdDevice=63.d7
-usb 3-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 3-1: config 0 descriptor??
-vmk80xx 3-1:0.134: driver 'vmk80xx' failed to auto-configure device.
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
+Offlined Pages 4096
+kmemleak: Cannot insert 0xc000201f7d040008 into the object search tree
+(overlaps existing)
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  assign_lock_key kernel/locking/lockdep.c:786 [inline]
-  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
-  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
-  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
-  down+0x12/0x80 kernel/locking/semaphore.c:58
-  vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
-  comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
-  comedi_device_cleanup.part.0+0x68/0x140  
-drivers/staging/comedi/comedi_fops.c:156
-  comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
-  comedi_free_board_dev.part.0+0x16/0x90  
-drivers/staging/comedi/comedi_fops.c:190
-  comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
-  comedi_release_hardware_device+0x111/0x140  
-drivers/staging/comedi/comedi_fops.c:2880
-  comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__list_add_valid+0x47/0xa0 lib/list_debug.c:26
-Code: fa 48 c1 ea 03 80 3c 02 00 75 50 49 8b 54 24 08 48 39 f2 0f 85 59 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f2 48 c1 ea 03 <80> 3c 02 00 75  
-3a 48 8b 16 4c 39 e2 0f 85 5e 01 00 00 48 39 f5 0f
-RSP: 0018:ffff8880a846f110 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880a7dba790 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7dba7d8
-RBP: ffff8880a846f170 R08: ffff8880a8444980 R09: ffffed101508de31
-R10: ffffed101508de30 R11: 0000000000000003 R12: ffff8880a7dba7d0
-R13: 0000000000000000 R14: ffff8880a7dba7d8 R15: ffff8880a7dba7d0
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fcc1d507000 CR3: 0000000082728000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __list_add include/linux/list.h:60 [inline]
-  list_add_tail include/linux/list.h:93 [inline]
-  __down_common kernel/locking/semaphore.c:210 [inline]
-  __down+0xa7/0x2c0 kernel/locking/semaphore.c:238
-  down+0x5c/0x80 kernel/locking/semaphore.c:62
-  vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
-  comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
-  comedi_device_cleanup.part.0+0x68/0x140  
-drivers/staging/comedi/comedi_fops.c:156
-  comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
-  comedi_free_board_dev.part.0+0x16/0x90  
-drivers/staging/comedi/comedi_fops.c:190
-  comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
-  comedi_release_hardware_device+0x111/0x140  
-drivers/staging/comedi/comedi_fops.c:2880
-  comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace baf4250c4ca185f3 ]---
-RIP: 0010:__list_add_valid+0x47/0xa0 lib/list_debug.c:26
-Code: fa 48 c1 ea 03 80 3c 02 00 75 50 49 8b 54 24 08 48 39 f2 0f 85 59 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f2 48 c1 ea 03 <80> 3c 02 00 75  
-3a 48 8b 16 4c 39 e2 0f 85 5e 01 00 00 48 39 f5 0f
-RSP: 0018:ffff8880a846f110 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880a7dba790 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7dba7d8
-RBP: ffff8880a846f170 R08: ffff8880a8444980 R09: ffffed101508de31
-R10: ffffed101508de30 R11: 0000000000000003 R12: ffff8880a7dba7d0
-R13: 0000000000000000 R14: ffff8880a7dba7d8 R15: ffff8880a7dba7d0
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fcc1d507000 CR3: 0000000082728000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[c00000003dc2faf0] [c000000000884b2c] dump_stack+0xb0/0xf4 (unreliable)
+[c00000003dc2fb30] [c000000000424fb4] create_object+0x344/0x380
+[c00000003dc2fbf0] [c0000000003d178c] __kmalloc_node+0x3ec/0x860
+[c00000003dc2fc90] [c000000000319078] kvmalloc_node+0x58/0x110
+[c00000003dc2fcd0] [c000000000484d9c] seq_read+0x41c/0x620
+[c00000003dc2fd60] [c0000000004472bc] __vfs_read+0x3c/0x70
+[c00000003dc2fd80] [c0000000004473ac] vfs_read+0xbc/0x1a0
+[c00000003dc2fdd0] [c00000000044783c] ksys_read+0x7c/0x140
+[c00000003dc2fe20] [c00000000000b108] system_call+0x5c/0x70
+kmemleak: Kernel memory leak detector disabled
+kmemleak: Object 0xc000201cc8000000 (size 13757317120):
+kmemleak:   comm "swapper/0", pid 0, jiffies 4294937297
+kmemleak:   min_count = -1
+kmemleak:   count = 0
+kmemleak:   flags = 0x5
+kmemleak:   checksum = 0
+kmemleak:   backtrace:
+     cma_declare_contiguous+0x2a4/0x3b0
+     kvm_cma_reserve+0x11c/0x134
+     setup_arch+0x300/0x3f8
+     start_kernel+0x9c/0x6e8
+     start_here_common+0x1c/0x4b0
+kmemleak: Automatic memory scanning thread ended
 
-
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+v2: Borrow some commit log texts from Michal.
+    Call dump_page() in the error path per Michal.
+
+ mm/page_alloc.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d96ca5bc555b..a9d2b0236167 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8005,7 +8005,10 @@ void *__init alloc_large_system_hash(const char *tablename,
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 			 int migratetype, int flags)
+ {
+-	unsigned long pfn, iter, found;
++	unsigned long found;
++	unsigned long iter = 0;
++	unsigned long pfn = page_to_pfn(page);
++	char reason[] = "unmovable page";
+ 
+ 	/*
+ 	 * TODO we could make this much more efficient by not checking every
+@@ -8015,17 +8018,20 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 	 * can still lead to having bootmem allocations in zone_movable.
+ 	 */
+ 
+-	/*
+-	 * CMA allocations (alloc_contig_range) really need to mark isolate
+-	 * CMA pageblocks even when they are not movable in fact so consider
+-	 * them movable here.
+-	 */
+-	if (is_migrate_cma(migratetype) &&
+-			is_migrate_cma(get_pageblock_migratetype(page)))
+-		return false;
++	if (is_migrate_cma(get_pageblock_migratetype(page))) {
++		/*
++		 * CMA allocations (alloc_contig_range) really need to mark
++		 * isolate CMA pageblocks even when they are not movable in fact
++		 * so consider them movable here.
++		 */
++		if (is_migrate_cma(migratetype))
++			return false;
++
++		strscpy(reason, "CMA page", 9);
++		goto unmovable;
++	}
+ 
+-	pfn = page_to_pfn(page);
+-	for (found = 0, iter = 0; iter < pageblock_nr_pages; iter++) {
++	for (found = 0; iter < pageblock_nr_pages; iter++) {
+ 		unsigned long check = pfn + iter;
+ 
+ 		if (!pfn_valid_within(check))
+@@ -8105,7 +8111,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ unmovable:
+ 	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+ 	if (flags & REPORT_FAILURE)
+-		dump_page(pfn_to_page(pfn+iter), "unmovable page");
++		dump_page(pfn_to_page(pfn+iter), reason);
+ 	return true;
+ }
+ 
+-- 
+2.20.1 (Apple Git-117)
+
