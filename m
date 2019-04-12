@@ -2,199 +2,70 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF3FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937AAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD8320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:14:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iCH1ACl4"
+	by mail.kernel.org (Postfix) with ESMTP id 6BE272075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfDLTOW (ORCPT
+        id S1726923AbfDLTTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:14:22 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41808 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfDLTOW (ORCPT
+        Fri, 12 Apr 2019 15:19:50 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48534 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLTTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:14:22 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w30so12495675qta.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jk3IJK+uxHlhLyrLET/ST/TNlQnf1/FQ3O8nqOSpEFI=;
-        b=iCH1ACl4Hdu/o0ka6oGZ8Np8tyxSsP4SGRofKiyvr9IVJaT2nHST1I2XmSqIemkWDN
-         ap0nMLW5C6RMWwpsla7uNhFS9v7xsD7YJNOVcL7Ygk2HE5+wTy+keL7nWBwPrlgMuZT7
-         EeTNpGZgL3L685aoebvERv/i0ioLq9J70k63XGmUiwUCwmHaLr3Bfa83E4UnTqiFNpHz
-         2j5cz2e/FLX5CCNXj3ylqpVo+LHIESL0jQsNq4YMaLobX8W06mbPEVBRecwCmBJl+mEM
-         ciSL75XMEc9UmnNY0p2rBJ+PI2vzWkJuzQhPhY5bsQ0Eh+SDGGwkeEd5KIac4W0pG5PN
-         ITZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jk3IJK+uxHlhLyrLET/ST/TNlQnf1/FQ3O8nqOSpEFI=;
-        b=Dzp+NOTv0iswgesTNbKTwCsYC496n3VGrtk42DJTXRF4ZauLlVKYvO8siakS4+KIPB
-         127he+IrSzjgfqxL6JQSJ8HLPWHOyF5W8ZKTElfRUr1Qr8B6oqZfLYKlQA/l/sm9Z6CT
-         xI5TKaRVYqbZGsZASXZPeryqaKr9xGpc9eAaNGLs4OzgkdpAGsGNfNtquoAtJwwk1ydw
-         26f1dLjy5AhP85d6L4EpVTUt/B7Jgmgnxk3LvGOoFGWmAkGIuA36RUw+ON3Zj3TlGbQZ
-         XkThfbdmOY+Kp0uCmwH4GHP4ktIRX6pk5LWbiJxB0J/Mu6j8nZHR+eYwJFFfw0TWcLz4
-         lldw==
-X-Gm-Message-State: APjAAAUVX8JYrexbuGKHQ1PXZFpdhXHkvZQnlb8VQHnyk/JLbXBOhR92
-        8tO2KAaD+bObW6c611deV+wVNw==
-X-Google-Smtp-Source: APXvYqyq9m+9i3ZW5k79jf7gkbdIwV2ZR0Pd/jS51R7EpZ/dKoI/BFsiDH4JSZThJ3QHwWWtbpTbYg==
-X-Received: by 2002:ac8:72c4:: with SMTP id o4mr48777855qtp.88.1555096460622;
-        Fri, 12 Apr 2019 12:14:20 -0700 (PDT)
-Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id u16sm34952720qtc.84.2019.04.12.12.14.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 12:14:19 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm: fix false-positive OVERCOMMIT_GUESS failures
-Date:   Fri, 12 Apr 2019 15:14:18 -0400
-Message-Id: <20190412191418.26333-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 12 Apr 2019 15:19:50 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hF1i7-0001Nc-FX; Fri, 12 Apr 2019 19:19:39 +0000
+Date:   Fri, 12 Apr 2019 20:19:39 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Ian Kent <raven@themaw.net>,
+        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel BUG at fs/inode.c:LINE!
+Message-ID: <20190412191939.GK2217@ZenIV.linux.org.uk>
+References: <20190410002603.GS2217@ZenIV.linux.org.uk>
+ <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
+ <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
+ <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
+ <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net>
+ <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
+ <20190410121159.GY2217@ZenIV.linux.org.uk>
+ <CACT4Y+bc=A=djKChMkJGwXYbZ7UXuxmRu5Z0Y1BEXAFH1-Z6Kw@mail.gmail.com>
+ <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net>
+ <CACT4Y+YKGX0MVEM-SrDKJc0500vCH+WOZpyzNr-O_tW7p5Sn_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YKGX0MVEM-SrDKJc0500vCH+WOZpyzNr-O_tW7p5Sn_A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the default overcommit==guess we occasionally run into mmap
-rejections despite plenty of memory that would get dropped under
-pressure but just isn't accounted reclaimable. One example of this is
-dying cgroups pinned by some page cache. A previous case was auxiliary
-path name memory associated with dentries; we have since annotated
-those allocations to avoid overcommit failures (see d79f7aa496fc ("mm:
-treat indirectly reclaimable memory as free in overcommit logic")).
+On Fri, Apr 12, 2019 at 12:59:30PM +0200, Dmitry Vyukov wrote:
 
-But trying to classify all allocated memory reliably as reclaimable
-and unreclaimable is a bit of a fool's errand. There could be a myriad
-of dependencies that constantly change with kernel versions.
+> Please don't ignore the bug status tracking part. Or we will only have
+> options of not testing kernel or dropping most of the bug reports on
+> the floor. Both are equally harmful for kernel quality.
+> 
+> Let's mark it as fixed by the next commit in series (which already
+> made it into mainline):
+> 
+> #syz fix: autofs: simplify parse_options() function call
+> 
+> But I won't be around always.
 
-It becomes even more questionable of an effort when considering how
-this estimate of available memory is used: it's not compared to the
-system-wide allocated virtual memory in any way. It's not even
-compared to the allocating process's address space. It's compared to
-the single allocation request at hand!
-
-So we have an elaborate left-hand side of the equation that tries to
-assess the exact breathing room the system has available down to a
-page - and then compare it to an isolated allocation request with no
-additional context. We could fail an allocation of N bytes, but for
-two allocations of N/2 bytes we'd do this elaborate dance twice in a
-row and then still let N bytes of virtual memory through. This doesn't
-make a whole lot of sense.
-
-Let's take a step back and look at the actual goal of the
-heuristic. From the documentation:
-
-   Heuristic overcommit handling. Obvious overcommits of address
-   space are refused. Used for a typical system. It ensures a
-   seriously wild allocation fails while allowing overcommit to
-   reduce swap usage.  root is allowed to allocate slightly more
-   memory in this mode. This is the default.
-
-If all we want to do is catch clearly bogus allocation requests
-irrespective of the general virtual memory situation, the physical
-memory counter-part doesn't need to be that complicated, either.
-
-When in GUESS mode, catch wild allocations by comparing their request
-size to total amount of ram and swap in the system.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/util.c | 51 +++++----------------------------------------------
- 1 file changed, 5 insertions(+), 46 deletions(-)
-
-diff --git a/mm/util.c b/mm/util.c
-index 05a464929b3e..e2e4f8c3fa12 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -652,7 +652,7 @@ EXPORT_SYMBOL_GPL(vm_memory_committed);
-  */
- int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- {
--	long free, allowed, reserve;
-+	long allowed;
- 
- 	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
- 			-(s64)vm_committed_as_batch * num_online_cpus(),
-@@ -667,51 +667,9 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- 		return 0;
- 
- 	if (sysctl_overcommit_memory == OVERCOMMIT_GUESS) {
--		free = global_zone_page_state(NR_FREE_PAGES);
--		free += global_node_page_state(NR_FILE_PAGES);
--
--		/*
--		 * shmem pages shouldn't be counted as free in this
--		 * case, they can't be purged, only swapped out, and
--		 * that won't affect the overall amount of available
--		 * memory in the system.
--		 */
--		free -= global_node_page_state(NR_SHMEM);
--
--		free += get_nr_swap_pages();
--
--		/*
--		 * Any slabs which are created with the
--		 * SLAB_RECLAIM_ACCOUNT flag claim to have contents
--		 * which are reclaimable, under pressure.  The dentry
--		 * cache and most inode caches should fall into this
--		 */
--		free += global_node_page_state(NR_SLAB_RECLAIMABLE);
--
--		/*
--		 * Part of the kernel memory, which can be released
--		 * under memory pressure.
--		 */
--		free += global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE);
--
--		/*
--		 * Leave reserved pages. The pages are not for anonymous pages.
--		 */
--		if (free <= totalreserve_pages)
-+		if (pages > totalram_pages() + total_swap_pages)
- 			goto error;
--		else
--			free -= totalreserve_pages;
--
--		/*
--		 * Reserve some for root
--		 */
--		if (!cap_sys_admin)
--			free -= sysctl_admin_reserve_kbytes >> (PAGE_SHIFT - 10);
--
--		if (free > pages)
--			return 0;
--
--		goto error;
-+		return 0;
- 	}
- 
- 	allowed = vm_commit_limit();
-@@ -725,7 +683,8 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- 	 * Don't let a single process grow so big a user can't recover
- 	 */
- 	if (mm) {
--		reserve = sysctl_user_reserve_kbytes >> (PAGE_SHIFT - 10);
-+		long reserve = sysctl_user_reserve_kbytes >> (PAGE_SHIFT - 10);
-+
- 		allowed -= min_t(long, mm->total_vm / 32, reserve);
- 	}
- 
--- 
-2.21.0
-
+You might want to add something like "commit discarded"...
