@@ -2,114 +2,93 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3413C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C5FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8205E2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555077645;
-	bh=nijqsap55XUBbZCPEQ18QWXyKoM2eiWnVLRWc9vjpFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OHIikFwYY2cWpE3xsHHDLI3RiBh/cjJzkawiO1PnChTIbywaiva98V7LFdjOR4fM/
-	 R7PR3H9eNBL8QDFDFNsGvtBK8QGGla4ZAKl2tevnrqZSxYkSUVXsjpelLPxr3BFekx
-	 lE7EjSZW9WoFM+q6SNcIO7dpJHwKk05rtjUrEepY=
+	by mail.kernel.org (Postfix) with ESMTP id 231272171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:01:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1ibx170"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfDLOAo (ORCPT
+        id S1726921AbfDLOBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfDLOAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:00:44 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CBE206BA;
-        Fri, 12 Apr 2019 14:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555077643;
-        bh=nijqsap55XUBbZCPEQ18QWXyKoM2eiWnVLRWc9vjpFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UTpFg69Irfxx+z7ULeCgkbr6LWenQJGbARB0olr18CwrekCJQTkNbkgrM3/gVXS0O
-         t08W0Tebf8ESHMEbYQx+PXtEKGxRpCaQ0haI4tzur+xvuG8lB3AeuxoPmaN7Q/XSPW
-         4QLetd+Vax7ZNZUfJ6CNMFEmjYhJnbMYoA8pmZnQ=
-Date:   Fri, 12 Apr 2019 09:00:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 4/6] PCI: mobiveil: Add PCIe Gen4 RC driver for NXP
- Layerscape SoCs
-Message-ID: <20190412140041.GA141472@google.com>
-References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com>
- <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
+        Fri, 12 Apr 2019 10:01:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46145 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLOBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:01:32 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r25so7557706lfn.13;
+        Fri, 12 Apr 2019 07:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=psYY2+80bNLYEksdQELL7+YptxqqnoRTW2EZPQivXbo=;
+        b=i1ibx170NlznCApjkmRZ0mJGVsNy+4B8MCLQ+KfMGys175KTqZGd21bgAeUBKSl9+I
+         aDRD7VK+w9APOirCVzKfc5d4xodeosmEQcaA9mb+kqWpUodA0MtqZkkgqfJaG7V9Zzbu
+         fFhd4G/xNDY7EPZP4+EqtE/Z/PFU+ttybnJ0W5mUtFNjI0NM6NAb91DufhT0ByLifUb+
+         4QBps8Dn3HYlFxILftccgRmxknB9VTTJfPDprwa2Doi+ZnNe6nitxzBAXOAeUu4Rzacs
+         /orUjQul03uFdbo+aU7615yvP+7B/BxwfcaRS6neKVfd/5z6LdHU/jIaldRBauZ8aUpY
+         pDfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=psYY2+80bNLYEksdQELL7+YptxqqnoRTW2EZPQivXbo=;
+        b=I+1rMF12nmQdKQr2nfIcW/GoRPeANrv3/9CKkMhw0zxzcz/R225raLLk/joGiX28qH
+         YUwOEHVRh9fSEp4oCz4tSdHlso9syVFaexh63zd1VtlGJq1Fm83RJr5Oictpe6QGn6xK
+         gsgc+ernOMT/lECDlA/830y5awWyokWYgjKg7T4acYmO+1XcWffVt7C9uoXapPYgHIk+
+         PrIRYtpGAfw9jafu79i/w+qEUzRFmkLHofXZ9oC5b4Di9TJnR3rKpvl9lVUzq6RXjo8k
+         bK9BLeMyamvkekUorQ5lC16YX98Q2N0HK47BtUimQPwLAYveTK4mer8nr6/Dg3aL6Z9q
+         Cq9Q==
+X-Gm-Message-State: APjAAAV8IHuUDpKEAxo2mzayJ5jIvukIB+GxCDfQyQQFZlX0YjyFfQEm
+        eVOAOfRDHwux28VMFSnLVKQgSgh2
+X-Google-Smtp-Source: APXvYqxN5UMM9cEe6EDxj/KmQvRtDXUKWtaQgNoklpeMEbNb3sk0Z0sjNjFSDeKHNRZvZAWmBaY4nw==
+X-Received: by 2002:ac2:596a:: with SMTP id h10mr20814975lfp.52.1555077690049;
+        Fri, 12 Apr 2019 07:01:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id y23sm531457lfy.31.2019.04.12.07.01.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 07:01:28 -0700 (PDT)
+Subject: Re: [PATCH v1 2/3] memory: tegra: Introduce Tegra30 EMC driver
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190411230221.31362-1-digetx@gmail.com>
+ <20190411230221.31362-3-digetx@gmail.com>
+Message-ID: <0e61d2a7-3f13-3868-954f-86562c546be1@gmail.com>
+Date:   Fri, 12 Apr 2019 17:01:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190411230221.31362-3-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 09:52:50AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+12.04.2019 2:02, Dmitry Osipenko пишет:
+> Introduce driver for the External Memory Controller (EMC) found on Tegra30
+> chips, it controls the external DRAM on the board. The purpose of this
+> driver is to program memory timing for external memory on the EMC clock
+> rate change.
 > 
-> This PCIe controller is based on the Mobiveil GPEX IP, which is
-> compatible with the PCI Express™ Base Specification, Revision 4.0.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V5:
->  - Corrected the subject.
->  - Corrected 2 typos.
->  - Updated the Copyright and driver description.
->  - Changed to use BIT(x) to define verious functions of register's bits.
->  - Unified the capitalization of error info.
->  - Changed the IRQ handler name to ls_pcie_g4_isr().
->  - Change 'irq' to 'IRQ' in error info.
->  - Trimmed some functions without functionality change.
-> 
->  drivers/pci/controller/mobiveil/Kconfig       |  10 +
->  drivers/pci/controller/mobiveil/Makefile      |   1 +
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
->  .../controller/mobiveil/pci-layerscape-gen4.c | 256 ++++++++++++++++++
-
-I would probably name this "pcie-layerscape-gen4.c" ("pcie" instead of
-"pci"), since that's more typical and this really is PCIe-specific.
-
-> +#define PCIE_PF_DBG			0x7fc
-> +#define PF_DBG_LTSSM_MASK		0x3f
-> +#define PF_DBG_WE			BIT(31)
-> +#define PF_DBG_PABR			BIT(27)
-> +
-> +#define LS_PCIE_G4_LTSSM_L0		0x2d /* L0 state */
-
-Maybe rename this and move it to make it obvious that it's related to
-PF_DBG_LTSSM_MASK?
-
-> +		dev_err(dev, "Poll PABRST&PABACT timeout.\n");
-
-No need for punctuation at end of messages.
+I realized that the MC_SAME_FREQ timing configuration need be properly handled for T30 and that is missed in this version. Will fix it up in v2. Although, seems it's not critical since things appear to work properly and probably only arbitration is not optimally configured because of the MC/EMC setup mismatch.  
