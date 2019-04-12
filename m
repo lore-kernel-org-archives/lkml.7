@@ -2,102 +2,122 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976FEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C0BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC7D20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA9A20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfDLQpu (ORCPT
+        id S1726920AbfDLQqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:45:50 -0400
-Received: from smtp3.goneo.de ([85.220.129.37]:35808 "EHLO smtp3.goneo.de"
+        Fri, 12 Apr 2019 12:46:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:36700 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfDLQpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:45:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 8BF8323FFBC;
-        Fri, 12 Apr 2019 18:45:45 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 38SmQFMpvigx; Fri, 12 Apr 2019 18:45:43 +0200 (CEST)
-Received: from [192.168.1.127] (dyndsl-091-248-139-154.ewe-ip-backbone.de [91.248.139.154])
-        by smtp3.goneo.de (Postfix) with ESMTPSA id 24A2D23F802;
-        Fri, 12 Apr 2019 18:45:43 +0200 (CEST)
-Subject: Re: [PATCH 0/8] Prepare files under Documentation/*.txt to build with
- Sphinx
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linux-arch@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-References: <94c47f05-0412-b938-908d-1ef8a91243ed@darmarit.de>
- <cover.1554889999.git.mchehab+samsung@kernel.org>
- <18261.1555064496@warthog.procyon.org.uk>
- <27303.1555071586@warthog.procyon.org.uk>
- <df609cad-fa5b-ac15-314f-ac8759771d90@darmarit.de>
- <20190412093947.62913186@lwn.net>
-From:   Markus Heiser <markus.heiser@darmarit.de>
-Message-ID: <06b2aeb4-825a-28d6-fa7d-f1f5900e53d8@darmarit.de>
-Date:   Fri, 12 Apr 2019 18:45:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726327AbfDLQqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 12:46:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01D4D15AB;
+        Fri, 12 Apr 2019 09:46:15 -0700 (PDT)
+Received: from red-moon (unknown [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F40E3F718;
+        Fri, 12 Apr 2019 09:46:11 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 17:45:34 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Zeev Zilberman <zeev@amazon.com>, Hanna Hawa <hhhawa@amazon.com>,
+        tsahee@annapurnalabs.com, antoine.tenart@bootlin.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com,
+        will.deacon@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net, ronenk@amazon.com,
+        dwmw@amazon.co.uk, vaerov@amazon.com, alisaidi@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 7/7] irqchip/al-msi: Add ACPI support
+Message-ID: <20190412164534.GA9071@red-moon>
+References: <1554035733-11827-1-git-send-email-hhhawa@amazon.com>
+ <1554035733-11827-3-git-send-email-hhhawa@amazon.com>
+ <86pnq65v48.wl-marc.zyngier@arm.com>
+ <cc40b029-b06e-1367-2411-1ec325d3b97b@amazon.com>
+ <a882317e-1f19-3bed-b790-10b8b8a3e839@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190412093947.62913186@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a882317e-1f19-3bed-b790-10b8b8a3e839@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Am 12.04.19 um 17:39 schrieb Jonathan Corbet:
-> On Fri, 12 Apr 2019 14:34:25 +0200
-> Markus Heiser <markus.heiser@darmarit.de> wrote:
+On Fri, Apr 12, 2019 at 01:08:00PM +0100, Marc Zyngier wrote:
+> Hi Zeev,
 > 
->> Am 12.04.19 um 14:19 schrieb David Howells:
->>> Markus Heiser <markus.heiser@darmarit.de> wrote:
->>>    
->>>> Which is already named in our 'How to write kernel documentation' introduction
->>>>
->>>> - https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html#writing-documentation
->>>
->>> This should really be in Documentation/ directory.
->>>    
->>
->> I agree with you, it is a kind of information hiding.  If you know proper
->> places, please send a patch to Jon.
+> On 04/04/2019 15:45, Zeev Zilberman wrote:
+> > Hi Marc,
+> > 
+> > We have considered exposing our interrupt controller both via MADT 
+> > OEM-specific entry and via DSDT.
+> > We've chosen MADT OEM-specific entry, because it seemed like a 
+> > reasonable placeholder for custom interrupt controller, but we can move 
+> > to DSDT, if this seems like a better way to represent it.
+> > 
+> > Either way we chose, we'll need to solve the ordering issue of the 
+> > drivers probing.
+> > The desired order of driver probing in the system, because of the 
+> > dependencies, is:
+> > GIC -> AL MSIX controller driver -> PCI
+> > If we keep using MADT, we can't just use IRQCHIP_DECLARE, because there 
+> > is no way we found to control ordering of MADT probing. So, GIC might be 
+> > probed after our driver in this case.
+> > The reason we used early_initcall, is that the early_initcalls are 
+> > invoked after MADT probing in the system (and before DSDT probing).
+> > 
+> > If we move to using DSDT we need to solve the ordering problem from 
+> > another direction - make sure that MSIX driver is probed before PCI.
+> > In the patches that were posted for xgene interrupt controller (and 
+> > weren't accepted) we saw that they proposed to solve the same issue
+> > by modifying ACPI subsystem code by defining a new type for msi drivers 
+> > and probing them before PCI drivers 
+> > (https://patchwork.ozlabs.org/patch/818771/).
+> >  From the feedback on that patch 
+> > (https://patchwork.ozlabs.org/cover/818767/#1788415) it seemed that 
+> > alternative solution is in the works,
+> > but we didn't manage to find any followup on this.
+> > 
+> > We would be glad to hear what you propose for fixing the ordering issue 
+> > and rework the patches accordingly.
 > 
-> As Jani pointed out, it's in Documentation/doc-guide.
+> There are multiple issues here, but the main one is that you're trying
+> to do something that is completely contrary to the ACPI spec by
+> inventing a new interrupt controller.
 > 
-> If you're saying it should be in the top level, I kind of disagree.
-> Documentation/ is an exercise in hiding information by placing it in the
-> middle of 200 other, unrelated files.  We've made some progress on that,
-> and I would like to continue to do so.
+> The use case for ACPI is quite simple: you have HW that matches the ACPI
+> spec, and everything will work out of the box. This means GICv2+GICv2m
+> or GICv3+ITS. There is zero space for creativity. Now, if you want your
+> own interrupt controller, the only choice is to stick with DT. That's
+> the place for weird and wonderful stuff that ACPI cannot support.
+> 
+> We've been around the block with XGene, and every "solution" was just
+> utter crap, prone to failure and in the end unmaintainable. Anything
+> involving an initcall definitely falls into that category.
+> 
+> I'll let Lorenzo speak his mind as the arm64 ACPI maintainer, but from
+> an irqchip perspective, I can't see how to support this unless we get
+> the ACPI spec to support this type of configuration.
 
-For those who are new and are willing to document, it migth be a good idea
-to have a simple Documentation/README.txt  with a link to doc-guide?
+That's pretty much it, as a matter of fact there is not much we can do,
+actually it is a problem that {should have been/can be} solved first at
+ACPI spec level, every kludge we put together to fix eg Xgene ended up
+having implicit dependencies/requirements on firmware that are
+non-existing from an ACPI spec binding perspective (eg DSDT objects
+ordering).
 
-Just a few words, I find with my editor, this is what I find often helpful
-when I'am new to a project.
+It is not a kernel problem, however we put it, we can't guess an
+IRQ controllers dependency that can't be described.
 
--- Markus --
+Lorenzo
