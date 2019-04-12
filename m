@@ -2,80 +2,115 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6558C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EABBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAE02171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEEE42171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555083181;
+	bh=WzX8XGkOY041LE4RUQ/RFMWNbG+GGbzcioro+MbFIBg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mK1r/izYnumvNNiu+8z0XTat+K+/iN7iKMPJ0phVGuknV/zIkj8MMMVXIwKtCdkl0
+	 INv+UQXyXIbfFRTKcQmSYnI2wI6AVKLQwDUBtiiVel85rIKBmbd0x9sjkdHa6YwW3V
+	 hBshRTOFpaMb2opXHOoM6gW7iAU8DhhkPATfCj/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfDLPcq (ORCPT
+        id S1727104AbfDLPc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:32:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43624 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLPcp (ORCPT
+        Fri, 12 Apr 2019 11:32:59 -0400
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:32978 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfDLPc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:32:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id n8so5291803plp.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:32:45 -0700 (PDT)
+        Fri, 12 Apr 2019 11:32:59 -0400
+Received: by mail-lf1-f49.google.com with SMTP id j11so7842798lfm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:32:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NXbKfjDtbjJTyw5Ef0Kix1bfyNOyzTYwEKpGgqOg0TQ=;
+        b=b29dvSdD9cfYHQabi8DqTd65SPCA4obhIln3RU66IajZ136WcOn3NOWVgBFDYVDptF
+         Pp2/5FS6XX6lmgEFeW+6w+62lN8PLub/YTGNvXWjkP9nQCUx99g1ArdD+fsyH0+QY+kM
+         Dy3/6RufoCQqG8kSbDLFyrVvMcECFbfR4KUgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=noS2y6mJ1srr5NBsPltQTfG4rP0q2Q9Awkb9hBGouko=;
-        b=S4S8+pEyGf2d9lMUeyk0EqKsRVeiYnShDIKwLXN9Dp6oN9jlC+5flSunUnFKXppTGU
-         EgBJ3oA3X5gkzCHR+H0Dxg9BUUv94JxLfDJKkN5JWiKXeDFoX2OSHWW2fuUqUcBX5D7y
-         an+VPSSzlhtgfEZ6kOnQiO2D2b7rZ94CeaI54bn4RL+Hc+K+Dq3ZELNLkYlToq1OBdFH
-         /WPKM6yOKigDeYcrScoU8Utiw0Nl2OZLfcbDIGq0gn6dkF5EHdrUaYwAOBANitXsTegV
-         61TVymEf6DUtmI/QLixWnYIg/dBaChrAbS0SdJMT/1vXS6L+mmp33S1xnkVH6PE8Yvbi
-         dwOQ==
-X-Gm-Message-State: APjAAAXZ9NfCvSDrc+G61t41/1RC3fhcfsTWXOtuE1sCXMPVhUeknPDG
-        3wQFWjPYj0vDPbHM5h1ddfA=
-X-Google-Smtp-Source: APXvYqyEJWZyVMv3UE/MFjBW4rBnWptp+N5Gg9RUasFpP6tTmSh+OKTTUY/J/Vzw3Q5KZkJGCZcXkQ==
-X-Received: by 2002:a17:902:263:: with SMTP id 90mr5562143plc.257.1555083164966;
-        Fri, 12 Apr 2019 08:32:44 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id 4sm56723694pfn.159.2019.04.12.08.32.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 08:32:44 -0700 (PDT)
-Message-ID: <1555083162.161891.83.camel@acm.org>
-Subject: Re: [PATCH] locking/lockdep: Make lockdep_register_key() ignore
- 'debug_locks'
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NXbKfjDtbjJTyw5Ef0Kix1bfyNOyzTYwEKpGgqOg0TQ=;
+        b=XYxI670BljsxMIgawK0srciRvoJOB+nHDbWu9kV+15IqVgv+3ZYafvJAUeZBrpgCYt
+         bG65bEDrp/7qiJLsRYHj6zaq097cUj8RkYbmceWSCcZll4AXal+gcdjBD5XyU+RIVICp
+         atf8kPyk9wWRREIFYZpv5cJHmSmgu3O5zitOhJT+j+SeAPannovbAdzO9GaAHqzjcrpV
+         UCJBqPlMPRhKTbgBP9QwuELthGeb1KtIrjayV4jLJJWY7xKRmFqtd75CD/78GhMof9lZ
+         Pg/AUTdMoOxAFWz9zvqZczWh5c6TADq43LEvrQ9O/NQqqtnd7eGzqU134Q+tKrED7gRs
+         vYeg==
+X-Gm-Message-State: APjAAAVjw9ZDNjZ+aAY/kJmBZr8Oxm+pm3Dk0J332cEB/IdDZCIrV0PL
+        1acaAJK2sur3XszNdnPnwgIpGKWliqc=
+X-Google-Smtp-Source: APXvYqyKKxlM4QaekPYCFKiOvdMUkzmUPtETBIVyQaKqZsp5KyPoZZuwcMvgb3TnQcqHY25ywqvPVQ==
+X-Received: by 2002:ac2:518b:: with SMTP id u11mr14094492lfi.46.1555083176265;
+        Fri, 12 Apr 2019 08:32:56 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id n9sm7896773lfl.35.2019.04.12.08.32.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 08:32:55 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id h16so9228314ljg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:32:55 -0700 (PDT)
+X-Received: by 2002:a2e:9a91:: with SMTP id p17mr30639609lji.127.1555083174727;
+ Fri, 12 Apr 2019 08:32:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com> <20190411193906.GA12232@hirez.programming.kicks-ass.net>
+ <20190411195424.GL14281@hirez.programming.kicks-ass.net> <20190411211348.GA8451@worktop.programming.kicks-ass.net>
+ <20190412105633.GM14281@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190412105633.GM14281@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 12 Apr 2019 08:32:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wieBr3G=_ZGoCndi8XnuG1wtkedaGqkWB+=AVq65=_8sQ@mail.gmail.com>
+Message-ID: <CAHk-=wieBr3G=_ZGoCndi8XnuG1wtkedaGqkWB+=AVq65=_8sQ@mail.gmail.com>
+Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"): BUG:
+ KASAN: stack-out-of-bounds in __change_page_attr_set_clr
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel test robot <lkp@intel.com>, LKP <lkp@01.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Waiman Long <longman@redhat.com>, shenghui <shhuiw@foxmail.com>
-Date:   Fri, 12 Apr 2019 08:32:42 -0700
-In-Reply-To: <20190412054719.GA80743@gmail.com>
-References: <20190411172612.39180-1-bvanassche@acm.org>
-         <20190412054719.GA80743@gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-12 at 07:47 +-0200, Ingo Molnar wrote:
-+AD4 So why don't we add a debug+AF8-locks test to lockdep+AF8-unregister+AF8-key() 
-+AD4 instead? The general principle to bring lockdep to a screeching halt when 
-+AD4 bugs are detected, ASAP.
+On Fri, Apr 12, 2019 at 3:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> --- a/arch/x86/mm/tlb.c
+> +++ b/arch/x86/mm/tlb.c
+> @@ -728,7 +728,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+>  {
+>         int cpu;
+>
+> -       struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
+> +       struct flush_tlb_info info = {
+>                 .mm = mm,
+>                 .stride_shift = stride_shift,
+>                 .freed_tables = freed_tables,
+>
 
-Hi Ingo,
+Ack.
 
-Since this issue was introduced by patch +ACI-locking/lockdep: Zap lock classes
-even with lock debugging disabled+ACI and since that patch is in the tip tree
-but not yet upstream: do you prefer that I post a version 3 of that patch or
-do you rather prefer that I post a follow-up patch?
+We should never have stack alignment bigger than 16 bytes.  And
+preferably not even that. Trying to align stack at a cacheline
+boundary is wrong - if you *really* need things to be that aligned, do
+something else (regular kmalloc, percpu temp area, static allocation -
+whatever).
 
-Thanks,
-
-Bart.
+           Linus
