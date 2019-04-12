@@ -2,89 +2,90 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A4DC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69109C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833612083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F7A2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="MLVm0dH1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LpMi21LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfDLPGy (ORCPT
+        id S1726865AbfDLPKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:06:54 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:54082 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbfDLPGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:06:50 -0400
-Received: from localhost.localdomain (91-115-28-155.adsl.highway.telekom.at [91.115.28.155])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 592BBC1D51;
-        Fri, 12 Apr 2019 15:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1555081608; bh=QR00LtWv8/eoQ1jFUpVKmnz8LHOduZ1ATvV/Pnuo9is=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=MLVm0dH1W7yFEMcBOnjPbAUr/KXVssm+MSVoMdq+G8/jWHkYOZuoIcTxL1MsbIGke
-         XCVaoF3uIw7cfTVg5QOJamvi95eu3giocjMsf1ZHDTJa7AV6P2p3osu4v6p08iBBYw
-         awtLaM55xKbSY/0HzSI9AdzeCgTfj3Ll2LR7kAo0=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN)...),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
-        Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v3 3/3] ARM: dts: msm8974-FP2: Add vibration motor
-Date:   Fri, 12 Apr 2019 17:06:25 +0200
-Message-Id: <20190412150625.28384-3-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190412150625.28384-1-luca@z3ntu.xyz>
-References: <20190412150625.28384-1-luca@z3ntu.xyz>
+        Fri, 12 Apr 2019 11:10:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfDLPKN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j1q7X6NhbEhLCOEdRNq18QipghdlQelDKQwUtZKxsIY=; b=LpMi21LXoKD2d7IA9vIfwCrxzP
+        356U2r7Gouk03R4Kff9JRy/cWb4nqTA4CM97uJW5y6WSbcBsraGpgHNJWs/h9SNt1Whts2o9HRhil
+        ug97rdAhPpyiJ40BN+r+C1Tww3LK7RdEQMq+1HN0AyUZYaj/eKgqd2bss6mNcsG+MTP+1FlkZoqxy
+        ETV6PdF2PutL7UQ5+rBBJbX0V/yu79NV6Ioh0t81ywYl9DqYALqZ0UMsJHnJiWSjpIiUZxPir/rlh
+        +vfatDmMlLH0VURQgoUgN82o8eJ/Vi4E0418vIx+vj4XyKv/jSVul2k1Y0v333KpMYAlPWwdbDX2V
+        kVwjt6ow==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hExoZ-0002GO-LA; Fri, 12 Apr 2019 15:10:03 +0000
+Date:   Fri, 12 Apr 2019 08:10:03 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     Chao Yu <yuchao0@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, weidu.du@huawei.com,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH] staging: erofs: fix unexpected out-of-bound data access
+Message-ID: <20190412151003.GA6990@infradead.org>
+References: <20190411105555.133551-1-gaoxiang25@huawei.com>
+ <20190412150633.GA20776@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190412150633.GA20776@infradead.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Fri, Apr 12, 2019 at 08:06:33AM -0700, Christoph Hellwig wrote:
+> > +++ b/drivers/staging/erofs/data.c
+> > @@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+> >  	*last_block = current_block;
+> >  
+> >  	/* shift in advance in case of it followed by too many gaps */
+> > -	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
+> > +	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
+> 
+> This is still a very odd check.  bi_max_vecs * PAGE_SIZE is rather
+> arbitrary… and more importantly bi_max_vecs is not really a public
+> field, in fact this is the only place every using it outside the
+> core block layer.
+> 
+> I think the logic in this function should be reworked to what we
+> do elsewhere in the kernel, that is just add to the bio until
+> bio_add_page fails, in which case you submit the bio and start
+> a new one.  Then once you are done with your operation just submit
+> the bio.  Which unless I'm missing something is what the code does,
+> except for the goto loop obsfucation that is trying to hide it.
+> 
+> So why not something like:
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-index 643c57f84818..bf402ae39226 100644
---- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-@@ -50,6 +50,12 @@
- 		};
- 	};
- 
-+	vibrator {
-+		compatible = "gpio-vibrator";
-+		enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
-+		vcc-supply = <&pm8941_l18>;
-+	};
-+
- 	smd {
- 		rpm {
- 			rpm_requests {
--- 
-2.21.0
-
+And looking at this a little more - I think you should drop the
+erofs raw ops entirely.  The iomap-based readpage and readpages
+from fs/iomap.c should serve your needs just fine without all that
+duplication.  The only thing missing is the cleancache calls,
+which could easily be added.
