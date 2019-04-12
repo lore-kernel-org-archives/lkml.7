@@ -2,81 +2,326 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FAAC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD25C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804062077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555051998;
-	bh=EcTuRdda4ii5j6K0LpuZIYhpRXNvT8pk6CXn0wkNiQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qg4bDGQG12Q2QXxyt5Dh/O5F5RBojSBRu/Q/PC7n5qGwyYOdAzBWPrsCSLDr6GLHP
-	 cygjtm0fpIBMNEpz25FafRqa4m9qJnqY7bc0kq81VlzlKYi7DBwXCz3XMDlh3RQczL
-	 2H5kmZySjJ10XxcoS9VtIvPlvsQgC+2/pSQJzn9c=
+	by mail.kernel.org (Postfix) with ESMTP id 4960E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfDLGxR (ORCPT
+        id S1726983AbfDLGzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:53:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58002 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726101AbfDLGxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:53:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 786A0ADDB;
-        Fri, 12 Apr 2019 06:53:15 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 08:53:14 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
-        rientjes@google.com, yuzhoujian@didichuxing.com,
-        jrdr.linux@gmail.com, guro@fb.com, hannes@cmpxchg.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, ebiederm@xmission.com,
-        shakeelb@google.com, christian@brauner.io, minchan@kernel.org,
-        timmurray@google.com, dancol@google.com, joel@joelfernandes.org,
-        jannh@google.com, linux-mm@kvack.org,
-        lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-Message-ID: <20190412065314.GC13373@dhcp22.suse.cz>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org>
+        Fri, 12 Apr 2019 02:55:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60178 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726720AbfDLGzE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:55:04 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3C6i90H072363
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 02:55:03 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rtj3rqqqg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 02:55:02 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Fri, 12 Apr 2019 07:55:00 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 12 Apr 2019 07:54:57 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3C6suQr50266140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Apr 2019 06:54:56 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A6EA42041;
+        Fri, 12 Apr 2019 06:54:56 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B92D4203F;
+        Fri, 12 Apr 2019 06:54:55 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.145.19.216])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Apr 2019 06:54:55 +0000 (GMT)
+Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
+ use
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Reinhard Buendgen <buendgen@de.ibm.com>
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Fri, 12 Apr 2019 08:54:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411153313.GE22763@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19041206-0020-0000-0000-0000032F01FE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041206-0021-0000-0000-00002181360E
+Message-Id: <223c82c7-6a75-7209-3652-c2341c83878f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904120046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-04-19 08:33:13, Matthew Wilcox wrote:
-> On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > victim process. The usage of this flag is currently limited to SIGKILL
-> > signal and only to privileged users.
-> 
-> What is the downside of doing expedited memory reclaim?  ie why not do it
-> every time a process is going to die?
- 
-Well, you are tearing down an address space which might be still in use
-because the task not fully dead yeat. So there are two downsides AFAICS.
-Core dumping which will not see the reaped memory so the resulting
-coredump might be incomplete. And unexpected #PF/gup on the reaped
-memory will result in SIGBUS. These are things that we have closed our
-eyes in the oom context because they likely do not matter. If we want to
-use the same technique for other usecases then we have to think how much
-that matter again.
+On 11.04.19 23:03, Tony Krowiak wrote:
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. This prevents
+> a root user from inadvertently taking a queue away from a guest and
+> giving it to the host, or vice versa. The callback will be invoked
+> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+> result in one or more AP queues being removed from its driver. If the
+> callback responds in the affirmative for any driver queried, the change
+> to the apmask or aqmask will be rejected with a device in use error.
+>
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
+>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 
--- 
-Michal Hocko
-SUSE Labs
+Hello Tony
+
+you are going out with your patches but ... what is the result of the discussions
+we had in the past ? Do we have a common understanding that we want to have
+it this way ? A driver which is able to claim resources and the bus code
+has lower precedence ?
+
+> ---
+>  drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>  drivers/s390/crypto/ap_bus.h |   3 +
+>  2 files changed, 135 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+> index 1546389d71db..66a5a9d9fae6 100644
+> --- a/drivers/s390/crypto/ap_bus.c
+> +++ b/drivers/s390/crypto/ap_bus.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/ctype.h>
+> +#include <linux/module.h>
+>  
+>  #include "ap_bus.h"
+>  #include "ap_debug.h"
+> @@ -980,9 +981,11 @@ int ap_parse_mask_str(const char *str,
+>  	newmap = kmalloc(size, GFP_KERNEL);
+>  	if (!newmap)
+>  		return -ENOMEM;
+> -	if (mutex_lock_interruptible(lock)) {
+> -		kfree(newmap);
+> -		return -ERESTARTSYS;
+> +	if (lock) {
+> +		if (mutex_lock_interruptible(lock)) {
+> +			kfree(newmap);
+> +			return -ERESTARTSYS;
+> +		}
+>  	}
+>  
+>  	if (*str == '+' || *str == '-') {
+> @@ -994,7 +997,10 @@ int ap_parse_mask_str(const char *str,
+>  	}
+>  	if (rc == 0)
+>  		memcpy(bitmap, newmap, size);
+> -	mutex_unlock(lock);
+> +
+> +	if (lock)
+> +		mutex_unlock(lock);
+> +
+>  	kfree(newmap);
+>  	return rc;
+>  }
+> @@ -1181,12 +1187,72 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>  	return rc;
+>  }
+>  
+> +static int __verify_card_reservations(struct device_driver *drv, void *data)
+> +{
+> +	int rc = 0;
+> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+> +	unsigned long *newapm = (unsigned long *)data;
+> +
+> +	/*
+> +	 * If the reserved bits do not identify cards reserved for use by the
+> +	 * non-default driver, there is no need to verify the driver is using
+> +	 * the queues.
+> +	 */
+> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+> +		return 0;
+> +
+> +	/* Pin the driver's module code */
+> +	if (!try_module_get(drv->owner))
+> +		return 0;
+> +
+> +	if (ap_drv->in_use)
+> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> +			rc = -EADDRINUSE;
+> +
+> +	module_put(drv->owner);
+> +
+> +	return rc;
+> +}
+> +
+> +static int apmask_commit(unsigned long *newapm)
+> +{
+> +	int rc;
+> +	unsigned long reserved[BITS_TO_LONGS(AP_DEVICES)];
+> +
+> +	/*
+> +	 * Check if any bits in the apmask have been set which will
+> +	 * result in queues being removed from non-default drivers
+> +	 */
+> +	if (bitmap_andnot(reserved, newapm, ap_perms.apm, AP_DEVICES)) {
+> +		rc = (bus_for_each_drv(&ap_bus_type, NULL, reserved,
+> +				       __verify_card_reservations));
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	memcpy(ap_perms.apm, newapm, APMASKSIZE);
+> +
+> +	return 0;
+> +}
+> +
+>  static ssize_t apmask_store(struct bus_type *bus, const char *buf,
+>  			    size_t count)
+>  {
+>  	int rc;
+> +	unsigned long newapm[BITS_TO_LONGS(AP_DEVICES)];
+> +
+> +	memcpy(newapm, ap_perms.apm, APMASKSIZE);
+> +
+> +	rc = ap_parse_mask_str(buf, newapm, AP_DEVICES, NULL);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (mutex_lock_interruptible(&ap_perms_mutex))
+> +		return -ERESTARTSYS;
+> +
+> +	rc = apmask_commit(newapm);
+> +	mutex_unlock(&ap_perms_mutex);
+>  
+> -	rc = ap_parse_mask_str(buf, ap_perms.apm, AP_DEVICES, &ap_perms_mutex);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -1212,12 +1278,72 @@ static ssize_t aqmask_show(struct bus_type *bus, char *buf)
+>  	return rc;
+>  }
+>  
+> +static int __verify_queue_reservations(struct device_driver *drv, void *data)
+> +{
+> +	int rc = 0;
+> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+> +	unsigned long *newaqm = (unsigned long *)data;
+> +
+> +	/*
+> +	 * If the reserved bits do not identify queues reserved for use by the
+> +	 * non-default driver, there is no need to verify the driver is using
+> +	 * the queues.
+> +	 */
+> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+> +		return 0;
+> +
+> +	/* Pin the driver's module code */
+> +	if (!try_module_get(drv->owner))
+> +		return 0;
+> +
+> +	if (ap_drv->in_use)
+> +		if (ap_drv->in_use(ap_perms.apm, newaqm))
+> +			rc = -EADDRINUSE;
+> +
+> +	module_put(drv->owner);
+> +
+> +	return rc;
+> +}
+> +
+> +static int aqmask_commit(unsigned long *newaqm)
+> +{
+> +	int rc;
+> +	unsigned long reserved[BITS_TO_LONGS(AP_DOMAINS)];
+> +
+> +	/*
+> +	 * Check if any bits in the aqmask have been set which will
+> +	 * result in queues being removed from non-default drivers
+> +	 */
+> +	if (bitmap_andnot(reserved, newaqm, ap_perms.aqm, AP_DOMAINS)) {
+> +		rc = (bus_for_each_drv(&ap_bus_type, NULL, reserved,
+> +				       __verify_queue_reservations));
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	memcpy(ap_perms.aqm, newaqm, APMASKSIZE);
+> +
+> +	return 0;
+> +}
+> +
+>  static ssize_t aqmask_store(struct bus_type *bus, const char *buf,
+>  			    size_t count)
+>  {
+>  	int rc;
+> +	unsigned long newaqm[BITS_TO_LONGS(AP_DOMAINS)];
+> +
+> +	memcpy(newaqm, ap_perms.aqm, AQMASKSIZE);
+> +
+> +	rc = ap_parse_mask_str(buf, newaqm, AP_DOMAINS, NULL);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (mutex_lock_interruptible(&ap_perms_mutex))
+> +		return -ERESTARTSYS;
+> +
+> +	rc = aqmask_commit(newaqm);
+> +	mutex_unlock(&ap_perms_mutex);
+>  
+> -	rc = ap_parse_mask_str(buf, ap_perms.aqm, AP_DOMAINS, &ap_perms_mutex);
+>  	if (rc)
+>  		return rc;
+>  
+> diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+> index 15a98a673c5c..b00952d5fdbb 100644
+> --- a/drivers/s390/crypto/ap_bus.h
+> +++ b/drivers/s390/crypto/ap_bus.h
+> @@ -137,6 +137,7 @@ struct ap_driver {
+>  	void (*remove)(struct ap_device *);
+>  	void (*suspend)(struct ap_device *);
+>  	void (*resume)(struct ap_device *);
+> +	bool (*in_use)(unsigned long *apm, unsigned long *aqm);
+>  };
+>  
+>  #define to_ap_drv(x) container_of((x), struct ap_driver, driver)
+> @@ -262,6 +263,8 @@ void ap_queue_reinit_state(struct ap_queue *aq);
+>  struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
+>  			       int comp_device_type, unsigned int functions);
+>  
+> +#define APMASKSIZE (BITS_TO_LONGS(AP_DEVICES) * sizeof(unsigned long))
+> +#define AQMASKSIZE (BITS_TO_LONGS(AP_DOMAINS) * sizeof(unsigned long))
+>  struct ap_perms {
+>  	unsigned long ioctlm[BITS_TO_LONGS(AP_IOCTLS)];
+>  	unsigned long apm[BITS_TO_LONGS(AP_DEVICES)];
+
