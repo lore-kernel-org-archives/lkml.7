@@ -2,110 +2,81 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B8C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A7CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475912186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="tytv2ReG"
+	by mail.kernel.org (Postfix) with ESMTP id CF1832073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfDLGnJ (ORCPT
+        id S1726981AbfDLGoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:43:09 -0400
-Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:6077
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfDLGnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:43:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector1-synaptics-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H7h5OWJ4duiQOjh8a93rsttKVXj1YfNALGUKcdnTxmc=;
- b=tytv2ReGeWTr7rwNWvSlR8wnoznDTOU6qetCAiL5P64KXKYv2cpMBB1vTH7hd0umzJeMTXVz3dhmQMp2oVSuUH+9sEXxUc208k9hB4vBy1fdB0Ngmw81ZC5MIHeWwu6LSs363XWu2Zj7dW0Cjxstu8AegJu9Xmn0J814GLUxktA=
-Received: from DM6PR03MB4778.namprd03.prod.outlook.com (20.179.105.26) by
- DM6SPR01MB0045.namprd03.prod.outlook.com (20.176.120.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.15; Fri, 12 Apr 2019 06:43:06 +0000
-Received: from DM6PR03MB4778.namprd03.prod.outlook.com
- ([fe80::1d45:49e6:4baa:d7b0]) by DM6PR03MB4778.namprd03.prod.outlook.com
- ([fe80::1d45:49e6:4baa:d7b0%3]) with mapi id 15.20.1792.009; Fri, 12 Apr 2019
- 06:43:06 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rajat Jain <rajatja@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: Make pci_aer_init() when !CONFIG_PCIEAER void too
-Thread-Topic: [PATCH] PCI: Make pci_aer_init() when !CONFIG_PCIEAER void too
-Thread-Index: AQHU8Pr82Du5MALJTk6mD6X4N4ajEg==
-Date:   Fri, 12 Apr 2019 06:43:06 +0000
-Message-ID: <20190412143458.2120118b@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR01CA0005.jpnprd01.prod.outlook.com (2603:1096:404::17)
- To DM6PR03MB4778.namprd03.prod.outlook.com (2603:10b6:5:184::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7ef761a1-2318-4f1c-b02f-08d6bf121e62
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6SPR01MB0045;
-x-ms-traffictypediagnostic: DM6SPR01MB0045:
-x-microsoft-antispam-prvs: <DM6SPR01MB0045E0CA2F7C7404FE474AFBED280@DM6SPR01MB0045.namprd03.prod.outlook.com>
-x-forefront-prvs: 0005B05917
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(136003)(396003)(346002)(189003)(199004)(7736002)(6436002)(72206003)(1076003)(478600001)(9686003)(66066001)(97736004)(6512007)(52116002)(305945005)(8676002)(99286004)(68736007)(110136005)(316002)(54906003)(2906002)(86362001)(26005)(3846002)(8936002)(6116002)(6506007)(14444005)(256004)(186003)(386003)(6486002)(476003)(102836004)(81156014)(4744005)(5660300002)(81166006)(25786009)(486006)(50226002)(71200400001)(106356001)(14454004)(105586002)(4326008)(71190400001)(53936002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6SPR01MB0045;H:DM6PR03MB4778.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PQzi43Dzs6B3Uw2kEjm/JQ/qMlF1Yk1e3hzyksVsIV4ys3xXI+9BfpKPl0i0Ss+AEPq4EKhQ+KLbf49xOljXdVdh2GjedEREjU3GisiMmJ5CfD/fmlIRquAf6cignNaYlowt+ZYZbvvskvl8Owp+BV0CwMbudr1splvY/dGbQSnMI1OwccpqEi7THPSePzS5KtrEGD2YFRE750kaWAeeoQ0KZFXfTwrDyJJCmR/nowctHSEvcjS9BCz47JuIh5ATBbPw/jnli4DQyVSOP6qGXV0GGSebcuGOes69PsrFbSzYzH7FGC23LI/l3WZ5uQIyZh8nMwwA22mJVP526nueVkRixE03+kvOwrzzahT+CdfNMuCHyY5/E7KalPvIjb5ELNS/2dVJLaaTXXtrFTIuv+NAT5z4815K6jCObBhs4tU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EF65E8110B0C7E4296F1A29653BB139B@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Apr 2019 02:44:02 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:34905 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfDLGoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:44:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id k2so7043327ioj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 23:44:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=nvp7ztOb1eozq3DPwMRJnm+OrNK0VnZje3xTWjckm/M=;
+        b=ZNYOu48M5p9qMYlV6Mv9zfpmIynTuBubUgOI5cw2aEgo6miHznzE0YfUGPABBkMZsg
+         lFOgLqjIZ4vvQlHqNlBji2BltR95BWZHgrTn9ZZUgBg8b0ngn+c92LM1Zp6T0oWNfozI
+         R8w9ZtnLPEnce9kBr1ANny1w36LBDQWM7PDuOy/i4axOxxO+9CXOSbVmkG/tvL6l+u6A
+         7uvW5h5zCdjYDJmU5U5slytLtaWncZ2a2bMTiTwBhvzdaeuDq8vGQR9Si+Onb2TuCb+p
+         spGWiz6iiHJHmV0D+d3VyjH7UTDXnZN8B8pT/V9IGNVSx0LeopZ6dNMvOlce/OBVZjbc
+         UEQw==
+X-Gm-Message-State: APjAAAWYUWU80uciUh2th8ogILqym5stvlJpFOSo4Rn+7gItmpXEsRIB
+        Z254ymSpU5MIQoWUbDdcaNIefs0yocbQm5MmTTSw+9Qwd5Gm
+X-Google-Smtp-Source: APXvYqxmW56SWtZY2McV4W+bxn5Ag3GW6Qb2Q3mJnZCdGa1f+Z4xfPcY7s/GS26I/WPCF917ncZHDCxcktJW2P01+l2htdhOSdEp
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ef761a1-2318-4f1c-b02f-08d6bf121e62
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 06:43:06.4457
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6SPR01MB0045
+X-Received: by 2002:a24:4645:: with SMTP id j66mr3359001itb.24.1555051441008;
+ Thu, 11 Apr 2019 23:44:01 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 23:44:01 -0700
+In-Reply-To: <0000000000002b42040573b8495a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000bfb6c405864fa081@google.com>
+Subject: Re: WARNING: refcount bug in igmp_start_timer
+From:   syzbot <syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, benjamin.gaignard@linaro.org,
+        cmetcalf@ezchip.com, daniel.vetter@ffwll.ch,
+        daniel.vetter@intel.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        paulmck@linux.vnet.ibm.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vincent.abriou@st.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 60ed982a4e78 ("PCI/AER: Move internal declarations to
-drivers/pci/pci.h") makes pci_aer_init() void, but the version when
-!CONFIG_PCIEAER isn't modified accordingly, fix it.
+syzbot has bisected this bug to:
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/pci/pci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+commit fc5e9d63a8db40e9e3a3b180be33d44af8a3cee8
+Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed May 24 14:52:05 2017 +0000
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index d994839a3e24..9cb99380c61e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -597,7 +597,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev);
- void pci_aer_clear_device_status(struct pci_dev *dev);
- #else
- static inline void pci_no_aer(void) { }
--static inline int pci_aer_init(struct pci_dev *d) { return -ENODEV; }
-+static inline void pci_aer_init(struct pci_dev *d) { }
- static inline void pci_aer_exit(struct pci_dev *d) { }
- static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
- static inline void pci_aer_clear_device_status(struct pci_dev *dev) { }
---=20
-2.20.1
+     drm/sti: Drop drm_vblank_cleanup
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f62c2d200000
+start commit:   ae596de1 Compiler Attributes: naked can be shared
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=100e2c2d200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f62c2d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa12be50bca08d8
+dashboard link: https://syzkaller.appspot.com/bug?extid=e28037ac1c96d2a86e89
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=178537da400000
+
+Reported-by: syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com
+Fixes: fc5e9d63a8db ("drm/sti: Drop drm_vblank_cleanup")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
