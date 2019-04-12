@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBCBC282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AE5C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1128E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193932084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ILqDJJHk"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="uCXjsNn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfDLPPW (ORCPT
+        id S1726798AbfDLPP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:15:22 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36747 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfDLPPU (ORCPT
+        Fri, 12 Apr 2019 11:15:28 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35773 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfDLPPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:15:20 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k130so5859167qke.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:15:19 -0700 (PDT)
+        Fri, 12 Apr 2019 11:15:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h39so11648565qte.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:15:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PRTUaF678C5HIzdBjBIPSEr+aHrXt+S0IRBXo9MeAws=;
-        b=ILqDJJHkPZz+eoKOvEr4x0/kgN/IBd0kCMfXy7rPlSfiWsGSmDI6DjyrVYmzgB/KgJ
-         o/a/0Y1afe7RfkMShz9vwu+3rR2TVnT91QuwBCSOdI5Q13s8C0dbu9xj3PjV4IRsSngj
-         +xYSZhSKjRK1gaqwdDvmiaOzBR7OeV2vcxlhnLdTeOQSTfrRfivBEbyYNTxVKLSnp+CB
-         zjIsSHe6XO4EZuIEVpRXex1t0Chpz6YqKKdL/mvxmkyCEQpYZDkvyznHQ6p01d47B6DJ
-         dw6CszzzPqXfI2qk2mij7G5QVuKJIXQGJm+0/35AP73eRIX1DEbeAooXRbZCZUFLrkSP
-         7iKg==
+        bh=FEfDsV1rTEEhN0SVMMTVTmF+r1SaZigmXU93Z6LcqvY=;
+        b=uCXjsNn9nQODbHIT3m0XWRrWyphSHgyMZl+xQCh+e/OHrUHKtlyxHUgk5wZ8rTqNwv
+         8wDvO39zbgpNE/i4pfbMVB0LE281Xa3dHNYmW7MmfqUGgCSpzPovdnVcbEZ8mBLpGZ5c
+         rPkhPtv2cg+BOyUkGrpZ0s8SW7sJuEd0OmIpv/llGjoaIuAh3nDKQgvOB3YhQhDOcc5L
+         1bW+QQaV7BIU0WALBTPmxh5Ee8yV7PqudKPyzCGByaA75pESqzAceJe+BI0k/kWhsX2u
+         ttJ903ree2TmIBnc5E+0+48VF8MAHaoMobzRkvXllpiWbz9A93EzAr3bxxk3Ctxtys/a
+         B+mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PRTUaF678C5HIzdBjBIPSEr+aHrXt+S0IRBXo9MeAws=;
-        b=bgbI6+uBvV+WUytB2/Fw64ebOn/LwhzTSJCxOilm9gyiP7e8OR/oOdzBXidfO6Uzsd
-         NOxDnQtyEhYQVJDA8FmvtaEVT4P26t1w5pXTqrATJmwv90AZksA7/FJb1/tp/V0E0U9F
-         /Ce2OL1eJF5Dti72GJ5JPiUTq4MpNflXbkLUJgxYDrqkBPHN16azKx0QNazX32KmfIx8
-         01sLAXQ8/zwvlOaxWldCklC3sPmSPZfNBsVvLZ/e2HIpf+vCA32SfLZjBdI5VfFAqTpX
-         XLjnaglPPvN3Fv+A+cpVn0d1ELFtFrie2uYfKCGpC+LgKYl5pWbBwN4XTnj3anwIKbcp
-         YI1Q==
-X-Gm-Message-State: APjAAAUD1xXomffYMYHEcQ3wYAjyzivedFoFtxSMtfEjyZ21/SsOAhwB
-        OU5NsOau3zFN6HhpVUJ0ogpPvKKvd/E=
-X-Google-Smtp-Source: APXvYqysIlg0nPC2TAIyhyZGpUry9fm9BHzZ/cusQuSfW34/ihXJ8nq+qmczg5uW0MTGOcK5jfgKsQ==
-X-Received: by 2002:a37:4f95:: with SMTP id d143mr45617065qkb.253.1555082119044;
-        Fri, 12 Apr 2019 08:15:19 -0700 (PDT)
+        bh=FEfDsV1rTEEhN0SVMMTVTmF+r1SaZigmXU93Z6LcqvY=;
+        b=ZlULHpnxoktNAQk3ZkdtbQJkIfMA5eCxFhaQgzwihYJklIH+cBJFBjQGl6XSg8YG2c
+         vlgcIJ6OF7GgIJc0DOjplsTm1OqzswMYGcWBA0JAtShWgdidCGi5uK+8KLvGUOG4V0TZ
+         VJOkwsfJvH++uplHoLLodkuKv1ruPiEQyhOsGiu9yzVFzkac4Xb38q4VgwBv3VP/5TG4
+         sm4tdKJwO0Drq9N3YBvu28ifIZw1iB7g0hg+eynIiEsQkXzeRj1K9EA/8+kP0KY3tTve
+         TlqhNDN2ZzK/8wFd/YjCoyn9Rh6lplif3Uh9PYH3/sxQb+acmNmMKgcBdXP3/WXMYbIe
+         fG8g==
+X-Gm-Message-State: APjAAAWlTYVy0BBkZd9rHTf5ay3lxeWobyLsDgJTFs9Tov9t5mJ579XY
+        hIMp+AiK8te0mfAa5PcENq/xQg==
+X-Google-Smtp-Source: APXvYqzo127I/xyvi2f2TQuihJ/PTbv/GbR3bqhfptJyq2tZG1LoaycbqyG+TZzhhwy3eZxqSBnHxA==
+X-Received: by 2002:ac8:3782:: with SMTP id d2mr46415710qtc.170.1555082120810;
+        Fri, 12 Apr 2019 08:15:20 -0700 (PDT)
 Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id x24sm13094296qtm.65.2019.04.12.08.15.18
+        by smtp.gmail.com with ESMTPSA id b46sm24700810qtk.77.2019.04.12.08.15.19
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 08:15:18 -0700 (PDT)
+        Fri, 12 Apr 2019 08:15:20 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH 2/4] mm: memcontrol: move stat/event counting functions out-of-line
-Date:   Fri, 12 Apr 2019 11:15:05 -0400
-Message-Id: <20190412151507.2769-3-hannes@cmpxchg.org>
+Subject: [PATCH 3/4] mm: memcontrol: fix recursive statistics correctness & scalabilty
+Date:   Fri, 12 Apr 2019 11:15:06 -0400
+Message-Id: <20190412151507.2769-4-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190412151507.2769-1-hannes@cmpxchg.org>
 References: <20190412151507.2769-1-hannes@cmpxchg.org>
@@ -73,197 +73,524 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are getting too big to be inlined in every callsite. They were
-stolen from vmstat.c, which already out-of-lines them, and they have
-only been growing since. The callsites aren't that hot, either.
+Right now, when somebody needs to know the recursive memory statistics
+and events of a cgroup subtree, they need to walk the entire subtree
+and sum up the counters manually.
 
-Move __mod_memcg_state()
-     __mod_lruvec_state() and
-     __count_memcg_events() out of line and add kerneldoc comments.
+There are two issues with this:
+
+1. When a cgroup gets deleted, its stats are lost. The state counters
+should all be 0 at that point, of course, but the events are not. When
+this happens, the event counters, which are supposed to be monotonic,
+can go backwards in the parent cgroups.
+
+2. During regular operation, we always have a certain number of lazily
+freed cgroups sitting around that have been deleted, have no tasks,
+but have a few cache pages remaining. These groups' statistics do not
+change until we eventually hit memory pressure, but somebody watching,
+say, memory.stat on an ancestor has to iterate those every time.
+
+This patch addresses both issues by introducing recursive counters at
+each level that are propagated from the write side when stats change.
+
+Upward propagation happens when the per-cpu caches spill over into the
+local atomic counter. This is the same thing we do during charge and
+uncharge, except that the latter uses atomic RMWs, which are more
+expensive; stat changes happen at around the same rate. In a sparse
+file test (page faults and reclaim at maximum CPU speed) with 5 cgroup
+nesting levels, perf shows __mod_memcg_page state at ~1%.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h | 62 +++---------------------------
- mm/memcontrol.c            | 79 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+), 57 deletions(-)
+ include/linux/memcontrol.h |  54 +++++++++-
+ mm/memcontrol.c            | 205 ++++++++++++++++++-------------------
+ 2 files changed, 150 insertions(+), 109 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 139be7d44c29..cae7d1b11eea 100644
+index cae7d1b11eea..36bdfe8e5965 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -580,22 +580,7 @@ static inline unsigned long memcg_page_state_local(struct mem_cgroup *memcg,
- 	return x;
- }
+@@ -128,6 +128,7 @@ struct mem_cgroup_per_node {
  
--/* idx can be of type enum memcg_stat_item or node_stat_item */
--static inline void __mod_memcg_state(struct mem_cgroup *memcg,
--				     int idx, int val)
--{
--	long x;
--
--	if (mem_cgroup_disabled())
--		return;
--
--	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
--	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
--		atomic_long_add(x, &memcg->vmstats[idx]);
--		x = 0;
--	}
--	__this_cpu_write(memcg->vmstats_percpu->stat[idx], x);
--}
-+void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val);
+ 	struct lruvec_stat __percpu *lruvec_stat_cpu;
+ 	atomic_long_t		lruvec_stat[NR_VM_NODE_STAT_ITEMS];
++	atomic_long_t		lruvec_stat_local[NR_VM_NODE_STAT_ITEMS];
  
- /* idx can be of type enum memcg_stat_item or node_stat_item */
- static inline void mod_memcg_state(struct mem_cgroup *memcg,
-@@ -657,31 +642,8 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
- 	return x;
- }
+ 	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
  
--static inline void __mod_lruvec_state(struct lruvec *lruvec,
--				      enum node_stat_item idx, int val)
--{
--	struct mem_cgroup_per_node *pn;
--	long x;
--
--	/* Update node */
--	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
--
--	if (mem_cgroup_disabled())
--		return;
--
--	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
--
--	/* Update memcg */
--	__mod_memcg_state(pn->memcg, idx, val);
--
--	/* Update lruvec */
--	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
--	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
--		atomic_long_add(x, &pn->lruvec_stat[idx]);
--		x = 0;
--	}
--	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
--}
-+void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
-+			int val);
+@@ -279,8 +280,12 @@ struct mem_cgroup {
+ 	MEMCG_PADDING(_pad2_);
  
- static inline void mod_lruvec_state(struct lruvec *lruvec,
- 				    enum node_stat_item idx, int val)
-@@ -723,22 +685,8 @@ unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
- 						gfp_t gfp_mask,
- 						unsigned long *total_scanned);
+ 	atomic_long_t		vmstats[MEMCG_NR_STAT];
++	atomic_long_t		vmstats_local[MEMCG_NR_STAT];
++
+ 	atomic_long_t		vmevents[NR_VM_EVENT_ITEMS];
+-	atomic_long_t memory_events[MEMCG_NR_MEMORY_EVENTS];
++	atomic_long_t		vmevents_local[NR_VM_EVENT_ITEMS];
++
++	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
  
--static inline void __count_memcg_events(struct mem_cgroup *memcg,
--					enum vm_event_item idx,
--					unsigned long count)
--{
--	unsigned long x;
--
--	if (mem_cgroup_disabled())
--		return;
--
--	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
--	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
--		atomic_long_add(x, &memcg->vmevents[idx]);
--		x = 0;
--	}
--	__this_cpu_write(memcg->vmstats_percpu->events[idx], x);
--}
-+void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
-+			  unsigned long count);
+ 	unsigned long		socket_pressure;
  
- static inline void count_memcg_events(struct mem_cgroup *memcg,
- 				      enum vm_event_item idx,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 109608b8091f..3535270ebeec 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -687,6 +687,85 @@ mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
- 	return mz;
- }
+@@ -565,6 +570,20 @@ struct mem_cgroup *lock_page_memcg(struct page *page);
+ void __unlock_page_memcg(struct mem_cgroup *memcg);
+ void unlock_page_memcg(struct page *page);
  
-+/**
-+ * __mod_memcg_state - update cgroup memory statistics
-+ * @memcg: the memory cgroup
-+ * @idx: the stat item - can be enum memcg_stat_item or enum node_stat_item
-+ * @val: delta to add to the counter, can be negative
++/*
++ * idx can be of type enum memcg_stat_item or node_stat_item.
++ * Keep in sync with memcg_exact_page_state().
 + */
-+void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
++static inline unsigned long memcg_page_state(struct mem_cgroup *memcg, int idx)
 +{
-+	long x;
-+
-+	if (mem_cgroup_disabled())
-+		return;
-+
-+	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
-+	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
-+		atomic_long_add(x, &memcg->vmstats[idx]);
++	long x = atomic_long_read(&memcg->vmstats[idx]);
++#ifdef CONFIG_SMP
++	if (x < 0)
 +		x = 0;
-+	}
-+	__this_cpu_write(memcg->vmstats_percpu->stat[idx], x);
++#endif
++	return x;
 +}
 +
-+/**
-+ * __mod_lruvec_state - update lruvec memory statistics
-+ * @lruvec: the lruvec
-+ * @idx: the stat item
-+ * @val: delta to add to the counter, can be negative
-+ *
-+ * The lruvec is the intersection of the NUMA node and a cgroup. This
-+ * function updates the all three counters that are affected by a
-+ * change of state at this level: per-node, per-cgroup, per-lruvec.
-+ */
-+void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
-+			int val)
+ /*
+  * idx can be of type enum memcg_stat_item or node_stat_item.
+  * Keep in sync with memcg_exact_page_state().
+@@ -572,7 +591,7 @@ void unlock_page_memcg(struct page *page);
+ static inline unsigned long memcg_page_state_local(struct mem_cgroup *memcg,
+ 						   int idx)
+ {
+-	long x = atomic_long_read(&memcg->vmstats[idx]);
++	long x = atomic_long_read(&memcg->vmstats_local[idx]);
+ #ifdef CONFIG_SMP
+ 	if (x < 0)
+ 		x = 0;
+@@ -624,6 +643,24 @@ static inline void mod_memcg_page_state(struct page *page,
+ 		mod_memcg_state(page->mem_cgroup, idx, val);
+ }
+ 
++static inline unsigned long lruvec_page_state(struct lruvec *lruvec,
++					      enum node_stat_item idx)
 +{
 +	struct mem_cgroup_per_node *pn;
 +	long x;
 +
-+	/* Update node */
-+	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
-+
 +	if (mem_cgroup_disabled())
-+		return;
++		return node_page_state(lruvec_pgdat(lruvec), idx);
 +
 +	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-+
-+	/* Update memcg */
-+	__mod_memcg_state(pn->memcg, idx, val);
-+
-+	/* Update lruvec */
-+	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
-+	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
-+		atomic_long_add(x, &pn->lruvec_stat[idx]);
++	x = atomic_long_read(&pn->lruvec_stat[idx]);
++#ifdef CONFIG_SMP
++	if (x < 0)
 +		x = 0;
-+	}
-+	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
++#endif
++	return x;
 +}
 +
-+/**
-+ * __count_memcg_events - account VM events in a cgroup
-+ * @memcg: the memory cgroup
-+ * @idx: the event item
-+ * @count: the number of events that occured
-+ */
-+void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
-+			  unsigned long count)
-+{
-+	unsigned long x;
-+
-+	if (mem_cgroup_disabled())
-+		return;
-+
-+	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
-+	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
-+		atomic_long_add(x, &memcg->vmevents[idx]);
-+		x = 0;
-+	}
-+	__this_cpu_write(memcg->vmstats_percpu->events[idx], x);
-+}
-+
- static unsigned long memcg_events_local(struct mem_cgroup *memcg,
- 					int event)
+ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
+ 						    enum node_stat_item idx)
  {
+@@ -634,7 +671,7 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
+ 		return node_page_state(lruvec_pgdat(lruvec), idx);
+ 
+ 	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+-	x = atomic_long_read(&pn->lruvec_stat[idx]);
++	x = atomic_long_read(&pn->lruvec_stat_local[idx]);
+ #ifdef CONFIG_SMP
+ 	if (x < 0)
+ 		x = 0;
+@@ -991,6 +1028,11 @@ static inline void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
+ {
+ }
+ 
++static inline unsigned long memcg_page_state(struct mem_cgroup *memcg, int idx)
++{
++	return 0;
++}
++
+ static inline unsigned long memcg_page_state_local(struct mem_cgroup *memcg,
+ 						   int idx)
+ {
+@@ -1021,6 +1063,12 @@ static inline void mod_memcg_page_state(struct page *page,
+ {
+ }
+ 
++static inline unsigned long lruvec_page_state(struct lruvec *lruvec,
++					      enum node_stat_item idx)
++{
++	return node_page_state(lruvec_pgdat(lruvec), idx);
++}
++
+ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
+ 						    enum node_stat_item idx)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 3535270ebeec..2eb2d4ef9b34 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -702,12 +702,27 @@ void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
+ 
+ 	x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+-		atomic_long_add(x, &memcg->vmstats[idx]);
++		struct mem_cgroup *mi;
++
++		atomic_long_add(x, &memcg->vmstats_local[idx]);
++		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++			atomic_long_add(x, &mi->vmstats[idx]);
+ 		x = 0;
+ 	}
+ 	__this_cpu_write(memcg->vmstats_percpu->stat[idx], x);
+ }
+ 
++static struct mem_cgroup_per_node *
++parent_nodeinfo(struct mem_cgroup_per_node *pn, int nid)
++{
++	struct mem_cgroup *parent;
++
++	parent = parent_mem_cgroup(pn->memcg);
++	if (!parent)
++		return NULL;
++	return mem_cgroup_nodeinfo(parent, nid);
++}
++
+ /**
+  * __mod_lruvec_state - update lruvec memory statistics
+  * @lruvec: the lruvec
+@@ -721,24 +736,31 @@ void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
+ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+ 			int val)
+ {
++	pg_data_t *pgdat = lruvec_pgdat(lruvec);
+ 	struct mem_cgroup_per_node *pn;
++	struct mem_cgroup *memcg;
+ 	long x;
+ 
+ 	/* Update node */
+-	__mod_node_page_state(lruvec_pgdat(lruvec), idx, val);
++	__mod_node_page_state(pgdat, idx, val);
+ 
+ 	if (mem_cgroup_disabled())
+ 		return;
+ 
+ 	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
++	memcg = pn->memcg;
+ 
+ 	/* Update memcg */
+-	__mod_memcg_state(pn->memcg, idx, val);
++	__mod_memcg_state(memcg, idx, val);
+ 
+ 	/* Update lruvec */
+ 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+ 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+-		atomic_long_add(x, &pn->lruvec_stat[idx]);
++		struct mem_cgroup_per_node *pi;
++
++		atomic_long_add(x, &pn->lruvec_stat_local[idx]);
++		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
++			atomic_long_add(x, &pi->lruvec_stat[idx]);
+ 		x = 0;
+ 	}
+ 	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
+@@ -760,18 +782,26 @@ void __count_memcg_events(struct mem_cgroup *memcg, enum vm_event_item idx,
+ 
+ 	x = count + __this_cpu_read(memcg->vmstats_percpu->events[idx]);
+ 	if (unlikely(x > MEMCG_CHARGE_BATCH)) {
+-		atomic_long_add(x, &memcg->vmevents[idx]);
++		struct mem_cgroup *mi;
++
++		atomic_long_add(x, &memcg->vmevents_local[idx]);
++		for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++			atomic_long_add(x, &mi->vmevents[idx]);
+ 		x = 0;
+ 	}
+ 	__this_cpu_write(memcg->vmstats_percpu->events[idx], x);
+ }
+ 
+-static unsigned long memcg_events_local(struct mem_cgroup *memcg,
+-					int event)
++static unsigned long memcg_events(struct mem_cgroup *memcg, int event)
+ {
+ 	return atomic_long_read(&memcg->vmevents[event]);
+ }
+ 
++static unsigned long memcg_events_local(struct mem_cgroup *memcg, int event)
++{
++	return atomic_long_read(&memcg->vmevents_local[event]);
++}
++
+ static void mem_cgroup_charge_statistics(struct mem_cgroup *memcg,
+ 					 struct page *page,
+ 					 bool compound, int nr_pages)
+@@ -2162,7 +2192,7 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
+ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ {
+ 	struct memcg_stock_pcp *stock;
+-	struct mem_cgroup *memcg;
++	struct mem_cgroup *memcg, *mi;
+ 
+ 	stock = &per_cpu(memcg_stock, cpu);
+ 	drain_stock(stock);
+@@ -2175,8 +2205,11 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 			long x;
+ 
+ 			x = this_cpu_xchg(memcg->vmstats_percpu->stat[i], 0);
+-			if (x)
+-				atomic_long_add(x, &memcg->vmstats[i]);
++			if (x) {
++				atomic_long_add(x, &memcg->vmstats_local[i]);
++				for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++					atomic_long_add(x, &memcg->vmstats[i]);
++			}
+ 
+ 			if (i >= NR_VM_NODE_STAT_ITEMS)
+ 				continue;
+@@ -2186,8 +2219,12 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 
+ 				pn = mem_cgroup_nodeinfo(memcg, nid);
+ 				x = this_cpu_xchg(pn->lruvec_stat_cpu->count[i], 0);
+-				if (x)
+-					atomic_long_add(x, &pn->lruvec_stat[i]);
++				if (x) {
++					atomic_long_add(x, &pn->lruvec_stat_local[i]);
++					do {
++						atomic_long_add(x, &pn->lruvec_stat[i]);
++					} while ((pn = parent_nodeinfo(pn, nid)));
++				}
+ 			}
+ 		}
+ 
+@@ -2195,8 +2232,11 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 			long x;
+ 
+ 			x = this_cpu_xchg(memcg->vmstats_percpu->events[i], 0);
+-			if (x)
+-				atomic_long_add(x, &memcg->vmevents[i]);
++			if (x) {
++				atomic_long_add(x, &memcg->vmevents_local[i]);
++				for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
++					atomic_long_add(x, &memcg->vmevents[i]);
++			}
+ 		}
+ 	}
+ 
+@@ -3036,54 +3076,15 @@ static int mem_cgroup_hierarchy_write(struct cgroup_subsys_state *css,
+ 	return retval;
+ }
+ 
+-struct accumulated_vmstats {
+-	unsigned long vmstats[MEMCG_NR_STAT];
+-	unsigned long vmevents[NR_VM_EVENT_ITEMS];
+-	unsigned long lru_pages[NR_LRU_LISTS];
+-
+-	/* overrides for v1 */
+-	const unsigned int *vmstats_array;
+-	const unsigned int *vmevents_array;
+-
+-	int vmstats_size;
+-	int vmevents_size;
+-};
+-
+-static void accumulate_vmstats(struct mem_cgroup *memcg,
+-			       struct accumulated_vmstats *acc)
+-{
+-	struct mem_cgroup *mi;
+-	int i;
+-
+-	for_each_mem_cgroup_tree(mi, memcg) {
+-		for (i = 0; i < acc->vmstats_size; i++)
+-			acc->vmstats[i] += memcg_page_state_local(mi,
+-				acc->vmstats_array ? acc->vmstats_array[i] : i);
+-
+-		for (i = 0; i < acc->vmevents_size; i++)
+-			acc->vmevents[i] += memcg_events_local(mi,
+-				acc->vmevents_array
+-				? acc->vmevents_array[i] : i);
+-
+-		for (i = 0; i < NR_LRU_LISTS; i++)
+-			acc->lru_pages[i] += memcg_page_state_local(mi,
+-							      NR_LRU_BASE + i);
+-	}
+-}
+-
+ static unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap)
+ {
+-	unsigned long val = 0;
++	unsigned long val;
+ 
+ 	if (mem_cgroup_is_root(memcg)) {
+-		struct mem_cgroup *iter;
+-
+-		for_each_mem_cgroup_tree(iter, memcg) {
+-			val += memcg_page_state_local(iter, MEMCG_CACHE);
+-			val += memcg_page_state_local(iter, MEMCG_RSS);
+-			if (swap)
+-				val += memcg_page_state_local(iter, MEMCG_SWAP);
+-		}
++		val = memcg_page_state(memcg, MEMCG_CACHE) +
++			memcg_page_state(memcg, MEMCG_RSS);
++		if (swap)
++			val += memcg_page_state(memcg, MEMCG_SWAP);
+ 	} else {
+ 		if (!swap)
+ 			val = page_counter_read(&memcg->memory);
+@@ -3514,7 +3515,6 @@ static int memcg_stat_show(struct seq_file *m, void *v)
+ 	unsigned long memory, memsw;
+ 	struct mem_cgroup *mi;
+ 	unsigned int i;
+-	struct accumulated_vmstats acc;
+ 
+ 	BUILD_BUG_ON(ARRAY_SIZE(memcg1_stat_names) != ARRAY_SIZE(memcg1_stats));
+ 	BUILD_BUG_ON(ARRAY_SIZE(mem_cgroup_lru_names) != NR_LRU_LISTS);
+@@ -3548,27 +3548,21 @@ static int memcg_stat_show(struct seq_file *m, void *v)
+ 		seq_printf(m, "hierarchical_memsw_limit %llu\n",
+ 			   (u64)memsw * PAGE_SIZE);
+ 
+-	memset(&acc, 0, sizeof(acc));
+-	acc.vmstats_size = ARRAY_SIZE(memcg1_stats);
+-	acc.vmstats_array = memcg1_stats;
+-	acc.vmevents_size = ARRAY_SIZE(memcg1_events);
+-	acc.vmevents_array = memcg1_events;
+-	accumulate_vmstats(memcg, &acc);
+-
+ 	for (i = 0; i < ARRAY_SIZE(memcg1_stats); i++) {
+ 		if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
+ 			continue;
+ 		seq_printf(m, "total_%s %llu\n", memcg1_stat_names[i],
+-			   (u64)acc.vmstats[i] * PAGE_SIZE);
++			   (u64)memcg_page_state(memcg, i) * PAGE_SIZE);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
+ 		seq_printf(m, "total_%s %llu\n", memcg1_event_names[i],
+-			   (u64)acc.vmevents[i]);
++			   (u64)memcg_events(memcg, i));
+ 
+ 	for (i = 0; i < NR_LRU_LISTS; i++)
+ 		seq_printf(m, "total_%s %llu\n", mem_cgroup_lru_names[i],
+-			   (u64)acc.lru_pages[i] * PAGE_SIZE);
++			   (u64)memcg_page_state(memcg, NR_LRU_BASE + i) *
++			   PAGE_SIZE);
+ 
+ #ifdef CONFIG_DEBUG_VM
+ 	{
+@@ -5661,7 +5655,6 @@ static int memory_events_show(struct seq_file *m, void *v)
+ static int memory_stat_show(struct seq_file *m, void *v)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
+-	struct accumulated_vmstats acc;
+ 	int i;
+ 
+ 	/*
+@@ -5675,31 +5668,27 @@ static int memory_stat_show(struct seq_file *m, void *v)
+ 	 * Current memory state:
+ 	 */
+ 
+-	memset(&acc, 0, sizeof(acc));
+-	acc.vmstats_size = MEMCG_NR_STAT;
+-	acc.vmevents_size = NR_VM_EVENT_ITEMS;
+-	accumulate_vmstats(memcg, &acc);
+-
+ 	seq_printf(m, "anon %llu\n",
+-		   (u64)acc.vmstats[MEMCG_RSS] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, MEMCG_RSS) * PAGE_SIZE);
+ 	seq_printf(m, "file %llu\n",
+-		   (u64)acc.vmstats[MEMCG_CACHE] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, MEMCG_CACHE) * PAGE_SIZE);
+ 	seq_printf(m, "kernel_stack %llu\n",
+-		   (u64)acc.vmstats[MEMCG_KERNEL_STACK_KB] * 1024);
++		   (u64)memcg_page_state(memcg, MEMCG_KERNEL_STACK_KB) * 1024);
+ 	seq_printf(m, "slab %llu\n",
+-		   (u64)(acc.vmstats[NR_SLAB_RECLAIMABLE] +
+-			 acc.vmstats[NR_SLAB_UNRECLAIMABLE]) * PAGE_SIZE);
++		   (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) +
++			 memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE)) *
++		   PAGE_SIZE);
+ 	seq_printf(m, "sock %llu\n",
+-		   (u64)acc.vmstats[MEMCG_SOCK] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, MEMCG_SOCK) * PAGE_SIZE);
+ 
+ 	seq_printf(m, "shmem %llu\n",
+-		   (u64)acc.vmstats[NR_SHMEM] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_SHMEM) * PAGE_SIZE);
+ 	seq_printf(m, "file_mapped %llu\n",
+-		   (u64)acc.vmstats[NR_FILE_MAPPED] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_FILE_MAPPED) * PAGE_SIZE);
+ 	seq_printf(m, "file_dirty %llu\n",
+-		   (u64)acc.vmstats[NR_FILE_DIRTY] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_FILE_DIRTY) * PAGE_SIZE);
+ 	seq_printf(m, "file_writeback %llu\n",
+-		   (u64)acc.vmstats[NR_WRITEBACK] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_WRITEBACK) * PAGE_SIZE);
+ 
+ 	/*
+ 	 * TODO: We should eventually replace our own MEMCG_RSS_HUGE counter
+@@ -5708,43 +5697,47 @@ static int memory_stat_show(struct seq_file *m, void *v)
+ 	 * where the page->mem_cgroup is set up and stable.
+ 	 */
+ 	seq_printf(m, "anon_thp %llu\n",
+-		   (u64)acc.vmstats[MEMCG_RSS_HUGE] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, MEMCG_RSS_HUGE) * PAGE_SIZE);
+ 
+ 	for (i = 0; i < NR_LRU_LISTS; i++)
+ 		seq_printf(m, "%s %llu\n", mem_cgroup_lru_names[i],
+-			   (u64)acc.lru_pages[i] * PAGE_SIZE);
++			   (u64)memcg_page_state(memcg, NR_LRU_BASE + i) *
++			   PAGE_SIZE);
+ 
+ 	seq_printf(m, "slab_reclaimable %llu\n",
+-		   (u64)acc.vmstats[NR_SLAB_RECLAIMABLE] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) *
++		   PAGE_SIZE);
+ 	seq_printf(m, "slab_unreclaimable %llu\n",
+-		   (u64)acc.vmstats[NR_SLAB_UNRECLAIMABLE] * PAGE_SIZE);
++		   (u64)memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE) *
++		   PAGE_SIZE);
+ 
+ 	/* Accumulated memory events */
+ 
+-	seq_printf(m, "pgfault %lu\n", acc.vmevents[PGFAULT]);
+-	seq_printf(m, "pgmajfault %lu\n", acc.vmevents[PGMAJFAULT]);
++	seq_printf(m, "pgfault %lu\n", memcg_events(memcg, PGFAULT));
++	seq_printf(m, "pgmajfault %lu\n", memcg_events(memcg, PGMAJFAULT));
+ 
+ 	seq_printf(m, "workingset_refault %lu\n",
+-		   acc.vmstats[WORKINGSET_REFAULT]);
++		   memcg_page_state(memcg, WORKINGSET_REFAULT));
+ 	seq_printf(m, "workingset_activate %lu\n",
+-		   acc.vmstats[WORKINGSET_ACTIVATE]);
++		   memcg_page_state(memcg, WORKINGSET_ACTIVATE));
+ 	seq_printf(m, "workingset_nodereclaim %lu\n",
+-		   acc.vmstats[WORKINGSET_NODERECLAIM]);
+-
+-	seq_printf(m, "pgrefill %lu\n", acc.vmevents[PGREFILL]);
+-	seq_printf(m, "pgscan %lu\n", acc.vmevents[PGSCAN_KSWAPD] +
+-		   acc.vmevents[PGSCAN_DIRECT]);
+-	seq_printf(m, "pgsteal %lu\n", acc.vmevents[PGSTEAL_KSWAPD] +
+-		   acc.vmevents[PGSTEAL_DIRECT]);
+-	seq_printf(m, "pgactivate %lu\n", acc.vmevents[PGACTIVATE]);
+-	seq_printf(m, "pgdeactivate %lu\n", acc.vmevents[PGDEACTIVATE]);
+-	seq_printf(m, "pglazyfree %lu\n", acc.vmevents[PGLAZYFREE]);
+-	seq_printf(m, "pglazyfreed %lu\n", acc.vmevents[PGLAZYFREED]);
++		   memcg_page_state(memcg, WORKINGSET_NODERECLAIM));
++
++	seq_printf(m, "pgrefill %lu\n", memcg_events(memcg, PGREFILL));
++	seq_printf(m, "pgscan %lu\n", memcg_events(memcg, PGSCAN_KSWAPD) +
++		   memcg_events(memcg, PGSCAN_DIRECT));
++	seq_printf(m, "pgsteal %lu\n", memcg_events(memcg, PGSTEAL_KSWAPD) +
++		   memcg_events(memcg, PGSTEAL_DIRECT));
++	seq_printf(m, "pgactivate %lu\n", memcg_events(memcg, PGACTIVATE));
++	seq_printf(m, "pgdeactivate %lu\n", memcg_events(memcg, PGDEACTIVATE));
++	seq_printf(m, "pglazyfree %lu\n", memcg_events(memcg, PGLAZYFREE));
++	seq_printf(m, "pglazyfreed %lu\n", memcg_events(memcg, PGLAZYFREED));
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	seq_printf(m, "thp_fault_alloc %lu\n", acc.vmevents[THP_FAULT_ALLOC]);
++	seq_printf(m, "thp_fault_alloc %lu\n",
++		   memcg_events(memcg, THP_FAULT_ALLOC));
+ 	seq_printf(m, "thp_collapse_alloc %lu\n",
+-		   acc.vmevents[THP_COLLAPSE_ALLOC]);
++		   memcg_events(memcg, THP_COLLAPSE_ALLOC));
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ 	return 0;
 -- 
 2.21.0
 
