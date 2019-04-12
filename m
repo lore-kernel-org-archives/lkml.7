@@ -2,153 +2,115 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABF5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC1C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A1920869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C37E218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:42:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="kF+cMgRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfDLTib (ORCPT
+        id S1726921AbfDLTmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:38:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37580 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbfDLTib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:38:31 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3CJZ282038854
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 15:38:30 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rtx83ppc3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 15:38:30 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Fri, 12 Apr 2019 20:38:29 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Apr 2019 20:38:26 +0100
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3CJcMHf23724214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Apr 2019 19:38:22 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A83B228058;
-        Fri, 12 Apr 2019 19:38:22 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4CA62805A;
-        Fri, 12 Apr 2019 19:38:21 +0000 (GMT)
-Received: from [9.85.196.181] (unknown [9.85.196.181])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Apr 2019 19:38:21 +0000 (GMT)
-Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
- use
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Reinhard Buendgen <buendgen@de.ibm.com>,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
- <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
- <223c82c7-6a75-7209-3652-c2341c83878f@linux.ibm.com>
- <20190412114313.0156c01b.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Fri, 12 Apr 2019 15:38:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190412114313.0156c01b.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 12 Apr 2019 15:42:43 -0400
+Received: from mail-eopbgr750059.outbound.protection.outlook.com ([40.107.75.59]:54084
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726815AbfDLTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:42:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I5+CUGpLOtOwV98jZ9lE/Cs0LjrA+X4NvVJ7fongJ7Y=;
+ b=kF+cMgRrYAcQTuVxKKEc8sOOYDVx64XtM7qNI1WKGFYEa9Exa1aOo68O01bna3S1ces0lzCAsc6C3z9yui2rG07YsmN6YRlcsml6cOGdVwwVBPlCJkr0bAgJSKicr7oYRBEWQwq3irHKrr1biR+Oe1yum7uh2JGlsE67D9wF80Y=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5765.namprd05.prod.outlook.com (20.178.48.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.9; Fri, 12 Apr 2019 19:42:38 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::4140:b8f2:8e3:f5fd]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::4140:b8f2:8e3:f5fd%4]) with mapi id 15.20.1792.009; Fri, 12 Apr 2019
+ 19:42:38 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     kernel test robot <lkp@intel.com>, LKP <lkp@01.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"):  BUG:
+ KASAN: stack-out-of-bounds in __change_page_attr_set_clr
+Thread-Topic: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"):  BUG:
+ KASAN: stack-out-of-bounds in __change_page_attr_set_clr
+Thread-Index: AQHU8R5sUhi0mJ9uO0aA/EiVew3tvaY4YIQAgABBN4CAADSSAIAAFzgA
+Date:   Fri, 12 Apr 2019 19:42:37 +0000
+Message-ID: <721948C9-0E56-4E70-B9C5-58F0A4A5C126@vmware.com>
+References: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com>
+ <20190411193906.GA12232@hirez.programming.kicks-ass.net>
+ <20190411195424.GL14281@hirez.programming.kicks-ass.net>
+ <20190411211348.GA8451@worktop.programming.kicks-ass.net>
+ <20190412105633.GM14281@hirez.programming.kicks-ass.net>
+ <20190412111756.GO14281@hirez.programming.kicks-ass.net>
+ <F18AF0D5-D8B4-4F4B-8469-F9DEC49683C7@vmware.com>
+ <20190412181930.GD12232@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190412181930.GD12232@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041219-0060-0000-0000-0000032C345C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010915; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01188145; UDB=6.00622416; IPR=6.00968912;
- MB=3.00026414; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-12 19:38:29
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041219-0061-0000-0000-000048EDC62C
-Message-Id: <89f09e58-eab6-94d4-c5aa-937162d60744@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904120131
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24ec8546-22a2-4769-3dbd-08d6bf7f04cd
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB5765;
+x-ms-traffictypediagnostic: BYAPR05MB5765:
+x-microsoft-antispam-prvs: <BYAPR05MB5765D9F6E536811F1A69173ED0280@BYAPR05MB5765.namprd05.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(39860400002)(376002)(346002)(189003)(199004)(4744005)(446003)(68736007)(6486002)(11346002)(6512007)(256004)(476003)(53936002)(2616005)(66066001)(486006)(82746002)(229853002)(6436002)(6246003)(14454004)(105586002)(106356001)(478600001)(93886005)(33656002)(97736004)(26005)(5660300002)(8676002)(81166006)(81156014)(6916009)(8936002)(86362001)(54906003)(305945005)(186003)(316002)(7736002)(53546011)(6506007)(99286004)(83716004)(7416002)(71190400001)(3846002)(71200400001)(4326008)(2906002)(76176011)(6116002)(25786009)(36756003)(102836004)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5765;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: I3DKf6ZNQHpWpNko/9CpXNTY+ePYLL6q0Lx1VEafuNb+HUtVcnt4wm/gMElG0mi+/ag7WJhl0zUllkuE+5hoTof2h33LOecqkqykFuzf16qaGlbHHjP2r6UOrTj8ckpl/ERNwJ+8d1ZZl6mRxubnkFISVgbjgwZ7goKPeMQvsVOrw7YEBA3vDM/HNsMW8IkdPRNCXduN0olY9g7Nhkt5Qvvtc6DMU3pZKH/IvfzGY5IEZY5t1IeNDHehERbY+7bnn6ATY25I82//Ypxl+Xz2rMrooSYpI08iPHTXwF9TnNBl20GVLwONl2SPmtUQwpEV1nSZtrON81aN/pQAEOLjXFo9e8hHUcFClYiKMpAfb3thQBByOKXu6Loz6CppTRYRQUMKK/1AxabadXQOWmdHnCZpHJYn2s3d25PPQWGpzkk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B2CC06664A851F43A6C8D26D535F1709@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24ec8546-22a2-4769-3dbd-08d6bf7f04cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 19:42:37.9793
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5765
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 5:43 AM, Cornelia Huck wrote:
-> On Fri, 12 Apr 2019 08:54:54 +0200
-> Harald Freudenberger <freude@linux.ibm.com> wrote:
-> 
->> On 11.04.19 23:03, Tony Krowiak wrote:
->>> Introduces a new driver callback to prevent a root user from unbinding
->>> an AP queue from its device driver if the queue is in use. This prevents
->>> a root user from inadvertently taking a queue away from a guest and
->>> giving it to the host, or vice versa. The callback will be invoked
->>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
->>> result in one or more AP queues being removed from its driver. If the
->>> callback responds in the affirmative for any driver queried, the change
->>> to the apmask or aqmask will be rejected with a device in use error.
->>>
->>> For this patch, only non-default drivers will be queried. Currently,
->>> there is only one non-default driver, the vfio_ap device driver. The
->>> vfio_ap device driver manages AP queues passed through to one or more
->>> guests and we don't want to unexpectedly take AP resources away from
->>> guests which are most likely independently administered.
->>>
->>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>
->> Hello Tony
->>
->> you are going out with your patches but ... what is the result of the discussions
->> we had in the past ? Do we have a common understanding that we want to have
->> it this way ? A driver which is able to claim resources and the bus code
->> has lower precedence ?
-
-This is what Reinhard suggested and what we agreed to as a team quite
-some time ago. I submitted three versions of this patch to our
-internal mailing list, all of which you reviewed, so I'm not sure
-why you are surprised by this now.
-
-> 
-> I don't know about previous discussions, but I'm curious how you
-> arrived at this design. A driver being able to override the bus code
-> seems odd. Restricting this to 'non-default' drivers looks even more
-> odd.
-> 
-> What is this trying to solve? Traditionally, root has been able to
-> shoot any appendages of their choice. I would rather expect that in a
-> supported setup you'd have some management software keeping track of
-> device usage and making sure that only unused queues can be unbound. Do
-> we need to export more information to user space so that management
-> software can make better choices?
-
-Is there a reason other than tradition to prevent root from accidentally
-shooting himself in the foot or any other appendage? At present,
-sysfs is the only supported setup, so IMHO it makes sense to prevent as
-much accidentally caused damage as possible in the kernel.
-
-> 
->>
->>> ---
->>>   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
->>>   drivers/s390/crypto/ap_bus.h |   3 +
->>>   2 files changed, 135 insertions(+), 6 deletions(-)
-> 
-
+PiBPbiBBcHIgMTIsIDIwMTksIGF0IDExOjE5IEFNLCBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGlu
+ZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiANCj4gT24gRnJpLCBBcHIgMTIsIDIwMTkgYXQgMDM6MTE6
+MjJQTSArMDAwMCwgTmFkYXYgQW1pdCB3cm90ZToNCj4+PiBPbiBBcHIgMTIsIDIwMTksIGF0IDQ6
+MTcgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0K
+Pj4+IFRvIGNsYXJpZnksICd0aGF0JyBpcyBOYWRhdidzIHBhdGNoOg0KPj4+IA0KPj4+IDUxNWFi
+N2M0MTMwNiAoIng4Ni9tbTogQWxpZ24gVExCIGludmFsaWRhdGlvbiBpbmZvIikNCj4+PiANCj4+
+PiB3aGljaCB0dXJucyBvdXQgdG8gYmUgdGhlIHJlYWwgcHJvYmxlbS4NCj4+IA0KPj4gU29ycnkg
+Zm9yIHRoYXQuIEkgc3RpbGwgdGhpbmsgaXQgc2hvdWxkIGJlIGFsaWduZWQsIGVzcGVjaWFsbHkg
+d2l0aCBhbGwgdGhlDQo+PiBlZmZvcnQgdGhlIEludGVsIHB1dHMgYXJvdW5kIHRvIGF2b2lkIGJ1
+cy1sb2NraW5nIG9uIHVuYWxpZ25lZCBhdG9taWMNCj4+IG9wZXJhdGlvbnMuDQo+IA0KPiBObyBh
+dG9taWNzIGFueXdoZXJlIGluIHNpZ2h0LCBzbyB0aGF0J3Mgbm90IGEgY29uY2Vybi4NCg0KWW91
+IGFyZSByaWdodC4gSSBzdGlsbCB0aGluayB0aGF0IGF0IGxlYXN0IFRMQi13aXNlIGl0IHNob3Vs
+ZCBiZSBiZXR0ZXIgdG8NCmhhdmUgdGhlIGFyZ3VtZW50IG9mZi1zdGFjay4gSeKAmWxsIHRyeSB0
+byBydW4gc29tZSBleHBlcmltZW50cywgYmFzZWQgb24NCnlvdXIgZmVlZGJhY2ssIGFuZCBzZW5k
+IGEgcGF0Y2ggb24gdG9wIG9mIHlvdXIgcmV2ZXJ0Lg0KDQpTb3JyeSBmb3IgdGhlIG1lc3MsIGFn
+YWluLg0KDQoNCg==
