@@ -2,123 +2,128 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9F9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34612C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C7E20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r8UlTadq"
+	by mail.kernel.org (Postfix) with ESMTP id 028F320818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555074498;
+	bh=4m8aeJb30aNur13bk3swZYY8j0WaHF+WhIvR4qErEUw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uN9vMQaMxBdMwcA5vFkxEwJBxyHi21OOcmQv58VEi7SRRGWU4Lifjh+Vn6ZGTBxli
+	 r0I5rfs++apP092QExFWg4dHRcGGks+em9IcJjFUYdKYq1bqjM/DHBBEZ0iUwbg8S6
+	 lKxw4W5IJz5V5bHFPuZpkaifO8E2LVvoW1kf4iME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfDLNHH (ORCPT
+        id S1727579AbfDLNIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:07:07 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49888 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfDLNHH (ORCPT
+        Fri, 12 Apr 2019 09:08:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55194 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfDLNIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:07:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3CD6Gib063442;
-        Fri, 12 Apr 2019 08:06:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555074376;
-        bh=VJzZ9biu0Tf659fVwX76Vk9/CUcEpbw7w/dLHP6wsSM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=r8UlTadqyuMNXJW5yv89YYRRJoEZfnfbYHN5Eo/CXaa9tPwyI/QeqaLHHB7ekvEX3
-         CcNShUTxo7wTDDGq409QSRKPAiFua/O/ADjEh38NZMVx/VjdhsThtcIP90X+qhGZee
-         l+6Py//VgXeLQ9XRojEjGdkFKiYp4cNa5AzikNWs=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3CD6GUh095292
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Apr 2019 08:06:16 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Apr 2019 08:06:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Apr 2019 08:06:16 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3CD68TH118347;
-        Fri, 12 Apr 2019 08:06:12 -0500
-Subject: Re: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        Adam Ford <aford173@gmail.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
- <20190408075924.2284-3-brgl@bgdev.pl>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com>
-Date:   Fri, 12 Apr 2019 18:36:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 09:08:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so11154052wml.4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 06:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=spnCsUoHXxKdEfYrtSZbfXkIH0YsFifJdGTb2+PiewM=;
+        b=kxBdwX+wdHuu7SK0aW6BNRIrYfjP8Y7RnpuKoZFSxal6y1LYPeVrvOu31PtWroiD0R
+         zBd3jRoPBpA5yeLK6V5EeiqwGeWqDlq/Wm42gmqXnrQ21lH6WqdlttEvIWWR9boRJx1K
+         dFeLvPyANVVGsnG+m1NJPz4u3r+++69n8MECagi2HYFcOpuaOzKZtGtVn547AqnOTdXl
+         6uIU4AWpoHWQa/cMvg0kL85QQZIkCHWrpUOhhmUsCMYJuzn6iEzl+ZQRlqDiH3TT8T2h
+         kMO1/aw7TlfI7xrNL/8DAYKp32LypQNTzUMvaCcO7eyJOtYkKfqNOso29rKrKgRPjEpO
+         bPQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=spnCsUoHXxKdEfYrtSZbfXkIH0YsFifJdGTb2+PiewM=;
+        b=mgYLFschvltj+xx3SejP95O9U2FLxFXBs2VmeEFFez5L6fpaUBTbp5Jcv5bjzMDV6s
+         X/EK9dN/f3MqFV3Ld9VknI9Ded90NG3oZ8t008y6PHiU1uIleAS6bOhrbCEUgpnOB3rK
+         KGdHkrhX+5QF9JEGarKf8mIURBgEVcSsFooGGdkFaip3I/e+E+pU3DJusEkPs5QaG+U6
+         4DtaQKP+elhmWFqXGRat3noE8jd4iz1w5owvZn+WUZdt63q+jk1pvT94Ms81s76SuwEU
+         GIwg8i4rmSJrxgdTaWYKXY+c7zEDpFg2P9/cfuRi5QZKN6gwXq9ub4PXBH3htYJ/A6Bt
+         iXLw==
+X-Gm-Message-State: APjAAAU6kyT1UKuDi5M5wr4BMePwrHhRNsE/NhO2MtES0x/A2VOnd/vv
+        dLEMZMvBIO7VCO2GFtCahNo=
+X-Google-Smtp-Source: APXvYqzI5MFZkk+C8nSSAvZ6SvfuHvEXUxfORdKih0t+7Z/4ct/fb5UptnkGraMrVjnv2ggSkhp+iw==
+X-Received: by 2002:a1c:df89:: with SMTP id w131mr10800762wmg.82.1555074494384;
+        Fri, 12 Apr 2019 06:08:14 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id i17sm42713836wrs.44.2019.04.12.06.08.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 06:08:13 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 15:08:11 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] scheduler fix
+Message-ID: <20190412130811.GA119417@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408075924.2284-3-brgl@bgdev.pl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> tps6507 pmic with configurable output voltage, so all operating points
-> can be enabled.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Linus,
 
-Adam, can you please ack? Looks good to me.
+Please pull the latest sched-urgent-for-linus git tree from:
 
-Thanks,
-Sekhar
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-for-linus
 
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index f04bc3e15332..f94bb38fdad9 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -191,6 +191,19 @@
->  	};
->  };
->  
-> +&cpu {
-> +	cpu-supply = <&vdcdc3_reg>;
-> +};
-> +
-> +/*
-> + * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-> + * point by default. Higher frequencies must be enabled for custom boards with
-> + * other variants of the SoC.
-> + */
-> +&opp_375 {
-> +	status = "okay";
-> +};
-> +
->  &sata {
->  	status = "okay";
->  };
-> -- 
-> 2.21.0
-> 
+   # HEAD: 0e9f02450da07fc7b1346c8c32c771555173e397 sched/fair: Do not re-read ->h_load_next during hierarchical load calculation
 
+Fix a NULL pointer dereference crash in certain environments.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Mel Gorman (1):
+      sched/fair: Do not re-read ->h_load_next during hierarchical load calculation
+
+
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fdab7eb6f351..40bd1e27b1b7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7784,10 +7784,10 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 	if (cfs_rq->last_h_load_update == now)
+ 		return;
+ 
+-	cfs_rq->h_load_next = NULL;
++	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_load_next = se;
++		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
+ 			break;
+ 	}
+@@ -7797,7 +7797,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 		cfs_rq->last_h_load_update = now;
+ 	}
+ 
+-	while ((se = cfs_rq->h_load_next) != NULL) {
++	while ((se = READ_ONCE(cfs_rq->h_load_next)) != NULL) {
+ 		load = cfs_rq->h_load;
+ 		load = div64_ul(load * se->avg.load_avg,
+ 			cfs_rq_load_avg(cfs_rq) + 1);
