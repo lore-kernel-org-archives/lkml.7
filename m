@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45730C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCE3C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDE1218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD43218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555093926;
-	bh=jiLNbmEM7Idc3pt65bEuMUpgmufpjAZ+SN1eZ0ORQxQ=;
+	s=default; t=1555093931;
+	bh=HcIechYl/c6FVy1DBpjkLY6E2a4oNKzK9h0x6CXvb6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zm0fv+OKXeNUyZ0ruyUacliBTvv1asOeXe0YmEXUZdKOYkqfR9izb809YyiY81716
-	 g0i8WKLpsGxgwRI4mshy22RVM4CnV0kRa50objKpvcvW1aK8QZoGdouzEzGS0jOcyr
-	 i5wgqA7p1Swp4y1nuwoWSBD0F9LKRy4aoZmrCqc0=
+	b=H9bfyyflkrUU8MykgebDHSt5zEKzF9UbnmpGnmlVZgjj/Ho3uioiflLiFCpfy88kA
+	 lOM1xDbGMUgw3Jbxhe0O60Yzvj/Dt0vtYmH6ysodAxqbayRXkZA8gsvw1KvXVzxbbZ
+	 TriuFRXu3zj077s2FxoyQogPkUPNAw7Jeq9w9jCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfDLScA (ORCPT
+        id S1727110AbfDLSb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50350 "EHLO mail.kernel.org"
+        Fri, 12 Apr 2019 14:31:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbfDLSbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:31:55 -0400
+        id S1727069AbfDLSb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 14:31:56 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5849218D9;
-        Fri, 12 Apr 2019 18:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476EA218FD;
+        Fri, 12 Apr 2019 18:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1555093915;
-        bh=jiLNbmEM7Idc3pt65bEuMUpgmufpjAZ+SN1eZ0ORQxQ=;
+        bh=HcIechYl/c6FVy1DBpjkLY6E2a4oNKzK9h0x6CXvb6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWs6oxVhXKz3fFxukKWnf06n7xo5ktMhKIBrgqEQmix2dt51VxdWw8zInpXBCPJow
-         0Bu04UTV+Yh6W88D236c7BgiZ88E+VnG6Tb7zVWrEmMUY+b/+HbuVeOSSbD2xQO8CT
-         IO3GMq/XwqSl3c5JP3/CgFVDtHsuJyLdHySGm0nU=
+        b=I5LVaitt0gaP9Kgq/jQq6EjSMNPxDolCIh2FYdQEkRl1dmXI1sr03GhxZ7hIDuK3a
+         63fD2KVZFKqGwVYOx9PUoTcSUR/nAUBhrMegibf8LE1MkFA+ml/bkDu3UiLHMjk1Vy
+         N6JbNZ5Di9f2ErAysLQx11oQKlNJazUKrD2p9EZU=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         Russell King <linux@armlinux.org.uk>,
         Jeffrey Hugo <jhugo@codeaurora.org>,
         Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v4 8/9] clk: Allow parents to be specified via clkspec index
-Date:   Fri, 12 Apr 2019 11:31:49 -0700
-Message-Id: <20190412183150.102131-9-sboyd@kernel.org>
+Subject: [PATCH v4 9/9] clk: fixed-factor: Let clk framework find parent
+Date:   Fri, 12 Apr 2019 11:31:50 -0700
+Message-Id: <20190412183150.102131-10-sboyd@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190412183150.102131-1-sboyd@kernel.org>
 References: <20190412183150.102131-1-sboyd@kernel.org>
@@ -61,13 +61,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some clk providers are simple DT nodes that only have a 'clocks'
-property without having an associated 'clock-names' property. In these
-cases, we want to let these clk providers point to their parent clks
-without having to dereference the 'clocks' property at probe time to
-figure out the parent's globally unique clk name. Let's add an 'index'
-property to the parent_data structure so that clk providers can indicate
-that their parent is a particular index in the 'clocks' DT property.
+Convert this driver to a more modern way of specifying parents now that
+we have a way to specify clk parents by DT index. This lets us nicely
+avoid a problem where a parent clk name isn't know because the parent
+clk hasn't been registered yet.
 
 Cc: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
@@ -77,104 +74,139 @@ Cc: Jeffrey Hugo <jhugo@codeaurora.org>
 Cc: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk.c            | 18 +++++++++++-------
- include/linux/clk-provider.h |  2 ++
- 2 files changed, 13 insertions(+), 7 deletions(-)
+ drivers/clk/clk-fixed-factor.c | 53 +++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 42f29fd6bfd8..65fe50b139ea 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -44,6 +44,7 @@ struct clk_parent_map {
- 	struct clk_core		*core;
- 	const char	 	*fw_name;
- 	const char	 	*name;
-+	int			index;
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index 241b3f8c61a9..67cc7e515e42 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -64,12 +64,14 @@ const struct clk_ops clk_fixed_factor_ops = {
+ };
+ EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
+ 
+-struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+-		const char *name, const char *parent_name, unsigned long flags,
+-		unsigned int mult, unsigned int div)
++static struct clk_hw *
++__clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
++		const char *name, const char *parent_name, int index,
++		unsigned long flags, unsigned int mult, unsigned int div)
+ {
+ 	struct clk_fixed_factor *fix;
+ 	struct clk_init_data init;
++	struct clk_parent_data pdata = { .index = index };
+ 	struct clk_hw *hw;
+ 	int ret;
+ 
+@@ -85,11 +87,17 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+ 	init.name = name;
+ 	init.ops = &clk_fixed_factor_ops;
+ 	init.flags = flags | CLK_IS_BASIC;
+-	init.parent_names = &parent_name;
++	if (parent_name)
++		init.parent_names = &parent_name;
++	else
++		init.parent_data = &pdata;
+ 	init.num_parents = 1;
+ 
+ 	hw = &fix->hw;
+-	ret = clk_hw_register(dev, hw);
++	if (dev)
++		ret = clk_hw_register(dev, hw);
++	else
++		ret = of_clk_hw_register(np, hw);
+ 	if (ret) {
+ 		kfree(fix);
+ 		hw = ERR_PTR(ret);
+@@ -97,6 +105,14 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+ 
+ 	return hw;
+ }
++
++struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
++		const char *name, const char *parent_name, unsigned long flags,
++		unsigned int mult, unsigned int div)
++{
++	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, -1, flags,
++					      mult, div);
++}
+ EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
+ 
+ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
+@@ -143,11 +159,10 @@ static const struct of_device_id set_rate_parent_matches[] = {
+ 	{ /* Sentinel */ },
  };
  
- struct clk_core {
-@@ -326,7 +327,8 @@ static struct clk_core *clk_core_lookup(const char *name)
- /**
-  * clk_core_get - Find the clk_core parent of a clk
-  * @core: clk to find parent of
-- * @name: name to search for
-+ * @name: name to search for (if string based)
-+ * @index: index to use for search (if DT index based)
-  *
-  * This is the preferred method for clk providers to find the parent of a
-  * clk when that parent is external to the clk controller. The parent_names
-@@ -358,22 +360,23 @@ static struct clk_core *clk_core_lookup(const char *name)
-  * provider knows about the clk but it isn't provided on this system.
-  * A valid clk_core pointer when the clk can be found in the provider.
-  */
--static struct clk_core *clk_core_get(struct clk_core *core, const char *name)
-+static struct clk_core *clk_core_get(struct clk_core *core, const char *name,
-+				     int index)
+-static struct clk *_of_fixed_factor_clk_setup(struct device_node *node)
++static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
  {
- 	struct clk_hw *hw = ERR_PTR(-ENOENT);
- 	struct device *dev = core->dev;
- 	const char *dev_id = dev ? dev_name(dev) : NULL;
- 	struct device_node *np = core->of_node;
+-	struct clk *clk;
++	struct clk_hw *hw;
+ 	const char *clk_name = node->name;
+-	const char *parent_name;
+ 	unsigned long flags = 0;
+ 	u32 div, mult;
+ 	int ret;
+@@ -165,30 +180,28 @@ static struct clk *_of_fixed_factor_clk_setup(struct device_node *node)
+ 	}
  
--	if (np)
--		hw = of_clk_get_hw(np, -1, name);
-+	if (np && index >= 0)
-+		hw = of_clk_get_hw(np, index, name);
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
+-	parent_name = of_clk_get_parent_name(node, 0);
+ 
+ 	if (of_match_node(set_rate_parent_matches, node))
+ 		flags |= CLK_SET_RATE_PARENT;
+ 
+-	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
+-					mult, div);
+-	if (IS_ERR(clk)) {
++	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, 0,
++					    flags, mult, div);
++	if (IS_ERR(hw)) {
+ 		/*
+-		 * If parent clock is not registered, registration would fail.
+ 		 * Clear OF_POPULATED flag so that clock registration can be
+ 		 * attempted again from probe function.
+ 		 */
+ 		of_node_clear_flag(node, OF_POPULATED);
+-		return clk;
++		return ERR_CAST(hw);
+ 	}
+ 
+-	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	ret = of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
+ 	if (ret) {
+-		clk_unregister(clk);
++		clk_hw_unregister_fixed_factor(hw);
+ 		return ERR_PTR(ret);
+ 	}
+ 
+-	return clk;
++	return hw;
+ }
+ 
+ /**
+@@ -203,17 +216,17 @@ CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clock",
+ 
+ static int of_fixed_factor_clk_remove(struct platform_device *pdev)
+ {
+-	struct clk *clk = platform_get_drvdata(pdev);
++	struct clk_hw *clk = platform_get_drvdata(pdev);
+ 
+ 	of_clk_del_provider(pdev->dev.of_node);
+-	clk_unregister_fixed_factor(clk);
++	clk_hw_unregister_fixed_factor(clk);
+ 
+ 	return 0;
+ }
+ 
+ static int of_fixed_factor_clk_probe(struct platform_device *pdev)
+ {
+-	struct clk *clk;
++	struct clk_hw *clk;
  
  	/*
- 	 * If the DT search above couldn't find the provider or the provider
- 	 * didn't know about this clk, fallback to looking up via clkdev based
- 	 * clk_lookups
- 	 */
--	if (PTR_ERR(hw) == -ENOENT)
-+	if (PTR_ERR(hw) == -ENOENT && name)
- 		hw = clk_find_hw(dev_id, name);
- 
- 	if (IS_ERR(hw))
-@@ -397,8 +400,7 @@ static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
- 		if (!parent)
- 			parent = ERR_PTR(-EPROBE_DEFER);
- 	} else {
--		if (entry->fw_name)
--			parent = clk_core_get(core, entry->fw_name);
-+		parent = clk_core_get(core, entry->fw_name, entry->index);
- 		if (IS_ERR(parent) && PTR_ERR(parent) == -ENOENT)
- 			parent = clk_core_lookup(entry->name);
- 	}
-@@ -3443,6 +3445,7 @@ static int clk_core_populate_parent_map(struct clk_core *core)
- 
- 	/* Copy everything over because it might be __initdata */
- 	for (i = 0, parent = parents; i < num_parents; i++, parent++) {
-+		parent->index = -1;
- 		if (parent_names) {
- 			/* throw a WARN if any entries are NULL */
- 			WARN(!parent_names[i],
-@@ -3452,6 +3455,7 @@ static int clk_core_populate_parent_map(struct clk_core *core)
- 					   true);
- 		} else if (parent_data) {
- 			parent->hw = parent_data[i].hw;
-+			parent->index = parent_data[i].index;
- 			ret = clk_cpy_name(&parent->fw_name,
- 					   parent_data[i].fw_name, false);
- 			if (!ret)
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 95d5a9d4e8c3..12fef24b740f 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -255,11 +255,13 @@ struct clk_ops {
-  * @hw: parent clk_hw pointer (used for clk providers with internal clks)
-  * @fw_name: parent name local to provider registering clk
-  * @name: globally unique parent name (used as a fallback)
-+ * @index: parent index local to provider registering clk (if @fw_name absent)
-  */
- struct clk_parent_data {
- 	const struct clk_hw 	*hw;
- 	const char		*fw_name;
- 	const char		*name;
-+	int			index;
- };
- 
- /**
+ 	 * This function is not executed when of_fixed_factor_clk_setup
 -- 
 Sent by a computer through tubes
 
