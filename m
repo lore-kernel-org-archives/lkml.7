@@ -2,70 +2,144 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937AAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704ADC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE272075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401942077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OajAVNCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfDLTTu (ORCPT
+        id S1726952AbfDLTYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:19:50 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48534 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfDLTTu (ORCPT
+        Fri, 12 Apr 2019 15:24:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32888 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLTYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:19:50 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hF1i7-0001Nc-FX; Fri, 12 Apr 2019 19:19:39 +0000
-Date:   Fri, 12 Apr 2019 20:19:39 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Ian Kent <raven@themaw.net>,
-        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel BUG at fs/inode.c:LINE!
-Message-ID: <20190412191939.GK2217@ZenIV.linux.org.uk>
-References: <20190410002603.GS2217@ZenIV.linux.org.uk>
- <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
- <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
- <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
- <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net>
- <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
- <20190410121159.GY2217@ZenIV.linux.org.uk>
- <CACT4Y+bc=A=djKChMkJGwXYbZ7UXuxmRu5Z0Y1BEXAFH1-Z6Kw@mail.gmail.com>
- <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net>
- <CACT4Y+YKGX0MVEM-SrDKJc0500vCH+WOZpyzNr-O_tW7p5Sn_A@mail.gmail.com>
+        Fri, 12 Apr 2019 15:24:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f23so9901817ljc.0;
+        Fri, 12 Apr 2019 12:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TqniWxHWbwOC/SbBq7rswqd2MLGdgAFEKuDzGbclVkY=;
+        b=OajAVNCIQug6nREPzyi4VoM6mgAKPGbdO544Pkh/7aL0BA12OmNs+sCkrDWJz+WncC
+         +h6LYvv5MP75zA7eG2wHO6REK8uVSVFvFcZmwBPuhQdkfZz7b+57mzPYN29xNSRMqzy2
+         B4wiJj89dyM4H4SjqstA0n6MRw0J2EWmLcWQvTcM2j+T6xAFwf7V2Fky7K5yQBXaln9R
+         g4kGeLqfcuOG3pU2IklwwXzc9XCLqSIdNyzzGcX52KayIMc1cnUAjXoqb4Qok9nXhqiZ
+         eQX8C0ciZ1V99czNmtHbTrS+R9qHZIrFyLpmTUWEBHIb0/wnEmxAL6bpNS0HBiQZrScE
+         ns6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TqniWxHWbwOC/SbBq7rswqd2MLGdgAFEKuDzGbclVkY=;
+        b=Ud+8g3DwqMB13NXVzgs78G3YHYxTqFMtVdjnjoFCXnCAF3c/QOx2AB/bvO+iIQLSCL
+         FapVKDRkx1/8aFobcdTvfXynqZsymFywdtuSVUKRns7SdnsrAb8mXGvAnGbPHs3C6KSo
+         9d6fCp8fOQ/rmUmUdKFqsJA4PKz7niJMYEIzAEEbq7qWTVXbblFkzmdEfW8c4MSbR2d8
+         LwbXCBaICsKsQNzWvFv56+CyUz744c5zA+wphJUY4hHN/Of5mBrFV7gPbH3BV03e6b5c
+         lJwEGH4HXzJrtUlsD3Xw5/YcarOOo7WTKMGtJ7BduYuV8R40BTIWereaXv9TZQWNyhcB
+         k+fg==
+X-Gm-Message-State: APjAAAXax0nEqSyCjvB267vijIvv07VyGJBk91mRkTGhT4aikx/pJJ7H
+        FjybPpni4GlH9cP8vrs9E+/YCoJW
+X-Google-Smtp-Source: APXvYqyDIr2QiKy9Afg/T62XMfU1k31uc3qQvNWGh2GI/3grEVJy8TGj8C62xKDuEb0QaiUs7k1ZQQ==
+X-Received: by 2002:a2e:7215:: with SMTP id n21mr33130015ljc.105.1555097056417;
+        Fri, 12 Apr 2019 12:24:16 -0700 (PDT)
+Received: from [192.168.1.19] (chg144.neoplus.adsl.tpnet.pl. [83.31.4.144])
+        by smtp.gmail.com with ESMTPSA id c5sm9297776ljd.18.2019.04.12.12.24.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 12:24:15 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
+ documention
+To:     Dan Murphy <dmurphy@ti.com>, Marek Behun <marek.behun@nic.cz>
+Cc:     robh+dt@kernel.org, pavel@ucw.cz, rdunlap@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20190411193848.23140-1-dmurphy@ti.com>
+ <20190411193848.23140-3-dmurphy@ti.com> <20190412000707.70f8319f@nic.cz>
+ <4e22f95f-8658-99cd-145e-b96f9e8314f7@gmail.com>
+ <579add89-e274-07d2-04a4-4998917a62ff@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <19932d2d-28c4-9212-b38b-8b7008fb1d34@gmail.com>
+Date:   Fri, 12 Apr 2019 21:24:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YKGX0MVEM-SrDKJc0500vCH+WOZpyzNr-O_tW7p5Sn_A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <579add89-e274-07d2-04a4-4998917a62ff@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:59:30PM +0200, Dmitry Vyukov wrote:
+Dan,
 
-> Please don't ignore the bug status tracking part. Or we will only have
-> options of not testing kernel or dropping most of the bug reports on
-> the floor. Both are equally harmful for kernel quality.
+On 4/12/19 8:46 PM, Dan Murphy wrote:
+> Jacek
 > 
-> Let's mark it as fixed by the next commit in series (which already
-> made it into mainline):
+> On 4/12/19 1:14 PM, Jacek Anaszewski wrote:
+>> Hi Marek,
+>>
+>> On 4/12/19 12:07 AM, Marek Behun wrote:
+>>> Hi Dan,
+>>> this probaly was discussed, but I did not follow brightness model
+>>> discussions:
+>>> what will happen if I set yellow by writing into yellow mode
+>>> brightness, and then orange by writing orange model brightness?
+>>> Will the resulting color be a mix of yellow and orange, or will the
+>>> orange overwrite the yellow setting?
+>>
+>> Orange will overwrite yellow settings. When color name is given
+>> it should be treated as a hue. Then changing brightness level
+>> should affect the lightness of a hue, similarly like changing
+>> L component of HSL color model. This will be however entirely
+>> up to DT brightness-model designer how they will design their models.
+>> We are not going to verify that in the LED multi color class.
+>>
+>> It implies that it will be possible to define arbitrary range
+>> of color levels, not necessarily adhering to any established color
+>> model. I think it could be useful to define brightness model
+>> that allows to go from blue color (for cold) up to red (hot)
+>> for representing a temperature for instance.
+>>
+>> These ideas will need however more documentation. Generally
+>> we aim to propose only a convention.
+>>
 > 
-> #syz fix: autofs: simplify parse_options() function call
-> 
-> But I won't be around always.
+> Ah but what about the issue of writing the monochrome LED color.  With your description
+> it implies that when we write the red LED, the red LED will come on and if we write the blue
+> LED then the red LED in theory should turn off and the blue come on.
 
-You might want to add something like "commit discarded"...
+Where did I write that? Probably the way I used word "color"
+was not adequate in at least two cases, which may have confused
+the reader.
+
+Modifying monochrome color brightness levels (under colors dir)
+will just modify corresponding IOUT brightness. Not affecting the
+other. I'll try to rephrase what seems to may sound equivocal:
+
+s/When color name is given/When brightness-model is given a color name/
+
+s/arbitrary range of color levels/arbitrary range of brightness-model 
+levels/
+
+
+> But these could be used to mix the colors to create some abstract violet that is not defined in the brightness
+> model.  Why should the brightness models and monochrome LEDs have two different operations.
+> 
+> Dan
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
