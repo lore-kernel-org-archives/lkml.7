@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C98C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9726C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA6C206BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfDLLkI (ORCPT
+        id S1727807AbfDLLkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:40:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12712 "EHLO mga02.intel.com"
+        Fri, 12 Apr 2019 07:40:14 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12704 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbfDLLj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:39:58 -0400
+        id S1727310AbfDLLj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 07:39:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 04:39:58 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 04:39:56 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,341,1549958400"; 
-   d="scan'208";a="336687258"
+   d="scan'208";a="336687254"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Apr 2019 04:39:57 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 12 Apr 2019 04:39:55 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] perf intel-pt: Improve sync_switch
-Date:   Fri, 12 Apr 2019 14:38:29 +0300
-Message-Id: <20190412113830.4126-8-adrian.hunter@intel.com>
+Subject: [PATCH 6/8] perf tools: perf-with-kcore.sh: Always allow fix_buildid_cache_permissions
+Date:   Fri, 12 Apr 2019 14:38:28 +0300
+Message-Id: <20190412113830.4126-7-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190412113830.4126-1-adrian.hunter@intel.com>
 References: <20190412113830.4126-1-adrian.hunter@intel.com>
@@ -43,74 +43,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sync_switch is a facility to synchronize decoding more closely with the
-point in the kernel when the context actually switched.
-
-Improve it by processing "context switch in" events.
+The user's buildid cache may contain entries added by root even if root
+has its own home directory (e.g. by using perfconfig to specify the same
+buildid dir), so remove that validation.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/intel-pt.c | 40 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ tools/perf/perf-with-kcore.sh | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 6d288237887b..deaf2888dc55 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1914,6 +1914,44 @@ static int intel_pt_process_switch(struct intel_pt *pt,
- 	return machine__set_current_tid(pt->machine, cpu, -1, tid);
- }
+diff --git a/tools/perf/perf-with-kcore.sh b/tools/perf/perf-with-kcore.sh
+index 7e47a7cbc195..2ad2fffdb209 100644
+--- a/tools/perf/perf-with-kcore.sh
++++ b/tools/perf/perf-with-kcore.sh
+@@ -111,11 +111,6 @@ fix_buildid_cache_permissions()
  
-+static int intel_pt_context_switch_in(struct intel_pt *pt,
-+				      struct perf_sample *sample)
-+{
-+	pid_t pid = sample->pid;
-+	pid_t tid = sample->tid;
-+	int cpu = sample->cpu;
-+
-+	if (pt->sync_switch) {
-+		struct intel_pt_queue *ptq;
-+
-+		ptq = intel_pt_cpu_to_ptq(pt, cpu);
-+		if (ptq && ptq->sync_switch) {
-+			ptq->next_tid = -1;
-+			switch (ptq->switch_state) {
-+			case INTEL_PT_SS_NOT_TRACING:
-+			case INTEL_PT_SS_UNKNOWN:
-+			case INTEL_PT_SS_TRACING:
-+				break;
-+			case INTEL_PT_SS_EXPECTING_SWITCH_EVENT:
-+			case INTEL_PT_SS_EXPECTING_SWITCH_IP:
-+				ptq->switch_state = INTEL_PT_SS_TRACING;
-+				break;
-+			default:
-+				break;
-+			}
-+		}
-+	}
-+
-+	/*
-+	 * If the current tid has not been updated yet, ensure it is now that
-+	 * a "switch in" event has occurred.
-+	 */
-+	if (machine__get_current_tid(pt->machine, cpu) == tid)
-+		return 0;
-+
-+	return machine__set_current_tid(pt->machine, cpu, pid, tid);
-+}
-+
- static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
- 				   struct perf_sample *sample)
- {
-@@ -1925,7 +1963,7 @@ static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
+ 	USER_HOME=$(bash <<< "echo ~$SUDO_USER")
  
- 	if (pt->have_sched_switch == 3) {
- 		if (!out)
--			return 0;
-+			return intel_pt_context_switch_in(pt, sample);
- 		if (event->header.type != PERF_RECORD_SWITCH_CPU_WIDE) {
- 			pr_err("Expecting CPU-wide context switch event\n");
- 			return -EINVAL;
+-	if [ "$HOME" != "$USER_HOME" ] ; then
+-		echo "Fix unnecessary because root has a home: $HOME" >&2
+-		exit 1
+-	fi
+-
+ 	echo "Fixing buildid cache permissions"
+ 
+ 	find "$USER_HOME/.debug" -xdev -type d          ! -user "$SUDO_USER" -ls -exec chown    "$SUDO_USER" \{\} \;
 -- 
 2.17.1
 
