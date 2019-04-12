@@ -2,123 +2,408 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B3EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC05C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3222206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HEHJboxb"
+	by mail.kernel.org (Postfix) with ESMTP id D4E192171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbfDLJYA (ORCPT
+        id S1727347AbfDLJ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:24:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40776 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727489AbfDLJXn (ORCPT
+        Fri, 12 Apr 2019 05:27:37 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42200 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726838AbfDLJ1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:23:43 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z24so10192479wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 02:23:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VrVpee+f1QzUj1w55U43u2u06qeWlLDZnjDCHCt7aSQ=;
-        b=HEHJboxbmey2sK5gsDZ6Bv1s8NO6jixV7xN7iG0VB/XiUbfIsSZ58svig80dxvcOis
-         ay5iJHGFSetEs7SBOkVGPW2Ntzx+KVU4Wdg4t35TeYTixLWBQvGfy+oIEaEiWF5edL1U
-         gx8ACBpZ7eNR5bXkzqnCZA1gI/E/TQqyPKx/uiw5XqpRvmyo+NdSnROPH1LXlwCvh6Th
-         9Fiq0vsVjVXjh7L9NG+kQH/PsWkOXsPIE12R+GdW9vFXHJmxd7w3Z2BR0m/PYDxcj8zi
-         GqG9O1IxbggoALYd7RQyaBuJLr5w6TSvlJYta1OTQjzlURJrgIxIR4vanLUfo7CbeoUo
-         z0Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VrVpee+f1QzUj1w55U43u2u06qeWlLDZnjDCHCt7aSQ=;
-        b=K7KRpigd5Gzlri4OM3f4vXOkoTs+3t9KpMiwpzHTaui8LvVQkps0cVsFiOmovuTcdP
-         fx8ryy6/MdK5rc2vN/sswNFNnNqalo+7pwSDpZcCkq/9oMXw1nyH7AiQ9tvkNmJshr6X
-         js3R03jURYirDKygVr5OBo/73g+/0K9iw1V2U+VkwDGmlZXEJi30JQxutk2jDc/tWnSo
-         R9jIMiR4NGYA+A47JqyNRmOPFKu0fYWc4J+ptHzDRiyz6JAMTlF4qJzBtJIgiZNIhbUa
-         USYmE81i4yaP7lgs+coRlFvnjg5IL3tItLLLqJaMmJzi+cDzAJ+VKP3s9yQtmAnr1SVb
-         Vreg==
-X-Gm-Message-State: APjAAAUfUZUeX8EnsIIJQcwhQMsF2jozb6dgwX6k+VF3RqXwYXNOWETE
-        lMihNZFwFFs2+XdYUkpAWaiKYA==
-X-Google-Smtp-Source: APXvYqzT+1A4+cJ5R6rz0CC94Ba+2nsxQWdqlVcqQeiJQiGhA9HZc4R+uEyff8wJ2WNp95n5AAqVxw==
-X-Received: by 2002:a1c:e1c5:: with SMTP id y188mr10395823wmg.39.1555061021412;
-        Fri, 12 Apr 2019 02:23:41 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s21sm6630224wmh.22.2019.04.12.02.23.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 12 Apr 2019 02:23:40 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     thierry.reding@gmail.com
-Cc:     baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] pwm: meson: Add clock source configuration for Meson G12A
-Date:   Fri, 12 Apr 2019 11:23:36 +0200
-Message-Id: <20190412092337.6941-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190412092337.6941-1-narmstrong@baylibre.com>
-References: <20190412092337.6941-1-narmstrong@baylibre.com>
+        Fri, 12 Apr 2019 05:27:37 -0400
+Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id EsT6hzc8UNG8zEsT7hC333; Fri, 12 Apr 2019 11:27:33 +0200
+Subject: Re: [PATCH v9 4/4] [media] cxusb: add raw mode support for Medion
+ MD95700
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+References: <cover.1553903063.git.mail@maciej.szmigiero.name>
+ <9ee1804b53cdeccde17826a58c17092400795b67.1553903063.git.mail@maciej.szmigiero.name>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9f526004-c431-3b1e-71bf-9cb1a795ae81@xs4all.nl>
+Date:   Fri, 12 Apr 2019 11:27:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ee1804b53cdeccde17826a58c17092400795b67.1553903063.git.mail@maciej.szmigiero.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGQakSGi8pzZeQeIi+XmPoJ3GxEqdvOqOz0MiyXCeizoge/jYXpGP2p/hrzH72nDUkUhN/pw00iG5Hfmc1ruTicjk0WPhguodgTOD1c7m7njc80byeh/
+ n70DfeNM8vJY5VXhMwP2Gt6LfaSBzIsEN29NyuhF8iJ1vNtlREoKd5LGq9g7BndonSrwwjzHw5q1kUHaxFj4QKq0id5HmxO2fNi98mvnNNAOPEdT78qXmjXB
+ 3y+WbFEVPfeeBMs9rnhR/9ErQJwK6drMvwa2DbPKg2zOdBAyO7wXyengTEK68HnXgGq2VC90sBmEWie2MPP172ErFBjDHAt8YI6Y/3LIUxm40Mb4fwMYhEej
+ iW+N5T6EQPVmPI60mCsURsUxgeHgIzzxtw1plMBRKL+a3RFM0C8j6P/NHqvibZAyFVc9rsWye3VFkypaJhOOtuDFUEkdckLzR7qNHs1TTo3035z7Kok=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For PWM controller in the Meson G12A SoC, the EE domain and AO domain
-have different clock sources. This patch tries to describe them in the
-DT compatible data.
+On 3/30/19 12:51 AM, Maciej S. Szmigiero wrote:
+> This adds raw (unprocessed) BT.656 stream capturing support for the analog
+> part of Medion 95700.
+> It can be enabled by setting CXUSB_EXTENDEDMODE_CAPTURE_RAW flag in
+> parm.capture.extendedmode passed to VIDIOC_S_PARM.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pwm/pwm-meson.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+What is the point of this feature? I think this should just be dropped.
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 2b03938039b6..46287cc8a0eb 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -434,6 +434,15 @@ static const struct meson_pwm_data pwm_axg_ao_data = {
- 	.num_parents = ARRAY_SIZE(pwm_axg_ao_parent_names),
- };
- 
-+static const char * const pwm_g12a_ee_parent_names[] = {
-+	"xtal", "hdmi_pll", "fclk_div4", "fclk_div3"
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ee_data = {
-+	.parent_names = pwm_g12a_ee_parent_names,
-+	.num_parents = ARRAY_SIZE(pwm_g12a_ee_parent_names),
-+};
-+
- static const struct of_device_id meson_pwm_matches[] = {
- 	{
- 		.compatible = "amlogic,meson8b-pwm",
-@@ -455,6 +464,14 @@ static const struct of_device_id meson_pwm_matches[] = {
- 		.compatible = "amlogic,meson-axg-ao-pwm",
- 		.data = &pwm_axg_ao_data
- 	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ee-pwm",
-+		.data = &pwm_g12a_ee_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ao-pwm",
-+		.data = &pwm_axg_ao_data
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, meson_pwm_matches);
--- 
-2.21.0
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> ---
+>  drivers/media/usb/dvb-usb/cxusb-analog.c | 190 +++++++++++++++++++----
+>  drivers/media/usb/dvb-usb/cxusb.h        |   4 +
+>  drivers/media/v4l2-core/v4l2-ioctl.c     |   3 +-
+>  3 files changed, 163 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/media/usb/dvb-usb/cxusb-analog.c b/drivers/media/usb/dvb-usb/cxusb-analog.c
+> index c726e578b5da..f8dcb8240d5c 100644
+> --- a/drivers/media/usb/dvb-usb/cxusb-analog.c
+> +++ b/drivers/media/usb/dvb-usb/cxusb-analog.c
+> @@ -44,7 +44,9 @@ static int cxusb_medion_v_queue_setup(struct vb2_queue *q,
+>  {
+>  	struct dvb_usb_device *dvbdev = vb2_get_drv_priv(q);
+>  	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+> -	unsigned int size = cxdev->width * cxdev->height * 2;
+> +	unsigned int size = cxdev->raw_mode ?
+> +		CXUSB_VIDEO_MAX_FRAME_SIZE :
+> +		cxdev->width * cxdev->height * 2;
+>  
+>  	if (*num_planes > 0) {
+>  		if (*num_planes != 1)
+> @@ -67,8 +69,13 @@ static int cxusb_medion_v_buf_init(struct vb2_buffer *vb)
+>  
+>  	cxusb_vprintk(dvbdev, OPS, "buffer init\n");
+>  
+> -	if (vb2_plane_size(vb, 0) < cxdev->width * cxdev->height * 2)
+> -		return -ENOMEM;
+> +	if (cxdev->raw_mode) {
+> +		if (vb2_plane_size(vb, 0) < CXUSB_VIDEO_MAX_FRAME_SIZE)
+> +			return -ENOMEM;
+> +	} else {
+> +		if (vb2_plane_size(vb, 0) < cxdev->width * cxdev->height * 2)
+> +			return -ENOMEM;
+> +	}
+>  
+>  	cxusb_vprintk(dvbdev, OPS, "buffer OK\n");
+>  
+> @@ -442,6 +449,45 @@ static bool cxusb_medion_copy_field(struct dvb_usb_device *dvbdev,
+>  	return true;
+>  }
+>  
+> +static void cxusb_medion_v_process_urb_raw(struct cxusb_medion_dev *cxdev,
+> +					   struct urb *urb)
+> +{
+> +	struct dvb_usb_device *dvbdev = cxdev->dvbdev;
+> +	u8 *buf;
+> +	struct cxusb_medion_vbuffer *vbuf;
+> +	int i;
+> +	unsigned long len;
+> +
+> +	if (list_empty(&cxdev->buflist)) {
+> +		dev_warn(&dvbdev->udev->dev, "no free buffers\n");
+> +		cxdev->vbuf_sequence++;
+> +		return;
+> +	}
+> +
+> +	vbuf = list_first_entry(&cxdev->buflist, struct cxusb_medion_vbuffer,
+> +				list);
+> +	list_del(&vbuf->list);
+> +
+> +	vbuf->vb2.field = V4L2_FIELD_NONE;
+
+This isn't right. It should likely be FIELD_INTERLACED, since that's what the
+cx25840 (and most other SDTV video receivers) gives you.
+
+> +	vbuf->vb2.sequence = cxdev->vbuf_sequence++;
+> +	vbuf->vb2.vb2_buf.timestamp = ktime_get_ns();
+> +
+> +	buf = vb2_plane_vaddr(&vbuf->vb2.vb2_buf, 0);
+> +
+> +	for (i = 0, len = 0; i < urb->number_of_packets; i++) {
+> +		memcpy(buf, urb->transfer_buffer +
+> +		       urb->iso_frame_desc[i].offset,
+> +		       urb->iso_frame_desc[i].actual_length);
+> +
+> +		buf += urb->iso_frame_desc[i].actual_length;
+> +		len += urb->iso_frame_desc[i].actual_length;
+> +	}
+> +
+> +	vb2_set_plane_payload(&vbuf->vb2.vb2_buf, 0, len);
+> +
+> +	vb2_buffer_done(&vbuf->vb2.vb2_buf, VB2_BUF_STATE_DONE);
+> +}
+> +
+>  static bool cxusb_medion_v_process_auxbuf(struct cxusb_medion_dev *cxdev,
+>  					  bool reset)
+>  {
+> @@ -566,22 +612,26 @@ static bool cxusb_medion_v_complete_handle_urb(struct cxusb_medion_dev *cxdev,
+>  			      len);
+>  
+>  		if (len > 0) {
+> -			cxusb_vprintk(dvbdev, URB, "appending URB\n");
+> -
+> -			/*
+> -			 * append new data to auxbuf while
+> -			 * overwriting old data if necessary
+> -			 *
+> -			 * if any overwrite happens then we can no
+> -			 * longer rely on consistency of the whole
+> -			 * data so let's start again the current
+> -			 * auxbuf frame assembling process from
+> -			 * the beginning
+> -			 */
+> -			*auxbuf_reset =
+> -				!cxusb_auxbuf_append_urb(dvbdev,
+> -							 &cxdev->auxbuf,
+> -							 urb);
+> +			if (cxdev->raw_mode)
+> +				cxusb_medion_v_process_urb_raw(cxdev, urb);
+> +			else {
+> +				cxusb_vprintk(dvbdev, URB, "appending URB\n");
+> +
+> +				/*
+> +				 * append new data to auxbuf while
+> +				 * overwriting old data if necessary
+> +				 *
+> +				 * if any overwrite happens then we can no
+> +				 * longer rely on consistency of the whole
+> +				 * data so let's start again the current
+> +				 * auxbuf frame assembling process from
+> +				 * the beginning
+> +				 */
+> +				*auxbuf_reset =
+> +					!cxusb_auxbuf_append_urb(dvbdev,
+> +								 &cxdev->auxbuf,
+> +								 urb);
+> +			}
+>  		}
+>  	}
+>  
+> @@ -616,7 +666,8 @@ static void cxusb_medion_v_complete_work(struct work_struct *work)
+>  
+>  	reschedule = cxusb_medion_v_complete_handle_urb(cxdev, &auxbuf_reset);
+>  
+> -	if (cxusb_medion_v_process_auxbuf(cxdev, auxbuf_reset))
+> +	if (!cxdev->raw_mode && cxusb_medion_v_process_auxbuf(cxdev,
+> +							      auxbuf_reset))
+>  		/* reschedule us until auxbuf no longer can produce any frame */
+>  		reschedule = true;
+>  
+> @@ -755,9 +806,13 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
+>  		goto ret_unstream_cx;
+>  	}
+>  
+> -	ret = cxusb_medion_v_ss_auxbuf_alloc(cxdev, &npackets);
+> -	if (ret != 0)
+> -		goto ret_unstream_md;
+> +	if (cxdev->raw_mode)
+> +		npackets = CXUSB_VIDEO_MAX_FRAME_PKTS;
+> +	else {
+> +		ret = cxusb_medion_v_ss_auxbuf_alloc(cxdev, &npackets);
+> +		if (ret != 0)
+> +			goto ret_unstream_md;
+> +	}
+>  
+>  	for (i = 0; i < CXUSB_VIDEO_URBS; i++) {
+>  		int framen;
+> @@ -813,9 +868,11 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
+>  	cxdev->nexturb = 0;
+>  	cxdev->vbuf_sequence = 0;
+>  
+> -	cxdev->vbuf = NULL;
+> -	cxdev->bt656.mode = NEW_FRAME;
+> -	cxdev->bt656.buf = NULL;
+> +	if (!cxdev->raw_mode) {
+> +		cxdev->vbuf = NULL;
+> +		cxdev->bt656.mode = NEW_FRAME;
+> +		cxdev->bt656.buf = NULL;
+> +	}
+>  
+>  	for (i = 0; i < CXUSB_VIDEO_URBS; i++)
+>  		if (cxdev->streamurbs[i] != NULL) {
+> @@ -833,7 +890,8 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
+>  	cxusb_medion_urbs_free(cxdev);
+>  
+>  ret_freeab:
+> -	vfree(cxdev->auxbuf.buf);
+> +	if (!cxdev->raw_mode)
+> +		vfree(cxdev->auxbuf.buf);
+>  
+>  ret_unstream_md:
+>  	cxusb_ctrl_msg(dvbdev, CMD_STREAMING_OFF, NULL, 0, NULL, 0);
+> @@ -880,7 +938,8 @@ static void cxusb_medion_v_stop_streaming(struct vb2_queue *q)
+>  	mutex_lock(cxdev->videodev->lock);
+>  
+>  	/* free transfer buffer and URB */
+> -	vfree(cxdev->auxbuf.buf);
+> +	if (!cxdev->raw_mode)
+> +		vfree(cxdev->auxbuf.buf);
+>  
+>  	cxusb_medion_urbs_free(cxdev);
+>  
+> @@ -953,9 +1012,11 @@ static int cxusb_medion_g_fmt_vid_cap(struct file *file, void *fh,
+>  	f->fmt.pix.height = cxdev->height;
+>  	f->fmt.pix.pixelformat = V4L2_PIX_FMT_UYVY;
+>  	f->fmt.pix.field = V4L2_FIELD_SEQ_TB;
+> -	f->fmt.pix.bytesperline = cxdev->width * 2;
+> +	f->fmt.pix.bytesperline = cxdev->raw_mode ? 0 : cxdev->width * 2;
+>  	f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
+> -	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+> +	f->fmt.pix.sizeimage =
+> +		cxdev->raw_mode ? CXUSB_VIDEO_MAX_FRAME_SIZE :
+> +		f->fmt.pix.bytesperline * f->fmt.pix.height;
+>  	f->fmt.pix.priv = 0;
+>  
+>  	return 0;
+> @@ -1010,8 +1071,10 @@ static int cxusb_medion_try_s_fmt_vid_cap(struct file *file,
+>  	f->fmt.pix.height = subfmt.format.height;
+>  	f->fmt.pix.pixelformat = V4L2_PIX_FMT_UYVY;
+>  	f->fmt.pix.field = V4L2_FIELD_SEQ_TB;
+> -	f->fmt.pix.bytesperline = f->fmt.pix.width * 2;
+> -	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
+> +	f->fmt.pix.bytesperline = cxdev->raw_mode ? 0 : f->fmt.pix.width * 2;
+> +	f->fmt.pix.sizeimage =
+> +		cxdev->raw_mode ? CXUSB_VIDEO_MAX_FRAME_SIZE :
+> +		f->fmt.pix.bytesperline * f->fmt.pix.height;
+>  	f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
+>  	f->fmt.pix.priv = 0;
+>  
+> @@ -1340,6 +1403,67 @@ static int cxusb_medion_s_std(struct file *file, void *fh,
+>  	return 0;
+>  }
+>  
+> +static int cxusb_medion_g_s_parm(struct file *file, void *fh,
+> +				 struct v4l2_streamparm *param)
+> +{
+> +	v4l2_std_id std;
+> +
+> +	if (param->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +		return -EINVAL;
+> +
+> +	param->parm.capture.readbuffers = 2;
+> +
+> +	if (cxusb_medion_g_std(file, fh, &std) == 0)
+> +		v4l2_video_std_frame_period(std,
+> +					    &param->parm.capture.timeperframe);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxusb_medion_g_parm(struct file *file, void *fh,
+> +			       struct v4l2_streamparm *param)
+> +{
+> +	struct dvb_usb_device *dvbdev = video_drvdata(file);
+> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+> +	int ret;
+> +
+> +	ret = cxusb_medion_g_s_parm(file, fh, param);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	if (cxdev->raw_mode)
+> +		param->parm.capture.extendedmode |=
+> +			CXUSB_EXTENDEDMODE_CAPTURE_RAW;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxusb_medion_s_parm(struct file *file, void *fh,
+> +			       struct v4l2_streamparm *param)
+> +{
+> +	struct dvb_usb_device *dvbdev = video_drvdata(file);
+> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+> +	int ret;
+> +	bool want_raw;
+> +
+> +	ret = cxusb_medion_g_s_parm(file, fh, param);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	want_raw = param->parm.capture.extendedmode &
+> +		CXUSB_EXTENDEDMODE_CAPTURE_RAW;
+> +
+> +	if (want_raw != cxdev->raw_mode) {
+> +		if (vb2_start_streaming_called(&cxdev->videoqueue) ||
+> +		    cxdev->stop_streaming)
+> +			return -EBUSY;
+> +
+> +		cxdev->raw_mode = want_raw;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxusb_medion_log_status(struct file *file, void *fh)
+>  {
+>  	struct dvb_usb_device *dvbdev = video_drvdata(file);
+> @@ -1359,6 +1483,8 @@ static const struct v4l2_ioctl_ops cxusb_video_ioctl = {
+>  	.vidioc_enum_input = cxusb_medion_enum_input,
+>  	.vidioc_g_input = cxusb_medion_g_input,
+>  	.vidioc_s_input = cxusb_medion_s_input,
+> +	.vidioc_g_parm = cxusb_medion_g_parm,
+> +	.vidioc_s_parm = cxusb_medion_s_parm,
+>  	.vidioc_g_tuner = cxusb_medion_g_tuner,
+>  	.vidioc_s_tuner = cxusb_medion_s_tuner,
+>  	.vidioc_g_frequency = cxusb_medion_g_frequency,
+> diff --git a/drivers/media/usb/dvb-usb/cxusb.h b/drivers/media/usb/dvb-usb/cxusb.h
+> index edd7e873e619..e08c946f7c35 100644
+> --- a/drivers/media/usb/dvb-usb/cxusb.h
+> +++ b/drivers/media/usb/dvb-usb/cxusb.h
+> @@ -130,6 +130,7 @@ struct cxusb_medion_dev {
+>  	u32 input;
+>  	bool stop_streaming;
+>  	u32 width, height;
+> +	bool raw_mode;
+>  	struct cxusb_medion_auxbuf auxbuf;
+>  	v4l2_std_id norm;
+>  
+> @@ -153,6 +154,9 @@ struct cxusb_medion_vbuffer {
+>  	struct list_head list;
+>  };
+>  
+> +/* Capture streaming parameters extendedmode field flags */
+> +#define CXUSB_EXTENDEDMODE_CAPTURE_RAW 1
+> +
+>  /* defines for "debug" module parameter */
+>  #define CXUSB_DBG_RC BIT(0)
+>  #define CXUSB_DBG_I2C BIT(1)
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index ac87c3e37280..0b9ca5acdd35 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -2023,7 +2023,7 @@ static int v4l_s_parm(const struct v4l2_ioctl_ops *ops,
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* Note: extendedmode is never used in drivers */
+> +	/* Note: extendedmode is never used in output drivers */
+>  	if (V4L2_TYPE_IS_OUTPUT(p->type)) {
+>  		memset(p->parm.output.reserved, 0,
+>  		       sizeof(p->parm.output.reserved));
+> @@ -2032,7 +2032,6 @@ static int v4l_s_parm(const struct v4l2_ioctl_ops *ops,
+>  	} else {
+>  		memset(p->parm.capture.reserved, 0,
+>  		       sizeof(p->parm.capture.reserved));
+> -		p->parm.capture.extendedmode = 0;
+>  		p->parm.capture.capturemode &= V4L2_MODE_HIGHQUALITY;
+>  	}
+>  	return ops->vidioc_s_parm(file, fh, p);
+> 
 
