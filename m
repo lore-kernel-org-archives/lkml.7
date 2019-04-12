@@ -2,150 +2,160 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF18C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976CAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5732186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tIs3Z8P4"
+	by mail.kernel.org (Postfix) with ESMTP id 68DEB2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfDLMHp (ORCPT
+        id S1727737AbfDLMIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 08:07:45 -0400
-Received: from vps.xff.cz ([195.181.215.36]:36314 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbfDLMHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 08:07:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1555070852; bh=DlgRb649mljlYFMMyH4qWotJiy+ctlKPT9WxhNBfniE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIs3Z8P4Iz3pZKxzAP7rxxh534VVXOaV6Ri8GMAPK9TK6i0ty5JJRz07GGVmasor3
-         v6593OJ/5dNlT9y7BHZgJFAuvessYnsZw9Z263SzAhumRvKy0pmj7ozdhC1mXjza0G
-         6ZhI7LiQ5ZLEUdVoKVUZxVT3gbT+wvrDUd74aFE0=
-From:   megous@megous.com
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Ondrej Jirman <megous@megous.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH 3/3] arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
-Date:   Fri, 12 Apr 2019 14:07:30 +0200
-Message-Id: <20190412120730.473-4-megous@megous.com>
-In-Reply-To: <20190412120730.473-1-megous@megous.com>
-References: <20190412120730.473-1-megous@megous.com>
+        Fri, 12 Apr 2019 08:08:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59450 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbfDLMIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 08:08:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41E6D374;
+        Fri, 12 Apr 2019 05:08:06 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A9A03F718;
+        Fri, 12 Apr 2019 05:08:02 -0700 (PDT)
+Subject: Re: [PATCH 7/7] irqchip/al-msi: Add ACPI support
+To:     Zeev Zilberman <zeev@amazon.com>, Hanna Hawa <hhhawa@amazon.com>
+Cc:     tsahee@annapurnalabs.com, antoine.tenart@bootlin.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com,
+        will.deacon@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net, ronenk@amazon.com,
+        dwmw@amazon.co.uk, vaerov@amazon.com, alisaidi@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <1554035733-11827-1-git-send-email-hhhawa@amazon.com>
+ <1554035733-11827-3-git-send-email-hhhawa@amazon.com>
+ <86pnq65v48.wl-marc.zyngier@arm.com>
+ <cc40b029-b06e-1367-2411-1ec325d3b97b@amazon.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <a882317e-1f19-3bed-b790-10b8b8a3e839@arm.com>
+Date:   Fri, 12 Apr 2019 13:08:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc40b029-b06e-1367-2411-1ec325d3b97b@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+Hi Zeev,
 
-This patch adds RTC node and fixes the clock properties and nodes
-to reflect the real clock tree.
+On 04/04/2019 15:45, Zeev Zilberman wrote:
+> Hi Marc,
+> 
+> We have considered exposing our interrupt controller both via MADT 
+> OEM-specific entry and via DSDT.
+> We've chosen MADT OEM-specific entry, because it seemed like a 
+> reasonable placeholder for custom interrupt controller, but we can move 
+> to DSDT, if this seems like a better way to represent it.
+> 
+> Either way we chose, we'll need to solve the ordering issue of the 
+> drivers probing.
+> The desired order of driver probing in the system, because of the 
+> dependencies, is:
+> GIC -> AL MSIX controller driver -> PCI
+> If we keep using MADT, we can't just use IRQCHIP_DECLARE, because there 
+> is no way we found to control ordering of MADT probing. So, GIC might be 
+> probed after our driver in this case.
+> The reason we used early_initcall, is that the early_initcalls are 
+> invoked after MADT probing in the system (and before DSDT probing).
+> 
+> If we move to using DSDT we need to solve the ordering problem from 
+> another direction - make sure that MSIX driver is probed before PCI.
+> In the patches that were posted for xgene interrupt controller (and 
+> weren't accepted) we saw that they proposed to solve the same issue
+> by modifying ACPI subsystem code by defining a new type for msi drivers 
+> and probing them before PCI drivers 
+> (https://patchwork.ozlabs.org/patch/818771/).
+>  From the feedback on that patch 
+> (https://patchwork.ozlabs.org/cover/818767/#1788415) it seemed that 
+> alternative solution is in the works,
+> but we didn't manage to find any followup on this.
+> 
+> We would be glad to hear what you propose for fixing the ordering issue 
+> and rework the patches accordingly.
 
-The device nodes for the internal oscillator and osc32k are removed,
-as these clocks are now provided by the RTC device. Clock references
-are fixed accordingly, too.
+There are multiple issues here, but the main one is that you're trying
+to do something that is completely contrary to the ACPI spec by
+inventing a new interrupt controller.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 30 +++++++++++---------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+The use case for ACPI is quite simple: you have HW that matches the ACPI
+spec, and everything will work out of the box. This means GICv2+GICv2m
+or GICv3+ITS. There is zero space for creativity. Now, if you want your
+own interrupt controller, the only choice is to stick with DT. That's
+the place for weird and wonderful stuff that ACPI cannot support.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index e0dc4a05c1ba..ba0f45b6f743 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -56,14 +56,6 @@
- 		status = "disabled";
- 	};
- 
--	iosc: internal-osc-clk {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <16000000>;
--		clock-accuracy = <300000000>;
--		clock-output-names = "iosc";
--	};
--
- 	osc24M: osc24M_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -71,11 +63,11 @@
- 		clock-output-names = "osc24M";
- 	};
- 
--	osc32k: osc32k_clk {
-+	ext_osc32k: ext_osc32k_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <32768>;
--		clock-output-names = "osc32k";
-+		clock-output-names = "ext_osc32k";
- 	};
- 
- 	psci {
-@@ -197,7 +189,7 @@
- 		ccu: clock@3001000 {
- 			compatible = "allwinner,sun50i-h6-ccu";
- 			reg = <0x03001000 0x1000>;
--			clocks = <&osc24M>, <&osc32k>, <&iosc>;
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>;
- 			clock-names = "hosc", "losc", "iosc";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -215,7 +207,7 @@
- 				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_APB1>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_APB1>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-@@ -603,10 +595,20 @@
- 			};
- 		};
- 
-+		rtc: rtc@7000000 {
-+			compatible = "allwinner,sun50i-h6-rtc";
-+			reg = <0x07000000 0x400>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-output-names = "osc32k", "osc32k-out", "iosc";
-+			clocks = <&ext_osc32k>;
-+			#clock-cells = <1>;
-+		};
-+
- 		r_ccu: clock@7010000 {
- 			compatible = "allwinner,sun50i-h6-r-ccu";
- 			reg = <0x07010000 0x400>;
--			clocks = <&osc24M>, <&osc32k>, <&iosc>,
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>,
- 				 <&ccu CLK_PLL_PERIPH0>;
- 			clock-names = "hosc", "losc", "iosc", "pll-periph";
- 			#clock-cells = <1>;
-@@ -627,7 +629,7 @@
- 			reg = <0x07022000 0x400>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&osc32k>;
-+			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
+We've been around the block with XGene, and every "solution" was just
+utter crap, prone to failure and in the end unmaintainable. Anything
+involving an initcall definitely falls into that category.
+
+I'll let Lorenzo speak his mind as the arm64 ACPI maintainer, but from
+an irqchip perspective, I can't see how to support this unless we get
+the ACPI spec to support this type of configuration.
+
+Thanks,
+
+	M.
 -- 
-2.21.0
-
+Jazz is not dead. It just smells funny...
