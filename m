@@ -2,211 +2,155 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87D8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C43C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E3D2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA05D20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mF/EVAeI"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ohPxwfuh";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="H2YMOi9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfDLWCs (ORCPT
+        id S1727137AbfDLWEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:02:48 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33524 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfDLWCs (ORCPT
+        Fri, 12 Apr 2019 18:04:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:38642 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726912AbfDLWEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:02:48 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3CM2LRk124095;
-        Fri, 12 Apr 2019 17:02:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555106541;
-        bh=Gr+mPzkDDlEkRvyGJvDmvi5rerSbW14PwLZQcv+QSSg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mF/EVAeI1EEfiCA+XWueMivBTbdrHIDAmJU4KCvqW2+chTDURfewEkMrcsncwu/w9
-         YGi9TjmA/xf5uzDz7jOdvL5JZoCUlQgONIPGsWPP/8nZvaudXbrnqwIyLuY0uAL5oB
-         l0emEigDNspeggE0Vkk6RNf1QQQYAKNkbRbVCCfg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3CM2Luo019597
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Apr 2019 17:02:21 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Apr 2019 17:02:20 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Apr 2019 17:02:21 -0500
-Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3CM2KW3021967;
-        Fri, 12 Apr 2019 17:02:20 -0500
-Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Marek Behun <marek.behun@nic.cz>
-CC:     <robh+dt@kernel.org>, <pavel@ucw.cz>, <rdunlap@infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20190411193848.23140-1-dmurphy@ti.com>
- <20190411193848.23140-3-dmurphy@ti.com> <20190412000707.70f8319f@nic.cz>
- <5675ac20-6db2-34ea-938a-01f0076b87e7@ti.com>
- <7a987453-0e4d-be27-790e-efa4a0f40b2b@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d2768a25-046f-9aff-f0ed-2772f451a829@ti.com>
-Date:   Fri, 12 Apr 2019 17:02:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <7a987453-0e4d-be27-790e-efa4a0f40b2b@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 12 Apr 2019 18:04:16 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3CLwbTu026404;
+        Fri, 12 Apr 2019 15:04:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=cqL+pJ71EKbv/SUv97RjkmOLlG58/qsHRdVt9C9X53w=;
+ b=ohPxwfuhNzun4WRdiBIgrledoQNF8uFSklb+JHWUPDLIfWrrrHeQyy51eOKQw0rzfNPq
+ Uv3UAFvisDKjQ0Ucltollc2ipfSk+weZC0j7UDPlmkn+JF5isO862jQRXjKvadyIYi0e
+ CoPVZ0HLnDhGFnc/37UDKnfY5Wenl6e8JZs= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rtw0ws91h-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 12 Apr 2019 15:04:05 -0700
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 12 Apr 2019 15:04:04 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 12 Apr 2019 15:04:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cqL+pJ71EKbv/SUv97RjkmOLlG58/qsHRdVt9C9X53w=;
+ b=H2YMOi9C5K3HKrHcYUVEsTNQncAmKIKe9qv6C2wcbnmVa0Qm4GHBQbE73WZEyNGEUTuW8skgVx4GLsYEsm9Jx2zDv+wkxET7Wkpr9nmeHRpwm31fsKixfqHYoyG57DrSykHOknNdeXFY3OPh94PQ8e7WlNqk0rT9USySdFQsiRg=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2679.namprd15.prod.outlook.com (20.179.156.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.18; Fri, 12 Apr 2019 22:04:02 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
+ 22:04:02 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 0/4] mm: memcontrol: memory.stat cost & correctness
+Thread-Topic: [PATCH 0/4] mm: memcontrol: memory.stat cost & correctness
+Thread-Index: AQHU8UKSRitH7aU5pEyAQQGRGu7VMKY5FLwA
+Date:   Fri, 12 Apr 2019 22:04:02 +0000
+Message-ID: <20190412220357.GA18999@tower.DHCP.thefacebook.com>
+References: <20190412151507.2769-1-hannes@cmpxchg.org>
+In-Reply-To: <20190412151507.2769-1-hannes@cmpxchg.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR2201CA0050.namprd22.prod.outlook.com
+ (2603:10b6:301:16::24) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:2586]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d2834e93-225c-4f32-794d-08d6bf92c5b3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2679;
+x-ms-traffictypediagnostic: BYAPR15MB2679:
+x-microsoft-antispam-prvs: <BYAPR15MB2679F7B13A86BB2E8B6A1E2EBE280@BYAPR15MB2679.namprd15.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(396003)(39860400002)(366004)(199004)(189003)(106356001)(6246003)(105586002)(71190400001)(8936002)(229853002)(71200400001)(6506007)(386003)(7736002)(6486002)(33656002)(476003)(186003)(86362001)(486006)(446003)(68736007)(2906002)(1076003)(5660300002)(14454004)(11346002)(46003)(102836004)(99286004)(478600001)(81156014)(6916009)(52116002)(76176011)(81166006)(305945005)(8676002)(4326008)(316002)(25786009)(256004)(9686003)(6512007)(54906003)(6436002)(6116002)(53936002)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2679;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Kvoj+NfNBjDXlBETeDzWIqqgsH8KbEFAt2j71KDTMrbXCNjriKjWOGd+oegkTTPjXh8TvZjJDTncvfdXcQZSpnSm8DRB2U5k/skdhSzzOHcFqw0wTZ/tu2hcZtyPPtdx0KxSzTVL5w3ykL0ZBZ5qeBDCQcUrvgsp6giHkoDOqYdeEbGlCeOKrhVtqq0ReMyruq+rxaYUboygr+N6mn6H/1IN95i8Vecb0PiznZTz5ca415RXMAVRVdMr7Gj9aIp8trW4f/xDSTzs5X7CQ8KIbzfMheWl1zLmFmV1QzWcTn7c4xGt68pwQupBz2SdDrhlGYkFZX6oXZw5ibY6z7NnYfkrrXV/7v+ieeojGfQ9boyzwNp0SIvLrI5R/xS4B1acgf4UVtCPzb8kulHNZJZ4azxI8sJPN0GxNaPc+p+8/uk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25150709FC40BE4791F4051712207847@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2834e93-225c-4f32-794d-08d6bf92c5b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 22:04:02.5229
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2679
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_11:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All
+On Fri, Apr 12, 2019 at 11:15:03AM -0400, Johannes Weiner wrote:
+> The cgroup memory.stat file holds recursive statistics for the entire
+> subtree. The current implementation does this tree walk on-demand
+> whenever the file is read. This is giving us problems in production.
+>=20
+> 1. The cost of aggregating the statistics on-demand is high. A lot of
+> system service cgroups are mostly idle and their stats don't change
+> between reads, yet we always have to check them. There are also always
+> some lazily-dying cgroups sitting around that are pinned by a handful
+> of remaining page cache; the same applies to them.
+>=20
+> In an application that periodically monitors memory.stat in our fleet,
+> we have seen the aggregation consume up to 5% CPU time.
+>=20
+> 2. When cgroups die and disappear from the cgroup tree, so do their
+> accumulated vm events. The result is that the event counters at
+> higher-level cgroups can go backwards and confuse some of our
+> automation, let alone people looking at the graphs over time.
+>=20
+> To address both issues, this patch series changes the stat
+> implementation to spill counts upwards when the counters change.
+>=20
+> The upward spilling is batched using the existing per-cpu cache. In a
+> sparse file stress test with 5 level cgroup nesting, the additional
+> cost of the flushing was negligible (a little under 1% of CPU at 100%
+> CPU utilization, compared to the 5% of reading memory.stat during
+> regular operation).
+>=20
+>  include/linux/memcontrol.h |  96 +++++++-------
+>  mm/memcontrol.c            | 290 +++++++++++++++++++++++++++------------=
+----
+>  mm/vmscan.c                |   4 +-
+>  mm/workingset.c            |   7 +-
+>  4 files changed, 234 insertions(+), 163 deletions(-)
+>=20
+>=20
 
-On 4/12/19 2:10 PM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 4/12/19 1:50 PM, Dan Murphy wrote:
->> Marek
->>
->> On 4/11/19 5:07 PM, Marek Behun wrote:
->>> Hi Dan,
->>> this probaly was discussed, but I did not follow brightness model
->>> discussions:
->>> what will happen if I set yellow by writing into yellow mode
->>> brightness, and then orange by writing orange model brightness?
->>> Will the resulting color be a mix of yellow and orange, or will the
->>> orange overwrite the yellow setting?
->>>
->>
->> This was not discussed and is a good question.  If you write the yellow mode for a group of
->> LEDs then yellow would be produced for the brightness requested.
->>
->> If orange is then requested then orange should be displayed at the brightness level requested.
->> So yes the orange will over write the yellow.
-> 
-> Yes, and individual color brightness levels should correspond
-> to the color components of the brightness-model level currently set.
-> 
->> The next question is if the absolute colors are written does it produce the same behavior?
->>
->> So if you have yellow and write to the red should the red LED brightness be modified or should the
->> color switch to red?
->> And if the red LED is on and the blue LED is written should the color switch to blue or should the blue and red LEDs be mixed together?
-> 
-> Now, if any of the color brightness files is altered it should update
-> the hardware with this new setting, but brightness-model and main
-> brightness level should not be changed. The thing that is missing in our
-> proposal is lack of the way to check if brightness-model is up to date
-> (i.e. if it reflects what is written to the hardware).
-> 
-> How about utilizing the sync file from the new colors directory?
-> It could return 1 on read when brightness levels of all colors
-> match exactly the ones assigned to the brightness model level currently
-> set.
-> 
+For the series:
+Reviewed-by: Roman Gushchin <guro@fb.com>
 
-There maybe a more pragmatic way to set the color brightness as opposed to defining each level. By defining the monochrome LEDs base maximum brightness for the brightness model and calculating a percentage for each LED from max   I shared this with Jacek earlier and he did not go for it but lets see if others agree or disagree.
-
-With this method we don't have to define a slew of levels. This in theory may work but not sure it will work in practice.
-
-For instance
-
-	lp5024_model_yellow: brightness-models {
-		led-brightness-model;
-		model@0 {
-			model_name = "yellow";
-			layout = <LED_COLOR_ID_RED
-				  LED_COLOR_ID_GREEN
-				  LED_COLOR_ID_BLUE>;
-			max_level = <255 247 196>;  //max level of the monochrome LEDs to obtain the color model.
-		};
-	};
-
-Assumption made that a linear slope for each color model is expected.
-
-Then in the code when a new brightness level is requested for the color the brightness of the monochrome LEDs would be based off the percentage from the max_brightness of the max in the max_level array
-
-The hue is presented as just another color in the colors dir with brightness and max_brightness files.  So it "appears" as a single LED.
-
-max_brightness = 255 This is the max of the LEDs in the array and this would also be presented to the user in the max_brightness of the hue. 
-
-Red = (255/255)  = 100%
-Green = (247/255) = 97%
-Blue = (196/255) = 77%
-
-brightness_val 128
-
-Red = (128 * 100) / 100 = 128
-Green = (128 * 97) / 100 = 124
-Blue = (128 * 77) / 100 = 98
-
-brightness_val 80
-
-Red = (80 * 100) / 100 = 80
-Green = (80 * 97) / 100 = 77
-Blue = (80 * 77) / 100 = 61
-
-brightness_val 10
-
-Red = (10 * 100) / 100 = 10
-Green = (10 * 97) / 100 = 9
-Blue = (10 * 77) / 100 = 7
-
-This method maintains a rough percentage delta between the LEDs.  Where in the MAX brightness case (255) blue is 77% dimmer in intensity then Red and with a brightness that is 1/4 max the delta percentage is 75% so the delta is within 5% tolerance.
-
-This would keep the directory structures clean and the user space would just need to know colors, brightness and max_brightness for each color.
-
-Also with this simplistic model we can simplify the DT nodes to
-	lp5024_model_yellow: brightness-models {
-		led-brightness-model;
-		model@0 {
-			model_name = "yellow";
-			layout = <LED_COLOR_ID_RED
-				  LED_COLOR_ID_GREEN
-				  LED_COLOR_ID_BLUE>;
-			max_level = <255 247 196>;
-		};
-	};
-
-	lp5024_model_orange: brightness-models {
-		led-brightness-model;
-		model@1 {
-			model_name = "orange";
-			layout = <LED_COLOR_ID_RED
-				  LED_COLOR_ID_GREEN
-				  LED_COLOR_ID_BLUE>;
-			max_level = <236 140 16>;
-		};
-	}; 
-
-For orange
-max_brightness = 236 This is the max of the LEDs in the array and this would also be presented to the user in the max_brightness of the hue. 
-
-Red = (236/236)  = 100%
-Green = (140/236) = 59%
-Blue = (16/236) = 6%
-
-<same math from above involved here>
-
-After all of this most likely someone will say this will not work.
-Like I indicated it works in principle maybe not in practice but it keeps the user interface simple and keeps the dt small.
-
-The other alternative is to have the user space define the color models and just expose the monochrome LEDs.
-
-Dan
-
-<snip>
+Thanks!
