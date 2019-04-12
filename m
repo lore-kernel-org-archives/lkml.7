@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD65DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F7EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857E32186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225B92171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfDLLqi (ORCPT
+        id S1728410AbfDLLqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:46:38 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:52051 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfDLLqN (ORCPT
+        Fri, 12 Apr 2019 07:46:44 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40230 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfDLLqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 07:46:13 -0400
-Received: by mail-it1-f200.google.com with SMTP id y127so8894114itb.1
+Received: by mail-io1-f69.google.com with SMTP id e72so7500854iof.7
         for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:46:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Fcgnn308KWXqWGCTLLJkSiki90KP8eZcglNT1uKkWZc=;
-        b=fHg+FMeLn1uTkIdcIRC7pUH1qAZemqGVgFGhdCyZR8S+j/dlijmQrb9HpH4/cyfmbJ
-         OBgPVuzsiopn4HSCOvsYTPhjdVBOEL9w1wKeO6bg4CRRq8UfiEWcsx35C0unQGjb3xSd
-         Hnkk9+qZ31AFf945ChvX8iW+qNJNhNDtwP4ex2UYzsLxzWWEAspi9ABctjnDQ5FDQbuq
-         +0QaksgyGQ4TctTpvw3EkxE7Bs8PQpiVxoCq+gsyG8x3o+ct3W10sC4yneT6ieezbdXU
-         5N37F5eovrMv/Krmobb5GIfXzd2yvUeCBGW/42CQtEZg6uO5Oew6DfAlJegowMiLr0d0
-         Kg9A==
-X-Gm-Message-State: APjAAAXnEU4sagXFwwEKb4HwPcB6Qj26WRiD8uv7q/NwTKcykayonlry
-        z+3CMHkzsxttMKzYJqSYuM6ttAlria2PYBw/J9Ake4suzro9
-X-Google-Smtp-Source: APXvYqx6GEMGWDCyJAwN/J4RJNrD+6ylC47NDpE0mLZeKQHIvf2dEWnfoDwZPId6BroJYC807k4uMua5CkwODw8vYRMBsgPTd/KI
+        bh=F4iqygl6G6Nxp1bDqFTZfsmZR6M7+MdVWV26GQdWnTE=;
+        b=C7oiQw3tFfnweCCVrA29IxL0fU7OV2NxjSlbyk0T12/Ox2iiBKq67xgyT8mTzUdDj7
+         iU6Zs5whhmX6azYSBQ8N71L0M6+jLsITN+vMS0gTYklTavoddnU6sD7O/EGyibK1IKRr
+         1vw9R/dOWoOZT3O8k6M9z/Yas6MuuS1UOkShjveMD6iZ8O0MURCpTjYqyhdqB5TARQOg
+         JNeqOyTPQXKeiFeLTDQ23MK0v7pK+9UYG/fZQp0as5BGPcGUyPc4Wrz54M3plJ1OY+MN
+         eVCj0tlPCZ/hCDei8nXtOSG2qGADLBhJLMXBlCBJwHcPORP4iA2+t+ibi/LUTkrN95Kx
+         Ljiw==
+X-Gm-Message-State: APjAAAUNnTj+c/iC2qzzXGAlFr1s7RrZEviVpMFcogB5jttQv/9NdlQW
+        t0Xikv2o0mE3erAgol9LoW1dhCzglz0Ms3SH8dFbldHo0VNs
+X-Google-Smtp-Source: APXvYqyAvRkBRmaceBPizwqMkR+jIKZk5mIU6GXJYCs0DqyiS2sh0R8CK9cglr4A60LHV+/OhjKq4BJbbh3BPpGnTa4ZhUy6pviZ
 MIME-Version: 1.0
-X-Received: by 2002:a5d:954c:: with SMTP id a12mr2527338ios.31.1555069572964;
+X-Received: by 2002:a24:33cc:: with SMTP id k195mr2429234itk.36.1555069572727;
  Fri, 12 Apr 2019 04:46:12 -0700 (PDT)
 Date:   Fri, 12 Apr 2019 04:46:12 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007f693a058653d90c@google.com>
-Subject: WARNING: proc registration bug in snd_info_card_register
-From:   syzbot <syzbot+2e782bf6a60d0fcb932d@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        joe@perches.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com, vkoul@kernel.org
+Message-ID: <0000000000007bd948058653d9a5@google.com>
+Subject: KASAN: stack-out-of-bounds Read in string
+From:   syzbot <syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,56 +59,46 @@ syzbot found the following crash on:
 
 HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1738acd3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116f9cd3200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e782bf6a60d0fcb932d
+dashboard link: https://syzkaller.appspot.com/bug?extid=b75b85111c10b8d680f1
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140ef0f3200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=102c7c2d200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=161ebce3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fd974b200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2e782bf6a60d0fcb932d@syzkaller.appspotmail.com
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
 
-usb 1-1: send failed (error -71)
-usb 6-1: send failed (error -71)
-usb 5-1: USB disconnect, device number 3
-------------[ cut here ]------------
-proc_dir_entry 'asound/PODStudioUX2' already registered
-WARNING: CPU: 1 PID: 534 at fs/proc/generic.c:359 proc_register+0x3d9/0x550  
-fs/proc/generic.c:359
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 534 Comm: kworker/1:2 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=0424, idProduct=012c,  
+bcdDevice=1a.78
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+==================================================================
+BUG: KASAN: stack-out-of-bounds in string+0x1f6/0x220 lib/vsprintf.c:606
+Read of size 1 at addr ffff88809ee2f260 by task kworker/0:2/539
+
+CPU: 0 PID: 539 Comm: kworker/0:2 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Workqueue: usb_hub_wq hub_event
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  panic+0x29d/0x5f2 kernel/panic.c:214
-  __warn.cold+0x20/0x48 kernel/panic.c:571
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:proc_register+0x3d9/0x550 fs/proc/generic.c:359
-Code: ff df 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 61 01 00 00 48 8b 04 24  
-48 c7 c7 e0 a0 79 8e 48 8b b0 d0 00 00 00 e8 a7 9e 71 ff <0f> 0b 48 c7 c7  
-a0 90 91 91 e8 b9 10 34 0c 48 8b 4c 24 28 48 b8 00
-RSP: 0018:ffff88809fb9f000 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff88809d2df840 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed1013f73df2
-RBP: ffff888096382a00 R08: ffff88809f9cc980 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff8880a594cd38 R15: 000000000000000c
-  proc_symlink+0x147/0x1c0 fs/proc/generic.c:451
-  snd_info_card_register+0x14b/0x1e0 sound/core/info.c:558
-  snd_card_register sound/core/init.c:772 [inline]
-  snd_card_register+0x432/0x5f0 sound/core/init.c:736
-  toneport_init sound/usb/line6/toneport.c:457 [inline]
-  toneport_init+0x256/0x63c sound/usb/line6/toneport.c:412
-  line6_probe+0xb01/0x1150 sound/usb/line6/driver.c:784
+  print_address_description+0x6c/0x236 mm/kasan/report.c:187
+  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
+  string+0x1f6/0x220 lib/vsprintf.c:606
+  vsnprintf+0xa14/0x16b0 lib/vsprintf.c:2396
+  pointer+0x60b/0x910 lib/vsprintf.c:2038
+  vsnprintf+0x5a0/0x16b0 lib/vsprintf.c:2400
+  vscnprintf+0x29/0x80 lib/vsprintf.c:2499
+  vprintk_store+0x45/0x4a0 kernel/printk/printk.c:1900
+  vprintk_emit+0x210/0x5a0 kernel/printk/printk.c:1957
+  dev_vprintk_emit+0x50e/0x553 drivers/base/core.c:3185
+  dev_printk_emit+0xbf/0xf6 drivers/base/core.c:3196
+  __dev_printk+0x1ed/0x215 drivers/base/core.c:3208
+  _dev_info+0xdc/0x10e drivers/base/core.c:3254
+  vub300_probe+0x25e/0xd80 drivers/mmc/host/vub300.c:2109
   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
   really_probe+0x2da/0xb10 drivers/base/dd.c:509
   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
@@ -134,12 +123,25 @@ R13: dffffc0000000000 R14: ffff8880a594cd38 R15: 000000000000000c
   port_event drivers/usb/core/hub.c:5350 [inline]
   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
   kthread+0x313/0x420 kernel/kthread.c:253
   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+
+The buggy address belongs to the page:
+page:ffffea00027b8bc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfff00000000000()
+raw: 00fff00000000000 ffffea00027b8bc8 ffffea00027b8bc8 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809ee2f100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff88809ee2f180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff88809ee2f200: 00 00 f1 f1 f1 f1 f1 f1 00 00 00 00 f2 f2 f2 f2
+                                                        ^
+  ffff88809ee2f280: 00 00 00 00 f2 f2 f2 f2 00 00 00 00 00 00 f3 f3
+  ffff88809ee2f300: f3 f3 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
 
 
 ---
