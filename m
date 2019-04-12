@@ -2,68 +2,68 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34427C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5768CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045AF2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231A92171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="oZOhl9lk"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="LjyO7Ryq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfDLOHU (ORCPT
+        id S1727130AbfDLOHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:07:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37793 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLOHR (ORCPT
+        Fri, 12 Apr 2019 10:07:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46063 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLOHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:07:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w23so5199125ply.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:07:17 -0700 (PDT)
+        Fri, 12 Apr 2019 10:07:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so5196464pfi.12
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=G85O0T9gvT51n0IPVcKAhBnkwkcI2Ktvg3abwb8MQTw=;
-        b=oZOhl9lks9xQeiZTfIDjI7EYhaklckELxEfaXUqoIJCvVd8ErnAMKcqoo2gYY4ywE6
-         3JNF61eEByZMJ86D8iu2LqOhAcAf+NEFmBvO5NTbnvlyHAbSCc4uYA2gZRExTJjeYkZW
-         SykoG5pVXlhsM/n3pG5+c23kbI/J4veTzxvx50O9LLnFtZCcuup9QbZ7Cvuge339rLS+
-         /Mypc5gacs625b+LSmG2klciLhwHoC5PKqK3kP/ZhMdaqF3Ppef32bXkXSkNXH0n/gZ+
-         JtevLQbxNlpB5x5pii//xsfxLYS5g8aHUgeLXgjd+7vMnwjvT7HwiYZKgUJt1FUq5zyF
-         rEBA==
+        bh=LFvs6B93AWMpE9a4jl7A5cXw5LlsuQGgpQWwUBBEyYw=;
+        b=LjyO7RyqSJXrGTsFsbYNu6/K2L+hviUiOBFipqMjvyBOKmrab6zQ+SHJURyt/54kaX
+         6WkZPJohzMPemr3iSVYNsSUmVQxJyMDhu73uNycfGMuadtNWzD2Q9LTKv2ioL8my/awB
+         RBWC2gxh1ktiunHzxZ1v1ck1yP1ufOzfnTIil9hO97yBLArSt5oJeB9NBZHCYC/AKDFn
+         k3KGC5KTv0ALDKDnUjxkAmK5BtBeEG8+K4LgZEzrhbx9xXPHwO08Os9Zzly4qXvz+0c2
+         WX9Tuslell02XSZ3nKgWt3O2VqvTW4u7fEw942z90aPMsf89JFDZ4Y8R3aydrY8btJH1
+         HHOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=G85O0T9gvT51n0IPVcKAhBnkwkcI2Ktvg3abwb8MQTw=;
-        b=Bgnyjh3WyfHRlOhG/9dyj3Y5TWEEvjkk9sIVugKSBi26dntmtset0RVpEn5AV1pyZZ
-         H3FQCzDJhFxGl0EB3gBG+5S1+LKkbU9VqAPtDgMCl9NY9f8I9Pq7kDP2yoL9Ipzvuf3N
-         KlChlEnsEqxMgU7eJJ4J4TJg6IqCChRK2Fq8fhpAfBcXJEd9A1pbqij5kX0Z/T8jImt3
-         7nx0/ztuiuc9msLugq3R8DpXFhm+obyWTQOEL7aIo+26FMcDJS7urVt7A7Gui8Qtplha
-         dzCQ9Lew/BY/VV1w7dMWVf6PpBPq39VG7yQvd6nmYMHCzA7KrGFp1jn9d9TGX4urLiDc
-         M+rw==
-X-Gm-Message-State: APjAAAXWDH97iEY2fwKk31LiorZV9P9X+pMHk6mmQKgaxgu2k6fLLrVO
-        yTOZwC12as7Pf4Tf/X0KSaNchA==
-X-Google-Smtp-Source: APXvYqzFnD28Pm9ejb3THRgNAiCeHFOd10yMJcboIe+IOXdKzX3SPUy4iz4lQyI1DpTAHWAPEL12HQ==
-X-Received: by 2002:a17:902:2f:: with SMTP id 44mr15487856pla.137.1555078036775;
-        Fri, 12 Apr 2019 07:07:16 -0700 (PDT)
+        bh=LFvs6B93AWMpE9a4jl7A5cXw5LlsuQGgpQWwUBBEyYw=;
+        b=VI4tFdOuLd4m2ZoUXJY6zuIVIPtMfPok+MhmWaOvdPE6cr0Ni9M5RhiDs6/GZaQVnu
+         VXopE2oAc3Gg43PpVq7njCDinY8g93aQA8aJDp+oJnPc0Op2M7BG1STMWTsjEcCx9qsM
+         KZlaxUoTwnCtZM6Eid/vBb1V2fzFxObkqnyYOGhvn7ex2abn7QI7C0Zumdw1RFzJ+O56
+         CyexXjM8X3CdBwnHDKWUJjR5iVR9rIwa3S9wz5WjnmbzqOtqGLwzwi4zCSW+Y7ZC7tKI
+         CBNQR2lyc2KlyzqHcYrO5QX6m8LNespHMpqHpMHixv0TcqgXumCCfdlytnk5T0Q66Zgy
+         I9lw==
+X-Gm-Message-State: APjAAAWBLqRSewjbj23XU/Bjus1qSLBPZHrSlX6FAuYGNtIYSYAU2XU7
+        zebIHtox2p4rr69XmmEZ++6AnC+ebEg=
+X-Google-Smtp-Source: APXvYqwdqX4QGcHRn70O4gRuDpeExbWjgyGTsYUvRgu0SFjcxbZ9SN0UQwWws65+NMGQTXG5YxhkNw==
+X-Received: by 2002:a62:1690:: with SMTP id 138mr57716277pfw.28.1555078040147;
+        Fri, 12 Apr 2019 07:07:20 -0700 (PDT)
 Received: from localhost.localdomain (36-239-234-188.dynamic-ip.hinet.net. [36.239.234.188])
-        by smtp.gmail.com with ESMTPSA id d68sm63862024pfg.16.2019.04.12.07.07.13
+        by smtp.gmail.com with ESMTPSA id d68sm63862024pfg.16.2019.04.12.07.07.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 07:07:16 -0700 (PDT)
+        Fri, 12 Apr 2019 07:07:19 -0700 (PDT)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Lee Jones <lee.jones@linaro.org>,
         Bengt Jonsson <bengt.g.jonsson@stericsson.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/3] regulator: ab8500-ext: Remove *rdev from struct ab8500_ext_regulator_info
-Date:   Fri, 12 Apr 2019 22:06:57 +0800
-Message-Id: <20190412140658.11754-2-axel.lin@ingics.com>
+Subject: [PATCH 3/3] regulator: ab8500-ext: Convert to use simplified DT parsing
+Date:   Fri, 12 Apr 2019 22:06:58 +0800
+Message-Id: <20190412140658.11754-3-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190412140658.11754-1-axel.lin@ingics.com>
 References: <20190412140658.11754-1-axel.lin@ingics.com>
@@ -72,83 +72,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code is using devm_regulator_register() so we don't need to save
-*rdev for clean up, use a local variable instead.
+Use regulator core's simplified DT parsing code to simplify the driver
+implementation.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/ab8500-ext.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/regulator/ab8500-ext.c | 28 +++++-----------------------
+ 1 file changed, 5 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/regulator/ab8500-ext.c b/drivers/regulator/ab8500-ext.c
-index 2268c934d6be..8e5365869c82 100644
+index 8e5365869c82..95704446d89e 100644
 --- a/drivers/regulator/ab8500-ext.c
 +++ b/drivers/regulator/ab8500-ext.c
-@@ -479,7 +479,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
-  * struct ab8500_ext_regulator_info - ab8500 regulator information
-  * @dev: device pointer
-  * @desc: regulator description
-- * @rdev: regulator device
-  * @cfg: regulator configuration (extension of regulator FW configuration)
-  * @update_bank: bank to control on/off
-  * @update_reg: register to control on/off
-@@ -495,7 +494,6 @@ static struct ab8500_regulator_platform_data ab8500_regulator_plat_data = {
- struct ab8500_ext_regulator_info {
- 	struct device *dev;
- 	struct regulator_desc desc;
--	struct regulator_dev *rdev;
- 	struct ab8500_ext_regulator_cfg *cfg;
- 	u8 update_bank;
- 	u8 update_reg;
-@@ -530,7 +528,7 @@ static int ab8500_ext_regulator_enable(struct regulator_dev *rdev)
- 		info->update_bank, info->update_reg,
- 		info->update_mask, regval);
- 	if (ret < 0) {
--		dev_err(rdev_get_dev(info->rdev),
-+		dev_err(rdev_get_dev(rdev),
- 			"couldn't set enable bits for regulator\n");
- 		return ret;
- 	}
-@@ -566,7 +564,7 @@ static int ab8500_ext_regulator_disable(struct regulator_dev *rdev)
- 		info->update_bank, info->update_reg,
- 		info->update_mask, regval);
- 	if (ret < 0) {
--		dev_err(rdev_get_dev(info->rdev),
-+		dev_err(rdev_get_dev(rdev),
- 			"couldn't set disable bits for regulator\n");
- 		return ret;
- 	}
-@@ -797,6 +795,7 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
- 	struct ab8500_regulator_platform_data *pdata = &ab8500_regulator_plat_data;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
- 	int i, err;
+@@ -733,6 +733,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY1] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY1",
++			.of_match	= of_match_ptr("ab8500_ext1"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY1,
+@@ -750,6 +751,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY2] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY2",
++			.of_match	= of_match_ptr("ab8500_ext2"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY2,
+@@ -767,6 +769,7 @@ static struct ab8500_ext_regulator_info
+ 	[AB8500_EXT_SUPPLY3] = {
+ 		.desc = {
+ 			.name		= "VEXTSUPPLY3",
++			.of_match	= of_match_ptr("ab8500_ext3"),
+ 			.ops		= &ab8500_ext_regulator_ops,
+ 			.type		= REGULATOR_VOLTAGE,
+ 			.id		= AB8500_EXT_SUPPLY3,
+@@ -783,31 +786,13 @@ static struct ab8500_ext_regulator_info
+ 	},
+ };
  
- 	if (np) {
-@@ -850,17 +849,15 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
- 			&pdata->ext_regulator[i];
+-static struct of_regulator_match ab8500_ext_regulator_match[] = {
+-	{ .name = "ab8500_ext1", .driver_data = (void *) AB8500_EXT_SUPPLY1, },
+-	{ .name = "ab8500_ext2", .driver_data = (void *) AB8500_EXT_SUPPLY2, },
+-	{ .name = "ab8500_ext3", .driver_data = (void *) AB8500_EXT_SUPPLY3, },
+-};
+-
+ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct ab8500 *ab8500 = dev_get_drvdata(pdev->dev.parent);
+ 	struct ab8500_regulator_platform_data *pdata = &ab8500_regulator_plat_data;
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
+-	int i, err;
+-
+-	if (np) {
+-		err = of_regulator_match(&pdev->dev, np,
+-					 ab8500_ext_regulator_match,
+-					 ARRAY_SIZE(ab8500_ext_regulator_match));
+-		if (err < 0) {
+-			dev_err(&pdev->dev,
+-				"Error parsing regulator init data: %d\n", err);
+-			return err;
+-		}
+-	}
++	int i;
+ 
+ 	if (!ab8500) {
+ 		dev_err(&pdev->dev, "null mfd parent\n");
+@@ -843,10 +828,7 @@ static int ab8500_ext_regulator_probe(struct platform_device *pdev)
+ 
+ 		config.dev = &pdev->dev;
+ 		config.driver_data = info;
+-		config.of_node = ab8500_ext_regulator_match[i].of_node;
+-		config.init_data = (np) ?
+-			ab8500_ext_regulator_match[i].init_data :
+-			&pdata->ext_regulator[i];
++		config.init_data = &pdata->ext_regulator[i];
  
  		/* register regulator with framework */
--		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
--						     &config);
--		if (IS_ERR(info->rdev)) {
--			err = PTR_ERR(info->rdev);
-+		rdev = devm_regulator_register(&pdev->dev, &info->desc,
-+					       &config);
-+		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev, "failed to register regulator %s\n",
- 					info->desc.name);
--			return err;
-+			return PTR_ERR(rdev);
- 		}
- 
--		dev_dbg(rdev_get_dev(info->rdev),
--			"%s-probed\n", info->desc.name);
-+		dev_dbg(&pdev->dev, "%s-probed\n", info->desc.name);
- 	}
- 
- 	return 0;
+ 		rdev = devm_regulator_register(&pdev->dev, &info->desc,
 -- 
 2.17.1
 
