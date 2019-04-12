@@ -2,125 +2,135 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99781C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED3DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B9420652
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E884F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6kl5u4g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIx/S1ql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfDLKyU (ORCPT
+        id S1727826AbfDLKym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:54:20 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33110 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfDLKyT (ORCPT
+        Fri, 12 Apr 2019 06:54:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38973 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfDLKyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:54:19 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d55so7144675ede.0;
-        Fri, 12 Apr 2019 03:54:18 -0700 (PDT)
+        Fri, 12 Apr 2019 06:54:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id n187so7569441oih.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 03:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xKIfWCxHbhwFJ1+b/MwpbnrM3F2wdwu1e4NkzCc5CUM=;
-        b=b6kl5u4gCyhc3RlJhHnrlp0Ruz7qcDwYdEYS37U+BV0XzFWCCcXpovAw/CUAILObFk
-         pTI2PARuYgVvelWMzAY4Ak9444kwJ5AkILEHBktWN+sEAETdd9eWnvcR/OVw1LjrZqYH
-         hVxx/jupdVUuUHBvQdkCqMJIKd1Cx+qkUqg4T1S3DOBv9qclj7c13NWaKw5N2sh5RA+r
-         ZyU4TYhxdjJJItlvDykMuluOhNFXRXssaVttuYTXQZeYlvKHaTXforCTvrW3EM6ISnvo
-         83h5Rul633cpgi1EnXhLeI2Ne74Lb0g+BSO5lnYM/jAp/RiXnRN38yi3r8R7hYpOYEeB
-         s+dg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Um8tlJAC3+HUO4lekEaITInfaofY4ttbay6MKSA4VAw=;
+        b=LIx/S1qlUMX6NGtRzHkTwlp8f+MWZiLcW20MXl9pKp9b+HhxYe1nv8Af3qNVAr56NK
+         70DoPq/QlMlk+2/Su8IUUnERJYxTTU4D5Fzhy50oBvLfsT03CoIt/Eu+vDcj3W9bHxv2
+         Fn74W9RCLpHrHJLFB/6MaP5TQLZ9pCCfOq5C6gd4ZsXSLHQVZguuQjn/z8nxwr2BXq0+
+         3hiQ2A2ZKbWoxjv4LN7IbKarfBY0NVR3l7LfdZXahCLqsROodkNPYzh8hUhMgZ/VGkPn
+         nnMjw7khefeI0uxQitorUEI4KJ2Gw770m0P9vbsz+FapBMZoI2EZPnyyvfLq/rXh+Od0
+         d3bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xKIfWCxHbhwFJ1+b/MwpbnrM3F2wdwu1e4NkzCc5CUM=;
-        b=pUAm1unSy63dppNMKDf8xriRNom6a9ulNcL3LteiQTwF2xEuOwQGuGUXqDqWFfRDlh
-         GXADTWu4QCx57pb9Yv7lNt1Xe6l2lF4PsxOLSkFidueR/bcpmnvtUYXsUWMMgfU2eHQ5
-         OkFWHIcFpn5aQKAp/WkOI3T77EKsAXJmu/641WK0+JwYl2ITawuVOMjzXUFOb9ydMayP
-         oLgNCbVDfXk064khCigJV085jFtxfzvyUtk5naGdUTfk2lzlrmAb0CO16jBZNoy7uYL5
-         6aa3O7+4E7APQrNhbaD0z1v/0A412ZwHt/M5u4aAfHjLkjXhGj/U9/IdLaWojaxywjv2
-         5TVw==
-X-Gm-Message-State: APjAAAXbK8vnuYwzrsXr+Qic07zKL38x1cxR0mTk36yzh1dHP9zJQT+o
-        FtDlIgOLdTkpS3DCAB9r+FSE0Kl0
-X-Google-Smtp-Source: APXvYqxe6QhezhBCK+opbYcdALZLkgRza3g2v2TvYPzD8jEQ0r9PChlcheUh07eMQCr/Xr7fdkmk7g==
-X-Received: by 2002:a17:906:2f13:: with SMTP id v19mr30567233eji.17.1555066457744;
-        Fri, 12 Apr 2019 03:54:17 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4262:1ab:e::10])
-        by smtp.gmail.com with ESMTPSA id y71sm2862750ede.21.2019.04.12.03.54.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 03:54:13 -0700 (PDT)
-From:   Emil Renner Berthing <kernel@esmil.dk>
-To:     linux-spi@vger.kernel.org
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Emil Renner Berthing <kernel@esmil.dk>
-Subject: [PATCH] spi: rockchip: turn down tx dma bursts
-Date:   Fri, 12 Apr 2019 12:53:20 +0200
-Message-Id: <20190412105320.2924-1-kernel@esmil.dk>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Um8tlJAC3+HUO4lekEaITInfaofY4ttbay6MKSA4VAw=;
+        b=lxLZGl3OBbhhn9DpHC32bOMvkBJweXo6mwKKj0qqIlN8e4SF5tb9gWASwteiAkMGJK
+         235Z0TVDzOn+1elTYhA+E5etLRQPGKYpdiO4Kc74iqdxo61BTKiKDW1ae85bS9R3iGCi
+         JKeWEHWl9SGZkuoCvfEu0eWZfBn5JRPDEbNAby9H4u5c5NxJjmaU3F+4tCe03bJjXRgf
+         x++UJiDi0E4jlx0g2DlEU3bwkjj5Nd/LtIVfG40oFsL1C4ObDC67Oia6BBXJTxFMjwtt
+         FQTv2U4jrI28HTfD52f7NRs2F7Y5GterBcx4v8oox0mSZHUygDZSWonGwH9bSimWX+XO
+         xiEg==
+X-Gm-Message-State: APjAAAVyVEM0/BBbGUjfk9fL04AD67SMGbQxURcz2nQUqut8hRakmtZf
+        TKjXK8vYF2QD4YrKVCad4T4TiQ==
+X-Google-Smtp-Source: APXvYqz2dphczWaAngIEKMdnIlH7zcDduGyhBSGptvIuG6HRTX93LhtrKUGlaGU2viBIA4036QPegw==
+X-Received: by 2002:aca:5512:: with SMTP id j18mr9640686oib.65.1555066480986;
+        Fri, 12 Apr 2019 03:54:40 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id g21sm16283804otk.12.2019.04.12.03.54.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 03:54:39 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 18:54:32 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
+ for static replicator
+Message-ID: <20190412105432.GA1643@leoy-ThinkPad-X240s>
+References: <20190412102738.12679-1-leo.yan@linaro.org>
+ <20190412102738.12679-2-leo.yan@linaro.org>
+ <a38d1f9e-622e-7fd6-6282-be5601863c11@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a38d1f9e-622e-7fd6-6282-be5601863c11@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
+On Fri, Apr 12, 2019 at 11:40:13AM +0100, Suzuki K Poulose wrote:
+> On 04/12/2019 11:27 AM, Leo Yan wrote:
+> > CoreSight uses below bindings for replicator:
+> > 
+> >    Dynamic replicator, aka. configurable replicator:
+> >      "arm,coresight-dynamic-replicator", "arm,primecell";
+> > 
+> >    Static replicator, aka. non-configurable replicator:
+> >      "arm,coresight-replicator";
+> > 
+> > The compatible string "arm,coresight-replicator" is not an explicit
+> > naming to express the replicator is 'static'.  To unify the naming
+> > convention, this patch introduces a new compatible string
+> > "arm,coresight-static-replicator" for the static replicator; the
+> > compatible string "arm,coresight-replicator" is kept for backward
+> > compatibility, but tag it as obsolete and suggest to use the new
+> > compatible string.
+> > 
+> > As result CoreSight replicator have below bindings:
+> > 
+> >    Dynamic replicator:
+> >      "arm,coresight-dynamic-replicator", "arm,primecell";
+> > 
+> >    Static replicator:
+> >      "arm,coresight-static-replicator";
+> >      "arm,coresight-replicator"; (obsolete)
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >   Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
+> >   1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> > index f8aff65ab921..d02d160fa8ac 100644
+> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> > @@ -69,7 +69,10 @@ its hardware characteristcs.
+> >   	* compatible: Currently supported value is (note the absence of the
+> >   	  AMBA markee):
+> > -		- "arm,coresight-replicator"
+> > +		- Coresight Non-configurable Replicator:
+> > +			"arm,coresight-static-replicator";
+> > +			"arm,coresight-replicator"; (OBSOLETE. For backward
+> > +				compatibility and will be removed)
+> >   	* port or ports: see "Graph bindings for Coresight" below.
+> > @@ -169,7 +172,7 @@ Example:
+> >   		/* non-configurable replicators don't show up on the
+> >   		 * AMBA bus.  As such no need to add "arm,primecell".
+> >   		 */
+> > -		compatible = "arm,coresight-replicator";
+> > +		compatible = "arm,coresight-static-replicator";
+> 
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
-signal is generated or it might skip some words. This in turn makes
-the rx dma channel never complete for bi-directional transfers.
-
-Fix it by setting tx burst length to fifo_len / 4 and the dma
-watermark to fifo_len / 2.
-
-However the rk3399 TRM says (sic):
-"DMAC support incrementing-address burst and fixed-address burst. But in
-the case of access SPI and UART at byte or halfword size, DMAC only
-support fixed-address burst and the address must be aligned to word."
-
-So this relies on fifo_len being a multiple of 16 such that the
-burst length (= fifo_len / 4) is a multiple of 4 and the addresses
-will be word-aligned.
-
-Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
----
- drivers/spi/spi-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 3912526ead66..19f6a76f1c07 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -425,7 +425,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
- 			.direction = DMA_MEM_TO_DEV,
- 			.dst_addr = rs->dma_addr_tx,
- 			.dst_addr_width = rs->n_bytes,
--			.dst_maxburst = rs->fifo_len / 2,
-+			.dst_maxburst = rs->fifo_len / 4,
- 		};
- 
- 		dmaengine_slave_config(master->dma_tx, &txconf);
-@@ -526,7 +526,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
- 	else
- 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
- 
--	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
-+	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
- 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
- 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
- 
--- 
-2.21.0
-
+Thanks a lot for quick reviewing, Suzuki.
