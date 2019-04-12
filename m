@@ -2,138 +2,100 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56ABC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845F12171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555061316;
-	bh=xWrBx6+oTY/WaLpNPIz9WwDRzDnmK+NRBn7xB5bcwCk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lpdXaen+BtMAtywCRHPE0Cm1o1FVikNWsXwq4ZoXrsWqN4ObSaqDLNsDvsC13LNb3
-	 FdXjP+skYxRep4mkHO3ZmSiXrsRM54Vuyvkbw0pOBI9OpCdpZcdCw6cW9DdE43wGty
-	 yrfUEF0ICc4yaHtH5myCu4Y2IA1lHEvYcYRYHYus=
+	by mail.kernel.org (Postfix) with ESMTP id A86A62186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfDLJ2f (ORCPT
+        id S1727676AbfDLJ2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:28:35 -0400
-Received: from casper.infradead.org ([85.118.1.10]:42328 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfDLJ2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:28:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WdL/F/RraVaWl4C+zv5obLRbC5DtbEUQ8VLCWL3vU0I=; b=Cxmjv6Bo9ZbULcdLj9ZXPVA7rn
-        GDJBhJsaA95unpN+Xtht+KVQ77YLKicnSvbJzrFg8eD9gViUB4PjPRNj19Cs3ze1pc1f9lrddTIKy
-        c/QjDGiZgwzZYVG9c73/GKohd+kW83gNuK+NGsbpBPGqALHA04Pd2JrSGMwneLa75A7cbdmOEOqTl
-        +RLC5kLSvq627UDxodIS3tj2dJ3MpuQb9QGreDZL1owplKXpe5jMU6x000Q9oepngOe0qJxLPqT8C
-        Ki8BZ9tr1ZrhCmdvZcrvg9bfXPF+LhG9m5rfFXK020EevSDKomsQHOar75sOZtnl0qRuE15Fe7G7p
-        mZjDtejQ==;
-Received: from 201.86.162.146.dynamic.adsl.gvt.net.br ([201.86.162.146] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hEsU2-0005DL-Nx; Fri, 12 Apr 2019 09:28:31 +0000
-Date:   Fri, 12 Apr 2019 06:28:26 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] Add all documentation files to an html/pdf
- produced book
-Message-ID: <20190412062826.7681c803@coco.lan>
-In-Reply-To: <20190411124904.12e61bc7@lwn.net>
-References: <cover.1554742526.git.mchehab+samsung@kernel.org>
-        <20190408161820.6a12657f@lwn.net>
-        <20190410064939.2a9dca9a@coco.lan>
-        <20190411124904.12e61bc7@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Apr 2019 05:28:45 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2109 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726678AbfDLJ2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:28:45 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id A558976D1FCE4BA83249;
+        Fri, 12 Apr 2019 17:28:41 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 12 Apr 2019 17:28:40 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 12 Apr 2019 17:28:38 +0800
+Subject: Re: [PATCH] staging: erofs: fix unexpected out-of-bound data access
+To:     Gao Xiang <gaoxiang25@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+References: <20190411105555.133551-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <0332f6b3-9705-50d2-6e1e-639d3e8e915f@huawei.com>
+Date:   Fri, 12 Apr 2019 17:28:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190411105555.133551-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme705-chm.china.huawei.com (10.1.199.101) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 11 Apr 2019 12:49:04 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> On Wed, 10 Apr 2019 06:49:39 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+On 2019/4/11 18:55, Gao Xiang wrote:
+> Unexpected out-of-bound data will be read in erofs_read_raw_page
+> after commit 07173c3ec276 ("block: enable multipage bvecs") since
+> one iovec could have multiple pages.
 > 
-> [I'm just responding to one little piece of this for the moment...]
+> Let's fix as what Ming's pointed out in the previous email.
+
+It will be better to add link address of discussion thread in your commit
+message, since discussion includes more details about how this issue happens.
+
 > 
-> > In any case, IMHO, the best would be to add a new
-> > crap^h^h^h^hstaging group were we could place all legacy random stuff.
-> > Then, gradually fix those, splitting stuff and promoting them to the
-> > main books, in a similar way to what we do with staging.  
-> 
-> Now that's an interesting idea; I hadn't thought about that.  Doing so,
-> though, implies a willingness to stage unloved docs *out*,
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-That sounds like a plus! 
-
-> and my experience is that there is little appetite for that. 
-
-Heh, I guess most of us are biased to avoid dropping stuff. Yet, it
-happens with time. I wouldn't mind dropping something too outdated
-if, after some time, nobody fixes the issues there.
-
-> It also kind of
-> implies moving docs twice - at least for the ones that get updates - and
-> that may not be entirely appreciated.
-
-True, but avoiding moving twice is not trivial. I mean, files
-need to be renamed anyway. Only if we get it right the first
-time (converting the file and placing at the right place), we'll
-avoid a double move.
-
-I considered an alternative of just including a *.txt file
-at a ReST TOC, but Sphinx doesn't allow including a file that
-it is not specified at source_suffix. Worse than that, if a
-suffix is added there, it will parse (and crash) if the file
-has things like:
-        some indented title
-        ===================
-
-or even:
-	- item
-	- ....
-
-With a sort of pattern that we have on several text files.
-
-There's an alternative: we could have an "index_staging.rst" file
-with the documents that require serious work. So, instead of
-actually moving stuff, we'll just place their location there
-(but files still need to be renamed). When the document is fixed,
-all we need is to move from the staging index to the main one.
-
-> > > I feel like it would, if anything, reduce the incentive to
-> > > deal with these leftover documents properly.      
-> > 
-> > IMHO, it is just the opposite. Let's face it: ReST build was added around
-> > May, 2016, for Kernel 4.7. People had quite some time and kernel versions
-> > to do conversions. If nothing is done, I doubt we would have any boom on
-> > patches addressing the issues.  
-> 
-> So I don't have any hard numbers, but my feeling is that this work is
-> continuing apace and perhaps even picking up.  Certainly I'm having a
-> harder time keeping up with it, even when you're busy with other things :)
-> These things take time; I'm not really ready to give up on it yet.
-
-Ok. I'm working on a series of patches converting stuff from some random
-subsystems. I should be sending the series soon.
-
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
 Thanks,
-Mauro
+
+> ---
+> 
+> It should be fixed from linux-5.1-rc after multi-page bvec feature.
+> 
+> Thanks,
+> Gao Xiang
+> 
+>  drivers/staging/erofs/data.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+> index 0714061ba888..c64ec76643d4 100644
+> --- a/drivers/staging/erofs/data.c
+> +++ b/drivers/staging/erofs/data.c
+> @@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+>  	*last_block = current_block;
+>  
+>  	/* shift in advance in case of it followed by too many gaps */
+> -	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
+> +	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
+>  		/* err should reassign to 0 after submitting */
+>  		err = 0;
+>  		goto submit_bio_out;
+> 
