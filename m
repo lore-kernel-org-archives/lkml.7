@@ -2,182 +2,170 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC6BC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B816FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FF22083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F67E2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SmYADYnh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d3es35FN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfDLLDr (ORCPT
+        id S1727204AbfDLLEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:03:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51904 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfDLLDr (ORCPT
+        Fri, 12 Apr 2019 07:04:41 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52308 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfDLLEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:03:47 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3CB3LdE062149;
-        Fri, 12 Apr 2019 06:03:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555067001;
-        bh=QOpbQOPEGfnHx7BYOEMM3tXXv5qE85Y2wbQy0Auarps=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SmYADYnhjk9veWb9BI8cTkS4DspywLZOUNhouOfrHpC51+5zNVpbAw/gOftEo6fqx
-         JwfRPbxyXSPkTP7igmE/QuXA6YPM2IPXFtLo0jiiB9qgM4LZ1rtLJi/rUyboBOOIhd
-         opI6er9XpzbzwSCaWqUC1FgAoZgQK53w4lhk+xZ4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3CB3Kma094171
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Apr 2019 06:03:20 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Apr 2019 06:03:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Apr 2019 06:03:20 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3CB3DfA081431;
-        Fri, 12 Apr 2019 06:03:14 -0500
-Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to be
- compiled for ARM64
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@axis.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, <linux-omap@vger.kernel.org>,
-        Roy Zang <roy.zang@nxp.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-13-kishon@ti.com> <20190411150332.GC6862@red-moon>
- <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
- <20190412093154.7wj4dmm3oppvv32m@shell.armlinux.org.uk>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <47ea91f7-bbc1-187d-6f75-e2e6460f90a0@ti.com>
-Date:   Fri, 12 Apr 2019 16:32:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 07:04:40 -0400
+Received: by mail-it1-f196.google.com with SMTP id x132so14978846itf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+O3b/2z1GkrPkPW5QZ+VECwgd8qDwmX7byvt1f+7hRs=;
+        b=d3es35FNZso6ey1AqacsFE4oVeDdCp4s34s0dyV9unFWa2oqTY04xi/wHGPbAD7yay
+         WC+gXaD8K/rCXv8tUNOemfZgK67DYUcEPBLLFTctQPKBhlfMd7ig2EbtpcEcqVHsYdEp
+         HdRf8wGRmNuxESgvLsCJfEis9FOqzDR0h6CuiaTKYIL/9nt4GKvbh2DHmbOoxUnQ0rzf
+         MFxbXRY4b1455WjPrGUS3E2VOa4U+6r81UiS/e1WTpkHP4C+ETqJBqIJfw71Jx6MH01s
+         JiPegrNTArocqZLjf73OlUVdlWjvJPIb4jPS7Kzk/mBO/aqry9xZwpUo9Dui8h93Byeo
+         VmFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+O3b/2z1GkrPkPW5QZ+VECwgd8qDwmX7byvt1f+7hRs=;
+        b=e1XhbLu+GKTcwBYOMxap7qqhk4oNa5qTCi7sFeVS9q0/EogXZ6h0A5sN3GQQ+xgZbO
+         Q70+TB9ia/TNfLa2TNORfXGPl1RW9+OPUDfGZwTM2qKEcRvJwyBupdXInGNHFjFg+k1s
+         y4WPzNHWPs7xfmSxmwVROX73K7Vh8b1Cfxdrt4fXcS0mAWGrzmpZdczpDOP9lS0ZU3Go
+         OCrirN0n5zht4W4KKSjexx/MGNKGN+a2g+C4yS927kCjNO3ozhPQkhksaab3LsMjrYhb
+         r8uz3WbskpNSCxWQvTb5KEjqIGDZImtmvEHBy/UWG18N1lGyrdy1a747X4vxF6zq+uuB
+         fxVA==
+X-Gm-Message-State: APjAAAXgcU0Az9VZjWzCMs4T3N1ummqIeI2TlOErem5frATrdS7hotuF
+        xB74uuVTJCFZlOzyOTXuapSPb83ERSinuL51thrHIQ==
+X-Google-Smtp-Source: APXvYqykBEFstfLZtvA1T3wtkG9DiCRpDImfN/YTGY4cJg1d89vwKaPUpwClNqzALzmgoYTW0heWLDsgjIPtQayBPRE=
+X-Received: by 2002:a24:3d8f:: with SMTP id n137mr11731392itn.96.1555067079018;
+ Fri, 12 Apr 2019 04:04:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190412093154.7wj4dmm3oppvv32m@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <00000000000036a4a9058619dff3@google.com> <20190410002603.GS2217@ZenIV.linux.org.uk>
+ <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
+ <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
+ <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
+ <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net>
+ <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
+ <20190410121159.GY2217@ZenIV.linux.org.uk> <CACT4Y+bc=A=djKChMkJGwXYbZ7UXuxmRu5Z0Y1BEXAFH1-Z6Kw@mail.gmail.com>
+ <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net> <20190411022257.GB2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190411022257.GB2217@ZenIV.linux.org.uk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 12 Apr 2019 13:04:27 +0200
+Message-ID: <CACT4Y+ZYyAYuy_dB1jx1MW7S1RowbLhd0s-OJjkRCo0UG7_BEA@mail.gmail.com>
+Subject: Re: kernel BUG at fs/inode.c:LINE!
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Ian Kent <raven@themaw.net>, Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+On Thu, Apr 11, 2019 at 4:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Thu, Apr 11, 2019 at 08:50:17AM +0800, Ian Kent wrote:
+> > On Wed, 2019-04-10 at 14:41 +0200, Dmitry Vyukov wrote:
+> > > On Wed, Apr 10, 2019 at 2:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > >
+> > > > On Wed, Apr 10, 2019 at 08:07:15PM +0800, Ian Kent wrote:
+> > > >
+> > > > > > I'm unable to find a branch matching the line numbers.
+> > > > > >
+> > > > > > Given that, on the face of it, the scenario is impossible I'm
+> > > > > > seeking clarification on what linux-next to look at for the
+> > > > > > sake of accuracy.
+> > > > > >
+> > > > > > So I'm wondering if this testing done using the master branch
+> > > > > > or one of the daily branches one would use to check for conflicts
+> > > > > > before posting?
+> > > > >
+> > > > > Sorry those are tags not branches.
+> > > >
+> > > > FWIW, that's next-20181214; it is what master had been in mid-December
+> > > > and master is rebased every day.  Can it be reproduced with the current
+> > > > tree?
+> > >
+> > > From the info on the dashboard we know that it happened only once on
+> > > d14b746c (the second one is result of reproducing the first one). So
+> > > it was either fixed or just hard to trigger.
+> >
+> > Looking at the source of tag next-20181214 in linux-next-history I see
+> > this is mistake I made due to incorrect error handling which I fixed
+> > soon after (there was in fact a double iput()).
+>
+> Right - "autofs: fix possible inode leak in autofs_fill_super()" had been
+> broken (and completely pointless), leading to double iput() in that failure
+> case.  And yes, double iput() can trigger that BUG_ON(), and with non-zero
+> odds do so with that stack trace.
+>
+> As far as I'm concerned, case closed - bug had been in a misguided "fix"
+> for inexistent leak (coming from misreading the calling conventions for
+> d_make_root()), introduced in -next at next-20181130 and kicked out of
+> there in next-20181219.  Dropped by Ian's request in
+> Message-ID: <66d497c00cffb3e4109ca0d5287c8277954d7132.camel@themaw.net>
+> which has fixed that crap.  Moreover, that posting had been in reply to
+> that very syzcaller report, AFAICS.
+>
+> I don't know how to tell the bot to STFU and close the report in this
+> situation; up to you, folks.
 
-On 12/04/19 3:01 PM, Russell King - ARM Linux admin wrote:
-> On Fri, Apr 12, 2019 at 02:20:06PM +0530, Kishon Vijay Abraham I wrote:
->> Hi Lorenzo,
->>
->> On 11/04/19 8:33 PM, Lorenzo Pieralisi wrote:
->>> On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
->>>> hook_fault_code is an ARM32 specific API for hooking into data abort.
->>>> Since pci-keystone.c will be used for AM65X platforms which is an
->>>> ARM64 platform,
->>>
->>> Hi Kishon,
->>>
->>> How is the problem plugged by the fault hook fixed on ARM64 ?
->>
->> At least in AM654 platform, I don't see a bus error when PCIe device is not
->> connected but returns 0xffffffff. So there is no necessary for hook_fault_code
->> in AM654 platform.
-> 
-> ... which needs to be explained somewhere, either in the commit
-> message or comments in the file, so that years later when someone
-> has to look at this code, they know why it is the way that it is.
-> 
-> When writing commits, please think about whether there is enough
-> information to understand the change in ten years time.
 
-sure, I'll fix this one.
+Please see the following for this:
 
-Lorenzo, let me know if you want me to resend with updated commit log.
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  syzbot.
 
-Thanks
-Kishon
+There are just 3 operations: mark as fixed by a commit, mark as
+invalid, mark as duplicate.
+I won't be always around. Tracking statuses of bug reports is in the
+interests of kernel quality.
 
-> 
->>
->> Thanks
->> Kishon
->>
->>>
->>> Thanks,
->>> Lorenzo
->>>
->>>> allow hook_fault_code to be compiled only for ARM32.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
->>>> index dfe54553d832..93296d434f40 100644
->>>> --- a/drivers/pci/controller/dwc/pci-keystone.c
->>>> +++ b/drivers/pci/controller/dwc/pci-keystone.c
->>>> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
->>>>  	return ret;
->>>>  }
->>>>  
->>>> +#ifdef CONFIG_ARM
->>>>  /*
->>>>   * When a PCI device does not exist during config cycles, keystone host gets a
->>>>   * bus error instead of returning 0xffffffff. This handler always returns 0
->>>> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
->>>>  
->>>>  	return 0;
->>>>  }
->>>> +#endif
->>>>  
->>>>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
->>>>  {
->>>> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
->>>>  	if (ret < 0)
->>>>  		return ret;
->>>>  
->>>> +#ifdef CONFIG_ARM
->>>>  	/*
->>>>  	 * PCIe access errors that result into OCP errors are caught by ARM as
->>>>  	 * "External aborts"
->>>>  	 */
->>>>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
->>>>  			"Asynchronous external abort");
->>>> +#endif
->>>>  
->>>>  	ks_pcie_start_link(pci);
->>>>  	dw_pcie_wait_for_link(pci);
->>>> -- 
->>>> 2.17.1
->>>>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
-> 
+
+
+> As an aside, the cause of that bug is that d_make_root() calling conventions
+> are insufficiently documented.  All we have is
+>
+> ||[mandatory]
+> ||        d_alloc_root() is gone, along with a lot of bugs caused by code
+> ||misusing it.  Replacement: d_make_root(inode).  The difference is,
+> ||d_make_root() drops the reference to inode if dentry allocation fails.
+>
+> in Documentation/filesystems/porting, and that's not good enough.  Anyone
+> willing to take a shot at that?  FWIW, the calling conventions are:
+>
+>         d_make_root(inode) normally allocates and returns a new dentry.
+> On failure NULL is returned.  A reference to inode is consumed in all
+> cases (on success it is transferred to new dentry, on failure it is
+> dropped), so failure handling does not need anything done to inode.
+> d_make_root(NULL) quietly returns NULL, which further simplifies the
+> error handling in typical caller.  Usually it's something like
+>         inode = foofs_new_inode(....);
+>         s->s_root = d_make_inode(inode);
+>         if (!s->s_root)
+>                 bugger off, no need to undo inode allocation
+>         success
+> We do not need to check if foofs_new_inode() has returned NULL and we
+> do not need any special cleanups in case of failure - not for the
+> undoing the inode allocation.
+>
+> If anyone cares to convert that into coherent (and printable) documentation,
+> patches are welcome...
