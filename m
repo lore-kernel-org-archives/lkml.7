@@ -2,186 +2,129 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74496C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEF5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427DA20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6934B218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="IfAM7I85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfDLWu5 (ORCPT
+        id S1726983AbfDLW7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:50:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36638 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLWu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:50:56 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 3DAC7281631
-Subject: Re: [PATCH v2 15/15] media: vimc: Create multiplanar parameter
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        lkcamp@lists.libreplanetbr.org
-References: <20190327151743.18528-1-andrealmeid@collabora.com>
- <20190327151743.18528-16-andrealmeid@collabora.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <9e832497-9ea1-1758-5a7f-c4bfcbebc382@collabora.com>
-Date:   Fri, 12 Apr 2019 19:50:42 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190327151743.18528-16-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 12 Apr 2019 18:59:46 -0400
+Received: from mail-eopbgr30096.outbound.protection.outlook.com ([40.107.3.96]:21214
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726757AbfDLW7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 18:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IuZhlqpIar/6P71EmLZE6b39zZX+ExXpOPeTl3uP3wo=;
+ b=IfAM7I85w+4MkD9xdpMTPIW5f/A2o+txLBMsTygKvS7k32PgYFyD6/M3T0lEAh7L1WEsw1nsvGpNf6bfAJTHekFX+/X2R8Rc+QUHQEleZcUKEWc5HXR3ZpkaWN+niwPSeb04sPZxk6ceuoxcktty7YeuBphPxCjp0SNKMLAGAz4=
+Received: from VI1PR02MB4542.eurprd02.prod.outlook.com (20.178.12.74) by
+ VI1PR02MB4303.eurprd02.prod.outlook.com (20.177.60.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.17; Fri, 12 Apr 2019 22:59:40 +0000
+Received: from VI1PR02MB4542.eurprd02.prod.outlook.com
+ ([fe80::2891:d814:7bff:fbc7]) by VI1PR02MB4542.eurprd02.prod.outlook.com
+ ([fe80::2891:d814:7bff:fbc7%4]) with mapi id 15.20.1771.019; Fri, 12 Apr 2019
+ 22:59:40 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: Re: [PATCH] i2c: iproc: Change driver to use 'BIT' macro
+Thread-Topic: [PATCH] i2c: iproc: Change driver to use 'BIT' macro
+Thread-Index: AQHU6mEE3VBQWFg3OEO4UFCMK2X3RqY5MgwA
+Date:   Fri, 12 Apr 2019 22:59:40 +0000
+Message-ID: <f28f604a-55a4-7542-0e13-a92a83ab2144@axentia.se>
+References: <20190403210535.32236-1-ray.jui@broadcom.com>
+In-Reply-To: <20190403210535.32236-1-ray.jui@broadcom.com>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR05CA0127.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::14) To VI1PR02MB4542.eurprd02.prod.outlook.com
+ (2603:10a6:803:b1::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 169db324-4b04-4702-3216-08d6bf9a8b6e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR02MB4303;
+x-ms-traffictypediagnostic: VI1PR02MB4303:
+x-microsoft-antispam-prvs: <VI1PR02MB4303D948F71F450C6FAAA2F0BC280@VI1PR02MB4303.eurprd02.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39830400003)(366004)(346002)(396003)(376002)(52314003)(189003)(199004)(99286004)(8676002)(305945005)(6436002)(5660300002)(106356001)(71200400001)(71190400001)(105586002)(7736002)(14454004)(316002)(6486002)(74482002)(65826007)(229853002)(110136005)(508600001)(54906003)(58126008)(31696002)(4326008)(11346002)(186003)(97736004)(66066001)(446003)(476003)(2616005)(6512007)(486006)(26005)(64126003)(65956001)(65806001)(31686004)(6246003)(2906002)(53936002)(36756003)(86362001)(3846002)(6116002)(81166006)(8936002)(81156014)(52116002)(68736007)(25786009)(14444005)(256004)(53546011)(6506007)(102836004)(386003)(76176011)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB4303;H:VI1PR02MB4542.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /nMDHvy6EENG+992CvATL6HxjmXq+ckdtu0GFfc4GTSHIjsH5q3iJi6kwOIXzqaed2jZhvCWRNxiVBfVtYg2ZnbGZ7qW8luGG4OEDnpF5Ul4eJzvJQS/vUWq33EpmDkUKvRoIbhd5VyPdJWY1FdhevGwPRw5u4HpHs1hmX2d2S9rUUTnsetBF80JWNnA5NZLh5RJVooKSr0LGkCRq8ckQtCKhYwt6NUY82T6ZZWDETIk3cXCI0HI/+MyFhuY2HPY660G/9xOtWDKTSkkZPzEwsQ0gMYSWx+UXtfmIUNr8ZDmuaSCcQt72WifBBEMeAWxCX/zG6vFOBNcnj9X44nWLvwEomXnZtjiSrikH8IG7+zPcMOpmNtpZv5Q6ovFjwU6FxGZiUmcEfCusSarcpFvUBQn4rFIMrHyVCAZM43W6MQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B974AB5B066A13448F3E73798D855946@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 169db324-4b04-4702-3216-08d6bf9a8b6e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 22:59:40.8240
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB4303
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/27/19 12:17 PM, André Almeida wrote:
-> Create multiplanar kernel module parameter to define if the driver is
-> running in single planar or in multiplanar mode. Define the device
-> capabilities according to the multiplanar kernel parameter. A device can't
-> support both CAP_VIDEO_CAPTURE and CAP_VIDEO_CAPTURE_MPLANAR at the
-> same time.
-> 
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
-> ---
-> Change in v2:
-> - Squash commits to create multiplanar module parameter and to define
-> the device capabilities
-> - Move the creation of the multiplanar parameter to the end of
-> history, so it's only added when all required changes are applied
-> 
->  drivers/media/platform/vimc/vimc-capture.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index f5bfb36a145c..3666fcca6812 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -28,6 +28,10 @@
->  
->  #define VIMC_CAP_DRV_NAME "vimc-capture"
->  
-> +static unsigned int multiplanar;
-> +module_param(multiplanar, uint, 0000);
-> +MODULE_PARM_DESC(multiplanar, "0 (default) creates a single planar device, 1 creates a multiplanar device.");
-> +
->  /* Checks if the device supports multiplanar capture */
->  #define IS_MULTIPLANAR(vcap) \
->  	(vcap->vdev.device_caps & V4L2_CAP_VIDEO_CAPTURE_MPLANE)
-> @@ -681,7 +685,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->  
->  	/* Initialize the vb2 queue */
->  	q = &vcap->queue;
-> -	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-> +	q->type = multiplanar ?
-> +		V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE :
-> +		V4L2_BUF_TYPE_VIDEO_CAPTURE;
->  	q->io_modes = VB2_MMAP | VB2_DMABUF | VB2_USERPTR;
->  	q->drv_priv = vcap;
->  	q->buf_struct_size = sizeof(struct vimc_cap_buffer);
-> @@ -709,9 +715,12 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->  	dev_set_drvdata(comp, &vcap->ved);
->  	vcap->dev = comp;
->  
-> +
->  	/* Initialize the video_device struct */
->  	vdev = &vcap->vdev;
-> -	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
-> +	vdev->device_caps = (multiplanar ?
-> +			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
-> +			V4L2_BUF_TYPE_VIDEO_CAPTURE) | V4L2_CAP_STREAMING;
-
-s/V4L2_BUF_TYPE_VIDEO_CAPTURE/V4L2_CAP_VIDEO_CAPTURE
-
->  	vdev->entity.ops = &vimc_cap_mops;
->  	vdev->release = vimc_cap_release;
->  	vdev->fops = &vimc_cap_fops;
-> 
+T24gMjAxOS0wNC0wMyAyMzowNSwgUmF5IEp1aSB3cm90ZToNCj4gQ2hhbmdlIHRoZSBpUHJvYyBJ
+MkMgZHJpdmVyIHRvIHVzZSB0aGUgJ0JJVCcgbWFjcm8gZnJvbSBhbGwgJzEgPDwgWFhYJw0KPiBi
+aXQgb3BlcmF0aW9ucyB0byBnZXQgcmlkIG9mIGNvbXBpbGVyIHdhcm5pbmcgYW5kIGltcHJvdmUg
+cmVhZGFiaWxpdHkgb2YNCj4gdGhlIGNvZGUNCg0KQWxsPyBJIHNlZSBsb3RzIG1vcmUgJzEgPDwg
+WFhYX1NISUZUJyBtYXRjaGVzLiBJIG1pZ2h0IGJlIGJlaGluZCB0aG91Z2g/DQpBbnl3YXksIGlm
+IHlvdSBhcmUgY2xlYW5pbmcgdXAsIEknbSBqdXN0IGZsYWdnaW5nIHRoYXQgQklUKFhYWF9TSElG
+VCkgbG9va3MNCmEgYml0IGNsdW5reSB0byBtZS4gWW91IG1pZ2h0IGNvbnNpZGVyIHJlbmFtaW5n
+IGFsbCB0aG9zZSBzaW5nbGUtYml0DQpYWFhfU0hJRlQgbWFjcm9zIHRvIHNpbXBsZSBiZQ0KDQoj
+ZGVmaW5lIFhYWCBCSVQoPHh4eD4pDQoNCmluc3RlYWQgb2YNCg0KI2RlZmluZSBYWFhfU0hJRlQg
+PHh4eD4NCg0KYnV0IHRoYXQgdHJpZ2dlcnMgbW9yZSBjaHVybiwgc28gaXMgb2J2aW91c2x5IG1v
+cmUgZXJyb3IgcHJvbmUuIFlvdSBtaWdodA0Kbm90IGRhcmUgaXQ/DQoNCkNoZWVycywNClBldGVy
+DQoNCj4gU2lnbmVkLW9mZi1ieTogUmF5IEp1aSA8cmF5Lmp1aUBicm9hZGNvbS5jb20+DQo+IC0t
+LQ0KPiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1iY20taXByb2MuYyB8IDYgKysrLS0tDQo+ICAx
+IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYmNtLWlwcm9jLmMgYi9kcml2ZXJzL2ky
+Yy9idXNzZXMvaTJjLWJjbS1pcHJvYy5jDQo+IGluZGV4IDU2Mjk0MmQwYzA1Yy4uYTg0NWI4ZGVj
+YWM4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWJjbS1pcHJvYy5jDQo+
+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYmNtLWlwcm9jLmMNCj4gQEAgLTcxNyw3ICs3
+MTcsNyBAQCBzdGF0aWMgaW50IGJjbV9pcHJvY19pMmNfeGZlcl9zaW5nbGVfbXNnKHN0cnVjdCBi
+Y21faXByb2NfaTJjX2RldiAqaXByb2NfaTJjLA0KPiAgDQo+ICAJCQkvKiBtYXJrIHRoZSBsYXN0
+IGJ5dGUgKi8NCj4gIAkJCWlmIChpID09IG1zZy0+bGVuIC0gMSkNCj4gLQkJCQl2YWwgfD0gMSA8
+PCBNX1RYX1dSX1NUQVRVU19TSElGVDsNCj4gKwkJCQl2YWwgfD0gQklUKE1fVFhfV1JfU1RBVFVT
+X1NISUZUKTsNCj4gIA0KPiAgCQkJaXByb2NfaTJjX3dyX3JlZyhpcHJvY19pMmMsIE1fVFhfT0ZG
+U0VULCB2YWwpOw0KPiAgCQl9DQo+IEBAIC04NDQsNyArODQ0LDcgQEAgc3RhdGljIGludCBiY21f
+aXByb2NfaTJjX2NmZ19zcGVlZChzdHJ1Y3QgYmNtX2lwcm9jX2kyY19kZXYgKmlwcm9jX2kyYykN
+Cj4gIA0KPiAgCWlwcm9jX2kyYy0+YnVzX3NwZWVkID0gYnVzX3NwZWVkOw0KPiAgCXZhbCA9IGlw
+cm9jX2kyY19yZF9yZWcoaXByb2NfaTJjLCBUSU1fQ0ZHX09GRlNFVCk7DQo+IC0JdmFsICY9IH4o
+MSA8PCBUSU1fQ0ZHX01PREVfNDAwX1NISUZUKTsNCj4gKwl2YWwgJj0gfkJJVChUSU1fQ0ZHX01P
+REVfNDAwX1NISUZUKTsNCj4gIAl2YWwgfD0gKGJ1c19zcGVlZCA9PSA0MDAwMDApIDw8IFRJTV9D
+RkdfTU9ERV80MDBfU0hJRlQ7DQo+ICAJaXByb2NfaTJjX3dyX3JlZyhpcHJvY19pMmMsIFRJTV9D
+RkdfT0ZGU0VULCB2YWwpOw0KPiAgDQo+IEBAIC05OTUsNyArOTk1LDcgQEAgc3RhdGljIGludCBi
+Y21faXByb2NfaTJjX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICANCj4gIAkvKiBjb25m
+aWd1cmUgdG8gdGhlIGRlc2lyZWQgYnVzIHNwZWVkICovDQo+ICAJdmFsID0gaXByb2NfaTJjX3Jk
+X3JlZyhpcHJvY19pMmMsIFRJTV9DRkdfT0ZGU0VUKTsNCj4gLQl2YWwgJj0gfigxIDw8IFRJTV9D
+RkdfTU9ERV80MDBfU0hJRlQpOw0KPiArCXZhbCAmPSB+QklUKFRJTV9DRkdfTU9ERV80MDBfU0hJ
+RlQpOw0KPiAgCXZhbCB8PSAoaXByb2NfaTJjLT5idXNfc3BlZWQgPT0gNDAwMDAwKSA8PCBUSU1f
+Q0ZHX01PREVfNDAwX1NISUZUOw0KPiAgCWlwcm9jX2kyY193cl9yZWcoaXByb2NfaTJjLCBUSU1f
+Q0ZHX09GRlNFVCwgdmFsKTsNCj4gIA0KPiANCg0K
