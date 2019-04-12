@@ -2,109 +2,91 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9906C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C29C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790ED20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CC320818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjHoSGyA"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="nUgw8Xfd";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="DN1Z/FtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfDLNDc (ORCPT
+        id S1727464AbfDLNEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:03:32 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36549 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLNDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:03:31 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z5so5142265pfn.3;
-        Fri, 12 Apr 2019 06:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8cgrpRUvSKD4HeN3iSFKfUgiE1M6o09c8aTWE24JonA=;
-        b=GjHoSGyAUdf3gmVgx06cjX1HeJ77LfRC/0uUISf9ArqO+8M5YVoXJfL8NDRvLM4+9W
-         7l+V3fc5h2An2d0kf+1jnjBY/rjSQQF5SRAO7mgbJbgVx/IseeqYtX/NtyDqEsPB/fB7
-         NHIOWbbCuaRL9WSl8+T6vJWsct0uk3/xzpyDiGQ0+3vgXvdo/AYsS8SmlOJf4l5luC7o
-         fUQKX6O/+Oc5Ue3V8hmyN+NZiSPYxC3tHewtLNpf/dMXxmTVQnrJr7iesIjRTy2t9l5u
-         zpWol8AoQN4KAhhXcCDvnd03BAeNDTkEJyltyiYCZIi1lfh+Ku+K88pLWCBFyFwDpVb/
-         lKCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8cgrpRUvSKD4HeN3iSFKfUgiE1M6o09c8aTWE24JonA=;
-        b=Xild54uev04tL1rQgCdHYyKcqBXRyf8VcbCNNEEE+I8vvEc4AY+pELePbIP68U67B0
-         6iL3dQPhS1o1vJpgyyDN7DxFSasnaCiuSJs58sxpduNxcik02mRtCC8WyB0x3FM6Y7g0
-         gW0WsM7ZzUYEM/edUbc9lRVSONSeWREkdfOwiCXCW499qpKRDrp45ZReMJ/rBFF8Q3by
-         KDCzT026rEjG0oPUNE5+57I5EGqtwb6XGke3Pw0Pcy9DS40lSm9R4gVVjLos1J0lJA+q
-         M++OSFXD6iOjcwMh+st1+IKsqbkIGktng6aGnVQVx2ilCXqfrXIsn2rrltxGtsV7kgDQ
-         kqTw==
-X-Gm-Message-State: APjAAAUawUUyIAfuZpP33eVDQspQmKVnCQNzWI0nDMyBZGcPxfIsV0Ty
-        swGH+NcTA9Lvccp1o9vrWGxtxY8g
-X-Google-Smtp-Source: APXvYqyLumrYEwrx1Gyxj44GkG6RatkIV8hjs9Nea0iDVl7dnEazybea4ck3SmpCOq9rVqXlAAhEDg==
-X-Received: by 2002:a63:6581:: with SMTP id z123mr51483899pgb.243.1555074210831;
-        Fri, 12 Apr 2019 06:03:30 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id k124sm69351800pgc.65.2019.04.12.06.03.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 06:03:29 -0700 (PDT)
-Subject: Re: [PATCH 2/2] net-sysfs: Fix memory leak in netdev_register_kobject
-To:     Wang Hai <wanghai26@huawei.com>, davem@davemloft.net,
-        idosch@mellanox.com, eric.dumazet@gmail.com,
-        alexander.h.duyck@intel.com, tyhicks@canonical.com,
-        f.fainelli@gmail.com, viro@zeniv.linux.org.uk,
-        amritha.nambiar@intel.com, joe@perches.com,
-        dmitry.torokhov@gmail.com, andriy.shevchenko@linux.intel.com,
-        stephen@networkplumber.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190412203634.30392-1-wanghai26@huawei.com>
- <20190412203634.30392-3-wanghai26@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <855b85ea-5af9-9acd-1dbc-17b73703311c@gmail.com>
-Date:   Fri, 12 Apr 2019 06:03:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190412203634.30392-3-wanghai26@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 12 Apr 2019 09:04:38 -0400
+Received: from node.akkea.ca ([192.155.83.177]:40760 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbfDLNEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:04:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 2A9F24E204E;
+        Fri, 12 Apr 2019 13:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1555074277; bh=zGfXHziq97TcaeLejxiR3m6pxZuIKuRyT/AHaS38stw=;
+        h=From:To:Cc:Subject:Date;
+        b=nUgw8XfdKwdI/+brs+tQX9y6QRFfqpiqyIOqoYNUm2qL40oNziJBgrSUG67t3M01i
+         MUVJx0IEoEOXzKJVibHx593j4+TXtTn6qpOa9d/pGT962ajAFfLSy9Ql6iGxaXysaK
+         OYi/voLXTXzvusrcZh9jrbE1+jyiEC5BsDI2/P9A=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4-cOoHnXjdrh; Fri, 12 Apr 2019 13:04:36 +0000 (UTC)
+Received: from localhost.localdomain (198-48-167-13.cpe.pppoe.ca [198.48.167.13])
+        by node.akkea.ca (Postfix) with ESMTPSA id E8A554E204B;
+        Fri, 12 Apr 2019 13:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1555074276; bh=zGfXHziq97TcaeLejxiR3m6pxZuIKuRyT/AHaS38stw=;
+        h=From:To:Cc:Subject:Date;
+        b=DN1Z/FtPDKmajOo9vS7+V5cI3n4ynV378hKLyhMLkPDoopfs4b+W9cK4rBBZKRr3L
+         v56saT7kK+MC6ibHB10cXJ6OX5+e460nLN7SCTORZeQDFOFUafbPjqbTV+pd2Zvgq6
+         yvEDO7icDxFNV7ojnuU51TICNvsnd+di1XSr6ewM=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus@akkea.ca
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Add support for the Purism Librem5 devkit
+Date:   Fri, 12 Apr 2019 07:04:25 -0600
+Message-Id: <20190412130427.13418-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
+Changes since v1:
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
 
-On 04/12/2019 01:36 PM, Wang Hai wrote:
-> When registering struct net_device, it will call
->         register_netdevice ->
->                 netdev_register_kobject ->
->                         device_initialize(dev);
->                         dev_set_name(dev, "%s", ndev->name)
->                         device_add(dev)
->                         register_queue_kobjects(ndev)
-> 
-> In netdev_register_kobject(), if device_add(dev) or
-> register_queue_kobjects(ndev) failed. Register_netdevice()
-> will return error, causing netdev_freemem(ndev) to be
-> called to free net_device, however put_device(&dev->dev)->..->
-> kobject_cleanup() won't be called, resulting in a memory leak
-> which is alloced by dev_set_name()
-> 
->
+Angus Ainslie (Purism) (2):
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
 
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 850 ++++++++++++++++++
+ 3 files changed, 852 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
 
-Having two patches with exact same title is rather confusing for bug trackers.
-
-Instead of revert + another_patch, why not just send a cumulative fix ?
+-- 
+2.17.1
 
