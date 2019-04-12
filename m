@@ -2,293 +2,241 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56DCC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E76AC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7019D2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BFF20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v2b3aRAZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l8WRr2vM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfDLUl2 (ORCPT
+        id S1726983AbfDLUny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:41:28 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38853 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfDLUl1 (ORCPT
+        Fri, 12 Apr 2019 16:43:54 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55385 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfDLUny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:41:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f36so5672664plb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 13:41:27 -0700 (PDT)
+        Fri, 12 Apr 2019 16:43:54 -0400
+Received: by mail-it1-f196.google.com with SMTP id y134so18065027itc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 13:43:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8MbXQHPFKFs9QXh+4FcoXqj3E9S6gjKkLjMQR1K+xGQ=;
-        b=v2b3aRAZHPk3PMqTaGuLwmPFT7VCMq41xJ7xuhDT8eR5Vj/xZOHE3XXUuT+dDVCnoU
-         8P44f1PviyOgYDO9bIzlvhhhKdonzEDuBcgOdRH3ZmckISkOX8STZC8EQMRtve0UnQIZ
-         6vWOUldI+XAADrc3FEsT1+gJcrMqSvzTan5Jk+WTfe4pVNRTLAyOCIhNsNtG5ptBwO1k
-         Br20+fhO1qAjXdZwY+7e0PP7GSIFP0xuXv3Kn4AOqTrkE3r4Bzt8atw3t+K9ln42/VvV
-         6M0FB34+Wy+jIpYqFh2PdckWj6HaRky3vSErvO1IoDqj2JzPG4mxWE0NgUnMM/Egaal0
-         nAuA==
+        bh=6AtluYqDW96uUvqwdMeng3c3OZl8GyvSWQybASn7yCE=;
+        b=l8WRr2vMDpGRPyZHyz5p/XxaN9PNEyEEOI9/aAx+t0l7VEJoScmzSpJaCSLBm6YVeZ
+         DaBDzJva5WMpGVLNUHqbd9p61h0DPF1zme9QehX2kYOZ5eCH0w0oP4aFAbSVa9hGdlk5
+         iEgJwRFMojRGw2rW5wogk+ih30D2fpXBqBcpHMjcg8w4no0+eN4LB63OvWW+dEXzpPjN
+         +OoT0oVZNoffyq4tBExGn8VyMam6AkHkS+8yGbUmv9mjBhxwu6NWWRYd73xui4M7CN0c
+         hHxl+JUOkvZ6dPYCHrykg/dQx9mtgboJM3OABohFlxjO8qgnXGB7vAQYULXW4C0OCBpF
+         FwlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8MbXQHPFKFs9QXh+4FcoXqj3E9S6gjKkLjMQR1K+xGQ=;
-        b=KF4BbwcMFSxZzVAv0ISQJELDSoFG2F+OR2JNt6QnYyA3fDg61oH34mlSgc5O0E2UKN
-         ODAmfFyCt3WMq1lGh19qbiF9BkKe1Gqo6N/oz2tIEVVKqm5sK7hK5TGy1V4XJy45uDjB
-         ZzcocY65meosC8RBefKsjWZFYKkgTL/tajuVMv19Eh3TTj6/+P/NdvO/9KdCDYVPX0Kc
-         B0eKCMtM+KkyISv5yODhlMjfYfqbTIY1BJevVHbE164LC4pSWchudUe8sqkgyPy1BZOe
-         NGhxUHUM4Kgq7EL5jYhyHOPO/LTZf740dmPmAVOLZSkJKoJxww4k/B2n2huLB5GhikbS
-         rmWA==
-X-Gm-Message-State: APjAAAWrUChETm3un6W9O2cs5wrbrHeDOcpqnuuoWtW3Y1T5s0nCu2d/
-        /s7SE38ttw2cKnoZMT8mvukaD5E+Jir4GdIEekjUow==
-X-Google-Smtp-Source: APXvYqyBqQqbX0juWWXl3/d2E/RKVYFaBVA7OPlSQhfwmKIxfsQzVi0KmmGcIaCiOGExT4TfpXeDwuJcSz0ON0j+eIQ=
-X-Received: by 2002:a17:902:854c:: with SMTP id d12mr12445767plo.150.1555101686024;
- Fri, 12 Apr 2019 13:41:26 -0700 (PDT)
+        bh=6AtluYqDW96uUvqwdMeng3c3OZl8GyvSWQybASn7yCE=;
+        b=MWjqsZ5LtPHVM9f7Yb6+KmT0ckqDfXAqfG6rfCcxUi2zY2kTspX+TCjaMJauvwAJce
+         sHog4rNWCfLfqUBrA6psscfIYVOLtdtT/ioDwZw86FQGPQyy85L6hhzrbwdTHgbBNMQL
+         xlEkSDTJIUblQkrmoz+4fN2/6W+4FhPQgC83DApQeBXo7dwHRKeEeKLN7eVtFmecG+au
+         6PqdSrxNZpzIZZf0OY9fvRQP5SG3K0kJR6elFIuqwCEfGkqJiv4t5mJI24tEs2UTdSL3
+         3L+XJa/t8zdnJUFK5/nM/fuXJurj1JT46/tODN5SoLBW3vBzSBBGzjeWytNq4LgM1pPv
+         BH1w==
+X-Gm-Message-State: APjAAAVdofvZaQIpq7h5ZzQ+xWYfMZvgsWTCjpi6c9qPU4oQ8nu+Op7X
+        +TjilgbuOgsU8q2sgXFiy+VnerZ58QpaITkTr7QWkw==
+X-Google-Smtp-Source: APXvYqwiQL4vXAimAMwRkowPqhnWs+7hHq2sMXAcLz4kP+dHnzgADgyOtA2d67/2lCApFWzHDTaJIAZ1IcbvP+Ui+kc=
+X-Received: by 2002:a24:41cd:: with SMTP id b74mr918494itd.100.1555101833048;
+ Fri, 12 Apr 2019 13:43:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412194348.225570-1-venture@google.com> <57e7d1e5-b980-fc80-ae2f-8a0ab12a0dbd@roeck-us.net>
-In-Reply-To: <57e7d1e5-b980-fc80-ae2f-8a0ab12a0dbd@roeck-us.net>
-From:   Patrick Venture <venture@google.com>
-Date:   Fri, 12 Apr 2019 13:41:15 -0700
-Message-ID: <CAO=notx0_F64goou+PNwmi4AmthRY28EvhM1e+6ERtvTi6yYSw@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: (pmbus/ir38064): Add driver for Infineon
- IR38064 Voltage Regulator
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, corbet@lwn.net,
-        Maxim Sloyko <maxims@google.com>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155440491334.3190322.44013027330479237.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAKv+Gu8ocQGxTAapfjb5WufhL=Qj54LythHcPHsyy+wUnVBnfA@mail.gmail.com>
+ <CAPcyv4gUL8j+EaAZ556_NKXLgva++HgPBOeeAUNHN+DAWaewaQ@mail.gmail.com>
+ <CAKv+Gu_M-V-3ahHTj10iyx=eC2pBzFg027NmdBX1x7nXrpqK7g@mail.gmail.com> <CAA9_cmeRqr=b-hmaxA0aLZE98YGS9hF8h8JGGp9K6c_qhLK3AQ@mail.gmail.com>
+In-Reply-To: <CAA9_cmeRqr=b-hmaxA0aLZE98YGS9hF8h8JGGp9K6c_qhLK3AQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 12 Apr 2019 13:43:42 -0700
+Message-ID: <CAKv+Gu_gzHH7onY4WUWV8SAYeVXfMK-W3CaxYZ706sPo6ATZpA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/5] efi: Detect UEFI 2.8 Special Purpose Memory
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 1:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On Tue, 9 Apr 2019 at 19:11, Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> On 4/12/19 12:43 PM, Patrick Venture wrote:
-> > From: Maxim Sloyko <maxims@google.com>
+> On Tue, Apr 9, 2019 at 10:21 AM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
 > >
-> > Add the pmbus driver for the Infineon ir38064 voltage regulator.
+> > On Tue, 9 Apr 2019 at 09:44, Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Fri, Apr 5, 2019 at 9:21 PM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > > >
+> > > > Hi Dan,
+> > > >
+> > > > On Thu, 4 Apr 2019 at 21:21, Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+> > > > > interpretation of the EFI Memory Types as "reserved for a special
+> > > > > purpose".
+> > > > >
+> > > > > The proposed Linux behavior for special purpose memory is that it is
+> > > > > reserved for direct-access (device-dax) by default and not available for
+> > > > > any kernel usage, not even as an OOM fallback. Later, through udev
+> > > > > scripts or another init mechanism, these device-dax claimed ranges can
+> > > > > be reconfigured and hot-added to the available System-RAM with a unique
+> > > > > node identifier.
+> > > > >
+> > > > > A follow-on patch integrates parsing of the ACPI HMAT to identify the
+> > > > > node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+> > > > > now, arrange for EFI_MEMORY_SP memory to be reserved.
+> > > > >
+> > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > > Cc: Borislav Petkov <bp@alien8.de>
+> > > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > > > Cc: Darren Hart <dvhart@infradead.org>
+> > > > > Cc: Andy Shevchenko <andy@infradead.org>
+> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > > ---
+> > > > >  arch/x86/Kconfig                  |   18 ++++++++++++++++++
+> > > > >  arch/x86/boot/compressed/eboot.c  |    5 ++++-
+> > > > >  arch/x86/boot/compressed/kaslr.c  |    2 +-
+> > > > >  arch/x86/include/asm/e820/types.h |    9 +++++++++
+> > > > >  arch/x86/kernel/e820.c            |    9 +++++++--
+> > > > >  arch/x86/platform/efi/efi.c       |   10 +++++++++-
+> > > > >  include/linux/efi.h               |   14 ++++++++++++++
+> > > > >  include/linux/ioport.h            |    1 +
+> > > > >  8 files changed, 63 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > > > index c1f9b3cf437c..cb9ca27de7a5 100644
+> > > > > --- a/arch/x86/Kconfig
+> > > > > +++ b/arch/x86/Kconfig
+> > > > > @@ -1961,6 +1961,24 @@ config EFI_MIXED
+> > > > >
+> > > > >            If unsure, say N.
+> > > > >
+> > > > > +config EFI_SPECIAL_MEMORY
+> > > > > +       bool "EFI Special Purpose Memory Support"
+> > > > > +       depends on EFI
+> > > > > +       ---help---
+> > > > > +         On systems that have mixed performance classes of memory EFI
+> > > > > +         may indicate special purpose memory with an attribute (See
+> > > > > +         EFI_MEMORY_SP in UEFI 2.8). A memory range tagged with this
+> > > > > +         attribute may have unique performance characteristics compared
+> > > > > +         to the system's general purpose "System RAM" pool. On the
+> > > > > +         expectation that such memory has application specific usage
+> > > > > +         answer Y to arrange for the kernel to reserve it for
+> > > > > +         direct-access (device-dax) by default. The memory range can
+> > > > > +         later be optionally assigned to the page allocator by system
+> > > > > +         administrator policy. Say N to have the kernel treat this
+> > > > > +         memory as general purpose by default.
+> > > > > +
+> > > > > +         If unsure, say Y.
+> > > > > +
+> > > >
+> > > > EFI_MEMORY_SP is now part of the UEFI spec proper, so it does not make
+> > > > sense to make any understanding of it Kconfigurable.
+> > >
+> > > No, I think you're misunderstanding what this Kconfig option is trying
+> > > to achieve.
+> > >
+> > > The configuration capability is solely for the default kernel policy.
+> > > As can already be seen by Christoph's response [1] the thought that
+> > > the firmware gets more leeway to dictate to Linux memory policy may be
+> > > objectionable.
+> > >
+> > > [1]: https://lore.kernel.org/lkml/20190409121318.GA16955@infradead.org/
+> > >
+> > > So the Kconfig option is gating whether the kernel simply ignores the
+> > > attribute and gives it to the page allocator by default. Anything
+> > > fancier, like sub-dividing how much is OS managed vs device-dax
+> > > accessed requires the OS to reserve it all from the page-allocator by
+> > > default until userspace policy can be applied.
+> > >
 > >
-> > Signed-off-by: Maxim Sloyko <maxims@google.com>
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > ---
-> > v2:
-> >   - Cleaned up weird tabbing behavior in doc.
-> > v1:
-> >   - Initial patchset.
-> > ---
-> >   Documentation/hwmon/ir38064   | 64 +++++++++++++++++++++++++++++++++++
-> >   drivers/hwmon/pmbus/Kconfig   |  9 +++++
-> >   drivers/hwmon/pmbus/Makefile  |  1 +
-> >   drivers/hwmon/pmbus/ir38064.c | 60 ++++++++++++++++++++++++++++++++
-> >   4 files changed, 134 insertions(+)
-> >   create mode 100644 Documentation/hwmon/ir38064
-> >   create mode 100644 drivers/hwmon/pmbus/ir38064.c
+> > I don't think this policy should dictate whether we pretend that the
+> > attribute doesn't exist in the first place. We should just wire up the
+> > bit fully, and only apply this policy at the very end.
+>
+> The bit is just a policy hint, if the kernel is not implementing any
+> of the policy why even check for the bit?
+>
+
+Because I would like things like the EFI memory map dumping code etc
+to report the bit regardless of whether we are honoring it or not.
+
 > >
-> > diff --git a/Documentation/hwmon/ir38064 b/Documentation/hwmon/ir38064
-> > new file mode 100644
-> > index 0000000000000..618779a329da0
-> > --- /dev/null
-> > +++ b/Documentation/hwmon/ir38064
-> > @@ -0,0 +1,64 @@
-> > +Kernel driver ir38064
-> > +=====================
-> > +
-> > +Supported chips:
-> > +  * Infineon IR38064
-> > +    Prefix: 'ir38064'
-> > +    Addresses scanned: -
-> > +    Datasheet: Publicly available at the Infineon webiste
-> > +      https://www.infineon.com/dgdl/Infineon-IR38064MTRPBF-DS-v03_07-EN.pdf?fileId=5546d462584d1d4a0158db0d9efb67ca
-> > +
-> > +Datasheet is not publicly available.
-> > +
-> > +
-> > +Authors:
-> > +        Maxim Sloyko <maxims@google.com>
-> > +        Patrick Venture <venture@google.com>
-> > +
-> > +Description
-> > +-----------
-> > +
-> > +IR38064 is a Single-input Voltage, Synchronous Buck Regulator, DC-DC Converter.
-> > +
-> > +Usage Notes
-> > +-----------
-> > +
-> > +This driver does not probe for PMBus devices. You will have to instantiate
-> > +devices explicitly.
-> > +
-> > +Sysfs attributes
-> > +----------------
-> > +
-> > +curr1_label          "iout1"
-> > +curr1_input          Measured output current
-> > +curr1_crit           Critical maximum current
-> > +curr1_crit_alarm     Current critical high alarm
-> > +curr1_max            Maximum current
-> > +curr1_max_alarm      Current high alarm
-> > +
-> > +in1_label            "vin"
-> > +in1_input            Measured input voltage
-> > +in1_crit             Critical maximum input voltage
-> > +in1_crit_alarm               Input voltage critical high alarm
-> > +in1_min              Minimum input voltage
-> > +in1_min_alarm                Input voltage low alarm
-> > +
-> > +in2_label            "vout1"
-> > +in2_input            Measured output voltage
-> > +in2_lcrit            Critical minimum output voltage
-> > +in2_lcrit_alarm      Output voltage critical low alarm
-> > +in2_crit             Critical maximum output voltage
-> > +in2_crit_alarm               Output voltage critical high alarm
-> > +in2_max              Maximum output voltage
-> > +in2_max_alarm                Output voltage high alarm
-> > +in2_min              Minimum output voltage
-> > +in2_min_alarm                Output voltage low alarm
-> > +
-> > +power1_label         "pout1"
-> > +power1_input         Measured output power
-> > +
-> > +temp1_input          Measured temperature
-> > +temp1_crit           Critical high temperature
-> > +temp1_crit_alarm     Chip temperature critical high alarm
-> > +temp1_max            Maximum temperature
-> > +temp1_max_alarm      Chip temperature high alarm
-> > diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> > index 629cb45f8557a..de87abab990e5 100644
-> > --- a/drivers/hwmon/pmbus/Kconfig
-> > +++ b/drivers/hwmon/pmbus/Kconfig
-> > @@ -54,6 +54,15 @@ config SENSORS_IR35221
-> >         This driver can also be built as a module. If so, the module will
-> >         be called ir35521.
+> > > > Instead, what I would prefer is to implement support for EFI_MEMORY_SP
+> > > > unconditionally (including the ability to identify it in the debug
+> > > > dump of the memory map etc), in a way that all architectures can use
+> > > > it. Then, I think we should never treat it as ordinary memory and make
+> > > > it the firmware's problem not to use the EFI_MEMORY_SP attribute in
+> > > > cases where it results in undesired behavior in the OS.
+> > >
+> > > No, a policy of "never treat it as ordinary memory" confuses the base
+> > > intent of the attribute which is an optional hint to get the OS to not
+> > > put immovable / non-critical allocations in what could be a precious
+> > > resource.
+> > >
 > >
-> > +config SENSORS_IR38064
-> > +     tristate "Infineon IR38064"
-> > +     help
-> > +       If you say yes here you get hardware monitoring support for Infineon
-> > +       IR38064.
-> > +
-> > +       This driver can also be built as a module. If so, the module will
-> > +       be called ir38064.
-> > +
-> >   config SENSORS_LM25066
-> >       tristate "National Semiconductor LM25066 and compatibles"
-> >       help
-> > diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> > index ea0e39518c216..7d1fa6b3c8c93 100644
-> > --- a/drivers/hwmon/pmbus/Makefile
-> > +++ b/drivers/hwmon/pmbus/Makefile
-> > @@ -8,6 +8,7 @@ obj-$(CONFIG_SENSORS_PMBUS)   += pmbus.o
-> >   obj-$(CONFIG_SENSORS_ADM1275)       += adm1275.o
-> >   obj-$(CONFIG_SENSORS_IBM_CFFPS)     += ibm-cffps.o
-> >   obj-$(CONFIG_SENSORS_IR35221)       += ir35221.o
-> > +obj-$(CONFIG_SENSORS_IR38064)        += ir38064.o
-> >   obj-$(CONFIG_SENSORS_LM25066)       += lm25066.o
-> >   obj-$(CONFIG_SENSORS_LTC2978)       += ltc2978.o
-> >   obj-$(CONFIG_SENSORS_LTC3815)       += ltc3815.o
-> > diff --git a/drivers/hwmon/pmbus/ir38064.c b/drivers/hwmon/pmbus/ir38064.c
-> > new file mode 100644
-> > index 0000000000000..4b957ebb6fa71
-> > --- /dev/null
-> > +++ b/drivers/hwmon/pmbus/ir38064.c
-> > @@ -0,0 +1,60 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Hardware monitoring driver for Infineon IR38064
-> > + *
-> > + * Copyright (c) 2017 Google Inc
-> > + *
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include "pmbus.h"
-> > +
-> > +static struct pmbus_driver_info ir38064_info = {
-> > +     .pages = 1,
-> > +     .format[PSC_VOLTAGE_IN] = linear,
-> > +     .format[PSC_VOLTAGE_OUT] = direct,
+> > The base intent is to prevent the OS from using memory that is
+> > co-located with an accelerator for any purpose other than what the
+> > accelerator needs it for. Having a Kconfigurable policy that may be
+> > disabled kind of misses the point IMO. I think 'optional hint' doesn't
+> > quite capture the intent.
 >
-> The datasheet says this is linear16 format with exponent=-8.
-> Oddly enough, the datasheet also suggests that VOUT_MODE is
-> not supported, which would normally report the exponent.
-> I think it would be is better to implement a local read function
-> and fake VOUT_MODE instead of declaring direct mode, but then
-> I understand that it would make the code more complex. I'll
-> leave it up to you, but if you want to keep it as-is,
-> please explain in a comment that you are faking linear16
-> mode with exponent -8.
-
-Added to commit message in v3.
-
+> That's not my understanding, and an EFI attribute is the wrong
+> mechanism to meet such a requirement. If this memory is specifically
+> meant for use with a given accelerator then it had better be marked
+> reserved and the accelerator driver is then responsible for publishing
+> the resource to the OS if at all.
 >
-> > +     .format[PSC_CURRENT_OUT] = linear,
-> > +     .format[PSC_POWER] = linear,
-> > +     .format[PSC_TEMPERATURE] = linear,
-> > +     .m[PSC_VOLTAGE_OUT] = 256,
-> > +     .b[PSC_VOLTAGE_OUT] = 0,
-> > +     .R[PSC_VOLTAGE_OUT] = 0,
-> > +     .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-> > +         | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-> > +         | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-> > +         | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-> > +         | PMBUS_HAVE_POUT,
-> > +};
-> > +
+> You did prompt me to go back and re-read the wording in the spec. It
+> still seems clear to me that the attribute is an optional hint not a
+> hard requirement. Whether the OS honors an optional hint is an OS
+> policy and I fail to see why the OS should bother to detect the bit
+> without implementing any associated policy.
 >
-> Not mandatory, but the chip does support VOUT_PEAK, IOUT_PEAK,
-> and TEMPERATURE_PEAK, just in case you are interested adding
-> support for it.
 
-Added to commit message in v3.
+Because not taking a hint is not the same thing as pretending it isn't
+there to begin with.
 
->
-> Thanks,
-> Guenter
-
-Thanks.
-
->
-> > +static int ir38064_probe(struct i2c_client *client,
-> > +                      const struct i2c_device_id *id)
-> > +{
-> > +     return pmbus_do_probe(client, id, &ir38064_info);
-> > +}
-> > +
-> > +static const struct i2c_device_id ir38064_id[] = {
-> > +     {"ir38064", 0},
-> > +     {}
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(i2c, ir38064_id);
-> > +
-> > +/* This is the driver that will be inserted */
-> > +static struct i2c_driver ir38064_driver = {
-> > +     .driver = {
-> > +                .name = "ir38064",
-> > +                },
-> > +     .probe = ir38064_probe,
-> > +     .remove = pmbus_do_remove,
-> > +     .id_table = ir38064_id,
-> > +};
-> > +
-> > +module_i2c_driver(ir38064_driver);
-> > +
-> > +MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
-> > +MODULE_DESCRIPTION("PMBus driver for Infineon IR38064");
-> > +MODULE_LICENSE("GPL");
+> > > Moreover, the interface for platform firmware to indicate that a
+> > > memory range should never be treated as ordinary memory is simply the
+> > > existing "reserved" memory type, not this attribute. That's the
+> > > mechanism to use when platform firmware knows that a driver is needed
+> > > for a given mmio resource.
+> > >
 > >
+> > Reserved memory is memory that simply should never touched at all by
+> > the OS, and on ARM, we take care never to map it anywhere.
 >
+> That's not a guarantee, at least on x86. Some shipping persistent
+> memory platforms describe it as reserved and then the ACPI NFIT
+> further describes what that reserved memory contains and how the OS
+> can use it. See commit af1996ef59db "ACPI: Change NFIT driver to
+> insert new resource".
+
+The UEFI spec is pretty clear about the fact that reserved memory
+shouldn't ever be touched by the OS. The fact that x86 platforms exist
+that violate this doesn't mean we should abuse it in other ways as
+well.
