@@ -3,94 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80843C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10532C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCF22084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8462084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfDLIkf (ORCPT
+        id S1727359AbfDLIlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:40:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:35657 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfDLIke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:40:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 01:40:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,340,1549958400"; 
-   d="scan'208";a="135179471"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga006.jf.intel.com with ESMTP; 12 Apr 2019 01:40:31 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hErjZ-0003Oj-Ko; Fri, 12 Apr 2019 11:40:29 +0300
-Date:   Fri, 12 Apr 2019 11:40:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Yury Norov <yury.norov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Mike Travis <travis@sgi.com>, Yury Norov <ynorov@marvell.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] lib/test_bitmap: add testcases for bitmap_parselist
-Message-ID: <20190412084029.GI9224@smile.fi.intel.com>
-References: <20190405173211.11373-1-ynorov@marvell.com>
- <20190405173211.11373-5-ynorov@marvell.com>
- <20190411183946.GA13348@roeck-us.net>
+        Fri, 12 Apr 2019 04:41:21 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40789 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfDLIlV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:41:21 -0400
+X-Originating-IP: 109.213.33.177
+Received: from localhost (alyon-652-1-42-177.w109-213.abo.wanadoo.fr [109.213.33.177])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C633520003;
+        Fri, 12 Apr 2019 08:41:16 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 10:41:16 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
+ irq function
+Message-ID: <20190412084116.GS3578@piout.net>
+References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
+ <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
+ <20190411073252.GC3050@dragon>
+ <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM0PR04MB4211816EDBEF23F7B330CCCB80280@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411183946.GA13348@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 11:39:46AM -0700, Guenter Roeck wrote:
-> On Fri, Apr 05, 2019 at 08:32:10PM +0300, Yury Norov wrote:
-> > Add tests for non-number character, empty regions, integer overflow.
+On 12/04/2019 02:32:54+0000, Anson Huang wrote:
+> > > 	As i.MX SCU general irq function is picked up by Shawn, could you
+> > > please also pick up below i.MX SC RTC alarm support patch ?
+> > > 	https://patchwork.kernel.org/patch/10890525/
+> > >
+> > 
+> > No, it can't go through Alexandre's tree due to dependency issue.
+> > 
+> > Shawn,
+> > Do you think you can pick it up? Alexandre already gave the Ack.
+> > 
+> > AFAIK there's no other SCU RTC patches since v5.1-rc1 in Alexandre's tree.
+> 
+> Yes, need to make sure the dependency is handled, the RTC alarm patch MUST be picked up
+> ONLY when scu irq patch is ready, NOT sure how to handle this case for such scenario?
+> 
 
-> >  	{0, "1-31:4/4",			&exp[9 * step], 32, 0},
-> >  	{0, "0-31:1/4,32-63:2/4",	&exp[10 * step], 64, 0},
-> >  	{0, "0-31:3/4,32-63:4/4",	&exp[11 * step], 64, 0},
-> > +	{0, "  ,,  0-31:3/4  ,, 32-63:4/4  ,,  ",	&exp[11 * step], 64, 0},
-> >  
-> >  	{0, "0-31:1/4,32-63:2/4,64-95:3/4,96-127:4/4",	exp2, 128, 0},
-> >  
-> >  	{0, "0-2047:128/256", NULL, 2048, PARSE_TIME},
-> >  
-> > +	{0, "",				&exp[12], 8, 0},
-> > +	{0, "\n",			&exp[12], 8, 0},
-> > +	{0, ",,  ,,  , ,  ,",		&exp[12], 8, 0},
-> > +	{0, " ,  ,,  , ,   ",		&exp[12], 8, 0},
-> > +	{0, " ,  ,,  , ,   \n",		&exp[12], 8, 0},
-> > +
-> 
-> This results in error messages such as
-> 
-> test_bitmap: parselist: 17: input is ,, ,,  , ,  ,, result is 0x0, expected 0x11111111
-> test_bitmap: parselist: 18: input is  ,  ,,  , ,   , result is 0x0, expected 0x11111111
-> 
-> on 32-bit systems. The above should be "&exp[12 * step]".
+Either it goes through arm-soc or if it can wait one release, I pick it
+up for 5.3. The other solution involves immutable branch but I don't
+think this is necessary.
 
-Nice catch!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
