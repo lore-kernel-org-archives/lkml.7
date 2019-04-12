@@ -2,113 +2,135 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DD5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD3AC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1272171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:09:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g/aRvsYH"
+	by mail.kernel.org (Postfix) with ESMTP id 72AEB2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfDLLJ2 (ORCPT
+        id S1726818AbfDLLMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:09:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43686 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfDLLJ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:09:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k17so6736461wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YyEzS7TnsOqr9o50OG+w7r/r1TOsp7qz+hz4A5W9UhI=;
-        b=g/aRvsYHYxdDXh4EFWk3cHFPNoT1owBzdPzk65Ho2obrGgDlUuHsJN909XD4g96DVR
-         /A2ryI8/UEcWwJT+UFMnwpWxt0CKE/PWtxmIEnxIt3BjAMpBpbstX6L/qq5HkR+/EBiz
-         VAwHNONebhC9DAfDQWbuap2YPG8NDprS7x2hmHzoCbaUr3ADXRIdIWCnPiWQEMVtSky+
-         5hl045zUGh9OajbYPLT0CBYwHfDmsW4b6vhhVnl56zu34O/CkKeV23ycpG2MgWDEG9uK
-         L1vOvmv+lkP5ALmENlwXC70ApLUwbqBo/F0lUQBE6GKeQnYpLAtvY4bvEAwwI80h6hPI
-         97fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YyEzS7TnsOqr9o50OG+w7r/r1TOsp7qz+hz4A5W9UhI=;
-        b=RSEMCtkZrVplwnMcyqvX9CZ/16xpFgnK67lcLb3D0Kf+Y2xGhA/P8ucpqnz6keqf3/
-         0nyHk28hVlBf2DylwhNHadWx3b24i5jNPO9vzdq/OT7zTRUndrEsE/wh0PyH+AN5OH1C
-         fVmW2lNUhhZj8iTQdFQAUgP54Ai7hTRlRsrAPOdhrwyQ6wOLsFJMVzWEKDvV8QCdaolo
-         2jxt+NK+QZosg/uSH82hO84GxsEAqGCrpOF0XiaWH3/Yr5Z/S1Usbovm8tOps1oniAm2
-         EURR7uB2sCwwx6tNFMS/EHzT9kWIkUSxRD0IXO7ZLpWK2gfVaXkUTkr31OBveJe2Vt1N
-         mOng==
-X-Gm-Message-State: APjAAAW2HzsH8RVm6uf9HnIKFPm3DwnRhBHzB3bqnRW3TL97RmKh5XIH
-        Q4llNRzdjrg20amz+ZngkbPWMg==
-X-Google-Smtp-Source: APXvYqyg+2Vsd6MyYFRrNVeyhQctKH3otR0j3E06DdXzOCaVgn1/7XurzAIyJ+ahPr2scYB2QWW6TA==
-X-Received: by 2002:adf:d081:: with SMTP id y1mr36515373wrh.283.1555067365789;
-        Fri, 12 Apr 2019 04:09:25 -0700 (PDT)
-Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id 7sm137426268wrc.81.2019.04.12.04.09.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 04:09:25 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] Bugfix and cleanup the timer driver for Milbeaut
- M10V
-To:     Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Takao Orito <orito.takao@socionext.com>,
-        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>
-References: <1555054611-23566-1-git-send-email-sugaya.taichi@socionext.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <2b6c5bad-485e-657d-e5fe-17fb6281041e@linaro.org>
-Date:   Fri, 12 Apr 2019 13:09:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 07:12:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58426 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726682AbfDLLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 07:12:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 926C515AB;
+        Fri, 12 Apr 2019 04:12:01 -0700 (PDT)
+Received: from red-moon (unknown [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 993BF3F718;
+        Fri, 12 Apr 2019 04:11:58 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 12:11:56 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>
+Subject: Re: [PATCH v3 12/26] PCI: keystone: Prevent ARM32 specific code to
+ be compiled for ARM64
+Message-ID: <20190412111156.GE8113@red-moon>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-13-kishon@ti.com>
+ <20190411150332.GC6862@red-moon>
+ <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1555054611-23566-1-git-send-email-sugaya.taichi@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee9d27e6-c653-4965-b552-3cf1ce5bdf51@ti.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/2019 09:36, Sugaya Taichi wrote:
-> This series fixes a bug and cleanup code about timer driver for
-> Milbeaut M10V.
-> Since it is difficult to separate, it is integrated into a series.
+On Fri, Apr 12, 2019 at 02:20:06PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
 > 
-> Changes from v1:
->  -Add "Fixes" tag.
+> On 11/04/19 8:33 PM, Lorenzo Pieralisi wrote:
+> > On Mon, Mar 25, 2019 at 03:09:33PM +0530, Kishon Vijay Abraham I wrote:
+> >> hook_fault_code is an ARM32 specific API for hooking into data abort.
+> >> Since pci-keystone.c will be used for AM65X platforms which is an
+> >> ARM64 platform,
+> > 
+> > Hi Kishon,
+> > 
+> > How is the problem plugged by the fault hook fixed on ARM64 ?
 > 
-> Sugaya Taichi (3):
->   clocksource/drivers/timer-milbeaut: Fix to enable one-shot timer
->   clocksource/drivers/timer-milbeaut: Add shutdown function
->   clocksource/drivers/timer-milbeaut: Cleanup common register accesses
+> At least in AM654 platform, I don't see a bus error when PCIe device
+> is not connected but returns 0xffffffff. So there is no necessary for
+> hook_fault_code in AM654 platform.
+
+That can't have much to do with ARM32<->ARM64, it is rather a platform
+integration issue AFAICS. Russell has a point, this has to be documented
+I can do it for you but I need additional information.
+
+Thanks,
+Lorenzo
+
+> Thanks
+> Kishon
 > 
->  drivers/clocksource/timer-milbeaut.c | 66 +++++++++++++++++++++++++-----------
->  1 file changed, 47 insertions(+), 19 deletions(-)
-
-Series applied for 5.2
-
-Thanks
-
-  -- Daniel
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> >> allow hook_fault_code to be compiled only for ARM32.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> >> index dfe54553d832..93296d434f40 100644
+> >> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> >> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> >> @@ -710,6 +710,7 @@ static int ks_pcie_config_legacy_irq(struct keystone_pcie *ks_pcie)
+> >>  	return ret;
+> >>  }
+> >>  
+> >> +#ifdef CONFIG_ARM
+> >>  /*
+> >>   * When a PCI device does not exist during config cycles, keystone host gets a
+> >>   * bus error instead of returning 0xffffffff. This handler always returns 0
+> >> @@ -729,6 +730,7 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
+> >>  
+> >>  	return 0;
+> >>  }
+> >> +#endif
+> >>  
+> >>  static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
+> >>  {
+> >> @@ -778,12 +780,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+> >>  	if (ret < 0)
+> >>  		return ret;
+> >>  
+> >> +#ifdef CONFIG_ARM
+> >>  	/*
+> >>  	 * PCIe access errors that result into OCP errors are caught by ARM as
+> >>  	 * "External aborts"
+> >>  	 */
+> >>  	hook_fault_code(17, ks_pcie_fault, SIGBUS, 0,
+> >>  			"Asynchronous external abort");
+> >> +#endif
+> >>  
+> >>  	ks_pcie_start_link(pci);
+> >>  	dw_pcie_wait_for_link(pci);
+> >> -- 
+> >> 2.17.1
+> >>
