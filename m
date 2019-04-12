@@ -2,214 +2,109 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC082C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB67C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805452083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284CF2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:19:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z0dMNmf4"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="SbWHQNX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfDLKRn (ORCPT
+        id S1726851AbfDLKTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:17:43 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33673 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDLKRm (ORCPT
+        Fri, 12 Apr 2019 06:19:41 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:42998 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLKTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:17:42 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190412101741euoutp017be6de9cfbb8ea33029c506675aed34c~UsrTydnai1422614226euoutp01q
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:17:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190412101741euoutp017be6de9cfbb8ea33029c506675aed34c~UsrTydnai1422614226euoutp01q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555064261;
-        bh=lN+XnhWEMkQ0fzryrdFbFXtaTrDcCTbeTvxBVv9jmGc=;
-        h=To:Cc:From:Subject:Date:References:From;
-        b=Z0dMNmf4NbEkAQJARBOl4A/ilqNNA/BZlW3U+8/z4r/BoQYwbfQOLe+rSoUnSE47A
-         oWMAHTrdEgwMPFkv67CNakEjXFIx02wcRE1m8UMckB3QLNrP4eJ/KNmzcmCt2BL0r8
-         2Xo7hIyOxH1WHLiHhsNMzHFEzXH3kvMQskUV9I04=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190412101741eucas1p2140a8c9844465a14dbac25c65b7be925~UsrTV0Sqp0271902719eucas1p2l;
-        Fri, 12 Apr 2019 10:17:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3B.BA.04298.4C560BC5; Fri, 12
-        Apr 2019 11:17:40 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190412101740eucas1p25cb418ef6836d06074d6a2f3fe3b9355~UsrSt1EOK0760607606eucas1p2A;
-        Fri, 12 Apr 2019 10:17:40 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190412101740eusmtrp1bd815be7e526febae218cb161eda0e7f~UsrSf4k_Z2794027940eusmtrp1b;
-        Fri, 12 Apr 2019 10:17:40 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-05-5cb065c496b1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.85.04146.4C560BC5; Fri, 12
-        Apr 2019 11:17:40 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190412101739eusmtip2a612d0b6acc790b0db093b99b3f612e2~UsrSSTbay2006420064eusmtip2X;
-        Fri, 12 Apr 2019 10:17:39 +0000 (GMT)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] tty: remove redundant 'default n' from Kconfig-s
-Message-ID: <353e4c44-2c90-f70f-d0e3-47218cf905d7@samsung.com>
-Date:   Fri, 12 Apr 2019 12:17:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7djP87pHUjfEGGzfYWzRvHg9m8WUDR+Y
-        LC7vmsPmwOyxf+4ado/1W66yeHzeJBfAHMVlk5Kak1mWWqRvl8CVsbfvHHvBUfmK57vfsjYw
-        zpHoYuTgkBAwkZg40bGLkZNDSGAFo0TLDc0uRi4g+wujxNqG7+wQzmdGiZcTDzODVIE0TLi8
-        hgkisZxR4sn/P1DOW0aJ/pPd7CBjRQSCJY5uNQFpYBZQl9i27woriM0mYCUxsX0VI4gtLOAo
-        MXXlG7ByXgE7iR+bskHCLAKqEpdPvGUFCYsKREj0n1EHCfMKCEqcnPmEBWKivMT2t3OYQbZK
-        CNxmk1g34SoLxG0uEpuvLWODsIUlXh3fwg5hy0icntzDAtGwjlHib8cLqO7tjBLLJ/+D6rCW
-        OHz8IthmZgFNifW79CHCjhJTztxjh4QWn8SNt4IQR/BJTNo2nRkizCvR0SYEUa0msWHZBjaY
-        tV07V0KDzUPiws05jJCAjpV4eaubZQKjwiwkr81C8toshBsWMDKvYhRPLS3OTU8tNsxLLdcr
-        TswtLs1L10vOz93ECEwUp/8d/7SD8eulpEOMAhyMSjy8G5zXxwixJpYVV+YeYpTgYFYS4Q1h
-        AQrxpiRWVqUW5ccXleakFh9ilOZgURLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpgZCnVPRXw
-        ION6zKJjl6R72hlOBnDXsnWVus25uKdaMu3P1M8Fq9NmC/50554352zvz3oLu/SJBwM5Xj6u
-        UIufFmAp//K56OZZD3X534b/920VWnd7jpj4p4tZ1m2tJab5U8r7guT0Wj9f+dC72b5cYHdi
-        Q0zJkfmRv1/4ck48W2q/asVTy9uLlViKMxINtZiLihMBYgP+NhADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsVy+t/xe7pHUjfEGDw6zWnRvHg9m8WUDR+Y
-        LC7vmsPmwOyxf+4ado/1W66yeHzeJBfAHKVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdo
-        bB5rZWSqpG9nk5Kak1mWWqRvl6CXsbfvHHvBUfmK57vfsjYwzpHoYuTkkBAwkZhweQ1TFyMX
-        h5DAUkaJX9t+MncxcgAlZCSOry+DqBGW+HOtiw2i5jWjxMLFE5lAEiICwRJ9S16ygtjMAuoS
-        2/ZdAbPZBKwkJravYgSxhQUcJaaufMMOMpNXwE7ix6ZskDCLgKrE5RNvwcpFBSIkbj3sYAGx
-        eQUEJU7OfMICM/LPvEvMELa8xPa3c5gnMPLPQlI2C0nZLCRlCxiZVzGKpJYW56bnFhvqFSfm
-        Fpfmpesl5+duYgQG9bZjPzfvYLy0MfgQowAHoxIPb4DV+hgh1sSy4srcQ4wSHMxKIrwhLEAh
-        3pTEyqrUovz4otKc1OJDjKZAh09klhJNzgdGXF5JvKGpobmFpaG5sbmxmYWSOO95g8ooIYH0
-        xJLU7NTUgtQimD4mDk6pBsapa79yiwg0fPUrkPV/OMch71Esv5oXy7XJRX7REpPVb/1R2OCa
-        sbLjuiXP1OnFm5RXdhxNnWHaxX42KK1VKnxZTKS9AdN8lu+ak0/e8fRUv+WYu3/L7Bued1el
-        iBWLMiv1611m+VXrvMSuad+7opj04wnp0wIy50nppubLf7+Zcbbyj8tGEyWW4oxEQy3mouJE
-        AOBArQqAAgAA
-X-CMS-MailID: 20190412101740eucas1p25cb418ef6836d06074d6a2f3fe3b9355
-X-Msg-Generator: CA
+        Fri, 12 Apr 2019 06:19:41 -0400
+X-IronPort-AV: E=Sophos;i="5.60,340,1549954800"; 
+   d="scan'208";a="31374106"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 12 Apr 2019 03:19:40 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Fri, 12 Apr 2019 03:19:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T6tqL5zrMozhh96Ecd1j+j5yAl+rxiVNj1xHZakVAdU=;
+ b=SbWHQNX2Kh1a5rNCslvt0eFl9mgUi2nIULk4PtzahR1wr1vnfrD8TlCMm68BpzwDM39/EtLZBWNZqbdZSTH0077OtnX9mQ+uMSVtkckeuPKPoMCUB3W79QwzzSBFK6zmO84zFqaKzEufw+rQ6gH9QGKq2gEjNxcqTEKu7qXdkds=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1947.namprd11.prod.outlook.com (10.175.88.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.16; Fri, 12 Apr 2019 10:19:37 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc%3]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
+ 10:19:37 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <mchehab@kernel.org>,
+        <ksloat@aampglobal.com>, <Eugen.Hristev@microchip.com>
+Subject: [PATCH 0/3] media: atmel: atmel-isc: some fixes
+Thread-Topic: [PATCH 0/3] media: atmel: atmel-isc: some fixes
+Thread-Index: AQHU8Rk7t7BW4v2Y6kWMbiWeR3e4gA==
+Date:   Fri, 12 Apr 2019 10:19:36 +0000
+Message-ID: <1555064098-19310-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: ro-RO, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR06CA0111.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::40) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Eugen.Hristev@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d9eea157-89d6-4e73-b1b5-08d6bf305d40
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1947;
+x-ms-traffictypediagnostic: DM5PR11MB1947:
+x-microsoft-antispam-prvs: <DM5PR11MB1947CE2844AEFECC911F38E7E8280@DM5PR11MB1947.namprd11.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(39860400002)(136003)(376002)(199004)(189003)(105586002)(54906003)(102836004)(36756003)(50226002)(26005)(14454004)(2906002)(97736004)(66066001)(6486002)(6436002)(6506007)(386003)(305945005)(7736002)(2501003)(81166006)(5660300002)(8676002)(8936002)(81156014)(107886003)(14444005)(256004)(486006)(4326008)(478600001)(110136005)(106356001)(68736007)(316002)(86362001)(3846002)(4744005)(71200400001)(52116002)(72206003)(2616005)(476003)(25786009)(6116002)(186003)(6512007)(71190400001)(99286004)(2201001)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1947;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CEH+1whyU/yN6pZ4vm+MJxJ8SAm3GA8/Vk86AcpzWch1XwVkQvVyEzgOcFfwbffO+tmEGu4bsD63sj0lVb0YluPjvyG6TqnhL69ZGcDGTU3yaAqzUh/q6YGHvOr2IX70u8U9b7HMK8Den22Yx6oBVMEn2rdNdxwuwI+58zx4DYO7rZsY3LC1g/T2JOF3J3vm30OB6x4vM/4eUjzP6UUSaDfrsIX6eVIqra6bWKDzmEPjCQzKUDjkzJ95EcU3ti3wapaHBDmwl50XByCn1sYUHxaJvVACW7Dgm60JOAU6kN2OHs/tPMEy8L/1UPtuc8cTVpKxzcRYur/S7lUAAAqf7h0hElIEPAAHfbYdlpHXAOdecPpRn+XV9Dfoj2jr/Lc2IVNyHeR/jUAF1yvsWFyT6AeVvK5a79ztlZcFZYh2Zas=
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190412101740eucas1p25cb418ef6836d06074d6a2f3fe3b9355
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190412101740eucas1p25cb418ef6836d06074d6a2f3fe3b9355
-References: <CGME20190412101740eucas1p25cb418ef6836d06074d6a2f3fe3b9355@eucas1p2.samsung.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9eea157-89d6-4e73-b1b5-08d6bf305d40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 10:19:37.0466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1947
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'default n' is the default value for any bool or tristate Kconfig
-setting so there is no need to write it explicitly.
-
-Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
-is not set' for visible symbols") the Kconfig behavior is the same
-regardless of 'default n' being present or not:
-
-    ...
-    One side effect of (and the main motivation for) this change is making
-    the following two definitions behave exactly the same:
-    
-        config FOO
-                bool
-    
-        config FOO
-                bool
-                default n
-    
-    With this change, neither of these will generate a
-    '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
-    That might make it clearer to people that a bare 'default n' is
-    redundant.
-    ...
-
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/tty/Kconfig        |    3 ---
- drivers/tty/hvc/Kconfig    |    2 --
- drivers/tty/serial/Kconfig |    3 ---
- 3 files changed, 8 deletions(-)
-
-Index: b/drivers/tty/Kconfig
-===================================================================
---- a/drivers/tty/Kconfig	2019-04-12 12:13:09.102141672 +0200
-+++ b/drivers/tty/Kconfig	2019-04-12 12:13:08.766141664 +0200
-@@ -84,7 +84,6 @@ config HW_CONSOLE
- config VT_HW_CONSOLE_BINDING
-        bool "Support for binding and unbinding console drivers"
-        depends on HW_CONSOLE
--       default n
-        ---help---
-          The virtual terminal is the device that interacts with the physical
-          terminal through console drivers. On these systems, at least one
-@@ -313,7 +312,6 @@ config N_GSM
- config TRACE_ROUTER
- 	tristate "Trace data router for MIPI P1149.7 cJTAG standard"
- 	depends on TRACE_SINK
--	default n
- 	help
- 	  The trace router uses the Linux tty line discipline framework to
- 	  route trace data coming from a tty port (say UART for example) to
-@@ -329,7 +327,6 @@ config TRACE_ROUTER
- 
- config TRACE_SINK
- 	tristate "Trace data sink for MIPI P1149.7 cJTAG standard"
--	default n
- 	help
- 	  The trace sink uses the Linux line discipline framework to receive
- 	  trace data coming from the trace router line discipline driver
-Index: b/drivers/tty/hvc/Kconfig
-===================================================================
---- a/drivers/tty/hvc/Kconfig	2019-04-12 12:13:09.102141672 +0200
-+++ b/drivers/tty/hvc/Kconfig	2019-04-12 12:13:09.034141670 +0200
-@@ -25,7 +25,6 @@ config HVC_CONSOLE
- config HVC_OLD_HVSI
- 	bool "Old driver for pSeries serial port (/dev/hvsi*)"
- 	depends on HVC_CONSOLE
--	default n
- 
- config HVC_OPAL
- 	bool "OPAL Console support"
-@@ -74,7 +73,6 @@ config HVC_UDBG
-        bool "udbg based fake hypervisor console"
-        depends on PPC
-        select HVC_DRIVER
--       default n
-        help
-          This is meant to be used during HW bring up or debugging when
- 	 no other console mechanism exist but udbg, to get you a quick
-Index: b/drivers/tty/serial/Kconfig
-===================================================================
---- a/drivers/tty/serial/Kconfig	2019-04-12 12:13:09.102141672 +0200
-+++ b/drivers/tty/serial/Kconfig	2019-04-12 12:13:09.070141671 +0200
-@@ -370,7 +370,6 @@ config SERIAL_MAX310X
- 	depends on SPI_MASTER
- 	select SERIAL_CORE
- 	select REGMAP_SPI if SPI_MASTER
--	default n
- 	help
- 	  This selects support for an advanced UART from Maxim (Dallas).
- 	  Supported ICs are MAX3107, MAX3108, MAX3109, MAX14830.
-@@ -653,7 +652,6 @@ config SERIAL_MUX_CONSOLE
- config PDC_CONSOLE
- 	bool "PDC software console support"
- 	depends on PARISC && !SERIAL_MUX && VT
--	default n
- 	help
- 	  Saying Y here will enable the software based PDC console to be 
- 	  used as the system console.  This is useful for machines in 
-@@ -1110,7 +1108,6 @@ config SERIAL_QE
- 	depends on QUICC_ENGINE
- 	select SERIAL_CORE
- 	select FW_LOADER
--	default n
- 	help
- 	  This driver supports the QE serial ports on Freescale embedded
- 	  PowerPC that contain a QUICC Engine.
+RnJvbTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KDQpIZWxs
+bywNCg0KVGhpcyBzZXJpZXMgaW5jbHVkZXMgc29tZSBmaXhlcyBmb3IgdGhlIGF0bWVsLWlzYyBt
+ZWRpYSBkcml2ZXIuDQoNCkFzIHJlcXVlc3RlZCBieSBIYW5zICwgY3JlYXRlZCBhIGZpcnN0IHNl
+cmllcyBvZiBvbmx5IGZpeGVzLA0KdGhlIHBhdGNoZXMgYXJlIHRoZSBzYW1lIGFzIGluIHRoZSBw
+cmV2aW91cyBwYXRjaCBzZXJpZXMsIGJ1dCByZW1vdmVkDQp0aGUgb25lIHdpdGggc2FmZSBjaGVj
+a3M6IEhhbnMgc2FpZCBpdCdzIG92ZXJraWxsLg0KDQpBbm90aGVyIHNlcmllcyBiYXNlZCBvbiB0
+aGlzIG9uZSBJIHdpbGwgc2VuZCBzb29uIHdpdGggdGhlIG5ldyBmZWF0dXJlIHNldCwNCnJld29y
+a2VkIGJhc2VkIG9uIEhhbnMnIHJldmlldy4NCg0KVGhhbmtzICENCg0KRXVnZW4gSHJpc3RldiAo
+Myk6DQogIG1lZGlhOiBhdG1lbDogYXRtZWwtaXNjOiBsaW1pdCBpbmNvbWluZyBwaXhlbHMgcGVy
+IGZyYW1lDQogIG1lZGlhOiBhdG1lbDogYXRtZWwtaXNjOiBmaXggSU5JVF9XT1JLIG1pc3BsYWNl
+bWVudA0KICBtZWRpYTogYXRtZWw6IGF0bWVsLWlzYzogZml4IGFzZCBtZW1vcnkgYWxsb2NhdGlv
+bg0KDQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9hdG1lbC9hdG1lbC1pc2MtcmVncy5oIHwgMTkg
+KysrKysrKysrKysNCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL2F0bWVsL2F0bWVsLWlzYy5jICAg
+ICAgfCA0NiArKysrKysrKysrKysrKysrKysrKysrKystLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDYx
+IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
