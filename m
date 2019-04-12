@@ -2,174 +2,198 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BCC10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6AFC10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9EF21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IYmOOA+V"
+	by mail.kernel.org (Postfix) with ESMTP id 191012084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfDLA6i (ORCPT
+        id S1726720AbfDLBAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:58:38 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:34191 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfDLA6h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:58:37 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190412005834epoutp0168d6a8b7a4ccfd7487145e3bb34e0959~UlDI1ghUs2583725837epoutp013
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 00:58:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190412005834epoutp0168d6a8b7a4ccfd7487145e3bb34e0959~UlDI1ghUs2583725837epoutp013
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555030714;
-        bh=vKSoFW2zwZcUclRwrPJJfW0HdEH+OTQjHoyIwUvQqEw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IYmOOA+Vwn8hUIU/FoXLcDq6C1PL/2jbN42ZCM9SDjr7oo4So718dX4x1ONG4vY8f
-         Zn0cD+/DLEt1gA2alhnWoqZUN/jJJfdULEFToz0jFUT/F7qRnIW2L8rw1cOMs1e6sL
-         yJPliIhCh7Y7YzkvEYBHwsnIQwCcTIm9pZUO8iyM=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190412005832epcas1p2561040aa30b44a3535c05f5827a59eea~UlDGlpvM31678516785epcas1p2J;
-        Fri, 12 Apr 2019 00:58:32 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        67.BF.04139.8B2EFAC5; Fri, 12 Apr 2019 09:58:32 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190412005832epcas1p11b1351c142ccce92759a0959f95b37c0~UlDGT1Lm81541715417epcas1p1T;
-        Fri, 12 Apr 2019 00:58:32 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190412005831epsmtrp27023528758a8f6bf938a94301a2bb450~UlDGTE3rq0981909819epsmtrp2J;
-        Fri, 12 Apr 2019 00:58:31 +0000 (GMT)
-X-AuditID: b6c32a35-973ff7000000102b-b7-5cafe2b8a007
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        42.37.03662.7B2EFAC5; Fri, 12 Apr 2019 09:58:31 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190412005831epsmtip149f5a594696e24b3a28728553c66a956~UlDGLDQWs1973419734epsmtip12;
-        Fri, 12 Apr 2019 00:58:31 +0000 (GMT)
-Subject: Re: [PATCH v2] extcon: axp288: Add a depends on ACPI to the Kconfig
- entry
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     myungjoo.ham@samsung.com, wens@csie.org, hdegoede@redhat.com,
-        rjw@rjwysocki.net,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Organization: Samsung Electronics
-Message-ID: <df1f3722-28a1-30eb-7dbf-e4d4586c9bc3@samsung.com>
-Date:   Fri, 12 Apr 2019 09:59:21 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Thu, 11 Apr 2019 21:00:24 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6179 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfDLBAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 21:00:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 18:00:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,339,1549958400"; 
+   d="scan'208";a="163575406"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2019 17:55:19 -0700
+Subject: Re: [PATCH v14 1/3] /proc/pid/status: Add support for architecture
+ specific output
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, aubrey.li@intel.com,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190410015326.24500-1-aubrey.li@linux.intel.com>
+ <CALCETrWV9SVDGQmzvZuub4aOPGyVqx7gPdk6D0s2_7j471jT_g@mail.gmail.com>
+ <89957461-ec42-f041-a7e9-2452b2e83d39@linux.intel.com>
+ <CALCETrWD4H8zZVD+Mk+=1VWmYNWx=aC7w+LOi8KqoSpAFgD--Q@mail.gmail.com>
+ <d9e9f68e-e8bb-7e53-9909-d86f5f73f617@linux.intel.com>
+ <39318cc8-340f-5366-f1d6-e7dcbb6ba595@linux.intel.com>
+ <CALCETrUPHg8b-aRpo3NhaedGMJgQxOJjgQN_9fjubnDWEzo+aA@mail.gmail.com>
+ <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <3507770f-9004-458a-98c3-5c1884ac57ef@linux.intel.com>
+Date:   Fri, 12 Apr 2019 08:55:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-In-Reply-To: <c11e2ae8-d785-902d-1469-4ff538ebe2ab@samsung.com>
+In-Reply-To: <3c2a8a1a-ed4b-348e-f06f-f71dbf64bbba@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+W2716nNfq7XyaLmjYoEbbe1usZmg6QGRQj5R5SmF71M2eOO
-        3U3KCAojy9QeWqEWRWJvmKnFEnS1XmqWlkgP6YEZPYhZrdf+6HGv18j/Pr/zO99zzvf3O2ql
-        tolMUhe7vJzHxTooMk519eYifWpg2J+j73+PmY93jymYs50HEDPQfpxkhnadI5nee48I5tTl
-        YcREQ30KS4y1efgiYR3tHCStbYPlKmt12wVkjbTMySI22U1FHFvIeXScq4AvLHbZzNTaDXmr
-        8ozL9HQqnc4sp3Qu1smZqcx1Wamrix3iGJSuhHX4xFAWKwjU4gyTh/d5OV0RL3jNFOcudLjT
-        3WkC6xR8LltaAe9cQev1S4xiYr69KNxahdzRSVv91bXKnehGXAWKVQNeCk/6ekmJtTiAYORd
-        bAWKE/kLgvbafTHy4TuCQPlB1T/F6boulXzRgeDhnheEfBhFUNV6TZSo1VNwNvzq1UkCEqdA
-        8N0TUsqZivciGG0MEdKFEpugsb8HSTwZJ8Pgz9djrMEZcKL569hMKjwfztQOKiSehjfCyzvN
-        hJyTCN11I2MTxeKVUNG3WyHXnAHPRk6O81wou9KglBoDjpBw++nRGNlCJkTLBgiZp8CHu23j
-        8SSIhDtImbfD+e5bpCwWp24L9o8LDBBsqlFILpV4EfjbF8vNEiD8rZKQwoA1sHePVs6eBwOv
-        nitkngmN5fvGy1uh4tcPdBAl10+wUz/BQv0EC/X/m51CqgtoOucWnDZOoN30xN9uQWMrmmIM
-        oNoH60IIqxE1SXPO5M/REmyJsM0ZQqBWUlM12SoxpClkt5VyHj7P43NwQggZxdc+pEyaVsCL
-        C+/y5tHGJQaDgVlKLzPSNDVD47esytFiG+vl7Bzn5jz/dAp1bNJOZCQfh8/wlU8/1/x+Yw+v
-        Lu379P3Sl/1N+c7AkeKtpu5Ke9SQaA5mXvzxwVJl4l7M2vIx7dB6pmFBfFfuz8o1XZHsryOz
-        c5OPP/R1ZJwFW1Z0B295GyxLyEyGE+U9B+LN82/Nul9a0pM+VP28WXs4fmieJe4N/2fzwrKZ
-        kdbrRP4QpRKKWDpF6RHYvxsqWZC4AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSnO72R+tjDM51W1m8OT6dyWL5vn5G
-        i8u75rBZ3G5cwWZx5vQlVosFGx8xWvw8dJ7Jgd1jw6PVrB7v911l89hytZ3Fo2/LKkaPz5vk
-        AlijuGxSUnMyy1KL9O0SuDLebe5lLPjJU7G+bwpzA+NBri5GTg4JAROJRTNPsHQxcnEICexm
-        lPjQfIkFIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBI7ulcxgsSFBUIk/p5RAClnE9CS2P/iBhtI
-        jYhAB6PEomVX2UESzAI2EosvnGKEaP7CKNF+dj0zSIJfQFHi6o/HjCA2r4CdxNwNX9hAbBYB
-        VYllU64ygdiiAhESZ96vYIGoEZQ4OfMJmM0pYC/Rdb6FCWKBusSfeZeYIWxxiVtP5kPF5SWa
-        t85mnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZw
-        PGlp7WA8cSL+EKMAB6MSD+8Km/UxQqyJZcWVuYcYJTiYlUR4Q1iAQrwpiZVVqUX58UWlOanF
-        hxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhjNH385p8+ZXGuU4RF4XqHr5esHnjP4
-        447usT+5oCgtqTT41Quuy7Of/56ybe3r9wVcIirqHAcslvu/bpmqY9W1m8/pqLTBgdADbJs+
-        zuzqKmj84H9+/nr5jndl81QDf2zakWATHHRb3y0tcuLVF8t3p+/RYl0qdsd81nrj6tkzFtm9
-        vhJodldciaU4I9FQi7moOBEAvGUKiqMCAAA=
-X-CMS-MailID: 20190412005832epcas1p11b1351c142ccce92759a0959f95b37c0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633
-References: <20190404104222.23900-1-yuehaibing@huawei.com>
-        <CGME20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633@epcas1p1.samsung.com>
-        <20190404141748.27048-1-yuehaibing@huawei.com>
-        <c11e2ae8-d785-902d-1469-4ff538ebe2ab@samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
- 
-+ stable@vger.kernel.org 
- 
-It should be posted to stable@vger.kernel.org
-in order to merge it to stable tree.
- 
-Regards,
-Chanwoo Choi
-
-
-On 19. 4. 12. 오전 8:30, Chanwoo Choi wrote:
-> On 19. 4. 4. 오후 11:17, Yue Haibing wrote:
->> From: YueHaibing <yuehaibing@huawei.com>
+On 2019/4/11 9:02, Li, Aubrey wrote:
+> On 2019/4/10 22:54, Andy Lutomirski wrote:
+>> On Tue, Apr 9, 2019 at 8:40 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>>>
+>>> On 2019/4/10 10:36, Li, Aubrey wrote:
+>>>> On 2019/4/10 10:25, Andy Lutomirski wrote:
+>>>>> On Tue, Apr 9, 2019 at 7:20 PM Li, Aubrey <aubrey.li@linux.intel.com> wrote:
+>>>>>>
+>>>>>> On 2019/4/10 9:58, Andy Lutomirski wrote:
+>>>>>>> On Tue, Apr 9, 2019 at 6:55 PM Aubrey Li <aubrey.li@linux.intel.com> wrote:
+>>>>>>>>
+>>>>>>>> The architecture specific information of the running processes could
+>>>>>>>> be useful to the userland. Add support to examine process architecture
+>>>>>>>> specific information externally.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+>>>>>>>> Cc: Peter Zijlstra <peterz@infradead.org>
+>>>>>>>> Cc: Andi Kleen <ak@linux.intel.com>
+>>>>>>>> Cc: Tim Chen <tim.c.chen@linux.intel.com>
+>>>>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
+>>>>>>>> Cc: Arjan van de Ven <arjan@linux.intel.com>
+>>>>>>>> Cc: Linux API <linux-api@vger.kernel.org>
+>>>>>>>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+>>>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>>>>> ---
+>>>>>>>>  fs/proc/array.c         | 5 +++++
+>>>>>>>>  include/linux/proc_fs.h | 2 ++
+>>>>>>>>  2 files changed, 7 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+>>>>>>>> index 2edbb657f859..331592a61718 100644
+>>>>>>>> --- a/fs/proc/array.c
+>>>>>>>> +++ b/fs/proc/array.c
+>>>>>>>> @@ -401,6 +401,10 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>>>>>>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>> +void __weak arch_proc_pid_status(struct seq_file *m, struct task_struct *task)
+>>>>>>>> +{
+>>>>>>>> +}
+>>>>>>>
+>>>>>>> This pointlessly bloats other architectures.  Do this instead in an
+>>>>>>> appropriate header:
+>>>>>>>
+>>>>>>> #ifndef arch_proc_pid_status
+>>>>>>> static inline void arch_proc_pid_status(...)
+>>>>>>> {
+>>>>>>> }
+>>>>>>> #endif
+>>>>>>>
+>>>>>>
+>>>>>> I saw a bunch of similar weak functions, is it not acceptable?
+>>>>>>
+>>>>>> fs/proc$ grep weak *.c
+>>>>>> cpuinfo.c:__weak void arch_freq_prepare_all(void)
+>>>>>> meminfo.c:void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
+>>>>>> vmcore.c:int __weak elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size)
+>>>>>> vmcore.c:void __weak elfcorehdr_free(unsigned long long addr)
+>>>>>> vmcore.c:ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>>>>>> vmcore.c:ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+>>>>>> vmcore.c:int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+>>>>>> vmcore.c:ssize_t __weak
+>>>>>
+>>>>> I think they're acceptable, but I don't personally like them.
+>>>>>
+>>>>
+>>>> okay, let me try to see if I can refine it in an appropriate way.
+>>>
+>>> Hi Andy,
+>>>
+>>> Is this what you want?
+>>>
+>>> Thanks,
+>>> -Aubrey
+>>>
+>>> ====================================================================
+>>> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+>>> index 2bb3a648fc12..82d77d3aefff 100644
+>>> --- a/arch/x86/include/asm/processor.h
+>>> +++ b/arch/x86/include/asm/processor.h
+>>> @@ -990,5 +990,8 @@ enum l1tf_mitigations {
+>>>  };
+>>>
+>>>  extern enum l1tf_mitigations l1tf_mitigation;
+>>> +/* Add support for architecture specific output in /proc/pid/status */
+>>> +void arch_proc_pid_status(struct seq_file *m, struct task_struct *task);
+>>> +#define arch_proc_pid_status arch_proc_pid_status
+>>>
+>>>  #endif /* _ASM_X86_PROCESSOR_H */
+>>> diff --git a/fs/proc/array.c b/fs/proc/array.c
+>>> index 2edbb657f859..fd65a6ba2864 100644
+>>> --- a/fs/proc/array.c
+>>> +++ b/fs/proc/array.c
+>>> @@ -401,6 +401,11 @@ static inline void task_thp_status(struct seq_file *m, struct mm_struct *mm)
+>>>         seq_printf(m, "THP_enabled:\t%d\n", thp_enabled);
+>>>  }
+>>>
+>>> +/* Add support for architecture specific output in /proc/pid/status */
+>>> +#ifndef arch_proc_pid_status
+>>> +#define arch_proc_pid_status(m, task)
+>>> +#endif
+>>> +
+>>>  int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>>>                         struct pid *pid, struct task_struct *task)
+>>>  {
+>>> @@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+>>>         task_cpus_allowed(m, task);
+>>>         cpuset_task_status_allowed(m, task);
+>>>         task_context_switch_counts(m, task);
+>>> +       arch_proc_pid_status(m, task);
+>>>         return 0;
+>>>  }
+>>>
 >>
->> As Hans de Goede pointed, using this driver without ACPI
->> makes little sense, so add ACPI dependency to Kconfig entry
->> to fix a build error while CONFIG_ACPI is not set.
+>> Yes.  But I still think it would be nicer to separate the arch stuff
+>> into its own file.  Others might reasonably disagree with me.
 >>
->> drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
->> drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
->>     put_device(&adev->dev);
->>
->> Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Suggested-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->> v2: rework patch
->> ---
->>  drivers/extcon/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->> index 1ed4b45..de06faf 100644
->> --- a/drivers/extcon/Kconfig
->> +++ b/drivers/extcon/Kconfig
->> @@ -30,7 +30,7 @@ config EXTCON_ARIZONA
->>  
->>  config EXTCON_AXP288
->>  	tristate "X-Power AXP288 EXTCON support"
->> -	depends on MFD_AXP20X && USB_SUPPORT && X86
->> +	depends on MFD_AXP20X && USB_SUPPORT && X86 && ACPI
->>  	select USB_ROLE_SWITCH
->>  	help
->>  	  Say Y here to enable support for USB peripheral detection
->>
+> I like arch_status, I proposed but no other arch shows interesting in it.
 > 
-> Applied it. Thanks.
+> I think the problem is similar for x86_status, it does not make sense for
+> those x86 platform without AVX512 to have an empty arch file. I personally
+> don't like [arch]_status because the code may become unclean if more arches
+> added in future.
 > 
+> Maybe it's too early to have a separated arch staff file for now.
 
+Hi Andy,
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Is it acceptable to you if I make the above change and post v15?
+
+Thanks,
+-Aubrey
