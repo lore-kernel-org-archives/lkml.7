@@ -2,129 +2,161 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18808C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24332C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92A22084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555111270;
-	bh=AE9f2pHcHkK0L4rZHgqYjhFucbpRz971YcYWLtEL7IE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hRreEIUwyr2KKlQIgA2CdaPTbpzp1vGFXqPjrKyQ4GhEqyixKUhlzQYfsHlEPf8ar
-	 X44RqOY/anilkruLsMbg0+w5FyhYQBJ3i4kmdgepoqtBbmOk7BFbA3JIFKdPWh+4cq
-	 fF57a3m8tiN3CM1hJm11hqddjLXHODeyGhm4JVPg=
+	by mail.kernel.org (Postfix) with ESMTP id DDFC22084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="iEZNn4kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfDLXVJ (ORCPT
+        id S1727092AbfDLXWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 19:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726624AbfDLXVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 19:21:09 -0400
-Received: from mail.kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C3582084D;
-        Fri, 12 Apr 2019 23:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555111268;
-        bh=AE9f2pHcHkK0L4rZHgqYjhFucbpRz971YcYWLtEL7IE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z5tcUlxGHYRlKeVNM5uuOV3KhTr+P2SMI3Ln93RBAP8aEFMBwDGiz7+lAMWGG35kj
-         FN6Ol+e47AyGXhQkx5YB+As2pOaRA/F6eajGxs/rnDfq7i3YNCTPacqGjrhydcpa2c
-         eKRf9olqk0ASq91lATuMT4F9AugX9ygLpZcE6pPo=
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk fixes for v5.1-rc4
-Date:   Fri, 12 Apr 2019 16:21:07 -0700
-Message-Id: <20190412232107.26830-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Fri, 12 Apr 2019 19:22:23 -0400
+Received: from ushosting.nmnhosting.com ([167.160.173.127]:51956 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfDLXWW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 19:22:22 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 17C3B2F28FBB;
+        Fri, 12 Apr 2019 19:22:16 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1555111337;
+        bh=C/7DEoX+0dM2fBJEvDkBmqJTxKMw1A5TTNNG1efLpXk=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=iEZNn4kRjBwcGYwsoTcmeSXFn73PNLUud7QhtmvuwgtsgfvlhqagT9OdctWgBo71G
+         jPgDD/CFQTbbUPPuyL56Ih+Zezuem++Ov3MP4OPmSof5JW7E/E3FMT24T1v+QyxM33
+         0VJdcn9JrElQ+vrx6NaSY2c6XEpn5iPuVrWqvLACFNwmWIX8br4Li7cNZKuJ1QMXis
+         Pq4/7lrAd/jPTvQJ4HreuYlbUmLtKIVcLZ5v5eLam2nZpzB4PuP6DjdvS3njAqr3cf
+         KmsmK/QcpFyVZ/W6NlbagwWIGB+Y6ItPv9LXcE/s7Y1CCPA3GJ5CkJ5vvjpY9e03yL
+         CfBSjh25mWXNYbgGfXHubhCiQXRm5o3HbvS2m+MoBgkpQMoD2yJe0DKrFEyzTeXAJ2
+         EwzTGZRoPa/M+6JsvTJQv6MnCWtUTIEvJxvIX2ck7bi1UIsZEO5zygTYdRpzuIRlx5
+         mlYyqr/OKm58DopDQrBYLdavWiimGK2B2BoYowL41Ebw1APYhvoPhhbAftO0rHbydF
+         fuy0TkV4HVIIoJ0vhEhCPHaxKLmuXotppHxH1OXl88IL+E0k279HUrAO0fouyNM2mG
+         Z/7kL13pSPDK7ShAyUvDIOV7A4U+BCEhGI+R/HRqJddJMhvUlOB23NjxShVYeOP8ks
+         mJc86FcoP7OdWrfstV4ZHcAo=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3CNM6AG018805
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Sat, 13 Apr 2019 09:22:06 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Petr Mladek'" <pmladek@suse.com>
+Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
+        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
+        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
+        "'David Airlie'" <airlied@linux.ie>,
+        "'Daniel Vetter'" <daniel@ffwll.ch>,
+        "'Karsten Keil'" <isdn@linux-pingi.de>,
+        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
+        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
+        "'Kalle Valo'" <kvalo@codeaurora.org>,
+        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
+        "'Benson Leung'" <bleung@chromium.org>,
+        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
+        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
+        "'Steven Rostedt'" <rostedt@goodmis.org>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-2-alastair@au1.ibm.com> <20190412134802.kprel2c2iqijd4ai@pathway.suse.cz>
+In-Reply-To: <20190412134802.kprel2c2iqijd4ai@pathway.suse.cz>
+Subject: RE: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
+Date:   Sat, 13 Apr 2019 09:22:05 +1000
+Message-ID: <092f01d4f186$8e9e7cd0$abdb7670$@d-silva.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AHAzoGyAvGIFSOjiHU+kA==
+Content-Language: en-au
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Sat, 13 Apr 2019 09:22:12 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> -----Original Message-----
+> From: Petr Mladek <pmladek@suse.com>
+> Sent: Friday, 12 April 2019 11:48 PM
+> To: Alastair D'Silva <alastair@au1.ibm.com>
+> Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>;
+Joonas
+> Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
+> <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
+> <daniel@ffwll.ch>; Karsten Keil <isdn@linux-pingi.de>; Jassi Brar
+> <jassisinghbrar@gmail.com>; Tom Lendacky <thomas.lendacky@amd.com>;
+> David S. Miller <davem@davemloft.net>; Jose Abreu
+> <Jose.Abreu@synopsys.com>; Kalle Valo <kvalo@codeaurora.org>;
+> Stanislaw Gruszka <sgruszka@redhat.com>; Benson Leung
+> <bleung@chromium.org>; Enric Balletbo i Serra
+> <enric.balletbo@collabora.com>; James E.J. Bottomley
+> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
+> <viro@zeniv.linux.org.uk>; Sergey Senozhatsky
+> <sergey.senozhatsky@gmail.com>; Steven Rostedt <rostedt@goodmis.org>;
+> Andrew Morton <akpm@linux-foundation.org>; intel-
+> gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org;
+> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
+> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
+> Subject: Re: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
+> 
+> On Wed 2019-04-10 13:17:17, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> >
+> > With modern high resolution screens, we can display more data, which
+> > makes life a bit easier when debugging.
+> 
+> I have quite some doubts about this feature.
+> 
+> We are talking about more than 256 characters per-line. I wonder if such a
+> long line is really easier to read for a human.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+It's basically 2 separate panes of information side by side, the hexdump and
+the ASCII version.
 
-are available in the Git repository at:
+I'm using this myself when dealing with the pmem labels, and it works quite
+nicely.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+> 
+> I am not expert but there is a reason why the standard is 80 characters
+per-
+> line. I guess that anything above 100 characters is questionable.
+> https://en.wikipedia.org/wiki/Line_length
+> somehow confirms that.
+> 
+> Second, if we take 8 pixels per-character. Then we need
+> 2048 to show the 256 characters. It is more than HD.
+> IMHO, there is still huge number of people that even do not have HD
+display,
+> especially on a notebook.
 
-for you to fetch changes up to f89b9e1be7da8bb0aac667a0206a00975cefe6d3:
-
-  clk: imx: Fix PLL_1416X not rounding rates (2019-04-12 14:21:43 -0700)
-
-----------------------------------------------------------------
-Here's more than a handful of clk driver fixes for changes that came in
-during the merge window:
-
- - Fix the AT91 sama5d2 programmable clk prescaler formula
-
- - A bunch of Amlogic meson clk driver fixes for the VPU clks
-
- - A DMI quirk for Intel's Bay Trail SoC's driver to properly mark
-   pmc clks as critical only when really needed
-
- - Stop overwriting CLK_SET_RATE_PARENT flag in mediatek's clk gate
-   implementation
-
- - Use the right structure to test for a frequency table in i.MX's
-   PLL_1416x driver
-
-----------------------------------------------------------------
-David Müller (1):
-      clk: x86: Add system specific quirk to mark clocks as critical
-
-Leonard Crestez (1):
-      clk: imx: Fix PLL_1416X not rounding rates
-
-Martin Blumenstingl (1):
-      clk: meson: pll: fix rounding and setting a rate that matches precisely
-
-Matthias Wieloch (1):
-      clk: at91: fix programmable clock for sama5d2
-
-Maxime Jourdan (2):
-      clk: meson-gxbb: round the vdec dividers to closest
-      clk: meson: g12a: fix VPU clock muxes mask
-
-Neil Armstrong (2):
-      clk: meson-g12a: fix VPU clock parents
-      clk: meson: vid-pll-div: remove warning and return 0 on invalid config
-
-Stephen Boyd (3):
-      Merge tag 'meson-clk-fixes-for-5.1' of https://github.com/BayLibre/clk-meson into clk-fixes
-      Merge tag 'meson-clk-fixes-for-5.1-v2' of https://github.com/BayLibre/clk-meson into clk-fixes
-      platform/x86: pmc_atom: Drop __initconst on dmi table
-
-Weiyi Lu (1):
-      clk: mediatek: fix clk-gate flag setting
-
- drivers/clk/at91/clk-programmable.c            | 57 +++++++++++++++++++-------
- drivers/clk/at91/pmc.h                         |  2 +
- drivers/clk/at91/sama5d2.c                     | 10 ++++-
- drivers/clk/imx/clk-pll14xx.c                  |  2 +-
- drivers/clk/mediatek/clk-gate.c                |  3 +-
- drivers/clk/meson/clk-pll.c                    |  2 +-
- drivers/clk/meson/g12a.c                       |  6 +--
- drivers/clk/meson/gxbb.c                       |  2 +
- drivers/clk/meson/vid-pll-div.c                |  4 +-
- drivers/clk/x86/clk-pmc-atom.c                 | 14 +++++--
- drivers/platform/x86/pmc_atom.c                | 21 ++++++++++
- include/linux/platform_data/x86/clk-pmc-atom.h |  3 ++
- 12 files changed, 99 insertions(+), 27 deletions(-)
+The intent is to make debugging easier when dealing with large chunks of
+binary data. I don't expect end users to see this output.
 
 -- 
-Sent by a computer through tubes
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+
+
+
