@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F36FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C6EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00CB2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01352083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:37:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfDLHhU (ORCPT
+        id S1727232AbfDLHhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:37:20 -0400
-Received: from mx.socionext.com ([202.248.49.38]:45667 "EHLO mx.socionext.com"
+        Fri, 12 Apr 2019 03:37:24 -0400
+Received: from mx.socionext.com ([202.248.49.38]:45670 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfDLHhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:37:20 -0400
+        id S1727204AbfDLHhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 03:37:21 -0400
 Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 12 Apr 2019 16:37:18 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id B2336180C0E;
-        Fri, 12 Apr 2019 16:37:18 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 12 Apr 2019 16:37:18 +0900
+  by mx.socionext.com with ESMTP; 12 Apr 2019 16:37:20 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3014C180C0E;
+        Fri, 12 Apr 2019 16:37:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 12 Apr 2019 16:37:20 +0900
 Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 4F6CA40372;
-        Fri, 12 Apr 2019 16:37:18 +0900 (JST)
+        by iyokan.css.socionext.com (Postfix) with ESMTP id BC5A240372;
+        Fri, 12 Apr 2019 16:37:19 +0900 (JST)
 Received: from M20VSDK.e01.socionext.com (unknown [10.213.118.34])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 3C501120499;
-        Fri, 12 Apr 2019 16:37:18 +0900 (JST)
+        by yuzu.css.socionext.com (Postfix) with ESMTP id A80ED120499;
+        Fri, 12 Apr 2019 16:37:19 +0900 (JST)
 From:   Sugaya Taichi <sugaya.taichi@socionext.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -41,9 +41,9 @@ Cc:     Takao Orito <orito.takao@socionext.com>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Sugaya Taichi <sugaya.taichi@socionext.com>
-Subject: [PATCH v2 2/3] clocksource/drivers/timer-milbeaut: Add shutdown function
-Date:   Fri, 12 Apr 2019 16:36:50 +0900
-Message-Id: <1555054611-23566-3-git-send-email-sugaya.taichi@socionext.com>
+Subject: [PATCH v2 3/3] clocksource/drivers/timer-milbeaut: Cleanup common register accesses
+Date:   Fri, 12 Apr 2019 16:36:51 +0900
+Message-Id: <1555054611-23566-4-git-send-email-sugaya.taichi@socionext.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1555054611-23566-1-git-send-email-sugaya.taichi@socionext.com>
 References: <1555054611-23566-1-git-send-email-sugaya.taichi@socionext.com>
@@ -52,40 +52,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a shutdown operation to support shutdown timer.
+Aggregate common register accesses into shared functions for
+maintainability.
 
 Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 ---
- drivers/clocksource/timer-milbeaut.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clocksource/timer-milbeaut.c | 62 +++++++++++++++++++++++-------------
+ 1 file changed, 39 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/clocksource/timer-milbeaut.c b/drivers/clocksource/timer-milbeaut.c
-index 9fd5d08..f478061 100644
+index f478061..fa9fb4e 100644
 --- a/drivers/clocksource/timer-milbeaut.c
 +++ b/drivers/clocksource/timer-milbeaut.c
-@@ -85,6 +85,15 @@ static int mlb_set_state_oneshot(struct clock_event_device *clk)
+@@ -26,8 +26,8 @@
+ #define MLB_TMR_TMCSR_CSL_DIV2	0
+ #define MLB_TMR_DIV_CNT		2
+ 
+-#define MLB_TMR_SRC_CH  (1)
+-#define MLB_TMR_EVT_CH  (0)
++#define MLB_TMR_SRC_CH		1
++#define MLB_TMR_EVT_CH		0
+ 
+ #define MLB_TMR_SRC_CH_OFS	(MLB_TMR_REGSZPCH * MLB_TMR_SRC_CH)
+ #define MLB_TMR_EVT_CH_OFS	(MLB_TMR_REGSZPCH * MLB_TMR_EVT_CH)
+@@ -43,6 +43,8 @@
+ #define MLB_TMR_EVT_TMRLR2_OFS	(MLB_TMR_EVT_CH_OFS + MLB_TMR_TMRLR2_OFS)
+ 
+ #define MLB_TIMER_RATING	500
++#define MLB_TIMER_ONESHOT	0
++#define MLB_TIMER_PERIODIC	1
+ 
+ static irqreturn_t mlb_timer_interrupt(int irq, void *dev_id)
+ {
+@@ -59,38 +61,53 @@ static irqreturn_t mlb_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int mlb_set_state_periodic(struct clock_event_device *clk)
++static void mlb_evt_timer_start(struct timer_of *to, bool periodic)
+ {
+-	struct timer_of *to = to_timer_of(clk);
+ 	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
+ 
++	val |= MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_TRG | MLB_TMR_TMCSR_INTE;
++	if (periodic)
++		val |= MLB_TMR_TMCSR_RELD;
+ 	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
++}
++
++static void mlb_evt_timer_stop(struct timer_of *to)
++{
++	u32 val = readl_relaxed(timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
+ 
+-	writel_relaxed(to->of_clk.period, timer_of_base(to) +
+-				MLB_TMR_EVT_TMRLR1_OFS);
+-	val |= MLB_TMR_TMCSR_RELD | MLB_TMR_TMCSR_CNTE |
+-		MLB_TMR_TMCSR_TRG | MLB_TMR_TMCSR_INTE;
++	val &= ~MLB_TMR_TMCSR_CNTE;
+ 	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
++}
++
++static void mlb_evt_timer_register_count(struct timer_of *to, unsigned long cnt)
++{
++	writel_relaxed(cnt, timer_of_base(to) + MLB_TMR_EVT_TMRLR1_OFS);
++}
++
++static int mlb_set_state_periodic(struct clock_event_device *clk)
++{
++	struct timer_of *to = to_timer_of(clk);
++
++	mlb_evt_timer_stop(to);
++	mlb_evt_timer_register_count(to, to->of_clk.period);
++	mlb_evt_timer_start(to, MLB_TIMER_PERIODIC);
  	return 0;
  }
  
-+static int mlb_set_state_shutdown(struct clock_event_device *clk)
-+{
-+	struct timer_of *to = to_timer_of(clk);
+ static int mlb_set_state_oneshot(struct clock_event_device *clk)
+ {
+ 	struct timer_of *to = to_timer_of(clk);
+-	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
+ 
+-	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
+-	val |= MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_TRG | MLB_TMR_TMCSR_INTE;
+-	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
++	mlb_evt_timer_stop(to);
++	mlb_evt_timer_start(to, MLB_TIMER_ONESHOT);
+ 	return 0;
+ }
+ 
+ static int mlb_set_state_shutdown(struct clock_event_device *clk)
+ {
+ 	struct timer_of *to = to_timer_of(clk);
+-	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
+ 
+-	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
++	mlb_evt_timer_stop(to);
+ 	return 0;
+ }
+ 
+@@ -99,22 +116,21 @@ static int mlb_clkevt_next_event(unsigned long event,
+ {
+ 	struct timer_of *to = to_timer_of(clk);
+ 
+-	writel_relaxed(event, timer_of_base(to) + MLB_TMR_EVT_TMRLR1_OFS);
+-	writel_relaxed(MLB_TMR_TMCSR_CSL_DIV2 |
+-			MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_INTE |
+-			MLB_TMR_TMCSR_TRG, timer_of_base(to) +
+-			MLB_TMR_EVT_TMCSR_OFS);
++	mlb_evt_timer_stop(to);
++	mlb_evt_timer_register_count(to, event);
++	mlb_evt_timer_start(to, MLB_TIMER_ONESHOT);
+ 	return 0;
+ }
+ 
+ static int mlb_config_clock_source(struct timer_of *to)
+ {
+-	writel_relaxed(0, timer_of_base(to) + MLB_TMR_SRC_TMCSR_OFS);
+-	writel_relaxed(~0, timer_of_base(to) + MLB_TMR_SRC_TMR_OFS);
 +	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
 +
-+	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
-+	return 0;
-+}
-+
- static int mlb_clkevt_next_event(unsigned long event,
- 				   struct clock_event_device *clk)
- {
-@@ -125,6 +134,7 @@ static int mlb_config_clock_event(struct timer_of *to)
- 		.features = CLOCK_EVT_FEAT_DYNIRQ | CLOCK_EVT_FEAT_ONESHOT,
- 		.set_state_oneshot = mlb_set_state_oneshot,
- 		.set_state_periodic = mlb_set_state_periodic,
-+		.set_state_shutdown = mlb_set_state_shutdown,
- 		.set_next_event = mlb_clkevt_next_event,
- 	},
++	writel_relaxed(val, timer_of_base(to) + MLB_TMR_SRC_TMCSR_OFS);
+ 	writel_relaxed(~0, timer_of_base(to) + MLB_TMR_SRC_TMRLR1_OFS);
+ 	writel_relaxed(~0, timer_of_base(to) + MLB_TMR_SRC_TMRLR2_OFS);
+-	writel_relaxed(BIT(4) | BIT(1) | BIT(0), timer_of_base(to) +
+-		MLB_TMR_SRC_TMCSR_OFS);
++	val |= MLB_TMR_TMCSR_RELD | MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_TRG;
++	writel_relaxed(val, timer_of_base(to) + MLB_TMR_SRC_TMCSR_OFS);
+ 	return 0;
+ }
  
 -- 
 1.9.1
