@@ -2,151 +2,80 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D15EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB93C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CE92084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089712171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfDLKKt (ORCPT
+        id S1727245AbfDLKLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:10:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45253 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfDLKKt (ORCPT
+        Fri, 12 Apr 2019 06:11:09 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:59621 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfDLKLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:10:49 -0400
-Received: from 79.184.255.221.ipv4.supernova.orange.pl (79.184.255.221) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 9e31b47dfc54e54f; Fri, 12 Apr 2019 12:10:45 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3] firmware/psci: add support for SYSTEM_RESET2
-Date:   Fri, 12 Apr 2019 12:10:45 +0200
-Message-ID: <2000694.m04KBuNrDd@kreacher>
-In-Reply-To: <20190412100227.15024-1-sudeep.holla@arm.com>
-References: <20190412100227.15024-1-sudeep.holla@arm.com>
+        Fri, 12 Apr 2019 06:11:09 -0400
+Received: from localhost (alyon-652-1-80-232.w109-213.abo.wanadoo.fr [109.213.223.232])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id CF589240005;
+        Fri, 12 Apr 2019 10:11:06 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 12:11:06 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Joshua Kinard <kumba@gentoo.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] rtc: ds1685: use correct device struct to get
+ platform device struct
+Message-ID: <20190412101106.GU3578@piout.net>
+References: <20190411143323.20945-1-tbogendoerfer@suse.de>
+ <20190411143323.20945-2-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411143323.20945-2-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, April 12, 2019 12:02:27 PM CEST Sudeep Holla wrote:
-> PSCI v1.1 introduced SYSTEM_RESET2 to allow both architectural resets
-> where the semantics are described by the PSCI specification itself as
-> well as vendor-specific resets. Currently only system warm reset
-> semantics is defined as part of architectural resets by the specification.
-> 
-> This patch implements support for SYSTEM_RESET2 by making using of
-> reboot_mode passed by the reboot infrastructure in the kernel.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Hi,
+
+Every patch need a commit message. Maybe you could indicate that this
+never gave any issue because parent is the first member of struct
+device.
+
+On 11/04/2019 16:33:22+0200, Thomas Bogendoerfer wrote:
+> Fixes: aaaf5fbf56f1 ("rtc: add driver for DS1685 family of real time clocks")
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 > ---
->  drivers/firmware/psci.c   | 24 +++++++++++++++++++++++-
->  include/uapi/linux/psci.h |  2 ++
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>  drivers/rtc/rtc-ds1685.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v2->v3:
-> 	- Added else condition so that if SYSTEM_RESET2 fails, it ends
-> 	  up doing a system halt
-> 	- Wrap single statement if..else with braces because of presence
-> 	  of multiple line comment
-> 
-> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-> index c80ec1d03274..c9ea8f38bd42 100644
-> --- a/drivers/firmware/psci.c
-> +++ b/drivers/firmware/psci.c
-> @@ -88,6 +88,7 @@ static u32 psci_function_id[PSCI_FN_MAX];
->  				PSCI_1_0_EXT_POWER_STATE_TYPE_MASK)
-> 
->  static u32 psci_cpu_suspend_feature;
-> +static bool psci_system_reset2_supported;
-> 
->  static inline bool psci_has_ext_power_state(void)
+> diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
+> index 2f5194df239e..929f28375b87 100644
+> --- a/drivers/rtc/rtc-ds1685.c
+> +++ b/drivers/rtc/rtc-ds1685.c
+> @@ -655,7 +655,7 @@ ds1685_rtc_work_queue(struct work_struct *work)
 >  {
-> @@ -253,7 +254,17 @@ static int get_set_conduit_method(struct device_node
-> *np)
+>  	struct ds1685_priv *rtc = container_of(work,
+>  					       struct ds1685_priv, work);
+> -	struct platform_device *pdev = to_platform_device(&rtc->dev->dev);
+> +	struct platform_device *pdev = to_platform_device(rtc->dev->dev.parent);
+>  	struct mutex *rtc_mutex = &rtc->dev->ops_lock;
+>  	u8 ctrl4a, ctrl4b;
+>  
+> -- 
+> 2.13.7
 > 
->  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
->  {
-> -	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
-> +	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
-> +	    psci_system_reset2_supported) {
-> +		/*
-> +		 * reset_type[31] = 0 (architectural)
-> +		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
-> +		 * cookie = 0 (ignored by the implementation)
-> +		 */
-> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
-> +	} else {
-> +		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
-> +	}
->  }
-> 
->  static void psci_sys_poweroff(void)
-> @@ -451,6 +462,16 @@ static const struct platform_suspend_ops
-> psci_suspend_ops = { .enter          = psci_system_suspend_enter,
->  };
-> 
-> +static void __init psci_init_system_reset2(void)
-> +{
-> +	int ret;
-> +
-> +	ret = psci_features(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2));
-> +
-> +	if (ret != PSCI_RET_NOT_SUPPORTED)
-> +		psci_system_reset2_supported = true;
-> +}
-> +
->  static void __init psci_init_system_suspend(void)
->  {
->  	int ret;
-> @@ -588,6 +609,7 @@ static int __init psci_probe(void)
->  		psci_init_smccc();
->  		psci_init_cpu_suspend();
->  		psci_init_system_suspend();
-> +		psci_init_system_reset2();
->  	}
-> 
->  	return 0;
-> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
-> index b3bcabe380da..5b0ba0062541 100644
-> --- a/include/uapi/linux/psci.h
-> +++ b/include/uapi/linux/psci.h
-> @@ -49,8 +49,10 @@
-> 
->  #define PSCI_1_0_FN_PSCI_FEATURES		PSCI_0_2_FN(10)
->  #define PSCI_1_0_FN_SYSTEM_SUSPEND		PSCI_0_2_FN(14)
-> +#define PSCI_1_1_FN_SYSTEM_RESET2		PSCI_0_2_FN(18)
-> 
->  #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
-> +#define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
-> 
->  /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
->  #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
-> --
 
-So I queued up the PSCI series from Ulf which clashes with this patch.
-
-I can take this one too, but I'd rather avoid becoming a PSCI maintainer as a 
-result. :-)
-
-
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
