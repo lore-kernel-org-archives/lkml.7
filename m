@@ -2,94 +2,151 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E422BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D15EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12462084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3XvMB3L"
+	by mail.kernel.org (Postfix) with ESMTP id 07CE92084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfDLKKC (ORCPT
+        id S1727208AbfDLKKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:10:02 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33721 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfDLKKB (ORCPT
+        Fri, 12 Apr 2019 06:10:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45253 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfDLKKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:10:01 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f23so8360084ljc.0;
-        Fri, 12 Apr 2019 03:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7g8hJg8giu60a8Iz1TikpygimYCfB9s7E04Q1bb0ETk=;
-        b=h3XvMB3LAYaJLkOtdcq0GY2Ay1+aRQralk7+KQBW7oLmkWAQjKVP8ryyb5FJ0+jjR5
-         NgfFp8m6K6oy5lSgJF5/OpZFqdI13Ue6Ci2ARp77BQa0V7/+o7Gy0+z0WCV9eSl3tMqa
-         NCNX/8jpUypjm12KAnVlyb15cnu884ripFuhEld/zfSxfOHv+95Bzm1jxWB+6vgLuBfl
-         fXpyaQCF92A6BLW7AZzJ4ofTgzT5yQvYaYzIx3dTvk/fE5xnJ/y6HGdMA17PVg+IS0rl
-         dF+t+Ctmi96E84CtloCvIqGw/llKbPYRD0xVBcqmEq6mWdNhrpT9ifWLNRcH4rscEdly
-         L5nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7g8hJg8giu60a8Iz1TikpygimYCfB9s7E04Q1bb0ETk=;
-        b=irn77fYwmETvnbpJmySCvzKCzgfTuYhx/D7W3UKBS67pR7MoGXLv0mGHDd2S+jwYRS
-         p0sF9JcFoecImiuzsLP+j4qYIyOI+lqs1GIvSK2brNA8LLjgH6W0fqV9lt75fNlZzKyF
-         oXxvYhTtUt9cnlimsCQOQjWpLLEQa/yEVH+GjNwSAyH9h1ew9ND0oITgHS8pLbLvXuTT
-         MSVJ1QBWsW+2A2bH7u2GlXFKPH7oixX0MplEQtA6xAku/3pahWq20/oR1VZCIiz8aybX
-         JCSiRA+tcDqtuOHr1NcR3ImcYqOiv13VKZae4GGbJqQNKom+aOE21Xd7GoPbtOyUpjO1
-         vSlA==
-X-Gm-Message-State: APjAAAV0SSI9yAB7mjZDJhCiFdQxKOjzcv2HdNRruTX7T92YhaVsWUOB
-        P17gpt0s1bfohm3JsPYk3guqzpaA
-X-Google-Smtp-Source: APXvYqxuRxIwDwj+wctn9pVxOAzihA1ZkY1ZBzxZlFu1HLlMPdVfZcPMEUSlMuU28FYQWt2jWxMQBA==
-X-Received: by 2002:a2e:9b48:: with SMTP id o8mr13653349ljj.51.1555063799512;
-        Fri, 12 Apr 2019 03:09:59 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id z83sm8195508ljb.48.2019.04.12.03.09.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 03:09:58 -0700 (PDT)
-Subject: Re: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller
- node
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 12 Apr 2019 06:10:49 -0400
+Received: from 79.184.255.221.ipv4.supernova.orange.pl (79.184.255.221) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 9e31b47dfc54e54f; Fri, 12 Apr 2019 12:10:45 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411230221.31362-1-digetx@gmail.com>
- <20190411230221.31362-4-digetx@gmail.com>
- <20190412080158.GG12975@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <46d3b12f-7279-c7c5-68ba-e524406f1c85@gmail.com>
-Date:   Fri, 12 Apr 2019 13:09:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3] firmware/psci: add support for SYSTEM_RESET2
+Date:   Fri, 12 Apr 2019 12:10:45 +0200
+Message-ID: <2000694.m04KBuNrDd@kreacher>
+In-Reply-To: <20190412100227.15024-1-sudeep.holla@arm.com>
+References: <20190412100227.15024-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190412080158.GG12975@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.04.2019 11:01, Peter De Schrijver пишет:
-> On Fri, Apr 12, 2019 at 02:02:21AM +0300, Dmitry Osipenko wrote:
->> Add Add External Memory Controller node to the device-tree.
->>
+On Friday, April 12, 2019 12:02:27 PM CEST Sudeep Holla wrote:
+> PSCI v1.1 introduced SYSTEM_RESET2 to allow both architectural resets
+> where the semantics are described by the PSCI specification itself as
+> well as vendor-specific resets. Currently only system warm reset
+> semantics is defined as part of architectural resets by the specification.
 > 
-> One 'Add' is enough I think :)
+> This patch implements support for SYSTEM_RESET2 by making using of
+> reboot_mode passed by the reboot infrastructure in the kernel.
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/psci.c   | 24 +++++++++++++++++++++++-
+>  include/uapi/linux/psci.h |  2 ++
+>  2 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> v2->v3:
+> 	- Added else condition so that if SYSTEM_RESET2 fails, it ends
+> 	  up doing a system halt
+> 	- Wrap single statement if..else with braces because of presence
+> 	  of multiple line comment
+> 
+> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> index c80ec1d03274..c9ea8f38bd42 100644
+> --- a/drivers/firmware/psci.c
+> +++ b/drivers/firmware/psci.c
+> @@ -88,6 +88,7 @@ static u32 psci_function_id[PSCI_FN_MAX];
+>  				PSCI_1_0_EXT_POWER_STATE_TYPE_MASK)
+> 
+>  static u32 psci_cpu_suspend_feature;
+> +static bool psci_system_reset2_supported;
+> 
+>  static inline bool psci_has_ext_power_state(void)
+>  {
+> @@ -253,7 +254,17 @@ static int get_set_conduit_method(struct device_node
+> *np)
+> 
+>  static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+>  {
+> -	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+> +	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> +	    psci_system_reset2_supported) {
+> +		/*
+> +		 * reset_type[31] = 0 (architectural)
+> +		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+> +		 * cookie = 0 (ignored by the implementation)
+> +		 */
+> +		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
+> +	} else {
+> +		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+> +	}
+>  }
+> 
+>  static void psci_sys_poweroff(void)
+> @@ -451,6 +462,16 @@ static const struct platform_suspend_ops
+> psci_suspend_ops = { .enter          = psci_system_suspend_enter,
+>  };
+> 
+> +static void __init psci_init_system_reset2(void)
+> +{
+> +	int ret;
+> +
+> +	ret = psci_features(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2));
+> +
+> +	if (ret != PSCI_RET_NOT_SUPPORTED)
+> +		psci_system_reset2_supported = true;
+> +}
+> +
+>  static void __init psci_init_system_suspend(void)
+>  {
+>  	int ret;
+> @@ -588,6 +609,7 @@ static int __init psci_probe(void)
+>  		psci_init_smccc();
+>  		psci_init_cpu_suspend();
+>  		psci_init_system_suspend();
+> +		psci_init_system_reset2();
+>  	}
+> 
+>  	return 0;
+> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+> index b3bcabe380da..5b0ba0062541 100644
+> --- a/include/uapi/linux/psci.h
+> +++ b/include/uapi/linux/psci.h
+> @@ -49,8 +49,10 @@
+> 
+>  #define PSCI_1_0_FN_PSCI_FEATURES		PSCI_0_2_FN(10)
+>  #define PSCI_1_0_FN_SYSTEM_SUSPEND		PSCI_0_2_FN(14)
+> +#define PSCI_1_1_FN_SYSTEM_RESET2		PSCI_0_2_FN(18)
+> 
+>  #define PSCI_1_0_FN64_SYSTEM_SUSPEND		PSCI_0_2_FN64(14)
+> +#define PSCI_1_1_FN64_SYSTEM_RESET2		PSCI_0_2_FN64(18)
+> 
+>  /* PSCI v0.2 power state encoding for CPU_SUSPEND function */
+>  #define PSCI_0_2_POWER_STATE_ID_MASK		0xffff
+> --
 
-Indeed, thank you!
+So I queued up the PSCI series from Ulf which clashes with this patch.
+
+I can take this one too, but I'd rather avoid becoming a PSCI maintainer as a 
+result. :-)
+
+
 
