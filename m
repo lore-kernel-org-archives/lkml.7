@@ -2,181 +2,238 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F60C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C98BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6EC2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5509E21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oFayK4Qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDLOim (ORCPT
+        id S1727043AbfDLOje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:38:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35296 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfDLOim (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:38:42 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8908D28018B;
-        Fri, 12 Apr 2019 15:38:37 +0100 (BST)
-Date:   Fri, 12 Apr 2019 16:38:35 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        dnicoara@chromium.org, daniels@collabora.com,
-        alexandros.frantzis@collabora.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, tomasz Figa <tfiga@chromium.org>,
-        tina.zhang@intel.com, Sean Paul <seanpaul@google.com>,
-        kernel@collabora.com, nicholas.kazlauskas@amd.com,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>,
-        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
-        linux-doc@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-rockchip@lists.infradead.org,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
-        Eric Anholt <eric@anholt.net>, Leo Li <sunpeng.li@amd.com>,
-        linux-arm-msm@vger.kernel.org,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Francis <David.Francis@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        freedreno@lists.freedesktop.org,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 2/4] drm/atomic: rename async_{update,check} to
- amend_{update,check}
-Message-ID: <20190412163835.5407984f@collabora.com>
-In-Reply-To: <bda69249-f193-9dbc-5186-7139fb2c365a@collabora.com>
-References: <20190412125827.5877-1-helen.koike@collabora.com>
-        <20190412125827.5877-3-helen.koike@collabora.com>
-        <20190412154957.558e49f8@collabora.com>
-        <bda69249-f193-9dbc-5186-7139fb2c365a@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Apr 2019 10:39:34 -0400
+Received: from mail-eopbgr50068.outbound.protection.outlook.com ([40.107.5.68]:15939
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726624AbfDLOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:39:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uMr1RQ4XbRavWHa0Z9kVSHh3QRxIH1glPWtFXx/YQjQ=;
+ b=oFayK4QpBbAmgfq2w0PupujCixjI046HnxMXG8NRCXBFgzbeUS58nC5BTt0R04nXUaGoB+aMcH8VaIDJFlhIEiKI+InFSIJ0NYZsJ1DvWbKnf52MsgL2N6q/4/667+Wx/+qINTlR/VWkmZBY2aAvEYTZc7LJdXhK/Di5EWvP21o=
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com (20.178.122.159) by
+ VI1PR04MB6189.eurprd04.prod.outlook.com (20.179.28.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.16; Fri, 12 Apr 2019 14:39:28 +0000
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::cca7:43cf:dc13:a822]) by VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::cca7:43cf:dc13:a822%4]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
+ 14:39:28 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     "matti.vaittinen@fi.rohmeurope.com" 
+        <matti.vaittinen@fi.rohmeurope.com>,
+        "angus@akkea.ca" <angus@akkea.ca>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Thread-Topic: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Thread-Index: AQHU8T2IVFjFW6RR0kS4iAbL+1/+Uw==
+Date:   Fri, 12 Apr 2019 14:39:28 +0000
+Message-ID: <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
+References: <20190412130427.13418-1-angus@akkea.ca>
+         <20190412130427.13418-2-angus@akkea.ca>
+In-Reply-To: <20190412130427.13418-2-angus@akkea.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 224fc197-2f20-461f-1349-08d6bf54aabe
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6189;
+x-ms-traffictypediagnostic: VI1PR04MB6189:
+x-microsoft-antispam-prvs: <VI1PR04MB6189C268AA9462470861FCA2EE280@VI1PR04MB6189.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(136003)(39860400002)(189003)(199004)(86362001)(6116002)(54906003)(110136005)(476003)(11346002)(316002)(14454004)(118296001)(14444005)(478600001)(36756003)(71200400001)(2616005)(26005)(486006)(256004)(6506007)(53936002)(71190400001)(186003)(102836004)(25786009)(6512007)(229853002)(6486002)(446003)(2501003)(76176011)(2906002)(6246003)(7416002)(4326008)(97736004)(6436002)(3846002)(5660300002)(105586002)(8936002)(50226002)(106356001)(81156014)(7736002)(305945005)(66066001)(81166006)(68736007)(99286004)(8676002)(44832011)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6189;H:VI1PR04MB5533.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1PMiLRrdLCRfR0LMmuMo2UadS3xatXi+gGOnqCkzvoi2dsWOcJ06UNlW1qwqbVyMHX0H0F5tahur7gmY1NntqrlW1yCxEpwL+F2TaLPxsRvWjjK/GutAuKFNiHYPLXma0NjfodaSQcmD+I8D6zQ/hSdpb05M8jOE06yLcM+F9m6gwxs+UBgnXMiaDJEqf0CRRBARJsJxqeO5DjzsPtiLJn70Y4fJDQWf4qBi0RVQbIPfQYi1YyLn0cNVL8mkqNoMcdVIlH7WVPc6j7f4FIm2F6DYQfMR5DaGNbpDE9hjvPTc4ab45xVeDDHDyxF0rYTFJMJJGNzEW3Dxxbi3+e47vFGCrUDOMVggIgQNg0rhDxMGNhWLtyxBmiWsexrAlecxWcABN1SzM4Sl+z2qwfpovjlKsi8AdowWh57JkqcG/Gc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <03A728088FA122419989483B1B96D021@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 224fc197-2f20-461f-1349-08d6bf54aabe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 14:39:28.1344
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 11:06:13 -0300
-Helen Koike <helen.koike@collabora.com> wrote:
-
-> Hi Boris,
-> 
-> On 4/12/19 10:49 AM, Boris Brezillon wrote:
-> > Hi Helen,
-> > 
-> > On Fri, 12 Apr 2019 09:58:25 -0300
-> > Helen Koike <helen.koike@collabora.com> wrote:
-> >   
-> >> Asynchronous update is the ability change the hw state at any time, not
-> >> only during vblank.
-> >>
-> >> Amend mode is the ability to perform 1000 commits to be applied as soon
-> >> as possible without waiting for 1000 vblanks.
-> >>
-> >> async updates can be seen as amend, but the opposite is not true.
-> >>
-> >> &drm_plane_helper_funcs.atomic_async_{update,check}() was being used by
-> >> drivers to implement amend and not async. So rename them to amend.
-> >>
-> >> Also improve docs explaining the difference.
-> >>
-> >> If asynchronous is required, normal page flip can be performed using
-> >> DRM_MODE_PAGE_FLIP_ASYNC flag.
-> >>
-> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >>
-> >> ---
-> >> Hello,
-> >>
-> >> I would like to officially clarify what async update means by adding it
-> >> in the docs.
-> >> Please correct me if I am wrong, but the current async_{update,check}
-> >> callbacks are being used to do amend (the legacy cursor behavior), i.e.
-> >> to allow 1000 updates without waiting for 1000 vblanks.  
-> > 
-> > Right now, the semantic of async update is driver dependent. Some
-> > drivers will amend the last commit touching that plane (amend semantic),
-> > others will update the plane buffer immediately which might cause
-> > tearing (async semantic).  
-> 
-> In my pov, async updates holds the properties of an amend update, so all
-> async updates we have are amend, but the opposite is not true.
-
-By doing that you keep the definition quite vague, and developers will
-still confused about what they should do when AMEND is requested. Why
-not distinguishing AMEND and ASYNC now?
-
-AMEND: replace the pending plane update (if any) by the new one, and
-make sure things will be applied on the next VBLANK (if nothing else
-amends the commit in the meantime)
-
-ASYNC: update things immediately (don't wait for VBLANK)
-
-> 
-> >   
-> >>
-> >> So I would like to clarify this in the docs and rename the current
-> >> callbacks to reflect this behaviour.  
-> > 
-> > I'm all for this clarification, but I don't think renaming the async
-> > hooks is a good idea, since some drivers will not do real 'amend'. So,
-> > you're changing the name, but it's still confusing :-).
-> > 
-> > How about adding new hooks (and/or flags) for the AMEND case, and
-> > keeping the async path untouched. We can then let drivers that
-> > currently implement async as amend implement the amend hooks instead.
-> > Once you've done that, you can hook that up to the legacy cursor update
-> > path so that it first tries one then the other and finally falls back
-> > to a sync update if none of ASYNC/AMEND is possible.  
-> 
-> I kinda did this (I re-introduced async in the last patch in the
-> series). I know this order is confusing, but as rockchip doesn't
-> implement true async, I would have to do a bunch of modifs at once to
-> keep the commits consistent, but I can re-work on that if it makes
-> things clearer.
-
-Let's wait for more feedback before taking a decision on this aspect.
-
-> 
-> >   
-> >>
-> >> I also see that for real async updates, the flag
-> >> DRM_MODE_PAGE_FLIP_ASYNC can be used in a normal sync update (it is
-> >> already being used by some drivers actually, in the atomic path, not only
-> >> in the legacy page flip, at least is what I understood from
-> >> amdgpu_dm_atomic_commit_tail() implementation).  
-> > 
-> > Yes, right now, async does not necessarily imply non-block, but
-> > Daniel seemed to think that most users want non-block when they do an
-> > async page flip, so maybe it should be clarified too.  
-> 
-> users could combine NONBLOCK flag with PAGE_FLIP_ASYNC, no? (we need to
-> add code for it of course).
-
-I guess AMD goes through the sync update path to guarantee that fences
-are signaled before doing the page flip, but most of the time, when you
-do an async page flip you don't want to block :-).
+T24gRnJpLCAyMDE5LTA0LTEyIGF0IDA3OjA0IC0wNjAwLCBBbmd1cyBBaW5zbGllIChQdXJpc20p
+IHdyb3RlOg0KPiArJmkyYzEgew0KPiArICAgICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+
+Ow0KPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3Ry
+bC0wID0gPCZwaW5jdHJsX2kyYzE+Ow0KPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gKw0K
+PiArICAgICAgIHBtaWM6IHBtaWNANGIgew0KPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NGI+
+Ow0KPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyb2htLGJkNzE4MzciOw0KPiArICAg
+ICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKyAgICAgICAgICAgICAg
+IHBpbmN0cmwtMCA9IDwmcGluY3RybF9wbWljPjsNCj4gKyAgICAgICAgICAgICAgIGNsb2NrcyA9
+IDwmcG1pY19vc2M+Ow0KPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAib3NjIjsNCj4g
+KyAgICAgICAgICAgICAgIGNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbWljX2NsayI7DQo+ICsgICAg
+ICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ICsgICAgICAgICAgICAg
+ICBpbnRlcnJ1cHRzID0gPDMgR1BJT19BQ1RJVkVfTE9XPjsNCj4gKyAgICAgICAgICAgICAgIGlu
+dGVycnVwdC1uYW1lcyA9ICJpcnEiOw0KPiArICAgICAgICAgICAgICAgcm9obSxyZXNldC1zbnZz
+LXBvd2VyZWQ7DQo+ICsNCj4gKyAgICAgICAgICAgICAgIGdwbyB7DQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIC8qIDBiMDAwMF8xMTAwIGFsbCBncG9zIHdpdGggY21vcyBvdXRwdXQgbW9kZQ0K
+PiAqLw0KPiArICAgICAgICAgICAgICAgICAgICAgICByb2htLGRydiA9IDwweDBDPjsNCj4gKyAg
+ICAgICAgICAgICAgIH07DQoNCkFmdGVyIHNlYXJjaGluZyBmb3IgdGhpcyBncG8vcm9obSxkcnYg
+cHJvcGVydHkgaXQgZG9lcyBub3Qgc2VlbSB0byBiZQ0KZG9jdW1lbnRlZCBvciBoYW5kbGVkIGFu
+eXdoZXJlPw0KDQpTaG91bGQgcHJvYmFibHkganVzdCBkcm9wLg0KDQo+ICsgICAgICAgICAgICAg
+ICByZWd1bGF0b3JzIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMg
+PSA8MT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiAr
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2sxX3JlZzogQlVDSzFAMCB7DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2sxIjsNCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0
+ID0gPDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRv
+ci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1h
+bHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLXJh
+bXAtZGVsYXkgPSA8MTI1MD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcm9o
+bSxkdnMtcnVuLXZvbHRhZ2UgPSA8OTAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByb2htLGR2cy1pZGxlLXZvbHRhZ2UgPSA8ODUwMDAwPjsNCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByb2htLGR2cy1zdXNwZW5kLXZvbHRhZ2UgPSA8ODAwMDAwPjsN
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICBidWNrMl9yZWc6IEJVQ0syQDEgew0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJlZyA9IDwxPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0
+b3ItbmFtZSA9ICJidWNrMiI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NzAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzAwMDAwPjsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItYm9vdC1vbjsNCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDEyNTA+Ow0KPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLXJ1bi12b2x0YWdlID0gPDEw
+MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLWlkbGUt
+dm9sdGFnZSA9IDw5MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiArDQo+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2szX3JlZzogQlVDSzNAMiB7DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDI+Ow0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2szIjsNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0KPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZzLXJ1
+bi12b2x0YWdlID0gPDEwMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiAr
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2s0X3JlZzogQlVDSzRAMyB7DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDM+Ow0KPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2s0IjsNCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0
+ID0gPDEzMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvaG0sZHZz
+LXJ1bi12b2x0YWdlID0gPDEwMDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0K
+PiArDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ1Y2s1X3JlZzogQlVDSzVANCB7DQo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDQ+Ow0KPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImJ1Y2s1IjsNCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw3MDAwMDA+
+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92
+b2x0ID0gPDEzNTAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3Vs
+YXRvci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRv
+ci1hbHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgYnVjazZfcmVnOiBCVUNLNkA1IHsNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICByZWcgPSA8NT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVndWxhdG9yLW5hbWUgPSAiYnVjazYiOw0KPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMwMDAwMDA+Ow0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAw
+MDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9u
+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgYnVjazdfcmVnOiBCVUNLN0A2IHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWcgPSA8Nj47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxh
+dG9yLW5hbWUgPSAiYnVjazciOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE2MDUwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE5OTUwMDA+Ow0KPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9uOw0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnVjazhf
+cmVnOiBCVUNLOEA3IHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+Nz47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAi
+YnVjazgiOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4t
+bWljcm92b2x0ID0gPDgwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTQwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAgICAgICBsZG8xX3JlZzogTERPMUA4IHsN
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8OD47DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvMSI7DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAw
+MDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1heC1t
+aWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+dWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBsZG8yX3JlZzogTERPMkA5IHsNCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8OT47DQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvMiI7DQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8OTAwMDAwPjsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDw5MDAw
+MDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9u
+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgbGRvM19yZWc6IExETzNAMTAgew0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJlZyA9IDwxMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxh
+dG9yLW5hbWUgPSAibGRvMyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAgICAgICAgICAgICAgICAgICBsZG80X3Jl
+ZzogTERPNEAxMSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDEx
+PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJs
+ZG80IjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWluLW1p
+Y3Jvdm9sdCA9IDw5MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+Z3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZ3VsYXRvci1ib290LW9uOw0KPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGRvNV9yZWc6IExETzVAMTIgew0K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxMj47DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvNSI7DQo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgw
+MDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1heC1t
+aWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsN
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGRvNl9yZWc6IExETzZAMTMgew0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxMz47DQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAibGRvNiI7DQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8OTAwMDAwPjsNCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
+IDwxODAwMDAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKw0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICBsZG83X3JlZzogTERPN0AxNCB7DQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVnID0gPDE0PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWd1bGF0b3ItbmFtZSA9ICJsZG83IjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAw
+PjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gKyAgICAgICAgICAgICAgIH07DQo+
+ICsgICAgICAgfTsNCg0K
