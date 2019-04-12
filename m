@@ -2,158 +2,185 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36247C10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA90C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00F82184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B332184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D5Fi8mbO"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="I0/a8iZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfDLACE (ORCPT
+        id S1727289AbfDLAIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:02:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34374 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfDLACE (ORCPT
+        Thu, 11 Apr 2019 20:08:14 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52248 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfDLAIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:02:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y6so4182636plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:02:04 -0700 (PDT)
+        Thu, 11 Apr 2019 20:08:13 -0400
+Received: by mail-it1-f195.google.com with SMTP id x132so12844979itf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:08:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CBrXfahcrBFEuBwWPHCafCU3+H7O4tvEDowgXbhEK6U=;
-        b=D5Fi8mbOCSkrQfJXjSCpDWQqcV7dm8ryqhwcqsasuSdKzRyh9K3aR7qnvpyvxtoff3
-         oczbvp1H+Wg/qACYaPZqbLBIepUNRmlKzBabcqg6qE6rvPAJqNNjWfzWJ0Zw455u6Y7T
-         1lYmVne3UKodqGbXUr8kqunA6yoN1h+Rm90Kk=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=C0gl3NUgFQXuG3eu0mpgKkF48V46lmRVT+B0m4qM+es=;
+        b=I0/a8iZyEJAc4sPgeuSpnbr1Ns3k3UHMl6WAv5dCgiVO1ryjcxXRmbZdwjdaSdzT8y
+         CD+833CoBbEg8198LT8ZEq81PVFv7W+pW3iGp43kSasUq9/AQwUl4Gn6d4tQbdZGeYxU
+         r2ocJfMKFYdoMBbAoX86zsdRsQJQjjbV8I1H5XLZFh8ntz+TZnILo5G77IyLQacqaJhL
+         fzWSh8GL9c2P4qy4AbTIdvX1bfYzMOCAvsBlMbJWZMQUTZgNYGUH9ZgfccI+dr1lrGov
+         nQQUCDc55xv/QIn92Ni6PAl9YnN4JHDj+WMqz2gmlhvbSEPIBFnOSzBNkJcH9Wv3u654
+         jjVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CBrXfahcrBFEuBwWPHCafCU3+H7O4tvEDowgXbhEK6U=;
-        b=Ms/xSrkkXUiLCGWUcwStxJjIHP1Mkz12V4nnELyTjZhpB7ktT6tvtTatS2vQGgj8sQ
-         HRllMona+lKGWAcxZxctrBjPTRV+Pmm7736QPM9cTeZ8xVO4gIHg9l8DEjJzCOPIgAvV
-         FKK53G8dO2KgIsGS1CROG/pgxYUsNkiu5CkmlJSLEjwXb/98Z82ckAGqDgw+tXaFWWCa
-         /CDTvF/imRSgsgHGj+QYnYV1P15DAY7XMJF34x7Nxmv6Jdi8PQH3tL8ir8Hv4awWVnJr
-         rznSrqtosb5GmuWECJXEnMy5i5pC2l1BD3O28RbNk98IJECTypnWfV3dI672O2M26bav
-         /JgA==
-X-Gm-Message-State: APjAAAVNvx1gUWWrnRPCLNb/OQLRJ20nOLCtbx75lM0VBtoJixl1F+qj
-        qgDegQTwIOGYvn/58b29lHjaWg==
-X-Google-Smtp-Source: APXvYqziWqnQWMDp7tTMmr/NmtdDsC1Uxc8Wsojj9LnVi+iw4SkqKwTXyY1TIqkwxJJFCAdRh4U/Mw==
-X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr54113352plr.251.1555027323186;
-        Thu, 11 Apr 2019 17:02:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id g5sm21081011pfo.53.2019.04.11.17.02.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 17:02:02 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Add dynamic-power-coefficient for rk3288
-Date:   Thu, 11 Apr 2019 17:01:58 -0700
-Message-Id: <20190412000158.248080-1-mka@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=C0gl3NUgFQXuG3eu0mpgKkF48V46lmRVT+B0m4qM+es=;
+        b=NROLfnOi5YDVeSpFldTr1MbqIuqSX5YOnqOqeooR2FXw8CrFByvJNvc18nWegJW9T+
+         ON94Qb+wzpUwonwcb0yY9QKl5To2KKApkV+FIEo0dbQnEeLQSKTjZE23GfkpCb5AEZN3
+         1iPZqmSSuLmipCNIPqEaB1FHUYg6IAWPlW0FmtdgqJ7w5OMjwADZXGCE0yloE8kfRJ+l
+         KuZNWVvTU3lyY+V0ZTeREY7FYkhC7Ttfl+lvLBtOzVKSTJ1687fCGDPvpAKfZNhMIC/B
+         /njarxs75Zx/mpbMhXup9oFR0GIbP8+19fJAC/+ycmuU7e6MZP+j/RJODu50KxWpjSN9
+         H+rA==
+X-Gm-Message-State: APjAAAW4f2nAUncXwRwoemBnqyYCky3EC0dmIQog5IByHziaAeEqZpQR
+        DPZwCt1Au34nD8/RkY/CL32v3GHpze0=
+X-Google-Smtp-Source: APXvYqyV3gfdu0tWVJVCCP2W9j+aOA//icl4BKPMAsxbDIK05jHZZ4JZ1x5tSenMhakgC5bap85rHg==
+X-Received: by 2002:a24:d0d3:: with SMTP id m202mr10686551itg.7.1555027692823;
+        Thu, 11 Apr 2019 17:08:12 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id u204sm3378152ita.33.2019.04.11.17.08.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 17:08:11 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 17:08:11 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH 1/6] arch: riscv: add support for building DTB files from
+ DT source data
+In-Reply-To: <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1904111618460.21321@viisi.sifive.com>
+References: <20190411084304.5072-2-paul.walmsley@sifive.com> <20190411114616.GA10032@infradead.org> <alpine.DEB.2.21.9999.1904111405470.19990@viisi.sifive.com> <3cf7f2d8-3039-7dd7-e243-77433b1f23a6@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value was determined with the following method:
+On Thu, 11 Apr 2019, Atish Patra wrote:
 
-- take CPUs 1-3 offline
-- for each OPP
-  - set cpufreq min and max freq to OPP freq
-  - start dhrystone benchmark
-  - measure CPU power consumption during 10s
-  - calculate Cx for OPPx
-    - Cx = (Px - P1) / (Vx²fx - V1²f1)          [1]
-      using the following units: mW / Ghz / V   [2]
-- C = avg(C2, ..., Cn)
+> On 4/11/19 2:12 PM, Paul Walmsley wrote:
+> > On Thu, 11 Apr 2019, Christoph Hellwig wrote:
+> > 
+> > > On Thu, Apr 11, 2019 at 01:42:59AM -0700, Paul Walmsley wrote:
+> > > > Similar to ARM64, add support for building DTB files from DT source
+> > > > data for RISC-V boards.
+> > > > 
+> > > > This patch starts with the infrastructure needed for SiFive boards.
+> > > > Boards from other vendors would add support here in a similar form.
+> > > 
+> > > What do we build it for?  We'd really need something like this:
+> > > 
+> > > http://git.infradead.org/users/hch/misc.git/commitdiff/d6242aa147baf57e05e2932199c74d8d24b9926e
+> > > http://git.infradead.org/users/hch/misc.git/commitdiff/0cd5413c8094ab57b68e0629dacfed695f4c1ef1
+> > > 
+> > > To actually use the DT files.
+> > 
+> > Those patches might be useful - I have not reviewed them closely - but
+> > they are not necessary.
+> > 
+> > The FSBL already supplies a DTB to Linux.  I assume the U-boot port works
+> > the same way.
+> > 
+> 
+> I am bit confused here. I thought the idea behind putting the the DTS in
+> kernel so that Kernel don't need to depend on DT passed from boot loaders.
 
-[1] see commit 4daa001a1773 ("arm64: dts: juno: Add cpu
-     dynamic-power-coefficient information")
-[2] https://patchwork.kernel.org/patch/10493615/#22158551
+Some users will want to do that - mostly embedded device integrators and 
+kernel developers.  We should definitely support these use-cases.  So the 
+basic idea behind Christoph's patch to do that is good (I have not yet 
+reviewed the code nor tested it).
 
-FTR, these are the values for the different OPPs:
+In fact, there has been an unofficial patch to do something similar for 
+ARM for about a decade now.  But for various reasons, some technical, some 
+managerial - it was never merged.  To be clear, I do agree that we should 
+merge something like that for RISC-V.
 
-freq (kHz)   	mV		Px (mW)		Cx
+However: the vast majority of users -- even embedded users -- will not use 
+a kernel with a bundled DTB.  This is because it irrevocably ties that 
+kernel binary to one specific board type.  I hope it is obvious why this 
+would be a non-starter for Linux distributions, and, more generally, 
+anyone who wants their kernels to be usable on multiple boards.  Those 
+distributors would need to ship one kernel binary per board, or bloat 
+their kernels with DTBs and come up with some new mechanism to select one.
 
-126000		900		39
-216000		900		66		370
-312000		900		95		372
-408000		900		122		363
-600000		900		177		359
-696000		950		230		363
-816000		1000		297		361
-1008000		1050		404		362
-1200000		1100		528		362
-1416000		1200		770		377
-1512000		1300		984		385
-1608000		1350		1156		394
+> Currently, DTB passed from FSBL is modified by OpenSBI/BBL before passing to
+> U-Boot or Linux.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-I couldn't find any really comprehensive information on determining
-the dynamic-power-coefficient, the method used is my understanding
-mostly derived from the sources mentioned above, the resulting value
-is within a reasonable range and the range of the intermediate Cx
-values is consistent. If someone knows better and things should be
-done differently please share your knowledge :)
----
- arch/arm/boot/dts/rk3288.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+This should be avoided whenever possible.  I'd be interested in hearing 
+what OpenSBI is doing now to the DTB; perhaps there is a case where it 
+makes sense.  But in general, doing this makes development and maintenance 
+quite difficult.  Considre that different operating systems that may use 
+the same SBI layer may use different DT data formats, or may not even use 
+DT at all.  And when the DT data format changes - as is happening now - a 
+maintenance hassle is created, since then versions across multiple pieces 
+of software may need to be synchronized.  It is also very disconcerting as 
+a kernel developer to have multiple pieces of software modifying one's 
+DTB.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 23e9c5253019..f0d92b045c57 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -61,6 +61,7 @@
- 			reg = <0x500>;
- 			resets = <&cru SRST_CORE0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			dynamic-power-coefficient = <370>;
- 			#cooling-cells = <2>; /* min followed by max */
- 			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
-@@ -71,6 +72,7 @@
- 			reg = <0x501>;
- 			resets = <&cru SRST_CORE1>;
- 			operating-points = <&cpu_opp_table>;
-+			dynamic-power-coefficient = <370>;
- 			#cooling-cells = <2>; /* min followed by max */
- 			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
-@@ -81,6 +83,7 @@
- 			reg = <0x502>;
- 			resets = <&cru SRST_CORE2>;
- 			operating-points = <&cpu_opp_table>;
-+			dynamic-power-coefficient = <370>;
- 			#cooling-cells = <2>; /* min followed by max */
- 			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
-@@ -91,6 +94,7 @@
- 			reg = <0x503>;
- 			resets = <&cru SRST_CORE3>;
- 			operating-points = <&cpu_opp_table>;
-+			dynamic-power-coefficient = <370>;
- 			#cooling-cells = <2>; /* min followed by max */
- 			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
--- 
-2.21.0.392.gf8f6787159e-goog
+The DT data is meant to represent hardware fact.  DT is also used to pass 
+in some non-hardware-related runtime configuration parameters, via the 
+"chosen" node.  But that's about it.  So from that point of view, only the 
+first-stage bootloader should be altering the DT data, and only then in 
+very minimal ways.
 
+> If Linux kernel can boot from the DTS contained within its source code as is,
+> that would be much more helpful.
+
+If you are thinking about embedded system builders, and developers who 
+only care about their test kernel being compatible with one board, I agree 
+with you for those specific use-cases.  Almost everyone else will pass in 
+a separate DTB, specific to the board they are using, from U-Boot or 
+Coreboot or GRUB.
+
+> > I haven't switched to U-boot yet for these driver tests, so I 
+> > personally have been using the open-source FSBL 
+> > (freedom-u540-c000-bootloader) with the following trivial patches 
+> > applied:
+> > 
+> > https://github.com/sifive/freedom-u540-c000-bootloader/tree/dev/paulw/supply-fsbl-dtb-v5.1-rc4
+> 
+> > The fsbl/ux00_fsbl.dtb file can be symlinked to the kernel DTB output,
+> > e.g., ~/linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb.
+> 
+> This assumes that FSBL has to be rebuilt every time I want to change the DT. I
+> was hoping to avoid that.
+
+The FSBL is on its way out.  It is just a short-term workaround until the 
+various popular bootloader ports become more stable.  After that happens, 
+it's likely that almost no one to use the current SiFive FSBLs.  We plan 
+to transition our Freedom-U development environment away from it 
+ourselves.
+
+The point of what I wrote to Christoph earlier is simply that everyone is 
+already using DTB data that is passed in from an early bootloader, whether 
+they realize it or not.  So there is an existence proof that no additional 
+patches are needed for the basics to function.  It may not be functioning 
+well in some cases, and may need patching; but that is a separate matter.
+
+
+- Paul
