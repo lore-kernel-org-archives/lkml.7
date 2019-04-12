@@ -2,123 +2,158 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD2DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FAFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF0F20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1B520818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555058827;
-	bh=IAoea2NMhGYn0MALqNfrG4bJU/Sr/YNE0/qHexgJHxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NEcGPVs9F/gP6lO7cGEdVuFiX2g8p2knNS7u2Q7svg6sQUEh5Fki/R2BTiYCvHdLQ
-	 O3GMBS1Z/JZVEYhfsfvhB6XWw0M2tHDpbXk/Gjc/VaW+8EpbIkIpAnH9hH0sTNXam+
-	 k7/u+dVqNxIUNi73aMV0RCWnZV2bFBcPfu5IFFWQ=
+	s=default; t=1555058935;
+	bh=z2tHWZjksT0JJz2uitfc2YyqdnMS7uukgVbHT838jwM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Zx5wvJ5XNBSv7sxyI5qElQgE2TfO4B1bEmgfZRh9vZ3T8/LfYrJ+Zk0BFl6sN0SHV
+	 RVEbimU/he65POuU6PoCkqpO1b68HzhmzEvYGYRli9MuLEXDBZVcd5XLqf389SislU
+	 ukxRVNa+izCjYWSazeQS/yPrkiRU1A+bXctO0glY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfDLIrG (ORCPT
+        id S1727322AbfDLIsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:47:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58874 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfDLIrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:47:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9CBE5ACBA;
-        Fri, 12 Apr 2019 08:47:03 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 10:47:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190412084702.GD13373@dhcp22.suse.cz>
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 12 Apr 2019 04:48:54 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38293 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfDLIsy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:48:54 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e80so7729075ote.5;
+        Fri, 12 Apr 2019 01:48:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vruAS9FVO8+0ZWh8zsjH+XnzNDkt1hKHtgpkktvnD+w=;
+        b=BXbf3zJT4TTIxGOs0Y76tWj3EHb0kaiCw9v5rU9jjOZw1nxXf8NwptKvWxsGDHFuVT
+         FQ8RK8+Q7GhbLQNRhW5Z5VfinLdbbUPQ0XCamCi1CV1tcDJKVfM/SlH9gJoaW7vpchHx
+         /7/6rQSrd3MDVmOCUbbR0oO/ZumkoOfJ0pF/HtYGZrLQH1eS5udZRfgTluIQ0sDg9RyH
+         0AU6K5uIvsuAwJqYAifRi2szkYfJqOVRt9xkP2C9mfsV9qm2xNBv2VDxjCPWO+nnJii+
+         yK9BjxpXJrRd1AJtsCWh9pE1apDINxFOzl6X2tX8WYKEgYsfG2tkjNZgfkGpPVB7hLqg
+         iyZg==
+X-Gm-Message-State: APjAAAXImaEkuuM6scuw7n106cSbc0gQCS6FQM1lLKbxE2mzD3yfkL/6
+        LdF/OgzUmMdBsetHU37ml32xFdxQgSWRAvE7Kik=
+X-Google-Smtp-Source: APXvYqydCjlAcj0h/1qD55yP60CnPcQb7vPuyjLlN06E9St6VPMMDagY6bXeq115CkJL6xL7lFuZTDUeWTsWo8M4khQ=
+X-Received: by 2002:a05:6830:11d0:: with SMTP id v16mr2217956otq.159.1555058933127;
+ Fri, 12 Apr 2019 01:48:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com> <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 12 Apr 2019 10:48:41 +0200
+Message-ID: <CAJZ5v0jTR6TqMxRoRhBzG8Rf8JgGfriuCLsGKBYxjBOZz_7yBA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] software node: Implement .get_reference_args
+ fwnode operation
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-04-19 11:56:50, Yang Shi wrote:
-[...]
-> Design
-> ======
-> Basically, the approach is aimed to spread data from DRAM (closest to local
-> CPU) down further to PMEM and disk (typically assume the lower tier storage
-> is slower, larger and cheaper than the upper tier) by their hotness.  The
-> patchset tries to achieve this goal by doing memory promotion/demotion via
-> NUMA balancing and memory reclaim as what the below diagram shows:
-> 
->     DRAM <--> PMEM <--> Disk
->       ^                   ^
->       |-------------------|
->                swap
-> 
-> When DRAM has memory pressure, demote pages to PMEM via page reclaim path.
-> Then NUMA balancing will promote pages to DRAM as long as the page is referenced
-> again.  The memory pressure on PMEM node would push the inactive pages of PMEM 
-> to disk via swap.
-> 
-> The promotion/demotion happens only between "primary" nodes (the nodes have
-> both CPU and memory) and PMEM nodes.  No promotion/demotion between PMEM nodes
-> and promotion from DRAM to PMEM and demotion from PMEM to DRAM.
-> 
-> The HMAT is effectively going to enforce "cpu-less" nodes for any memory range
-> that has differentiated performance from the conventional memory pool, or
-> differentiated performance for a specific initiator, per Dan Williams.  So,
-> assuming PMEM nodes are cpuless nodes sounds reasonable.
-> 
-> However, cpuless nodes might be not PMEM nodes.  But, actually, memory
-> promotion/demotion doesn't care what kind of memory will be the target nodes,
-> it could be DRAM, PMEM or something else, as long as they are the second tier
-> memory (slower, larger and cheaper than regular DRAM), otherwise it sounds
-> pointless to do such demotion.
-> 
-> Defined "N_CPU_MEM" nodemask for the nodes which have both CPU and memory in
-> order to distinguish with cpuless nodes (memory only, i.e. PMEM nodes) and
-> memoryless nodes (some architectures, i.e. Power, may have memoryless nodes).
-> Typically, memory allocation would happen on such nodes by default unless
-> cpuless nodes are specified explicitly, cpuless nodes would be just fallback
-> nodes, so they are also as known as "primary" nodes in this patchset.  With
-> two tier memory system (i.e. DRAM + PMEM), this sounds good enough to
-> demonstrate the promotion/demotion approach for now, and this looks more
-> architecture-independent.  But it may be better to construct such node mask
-> by reading hardware information (i.e. HMAT), particularly for more complex
-> memory hierarchy.
+On Wed, Apr 10, 2019 at 5:26 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> This makes it possible to support drivers that use
+> fwnode_property_get_reference_args() function.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/base/swnode.c | 56 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index 39b8f8f35cfe..d6a9b56cb073 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -534,6 +534,61 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
+>         return NULL;
+>  }
+>
+> +static int
+> +software_node_get_reference_args(const struct fwnode_handle *fwnode,
+> +                                const char *propname, const char *nargs_prop,
+> +                                unsigned int nargs, unsigned int index,
+> +                                struct fwnode_reference_args *args)
+> +{
+> +       struct software_node *swnode = to_software_node(fwnode);
+> +       struct software_node_reference *ref;
+> +       const struct property_entry *prop;
+> +       int ret = -ENOENT;
+> +       int i;
+> +
+> +       mutex_lock(&swnode->lock);
+> +
+> +       if (!swnode || list_empty(&swnode->references))
+> +               goto err_unlock;
+> +
+> +       if (nargs_prop) {
+> +               prop = property_entry_get(swnode->properties, nargs_prop);
+> +               if (!prop) {
+> +                       ret = -EINVAL;
+> +                       goto err_unlock;
+> +               }
+> +
+> +               nargs = prop->value.u32_data;
+> +       }
+> +
+> +       if (nargs > NR_FWNODE_REFERENCE_ARGS) {
+> +               ret = -EINVAL;
+> +               goto err_unlock;
+> +       }
+> +
+> +       list_for_each_entry(ref, &swnode->references, list) {
+> +               if (strcmp(ref->name, propname))
+> +                       continue;
+> +
+> +               if (index > (ref->nrefs - 1))
+> +                       break;
+> +
+> +               args->nargs = nargs;
+> +               args->fwnode = software_node_get(ref->args[index].fwnode);
+> +
+> +               for (i = 0; i < nargs; i++)
+> +                       args->args[i] = ref->args[index].args[i];
 
-I still believe you are overcomplicating this without a strong reason.
-Why cannot we start simple and build from there? In other words I do not
-think we really need anything like N_CPU_MEM at all.
+If nargs is provided by the caller, can't it be greater than the
+number of args[index].args[] entries?
 
-I would expect that the very first attempt wouldn't do much more than
-migrate to-be-reclaimed pages (without an explicit binding) with a
-very optimistic allocation strategy (effectivelly GFP_NOWAIT) and if
-that fails then simply give up. All that hooked essentially to the
-node_reclaim path with a new node_reclaim mode so that the behavior
-would be opt-in. This should be the most simplistic way to start AFAICS
-and something people can play with without risking regressions.
-
-Once we see how that behaves in the real world and what kind of corner
-case user are able to trigger then we can build on top. E.g. do we want
-to migrate from cpuless nodes as well? I am not really sure TBH. On one
-hand why not if other nodes are free to hold that memory? Swap out is
-more expensive. Anyway this is kind of decision which would rather be
-shaped on an existing experience rather than ad-hoc decistion right now.
-
-I would also not touch the numa balancing logic at this stage and rather
-see how the current implementation behaves.
--- 
-Michal Hocko
-SUSE Labs
+> +
+> +               ret = 0;
+> +               break;
+> +       }
+> +
+> +err_unlock:
+> +       mutex_unlock(&swnode->lock);
+> +
+> +       return ret;
+> +}
+> +
+>  static const struct fwnode_operations software_node_ops = {
+>         .get = software_node_get,
+>         .put = software_node_put,
+> @@ -543,6 +598,7 @@ static const struct fwnode_operations software_node_ops = {
+>         .get_parent = software_node_get_parent,
+>         .get_next_child_node = software_node_get_next_child,
+>         .get_named_child_node = software_node_get_named_child_node,
+> +       .get_reference_args = software_node_get_reference_args,
+>  };
+>
+>  /* -------------------------------------------------------------------------- */
