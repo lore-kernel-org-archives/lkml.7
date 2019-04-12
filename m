@@ -2,501 +2,434 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71664C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA8C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2411F20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PJgFTYQh"
+	by mail.kernel.org (Postfix) with ESMTP id 31C2820818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfDLWps (ORCPT
+        id S1727097AbfDLWsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:45:48 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40268 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfDLWpr (ORCPT
+        Fri, 12 Apr 2019 18:48:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36500 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfDLWsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:45:47 -0400
-Received: by mail-it1-f195.google.com with SMTP id k64so18371863itb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 15:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iY6XRV6z4QH7U0FQXaTjHwTWnz+FcCMh9XOUwYR/u9w=;
-        b=PJgFTYQh0GfuYfu+NnehROL8Bz/dw3Xrmd6fUqQiighZ1esKpEQs4wz4OGoScT1+DY
-         sGmaPthMUlfc0WS6844eeVaIEMEuLsIMQx+4AivRa6szlmM470pcNsI0uUEMInjeYF3c
-         pORR/K24INRqRMnoMQ1PV5dtWJpCizqRFQ6Ac=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iY6XRV6z4QH7U0FQXaTjHwTWnz+FcCMh9XOUwYR/u9w=;
-        b=cWMK5h4gfkhPC9obYZBLgZFBNed4Q17BPr9DHwPb7dWOpr0+W34yG3SK7rV9VU1CQg
-         upCu56ptZ1NIPSkA/T6e59+d4MncnRwehUuJte49KEZ52d4qzqXy3s8S4MYecP9wuOcJ
-         +XhmjJkX+4ep/B3/oMz+T6wM3e28TZMc9sYt416B35pqjAl3C7deo2kmHnwLS1pg7DIa
-         kZo8k80oH6dGICRfRu6CUk7eROrtw+cqX2uiYdQUWOFAVYzqtxY0l36nFftLEOdIY7AN
-         0lDhuda2Eoq0VAFss9H9J/YBsKphHkOr3QgzIKt7o7YEkxrWRjnlGKJgXWOayfbnxV+U
-         H35w==
-X-Gm-Message-State: APjAAAUSWc2S/ry9wZWsc7BHdSW3RLWPdx9PXAcO87ms4tiIQui9mGqM
-        GlWyhmdcqWGCFZEr9zhKGq2Gdg==
-X-Google-Smtp-Source: APXvYqxV8kLoiIfvFPWs1hfpmpHW1w0flIc6wNZrkN6f+Pp5TJ+/risDOoRV3cW/8Qk9qeZkhoUPpQ==
-X-Received: by 2002:a24:64d7:: with SMTP id t206mr6889153itc.89.1555109146622;
-        Fri, 12 Apr 2019 15:45:46 -0700 (PDT)
-Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
-        by smtp.gmail.com with ESMTPSA id l68sm4674059itb.29.2019.04.12.15.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 12 Apr 2019 15:45:46 -0700 (PDT)
-From:   Nick Crews <ncrews@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com,
-        sjg@chromium.org, bartfab@chromium.org, lamzin@google.com,
-        jchwong@google.com, Nick Crews <ncrews@chromium.org>
-Subject: [PATCH] platform/chrome: wilco_ec: Add telemetry data char device interface
-Date:   Fri, 12 Apr 2019 16:45:39 -0600
-Message-Id: <20190412224539.161321-1-ncrews@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 12 Apr 2019 18:48:23 -0400
+Received: from [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d] (unknown [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 59D26281631;
+        Fri, 12 Apr 2019 23:48:14 +0100 (BST)
+Subject: Re: [PATCH v2 01/15] media: Move sp2mp functions to v4l2-common
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        lkcamp@lists.libreplanetbr.org
+References: <20190327151743.18528-1-andrealmeid@collabora.com>
+ <20190327151743.18528-2-andrealmeid@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <7a50ac03-be96-b119-322b-4531267a1f0e@collabora.com>
+Date:   Fri, 12 Apr 2019 19:48:04 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190327151743.18528-2-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Wilco Embedded Controller is able to send telemetry data
-which is useful for enterprise applications. A daemon running on
-the OS sends a command to the EC via write() to char device,
-and can read the response with a read() request.
-Both the request and the response are in an opaque
-binary format so that information which is proprietary to the
-enterprise service provider is secure.
+Hi Andre,
 
-The character device will appear as /dev/wilco_telemN, where N is some
-small non-negative integer, starting with 0. Only one process may have
-the file descriptor open at a time. The calling userspace program needs
-to keep the device file descriptor open between the calls to write() and
-read() in order to preserve the response. Either 32 or 256 bytes of data
-are expected for arguments, and the same number of bytes will be
-returned.
+Thanks for the patch, just some small comments.
 
-For testing purposes, if the EC receives a byte sequence beginning with
-0, it will return an inverted copy of the input sequence. For an
-example, run the simple python script from
-https://gist.github.com/52ab07c8519b56c0ec671d3338760516
+On 3/27/19 12:17 PM, André Almeida wrote:
+> Move sp2mp functions from vivid code to v4l2-common as it will be reused
+> by vimc driver for multiplanar support.
 
-Signed-off-by: Nick Crews <ncrews@chromium.org>
----
- drivers/platform/chrome/wilco_ec/Kconfig     |   7 +
- drivers/platform/chrome/wilco_ec/Makefile    |   2 +
- drivers/platform/chrome/wilco_ec/core.c      |  13 +
- drivers/platform/chrome/wilco_ec/telemetry.c | 312 +++++++++++++++++++
- include/linux/platform_data/wilco-ec.h       |   2 +
- 5 files changed, 336 insertions(+)
- create mode 100644 drivers/platform/chrome/wilco_ec/telemetry.c
+Just a detail (not a big deal):
+I would re-order this patch to be just before patch "media: vimc: cap:
+Add handler for singleplanar fmt ioctls", as it is only required there,
+so it is easier to see why this modification was needed.
 
-diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-index e09e4cebe9b4..7846f6146b78 100644
---- a/drivers/platform/chrome/wilco_ec/Kconfig
-+++ b/drivers/platform/chrome/wilco_ec/Kconfig
-@@ -18,3 +18,10 @@ config WILCO_EC_DEBUGFS
- 	  manipulation and allow for testing arbitrary commands.  This
- 	  interface is intended for debug only and will not be present
- 	  on production devices.
-+
-+config WILCO_EC_TELEMETRY
-+	tristate "Enable querying telemetry data from EC"
-+	depends on WILCO_EC
-+	help
-+	  If you say Y here, you get support to query opaque binary
-+	  telemetrydata from /dev/wilco_telem using write() and then read().
-diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-index 063e7fb4ea17..b4aa6d26a3df 100644
---- a/drivers/platform/chrome/wilco_ec/Makefile
-+++ b/drivers/platform/chrome/wilco_ec/Makefile
-@@ -4,3 +4,5 @@ wilco_ec-objs				:= core.o mailbox.o
- obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
- wilco_ec_debugfs-objs			:= debugfs.o
- obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
-+wilco_ec_telem-objs			:= telemetry.o
-+obj-$(CONFIG_WILCO_EC_TELEMETRY)	+= wilco_ec_telem.o
-diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
-index 05e1e2be1c91..517d9627fecc 100644
---- a/drivers/platform/chrome/wilco_ec/core.c
-+++ b/drivers/platform/chrome/wilco_ec/core.c
-@@ -89,8 +89,20 @@ static int wilco_ec_probe(struct platform_device *pdev)
- 		goto unregister_debugfs;
- 	}
- 
-+	/* Register child device that will be found by the telemetry driver. */
-+	ec->telem_pdev = platform_device_register_data(dev, "wilco_telem",
-+						       PLATFORM_DEVID_AUTO,
-+						       NULL, 0);
-+	if (IS_ERR(ec->telem_pdev)) {
-+		dev_err(dev, "Failed to create telemetry platform device\n");
-+		ret = PTR_ERR(ec->telem_pdev);
-+		goto unregister_rtc;
-+	}
-+
- 	return 0;
- 
-+unregister_rtc:
-+	platform_device_unregister(ec->rtc_pdev);
- unregister_debugfs:
- 	if (ec->debugfs_pdev)
- 		platform_device_unregister(ec->debugfs_pdev);
-@@ -102,6 +114,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
- {
- 	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
- 
-+	platform_device_unregister(ec->telem_pdev);
- 	platform_device_unregister(ec->rtc_pdev);
- 	if (ec->debugfs_pdev)
- 		platform_device_unregister(ec->debugfs_pdev);
-diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
-new file mode 100644
-index 000000000000..6b3dc84bd0f2
---- /dev/null
-+++ b/drivers/platform/chrome/wilco_ec/telemetry.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Telemetry communication for Wilco EC
-+ *
-+ * Copyright 2019 Google LLC
-+ *
-+ * The Wilco Embedded Controller is able to send telemetry data
-+ * which is useful for enterprise applications. A daemon running on
-+ * the OS sends a command to the EC via a write() to a char device, and
-+ * can read the response with a read() request. Both the request
-+ * and the response are in an opaque binary format so that information
-+ * which is proprietary to the enterprise service provider is secure.
-+ *
-+ * The character device will appear as /dev/wilco_telemN, where N is some
-+ * small non-negative integer, starting with 0. Only one process may have
-+ * the file descriptor open at a time. The calling userspace program needs
-+ * to keep the device file descriptor open between the calls to write() and
-+ * read() in order to preserve the response. Either 32 or 256 bytes of data
-+ * are expected for arguments, and the same number of bytes will be
-+ * returned.
-+ *
-+ * For testing purposes, if the EC receives a byte sequence beginning with
-+ * 0, it will return an inverted copy of the input sequence. For an
-+ * example, run the simple python script from
-+ * https://gist.github.com/52ab07c8519b56c0ec671d3338760516
-+ */
-+
-+#include <linux/cdev.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/wilco-ec.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+
-+#define TELEM_DEV_NAME		"wilco_telem"
-+#define TELEM_CLASS_NAME	TELEM_DEV_NAME
-+#define DRV_NAME		TELEM_DEV_NAME
-+#define TELEM_DEV_NAME_FMT	(TELEM_DEV_NAME "%d")
-+static struct class telem_class = {
-+	.owner	= THIS_MODULE,
-+	.name	= TELEM_CLASS_NAME,
-+};
-+
-+/* Keep track of all the device numbers used. */
-+#define TELEM_MAX_DEV 128
-+static int telem_major;
-+static DEFINE_IDA(telem_ida);
-+
-+/**
-+ * struct telem_device_data - Data for a Wilco EC device that queries telemetry.
-+ * @cdev: Char dev that userspace reads and polls from.
-+ * @dev: Device associated with the %cdev.
-+ * @ec: Wilco EC that we will be communicating with using the mailbox interface.
-+ * @available: Boolean of if the device can be opened.
-+ */
-+struct telem_device_data {
-+	struct device dev;
-+	struct cdev cdev;
-+	struct wilco_ec_device *ec;
-+	atomic_t available;
-+};
-+
-+/**
-+ * struct telem_session_data - Data that exists between open() and release().
-+ * @dev_data: Pointer to get back to the device data and EC.
-+ * @request: Argument buffer of opaque binary data sent to EC.
-+ * @response: Response buffer of opaque binary data from EC.
-+ * @msg_size: Number of bytes in request and response.
-+ * @has_msg: Is there data available to read from a previous write?
-+ */
-+struct telem_session_data {
-+	struct telem_device_data *dev_data;
-+	u8 request[EC_MAILBOX_DATA_SIZE_EXTENDED];
-+	u8 response[EC_MAILBOX_DATA_SIZE_EXTENDED];
-+	int msg_size;
-+	bool has_msg;
-+};
-+
-+/**
-+ * telem_open() - Callback for when the device node is opened.
-+ * @inode: inode for this char device node.
-+ * @filp: file for this char device node.
-+ *
-+ * We need to ensure that after writing a command to the device,
-+ * the same userspace process reads the corresponding result.
-+ * Therefore, we increment a refcount on opening the device, so that
-+ * only one process can communicate with the EC at a time.
-+ *
-+ * Return: 0 on success, or negative error code on failure.
-+ */
-+static int telem_open(struct inode *inode, struct file *filp)
-+{
-+	struct telem_device_data *dev_data;
-+	struct telem_session_data *sess_data;
-+
-+	/* Ensure device isn't already open */
-+	dev_data = container_of(inode->i_cdev, struct telem_device_data, cdev);
-+	if (atomic_cmpxchg(&dev_data->available, 1, 0) == 0)
-+		return -EBUSY;
-+
-+	sess_data = kzalloc(sizeof(*sess_data), GFP_KERNEL);
-+	if (!sess_data) {
-+		atomic_set(&dev_data->available, 1);
-+		return -ENOMEM;
-+	}
-+	sess_data->dev_data = dev_data;
-+	sess_data->has_msg = false;
-+
-+	nonseekable_open(inode, filp);
-+	filp->private_data = sess_data;
-+
-+	return 0;
-+}
-+
-+static ssize_t telem_write(struct file *filp, const char __user *buf,
-+			   size_t count, loff_t *pos)
-+{
-+	struct telem_session_data *sess_data = filp->private_data;
-+	struct wilco_ec_message msg;
-+	int ret;
-+
-+	if (count != EC_MAILBOX_DATA_SIZE &&
-+	    count != EC_MAILBOX_DATA_SIZE_EXTENDED)
-+		return -EINVAL;
-+	sess_data->msg_size = count;
-+
-+	if (copy_from_user(sess_data->request, buf, count))
-+		return -EFAULT;
-+
-+	if (sess_data->msg_size == EC_MAILBOX_DATA_SIZE) {
-+		msg.type = WILCO_EC_MSG_TELEMETRY_SHORT;
-+		msg.flags = 0;
-+	} else {
-+		msg.type = WILCO_EC_MSG_TELEMETRY_LONG;
-+		msg.flags = WILCO_EC_FLAG_EXTENDED_DATA;
-+	}
-+	msg.request_data = sess_data->request;
-+	msg.request_size = sess_data->msg_size;
-+	msg.response_data = sess_data->response;
-+	msg.response_size = sess_data->msg_size;
-+
-+	ret = wilco_ec_mailbox(sess_data->dev_data->ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != sess_data->msg_size)
-+		return -EMSGSIZE;
-+
-+	sess_data->has_msg = true;
-+
-+	return count;
-+}
-+
-+static ssize_t telem_read(struct file *filp, char __user *buf, size_t count,
-+			  loff_t *pos)
-+{
-+	struct telem_session_data *sess_data = filp->private_data;
-+
-+	if (!sess_data->has_msg)
-+		return -ENODATA;
-+	if (count != sess_data->msg_size)
-+		return -EINVAL;
-+
-+	if (copy_to_user(buf, sess_data->response, sess_data->msg_size))
-+		return -EFAULT;
-+
-+	sess_data->has_msg = false;
-+
-+	return sess_data->msg_size;
-+}
-+
-+static int telem_release(struct inode *inode, struct file *filp)
-+{
-+	struct telem_session_data *sess_data = filp->private_data;
-+
-+	atomic_set(&sess_data->dev_data->available, 1);
-+	kfree(sess_data);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations telem_fops = {
-+	.open = telem_open,
-+	.write = telem_write,
-+	.read = telem_read,
-+	.release = telem_release,
-+	.llseek = no_llseek,
-+	.owner = THIS_MODULE,
-+};
-+
-+/**
-+ * telem_device_probe() - Callback when creating a new device.
-+ * @pdev: platform device that we will be receiving telems from.
-+ *
-+ * This finds a free minor number for the device, allocates and initializes
-+ * some device data, and creates a new device and char dev node.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+static int telem_device_probe(struct platform_device *pdev)
-+{
-+	struct telem_device_data *dev_data;
-+	dev_t dev_num;
-+	int error, minor;
-+
-+	/* Get the next available device number */
-+	minor = ida_alloc_max(&telem_ida, TELEM_MAX_DEV-1, GFP_KERNEL);
-+	if (minor < 0) {
-+		error = minor;
-+		dev_err(&pdev->dev, "Failed to find minor number: %d", error);
-+		return error;
-+	}
-+
-+	dev_data = devm_kzalloc(&pdev->dev, sizeof(*dev_data), GFP_KERNEL);
-+	if (!dev_data) {
-+		ida_simple_remove(&telem_ida, minor);
-+		return -ENOMEM;
-+	}
-+
-+	/* Initialize the device data */
-+	dev_data->ec = dev_get_drvdata(pdev->dev.parent);
-+	atomic_set(&dev_data->available, 1);
-+	platform_set_drvdata(pdev, dev_data);
-+
-+	/* Initialize the device */
-+	dev_num = MKDEV(telem_major, minor);
-+	dev_data->dev.devt = dev_num;
-+	dev_data->dev.class = &telem_class;
-+	dev_set_name(&dev_data->dev, TELEM_DEV_NAME_FMT, minor);
-+	device_initialize(&dev_data->dev);
-+
-+	/* Initialize the character device and add it to userspace */;
-+	cdev_init(&dev_data->cdev, &telem_fops);
-+	error = cdev_device_add(&dev_data->cdev, &dev_data->dev);
-+	if (error) {
-+		ida_simple_remove(&telem_ida, minor);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int telem_device_remove(struct platform_device *pdev)
-+{
-+	struct telem_device_data *dev_data = platform_get_drvdata(pdev);
-+
-+	cdev_device_del(&dev_data->cdev, &dev_data->dev);
-+	ida_simple_remove(&telem_ida, MINOR(dev_data->dev.devt));
-+
-+	return 0;
-+}
-+
-+static struct platform_driver telem_driver = {
-+	.probe = telem_device_probe,
-+	.remove = telem_device_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+};
-+
-+static int __init telem_module_init(void)
-+{
-+	dev_t dev_num = 0;
-+	int ret;
-+
-+	ret = class_register(&telem_class);
-+	if (ret) {
-+		pr_warn(DRV_NAME ": Failed registering class: %d", ret);
-+		return ret;
-+	}
-+
-+	/* Request the kernel for device numbers, starting with minor=0 */
-+	ret = alloc_chrdev_region(&dev_num, 0, TELEM_MAX_DEV, TELEM_DEV_NAME);
-+	if (ret) {
-+		pr_warn(DRV_NAME ": Failed allocating dev numbers: %d", ret);
-+		goto destroy_class;
-+	}
-+	telem_major = MAJOR(dev_num);
-+
-+	ret = platform_driver_register(&telem_driver);
-+	if (ret < 0) {
-+		pr_warn(DRV_NAME ": Failed registering driver: %d\n", ret);
-+		goto unregister_region;
-+	}
-+
-+	return 0;
-+
-+unregister_region:
-+	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
-+destroy_class:
-+	class_unregister(&telem_class);
-+	ida_destroy(&telem_ida);
-+	return ret;
-+}
-+
-+static void __exit telem_module_exit(void)
-+{
-+	platform_driver_unregister(&telem_driver);
-+	unregister_chrdev_region(MKDEV(telem_major, 0), TELEM_MAX_DEV);
-+	class_unregister(&telem_class);
-+	ida_destroy(&telem_ida);
-+}
-+
-+module_init(telem_module_init);
-+module_exit(telem_module_exit);
-+
-+MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-+MODULE_DESCRIPTION("Wilco EC telemetry driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
-index 1ff224793c99..ec0f9c06be01 100644
---- a/include/linux/platform_data/wilco-ec.h
-+++ b/include/linux/platform_data/wilco-ec.h
-@@ -32,6 +32,7 @@
-  * @data_size: Size of the data buffer used for EC communication.
-  * @debugfs_pdev: The child platform_device used by the debugfs sub-driver.
-  * @rtc_pdev: The child platform_device used by the RTC sub-driver.
-+ * @telem_pdev: The child platform_device used by the telemetry sub-driver.
-  */
- struct wilco_ec_device {
- 	struct device *dev;
-@@ -43,6 +44,7 @@ struct wilco_ec_device {
- 	size_t data_size;
- 	struct platform_device *debugfs_pdev;
- 	struct platform_device *rtc_pdev;
-+	struct platform_device *telem_pdev;
- };
- 
- /**
--- 
-2.20.1
+> 
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+> Changes in v2:
+> - Fix indentation
+> - Change the style of comments. Functions now have a shorter title and a
+> better description bellow
+> 
+>  drivers/media/platform/vivid/vivid-vid-cap.c  |  6 +-
+>  .../media/platform/vivid/vivid-vid-common.c   | 59 ------------------
+>  .../media/platform/vivid/vivid-vid-common.h   |  9 ---
+>  drivers/media/platform/vivid/vivid-vid-out.c  |  6 +-
+>  drivers/media/v4l2-core/v4l2-common.c         | 62 +++++++++++++++++++
+>  include/media/v4l2-common.h                   | 37 +++++++++++
+>  6 files changed, 105 insertions(+), 74 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vivid/vivid-vid-cap.c b/drivers/media/platform/vivid/vivid-vid-cap.c
+> index 52eeda624d7e..b5ad71bbf7bf 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-cap.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-cap.c
+> @@ -815,7 +815,7 @@ int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_cap);
+>  }
+>  
+>  int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
+> @@ -825,7 +825,7 @@ int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_cap);
+>  }
+>  
+>  int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
+> @@ -835,7 +835,7 @@ int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_cap);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_cap);
+>  }
+>  
+>  int vivid_vid_cap_g_selection(struct file *file, void *priv,
+> diff --git a/drivers/media/platform/vivid/vivid-vid-common.c b/drivers/media/platform/vivid/vivid-vid-common.c
+> index 74b83bcc6119..3dd3a05d2e67 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-common.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-common.c
+> @@ -674,65 +674,6 @@ void vivid_send_source_change(struct vivid_dev *dev, unsigned type)
+>  	}
+>  }
+>  
+> -/*
+> - * Conversion function that converts a single-planar format to a
+> - * single-plane multiplanar format.
+> - */
+> -void fmt_sp2mp(const struct v4l2_format *sp_fmt, struct v4l2_format *mp_fmt)
+> -{
+> -	struct v4l2_pix_format_mplane *mp = &mp_fmt->fmt.pix_mp;
+> -	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> -	const struct v4l2_pix_format *pix = &sp_fmt->fmt.pix;
+> -	bool is_out = sp_fmt->type == V4L2_BUF_TYPE_VIDEO_OUTPUT;
+> -
+> -	memset(mp->reserved, 0, sizeof(mp->reserved));
+> -	mp_fmt->type = is_out ? V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE :
+> -			   V4L2_CAP_VIDEO_CAPTURE_MPLANE;
+> -	mp->width = pix->width;
+> -	mp->height = pix->height;
+> -	mp->pixelformat = pix->pixelformat;
+> -	mp->field = pix->field;
+> -	mp->colorspace = pix->colorspace;
+> -	mp->xfer_func = pix->xfer_func;
+> -	/* Also copies hsv_enc */
+> -	mp->ycbcr_enc = pix->ycbcr_enc;
+> -	mp->quantization = pix->quantization;
+> -	mp->num_planes = 1;
+> -	mp->flags = pix->flags;
+> -	ppix->sizeimage = pix->sizeimage;
+> -	ppix->bytesperline = pix->bytesperline;
+> -	memset(ppix->reserved, 0, sizeof(ppix->reserved));
+> -}
+> -
+> -int fmt_sp2mp_func(struct file *file, void *priv,
+> -		struct v4l2_format *f, fmtfunc func)
+> -{
+> -	struct v4l2_format fmt;
+> -	struct v4l2_pix_format_mplane *mp = &fmt.fmt.pix_mp;
+> -	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> -	struct v4l2_pix_format *pix = &f->fmt.pix;
+> -	int ret;
+> -
+> -	/* Converts to a mplane format */
+> -	fmt_sp2mp(f, &fmt);
+> -	/* Passes it to the generic mplane format function */
+> -	ret = func(file, priv, &fmt);
+> -	/* Copies back the mplane data to the single plane format */
+> -	pix->width = mp->width;
+> -	pix->height = mp->height;
+> -	pix->pixelformat = mp->pixelformat;
+> -	pix->field = mp->field;
+> -	pix->colorspace = mp->colorspace;
+> -	pix->xfer_func = mp->xfer_func;
+> -	/* Also copies hsv_enc */
+> -	pix->ycbcr_enc = mp->ycbcr_enc;
+> -	pix->quantization = mp->quantization;
+> -	pix->sizeimage = ppix->sizeimage;
+> -	pix->bytesperline = ppix->bytesperline;
+> -	pix->flags = mp->flags;
+> -	return ret;
+> -}
+> -
+>  int vivid_vid_adjust_sel(unsigned flags, struct v4l2_rect *r)
+>  {
+>  	unsigned w = r->width;
+> diff --git a/drivers/media/platform/vivid/vivid-vid-common.h b/drivers/media/platform/vivid/vivid-vid-common.h
+> index 29b6c0b40a1b..13adea56baa0 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-common.h
+> +++ b/drivers/media/platform/vivid/vivid-vid-common.h
+> @@ -8,15 +8,6 @@
+>  #ifndef _VIVID_VID_COMMON_H_
+>  #define _VIVID_VID_COMMON_H_
+>  
+> -typedef int (*fmtfunc)(struct file *file, void *priv, struct v4l2_format *f);
+> -
+> -/*
+> - * Conversion function that converts a single-planar format to a
+> - * single-plane multiplanar format.
+> - */
+> -void fmt_sp2mp(const struct v4l2_format *sp_fmt, struct v4l2_format *mp_fmt);
+> -int fmt_sp2mp_func(struct file *file, void *priv,
+> -		struct v4l2_format *f, fmtfunc func);
+>  
+>  extern const struct v4l2_dv_timings_cap vivid_dv_timings_cap;
+>  
+> diff --git a/drivers/media/platform/vivid/vivid-vid-out.c b/drivers/media/platform/vivid/vivid-vid-out.c
+> index 9350ca65dd91..e9d68ccbcc5d 100644
+> --- a/drivers/media/platform/vivid/vivid-vid-out.c
+> +++ b/drivers/media/platform/vivid/vivid-vid-out.c
+> @@ -612,7 +612,7 @@ int vidioc_g_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_g_fmt_vid_out);
+>  }
+>  
+>  int vidioc_try_fmt_vid_out(struct file *file, void *priv,
+> @@ -622,7 +622,7 @@ int vidioc_try_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_try_fmt_vid_out);
+>  }
+>  
+>  int vidioc_s_fmt_vid_out(struct file *file, void *priv,
+> @@ -632,7 +632,7 @@ int vidioc_s_fmt_vid_out(struct file *file, void *priv,
+>  
+>  	if (dev->multiplanar)
+>  		return -ENOTTY;
+> -	return fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_out);
+> +	return v4l2_fmt_sp2mp_func(file, priv, f, vivid_s_fmt_vid_out);
+>  }
+>  
+>  int vivid_vid_out_g_selection(struct file *file, void *priv,
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index 779e44d6db43..da294b812424 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -653,3 +653,65 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, int pixelformat, int width,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+> +
+> +/*
+> + * Conversion functions that convert a single-planar format to a
+> + * multi-planar format.
+> + */
+> +void v4l2_fmt_sp2mp(const struct v4l2_format *sp_fmt,
+> +		    struct v4l2_format *mp_fmt)
+> +{
+> +	struct v4l2_pix_format_mplane *mp = &mp_fmt->fmt.pix_mp;
+> +	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> +	const struct v4l2_pix_format *pix = &sp_fmt->fmt.pix;
+> +	bool is_out = sp_fmt->type == V4L2_BUF_TYPE_VIDEO_OUTPUT;
+> +
+> +	memset(mp->reserved, 0, sizeof(mp->reserved));
+> +	mp_fmt->type = is_out ? V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE :
+> +			   V4L2_CAP_VIDEO_CAPTURE_MPLANE;
+> +	mp->width = pix->width;
+> +	mp->height = pix->height;
+> +	mp->pixelformat = pix->pixelformat;
+> +	mp->field = pix->field;
+> +	mp->colorspace = pix->colorspace;
+> +	mp->xfer_func = pix->xfer_func;
+> +	/* Also copies hsv_enc */
+> +	mp->ycbcr_enc = pix->ycbcr_enc;
+> +	mp->quantization = pix->quantization;
+> +	mp->num_planes = 1;
+> +	mp->flags = pix->flags;
+> +	ppix->sizeimage = pix->sizeimage;
+> +	ppix->bytesperline = pix->bytesperline;
+> +	memset(ppix->reserved, 0, sizeof(ppix->reserved));
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_fmt_sp2mp);
+> +
+> +int v4l2_fmt_sp2mp_func(struct file *file, void *priv, struct v4l2_format *f,
+> +			v4l2_fmtfunc func)
+> +{
+> +	struct v4l2_format fmt;
+> +	struct v4l2_pix_format_mplane *mp = &fmt.fmt.pix_mp;
+> +	struct v4l2_plane_pix_format *ppix = &mp->plane_fmt[0];
+> +	struct v4l2_pix_format *pix = &f->fmt.pix;
+> +	int ret;
+> +
+> +	/* Converts to a mplane format */
+> +	v4l2_fmt_sp2mp(f, &fmt);
+> +	/* Passes it to the generic mplane format function */
+> +	ret = func(file, priv, &fmt);
+> +	/* Copies back the mplane data to the single plane format */
+> +	pix->width = mp->width;
+> +	pix->height = mp->height;
+> +	pix->pixelformat = mp->pixelformat;
+> +	pix->field = mp->field;
+> +	pix->colorspace = mp->colorspace;
+> +	pix->xfer_func = mp->xfer_func;
+> +	/* Also copies hsv_enc */
+> +	pix->ycbcr_enc = mp->ycbcr_enc;
+> +	pix->quantization = mp->quantization;
+> +	pix->sizeimage = ppix->sizeimage;
+> +	pix->bytesperline = ppix->bytesperline;
+> +	pix->flags = mp->flags;
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_fmt_sp2mp_func);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 937b74a946cd..c5be976ce49e 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -424,4 +424,41 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, int pixelformat,
+>  int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt, int pixelformat,
+>  			int width, int height);
+>  
+> +/**
+> + * v4l2_fmtfunc - function pointer for v4l2_fmt_sp2mp()
+> + *
+> + * @file: device's descriptor file
+> + * @priv: private data pointer
+> + * @f: format that holds a mp pixel format
+> + *
+> + * Type to be passed as argument of v4l2_fmt_sp2mp() to be used by
+> + * v4l2_fmt_sp2mp_func to pass the generic multi-planar function as argument.
 
+I would re-word this a bit:
+
+* Function type used by v4l2_fmt_sp2mp(). Please, see v4l2_fmt_sp2mp for
+* more details.
+
+And in the docs of function v4l2_fmt_sp2mp() you can explain better how
+it is used.
+
+Helen
+
+> + */
+> +typedef int (*v4l2_fmtfunc)(struct file *file, void *priv,
+> +			    struct v4l2_format *f);
+> +
+> +/**
+> + * v4l2_fmt_sp2mp - transforms a single-planar format struct into a multi-planar
+> + * struct
+> + *
+> + * @sp_fmt: pointer to the single-planar format struct (in)
+> + * @mp_fmt: pointer to the multi-planar format struct (out)
+> + */
+> +void v4l2_fmt_sp2mp(const struct v4l2_format *sp_fmt,
+> +		    struct v4l2_format *mp_fmt);
+> +
+> +/**
+> + * v4l2_fmt_sp2mp_func - handler for single-planar format functions
+> + * @file: device's descriptor file
+> + * @priv: private data pointer
+> + * @f: format that holds a sp pixel format
+> + * @func: generic mp function
+> + *
+> + * Handler to call a generic multi-planar format function using single-planar
+> + * format. It converts the sp to a mp, calls the function and converts mp back
+> + * to sp.
+> + */
+> +int v4l2_fmt_sp2mp_func(struct file *file, void *priv, struct v4l2_format *f,
+> +			v4l2_fmtfunc func);
+> +
+>  #endif /* V4L2_COMMON_H_ */
+> 
