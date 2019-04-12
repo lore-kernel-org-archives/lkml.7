@@ -2,307 +2,195 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68DFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CA7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A302171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3B32083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3Wwr+QU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfDLKYF (ORCPT
+        id S1727285AbfDLKYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:24:05 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:39714 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726711AbfDLKYE (ORCPT
+        Fri, 12 Apr 2019 06:24:33 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:52635 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDLKYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:24:04 -0400
-Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id EtLkh05rdNG8zEtLlhCJfJ; Fri, 12 Apr 2019 12:24:01 +0200
-Subject: Re: [PATCH v2 2/2] drm/sun4i: dw-hdmi: Bit bang CEC on some SoCs
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@bootlin.com
-Cc:     narmstrong@baylibre.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wens@csie.org, Laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20190401191513.23159-1-jernej.skrabec@siol.net>
- <20190401191513.23159-3-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bc3d80c3-c249-9d5e-f26b-df146b580224@xs4all.nl>
-Date:   Fri, 12 Apr 2019 12:24:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 06:24:33 -0400
+Received: by mail-wm1-f53.google.com with SMTP id a184so10550035wma.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 03:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ka45ptmGyQFzPQ5cdN3bD2WYbbrHjTtlr0Y6HP683ec=;
+        b=h3Wwr+QU181Yg8fgTodgGsCWi+F4vA4L3DWOCrWJulx9Na9nYxwjhllJb8AUvfRoW+
+         Fp+8HI4DBp1lBgA9iIOXUxMjLtp0MNdJCGlJfJXgG2jYmZ+CtbZkmV4oIF57OBoclDIa
+         YTfI8V4eXTGtHOv/OBmDzWD0e7u9hr+UTgoMNpjVNd7dlJYv6BMykSBIESe8EBqZ6gvu
+         PbWOHLDJahxDXOVBMrvWS1E+o1xFe3HXYa4B09kbyJJRXVT+6vAu5Vz+SKgcx8QAeqX5
+         0j+/DnWBtxQv6ubILhy2v/it/loo/Na4WUjl/rTsM9uqeR3vUfiv6QY9K5A5QZ0PmRZ/
+         HMug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ka45ptmGyQFzPQ5cdN3bD2WYbbrHjTtlr0Y6HP683ec=;
+        b=lZpeP/uKuYS7vUYqwdjbovW1hB+8Bi+Zu8KTRJQkFRsV5jR9xUW2T1VcKHHsFlmSFK
+         isxIEo+OX1uDcMur8p/JjyCjh3KE6P+6F4DbN/tPFq67OOT4jyL94mIITGar5XSFz6DQ
+         88adzqfeyn1PEwmLAhWNxr1lROOAJDb/MRWF0vhxdi9kjDp+rNlSi4F3jjs9/TM/7lm4
+         4pXqiegH0wU0PnBse6+LihxpUDA3+xv/m0bbiQif8V00wbYID+qngti5fM01BGG66wgm
+         1Yp81b8QwU+OS58qEiVno64c2J2yw/UBo1rtuXzMnK72yc75WwWvEUOjuFmd0vX0Imwn
+         GtOA==
+X-Gm-Message-State: APjAAAVUQ8Yu282HIsfVsGWJloVO07b8Tv69YmQ4AOucfyaOlWAY2mxE
+        x9hF+M5J8eyEve8UpYUIl9EtMCNa
+X-Google-Smtp-Source: APXvYqzYLAEiSknJxFxsh4o4vl6QoOvqvEtzhgVGrWlpBUuXYayI6ca0z6Gz42d36GYqbr79hm+TBA==
+X-Received: by 2002:a1c:a803:: with SMTP id r3mr9710125wme.78.1555064670837;
+        Fri, 12 Apr 2019 03:24:30 -0700 (PDT)
+Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
+        by smtp.gmail.com with ESMTPSA id i28sm114194260wrc.32.2019.04.12.03.24.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 03:24:30 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 12:24:18 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH] clang-format: Update with the latest for_each macro list
+Message-ID: <20190412102418.GA12679@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190401191513.23159-3-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAwB0wri52zhokfyFebSm91lsoHzNzKNuNDKFsyqfqoHJOyqSHINDsB46wtueYVW3WRcwhOHirggFzDKWERKM7pU6FcoJA66Hig41tb8jS0eIvFwBKww
- BGfBGjniPyu5vdqaK6d9MfY8SYz+oaw46wVfXFJmfQVkllZaEF3VeVhz1xErp2OTqxNvealWjrmkdok2DZOVrJ6dbfwWdI2SwvL6KfQxUf3p8CSMVVOVq30L
- aP8w2OgNCxqCcOzmijuFgkaeoedeJ/UtC9IHAUeFdYpNW/xUVzwfYNXzuTversOhGT61a/7ue6GSLk+1xVba6SJEaV8DBaHU+WKD5S95VSHVZve9N0GXofyQ
- nvBhEPnA0cXL6XPAbBaMNAVeTVyte3rBlDGX9fG9mcOvjEnVIZCu9rrrvR0yCvMPiCz1GvnXQ81SghV3UhPLTm0fwdg1T+wHm73xUwQEXU2Pfob61oKbwGc/
- gC0OYsJVqKsuy6xFx9Q/5orm1gHg2JUsao7C8Wav9DZXjzmqn66kSFLa3La5Cldc5YdQhlYMaPmj/hx/KBvd97W7Zx93B//H/soAZbzNKAuHpXaHfKW+kppw
- CrM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 9:15 PM, Jernej Skrabec wrote:
-> All DW HDMI controllers used by Allwinner SoCs include CEC controller.
-> However, due to additional logic put between CEC controller and pins,
-> CEC communication doesn't work well on some of them.
-> 
-> Based on observations, it seems that only outgoing messages are
-> properly transmitted. It's possible that it would still work correctly
-> if pins are switched between input and output mode manually in right
-> moment. But that's very error prone. It's better and easier just to bit
-> bang protocol.
-> 
-> Enable bit banging just for controller and phy combination found in H3
-> and other 40nm SoCs. Other combinations work (H6) or the status is
-> unknown (A83T).
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/gpu/drm/sun4i/Kconfig          | 10 ++++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  | 11 ++++
->  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 83 +++++++++++++++++++++++++-
->  3 files changed, 102 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
-> index 1dbbc3a1b763..7149c72e44c8 100644
-> --- a/drivers/gpu/drm/sun4i/Kconfig
-> +++ b/drivers/gpu/drm/sun4i/Kconfig
-> @@ -60,6 +60,16 @@ config DRM_SUN8I_DW_HDMI
->  	  DesignWare HDMI controller with custom HDMI PHY. If M is
->  	  selected the module will be called sun8i_dw_hdmi.
->  
-> +config DRM_SUN8I_DW_HDMI_CEC
-> +       bool "Allwinner DesignWare HDMI CEC Support for 40nm SoCs"
+Re-run the shell fragment that generated the original list now that
+there are two dozens of new entries after v5.1's merge window.
+---
+Sending this as a PR for the next -rc.
 
-I'm not sure mentioning "DesignWare" here is right. The CEC support
-(as I understand it) bypasses the DW entirely and is really a sunxi
-specific implementation.
+ .clang-format | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-> +       depends on DRM_SUN8I_DW_HDMI
-> +       select CEC_CORE
-> +       select CEC_PIN
-> +       help
-> +	  Choose this option if you have an 40nm Allwinner SoC with
-> +	  the DesignWare HDMI controller with custom HDMI PHY and
-> +	  you want to use CEC.
-> +
->  config DRM_SUN8I_MIXER
->  	tristate "Support for Allwinner Display Engine 2.0 Mixer"
->  	default MACH_SUN8I
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> index 720c5aa8adc1..49ca001923e3 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> @@ -12,6 +12,7 @@
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/reset.h>
-> +#include <media/cec-pin.h>
->  
->  #define SUN8I_HDMI_PHY_DBG_CTRL_REG	0x0000
->  #define SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK		BIT(0)
-> @@ -144,6 +145,13 @@
->  #define SUN8I_HDMI_PHY_ANA_STS_RCAL_MASK	GENMASK(5, 0)
->  
->  #define SUN8I_HDMI_PHY_CEC_REG		0x003c
-> +#define SUN8I_HDMI_PHY_CEC_PIN_CTRL		BIT(7)
-> +/*
-> + * Documentation says that this bit is output enable. However,
-> + * it seems that this bit is actually output disable.
-> + */
-> +#define SUN8I_HDMI_PHY_CEC_OUT_DIS		BIT(2)
-> +#define SUN8I_HDMI_PHY_CEC_IN_DATA		BIT(1)
->  
->  struct sun8i_hdmi_phy;
->  
-> @@ -151,6 +159,7 @@ struct sun8i_hdmi_phy_variant {
->  	bool has_phy_clk;
->  	bool has_second_pll;
->  	unsigned int is_custom_phy : 1;
-> +	unsigned int bit_bang_cec : 1;
->  	const struct dw_hdmi_curr_ctrl *cur_ctr;
->  	const struct dw_hdmi_mpll_config *mpll_cfg;
->  	const struct dw_hdmi_phy_config *phy_cfg;
-> @@ -163,6 +172,8 @@ struct sun8i_hdmi_phy_variant {
->  };
->  
->  struct sun8i_hdmi_phy {
-> +	struct cec_adapter		*cec_adapter;
-> +	struct cec_notifier		*cec_notifier;
->  	struct clk			*clk_bus;
->  	struct clk			*clk_mod;
->  	struct clk			*clk_phy;
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> index 66ea3a902e36..8fd6bf91714e 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> @@ -503,8 +503,9 @@ static void sun8i_hdmi_phy_init_h3(struct sun8i_hdmi_phy *phy)
->  	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
->  			   SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK, 0);
->  
-> -	/* set HW control of CEC pins */
-> -	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG, 0);
-> +	/* manual control of CEC pins */
-> +	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG,
-> +		     SUN8I_HDMI_PHY_CEC_PIN_CTRL);
->  
->  	/* read calibration data */
->  	regmap_read(phy->regs, SUN8I_HDMI_PHY_ANA_STS_REG, &val);
-> @@ -530,8 +531,49 @@ void sun8i_hdmi_phy_set_ops(struct sun8i_hdmi_phy *phy,
->  		plat_data->cur_ctr = variant->cur_ctr;
->  		plat_data->phy_config = variant->phy_cfg;
->  	}
-> +	plat_data->disable_cec = phy->variant->bit_bang_cec;
->  }
->  
-> +#ifdef CONFIG_DRM_SUN8I_DW_HDMI_CEC
-> +static bool sun8i_hdmi_phy_cec_pin_read(struct cec_adapter *adap)
-> +{
-> +	struct sun8i_hdmi_phy *phy = cec_get_drvdata(adap);
-> +	unsigned int val;
-> +
-> +	regmap_read(phy->regs, SUN8I_HDMI_PHY_CEC_REG, &val);
-> +
-> +	return val & SUN8I_HDMI_PHY_CEC_IN_DATA;
-> +}
-> +
-> +static void sun8i_hdmi_phy_cec_pin_low(struct cec_adapter *adap)
-> +{
-> +	struct sun8i_hdmi_phy *phy = cec_get_drvdata(adap);
-> +
-> +	/* Start driving the CEC pin low */
-> +	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG,
-> +		     SUN8I_HDMI_PHY_CEC_PIN_CTRL);
-> +}
-> +
-> +static void sun8i_hdmi_phy_cec_pin_high(struct cec_adapter *adap)
-> +{
-> +	struct sun8i_hdmi_phy *phy = cec_get_drvdata(adap);
-> +
-> +	/*
-> +	 * Stop driving the CEC pin, the pull up will take over
-> +	 * unless another CEC device is driving the pin low.
-> +	 */
-> +	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG,
-> +		     SUN8I_HDMI_PHY_CEC_PIN_CTRL |
-> +		     SUN8I_HDMI_PHY_CEC_OUT_DIS);
-> +}
-> +
-> +static const struct cec_pin_ops sun8i_hdmi_phy_cec_pin_ops = {
-> +	.read = sun8i_hdmi_phy_cec_pin_read,
-> +	.low = sun8i_hdmi_phy_cec_pin_low,
-> +	.high = sun8i_hdmi_phy_cec_pin_high,
-> +};
-> +#endif
-> +
->  static struct regmap_config sun8i_hdmi_phy_regmap_config = {
->  	.reg_bits	= 32,
->  	.val_bits	= 32,
-> @@ -548,6 +590,7 @@ static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
->  };
->  
->  static const struct sun8i_hdmi_phy_variant sun8i_h3_hdmi_phy = {
-> +	.bit_bang_cec = true,
->  	.has_phy_clk = true,
->  	.is_custom_phy = true,
->  	.phy_init = &sun8i_hdmi_phy_init_h3,
-> @@ -556,6 +599,7 @@ static const struct sun8i_hdmi_phy_variant sun8i_h3_hdmi_phy = {
->  };
->  
->  static const struct sun8i_hdmi_phy_variant sun8i_r40_hdmi_phy = {
-> +	.bit_bang_cec = true,
->  	.has_phy_clk = true,
->  	.has_second_pll = true,
->  	.is_custom_phy = true,
-> @@ -565,6 +609,7 @@ static const struct sun8i_hdmi_phy_variant sun8i_r40_hdmi_phy = {
->  };
->  
->  static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
-> +	.bit_bang_cec = true,
->  	.has_phy_clk = true,
->  	.is_custom_phy = true,
->  	.phy_init = &sun8i_hdmi_phy_init_h3,
-> @@ -708,10 +753,40 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
->  		goto err_disable_clk_bus;
->  	}
->  
-> +#ifdef CONFIG_DRM_SUN8I_DW_HDMI_CEC
-> +	if (phy->variant->bit_bang_cec) {
-> +		phy->cec_notifier = cec_notifier_get(dev);
-> +		if (!phy->cec_notifier) {
-> +			ret = -ENOMEM;
-> +			goto err_disable_clk_mod;
-> +		}
-> +
-> +		phy->cec_adapter =
-> +			cec_pin_allocate_adapter(&sun8i_hdmi_phy_cec_pin_ops,
-> +						 phy, "sun8i-cec",
-> +						 CEC_CAP_DEFAULTS);
-
-Please note that while this cec-pin implementation is quite accurate, you can make
-it miss messages. Specifically when transmitting or receiving broadcast messages
-since there is no proper acknowledge mechanism to verify that there were no timing
-errors due to a missed deadline of the high-res timer.
-
-That said, when I tested this originally on the Allwinner A10, it was very hard
-to make it fail. But it remains a second-choice implementation.
-
-But it does have an advantage in that it allows you to enable CEC error injection
-and test all sorts of nasty scenarios :-)
-
-I do think you should document somewhere why you had to choose this option for
-CEC instead of the DW solution. It's not obvious.
-
-Regards,
-
-	Hans
-
-> +		ret = PTR_ERR_OR_ZERO(phy->cec_adapter);
-> +		if (ret < 0)
-> +			goto err_put_cec_notifier;
-> +
-> +		ret = cec_register_adapter(phy->cec_adapter, dev);
-> +		if (ret < 0)
-> +			goto err_delete_cec_adapter;
-> +
-> +		cec_register_cec_notifier(phy->cec_adapter, phy->cec_notifier);
-> +	}
-> +#endif
-> +
->  	hdmi->phy = phy;
->  
->  	return 0;
->  
-> +err_delete_cec_adapter:
-> +	cec_delete_adapter(phy->cec_adapter);
-> +err_put_cec_notifier:
-> +	cec_notifier_put(phy->cec_notifier);
-> +err_disable_clk_mod:
-> +	clk_disable_unprepare(phy->clk_mod);
->  err_disable_clk_bus:
->  	clk_disable_unprepare(phy->clk_bus);
->  err_deassert_rst_phy:
-> @@ -736,6 +811,10 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi)
->  {
->  	struct sun8i_hdmi_phy *phy = hdmi->phy;
->  
-> +	cec_unregister_adapter(phy->cec_adapter);
-> +	if (phy->cec_notifier)
-> +		cec_notifier_put(phy->cec_notifier);
-> +
->  	clk_disable_unprepare(phy->clk_mod);
->  	clk_disable_unprepare(phy->clk_bus);
->  	clk_disable_unprepare(phy->clk_phy);
-> 
+diff --git a/.clang-format b/.clang-format
+index f49620f506f1..f3923a1f9858 100644
+--- a/.clang-format
++++ b/.clang-format
+@@ -78,6 +78,8 @@ ForEachMacros:
+   - 'ata_qc_for_each_with_internal'
+   - 'ax25_for_each'
+   - 'ax25_uid_for_each'
++  - '__bio_for_each_bvec'
++  - 'bio_for_each_bvec'
+   - 'bio_for_each_integrity_vec'
+   - '__bio_for_each_segment'
+   - 'bio_for_each_segment'
+@@ -118,10 +120,12 @@ ForEachMacros:
+   - 'drm_for_each_legacy_plane'
+   - 'drm_for_each_plane'
+   - 'drm_for_each_plane_mask'
++  - 'drm_for_each_privobj'
+   - 'drm_mm_for_each_hole'
+   - 'drm_mm_for_each_node'
+   - 'drm_mm_for_each_node_in_range'
+   - 'drm_mm_for_each_node_safe'
++  - 'flow_action_for_each'
+   - 'for_each_active_drhd_unit'
+   - 'for_each_active_iommu'
+   - 'for_each_available_child_of_node'
+@@ -158,6 +162,9 @@ ForEachMacros:
+   - 'for_each_dss_dev'
+   - 'for_each_efi_memory_desc'
+   - 'for_each_efi_memory_desc_in_map'
++  - 'for_each_element'
++  - 'for_each_element_extid'
++  - 'for_each_element_id'
+   - 'for_each_endpoint_of_node'
+   - 'for_each_evictable_lru'
+   - 'for_each_fib6_node_rt_rcu'
+@@ -195,6 +202,7 @@ ForEachMacros:
+   - 'for_each_net_rcu'
+   - 'for_each_new_connector_in_state'
+   - 'for_each_new_crtc_in_state'
++  - 'for_each_new_mst_mgr_in_state'
+   - 'for_each_new_plane_in_state'
+   - 'for_each_new_private_obj_in_state'
+   - 'for_each_node'
+@@ -210,8 +218,10 @@ ForEachMacros:
+   - 'for_each_of_pci_range'
+   - 'for_each_old_connector_in_state'
+   - 'for_each_old_crtc_in_state'
++  - 'for_each_old_mst_mgr_in_state'
+   - 'for_each_oldnew_connector_in_state'
+   - 'for_each_oldnew_crtc_in_state'
++  - 'for_each_oldnew_mst_mgr_in_state'
+   - 'for_each_oldnew_plane_in_state'
+   - 'for_each_oldnew_plane_in_state_reverse'
+   - 'for_each_oldnew_private_obj_in_state'
+@@ -243,6 +253,9 @@ ForEachMacros:
+   - 'for_each_sg_dma_page'
+   - 'for_each_sg_page'
+   - 'for_each_sibling_event'
++  - 'for_each_subelement'
++  - 'for_each_subelement_extid'
++  - 'for_each_subelement_id'
+   - '__for_each_thread'
+   - 'for_each_thread'
+   - 'for_each_zone'
+@@ -252,6 +265,8 @@ ForEachMacros:
+   - 'fwnode_for_each_child_node'
+   - 'fwnode_graph_for_each_endpoint'
+   - 'gadget_for_each_ep'
++  - 'genradix_for_each'
++  - 'genradix_for_each_from'
+   - 'hash_for_each'
+   - 'hash_for_each_possible'
+   - 'hash_for_each_possible_rcu'
+@@ -293,7 +308,11 @@ ForEachMacros:
+   - 'key_for_each'
+   - 'key_for_each_safe'
+   - 'klp_for_each_func'
++  - 'klp_for_each_func_safe'
++  - 'klp_for_each_func_static'
+   - 'klp_for_each_object'
++  - 'klp_for_each_object_safe'
++  - 'klp_for_each_object_static'
+   - 'kvm_for_each_memslot'
+   - 'kvm_for_each_vcpu'
+   - 'list_for_each'
+@@ -324,6 +343,8 @@ ForEachMacros:
+   - 'media_device_for_each_intf'
+   - 'media_device_for_each_link'
+   - 'media_device_for_each_pad'
++  - 'mp_bvec_for_each_page'
++  - 'mp_bvec_for_each_segment'
+   - 'nanddev_io_for_each_page'
+   - 'netdev_for_each_lower_dev'
+   - 'netdev_for_each_lower_private'
+@@ -375,6 +396,7 @@ ForEachMacros:
+   - 'rht_for_each_rcu'
+   - 'rht_for_each_rcu_continue'
+   - '__rq_for_each_bio'
++  - 'rq_for_each_bvec'
+   - 'rq_for_each_segment'
+   - 'scsi_for_each_prot_sg'
+   - 'scsi_for_each_sg'
+@@ -410,6 +432,8 @@ ForEachMacros:
+   - 'v4l2_m2m_for_each_src_buf_safe'
+   - 'virtio_device_for_each_vq'
+   - 'xa_for_each'
++  - 'xa_for_each_marked'
++  - 'xa_for_each_start'
+   - 'xas_for_each'
+   - 'xas_for_each_conflict'
+   - 'xas_for_each_marked'
+-- 
+2.17.1
 
