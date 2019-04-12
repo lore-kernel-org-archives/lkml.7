@@ -2,100 +2,102 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDFC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184FFC10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E342921850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB622184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPRcOlBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfDLAIz (ORCPT
+        id S1727334AbfDLALL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:08:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38022 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726732AbfDLAIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:08:54 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BA22B19D2BD;
-        Fri, 12 Apr 2019 00:08:53 +0000 (UTC)
-Received: from redhat.com (ovpn-120-97.rdu2.redhat.com [10.10.120.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EE7C5D9C8;
-        Fri, 12 Apr 2019 00:08:48 +0000 (UTC)
-Date:   Thu, 11 Apr 2019 20:08:46 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ernesto A =?iso-8859-1?Q?=2E_Fern=E1ndez?= 
-        <ernesto.mnd.fernandez@gmail.com>, Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH v1 12/15] fs/direct-io: keep track of wether a page is
- coming from GUP or not
-Message-ID: <20190412000846.GB13369@redhat.com>
-References: <20190411210834.4105-1-jglisse@redhat.com>
- <20190411210834.4105-13-jglisse@redhat.com>
- <20190411231443.GD1695@dread.disaster.area>
+        Thu, 11 Apr 2019 20:11:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47076 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfDLALL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 20:11:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so4196742pfj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=6OeTWA9VQSd3NbwEDeXQUKakof8cdRIwi/Z/BNNmjCA=;
+        b=WPRcOlBvuy0aTnPUV4isEKo9st3ofkrxAsF+2Vgnj3mvemy/IuWuSzSkeYceYQyOY4
+         NeSOlVC/wcHIPISuL8R0VaVlK825KEMTFqUYhr0JQnAR8qBXOtN3fxfZHbx0kgpA8CZD
+         6P2z3VSg+Pqd6vViuxkzdBephpHeiQue4j4Ss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=6OeTWA9VQSd3NbwEDeXQUKakof8cdRIwi/Z/BNNmjCA=;
+        b=ukRuOXdO0uSDkS2D98ToirCB98pb+bDlvcZ576k/ctJkrwx3GOp20QLy5+GSnZXnWA
+         iInHGqOm3ymY4OEcuExC9dmp4DKxoldTvZAsb3pNqejLcJMMt7jEEvr4OJB0dLgd1UZy
+         H2KIMSdr2wt0w7zKLvp6rxr/lx0239c0OpupfuEuZjE1R8dlx/2kZ1BdVqryNgKgiwdx
+         LYKhhCQJg2QtG5jkqRcJzGYeK4XkwuV3LEJGxzDAGjexVlCpv9IyLUpLDI+fMIsASSVX
+         PPjCW+GQRYD5rp3oaO0lDmb2an1+ZWOblrDpVLss7v9pnWvry2Ct1ENOOQYnI4LMtu5R
+         aFQA==
+X-Gm-Message-State: APjAAAVUjusBTb0oe7l35HEvVrbv04ED8n0vtm1L1JR9gIB83x9dCQSt
+        LDEq5LXvOPpO/WMWv8OAzar81w==
+X-Google-Smtp-Source: APXvYqxHAXMuO4byLy8md2p5UxIGKasqS+wXkSMF+NQkLI/oGPfi3IhhJGYZ83VhqcFtDQWoe74fVg==
+X-Received: by 2002:a63:720c:: with SMTP id n12mr50217088pgc.348.1555027870565;
+        Thu, 11 Apr 2019 17:11:10 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id g67sm61418544pfg.94.2019.04.11.17.11.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Apr 2019 17:11:09 -0700 (PDT)
+Date:   Thu, 11 Apr 2019 17:11:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/harness: Add 30 second timeout per test
+Message-ID: <20190412001108.GA3576@beast>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411231443.GD1695@dread.disaster.area>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 12 Apr 2019 00:08:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 09:14:43AM +1000, Dave Chinner wrote:
-> On Thu, Apr 11, 2019 at 05:08:31PM -0400, jglisse@redhat.com wrote:
-> > From: Jérôme Glisse <jglisse@redhat.com>
-> > 
-> > We want to keep track of how we got a reference on page when doing DIO,
-> > ie wether the page was reference through GUP (get_user_page*) or not.
-> > For that this patch rework the way page reference is taken and handed
-> > over between DIO code and BIO. Instead of taking a reference for page
-> > that have been successfuly added to a BIO we just steal the reference
-> > we have when we lookup the page (either through GUP or for ZERO_PAGE).
-> > 
-> > So this patch keep track of wether the reference has been stolen by the
-> > BIO or not. This avoids a bunch of get_page()/put_page() so this limit
-> > the number of atomic operations.
-> 
-> Is the asme set of changes appropriate for the fs/iomap.c direct IO
-> path (i.e. XFS)?
+In order to keep tests from hanging forever, this adds an alarm signal
+to each test run. This assumes an individual test doesn't take longer
+than 30 seconds.
 
-Yes and it is part of this patchset AFAICT iomap use bio_iov_iter_get_pages()
-which is updated to pass down wether page are coming from GUP or not. The
-bio you get out of that is then release through iomap_dio_bio_end_io() which
-calls bvec_put_page() which will use put_user_page() for GUPed page.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/kselftest_harness.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I may have miss a case and review are welcome.
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 2d90c98eeb67..941d9391377f 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -696,6 +696,7 @@ void __run_test(struct __test_metadata *t)
+ 	t->passed = 1;
+ 	t->trigger = 0;
+ 	printf("[ RUN      ] %s\n", t->name);
++	alarm(30);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+ 		printf("ERROR SPAWNING TEST CHILD\n");
+@@ -744,6 +745,7 @@ void __run_test(struct __test_metadata *t)
+ 		}
+ 	}
+ 	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
++	alarm(0);
+ }
+ 
+ static int test_harness_run(int __attribute__((unused)) argc,
+-- 
+2.17.1
 
-Note that while the convertion is happening put_user_page is exactly the same
-as put_page() in fact the implementation just call put_page() with nothing
-else.
 
-The tricky part is making sure that before we diverge with a put_user_page()
-that does something else that put_page() we will need to be sure that we did
-not left a path that do GUP but does call put_page() and not put_user_page().
-We have some plan to catch that in debug build.
-
-In any case i believe we will be very careful when the times come to change
-put_user_page() to something different.
-
-Cheers,
-Jérôme
+-- 
+Kees Cook
