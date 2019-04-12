@@ -2,131 +2,169 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE7BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56087C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31958218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555104789;
-	bh=G0n+RD7WzgKE1Bp1mc3p0Joa9QfqNlG2x2vv8QQloFw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wktaVI/2CaVk4S+zAEAxDai+CatZnRQ5J/Jn/PZQffoOowXegLy9Qh/B0wuUJS5I1
-	 XyXbplfwjdHbKAvp4onjQd6xyeJ4cSshHHk+7i/gPmW0fQ5OROVgCysfXoLftJWSd2
-	 gLTHr/C5fV8ofDUbksoVKQuxZ5uL5ADExs6w3dCc=
+	by mail.kernel.org (Postfix) with ESMTP id 270362083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfDLVdI (ORCPT
+        id S1727041AbfDLVxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 17:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfDLVdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 17:33:07 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46627218FC
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 21:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555104786;
-        bh=G0n+RD7WzgKE1Bp1mc3p0Joa9QfqNlG2x2vv8QQloFw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l1mS0Z24mBEOBqu7t+gfQYA/4aNAmm/de1JMGdrebrcsJTEO0eQJAi8KLGHN2QxIv
-         IJW4Rq68JGkEkOhGRtIfrgeB9FZnegy5KHhd8bL8CLnp72/krW2UC6pwsENTnp2BM4
-         gozCPH03EqkYozUSEhN4GfWFoBXwzIzR+HY9O1z8=
-Received: by mail-wm1-f50.google.com with SMTP id h18so12598832wml.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 14:33:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAWyKkVBxluG7EWsfaGOTLQS+cFSHjM1b4mr3kbv1mQjrSpEYarO
-        BUHVciwMgjJthiKNG+fSv2pwaS05j3tq8/28ThZJkQ==
-X-Google-Smtp-Source: APXvYqyWkWQmR3dFfAyiKEnxHZBFm/hmsqTjQDWvcKZLincV//nNnrTxC3QydrvhPfst/4cCh1lb1GQGZR7GLK845pM=
-X-Received: by 2002:a1c:99d5:: with SMTP id b204mr12313630wme.95.1555104784796;
- Fri, 12 Apr 2019 14:33:04 -0700 (PDT)
+        Fri, 12 Apr 2019 17:53:40 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50208 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfDLVxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 17:53:40 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hF476-0005e7-TN; Fri, 12 Apr 2019 21:53:36 +0000
+Date:   Fri, 12 Apr 2019 22:53:36 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        axboe@kernel.dk
+Subject: Re: [PATCH REPOST] docs: Add struct file refcounting and SCM_RIGHTS
+ mess info
+Message-ID: <20190412215336.GL2217@ZenIV.linux.org.uk>
+References: <20190411142308.179247a4@lwn.net>
 MIME-Version: 1.0
-References: <20190411175043.31207-1-joel@joelfernandes.org>
-In-Reply-To: <20190411175043.31207-1-joel@joelfernandes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 12 Apr 2019 14:32:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrV7Hw50Bh=qQX86v_6euiGqX7eNboi50_7JmfQsyVR3_A@mail.gmail.com>
-Message-ID: <CALCETrV7Hw50Bh=qQX86v_6euiGqX7eNboi50_7JmfQsyVR3_A@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Colascione <dancol@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Oleg Nesterov <oleg@redhat.com>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411142308.179247a4@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:51 AM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> pidfd are /proc/pid directory file descriptors referring to a task group
-> leader. Android low memory killer (LMK) needs pidfd polling support to
-> replace code that currently checks for existence of /proc/pid for
-> knowing a process that is signalled to be killed has died, which is both
-> racy and slow. The pidfd poll approach is race-free, and also allows the
-> LMK to do other things (such as by polling on other fds) while awaiting
-> the process being killed to die.
->
-> It prevents a situation where a PID is reused between when LMK sends a
-> kill signal and checks for existence of the PID, since the wrong PID is
-> now possibly checked for existence.
->
-> In this patch, we follow the same mechanism used uhen the parent of the
-> task group is to be notified, that is when the tasks waiting on a poll
-> of pidfd are also awakened.
->
-> We have decided to include the waitqueue in struct pid for the following
-> reasons:
-> 1. The wait queue has to survive for the lifetime of the poll. Including
-> it in task_struct would not be option in this case because the task can
-> be reaped and destroyed before the poll returns.
+On Thu, Apr 11, 2019 at 02:23:08PM -0600, Jonathan Corbet wrote:
+> +======================
+> +Lifecycles and locking
+> +======================
+> +
+> +This manual aspires to cover the lifecycles of VFS objects and the locking
+> +that protects them.
+> +
+> +Reference counting for file structures
+> +======================================
+> +
+> +(The following text derives from `this email from Al Viro
+> +<https://lwn.net/ml/linux-fsdevel/20190207040058.GW2217@ZenIV.linux.org.uk/>`_).
+> +
+> +The :c:type:`struct file` type represents an open file in the kernel.  Its
 
-Are you sure?  I admit I'm not all that familiar with the innards of
-poll() on Linux, but I thought that the waitqueue only had to survive
-long enough to kick the polling thread and did *not* have to survive
-until poll() actually returned.
+That wants a separate section in the beginning, with overview of notions for
+which the word "file" gets misused ;-)  I have something, but it's too much
+of a rant at the moment (mostly regarding the unknown linguistic genius
+somewhere in the bowels of POSIX committees, responsible for the term
+"file description" used along with and in contrast to "file descriptor").
 
->
-> 2. By including the struct pid for the waitqueue means that during
-> de_exec, the thread doing de_thread() automatically gets the new
-> waitqueue/pid even though its task_struct is different.
+> +lifetime is controlled by a simple reference count (f_count) in that
+> +structure.  References are obtained with functions like fget(), fdget(),
+> +and fget_raw(); they are returned with fput().
 
-I didn't follow this.  Can you clarify?
+... and fdput().  BTW, are you sure that "returned" is the right verb here?
+Would "released" or "dropped" be less overloaded?
 
-Also, please don't call your new helper wake_up_pidfd_pollers().  One
-of the goals of my patch was to make it generically possible for
-kernel code to wait for a task to exit.  There are other cases besides
-pidfd for which this would be useful.  Ahem, kthread.  (The kthread
-implementation currently does some seriously awful things to detect
-when kthreads die.)  Also, some hypothetical future vastly improved
-debugging API (to supercede ptrace for new applications) might want
-this.
+The set is actually
+	fget{,_raw}()		fput()
+	fdget{,_raw}()		fdput()
+	fdget_pos()		fdput_pos()
+	get_file()		fput()
+	get_file_rcu()		fput()		[not for general use]
 
---Andy
+Not sure if it's worth putting here, but _raw variants are the ones that
+accept O_PATH files and fdget_pos() is "with XSI 2.9.7-inflicted exclusion".
+
+> +.. FIXME we should have kerneldoc comments for those functions
+> +
+
+> +Descriptor tables
+> +-----------------
+
+That wants an overview of WTF those are and what are they for; again, fodder
+for the overview section in the beginning...
+
+> +execve() does almost the same thing: if the pre-exec descriptor table is
+> +shared, it will switch to a new copy first.  In case of success the
+> +reference to the original table is dropped, in case of failure we revert to
+> +the original and drop the copy.  Note that handling of close-on-exec is
+> +done in the *copy*; the original is unaffected, so failing in execve() does
+> +not disrupt the descriptor table.
+
+The last part is actually a bit misleading - close-on-exec is handled only after
+the point of no return on execve(), so any execve() failure either happens
+before we get to doing that, or the caller gets killed.
+
+What that really gives is that descriptor table sharing is terminated by
+execve(), even if it had been across the thread group boundary, and those
+who used to share it are unaffected by our close-on-exec (everyone in the
+same thread group will be simply killed by execve(); however, other processes
+might be sharing the damn thing as well and _they_ will keep going - with
+the original table).
+
+> +The SCM_RIGHTS datagram option with Unix-domain sockets can be used to
+> +transfer a file descriptor, and its associated struct file reference, to
+> +the receiving process.
+
+"transfer X and Y to Z" implies that both X and Y are transferred; in reality
+only Y is...   I'm not sure how to put it in one sentence, though ;-/
+
+Perhaps something along the lines of "to pass opened files between the
+processes" might be better, with details explained after that?  Those who
+understand what SCM_RIGHTS is will be fine either way, but I had a bad
+experience explaining what SCM_RIGHTS was to people who'd never looked
+into that thing before.  And most of the problems had been precisely
+because of confusion re what gets passed around...  The variant I'd
+found to work best is along the lines of
+
+################
+	Sender has an opened file and wants to give it to recepient.
+Of course, telling recepient "the file I want you to use is
+descriptor 42" is useless - _their_ descriptor 42 has nothing to do
+with yours, to start with.  What's needed is
+	* getting the opened file reference from sender's descriptor
+table into recepients'
+	* telling the recepient where in _their_ descriptor table
+has it ended up.
+	The way it's done is
+1) sender specifies which of its opened files should be passed (by
+their locations in sender's descriptor table, i.e. their file descriptors).
+2) references to these opened files are attached to a packet and sent
+over.
+3) the packet is received; unused slots in recepient's descriptor table
+are chosen (same as open(2), pipe(2), etc. would have done),
+opened file references from the packet are inserted into those slots
+and their numbers (i.e. file descriptors for recepient to use) are
+given to recepient.  They are more than likely to be different
+from whatever descriptors sender used, of course; it's the opened
+files they refer to that got passed.
+	That requires cooperation from recepient, of course - if
+nothing else, they need to tell recvmsg(2) where to put that
+array of descriptors.  Details are more than slightly clumsy;
+look around in csmg_data(3) for sad boilerplate.
+################
+
+I think it's too verbose to use here, though, and I've no idea how to do it
+in more concise form...
+
+[snip]
+
+> +Note that, in both cases, the leaks are caused by loops passing through
+
+s/loops/loops in the graph of references/, maybe?
+
+> +some SCM_RIGHTS datagrams that can never be received.  So locating those,
+> +removing them from the queues they sit in and then discarding the suckers,
+> +is enough to resolve the situation. Furthermore, in both cases the loop
+> +passes through the unix_sock of something that got sent over in an
+> +SCM_RIGHTS datagram.  So we can do the following:
+
+I wonder if the subsequent discussion of the garbage collector guts (as
+opposed to the need to have it + "the strategy is to find a set of undeliverable
+SCM_RIGHTS datagrams and kick them out, breaking the unreachable loops")
+would better off living separately...
