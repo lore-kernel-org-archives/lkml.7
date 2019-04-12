@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3309C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D5CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813DB2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD822171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555083026;
-	bh=h2M8NrhlVXbwvKmntIdbgChVq2GhMDq2/JHnCxN0sKs=;
+	s=default; t=1555083031;
+	bh=3oMFdjuYL+labyYLfDP6+m7x14e3DgoHiAhnlGrHGHQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=koGMmVntZZj/GBTURWBE3+Ycjs5wsaFiquu1uYDXzbaME1S1C771wZFoYxE1oTkdv
-	 7Q3al9qAnPp24ukJ8xVygaMmG0eR5aERhPj3tM/MQa7qe7vEuyskYH7U+0mz47Woqx
-	 eON9VryieqA91mo4cYQFgR+F1+cMd9bjduX2G6yM=
+	b=k0j8FoyJ1OcbJsaEiS3D8W00AFavneMZWurWgw9KOefAR8szY+Z46OdXRqMT6+cmp
+	 LANgFdSFln8tQuW7l7OV8rm91L0CweA5MP8Lc6a1Za/keSGThWwP+czeEXkQGi2SSa
+	 4RL40sDOeHUNrZcC3q2ewdtOjYCtS9IAAVhUi9R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfDLPaZ (ORCPT
+        id S1727336AbfDLPaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55122 "EHLO mail.kernel.org"
+        Fri, 12 Apr 2019 11:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfDLPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727059AbfDLPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 11:30:07 -0400
-Subject: Re: [GIT PULL] MMC fixes for v5.1-rc5
+Subject: Re: [GIT PULL] clang-format for v5.1-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555083007;
-        bh=h2M8NrhlVXbwvKmntIdbgChVq2GhMDq2/JHnCxN0sKs=;
+        s=default; t=1555083006;
+        bh=3oMFdjuYL+labyYLfDP6+m7x14e3DgoHiAhnlGrHGHQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=g+tsxEYLQ/d/zr7EwePPPkktfxvro2/JRMekEaQh/OjWPwONRwRTGy0zH8oLJLOUn
-         xmT7btG6VLzNeX6e68enK/moeMF/qo0rb8dUgJvVgbBRm591oQ0D595NzESEX0xVe8
-         +adE5D4q5/0DlSEUccuscm/Mx2g6/ShLn/KOtkyk=
+        b=ES3cQ7KYfdOYge4QCiRGeHO/w9A18/Doi1xH/dyjVOSA+OuZ50b4GTYUVNUCHNa+n
+         hkhh6nJeW68CLdyLcTNl3COqP1O0ucg00BdISVnyonQgUxdtsgSrQ19kkexHjX9nh9
+         YZ4wZKfxJp4KbKmDPU1LnmacjqOKVtkPGosrn1p8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190412120252.3704-1-ulf.hansson@linaro.org>
-References: <20190412120252.3704-1-ulf.hansson@linaro.org>
+In-Reply-To: <20190412110003.GA14630@gmail.com>
+References: <20190412110003.GA14630@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190412120252.3704-1-ulf.hansson@linaro.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.1-rc2
-X-PR-Tracked-Commit-Id: 5c41ea6d52003b5bc77c2a82fd5ca7d480237d89
+X-PR-Tracked-Message-Id: <20190412110003.GA14630@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ojeda/linux.git
+ tags/clang-format-for-linus-v5.1-rc5
+X-PR-Tracked-Commit-Id: f16628d6e8c6616b071ffe775908b95e07404cab
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ea951a943f8d046fcb77e7d259b3c45eb2017ab0
-Message-Id: <155508300742.31973.925361565507280470.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Apr 2019 15:30:07 +0000
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+X-PR-Merge-Commit-Id: 8e72d95d993de920a81cd71027d3bb9c22cd0b4e
+Message-Id: <155508300688.31973.5710118967708631635.pr-tracker-bot@kernel.org>
+Date:   Fri, 12 Apr 2019 15:30:06 +0000
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 12 Apr 2019 14:02:52 +0200:
+The pull request you sent on Fri, 12 Apr 2019 13:00:03 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.1-rc2
+> https://github.com/ojeda/linux.git tags/clang-format-for-linus-v5.1-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ea951a943f8d046fcb77e7d259b3c45eb2017ab0
+https://git.kernel.org/torvalds/c/8e72d95d993de920a81cd71027d3bb9c22cd0b4e
 
 Thank you!
 
