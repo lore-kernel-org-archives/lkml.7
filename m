@@ -2,165 +2,140 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DADCC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3FCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FC02083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A11F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555079282;
+	bh=bIE9gs7XneLI+Mm2Ad2MU4iATuFw7FjsD8YJbJFJaeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aVvD5tn8CMuqmCpHpnKbHucfhYtN9Ocr2rwehFdlnhwoLe1dYgMhvo7mw6qG7QWBM
+	 Dda3PTBxRDkaj61kT/Lg68KjO+7M1x15iiQf/PktTb3MB/yDA13fo+UlWogtLwn0Yp
+	 Qof9RLvOdF8UAsHfF+EGjTGZvR9uXEujN7fURNuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfDLO0N (ORCPT
+        id S1727027AbfDLO2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:26:13 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36682 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfDLO0M (ORCPT
+        Fri, 12 Apr 2019 10:28:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37152 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfDLO2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:26:12 -0400
-Received: by mail-io1-f71.google.com with SMTP id a7so8010548ioq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:26:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0m8hg4kBF1SrMNFuMiutdCm5MvTrhGleRyR3argUwfA=;
-        b=XNnpwKOzunjfCp2EShD2qO73EJUW/ccE5HDuMe9FQR1mPEbBuNQ/D4iVrRA0+uW1NT
-         oD3SsTWXzImJOPDgSnYGbfYMH+00GsXWoUqrZiH2akCUYpkpgdF/0cICHqgfjeLneeY+
-         Gt1AQu3HleW8xHtbeWdn7c+7wxceZZKp+hRD5Nr+/AgeDVam0cvFnLR/j+Js1jdxzkHk
-         DcSRPz/tbHYZhZjCkVeEOdEjt0kGVyPkOo9uTLkpBddEI3/JV4Ht+OCjww/nwT7KicJz
-         qBO2b/FD0ak19p9LUhpMSi4V+TVA+Yu/23oYBREl2o2c8SKzjtN4kkCbS/bezZe1zozV
-         XawA==
-X-Gm-Message-State: APjAAAVwUzAJBBvh7WS4Txa/m19sK1DYeWebR62E4AbWR21zfK3cbt6d
-        0ly5VvFs8qsywqLqjPK9jSSaYnTjhXgIyIpHu42fYLwu8tCa
-X-Google-Smtp-Source: APXvYqwI9Pxlphm5/0kKOg4B8wYKVLN5C4yYVhutG4IEe5DJqc7K1/MoR/1oxm5PtNYgnAJhEQKy4AHx9Q62OJPak51GXxTwEVZH
+        Fri, 12 Apr 2019 10:28:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qxDH6L1FTEn5bSDv2p2bqSdx5euLq7X5rYD0KvdDqRE=; b=n0H6r8vUxCiXsArrHSiYFWJjt
+        ZKGHUGr86yZvyNrozykxY+9Yn7oDW1c8m1MUM+zsdfEx6qyR3CZjXv8SSdlN3TTKLKXFxfPp9A8UD
+        QzZzwguhE82X4BbPByKAXu7p5FUDdysELX3ik9nHyqSt5IMoGeiFARVMeZynhUennV3RM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hEx9i-0007Ej-Jb; Fri, 12 Apr 2019 14:27:50 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 6123C1121A6C; Fri, 12 Apr 2019 15:27:48 +0100 (BST)
+Date:   Fri, 12 Apr 2019 15:27:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com
+Subject: Re: [alsa-devel] [PATCH 0/2] soundwire: fix Kconfig select/depend
+ issues
+Message-ID: <20190412142748.GB6235@sirena.org.uk>
+References: <20190411192814.10663-1-pierre-louis.bossart@linux.intel.com>
+ <189ee558-766c-0e94-9570-3bf283681795@linaro.org>
+ <aaa3f184-bcd5-70fd-b8fa-e6e361253ede@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:32d7:: with SMTP id j206mr3730170ita.2.1555079170779;
- Fri, 12 Apr 2019 07:26:10 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 07:26:10 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000927a7b0586561537@google.com>
-Subject: INFO: trying to register non-static key in del_timer_sync (2)
-From:   syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
-To:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
-        gbhat@marvell.com, huxinming820@gmail.com, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        nishants@marvell.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
+Content-Disposition: inline
+In-Reply-To: <aaa3f184-bcd5-70fd-b8fa-e6e361253ede@linux.intel.com>
+X-Cookie: You dialed 5483.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--yEPQxsgoJgBvi8ip
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14793fa7200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=dc4127f950da51639216
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f8c22d200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16eeadbb200000
+On Fri, Apr 12, 2019 at 09:17:35AM -0500, Pierre-Louis Bossart wrote:
+> On 4/12/19 5:06 AM, Srinivas Kandagatla wrote:
+> > On 11/04/2019 20:28, Pierre-Louis Bossart wrote:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+dc4127f950da51639216@syzkaller.appspotmail.com
+> > > 0-day/Kbuild starts complaining about missed module dependencies and
+> > > compilation issues. Since codecs and soc drivers need to be compilable
+> > > independently, let's fix this using the following model:
 
-usb 1-1: string descriptor 0 read error: -71
-usb 1-1: USB disconnect, device number 2
-usb 1-1: Direct firmware load for mrvl/usb8801_uapsta.bin failed with error  
--2
-usb 1-1: Failed to get firmware mrvl/usb8801_uapsta.bin
-usb 1-1: info: _mwifiex_fw_dpc: unregister device
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  assign_lock_key kernel/locking/lockdep.c:786 [inline]
-  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
-  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
-  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
-  del_timer_sync+0x4c/0x150 kernel/time/timer.c:1282
-  mwifiex_usb_cleanup_tx_aggr  
-drivers/net/wireless/marvell/mwifiex/usb.c:1358 [inline]
-  mwifiex_unregister_dev+0x41b/0x690  
-drivers/net/wireless/marvell/mwifiex/usb.c:1370
-  _mwifiex_fw_dpc+0x711/0xdd0 drivers/net/wireless/marvell/mwifiex/main.c:651
-  request_firmware_work_func+0x12d/0x249  
-drivers/base/firmware_loader/main.c:785
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-------------[ cut here ]------------
-ODEBUG: assert_init not available (active state 0) object type: timer_list  
-hint:           (null)
-WARNING: CPU: 0 PID: 12 at lib/debugobjects.c:325  
-debug_print_object+0x162/0x250 lib/debugobjects.c:325
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  panic+0x29d/0x5f2 kernel/panic.c:214
-  __warn.cold+0x20/0x48 kernel/panic.c:571
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:debug_print_object+0x162/0x250 lib/debugobjects.c:325
-Code: dd e0 a1 b3 8e 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
-8b 14 dd e0 a1 b3 8e 48 c7 c7 60 96 b3 8e e8 8e 93 d2 fd <0f> 0b 83 05 e9  
-d6 59 10 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffff8880a84b78d8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed1015096f0d
-RBP: 0000000000000001 R08: ffff8880a849b100 R09: fffffbfff22f95ed
-R10: fffffbfff22f95ec R11: ffffffff917caf63 R12: ffffffff917e7780
-R13: ffffffff8161ec90 R14: 1ffff11015096f28 R15: ffff88809fc893f8
-  debug_object_assert_init lib/debugobjects.c:694 [inline]
-  debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
-  debug_timer_assert_init kernel/time/timer.c:723 [inline]
-  debug_assert_init kernel/time/timer.c:775 [inline]
-  try_to_del_timer_sync+0x72/0x110 kernel/time/timer.c:1222
-  del_timer_sync+0x112/0x150 kernel/time/timer.c:1292
-  mwifiex_usb_cleanup_tx_aggr  
-drivers/net/wireless/marvell/mwifiex/usb.c:1358 [inline]
-  mwifiex_unregister_dev+0x41b/0x690  
-drivers/net/wireless/marvell/mwifiex/usb.c:1370
-  _mwifiex_fw_dpc+0x711/0xdd0 drivers/net/wireless/marvell/mwifiex/main.c:651
-  request_firmware_work_func+0x12d/0x249  
-drivers/base/firmware_loader/main.c:785
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> > > SOUNDWIRE_INTEL ---- select -----------
+> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |
+> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 v
+> > > REGMAP_SOUNDWIRE --- select ---> SOUNDWIRE_BUS
 
+> > Last time when I looked at this, Kconfig symbols SOUNDWIRE_BUS and
+> > SOUNDWIRE looked totally redundant and bit over done.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > Removing SOUNDWIRE_BUS Kconfig did clean it up and made it bit more
+> > align with others
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> Good point, but no. This is intentional and follows the Kconfig pattern
+> pattern described by Takashi at https://lkml.org/lkml/2017/11/17/47
+
+> yes, this SOUNDWIRE is overkill for now, but let's assume there is a seco=
+nd
+> non-intel implementation (which I understand as very likely given all the
+> threads on ARM64 support). In that case you'd really want a top-level
+> selector option that has no actual compilation impact - not used in any
+> Makefile or code - but enables the sub-options and let users/distros sele=
+ct
+> the platforms they care about.
+
+I don't understand what you're saying here - what is the intended
+difference between SOUNDWIRE and SOUNDWIRE_BUS?  Having the separate
+option for _INTEL for your controller makes sense but otherwise the
+normal pattern for a bus would be that you'd have the root config
+option for the bus (which would enable the core code for the bus) and
+then everything else is hidden behind that.
+
+>=20
+> SOUNDWIRE_BUS is really the lowest-common denominator that will be used by
+> all drivers at the end.
+>=20
+> > regarding REGMAP_SOUNDWIRE, It should be selected by the codec/soundwire
+> > slave drivers isn't it?
+>=20
+> yes, that was the intent.
+> Thanks
+> -Pierre
+
+--yEPQxsgoJgBvi8ip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlywoGMACgkQJNaLcl1U
+h9BKWgf/Uu12+7GZaZlYY+rgsISG7oJhhvwc6PKMSDUkKB3TPs5PYY50WEJuAz3G
+Yc0EFNJpJleCQJ7+Cwt1bhV8fZ+gMKmuS6DchfTQIpdCq/cs9iD3vqDCOdBE0h/i
+ufk0Du3ztMmg4YG49lvPQane1xuuG6twho3OdONZndeTKsJy16fqpp5fhNs2FAD+
+VAGuxJBBx2YTGgO+g7Oog9wv5n1NcwGwbUH7BBKPceUwh2P8bKXBtVa5ai6+JWW3
+W2wPS96Swegy1/gLu0RIERQNVy9mrx7dbiX+4omgtdYuhsPReJhmG4tQrbWonYg0
+axdGsoYgOFcRZv78mX/MuxqNlL2kzg==
+=y7Jn
+-----END PGP SIGNATURE-----
+
+--yEPQxsgoJgBvi8ip--
