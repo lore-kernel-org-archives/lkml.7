@@ -2,107 +2,119 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57489C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F61C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300F92082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1F52171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2vZKP7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfDLNMj (ORCPT
+        id S1728555AbfDLNN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:12:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46064 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbfDLNMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:12:38 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83CB5C05681F;
-        Fri, 12 Apr 2019 13:12:26 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 537D519C6F;
-        Fri, 12 Apr 2019 13:12:11 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
-        yuval.shaia@oracle.com
-Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
-References: <20190410040826.24371-1-pagupta@redhat.com>
-        <20190410040826.24371-2-pagupta@redhat.com>
-        <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
-        <20190412083230.GA29850@quack2.suse.cz>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Fri, 12 Apr 2019 09:12:10 -0400
-In-Reply-To: <20190412083230.GA29850@quack2.suse.cz> (Jan Kara's message of
-        "Fri, 12 Apr 2019 10:32:30 +0200")
-Message-ID: <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 12 Apr 2019 09:13:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36937 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfDLNN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:13:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 8so5154583pfr.4;
+        Fri, 12 Apr 2019 06:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9julFFNnjjmpRPEwh1/7ZmyWUlZl64V1L5pTrjM48n0=;
+        b=W2vZKP7M4kf7G4UubRsddkMr/LDrMMxPetvcBihAXO0pjawdyrD18x95p9nWKLqIpE
+         kb/PUhQSA7jWbzavgm8YyfMfqnQiQT5J+MMN5h3XnMgJXSygzmGuzN5UzGXgtk+dsTz5
+         vyVPKKPeZqgLoTgi6eKGTgCec0XIUKOiv5bXVe/qhsas/HcN68XIoz0FEpQaQSYK4eKF
+         xrFtewY5zZbMWo/pFvdJpssCPh0S03neu0B4sbXKjlM13lEUCWws5pseRQwRKoQNmOoK
+         K0x2o5lUL+OWjtmOQJwQ06kNSEObvJd+MHeMmKQht5bXkoaFg6Z/e+nbKPz/ppL31kCl
+         L1ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9julFFNnjjmpRPEwh1/7ZmyWUlZl64V1L5pTrjM48n0=;
+        b=aCngDAn+hr9bcHYBgqw5JiJUeOdKEuULhZFTiGt7NoWR9oLqFPr+awbLK/y4XtUza0
+         9J9xQ/kdY+smchB96MEGy8E7PhNijUxaHo6rhhqdMBERlSx3m77DZIaBeoM7CAFSsMfO
+         bgwFo7UHJmdtr76spI5jBqHJj23CwzSaGP1cyOICniL1k/WdVCzmi/TZGIdDTjqAKmEM
+         mceGEyQq/6ApWhcThii8aNGH8Lx7w2kCtVuXRtA7Bl4QzRpi/XPQwEXdEvPfEe3QodSt
+         ZEt2FVuud391N4GBO/QyoR/Lp9dWpHHpH7gAnRzagKbkMzSe7AZ+1hCJrMYgPcYCxx4Q
+         UP9A==
+X-Gm-Message-State: APjAAAVePfIU/n+fgXd11D7C4GkriDlBpva4gAKPuzdjXgtWqZs973VU
+        vgYajIv1SutYJrrG8vZYzEv9lTgv5cjgWnx2gfI=
+X-Google-Smtp-Source: APXvYqxkuX6py0td5Df1zd06ScNAAg5QEhoQbMz9ORZBsVgWsBMMIG4/0ZC50dtitehPFIh4YmUsJIeEYlF68JT2QNk=
+X-Received: by 2002:a63:fd49:: with SMTP id m9mr53719071pgj.16.1555074806560;
+ Fri, 12 Apr 2019 06:13:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 12 Apr 2019 13:12:38 +0000 (UTC)
+References: <20190404103925.25652-1-yuehaibing@huawei.com> <20190405142112.26592-1-yuehaibing@huawei.com>
+ <20190405145009.GD9224@smile.fi.intel.com> <2719325.nu6fPkO1U5@kreacher>
+In-Reply-To: <2719325.nu6fPkO1U5@kreacher>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 12 Apr 2019 16:13:14 +0300
+Message-ID: <CAHp75VccF9-ax8nJ9qOfAFMvLR19K6NqwyePEf-86r4ifMnJKA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: merrifield: Fix build err without CONFIG_ACPI
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jan Kara <jack@suse.cz> writes:
-
-> On Thu 11-04-19 07:51:48, Dan Williams wrote:
->> On Tue, Apr 9, 2019 at 9:09 PM Pankaj Gupta <pagupta@redhat.com> wrote:
->> > +       } else {
->> > +               if (nd_region->flush(nd_region))
->> > +                       rc = -EIO;
->> 
->> Given the common case wants to be fast and synchronous I think we
->> should try to avoid retpoline overhead by default. So something like
->> this:
->> 
->> if (nd_region->flush == generic_nvdimm_flush)
->>     rc = generic_nvdimm_flush(...);
+On Fri, Apr 12, 2019 at 3:55 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Friday, April 5, 2019 4:50:09 PM CEST Andy Shevchenko wrote:
+> > On Fri, Apr 05, 2019 at 10:21:12PM +0800, Yue Haibing wrote:
+> > > From: YueHaibing <yuehaibing@huawei.com>
+> > >
+> > > When building CONFIG_ACPI is not set
+> > > gcc warn this:
+> > >
+> > > drivers/gpio/gpio-merrifield.c: In function
+> > > mrfld_gpio_get_pinctrl_dev_name: drivers/gpio/gpio-merrifield.c:388:19:
+> > > error: dereferencing pointer to incomplete type struct acpi_device>
+> > >    put_device(&adev->dev);
+> > >
+> > >                    ^
+> > >
+> > > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Fixes:d00d2109c367 ("gpio: merrifield: Convert to use
+> > > acpi_dev_get_first_match_dev()") Signed-off-by: YueHaibing
+> > > <yuehaibing@huawei.com>
+> >
+> > Thank you for an update, I have a comment below, but before sending v3, let
+> > Rafael to have a chance to look at it.
+> >
+> > >  #ifdef CONFIG_ACPI
+> > >  extern int acpi_platform_notify(struct device *dev, enum kobject_action
+> > >  action);>
+> > > +
+> > > +static inline void put_acpi_device(struct acpi_device *adev)
+> > > +{
+> > > +   put_device(&adev->dev);
+> > > +}
+> >
+> > This should probably go to acpi_bus.h under acpi_dev_get_first_match_dev().
+> > And talking to Mika we agreed that naming would be better as acpi_dev_put().
 >
-> I'd either add a comment about avoiding retpoline overhead here or just
-> make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
-> get confused by the code.
+> Agreed on both accounts.
 
-Isn't this premature optimization?  I really don't like adding things
-like this without some numbers to show it's worth it.
+Thanks!
+YueHaibing, please, send v3 with suggested changes.
 
--Jeff
+-- 
+With Best Regards,
+Andy Shevchenko
