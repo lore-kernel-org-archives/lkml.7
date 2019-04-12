@@ -2,197 +2,124 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CFEC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BF7218AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78E720869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="BmHf4XQm"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Mj6R6On8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfDLXbg (ORCPT
+        id S1727006AbfDLXeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 19:31:36 -0400
-Received: from ushosting.nmnhosting.com ([167.160.173.127]:53078 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfDLXbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 19:31:35 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 3463D2F28FBF;
-        Fri, 12 Apr 2019 19:31:32 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1555111893;
-        bh=rimSzx0ZYGZZ5jb4ghIWV17gFb2jTDUA34yHd5IGqSw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=BmHf4XQmvnirJmVQ0BTAgVUqos7dTFY+a+X0qYuhnCF6TK7GyHA0rFJPhAY7uu2a3
-         x+D5T0I2ra7etPwsRTl2wiCEOF7eOu4FBqo35lQySjhOIuwrcJ0qPf1kDkPxyjK38K
-         7A5B8NdUOvq1LPjDbNxRSxoEjypurheCaOV8T8Tx+ZYcv6pYZNojmiN/HQ4MH8O5xq
-         7ro/4yPZGSkS+1M57Ebbs/QvVKeRgp2F8Ztg8Eu2HFvOYIAacxeJ8wTajfclD71z2W
-         +GXQfSGuQv7j4GBAG9/7yEZvhrFIvAWyYc1lYHwgJ93VPzp2e8B0aqMP/zgWA8SYD4
-         9ayqarDJFUMpz4HvfYhY+dCncyJKmXsIMPmaDTR6ah89MtOlAJ8+eGO8kUQeXtxlXF
-         hFK+3AnQRca77X0oS6wLM3pB719GFPjweWEdjnbAoWlq0vAWoZIQI+ugxbuLJtoYRt
-         kxGIGqLIPgBaQhMRu9lVy8zBH8t034fiZURri3a+LkDTzAJJEezF7XFpxXryFE2//P
-         Jlw0ruVT+OCUm+7EPPtd/4CITmRWlf/PQNtwebTwXpvKJ+Ofw9TKggeON3mUdBHCS+
-         wUVLn+3Rs0Vz+6CW5zYqoWknEw1uu2PTtPQUXA9HfSyT8jOyvHHt2kIfE2PSi7/O9k
-         QbALBi51LUi9HtlX1EmFRaOw=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3CNVRg7018852
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 09:31:27 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'Petr Mladek'" <pmladek@suse.com>,
-        "'Alastair D'Silva'" <alastair@au1.ibm.com>
-Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
-        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
-        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
-        "'David Airlie'" <airlied@linux.ie>,
-        "'Daniel Vetter'" <daniel@ffwll.ch>,
-        "'Karsten Keil'" <isdn@linux-pingi.de>,
-        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
-        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>,
-        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
-        "'Benson Leung'" <bleung@chromium.org>,
-        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
-        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
-        "'Steven Rostedt'" <rostedt@goodmis.org>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-4-alastair@au1.ibm.com> <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz>
-In-Reply-To: <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz>
-Subject: RE: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
-Date:   Sat, 13 Apr 2019 09:31:27 +1000
-Message-ID: <093301d4f187$da0756a0$8e1603e0$@d-silva.org>
+        Fri, 12 Apr 2019 19:34:50 -0400
+Received: from mail-eopbgr790132.outbound.protection.outlook.com ([40.107.79.132]:48841
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726788AbfDLXeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 19:34:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=oZ7KQdSuZflgdmr+sRumsWLLyW5wsN6oid9BJLvWjbLU9wnHzMYo2v1TMIj6ZFOpA0Q9U20rXarYtws2OLBBFM9jMIZSJKh2yfpOqOM4UYly3uIOSHcd46o7s4hzCAAUcnd1A2qcgzdkR/8+GrRSRsNn4EiUNR0Cc3jUQ7gEfy7v4BdoBrg0sWA1o05S6LjGiN9e9ZdvTad3Lyph+JXM2r6S2Z2B85JstjqTd+LS0gMBkzT9imAgEgbDT/EZiSarOYJqu6qbOw3FpaLrAu8BBVvEk3mbFYcjied6dVndfBLVJwzw4caNyTHv/ZMYn8NYqNXvMuBMhdhnPUp5v/+sbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nqa4BWHjVjX4q1TPM/sqmjAoOZ+uEGd0jjTCa8lYrEc=;
+ b=KfiQ/RWbFzRffCX3MuCe2VD0PF/ik0kKMC/SSePHMEIipHfzVwSgTWcbwuHlUPJYN/Z2NO47VtKsXtQE8IA/ZHCLUrG85dNixxGRR1nu5QZAnaoQn0Lhy3xBFZ5yMVyAirHw8w4VB8ClJrpnrZSOEdaE+wB7NH4Atm424mthyFM7o9UVn32tMh9DvVD5H2C5tLTdYBGPIeVWkAZOQg1t9TplEcKDqvqh2d2GbWRT+H8/dUwJG89o0csVzLt2aOSVI1OINB22H5flzKyLVdtY61mfDcavVc8YPRNxjk8PeuboV9scNUYEYae6SeOvDcufZ9pBweJ9a5QNWjkRJA4CRA==
+ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
+ action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nqa4BWHjVjX4q1TPM/sqmjAoOZ+uEGd0jjTCa8lYrEc=;
+ b=Mj6R6On8OHCUQbuHraZ1wwEi9nGN2iWusTLZh1WOvgtfZbXUbRTZCefEn3Bh5SE0kaI9IOrTwPvioiReTSLj8RgcvvI9/rk9bCH0qK5WGYim0xMDq16BmdSu7mR920QWkJUIRktUNi4ubROE4zVZGrW60CYCZ81QlDgSCIvBzlA=
+Received: from MW2PR2101MB0937.namprd21.prod.outlook.com (52.132.146.10) by
+ MW2PR2101MB0907.namprd21.prod.outlook.com (52.132.152.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.0; Fri, 12 Apr 2019 23:34:46 +0000
+Received: from MW2PR2101MB0937.namprd21.prod.outlook.com
+ ([fe80::14a3:1607:bd48:515b]) by MW2PR2101MB0937.namprd21.prod.outlook.com
+ ([fe80::14a3:1607:bd48:515b%3]) with mapi id 15.20.1813.001; Fri, 12 Apr 2019
+ 23:34:46 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH] vmbus: Remove the undesired put_cpu_ptr() in
+ hv_synic_cleanup()
+Thread-Topic: [PATCH] vmbus: Remove the undesired put_cpu_ptr() in
+ hv_synic_cleanup()
+Thread-Index: AQHU8YhPOJo/Dt+Ohk2Vxh0PedeQDQ==
+Date:   Fri, 12 Apr 2019 23:34:45 +0000
+Message-ID: <20190412233429.29146-1-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO1PR15CA0087.namprd15.prod.outlook.com
+ (2603:10b6:101:20::31) To MW2PR2101MB0937.namprd21.prod.outlook.com
+ (2603:10b6:302:4::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-originating-ip: [2001:4898:80e8:2:4bb:b561:d6cf:51ef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eda3d468-a988-4475-3487-08d6bf9f71b1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MW2PR2101MB0907;
+x-ms-traffictypediagnostic: MW2PR2101MB0907:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB0907DB6FEC7D610D1C2157B7BF280@MW2PR2101MB0907.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39860400002)(136003)(366004)(346002)(189003)(199004)(52116002)(1076003)(6512007)(86612001)(4326008)(186003)(486006)(102836004)(386003)(6506007)(2906002)(4744005)(2501003)(36756003)(71200400001)(6116002)(476003)(2616005)(71190400001)(99286004)(53936002)(46003)(106356001)(256004)(5660300002)(25786009)(68736007)(478600001)(10290500003)(97736004)(81156014)(14444005)(14454004)(6486002)(2201001)(316002)(6636002)(54906003)(110136005)(105586002)(10090500001)(22452003)(86362001)(1511001)(50226002)(305945005)(8936002)(6436002)(81166006)(8676002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0907;H:MW2PR2101MB0937.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PF9N3Cb7OSUwK73ByxV0a2Izb8ObaSZAkqJPES21zcsJYMSn3D9bmj5FoItGAa3BTFQoN5CqelSGhm+oo/XE8dxP78Br7NGbeA5Tmec87Qr3Q3d2s3Tnlag2Wm8vaZxnS62iHrzqy//uZZoRggE2k3PEPQW7tjO5bYAfTxHFPMlZxkVLTNVImYClf/mudrP0cl6o4owQn2lOSW0znevTrCFZaKlxyQo0C2PhpH5YgLpa7HEG4DFSPeHu0gVicD+F6smlI9VnLwBmIOLfLs72GySHdhkBVbrA51rw2oz8gn8w8pUVEPyQLwDLmH6s2Ke602Bw8P79TK6Nh9QNIfYFVslw/xH2Q49UixuBYv+KKCblcTCl5qu64AY13gOmX44geX5CYYSu52c16Znzqqs2r8WHVJ6QQIm+R4XH4NVp9mM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1ALvlgN3AdorRAijh70pcA==
-Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Sat, 13 Apr 2019 09:31:28 +1000 (AEST)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eda3d468-a988-4475-3487-08d6bf9f71b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 23:34:46.2579
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0907
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Petr Mladek <pmladek@suse.com>
-> Sent: Saturday, 13 April 2019 12:12 AM
-> To: Alastair D'Silva <alastair@au1.ibm.com>
-> Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>;
-Joonas
-> Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
-> <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
-> <daniel@ffwll.ch>; Karsten Keil <isdn@linux-pingi.de>; Jassi Brar
-> <jassisinghbrar@gmail.com>; Tom Lendacky <thomas.lendacky@amd.com>;
-> David S. Miller <davem@davemloft.net>; Jose Abreu
-> <Jose.Abreu@synopsys.com>; Kalle Valo <kvalo@codeaurora.org>;
-> Stanislaw Gruszka <sgruszka@redhat.com>; Benson Leung
-> <bleung@chromium.org>; Enric Balletbo i Serra
-> <enric.balletbo@collabora.com>; James E.J. Bottomley
-> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
-> <viro@zeniv.linux.org.uk>; Sergey Senozhatsky
-> <sergey.senozhatsky@gmail.com>; Steven Rostedt <rostedt@goodmis.org>;
-> Andrew Morton <akpm@linux-foundation.org>; intel-
-> gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
-> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
-> Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
-> hex_dump_to_buffer with flags
-> 
-> On Wed 2019-04-10 13:17:19, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> >
-> > In order to support additional features in hex_dump_to_buffer, replace
-> > the ascii bool parameter with flags.
-> >
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/gpu/drm/i915/intel_engine_cs.c            |  2 +-
-> >  drivers/isdn/hardware/mISDN/mISDNisar.c           |  6 ++++--
-> >  drivers/mailbox/mailbox-test.c                    |  2 +-
-> >  drivers/net/ethernet/amd/xgbe/xgbe-drv.c          |  2 +-
-> >  drivers/net/ethernet/synopsys/dwc-xlgmac-common.c |  2 +-
-> >  drivers/net/wireless/ath/ath10k/debug.c           |  3 ++-
-> >  drivers/net/wireless/intel/iwlegacy/3945-mac.c    |  2 +-
-> >  drivers/platform/chrome/wilco_ec/debugfs.c        |  3 ++-
-> >  drivers/scsi/scsi_logging.c                       |  8 +++-----
-> >  drivers/staging/fbtft/fbtft-core.c                |  2 +-
-> >  fs/seq_file.c                                     |  3 ++-
-> >  include/linux/printk.h                            |  2 +-
-> >  lib/hexdump.c                                     | 15 ++++++++-------
-> >  lib/test_hexdump.c                                |  5 +++--
-> >  14 files changed, 31 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/i915/intel_engine_cs.c
-> > b/drivers/gpu/drm/i915/intel_engine_cs.c
-> > index 49fa43ff02ba..fb133e729f9a 100644
-> > --- a/drivers/gpu/drm/i915/intel_engine_cs.c
-> > +++ b/drivers/gpu/drm/i915/intel_engine_cs.c
-> > @@ -1318,7 +1318,7 @@ static void hexdump(struct drm_printer *m, const
-> void *buf, size_t len)
-> >  		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len -
-> pos,
-> >  						rowsize, sizeof(u32),
-> >  						line, sizeof(line),
-> > -						false) >= sizeof(line));
-> > +						0) >= sizeof(line));
-> 
-> It might be more clear when we define:
-> 
-> #define HEXDUMP_BINARY 0
-
-This feels unnecessary, and weird. Omitting the flag won't disable the hex
-output (as expected), and if you don't want hex output, why call hexdump in
-the first place?
-
-> >  		drm_printf(m, "[%04zx] %s\n", pos, line);
-> >
-> >  		prev = buf + pos;
-> > diff --git a/include/linux/printk.h b/include/linux/printk.h index
-> > c014e5573665..82975853c400 100644
-> > --- a/include/linux/printk.h
-> > +++ b/include/linux/printk.h
-> > @@ -493,7 +493,7 @@ enum {
-> >
-> >  extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
-> >  			      int groupsize, char *linebuf, size_t
-linebuflen,
-> > -			      bool ascii);
-> > +			      u64 flags);
-> 
-> I wonder how fancy hex_dump could be. IMHO, u32 should be enough.
-> The last famous words ;-)
-> 
-> Best Regards,
-> Petr
-> 
-> 
-> ---
-> This email has been checked for viruses by AVG.
-> https://www.avg.com
-
-
+V2l0aCBDT05GSUdfREVCVUdfUFJFRU1QVD15LCB0aGUgcHV0X2NwdV9wdHIoKSB0cmlnZ2llcnMg
+YW4gdW5kZXJmbG93DQp3YXJuaW5nIGluIHByZWVtcHRfY291bnRfc3ViKCkuDQoNCkZpeGVzOiAz
+N2NkZDk5MWZhYzggKCJ2bWJ1czogcHV0IHJlbGF0ZWQgcGVyLWNwdSB2YXJpYWJsZSB0b2dldGhl
+ciIpDQpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KQ2M6IFN0ZXBoZW4gSGVtbWluZ2VyIDxz
+dGhlbW1pbkBtaWNyb3NvZnQuY29tPg0KU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlA
+bWljcm9zb2Z0LmNvbT4NCi0tLQ0KIGRyaXZlcnMvaHYvaHYuYyB8IDEgLQ0KIDEgZmlsZSBjaGFu
+Z2VkLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2h2L2h2LmMgYi9kcml2
+ZXJzL2h2L2h2LmMNCmluZGV4IDYzMmQyNTY3NGU3Zi4uNDU2NTMwMjllZTE4IDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9odi9odi5jDQorKysgYi9kcml2ZXJzL2h2L2h2LmMNCkBAIC00MDgsNyArNDA4
+LDYgQEAgaW50IGh2X3N5bmljX2NsZWFudXAodW5zaWduZWQgaW50IGNwdSkNCiANCiAJCWNsb2Nr
+ZXZlbnRzX3VuYmluZF9kZXZpY2UoaHZfY3B1LT5jbGtfZXZ0LCBjcHUpOw0KIAkJaHZfY2Vfc2h1
+dGRvd24oaHZfY3B1LT5jbGtfZXZ0KTsNCi0JCXB1dF9jcHVfcHRyKGh2X2NwdSk7DQogCX0NCiAN
+CiAJaHZfZ2V0X3N5bmludF9zdGF0ZShWTUJVU19NRVNTQUdFX1NJTlQsIHNoYXJlZF9zaW50LmFz
+X3VpbnQ2NCk7DQotLSANCjIuMTkuMQ0KDQo=
