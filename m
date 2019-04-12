@@ -2,88 +2,55 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33A9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CFEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FED520651
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3BC20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfDLIIf (ORCPT
+        id S1727295AbfDLIJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:08:35 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:36400 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbfDLIIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:08:35 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hErEY-0003xN-1G; Fri, 12 Apr 2019 10:08:26 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 2/5] pinctrl: rockchip: fix leaked of_node references
-Date:   Fri, 12 Apr 2019 10:08:25 +0200
-Message-ID: <4822039.BKTqNpLmcE@diego>
-In-Reply-To: <1555048943-39589-3-git-send-email-wen.yang99@zte.com.cn>
-References: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn> <1555048943-39589-3-git-send-email-wen.yang99@zte.com.cn>
+        Fri, 12 Apr 2019 04:09:30 -0400
+Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:40426 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725973AbfDLIJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:09:29 -0400
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
+        (envelope-from <fw@strlen.de>)
+        id 1hErFQ-0007Ot-Rp; Fri, 12 Apr 2019 10:09:20 +0200
+Date:   Fri, 12 Apr 2019 10:09:20 +0200
+From:   Florian Westphal <fw@strlen.de>
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
+        keescook@chromium.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
+        "open list:NETFILTER" <coreteam@netfilter.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] net: Replace CONFIG_DEBUG_KERNEL with
+ CONFIG_DEBUG_MISC
+Message-ID: <20190412080920.wusq2va6zdbsf3v7@breakpoint.cc>
+References: <20190412014355.25307-1-okaya@kernel.org>
+ <20190412014355.25307-6-okaya@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190412014355.25307-6-okaya@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sinan Kaya <okaya@kernel.org> wrote:
+> CONFIG_DEBUG_KERNEL should not impact code generation. Use the newly
+> defined CONFIG_DEBUG_MISC instead to keep the current code.
 
-Am Freitag, 12. April 2019, 08:02:20 CEST schrieb Wen Yang:
-> The call to of_parse_phandle returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
-> 
-> Detected by coccinelle with the following warnings:
-> ./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-> ./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
-> 
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 16bf21b..e22d387 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3195,6 +3195,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
->  
->  		node = of_parse_phandle(bank->of_node->parent,
->  					"rockchip,pmu", 0);
-> +		of_node_put(node);
->  		if (!node) {
->  			if (of_address_to_resource(bank->of_node, 1, &res)) {
->  				dev_err(info->dev, "cannot find IO resource for bank\n");
-> 
-
-hmm, the conditional does still use the node pointer, so the of_node_put
-should probably be below the whole if clause?
-
-
-Heiko
-
-
-
+Acked-by: Florian Westphal <fw@strlen.de>
