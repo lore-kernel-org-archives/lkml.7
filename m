@@ -2,160 +2,110 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E602BC10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77780C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B504F21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47ADA2184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PtKcslHD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxG5Lfvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDLAsS (ORCPT
+        id S1727048AbfDLAte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:48:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38858 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbfDLAsS (ORCPT
+        Thu, 11 Apr 2019 20:49:34 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35029 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfDLAte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:48:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k11so9673670wro.5
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 17:48:17 -0700 (PDT)
+        Thu, 11 Apr 2019 20:49:34 -0400
+Received: by mail-vs1-f66.google.com with SMTP id d8so4603123vsp.2;
+        Thu, 11 Apr 2019 17:49:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EGa6ziXLYfRRM+NmivaW3Md44smSFk48FqpDI63b5lo=;
-        b=PtKcslHDn2R6z6QcnKMR4NphY8jE54zbep/3cKh9aE+bR36cTRa2WXKbOLhqEHTm59
-         h+8SpKz+XawyoWvTdrjazPnlxJ+5rPJ+5VEQZmk7J7kAVvAXWMyDXty1FrLfOvsuHoA7
-         xbECveEa7lWMG5m19QG5fzhZEK7OTI5mkG7noKywPaR8zMkjhZEZzk3FUhtVeFYlCaZA
-         GAICt8oQZvXimP0kemSmMkmDq3+bfz+Qk58ZQ8G6EzBAqfeDYSWJRQ0pL78MYI19u/wb
-         gAibFC1M9hwK4YwwBVDBAdETKieknZqqlBTvt/w1Uc51nS+XEazejJFtbpZ9YNAy+edH
-         w21w==
+        bh=aWBpR9dyC+xLnfEFgXj9tuZsVDw3WOnEHHAmffrI+OI=;
+        b=rxG5LfvmG1C32HozkkLevSvbpCrrv685/jmZpjprMmyNxtE2Q31fL6G9UOlE4AIO3h
+         NrV1UtIwHzrDNoSm9wNa54wKqjSKHrlb0DovQGCQ87iw+Al7LUaZidbJHwF8rRpx3oue
+         xTdo6CXkjvHkapqQtTAVywV3eZS+iUgyK3IhBCmyRJd9RW6papq6LEn0RyqBlYnp2j8/
+         +/3GqT4QR0cF3gWvmGWA5DC9pILZPFqeC2PilE9b+aVAesqUS7aCXbRqokBYBRQc4bKx
+         7DQafVtU8z2UkkIDUFuK5khaHkMOxSZzvHYXlROdjoMJIvWj0qfHvj/gEDzLQvfxDu7V
+         Fg5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EGa6ziXLYfRRM+NmivaW3Md44smSFk48FqpDI63b5lo=;
-        b=cSwjo4FoEANiSaPVtPUl0kvdTJ7w1yC4rGlSdjxv2DT7u8mx5u3fikww1ZTBtOoco+
-         EeHFycQzFBXAV8SilUSsOxOyOBVr/zeerr+/kEWw40MC2F83BHOmybBfS7XOIXZYsrRY
-         UG4311mw1pHncuBK73GvXF1e50hs5LX60/bWEk1mHA7A9MygA5GVEKTgvsd+pWPoBeV4
-         M1oRJ5dkGb74zhdoa95PMmfQRDbO8P5G1T13HbsB/Nj3fd6Z96Z5gzA2zJzAEwJ2ximN
-         OizGFkuKNP9eQZH5G7gyu2s4+ZlHQ/QDDotMIqefIoGzyKj4sXKgrcJyesCp8slw18NX
-         r4Mw==
-X-Gm-Message-State: APjAAAUuTdxzU4/Rn5X6wZqgX8lWDkgvuMA/ExrXJ/NbZw4BlSPJbEU5
-        ohWmfmbYIngtpfgsACRxpDZtn1KOV6jZlIUWcTgktw==
-X-Google-Smtp-Source: APXvYqzRFUlCHznqhQBumuCsyfdx/ROFSBWLjFLoML0kLKMa7ajlzmY0FuthJauK33a1w5Rq9vJ0A1gBGYQJfZmQEvE=
-X-Received: by 2002:adf:ec87:: with SMTP id z7mr32359209wrn.44.1555030096320;
- Thu, 11 Apr 2019 17:48:16 -0700 (PDT)
+        bh=aWBpR9dyC+xLnfEFgXj9tuZsVDw3WOnEHHAmffrI+OI=;
+        b=grxrNE2RxS8hZGMRnuB/BbUSgu1xxnWdRnMzSfSKaMYnuedAY67YTmzmwFR54ohkI/
+         MJen2kNeesGWDKg6tx4F4eCD+Mnr+HIrJjetTapsvaLtsMOvc7eN88B1UjMvFqKjFE5c
+         FgCLLIojA0HJ1Co6eYQclSy0472kVjzT0+vGYTw9j2CBTDqSXlNwDZFhn0mL63yyL9ZT
+         VAYVSxt5+2kGvm8qF+IU94u85wb8B07nsFIdQYbSPqNQzRnWXHsgo7J0zz+s5iNzFwfj
+         z4I5NRi5NVuwgl++Kt5m5LfdWq2FmczqnDtco/H7tsH5+4ab+xn0kJIsoDlMck7LQyNx
+         574Q==
+X-Gm-Message-State: APjAAAUBLlHlWDySjYwjW5q8EMKYkjlDQ3U2smmeolk216dCinat3CmP
+        hR3SIdIJXBkvqO0spdCea6CsLC65lSGA7AzFYKp5w8el
+X-Google-Smtp-Source: APXvYqyJYVcb+/w0X0buIFBGIPHkKGOSh2HGwtbXkVBvxd/Bn2yJI3+LXBSdxM/cuDO+GUiEgeLRt9DWYAM/7TVnp8A=
+X-Received: by 2002:a67:b106:: with SMTP id w6mr30490948vsl.16.1555030172978;
+ Thu, 11 Apr 2019 17:49:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190329041409.70138-1-chenyu56@huawei.com> <20190329041409.70138-11-chenyu56@huawei.com>
-In-Reply-To: <20190329041409.70138-11-chenyu56@huawei.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 11 Apr 2019 17:48:04 -0700
-Message-ID: <CALAqxLVdrzNS2t1OYT=Pziu81VO+zWq5LYghHhMJO53cSvNNtQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/13] usb: dwc3: Registering a role switch in the DRD code.
-To:     Yu Chen <chenyu56@huawei.com>
-Cc:     Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Zhuangluan Su <suzhuangluan@hisilicon.com>,
-        Kongfei <kongfei@hisilicon.com>,
-        "Liuyu (R)" <liuyu712@hisilicon.com>, wanghu17@hisilicon.com,
-        butao <butao@hisilicon.com>, chenyao11@huawei.com,
-        fangshengzhou@hisilicon.com,
-        Li Pengcheng <lipengcheng8@huawei.com>,
-        songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>,
-        xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <1549566446-27967-1-git-send-email-longman@redhat.com>
+ <20190213091936.GA22829@shao2-debian> <CAHk-=wiF2qv4TdKOTaTYeMnmsn4h6z9ot+MRj1=s7dm5y1FUwQ@mail.gmail.com>
+ <CAC=cRTM5=e7rJX80m0vL10aQoLawK_VTnQubH8A7_sUO2VUCNA@mail.gmail.com> <cc8af095-50e0-cd3e-e498-8c3350d314b7@redhat.com>
+In-Reply-To: <cc8af095-50e0-cd3e-e498-8c3350d314b7@redhat.com>
+From:   huang ying <huang.ying.caritas@gmail.com>
+Date:   Fri, 12 Apr 2019 08:49:21 +0800
+Message-ID: <CAC=cRTP38JmFWe8C=y6ew_m1Lswb8DghnqLtdiMc0EW_fyPH7g@mail.gmail.com>
+Subject: Re: [PATCH-tip 00/22] locking/rwsem: Rework rwsem-xadd & enable new
+ rwsem features
+To:     Waiman Long <longman@redhat.com>
+Cc:     Chen Rong <rong.a.chen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "IngoMolnar@shao2-debian" <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
+On Thu, Apr 11, 2019 at 12:08 AM Waiman Long <longman@redhat.com> wrote:
 >
-> The Type-C drivers use USB role switch API to inform the
-> system about the negotiated data role, so registering a role
-> switch in the DRD code in order to support platforms with
-> USB Type-C connectors.
+> On 04/10/2019 04:15 AM, huang ying wrote:
+> > Hi, Waiman,
+> >
+> > What's the status of this patchset?  And its merging plan?
+> >
+> > Best Regards,
+> > Huang, Ying
 >
+> I have broken the patch into 3 parts (0/1/2) and rewritten some of them.
+> Part 0 has been merged into tip. Parts 1 and 2 are still under testing.
 
-Hey Yu Chen!
-  Thanks so much for sending these patches out!  I have run into some
-troubles on bootup where things aren't working properly at first, that
-seem to be due to state initialization races.  In chasing those down,
-I've found some other quirks I wanted to bring up.
+Thanks!  Please keep me updated!
 
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -479,6 +479,43 @@ static struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
->         return edev;
->  }
+Best Regards,
+Huang, Ying
+
+> Cheers,
+> Longman
 >
-> +static int dwc3_usb_role_switch_set(struct device *dev, enum usb_role role)
-> +{
-> +       struct dwc3 *dwc = dev_get_drvdata(dev);
-> +       u32 mode;
-> +
-> +       switch (role) {
-> +       case USB_ROLE_HOST:
-> +               mode = DWC3_GCTL_PRTCAP_HOST;
-> +               break;
-> +       case USB_ROLE_DEVICE:
-> +               mode = DWC3_GCTL_PRTCAP_DEVICE;
-> +               break;
-> +       default:
-> +               if (dwc->role_switch_default_mode == USB_DR_MODE_HOST)
-> +                       mode = DWC3_GCTL_PRTCAP_HOST;
-> +               else
-> +                       mode = DWC3_GCTL_PRTCAP_DEVICE;
-> +               break;
-> +       }
-> +
-> +       dwc3_set_mode(dwc, mode);
-> +       return 0;
-> +}
-> +
-> +static enum usb_role dwc3_usb_role_switch_get(struct device *dev)
-> +{
-> +       struct dwc3 *dwc = dev_get_drvdata(dev);
-> +       unsigned long flags;
-> +       enum usb_role role;
-> +
-> +       spin_lock_irqsave(&dwc->lock, flags);
-> +       role = dwc->current_otg_role;
-> +       spin_unlock_irqrestore(&dwc->lock, flags);
-> +
-> +       return role;
-> +}
-> +
-
-So the two functions above are a bit asymmetric.  The
-dwc3_usb_role_switch_set() can put the device into host or device
-mode, which eventually sets the current_dr_role value.  However on the
-dwc3_usb_role_switch_get() we return the current_otg_role value.
-current_otg_role isn't set unless current_dr_role is
-DWC3_GCTL_PRTCAP_OTG, which doesn't seem to happen here.
-
-I suspect in dwc3_usb_role_switch_get() we should return
-current_dr_role, unless current_dr_role==DWC3_GCTL_PRTCAP_OTG, in
-which case we'd want to return current_otg_role.
-
-Does that make sense?
-
-Nothing really actually use this dwc3_usb_role_switch_get() yet, so
-this was easy to overlook, and I only caught it as I was trying to
-debug some of the initialization races.
-
-thanks
--john
