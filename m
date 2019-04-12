@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FCCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA29C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC712086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C002086D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXZeJ0P0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jktP0PA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfDLRoO (ORCPT
+        id S1727015AbfDLRoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:44:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34587 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfDLRoM (ORCPT
+        Fri, 12 Apr 2019 13:44:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45808 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfDLRoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:44:12 -0400
-Received: by mail-ed1-f65.google.com with SMTP id x14so9071016eds.1;
-        Fri, 12 Apr 2019 10:44:09 -0700 (PDT)
+        Fri, 12 Apr 2019 13:44:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o26so9011625edv.12;
+        Fri, 12 Apr 2019 10:44:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gGdNELhYkh0AWJ2HMG4iXp0cCJoE1c0z3RVFNAd+HsM=;
-        b=uXZeJ0P0JHFvqbKouD1hUtM1+B/yHEn2+yC1iAnl11s+KYqqrZ7yQbKiXDP0m26old
-         eyzuQ+pPAOqLgIPf+SxFDWCIjnVk585ftD2DQjnhLSg8+oX1dHphTEhDXsD2g7R2rprw
-         KoWvwsl6knWSCk5DDE2hLm8GoUUyt5Wizs0GcYm9psf65MPckiqSjjQNvwe75oJl2rvB
-         I7pbFV7S7sSEU21FYQDk1PCv203hwIhUSj6aftGjozxFH/qVdtK6wV4qf2eyqIyTpkfL
-         GkXBKoL2HH0QbWi/Ws7zXWBCBKXYbLTBXqSufSoeAIyT2XiKe5xWra9p75BGBFMN/MJG
-         H0QQ==
+        bh=fc4wsc1nWBp36dCx9E9q61KtgvmVPyLFy5ImbjpVnDg=;
+        b=jktP0PA+i2FgIRN+FGQjPJNTPMMGByIdl+FipZyz7Zb7gKPx0E3pXMaG0aQheUtPdU
+         TvX+Im0oU2wAAgDbbD/mYFc6X/WO/8B/7JMxRE9IiMoapwKV15hsTAB1zxIoL6x6yLav
+         DXCnQk0Q1v/jWvcK5vF7AaIPbbzrCsv4MO9EzZkiLzQ7frShupv22Fx20UETGQhEbMCY
+         ZOReZQU8zHinC51C8xHeTCNrax/TUnqWl2Ayisfk2AvOj9j6kToIZTrjMAwr0qBbhIL4
+         a9zBM6CcL1g98r6DJx+qajxiEx74LyUCJ8h7sdB5Zhdxl1SRV8B2WcC34m0/C8Hc3Jck
+         +mjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=gGdNELhYkh0AWJ2HMG4iXp0cCJoE1c0z3RVFNAd+HsM=;
-        b=hVWfaa8XF3Ssnfx8I16X1h/C9iO6woi4/G6PKd6WgjBtr8IEpLAPyilsnIUZPb4S3e
-         CybvSgv8Y4yIC37a9PrqriB4yxMwbycLP3kWHsUGb9OIzTOQjaqtSExu97fkp6AdTyR8
-         MnDzVI62VPFhkX6xBjSkV5KWjGG8L+GvF4mkA+RQP2BOusMoMyjIlusO6ZdjXSLNmsQ7
-         9DK97Gbn/eZGfofi3gJjGq3yW3SLVE7QPK85lAnIGSD5xQvN87EoDw7/G4aUTWseur/N
-         GHvWMzGn2XnBvA9KXHPfbIhHDkJwTxmEeYFEveYnxVpGb0xgiwE0yoRvliwGmm3kH8Fg
-         PHRA==
-X-Gm-Message-State: APjAAAWlaNPu0scIDCigU1qJ22Ot2QCdGSo+vp+T0b4hx2TwgVXU+Dyg
-        D8bP5D9guknxNzjN3PnAMlM=
-X-Google-Smtp-Source: APXvYqxtPO9QJIMK+7yh377IUW1zjlnwpjmDipZ4Nv7ppH0hxGvrc3SNLkSxBDuY3OMew8UwGUz6kA==
-X-Received: by 2002:a17:906:32d3:: with SMTP id k19mr32106760ejk.132.1555091048520;
-        Fri, 12 Apr 2019 10:44:08 -0700 (PDT)
+        bh=fc4wsc1nWBp36dCx9E9q61KtgvmVPyLFy5ImbjpVnDg=;
+        b=ss3gOMVlmKwOzRLiYITDN9YFXO08Weql936mex6pVHTw5DQAp2gFpfMuR3yTdSFtTm
+         E8m4VnM6YLgryLpLY12islfMJBlmwbjTdUsUOtEvNk7SXLRlaL8+C6xSV+zx7xYBqQlG
+         gC/WJJdA1jtCdnZglHQh1BWaqKb6k5tkTVhVY47vdkLrJdsipoDLBS7TgVP0vA6GYici
+         PD5HSzUO57byUZ9010nAlcTUtuhiZ95nf5Nlw+9fxowZe/8ehgTWirJ7+3Jud+qZ39zv
+         kpuAR6BiyxcUCo559GOY3/TF4BD6E58l2Yefx45hetPwxoIWb/kYlCM5D/O4Jg+Fbtu7
+         Nuaw==
+X-Gm-Message-State: APjAAAVgZ1mkC0/ILo6ZusdIo+9yT5VAo6EBQL9ivJnUO8iDFuKZ4dUZ
+        3tsSpUc28YJlY643NSfkPJg=
+X-Google-Smtp-Source: APXvYqxGzvxKqhM90Ucbsr6dne06nYsF67iDmpB5XYbz+M2tMCklR+JKi0W+k26z9zWHL6xfRypo0w==
+X-Received: by 2002:a50:b4dd:: with SMTP id x29mr37484630edd.219.1555091057232;
+        Fri, 12 Apr 2019 10:44:17 -0700 (PDT)
 Received: from ziggy.stardust (89.red-2-139-173.staticip.rima-tde.net. [2.139.173.89])
-        by smtp.gmail.com with ESMTPSA id a11sm7518318eje.38.2019.04.12.10.44.06
+        by smtp.gmail.com with ESMTPSA id y2sm2083381eda.52.2019.04.12.10.44.15
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 10:44:07 -0700 (PDT)
-Subject: Re: [PATCH 03/24] dt-bindings: pwrap: mediatek: add pwrap support for
- MT8516
+        Fri, 12 Apr 2019 10:44:16 -0700 (PDT)
+Subject: Re: [PATCH 04/24] soc: mediatek: pwrap: add missing check on rstc
 To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
         mark.rutland@arm.com
 Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
@@ -73,7 +72,7 @@ Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-4-fparent@baylibre.com>
+ <20190323211612.860-5-fparent@baylibre.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -169,12 +168,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <effcf905-92c9-0181-2518-5a8e943f36ac@gmail.com>
-Date:   Fri, 12 Apr 2019 19:44:05 +0200
+Message-ID: <bfb3a38b-994c-ef4f-799c-8f8a4f012fa0@gmail.com>
+Date:   Fri, 12 Apr 2019 19:44:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190323211612.860-4-fparent@baylibre.com>
+In-Reply-To: <20190323211612.860-5-fparent@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -186,28 +185,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 23/03/2019 22:15, Fabien Parent wrote:
-> Add binding documentation of pwrap for MT8516 SoCs.
+> The variable rstc is set only when the SoC PWRAP have the
+> PWRAP_CAP_RESET capability. Check whether rstc is set before
+> using it to avoid errors.
 > 
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 applied to v5.1-next/soc
 
 Thanks!
 
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> index 5a2ef1726e2a..7a32404c6114 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> @@ -25,6 +25,7 @@ Required properties in pwrap device node.
->  	"mediatek,mt8135-pwrap" for MT8135 SoCs
->  	"mediatek,mt8173-pwrap" for MT8173 SoCs
->  	"mediatek,mt8183-pwrap" for MT8183 SoCs
-> +	"mediatek,mt8516-pwrap" for MT8516 SoCs
->  - interrupts: IRQ for pwrap in SOC
->  - reg-names: Must include the following entries:
->    "pwrap": Main registers base
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index 8236a6c87e19..b3ba2301f569 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -1478,7 +1478,8 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+>  {
+>  	int ret;
+>  
+> -	reset_control_reset(wrp->rstc);
+> +	if (wrp->rstc)
+> +		reset_control_reset(wrp->rstc);
+>  	if (wrp->rstc_bridge)
+>  		reset_control_reset(wrp->rstc_bridge);
+>  
 > 
