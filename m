@@ -2,103 +2,90 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0560EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF8FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A2820818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="Uv4YryJm"
+	by mail.kernel.org (Postfix) with ESMTP id 6F1512171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfDLToO (ORCPT
+        id S1727035AbfDLTq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:44:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43756 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfDLToN (ORCPT
+        Fri, 12 Apr 2019 15:46:27 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:44364 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726870AbfDLTq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:44:13 -0400
-Received: by mail-pl1-f193.google.com with SMTP id n8so5590848plp.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QDSyeWKte6gUJHhZ5n8yra+XVisEFH5wdFTnyuNs4rY=;
-        b=Uv4YryJmlahAjDgDwAuvUpQoU8nfwH9+Yr4tQ9RmwQemsQHwYhZBam1/EPa3W0epC1
-         Zh/28DVpZNPJynU5jnzdpbHZPxBiAkG0hzrzhJx3F+egfeIBNjO4ZtivEd1pplorUJKw
-         k5Gk0sUugibKuuejEvc/Ck+0cL/cS883ueTh+RSU2gX1o5ImTFbrJP1MA8y2I0oG98ox
-         LIcFWxXMUkADxiENYgYLS8zRaDWcp6O/iqdggRJD/Q+j52I8aQIdOAs02hAa8V3euEMw
-         tGtLv3ASAALsMHsaCk1Rg8uCE9X+j22Up1PIm0+hLzbWuMiD19B2RpOYvnIoodb+YVFk
-         2HxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QDSyeWKte6gUJHhZ5n8yra+XVisEFH5wdFTnyuNs4rY=;
-        b=gz33uWxnIl+J0nQWYLpw0dsymVYob7d98bye1HfJYlrJM/1OS44EMrJGGPYa7ZMuEh
-         nRxV5U4pNIgxivOCRyPNCiHBAAnbYWIAgAmlOtM/ankrc7nZDHA3AP59nkAAauicJP8w
-         khkKOeO3sqoUBjVLi737oLS41Z8RPgmzxFCkQEXYKKgECkUj9TdEfigtYtWcTppfGEue
-         DeZXrmKHKIUrBaV+LZ87k7NCCFrev9RpAu3TDxn18wLrXwRtyhldzAwPCyzot79TkzW6
-         5NKC3KBHDfgUychl0DfKji0zasGYy8Hp5m4Jm+rk0qQCT4XnjSCr8tLpEn9aFkU0sHc9
-         R7Nw==
-X-Gm-Message-State: APjAAAU9iQ6ndq8BQe2R2BYwdok+K/p9Wc4mThOOPkFJYhJBX6XawV86
-        cEhSRIRCeoW0NFdALWg5adxWjQ==
-X-Google-Smtp-Source: APXvYqxq4h7OpgaqkLS8WLWdn5KmkgnOjZwCYjndr2hv1AYef932p5Jx5qN7FsfRQ2sUwuI4tgSmVQ==
-X-Received: by 2002:a17:902:294b:: with SMTP id g69mr10137752plb.57.1555098252408;
-        Fri, 12 Apr 2019 12:44:12 -0700 (PDT)
-Received: from cisco ([2601:282:901:dd7b:e0a2:3243:c21a:e844])
-        by smtp.gmail.com with ESMTPSA id 81sm35768568pfy.89.2019.04.12.12.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 12:44:11 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 13:44:09 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     shuah <shuah@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/seccomp: Handle namespace failures gracefully
-Message-ID: <20190412194409.GD25793@cisco>
-References: <20190411235631.GA31624@beast>
- <20190412152543.GB25793@cisco>
- <8fca6205-4983-2ba1-c1eb-c80be2dc8769@kernel.org>
+        Fri, 12 Apr 2019 15:46:26 -0400
+Received: (qmail 2122 invoked by uid 2102); 12 Apr 2019 15:46:25 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Apr 2019 15:46:25 -0400
+Date:   Fri, 12 Apr 2019 15:46:25 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     andreyknvl@google.com
+cc:     gregkh@linuxfoundation.org, <gustavo@embeddedor.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: INFO: task hung in usb_kill_urb
+In-Reply-To: <0000000000006f1596058653d991@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904121540001.1283-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8fca6205-4983-2ba1-c1eb-c80be2dc8769@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 11:07:11AM -0600, shuah wrote:
-> On 4/12/19 9:25 AM, Tycho Andersen wrote:
-> > On Thu, Apr 11, 2019 at 04:56:31PM -0700, Kees Cook wrote:
-> > > When running without USERNS or PIDNS the seccomp test would hang since
-> > > it was waiting forever for the child to trigger the user notification
-> > > since it seems the glibc() abort handler makes a call to getpid(),
-> > > which would trap again. This changes the getpid filter to getppid, and
-> > > makes sure ASSERTs execute to stop from spawning the listener.
-> > > 
-> > > Reported-by: Shuah Khan <shuah@kernel.org>
-> > > Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Sorry for the delay, thanks for looking at this!
-> > 
-> > Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-> > 
+Andrey:
+
+It's really hard to tell just what's going on here.
+
+On Fri, 12 Apr 2019, syzbot wrote:
+
+> Hello,
 > 
-> Thanks both. Should it go into stables. I will pull this and
-> add stable if that is appropriate.
+> syzbot found the following crash on:
+> 
+> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14c4c1af200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d919b0f29d7b5a4994b9
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14410dbb200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f0acd3200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
+> 
+> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> INFO: task kworker/0:2:532 blocked for more than 143 seconds.
+>        Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/0:2     D26656   532      2 0x80000000
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   schedule+0x8f/0x180 kernel/sched/core.c:3562
+>   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
+>   usb_kill_urb+0x22a/0x2c0 drivers/usb/core/urb.c:687
+>   usb_start_wait_urb+0x257/0x4d0 drivers/usb/core/message.c:63
+>   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+>   usb_control_msg+0x321/0x4a0 drivers/usb/core/message.c:152
 
-Yes, for 5.0+ that sounds good.
+It looks like something is stuck waiting for usb_kill_urb() to finish.  
+But what happened before that?
 
-Thanks!
+I can't tell from the reproducer source, because it uses a bunch of 
+special stuff you added in your usb-fuzzer tree.
 
-Tycho
+Alan Stern
+
