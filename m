@@ -2,116 +2,229 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF9BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94B1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B70218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555099011;
-	bh=8smsSmoLiGCLUxSbLuqgD3317huQyh2jmer/5G9rRJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mcaKHCq6B7apKUFpbuA6Jeet+eHdzXd3yEnoczziu2GzPWnRklUb8y64BYZdAYBr0
-	 caNnaN819VAOnG3KPV+yI1hwP1Jy1jZNj/hC4Jfp52rSvD0bZUlLyOehnnvT76AHXV
-	 qg+0RdEdbAApultQ3U/Ha3kWBdSpHI7jjW9tOvkw=
+	by mail.kernel.org (Postfix) with ESMTP id 85FC020850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:58:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge4sa+cH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfDLT4u (ORCPT
+        id S1726926AbfDLT6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfDLT4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:56:49 -0400
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FEDB2171F;
-        Fri, 12 Apr 2019 19:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555099008;
-        bh=8smsSmoLiGCLUxSbLuqgD3317huQyh2jmer/5G9rRJ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W4QXNx7rH+AgjDiyq67un/ItT2S90Bubp0H4mMJkzZptUo1SyhWlLXAU3ieLvJBbr
-         rXoRI/3nJvl/2a1dW3YckUzgAK3seS48OaTiOEGQSh33FTap6oi55Mg+T+h0PyC9Bn
-         gIkQqFwLDWr4U/u9CISX7KVKgpXsGvuMTyG7NpuE=
-Date:   Fri, 12 Apr 2019 22:56:45 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        =?iso-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RDMA/cma: Make CM response timeout and # CM retries
- configurable
-Message-ID: <20190412195645.GG3201@mtr-leonro.mtl.com>
-References: <20190217170909.1178575-1-haakon.bugge@oracle.com>
- <20190222163637.GA9819@ziepe.ca>
- <afadc799-b547-5c20-64d2-75fa0f64cd9e@opengridcomputing.com>
- <C7922E85-CA43-479A-8021-DADD59FF5BE7@redhat.com>
- <20190223084930.GJ23561@mtr-leonro.mtl.com>
- <VI1PR0501MB2271E8A704DD21EF81C7DC24D1710@VI1PR0501MB2271.eurprd05.prod.outlook.com>
- <20190412193024.GB4690@ziepe.ca>
+        Fri, 12 Apr 2019 15:58:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34591 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLT6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:58:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x14so9426265eds.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+sqk7b0W+kZWE70jLfTxrnA3dVt6lc7hB1p+/AAF4VM=;
+        b=ge4sa+cHeLtRW4KFn7LgNmdd1KU+hG0BNWubRxYDn8MlRYHB+UYDXu2KIsqTA7C9Yw
+         EEiG9vrUpCWKAOUB7N8wvd16x22uWiUsHIh9m85doDLSuLEQ1Q92DF57z/XRjwDhx3em
+         AYlLmm4UwoW2+jV9/KajDuK0jBgCb6fcmqx2Gh9ZwpB3xd73nNpVlwTv85wjbmRVEScx
+         Sq4cIgMU17ZKEH3pYIQGIGxgtAFeTGw7MsI6WpnRkZ6wzSp5W7OWByTh5UR80L+1I1Z6
+         Z/7AwbnszTX7jKeTdYj+ZnWBYHRRbBIC4S95O6Al6klA7ngG2wm4qlKfJgrLNLdHzqmQ
+         PjqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+sqk7b0W+kZWE70jLfTxrnA3dVt6lc7hB1p+/AAF4VM=;
+        b=nYvRfqoB7tKJ/cZMfCNlaIrl7NsDOOQb/AcdwhGKCkn/fYtimHGS4xkEJkL2qKZOFi
+         x8DmJjTMeVqIltZrhZ+O0zwJ8Zh9X0hybLg+wslHkE/OuXUE1a+PUTMQuygGnlPykQti
+         T1pn9kZBgzbrOQg8sVdlc5yTZ8Yb0xUC0BOFNRfvg0XDwgvTSjEFn4z6kDaydT1lNmvh
+         89kRmIGpRLbnpq8lrTxpADn5sr2FZpPjoPrx+MNInTkFkchfJ5qrTQB2oNUJlhm82fZ2
+         GPwa8K3UYT6ltGo1rIQ43QRbBuKGq7k20YIZrEpfmPtJXXSxRqYLxv4MbmSX/aZo/fQh
+         0eYg==
+X-Gm-Message-State: APjAAAW3DSpIbwbXFtoEPWptTSFm09hhmQxJO4wRXWfpjMvupuTh1hKe
+        ZRyVWSPttxhFQxiuHKVnuBE=
+X-Google-Smtp-Source: APXvYqzq01siiudfiYF20p0qHozDtVqp4R76OAuGNNz+sSoCijNQ77p54ndPUZ+8FfhBsm+jJmgJOw==
+X-Received: by 2002:a17:906:af6d:: with SMTP id os13mr31946795ejb.222.1555099111353;
+        Fri, 12 Apr 2019 12:58:31 -0700 (PDT)
+Received: from ziggy.stardust (89.red-2-139-173.staticip.rima-tde.net. [2.139.173.89])
+        by smtp.gmail.com with ESMTPSA id m12sm4508215edi.3.2019.04.12.12.58.30
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 12:58:30 -0700 (PDT)
+Subject: Re: [PATCH] soc: mediatek: pwrap: Zero initialize rdata in
+ pwrap_init_cipher
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20190307225650.23001-1-natechancellor@gmail.com>
+ <20190320191118.GE28744@archlinux-ryzen>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <0d77d9bd-4b4e-8e40-a721-cf8eb0451c9e@gmail.com>
+Date:   Fri, 12 Apr 2019 21:58:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1ddnCX6roxAgyKJ1"
-Content-Disposition: inline
-In-Reply-To: <20190412193024.GB4690@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190320191118.GE28744@archlinux-ryzen>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---1ddnCX6roxAgyKJ1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Apr 12, 2019 at 04:30:24PM -0300, Jason Gunthorpe wrote:
-> On Mon, Mar 04, 2019 at 06:27:26AM +0000, Parav Pandit wrote:
->
-> > I think we should use rdma_nl_register(RDMA_NL_RDMA_CM, cma_cb_table) which was removed as part of ID stats removal.
-> > Because of below reasons.
-> > 1. rdma netlink command auto loads the module
->
-> This is probably the best argument to stay away from sysctl for module
-> parameters.. It is tricky to make sure the rdma module is loaded
-> before sysctl runs in boot, and I don't think sysctl autoloads missing
-> modules, or somehow copes with dynamic module loading, does it?
+On 20/03/2019 20:11, Nathan Chancellor wrote:
+> On Thu, Mar 07, 2019 at 03:56:51PM -0700, Nathan Chancellor wrote:
+>> When building with -Wsometimes-uninitialized, Clang warns:
+>>
+>> drivers/soc/mediatek/mtk-pmic-wrap.c:1358:6: error: variable 'rdata' is
+>> used uninitialized whenever '||' condition is true
+>> [-Werror,-Wsometimes-uninitialized]
+>>
+>> If pwrap_write returns non-zero, pwrap_read will not be called to
+>> initialize rdata, meaning that we will use some random uninitialized
+>> stack value in our print statement. Zero initialize rdata in case this
+>> happens.
+>>
+>> Link: https://github.com/ClangBuiltLinux/linux/issues/401
+>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>> ---
+>>
+>> I don't know if this is better or to just restructure the if statement
+>> below (I'm not an expert in this code so I'll leave that up to the
+>> maintainers to decide).
+>>
+>>  drivers/soc/mediatek/mtk-pmic-wrap.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+>> index 8236a6c87e19..2f632e8790f7 100644
+>> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+>> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+>> @@ -1281,7 +1281,7 @@ static bool pwrap_is_pmic_cipher_ready(struct pmic_wrapper *wrp)
+>>  static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+>>  {
+>>  	int ret;
+>> -	u32 rdata;
+>> +	u32 rdata = 0;
+>>  
+>>  	pwrap_writel(wrp, 0x1, PWRAP_CIPHER_SWRST);
+>>  	pwrap_writel(wrp, 0x0, PWRAP_CIPHER_SWRST);
+>> -- 
+>> 2.21.0
+>>
+> 
+> Gentle ping (if there was a response to this, I didn't receive it). I
+> know I sent it in the middle of a merge window so I get if it slipped
+> through the cracks.
+> 
 
-As far as I remember, sysctl won't be available till module is loaded,
-so autoload won't work because path doesn't exist.
+applied now to v5.1-next/soc
 
->
-> To that end we should probably have the entire sysctl configurable
-> available in netlink
->
-> Jason
-
---1ddnCX6roxAgyKJ1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcsO19AAoJEORje4g2clinAIgP/3fDJ2ejyqJ3RWUKefRTl98A
-a9xElmkzfHyU5J6wnDPyBqssKwrzz9MCcIXvDPFI55SpoYNVYjmW0HpFOAfZtfF3
-Wz6psZh6NqfNUvkkG9h0pGyDgZl/OADpEYNV0Gv1dR5mpM4uTWMYLEBkHoxrTMji
-RuA5sueapLvADXUMemD//SiAgLsM3Jckarto0mPfp52sq9Pt41utGjlq4yN+mcXt
-Mbz3rQw2Ey5/6gxTr4IvXWDOdOHRkLSpYon06m1PfJPgjhIX+IbxSNbKI9P1l+Xz
-m0pRB1mR+7pKGuUzpKZC6WilOab1v0CYaBFpzLOaGL/RwMGUhFjSLI2SO0ecfVD2
-fFFY2V7TH9DInTSrHDIcqFlJNYfUd6zmj0QXZ+e6yP8HybkhBgahDF87dbniRrLj
-QP/A30ouCVm3oGkS5KuV5ZNL/JusWpFhL48pzqZgEyEZ9F0Px2ILa/nhMUyOQJbr
-5hPEwA9gaL8qXbodqphpXLHaBm3i2rL3EqpNdtbiDrFDVHDstLV6sek0/IKNTaiU
-EIRutsOTRFoXengQjv/ezKI5pVhjWLoGciVfa4uioiIObqw1YJymdF4qKXG6zQfd
-UK/SnWUudr8NyWzFkYK3IX0upw0hkGSGnYvLSU7TkfDbIma/uzPcDTEXYCYZv/Vl
-IGe2aZTyxCSckkYSurdy
-=RILM
------END PGP SIGNATURE-----
-
---1ddnCX6roxAgyKJ1--
+thanks
