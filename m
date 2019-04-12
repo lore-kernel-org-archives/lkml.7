@@ -2,146 +2,183 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F043C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D45C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5EA20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="tqmWMvB0"
+	by mail.kernel.org (Postfix) with ESMTP id E977A20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555079004;
+	bh=Fc/J0DaiXJ6eKFZsqOTqPq+h1GGAjej4uodIivPt32o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nEsC4WgJkIQrA60Eb8Bae0Ae/Rxc9WqUpMS0UQQIfMxW56US9Orz6LB/E5p7jY/vV
+	 uUWyxZAORhTMl4Tuoc6sYmj+gV46+h9JWelF20fzuJWJ5CehtDJCDhIUS8XnbY2qAZ
+	 LFe45rfILaN5ZOUPNwe7kE8qmA3IoOw4nE15l6Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfDLOXS (ORCPT
+        id S1727216AbfDLOXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:23:18 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53680 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727133AbfDLOXQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:23:16 -0400
-Received: by mail-it1-f195.google.com with SMTP id y204so15973132itf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vrDH57bQG2o4KJBrG5k5zmJiTn+4+uR9TaQNTiUy5d0=;
-        b=tqmWMvB04VikQpMZ2UJAt1JWG7VbHL7jzZSPvCv9KZ405cX1x/R2TD/IxQin+A+lDs
-         gRKjk5qLoJteOwowOZdUtxD1PDBNy8wd56U4yUOyREbIpZV9FzBpLhp94Rbynqqwl7/n
-         6MECerG7c3hUR/SBHfqyhbDNFres8+sLUV+VGX9SBvP+1pB23jIy8QxjLdwcmLRA7lFV
-         vMOH4QzYPU9tWcBrusTu3n/nhCbnjaOw1WRwvyYyNt1GmHrKqitwAz4vNsQF8unBuKEB
-         ThJyU8i1Mud6vQ7KSTyenV1DlHEezxrQRVUFeg4EylyTQLtuVljIcFRG9C8Ex0O58VPb
-         mfPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vrDH57bQG2o4KJBrG5k5zmJiTn+4+uR9TaQNTiUy5d0=;
-        b=Z3/CcPFMqVk0jL1Pm4rOk7HsYx9UKCRrcX6pMdE0AdzADy+vqQ3ly79Mh11HLg0vwW
-         9n9vQvVJ/lKQJpUaxX1Ajf1qqcFuy3pyy+icabV+e3pHoKixmADLiXMnpwZRNTYGuxWP
-         DmwyHBmOedJnZiTMn0ygnhCxF4TB0Vw5g5dzFNU9cQy/cP6iafP1a25RG3z+OvOupofn
-         DFVzgX+czbUMnovd1t89P1S6nKk3zrWl8fnNU2iOCsBAEpchl7VYcWvhQ2rh1v/LgAkJ
-         qfP0gLa/+63YBtq6o6p1b67rqW+Szo3YrfUi3I/cx7FMUpRbiL9useoeD21dQfTErY7o
-         bBeQ==
-X-Gm-Message-State: APjAAAXTjDLsO7SnQtgeawmCPIyrmf9XLzg4vmM7L0a2Wf1DbdUhpz5k
-        WyQpCI3EkiX3IEdMcSwMJ9UCwka0DCOPD3sbFbuxhg==
-X-Google-Smtp-Source: APXvYqy94lzP4DxCRk/dbaMFBvfm3+thim2vYOADaTGL1LvG2eOW9qwD3NjA/Xh9yU0qniQVNWmNhR1Ogm14J3mIisI=
-X-Received: by 2002:a02:5bc2:: with SMTP id g185mr40046106jab.31.1555078995393;
- Fri, 12 Apr 2019 07:23:15 -0700 (PDT)
+        Fri, 12 Apr 2019 10:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbfDLOXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:23:20 -0400
+Received: from quaco.ghostprotocols.net (177-58-174-75.3g.claro.net.br [177.58.174.75])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0003221904;
+        Fri, 12 Apr 2019 14:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555078999;
+        bh=Fc/J0DaiXJ6eKFZsqOTqPq+h1GGAjej4uodIivPt32o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kWfu9+osAC1bem2YdHLHLCzLv4FepkXgoTev/HzbIhwXvsskQS+x5G0KJWn3MG6Yw
+         EqnVkF51YHKNBorizwgprgBRn0mBDrByVPZsN4ZxEWWIf4DTYSMIiHAh5wL7Dt/8Qm
+         Wgidw4zw5pZSXVC/cWE3OkMm4v6o0fn1t4LMOlAs=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 1/7] x86/perf/amd: Remove need to check "running" bit in NMI handler
+Date:   Fri, 12 Apr 2019 11:22:44 -0300
+Message-Id: <20190412142250.20595-2-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190412142250.20595-1-acme@kernel.org>
+References: <20190412142250.20595-1-acme@kernel.org>
 MIME-Version: 1.0
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-3-brgl@bgdev.pl>
- <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com> <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
-In-Reply-To: <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 12 Apr 2019 16:23:04 +0200
-Message-ID: <CAMRc=MfTytX=8L8BrNKXGhiutxWj8i84wX-5agh=EWA-AZe1Pw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 12 kwi 2019 o 15:59 Adam Ford <aford173@gmail.com> napisa=C5=82(a):
->
-> On Fri, Apr 12, 2019 at 8:06 AM Sekhar Nori <nsekhar@ti.com> wrote:
-> >
-> > On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> > > tps6507 pmic with configurable output voltage, so all operating point=
-s
-> > > can be enabled.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Adam, can you please ack? Looks good to me.
->
-> Sekhar,
-> Based on what I read in the thread about the LCDK, I want to do some
-> tests on the da850-evm before put my name on it.  I like what I see in
-> general, so I am excited to this this here.
->
-> Bartosz - which kernel branch should I use as a starting point to apply t=
-hese?
->
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
 
-Upstream v5.1-rc4.
+Spurious interrupt support was adding to perf in:
+commit 63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
 
-Bartosz
+The two previous patches (resolving the race condition when disabling a
+PMC and NMI latency mitigation) allow for the removal of this older
+spurious interrupt support.
 
-> adam
-> >
-> > Thanks,
-> > Sekhar
-> >
-> > > ---
-> > >  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da85=
-0-evm.dts
-> > > index f04bc3e15332..f94bb38fdad9 100644
-> > > --- a/arch/arm/boot/dts/da850-evm.dts
-> > > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > > @@ -191,6 +191,19 @@
-> > >       };
-> > >  };
-> > >
-> > > +&cpu {
-> > > +     cpu-supply =3D <&vdcdc3_reg>;
-> > > +};
-> > > +
-> > > +/*
-> > > + * The standard da850-evm kits and SOM's are 375MHz so enable this o=
-perating
-> > > + * point by default. Higher frequencies must be enabled for custom b=
-oards with
-> > > + * other variants of the SoC.
-> > > + */
-> > > +&opp_375 {
-> > > +     status =3D "okay";
-> > > +};
-> > > +
-> > >  &sata {
-> > >       status =3D "okay";
-> > >  };
-> > > --
-> > > 2.21.0
-> > >
-> >
+Currently in x86_pmu_stop(), the bit for the PMC in the active_mask bitmap
+is cleared before disabling the PMC, which sets up a race condition. This
+race condition was mitigated by introducing the running bitmap. That race
+condition can be eliminated by first disabling the PMC, waiting for PMC
+reset on overflow and then clearing the bit for the PMC in the active_mask
+bitmap. The NMI handler will not re-enable a disabled counter.
+
+If x86_pmu_stop() is called from the perf NMI handler, the NMI latency
+mitigation support will guard against any unhandled NMI messages.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/Message-ID:
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ arch/x86/events/amd/core.c | 19 ++++++++++++++++++-
+ arch/x86/events/core.c     | 13 +++----------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 34c191453ce3..5d423653f744 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -491,6 +491,23 @@ static void amd_pmu_disable_all(void)
+ 	}
+ }
+ 
++static void amd_pmu_disable_event(struct perf_event *event)
++{
++	x86_pmu_disable_event(event);
++
++	/*
++	 * This can be called from NMI context (via x86_pmu_stop). The counter
++	 * may have overflowed, but either way, we'll never see it get reset
++	 * by the NMI if we're already in the NMI. And the NMI latency support
++	 * below will take care of any pending NMI that might have been
++	 * generated by the overflow.
++	 */
++	if (in_nmi())
++		return;
++
++	amd_pmu_wait_on_overflow(event->hw.idx);
++}
++
+ /*
+  * Because of NMI latency, if multiple PMC counters are active or other sources
+  * of NMIs are received, the perf NMI handler can handle one or more overflowed
+@@ -738,7 +755,7 @@ static __initconst const struct x86_pmu amd_pmu = {
+ 	.disable_all		= amd_pmu_disable_all,
+ 	.enable_all		= x86_pmu_enable_all,
+ 	.enable			= x86_pmu_enable_event,
+-	.disable		= x86_pmu_disable_event,
++	.disable		= amd_pmu_disable_event,
+ 	.hw_config		= amd_pmu_hw_config,
+ 	.schedule_events	= x86_schedule_events,
+ 	.eventsel		= MSR_K7_EVNTSEL0,
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447192a8..81911e11a15d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1349,8 +1349,9 @@ void x86_pmu_stop(struct perf_event *event, int flags)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
++	if (test_bit(hwc->idx, cpuc->active_mask)) {
+ 		x86_pmu.disable(event);
++		__clear_bit(hwc->idx, cpuc->active_mask);
+ 		cpuc->events[hwc->idx] = NULL;
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
+@@ -1447,16 +1448,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	apic_write(APIC_LVTPC, APIC_DM_NMI);
+ 
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+-		if (!test_bit(idx, cpuc->active_mask)) {
+-			/*
+-			 * Though we deactivated the counter some cpus
+-			 * might still deliver spurious interrupts still
+-			 * in flight. Catch them:
+-			 */
+-			if (__test_and_clear_bit(idx, cpuc->running))
+-				handled++;
++		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+-		}
+ 
+ 		event = cpuc->events[idx];
+ 
+-- 
+2.20.1
+
