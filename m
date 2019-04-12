@@ -2,113 +2,93 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CA0C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182B7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3CD205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E3D205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfDLJcu (ORCPT
+        id S1726767AbfDLJei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:32:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:56220 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfDLJct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:32:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 053F915AB;
-        Fri, 12 Apr 2019 02:32:49 -0700 (PDT)
-Received: from red-moon (unknown [10.1.197.39])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E32ED3F59C;
-        Fri, 12 Apr 2019 02:32:46 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 10:32:42 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/11] i.MX6, DesignWare PCI improvements
-Message-ID: <20190412093242.GA8113@red-moon>
-References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+        Fri, 12 Apr 2019 05:34:38 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52497 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfDLJei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:34:38 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 4284B802DD; Fri, 12 Apr 2019 11:34:27 +0200 (CEST)
+Date:   Fri, 12 Apr 2019 11:34:34 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     ulf.hansson@linaro.org, kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>,
+        Trivial patch monkey <trivial@kernel.org>
+Subject: [PATCH] Fix warning and undefined behavior in mmc voltage handling
+Message-ID: <20190412093434.GA24516@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
 Content-Disposition: inline
-In-Reply-To: <20190401042547.14067-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 09:25:36PM -0700, Andrey Smirnov wrote:
-> Everyone:
-> 
-> This is the series containing various small improvements that I made
-> while reading the code and researching commit history of pci-imx6.c
-> and pcie-designware*.c files. All changes are optional, so commits
-> that don't seem like an improvement can be easily dropped. Hopefully
-> each patch is self-explanatory.
-> 
-> I tested this series on i.MX6Q, i.MX7D and i.MX8MQ.
-> 
-> Feedback is welcome!
-> 
-> Thanks,
-> Andrey Smirnov
-> 
-> Changes since [v2]:
-> 
->     - All non i.MX6 patches dropped, since they were accepted as a
->       seprarte series
->       
->     - Series rebased on lates 'dwc-pci' branch of PCI tree
->     
->     - Patches "PCI: imx6: Use flags to indicate support for suspend"
->       and "PCI: imx6: Replace calls to udelay() with usleep_range()"
->       added to the series
-> 
-> Changes since [v1]:
-> 
->   - Dropped "PCI: imx6: Drop imx6_pcie_link_up()" due to the matter
->     already having been addressed by "PCI: imx6: Fix link training
->     status detection in link up check" from Trent Piepho
-> 
->   - Changed "designware" -> "dwc" for all subject lines
-> 
->   - Collected Acked-by's from Gustavo Pimentel
-> 
-> [v2] lkml.kernel.org/r/20190104174925.17153-1-andrew.smirnov@gmail.com
-> [v1] lkml.kernel.org/r/20181221072716.29017-1-andrew.smirnov@gmail.com
-> 
-> Andrey Smirnov (11):
->   PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
->   PCI: imx6: Remove redundant debug tracing
->   PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
->   PCI: imx6: Remove PCIE_PL_PFLR_* constants
->   PCI: dwc: imx6: Share PHY debug register definitions
->   PCI: imx6: Make use of BIT() in constant definitions
->   PCI: imx6: Simplify bit operations in PHY functions
->   PCI: imx6: Simplify pcie_phy_poll_ack()
->   PCI: imx6: Restrict PHY register data to 16-bit
->   PCI: imx6: Use flags to indicate support for suspend
->   PCI: imx6: Replace calls to udelay() with usleep_range()
-> 
->  drivers/pci/controller/dwc/pci-imx6.c        | 119 ++++++++-----------
->  drivers/pci/controller/dwc/pcie-designware.c |  12 +-
->  drivers/pci/controller/dwc/pcie-designware.h |   3 +
->  3 files changed, 54 insertions(+), 80 deletions(-)
 
-I am waiting for Lucas's review/ACKs to proceed with this
-series.
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Lorenzo
+!voltage_ranges is tested for too late, allowing warning and undefined
+behavior. Fix that.
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+---
+
+Plus I guess author should add parenthesis in the expression. a / b /
+c is _not_ common idiom.
+
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 3a4402a..b3fa9c9 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -363,11 +363,11 @@ int mmc_of_parse_voltage(struct device_node *np, u32 =
+*mask)
+ 	int num_ranges, i;
+=20
+ 	voltage_ranges =3D of_get_property(np, "voltage-ranges", &num_ranges);
+-	num_ranges =3D num_ranges / sizeof(*voltage_ranges) / 2;
+ 	if (!voltage_ranges) {
+ 		pr_debug("%pOF: voltage-ranges unspecified\n", np);
+ 		return 0;
+ 	}
++	num_ranges =3D num_ranges / sizeof(*voltage_ranges) / 2;
+ 	if (!num_ranges) {
+ 		pr_err("%pOF: voltage-ranges empty\n", np);
+ 		return -EINVAL;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlywW6oACgkQMOfwapXb+vKoUwCfWbPLHUct8b8G0sHsIgxXQ7Pd
+cBsAnRKktGDA/0jZ7O3fxF7sYFkQGZyb
+=ZJX/
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
