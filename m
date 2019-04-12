@@ -2,152 +2,120 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392E6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13D6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AAE205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0FXbQwa"
+	by mail.kernel.org (Postfix) with ESMTP id 97DCF205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfDLHYG (ORCPT
+        id S1727156AbfDLHYY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:24:06 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39946 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfDLHYF (ORCPT
+        Fri, 12 Apr 2019 03:24:24 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59515 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfDLHYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:24:05 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d31so4759170pgl.7;
-        Fri, 12 Apr 2019 00:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tmac2wD6GD50sbBNm9+eHFKNSGz66kGw4gG02gXCGmg=;
-        b=F0FXbQwaxmu957CJTTTXsa2qnTd2YgIhAzLGdCyC9O8wN0CU0KKl8DkyKJg6mo6qt+
-         gv9g3cST3nOJpMDwzmPcYTzrOeF/hUyh5plyO0QnZztca3uyi/beol4PtcshD2C9olLv
-         RnpgWsi3MRiGzH+2EpjzId8Fnpb/20htzUf/oYqPEGwerswOZOssf+OeJ7VIeiT3hyHx
-         7OQCc5USqNUYrWWw48dIobyUcukRlkdmBjCCxZ5/j986TS3G8wPf3fsOrMbUyxqRoNy4
-         62IH7MHBLjcMUMm04o1LFLDToqudjFYpUvNg/0bNi5MqfTD3pijnLDi3ODXOmGGdI5AJ
-         wkLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tmac2wD6GD50sbBNm9+eHFKNSGz66kGw4gG02gXCGmg=;
-        b=PdkIIMXfJvewxrMvcn03yubjE6ncmER/5H++pAuqLTMAGb6fKd1ikd8nFHZjI9qBXv
-         s4PKW87gYa25jli4oVqnFuvRnYAfXknmNrY+acDugnPLrE6mC34uoTcsR0hbfC3fpqXk
-         GiieQfsiJan76RFgStZffO4adb5kqf2yOO73bIRO0d04m169OBvU5cSwnNbKpZoTy7rP
-         iPC8i4kttGQIrQTSfBlZ10OMDrxLspdWErvHF5pcEXoc5sYfq0c7vxwXm/8UKvqEHVeR
-         1eJdUBOE6MmxS8NPn3Y/LXSYhf6yYDhsU8eBjqzwt6LwJRRpqhZVMeOgZnsg7gOS3BCY
-         NRDg==
-X-Gm-Message-State: APjAAAX+8bQ5HQLWLhxCmcgAUrwd0c2sSAAQP5SpCD0wipEmXeT8FIKG
-        SVKI+WOKSjn1GRtHJdqYm+nbhmRE8sc=
-X-Google-Smtp-Source: APXvYqySlz/DhTvJcZ9mx74YH3BupHCt16RjrxQoKfJyGFBl0SG6H8gj29Bl1t7idYXg3DvH5ZnD6Q==
-X-Received: by 2002:a63:7843:: with SMTP id t64mr34386417pgc.130.1555053845058;
-        Fri, 12 Apr 2019 00:24:05 -0700 (PDT)
-Received: from maya190131 ([52.175.207.219])
-        by smtp.gmail.com with ESMTPSA id g67sm62711857pfg.94.2019.04.12.00.24.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 00:24:04 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 07:24:03 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] x86: hv: hv_init.c: Replace alloc_page() with
- kmem_cache_alloc()
-Message-ID: <20190412072401.GA69620@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
-References: <cover.1554426039.git.m.maya.nakamura@gmail.com>
- <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com>
- <87wok8it8p.fsf@vitty.brq.redhat.com>
+        Fri, 12 Apr 2019 03:24:23 -0400
+X-Originating-IP: 90.88.18.121
+Received: from xps13 (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4408BFF80F;
+        Fri, 12 Apr 2019 07:24:19 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 09:24:19 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] mtd: rawnand: mark expected switch fall-throughs
+Message-ID: <20190412092419.6f5a6432@xps13>
+In-Reply-To: <017bdd52-8d1f-f746-6e1c-4d38491b2d6a@embeddedor.com>
+References: <20190128181520.GA25887@embeddedor>
+        <20190205135521.622f82c2@xps13>
+        <ce33f949-48c8-b32a-028e-ee68afc08e8f@embeddedor.com>
+        <20190412001009.2db358b7@xps13>
+        <017bdd52-8d1f-f746-6e1c-4d38491b2d6a@embeddedor.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wok8it8p.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 01:31:02PM +0200, Vitaly Kuznetsov wrote:
-> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
-> 
-> > @@ -98,18 +99,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
-> >  u32 hv_max_vp_index;
-> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
-> >  
-> > +struct kmem_cache *cachep;
-> > +EXPORT_SYMBOL_GPL(cachep);
-> > +
-> >  static int hv_cpu_init(unsigned int cpu)
-> >  {
-> >  	u64 msr_vp_index;
-> >  	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
-> >  	void **input_arg;
-> > -	struct page *pg;
-> >  
-> >  	input_arg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> > -	pg = alloc_page(GFP_KERNEL);
-> > -	if (unlikely(!pg))
-> > +	*input_arg = kmem_cache_alloc(cachep, GFP_KERNEL);
-> 
-> I'm not sure use of kmem_cache is justified here: pages we allocate are
-> not cache-line and all these allocations are supposed to persist for the
-> lifetime of the guest. In case you think that even on x86 it will be
-> possible to see PAGE_SIZE != HV_HYP_PAGE_SIZE you can use alloc_pages()
-> instead.
-> 
-Thank you for your feedback, Vitaly!
+Hi Gustavo,
 
-Will you please tell me how cache-line relates to kmem_cache?
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Thu, 11 Apr
+2019 17:20:31 -0500:
 
-I understand that alloc_pages() would work when PAGE_SIZE <=
-HV_HYP_PAGE_SIZE, but I think that it would not work if PAGE_SIZE >
-HV_HYP_PAGE_SIZE.
+> On 4/11/19 5:10 PM, Miquel Raynal wrote:
+> > Hi Gustavo,
+> > 
+> > "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Thu, 11 Apr
+> > 2019 13:30:31 -0500:
+> >   
+> >> Hi Miquel,
+> >>
+> >> On 2/5/19 6:55 AM, Miquel Raynal wrote:
+> >> [..]  
+> >>>> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
+> >>>>  			if ((this->version_id & 0xf) == 0xe)
+> >>>>  				this->options |= ONENAND_HAS_NOP_1;
+> >>>>  		}
+> >>>> +		/* fall through */
+> >>>>  
+> >>>>  	case ONENAND_DEVICE_DENSITY_2Gb:
+> >>>>  		/* 2Gb DDP does not have 2 plane */
+> >>>>  		if (!ONENAND_IS_DDP(this))
+> >>>>  			this->options |= ONENAND_HAS_2PLANE;
+> >>>>  		this->options |= ONENAND_HAS_UNLOCK_ALL;
+> >>>> +		/* fall through */    
+> >>>
+> >>> This looks strange.
+> >>>
+> >>> In ONENAND_DEVICE_DENSITY_2Gb:
+> >>> ONENAND_HAS_UNLOCK_ALL is set unconditionally.
+> >>>
+> >>> But then, under ONENAND_DEVICE_DENSITY_1Gb, the same option is set only
+> >>> if process is evaluated to true.
+> >>>
+> >>> Same problem with ONENAND_HAS_2PLANE:
+> >>> - it is set in ONENAND_DEVICE_DENSITY_4Gb only if ONENAND_IS_DDP()
+> >>> - it is unset in ONENAND_DEVICE_DENSITY_2Gb only if !ONENAND_IS_DDP()
+> >>>
+> >>> Maybe this portion should be reworked because I am unsure if this is a
+> >>> missing fall through or a bug.
+> >>>     
+> >>
+> >> I wonder if you had the chance to take a look into this piece of code.
+> >>
+> >> Thanks
+> >> --
+> >> Gustavo  
+> > 
+> > What do you mean?
+> >   
+> 
+> You commented that the piece of code above should be reworked. So, it wasn't
+> clear to me who was going to do that; and that's why I'm asking if you took
+> a look into it and finally determine whether we are dealing with an actual
+> bug or a false positive.
 
-> Also, in case the idea is to generalize stuff, what will happen if
-> PAGE_SIZE > HV_HYP_PAGE_SIZE? Who will guarantee proper alignment?
-> 
-> I think we can leave hypercall arguments, vp_assist and similar pages
-> alone for now: the code is not going to be shared among architectures
-> anyways.
-> 
-About the alignment, kmem_cache_create() aligns memory with its third
-parameter, offset.
+Yes please do it, I don't have the time and I don't plan to do it
+myself.
 
-> > @@ -338,7 +349,10 @@ void __init hyperv_init(void)
-> >  	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-> >  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
-> >  
-> > -	hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX);
-> > +	hv_hypercall_pg = kmem_cache_alloc(cachep, GFP_KERNEL);
-> > +	if (hv_hypercall_pg)
-> > +		set_memory_x((unsigned long)hv_hypercall_pg, 1);
-> 
-> _RX is not writeable, right?
-> 
-Yes, you are correct. I should use set_memory_ro() in addition to
-set_memory_x().
 
-> > @@ -416,6 +431,7 @@ void hyperv_cleanup(void)
-> >  	 * let hypercall operations fail safely rather than
-> >  	 * panic the kernel for using invalid hypercall page
-> >  	 */
-> > +	kmem_cache_free(cachep, hv_hypercall_pg);
-> 
-> Please don't do that: hyperv_cleanup() is called on kexec/kdump and
-> we're trying to do the bare minimum to allow next kernel to boot. Doing
-> excessive work here will likely lead to consequent problems (we're
-> already crashing the case it's kdump!).
-> 
-Thank you for the explanation! I will remove that.
-
+Thanks,
+Miquèl
