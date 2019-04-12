@@ -2,91 +2,106 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9A9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FDAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A4F20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F69220693
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfDLPxc (ORCPT
+        id S1727169AbfDLPxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:53:32 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29152 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfDLPxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:53:31 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 08:53:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,341,1549958400"; 
-   d="scan'208";a="130871774"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 12 Apr 2019 08:53:28 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hEyUZ-00073w-Ib; Fri, 12 Apr 2019 23:53:27 +0800
-Date:   Fri, 12 Apr 2019 23:52:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     kbuild-all@01.org, enric.balletbo@collabora.com,
-        bleung@chromium.org, sre@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        lamzin@google.com, bartfab@google.com, derat@google.com,
-        groeck@google.com, dtor@google.com, sjg@chromium.org,
-        jchwong@chromium.org, Nick Crews <ncrews@chromium.org>
-Subject: [PATCH] power_supply: platform/chrome: wilco_ec: fix ptr_ret.cocci
- warnings
-Message-ID: <20190412155243.GA26871@lkp-ivb-ep02>
-References: <20190412002055.92529-2-ncrews@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412002055.92529-2-ncrews@chromium.org>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Fri, 12 Apr 2019 11:53:46 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57681 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfDLPxq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:53:46 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hEyUj-0000q7-CN; Fri, 12 Apr 2019 17:53:37 +0200
+Message-ID: <1555084415.11529.29.camel@pengutronix.de>
+Subject: Re: [PATCH v3 02/11] PCI: imx6: Remove redundant debug tracing
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Apr 2019 17:53:35 +0200
+In-Reply-To: <20190401042547.14067-3-andrew.smirnov@gmail.com>
+References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+         <20190401042547.14067-3-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
+> All calls to imx6_pcie_wait_for_link() share the same error path and
+> the state of PHY debug registers will already be printed there.
 
-drivers/platform/chrome/wilco_ec/charge_config.c:173:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+With this change we can drop imx6_pcie_wait_for_link altogether, as
+it's now just wrapper around dw_pcie_wait_for_link that pulls out the
+dw_pcie struct from imx6_pcie. Both callers have dw_pcie already
+available, so there is no point in keeping this function.
 
+Regards,
+Lucas
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
-
-Fixes: 08c1b2e2e50e ("power_supply: platform/chrome: wilco_ec: Add charging config driver")
-CC: Nick Crews <ncrews@chromium.org>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
-
-url:    https://github.com/0day-ci/linux/commits/Nick-Crews/power_supply-Add-more-charge-types-and-CHARGE_CONTROL_-properties/20190412-211253
-
- charge_config.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
---- a/drivers/platform/chrome/wilco_ec/charge_config.c
-+++ b/drivers/platform/chrome/wilco_ec/charge_config.c
-@@ -170,10 +170,7 @@ static int wilco_charge_probe(struct pla
- 
- 	psy_cfg.drv_data = ec;
- 	psy = devm_power_supply_register(&pdev->dev, &wilco_ps_desc, &psy_cfg);
--	if (IS_ERR(psy))
--		return PTR_ERR(psy);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(psy);
- }
- 
- static struct platform_driver wilco_charge_driver = {
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index fb0b29e5b1f0..7582d0b2fbe7 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -726,16 +726,9 @@ static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
+>  static int imx6_pcie_wait_for_link(struct imx6_pcie *imx6_pcie)
+>  {
+> >  	struct dw_pcie *pci = imx6_pcie->pci;
+> > -	struct device *dev = pci->dev;
+>  
+> >  	/* check if the link is up or not */
+> > -	if (!dw_pcie_wait_for_link(pci))
+> > -		return 0;
+> -
+> > -	dev_dbg(dev, "DEBUG_R0: 0x%08x, DEBUG_R1: 0x%08x\n",
+> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R0),
+> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R1));
+> > -	return -ETIMEDOUT;
+> > +	return dw_pcie_wait_for_link(pci);
+>  }
+>  
+>  static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
