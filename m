@@ -2,147 +2,140 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF4C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51EFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7612171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:02:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eyhVxxo1"
+	by mail.kernel.org (Postfix) with ESMTP id 7723F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfDLSC5 (ORCPT
+        id S1726905AbfDLSFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:02:57 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41858 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfDLSC5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:02:57 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f6so5553086pgs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 11:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=S+H4OZ/XxRElDLqv3IW/VMLs9qpYjEmorStnxnx/F4Y=;
-        b=eyhVxxo1dKssj7vGt0KmlMi87MjvK2GDOC5vfU5whsJKeom/a2LaJNYwnkYhyHop21
-         YbxAidjVfLdicVm0lsHOarTJNePejS2UY3+eM5ROyxDylX4I40KuNGt6dBzrpEuS/bAo
-         CeU5HUMFBHAA5NPMI8lfMPde13IPcvY2EgvtY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=S+H4OZ/XxRElDLqv3IW/VMLs9qpYjEmorStnxnx/F4Y=;
-        b=O8pHDfACPogETiUESDVskqwpy4gDl8XTJTFUMlxJdBcu644E9DebT+YvUn6RSOScKo
-         4WvHYB5vcfthvk9wBFpiyOYziCoeVSRdTUTs+IASS3PyoZDxiIVypVi07jas0zTup02W
-         Ax2sH7dhmD5vN/5eMG+KUxNIRS1ZVPiwV96oMwHcaRhRT6lI18zobB3HkrNFyYfB7IvC
-         jai0fa2QkIwMvUrPgNT7YMMmk4L4Al0eObHx8fpTTy7t89o4QNTrJ/Y4LBuq/hIIk3wr
-         KB2jEYPKnniQU/AUgJp0lEHVhsu3gWb1LuWcYtLrGtnQtU7axX+FlqE7B3uXsyy7ip1a
-         dw+g==
-X-Gm-Message-State: APjAAAVOIuEifqKQxICUXaJkXyZnX5hQy2OedSoYF5/F8dmeU3Z/tttq
-        XmUuvFbH01p5KWw2YtJgFA9A6w==
-X-Google-Smtp-Source: APXvYqy6XIB4V6b5SYJngjhgqRFGiAB+cNvpjz2//g7Hrl4xUmISqdzEjHjWAqq/zAPIf2dpm9Rwbg==
-X-Received: by 2002:a63:c84c:: with SMTP id l12mr54921891pgi.287.1555092176367;
-        Fri, 12 Apr 2019 11:02:56 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id v1sm68363079pff.81.2019.04.12.11.02.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 11:02:55 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 11:02:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] clk: rockchip: rk3288: Limit use of USB PHY clock to USB
-Message-ID: <20190412180255.GW112750@google.com>
-References: <20190411175917.173566-1-mka@chromium.org>
- <3787637.WUkDPpUsF8@diego>
- <20190412001657.GV112750@google.com>
- <2029012.W0xZ3ly3fY@diego>
+        Fri, 12 Apr 2019 14:05:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46162 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726685AbfDLSFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 14:05:52 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AB76308A958;
+        Fri, 12 Apr 2019 18:05:52 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-125-232.rdu2.redhat.com [10.10.125.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC335608E1;
+        Fri, 12 Apr 2019 18:05:50 +0000 (UTC)
+Subject: Re: [PATCH-tip v3 02/14] locking/rwsem: Make owner available even if
+ !CONFIG_RWSEM_SPIN_ON_OWNER
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190410184231.6748-1-longman@redhat.com>
+ <20190410184231.6748-3-longman@redhat.com>
+ <20190411081224.GB4038@hirez.programming.kicks-ass.net>
+ <29aca54a-536e-6e46-7e18-658914c34548@redhat.com>
+ <20190412070209.GC129493@gmail.com>
+ <20190412070545.GF11158@hirez.programming.kicks-ass.net>
+ <20190412070904.GA45214@gmail.com>
+ <b97eb5d5-1658-c405-e52e-2d20c4840948@redhat.com>
+ <33b0111b-fe0f-eefc-59f4-f06d84d9cacc@redhat.com>
+ <277e9c8e-8913-b251-4c98-dd2d4997d643@redhat.com>
+ <20190412164123.GA119547@gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <4aefd2cd-f303-99ed-ada9-e7ba2ae9cd3c@redhat.com>
+Date:   Fri, 12 Apr 2019 14:05:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190412164123.GA119547@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2029012.W0xZ3ly3fY@diego>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 12 Apr 2019 18:05:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 11:30:37AM +0200, Heiko Stübner wrote:
-> Am Freitag, 12. April 2019, 02:16:57 CEST schrieb Matthias Kaehlcke:
-> > Hi Heiko,
-> > 
-> > On Thu, Apr 11, 2019 at 09:03:07PM +0200, Heiko Stübner wrote:
-> > > Hi Matthias,
-> > > 
-> > > Am Donnerstag, 11. April 2019, 19:59:17 CEST schrieb Matthias Kaehlcke:
-> > > > The USB PHY clock can be configured as (grand) parent of uart0_sclk and
-> > > > sclk_gpu. It has been observed that UART0 doesn't work reliably in high
-> > > > speed mode with the PHY clock as input when certain USB devices are
-> > > > plugged to the USB HOST1 port (see https://crrev.com/c/320543).
-> > > > 
-> > > > Prefix the name of the PHY clock with a '.' in the non-USB muxes to
-> > > > effectively remove the clock as input from these muxes.
-> > > > 
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > ---
-> > > >  drivers/clk/rockchip/clk-rk3288.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> > > > index 5a67b7869960..677bc5485201 100644
-> > > > --- a/drivers/clk/rockchip/clk-rk3288.c
-> > > > +++ b/drivers/clk/rockchip/clk-rk3288.c
-> > > > @@ -200,8 +200,8 @@ PNAME(mux_aclk_cpu_src_p)	= { "cpll_aclk_cpu", "gpll_aclk_cpu" };
-> > > >  PNAME(mux_pll_src_cpll_gpll_p)		= { "cpll", "gpll" };
-> > > >  PNAME(mux_pll_src_npll_cpll_gpll_p)	= { "npll", "cpll", "gpll" };
-> > > >  PNAME(mux_pll_src_cpll_gpll_npll_p)	= { "cpll", "gpll", "npll" };
-> > > > -PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
-> > > > -PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", "usbphy480m_src", "npll" };
-> > > > +PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", ".usbphy480m_src" };
-> > > > +PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", ".usbphy480m_src", "npll" };
-> > > 
-> > > In general I like to have things like the clock-tree described fully
-> > > and let the kernel handle correct sourcing ... but:
-> > > 
-> > > As you write this seems like a systemic problem when just connecting
-> > > random peripherals can create unstable clock source frequencies,
-> > > so I tend to agree here ... but:
-> > > 
-> > > Can we please find a more "talking" name for this ... because as with the
-> > > above someone will find the "." and submit a fix for it ;-) .
-> > > 
-> > > So just name it "unstable_dummy" or so?
-> > 
-> > I looked for some common pattern, but couldn't find one. I liked the
-> > '.' since it leaves the name of the clock mostly intact, just hiding
-> > it (similar to a leading '.' in a Linux file system). But I agree that
-> > it might not be expressive enough. I still like the idea to keep the
-> > clock name around for reference, maybe we could name it
-> > "unstable:usbphy480m_src" or similar. If you don't object I'll send a
-> > patch with this some time tomorrow.
-> 
-> I've just adapted the patch to use the new parent-name you suggested
-> and applied it for 5.2 So no need to resend :-) .
+On 04/12/2019 12:41 PM, Ingo Molnar wrote:
+> * Waiman Long <longman@redhat.com> wrote:
+>
+>>> BTW, the v3 patch that I posted yesterday should work fine as long as
+>>> CONFIG_RWSEM_SPIN_ON_OWNER is defined.
+>>>
+>>> Cheers,
+>>> Longman
+>>>
+>> Oh, I see that the WIP.locking/core is currently merged into master. I
+>> would say rwsem part1 patchset and patch 1 of part2 are stable. So I
+>> would suggest merging those into the the master will be good. The rests
+>> are still under review until I get an OK from Peter. If they miss the
+>> next merge window and have to postpone to 5.3, I am fine with that.
+> So beyond the primary constraint of PeterZ OK-ing it all, there's also 
+> these two scalability regression reports from the ktest bot:
+>
+>  [locking/rwsem] 1b94536f2d: stress-ng.bad-altstack.ops_per_sec -32.7% regression
 
-Pefect, thanks!
+A regression due to the lock handoff patch is kind of expected, but I
+will into why there is such a large drop.
 
-I don't see the patch in the git.kernel.org repo (nor
-https://lore.kernel.org/patchwork/patch/1060781/), looks like the push
-is still pending.
+>  [locking/rwsem] adc32e8877: will-it-scale.per_thread_ops -21.0% regression
 
-Cheers
+Will look into that also.
 
-Matthias
+Thanks,
+Longman
