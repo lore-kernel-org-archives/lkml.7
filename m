@@ -2,97 +2,92 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA36BC10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 02:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E945C282DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 02:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12CD2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 02:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3CD20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 02:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfDLClZ (ORCPT
+        id S1726797AbfDLCma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 22:41:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41967 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfDLClY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 22:41:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gMbP2hcyz9s5c;
-        Fri, 12 Apr 2019 12:41:21 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC 1/5] cpu/speculation: Add 'cpu_spec_mitigations=' cmdline options
-In-Reply-To: <20190411131540.754t5t4tp55i6vjq@treble>
-References: <cover.1554396090.git.jpoimboe@redhat.com> <f0bd17358ab478eaca52f3b1da8305c150911b40.1554396090.git.jpoimboe@redhat.com> <20190405131211.GE23348@zn.tnic> <20190405142048.burthk2jnpcvi2om@treble> <20190405152059.GG23348@zn.tnic> <20190405160136.GI23348@zn.tnic> <20190405161852.nmpk22omgiety4df@treble> <87sguqwgu7.fsf@concordia.ellerman.id.au> <alpine.DEB.2.21.1904101408580.3479@nanos.tec.linutronix.de> <20190411131540.754t5t4tp55i6vjq@treble>
-Date:   Fri, 12 Apr 2019 12:41:21 +1000
-Message-ID: <878swguer2.fsf@concordia.ellerman.id.au>
+        Thu, 11 Apr 2019 22:42:30 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56692 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726661AbfDLCma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 22:42:30 -0400
+X-UUID: 66d88c511ae54b0db42b8d4c3e9155bc-20190412
+X-UUID: 66d88c511ae54b0db42b8d4c3e9155bc-20190412
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1157262839; Fri, 12 Apr 2019 10:42:22 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 12 Apr 2019 10:42:17 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 12 Apr 2019 10:42:17 +0800
+Message-ID: <1555036937.2654.5.camel@mtksdaap41>
+Subject: Re: [PATCH v5 6/9] clk: mediatek: Add flags support for mtk_gate
+ data
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 12 Apr 2019 10:42:17 +0800
+In-Reply-To: <155501399858.20095.16525048679717411283@swboyd.mtv.corp.google.com>
+References: <20190305050546.23431-1-weiyi.lu@mediatek.com>
+         <20190305050546.23431-8-weiyi.lu@mediatek.com>
+         <155501399858.20095.16525048679717411283@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Josh Poimboeuf <jpoimboe@redhat.com> writes:
-> On Wed, Apr 10, 2019 at 02:10:01PM +0200, Thomas Gleixner wrote:
->> On Wed, 10 Apr 2019, Michael Ellerman wrote:
->> > Josh Poimboeuf <jpoimboe@redhat.com> writes:
->> > 
->> > > On Fri, Apr 05, 2019 at 06:01:36PM +0200, Borislav Petkov wrote:
->> > >> Thinking about this more, we can shave off the first 4 chars and have it
->> > >> be:
->> > >> 
->> > >> spec_mitigations=
->> > >> 
->> > >> I think it is painfully clear which speculation mitigations we mean. And
->> > >> the other switches don't have "cpu_" prefixes too so...
->> > >
->> > > Sure, I'm ok with renaming it to that, if there are no objections.
->> > 
->> > What about when we have a mitigation for a non-speculation related bug :)
->> 
->> Those kind of silicon bugs are usually mitigated unconditionally.
->
-> Right.
->
-> But at least "mitigations=" is nice and short.  We could clarify in the
-> documentation that it doesn't apply to *all* mitigations, only the ones
-> which are optional and which can affect performance.
->
-> And it would give us the freedom to include any future "optional"
-> mitigations, spec or not.
->
-> I kind of like it.  But I could go either way.
+On Thu, 2019-04-11 at 13:19 -0700, Stephen Boyd wrote:
+> Quoting Weiyi Lu (2019-03-04 21:05:43)
+> > On some Mediatek platforms, there are critical clocks of
+> > clock gate type.
+> > To register clock gate with flags CLK_IS_CRITICAL,
+> > we need to add the flags field in mtk_gate data and register APIs.
+> > 
+> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> 
+> This patch doesn't apply, because it's already there via commit
+> 5a1cc4c27ad2 ("clk: mediatek: Add flags to mtk_gate").
+> 
+Got it, but just catch a minor defect by 5a1cc4c27ad2 ("clk: mediatek:
+Add flags to mtk_gate").
 
-Some of the published SMT attacks are not speculation based.
+init.flags = CLK_SET_RATE_PARENT;
+...
+init.flags = flags;
 
-And arguably we already have an optional mitigation for those, ie. nosmt.
+I'll send a fix later.
 
-cheers
+Thanks for the help on the MT8183 clk series.
+
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
