@@ -2,202 +2,105 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2009AC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19272C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BCE205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D127721872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJnOHrjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbfDLJhP (ORCPT
+        id S1726973AbfDLJhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:37:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36632 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726709AbfDLJhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:37:14 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AF22C68F1E796B373A28;
-        Fri, 12 Apr 2019 17:37:12 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
- 17:37:04 +0800
-Subject: Re: [PATCH 2/2] kvm: arm: Unify handling THP backed host memory
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>, <julien.thierry@arm.com>,
-        <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
-        <andrew.murray@arm.com>, <eric.auger@redhat.com>,
-        <zhengxiang9@huawei.com>, <wanghaibin.wang@huawei.com>
-References: <1554909297-6753-1-git-send-email-suzuki.poulose@arm.com>
- <1554909832-7169-1-git-send-email-suzuki.poulose@arm.com>
- <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
- <c48b2bd4-68e6-dbc0-b010-78a23a889196@huawei.com>
- <1bac514c-e4f0-a609-96ed-f48ef3461da1@arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <e5f35fa6-ab8d-695a-6c66-bfb2b2465b2a@huawei.com>
-Date:   Fri, 12 Apr 2019 17:34:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Fri, 12 Apr 2019 05:37:36 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:35597 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfDLJhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:37:33 -0400
+Received: by mail-ua1-f67.google.com with SMTP id a46so3024427uae.2;
+        Fri, 12 Apr 2019 02:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GvmE54vyB2V1TH3b9XcIfl2rFpKkdQtVqNd4bYtbiCw=;
+        b=dJnOHrjPYRDcvpIqtkL/Vx7ixEGh6stpJQBfe6bInIfTGw1/UFKXrrc5h3XtStZ+WI
+         D4RFBYVZ3Ioa2ti/s94NUIZNnokdaTCkusUEQLFJOTeVOQqUe9xvbYeRNjUR7VoxfYFT
+         elHpN7Q5HlMBQkrkte11ZZB9lXce43Ipal188+FUsv7rsS8dFooDDpX3gJ8wp/AgwAUu
+         0TCRS7xXv5IEp7Sdcv8C6uMvlJvpV3BOK28/K9W7Hu/9j0/HpzR1Mhgf1AMqm0AOCeDI
+         j89/uZlm9yRhy+XB6hWr7kxQf54y0Z/wQDIHp6YQpbglgHk93tMkdFardQMFTFyubXcl
+         hXjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GvmE54vyB2V1TH3b9XcIfl2rFpKkdQtVqNd4bYtbiCw=;
+        b=jiMsWKALDT4Qhk5HRn7TEKmMAo6b8AO1ZVbrD4m/8uWkLemq3lLEnQyGijR8KpPrGv
+         +WvtpW7XmpLqUyyihEFnnS+aVkA29dv2Zl3FUUMZaKO/WBmCVg7J3peapPwjDa4B/qdw
+         RftzZMJVYBq2d9YU317G6kncGlMPQGpEE/IYQoMLojwVvALJ9ShtyabyVrbQSle4APEl
+         QivpyHke1zcFRn1Biz7rvaAMC0isY7HCzvdHr1mEOhoYGbBkJhfN/k5ayx3l6pKSOD+c
+         xmvYaaRCLPkuRk0Ui5sEsRywKOLmyAKTEYFJa5dGVe7aIVRCCBAwtFU2A5ASIrhKRpzt
+         Nfhw==
+X-Gm-Message-State: APjAAAVTSWaHIc8OzhrqKpNCioHsfHkmp/4Fc7dD/E/D7W9F6+je34bq
+        FsPhtuanp7duuyPVF2txNoatX15ch7oGtQLJNs8=
+X-Google-Smtp-Source: APXvYqwy/aGPPBprRKXvZmdWOFxrVvrjT+0ptLixHM1Ld02+9ohW2hrxc1bvP8ABknl0dIpYXWaDYcejYdUE/nC6Xp0=
+X-Received: by 2002:ab0:b90:: with SMTP id c16mr22854602uak.55.1555061852474;
+ Fri, 12 Apr 2019 02:37:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1bac514c-e4f0-a609-96ed-f48ef3461da1@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+References: <1555036767-31170-1-git-send-email-92siuyang@gmail.com>
+ <878swf645i.fsf@miraculix.mork.no> <CAKgHYH05R2CQ1XmS-KCTtL0J49D2kpnkBgyYxdPc47SNpaf8vA@mail.gmail.com>
+ <87mukv4mo6.fsf@miraculix.mork.no>
+In-Reply-To: <87mukv4mo6.fsf@miraculix.mork.no>
+From:   Yang Xiao <92siuyang@gmail.com>
+Date:   Fri, 12 Apr 2019 17:36:48 +0800
+Message-ID: <CAKgHYH1=BcnTqwEdmzsiRkyQmuqngCA0YHfbY7M6ObvVbqqj8w@mail.gmail.com>
+Subject: Re: [PATCH] USB: s2255 & stkwebcam: fix oops with malicious USB descriptors
+To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Cc:     kbuild-all@01.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        greg@kroah.com, mchehab@kernel.org,
+        Kees Cook <keescook@chromium.org>, hans.verkuil@cisco.com,
+        Young Xiao <YangX92@hotmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I am so sorry. I misunderstood the reason of  CVE-2016-2188.
 
-On 2019/4/11 23:16, Suzuki K Poulose wrote:
-> Hi Zhengui,
-> 
-> On 11/04/2019 02:59, Zenghui Yu wrote:
->> Hi Suzuki,
->>
->> On 2019/4/10 23:23, Suzuki K Poulose wrote:
->>> We support mapping host memory backed by PMD transparent hugepages
->>> at stage2 as huge pages. However the checks are now spread across
->>> two different places. Let us unify the handling of the THPs to
->>> keep the code cleaner (and future proof for PUD THP support).
->>> This patch moves transparent_hugepage_adjust() closer to the caller
->>> to avoid a forward declaration for 
->>> fault_supports_stage2_huge_mappings().
->>>
->>> Also, since we already handle the case where the host VA and the guest
->>> PA may not be aligned, the explicit VM_BUG_ON() is not required.
->>>
->>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>> Cc: Christoffer Dall <christoffer.dall@arm.com>
->>> Cc: Zneghui Yu <yuzenghui@huawei.com>
->>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> ---
->>>    virt/kvm/arm/mmu.c | 123 
->>> +++++++++++++++++++++++++++--------------------------
->>>    1 file changed, 62 insertions(+), 61 deletions(-)
->>>
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index 6d73322..714eec2 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -1380,53 +1380,6 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, 
->>> phys_addr_t guest_ipa,
->>>        return ret;
->>>    }
->>> -static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t 
->>> *ipap)
->>> -{
->>> -    kvm_pfn_t pfn = *pfnp;
->>> -    gfn_t gfn = *ipap >> PAGE_SHIFT;
->>> -    struct page *page = pfn_to_page(pfn);
->>> -
->>> -    /*
->>> -     * PageTransCompoundMap() returns true for THP and
->>> -     * hugetlbfs. Make sure the adjustment is done only for THP
->>> -     * pages.
->>> -     */
->>> -    if (!PageHuge(page) && PageTransCompoundMap(page)) {
->>> -        unsigned long mask;
->>> -        /*
->>> -         * The address we faulted on is backed by a transparent huge
->>> -         * page.  However, because we map the compound huge page and
->>> -         * not the individual tail page, we need to transfer the
->>> -         * refcount to the head page.  We have to be careful that the
->>> -         * THP doesn't start to split while we are adjusting the
->>> -         * refcounts.
->>> -         *
->>> -         * We are sure this doesn't happen, because mmu_notifier_retry
->>> -         * was successful and we are holding the mmu_lock, so if this
->>> -         * THP is trying to split, it will be blocked in the mmu
->>> -         * notifier before touching any of the pages, specifically
->>> -         * before being able to call __split_huge_page_refcount().
->>> -         *
->>> -         * We can therefore safely transfer the refcount from PG_tail
->>> -         * to PG_head and switch the pfn from a tail page to the head
->>> -         * page accordingly.
->>> -         */
->>> -        mask = PTRS_PER_PMD - 1;
->>> -        VM_BUG_ON((gfn & mask) != (pfn & mask));
->>> -        if (pfn & mask) {
->>> -            *ipap &= PMD_MASK;
->>> -            kvm_release_pfn_clean(pfn);
->>> -            pfn &= ~mask;
->>> -            kvm_get_pfn(pfn);
->>> -            *pfnp = pfn;
->>> -        }
->>> -
->>> -        return true;
->>> -    }
->>> -
->>> -    return false;
->>> -}
->>> -
->>>    /**
->>>     * stage2_wp_ptes - write protect PMD range
->>>     * @pmd:    pointer to pmd entry
->>> @@ -1677,6 +1630,61 @@ static bool 
->>> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
->>>               (hva & ~(map_size - 1)) + map_size <= uaddr_end;
->>>    }
->>> +/*
->>> + * Check if the given hva is backed by a transparent huge page (THP)
->>> + * and whether it can be mapped using block mapping in stage2. If 
->>> so, adjust
->>> + * the stage2 PFN and IPA accordingly. Only PMD_SIZE THPs are currently
->>> + * supported. This will need to be updated to support other THP sizes.
->>> + *
->>> + * Returns the size of the mapping.
->>> + */
->>> +static unsigned long
->>> +transparent_hugepage_adjust(struct kvm_memory_slot *memslot,
->>> +                unsigned long hva, kvm_pfn_t *pfnp,
->>> +                phys_addr_t *ipap)
->>> +{
->>> +    kvm_pfn_t pfn = *pfnp;
->>> +    struct page *page = pfn_to_page(pfn);
->>> +
->>> +    /*
->>> +     * PageTransCompoundMap() returns true for THP and
->>> +     * hugetlbfs. Make sure the adjustment is done only for THP
->>> +     * pages. Also make sure that the HVA and IPA are sufficiently
->>> +     * aligned and that the  block map is contained within the memslot.
->>> +     */
->>> +    if (!PageHuge(page) && PageTransCompoundMap(page) &&
->>
->> We managed to get here, ensure that we only play with normal size pages
->> and no hugetlbfs pages will be involved.  "!PageHuge(page)" will always
->> return true and we can let it go.
-> 
-> I think that is a bit tricky. If someone ever modifies the user_mem_abort()
-> and we end up in getting called with a HugeTLB backed page things could go
-> wrong.
+Sorry again!!!
 
-That will be bad. I'm not sure if it's possible in the future.
-
-> I could do remove the check, but would like to add a WARN_ON_ONCE() to make
-> sure our assumption is held.
-> 
-> i.e,
->      WARN_ON_ONCE(PageHuge(page));
-
-But this is a careful approach. I think this will be valuable both for
-developers and the code itself. Thanks!
-
-
-zenghui
-
-> 
->      if (PageTransCompoundMap(page) &&>> + 
-> fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE)) {
-> 
-> ...
-> 
-
-
+On Fri, Apr 12, 2019 at 5:07 PM Bj=C3=B8rn Mork <bjorn@mork.no> wrote:
+>
+> Yang Xiao <92siuyang@gmail.com> writes:
+>
+> > If given malicious descritors that spcify 0 for the number of endpoints=
+,
+> > then there is a null pointer deference when calling function
+> > usb_endpoint_is_bulk_in.
+> >
+> >        for (i =3D 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+>
+> Try this:
+>
+> #include <stdio.h>
+> int main()
+> {
+>         int i;
+>         for (i=3D0; i<0; ++i)
+>                 printf("%d\n");
+>         return 0;
+> }
+>
+> How many lines did it print?
+>
+>
+> Bj=C3=B8rn
