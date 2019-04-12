@@ -2,114 +2,108 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D40C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB570C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85DE218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555108453;
-	bh=O5U3eSLMuJ3jb7KoqaCOHpaX1Y5XwTwPpbqkPrMXr2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yNESRfXNpI+cf8tZ2CZUgq8pp59JVZGhTzcdGJHW121J/DyH47GgGBxa4gsGUAHq0
-	 rfTZoKBlmGI04JpSEgXPiaetnyrR2HGA3mb3AdMAHvnmKZ2cY7cVtREEpgBPixrqSq
-	 Ap2iR4jeMwu3vggl2PlwnT88t+MwEcPOoFZypDdE=
+	by mail.kernel.org (Postfix) with ESMTP id 886C520818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:42:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kaVMx2CG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfDLWeM (ORCPT
+        id S1727044AbfDLWmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbfDLWeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:34:11 -0400
-Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DBB2073F;
-        Fri, 12 Apr 2019 22:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555108451;
-        bh=O5U3eSLMuJ3jb7KoqaCOHpaX1Y5XwTwPpbqkPrMXr2U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hf+DnBdtXvFJmGJqqJmNsczr4LLF86JH8RNKYAyIuaUhhlbvjD/yR+nO5d3rs/Fai
-         Z7gcpEeXUH/SybJ8d8u4NaPd1YoEBJdVAaciGUpWi4W6Ej7709BTIL7aBU9Sl+aZby
-         twkDtms0o9rNLTFZNtySk76+0iFnU8inH+gzkPAU=
-Date:   Fri, 12 Apr 2019 17:34:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
-Message-ID: <20190412223409.GB126710@google.com>
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+        Fri, 12 Apr 2019 18:42:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33620 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbfDLWmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 18:42:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t16so5795406plo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 15:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8ngcn1hFw8Idtgog7uZA26fpDBwfRZfsO4S5EVa4nB8=;
+        b=kaVMx2CGUv+F7QdUeNhXNc/025lldoXzYYDRCbNP7+PY5frjU14guCrDchjyU6XpBg
+         xejnxDmCPSe/eAokqL/btZ5wgexyJjKfpHkEBebyTAuQ7xXl0+oERBxsISqel4ZrrJZt
+         +LYyLMysprW1iip6meQ2OMEE2KUkObENhVuv4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8ngcn1hFw8Idtgog7uZA26fpDBwfRZfsO4S5EVa4nB8=;
+        b=PDIBcYQ7MjUsIfbPB5H6uoJ1/XoKb7RF+c3XtKINCTl9BiXP+6YLYxtrmTVi5S28eC
+         FBPEXv7CJie8LqUkkOeMVS2wpGYGSlPeJMm52iI4hNNFevALfclTL0NwEIl+2a9qmVda
+         VfFoxnrZsGiu1sSZIvnmhKhmS/SzoNHzjWKgYlLwMhNmqft597rfrQFqKOsPnzBl2QkD
+         ABHUTfywEv/s1f4UmZveU5ReamLQMQQcQQjUvTCM0vCsD+XKj9KK93yoj/wOFwNAIoC9
+         mFgsTzIYFqRwWCKqfecmaRrpSI87C8YkyNAdjsRAA05HAQH8+c8swlueY3jrDGF/WPkG
+         mrmA==
+X-Gm-Message-State: APjAAAXb4fza+aVeyoGa29OSLPHhHvuWT0uk6alu6KIjyrACLHhYTc65
+        RakjxbETJRvJFVlsAW/bxxAVIw==
+X-Google-Smtp-Source: APXvYqw9fJqLJ4H66fWrkQ0rZ0t7wvUSM0mOB4NGTtWkpxku760IEJjfA5ga0WKH+gGKJNjXqExSAA==
+X-Received: by 2002:a17:902:6949:: with SMTP id k9mr59815428plt.59.1555108934928;
+        Fri, 12 Apr 2019 15:42:14 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id j22sm57170579pfn.129.2019.04.12.15.42.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 15:42:14 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        linux-usb@vger.kernel.org, Randy Li <ayaka@soulik.info>,
+        mka@chromium.org, ryandcase@chromium.org, jwerner@chromium.org,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/4] usb: dwc2: Another attempt handling rk3288's remote wake quirk
+Date:   Fri, 12 Apr 2019 15:41:45 -0700
+Message-Id: <20190412224149.106971-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
-> Few SOCs have limitation that their PCIe host can't allow few inbound
-> address ranges. Allowed inbound address ranges are listed in dma-ranges
-> DT property and this address ranges are required to do IOVA mapping.
-> Remaining address ranges have to be reserved in IOVA mapping.
+This is another attempt to upstream the code to unwedge the rk3288's
+"host" USB port when it sees a remote wakeup.  Previously I attempted
+this [1] and it appears that Randy Li made some attempts too [2] which
+resulted in at least the PHY bindings for the USB PHY landing as well
+as the USB PHY support.  Nice!
 
-If I understand correctly, devices below these PCIe host bridges can
-DMA only to the listed address ranges, and you prevent devices from
-doing DMA to the holes between the listed ranges by reserving the
-holes in dma-iommu.
+Hopefully this addresses previous comments and could land this time?
 
-Apparently there's something that makes sure driver dma_map_*() always
-goes through dma-iommu?  I traced as far as seeing that dma-iommu
-depends on CONFIG_IOMMU_DMA, and that arm64 selects CONFIG_IOMMU_DMA
-if CONFIG_IOMMU_SUPPORT, but then the trail got cold.  I didn't see
-what selects CONFIG_IOMMU_SUPPORT.
+[1] https://lkml.kernel.org/r/1446236275-12698-2-git-send-email-dianders@chromium.org
+[2] https://lkml.kernel.org/r/1472939729-15187-4-git-send-email-ayaka@soulik.info
 
-This does look like what Robin suggested, as far as I can tell.
-Hopefully he'll take a look and give his reviewed-by.  Thanks for
-persevering!
 
-> PCIe Host driver of those SOCs has to list resource entries of allowed
-> address ranges given in dma-ranges DT property in sorted order. This
-> sorted list of resources will be processed and reserve IOVA address for
-> inaccessible address holes while initializing IOMMU domain.
-> 
-> This patch set is based on Linux-5.0-rc2.
-> 
-> Changes from v3:
->   - Addressed Robin Murphy review comments.
->     - pcie-iproc: parse dma-ranges and make sorted resource list.
->     - dma-iommu: process list and reserve gaps between entries
-> 
-> Changes from v2:
->   - Patch set rebased to Linux-5.0-rc2
-> 
-> Changes from v1:
->   - Addressed Oza review comments.
-> 
-> Srinath Mannam (3):
->   PCI: Add dma_ranges window list
->   iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
->   PCI: iproc: Add sorted dma ranges resource entries to host bridge
-> 
->  drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
->  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
->  drivers/pci/probe.c                 |  3 +++
->  include/linux/pci.h                 |  1 +
->  4 files changed, 66 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.7.4
-> 
+Douglas Anderson (4):
+  dt-bindings: usb: dwc2: Document quirk to reset PHY upon wakeup
+  usb: dwc2: optionally assert phy reset when waking up
+  ARM: dts: rockchip: Hook resets up to USB PHYs on rk3288.
+  ARM: dts: rockchip: Add quirk for resetting rk3288's dwc2 host on
+    wakeup
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
+ arch/arm/boot/dts/rk3288.dtsi                  |  7 +++++++
+ drivers/usb/dwc2/core.h                        |  5 +++++
+ drivers/usb/dwc2/core_intr.c                   | 12 ++++++++++++
+ drivers/usb/dwc2/hcd.c                         | 16 +++++++++++++---
+ drivers/usb/dwc2/platform.c                    |  9 +++++++++
+ 6 files changed, 48 insertions(+), 3 deletions(-)
+
+-- 
+2.21.0.392.gf8f6787159e-goog
+
