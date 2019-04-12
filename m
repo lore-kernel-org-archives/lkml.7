@@ -2,82 +2,89 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746C9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4648FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5C0206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144D82084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:23:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e2Pwq8N+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfDLJXZ (ORCPT
+        id S1727609AbfDLJXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:23:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33730 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbfDLJXY (ORCPT
+        Fri, 12 Apr 2019 05:23:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44570 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfDLJXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:23:24 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 26CBC282267
-Subject: Re: [PATCH v3] platform/chrome: cros_ec_spi: Transfer messages at
- high priority
-To:     Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Alexandru M Stan <amstan@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Simon Glass <sjg@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Randall Spangler <rspangler@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-References: <20190403203137.203582-1-dianders@chromium.org>
- <CA+ASDXNmxspD_3p-BftgySn5mPSYvSTeEXkzNS9B+ReZho-Uyw@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <9fce8b1c-e277-2eeb-4b0d-e6b0e1851419@collabora.com>
-Date:   Fri, 12 Apr 2019 11:23:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 05:23:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y7so10979461wrn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 02:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6c5xGsgEUsBmr+NfEPZmljbvAMnY7PKQByP0HLkSwg=;
+        b=e2Pwq8N+XLbow9tRHSQP4MLvNZNC8O0Kzpx94hFulcpf6DCqJHmyJb4BhB69iV181v
+         rMj7qeb3B8+t+9M9emNOfOsLxsA0D/DHVKpHxMSNyuPdlywcG3i6fZjYKYBu8n5Kt+Hb
+         I/lGi/35kXN/8KYe76Ue30A4lAkqN3jBBpi6GuWLq8DlFepoZrY0C4zc7RQZHp+YHSDY
+         BFw6gDksLOQAYFO8T8R5mISq10dkrbd6FyReN0nvLtxp1GKkcoJInn5Z1Ckr4FQOWeRz
+         QCSwjGhaoNvs+nMHnNMA86Ruy46GeEnVWWqiighrZh5FlncK8Fjj4PvDzrkw33dDqSrb
+         QOjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6c5xGsgEUsBmr+NfEPZmljbvAMnY7PKQByP0HLkSwg=;
+        b=awtEGCjigCHjFZvR76NvCRB4YV7MDLUh+Oox1F9tT8eL8qU32IrXM5n8GaECxEUT/o
+         ZJLFKhYGPoCForuAexIkvOd27WbbMwjPLc6BVTInicAgpnUGtUKhWVevdJWw3I6mAiEp
+         5PqY93/qKj1cvDCaStJqYwkfj6WYWX/UVgFU2FuR7tbji3pm0t3lErEW9pmzPhcWz98v
+         HF5lSTpAEiiExoOstIxTQHf9PfPuAJwXpuHl171Y2NgK1isXXJqERFW61J0KQMfLVeTI
+         efnUoCsa3IVSrdBbR4XThwhizHtlC1SyvAMAx7LzCE4d98Ji0e315VdVgJlvML2jjxaA
+         oF+A==
+X-Gm-Message-State: APjAAAWStV0l48dutI6bKHTi84ez+ur2w+2/vVeRQawg7BrburiqDT08
+        XOYaV+g1rzt2XVGvz53Z1NJrgw==
+X-Google-Smtp-Source: APXvYqyj8Gu+Ubs+zej9YnxEdsDcovDEj6rsPye3Ho5bURXKk2LkzZRoqINhMeKNdlfTQIYRoZMMog==
+X-Received: by 2002:adf:e50d:: with SMTP id j13mr36968828wrm.165.1555061019438;
+        Fri, 12 Apr 2019 02:23:39 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s21sm6630224wmh.22.2019.04.12.02.23.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 12 Apr 2019 02:23:38 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     thierry.reding@gmail.com
+Cc:     baylibre-upstreaming@groups.io,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] pwm: Add support for Amlogic Meson G12A
+Date:   Fri, 12 Apr 2019 11:23:34 +0200
+Message-Id: <20190412092337.6941-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXNmxspD_3p-BftgySn5mPSYvSTeEXkzNS9B+ReZho-Uyw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This adds support for the PWM modules on the Amlogic Meson G12A SoC
+family, including bindings changes and DT nodes.
 
-On 12/4/19 3:27, Brian Norris wrote:
-> On Wed, Apr 3, 2019 at 1:32 PM Douglas Anderson <dianders@chromium.org> wrote:
->> +static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
->> +                                struct cros_ec_command *ec_msg,
->> +                                cros_ec_xfer_fn_t fn)
->> +{
->> +       struct cros_ec_xfer_work_params params;
->> +
->> +       INIT_WORK(&params.work, cros_ec_xfer_high_pri_work);
-> 
-> Sorry for the late review, but this should have been
-> INIT_WORK_ONSTACK(). Should it be a new patch, or is this in a
-> non-rebasing tree yet?
-> 
+Neil Armstrong (3):
+  dt-bindings: pwm: Update bindings for the Meson G12A Family
+  pwm: meson: Add clock source configuration for Meson G12A
+  arm64: dts: meson-g12a: Add PWM nodes
 
-No need to resend, I'll do the modification myself and push again.
+ .../devicetree/bindings/pwm/pwm-meson.txt     |   2 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 179 ++++++++++++++++++
+ drivers/pwm/pwm-meson.c                       |  17 ++
+ 3 files changed, 198 insertions(+)
 
-Thanks,
- Enric
+-- 
+2.21.0
 
-> Otherwise, looks fine to me:
-> 
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> 
