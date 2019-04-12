@@ -2,84 +2,174 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08351C10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BCC10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FA52084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9EF21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IYmOOA+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfDLA52 (ORCPT
+        id S1726767AbfDLA6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:57:28 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2477 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726661AbfDLA52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:57:28 -0400
-Received: from dggeml406-hub.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id BFC2B3EA51BC2F215F54;
-        Fri, 12 Apr 2019 08:57:25 +0800 (CST)
-Received: from DGGEML502-MBX.china.huawei.com ([169.254.2.153]) by
- dggeml406-hub.china.huawei.com ([10.3.17.50]) with mapi id 14.03.0415.000;
- Fri, 12 Apr 2019 08:57:24 +0800
-From:   Linhaifeng <haifeng.lin@huawei.com>
-To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: perf tools:Is there any tools  to found out the max latency by irq
- or cpu idle 
-Thread-Topic: perf tools:Is there any tools  to found out the max latency by
- irq or cpu idle 
-Thread-Index: AdTwypFCWbA+6SJGRxm1JN4pevZ4ZA==
-Date:   Fri, 12 Apr 2019 00:57:24 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.20.223]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 11 Apr 2019 20:58:38 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:34191 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfDLA6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 20:58:37 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190412005834epoutp0168d6a8b7a4ccfd7487145e3bb34e0959~UlDI1ghUs2583725837epoutp013
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 00:58:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190412005834epoutp0168d6a8b7a4ccfd7487145e3bb34e0959~UlDI1ghUs2583725837epoutp013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1555030714;
+        bh=vKSoFW2zwZcUclRwrPJJfW0HdEH+OTQjHoyIwUvQqEw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=IYmOOA+Vwn8hUIU/FoXLcDq6C1PL/2jbN42ZCM9SDjr7oo4So718dX4x1ONG4vY8f
+         Zn0cD+/DLEt1gA2alhnWoqZUN/jJJfdULEFToz0jFUT/F7qRnIW2L8rw1cOMs1e6sL
+         yJPliIhCh7Y7YzkvEYBHwsnIQwCcTIm9pZUO8iyM=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.153]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190412005832epcas1p2561040aa30b44a3535c05f5827a59eea~UlDGlpvM31678516785epcas1p2J;
+        Fri, 12 Apr 2019 00:58:32 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        67.BF.04139.8B2EFAC5; Fri, 12 Apr 2019 09:58:32 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190412005832epcas1p11b1351c142ccce92759a0959f95b37c0~UlDGT1Lm81541715417epcas1p1T;
+        Fri, 12 Apr 2019 00:58:32 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190412005831epsmtrp27023528758a8f6bf938a94301a2bb450~UlDGTE3rq0981909819epsmtrp2J;
+        Fri, 12 Apr 2019 00:58:31 +0000 (GMT)
+X-AuditID: b6c32a35-973ff7000000102b-b7-5cafe2b8a007
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        42.37.03662.7B2EFAC5; Fri, 12 Apr 2019 09:58:31 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190412005831epsmtip149f5a594696e24b3a28728553c66a956~UlDGLDQWs1973419734epsmtip12;
+        Fri, 12 Apr 2019 00:58:31 +0000 (GMT)
+Subject: Re: [PATCH v2] extcon: axp288: Add a depends on ACPI to the Kconfig
+ entry
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     myungjoo.ham@samsung.com, wens@csie.org, hdegoede@redhat.com,
+        rjw@rjwysocki.net,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Organization: Samsung Electronics
+Message-ID: <df1f3722-28a1-30eb-7dbf-e4d4586c9bc3@samsung.com>
+Date:   Fri, 12 Apr 2019 09:59:21 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <c11e2ae8-d785-902d-1469-4ff538ebe2ab@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+W2716nNfq7XyaLmjYoEbbe1usZmg6QGRQj5R5SmF71M2eOO
+        3U3KCAojy9QeWqEWRWJvmKnFEnS1XmqWlkgP6YEZPYhZrdf+6HGv18j/Pr/zO99zzvf3O2ql
+        tolMUhe7vJzHxTooMk519eYifWpg2J+j73+PmY93jymYs50HEDPQfpxkhnadI5nee48I5tTl
+        YcREQ30KS4y1efgiYR3tHCStbYPlKmt12wVkjbTMySI22U1FHFvIeXScq4AvLHbZzNTaDXmr
+        8ozL9HQqnc4sp3Qu1smZqcx1Wamrix3iGJSuhHX4xFAWKwjU4gyTh/d5OV0RL3jNFOcudLjT
+        3WkC6xR8LltaAe9cQev1S4xiYr69KNxahdzRSVv91bXKnehGXAWKVQNeCk/6ekmJtTiAYORd
+        bAWKE/kLgvbafTHy4TuCQPlB1T/F6boulXzRgeDhnheEfBhFUNV6TZSo1VNwNvzq1UkCEqdA
+        8N0TUsqZivciGG0MEdKFEpugsb8HSTwZJ8Pgz9djrMEZcKL569hMKjwfztQOKiSehjfCyzvN
+        hJyTCN11I2MTxeKVUNG3WyHXnAHPRk6O81wou9KglBoDjpBw++nRGNlCJkTLBgiZp8CHu23j
+        8SSIhDtImbfD+e5bpCwWp24L9o8LDBBsqlFILpV4EfjbF8vNEiD8rZKQwoA1sHePVs6eBwOv
+        nitkngmN5fvGy1uh4tcPdBAl10+wUz/BQv0EC/X/m51CqgtoOucWnDZOoN30xN9uQWMrmmIM
+        oNoH60IIqxE1SXPO5M/REmyJsM0ZQqBWUlM12SoxpClkt5VyHj7P43NwQggZxdc+pEyaVsCL
+        C+/y5tHGJQaDgVlKLzPSNDVD47esytFiG+vl7Bzn5jz/dAp1bNJOZCQfh8/wlU8/1/x+Yw+v
+        Lu379P3Sl/1N+c7AkeKtpu5Ke9SQaA5mXvzxwVJl4l7M2vIx7dB6pmFBfFfuz8o1XZHsryOz
+        c5OPP/R1ZJwFW1Z0B295GyxLyEyGE+U9B+LN82/Nul9a0pM+VP28WXs4fmieJe4N/2fzwrKZ
+        kdbrRP4QpRKKWDpF6RHYvxsqWZC4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSnO72R+tjDM51W1m8OT6dyWL5vn5G
+        i8u75rBZ3G5cwWZx5vQlVosFGx8xWvw8dJ7Jgd1jw6PVrB7v911l89hytZ3Fo2/LKkaPz5vk
+        AlijuGxSUnMyy1KL9O0SuDLebe5lLPjJU7G+bwpzA+NBri5GTg4JAROJRTNPsHQxcnEICexm
+        lPjQfIkFIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBI7ulcxgsSFBUIk/p5RAClnE9CS2P/iBhtI
+        jYhAB6PEomVX2UESzAI2EosvnGKEaP7CKNF+dj0zSIJfQFHi6o/HjCA2r4CdxNwNX9hAbBYB
+        VYllU64ygdiiAhESZ96vYIGoEZQ4OfMJmM0pYC/Rdb6FCWKBusSfeZeYIWxxiVtP5kPF5SWa
+        t85mnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZw
+        PGlp7WA8cSL+EKMAB6MSD+8Km/UxQqyJZcWVuYcYJTiYlUR4Q1iAQrwpiZVVqUX58UWlOanF
+        hxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhjNH385p8+ZXGuU4RF4XqHr5esHnjP4
+        447usT+5oCgtqTT41Quuy7Of/56ybe3r9wVcIirqHAcslvu/bpmqY9W1m8/pqLTBgdADbJs+
+        zuzqKmj84H9+/nr5jndl81QDf2zakWATHHRb3y0tcuLVF8t3p+/RYl0qdsd81nrj6tkzFtm9
+        vhJodldciaU4I9FQi7moOBEAvGUKiqMCAAA=
+X-CMS-MailID: 20190412005832epcas1p11b1351c142ccce92759a0959f95b37c0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633
+References: <20190404104222.23900-1-yuehaibing@huawei.com>
+        <CGME20190404142002epcas1p1a86f6d0d5d1a694581630a99532af633@epcas1p1.samsung.com>
+        <20190404141748.27048-1-yuehaibing@huawei.com>
+        <c11e2ae8-d785-902d-1469-4ff538ebe2ab@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIA0KSSBoYXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQoNCldo
-aWxlICgxKSB7DQrCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KwqDCoMKgIHNxcnQgKDEwMjQpO8Kg
-wqDCoMKgwqAgDQrjgIDjgIBlbmQgPSByZHRzYygpOw0K44CA44CAY3ljbGVzID0gZW5kIOKAkyBz
-dGFydDsNCuOAgOOAgHByaW50ZigiY3ljbGVzOiAlZC0lMDJkLSUwMmQgJTAyZDolMDJkOiUwMmQ6
-ICVsdVxuIiwgDQrjgIDjgIDjgIDjgIDjgIDjgIAxOTAwK3RpbWVpbmZvLT50bV95ZWFyLCAxK3Rp
-bWVpbmZvLT50bV9tb24sIHRpbWVpbmZvLT50bV9tZGF5LCB0aW1laW5mby0+dG1faG91ciwgdGlt
-ZWluZm8tPnRtX21pbiwgdGltZWluZm8tPnRtX3NlYywNCuOAgOOAgOOAgOOAgOOAgOOAgGN5Y2xl
-cyk7DQp9DQpJdCBwcmludCB0aGUgY3ljbGVzIG9mIHNxcnQgZXZlcnkgc2Vjb25kIGFuZCBydW4g
-d2l0aCB0YXNrc2V0IOKAk2MgMSAuL3NxcnQuDQpUaGUgcmVzdWx0IG9mIHRlc3QgaXM6DQoNCnNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1MDogNDM5NjgNCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTog
-NDQwNjANCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MjogNDkwMTINCnNxcnQgMjAxOS0wNC0xMCAy
-Mzo1Mzo1MzogMzgxNzINCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQpzcXJ0
-IDIwMTktMDQtMTAgMjM6NTM6NTU6IDQzNjAwDQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTY6IDQ2
-NzA0DQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTc6IDQ2ODgwDQpzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTg6IDQ0MzMyDQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4
-DQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwNDo0MDozNTogMTMxMDgxNDA4DQrigKbigKYNCg0K
-RXZlcnkgMmhvdXIyM21pbiB0aGVyZSB3b3VsZCBiZSBhIGxhcmdlIGN5Y2xlcy4gSSB1c2UgcGVy
-ZiBzY2hlZCBub3QgZm91bmQgYW55IHNjaGVkX3N3aXRjaCBldmVudHMuDQoNCkwyR1dfMjY4MDov
-aG9tZS9mc3Avem4gIyBwZXJmIHNjaGVkIHJlY29yZCAtQyA2LTExIC1vIHBlcmYuc2NoZWQNCl5D
-WyBwZXJmIHJlY29yZDogV29rZW4gdXAgNjQgdGltZXMgdG8gd3JpdGUgZGF0YSBdDQpbIHBlcmYg
-cmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMjA0Ljg3OCBNQiBwZXJmLnNjaGVkICgxOTExMTg5
-IHNhbXBsZXMpIF0NCg0KTDJHV18yNjgwOi9ob21lL2ZzcC96biAjIHBlcmYgc2NoZWQgbGF0ZW5j
-eSAtaSBwZXJmLnNjaGVkIA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KwqAgVGFza8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfMKgwqAgUnVudGltZSBtc8KgIHwgU3dpdGNoZXMgfCBBdmVyYWdlIGRlbGF5IG1zIHwg
-TWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDCoMKgwqAgfA0KLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQrCoCBU
-T1RBTDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqAgMC4wMDAgbXMg
-fCDCoMKgwqDCoMKgwqDCoDAgfA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQoNCg0KDQpJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0
-byBmb3VuZCBvdXQgdGhlIG1heCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQoNCg0K
+Dear all,
+ 
++ stable@vger.kernel.org 
+ 
+It should be posted to stable@vger.kernel.org
+in order to merge it to stable tree.
+ 
+Regards,
+Chanwoo Choi
+
+
+On 19. 4. 12. 오전 8:30, Chanwoo Choi wrote:
+> On 19. 4. 4. 오후 11:17, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> As Hans de Goede pointed, using this driver without ACPI
+>> makes little sense, so add ACPI dependency to Kconfig entry
+>> to fix a build error while CONFIG_ACPI is not set.
+>>
+>> drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
+>> drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
+>>     put_device(&adev->dev);
+>>
+>> Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>> v2: rework patch
+>> ---
+>>  drivers/extcon/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>> index 1ed4b45..de06faf 100644
+>> --- a/drivers/extcon/Kconfig
+>> +++ b/drivers/extcon/Kconfig
+>> @@ -30,7 +30,7 @@ config EXTCON_ARIZONA
+>>  
+>>  config EXTCON_AXP288
+>>  	tristate "X-Power AXP288 EXTCON support"
+>> -	depends on MFD_AXP20X && USB_SUPPORT && X86
+>> +	depends on MFD_AXP20X && USB_SUPPORT && X86 && ACPI
+>>  	select USB_ROLE_SWITCH
+>>  	help
+>>  	  Say Y here to enable support for USB peripheral detection
+>>
+> 
+> Applied it. Thanks.
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
