@@ -2,101 +2,110 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6047AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E6EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD70206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41A121872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555075626;
+	bh=pZpdFE2n9SIrv6fRHGRkRbWq48qrQJG6z6V/4z4Mvyg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ERZUOOt3nsqERAWbJQ/WHI1lO45ErLSVtGTOPVt/PmMancfPxM4joR7bWiqBycCsL
+	 xI9f+P+25qhYOtDCDSrA35UVcwbKoMxf/RBCHLg8EFiTB/WlZpzZXoEnNcrUeuxFUQ
+	 KuwcibDsdxXbuK3/Z5OaGj/iJsC06qNkli5FH5ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfDLN0x (ORCPT
+        id S1726889AbfDLN1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:26:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726244AbfDLN0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:26:52 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2DC81A45623B1C5A690B;
-        Fri, 12 Apr 2019 21:26:47 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
- 21:26:42 +0800
-Subject: Re: [PATCH v2] gpio: merrifield: Fix build err without CONFIG_ACPI
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20190404103925.25652-1-yuehaibing@huawei.com>
- <20190405142112.26592-1-yuehaibing@huawei.com>
- <20190405145009.GD9224@smile.fi.intel.com> <2719325.nu6fPkO1U5@kreacher>
- <CAHp75VccF9-ax8nJ9qOfAFMvLR19K6NqwyePEf-86r4ifMnJKA@mail.gmail.com>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <241a0251-3d2d-b304-c103-a6d240e89ce6@huawei.com>
-Date:   Fri, 12 Apr 2019 21:26:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Fri, 12 Apr 2019 09:27:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbfDLN1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:27:04 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52BA9206BA;
+        Fri, 12 Apr 2019 13:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555075623;
+        bh=pZpdFE2n9SIrv6fRHGRkRbWq48qrQJG6z6V/4z4Mvyg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LrFvPgGDGc/EM49/+AwwlvwjOUBIJL/Bo6DA4Vni8alq00K19sd5kDyWO1yYYA++e
+         FkrcZnU9wPe4oxYKiDpsiRRXglDz2ENiz++2UWeygJKPUfIwggaTvCcJFvALbEaZJ4
+         6CXJRcqJvXvtIJDpn6FEzbVdHntS0L/Qn9jLlb64=
+Subject: Re: [PATCH] selftests: livepatch use TEST_PROGS for test shell
+ scripts
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190412011823.26884-1-shuah@kernel.org>
+ <alpine.LSU.2.21.1904120901490.773@pobox.suse.cz>
+From:   shuah <shuah@kernel.org>
+Message-ID: <8967c9aa-7eb1-7e6d-a371-f29a2be24c84@kernel.org>
+Date:   Fri, 12 Apr 2019 07:26:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VccF9-ax8nJ9qOfAFMvLR19K6NqwyePEf-86r4ifMnJKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <alpine.LSU.2.21.1904120901490.773@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/12 21:13, Andy Shevchenko wrote:
-> On Fri, Apr 12, 2019 at 3:55 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> On Friday, April 5, 2019 4:50:09 PM CEST Andy Shevchenko wrote:
->>> On Fri, Apr 05, 2019 at 10:21:12PM +0800, Yue Haibing wrote:
->>>> From: YueHaibing <yuehaibing@huawei.com>
->>>>
->>>> When building CONFIG_ACPI is not set
->>>> gcc warn this:
->>>>
->>>> drivers/gpio/gpio-merrifield.c: In function
->>>> mrfld_gpio_get_pinctrl_dev_name: drivers/gpio/gpio-merrifield.c:388:19:
->>>> error: dereferencing pointer to incomplete type struct acpi_device>
->>>>    put_device(&adev->dev);
->>>>
->>>>                    ^
->>>>
->>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>>> Fixes:d00d2109c367 ("gpio: merrifield: Convert to use
->>>> acpi_dev_get_first_match_dev()") Signed-off-by: YueHaibing
->>>> <yuehaibing@huawei.com>
->>>
->>> Thank you for an update, I have a comment below, but before sending v3, let
->>> Rafael to have a chance to look at it.
->>>
->>>>  #ifdef CONFIG_ACPI
->>>>  extern int acpi_platform_notify(struct device *dev, enum kobject_action
->>>>  action);>
->>>> +
->>>> +static inline void put_acpi_device(struct acpi_device *adev)
->>>> +{
->>>> +   put_device(&adev->dev);
->>>> +}
->>>
->>> This should probably go to acpi_bus.h under acpi_dev_get_first_match_dev().
->>> And talking to Mika we agreed that naming would be better as acpi_dev_put().
+On 4/12/19 1:03 AM, Miroslav Benes wrote:
+> On Thu, 11 Apr 2019, Shuah Khan wrote:
+> 
+>> TEST_PROGS variable is for test shell scripts and common clean target
+>> in lib.mk doesn't touch them. TEST_GEN_PROGS are removed by it.
 >>
->> Agreed on both accounts.
+>> Fix it to use TEST_PROGS for test shell scripts and TEST_PROGS_EXTENDED
+>> for common functions.sh.
+>>
+>> Signed-off-by: Shuah Khan <shuah@kernel.org>
+>> ---
+>>   tools/testing/selftests/livepatch/Makefile | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
+>> index af4aee79bebb..fd405402c3ff 100644
+>> --- a/tools/testing/selftests/livepatch/Makefile
+>> +++ b/tools/testing/selftests/livepatch/Makefile
+>> @@ -1,6 +1,7 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>>   
+>> -TEST_GEN_PROGS := \
+>> +TEST_PROGS_EXTENDED := functions.sh
+>> +TEST_PROGS := \
+>>   	test-livepatch.sh \
+>>   	test-callbacks.sh \
+>>   	test-shadow-vars.sh
 > 
-> Thanks!
-> YueHaibing, please, send v3 with suggested changes.
-
-Ok.
-
+> Hi Shuah,
 > 
+> thanks for the patch. We have already something similar queued in our git
+> tree. See
+> https://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git/commit/?h=for-5.1/upstream-fixes&id=abfe3c4560684864f66641438fee3075de098e89
+> 
+> It is missing TEST_PROGS_EXTENDED though. Should we add it?
+> 
+
+Please do. What that does is when selftests are installed, functions.h
+gets installed as well so the the test can run from installed location.
+
+Did I miss reviewing the original? I maintain the framework and try to
+catch these if patch gets sent to me.
+
+thanks,
+-- Shuah
 
