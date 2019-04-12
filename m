@@ -2,88 +2,101 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B05C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE30EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594A42082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAB721872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDLPjz (ORCPT
+        id S1726983AbfDLPkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:39:55 -0400
-Received: from ms.lwn.net ([45.79.88.28]:45164 "EHLO ms.lwn.net"
+        Fri, 12 Apr 2019 11:40:55 -0400
+Received: from muru.com ([72.249.23.125]:45624 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfDLPjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:39:55 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DF6C7308;
-        Fri, 12 Apr 2019 15:39:50 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 09:39:47 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Markus Heiser <markus.heiser@darmarit.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linux-arch@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>
-Subject: Re: [PATCH 0/8] Prepare files under Documentation/*.txt to build
- with Sphinx
-Message-ID: <20190412093947.62913186@lwn.net>
-In-Reply-To: <df609cad-fa5b-ac15-314f-ac8759771d90@darmarit.de>
-References: <94c47f05-0412-b938-908d-1ef8a91243ed@darmarit.de>
-        <cover.1554889999.git.mchehab+samsung@kernel.org>
-        <18261.1555064496@warthog.procyon.org.uk>
-        <27303.1555071586@warthog.procyon.org.uk>
-        <df609cad-fa5b-ac15-314f-ac8759771d90@darmarit.de>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726711AbfDLPky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:40:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 84B4A80F3;
+        Fri, 12 Apr 2019 15:41:09 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 08:40:51 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+Message-ID: <20190412154051.GW2839@atomide.com>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+ <20190327081142.GA11034@lenoch>
+ <20190404141730.GE49658@atomide.com>
+ <6defcea8-1e94-14ac-f9c5-e14c61ea4d99@linaro.org>
+ <20190410200748.GN2839@atomide.com>
+ <b8a177ee-0058-2730-4c95-56834f6bafd4@linaro.org>
+ <20190411205657.GT2839@atomide.com>
+ <20190412045954.GA30291@archlinux-i9>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190412045954.GA30291@archlinux-i9>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 14:34:25 +0200
-Markus Heiser <markus.heiser@darmarit.de> wrote:
-
-> Am 12.04.19 um 14:19 schrieb David Howells:
-> > Markus Heiser <markus.heiser@darmarit.de> wrote:
-> >   
-> >> Which is already named in our 'How to write kernel documentation' introduction
-> >>
-> >> - https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html#writing-documentation  
+* Nathan Chancellor <natechancellor@gmail.com> [190412 05:00]:
+> On Thu, Apr 11, 2019 at 01:56:57PM -0700, Tony Lindgren wrote:
+> > Hi,
 > > 
-> > This should really be in Documentation/ directory.
-> >   
+> > * Daniel Lezcano <daniel.lezcano@linaro.org> [190411 19:21]:
+> > > On 10/04/2019 22:07, Tony Lindgren wrote:
+> > > > Hi,
+> > > > 
+> > > > * Daniel Lezcano <daniel.lezcano@linaro.org> [190410 17:02]:
+> > > >> can you ask for an acked-by before pulling a patch in your tree?
+> > > > 
+> > > > I certainly do ask and wait for acks where possible :)
+> > > 
+> > > Ok, I may have missed them.
+> > > 
+> > > > Note that I have not applied this patch. I just added
+> > > > Keerthy to Cc on this thread so maybe you misread the
+> > > > message earlier. My comment "seems like no other
+> > > > takers" was for Ladislav regarding somebody picking up
+> > > > his earlier work, not for picking up this patch :)
+> > > 
+> > > Actually I was referring to the commit 592ea6bd1fad. Anyway as stated
+> > > above I could have miss your call.
+> > 
+> > Hmm so commit 592ea6bd1fad was part of the PWM timer series
+> > that was posted several times from late 2017 to end of
+> > February 2018. I did not get any timer related acks or
+> > comments so I applied it together with the PWM timer
+> > changes.
+> > 
+> > I'm guessing you may have accidentally checked out some
+> > older deja-vu branch from about a year ago? Commit
+> > 592ea6bd1fad is not related to this fix.. :)
+> > 
 > 
-> I agree with you, it is a kind of information hiding.  If you know proper
-> places, please send a patch to Jon.
+> Just for the record, I said this patch fixes 592ea6bd1fad because
+> 592ea6bd1fad should have been marked this function as static, which
+> would have exposed that this function was unused and it could have
+> been removed at that time. I know it is a bit of a stretch for this
+> commit (would be more appropriate for 008258d995a6 to have it) but
+> that was my logic behind it. Not opposed to having it removed before
+> committing.
 
-As Jani pointed out, it's in Documentation/doc-guide.
+Oh OK yes they should have all become static with the PWM
+series.
 
-If you're saying it should be in the top level, I kind of disagree.
-Documentation/ is an exercise in hiding information by placing it in the
-middle of 200 other, unrelated files.  We've made some progress on that,
-and I would like to continue to do so.
+Regards,
 
-Thanks,
-
-jon
+Tony
