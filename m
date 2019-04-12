@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FABC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36C5C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33B82084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEBC2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfDLNlr (ORCPT
+        id S1727209AbfDLNlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:41:47 -0400
+        Fri, 12 Apr 2019 09:41:51 -0400
 Received: from mga07.intel.com ([134.134.136.100]:9855 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbfDLNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:41:43 -0400
+        id S1727157AbfDLNlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:41:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 06:41:42 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Apr 2019 06:41:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,341,1549958400"; 
-   d="scan'208";a="163824258"
+   d="scan'208";a="163824264"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Apr 2019 06:41:39 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 12 Apr 2019 06:41:42 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,9 +36,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andy@infradead.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 06/13] ACPI / property: Don't limit named child node matching to data nodes
-Date:   Fri, 12 Apr 2019 16:41:15 +0300
-Message-Id: <20190412134122.82903-7-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v3 07/13] device connection: Find connections also by checking the references
+Date:   Fri, 12 Apr 2019 16:41:16 +0300
+Message-Id: <20190412134122.82903-8-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
 References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
@@ -49,54 +49,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason why we should limit the use of
-fwnode_get_named_child_node() to data nodes only.
+We can also use this API to find named references that the
+device nodes have by using fwnode_property_get_reference_args()
+function.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/acpi/property.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/base/devcon.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 77abe0ec4043..572a6868ff2e 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -602,15 +602,29 @@ static struct fwnode_handle *
- acpi_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
- 				 const char *childname)
- {
-+	char name[ACPI_PATH_SEGMENT_LENGTH];
- 	struct fwnode_handle *child;
-+	struct acpi_buffer path;
-+	acpi_status status;
- 
--	/*
--	 * Find first matching named child node of this fwnode.
--	 * For ACPI this will be a data only sub-node.
--	 */
--	fwnode_for_each_child_node(fwnode, child)
--		if (acpi_data_node_match(child, childname))
-+	path.length = sizeof(name);
-+	path.pointer = name;
-+
-+	fwnode_for_each_child_node(fwnode, child) {
-+		if (is_acpi_data_node(child)) {
-+			if (acpi_data_node_match(child, childname))
-+				return child;
-+			continue;
-+		}
-+
-+		status = acpi_get_name(ACPI_HANDLE_FWNODE(child),
-+				       ACPI_SINGLE_NAME, &path);
-+		if (ACPI_FAILURE(status))
-+			break;
-+
-+		if (!strncmp(name, childname, ACPI_NAMESEG_SIZE))
- 			return child;
-+	}
- 
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+index 04db9ae235e4..4cdf95532b63 100644
+--- a/drivers/base/devcon.c
++++ b/drivers/base/devcon.c
+@@ -38,6 +38,30 @@ fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
  	return NULL;
  }
+ 
++static void *
++fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
++		    void *data, devcon_match_fn_t match)
++{
++	struct device_connection con = { };
++	struct fwnode_reference_args args;
++	void *ret;
++	int i;
++
++	for (i = 0; ; i++) {
++		if (fwnode_property_get_reference_args(fwnode, con_id, NULL, 0,
++						       i, &args))
++			break;
++
++		con.fwnode = args.fwnode;
++		ret = match(&con, -1, data);
++		fwnode_handle_put(args.fwnode);
++		if (ret)
++			return ret;
++	}
++
++	return NULL;
++}
++
+ /**
+  * device_connection_find_match - Find physical connection to a device
+  * @dev: Device with the connection
+@@ -65,6 +89,10 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
+ 		ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
+ 		if (ret)
+ 			return ret;
++
++		ret = fwnode_devcon_match(fwnode, con_id, data, match);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	mutex_lock(&devcon_lock);
 -- 
 2.20.1
 
