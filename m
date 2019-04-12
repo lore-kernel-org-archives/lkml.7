@@ -2,95 +2,145 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C191C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88FCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C612084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B6420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555076963;
+	bh=/6YSBsCEYlkSXwaJHg4fmlnapDa79xojOFgqTwN7IDo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GVQO2OPMU3dsoiAWIyVWpYNbTvzRvHsuH6+Gc1eV6f7pY3SgYrfAduBcHFOOTKPH1
+	 etRwwwoYSsxXR2+O+vzrnr+6CJApa8X1SviILOiYvwAanPFFGDW5wFY+fuRlz4Orxq
+	 XzkmQcWPg/toor4NW1i3y0oG31ZUDfwTdWrL7huA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfDLNsI (ORCPT
+        id S1726907AbfDLNtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:48:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48048 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726842AbfDLNsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:48:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CB555AD63;
-        Fri, 12 Apr 2019 13:48:04 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 15:48:02 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Fri, 12 Apr 2019 09:49:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbfDLNtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:49:22 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E92084D;
+        Fri, 12 Apr 2019 13:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555076961;
+        bh=/6YSBsCEYlkSXwaJHg4fmlnapDa79xojOFgqTwN7IDo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dPC6hmU5VVHipggOy2xRcgC3X8cQ2Wsq1r6AcGlI4j4LITlc0pxkj0Gig6KTgYU1B
+         kqNdmju8A3gEPuzNUavfSMHGlSMOcE2nntS1ZGFdyTvssr081bN1cEgT2EEZ+S2GT2
+         Jrxd6Ugkfv+xFrePTn68GonfQWdLhaCTm4zVF0pY=
+Date:   Fri, 12 Apr 2019 22:49:16 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
-Message-ID: <20190412134802.kprel2c2iqijd4ai@pathway.suse.cz>
-References: <20190410031720.11067-1-alastair@au1.ibm.com>
- <20190410031720.11067-2-alastair@au1.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410031720.11067-2-alastair@au1.ibm.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: ptrace: Add function argument access API
+Message-Id: <20190412224916.fea6405337457c1242d8960a@kernel.org>
+In-Reply-To: <20190411172253.GH29081@fuggles.cambridge.arm.com>
+References: <155289594227.10570.1879705446198840331.stgit@devnote2>
+        <20190403120649.GB29409@fuggles.cambridge.arm.com>
+        <20190408093320.35f4050788937c995ca56a6b@kernel.org>
+        <20190411172253.GH29081@fuggles.cambridge.arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-04-10 13:17:17, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Thu, 11 Apr 2019 18:22:53 +0100
+Will Deacon <will.deacon@arm.com> wrote:
+
+> On Mon, Apr 08, 2019 at 09:33:20AM +0900, Masami Hiramatsu wrote:
+> > On Wed, 3 Apr 2019 13:06:49 +0100
+> > Will Deacon <will.deacon@arm.com> wrote:
+> > > On Mon, Mar 18, 2019 at 04:59:02PM +0900, Masami Hiramatsu wrote:
+> > > > Add regs_get_argument() which returns N th argument of the function
+> > > > call. On arm64, it supports up to 8th argument.
+> > > > Note that this chooses most probably assignment, in some case
+> > > > it can be incorrect (e.g. passing data structure or floating
+> > > > point etc.)
+> > > > 
+> > > > This enables ftrace kprobe events to access kernel function
+> > > > arguments via $argN syntax.
+> > > > 
+> > > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > > ---
+> > > >  arch/arm64/Kconfig              |    1 +
+> > > >  arch/arm64/include/asm/ptrace.h |   18 ++++++++++++++++++
+> > > >  2 files changed, 19 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > > index 117b2541ef3d..6ba0da4be73c 100644
+> > > > --- a/arch/arm64/Kconfig
+> > > > +++ b/arch/arm64/Kconfig
+> > > > @@ -148,6 +148,7 @@ config ARM64
+> > > >  	select HAVE_PERF_REGS
+> > > >  	select HAVE_PERF_USER_STACK_DUMP
+> > > >  	select HAVE_REGS_AND_STACK_ACCESS_API
+> > > > +	select HAVE_FUNCTION_ARG_ACCESS_API
+> > > >  	select HAVE_RCU_TABLE_FREE
+> > > >  	select HAVE_RCU_TABLE_INVALIDATE
+> > > >  	select HAVE_RSEQ
+> > > > diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+> > > > index ec60174c8c18..cfa1bc9b8b70 100644
+> > > > --- a/arch/arm64/include/asm/ptrace.h
+> > > > +++ b/arch/arm64/include/asm/ptrace.h
+> > > > @@ -305,6 +305,24 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
+> > > >  	return regs->regs[0];
+> > > >  }
+> > > >  
+> > > > +/**
+> > > > + * regs_get_kernel_argument() - get Nth function argument in kernel
+> > > > + * @regs:	pt_regs of that context
+> > > > + * @n:		function argument number (start from 0)
+> > > > + *
+> > > > + * regs_get_argument() returns @n th argument of the function call.
+> > > > + * Note that this chooses most probably assignment, in some case
+> > > > + * it can be incorrect.
+> > > 
+> > > In which cases would it be incorrect? I can imagine varargs causing
+> > > problems, but are there others?
+> > 
+> > As far as I can read "Procedure Call Standard for the ARM 64-bit 
+> > Architecture(AArch64) 5.4.2 Parameter Passing Rules", it may not return
+> > correct data if the target function has a parameter which is 16bytes
+> > or bigger size. Of course that is just a limitation of this interface.
+> > But anyway, it can return wrong data for the parameter after such big
+> > parameters. I think, for func(data-struct-128bits p1, u64 p2), p1
+> > is stored into r0 and r1, and p2 is stored r2, is that correct?
 > 
-> With modern high resolution screens, we can display more data, which makes
-> life a bit easier when debugging.
+> Oh, yes, passing things by value that don't fit in the registers will
+> obviously go wrong. Thanks. Do we do that in the kernel?
 
-I have quite some doubts about this feature.
+No, as far as I know. But I can't say it never happens in the kernel.
 
-We are talking about more than 256 characters per-line. I wonder
-if such a long line is really easier to read for a human.
+> 
+> Anyway, please resend with the comment expanded a bit and using
+> pt_regs_read_reg(), then I can queue this up for 5.2.
 
-I am not expert but there is a reason why the standard is 80
-characters per-line. I guess that anything above 100 characters
-is questionable. https://en.wikipedia.org/wiki/Line_length
-somehow confirms that.
+OK, I'll do.
 
-Second, if we take 8 pixels per-character. Then we need
-2048 to show the 256 characters. It is more than HD.
-IMHO, there is still huge number of people that even do
-not have HD display, especially on a notebook.
+Thank you!
+
+> 
+> Cheers,
+> 
+> Will
 
 
-I am sorry but I am strongly against having this hardcoded
-anywhere. And I doubt that there will be enough users
-to complicate the code and make it configurable.
-
-Best Regards,
-Petr
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
