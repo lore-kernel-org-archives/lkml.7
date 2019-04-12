@@ -6,97 +6,114 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A78C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05779C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB3D2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2B6206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfDLJOb (ORCPT
+        id S1727310AbfDLJUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:14:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48774 "EHLO mx1.suse.de"
+        Fri, 12 Apr 2019 05:20:12 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43004 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfDLJOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:14:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A6E44AE31;
-        Fri, 12 Apr 2019 09:14:29 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 11:14:28 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 4/9] livepatch: Add klp-convert annotation helpers
-In-Reply-To: <20190410181837.GA13083@redhat.com>
-Message-ID: <alpine.LSU.2.21.1904121112070.773@pobox.suse.cz>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190410155058.9437-5-joe.lawrence@redhat.com> <20190410181837.GA13083@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726838AbfDLJUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:20:12 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DA1DF5CE4DCAD6EB215F;
+        Fri, 12 Apr 2019 17:20:08 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
+ 17:20:06 +0800
+Subject: Re: [PATCH] scsi: qedf: replace memset/memcpy with safer strscpy
+To:     Colin King <colin.king@canonical.com>,
+        <QLogic-Storage-Upstream@cavium.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>
+References: <20190412090552.26925-1-colin.king@canonical.com>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <5ad7aee7-0c0b-5d1d-e40d-39e8bbe5e841@huawei.com>
+Date:   Fri, 12 Apr 2019 17:20:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190412090552.26925-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019, Joe Lawrence wrote:
 
-> On Wed, Apr 10, 2019 at 11:50:53AM -0400, Joe Lawrence wrote:
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > 
-> > Define macros KLP_MODULE_RELOC and KLP_SYMPOS in
-> > include/linux/livepatch.h to improve user-friendliness of the
-> > livepatch annotation process.
-> > 
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > ---
-> >  include/linux/livepatch.h | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> > index 16b48e8b29a2..947cfc2d1980 100644
-> > --- a/include/linux/livepatch.h
-> > +++ b/include/linux/livepatch.h
-> > @@ -236,6 +236,18 @@ void *klp_shadow_get_or_alloc(void *obj, unsigned long id,
-> >  void klp_shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor);
-> >  void klp_shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor);
-> >  
-> > +/* Used to annotate symbol relocations in livepatches */
-> > +#define KLP_MODULE_RELOC(obj)						\
-> > +	struct klp_module_reloc						\
-> > +	__attribute__((__section__(".klp.module_relocs." #obj)))	\
-> > +	__attribute__((aligned (4)))
-> > +
-> > +#define KLP_SYMPOS(symbol, pos)						\
-> > +	{								\
-> > +		.sym = &symbol,						\
-> > +		.sympos = pos,						\
-> > +	},
->         ^^
-> nit: if we dropped the trailing array comma delimiter from KLP_SYMPOS
-> macro, the invocations would look more intuitively like an array.  For
-> example:
+I send a similar fix earlier, but it seems not be picked.
+
+https://patchwork.kernel.org/patch/10874565/
+
+On 2019/4/12 17:05, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
->   KLP_MODULE_RELOC(test_klp_convert_mod) test_klp_convert_mod_relocs_a[] = {
->   	KLP_SYMPOS(driver_name, 0),
->   	KLP_SYMPOS(homonym_string, 2),
->   	KLP_SYMPOS(get_homonym_string, 2),
->   };
+> Currently the qedf_dbg_* family of functions can overrun the end
+> of the source string if it is less than the destination buffer
+> length because of the use of a fixed sized memcpy. Replace the
+> memset/memcpy calls with the safer strscpy as this won't overrun
+> the end of the source string and it ensures the destination
+> string is always terminated with NUL.
 > 
-> But I could not figure out a good regex to reference if other such
-> kernel preprocessor macros include or exclude the delimiter.  Are there
-> reasons to include it?
+> Addresses-Coverity: ("Out-of-bounds access")
+> Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/scsi/qedf/qedf_dbg.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
+> index f2397ee9ba69..b491bebeaca9 100644
+> --- a/drivers/scsi/qedf/qedf_dbg.c
+> +++ b/drivers/scsi/qedf/qedf_dbg.c
+> @@ -17,8 +17,7 @@ qedf_dbg_err(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+>  	struct va_format vaf;
+>  	char nfunc[32];
+>  
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+> +	strscpy(nfunc, func, sizeof(nfunc));
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -42,8 +41,7 @@ qedf_dbg_warn(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+>  	struct va_format vaf;
+>  	char nfunc[32];
+>  
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+> +	strscpy(nfunc, func, sizeof(nfunc));
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -71,8 +69,7 @@ qedf_dbg_notice(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+>  	struct va_format vaf;
+>  	char nfunc[32];
+>  
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+> +	strscpy(nfunc, func, sizeof(nfunc));
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -101,8 +98,7 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+>  	struct va_format vaf;
+>  	char nfunc[32];
+>  
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+> +	strscpy(nfunc, func, sizeof(nfunc));
+>  
+>  	va_start(va, fmt);
+>  
+> 
 
-No, I don't think so. We should change it. Good catch.
-
-Miroslav
