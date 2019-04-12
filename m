@@ -2,93 +2,101 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FA3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B20C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4014E2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D02D2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfDLEc3 (ORCPT
+        id S1726857AbfDLEcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 00:32:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12394 "EHLO mga17.intel.com"
+        Fri, 12 Apr 2019 00:32:55 -0400
+Received: from mx.socionext.com ([202.248.49.38]:43170 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfDLEc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 00:32:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 21:32:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,340,1549958400"; 
-   d="scan'208";a="142097063"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Apr 2019 21:32:26 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Flush IOTLB for untrusted device in time
-Date:   Fri, 12 Apr 2019 12:26:13 +0800
-Message-Id: <20190412042613.20257-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725747AbfDLEcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 00:32:55 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 12 Apr 2019 13:32:53 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id B42EC6117D;
+        Fri, 12 Apr 2019 13:32:53 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 12 Apr 2019 13:32:53 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2C49F1A15B7;
+        Fri, 12 Apr 2019 13:32:53 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 12D4A120487;
+        Fri, 12 Apr 2019 13:32:53 +0900 (JST)
+Subject: Re: [PATCH 1/3] clocksource/drivers/timer-milbeaut: Fix to enable
+ one-shot timer
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Takao Orito <orito.takao@socionext.com>,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+References: <1553483149-8922-1-git-send-email-sugaya.taichi@socionext.com>
+ <1553483149-8922-2-git-send-email-sugaya.taichi@socionext.com>
+ <0488b22d-6e47-768a-6bde-eb2d7196f7e9@linaro.org>
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Message-ID: <0d0a4ceb-9ddc-447a-5e78-440a3efe8129@socionext.com>
+Date:   Fri, 12 Apr 2019 13:32:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <0488b22d-6e47-768a-6bde-eb2d7196f7e9@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default, for performance consideration, Intel IOMMU
-driver won't flush IOTLB immediately after a buffer is
-unmapped. It schedules a thread and flushes IOTLB in a
-batched mode. This isn't suitable for untrusted device
-since it still can access the memory even if it isn't
-supposed to do so.
+Hi,
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Tested-by: Xu Pengfei <pengfei.xu@intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@intel.com>
----
- drivers/iommu/intel-iommu.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thank you for your comment.
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index c137f0f2cf49..3d504b685dd8 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3732,10 +3732,14 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 	unsigned long iova_pfn;
- 	struct intel_iommu *iommu;
- 	struct page *freelist;
-+	struct pci_dev *pdev = NULL;
- 
- 	if (iommu_no_mapping(dev))
- 		return;
- 
-+	if (dev_is_pci(dev))
-+		pdev = to_pci_dev(dev);
-+
- 	domain = find_domain(dev);
- 	BUG_ON(!domain);
- 
-@@ -3751,7 +3755,7 @@ static void intel_unmap(struct device *dev, dma_addr_t dev_addr, size_t size)
- 
- 	freelist = domain_unmap(domain, start_pfn, last_pfn);
- 
--	if (intel_iommu_strict) {
-+	if (intel_iommu_strict || (pdev && pdev->untrusted)) {
- 		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
- 				      nrpages, !freelist, 0);
- 		/* free iova */
--- 
-2.17.1
+On 2019/04/12 5:08, Daniel Lezcano wrote:
+> On 25/03/2019 04:05, Sugaya Taichi wrote:
+>> Fix mlb_set_oneshot_state() to enable one-shot timer.
+>> The function should stop and start a timer, but "start" statement was
+>> dropped. Kick the register to start one-shot timer.
+> 
+> Can you add the "Fixes" tag please.
+> 
+I got it, will resend with correct form.
+
+Thanks,
+Sugaya Taichi
+
+> 
+> 
+>> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+>> ---
+>>   drivers/clocksource/timer-milbeaut.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/clocksource/timer-milbeaut.c b/drivers/clocksource/timer-milbeaut.c
+>> index f2019a8..9fd5d08 100644
+>> --- a/drivers/clocksource/timer-milbeaut.c
+>> +++ b/drivers/clocksource/timer-milbeaut.c
+>> @@ -80,6 +80,8 @@ static int mlb_set_state_oneshot(struct clock_event_device *clk)
+>>   	u32 val = MLB_TMR_TMCSR_CSL_DIV2;
+>>   
+>>   	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
+>> +	val |= MLB_TMR_TMCSR_CNTE | MLB_TMR_TMCSR_TRG | MLB_TMR_TMCSR_INTE;
+>> +	writel_relaxed(val, timer_of_base(to) + MLB_TMR_EVT_TMCSR_OFS);
+>>   	return 0;
+>>   }
+>>   
+>>
+> 
+> 
 
