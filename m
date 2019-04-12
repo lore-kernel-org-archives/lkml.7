@@ -2,964 +2,476 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8BDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CAFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C5520818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="c9SYKfOE";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="voVXL7vw"
+	by mail.kernel.org (Postfix) with ESMTP id F0D1E20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555074410;
+	bh=ZYnwcJDMvVpJ3oy9GhqXfrbGjHhW+07tKPtLBUs+rGk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=LlKXazVtUuXV9qyCFZAZvFWfm8fCb+9QpcEN5Zlf9yQjRDlXbAotI6DkrnmS6uVEg
+	 y1RQdL/jyBos2EuIrK7r3rvjaLz87YUKeP/SjDma7q2wuL8bfg5O8fRCB3GxyfKVue
+	 q2tNfLODo9kRpR4fh/u+/wOugY7v/deXRoGhrtCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfDLNEr (ORCPT
+        id S1727381AbfDLNGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:04:47 -0400
-Received: from node.akkea.ca ([192.155.83.177]:40818 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfDLNEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:04:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id AAD834E204D;
-        Fri, 12 Apr 2019 13:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1555074280; bh=0LlLdvuhFIEUT6/w7q8Q8TnzbU/pMiklvPsuwsttH5E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=c9SYKfOEdP3YIBLMLnV5qZLkgk2P0rUOi/roeLJmWeqMpyJ5agCkODnslkuuzc4VT
-         2P4twPGeixfQk1ib3Wlgckz/mZ8FAuDC63qrqFY/n4uYE2HHYh8mcVazhqS5sKXK4w
-         mNYrBNnS4wUbiIris7R5Ix2xe5SErTYLq0eWqQBc=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QbL3pNbl64Nq; Fri, 12 Apr 2019 13:04:39 +0000 (UTC)
-Received: from localhost.localdomain (198-48-167-13.cpe.pppoe.ca [198.48.167.13])
-        by node.akkea.ca (Postfix) with ESMTPSA id C0BAA4E204B;
-        Fri, 12 Apr 2019 13:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1555074279; bh=0LlLdvuhFIEUT6/w7q8Q8TnzbU/pMiklvPsuwsttH5E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=voVXL7vwE7GtJy7MXR3kHf+IDkoGjm+JHADWOfW6aJbMD6IOYEsPG+ZmX4MBsymlk
-         ybwlIJz9bBonfNSd9KS3sabJ7x58PXvzw9KfB3oNtNbhuEeQDe2GfAdRv3g5/uzOf1
-         k/fexXzWh4fiTNA5IN+DU/P78NIzUPesCqbTiFBo=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus@akkea.ca
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
-Date:   Fri, 12 Apr 2019 07:04:26 -0600
-Message-Id: <20190412130427.13418-2-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190412130427.13418-1-angus@akkea.ca>
-References: <20190412130427.13418-1-angus@akkea.ca>
+        Fri, 12 Apr 2019 09:06:48 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50524 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfDLNGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:06:48 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z11so11223075wmi.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 06:06:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NUYsJNJCtdTmThlpAvJloLw8EnmqIWl3fW1RWHftPrc=;
+        b=jDpX+uy9haXp9NYz1H1Bd9jerG2PymNU3AMH5jOCc43a+wG7UwJ2rNauWMnVWITW43
+         gSuB/XX5/fOLkh8YEllvKE+Lhxxcii/CRZ0cmZaW5RhqOalzqIwUVanr/XrK5tg/dmwk
+         /2yNiLXm/TwiTT0rgKe/HYaLYWgoJkOqrPuj0mnN/bMTETEhbW/wRpqr0xYV9t0OOG5r
+         GG4dTRwae05CQ/1kLKKeol7mzZeuG157FtXmAV9Lq4Kx9l/6KDClr9U5jrx7rnXpTpbk
+         eiP0yyYZFDIy3yTUSC/wcX/zAT81ZO/H8Tj9jzgAX4YQa2g3If+aEYkjUOgd1m3N1vy2
+         +ZZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=NUYsJNJCtdTmThlpAvJloLw8EnmqIWl3fW1RWHftPrc=;
+        b=KFba3zZHM5vFy+xQ++l9zukM1mzM5Y3SBL08PKqlLeZl/0CbWFUQifdOI51jwXIqbb
+         dW/rdMSiBw+/bItoSmlmKlo7NFxsSuD3SVnKOnszTYxuVG6CW7RsWCVEvkJycHktQmXq
+         Y3e7M/vYxK/qXq4KfxyjTiay4maLgO2jXXAnxUmE0j2LO3pBr3ujbGYpSBYJXcGZ1NlR
+         ys0wsbZeO/l87HxP6LnCgckwf91My3sCAV9YhNn3yNboGlf/HQXIgH4J+KCNZcOcVDyc
+         wTHc4q3xmVzAdaXIW6WaOdAaxZ1PBhKa/aMbG47NewX1qnqELRWq5pF387455RurpzyG
+         iOWg==
+X-Gm-Message-State: APjAAAXPeLKWphWIpSzpOfoZTU0SGD3cVL7FNGUZk3AVVQ8ujGixYWg1
+        A/biuETEDZPbd3diaDZ4it4=
+X-Google-Smtp-Source: APXvYqyIBE7WsCNOxjOLjS9MjtrbgFFcQC/bLQ7sL1b7aLLhaMtOHfP8PRCGwF5m0kDwsbTe3BD64w==
+X-Received: by 2002:a1c:44d7:: with SMTP id r206mr11514609wma.129.1555074405116;
+        Fri, 12 Apr 2019 06:06:45 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id w130sm10992117wma.36.2019.04.12.06.06.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 06:06:44 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 15:06:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [GIT PULL] perf fixes
+Message-ID: <20190412130642.GA29980@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the development kit board for the Librem 5. The current level of
-support yields a working console and is able to boot userspace from the
-Network or eMMC.
+Linus,
 
-Additional subsystems that are active :
+Please pull the latest perf-urgent-for-linus git tree from:
 
-- Both USB ports
-- SD card socket
-- WiFi usdhc
-- WWAN modem
-- GNSS
-- GPIO keys
-- LEDs
-- gyro
-- magnetometer
-- touchscreen
-- pwm
-- backlight
-- haptic motor
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 850 ++++++++++++++++++
- 2 files changed, 851 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+   # HEAD: 1d54ad944074010609562da5c89e4f5df2f4e5db perf/core: Fix perf_event_disable_inatomic() race
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 13604e558dc1..03eb7743f1ad 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -21,4 +21,5 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+Six kernel side fixes: three related to NMI handling on AMD systems, a 
+race fix, a kexec initialization fix and a PEBS sampling fix.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Lendacky, Thomas (3):
+      x86/perf/amd: Resolve race condition when disabling PMC
+      x86/perf/amd: Resolve NMI latency issues for active PMCs
+      x86/perf/amd: Remove need to check "running" bit in NMI handler
+
+Peter Zijlstra (2):
+      perf/x86/intel: Initialize TFA MSR
+      perf/core: Fix perf_event_disable_inatomic() race
+
+Stephane Eranian (1):
+      perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+
+
+ arch/x86/events/amd/core.c   | 140 +++++++++++++++++++++++++++++++++++++++++--
+ arch/x86/events/core.c       |  13 +---
+ arch/x86/events/intel/core.c |   8 ++-
+ kernel/events/core.c         |  52 +++++++++++++---
+ kernel/events/ring_buffer.c  |   4 +-
+ 5 files changed, 190 insertions(+), 27 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 7d2d7c801dba..0ecfac84ba91 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -3,10 +3,14 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
++#include <linux/delay.h>
+ #include <asm/apicdef.h>
++#include <asm/nmi.h>
  
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-new file mode 100644
-index 000000000000..5f9f369d2422
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -0,0 +1,850 @@
-+/* SPDX-License-Identifier: GPL-2.0+
-+ *
-+ * Copyright 2018-2019 Purism SPC
+ #include "../perf_event.h"
+ 
++static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
++
+ static __initconst const u64 amd_hw_cache_event_ids
+ 				[PERF_COUNT_HW_CACHE_MAX]
+ 				[PERF_COUNT_HW_CACHE_OP_MAX]
+@@ -429,6 +433,132 @@ static void amd_pmu_cpu_dead(int cpu)
+ 	}
+ }
+ 
++/*
++ * When a PMC counter overflows, an NMI is used to process the event and
++ * reset the counter. NMI latency can result in the counter being updated
++ * before the NMI can run, which can result in what appear to be spurious
++ * NMIs. This function is intended to wait for the NMI to run and reset
++ * the counter to avoid possible unhandled NMI messages.
 + */
-+
-+/dts-v1/;
-+
-+#include "imx8mq.dtsi"
-+#include "dt-bindings/usb/pd.h"
-+#include "dt-bindings/input/input.h"
-+
-+/ {
-+	model = "Purism Librem 5 devkit 1.0";
-+	compatible = "purism,librem5-devkit", "fsl,imx8mq";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VSD_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	wifi_pwr_en: wifi-en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "WIFI_EN";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_pwr_en: regulator-pwr-en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "PWR_EN";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_vbat: regulator-vbat {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT_REG";
-+		regulator-always-on;
-+	};
-+
-+	reg_22V4_P: regulator-22V4-P {
-+		compatible = "regulator-fixed";
-+		regulator-name = "22V4_P";
-+		regulator-min-microvolt = <22400000>;
-+		regulator-max-microvolt = <22400000>;
-+		vin-supply = <&reg_vbat>;
-+	};
-+
-+	reg_5V_SOM: regulator-5V-SOM {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V_SOM";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vbat>;
-+		regulator-always-on;
-+	};
-+
-+	reg_5V_P: regulator-5V-P {
-+		/* Supplies HDMI, USB hub and smartcard */
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V_P";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vbat>;
-+		en-supply = <&reg_pwr_en>;
-+	};
-+
-+	reg_3V3_P: regulator-3V3-P {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3V3_P";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&reg_vbat>;
-+		en-supply = <&reg_pwr_en>;
-+	};
-+
-+	reg_2V8_P: regulator-2V8-P {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2V8_P";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&reg_3V3_P>;
-+	};
-+
-+	reg_1V8_P: regulator-1V8-P {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1V8_P";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&reg_vbat>;
-+		en-supply = <&reg_pwr_en>;
-+	};
-+
-+	pmic_osc: pmic-osc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "pmic_osc";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+		status = "okay";
-+
-+		led1 {
-+			label = "LED 1";
-+			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		btn1 {
-+			label = "VOL_UP";
-+			gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-+			gpio-key,wakeup;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+
-+		btn2 {
-+			label = "VOL_DOWN";
-+			gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
-+			gpio-key,wakeup;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		hp_det {
-+			label = "HP_DET";
-+			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-+			gpio-key,wakeup;
-+			linux,code = <KEY_HP>;
-+		};
-+	};
-+
-+	backlight_dsi: backlight-dsi {
-+		compatible = "pwm-backlight";
-+		/* 200 Hz for the PAM2841 */
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
-+		       10 11 12 13 14 15 16 17 18 19
-+		       20 21 22 23 24 25 26 27 28 29
-+		       30 31 32 33 34 35 36 37 38 39
-+		       40 41 42 43 44 45 46 47 48 49
-+		       50 51 52 53 54 55 56 57 58 59
-+		       60 61 62 63 64 65 66 67 68 69
-+		       70 71 72 73 74 75 76 77 78 79
-+		       80 81 82 83 84 85 86 87 88 89
-+		       90 91 92 93 94 95 96 97 98 99
-+		       100>;
-+		/* Default brightness level (index into the array defined by */
-+		/* the "brightness-levels" property) */
-+		default-brightness-level = <0>;
-+		power-supply = <&reg_22V4_P>;
-+	};
-+
-+	pwmleds {
-+		compatible = "pwm-leds";
-+		haptic {
-+			label = "librem5::haptic";
-+			pwms = <&pwm2 0 200000>;
-+			active-low;
-+			max-brightness = <255>;
-+			power-supply = <&reg_3V3_P>;
-+		};
-+	};
-+};
-+
-+
-+&clk {
-+	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
-+	assigned-clock-rates = <786432000>, <722534400>;
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+	phy-supply = <&reg_pwr_en>;
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			power-supply = <&reg_3V3_P>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_pwr_en: pwrengrp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8               0x06
-+		>;
-+	};
-+
-+	pinctrl_wwan: wwangrp {
-+		fsl,pins = <
-+		/* nWWAN_DISABLE */
-+		MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09
-+		/* nWoWWAN */
-+		MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80
-+		/* WWAN_RESET */
-+		MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-+		MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x3
-+		MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-+		MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-+		MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-+		MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-+		MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-+		MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-+		MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-+		MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-+		MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-+		MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-+		MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+		MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+		MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
-+		MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2      0x1f
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL		0x4000001f
-+		MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA		0x4000001f
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL		0x4000001f
-+		MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA		0x4000001f
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_I2C3_SCL_I2C3_SCL		0x4000001f
-+		MX8MQ_IOMUXC_I2C3_SDA_I2C3_SDA		0x4000001f
-+		>;
-+	};
-+
-+	pinctrl_typec: typecgrp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12	0x16
-+		MX8MQ_IOMUXC_NAND_CE0_B_GPIO3_IO1	0x80
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-+		MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
-+		MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
-+		MX8MQ_IOMUXC_UART4_RXD_UART2_DCE_CTS_B		0x49
-+		MX8MQ_IOMUXC_UART4_TXD_UART2_DCE_RTS_B		0x49
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX		0x49
-+		MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX		0x49
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0x49
-+		MX8MQ_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX		0x49
-+		MX8MQ_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B	0x49
-+		MX8MQ_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0x49
-+		MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0x49
-+		>;
-+	};
-+
-+	pinctrl_bt: btgrp {
-+		fsl,pins = <
-+		/* nBT_DISABLE */
-+		MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11             0x16
-+		/* BT_HOST_WAKE */
-+		MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7              0x10
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-+		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-+		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-+		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-+		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-+		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
-+		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
-+		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
-+		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
-+		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x8d
-+		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
-+		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
-+		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
-+		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
-+		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x9f
-+		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x41
-+		/* WIFI_WAKE */
-+		MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20			0x80
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-+		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-+		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-+		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-+		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-+		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x8d
-+		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcd
-+		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xcd
-+		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xcd
-+		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xcd
-+		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xcd
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x9f
-+		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcf
-+		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xcf
-+		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xcf
-+		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xcf
-+		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xcf
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
-+		>;
-+	};
-+
-+	pinctrl_charger: chargernirq {
-+		fsl,pins = <
-+		/* CHRG_nINT */
-+		MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25	0x80
-+		>;
-+	};
-+
-+	pinctrl_rtc: rtcirq {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SAI3_RXC_GPIO4_IO29	0x80
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicint {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x80
-+		>;
-+	};
-+
-+	pinctrl_imu: imugrp {
-+		fsl,pins = <
-+		/* IMU_INT */
-+		MX8MQ_IOMUXC_SAI5_RXFS_GPIO3_IO19	0x8
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioleds {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x16
-+		>;
-+	};
-+
-+	pinctrl_gpio_keys: gpiokeys {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SAI2_RXFS_GPIO4_IO21	0x16
-+		MX8MQ_IOMUXC_SAI2_RXC_GPIO4_IO22	0x16
-+		/* HP_DET */
-+		MX8MQ_IOMUXC_SAI5_RXC_GPIO3_IO20	0x180
-+		>;
-+	};
-+
-+	pinctrl_goodix_ts: gt5688 {
-+		fsl,pins = <
-+		/* TOUCH INT */
-+		MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0         0x16
-+		/* TOUCH RST */
-+		MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5	0x19
-+		>;
-+	};
-+
-+	pinctrl_pwm1: pwm1 {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_GPIO1_IO01_PWM1_OUT	0x6  /* DSI_BL_PWM */
-+		>;
-+	};
-+
-+	pinctrl_haptic: hapticgrp {
-+		fsl,pins = <
-+		MX8MQ_IOMUXC_SPDIF_RX_PWM2_OUT		0xc6  /* nHAPTIC */
-+		>;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic: pmic@4b {
-+		reg = <0x4b>;
-+		compatible = "rohm,bd71837";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		clocks = <&pmic_osc>;
-+		clock-names = "osc";
-+		clock-output-names = "pmic_clk";
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <3 GPIO_ACTIVE_LOW>;
-+		interrupt-names = "irq";
-+		rohm,reset-snvs-powered;
-+
-+		gpo {
-+			/* 0b0000_1100 all gpos with cmos output mode */
-+			rohm,drv = <0x0C>;
-+		};
-+
-+		regulators {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			buck1_reg: BUCK1@0 {
-+				reg = <0>;
-+				regulator-name = "buck1";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <1250>;
-+				rohm,dvs-run-voltage = <900000>;
-+				rohm,dvs-idle-voltage = <850000>;
-+				rohm,dvs-suspend-voltage = <800000>;
-+			};
-+
-+			buck2_reg: BUCK2@1 {
-+				reg = <1>;
-+				regulator-name = "buck2";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <1250>;
-+				rohm,dvs-run-voltage = <1000000>;
-+				rohm,dvs-idle-voltage = <900000>;
-+			};
-+
-+			buck3_reg: BUCK3@2 {
-+				reg = <2>;
-+				regulator-name = "buck3";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				rohm,dvs-run-voltage = <1000000>;
-+			};
-+
-+			buck4_reg: BUCK4@3 {
-+				reg = <3>;
-+				regulator-name = "buck4";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				rohm,dvs-run-voltage = <1000000>;
-+			};
-+
-+			buck5_reg: BUCK5@4 {
-+				reg = <4>;
-+				regulator-name = "buck5";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck6_reg: BUCK6@5 {
-+				reg = <5>;
-+				regulator-name = "buck6";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck7_reg: BUCK7@6 {
-+				reg = <6>;
-+				regulator-name = "buck7";
-+				regulator-min-microvolt = <1605000>;
-+				regulator-max-microvolt = <1995000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck8_reg: BUCK8@7 {
-+				reg = <7>;
-+				regulator-name = "buck8";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo1_reg: LDO1@8 {
-+				reg = <8>;
-+				regulator-name = "ldo1";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2_reg: LDO2@9 {
-+				reg = <9>;
-+				regulator-name = "ldo2";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3_reg: LDO3@10 {
-+				reg = <10>;
-+				regulator-name = "ldo3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo4_reg: LDO4@11 {
-+				reg = <11>;
-+				regulator-name = "ldo4";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo5_reg: LDO5@12 {
-+				reg = <12>;
-+				regulator-name = "ldo5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			ldo6_reg: LDO6@13 {
-+				reg = <13>;
-+				regulator-name = "ldo6";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			ldo7_reg: LDO7@14 {
-+				reg = <14>;
-+				regulator-name = "ldo7";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+		};
-+	};
-+
-+	typec_ptn5100: usb_typec@52 {
-+		compatible = "nxp,ptn5110";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_typec>;
-+		reg = <0x52>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-+		vconn-supply = <&reg_5V_P>;
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			power-role = "dual";
-+			try-power-role = "sink";
-+			source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM | PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP )>;
-+			sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM | PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP )
-+			     PDO_VAR(5000, 12000, 2000)>;
-+			op-sink-microwatt = <10000000>;
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@0 {
-+					reg = <0>;
-+					usb_con_hs: endpoint {
-+						remote-endpoint = <&typec_hs>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					usb_con_ss: endpoint {
-+						remote-endpoint = <&typec_ss>;
-+					};
-+				};
-+			};
-+		};
-+
-+	};
-+
-+	charger: charger@6b { /* bq25896 */
-+		compatible = "ti,bq25890";
-+		reg = <0x6b>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_charger>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+		ti,battery-regulation-voltage = <4192000>; /* 4.192V */
-+		ti,charge-current = <1600000>; /* 1.6 A */
-+		ti,termination-current = <66000>;  /* 66mA */
-+		ti,precharge-current = <1300000>; /* 1.3A */
-+		ti,minimum-sys-voltage = <2750000>; /* 2.75V */
-+		ti,boost-voltage = <5000000>; /* 5V */
-+		ti,boost-max-current = <50000>; /* 50mA */
-+	};
-+
-+	rtc@68 {
-+		pinctrl-names = "default";
-+		compatible = "microcrystal,rv4162";
-+		reg = <0x68>;
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "disabled";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>, <&pinctrl_imu>;
-+	status = "okay";
-+
-+	lsm9d_magn: magnetometer@1e	{
-+		compatible = "st,lsm9ds1-magn";
-+		reg = <0x1e>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+		vdd-supply = <&reg_3V3_P>;
-+		vddio-supply = <&reg_3V3_P>;
-+	};
-+
-+	goodix_ts: touchscreen@5d {
-+		compatible = "goodix,gt5688";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_goodix_ts>;
-+		reg = <0x5d>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+		irq-gpios = <&gpio3 0 GPIO_ACTIVE_HIGH>;
-+		touchscreen-size-x = <720>;
-+		touchscreen-size-y = <1440>;
-+		AVDD28-supply = <&reg_2V8_P>;
-+		VDDIO-supply = <&reg_1V8_P>;
-+	};
-+};
-+
-+&usb3_phy0 {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	port@0 {
-+		reg = <0>;
-+		typec_hs: endpoint {
-+			remote-endpoint = <&usb_con_hs>;
-+		};
-+	};
-+	port@1 {
-+		reg = <1>;
-+		typec_ss: endpoint {
-+			remote-endpoint = <&usb_con_ss>;
-+		};
-+	};
-+};
-+
-+&usb_dwc3_0 {
-+	status = "okay";
-+	extcon = <&typec_ptn5100>;
-+	dr_mode = "otg";
-+};
-+
-+&usb3_phy1 {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
-+
-+&usb_dwc3_1 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&uart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart3 { /* GNSS */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&uart4 { /* BT */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	power-supply = <&wifi_pwr_en>;
-+
-+	non-removable;
-+	disable-wp;
-+	cap-sdio-irq;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_haptic>;
-+	status = "okay";
-+};
--- 
-2.17.1
-
++#define OVERFLOW_WAIT_COUNT	50
++
++static void amd_pmu_wait_on_overflow(int idx)
++{
++	unsigned int i;
++	u64 counter;
++
++	/*
++	 * Wait for the counter to be reset if it has overflowed. This loop
++	 * should exit very, very quickly, but just in case, don't wait
++	 * forever...
++	 */
++	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
++		rdmsrl(x86_pmu_event_addr(idx), counter);
++		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
++			break;
++
++		/* Might be in IRQ context, so can't sleep */
++		udelay(1);
++	}
++}
++
++static void amd_pmu_disable_all(void)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int idx;
++
++	x86_pmu_disable_all();
++
++	/*
++	 * This shouldn't be called from NMI context, but add a safeguard here
++	 * to return, since if we're in NMI context we can't wait for an NMI
++	 * to reset an overflowed counter value.
++	 */
++	if (in_nmi())
++		return;
++
++	/*
++	 * Check each counter for overflow and wait for it to be reset by the
++	 * NMI if it has overflowed. This relies on the fact that all active
++	 * counters are always enabled when this function is caled and
++	 * ARCH_PERFMON_EVENTSEL_INT is always set.
++	 */
++	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
++		if (!test_bit(idx, cpuc->active_mask))
++			continue;
++
++		amd_pmu_wait_on_overflow(idx);
++	}
++}
++
++static void amd_pmu_disable_event(struct perf_event *event)
++{
++	x86_pmu_disable_event(event);
++
++	/*
++	 * This can be called from NMI context (via x86_pmu_stop). The counter
++	 * may have overflowed, but either way, we'll never see it get reset
++	 * by the NMI if we're already in the NMI. And the NMI latency support
++	 * below will take care of any pending NMI that might have been
++	 * generated by the overflow.
++	 */
++	if (in_nmi())
++		return;
++
++	amd_pmu_wait_on_overflow(event->hw.idx);
++}
++
++/*
++ * Because of NMI latency, if multiple PMC counters are active or other sources
++ * of NMIs are received, the perf NMI handler can handle one or more overflowed
++ * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
++ * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
++ * back-to-back NMI support won't be active. This PMC handler needs to take into
++ * account that this can occur, otherwise this could result in unknown NMI
++ * messages being issued. Examples of this is PMC overflow while in the NMI
++ * handler when multiple PMCs are active or PMC overflow while handling some
++ * other source of an NMI.
++ *
++ * Attempt to mitigate this by using the number of active PMCs to determine
++ * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
++ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
++ * number of active PMCs or 2. The value of 2 is used in case an NMI does not
++ * arrive at the LAPIC in time to be collapsed into an already pending NMI.
++ */
++static int amd_pmu_handle_irq(struct pt_regs *regs)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int active, handled;
++
++	/*
++	 * Obtain the active count before calling x86_pmu_handle_irq() since
++	 * it is possible that x86_pmu_handle_irq() may make a counter
++	 * inactive (through x86_pmu_stop).
++	 */
++	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
++
++	/* Process any counter overflows */
++	handled = x86_pmu_handle_irq(regs);
++
++	/*
++	 * If a counter was handled, record the number of possible remaining
++	 * NMIs that can occur.
++	 */
++	if (handled) {
++		this_cpu_write(perf_nmi_counter,
++			       min_t(unsigned int, 2, active));
++
++		return handled;
++	}
++
++	if (!this_cpu_read(perf_nmi_counter))
++		return NMI_DONE;
++
++	this_cpu_dec(perf_nmi_counter);
++
++	return NMI_HANDLED;
++}
++
+ static struct event_constraint *
+ amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -621,11 +751,11 @@ static ssize_t amd_event_sysfs_show(char *page, u64 config)
+ 
+ static __initconst const struct x86_pmu amd_pmu = {
+ 	.name			= "AMD",
+-	.handle_irq		= x86_pmu_handle_irq,
+-	.disable_all		= x86_pmu_disable_all,
++	.handle_irq		= amd_pmu_handle_irq,
++	.disable_all		= amd_pmu_disable_all,
+ 	.enable_all		= x86_pmu_enable_all,
+ 	.enable			= x86_pmu_enable_event,
+-	.disable		= x86_pmu_disable_event,
++	.disable		= amd_pmu_disable_event,
+ 	.hw_config		= amd_pmu_hw_config,
+ 	.schedule_events	= x86_schedule_events,
+ 	.eventsel		= MSR_K7_EVNTSEL0,
+@@ -732,7 +862,7 @@ void amd_pmu_enable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = 0;
+ 
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
+@@ -750,7 +880,7 @@ void amd_pmu_disable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
+ 
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_disable_virt);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447192a8..81911e11a15d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1349,8 +1349,9 @@ void x86_pmu_stop(struct perf_event *event, int flags)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
++	if (test_bit(hwc->idx, cpuc->active_mask)) {
+ 		x86_pmu.disable(event);
++		__clear_bit(hwc->idx, cpuc->active_mask);
+ 		cpuc->events[hwc->idx] = NULL;
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
+@@ -1447,16 +1448,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	apic_write(APIC_LVTPC, APIC_DM_NMI);
+ 
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+-		if (!test_bit(idx, cpuc->active_mask)) {
+-			/*
+-			 * Though we deactivated the counter some cpus
+-			 * might still deliver spurious interrupts still
+-			 * in flight. Catch them:
+-			 */
+-			if (__test_and_clear_bit(idx, cpuc->running))
+-				handled++;
++		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+-		}
+ 
+ 		event = cpuc->events[idx];
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 8baa441d8000..f61dcbef20ff 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3185,7 +3185,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
+ 
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
+@@ -3575,6 +3575,12 @@ static void intel_pmu_cpu_starting(int cpu)
+ 
+ 	cpuc->lbr_sel = NULL;
+ 
++	if (x86_pmu.flags & PMU_FL_TFA) {
++		WARN_ON_ONCE(cpuc->tfa_shadow);
++		cpuc->tfa_shadow = ~0ULL;
++		intel_set_tfa(cpuc, false);
++	}
++
+ 	if (x86_pmu.version > 1)
+ 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 72d06e302e99..534e01e7bc36 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2009,8 +2009,8 @@ event_sched_out(struct perf_event *event,
+ 	event->pmu->del(event, 0);
+ 	event->oncpu = -1;
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
++	if (READ_ONCE(event->pending_disable) >= 0) {
++		WRITE_ONCE(event->pending_disable, -1);
+ 		state = PERF_EVENT_STATE_OFF;
+ 	}
+ 	perf_event_set_state(event, state);
+@@ -2198,7 +2198,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
+ 
+ void perf_event_disable_inatomic(struct perf_event *event)
+ {
+-	event->pending_disable = 1;
++	WRITE_ONCE(event->pending_disable, smp_processor_id());
++	/* can fail, see perf_pending_event_disable() */
+ 	irq_work_queue(&event->pending);
+ }
+ 
+@@ -5810,10 +5811,45 @@ void perf_event_wakeup(struct perf_event *event)
+ 	}
+ }
+ 
++static void perf_pending_event_disable(struct perf_event *event)
++{
++	int cpu = READ_ONCE(event->pending_disable);
++
++	if (cpu < 0)
++		return;
++
++	if (cpu == smp_processor_id()) {
++		WRITE_ONCE(event->pending_disable, -1);
++		perf_event_disable_local(event);
++		return;
++	}
++
++	/*
++	 *  CPU-A			CPU-B
++	 *
++	 *  perf_event_disable_inatomic()
++	 *    @pending_disable = CPU-A;
++	 *    irq_work_queue();
++	 *
++	 *  sched-out
++	 *    @pending_disable = -1;
++	 *
++	 *				sched-in
++	 *				perf_event_disable_inatomic()
++	 *				  @pending_disable = CPU-B;
++	 *				  irq_work_queue(); // FAILS
++	 *
++	 *  irq_work_run()
++	 *    perf_pending_event()
++	 *
++	 * But the event runs on CPU-B and wants disabling there.
++	 */
++	irq_work_queue_on(&event->pending, cpu);
++}
++
+ static void perf_pending_event(struct irq_work *entry)
+ {
+-	struct perf_event *event = container_of(entry,
+-			struct perf_event, pending);
++	struct perf_event *event = container_of(entry, struct perf_event, pending);
+ 	int rctx;
+ 
+ 	rctx = perf_swevent_get_recursion_context();
+@@ -5822,10 +5858,7 @@ static void perf_pending_event(struct irq_work *entry)
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
+-	if (event->pending_disable) {
+-		event->pending_disable = 0;
+-		perf_event_disable_local(event);
+-	}
++	perf_pending_event_disable(event);
+ 
+ 	if (event->pending_wakeup) {
+ 		event->pending_wakeup = 0;
+@@ -10236,6 +10269,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 
+ 
+ 	init_waitqueue_head(&event->waitq);
++	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
+ 
+ 	mutex_init(&event->mmap_mutex);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index a4047321d7d8..2545ac08cc77 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -392,7 +392,7 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
+ 		 * store that will be enabled on successful return
+ 		 */
+ 		if (!handle->size) { /* A, matches D */
+-			event->pending_disable = 1;
++			event->pending_disable = smp_processor_id();
+ 			perf_output_wakeup(handle);
+ 			local_set(&rb->aux_nest, 0);
+ 			goto err_put;
+@@ -480,7 +480,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 
+ 	if (wakeup) {
+ 		if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
+-			handle->event->pending_disable = 1;
++			handle->event->pending_disable = smp_processor_id();
+ 		perf_output_wakeup(handle);
+ 	}
+ 
