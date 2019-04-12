@@ -2,55 +2,95 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CFEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC37BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3BC20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF4B20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555056700;
+	bh=f6LNNY1sP63m2YWoANx0b9cAojzOKzrFAB7+nliWhuU=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=08rtZoP0/j4WUv6/hwbboAMZujZeJhHZDRTRk09DLAhG/QlgQFaerD6pRx8dPOb83
+	 syIWzM2MCWNAjqbDo1v9NOENGT1elLyKTstv5qPs/WvlA6adad/pYJ9u7TEy7AeEFY
+	 3jzww6Jn4p6YY07mR4yUQV0iseL9ogtNRdBgbzb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfDLIJa (ORCPT
+        id S1727190AbfDLILj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:09:30 -0400
-Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:40426 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725973AbfDLIJ3 (ORCPT
+        Fri, 12 Apr 2019 04:11:39 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46635 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfDLILj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:09:29 -0400
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
-        (envelope-from <fw@strlen.de>)
-        id 1hErFQ-0007Ot-Rp; Fri, 12 Apr 2019 10:09:20 +0200
-Date:   Fri, 12 Apr 2019 10:09:20 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Sinan Kaya <okaya@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-        keescook@chromium.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETFILTER" <netfilter-devel@vger.kernel.org>,
-        "open list:NETFILTER" <coreteam@netfilter.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v4 5/5] net: Replace CONFIG_DEBUG_KERNEL with
- CONFIG_DEBUG_MISC
-Message-ID: <20190412080920.wusq2va6zdbsf3v7@breakpoint.cc>
-References: <20190412014355.25307-1-okaya@kernel.org>
- <20190412014355.25307-6-okaya@kernel.org>
+        Fri, 12 Apr 2019 04:11:39 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x188so7220889oia.13;
+        Fri, 12 Apr 2019 01:11:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=B2IpjxM0aHzY+BVWhPSCyxpoJj0L1vnQLxYTiu6TxCs=;
+        b=lDcSDVIk4T2bVb+9ePDwNX+tJY+a59P04GYT70jPzjjuZE0wrAF9ueZGSXRKEtRC+T
+         XH5gegFI7u5BjIdYYMctziQ6giSREX1bdn3Eds9Wa5F+9bW6VCzcKVFd8z50PcX7API0
+         iSkRxf4eqURK1a/9aTSMn7PI3nGQ/1HbByXOZB5yilkaw0ylvu7kw0HLm5BLhjbt31ST
+         aKTUIitdZr+tPQYG8iQQcd3fj3COXcM5Atu9reElpfR2sDV6lIgXVc0XM5ct5fz3IETN
+         ebV/rbFPu6Rfwq0B+Y7nPlCm7tezG0GPdrwR3pOe6l2a62rng3ty2w0qrm47RS5cBqEf
+         DNSQ==
+X-Gm-Message-State: APjAAAWspNLIRp470tNZngXFp7EOomZKLFryEjfL+HT2AskehJUnreOY
+        RB0zTMp8ymngpzS7kI/rmo0Y9kiPL4KgKFqp+rWyUNbi
+X-Google-Smtp-Source: APXvYqyRYORwJW6QFGk0f+pfk4tTnKz+gNdusOG1/sIxLp+Y59bqHv0rg7SioxcChLVB9Za0KTrV894wbsxNI9PZGYk=
+X-Received: by 2002:aca:6289:: with SMTP id w131mr9223111oib.84.1555056698489;
+ Fri, 12 Apr 2019 01:11:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412014355.25307-6-okaya@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 12 Apr 2019 10:11:27 +0200
+Message-ID: <CAJZ5v0jfyUSTRs909hsPhDSEt__MGPKC+1UBsG8oieWE07nn5A@mail.gmail.com>
+Subject: [GIT PULL] ACPI fix for v5.1-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sinan Kaya <okaya@kernel.org> wrote:
-> CONFIG_DEBUG_KERNEL should not impact code generation. Use the newly
-> defined CONFIG_DEBUG_MISC instead to keep the current code.
+Hi Linus,
 
-Acked-by: Florian Westphal <fw@strlen.de>
+Please pull from the tag
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.1-rc5
+
+with top-most commit c5781ffbbd4f742a58263458145fe7f0ac01d9e0
+
+ ACPICA: Namespace: remove address node from global list after method
+termination
+
+on top of commit 15ade5d2e7775667cf191cf2f94327a4889f8b9d
+
+ Linux 5.1-rc4
+
+to receive an ACPI fix for 5.1-rc5.
+
+This fixes an ACPICA issue introduced during the 4.20 development cycle
+and causing some systems to crash because of leftover operation region
+data still maintained after the operation region in question has gone
+away (Erik Schmauss).
+
+Thanks!
+
+
+---------------
+
+Erik Schmauss (1):
+      ACPICA: Namespace: remove address node from global list after
+method termination
+
+---------------
+
+ drivers/acpi/acpica/nsobject.c | 4 ++++
+ 1 file changed, 4 insertions(+)
