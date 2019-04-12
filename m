@@ -2,99 +2,123 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602C7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1925C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC0B205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25A52184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="JsNs80XH"
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="ozdscDFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfDLIDb (ORCPT
+        id S1727253AbfDLIEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:03:31 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45290 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfDLIDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:03:30 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v20so10177844qtv.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 01:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IA3mZ3nvheNqDR0FWDnnqoP9wxY5UD2M8T0Ec+3Ict8=;
-        b=JsNs80XH2gxh0J8qGUD0lWjVDROyJtMIOvBIqovw4O1YRujNKeCvGZTSbm98b2Cmpn
-         +PwhVzmu2N0m6u+viv93eFBdPM4xooNJPN/d779ZwP2ExAglyn7J8mi2Nxq93Olc5PrM
-         gwljaJm0/aHkNFjxo5TQq70krYCEwNce4tk6yy3UyAiRPpUbKxiH3DAtkDdKkft/lgC/
-         wOX3U5fdB9aI5mP5yEVaITl2N/JTbFj3sLUaZjGFb6mKIE0PVY9HB9krnZcU5LwFFb1V
-         xdXeBTON8UqDurUBKK8PzRVwDOkykMFOj8bMjFFc/YaNg8npNU1YYpSS9hdv9jVJDXkB
-         L4+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IA3mZ3nvheNqDR0FWDnnqoP9wxY5UD2M8T0Ec+3Ict8=;
-        b=bzmx1sdBeDoVb7a6/NOjD5avlDa5Yrke/TpEXVDi2rvSseQfdlkZQJrdAJboCa+el/
-         ZJneoszggjha/fbPrZ4+OatqvtgVceROdchYPrSNht/cZTsE1LiuoP70t6dVRA3XXgRy
-         g7Z11yRF6WNmLo0AOWCCwHpwRWBC3wMKkfL/qqtQevdWubT/yjKWUv+RWTtTWnaBTmMe
-         V1FnBImdloAC2boPzSL+pkmDjJLgX8x5d+LCqo/1Pfx9hmnx+PnqFduFrc8DogYh68N3
-         UkUb7dHMm5ZIO4vZ00ts8OK/wFOAm1ZHflnKho2IgoiMdvop9wZoD5mxEmxc9S65mawT
-         C1Zw==
-X-Gm-Message-State: APjAAAVEFusQDqd1Ps+FTMBTqY2zcQbopa7rL7cUBmPKdQ/Lpz4V9WRr
-        9nOrgwbYcKCt6Hg5c4scZhLG6O8AI+OaLtKqT98ZKA==
-X-Google-Smtp-Source: APXvYqzhuQa5rNgGunLO5GTHjRU9NyN1UowoNP9OQ8b+lvtSpZfoXMnrTbDbRJYw46FpQEb2zklsnvCsGdbJF/OG5MY=
-X-Received: by 2002:ac8:3789:: with SMTP id d9mr48179356qtc.34.1555056209073;
- Fri, 12 Apr 2019 01:03:29 -0700 (PDT)
+        Fri, 12 Apr 2019 04:04:52 -0400
+Received: from canardo.mork.no ([148.122.252.1]:56899 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfDLIEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:04:51 -0400
+Received: from miraculix.mork.no ([IPv6:2a02:2121:34e:7a0c:4cff:dff:fef6:bcb])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x3C84Ebf014007
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 12 Apr 2019 10:04:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1555056256; bh=TEkdjUFncQpPGr5cjnaKDc1jJA03Oku+3cZNXWXIdlQ=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=ozdscDFPm0M7yNoNVmhDnMc9RQ5Am6yBi10OnL6WJNVDgnBX39PGx2zDwRYhXUnS+
+         8XPRgRphsnOfRPZ8KjgNEYrgOUYYb3Q2IfDo7AsH30bblIlkU5zrmq4EF8IQm/qBak
+         cb8sXnzkLR5+fc45UWtlrq5YluWkB5IQSejuqtQo=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.89)
+        (envelope-from <bjorn@mork.no>)
+        id 1hErAP-000557-Jz; Fri, 12 Apr 2019 10:04:09 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     kbuild-all@01.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        greg@kroah.com, mchehab@kernel.org, keescook@chromium.org,
+        hans.verkuil@cisco.com, Young Xiao <YangX92@hotmail.com>
+Subject: Re: [PATCH] USB: s2255 & stkwebcam: fix oops with malicious USB descriptors
+Organization: m
+References: <1555036767-31170-1-git-send-email-92siuyang@gmail.com>
+Date:   Fri, 12 Apr 2019 10:04:09 +0200
+In-Reply-To: <1555036767-31170-1-git-send-email-92siuyang@gmail.com> (Young
+        Xiao's message of "Fri, 12 Apr 2019 10:39:27 +0800")
+Message-ID: <878swf645i.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <72b3e0aa-d53a-8a82-1505-f4f00aa2bb46@gmail.com> <fecb4870-7875-a524-bf6d-3108e25af888@gmail.com>
-In-Reply-To: <fecb4870-7875-a524-bf6d-3108e25af888@gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Fri, 12 Apr 2019 16:03:17 +0800
-Message-ID: <CAD8Lp45ivFJiW0FZo+ZOyUdpV1JFwPg=o7rx7eyp_YdSAbRRkg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] platform/x86: asus-wmi: Switch fan boost mode
-To:     Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.100.3 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:47 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
-> * 0x00 - is normal,
-> * 0x01 - is obviously turbo by the amount of noise, might be useful to
-> avoid CPU frequency throttling on high load,
-> * 0x02 - the meaning is unknown at the time as modes are not named
-> in the vendor documentation, but it does look like a quiet mode as CPU
-> temperature does increase about 10 degrees on maximum load.
+Please mark updated patches with a version number or some other
+indication that it replaces a previous patch.  Including a summary of
+changes is also normal.
 
-I'm curious which vendor documentation you're working with here.
+And speaking of normal:  We do build test our patches, don't we?
 
-From the spec,
-0 = normal
-1 = overboost
-2 = silent
 
-Also you can use DSTS on the 0x00110018 device to check the exact
-capabilities supported, which you should use to refine which modes can
-be cycled through.
-Bit 0 = overboost supported
-Bit 1 = silent supported
+Young Xiao <92siuyang@gmail.com> writes:
 
-Thanks
-Daniel
+> From: Young Xiao <YangX92@hotmail.com>
+>
+> The driver expects at least one valid endpoint. If given
+> malicious descriptors that specify 0 for the number of endpoints,
+> it will crash in the probe function.
+
+No, it won't.  Did you test this?  Can you provide the oops?
+
+This is perfectly fine as it is:
+
+	dev =3D kzalloc(sizeof(struct s2255_dev), GFP_KERNEL);
+..
+	for (i =3D 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+		endpoint =3D &iface_desc->endpoint[i].desc;
+		if (!dev->read_endpoint && usb_endpoint_is_bulk_in(endpoint)) {
+			/* we found the bulk in endpoint */
+			dev->read_endpoint =3D endpoint->bEndpointAddress;
+		}
+	}
+
+	if (!dev->read_endpoint) {
+		dev_err(&interface->dev, "Could not find bulk-in endpoint\n");
+		goto errorEP;
+	}
+
+>  drivers/media/usb/stkwebcam/stk-webcam.c | 6 ++++++
+
+I didn't bother looking at this driver to see if your patch there makes
+more sense.  That is your home work now.  Please explain why you believe
+it is.  An actual oops would be good.
+
+<rant>
+Yes, and I do have some objections to this whole "protect against
+malicious devices".  How do you intend to protect against a USB device
+disguising itself as a keyboard or ethernet adapater or whatever?
+Allowing potentionally malicious devices is crazy enough for USB, and it
+gets completely wacko when people start talking about it in the context
+of firewire or PCIe
+
+Fixing bugs in drivers is fine. But it won't make any difference wrt
+security if you connect malicious devices to your system.  Don't do that
+if you want a secure system.
+
+Allocating CVE numbers to arbitrary driver bugs is just adding
+noise. This noise makes it harder for sysadmins and others to to notice
+the really important problems.  No one will care anymore if every kernel
+release fixes thousands of CVEs.  Which is pretty close to the truth if
+you start allocating CVE numbers to any bug with a security impact.
+</rant>
+
+
+
+
+Bj=C3=B8rn
