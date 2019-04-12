@@ -2,153 +2,260 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63612C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960EBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2741621872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngUWlkCG"
+	by mail.kernel.org (Postfix) with ESMTP id 663CA20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfDLKZU (ORCPT
+        id S1726794AbfDLK1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:25:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36331 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDLKZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:25:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r24so8399008ljg.3;
-        Fri, 12 Apr 2019 03:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6G+l4HRtDXC8V+QnF5etvnMD5+Lz33fnqLoRq9LgE18=;
-        b=ngUWlkCG9ZufOrdS/RM0jm3/FLnDxUYR2E7++4jX6/jmiYnakdXWC1B3MUW7IWjINc
-         QjpWu6aZW8yvz8ZK32+CKTn20o/qO+k1w623C4ECQqsDcE0UshGC1NIpTWCvkx73Vb/N
-         dNo8yxrVYoyCHkTSrHVK0jiuyIKRcFPiwXdPHjHfYsiEuYFwgrgfv1izWu0vhMqaQDUx
-         vvGe6nYs4JGFZRv3SZGPL9RwOJxRWzXKvROF6F6D/Sq1PJSfUqKkkgrxOIAICrdsi2DE
-         xd5hsqp78R9C+l4LfmKT2+q2whutEfXJJyYLrlJrO/nmSn4wwMtlV122lQddFuw6VW/u
-         Y6eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6G+l4HRtDXC8V+QnF5etvnMD5+Lz33fnqLoRq9LgE18=;
-        b=OtyoamlxCZgQka/PDHusEhGkStnACKOlMIp5wFQAZvYbqC8iX7qlxMt8Dp4XWffran
-         czD1sPh5IaIS5B+ltbU2eYXeCV8Bch8rep7j/XNhVPI3QKspXwUV6SYdLlzBH00Hng4h
-         afxTwq+qRkCsQa58YA6VBSdd/KczzMqi59A2qay5lf+nj4OVVbT5K4M71GEf7GknH34j
-         z3gH3M0SXvBfbCOn3jfBq2pNYADKvPIkhfEdCC9/8c7cLMkG3flz1jYKFAEvfRrGBcH7
-         vAa5bfRleYAZvMgiOPWFTcOJToHkKlglA5If5yqVh4qGPBUhqp+QJmkaxsvbdP39+iug
-         KGJg==
-X-Gm-Message-State: APjAAAVuZHhDh/pblYYjf+e1EkEuxj5A5ThkWU6tY9b/8AQv9EoYAgJ8
-        7/xvvLjsq7nwIFil8YACRr1GVYRX
-X-Google-Smtp-Source: APXvYqx3+hgcdeOQu0NdacrX7uv/ifXVn5TxgFOKPp8HO2wEhi8oMp08eUGDB7OBOK08B4zcw+wCAQ==
-X-Received: by 2002:a2e:42cf:: with SMTP id h76mr28859782ljf.95.1555064717379;
-        Fri, 12 Apr 2019 03:25:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id p18sm7738637ljp.1.2019.04.12.03.25.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 03:25:16 -0700 (PDT)
-Subject: Re: [PATCH v1] clk: tegra20/30: Add custom EMC clock implementation
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411224708.29103-1-digetx@gmail.com>
- <20190412074658.GF12975@pdeschrijver-desktop.Nvidia.com>
- <683b978a-8c7c-0593-755b-90975907e7ff@gmail.com>
-Message-ID: <783553d2-15d0-5c59-3fef-59e2a8aba4ed@gmail.com>
-Date:   Fri, 12 Apr 2019 13:25:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 06:27:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbfDLK1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 06:27:30 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DA38F622108C275A13F2;
+        Fri, 12 Apr 2019 18:27:26 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
+ 18:27:14 +0800
+Subject: Re: [PATCH v5 1/6] iommu: add generic boot option iommu.dma_mode
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+References: <20190409125308.18304-1-thunder.leizhen@huawei.com>
+ <20190409125308.18304-2-thunder.leizhen@huawei.com>
+CC:     Hanjun Guo <guohanjun@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <010d3cbd-ef74-ad21-c735-0af8b18955e6@huawei.com>
+Date:   Fri, 12 Apr 2019 11:26:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <683b978a-8c7c-0593-755b-90975907e7ff@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190409125308.18304-2-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.04.2019 13:09, Dmitry Osipenko пишет:
-> 12.04.2019 10:46, Peter De Schrijver пишет:
->> On Fri, Apr 12, 2019 at 01:47:08AM +0300, Dmitry Osipenko wrote:
->>> A proper External Memory Controller clock rounding and parent selection
->>> functionality is required by the EMC drivers. It is not available using
->>> the generic clock implementation, hence add a custom one. The clock rate
->>> rounding shall be done by the EMC drivers because they have information
->>> about available memory timings, so the drivers will have to register a
->>> callback that will round the requested rate. EMC clock users won't be able
->>> to request EMC clock by getting -EPROBE_DEFER until EMC driver is probed
->>> and the callback is set up. The functionality is somewhat similar to the
->>> clk-emc.c which serves Tegra124+ SoC's, the later HW generations support
->>> more parent clock sources and the HW configuration and integration with
->>> the EMC drivers differs a tad from the older gens, hence it's not really
->>> worth to try to squash everything into a single source file.
->>>
->> ..
->>
->>> +	val = readl_relaxed(emc->ioaddr);
->>> +	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->>> +	val |= div;
->>> +
->>> +	parent = val >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->>> +
->>> +	if (parent == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
->>> +		val |= USE_PLLM_UD;
->>> +	else
->>> +		val &= ~USE_PLLM_UD;
->>> +
->>
->> Note that low jitter means the divider is bypassed, so you can only use
->> this when div == 1.
->>
->>> +	writel_relaxed(val, emc->ioaddr);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int emc_set_rate_and_parent(struct clk_hw *hw,
->>> +				   unsigned long rate,
->>> +				   unsigned long parent_rate,
->>> +				   u8 index)
->>> +{
->>> +	struct tegra_clk_emc *emc = to_tegra_clk_emc(hw);
->>> +	u32 val, div;
->>> +
->>> +	div = div_frac_get(rate, parent_rate, 8, 1, 0);
->>> +
->>> +	val = readl_relaxed(emc->ioaddr);
->>> +
->>> +	val &= ~CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
->>> +	val |= index << CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT;
->>> +
->>> +	val &= ~CLK_SOURCE_EMC_2X_CLK_DIVISOR_MASK;
->>> +	val |= div;
->>> +
->>> +	if (index == EMC_SRC_PLL_M && div == 0 && emc->want_low_jitter)
->>> +		val |= USE_PLLM_UD;
->>> +	else
->>> +		val &= ~USE_PLLM_UD;
->>> +
->>
->> Same here ofcourse.
-> 
-> Please note that hw_div = div + 1.0, hence writing div=0 means that HW divider is disabled and thus can be bypassed to get a low jitter clock. Also please note that div_frac_get() returns the "hw_div" value. Tegra30 doesn't work well if low jitter isn't enabled for the high clock rate (hangs after couple seconds) and Tegra20 is the opposite. Everything should be fine and it is working well, I don't see any problem.
-> 
+On 09/04/2019 13:53, Zhen Lei wrote:
+> Currently the IOMMU dma contains 3 modes: passthrough, lazy, strict. The
+> passthrough mode bypass the IOMMU, the lazy mode defer the invalidation
+> of hardware TLBs, and the strict mode invalidate IOMMU hardware TLBs
+> synchronously. The three modes are mutually exclusive. But the current
+> boot options are confused, such as: iommu.passthrough and iommu.strict,
+> because they are no good to be coexist. So add iommu.dma_mode.
+>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 19 ++++++++
+>  drivers/iommu/iommu.c                           | 59 ++++++++++++++++++++-----
+>  include/linux/iommu.h                           |  5 +++
+>  3 files changed, 71 insertions(+), 12 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 2b8ee90bb64470d..f7766f8ac8b9084 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1811,6 +1811,25 @@
+>  			1 - Bypass the IOMMU for DMA.
+>  			unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
+>
+> +	iommu.dma_mode= Configure default dma mode. if unset, use the value
+> +			of CONFIG_IOMMU_DEFAULT_PASSTHROUGH to determine
+> +			passthrough or not.
 
-Oh, div_frac_get() returns the "div" value of course.
+To me, for unset it's unclear what we default to. So if unset and also 
+CONFIG_IOMMU_DEFAULT_PASSTHROUGH is not set, do we get lazy or strict 
+mode? (note: I'm ignoring backwards compatibility and interaction of 
+iommu.strict and .passthorugh also, more below).
+
+Could we considering introducing config DEFAULT_IOMMU_DMA_MODE, similar 
+to DEFAULT_IOSCHED?
+
+> +			Note: For historical reasons, ARM64/S390/PPC/X86 have
+> +			their specific options. Currently, only ARM64 support
+> +			this boot option, and hope other ARCHs to use this as
+> +			generic boot option.
+> +		passthrough
+> +			Configure DMA to bypass the IOMMU by default.
+> +		lazy
+> +			Request that DMA unmap operations use deferred
+> +			invalidation of hardware TLBs, for increased
+> +			throughput at the cost of reduced device isolation.
+> +			Will fall back to strict mode if not supported by
+> +			the relevant IOMMU driver.
+> +		strict
+> +			DMA unmap operations invalidate IOMMU hardware TLBs
+> +			synchronously.
+> +
+>  	io7=		[HW] IO7 for Marvel based alpha systems
+>  			See comment before marvel_specify_io7 in
+>  			arch/alpha/kernel/core_marvel.c.
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 109de67d5d727c2..df1ce8e22385b48 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -38,12 +38,13 @@
+>
+>  static struct kset *iommu_group_kset;
+>  static DEFINE_IDA(iommu_group_ida);
+> +
+>  #ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_IDENTITY;
+> +#define IOMMU_DEFAULT_DMA_MODE		IOMMU_DMA_MODE_PASSTHROUGH
+>  #else
+> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+> +#define IOMMU_DEFAULT_DMA_MODE		IOMMU_DMA_MODE_STRICT
+>  #endif
+> -static bool iommu_dma_strict __read_mostly = true;
+> +static int iommu_default_dma_mode __read_mostly = IOMMU_DEFAULT_DMA_MODE;
+>
+>  struct iommu_callback_data {
+>  	const struct iommu_ops *ops;
+> @@ -147,20 +148,51 @@ static int __init iommu_set_def_domain_type(char *str)
+>  	int ret;
+>
+>  	ret = kstrtobool(str, &pt);
+> -	if (ret)
+> -		return ret;
+> +	if (!ret && pt)
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
+>
+> -	iommu_def_domain_type = pt ? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
+> -	return 0;
+> +	return ret;
+>  }
+>  early_param("iommu.passthrough", iommu_set_def_domain_type);
+>
+>  static int __init iommu_dma_setup(char *str)
+>  {
+> -	return kstrtobool(str, &iommu_dma_strict);
+> +	bool strict;
+> +	int ret;
+> +
+> +	ret = kstrtobool(str, &strict);
+> +	if (!ret)
+> +		iommu_default_dma_mode = strict ?
+> +				IOMMU_DMA_MODE_STRICT : IOMMU_DMA_MODE_LAZY;
+> +
+> +	return ret;
+>  }
+>  early_param("iommu.strict", iommu_dma_setup);
+>
+> +static int __init iommu_dma_mode_setup(char *str)
+> +{
+> +	if (!str)
+> +		goto fail;
+> +
+> +	if (!strncmp(str, "passthrough", 11))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
+> +	else if (!strncmp(str, "lazy", 4))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_LAZY;
+> +	else if (!strncmp(str, "strict", 6))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_STRICT;
+> +	else
+> +		goto fail;
+> +
+> +	pr_info("Force dma mode to be %d\n", iommu_default_dma_mode);
+
+What happens if the cmdline option iommu.dma_mode is passed multiple 
+times? We get mutliple - possibily conflicting - prints, right?
+
+And do we need to have backwards compatibility, such that the setting 
+for iommu.strict or iommu.passthrough trumps iommu.dma_mode, regardless 
+of order?
+
+> +
+> +	return 0;
+> +
+> +fail:
+> +	pr_debug("Boot option iommu.dma_mode is incorrect, ignored\n");
+> +	return -EINVAL;
+> +}
+> +early_param("iommu.dma_mode", iommu_dma_mode_setup);
+> +
+>  static ssize_t iommu_group_attr_show(struct kobject *kobj,
+>  				     struct attribute *__attr, char *buf)
+>  {
+> @@ -1102,14 +1134,17 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
+>  	 */
+>  	if (!group->default_domain) {
+>  		struct iommu_domain *dom;
+> +		int def_domain_type =
+> +			(iommu_default_dma_mode == IOMMU_DMA_MODE_PASSTHROUGH)
+> +			? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
+>
+> -		dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
+> -		if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
+> +		dom = __iommu_domain_alloc(dev->bus, def_domain_type);
+> +		if (!dom && def_domain_type != IOMMU_DOMAIN_DMA) {
+>  			dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
+>  			if (dom) {
+>  				dev_warn(dev,
+>  					 "failed to allocate default IOMMU domain of type %u; falling back to IOMMU_DOMAIN_DMA",
+> -					 iommu_def_domain_type);
+> +					 def_domain_type);
+>  			}
+>  		}
+>
+> @@ -1117,7 +1152,7 @@ struct iommu_group *iommu_group_get_for_dev(struct device *dev)
+>  		if (!group->domain)
+>  			group->domain = dom;
+>
+> -		if (dom && !iommu_dma_strict) {
+> +		if (dom && (iommu_default_dma_mode == IOMMU_DMA_MODE_LAZY)) {
+>  			int attr = 1;
+>  			iommu_domain_set_attr(dom,
+>  					      DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index ffbbc7e39ceeba3..c3f4e3416176496 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -42,6 +42,11 @@
+>   */
+>  #define IOMMU_PRIV	(1 << 5)
+>
+> +
+> +#define IOMMU_DMA_MODE_STRICT		0x0
+> +#define IOMMU_DMA_MODE_LAZY		0x1
+> +#define IOMMU_DMA_MODE_PASSTHROUGH	0x2
+> +
+>  struct iommu_ops;
+>  struct iommu_group;
+>  struct bus_type;
+>
+
+
