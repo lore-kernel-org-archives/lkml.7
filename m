@@ -2,150 +2,109 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14131C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5840C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57E6218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555098421;
-	bh=WHdNZD8SFTlar+YeQLvAISzTis7csPuXZZcC132Rqro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0GEX4BSEHENOt7NTSaotzsQt7ob/wrcFzJDetOt3Nglqa/ynRxUNayTZHsSBW0Td9
-	 Bgqos3BViOuuzfTv52bD//9wfqATi8Xtlbk9URRlvihNNRfu7/lMpDS02oPCPe7Rj8
-	 Bk60vweRfzMqF+tg8pnK+J7BVOMqjTGAGEAJVKq4=
+	by mail.kernel.org (Postfix) with ESMTP id AC8432171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfDLTrA (ORCPT
+        id S1727097AbfDLTr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfDLTrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:47:00 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F682171F;
-        Fri, 12 Apr 2019 19:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555098419;
-        bh=WHdNZD8SFTlar+YeQLvAISzTis7csPuXZZcC132Rqro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x52ueQlljQXO2vmSkQqH+FI8HMS5dUnTo09OFyChcU+QqspLrOqkfL13hYJM9R3Dx
-         hHc8tXHAExcQXb7HNjkU9aPu0UOueqf3h5nD9jqi3IFHPhBqLyCn05kQPUDDZxeLlP
-         O6WN5/bwssy93TnzHdUqI+l2UMDXWiWuG7fLzDp4=
-Date:   Fri, 12 Apr 2019 12:46:57 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        syzbot <syzbot+5399ed0832693e29f392@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: kernel BUG at fs/inode.c:LINE!
-Message-ID: <20190412194656.GA8045@gmail.com>
-References: <CACT4Y+YurDDxvvd2MbOf8pGyA0B+W_EFB34oVAcHXyv-ApKC7Q@mail.gmail.com>
- <eb223b47641df91a56fd200188a65d2c0ca4abe1.camel@themaw.net>
- <CACT4Y+YdaDdDbRvQZzvqbPofMD6F9cPtGFzcW+db-etJayfaJw@mail.gmail.com>
- <5c581e6eadc946b965e3138c9daffda75b1fba56.camel@themaw.net>
- <1f1d3b95189b6b8acfdf61dd05a804744791d313.camel@themaw.net>
- <20190410121159.GY2217@ZenIV.linux.org.uk>
- <CACT4Y+bc=A=djKChMkJGwXYbZ7UXuxmRu5Z0Y1BEXAFH1-Z6Kw@mail.gmail.com>
- <ed84e67c9cb55e91daf0d090152b3a9e2e06fe0b.camel@themaw.net>
- <20190411022257.GB2217@ZenIV.linux.org.uk>
- <CACT4Y+ZYyAYuy_dB1jx1MW7S1RowbLhd0s-OJjkRCo0UG7_BEA@mail.gmail.com>
+        Fri, 12 Apr 2019 15:47:59 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36734 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfDLTr6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:47:58 -0400
+Received: by mail-io1-f65.google.com with SMTP id f6so9547914iop.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:47:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eytJCn/M3BPr+VLE9KRBg1wy49E1CvxwwjDmWVTBmUc=;
+        b=gr0DuelXX8koG22k28U2kQAG6lCieC/eho7MbOLRgxwYKHvDkJUosxG2Zmbka7hKtu
+         nccVymd51IYh/JqD9ug2QEgDRltxcMrBEY/4JYnm+0ft1mqR2vH0bu6xZjmuF3HYCPFE
+         mKQMKR5h1Xwm7CUV3ZjFtxa/lIW/pDIAWzuaKCE9QK6tDNLswOS/OcR33Z4O8yakp9pn
+         ts94Cq+48dL8cWhgMFdTD/hr7l8d1seD2vB8+FyKHD0n6lQ0BgE6x2BS86Cjnr69+5lB
+         we8bA/v1TJQHHg2i6uPvt2x5+W73V8ryzII1j2U5r29t7ZiPM3KcPKv5v7m32Re4kJOE
+         d6wg==
+X-Gm-Message-State: APjAAAUr0Dq2CQQ8s9CdxieDEojbY0EZ0kz3V9jOhwa51kKtCIUOBcH6
+        dLwx7lXnRL+IfS4AKffBPJ2DnQ==
+X-Google-Smtp-Source: APXvYqycmA3Fwn4qflLxtQbMn7VL2CKTf2bzrk6uD+LoRj5JQol55d9h1F9lAgr68K+DoOFzO9xIMQ==
+X-Received: by 2002:a5d:91d2:: with SMTP id k18mr29630462ior.24.1555098477717;
+        Fri, 12 Apr 2019 12:47:57 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id c25sm15366576ioa.75.2019.04.12.12.47.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Apr 2019 12:47:56 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 13:47:52 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-trace-devel@vger.kernel.org, eballetbo@gmail.com,
+        zwisler@chromium.org, djkurtz@chromium.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Subject: Re: [PATCH v2] chrome/platform: cros_ec_proto:: Add trace event to
+ trace EC commands
+Message-ID: <20190412194752.GA238393@google.com>
+References: <20190412184944.125338-1-rrangel@chromium.org>
+ <20190412150438.56ba4429@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZYyAYuy_dB1jx1MW7S1RowbLhd0s-OJjkRCo0UG7_BEA@mail.gmail.com>
+In-Reply-To: <20190412150438.56ba4429@gandalf.local.home>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On Fri, Apr 12, 2019 at 01:04:27PM +0200, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Thu, Apr 11, 2019 at 4:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > On Thu, Apr 11, 2019 at 08:50:17AM +0800, Ian Kent wrote:
-> > > On Wed, 2019-04-10 at 14:41 +0200, Dmitry Vyukov wrote:
-> > > > On Wed, Apr 10, 2019 at 2:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > > >
-> > > > > On Wed, Apr 10, 2019 at 08:07:15PM +0800, Ian Kent wrote:
-> > > > >
-> > > > > > > I'm unable to find a branch matching the line numbers.
-> > > > > > >
-> > > > > > > Given that, on the face of it, the scenario is impossible I'm
-> > > > > > > seeking clarification on what linux-next to look at for the
-> > > > > > > sake of accuracy.
-> > > > > > >
-> > > > > > > So I'm wondering if this testing done using the master branch
-> > > > > > > or one of the daily branches one would use to check for conflicts
-> > > > > > > before posting?
-> > > > > >
-> > > > > > Sorry those are tags not branches.
-> > > > >
-> > > > > FWIW, that's next-20181214; it is what master had been in mid-December
-> > > > > and master is rebased every day.  Can it be reproduced with the current
-> > > > > tree?
-> > > >
-> > > > From the info on the dashboard we know that it happened only once on
-> > > > d14b746c (the second one is result of reproducing the first one). So
-> > > > it was either fixed or just hard to trigger.
-> > >
-> > > Looking at the source of tag next-20181214 in linux-next-history I see
-> > > this is mistake I made due to incorrect error handling which I fixed
-> > > soon after (there was in fact a double iput()).
-> >
-> > Right - "autofs: fix possible inode leak in autofs_fill_super()" had been
-> > broken (and completely pointless), leading to double iput() in that failure
-> > case.  And yes, double iput() can trigger that BUG_ON(), and with non-zero
-> > odds do so with that stack trace.
-> >
-> > As far as I'm concerned, case closed - bug had been in a misguided "fix"
-> > for inexistent leak (coming from misreading the calling conventions for
-> > d_make_root()), introduced in -next at next-20181130 and kicked out of
-> > there in next-20181219.  Dropped by Ian's request in
-> > Message-ID: <66d497c00cffb3e4109ca0d5287c8277954d7132.camel@themaw.net>
-> > which has fixed that crap.  Moreover, that posting had been in reply to
-> > that very syzcaller report, AFAICS.
-> >
-> > I don't know how to tell the bot to STFU and close the report in this
-> > situation; up to you, folks.
+On Fri, Apr 12, 2019 at 03:04:38PM -0400, Steven Rostedt wrote:
+> On Fri, 12 Apr 2019 12:49:44 -0600
+> Raul E Rangel <rrangel@chromium.org> wrote:
+> 
+> > +#define ec_cmds \
+> > +	{EC_CMD_PROTO_VERSION, "PROTO_VERSION"}, \
+> > +	{EC_CMD_HELLO, "HELLO"}, \
+> > +	{EC_CMD_GET_VERSION, "GET_VERSION"}, \
+> > +	{EC_CMD_READ_TEST, "READ_TEST"}, \
+> > +	{EC_CMD_GET_BUILD_INFO, "GET_BUILD_INFO"}, \
+> > +	{EC_CMD_GET_CHIP_INFO, "GET_CHIP_INFO"}, \
+> > +	{EC_CMD_GET_BOARD_VERSION, "GET_BOARD_VERSION"}, \
+> > +	{EC_CMD_READ_MEMMAP, "READ_MEMMAP"}, \
+> > +	{EC_CMD_GET_CMD_VERSIONS, "GET_CMD_VERSIONS"}, \
+> > +	{EC_CMD_GET_COMMS_STATUS, "GET_COMMS_STATUS"}, \
+> > +	{EC_CMD_TEST_PROTOCOL, "TEST_PROTOCOL"}, \
+> > +	{EC_CMD_GET_PROTOCOL_INFO, "GET_PROTOCOL_INFO"}, \
+> > +	{EC_CMD_GSV_PAUSE_IN_S5, "GSV_PAUSE_IN_S5"}, \
+> > +	{EC_CMD_GET_FEATURES, "GET_FEATURES"}, \
+> 
+> Usually, if I have something like this, I would do:
 > 
 > 
-> Please see the following for this:
+> #define ec_cmds \
+> 	EC(PROTO_VERSION), \
+> 	EC(HELLO), \
+> 	EC(GET_VERSION), \
+> 	EC(READ_TEST), \
+> 	[...]
 > 
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  syzbot.
+> Then:
 > 
-> There are just 3 operations: mark as fixed by a commit, mark as
-> invalid, mark as duplicate.
-> I won't be always around. Tracking statuses of bug reports is in the
-> interests of kernel quality.
+> #define EC(a) {EC_CMD_##a, #a}
 > 
+> and then ec_cmds ends up with the same result with much less typing and
+> little risk for copy past errors.
+I generally don't like doing that because it breaks my editors Goto
+Definition, but I can send out a patch that uses the macro.
 
-As I suggested before, syzbot should automatically invalidate old bug reports,
-especially on linux-next, that are unlikely to still be real problems.
-
-And, syzbot should send remainders about bugs that are still occurring.
-
-Instead, currently developers have to waste time debugging bugs caused by
-patches that were in linux-next for a few days/weeks and then dropped months
-ago, and have to argue with you every time about how to tell syzbot to close the
-bug when it never made it into git history.  And meanwhile, no one is looking
-into the bugs that are being hit on mainline every hour or even every 10 minutes
-for the past year.
-
-That's not a great strategy to actually get bugs fixed.
-
-- Eric
+Thanks,
+Raul
+> 
+> -- Steve
