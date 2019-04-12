@@ -2,122 +2,105 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B015FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44850C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8784C20693
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132C120693
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555084360;
+	bh=PrEYzva0qBO2/wZGTDzFAgUYn7v+WBL5x8rAHqM5aHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W6qBc1TThPWbXBYZY9aY/qn9+mXVzwjrRSaZVnXq6L6gtbvQYI4w1mP0bYtqjaXSh
+	 dNxHHLzm9xPiYxfMH0YFe6OghupalJXXUfwQMq9MmUI2snS8Usw7pHpDs7Zu42HjF7
+	 CTVikLtuggcNZ8IBfWWBcOZEdL6t2v8QdRCnTrpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfDLPtt (ORCPT
+        id S1727069AbfDLPwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:49:49 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45635 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfDLPtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:49:49 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hEyQv-0008GX-3L; Fri, 12 Apr 2019 17:49:41 +0200
-Message-ID: <1555084180.11529.27.camel@pengutronix.de>
-Subject: Re: [PATCH v3 01/11] PCI: imx6: Simplify
- imx7d_pcie_wait_for_phy_pll_lock()
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Apr 2019 17:49:40 +0200
-In-Reply-To: <20190401042547.14067-2-andrew.smirnov@gmail.com>
-References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
-         <20190401042547.14067-2-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 12 Apr 2019 11:52:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726850AbfDLPwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:52:38 -0400
+Received: from localhost (unknown [77.138.135.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1BA20693;
+        Fri, 12 Apr 2019 15:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555084357;
+        bh=PrEYzva0qBO2/wZGTDzFAgUYn7v+WBL5x8rAHqM5aHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uT7g0p4XWzmnz5AR4oQI+yN1j1IVWCSm1wT2GbFQBG7/jk4MuuFbHCq0Gut6JtxvM
+         MwgOfVVYfFapaDWAOAwq3vTcaHf6VZw/LLCrYQioJxewBaWebEzXpxn/cGCHe5oEvd
+         kjL0ogiS9DXk4jE9uiw9dfiuNmioVaLehNz6AkR8=
+Date:   Fri, 12 Apr 2019 18:52:34 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/mlx5: check for error return in flow_rule
+ rather than err
+Message-ID: <20190412155234.GE3201@mtr-leonro.mtl.com>
+References: <20190412104017.25507-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CqVFb5A8LpjztvkH"
+Content-Disposition: inline
+In-Reply-To: <20190412104017.25507-1-colin.king@canonical.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
-> Make use of regmap_read_poll_timeout() to simplify
-> imx7d_pcie_wait_for_phy_pll_lock(). No functional change intended.
-> 
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: linux-imx@nxp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+--CqVFb5A8LpjztvkH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, Apr 12, 2019 at 11:40:17AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently when the call to create_flow_rule_vport_sq fails, the error
+> check is being performed on err rather than on the return pointer
+> flow_rule.  The return flow_rule maybe NULL (which is not considered
+> an error) or an error code, so check for the error on flow_rule.
+>
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Fixes: d5ed8ac34cef ("RDMA/mlx5: Move default representors SQ steering to rule to modify QP")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 2eb39d5de4f6..fb0b29e5b1f0 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -89,9 +89,8 @@ struct imx6_pcie {
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> > -#define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
-> > -#define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
-> >  #define PHY_PLL_LOCK_WAIT_USLEEP_MAX	200
-> > +#define PHY_PLL_LOCK_WAIT_TIMEOUT	(2000 * PHY_PLL_LOCK_WAIT_USLEEP_MAX)
->  
->  /* PCIe Root Complex registers (memory-mapped) */
-> >  #define PCIE_RC_IMX6_MSI_CAP			0x50
-> @@ -488,20 +487,14 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
->  {
-> >  	u32 val;
-> > -	unsigned int retries;
-> >  	struct device *dev = imx6_pcie->pci->dev;
->  
-> > -	for (retries = 0; retries < PHY_PLL_LOCK_WAIT_MAX_RETRIES; retries++) {
-> > -		regmap_read(imx6_pcie->iomuxc_gpr, IOMUXC_GPR22, &val);
-> -
-> > -		if (val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED)
-> > -			return;
-> -
-> > -		usleep_range(PHY_PLL_LOCK_WAIT_USLEEP_MIN,
-> > -			     PHY_PLL_LOCK_WAIT_USLEEP_MAX);
-> > -	}
-> -
-> > -	dev_err(dev, "PCIe PLL lock timeout\n");
-> > +	if (regmap_read_poll_timeout(imx6_pcie->iomuxc_gpr,
-> > +				     IOMUXC_GPR22, val,
-> > +				     val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED,
-> > +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
-> > +				     PHY_PLL_LOCK_WAIT_TIMEOUT))
-> > +		dev_err(dev, "PCIe PLL lock timeout\n");
->  }
->  
->  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  drivers/infiniband/hw/mlx5/qp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+
+Thanks,
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+
+--CqVFb5A8LpjztvkH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJcsLRCAAoJEORje4g2clinJTgP/2fgwFUh66hOcloEsSa6Yv0x
+SjrXPwLwu+ppyOsmqyYHv3bgHmqkAH2h04hCRjeWHOfEU5hK4tmqnLuSM3cQ2Uxg
+sXGaRSaQ6aqlQldjWtEM0Qtu9PdxeA1HVyLRyACtUdp9ze/pIKRU4DNVswoCazkA
+RdhtjyEwq3pmZz7GkBYNjEtQFLxSnshEaghQvVdfcSdKBDZ7atlNeoKYgmz5LepZ
+Xs5UIjKC+9oqD1Fv5yajbWBbAbJ9GCjSVkt5XW7P+G7fwlafUZ97jUF0kgEVC4Ib
+LmKBniv3bmTLOnT5n2np+U7HJBUzpJmn0eDELVjZefBZAoTtcceK+xCT+J2Kf2QY
+VhTXrUBrkgrZn8p8V+25655Hd4fHLujyvaC07Yn8evbBD3k5A6iysnkctbi3cPUS
+Rhwa/vYJA6v+CDpUrBo2fg2KRrvIi6ghRUsiV6ItwQFF2WZQp6rBUsq8Hyxv6fSE
+zr3Kh8GZ9lifEAJU57fE/I7m3yN3u0lPc6nVrtL5oR3KCdK6ZvYBG7njuBUDDg9m
+7LtHN6syTZu/XUVJQkOKahYBicapEJusvReP74HtEYtVk53q1wToRnlyBbcLB2Za
+5anuw9n7kKIzEJZNlxe77lJ+ZIE5SauT97n+m2qRBsOydnmlVp5GIE1+KmumQ7ZC
+ny0e5BqclAnp/pnO3lUX
+=j6pB
+-----END PGP SIGNATURE-----
+
+--CqVFb5A8LpjztvkH--
