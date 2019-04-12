@@ -2,124 +2,121 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC6AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880FD21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY/6cV7j"
+	by mail.kernel.org (Postfix) with ESMTP id 17ED9218AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfDLQM5 (ORCPT
+        id S1726953AbfDLQND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:12:57 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42804 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726624AbfDLQM4 (ORCPT
+        Fri, 12 Apr 2019 12:13:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48851 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbfDLQND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:12:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w25so5362510pfi.9;
-        Fri, 12 Apr 2019 09:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2j8BUcng0BwJmxMELQ9fVczmlAT/WBCK6nxFe8uX3w4=;
-        b=VY/6cV7jFXJN+VI5kQu6aV/UCQZSuHhpb1UjdxNg/19uFHouW3/2HKjdLP/YC/Zdfn
-         YFWXi4yQh4PxSXpjESu6wOJnT35Q6mGwwVKk5LvB6G0A1YokNZS9r0fLlKMwsv9OGblS
-         olQZZWt2JhcWvuktRIHWCeql/J93l5RAAB/eRi4Pf2tOIu0TZGjTeGTnh/1UboeCu8+Y
-         WxFCLCmReITPgXQm7bmobYDjHLcLq6lZw4rew+2q7mzwEO+otZhdeH+IFM4CSTvhS8gu
-         pda6lSymDtbwxDV8Zw24AFcVgTJTlrTnOBZTDuEkM8jpY2AXcwCuGzf0bRS0SNsUswFG
-         NMHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2j8BUcng0BwJmxMELQ9fVczmlAT/WBCK6nxFe8uX3w4=;
-        b=JRszre10l17ta84wYl/6wTrF0lcLl6dKQJHwTdiEpsCQBCO1mtaQRzpH5ijBXCWyYI
-         6yqSoGOQReoh+16w1A211UCOQvPerZgjoexV8M4/94fXoiJh51zIR+rhfudv/NJIBnSd
-         +ZSA3wVq39z8nuqY2NqDSmtVT4sjR53vSj64JR1P/r4bPrj5VmlsW1EXZlPtZD9nyADM
-         qJhzIBzwGTJ+6djDABEHoYHFiZVa0TeeXgNc5pEyEVPcEO7Vb7h7FDbi0mmBOkde3nHd
-         0s/cnZ3xTOv/M1Eqiegk7DXCtGgre4RKvshqekHFDOwCoW9U/GjY1xRLRISo2adMMia4
-         11ow==
-X-Gm-Message-State: APjAAAW2jigVLKNCA8MJWWJkZMGCQzdNaaabJRQdbOXSflRJlvDe15rp
-        Qtfp1gkY+qyyobpeGzWbrA3uzku7
-X-Google-Smtp-Source: APXvYqzlgQhXj11v8hPpOVHEl0vgqSzx0/7UQt1zJcBa3dDhwLJ+RJGk8OJeGm5efqOOlmZjVXglnQ==
-X-Received: by 2002:a63:7c45:: with SMTP id l5mr54506453pgn.303.1555085575990;
-        Fri, 12 Apr 2019 09:12:55 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b7sm123353710pfj.67.2019.04.12.09.12.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 09:12:54 -0700 (PDT)
-Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <cover.1554923967.git.mchehab+samsung@kernel.org>
- <20190411124324.3ed62fad@lwn.net> <20190411174357.251904f5@coco.lan>
- <20190411210731.GA29378@roeck-us.net> <20190412100451.6fe49de7@lwn.net>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8514ff97-3167-3c89-3468-e247d14c5086@roeck-us.net>
-Date:   Fri, 12 Apr 2019 09:12:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412100451.6fe49de7@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 12 Apr 2019 12:13:03 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hEynN-0003Rp-Iu; Fri, 12 Apr 2019 18:12:53 +0200
+Message-ID: <1555085573.11529.36.camel@pengutronix.de>
+Subject: Re: [PATCH v3 08/11] PCI: imx6: Simplify pcie_phy_poll_ack()
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Apr 2019 18:12:53 +0200
+In-Reply-To: <20190401042547.14067-9-andrew.smirnov@gmail.com>
+References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+         <20190401042547.14067-9-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 9:04 AM, Jonathan Corbet wrote:
-> On Thu, 11 Apr 2019 14:07:31 -0700
-> Guenter Roeck <linux@roeck-us.net> wrote:
+Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
+> Simplify pcie_phy_poll_ack() by incorporating shifting into constant
+> definition and convert the code to use 'bool'. No functional change
+> intended.
 > 
->>> While nobody does such split, IMHO, the best would be to keep the
->>> information outside Documentation/admin-guide. But hey! You're
->>> the Doc maintainer. If you prefer to move, I'm perfectly fine
->>> with that.
->>>    
->>
->> Same here, but please don't move the files which are kernel facing only.
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Well, let's step back and think about this.  Who is the audience for
-> these documents?  That will tell us a lot about where they should really
-> be.
-> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index a49e5e491e12..7c3ffb751002 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -112,7 +112,7 @@ struct imx6_pcie {
+> >  #define PCIE_PHY_CTRL_RD		BIT(19)
+>  
+>  #define PCIE_PHY_STAT (PL_OFFSET + 0x110)
+> -#define PCIE_PHY_STAT_ACK_LOC 16
+> > +#define PCIE_PHY_STAT_ACK		BIT(16)
+>  
+> >  #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+>  
+> @@ -151,16 +151,16 @@ struct imx6_pcie {
+> >  #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
+> >  #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
+>  
+> -static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, int exp_val)
+> +static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
 
-Most of them are for users, some of them are for driver developers. A few
-are for both, though that is generally not the intention (and one may argue
-that driver internal documentation should be moved into the respective
-driver source).
+This looks like only going half the way to me. The parameter type is
+changed to bool, but the callers still use 0 and 1 directly. If we use
+bool here the callers should be changed to true/false.
 
-> What I would prefer to avoid is the status quo where *everything* is in
-> the top-level directory, and where documents are organized for the
-> convenience of their maintainers rather than of their readers.  But
-> sometimes I feel like I'm alone in that desire...:)
-> 
-I am fine with separating user pointing from kernel API/driver developer
-guides, and I agree that it would make a lot of sense. As I said, please
-just make sure that kernel facing files don't end up in the wrong directory.
+>  {
+>  	struct dw_pcie *pci = imx6_pcie->pci;
+> -	u32 val;
+> +	bool val;
+>  	u32 max_iterations = 10;
+>  	u32 wait_counter = 0;
+>  
+>  	do {
+> -		val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
+> -		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT) &
+> +			PCIE_PHY_STAT_ACK;
 
-Thanks,
-Guenter
+I think this needs to be
+val = !!(dw_pcie_readl_dbi(pci, PCIE_PHY_STAT) & PCIE_PHY_STAT_ACK);
+as the ACK bit isn't shifted down into bit position 0 anymore.
+
+>  		wait_counter++;
+>  
+> >  		if (val == exp_val)
