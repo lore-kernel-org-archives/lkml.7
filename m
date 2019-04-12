@@ -2,169 +2,212 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2690AC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D0FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF65218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:16:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ND5cG26i";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="crVB3ElF"
+	by mail.kernel.org (Postfix) with ESMTP id 4769220869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfDLUQF (ORCPT
+        id S1727092AbfDLUQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:16:05 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45490 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726844AbfDLUQF (ORCPT
+        Fri, 12 Apr 2019 16:16:12 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:39139 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfDLUQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:16:05 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3CK05o6029224;
-        Fri, 12 Apr 2019 13:15:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=tj8d9Aesqk59fYl7HFJeF3PryMc8P4Ae1h5Ah3FbvZ0=;
- b=ND5cG26i3vMtxZnN8OPgYUA0GjvVFAP9FzCxsJBJ9NWkrMnjeXA0PNMgz9uz0exAgMX9
- /PghIVhdFWaC7GAaSmnid7++khsytxHo8qioGdfm793DlT5NAf3eTJqmRGWrrt4Qkkh7
- XKUXhf/OOtnJcUMlDVYkY8EeuPRsmq1SeY4= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rtrx9hsdj-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 12 Apr 2019 13:15:56 -0700
-Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 12 Apr 2019 13:15:41 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 12 Apr 2019 13:15:41 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 12 Apr 2019 13:15:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tj8d9Aesqk59fYl7HFJeF3PryMc8P4Ae1h5Ah3FbvZ0=;
- b=crVB3ElFsL4Vd2R9GD6Bvj8BQ2Zenr25Ra3dS4S3a7zO9ivqs/rslGABqTj+RjbTpTBnlMvEmmlnKfThc9U8VSY+NqCIukGDONENfiBVPfubqbohnuzXjF4heeBsimJzHOAgOyLf/XkL/XWY+HF3hewt8EaotYrObq9RSOoPWbk=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3159.namprd15.prod.outlook.com (20.178.207.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Fri, 12 Apr 2019 20:15:39 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
- 20:15:39 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH 3/4] mm: memcontrol: fix recursive statistics correctness
- & scalabilty
-Thread-Topic: [PATCH 3/4] mm: memcontrol: fix recursive statistics correctness
- & scalabilty
-Thread-Index: AQHU8UKUV0F4p+EmokWSlSobKT/LA6Y48L8AgAAFtYA=
-Date:   Fri, 12 Apr 2019 20:15:38 +0000
-Message-ID: <20190412201534.GB24377@tower.DHCP.thefacebook.com>
-References: <20190412151507.2769-1-hannes@cmpxchg.org>
- <20190412151507.2769-4-hannes@cmpxchg.org>
- <CALvZod4xu10+E41YyaamigysZAnDcdA09f5m-hGd72LeJ9VmEg@mail.gmail.com>
-In-Reply-To: <CALvZod4xu10+E41YyaamigysZAnDcdA09f5m-hGd72LeJ9VmEg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR03CA0040.namprd03.prod.outlook.com
- (2603:10b6:301:3b::29) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:2586]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 125b0329-fb27-4491-1eea-08d6bf83a151
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3159;
-x-ms-traffictypediagnostic: BYAPR15MB3159:
-x-microsoft-antispam-prvs: <BYAPR15MB31591CD0F47CAABABE6FB7B5BE280@BYAPR15MB3159.namprd15.prod.outlook.com>
-x-forefront-prvs: 0005B05917
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(376002)(346002)(39860400002)(189003)(199004)(52116002)(81166006)(71200400001)(105586002)(71190400001)(97736004)(68736007)(478600001)(8936002)(14454004)(7736002)(81156014)(6116002)(33656002)(106356001)(8676002)(25786009)(305945005)(486006)(54906003)(5660300002)(1076003)(476003)(46003)(316002)(4326008)(99286004)(53936002)(446003)(76176011)(86362001)(6246003)(256004)(6436002)(2906002)(9686003)(11346002)(6512007)(6486002)(102836004)(53546011)(186003)(6916009)(386003)(6506007)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3159;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fbf353SeamkSFWKGkIHYPCnsqViX/Opvi0LBCLohv31qIeMltFxLdC5xKM38uK7Wn4v1HoHTriqBB03H4tAFlfK1638xscrkbDAHfW/7lHldgQIX6jQqpRUOUO2RICOg4tkzmU4CjWHDVjon3UTzcTkXSDXv0NevoZRYm90reu5H6Ne6fXW0fHT3iEg2XVyK+ep0le2ckrTkeXwxoZDnVr+J96QToBog0G37fbrHimm/ntbBxQ6/eFo3dxvDd9MALZ981gjR9j/uHxmwIJOnFnEt+qtZ+SnL9dJmwcR6Mti+6AO3UEio7sI8tPccq4ygBHQLKPkl0vreO4FYsdTfVWHnFPNF/NlDURvNoVI+63OsEGlVmBj4zGqB2hOr6c6Z00lM39D2RkXdY7DEqxBHnEGmVap3WQju9iJCZxIkuMU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <83C4D58C79AA094F9D9733F4C0F7C635@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 12 Apr 2019 16:16:11 -0400
+Received: by mail-it1-f197.google.com with SMTP id z125so9711751itf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 13:16:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=JRJfdZ/9AW26ZH1DjkOcBersgSNKQQTupC9tV461ATU=;
+        b=qmUw4psGHCSeJdQwt8JpETMrK0IroSSLgBya+DVJ7o77C+7AotXokNMYnkRYgW3GN2
+         dOX/yw6F0pGxxCx26JcVSCDZIqS2+JRnMdttd7916jCyW6ZhboUsVWaP2uHLI/PZgbns
+         UWHHKSXYwf+ui50f+/wPrl2X3S+lekt7C34ejiACOhNtrdNh8ztSIwBcRqhHBmQyzaZB
+         LtiViD7x/Sig/hjGqqwQfxuMkres11TRJ7I4OJZDAyU5zgMC/hhR8bfTtOirRZl9Wnd+
+         MC8SMVfqxyoapeTl/H6Fr2gnHTBKbWrGKAepr/w5iLcp+rUWoFz8QDQiN8HNPHwiEzhD
+         q9qg==
+X-Gm-Message-State: APjAAAVt/S0uP9//CNfaBTy0jzLZmihEWjvtZG+1DOHoYpyXXZZfi85o
+        aDo2F/cewbA0LWX88hFMFSASoSSG3mvO4nVniBG0c4qV3HjD
+X-Google-Smtp-Source: APXvYqyDo26rd2xE6EkrUtYdyBovt+hdisPpjKgAgI3GH0proUsSONU3TaSUnlBLYTdkJ/N7j2xKR7z8xMbVMP6fHRl+M6g1sJ0c
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 125b0329-fb27-4491-1eea-08d6bf83a151
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 20:15:38.9934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3159
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_11:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-Received: by 2002:a24:3cd:: with SMTP id e196mr4212434ite.10.1555100170413;
+ Fri, 12 Apr 2019 13:16:10 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 13:16:10 -0700
+In-Reply-To: <0000000000001d4f78058656ecfb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003f70b905865af968@google.com>
+Subject: Re: INFO: trying to register non-static key in vmk80xx_detach
+From:   syzbot <syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com>
+To:     abbotti@mev.co.uk, andreyknvl@google.com,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:55:10PM -0700, Shakeel Butt wrote:
-> On Fri, Apr 12, 2019 at 8:15 AM Johannes Weiner <hannes@cmpxchg.org> wrot=
-e:
-> >
-> > Right now, when somebody needs to know the recursive memory statistics
-> > and events of a cgroup subtree, they need to walk the entire subtree
-> > and sum up the counters manually.
-> >
-> > There are two issues with this:
-> >
-> > 1. When a cgroup gets deleted, its stats are lost. The state counters
-> > should all be 0 at that point, of course, but the events are not. When
-> > this happens, the event counters, which are supposed to be monotonic,
-> > can go backwards in the parent cgroups.
-> >
->=20
-> We also faced this exact same issue as well and had the similar solution.
->=20
-> > 2. During regular operation, we always have a certain number of lazily
-> > freed cgroups sitting around that have been deleted, have no tasks,
-> > but have a few cache pages remaining. These groups' statistics do not
-> > change until we eventually hit memory pressure, but somebody watching,
-> > say, memory.stat on an ancestor has to iterate those every time.
-> >
-> > This patch addresses both issues by introducing recursive counters at
-> > each level that are propagated from the write side when stats change.
-> >
-> > Upward propagation happens when the per-cpu caches spill over into the
-> > local atomic counter. This is the same thing we do during charge and
-> > uncharge, except that the latter uses atomic RMWs, which are more
-> > expensive; stat changes happen at around the same rate. In a sparse
-> > file test (page faults and reclaim at maximum CPU speed) with 5 cgroup
-> > nesting levels, perf shows __mod_memcg_page state at ~1%.
-> >
->=20
-> (Unrelated to this patchset) I think there should also a way to get
-> the exact memcg stats. As the machines are getting bigger (more cpus
-> and larger basic page size) the accuracy of stats are getting worse.
-> Internally we have an additional interface memory.stat_exact for that.
-> However I am not sure in the upstream kernel will an additional
-> interface is better or something like /proc/sys/vm/stat_refresh which
-> sync all per-cpu stats.
+syzbot has found a reproducer for the following crash on:
 
-I was thinking about eventually consistent counters: sync them periodically
-from a worker thread. It should keep the cost of reading small, but
-should increase the accuracy. Will it work for you?
+HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=11bed6fd200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+dashboard link: https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fdc6bf200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156dc2d3200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
+
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068,  
+bcdDevice=e6.8d
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:786 [inline]
+  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+  down+0x12/0x80 kernel/locking/semaphore.c:58
+  vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+  comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+  comedi_device_cleanup.part.0+0x68/0x140  
+drivers/staging/comedi/comedi_fops.c:156
+  comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+  comedi_free_board_dev.part.0+0x16/0x90  
+drivers/staging/comedi/comedi_fops.c:190
+  comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+  comedi_release_hardware_device+0x111/0x140  
+drivers/staging/comedi/comedi_fops.c:2880
+  comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:__list_add_valid+0x47/0xa0 lib/list_debug.c:26
+Code: fa 48 c1 ea 03 80 3c 02 00 75 50 49 8b 54 24 08 48 39 f2 0f 85 59 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f2 48 c1 ea 03 <80> 3c 02 00 75  
+3a 48 8b 16 4c 39 e2 0f 85 5e 01 00 00 48 39 f5 0f
+RSP: 0018:ffff8880a84a7110 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff888097143850 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888097143898
+RBP: ffff8880a84a7170 R08: ffff8880a8491880 R09: ffffed1015094e31
+R10: ffffed1015094e30 R11: 0000000000000003 R12: ffff888097143890
+R13: 0000000000000000 R14: ffff888097143898 R15: ffff888097143890
+FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe70ec4d000 CR3: 000000009a600000 CR4: 00000000001406f0
+Call Trace:
+  __list_add include/linux/list.h:60 [inline]
+  list_add_tail include/linux/list.h:93 [inline]
+  __down_common kernel/locking/semaphore.c:210 [inline]
+  __down+0xa7/0x2c0 kernel/locking/semaphore.c:238
+  down+0x5c/0x80 kernel/locking/semaphore.c:62
+  vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+  comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+  comedi_device_cleanup.part.0+0x68/0x140  
+drivers/staging/comedi/comedi_fops.c:156
+  comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+  comedi_free_board_dev.part.0+0x16/0x90  
+drivers/staging/comedi/comedi_fops.c:190
+  comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+  comedi_release_hardware_device+0x111/0x140  
+drivers/staging/comedi/comedi_fops.c:2880
+  comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace a32085c9f9945bfb ]---
+RIP: 0010:__list_add_valid+0x47/0xa0 lib/list_debug.c:26
+Code: fa 48 c1 ea 03 80 3c 02 00 75 50 49 8b 54 24 08 48 39 f2 0f 85 59 01  
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f2 48 c1 ea 03 <80> 3c 02 00 75  
+3a 48 8b 16 4c 39 e2 0f 85 5e 01 00 00 48 39 f5 0f
+RSP: 0018:ffff8880a84a7110 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: ffff888097143850 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888097143898
+RBP: ffff8880a84a7170 R08: ffff8880a8491880 R09: ffffed1015094e31
+R10: ffffed1015094e30 R11: 0000000000000003 R12: ffff888097143890
+R13: 0000000000000000 R14: ffff888097143898 R15: ffff888097143890
+FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe70ec4d000 CR3: 000000009a600000 CR4: 00000000001406f0
+
