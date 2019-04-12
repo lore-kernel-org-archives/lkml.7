@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20431C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DADCC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3092083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FC02083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfDLO0O (ORCPT
+        id S1727092AbfDLO0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:26:14 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:36680 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfDLO0L (ORCPT
+        Fri, 12 Apr 2019 10:26:13 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:36682 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbfDLO0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:26:11 -0400
-Received: by mail-io1-f72.google.com with SMTP id a7so8010533ioq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:26:10 -0700 (PDT)
+        Fri, 12 Apr 2019 10:26:12 -0400
+Received: by mail-io1-f71.google.com with SMTP id a7so8010548ioq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:26:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=g3RXwxQQ00FGbyuhLMsnTKehFpmuAvdvLcSEXXALj3c=;
-        b=WTeB4GQQQWmoGC48bdjSt3lMMfbF/o38a2JeP+1KSbyGaMFSgMLB9oikGInmzS9fR2
-         vsTDdPNekel7q3vWBJRCf8zqrGnjWPg0lu/ZYONBrzhnlvTmDDS5ZLTZgPZsr7lM+tv2
-         ttMtwTjTdlj8PnU+nHDzMgZG36zqwCsIbvcQc5KpcnopJ/hQ+KHUujFAZGujRjIRh6QD
-         u9akvesSvC/GrzE6apYWy7BOCpdLVpehtiC2kEjh5d/x4t0LrGl1jGiuc4SI9T0JXgDb
-         nnDTEMTNDli1dtRjYtnU2A9NB2kZ5KUNATjb6W3+c0pfTgk9HUcM+klwbgfSr07ueiDK
-         hfmA==
-X-Gm-Message-State: APjAAAV7l2IWuyIPyJBseOTUov7Ev/LezTvpMKgNPZEUYxYi7qTaj29r
-        QbALVmpoWGUMx+6v0IZazUaIyEwZKfP/Ba/JJ6i5JGSPsQrK
-X-Google-Smtp-Source: APXvYqxrLsPKH/+P8c04nIXXCQQUUyoXloeHZyqTgls17FbAxKi5bY7FKKO1dbSyYDp9W0qYI69C7FK9/V+KeNZwAUnI7uybpZ6f
+        bh=0m8hg4kBF1SrMNFuMiutdCm5MvTrhGleRyR3argUwfA=;
+        b=XNnpwKOzunjfCp2EShD2qO73EJUW/ccE5HDuMe9FQR1mPEbBuNQ/D4iVrRA0+uW1NT
+         oD3SsTWXzImJOPDgSnYGbfYMH+00GsXWoUqrZiH2akCUYpkpgdF/0cICHqgfjeLneeY+
+         Gt1AQu3HleW8xHtbeWdn7c+7wxceZZKp+hRD5Nr+/AgeDVam0cvFnLR/j+Js1jdxzkHk
+         DcSRPz/tbHYZhZjCkVeEOdEjt0kGVyPkOo9uTLkpBddEI3/JV4Ht+OCjww/nwT7KicJz
+         qBO2b/FD0ak19p9LUhpMSi4V+TVA+Yu/23oYBREl2o2c8SKzjtN4kkCbS/bezZe1zozV
+         XawA==
+X-Gm-Message-State: APjAAAVwUzAJBBvh7WS4Txa/m19sK1DYeWebR62E4AbWR21zfK3cbt6d
+        0ly5VvFs8qsywqLqjPK9jSSaYnTjhXgIyIpHu42fYLwu8tCa
+X-Google-Smtp-Source: APXvYqwI9Pxlphm5/0kKOg4B8wYKVLN5C4yYVhutG4IEe5DJqc7K1/MoR/1oxm5PtNYgnAJhEQKy4AHx9Q62OJPak51GXxTwEVZH
 MIME-Version: 1.0
-X-Received: by 2002:a02:aa07:: with SMTP id r7mr10399932jam.24.1555079170521;
+X-Received: by 2002:a24:32d7:: with SMTP id j206mr3730170ita.2.1555079170779;
  Fri, 12 Apr 2019 07:26:10 -0700 (PDT)
 Date:   Fri, 12 Apr 2019 07:26:10 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008e825105865615e3@google.com>
-Subject: general protection fault in ath6kl_usb_alloc_urb_from_pipe
-From:   syzbot <syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
+Message-ID: <000000000000927a7b0586561537@google.com>
+Subject: INFO: trying to register non-static key in del_timer_sync (2)
+From:   syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
+To:     amitkarwar@gmail.com, andreyknvl@google.com, davem@davemloft.net,
+        gbhat@marvell.com, huxinming820@gmail.com, kvalo@codeaurora.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+        nishants@marvell.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,101 +61,98 @@ syzbot found the following crash on:
 
 HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=12405cd3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14793fa7200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=ead4037ec793e025e66f
+dashboard link: https://syzkaller.appspot.com/bug?extid=dc4127f950da51639216
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11acc1af200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1344acd3200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f8c22d200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16eeadbb200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com
+Reported-by: syzbot+dc4127f950da51639216@syzkaller.appspotmail.com
 
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
 usb 1-1: string descriptor 0 read error: -71
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
+usb 1-1: USB disconnect, device number 2
+usb 1-1: Direct firmware load for mrvl/usb8801_uapsta.bin failed with error  
+-2
+usb 1-1: Failed to get firmware mrvl/usb8801_uapsta.bin
+usb 1-1: info: _mwifiex_fw_dpc: unregister device
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
 CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__lock_acquire+0xadc/0x37c0 kernel/locking/lockdep.c:3573
-Code: 00 0f 85 c1 1d 00 00 48 81 c4 10 01 00 00 5b 5d 41 5c 41 5d 41 5e 41  
-5f c3 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f  
-85 35 1e 00 00 49 81 7d 00 40 39 01 96 0f 84 e8 f5
-RSP: 0018:ffff8880a84b6f78 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: ffff8880a849c980 RCX: 0000000000000000
-RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: ffff8880a849c980 R12: 0000000000000000
-R13: 0000000000000018 R14: 0000000000000001 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c6768 CR3: 000000009b83e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Workqueue: events request_firmware_work_func
 Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  assign_lock_key kernel/locking/lockdep.c:786 [inline]
+  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
   lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
-  ath6kl_usb_alloc_urb_from_pipe+0x49/0x2b0  
-drivers/net/wireless/ath/ath6kl/usb.c:135
-  ath6kl_usb_post_recv_transfers.constprop.0+0x233/0x400  
-drivers/net/wireless/ath/ath6kl/usb.c:410
-  ath6kl_usb_start_recv_pipes drivers/net/wireless/ath/ath6kl/usb.c:484  
-[inline]
-  hif_start drivers/net/wireless/ath/ath6kl/usb.c:682 [inline]
-  ath6kl_usb_power_on+0x8d/0x120 drivers/net/wireless/ath/ath6kl/usb.c:1041
-  ath6kl_hif_power_on drivers/net/wireless/ath/ath6kl/hif-ops.h:136 [inline]
-  ath6kl_core_init drivers/net/wireless/ath/ath6kl/core.c:97 [inline]
-  ath6kl_core_init+0x1b8/0x1060 drivers/net/wireless/ath/ath6kl/core.c:66
-  ath6kl_usb_probe+0xc7f/0x1180 drivers/net/wireless/ath/ath6kl/usb.c:1147
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  del_timer_sync+0x4c/0x150 kernel/time/timer.c:1282
+  mwifiex_usb_cleanup_tx_aggr  
+drivers/net/wireless/marvell/mwifiex/usb.c:1358 [inline]
+  mwifiex_unregister_dev+0x41b/0x690  
+drivers/net/wireless/marvell/mwifiex/usb.c:1370
+  _mwifiex_fw_dpc+0x711/0xdd0 drivers/net/wireless/marvell/mwifiex/main.c:651
+  request_firmware_work_func+0x12d/0x249  
+drivers/base/firmware_loader/main.c:785
   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
   kthread+0x313/0x420 kernel/kthread.c:253
   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 4efca44223c9b0b0 ]---
-RIP: 0010:__lock_acquire+0xadc/0x37c0 kernel/locking/lockdep.c:3573
-Code: 00 0f 85 c1 1d 00 00 48 81 c4 10 01 00 00 5b 5d 41 5c 41 5d 41 5e 41  
-5f c3 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f  
-85 35 1e 00 00 49 81 7d 00 40 39 01 96 0f 84 e8 f5
-RSP: 0018:ffff8880a84b6f78 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: ffff8880a849c980 RCX: 0000000000000000
-RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: ffff8880a849c980 R12: 0000000000000000
-R13: 0000000000000018 R14: 0000000000000001 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004c6768 CR3: 000000009b83e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+------------[ cut here ]------------
+ODEBUG: assert_init not available (active state 0) object type: timer_list  
+hint:           (null)
+WARNING: CPU: 0 PID: 12 at lib/debugobjects.c:325  
+debug_print_object+0x162/0x250 lib/debugobjects.c:325
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  panic+0x29d/0x5f2 kernel/panic.c:214
+  __warn.cold+0x20/0x48 kernel/panic.c:571
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:debug_print_object+0x162/0x250 lib/debugobjects.c:325
+Code: dd e0 a1 b3 8e 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
+8b 14 dd e0 a1 b3 8e 48 c7 c7 60 96 b3 8e e8 8e 93 d2 fd <0f> 0b 83 05 e9  
+d6 59 10 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffff8880a84b78d8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed1015096f0d
+RBP: 0000000000000001 R08: ffff8880a849b100 R09: fffffbfff22f95ed
+R10: fffffbfff22f95ec R11: ffffffff917caf63 R12: ffffffff917e7780
+R13: ffffffff8161ec90 R14: 1ffff11015096f28 R15: ffff88809fc893f8
+  debug_object_assert_init lib/debugobjects.c:694 [inline]
+  debug_object_assert_init+0x23d/0x2f0 lib/debugobjects.c:665
+  debug_timer_assert_init kernel/time/timer.c:723 [inline]
+  debug_assert_init kernel/time/timer.c:775 [inline]
+  try_to_del_timer_sync+0x72/0x110 kernel/time/timer.c:1222
+  del_timer_sync+0x112/0x150 kernel/time/timer.c:1292
+  mwifiex_usb_cleanup_tx_aggr  
+drivers/net/wireless/marvell/mwifiex/usb.c:1358 [inline]
+  mwifiex_unregister_dev+0x41b/0x690  
+drivers/net/wireless/marvell/mwifiex/usb.c:1370
+  _mwifiex_fw_dpc+0x711/0xdd0 drivers/net/wireless/marvell/mwifiex/main.c:651
+  request_firmware_work_func+0x12d/0x249  
+drivers/base/firmware_loader/main.c:785
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
