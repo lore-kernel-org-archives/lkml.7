@@ -2,81 +2,69 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D3CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C314C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C8E20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555088834;
-	bh=t/QGZ7CMTwVEh95Tz21CeBH1q0YtyGXlOXkq7m6LOVM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1ByTBGh8R4LPW+a7PnLCY6tg81yMMF5dgo/zWmBo4dSd532wSr4gxjdvZdBDcY0U+
-	 4XQrsnqm33JW5bvW3cWPPTxAbulrs6MEP1ukYAAkWT6n/zosxUHdaEVQSkqlpbIOea
-	 gCMkcCMrWmeVbtcXazM85ex45VEhxRsEwcwMcM8w=
+	by mail.kernel.org (Postfix) with ESMTP id 355AF218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfDLRHN (ORCPT
+        id S1727040AbfDLRKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726624AbfDLRHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:07:13 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3145020869;
-        Fri, 12 Apr 2019 17:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555088832;
-        bh=t/QGZ7CMTwVEh95Tz21CeBH1q0YtyGXlOXkq7m6LOVM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KrLJMqV355/hEkDJzCebFcFA1puyjEOsnk4wPkzPYCuvGKRj2nYIyE0t+qgbGbbPP
-         ZOItLSQcvSDTxa1SQ9C5fTre+yTIn547tV8Ie5/1wEYmsBQfjJZi/C6RYi5KR8krkh
-         zRNtmqzeqMWndX7QJpgqHJhQ5tNenD2H/QgfMEuw=
-Subject: Re: [PATCH] selftests/seccomp: Handle namespace failures gracefully
-To:     Tycho Andersen <tycho@tycho.ws>, Kees Cook <keescook@chromium.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190411235631.GA31624@beast> <20190412152543.GB25793@cisco>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8fca6205-4983-2ba1-c1eb-c80be2dc8769@kernel.org>
-Date:   Fri, 12 Apr 2019 11:07:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412152543.GB25793@cisco>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Fri, 12 Apr 2019 13:10:45 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:46924 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfDLRKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 13:10:44 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BDA6E133EB06B;
+        Fri, 12 Apr 2019 10:10:43 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 10:10:41 -0700 (PDT)
+Message-Id: <20190412.101041.259784853562829642.davem@davemloft.net>
+To:     dongli.zhang@oracle.com
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.liu2@citrix.com,
+        paul.durrant@citrix.com, joe.jin@oracle.com, junxiao.bi@oracle.com,
+        jie.l.li@oracle.com
+Subject: Re: [PATCH 1/1] xen-netback: add reference from xenvif to
+ backend_info to facilitate coredump analysis
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1555052004-31855-1-git-send-email-dongli.zhang@oracle.com>
+References: <1555052004-31855-1-git-send-email-dongli.zhang@oracle.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 12 Apr 2019 10:10:44 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 9:25 AM, Tycho Andersen wrote:
-> On Thu, Apr 11, 2019 at 04:56:31PM -0700, Kees Cook wrote:
->> When running without USERNS or PIDNS the seccomp test would hang since
->> it was waiting forever for the child to trigger the user notification
->> since it seems the glibc() abort handler makes a call to getpid(),
->> which would trap again. This changes the getpid filter to getppid, and
->> makes sure ASSERTs execute to stop from spawning the listener.
->>
->> Reported-by: Shuah Khan <shuah@kernel.org>
->> Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
->> Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Sorry for the delay, thanks for looking at this!
-> 
-> Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-> 
+From: Dongli Zhang <dongli.zhang@oracle.com>
+Date: Fri, 12 Apr 2019 14:53:24 +0800
 
-Thanks both. Should it go into stables. I will pull this and
-add stable if that is appropriate.
+> During coredump analysis, it is not easy to obtain the address of
+> backend_info in xen-netback.
+> 
+> So far there are two ways to obtain backend_info:
+> 
+> 1. Do what xenbus_device_find() does for vmcore to find the xenbus_device
+> and then derive it from dev_get_drvdata().
+> 
+> 2. Extract backend_info from callstack of xenwatch (e.g., netback_remove()
+> or frontend_changed()).
+> 
+> This patch adds a reference from xenvif to backend_info so that it would be
+> much more easier to obtain backend_info during coredump analysis.
+> 
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 
-thanks,
--- Shuah
+Applied to net-next.
