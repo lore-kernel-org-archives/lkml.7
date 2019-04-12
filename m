@@ -2,105 +2,127 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED284C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847D0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D0120869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555097556;
-	bh=gR/9fCMB0ol53XyfIfFWCBw74NeQrI4eIbNOjzeqB9U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TfHcycDR4CweoHkX9GsnvgshricHS8L9rZr1A6sCu00iwoSARos1sGeunqBfK3gYs
-	 izBqv8DUXSlIpv1qkHyga5BAX2xd6zXZEKbVWRqyZXKAZKHECc712NSgC8hTV9Qk7I
-	 fTmoPqE8aXmww3HXusiDGa12ngdKjpR+Fbgh5TqI=
+	by mail.kernel.org (Postfix) with ESMTP id 4989B20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNcYB3xM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfDLTcf (ORCPT
+        id S1726920AbfDLTek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:32:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33383 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfDLTcf (ORCPT
+        Fri, 12 Apr 2019 15:34:40 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44390 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfDLTej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:32:35 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d55so8538238ede.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:32:34 -0700 (PDT)
+        Fri, 12 Apr 2019 15:34:39 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h16so9868849ljg.11;
+        Fri, 12 Apr 2019 12:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UehPlKGt8PA5rBPsZJi5fUgjCQWFMytQP0IEcHEqyq8=;
+        b=uNcYB3xMfPCVhg+8N/z9pRWjzpiNiYEg70I68LXIDjnuRUY3lbUUkOrxgbgJZaaDGs
+         YTPnXGE5q5wxVpfMHp3EkpNHuOkoUeRAZBw5n4DfM/wjHG9DlJoiAWkm1FQNcy7fvVaO
+         mCKEFud3/gC3uFLS2WtyQoCsWYXSuPXcJ5wg5s3/eCpz33PoDNcb5TEC6//ALvwfCYW0
+         IIwhzwuoJ+YVNmOKOAq1dM9h3pPjjgHyHIuGBcCoIdTVuAo6WooeTGgHfkmK8P+r2skX
+         gTjn7mfc8t+dchA2HE6iQzETvRTJaataHaYHCvnIEgYzIB693riLpovLZ8eqppVVc75k
+         Pk7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fL6Pbpktz1jLAglVEkV/isN/w3tNz9RyGJicSn0MlQ4=;
-        b=ZAHVXriT2xHpRcZVgYBieUPxZLCavtQqaFoWH2irk9L13hBdZEFJZTcoVX42M2yQOD
-         ubS4/L9K8pu0dY5u/bpThS38Kzx1NmPtbsq3A13Tz/517X7i3QIJ106pM7+xBpjxyRD3
-         mwIZdKUL7bbC5Zztyp99+Xo7RsEQKXMyG9+ZNK5HWKtcOfVYRGR5gcqGIud305/e42eJ
-         xFYKcQlozJ8tDBgQ0hhAe6IC2d8x35EbfgsJRQ6p/FlohEhC27DbiuYhlvBewXHVqTkz
-         5ka0Fi/wFU961Nff1vY2GNfh25BaY5es8ISDAmskRuolmckXgqLlFzgrAdqM5n8knUJC
-         tLcw==
-X-Gm-Message-State: APjAAAWZ2E7OG/ncA089e/8aJP1XlTghRod8TpozLxTjO4UlAsFeMzlN
-        EdW4pgKebvWK96g7j9DNthkgKKwHZBJDeWO1uM/Od3qa
-X-Google-Smtp-Source: APXvYqwJeMD3Kplfqaqg6ek94h1Pey/RS5YmfwyPyVzKwHjt2Pa6B4LETdeQ9bL7ppYMnR1uVDxZAC4SENbtmdf8Q/A=
-X-Received: by 2002:a50:a704:: with SMTP id h4mr35645423edc.7.1555097553542;
- Fri, 12 Apr 2019 12:32:33 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UehPlKGt8PA5rBPsZJi5fUgjCQWFMytQP0IEcHEqyq8=;
+        b=PFK8h+lbrNu4zQJmoYLn/vLIe2+J58qIpFHfZWlXRoJ/TqAoANJHtalqz9HiO6kQtb
+         vEbGy0ngxtOUYb2dFJ4PinfVj+TLQN/iR5lbsxp+YI5rf4yNcEnsRzZqii3Ln36ZIURi
+         6C1trxMUtrfy0+uT+xGMfmn2M4ou/xbPehzb/PuaupHK8s7IBuPooBHj7sCbcw7cNaPw
+         WRoK8CVpmy7ytufcx+MAgnDTr1yDbkVJB+cicfzJ+BWLfg85JV0iJ+qN13PbZt0mBsha
+         tTYSBwQYp5+JKkRBsfavoRbxuPQE2lxkzNS0tfOfZ8waLw/vAknd7pWUnkLuAbAd7sfx
+         YyBA==
+X-Gm-Message-State: APjAAAX4QI5MEl0/w+LDzceP3R4RZ/i7/cR73J+UTTnN2foiKp4SSFdk
+        W7nMA493xJ/QwSByaHgg8neelUU1
+X-Google-Smtp-Source: APXvYqy3H4/Fx3rFPi/NPwJJ97ZfJQtzpIx00UjPHcvtaiS5P4jkhjfGHGfBQcZpNovYUh4VATrSKw==
+X-Received: by 2002:a2e:5c7:: with SMTP id 190mr30895609ljf.108.1555097676455;
+        Fri, 12 Apr 2019 12:34:36 -0700 (PDT)
+Received: from [192.168.1.19] (chg144.neoplus.adsl.tpnet.pl. [83.31.4.144])
+        by smtp.gmail.com with ESMTPSA id t28sm9555414lje.9.2019.04.12.12.34.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 12:34:35 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20190405142855.3969-1-dmurphy@ti.com>
+ <20190405142855.3969-4-dmurphy@ti.com>
+ <04e160da-a73e-d330-3df4-8f420b3612b4@gmail.com>
+Message-ID: <1a1482f7-a683-49d5-69a3-aa73a641288e@gmail.com>
+Date:   Fri, 12 Apr 2019 21:34:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190226062012.23746-1-lenb@kernel.org> <20190226185131.GP2861@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190226185131.GP2861@worktop.programming.kicks-ass.net>
-From:   Len Brown <lenb@kernel.org>
-Date:   Fri, 12 Apr 2019 15:32:22 -0400
-Message-ID: <CAJvTdKkwCDdV0G1XS-C=WQqt9UtvQ+Vk-_aBRxW8j4VO98g7zQ@mail.gmail.com>
-Subject: Re: [PATCH 0/14] v2 multi-die/package topology support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <04e160da-a73e-d330-3df4-8f420b3612b4@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 1:51 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Feb 26, 2019 at 01:19:58AM -0500, Len Brown wrote:
-> > Restored sysfs core_siblings, core_siblings_list
-> >
-> >       v1 proposed re-defining this existing attribute to
-> >       be the threads in a die, rather than in a package.
-> >
-> >       For compatibility, decided rather to keep this
-> >       attribute unchanged, for now, even though
-> >       its name makes little sense, and it makes
-> >       no sense in a multi-die system.
->
-> So why do things that make no sense?
+And one more:
 
->>> 7) /sys/devices/system/cpu/cpuX/topology/core_siblings:
->>>
->>> internal kernel map of cpuX's hardware threads within the same
->>> physical_package_id.
+[5] - LED naming patch set v3
 
-This definition tells you what cpus are in what package.
-That is fine, it is useful, and it is in use.
+On 4/11/19 9:48 PM, Jacek Anaszewski wrote:
+> Hi Rob,
+> 
+> I've collected references to the DT patches we're waiting
+> to be reviewed. This is just to make sure that none of them
+> will be missed - recent traffic on the linux-leds list
+> is a bit heavier.
+> 
+> [0] - draft of LED multi color class - we would especially like
+>        to get a feedback on the proposed brightness-model DT design
+> [1][2] - LM3697 backlight driver rework
+> [3][4] - LM36274 backlight driver with regulator support
+> 
+> On 4/5/19 4:28 PM, Dan Murphy wrote:
+>> The LM3697 is a single function LED driver. The single function LED
+>> driver needs to reside in the LED directory as a dedicated LED driver
+>> and not as a MFD device.  The device does have common brightness and ramp
+>> features and those can be accomodated by a TI LMU framework.
+>>
+>> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a 
+>> dedicated
+>> LED dt binding needs to be added.  The new LM3697 LED dt binding will 
+>> then
+>> reside in the Documentation/devicetree/bindings/leds directory and 
+>> follow the
+>> current LED and general bindings guidelines.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+[...]
+> [0] https://marc.info/?l=linux-kernel&m=155414072611538&w=2
+> [1] https://marc.info/?l=devicetree&m=155447454524411&w=2
+> [2] https://lore.kernel.org/patchwork/patch/1058762/
+> [3] https://marc.info/?l=devicetree&m=155447624324995&w=2
+> [4] https://lore.kernel.org/patchwork/patch/1058779/
+> 
 
-What doesn't make sense is that it is called "core_siblings".
-Who is to say that the map of CPUs inside a package has anything to do
-with "cores"?
-Sometimes it does, sometimes it doesn't...
+[5] - https://marc.info/?l=linux-kernel&m=155405492231039&w=2
 
-> What breaks?
-
-User space applications, such as lscpu and hwloc are using this attribute
-per its definition, to figure out what cpus are in what packages.
-If we change the definition to match the attribute's name, they break.
-If we change the attribute name to match the definition, they break.
-
-So the plan is to simply leave this attribute and its definition in place,
-deprecate it, and move to the new attribute names that don't have
-the word "siblings" in them -- which imply a known fixed topology.
-
-We can schedule this attribute to be deleted some day,
-but changing it and hoping you've updated all of user-space
-would be a unnecessary pain.
-
-Len Brown, Intel Open Source Technology Center
+-- 
+Best regards,
+Jacek Anaszewski
