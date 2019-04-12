@@ -2,225 +2,173 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECFFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21159C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A4520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E0E218FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yf7WtE8d"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OthroVqi";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ld+kq/Xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfDLUE2 (ORCPT
+        id S1726958AbfDLUHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:04:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40221 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLUE2 (ORCPT
+        Fri, 12 Apr 2019 16:07:07 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:40964 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbfDLUHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:04:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z24so12459921wmi.5;
-        Fri, 12 Apr 2019 13:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ocrb2VWWs7Nnp5MYzo7t6LV+BOLb+dTLJX6dSaQqGi4=;
-        b=Yf7WtE8dgMIu2a0mlGcpIOsoHdrqhMav8ombg7WvAoLU6HkqOts1uzMKeWopT1qp5N
-         5jjkZ8Rd98zufQBbcrKneOYbppMBwZEaVpHuPLCbPb5MiOR+VTX4YLXkHyHQG8uylmb0
-         djNHvi7YyOj0LfA1sCBEiOH00r7e0aV0Bjcpr7afGruz8X3vpib70Lj1GRp6bIR8Ycjn
-         2quV7JIMYIzk01/cNXg6k2EmxfFzfqCflzXdL6kUORDb+uF4jTPt4xBrauDJz9OaWMCf
-         zFpCRkKGGxR+UK/qq7n9OSSZVrs9/dZ/k4i2M3nGLyDugQlREuKGkI4ToHWUmFzCkbJu
-         OuUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ocrb2VWWs7Nnp5MYzo7t6LV+BOLb+dTLJX6dSaQqGi4=;
-        b=dtbRax+EC7HEKpww3KFimBCV44j/fFXRBGmiXKSSftcco5dKsx45W54QDReSL8QI/3
-         IV95gpnTX1WMIlTrmvSsQjK/9epVLmwfbBhpWdYQJOv2dTxR/EITFwDT6eeRkLZdhbQ2
-         iLZxacoZQIIRTx1LrRACXn2t1dyXzLkTsBC2BgMUHP1SKNOtr2FjFly5qVbP+U1OtH3G
-         r9eXszXirrmNM4w8wH+ApPPXeVYfs/mXkbCEwrSKfw7RdB6BliovsNjcywYJWs0CAzfG
-         sRlPgllCws6zbFy0jvhsZh8RQpaZ9GYLK6dCZ5ToaJ0eYCF0c0akYBEO+TlGl0MoK/Ly
-         Q6ZA==
-X-Gm-Message-State: APjAAAVoC2lFj4n52zBA4weN+IbDtno3PKPS1fYjlP3vj/Vne8fSjzSH
-        PmqViT8rO8ezfzJV30A278o=
-X-Google-Smtp-Source: APXvYqzHHs3WCBUfKpElPvfU0pWVOkfaDPT+Gq3DTey6NHmuMLHdLbExsU+S5gwIkmx8pEOPq9eOvQ==
-X-Received: by 2002:a1c:1c5:: with SMTP id 188mr12833102wmb.52.1555099465917;
-        Fri, 12 Apr 2019 13:04:25 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id f1sm8274266wml.28.2019.04.12.13.04.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 13:04:25 -0700 (PDT)
-Subject: Re: [PATCH 04/11] platform/x86: asus-wmi: Add quirk to force DSTS WMI
- method detection
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <d8e0f65c-8c4e-7b60-93bd-3bf90e2da344@gmail.com>
- <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Message-ID: <99de12d7-ac8d-3bb2-f154-e7fd424e11db@gmail.com>
-Date:   Fri, 12 Apr 2019 22:04:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 12 Apr 2019 16:07:06 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3CK4fO3030123;
+        Fri, 12 Apr 2019 13:06:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=w34ue0TCLhcYpA27Lg6nzR6yawZCjemc0AF2Iua7eSc=;
+ b=OthroVqixESb+voiTgT+rRwz2z7bj5BNfFMIO2/xMNVkVWLv+mKfkzUBouvv90TalpsN
+ sbpQNL6y56qGAdw/CRJuU7tTJN/TZDYWHfFSORUXpR4n9AUfle2/KJjQH9LnfI5+XF/U
+ ifpgWi1K1S9vQ3ChY43t6MdhrHhdgvMW564= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rtw0wrxg6-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 12 Apr 2019 13:06:58 -0700
+Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 12 Apr 2019 13:06:56 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 12 Apr 2019 13:06:55 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 12 Apr 2019 13:06:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w34ue0TCLhcYpA27Lg6nzR6yawZCjemc0AF2Iua7eSc=;
+ b=Ld+kq/XkF7mybhf8LhRGO1LH0MlPBJuffsxGDYoPBPbxom7sQaAkpdxHzIAYpe+pRPpCHrM+VDgcs52scN3rK3ZDQk89KLH7n2qPyJlUIimGXko5hYyxangmYD7eS4wOESVT9ACxs3ZQAqJzC8QKPlMg17v1k4KbqbE3NhBhkiw=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3464.namprd15.prod.outlook.com (20.179.60.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.17; Fri, 12 Apr 2019 20:06:34 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
+ 20:06:34 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH] mm: fix false-positive OVERCOMMIT_GUESS failures
+Thread-Topic: [PATCH] mm: fix false-positive OVERCOMMIT_GUESS failures
+Thread-Index: AQHU8WPzV7whvXpmeUeLhsl6IRCndKY486cA
+Date:   Fri, 12 Apr 2019 20:06:34 +0000
+Message-ID: <20190412200629.GA24377@tower.DHCP.thefacebook.com>
+References: <20190412191418.26333-1-hannes@cmpxchg.org>
+In-Reply-To: <20190412191418.26333-1-hannes@cmpxchg.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0060.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::22) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:2586]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 618b90be-36fd-4858-de96-08d6bf825c63
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3464;
+x-ms-traffictypediagnostic: BYAPR15MB3464:
+x-microsoft-antispam-prvs: <BYAPR15MB34644CDEFE076D0722E31AC2BE280@BYAPR15MB3464.namprd15.prod.outlook.com>
+x-forefront-prvs: 0005B05917
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(366004)(39860400002)(136003)(199004)(189003)(76176011)(476003)(11346002)(33656002)(81156014)(81166006)(486006)(478600001)(446003)(68736007)(229853002)(8936002)(6436002)(102836004)(6512007)(5660300002)(1076003)(6116002)(54906003)(316002)(4326008)(14454004)(256004)(7736002)(71190400001)(2906002)(71200400001)(6506007)(386003)(305945005)(9686003)(6916009)(86362001)(25786009)(6486002)(14444005)(106356001)(105586002)(6246003)(99286004)(186003)(97736004)(53936002)(52116002)(8676002)(46003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3464;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: a2FLjq9PZzm9RXIQb4/s5oW76KDP6WrSHcN+R/HqE1rdkyXjmhAOBLvBaAOfW/iStb+8udrALGRjiqLWleAdAJcFE2X15zykVg2CQmQ/STrbbPXEFMBJxtanOre2uRID6En4FmqFQUAriQwrca8ahwGOohONKxxhCoopzU7xosBceSRLn1j66biTVRdULoHQZCoCdmR8C4LyTVGF9YaLySnMINLcbxMHgEZUzd8Ko3Lk3/Tr03r3BhSa8HeY3PryaopYaWno5Ori5BglrEmcAgGORdhHw/To9CK6Lw7lNVJJb+0JQkpTYB+IhvnjO4FSOYwfIg5DrwpbAwyZvXzi5iGCcDK16TJ6FvAbKH6c0Ax/cMnwaiviKw9SaOTvYwv/KHMkt5YZbkf4V8wzoBuF3ZGTZBrrjLEGNx4qCEHDzqo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <07E8811B2E537E488E0FA5B519045F3F@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 618b90be-36fd-4858-de96-08d6bf825c63
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 20:06:34.1190
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3464
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_11:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wow that is a great thing you done, thanks a lot for your time and your
-kind words! Your suggestion indeed sounds good judging by your results.
+On Fri, Apr 12, 2019 at 03:14:18PM -0400, Johannes Weiner wrote:
+> With the default overcommit=3D=3Dguess we occasionally run into mmap
+> rejections despite plenty of memory that would get dropped under
+> pressure but just isn't accounted reclaimable. One example of this is
+> dying cgroups pinned by some page cache. A previous case was auxiliary
+> path name memory associated with dentries; we have since annotated
+> those allocations to avoid overcommit failures (see d79f7aa496fc ("mm:
+> treat indirectly reclaimable memory as free in overcommit logic")).
+>=20
+> But trying to classify all allocated memory reliably as reclaimable
+> and unreclaimable is a bit of a fool's errand. There could be a myriad
+> of dependencies that constantly change with kernel versions.
+>=20
+> It becomes even more questionable of an effort when considering how
+> this estimate of available memory is used: it's not compared to the
+> system-wide allocated virtual memory in any way. It's not even
+> compared to the allocating process's address space. It's compared to
+> the single allocation request at hand!
+>=20
+> So we have an elaborate left-hand side of the equation that tries to
+> assess the exact breathing room the system has available down to a
+> page - and then compare it to an isolated allocation request with no
+> additional context. We could fail an allocation of N bytes, but for
+> two allocations of N/2 bytes we'd do this elaborate dance twice in a
+> row and then still let N bytes of virtual memory through. This doesn't
+> make a whole lot of sense.
+>=20
+> Let's take a step back and look at the actual goal of the
+> heuristic. From the documentation:
+>=20
+>    Heuristic overcommit handling. Obvious overcommits of address
+>    space are refused. Used for a typical system. It ensures a
+>    seriously wild allocation fails while allowing overcommit to
+>    reduce swap usage.  root is allowed to allocate slightly more
+>    memory in this mode. This is the default.
+>=20
+> If all we want to do is catch clearly bogus allocation requests
+> irrespective of the general virtual memory situation, the physical
+> memory counter-part doesn't need to be that complicated, either.
+>=20
+> When in GUESS mode, catch wild allocations by comparing their request
+> size to total amount of ram and swap in the system.
+>=20
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Both of my devices have UID "ATK" (actually FX505 also has two other
-PNP0C14 devices with HIDs SampleDev and TestDev, but I think they are
-disabled by default).
+My 2c here: any kinds of percpu counters and percpu data is accounted
+as unreclaimable and can alter the calculation significantly.
 
-It looks like the driver is loaded already only if ASUS_WMI_MGMT_GUID is
-present, so I guess that could be used for wmi_driver_register. A little
-obstacle is that ACPI device pointer is stored in wmi_block structure,
-which is internal to the wmi.c. This means we would have to add a new
-method to wmi.h / wmi.c for getting the UID of WMI ACPI device.
+This is a special problem on hosts, which were idle for some time.
+Without any memory pressure, kernel caches do occupy most of the memory,
+so than a following attempt to start a workload fails.
 
-I guess it might be possible to somehow navigate the device tree back to
-the platform driver of WMI module, but it would definitely be more obscure,
-and searching for the device by HID again is not only slower but generally
-would require a guarantee that it's the same device. So adding a new
-function looks reasonable to me. It might also be useful to someone
-implementing similar things for other vendors in the future.
+With a big pleasure:
+Acked-by: Roman Gushchin <guro@fb.com>
 
-I'm going to implement this in updated patch.
-
-Thanks,
-Yurii
-
-On 11.04.19 12:55, Daniel Drake wrote:
-> On Thu, Apr 11, 2019 at 4:28 AM Yurii Pavlovskyi
-> <yurii.pavlovskyi@gmail.com> wrote:
->> The DSTS method detection fails, as nothing is returned if method is not
->> defined in WMNB. As a result the control of keyboard backlight is not
->> functional for TUF Gaming series laptops (at the time the only
->> functionality of the driver on this model implemented with WMI methods).
->>
->> Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
->>
->> FX505GM:
->> Method (WMNB, 3, Serialized)
->> { ...
->>     If ((Local0 == 0x53545344))
->>     {
->>         ...
->>         Return (Zero)
->>     }
->>     ...
->>     // No return
->> }
->>
->> K54C:
->> Method (WMNB, 3, Serialized)
->> { ...
->>     If ((Local0 == 0x53545344))
->>     {
->>         ...
->>         Return (0x02)
->>     }
->>     ...
->>     Return (0xFFFFFFFE)
->> }
->>
->> The non-existing method ASUS_WMI_METHODID_DSTS=0x53544344 (actually it is
->> DCTS in little endian ASCII) is selected in asus->dsts.
->>
->> One way to fix this would be to call both for every known device ID until
->> some answers - this would increase module load time.
->>
->> Another option is to check some device that is known to exist on every
->> model - none known at the time.
->>
->> Last option, which is implemented, is to check for presence of the
->> ASUS7000 device in ACPI tree (it is a dummy device), which is the
->> condition used for loading the vendor driver for this model. This might
->> not fix every affected model ever produced, but it likely does not
->> introduce any regressions. The patch introduces a quirk that is enabled
->> when ASUS7000 is found.
->>
->> Scope (_SB)
->> {
->>     Device (ATK)
->>     {
->>         Name (_HID, "ASUS7000")  // _HID: Hardware ID
->>     }
->> }
-> 
-> Hmm, tricky! But about time we did something about the DSTS vs DCTS guessing.
-> 
-> While we don't have definitive knowledge of the right thing to do
-> here, I think I have enough info available to solidify some
-> assumptions we'd otherwise be afraid to make, and then we can
-> implement a better approach here.
-> 
-> In our database of 144 Asus DSDTs, 14 of them respond to DCTS:
-> 
-> AS_D520MT
-> D425MC
-> D640SA
-> D320SF-K
-> D415MT
-> D830MT
-> G11DF
-> M32CD4-K
-> V221ID
-> V272UN_SKU3
-> Z240IE
-> ZN220IC-K
-> ZN241IC
-> ZN270IE
-> 
-> Of those 14, they all additionally respond to DSTS, except for D415MT
-> and AS_D520MT.
-> 
-> In all 14 cases, the DCTS handling is done inside a device with _UID
-> ASUSWMI. None of the other 130 products have a device with that _UID.
-> 
-> Furthermore, we recently received access to the ASUS spec, which
-> confirms that the Instance Name for EeePC is "ACPI\PNP0C14\ASUSWMI_0"
-> whereas the Instance Name for other notebooks is "ACPI\PNP0C14\ATK_0".
-> 
-> The 12 devices that respond to both DCTS and DSTS, do it on separate
-> different devices, albeit with the same _WDG UUID. The one with _UID
-> ASUSWMI responds to DCTS, and the one with _UID ATK responds to DSTS.
-> 
-> So that seems fairly convincing. My thinking is that we can check the
-> _UID of the underlying device, and use DCTS for ASUSWMI, DSTS
-> otherwise. To do that, I think you'd have to rework the driver probing
-> so that it happens through wmi_driver_register(). Then from the probe
-> function onwards you will get a wmi_device, and hopefully you can get
-> the _UID through that instance somehow.
-> 
-> There's a separate issue of what happens on those 12 machines where
-> there are two WMI devs, with the same _WDG GUID.
-> drivers/platform/x86/wmi.c drops duplicates, so one of them is being
-> ignored in that case. We'd ideally find a way to ignore the ASUSWMI
-> node and go with ATK in that situation. But I think this can be
-> separated from your work here.
-> 
-> Thanks for these patches and welcome to the world of kernel development!
-> 
-> Daniel
-> 
+Thanks!
