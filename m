@@ -2,82 +2,127 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747A8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4129EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BECD218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6852077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:25:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUOaUBQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfDLRZn (ORCPT
+        id S1727021AbfDLRZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfDLRZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:25:41 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA1DE2077C;
-        Fri, 12 Apr 2019 17:25:38 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 13:25:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
- kernel easier
-Message-ID: <20190412132536.1211a66c@gandalf.local.home>
-In-Reply-To: <76db9a89-ae64-5c2b-6f56-3e2b860cbda2@metux.net>
-References: <20190320163116.39275-1-joel@joelfernandes.org>
-        <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
-        <20190408203601.GF133872@google.com>
-        <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
-        <CAK8P3a30yY_1mPcUBxOYOkbFwoeCHbo5EHuWMN4fqKug9DiQDQ@mail.gmail.com>
-        <76db9a89-ae64-5c2b-6f56-3e2b860cbda2@metux.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 12 Apr 2019 13:25:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46415 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfDLRZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 13:25:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t17so12880659wrw.13;
+        Fri, 12 Apr 2019 10:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+XyBAec1IZYURNjo7Paci4kN3iS4hKPrUQv66Ew8HwE=;
+        b=EUOaUBQLqLRTo0ysDGff/5pgXZiPkBdKVLN9uP25A51+7/+2w/xoeVoRow8lF/yegl
+         BOYQ59ZXGyw2tCgBC3xWCkk/SjM1j/Lm+wLlA/7rNO0Kwr5+5ikkueYCps1mhgn8sh8t
+         GakCo5A84kQzWfTjImTD9TK5BR/e76nmDjz9AhrWe12gieySAjAGsB0MXC9xAXBo62U4
+         XFE+fkk4EUtrVaufkCpydEJmrzG3Sxz2qsrcHf64RdVZ6U4rO/RAUHmoBWkV7wMWghsn
+         yM7yjXVi0HJhUj+uh+CwYGzbjlk1E17294XsO94D8WK3UuvAw2hn8iBtID7xLtOsWjCt
+         2A/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+XyBAec1IZYURNjo7Paci4kN3iS4hKPrUQv66Ew8HwE=;
+        b=koQftluoyuhwjeOlkGLMYYcVdNMQMvLL3o5cGIsiTfsJ+R1MK4yragI4Otf9YAK0SJ
+         LPSVVFW0wwBdXbpQpucm49KFR38zY3d+yP2rVMlfiX9wXD/NrsELgVbLdH6PQIG/ey5d
+         ysTKFyPhz4fu9bhxN3CHKB6dwDI0oNLxuZfFbTc++bepTXHztJtwCIpB+PC2vsvGOpXx
+         ZHw4mHhtrmk/uAPdMdBp9FSoDk3YeKSB+Yij3hdptiEVHDMVI6tiflaHpxFMb7lEj4Zf
+         V6Jz5m/KhWv3u1nAtCOld+fpJKtMpAS0O8OOsu337HzFQ2I8hZqyRd27i/05EWbBJfWt
+         1BXQ==
+X-Gm-Message-State: APjAAAVuxzo5mOHn9jZ7SLIPAV7sTVW7kWZ35LO1fWZL3S9J3ECqYDUF
+        UDjaq2lxDqyCBIirHFsk1ok=
+X-Google-Smtp-Source: APXvYqzQirGmrnpatvN66mQFnSP3C/FYoDJ3JPyX58CAEBrf3henBR4m9bpE/wSPL5QIb9MMbH0gIA==
+X-Received: by 2002:adf:f088:: with SMTP id n8mr37996419wro.112.1555089947642;
+        Fri, 12 Apr 2019 10:25:47 -0700 (PDT)
+Received: from macpro-scc.lancs.ac.uk (inc028000049.lancs.ac.uk. [148.88.224.78])
+        by smtp.gmail.com with ESMTPSA id g8sm68134975wro.77.2019.04.12.10.25.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 10:25:47 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 18:25:46 +0100
+From:   Willy Wolff <willy.mh.wolff.ml@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
+ Exynos542x SoCs
+Message-ID: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 18:16:19 +0200
-"Enrico Weigelt, metux IT consult" <lkml@metux.net> wrote:
+Add device tree entries for PMU of ARM CCI-400.
 
-> So, rpm doesn't count as "sane" ? :o
-> 
+$ sudo ./perf stat -a -C 0 -e CCI_400/config=0xff,name=cycles/ sleep 1
 
-As a Debian user... No ;-)
+ Performance counter stats for 'system wide':
 
-/me runs
+       420,303,619      cycles
 
--- Steve
+       1.019058775 seconds time elapsed
+
+Tested on Odroid-xu3 and 4.
+
+Signed-off-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index aaff15880761..be58650aca35 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -158,7 +158,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			reg = <0x10d20000 0x1000>;
+-			ranges = <0x0 0x10d20000 0x6000>;
++			ranges = <0x0 0x10d20000 0x10000>;
+ 
+ 			cci_control0: slave-if@4000 {
+ 				compatible = "arm,cci-400-ctrl-if";
+@@ -170,6 +170,16 @@
+ 				interface-type = "ace";
+ 				reg = <0x5000 0x1000>;
+ 			};
++
++			pmu@9000 {
++				compatible = "arm,cci-400-pmu,r0";
++				reg = <0x9000 0x5000>;
++				interrupts = <0 105 4>,
++					     <0 101 4>,
++					     <0 102 4>,
++					     <0 103 4>,
++					     <0 104 4>;
++			};
+ 		};
+ 
+ 		clock: clock-controller@10010000 {
+-- 
+2.11.0
+
