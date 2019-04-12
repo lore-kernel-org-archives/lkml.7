@@ -2,129 +2,128 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63235C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D73C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E8F205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607C22171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dy58lTdh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N7csTN6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfDLIAa (ORCPT
+        id S1727229AbfDLICD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:00:30 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45757 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfDLIA3 (ORCPT
+        Fri, 12 Apr 2019 04:02:03 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1962 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfDLICB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:00:29 -0400
-Received: by mail-ua1-f65.google.com with SMTP id c13so2927646uao.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 01:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GhL6LONnkvIVp0AvYB18vhAHStJG1zjOEGpY9uUIPa0=;
-        b=Dy58lTdhTzUOXZtqFPWtrxYCDOSeXk7qK0RM4+qgGI9Dhjwd9lDd87aQRP9f/U9tS9
-         wUH6BBPXrnVcpajxSRFev12WOeqtnVuGiLMF+OFH8qy6FEL2Fbx+L33fX2CNvk9f5afn
-         tufvfv+bd+76e9sglWxGhZjxbf/42L1KPdT2dHSbGZkaSgQyNKfJ55OdVGGLc8sI/0SC
-         4urWlviPzBxvaR5avGXUxX0HHIOBYuZepumTggW/JNZjw3SsfkygykVFl7K25KeDzlOB
-         eDFNGqKzziJMdEMTGQbv/HfsqqeR+v1EYoXLzoIJv/K4fhBQ3nLGDWd95JjsEaTZzc+t
-         nCig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GhL6LONnkvIVp0AvYB18vhAHStJG1zjOEGpY9uUIPa0=;
-        b=kenPyqrgN+BcMHZDm2hAV1mXI8rglhvX1VR/HYhCNLn117dE5M7FRKtNTfRfSSO7xl
-         4wnyUuquF/YigU+hFZ/7JVMn80UDjANg/NxKFQPfVJg0QW0g3VRqzBj657LwQJ7bYT4d
-         R1MY8wT0cbXzQaNOQd7OVonEngYrJm+PX1OV16IreE9Bhg7bjK87oOb3uSuOvGR76Jxh
-         bbWdXiiCZ6wK/HFqAvDcvO+gvxqlI/B6vckcoJ7CXNAh6JbXz2bXvubx7N9YeL8ZLG9C
-         sVwiKgkImpi5IBNf4ZATyiw04qBh9B4Ssmn66/oyNTzckrJO1whOrW9IbA6GOUxtrx2l
-         l3uQ==
-X-Gm-Message-State: APjAAAXboe/qoiPeMopaIQtwCakBPjTcxEclEFr9Yatrd2Nl1rnfH2uU
-        L0geXYu/jpBVEzevUZPY2v5HnNq9BM7hvYUjPshpyA==
-X-Google-Smtp-Source: APXvYqyNA9gGrxiVDy4z3apKD3I6B0Av50rojHvvN8/Dj124PwRTQ3xgVEKZOzszA3clDyxv7KvZSNuTgCxTzl6ajrA=
-X-Received: by 2002:ab0:7486:: with SMTP id n6mr5073154uap.66.1555056028676;
- Fri, 12 Apr 2019 01:00:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190411181733.21437-1-ulf.hansson@linaro.org> <CAJZ5v0hVkgF2MYUh4VkXN0L2ZtxMoC8bUV6CY7=fAnSHRLpqUA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hVkgF2MYUh4VkXN0L2ZtxMoC8bUV6CY7=fAnSHRLpqUA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 12 Apr 2019 09:59:52 +0200
-Message-ID: <CAPDyKFqesUc5PaZGvkMPcpiLUX1cRvFcSCVdv+p6LtpO4QpK3g@mail.gmail.com>
-Subject: Re: [PATCH v14 4/4] PM / Domains: Add genpd governor for CPUs
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Fri, 12 Apr 2019 04:02:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb045e80000>; Fri, 12 Apr 2019 01:01:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 12 Apr 2019 01:02:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 12 Apr 2019 01:02:00 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Apr
+ 2019 08:02:00 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 2105641B97; Fri, 12 Apr 2019 11:01:58 +0300 (EEST)
+Date:   Fri, 12 Apr 2019 11:01:58 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller
+ node
+Message-ID: <20190412080158.GG12975@pdeschrijver-desktop.Nvidia.com>
+References: <20190411230221.31362-1-digetx@gmail.com>
+ <20190411230221.31362-4-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190411230221.31362-4-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555056104; bh=BK9NQTQz9YD156sUw/1DYb+sHj7A+1jttdjImZHJPMY=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=N7csTN6U6jTwNKcmPlm5U0gR8648fg1M7H+WLjqihekMHTGFNRz32FjVweZyuO74G
+         rXmWQ43HBnplLtqmI03ftYDLsQ/Bib6w8o1vq0az6Urzn5a5c/7CpHUI3aU3v7uDiy
+         xgkwvaM9dYOCZUS4x99b8A0+m63FAyvnicndzuqhSBAhV3Wnv26ZTATnphgixDTwE5
+         U8ix6cAlcLlJZv23/mbHZpgfdMiYwnbqNd7VB4X96Jp0FzOxKf8P4B6eZ7T3d08gF4
+         +goVaiKxEY6Sjc5gcrhLgQ/JeT9Thq+0CCNwpYTIjIZX0OIOPsF8JyIetbkvbTrFsB
+         UOzV8sKgEmMOg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 at 22:44, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Apr 11, 2019 at 8:17 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > After some preceding changes, PM domains managed by genpd may contain
-> > CPU devices, so idle state residency values should be taken into
-> > account during the state selection process. [The residency value is
-> > the minimum amount of time to be spent by a CPU (or a group of CPUs)
-> > in an idle state in order to save more energy than could be saved
-> > by picking up a shallower idle state.]
-> >
-> > For this purpose, add a new genpd governor, pm_domain_cpu_gov, to be
-> > used for selecting idle states of PM domains with CPU devices attached
-> > either directly or through subdomains.
-> >
-> > The new governor computes the minimum expected idle duration for all
-> > online CPUs attached to a PM domain and its subdomains.  Next, it
-> > finds the deepest idle state whose target residency is within the
-> > expected idle duration and selects it as the target idle state of
-> > the domain.
-> >
-> > It should be noted that the minimum expected idle duration computation
-> > is based on the closest timer event information stored in the per-CPU
-> > variables cpuidle_devices for all of the CPUs in the domain.  That
-> > needs to be revisited in future, as obviously there are other reasons
-> > why a CPU may be woken up from idle.
-> >
-> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > [ rjw: Changelog ]
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Applied instead of the previous version, thanks!
+On Fri, Apr 12, 2019 at 02:02:21AM +0300, Dmitry Osipenko wrote:
+> Add Add External Memory Controller node to the device-tree.
+> 
 
-Thanks - and sorry for the mess!
+One 'Add' is enough I think :)
 
-When things have settled, here's the reposted PSCI cleanup series in
-case it slipped through your filters.
-https://patchwork.kernel.org/project/linux-pm/list/?series=103537
+Peter.
 
-Kind regards
-Uffe
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/boot/dts/tegra30.dtsi     | 11 +++++++++++
+>  drivers/memory/tegra/tegra30-emc.c |  3 ++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index e074258d4518..92c4aeafab29 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -732,6 +732,17 @@
+>  		#reset-cells = <1>;
+>  	};
+>  
+> +	memory-controller@7000f400 {
+> +		compatible = "nvidia,tegra30-emc";
+> +		reg = <0x7000f400 0x400>;
+> +		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&tegra_car TEGRA30_CLK_EMC>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		nvidia,memory-controller = <&mc>;
+> +	};
+> +
+>  	fuse@7000f800 {
+>  		compatible = "nvidia,tegra30-efuse";
+>  		reg = <0x7000f800 0x400>;
+> diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
+> index 38ebdb076ccd..defdb38bde54 100644
+> --- a/drivers/memory/tegra/tegra30-emc.c
+> +++ b/drivers/memory/tegra/tegra30-emc.c
+> @@ -980,7 +980,8 @@ static long emc_round_rate(unsigned long rate,
+>  	}
+>  
+>  	if (!timing) {
+> -		dev_err(emc->dev, "no timing for rate %lu\n", rate);
+> +		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
+> +			rate, min_rate, max_rate);
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 2.21.0
+> 
