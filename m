@@ -2,484 +2,152 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AACEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8B220850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A496B2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfDLPzw (ORCPT
+        id S1727015AbfDLP40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:55:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:35360 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfDLPzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:55:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A3AE15AB;
-        Fri, 12 Apr 2019 08:55:51 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C865D3F557;
-        Fri, 12 Apr 2019 08:55:50 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 23EE868012C; Fri, 12 Apr 2019 16:55:49 +0100 (BST)
-Date:   Fri, 12 Apr 2019 16:55:49 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     Ben Davis <Ben.Davis@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>, Brian Starkey <Brian.Starkey@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] drm/malidp: Enable writeback scaling
-Message-ID: <20190412155548.GN15144@e110455-lin.cambridge.arm.com>
-References: <1555078094-6587-1-git-send-email-ben.davis@arm.com>
- <1555078094-6587-3-git-send-email-ben.davis@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Fri, 12 Apr 2019 11:56:26 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48705 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfDLP40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:56:26 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hEyXK-0001Kl-Vn; Fri, 12 Apr 2019 17:56:18 +0200
+Message-ID: <1555084578.11529.32.camel@pengutronix.de>
+Subject: Re: [PATCH v3 05/11] PCI: dwc: imx6: Share PHY debug register
+ definitions
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Apr 2019 17:56:18 +0200
+In-Reply-To: <20190401042547.14067-6-andrew.smirnov@gmail.com>
+References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+         <20190401042547.14067-6-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1555078094-6587-3-git-send-email-ben.davis@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
+> Both pcie-designware.c and pci-imx6.c contain custom definitions for
+> PHY debug registers R0/R1 and on top of that there's already a
+> definition for R0 in pcie-designware.h. Move all of the definitions to
+> pcie-designware.h. No functional change intended.
+> 
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-On Fri, Apr 12, 2019 at 03:08:32PM +0100, Ben Davis wrote:
-> The phase setting part of malidp_crtc_atomic_check_scaling is refactored
-> to allow use in writeback scaling.
-> 
-> Also the enable_memwrite function prototype is simplified by directly
-> passing mw_state.
-> 
-> Signed-off-by: Ben Davis <ben.davis@arm.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
 > ---
->  drivers/gpu/drm/arm/malidp_crtc.c | 49 ++++++++++++----------
->  drivers/gpu/drm/arm/malidp_crtc.h | 12 ++++++
->  drivers/gpu/drm/arm/malidp_drv.c  | 10 +++--
->  drivers/gpu/drm/arm/malidp_hw.c   | 45 ++++++++++++++------
->  drivers/gpu/drm/arm/malidp_hw.h   | 19 +++++++--
->  drivers/gpu/drm/arm/malidp_mw.c   | 86 ++++++++++++++++++++++++++++++---------
->  drivers/gpu/drm/arm/malidp_regs.h |  1 +
->  7 files changed, 161 insertions(+), 61 deletions(-)
->  create mode 100644 drivers/gpu/drm/arm/malidp_crtc.h
+>  drivers/pci/controller/dwc/pci-imx6.c        |  6 ++----
+>  drivers/pci/controller/dwc/pcie-designware.c | 12 +++---------
+>  drivers/pci/controller/dwc/pcie-designware.h |  3 +++
+>  3 files changed, 8 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/arm/malidp_crtc.c b/drivers/gpu/drm/arm/malidp_crtc.c
-> index 3f65996..aa66457 100644
-> --- a/drivers/gpu/drm/arm/malidp_crtc.c
-> +++ b/drivers/gpu/drm/arm/malidp_crtc.c
-> @@ -265,6 +265,31 @@ static int malidp_crtc_atomic_check_ctm(struct drm_crtc *crtc,
->  	return 0;
->  }
->  
-> +void malidp_set_se_config_phase(struct malidp_se_config *s)
-> +{
-> +#define SE_N_PHASE 4
-> +#define SE_SHIFT_N_PHASE 12
-> +	u32 phase;
-> +
-> +	/* Calculate initial_phase and delta_phase for horizontal. */
-> +	phase = s->input_w;
-> +	s->h_init_phase = ((phase << SE_N_PHASE) / s->output_w + 1) / 2;
-> +
-> +	phase = s->input_w;
-> +	phase <<= (SE_SHIFT_N_PHASE + SE_N_PHASE);
-> +	s->h_delta_phase = phase / s->output_w;
-> +
-> +	/* Same for vertical. */
-> +	phase = s->input_h;
-> +	s->v_init_phase = ((phase << SE_N_PHASE) / s->output_h + 1) / 2;
-> +
-> +	phase = s->input_h;
-> +	phase <<= (SE_SHIFT_N_PHASE + SE_N_PHASE);
-> +	s->v_delta_phase = phase / s->output_h;
-> +#undef SE_N_PHASE
-> +#undef SE_SHIFT_N_PHASE
-> +}
-> +
->  static int malidp_crtc_atomic_check_scaling(struct drm_crtc *crtc,
->  					    struct drm_crtc_state *state)
->  {
-> @@ -291,7 +316,6 @@ static int malidp_crtc_atomic_check_scaling(struct drm_crtc *crtc,
->  
->  	drm_atomic_crtc_state_for_each_plane_state(plane, pstate, state) {
->  		struct malidp_plane *mp = to_malidp_plane(plane);
-> -		u32 phase;
->  
->  		if (!(mp->layer->id & scaling))
->  			continue;
-> @@ -319,27 +343,8 @@ static int malidp_crtc_atomic_check_scaling(struct drm_crtc *crtc,
->  		s->output_w = pstate->crtc_w;
->  		s->output_h = pstate->crtc_h;
->  
-> -#define SE_N_PHASE 4
-> -#define SE_SHIFT_N_PHASE 12
-> -		/* Calculate initial_phase and delta_phase for horizontal. */
-> -		phase = s->input_w;
-> -		s->h_init_phase =
-> -				((phase << SE_N_PHASE) / s->output_w + 1) / 2;
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 92c40c250a34..bb95a3273ca2 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -103,8 +103,6 @@ struct imx6_pcie {
+>  
+>  /* PCIe Port Logic registers (memory-mapped) */
+>  #define PL_OFFSET 0x700
+> -#define PCIE_PHY_DEBUG_R0 (PL_OFFSET + 0x28)
+> -#define PCIE_PHY_DEBUG_R1 (PL_OFFSET + 0x2c)
+>  
+>  #define PCIE_PHY_CTRL (PL_OFFSET + 0x114)
+>  #define PCIE_PHY_CTRL_DATA_LOC 0
+> @@ -839,8 +837,8 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
+>  
+>  err_reset_phy:
+> >  	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
+> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R0),
+> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R1));
+> > +		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
+> > +		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
+> >  	imx6_pcie_reset_phy(imx6_pcie);
+> >  	return ret;
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 31f6331ca46f..086e87a40316 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -14,12 +14,6 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> -/* PCIe Port Logic registers */
+> > -#define PLR_OFFSET			0x700
+> > -#define PCIE_PHY_DEBUG_R1		(PLR_OFFSET + 0x2c)
+> > -#define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+> > -#define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
 > -
-> -		phase = s->input_w;
-> -		phase <<= (SE_SHIFT_N_PHASE + SE_N_PHASE);
-> -		s->h_delta_phase = phase / s->output_w;
-> -
-> -		/* Same for vertical. */
-> -		phase = s->input_h;
-> -		s->v_init_phase =
-> -				((phase << SE_N_PHASE) / s->output_h + 1) / 2;
-> -
-> -		phase = s->input_h;
-> -		phase <<= (SE_SHIFT_N_PHASE + SE_N_PHASE);
-> -		s->v_delta_phase = phase / s->output_h;
-> -#undef SE_N_PHASE
-> -#undef SE_SHIFT_N_PHASE
-> +
-> +		malidp_set_se_config_phase(s);
->  		s->plane_src_id = mp->layer->id;
->  	}
->  
-> diff --git a/drivers/gpu/drm/arm/malidp_crtc.h b/drivers/gpu/drm/arm/malidp_crtc.h
-> new file mode 100644
-> index 0000000..0f056f8
-> --- /dev/null
-> +++ b/drivers/gpu/drm/arm/malidp_crtc.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
-> + *
-> + */
-> +
-> +#include "malidp_hw.h"
-> +
-> +#ifndef __MALIDP_CRTC_H__
-> +#define __MALIDP_CRTC_H__
-> +void malidp_set_se_config_phase(struct malidp_se_config *s);
-> +#endif
-> diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-> index d37ff9d..e2465e9 100644
-> --- a/drivers/gpu/drm/arm/malidp_drv.c
-> +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> @@ -138,7 +138,7 @@ static void malidp_atomic_commit_se_config(struct drm_crtc *crtc,
->  	u32 val;
->  
->  	/* Set SE_CONTROL */
-> -	if (!s->scale_enable) {
-> +	if (!s->scale_enable && !s->wb_scale_enable) {
->  		val = malidp_hw_read(hwdev, se_control);
->  		val &= ~MALIDP_SE_SCALING_EN;
->  		malidp_hw_write(hwdev, val, se_control);
-> @@ -147,12 +147,16 @@ static void malidp_atomic_commit_se_config(struct drm_crtc *crtc,
->  
->  	hwdev->hw->se_set_scaling_coeffs(hwdev, s, old_s);
->  	val = malidp_hw_read(hwdev, se_control);
-> -	val |= MALIDP_SE_SCALING_EN | MALIDP_SE_ALPHA_EN;
-> +	val |= MALIDP_SE_SCALING_EN;
->  
->  	val &= ~MALIDP_SE_ENH(MALIDP_SE_ENH_MASK);
->  	val |= s->enhancer_enable ? MALIDP_SE_ENH(3) : 0;
->  
-> -	val |= MALIDP_SE_RGBO_IF_EN;
-> +	if (s->scale_enable)
-> +		val |= (MALIDP_SE_RGBO_IF_EN | MALIDP_SE_ALPHA_EN);
-> +	else
-> +		val &= ~((MALIDP_SE_RGBO_IF_EN | MALIDP_SE_ALPHA_EN));
-> +
->  	malidp_hw_write(hwdev, val, se_control);
->  
->  	/* Set IN_SIZE & OUT_SIZE. */
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-> index 1a36718..6f59c0e 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.c
-> +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> @@ -497,13 +497,18 @@ static long malidp500_se_calc_mclk(struct malidp_hw_device *hwdev,
->  	return ret;
->  }
->  
-> -static int malidp500_enable_memwrite(struct malidp_hw_device *hwdev,
-> -				     dma_addr_t *addrs, s32 *pitches,
-> -				     int num_planes, u16 w, u16 h, u32 fmt_id,
-> -				     const s16 *rgb2yuv_coeffs)
-> +static int malidp500_enable_memwrite(struct malidp_hw_device *hwdev, u16 w, u16 h,
-> +				     struct malidp_mw_connector_state *mw_state)
->  {
-> +
-> +	int num_planes = mw_state->n_planes;
-> +	dma_addr_t *addrs = mw_state->addrs;
-> +	s32 *pitches = mw_state->pitches;
-> +	u32 fmt_id = mw_state->format;
->  	u32 base = MALIDP500_SE_MEMWRITE_BASE;
->  	u32 de_base = malidp_get_block_base(hwdev, MALIDP_DE_BLOCK);
-> +	const s16 *rgb2yuv_coeffs = !mw_state->rgb2yuv_initialized ?
-> +					mw_state->rgb2yuv_coeffs : NULL;
->  
->  	/* enable the scaling engine block */
->  	malidp_hw_setbits(hwdev, MALIDP_SCALE_ENGINE_EN, de_base + MALIDP_DE_DISPLAY_FUNC);
-> @@ -847,13 +852,18 @@ static long malidp550_se_calc_mclk(struct malidp_hw_device *hwdev,
->  	return ret;
->  }
->  
-> -static int malidp550_enable_memwrite(struct malidp_hw_device *hwdev,
-> -				     dma_addr_t *addrs, s32 *pitches,
-> -				     int num_planes, u16 w, u16 h, u32 fmt_id,
-> -				     const s16 *rgb2yuv_coeffs)
-> +static int malidp550_enable_memwrite(struct malidp_hw_device *hwdev, u16 w, u16 h,
-> +				     struct malidp_mw_connector_state *mw_state)
->  {
-> +	int num_planes = mw_state->n_planes;
-> +	bool scaling = mw_state->wb_scale_enable;
-> +	dma_addr_t *addrs = mw_state->addrs;
-> +	s32 *pitches = mw_state->pitches;
-> +	u32 fmt_id = mw_state->format;
->  	u32 base = MALIDP550_SE_MEMWRITE_BASE;
->  	u32 de_base = malidp_get_block_base(hwdev, MALIDP_DE_BLOCK);
-> +	const s16 *rgb2yuv_coeffs = !mw_state->rgb2yuv_initialized ?
-> +					mw_state->rgb2yuv_coeffs : NULL;
->  
->  	/* enable the scaling engine block */
->  	malidp_hw_setbits(hwdev, MALIDP_SCALE_ENGINE_EN, de_base + MALIDP_DE_DISPLAY_FUNC);
-> @@ -876,10 +886,18 @@ static int malidp550_enable_memwrite(struct malidp_hw_device *hwdev,
->  		WARN(1, "Invalid number of planes");
->  	}
->  
-> -	malidp_hw_write(hwdev, MALIDP_DE_H_ACTIVE(w) | MALIDP_DE_V_ACTIVE(h),
-> -			MALIDP550_SE_MEMWRITE_OUT_SIZE);
-> -	malidp_hw_setbits(hwdev, MALIDP550_SE_MEMWRITE_ONESHOT | MALIDP_SE_MEMWRITE_EN,
-> -			  MALIDP550_SE_CONTROL);
-> +	malidp_hw_clearbits(hwdev, MALIDP_SE_MEMWRITE_EN | MALIDP_SE_MEMWRITE_SCL_EN,
-> +			    MALIDP550_SE_CONTROL);
-> +
-> +	if (scaling) {
-> +		malidp_hw_setbits(hwdev, MALIDP550_SE_MEMWRITE_ONESHOT | MALIDP_SE_MEMWRITE_SCL_EN,
-> +				  MALIDP550_SE_CONTROL);
-> +	} else {
-> +		malidp_hw_write(hwdev, MALIDP_DE_H_ACTIVE(w) | MALIDP_DE_V_ACTIVE(h),
-> +				MALIDP550_SE_MEMWRITE_OUT_SIZE);
-> +		malidp_hw_setbits(hwdev, MALIDP550_SE_MEMWRITE_ONESHOT | MALIDP_SE_MEMWRITE_EN,
-> +				  MALIDP550_SE_CONTROL);
-> +	}
->  
->  	if (rgb2yuv_coeffs) {
->  		int i;
-> @@ -897,7 +915,8 @@ static void malidp550_disable_memwrite(struct malidp_hw_device *hwdev)
->  {
->  	u32 base = malidp_get_block_base(hwdev, MALIDP_DE_BLOCK);
->  
-> -	malidp_hw_clearbits(hwdev, MALIDP550_SE_MEMWRITE_ONESHOT | MALIDP_SE_MEMWRITE_EN,
-> +	malidp_hw_clearbits(hwdev,
-> +			    MALIDP550_SE_MEMWRITE_ONESHOT | MALIDP_SE_MEMWRITE_EN | MALIDP_SE_MEMWRITE_SCL_EN,
->  			    MALIDP550_SE_CONTROL);
->  	malidp_hw_clearbits(hwdev, MALIDP_SCALE_ENGINE_EN, base + MALIDP_DE_DISPLAY_FUNC);
->  }
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.h b/drivers/gpu/drm/arm/malidp_hw.h
-> index 8352a2e..61ddcb5 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.h
-> +++ b/drivers/gpu/drm/arm/malidp_hw.h
-> @@ -85,6 +85,7 @@ enum malidp_scaling_coeff_set {
->  struct malidp_se_config {
->  	u8 scale_enable : 1;
->  	u8 enhancer_enable : 1;
-> +	u8 wb_scale_enable : 1;
->  	u8 hcoeff : 3;
->  	u8 vcoeff : 3;
->  	u8 plane_src_id;
-> @@ -94,6 +95,19 @@ struct malidp_se_config {
->  	u32 v_init_phase, v_delta_phase;
->  };
->  
-> +#define to_mw_state(_state) (struct malidp_mw_connector_state *)(_state)
-> +
-> +struct malidp_mw_connector_state {
-> +	struct drm_connector_state base;
-> +	dma_addr_t addrs[2];
-> +	s32 pitches[2];
-> +	u8 format;
-> +	u8 n_planes;
-> +	bool rgb2yuv_initialized;
-> +	const s16 *rgb2yuv_coeffs;
-> +	bool wb_scale_enable;
-> +};
-> +
->  /* regmap features */
->  #define MALIDP_REGMAP_HAS_CLEARIRQ				BIT(0)
->  #define MALIDP_DEVICE_AFBC_SUPPORT_SPLIT			BIT(1)
-> @@ -206,9 +220,8 @@ struct malidp_hw {
->  	 * @param h - height of the output frame
->  	 * @param fmt_id - internal format ID of output buffer
->  	 */
-> -	int (*enable_memwrite)(struct malidp_hw_device *hwdev, dma_addr_t *addrs,
-> -			       s32 *pitches, int num_planes, u16 w, u16 h, u32 fmt_id,
-> -			       const s16 *rgb2yuv_coeffs);
-> +	int (*enable_memwrite)(struct malidp_hw_device *hwdev, u16 w, u16 h,
-> +			       struct malidp_mw_connector_state *mw_state);
->  
->  	/*
->  	 * Disable the writing to memory of the next frame's content.
-> diff --git a/drivers/gpu/drm/arm/malidp_mw.c b/drivers/gpu/drm/arm/malidp_mw.c
-> index 2865f7a..2120ef1 100644
-> --- a/drivers/gpu/drm/arm/malidp_mw.c
-> +++ b/drivers/gpu/drm/arm/malidp_mw.c
-> @@ -13,23 +13,13 @@
->  #include <drm/drm_gem_cma_helper.h>
->  #include <drm/drmP.h>
->  #include <drm/drm_writeback.h>
-> +#include <video/videomode.h>
->  
-> +#include "malidp_crtc.h"
->  #include "malidp_drv.h"
->  #include "malidp_hw.h"
->  #include "malidp_mw.h"
->  
-> -#define to_mw_state(_state) (struct malidp_mw_connector_state *)(_state)
-> -
-> -struct malidp_mw_connector_state {
-> -	struct drm_connector_state base;
-> -	dma_addr_t addrs[2];
-> -	s32 pitches[2];
-> -	u8 format;
-> -	u8 n_planes;
-> -	bool rgb2yuv_initialized;
-> -	const s16 *rgb2yuv_coeffs;
-> -};
-> -
->  static int malidp_mw_connector_get_modes(struct drm_connector *connector)
->  {
->  	struct drm_device *dev = connector->dev;
-> @@ -126,16 +116,76 @@ malidp_mw_encoder_atomic_check(struct drm_encoder *encoder,
->  			       struct drm_connector_state *conn_state)
->  {
->  	struct malidp_mw_connector_state *mw_state = to_mw_state(conn_state);
-> +	struct malidp_crtc_state *cs = to_malidp_crtc_state(crtc_state);
-> +	struct malidp_se_config *s = &cs->scaler_config;
->  	struct malidp_drm *malidp = encoder->dev->dev_private;
->  	struct drm_framebuffer *fb;
-> -	int i, n_planes;
-> +	int i, n_planes, ret;
-> +	struct malidp_hw_device *hwdev = malidp->dev;
-> +	struct videomode vm;
-> +	u32 h_upscale_factor = 0; /* U16.16 */
-> +	u32 v_upscale_factor = 0; /* U16.16 */
-> +
-> +	s->wb_scale_enable = 0;
->  
->  	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
->  		return 0;
->  
-> +
-> +	if ((conn_state->writeback_w != crtc_state->mode.hdisplay) ||
-> +	    (conn_state->writeback_h != crtc_state->mode.vdisplay)) {
-
-Now that the default (zero) for writeback_w and writeback_h means "not
-set by userspace, don't scale" I think you need to revisit this check.
-Otherwise the writeback scaling gets enabled all the time.
-
-Best regards,
-Liviu
-
-
-> +		s->wb_scale_enable = 1;
-> +		mw_state->wb_scale_enable = true;
-> +	}
-> +
->  	fb = conn_state->writeback_job->fb;
-> -	if ((fb->width != crtc_state->mode.hdisplay) ||
-> -	    (fb->height != crtc_state->mode.vdisplay)) {
-> +	if (s->wb_scale_enable) {
-> +		if (s->scale_enable) {
-> +			DRM_DEBUG_KMS("Attempting to scale on writeback while scaling a layer\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		s->input_w = crtc_state->mode.hdisplay;
-> +		s->input_h = crtc_state->mode.vdisplay;
-> +		s->output_w = conn_state->writeback_w;
-> +		s->output_h = conn_state->writeback_h;
-> +
-> +		if (fb->width < s->output_w || fb->height < s->output_h) {
-> +			DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
-> +					fb->width, fb->height);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if ((s->output_w > s->input_w) || (s->output_h > s->input_h)) {
-> +			DRM_DEBUG_KMS("Upscaling on writeback is not supported\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/*
-> +		 * Convert crtc_[w|h] to U32.32, then divide by U16.16 src_[w|h]
-> +		 * to get the U16.16 result.
-> +		 */
-> +		h_upscale_factor = div_u64((u64)s->output_w << 32,
-> +					   (u32)s->input_w << 16);
-> +		v_upscale_factor = div_u64((u64)s->output_h << 32,
-> +					   (u32)s->input_h << 16);
-> +
-> +		/* enhancer is for upscaling */
-> +		s->enhancer_enable = 0;
-> +
-> +		malidp_set_se_config_phase(s);
-> +
-> +		s->hcoeff = malidp_se_select_coeffs(h_upscale_factor);
-> +		s->vcoeff = malidp_se_select_coeffs(v_upscale_factor);
-> +
-> +		drm_display_mode_to_videomode(&crtc_state->adjusted_mode, &vm);
-> +		ret = hwdev->hw->se_calc_mclk(hwdev, s, &vm);
-> +		if (ret < 0)
-> +			return -EINVAL;
-> +	}
-> +
-> +	if (!s->wb_scale_enable && ((fb->width != crtc_state->mode.hdisplay) ||
-> +		       (fb->height != crtc_state->mode.vdisplay))) {
->  		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
->  				fb->width, fb->height);
->  		return -EINVAL;
-> @@ -259,11 +309,7 @@ void malidp_mw_atomic_commit(struct drm_device *drm,
->  
->  		drm_writeback_queue_job(mw_conn, conn_state->writeback_job);
->  		conn_state->writeback_job = NULL;
-> -		hwdev->hw->enable_memwrite(hwdev, mw_state->addrs,
-> -					   mw_state->pitches, mw_state->n_planes,
-> -					   fb->width, fb->height, mw_state->format,
-> -					   !mw_state->rgb2yuv_initialized ?
-> -					   mw_state->rgb2yuv_coeffs : NULL);
-> +		hwdev->hw->enable_memwrite(hwdev, fb->width, fb->height, mw_state);
->  		mw_state->rgb2yuv_initialized = !!mw_state->rgb2yuv_coeffs;
->  	} else {
->  		DRM_DEV_DEBUG_DRIVER(drm->dev, "Disable memwrite\n");
-> diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
-> index a3363f3..254aa98 100644
-> --- a/drivers/gpu/drm/arm/malidp_regs.h
-> +++ b/drivers/gpu/drm/arm/malidp_regs.h
-> @@ -73,6 +73,7 @@
->  #define   MALIDP_DISP_FUNC_CADJ		(1 << 4)
->  #define   MALIDP_DISP_FUNC_ILACED	(1 << 8)
->  #define   MALIDP_SCALE_ENGINE_EN	(1 << 16)
-> +#define   MALIDP_SE_MEMWRITE_SCL_EN	(1 << 5)
->  #define   MALIDP_SE_MEMWRITE_EN		(2 << 5)
->  
->  /* register offsets for IRQ management */
-> -- 
-> 2.7.4
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>  {
+> >  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> @@ -334,9 +328,9 @@ int dw_pcie_link_up(struct dw_pcie *pci)
+> >  	if (pci->ops->link_up)
+> >  		return pci->ops->link_up(pci);
+>  
+> > -	val = readl(pci->dbi_base + PCIE_PHY_DEBUG_R1);
+> > -	return ((val & PCIE_PHY_DEBUG_R1_LINK_UP) &&
+> > -		(!(val & PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING)));
+> > +	val = readl(pci->dbi_base + PCIE_PORT_DEBUG1);
+> > +	return ((val & PCIE_PORT_DEBUG1_LINK_UP) &&
+> > +		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
+>  }
+>  
+>  void dw_pcie_setup(struct dw_pcie *pci)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 377f4c0b52da..662bb9082c76 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -41,6 +41,9 @@
+> >  #define PCIE_PORT_DEBUG0		0x728
+> >  #define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
+> >  #define PORT_LOGIC_LTSSM_STATE_L0	0x11
+> > +#define PCIE_PORT_DEBUG1		0x72C
+> > +#define PCIE_PORT_DEBUG1_LINK_UP		(0x1 << 4)
+> > +#define PCIE_PORT_DEBUG1_LINK_IN_TRAINING	(0x1 << 29)
+>  
+> >  #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+> >  #define PORT_LOGIC_SPEED_CHANGE		BIT(17)
