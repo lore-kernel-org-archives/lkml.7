@@ -2,117 +2,244 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C37C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA13C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F872171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B50F21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfDLOGW (ORCPT
+        id S1727069AbfDLOGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:06:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34620 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfDLOGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:06:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 12 Apr 2019 10:06:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35080 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLOG3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:06:29 -0400
+Received: from [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d] (unknown [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8947A30FD82F;
-        Fri, 12 Apr 2019 14:06:21 +0000 (UTC)
-Received: from [10.13.129.79] (dhcp129-79.rdu.redhat.com [10.13.129.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4379519C6F;
-        Fri, 12 Apr 2019 14:06:21 +0000 (UTC)
-Subject: Re: perf tools:Is there any tools to found out the max latency by irq
- or cpu idle
-To:     Linhaifeng <haifeng.lin@huawei.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
-From:   William Cohen <wcohen@redhat.com>
-Message-ID: <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
-Date:   Fri, 12 Apr 2019 10:06:20 -0400
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1FCE3281156;
+        Fri, 12 Apr 2019 15:06:16 +0100 (BST)
+Subject: Re: [PATCH v3 2/4] drm/atomic: rename async_{update,check} to
+ amend_{update,check}
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        dnicoara@chromium.org, daniels@collabora.com,
+        alexandros.frantzis@collabora.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, tomasz Figa <tfiga@chromium.org>,
+        tina.zhang@intel.com, Sean Paul <seanpaul@google.com>,
+        kernel@collabora.com, nicholas.kazlauskas@amd.com,
+        =?UTF-8?Q?St=c3=a9phane_Marchesin?= <marcheu@google.com>,
+        Gustavo Padovan <gustavo.padovan@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        linux-doc@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-rockchip@lists.infradead.org,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Eric Anholt <eric@anholt.net>, Leo Li <sunpeng.li@amd.com>,
+        linux-arm-msm@vger.kernel.org,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20190412125827.5877-1-helen.koike@collabora.com>
+ <20190412125827.5877-3-helen.koike@collabora.com>
+ <20190412154957.558e49f8@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <bda69249-f193-9dbc-5186-7139fb2c365a@collabora.com>
+Date:   Fri, 12 Apr 2019 11:06:13 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
+In-Reply-To: <20190412154957.558e49f8@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 12 Apr 2019 14:06:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 8:57 PM, Linhaifeng wrote:
-> Hi, 
-> I have a single thread application like this:
+Hi Boris,
+
+On 4/12/19 10:49 AM, Boris Brezillon wrote:
+> Hi Helen,
 > 
-> While (1) {
->     start = rdtsc();
->     sqrt (1024);      
-> 　　end = rdtsc();
-> 　　cycles = end – start;
-> 　　printf("cycles: %d-%02d-%02d %02d:%02d:%02d: %lu\n", 
-> 　　　　　　1900+timeinfo->tm_year, 1+timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
-> 　　　　　　cycles);
-> }
-> It print the cycles of sqrt every second and run with taskset –c 1 ./sqrt.
-> The result of test is:
+> On Fri, 12 Apr 2019 09:58:25 -0300
+> Helen Koike <helen.koike@collabora.com> wrote:
 > 
-> sqrt 2019-04-10 23:53:50: 43968
-> sqrt 2019-04-10 23:53:51: 44060
-> sqrt 2019-04-10 23:53:52: 49012
-> sqrt 2019-04-10 23:53:53: 38172
-> sqrt 2019-04-10 23:53:54: 131081408
-> sqrt 2019-04-10 23:53:55: 43600
-> sqrt 2019-04-10 23:53:56: 46704
-> sqrt 2019-04-10 23:53:57: 46880
-> sqrt 2019-04-10 23:53:58: 44332
-> ……
-> sqrt 2019-04-10 02:17:15: 131081408
-> ……
-> sqrt 2019-04-10 04:40:35: 131081408
-> ……
+>> Asynchronous update is the ability change the hw state at any time, not
+>> only during vblank.
+>>
+>> Amend mode is the ability to perform 1000 commits to be applied as soon
+>> as possible without waiting for 1000 vblanks.
+>>
+>> async updates can be seen as amend, but the opposite is not true.
+>>
+>> &drm_plane_helper_funcs.atomic_async_{update,check}() was being used by
+>> drivers to implement amend and not async. So rename them to amend.
+>>
+>> Also improve docs explaining the difference.
+>>
+>> If asynchronous is required, normal page flip can be performed using
+>> DRM_MODE_PAGE_FLIP_ASYNC flag.
+>>
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>>
+>> ---
+>> Hello,
+>>
+>> I would like to officially clarify what async update means by adding it
+>> in the docs.
+>> Please correct me if I am wrong, but the current async_{update,check}
+>> callbacks are being used to do amend (the legacy cursor behavior), i.e.
+>> to allow 1000 updates without waiting for 1000 vblanks.
 > 
-> Every 2hour23min there would be a large cycles. I use perf sched not found any sched_switch events.
+> Right now, the semantic of async update is driver dependent. Some
+> drivers will amend the last commit touching that plane (amend semantic),
+> others will update the plane buffer immediately which might cause
+> tearing (async semantic).
 
-Hi,
-
-The fact that it is the same value 131081408 every 2 hours 23 minutes looks suspect. One would expect some variation in the counts.  It looks like there is some rollover or overflow issue.  It would be helpful to print out the start and end values to see what is going on with the raw rdstc values.  Maybe the thread is being moved between processors and the TSC are out of sync.  What particular processor model was this running on? Was this running on physical hardware or inside a kvm guest? 
-
-According to the Intel 64 and IA-32 Architecture Software Devloper's Manual Volume 3 (325384-sdm-vol-3abcd.pdf):
-
-The RDTSC instruction reads the time-stamp counter and is guaranteed to return a monotonically increasing
-unique value whenever executed, except for a 64-bit counter wraparound. Intel guarantees that the time-stamp
-counter will not wraparound within 10 years after being reset. The period for counter wrap is longer for Pentium 4,
-Intel Xeon, P6 family, and Pentium processors.
-
--Will Cohen
-
+In my pov, async updates holds the properties of an amend update, so all
+async updates we have are amend, but the opposite is not true.
 
 > 
-> L2GW_2680:/home/fsp/zn # perf sched record -C 6-11 -o perf.sched
-> ^C[ perf record: Woken up 64 times to write data ]
-> [ perf record: Captured and wrote 204.878 MB perf.sched (1911189 samples) ]
+>>
+>> So I would like to clarify this in the docs and rename the current
+>> callbacks to reflect this behaviour.
 > 
-> L2GW_2680:/home/fsp/zn # perf sched latency -i perf.sched 
+> I'm all for this clarification, but I don't think renaming the async
+> hooks is a good idea, since some drivers will not do real 'amend'. So,
+> you're changing the name, but it's still confusing :-).
 > 
-> -----------------------------------------------------------------------------------------------------------------
->   Task                  |   Runtime ms  | Switches | Average delay ms | Maximum delay ms | Maximum delay at       |
-> -----------------------------------------------------------------------------------------------------------------
-> -----------------------------------------------------------------------------------------------------------------
->   TOTAL:                |      0.000 ms |        0 |
-> ---------------------------------------------------
-> 
-> 
-> 
-> Is there any other tools of perf to found out the max latency by irq or cpu idle ?
-> 
-> 
+> How about adding new hooks (and/or flags) for the AMEND case, and
+> keeping the async path untouched. We can then let drivers that
+> currently implement async as amend implement the amend hooks instead.
+> Once you've done that, you can hook that up to the legacy cursor update
+> path so that it first tries one then the other and finally falls back
+> to a sync update if none of ASYNC/AMEND is possible.
 
+I kinda did this (I re-introduced async in the last patch in the
+series). I know this order is confusing, but as rockchip doesn't
+implement true async, I would have to do a bunch of modifs at once to
+keep the commits consistent, but I can re-work on that if it makes
+things clearer.
+
+> 
+>>
+>> I also see that for real async updates, the flag
+>> DRM_MODE_PAGE_FLIP_ASYNC can be used in a normal sync update (it is
+>> already being used by some drivers actually, in the atomic path, not only
+>> in the legacy page flip, at least is what I understood from
+>> amdgpu_dm_atomic_commit_tail() implementation).
+> 
+> Yes, right now, async does not necessarily imply non-block, but
+> Daniel seemed to think that most users want non-block when they do an
+> async page flip, so maybe it should be clarified too.
+
+users could combine NONBLOCK flag with PAGE_FLIP_ASYNC, no? (we need to
+add code for it of course).
+
+Thanks
+Helen
+
+> 
+> Regards,
+> 
+> Boris
+> 
