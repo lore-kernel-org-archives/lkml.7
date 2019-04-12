@@ -2,136 +2,131 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426BCC10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AA2C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E462084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B3B20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="s5p+jvu7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yRPZ6tuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfDLBFh (ORCPT
+        id S1726708AbfDLBMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 21:05:37 -0400
-Received: from mail-eopbgr140045.outbound.protection.outlook.com ([40.107.14.45]:54322
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726636AbfDLBFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 21:05:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hKMin34p7ppiP4SLOVfYqnmQ0h/i5WWOwlshgaJQMtg=;
- b=s5p+jvu7nnPtBGBdOoV0DvGwvNo860sVdW9gGPQTwuITiCS/g2LqTHNIyJsnBYkSNF1YT+AaBsLVhHuyXEz5OAVpw2ICPsRZm9NLHznGyIlOV5ssGlcMMiNS+L8/ABQt2SFTnClmi4KMy6R7v8s9O+jBdKwnO5TygXLvrNrkJyM=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3820.eurprd04.prod.outlook.com (52.134.65.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Fri, 12 Apr 2019 01:05:32 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1792.016; Fri, 12 Apr 2019
- 01:05:32 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
- irq function
-Thread-Topic: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
- irq function
-Thread-Index: AQHU7pESFiPArqSQREy0TQYaxheiu6Y2lGmAgAElItA=
-Date:   Fri, 12 Apr 2019 01:05:32 +0000
-Message-ID: <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
- <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
- <20190411073252.GC3050@dragon>
-In-Reply-To: <20190411073252.GC3050@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 33efc271-86e7-4bd6-12ae-08d6bee2f633
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3820;
-x-ms-traffictypediagnostic: DB3PR0402MB3820:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0402MB3820639E0FA43EDBBDEAD34FF5280@DB3PR0402MB3820.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0005B05917
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(396003)(39860400002)(346002)(13464003)(189003)(199004)(8676002)(52536014)(81166006)(81156014)(2906002)(8936002)(6306002)(6506007)(9686003)(102836004)(7416002)(55016002)(7696005)(53546011)(76176011)(54906003)(110136005)(74316002)(305945005)(86362001)(229853002)(5660300002)(7736002)(316002)(966005)(2501003)(99286004)(478600001)(14454004)(6436002)(66066001)(486006)(6116002)(476003)(14444005)(4326008)(44832011)(5024004)(256004)(3846002)(25786009)(446003)(11346002)(97736004)(71190400001)(71200400001)(68736007)(106356001)(33656002)(105586002)(186003)(6246003)(53936002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3820;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mX+J1AORD+ao1RBcB7PdWDeJedzvups6pLs2aL9rWoBv772+5kec3EaANq0HyAW9+LvuSiD1RkmjNY7OLlg1Q0Aq4CAUBWbrZnRiqDdjcFa2JY4AzjG5K5FuaBxeWwRUWL+EtQaHtXIN/cf/polymKR1nU3pJZPkMFC3PFJOVacwXs0rCdGGgT+lnOvujlMFdih7SEMvpmYl6D5M8wgD4rxN6RHPVknwpXiAvlPwFf4vAowROlElS3u6A8F1yCe2DyJCm3ucjWeWkchd1TxDU9htXBn69QEyQ51C1YwQ13/KOxMeo2PuAfVP1gRS74fZR+TqM8WdyJ0DX3/bwE1P8iP0XFIwtMue9RjyiX/nsRDSjoBvkueNnnIGf1gSmtSAE+1QkMdklLJXeRu7ZdjdLfsZNp7BtRi1W11HvbuaeUU=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 11 Apr 2019 21:12:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40770 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfDLBMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 21:12:44 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so8942807wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 18:12:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+6t9fDuLGcu+F3sQB7g2ficOIVeXLxhNqKwl9GmNOHE=;
+        b=yRPZ6tuIJ8qTSy3AYcGz9Vimw4SGUiH6/6xdFBD6xllQCoGYzJK2iZPSTH+MvV4ACF
+         n+p2vkJMXfaVFYl58duMQhiVMEFvgoT0h/Y7FcOYFMVDQTVD1C6363Ute6pSRt5d8L7V
+         5MKjlkiwuTBZUf66CFNKvRwCeDop6gJO/34nKaxo82HjoMdSFAFe9WygWUhYVecdgoXZ
+         Nz7GUKzw6dtDaM3ogJ9W5sZ6PJH3QTUDgvmMyVqMQ2Y6TpV7+jz5C9FMCyMOpgBVcZoW
+         xuRVh5uv46cC50DiezLLSziaED0hZIEBpqHYE43YuFWIA9KCsbvPjBG2lQH1Awdi23y+
+         Z1dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+6t9fDuLGcu+F3sQB7g2ficOIVeXLxhNqKwl9GmNOHE=;
+        b=DkDROtxCBFwG4ZhjGRAUwgNhAXL1lUv8xRVDprPboRJwNjx6jtlnyCPavPdP+ZDj1L
+         ZzWmsNqIfc2MwSTzpU6S1UQObJiNdQ+oxOrxLXHzKx6F9f6K45oPZpYODKDTdyRU8hs5
+         WYQemP0gQYEiGekRuMuNFEtW3IvMpvcQxSgB+t5Zk/s04Wl8NG9i+wBmoM7l4BDfmoIi
+         9BbXef2OMCjvdBU36g8dEpKOmbAbjbgNodiFFhd5PWI0pto/LkvAWD7Vyws5sd8R9+ZE
+         q8liiD8LHRv+CWC2Wi7WDqvJwtuQW+0Jpbb8mYqnVOwsB8g1JRTGOl279S0Z2TuIZ7HC
+         dbcA==
+X-Gm-Message-State: APjAAAU3SSjSJjyiHfgeWbOP0Oo0xrrkP2/OwRYVODiDFeFP7ihhJTFn
+        TRqcBa/bDzINXGhpbktBGPBUjz+dlsFwac3rimEVpA==
+X-Google-Smtp-Source: APXvYqwYuRDeUgwOa9EiKKBjsIxY1nRhXsSMG4LlmEAt0MXG+Zv9NmSEmInkrpRSEySYfHClcM4otK9ut+dM6HxszQ4=
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr8196227wmh.81.1555031562719;
+ Thu, 11 Apr 2019 18:12:42 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33efc271-86e7-4bd6-12ae-08d6bee2f633
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 01:05:32.1221
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3820
+References: <20190329041409.70138-1-chenyu56@huawei.com> <20190329041409.70138-10-chenyu56@huawei.com>
+In-Reply-To: <20190329041409.70138-10-chenyu56@huawei.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 11 Apr 2019 18:12:30 -0700
+Message-ID: <CALAqxLUQW03waz0LETcnYpc7qhm=RG6RfwbGVZ7MQz00jTZSWQ@mail.gmail.com>
+Subject: Re: [PATCH v5 09/13] usb: roles: Add usb role switch notifier.
+To:     Yu Chen <chenyu56@huawei.com>
+Cc:     Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Zhuangluan Su <suzhuangluan@hisilicon.com>,
+        Kongfei <kongfei@hisilicon.com>,
+        "Liuyu (R)" <liuyu712@hisilicon.com>, wanghu17@hisilicon.com,
+        butao <butao@hisilicon.com>, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com,
+        Li Pengcheng <lipengcheng8@huawei.com>,
+        songxiaowei@hisilicon.com, YiPing Xu <xuyiping@hisilicon.com>,
+        xuyoujun4@huawei.com, Yudongbin <yudongbin@hisilicon.com>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sIEFsZXhhbmRyZQ0KCUFzIGkuTVggU0NVIGdlbmVyYWwgaXJxIGZ1bmN0aW9uIGlzIHBp
-Y2tlZCB1cCBieSBTaGF3biwgY291bGQgeW91IHBsZWFzZSBhbHNvIHBpY2sgdXAgYmVsb3cgaS5N
-WCBTQyBSVEMgYWxhcm0gc3VwcG9ydCBwYXRjaCA/DQoJaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wYXRjaC8xMDg5MDUyNS8gDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hh
-d25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxOcTqNNTCMTHI1SAxNTozMw0KPiBUbzogQW5z
-b24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOw0KPiBrZXJuZWxA
-cGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsgYS56dW1tb0B0b3dlcnRlY2guaXQ7
-DQo+IGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tOyBBaXNoZW5nIERvbmcgPGFpc2hlbmcu
-ZG9uZ0BueHAuY29tPjsNCj4gdWxmLmhhbnNzb25AbGluYXJvLm9yZzsgc2JveWRAa2VybmVsLm9y
-ZzsgUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+Ow0KPiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwu
-YmFsdXRhQG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsgbGludXgtDQo+IHJ0Y0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0ggVjcgMi80XSBmaXJtd2FyZTog
-aW14OiBlbmFibGUgaW14IHNjdSBnZW5lcmFsIGlycQ0KPiBmdW5jdGlvbg0KPiANCj4gV0FSTklO
-RzogVGhpcyBlbWFpbCB3YXMgY3JlYXRlZCBvdXRzaWRlIG9mIE5YUC4gRE8gTk9UIENMSUNLIGxp
-bmtzIG9yDQo+IGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5k
-IGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiANCj4gT24gVHVlLCBBcHIgMDks
-IDIwMTkgYXQgMDQ6NTk6NTVBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gVGhlIFN5
-c3RlbSBDb250cm9sbGVyIEZpcm13YXJlIChTQ0ZXKSBjb250cm9scyBSVEMsIHRoZXJtYWwgYW5k
-IFdET0cNCj4gPiBldGMuLCB0aGVzZSByZXNvdXJjZXMnIGludGVycnVwdCBmdW5jdGlvbiBhcmUg
-bWFuYWdlZCBieSBTQ1UuIFdoZW4gYW55DQo+ID4gSVJRIHBlbmRpbmcsIFNDVSB3aWxsIG5vdGlm
-eSBMaW51eCB2aWEgTVUgZ2VuZXJhbCBpbnRlcnJ1cHQgY2hhbm5lbA0KPiA+ICMzLCBhbmQgTGlu
-dXgga2VybmVsIG5lZWRzIHRvIGNhbGwgU0NVIEFQSXMgdG8gZ2V0IElSUSBzdGF0dXMgYW5kDQo+
-ID4gbm90aWZ5IGVhY2ggbW9kdWxlIHRvIGhhbmRsZSB0aGUgaW50ZXJydXB0Lg0KPiA+DQo+ID4g
-U2luY2UgdGhlcmUgaXMgbm8gZGF0YSB0cmFuc21pc3Npb24gZm9yIFNDVSBJUlEgbm90aWZpY2F0
-aW9uLCBzbw0KPiA+IGRvb3JiZWxsIG1vZGUgaXMgdXNlZCBmb3IgdGhpcyBNVSBjaGFubmVsLCBh
-bmQgU0NVIGRyaXZlciB3aWxsIHVzZQ0KPiA+IG5vdGlmaWVyIG1lY2hhbmlzbSB0byBicm9hZGNh
-c3QgdG8gZXZlcnkgbW9kdWxlIHdoaWNoIHJlZ2lzdGVycyB0aGUNCj4gPiBTQ1UgYmxvY2sgbm90
-aWZpZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
-bnhwLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhw
-LmNvbT4NCj4gDQo+IEFwcGxpZWQsIHRoYW5rcy4NCg==
+On Thu, Mar 28, 2019 at 9:14 PM Yu Chen <chenyu56@huawei.com> wrote:
+>
+> This patch adds notifier for drivers want to be informed of the usb role
+> switch.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+
+Hey Yu Chen!
+   Thanks again for sending this patch out! As mentioned in my
+comments with the other patches, I've got one proposal I wanted to
+share to try to avoid  state initialization races that I've seen with
+this patchset.
+
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..e2caaa665d6e 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+>
+> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+> +                                     struct notifier_block *nb)
+> +{
+> +       return blocking_notifier_chain_register(&sw->nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
+
+As noted earlier, one issue I've seen is that the hisi_hikey_usb
+driver's notifier may not get called early enough to receive
+notification of the initial usb state.
+
+It seems like on registration here, we should take the lock, read the
+role state and immediately call the notifier to properly initialize
+it? I suspect that should close the window for any state races around
+driver probe timings and
+
+Does that make sense? I have roughly prototyped this but need to do
+additional testing.
+
+thanks
+-john
