@@ -2,283 +2,294 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0A6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8148C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614302171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555074649;
-	bh=9TYnNOkKN7PclYqzIvTgdBQJt2JY7yg9K+3L9vIW/0E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tdTNEkWb4/W5m14LpC/lpNDJ7x/NZXWE1yj4QVfRlL6iuTj+8HWRNC+ejZ2G0t9j2
-	 owao5mMpABa1I4QlS0aPj+QNDbofzVdgLPPG4bGdZnQvcYOo4bn/5GHwn1zS/XVKK4
-	 xqTlJ3ThI49/D+T6kNXnvhRx6scvTFYmDG6EmZdE=
+	by mail.kernel.org (Postfix) with ESMTP id 8F84720850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfDLNKs (ORCPT
+        id S1727807AbfDLNLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:10:48 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44307 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfDLNKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:10:47 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y7so11853741wrn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 06:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Pp2wCUtfhGtn1pGb5cuDWo7L+B1L/GDnvM/SuwdnAjE=;
-        b=DkmNeXYimlWU7fHG/+/674XhqOfIAQgCzrGNbt6aPTrYB93ff+GlRdbAN0Lrr2KS49
-         YfR/rHYRRUoWVqwG2EUBR8QjBCAtSWR2Dw7UHGHHvWqsR+xIG3jI8RY2t37uFX+OTwq9
-         S2hNb/XpqmyFDfMnzcYRhbsHtsUjByx/+W5LrRT8PX1Ng0HjdZ7KjDCeXjsBpS4owgVz
-         wBAuJYmw93OtIkLiEk/qvZZYugv8bYRtd6GYjRLbqGmlhe0qN3owcPHOk5S5gH6/UwBE
-         X5o43mfk94puN7Vo8CGHsqE4yCwod/WlOoUedqdT6eNKQeW79xYjxIzdvLRJwF4pczB3
-         851g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Pp2wCUtfhGtn1pGb5cuDWo7L+B1L/GDnvM/SuwdnAjE=;
-        b=AZnK7toP+lc2EynyRD77cNVS3cA1AsBG1WbJC/rhFtgQTyhIdOMXjty56KdMKL8Z9D
-         yxtJnqIw3y/6K/HWeRQkLd6tr7n4qArT+F/yl4Z8bR7JATfsdhu+LbdbzCk2HTwZ0QnY
-         WFLbkbaBSTzDzg4KL6P8yDMmqudmbpeth6s6t9Q3iW7opwM7TGPHOBNfGHo+vMU95bGR
-         SxCdE/2WrpE+mfbRD1BBBBndi9QYoatkW0lZYSrn4j+MLWaesYOd+QSTyhccpYW3qJzP
-         vHymWf4U2SC+JysBn9Du4asVERcuyQpiLH/5fxAvnjGdts2GOpJWPgklEj1PR72aOeEz
-         4ZLA==
-X-Gm-Message-State: APjAAAVuvISJwVGRXbCP5JC/sKSHJzhBKjxcnw9rp/aDAI5HPu2MQR7S
-        1L07A5L+ih9uKlE8cfs3NGk=
-X-Google-Smtp-Source: APXvYqw2X6UhcbVoQ1t51P7QRmz7Sb0JTwdGtJn3iYR+zPch2/d9XQF3Lxpvlk3BGt/Bwr8XpWnYdQ==
-X-Received: by 2002:adf:f68d:: with SMTP id v13mr34956936wrp.6.1555074644897;
-        Fri, 12 Apr 2019 06:10:44 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id v184sm15681233wma.6.2019.04.12.06.10.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 06:10:44 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 15:10:42 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86 fixes
-Message-ID: <20190412131042.GA52595@gmail.com>
+        Fri, 12 Apr 2019 09:11:39 -0400
+Received: from foss.arm.com ([217.140.101.70]:60710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfDLNLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:11:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B799374;
+        Fri, 12 Apr 2019 06:11:37 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B38C63F68F;
+        Fri, 12 Apr 2019 06:11:32 -0700 (PDT)
+Subject: Re: [PATCH v5 1/6] iommu: add generic boot option iommu.dma_mode
+To:     John Garry <john.garry@huawei.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+Cc:     Hanjun Guo <guohanjun@huawei.com>
+References: <20190409125308.18304-1-thunder.leizhen@huawei.com>
+ <20190409125308.18304-2-thunder.leizhen@huawei.com>
+ <010d3cbd-ef74-ad21-c735-0af8b18955e6@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <222946ee-adcc-1311-82a7-6afc9ffbc846@arm.com>
+Date:   Fri, 12 Apr 2019 14:11:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <010d3cbd-ef74-ad21-c735-0af8b18955e6@huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 12/04/2019 11:26, John Garry wrote:
+> On 09/04/2019 13:53, Zhen Lei wrote:
+>> Currently the IOMMU dma contains 3 modes: passthrough, lazy, strict. The
+>> passthrough mode bypass the IOMMU, the lazy mode defer the invalidation
+>> of hardware TLBs, and the strict mode invalidate IOMMU hardware TLBs
+>> synchronously. The three modes are mutually exclusive. But the current
+>> boot options are confused, such as: iommu.passthrough and iommu.strict,
+>> because they are no good to be coexist. So add iommu.dma_mode.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  Documentation/admin-guide/kernel-parameters.txt | 19 ++++++++
+>>  drivers/iommu/iommu.c                           | 59 
+>> ++++++++++++++++++++-----
+>>  include/linux/iommu.h                           |  5 +++
+>>  3 files changed, 71 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt 
+>> b/Documentation/admin-guide/kernel-parameters.txt
+>> index 2b8ee90bb64470d..f7766f8ac8b9084 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -1811,6 +1811,25 @@
+>>              1 - Bypass the IOMMU for DMA.
+>>              unset - Use value of CONFIG_IOMMU_DEFAULT_PASSTHROUGH.
+>>
+>> +    iommu.dma_mode= Configure default dma mode. if unset, use the value
+>> +            of CONFIG_IOMMU_DEFAULT_PASSTHROUGH to determine
+>> +            passthrough or not.
+> 
+> To me, for unset it's unclear what we default to. So if unset and also 
+> CONFIG_IOMMU_DEFAULT_PASSTHROUGH is not set, do we get lazy or strict 
+> mode? (note: I'm ignoring backwards compatibility and interaction of 
+> iommu.strict and .passthorugh also, more below).
+> 
+> Could we considering introducing config DEFAULT_IOMMU_DMA_MODE, similar 
+> to DEFAULT_IOSCHED?
 
-Please pull the latest x86-urgent-for-linus git tree from:
+Yes, what I was suggesting was specifically refactoring the Kconfig 
+options into a single choice that controls the default (i.e. no command 
+line option provided) behaviour. AFAICS it should be fairly 
+straightforward to maintain the existing "strict" and "passthrough" 
+options (and legacy arch-specific versions thereof) to override that 
+default without introducing yet another command-line option, which I 
+think we should avoid if possible.
+>> +            Note: For historical reasons, ARM64/S390/PPC/X86 have
+>> +            their specific options. Currently, only ARM64 support
+>> +            this boot option, and hope other ARCHs to use this as
+>> +            generic boot option.
+>> +        passthrough
+>> +            Configure DMA to bypass the IOMMU by default.
+>> +        lazy
+>> +            Request that DMA unmap operations use deferred
+>> +            invalidation of hardware TLBs, for increased
+>> +            throughput at the cost of reduced device isolation.
+>> +            Will fall back to strict mode if not supported by
+>> +            the relevant IOMMU driver.
+>> +        strict
+>> +            DMA unmap operations invalidate IOMMU hardware TLBs
+>> +            synchronously.
+>> +
+>>      io7=        [HW] IO7 for Marvel based alpha systems
+>>              See comment before marvel_specify_io7 in
+>>              arch/alpha/kernel/core_marvel.c.
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 109de67d5d727c2..df1ce8e22385b48 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -38,12 +38,13 @@
+>>
+>>  static struct kset *iommu_group_kset;
+>>  static DEFINE_IDA(iommu_group_ida);
+>> +
+>>  #ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+>> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_IDENTITY;
+>> +#define IOMMU_DEFAULT_DMA_MODE        IOMMU_DMA_MODE_PASSTHROUGH
+>>  #else
+>> -static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+>> +#define IOMMU_DEFAULT_DMA_MODE        IOMMU_DMA_MODE_STRICT
+>>  #endif
+>> -static bool iommu_dma_strict __read_mostly = true;
+>> +static int iommu_default_dma_mode __read_mostly = 
+>> IOMMU_DEFAULT_DMA_MODE;
+>>
+>>  struct iommu_callback_data {
+>>      const struct iommu_ops *ops;
+>> @@ -147,20 +148,51 @@ static int __init iommu_set_def_domain_type(char 
+>> *str)
+>>      int ret;
+>>
+>>      ret = kstrtobool(str, &pt);
+>> -    if (ret)
+>> -        return ret;
+>> +    if (!ret && pt)
+>> +        iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
+>>
+>> -    iommu_def_domain_type = pt ? IOMMU_DOMAIN_IDENTITY : 
+>> IOMMU_DOMAIN_DMA;
+>> -    return 0;
+>> +    return ret;
+>>  }
+>>  early_param("iommu.passthrough", iommu_set_def_domain_type);
+>>
+>>  static int __init iommu_dma_setup(char *str)
+>>  {
+>> -    return kstrtobool(str, &iommu_dma_strict);
+>> +    bool strict;
+>> +    int ret;
+>> +
+>> +    ret = kstrtobool(str, &strict);
+>> +    if (!ret)
+>> +        iommu_default_dma_mode = strict ?
+>> +                IOMMU_DMA_MODE_STRICT : IOMMU_DMA_MODE_LAZY;
+>> +
+>> +    return ret;
+>>  }
+>>  early_param("iommu.strict", iommu_dma_setup);
+>>
+>> +static int __init iommu_dma_mode_setup(char *str)
+>> +{
+>> +    if (!str)
+>> +        goto fail;
+>> +
+>> +    if (!strncmp(str, "passthrough", 11))
+>> +        iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
+>> +    else if (!strncmp(str, "lazy", 4))
+>> +        iommu_default_dma_mode = IOMMU_DMA_MODE_LAZY;
+>> +    else if (!strncmp(str, "strict", 6))
+>> +        iommu_default_dma_mode = IOMMU_DMA_MODE_STRICT;
+>> +    else
+>> +        goto fail;
+>> +
+>> +    pr_info("Force dma mode to be %d\n", iommu_default_dma_mode);
+> 
+> What happens if the cmdline option iommu.dma_mode is passed multiple 
+> times? We get mutliple - possibily conflicting - prints, right?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+Indeed; we ended up removing such prints for the existing options here, 
+specifically because multiple messages seemed more likely to be 
+confusing than useful.
 
-   # HEAD: 5b77e95dd7790ff6c8fbf1cd8d0104ebed818a03 x86/asm: Use stricter assembly constraints in bitops
+> And do we need to have backwards compatibility, such that the setting 
+> for iommu.strict or iommu.passthrough trumps iommu.dma_mode, regardless 
+> of order?
 
-Fix typos in user-visible resctrl parameters, and also fix assembly 
-constraint bugs that might result in miscompilation.
+As above I think it would be preferable to just keep using the existing 
+options anyway. The current behaviour works out as:
 
- Thanks,
+iommu.passthrough |      Y	|	  N
+iommu.strict	  |      x	|    Y         N
+------------------|-------------|---------|--------
+MODE		  | PASSTHROUGH | STRICT  |  LAZY
 
-	Ingo
+which seems intuitive enough that a specific dma_mode option doesn't add 
+much value, and would more likely just overcomplicate things for users 
+as well as our implementation.
 
------------------->
-Alexander Potapenko (1):
-      x86/asm: Use stricter assembly constraints in bitops
+Robin.
 
-Xiaochen Shen (1):
-      x86/resctrl: Fix typos in the mba_sc mount option
-
-
- arch/x86/include/asm/bitops.h          | 41 +++++++++++++++-------------------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |  6 ++---
- 2 files changed, 21 insertions(+), 26 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index d153d570bb04..8e790ec219a5 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -36,16 +36,17 @@
-  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-  */
- 
--#define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
-+#define RLONG_ADDR(x)			 "m" (*(volatile long *) (x))
-+#define WBYTE_ADDR(x)			"+m" (*(volatile char *) (x))
- 
--#define ADDR				BITOP_ADDR(addr)
-+#define ADDR				RLONG_ADDR(addr)
- 
- /*
-  * We do the locked ops that don't return the old value as
-  * a mask operation on a byte.
-  */
- #define IS_IMMEDIATE(nr)		(__builtin_constant_p(nr))
--#define CONST_MASK_ADDR(nr, addr)	BITOP_ADDR((void *)(addr) + ((nr)>>3))
-+#define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
- #define CONST_MASK(nr)			(1 << ((nr) & 7))
- 
- /**
-@@ -73,7 +74,7 @@ set_bit(long nr, volatile unsigned long *addr)
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
--			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -88,7 +89,7 @@ set_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
-+	asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -110,8 +111,7 @@ clear_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)~CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -131,7 +131,7 @@ static __always_inline void clear_bit_unlock(long nr, volatile unsigned long *ad
- 
- static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
-@@ -139,7 +139,7 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
- 	bool negative;
- 	asm volatile(LOCK_PREFIX "andb %2,%1"
- 		CC_SET(s)
--		: CC_OUT(s) (negative), ADDR
-+		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
- 		: "ir" ((char) ~(1 << nr)) : "memory");
- 	return negative;
- }
-@@ -155,13 +155,9 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
-  * __clear_bit() is non-atomic and implies release semantics before the memory
-  * operation. It can be used for an unlock if no other CPUs can concurrently
-  * modify other bits in the word.
-- *
-- * No memory barrier is required here, because x86 cannot reorder stores past
-- * older loads. Same principle as spin_unlock.
-  */
- static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
- {
--	barrier();
- 	__clear_bit(nr, addr);
- }
- 
-@@ -176,7 +172,7 @@ static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *
-  */
- static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btc) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -196,8 +192,7 @@ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -242,8 +237,8 @@ static __always_inline bool __test_and_set_bit(long nr, volatile unsigned long *
- 
- 	asm(__ASM_SIZE(bts) " %2,%1"
- 	    CC_SET(c)
--	    : CC_OUT(c) (oldbit), ADDR
--	    : "Ir" (nr));
-+	    : CC_OUT(c) (oldbit)
-+	    : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -282,8 +277,8 @@ static __always_inline bool __test_and_clear_bit(long nr, volatile unsigned long
- 
- 	asm volatile(__ASM_SIZE(btr) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr));
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -294,8 +289,8 @@ static __always_inline bool __test_and_change_bit(long nr, volatile unsigned lon
- 
- 	asm volatile(__ASM_SIZE(btc) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr) : "memory");
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
-@@ -326,7 +321,7 @@ static __always_inline bool variable_test_bit(long nr, volatile const unsigned l
- 	asm volatile(__ASM_SIZE(bt) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
--		     : "m" (*(unsigned long *)addr), "Ir" (nr));
-+		     : "m" (*(unsigned long *)addr), "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 399601eda8e4..54b9eef3eea9 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2039,14 +2039,14 @@ static int rdt_get_tree(struct fs_context *fc)
- enum rdt_param {
- 	Opt_cdp,
- 	Opt_cdpl2,
--	Opt_mba_mpbs,
-+	Opt_mba_mbps,
- 	nr__rdt_params
- };
- 
- static const struct fs_parameter_spec rdt_param_specs[] = {
- 	fsparam_flag("cdp",		Opt_cdp),
- 	fsparam_flag("cdpl2",		Opt_cdpl2),
--	fsparam_flag("mba_mpbs",	Opt_mba_mpbs),
-+	fsparam_flag("mba_MBps",	Opt_mba_mbps),
- 	{}
- };
- 
-@@ -2072,7 +2072,7 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 	case Opt_cdpl2:
- 		ctx->enable_cdpl2 = true;
- 		return 0;
--	case Opt_mba_mpbs:
-+	case Opt_mba_mbps:
- 		if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
- 			return -EINVAL;
- 		ctx->enable_mba_mbps = true;
+>> +
+>> +    return 0;
+>> +
+>> +fail:
+>> +    pr_debug("Boot option iommu.dma_mode is incorrect, ignored\n");
+>> +    return -EINVAL;
+>> +}
+>> +early_param("iommu.dma_mode", iommu_dma_mode_setup);
+>> +
+>>  static ssize_t iommu_group_attr_show(struct kobject *kobj,
+>>                       struct attribute *__attr, char *buf)
+>>  {
+>> @@ -1102,14 +1134,17 @@ struct iommu_group 
+>> *iommu_group_get_for_dev(struct device *dev)
+>>       */
+>>      if (!group->default_domain) {
+>>          struct iommu_domain *dom;
+>> +        int def_domain_type =
+>> +            (iommu_default_dma_mode == IOMMU_DMA_MODE_PASSTHROUGH)
+>> +            ? IOMMU_DOMAIN_IDENTITY : IOMMU_DOMAIN_DMA;
+>>
+>> -        dom = __iommu_domain_alloc(dev->bus, iommu_def_domain_type);
+>> -        if (!dom && iommu_def_domain_type != IOMMU_DOMAIN_DMA) {
+>> +        dom = __iommu_domain_alloc(dev->bus, def_domain_type);
+>> +        if (!dom && def_domain_type != IOMMU_DOMAIN_DMA) {
+>>              dom = __iommu_domain_alloc(dev->bus, IOMMU_DOMAIN_DMA);
+>>              if (dom) {
+>>                  dev_warn(dev,
+>>                       "failed to allocate default IOMMU domain of type 
+>> %u; falling back to IOMMU_DOMAIN_DMA",
+>> -                     iommu_def_domain_type);
+>> +                     def_domain_type);
+>>              }
+>>          }
+>>
+>> @@ -1117,7 +1152,7 @@ struct iommu_group 
+>> *iommu_group_get_for_dev(struct device *dev)
+>>          if (!group->domain)
+>>              group->domain = dom;
+>>
+>> -        if (dom && !iommu_dma_strict) {
+>> +        if (dom && (iommu_default_dma_mode == IOMMU_DMA_MODE_LAZY)) {
+>>              int attr = 1;
+>>              iommu_domain_set_attr(dom,
+>>                            DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index ffbbc7e39ceeba3..c3f4e3416176496 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -42,6 +42,11 @@
+>>   */
+>>  #define IOMMU_PRIV    (1 << 5)
+>>
+>> +
+>> +#define IOMMU_DMA_MODE_STRICT        0x0
+>> +#define IOMMU_DMA_MODE_LAZY        0x1
+>> +#define IOMMU_DMA_MODE_PASSTHROUGH    0x2
+>> +
+>>  struct iommu_ops;
+>>  struct iommu_group;
+>>  struct bus_type;
+>>
+> 
+> 
