@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5854C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E387EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F44F2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7A12083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfDLI62 (ORCPT
+        id S1727491AbfDLI6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:58:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6732 "EHLO huawei.com"
+        Fri, 12 Apr 2019 04:58:30 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6735 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726731AbfDLI61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727278AbfDLI61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 12 Apr 2019 04:58:27 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AFEB922D21713472FF63;
+        by Forcepoint Email with ESMTP id B481B12ED4669CC8B778;
         Fri, 12 Apr 2019 16:58:24 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
@@ -31,9 +31,9 @@ CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
         <linux-scsi@vger.kernel.org>, <yanaijie@huawei.com>,
         <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH 5/6] scsi: libsas: Do discovery on empty PHY to update PHY info
-Date:   Fri, 12 Apr 2019 16:57:56 +0800
-Message-ID: <1555059478-36224-6-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 4/6] scsi: libsas: Inject revalidate event for root port event
+Date:   Fri, 12 Apr 2019 16:57:55 +0800
+Message-ID: <1555059478-36224-5-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1555059478-36224-1-git-send-email-john.garry@huawei.com>
 References: <1555059478-36224-1-git-send-email-john.garry@huawei.com>
@@ -46,47 +46,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we discover the PHY is empty in sas_rediscover_dev(), the PHY
-information (like negotiated linkrate) is not updated.
+According to the SAS spec, an expander device shall transmit BROADCAST
+(CHANGE) from at least one phy in each expander port other than the
+expander port that is the cause for transmitting BROADCAST (CHANGE).
 
-As such, for a user examining sysfs for that PHY, they would see
-incorrect values:
-root@(none)$ cd /sys/class/sas_phy/phy-0:0:20
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
-root@(none)$ echo 0 > enable
-root@(none)$ more negotiated_linkrate
-3.0 Gbit
+As such, for when the link is lost for a root PHY attached to an
+expander PHY, we get no broadcast event.
 
-So fix this, simply discover the PHY again, even though we know it's
-empty; in the above example, this gives us:
-root@(none)$ more negotiated_linkrate
-Phy disabled
+This causes an issue for libsas, in that we will not revalidate the
+domain for these events.
 
-We must do this after unregistering the device associated with the PHY
-(in sas_unregister_devs_sas_addr()).
+As a solution, for when a root PHY is formed or deformed from a root
+port, insert a broadcast event to trigger a domain revalidation.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/scsi/libsas/sas_expander.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/libsas/sas_port.c | 24 +++++++++++++++++++++---
+ include/scsi/libsas.h          |  7 +++++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index 6f569a65d791..ad96bc843acc 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2068,6 +2068,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
- 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
- 		phy->phy_state = PHY_EMPTY;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
-+		/*
-+		 * Even though the PHY is empty, for convenience we discover
-+		 * the PHY to update the PHY info, like negotiated linkrate.
-+		 */
-+		sas_ex_phy_discover(dev, phy_id);
- 		return res;
- 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
- 		   dev_type_flutter(type, phy->attached_dev_type)) {
+diff --git a/drivers/scsi/libsas/sas_port.c b/drivers/scsi/libsas/sas_port.c
+index 03fe479359b6..38a10478605c 100644
+--- a/drivers/scsi/libsas/sas_port.c
++++ b/drivers/scsi/libsas/sas_port.c
+@@ -95,6 +95,7 @@ static void sas_form_port(struct asd_sas_phy *phy)
+ 	int i;
+ 	struct sas_ha_struct *sas_ha = phy->ha;
+ 	struct asd_sas_port *port = phy->port;
++	struct domain_device *port_dev;
+ 	struct sas_internal *si =
+ 		to_sas_internal(sas_ha->core.shost->transportt);
+ 	unsigned long flags;
+@@ -153,8 +154,9 @@ static void sas_form_port(struct asd_sas_phy *phy)
+ 	}
+ 
+ 	/* add the phy to the port */
++	port_dev = port->port_dev;
+ 	list_add_tail(&phy->port_phy_el, &port->phy_list);
+-	sas_phy_set_target(phy, port->port_dev);
++	sas_phy_set_target(phy, port_dev);
+ 	phy->port = port;
+ 	port->num_phys++;
+ 	port->phy_mask |= (1U << phy->id);
+@@ -184,14 +186,21 @@ static void sas_form_port(struct asd_sas_phy *phy)
+ 		 port->phy_mask,
+ 		 SAS_ADDR(port->attached_sas_addr));
+ 
+-	if (port->port_dev)
+-		port->port_dev->pathways = port->num_phys;
++	if (port_dev)
++		port_dev->pathways = port->num_phys;
+ 
+ 	/* Tell the LLDD about this port formation. */
+ 	if (si->dft->lldd_port_formed)
+ 		si->dft->lldd_port_formed(phy);
+ 
+ 	sas_discover_event(phy->port, DISCE_DISCOVER_DOMAIN);
++	/* Only insert a revalidate event after initial discovery */
++	if (port_dev && sas_dev_type_is_expander(port_dev->dev_type)) {
++		struct expander_device *ex_dev = &port_dev->ex_dev;
++
++		ex_dev->ex_change_count = -1;
++		sas_discover_event(port, DISCE_REVALIDATE_DOMAIN);
++	}
+ 	flush_workqueue(sas_ha->disco_q);
+ }
+ 
+@@ -254,6 +263,15 @@ void sas_deform_port(struct asd_sas_phy *phy, int gone)
+ 	spin_unlock(&port->phy_list_lock);
+ 	spin_unlock_irqrestore(&sas_ha->phy_port_lock, flags);
+ 
++	/* Only insert revalidate event if the port still has members */
++	if (port->port && dev && sas_dev_type_is_expander(dev->dev_type)) {
++		struct expander_device *ex_dev = &dev->ex_dev;
++
++		ex_dev->ex_change_count = -1;
++		sas_discover_event(port, DISCE_REVALIDATE_DOMAIN);
++	}
++	flush_workqueue(sas_ha->disco_q);
++
+ 	return;
+ }
+ 
+diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
+index cfaaf1254211..b08febec7895 100644
+--- a/include/scsi/libsas.h
++++ b/include/scsi/libsas.h
+@@ -224,6 +224,13 @@ struct sas_work {
+ 	struct work_struct work;
+ };
+ 
++/* Lots of code duplicates this in the SCSI tree, which can be factored out */
++static inline bool sas_dev_type_is_expander(enum sas_device_type type)
++{
++	return type == SAS_EDGE_EXPANDER_DEVICE ||
++	       type == SAS_FANOUT_EXPANDER_DEVICE;
++}
++
+ static inline void INIT_SAS_WORK(struct sas_work *sw, void (*fn)(struct work_struct *))
+ {
+ 	INIT_WORK(&sw->work, fn);
 -- 
 2.17.1
 
