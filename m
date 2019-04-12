@@ -2,210 +2,115 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FDCC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633E3C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE202171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C49F2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NNAs4gTk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J40k/k39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfDLR3J (ORCPT
+        id S1727035AbfDLR3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:29:09 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:47039 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfDLR3J (ORCPT
+        Fri, 12 Apr 2019 13:29:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35834 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfDLR3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:29:09 -0400
-Received: by mail-vs1-f67.google.com with SMTP id e2so5970848vsc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:29:08 -0700 (PDT)
+        Fri, 12 Apr 2019 13:29:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so5529906pgf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XkWraLgMjYQXOFvMDPQ6BgisdR6SKwNuTLZ8CZqppKk=;
-        b=NNAs4gTkHhdy/FfBnG3wDOH1ZcHChfZQyqYvlq9tOX5svUQ3M0bLi5Mn24Vl1LR0Yr
-         fDeiLZaXkiUq6QHaFq7C0wBxE2sNshtExjoI7d2At4OTAz/XQS56j6TO+Zp56s1Lon4t
-         IgDYJz5E1CquWcC7pm2edW8HGCXzpF5M86lak=
+         :cc;
+        bh=AjZ4YMyKo+QbZAjVtELKpRi6NtVs0gJzGRZ9miVsfu8=;
+        b=J40k/k39s8tcNfMXc+f52TAYVBDF3zM1alSY7PFnlZELIYSpAVvVsaWIho/LoTm4Mm
+         dTw/f5/5pou8BOIqwwqtzyJC9r4i7Y39r/4saZrVdf/H70HHOeJPizo3ta0fQktyLAbo
+         cnwIg2LNqHLrPAzTfzjJf4oskeg5Ob1sjuC4e1FSDsuSKOs57g0k6vWliI2TlNrDWGLs
+         Haoaakd+rxydz0B+PS4k5NDUUSdRgW/IeP6mG/jP+FcREim7BSi6fCa8Vh7Qe4ULU1SG
+         EzNPLI7cbkBKwgWYOiXR/KxnE2usBWQ7delOJAt1VYrSvLsOZYveWcE3tlVRT0Z/ZnDc
+         AO6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XkWraLgMjYQXOFvMDPQ6BgisdR6SKwNuTLZ8CZqppKk=;
-        b=pDWgUFzi+/cDFR28IplKs9C2dAUxLddbDvM+AWFOsEMf1hR+/ZVFo0wuRqJUcr8jfM
-         b30vI2lXFYkLXM68ud46Fmb68P3PvOat+KhiF/ae9mQ3MipWDk4L7JDwsOyilGNB9W/P
-         N4o5qd7kQCGLcV/NuR2SJtXsyRG8DNgFEiox8jUCB4iBsdmmNiK6p4M5daaJpuGdXhgj
-         LBT29cv6FykhufTecGZBrkSGiSQ6e+t1bv39uzwAChUmuEa/9VVUxR+Q+OmBpVoxoUZ6
-         NWHQhtoENFBs3XZ8iXch0Pd3pRiNOfGORp5xKbctHanBH6AsfuRejoCpRuT+RE0MlW7k
-         2cug==
-X-Gm-Message-State: APjAAAWGSagt0FUIKgDT9rm98Sirvgm0bHqouIuMlD1kELYJuZeqfRjH
-        5Up67ofV9oe3q4G/Zv3QwsPrnp5AyAI=
-X-Google-Smtp-Source: APXvYqz2w3Yo7CbKxibiaMD0DDd2FOl/CW4OTE69bh0evwNua6ERB95BCY5rcs4EeFkSdpY0Wc7G7Q==
-X-Received: by 2002:a67:f441:: with SMTP id r1mr15866018vsn.38.1555090147344;
-        Fri, 12 Apr 2019 10:29:07 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id w79sm14217672vkw.51.2019.04.12.10.29.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 10:29:05 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id t78so6011570vsc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:29:05 -0700 (PDT)
-X-Received: by 2002:a67:7f44:: with SMTP id a65mr12648937vsd.179.1555090145127;
- Fri, 12 Apr 2019 10:29:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=AjZ4YMyKo+QbZAjVtELKpRi6NtVs0gJzGRZ9miVsfu8=;
+        b=lmDVACwXEYH3IY8YSj+lhNNRUXUN3C7mzXFnMeM6Bg10uboBGacKSrIUdAknGlSTUj
+         XAvnWKFskkNBJ9P0+dH63HK5wqt8XDrmAzxE7sPnel9fmWjHIORwYMg0gHwYwJ4ciLrA
+         s0eHOIfpPr4HmCwZF1onLREN0DjP5GesAbSwNeKuVR3HdTxPRWrWIdlwX8OnXDP4mHBr
+         ucahCwWBq87HteUanInzoHcSTlQGLPeL/WDhTTuD+Vfl1iW70sZAWUoXavN2fB6jVE6I
+         HJUlNRX3Z4bF8QOx/IjAO5TM3sFj4oF7tykCrH8whijW4MCaaDC/czBlVS+WMPifRZCT
+         PXmQ==
+X-Gm-Message-State: APjAAAVI/nJY+JVZHGDARw2M/S/gpjd238v1mXtxmzLnja3wk5OmvSAh
+        71Ttw/Oxt6VMmaQYqcoiu59iSeEsu/7FFDcIa4QwSA==
+X-Google-Smtp-Source: APXvYqy5jxEfB76p9f+NH5/SAAqUtuQhzZpE8dqX1U54P0+GkAMjQuC7KpGW4z4Ny05H0jpBJE/Nhwu8fQStcW6lDlY=
+X-Received: by 2002:a63:d256:: with SMTP id t22mr51807898pgi.80.1555090153616;
+ Fri, 12 Apr 2019 10:29:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554284549-24916-1-git-send-email-zhangqing@rock-chips.com>
- <1554284649-26764-1-git-send-email-zhangqing@rock-chips.com> <5677286.2uEqRd8HI1@diego>
-In-Reply-To: <5677286.2uEqRd8HI1@diego>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 12 Apr 2019 10:28:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XzDZHX7q-h7jAGpoqXyz_C5RJhbZuXo2gM=1kZeAwRUQ@mail.gmail.com>
-Message-ID: <CAD=FV=XzDZHX7q-h7jAGpoqXyz_C5RJhbZuXo2gM=1kZeAwRUQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/6] clk: rockchip: add pll up and down when change pll freq
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, xxx <xxx@rock-chips.com>,
-        xf@rock-chips.com, =?UTF-8?B?6buE5rab?= <huangtao@rock-chips.com>,
-        Brian Norris <briannorris@chromium.org>
+References: <20190411092933.6413-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190411092933.6413-1-yamada.masahiro@socionext.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 12 Apr 2019 10:29:02 -0700
+Message-ID: <CAKwvOdmyyOnfmy4Y-Yuhj2OnpdSmZ07N2LuDiEnefa9Xf4F7LQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: vdso: use $(LD) instead of $(CC) to link VDSO
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Apr 11, 2019 at 2:30 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> My plan is to rewrite all VDSO Makefiles to use $(LD), then delete
+> cc-ldoption.
 
-On Fri, Apr 12, 2019 at 5:16 AM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+I too look forward to the removal of cc-ldoption. Thanks for the
+patch.  Based on some of the discussion in a similar patch for
+aarch64: https://lkml.org/lkml/2019/4/12/760:
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 >
-> Hi Elaine,
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 >
-> Am Mittwoch, 3. April 2019, 11:44:09 CEST schrieb Elaine Zhang:
-> > set pll sequence:
-> >       ->set pll to slow mode or other plls
-> >       ->set pll down
-> >       ->set pll params
-> >       ->set pll up
-> >       ->wait pll lock status
-> >       ->set pll to normal mode
-> >
-> > To slove the system error:
-> > wait_pll_lock: timeout waiting for pll to lock
-> > pll_set_params: pll update unsucessful,
-> >               trying to restore old params
+>  arch/arm/vdso/Makefile | 21 ++++++++-------------
+>  1 file changed, 8 insertions(+), 13 deletions(-)
 >
-> Can you tell me on what soc this was experienced?
+> diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
+> index f4efff9d3afb..fadf554d9391 100644
+> --- a/arch/arm/vdso/Makefile
+> +++ b/arch/arm/vdso/Makefile
+> @@ -10,12 +10,12 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+>  ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
+>  ccflags-y += -DDISABLE_BRANCH_PROFILING
 >
-> The patch includes rk3399, but I don't think the CrOS kernel
-> does powerdown the pll when changing the cpu-frequency
-> [added Doug and Brian for clarification and possible testing :-) ]
+> -VDSO_LDFLAGS := -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
+> -VDSO_LDFLAGS += -Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096
+> -VDSO_LDFLAGS += -nostdlib -shared
+> -VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+> -VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--build-id)
+> -VDSO_LDFLAGS += $(call cc-ldoption, -fuse-ld=bfd)
+> +ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+> +           -z max-page-size=4096 -z common-page-size=4096 \
 
-As far as I can tell you're right.  We don't seem to have it and I'm
-not aware of problems.
+This reminds me that I should resend:
+https://lore.kernel.org/patchwork/patch/1023578/
 
-
-> But I did find that the M0 code in ATF does actually power-down the
-> PLL and follow your outline from above. So essentially I'd just like
-> a thumbs up from chromeos people if they have the time.
-
-It does seem like it should be fine in general to do it.  It's one
-extra step but presumably it should be fine.
-
-In general the Rockchip PLL programming guidelines have always been a
-bit funny.  Looking at the version of the doc I have, I see phrases
-like "The PLL programming support changed on-the-fly and the PLL will
-simply slew to the new frequency" which makes me feel like you're
-supposed to be able to change the PLL frequency without powering down.
-This is repeated in another part of the manual which talks about the
-glitches that can happen when changing the PLL on the fly: it doesn't
-say not to do it, it just says to expect glitches (which can be
-avoided by changing the parent first).
-
-...but then in another section of the doc it talks about asserting PD
-before doing a frequency change!  :-P
-
-Though in that same section it says: "Release PD after no less than
-1us from the time it was asserted."  Even though probably 1 us has
-passed, I'd still expect a udelay(1) to be explicit here.
-
-
-One other thing that concerns me a little about this patch is that I
-wonder if it is legal to call rockchip_rk3399_pll_set_params() while
-the PLL is off.  AKA is it OK to change the rate of a PLL while it is
-not enabled?  I'm not saying that this would have worked before
-(actually, you might end up hitting the exact error "timeout waiting
-for pll to lock"), but now it seems even worse because we'll
-implicitly turning on the PLL.  ...a part of me wonders if this is the
-root cause of the problem Elaine's patch is trying to solve: that some
-code was trying to set the rate of a PLL before enabling it.
-
-
-So, tl; dr:
-* I doubt this patch is needed on rk3399, but it probably won't hurt.
-* If you're going to do the power down, you should add the udelay()
-* There's a bug on 3036.  See below.
-* You should change your patch so it doesn't enable the PLL if it
-wasn't already enabled.
-
-
-> > Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> > ---
-> >  drivers/clk/rockchip/clk-pll.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-=
-pll.c
-> > index dd0433d4753e..9fe1227e77e9 100644
-> > --- a/drivers/clk/rockchip/clk-pll.c
-> > +++ b/drivers/clk/rockchip/clk-pll.c
-> > @@ -208,6 +208,11 @@ static int rockchip_rk3036_pll_set_params(struct r=
-ockchip_clk_pll *pll,
-> >               rate_change_remuxed =3D 1;
-> >       }
-> >
-> > +     /* set pll power down */
-> > +     writel(HIWORD_UPDATE(1,
-> > +                          RK3036_PLLCON1_PWRDOWN, 13),
-
-This does not do what you think it does.  It should be:
-
-HIWORD_UPDATE(RK3036_PLLCON1_PWRDOWN,
-     RK3036_PLLCON1_PWRDOWN, 0)
-
-...without that my compiler yells at me:
-
-signed shift result (0x40000000000) requires 44 bits to represent
-
-...and the compiler is, indeed, correct.
-
-
-> > +            pll->reg_base + RK3036_PLLCON(1));
-> > +
-> >       /* update pll values */
-> >       writel_relaxed(HIWORD_UPDATE(rate->fbdiv, RK3036_PLLCON0_FBDIV_MA=
-SK,
-> >                                         RK3036_PLLCON0_FBDIV_SHIFT) |
-> > @@ -229,6 +234,10 @@ static int rockchip_rk3036_pll_set_params(struct r=
-ockchip_clk_pll *pll,
-> >       pllcon |=3D rate->frac << RK3036_PLLCON2_FRAC_SHIFT;
-> >       writel_relaxed(pllcon, pll->reg_base + RK3036_PLLCON(2));
-> >
-> > +     /* set pll power up */
-> > +     writel(HIWORD_UPDATE(0, RK3036_PLLCON1_PWRDOWN, 13),
-> > +            pll->reg_base + RK3036_PLLCON(1));
-
-In a similar vein, the above should be:
-
-writel(HIWORD_UPDATE(0, RK3036_PLLCON1_PWRDOWN, 0),
-
-...since RK3036_PLLCON1_PWRDOWN already has the shift.
+-- 
+Thanks,
+~Nick Desaulniers
