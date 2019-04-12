@@ -2,90 +2,157 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316F7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D80C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E352186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CEB2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s/CmnUcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfDLLbL (ORCPT
+        id S1727110AbfDLLc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:31:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:55241 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfDLLbL (ORCPT
+        Fri, 12 Apr 2019 07:32:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42937 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfDLLcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:31:11 -0400
-Received: from [192.168.1.110] ([77.9.22.14]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MyJx6-1gwGTr2EmK-00ygCY; Fri, 12 Apr 2019 13:31:03 +0200
-Subject: Re: [PATCH] tty: Add NULL TTY driver
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
- <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
- <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
- <20190405090043.vnsftwpdm56cx2hr@axis.com>
- <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
- <20190411152845.xomzmhtyejzr4r35@axis.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <44d0b915-f084-e7b1-6e73-51ffed2e1d18@metux.net>
-Date:   Fri, 12 Apr 2019 13:31:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 12 Apr 2019 07:32:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w25so5014970pfi.9
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fdCM2Nqi/kSmMuFih58b5PYsWTV2zyCiLDVsi9MrYwU=;
+        b=s/CmnUcGoEvfN1NLw0Te9TM7lijbvM3qY/AG4pkSa6yhdVthfznJ2DSbNYjFVZTi0f
+         hZ9c0fbeG9W8Y0Mr5K+BLbdU0oSTgE2+8Rgd5W2r7yh4QO06fIMxSWi4kOaM/CU9Gmp/
+         QMykwpVPixa4TW7x8U7iHcddH2QiSdRNRy3j1UndhzHal7vZep0xsv9gmNPHEqK756uv
+         QSGkwl+M6hTeo+yM4D3/D2ZsLEyQEjtfmLqH2x9xM8E3Zsmw/m3IujxIOdiUkzyziChT
+         d4vaLzgHFk3nv4WqaSbVk9pRng2os5SFbJfPLbwxf33X2HqVNCvNNNup5OLbrqKwS6RQ
+         p5aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fdCM2Nqi/kSmMuFih58b5PYsWTV2zyCiLDVsi9MrYwU=;
+        b=PZibac7MqJr+XLYMkfR7lVdK1YemqQHAlH1uFixnOXfQHEU+eX2/RKMEav7Dz029AZ
+         hIfhdxYnOtQ6Tc4uJ+lFPTKi6umpLAJ63I9J4xMTQHs0uo+dW75luH9aaZ5g1HMpjTVf
+         /s0aZP8n4ZyN/xvQigSr7gU5Fm3VlBXz6LFVhQwUcULnicCB4/uPn41C6O0usHMKYdrR
+         394lRjG6LyP7HB1a/kxSskGx5sAnFguiG6TNXUiKIndabpxofJykVzLHyFLyRSB3ojnl
+         fpgSyFCy6NThcfIDg0J07pA1OBw+Abpgr0GwGNonsn/0Hb5m3ochJwUHkFYYPXBLnaPJ
+         vsfg==
+X-Gm-Message-State: APjAAAVD+3g2SLTBqz54S0JORi26PFlCi4tlQF+L36LVRRgYRV/Xnjef
+        gsMUOHC5+R/hVua7xXxjrLnCxAmjPnuNEHOCqUGS2w==
+X-Google-Smtp-Source: APXvYqzPGxoR/3XsTUL5DSGYMIH+hRwRyIZbSUjxvmHAsXQ2VAnhoFeNJk9CEwCXUAHVOWUJsLtI3G+qtauaug8Gt5E=
+X-Received: by 2002:a63:cf0d:: with SMTP id j13mr52772412pgg.34.1555068774202;
+ Fri, 12 Apr 2019 04:32:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190411152845.xomzmhtyejzr4r35@axis.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:8rIgG6aHjfmzI5v5ZkRK+1yEYl3q24ScMEXuGkkxeFqHYTL96nJ
- 6V/sJyAoFCO6EgUhtr7OWo3cPZW+oisxNYjpWJhCMDv7WW7kkaJvtcafkW9+KGOUwJF/SIF
- PB3miQCMis70EA1u1qg+dtOaVDT49dXvytq7LkHGsaqa0CQwbukX2X4gyDfVVIkE7r2qABC
- 1lIa8pKhJvzEYUjcHNs0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nUFdakN8IuE=:AIHhO1gbvHG3m8QdSVdFEP
- ldhs4eYhCag/CKOyoROGJGEBy8TmA8530X+SnPInkZuy+P43aSDUzL5MZiuUFz5+9ulMQjbd6
- urXH4kp+d3ZEp0Z0Hu+KYoi1YmgX7fuJJjcBaT2/w4bIVv+AuKQHHajb75DudD1RNl91SSL55
- 34Eyi7tWg1sJlK3uLCx7+jaIRchL8eX0+vCF5nuaOkJo0D31VVsOtaTHxammCmiQiS/F7M3mb
- 3AtpzECaC0+sBYYlbGFN3zjKi236nNh1/ULTCQTjgiyqN8YRjmWpyw58xgXMnRCzwbp2R21rY
- XNkBaI6worWenZmLk9FJ91KbCJ79tvPTTZW7vwmU1SxrsDtlaNZr2f1hwJbEyaw+vB05qfgKp
- IcS/Ko28dlQ5HtVmiHEtKasMMikRzNGdjIXGg7A2RiO4cEpA02TuMUuFAAA2ZBwb2zHivTL7d
- bW0JyxcaUYf5OIOqP6aDfD6zzLS2nDkUp5TDUgPfJR7frdf8t7D1+b09Aux1xSx4j31s5zLLL
- ka9dz/UdJ/pu/gdQVjaCRSwVD+uEnfy01WnyHz9ZZz7S4IhOaI5qIQ8onfyDNknDLTZra2ibH
- XF3fMIAZyUjbZgWJWP8Dkd0ZIBS59UJjMznPgZ9Jiou61X0j68DzP/21ZuVNgUlMttPjLXFw/
- wicMP+5QRn7sawlPdwWLRrBauhunWTRjcr1viGtaxBOWtOnJjk0Qj2WrX6G/3+y1A2JPq2rJj
- gfxb0S/lQy99+SPMalT82djI5P33kE2yz/ZVI32OYEB8m9qBMmXie4wYcT0=
+References: <000000000000d9f094057a17b97b@google.com> <000000000000b439370586498dff@google.com>
+In-Reply-To: <000000000000b439370586498dff@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 12 Apr 2019 13:32:43 +0200
+Message-ID: <CAAeHK+zUHJswwHfVUCV0qTgvFVFZpT0hJqioLyYgbA0yQC0H8Q@mail.gmail.com>
+Subject: Re: WARNING in rollback_registered_many (2)
+To:     syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>, avagin@virtuozzo.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devel@driverdev.osuosl.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Eric Dumazet <edumazet@google.com>,
+        florian.c.schilhabel@googlemail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kai.heng.feng@canonical.com, ktkhai@virtuozzo.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, straube.linux@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tyhicks@canonical.com, Matthew Wilcox <willy@infradead.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.19 17:28, Vincent Whitchurch wrote:
+On Fri, Apr 12, 2019 at 1:29 AM syzbot
+<syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has found a reproducer for the following crash on:
+>
+> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10d552b7200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> dashboard link: https://syzkaller.appspot.com/bug?extid=40918e4d826fb2ff9b96
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a4c1af200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121b274b200000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
+>
+> usb 1-1: r8712u: MAC Address from efuse = 00:e0:4c:87:00:00
+> usb 1-1: r8712u: Loading firmware from "rtlwifi/rtl8712u.bin"
+> usb 1-1: USB disconnect, device number 2
+> usb 1-1: Direct firmware load for rtlwifi/rtl8712u.bin failed with error -2
+> usb 1-1: r8712u: Firmware request failed
+> WARNING: CPU: 0 PID: 575 at net/core/dev.c:8152
+> rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 575 Comm: kworker/0:4 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>   panic+0x29d/0x5f2 kernel/panic.c:214
+>   __warn.cold+0x20/0x48 kernel/panic.c:571
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> RIP: 0010:rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+> Code: 05 00 00 31 ff 44 89 fe e8 5a 15 f3 f4 45 84 ff 0f 85 49 ff ff ff e8
+> 1c 14 f3 f4 0f 1f 44 00 00 e8 12 14 f3 f4 e8 0d 14 f3 f4 <0f> 0b 4c 89 e7
+> e8 33 72 f2 f6 31 ff 41 89 c4 89 c6 e8 27 15 f3 f4
+> RSP: 0018:ffff88809d087698 EFLAGS: 00010293
+> RAX: ffff88809d058000 RBX: ffff888096240000 RCX: ffffffff8c7eb146
+> RDX: 0000000000000000 RSI: ffffffff8c7eb163 RDI: 0000000000000001
+> RBP: ffff88809d0877c8 R08: ffff88809d058000 R09: fffffbfff2708111
+> R10: fffffbfff2708110 R11: ffffffff93840887 R12: ffff888096240070
+> R13: dffffc0000000000 R14: ffff88809d087758 R15: 0000000000000000
+>   rollback_registered+0xf7/0x1c0 net/core/dev.c:8228
+>   unregister_netdevice_queue net/core/dev.c:9275 [inline]
+>   unregister_netdevice_queue+0x1dc/0x2b0 net/core/dev.c:9268
+>   unregister_netdevice include/linux/netdevice.h:2655 [inline]
+>   unregister_netdev+0x1d/0x30 net/core/dev.c:9316
+>   r871xu_dev_remove+0xe7/0x223 drivers/staging/rtl8712/usb_intf.c:604
+>   usb_unbind_interface+0x1c9/0x980 drivers/usb/core/driver.c:423
+>   __device_release_driver drivers/base/dd.c:1082 [inline]
+>   device_release_driver_internal+0x436/0x4f0 drivers/base/dd.c:1113
+>   bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
+>   device_del+0x467/0xb90 drivers/base/core.c:2269
+>   usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1235
+>   usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
+>   hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>   port_event drivers/usb/core/hub.c:5350 [inline]
+>   hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
+>   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+>   kthread+0x313/0x420 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
 
-<snip>
-
->> hmm, wo (which programs) do you need, that really need them ?> > I think it was systemd's debug-shell which complained about the ioctls.
-Okay, why not fixing this broken userland ?
-
-systemd is written by somebody who doesn't even know the semantics of
-rm  -R (as specified by unix standard since many decades) and so causing
-funny things like complete disk wipe:
-
-   https://github.com/systemd/systemd/issues/5644
-
-
-In the last 25 years, I've always been fine w/ just redirecting to
-/dev/null.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
++linux-usb mailing list
