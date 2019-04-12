@@ -2,88 +2,106 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC7CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A104C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39252083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555038827;
-	bh=li2vdXSxTbZHlWLCRNC+xG7xIIhnZYFJcAnB8lZF6xQ=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=eSx6Vc0jfVlNIQTt+jzNPXj/j7aK51cskuYf4xlQCpx10kOYChvZfAnrDSqfmeSUd
-	 VRuKZHD+wh42h/UGJ0hSg5yt7fUaifnR9eb2RJ2RAPwJ1XjGjqj5OHmW2NgEfDKVMN
-	 Lhr/bVbXKVZaRCbhuvb9E3RvNOcx6ERFwupByW34=
+	by mail.kernel.org (Postfix) with ESMTP id CDB492083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YFno93QX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfDLDNp (ORCPT
+        id S1726847AbfDLDNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 23:13:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34223 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfDLDNp (ORCPT
+        Thu, 11 Apr 2019 23:13:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44947 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfDLDNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 23:13:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so7177703otf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 20:13:44 -0700 (PDT)
+        Thu, 11 Apr 2019 23:13:55 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d11so7000310edp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 20:13:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=li2vdXSxTbZHlWLCRNC+xG7xIIhnZYFJcAnB8lZF6xQ=;
-        b=JNGSe+YeYUW8n6OVyE1roSOg4DxD4g4ghvuCvpaYjeGwXWfZdM3Z3U4JtJ79lEKj0W
-         a4O9Mu2/I2krrXLlOIM1Yf6DJSyVaQDP6/1388JCA3kiLBzjQ2/d0W2H//+/Eut9eNi/
-         DVasSnInfWUtAvf488+wOl8ZFeHe3HqqV500fCPNWXzrVy98XAtBqMCZSopPryj1Hui4
-         yqKMqfIL35bxASX+s+xr4EGfq8+zy2n1Wkk6phs9Nq/pwYm1ogTXUqJmli1PHzoiI5do
-         Kww+2AqcmNBV+V9utUSA88zbHQe9LxU9fWhtfpAtFI3mhoKCz7K95APqPg8XKm3W+SBV
-         FJsw==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=lSZmLfiTS0tVJgkUC+AaFkmLshmlkzFI4jJrlCOnI6o=;
+        b=YFno93QXuTT8g873ob4lzZVYz3tZWm+LfJx0YMpac2uEV9aJ6oZNSx9WOKnOf8lAo1
+         +NqfDN8Br13bz4GqPuBdzRpRcU4aHRKhvkkpILIQq8DCmznfx/atr8QKvtlKx36BCQ8b
+         DHYXbpmkIT46Gjd93nsMUBag2FEmJGH9PF5Ws=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=li2vdXSxTbZHlWLCRNC+xG7xIIhnZYFJcAnB8lZF6xQ=;
-        b=PxPCKxQEpsLveLXoJkf70UyVcocMnAMx8MhhgMbxWggT+jn3tFArNAfPWGHqJnW22N
-         Zb0dMcmRLSu0cRJC1xj+QPOviGlaIbOB2UoOZ1gFnDL07jFpqI7Q/ih9qjdLZi1FztlL
-         ix+I8Gk2jUycMSKgRXXexi5GYGMpdt3z6KFQk7r+E1/46ALbM670d+VqP8fmlNYXnUIr
-         UW2dCpI0EUwXoLdEhQnbjvv5XfQ6aqk0qTD0zgiKkw/SPUouaGoE9h1QWCt+lK0iBaPZ
-         rIlRSUq63G1yoGafyBM1nOj0inNUmfNGo6cxqleIsSOmlSVL+c4oEwK09BZf7ODa3eHW
-         gzfg==
-X-Gm-Message-State: APjAAAVzxrzx3mfm2cV23Li8yg76dzwlqPsSCUQQGZ7743VAlHNVPO6+
-        u+JmsXFoqhcoE7iAIwWIXaQ=
-X-Google-Smtp-Source: APXvYqyYVQgikdkDDFOU4yd62nXoI8zKxWpJR+Lv0R+IzylrYgZQUx4Z/6QXdiHK6Ld6ZCboBRze+Q==
-X-Received: by 2002:a9d:1c2:: with SMTP id e60mr36205042ote.122.1555038824047;
-        Thu, 11 Apr 2019 20:13:44 -0700 (PDT)
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net. [75.58.59.55])
-        by smtp.gmail.com with ESMTPSA id r3sm16559921otg.24.2019.04.11.20.13.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 20:13:43 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v4 0/5] init: Do not select DEBUG_KERNEL by default
-To:     Josh Triplett <josh@joshtriplett.org>
-Cc:     linux-kernel@vger.kernel.org, keescook@chromium.org
-References: <20190412014355.25307-1-okaya@kernel.org>
- <20190412030237.GB1577@localhost>
-Message-ID: <cb6b69d5-73dd-e11f-bb4c-f0ce4b9d14f0@kernel.org>
-Date:   Thu, 11 Apr 2019 23:13:42 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412030237.GB1577@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lSZmLfiTS0tVJgkUC+AaFkmLshmlkzFI4jJrlCOnI6o=;
+        b=QqcAR1YX4aInDM5xCyi7Jt6M5IjIuTt7HlnVeT38aZ/Y7gTvu0HAJiJ3F0UBFNEBme
+         pXD7bz3Sz44TjSs4gHCUC7ZAMf7jlfU7ceGXn9OCzXpad2Ir+xS4Dz1tVuPAWBV/fVJb
+         N6XE3RLO7tGhRi+fTG6aBHC+1Tqyif9HGsIBStlCf0v4quGVK6goJB1ipGqpDiRL175k
+         RxQncCh9FMSunrSQcF3y2XN7T0AUQipVCgBe3QReRlMfW4AI9bMOkKAmHctoKtIMcJoO
+         f10Gne1mjuEw2G2jOrqxkYtbpVZWZKpLocCJeXHagwZF7Nu7+t4aT4SxHntLcs/gX9b1
+         WOhQ==
+X-Gm-Message-State: APjAAAVc8JFMeu1p99j/esic9j+b5Z7dxAqrexk/0ILVwXtjX4UryveZ
+        7fbE2PrKZM6lZb5ty/W2XH8Qjg==
+X-Google-Smtp-Source: APXvYqz8Z8DBYr6JemK9OQFaobK4cwQGMmE9tVq+z/+aM5UzwZDbxfR2W0WlgQFUXvqBP0mVwT6VEg==
+X-Received: by 2002:aa7:dc4d:: with SMTP id g13mr5176207edu.106.1555038833471;
+        Thu, 11 Apr 2019 20:13:53 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id c7sm11533352edt.70.2019.04.11.20.13.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 11 Apr 2019 20:13:52 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+Date:   Fri, 12 Apr 2019 08:43:32 +0530
+Message-Id: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/2019 11:02 PM, Josh Triplett wrote:
-> I noticed one minor typo in patch 1/5, with that fixed, for the whole
-> series:
+Few SOCs have limitation that their PCIe host can't allow few inbound
+address ranges. Allowed inbound address ranges are listed in dma-ranges
+DT property and this address ranges are required to do IOVA mapping.
+Remaining address ranges have to be reserved in IOVA mapping.
 
-Can you point to the typo?
+PCIe Host driver of those SOCs has to list resource entries of allowed
+address ranges given in dma-ranges DT property in sorted order. This
+sorted list of resources will be processed and reserve IOVA address for
+inaccessible address holes while initializing IOMMU domain.
+
+This patch set is based on Linux-5.0-rc2.
+
+Changes from v3:
+  - Addressed Robin Murphy review comments.
+    - pcie-iproc: parse dma-ranges and make sorted resource list.
+    - dma-iommu: process list and reserve gaps between entries
+
+Changes from v2:
+  - Patch set rebased to Linux-5.0-rc2
+
+Changes from v1:
+  - Addressed Oza review comments.
+
+Srinath Mannam (3):
+  PCI: Add dma_ranges window list
+  iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+  PCI: iproc: Add sorted dma ranges resource entries to host bridge
+
+ drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
+ drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+ drivers/pci/probe.c                 |  3 +++
+ include/linux/pci.h                 |  1 +
+ 4 files changed, 66 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
