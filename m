@@ -2,80 +2,105 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E855CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA544C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4B12084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A7E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EqEgyH7e"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="otZiKvwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfDLPOA (ORCPT
+        id S1726914AbfDLPPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:14:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfDLPOA (ORCPT
+        Fri, 12 Apr 2019 11:15:17 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40258 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLPPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6eopH1ulMxpwesyQyw5Ma3QJT2y7EdVBllYB2iJTBxg=; b=EqEgyH7e76H05fNJhPcj9xsQH
-        gBQl3ndSh9ykqrwKlwi0vqfhT9ngC017CV/9Vg6lP/7yofGPbioE153xwlDLLik0keHRt6XymmOgW
-        nuuRWVFGJdQ2C/tni0mmGV/D9stXPtaN8wrZezMBW5Ssk2xHbu0d10RTJGblUpcFSkvKi5sOa8QuG
-        5r/c2uxLKp0f1a4D2Yb/t8blPLgUd+XvEr/1a43LlIve7jphml1riRGeHKFm7ZE12XV6VJUmHGeJE
-        9qD6rQKCxLn9NW2oIp018CCD6TR1cY6Xmy3nF5m3ONj8KTHNttwWSklk1dlomtTXaRr296oaz5Rtm
-        JABZhWMAg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hExsN-0003fV-GI; Fri, 12 Apr 2019 15:13:59 +0000
-Subject: Re: linux-next: Tree for Apr 12 (net/sched/sch_taprio.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>
-References: <20190412181707.51c073c3@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <39fbf66e-b816-447a-f214-50909aec9dfc@infradead.org>
-Date:   Fri, 12 Apr 2019 08:13:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 11:15:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x12so11604796qts.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ExcVMXKMLAIGNf5KmSqXrW5PdcB9ts4NWl7/RwgO/jI=;
+        b=otZiKvwBqdW+yp5E+sxlXMkmP/ZdX7vWtbD/mtd0dHs4PrW2KX3YuzFsZUDMkuJgc/
+         w0UCkKwKdoYReI/dgPptzYV3khKBw7sj2riOqQ8G6vyQd6uSAtjgisNqVmD8di5ZiEqs
+         Zw4BXpu40szBooKU5UTvQRGYhF7Gg+ic4rFebiZ5bv3sypeI/TiR625hnOx3fhnSWwzk
+         aY9eyFzrLAiiyGiQYzvyO9HFpdX3PZ4wj/lfwRflCHJJUwNEBFWwL7sZvDIJ31Owagc4
+         4KHAfGjPzWg9oqhFZ0KqE8gwCnV8C7jmrR+57NKQuzD6XBgU9SRxPlt99lPgk9K2KgXl
+         JEUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ExcVMXKMLAIGNf5KmSqXrW5PdcB9ts4NWl7/RwgO/jI=;
+        b=Ceq5cHC2uL87cAPNCKFet5FzkUhjeuuS8HJGEfF2I6UuJ5ren9NpC5B/9oDeKihsOK
+         00tU5mmwGYfNDOK73stqoZYYG4wnrckzC869KXlL0nV6a2hKFL65rH+w45Q9VeZZHwNM
+         enSOP5gys3vDndrkfutilRft6OS5rfYCNzEL50/EhbyGRRXVn70YrrBtqvnDwBozXi4A
+         P+1mF+Pj56AGa+kxFuyla2oILwAJrP6hGACNloABIGfgwgGzCvvkpNthf3wgDCItVJx3
+         fvD+ZjhDkOlHOcgR8GAKqqW3An6C+X3aCLHkMURUiMLo+im1EE5QVZ97OjYCb91l2o02
+         8jMw==
+X-Gm-Message-State: APjAAAXrA63YSi8417/BsAKyPRdRfGHf4mn5NIkge9RSgrA8yXrOUQqu
+        yFRR/OSPh0/LHZtrNQP6n3Vufw==
+X-Google-Smtp-Source: APXvYqzWgvKc4Fr5gRxDaJ6QTk0PaB7XEaAOjXMkq0vmcXUP6Zld9Yt2kxhFXms6m0K7drFhzvTUhQ==
+X-Received: by 2002:a0c:89b5:: with SMTP id 50mr46177023qvr.156.1555082115847;
+        Fri, 12 Apr 2019 08:15:15 -0700 (PDT)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id b7sm23214436qkc.47.2019.04.12.08.15.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 08:15:15 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH 0/4] mm: memcontrol: memory.stat cost & correctness
+Date:   Fri, 12 Apr 2019 11:15:03 -0400
+Message-Id: <20190412151507.2769-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190412181707.51c073c3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 1:17 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190411:
-> 
+The cgroup memory.stat file holds recursive statistics for the entire
+subtree. The current implementation does this tree walk on-demand
+whenever the file is read. This is giving us problems in production.
+
+1. The cost of aggregating the statistics on-demand is high. A lot of
+system service cgroups are mostly idle and their stats don't change
+between reads, yet we always have to check them. There are also always
+some lazily-dying cgroups sitting around that are pinned by a handful
+of remaining page cache; the same applies to them.
+
+In an application that periodically monitors memory.stat in our fleet,
+we have seen the aggregation consume up to 5% CPU time.
+
+2. When cgroups die and disappear from the cgroup tree, so do their
+accumulated vm events. The result is that the event counters at
+higher-level cgroups can go backwards and confuse some of our
+automation, let alone people looking at the graphs over time.
+
+To address both issues, this patch series changes the stat
+implementation to spill counts upwards when the counters change.
+
+The upward spilling is batched using the existing per-cpu cache. In a
+sparse file stress test with 5 level cgroup nesting, the additional
+cost of the flushing was negligible (a little under 1% of CPU at 100%
+CPU utilization, compared to the 5% of reading memory.stat during
+regular operation).
+
+ include/linux/memcontrol.h |  96 +++++++-------
+ mm/memcontrol.c            | 290 +++++++++++++++++++++++++++----------------
+ mm/vmscan.c                |   4 +-
+ mm/workingset.c            |   7 +-
+ 4 files changed, 234 insertions(+), 163 deletions(-)
 
 
-on i386:
-
-ld: net/sched/sch_taprio.o: in function `advance_sched':
-sch_taprio.c:(.text+0x55d): undefined reference to `__divdi3'
-ld: net/sched/sch_taprio.o: in function `taprio_dequeue':
-sch_taprio.c:(.text+0x76d): undefined reference to `__divdi3'
-ld: net/sched/sch_taprio.o: in function `taprio_init':
-sch_taprio.c:(.text+0x12bb): undefined reference to `__divdi3'
-
-
-
--- 
-~Randy
