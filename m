@@ -2,112 +2,202 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAA8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2009AC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0C6205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="LAMWBzbT"
+	by mail.kernel.org (Postfix) with ESMTP id C6BCE205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfDLJgc (ORCPT
+        id S1726850AbfDLJhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:36:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37460 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfDLJgb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:36:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v13so8250318ljk.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 02:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rP6B5gEYGXtK5rR2H8KZKeoPQ0EP/B4IFVH2yMaLFdI=;
-        b=LAMWBzbTHQOid3zEnZroud8oHQ3dtwkrHSAMA3c7mTZZlvN9wiILz6HmmwR8bPin7X
-         nMc1Ap8bS7rAHVwitOBZO1cTsK+meSxhRK/6yt7iesyOqaakZDVCEZLpVH/bOYObIuZa
-         aeCCulnByXwn2ugX6a8gls1b9El+WumgyYyK8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rP6B5gEYGXtK5rR2H8KZKeoPQ0EP/B4IFVH2yMaLFdI=;
-        b=A1Rs61AzKFd17NB2COUa9DDjkVlQZvqaY8+5ThkyEB+3bkIUsRaVnNOBAAcMqA/od9
-         x2zS2dAYOS4TFruqoUEzJNG2fVVz17ZnnFslMO5Fz4RIo75WPI7HPwPqoitV/bANZ9LQ
-         7pvJNNz3vPQsg0F3ho0Kce3dUma8YcULFHGE9AQl430OWgqEnD5ber4QqsTWuj6QPY1D
-         Oz9WhzgQZRtzW8Zyy9I/w0rtBtPnBIwSRr6IQor9GHhe/VTE62Yy4qQ46IizeO7LMnd1
-         73Pd7vEf6TEEJfXjwOCxxI2+Scoh8zBjipoZ89XHh4jRs3x+C64HZzx+PuREEENGqjiz
-         o92g==
-X-Gm-Message-State: APjAAAXvnajonoiNYeHF/xnZjK5/onVepV0cgnIDBQbfOIQqZ45SnI83
-        Go79G9kVcBUgSWqr6O82UHEEWaQ+8/r4rf7l
-X-Google-Smtp-Source: APXvYqwlNJsMqCiIlqZtI50LamrQng6x2nW5HuU0EQyKF8UwPKWBJWKynqszZSWfcXffYlhiqGb9Fw==
-X-Received: by 2002:a2e:42cf:: with SMTP id h76mr28705045ljf.95.1555061789199;
-        Fri, 12 Apr 2019 02:36:29 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id q5sm7989954lfm.16.2019.04.12.02.36.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 02:36:28 -0700 (PDT)
-Subject: Re: [PATCH] scsi: qedf: replace memset/memcpy with safer strscpy
-To:     Colin King <colin.king@canonical.com>,
-        QLogic-Storage-Upstream@cavium.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190412090552.26925-1-colin.king@canonical.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <1f51ff1c-bd1a-2b77-fd5f-77fb873111e9@rasmusvillemoes.dk>
-Date:   Fri, 12 Apr 2019 11:36:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 05:37:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36632 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726709AbfDLJhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:37:14 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AF22C68F1E796B373A28;
+        Fri, 12 Apr 2019 17:37:12 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Fri, 12 Apr 2019
+ 17:37:04 +0800
+Subject: Re: [PATCH 2/2] kvm: arm: Unify handling THP backed host memory
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <kvmarm@lists.cs.columbia.edu>, <julien.thierry@arm.com>,
+        <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
+        <andrew.murray@arm.com>, <eric.auger@redhat.com>,
+        <zhengxiang9@huawei.com>, <wanghaibin.wang@huawei.com>
+References: <1554909297-6753-1-git-send-email-suzuki.poulose@arm.com>
+ <1554909832-7169-1-git-send-email-suzuki.poulose@arm.com>
+ <1554909832-7169-3-git-send-email-suzuki.poulose@arm.com>
+ <c48b2bd4-68e6-dbc0-b010-78a23a889196@huawei.com>
+ <1bac514c-e4f0-a609-96ed-f48ef3461da1@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <e5f35fa6-ab8d-695a-6c66-bfb2b2465b2a@huawei.com>
+Date:   Fri, 12 Apr 2019 17:34:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-In-Reply-To: <20190412090552.26925-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1bac514c-e4f0-a609-96ed-f48ef3461da1@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/2019 11.05, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the qedf_dbg_* family of functions can overrun the end
-> of the source string if it is less than the destination buffer
-> length because of the use of a fixed sized memcpy. Replace the
-> memset/memcpy calls with the safer strscpy as this won't overrun
-> the end of the source string and it ensures the destination
-> string is always terminated with NUL.
-> 
-> Addresses-Coverity: ("Out-of-bounds access")
-> Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/scsi/qedf/qedf_dbg.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
-> index f2397ee9ba69..b491bebeaca9 100644
-> --- a/drivers/scsi/qedf/qedf_dbg.c
-> +++ b/drivers/scsi/qedf/qedf_dbg.c
-> @@ -17,8 +17,7 @@ qedf_dbg_err(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
->  	struct va_format vaf;
->  	char nfunc[32];
->  
-> -	memset(nfunc, 0, sizeof(nfunc));
-> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
-> +	strscpy(nfunc, func, sizeof(nfunc));
 
-Why not drop the pointless nfunc and stack copying and just pass func as
-the %s parameter; these are only called via macros that pass __func__ as
-the func argument, and that is always a proper nul-terminated string.
+On 2019/4/11 23:16, Suzuki K Poulose wrote:
+> Hi Zhengui,
+> 
+> On 11/04/2019 02:59, Zenghui Yu wrote:
+>> Hi Suzuki,
+>>
+>> On 2019/4/10 23:23, Suzuki K Poulose wrote:
+>>> We support mapping host memory backed by PMD transparent hugepages
+>>> at stage2 as huge pages. However the checks are now spread across
+>>> two different places. Let us unify the handling of the THPs to
+>>> keep the code cleaner (and future proof for PUD THP support).
+>>> This patch moves transparent_hugepage_adjust() closer to the caller
+>>> to avoid a forward declaration for 
+>>> fault_supports_stage2_huge_mappings().
+>>>
+>>> Also, since we already handle the case where the host VA and the guest
+>>> PA may not be aligned, the explicit VM_BUG_ON() is not required.
+>>>
+>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>> Cc: Zneghui Yu <yuzenghui@huawei.com>
+>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> ---
+>>>    virt/kvm/arm/mmu.c | 123 
+>>> +++++++++++++++++++++++++++--------------------------
+>>>    1 file changed, 62 insertions(+), 61 deletions(-)
+>>>
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index 6d73322..714eec2 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -1380,53 +1380,6 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, 
+>>> phys_addr_t guest_ipa,
+>>>        return ret;
+>>>    }
+>>> -static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t 
+>>> *ipap)
+>>> -{
+>>> -    kvm_pfn_t pfn = *pfnp;
+>>> -    gfn_t gfn = *ipap >> PAGE_SHIFT;
+>>> -    struct page *page = pfn_to_page(pfn);
+>>> -
+>>> -    /*
+>>> -     * PageTransCompoundMap() returns true for THP and
+>>> -     * hugetlbfs. Make sure the adjustment is done only for THP
+>>> -     * pages.
+>>> -     */
+>>> -    if (!PageHuge(page) && PageTransCompoundMap(page)) {
+>>> -        unsigned long mask;
+>>> -        /*
+>>> -         * The address we faulted on is backed by a transparent huge
+>>> -         * page.  However, because we map the compound huge page and
+>>> -         * not the individual tail page, we need to transfer the
+>>> -         * refcount to the head page.  We have to be careful that the
+>>> -         * THP doesn't start to split while we are adjusting the
+>>> -         * refcounts.
+>>> -         *
+>>> -         * We are sure this doesn't happen, because mmu_notifier_retry
+>>> -         * was successful and we are holding the mmu_lock, so if this
+>>> -         * THP is trying to split, it will be blocked in the mmu
+>>> -         * notifier before touching any of the pages, specifically
+>>> -         * before being able to call __split_huge_page_refcount().
+>>> -         *
+>>> -         * We can therefore safely transfer the refcount from PG_tail
+>>> -         * to PG_head and switch the pfn from a tail page to the head
+>>> -         * page accordingly.
+>>> -         */
+>>> -        mask = PTRS_PER_PMD - 1;
+>>> -        VM_BUG_ON((gfn & mask) != (pfn & mask));
+>>> -        if (pfn & mask) {
+>>> -            *ipap &= PMD_MASK;
+>>> -            kvm_release_pfn_clean(pfn);
+>>> -            pfn &= ~mask;
+>>> -            kvm_get_pfn(pfn);
+>>> -            *pfnp = pfn;
+>>> -        }
+>>> -
+>>> -        return true;
+>>> -    }
+>>> -
+>>> -    return false;
+>>> -}
+>>> -
+>>>    /**
+>>>     * stage2_wp_ptes - write protect PMD range
+>>>     * @pmd:    pointer to pmd entry
+>>> @@ -1677,6 +1630,61 @@ static bool 
+>>> fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
+>>>               (hva & ~(map_size - 1)) + map_size <= uaddr_end;
+>>>    }
+>>> +/*
+>>> + * Check if the given hva is backed by a transparent huge page (THP)
+>>> + * and whether it can be mapped using block mapping in stage2. If 
+>>> so, adjust
+>>> + * the stage2 PFN and IPA accordingly. Only PMD_SIZE THPs are currently
+>>> + * supported. This will need to be updated to support other THP sizes.
+>>> + *
+>>> + * Returns the size of the mapping.
+>>> + */
+>>> +static unsigned long
+>>> +transparent_hugepage_adjust(struct kvm_memory_slot *memslot,
+>>> +                unsigned long hva, kvm_pfn_t *pfnp,
+>>> +                phys_addr_t *ipap)
+>>> +{
+>>> +    kvm_pfn_t pfn = *pfnp;
+>>> +    struct page *page = pfn_to_page(pfn);
+>>> +
+>>> +    /*
+>>> +     * PageTransCompoundMap() returns true for THP and
+>>> +     * hugetlbfs. Make sure the adjustment is done only for THP
+>>> +     * pages. Also make sure that the HVA and IPA are sufficiently
+>>> +     * aligned and that the  block map is contained within the memslot.
+>>> +     */
+>>> +    if (!PageHuge(page) && PageTransCompoundMap(page) &&
+>>
+>> We managed to get here, ensure that we only play with normal size pages
+>> and no hugetlbfs pages will be involved.  "!PageHuge(page)" will always
+>> return true and we can let it go.
+> 
+> I think that is a bit tricky. If someone ever modifies the user_mem_abort()
+> and we end up in getting called with a HugeTLB backed page things could go
+> wrong.
 
-Rasmus
+That will be bad. I'm not sure if it's possible in the future.
+
+> I could do remove the check, but would like to add a WARN_ON_ONCE() to make
+> sure our assumption is held.
+> 
+> i.e,
+>      WARN_ON_ONCE(PageHuge(page));
+
+But this is a careful approach. I think this will be valuable both for
+developers and the code itself. Thanks!
+
+
+zenghui
+
+> 
+>      if (PageTransCompoundMap(page) &&>> + 
+> fault_supports_stage2_huge_mapping(memslot, hva, PMD_SIZE)) {
+> 
+> ...
+> 
+
+
