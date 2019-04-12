@@ -2,136 +2,108 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01935C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA13C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A8D2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4GmL0YL8"
+	by mail.kernel.org (Postfix) with ESMTP id 7168F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 00:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfDLAV6 (ORCPT
+        id S1726897AbfDLAXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 20:21:58 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59380 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbfDLAV6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 20:21:58 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3C09vn3149950;
-        Fri, 12 Apr 2019 00:21:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=wN/MwZ3CVa4Cm3tgRbC0EkkYzPMnWNJvAXa/v3LMrCA=;
- b=4GmL0YL8HgIh0lfuNAIhLi5fgFMUu2v65Y9ITCJUrco5tdXqHMiI7sjqKva+q/IdoPV4
- 4lnjPnOyQad/Y7YUD+WdxA5cDCUZAqRk75RQM4abkGeWhopuAn73QSGenjkFJ02EtiSH
- wnSRoO6j7DHMxy8Rs6jeCqZzb60FxsOY7rg26pMdb7dYGHmrTkR81Zk+XCDFPHv9yXRz
- Xsl5FFNM8biFeY5wTnAM5sf88xahOADUgETRVmB5Co6smflVpFi/JBOQ0CJHtS5AkNar
- QgaVNOsAzOHe39vEP3kuXZ3e9rUEyA06EbK56c4NrHnatnNmFZ19y5MTdObYf5LbczZV xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2rphmeuyxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Apr 2019 00:21:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3C0Jhqf176560;
-        Fri, 12 Apr 2019 00:19:44 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2rpytd2hnm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Apr 2019 00:19:44 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3C0JgWA022936;
-        Fri, 12 Apr 2019 00:19:43 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 11 Apr 2019 17:19:42 -0700
-Date:   Thu, 11 Apr 2019 17:19:41 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: use struct_size() helper
-Message-ID: <20190412001941.GV15524@magnolia>
-References: <20190411233758.GA19031@embeddedor>
+        Thu, 11 Apr 2019 20:23:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60024 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbfDLAXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 20:23:53 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A3C3D85545;
+        Fri, 12 Apr 2019 00:23:52 +0000 (UTC)
+Received: from localhost (ovpn-12-23.pek2.redhat.com [10.72.12.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51A9D608BB;
+        Fri, 12 Apr 2019 00:23:48 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 08:23:45 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Dave Young <dyoung@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190412002345.GA6356@MiWiFi-R3L-srv>
+References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
+ <20190410171431.GE26580@zn.tnic>
+ <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
+ <20190411080927.GA30080@zn.tnic>
+ <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
+ <20190411084235.GJ3805@localhost.localdomain>
+ <1bb7bccb-0270-d073-fa2f-43e1a1c73fbe@ce.jp.nec.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411233758.GA19031@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9224 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904120000
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9224 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904120000
+In-Reply-To: <1bb7bccb-0270-d073-fa2f-43e1a1c73fbe@ce.jp.nec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 12 Apr 2019 00:23:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[fixing linux-xfs cc]
+On 04/11/19 at 09:14am, Junichi Nomura wrote:
+> On 4/11/19 5:42 PM, Baoquan He wrote:
+> > On 04/11/19 at 08:16am, Junichi Nomura wrote:
+> >> kexec_get_rsdp_addr() might fail on kexec-booted kernel, e.g. if the
+> >> setup_data was invalid. In such a case, falling back to efi_get_rsdp_addr()
+> >> will hit the problem of accessing invalid table pointer again.
+> > 
+> > Seems you are trying to address Dave Young's comment in 
+> > http://lkml.kernel.org/r/20190404073233.GC5708@dhcp-128-65.nay.redhat.com
+> 
+> Right. His "In case kexec_get_rsdp_addr failed.." comment.
+> 
+> > We may need discuss and make clear if those are doable. E.g the first
+> > comment, if not hang by below line of code, returning 0 for what? Can
+> > kexec still be saved, or just reset to firmware?
+> > 
+> > 	error("EFI system table not found in kexec boot_params.")
+> 
+> If we return 0 and also don't hang in the rest of get_rsdp_addr(),
+> it just work as the same way as v5.0 and earlier kernel do.
+> 
+> Failure cases in kexec_get_rsdp_addr() are followings:
+> 1. efi_setup_data is invalid
+> 2. loader signature is invalid
+> 3. EFI systab is not found in boot_params
+> 4. RSDP is not found by parsing tables pointed to by efi_setup_data
+> 
+> I think all of them are critical for EFI boot, so one option could be
+> we never return failure in kexec_get_rsdp_addr() and just hang.
+> But hanging in this very early stage of boot may make the problem
+> harder to investigate once happens. Even earlyprintk is not working yet.
+> So the other option is returning 0 to defer the crash for later stage.
 
-On Thu, Apr 11, 2019 at 06:37:58PM -0500, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded  version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace code of the following form:
-> 
-> sizeof(*alist) + context->count * sizeof(alist->al_offset[0]
-> 
-> with:
-> 
-> struct_size(alist, al_offset, context->count)
-> 
-> and remove unnecessary variable arraytop.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+OK, I got the point, thanks. So it is deferred to the late stage, KASLR
+may not avoid those memory region which is marked as hotpluggable in
+SRAT. Kernel can boot up, but doesn't function well on hotplug stuff.
+In this case, people don't know why it happened. We are still blind.
 
-Has this been run through xfstests?
+Seems early console in efi is the problem, but not kexec or hotplug. I
+am fine to hang, or make it continue booting for now.
 
---D
+Hi Dave, 
 
->  fs/xfs/xfs_attr_list.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
-> index 3d213a7394c5..05e03348553e 100644
-> --- a/fs/xfs/xfs_attr_list.c
-> +++ b/fs/xfs/xfs_attr_list.c
-> @@ -553,7 +553,6 @@ xfs_attr_put_listent(
->  {
->  	struct attrlist *alist = (struct attrlist *)context->alist;
->  	attrlist_ent_t *aep;
-> -	int arraytop;
->  
->  	ASSERT(!context->seen_enough);
->  	ASSERT(!(context->flags & ATTR_KERNOVAL));
-> @@ -572,10 +571,8 @@ xfs_attr_put_listent(
->  	    ((flags & XFS_ATTR_ROOT) == 0))
->  		return;
->  
-> -	arraytop = sizeof(*alist) +
-> -			context->count * sizeof(alist->al_offset[0]);
->  	context->firstu -= ATTR_ENTSIZE(namelen);
-> -	if (context->firstu < arraytop) {
-> +	if (context->firstu < struct_size(alist, al_offset, context->count)) {
->  		trace_xfs_attr_list_full(context);
->  		alist->al_more = 1;
->  		context->seen_enough = 1;
-> -- 
-> 2.21.0
-> 
+Is it possible to fix the efi early console issue? I mean the
+feasibility, I believe it won't be easy. Ask this because not only this
+issue encountered, any other issue could be triggered during boot
+decompressing stage. If efi has this problem, we can't debug them
+either.
