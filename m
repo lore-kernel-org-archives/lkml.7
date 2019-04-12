@@ -2,61 +2,88 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14146C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC9920643
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F6920643
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfDLLQu (ORCPT
+        id S1727190AbfDLLQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:16:50 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38588 "EHLO gloria.sntech.de"
+        Fri, 12 Apr 2019 07:16:54 -0400
+Received: from 8bytes.org ([81.169.241.247]:34386 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfDLLQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:16:50 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEuAp-00054d-Gb; Fri, 12 Apr 2019 13:16:47 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>, dbasehore@chromium.org,
-        amstan@chromium.org, linux-rockchip@lists.infradead.org,
-        briannorris@chromium.org, mka@chromium.org, ryandcase@chromium.org,
-        Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/5] ARM: dts: rockchip: Add DDR retention/poweroff to rk3288-veyron hogs
-Date:   Fri, 12 Apr 2019 13:16:46 +0200
-Message-ID: <5038829.dT3Rz05rMg@diego>
-In-Reply-To: <20190411232157.55125-3-dianders@chromium.org>
-References: <20190411232157.55125-1-dianders@chromium.org> <20190411232157.55125-3-dianders@chromium.org>
+        id S1726682AbfDLLQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 07:16:53 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5249D21D; Fri, 12 Apr 2019 13:16:51 +0200 (CEST)
+Date:   Fri, 12 Apr 2019 13:16:50 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH v5 1/6] iommu: add generic boot option iommu.dma_mode
+Message-ID: <20190412111649.GK4518@8bytes.org>
+References: <20190409125308.18304-1-thunder.leizhen@huawei.com>
+ <20190409125308.18304-2-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409125308.18304-2-thunder.leizhen@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 12. April 2019, 01:21:55 CEST schrieb Douglas Anderson:
-> Even though upstream Linux doesn't yet go into deep enough suspend to
-> get DDR into self refresh, there is no harm in setting these pins up.
-> They'll only actually do something if we go into a deeper suspend but
-> leaving them configed always is fine.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Tue, Apr 09, 2019 at 08:53:03PM +0800, Zhen Lei wrote:
+> +static int __init iommu_dma_mode_setup(char *str)
+> +{
+> +	if (!str)
+> +		goto fail;
+> +
+> +	if (!strncmp(str, "passthrough", 11))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_PASSTHROUGH;
+> +	else if (!strncmp(str, "lazy", 4))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_LAZY;
+> +	else if (!strncmp(str, "strict", 6))
+> +		iommu_default_dma_mode = IOMMU_DMA_MODE_STRICT;
+> +	else
+> +		goto fail;
+> +
+> +	pr_info("Force dma mode to be %d\n", iommu_default_dma_mode);
 
-applied for 5.2
-
-Thanks
-Heiko
+Printing a number is not very desriptive or helpful to the user. Please
+print the name of the mode instead.
 
 
+Regards,
+
+	Joerg
