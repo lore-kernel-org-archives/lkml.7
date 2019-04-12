@@ -2,83 +2,168 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E179AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B95C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E352171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55532184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k3ar99Eg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDLHSS (ORCPT
+        id S1727074AbfDLHTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:18:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:39019 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfDLHSS (ORCPT
+        Fri, 12 Apr 2019 03:19:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40551 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfDLHTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:18:18 -0400
-Received: from [192.168.1.110] ([77.9.22.14]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N5mWp-1gnDLm3t51-017GnO; Fri, 12 Apr 2019 09:17:30 +0200
-Subject: Re: [PATCH] tty: Add NULL TTY driver
-To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
- <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
- <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
- <20190405090043.vnsftwpdm56cx2hr@axis.com>
- <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
- <20190411130458.GA11390@localhost.localdomain>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c77474fd-96d6-392b-9a54-fd7e6a29b72d@metux.net>
-Date:   Fri, 12 Apr 2019 09:17:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 12 Apr 2019 03:19:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d31so4752689pgl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 00:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CdjtSJDgHKJru6yUdFHRXvszC0gLu6QOE1jwOSiM3wo=;
+        b=k3ar99EgtK0dqas/r9PN3Rr3t76D9gBsDKkAodBiVTEwsoi7XeDIMGzwfQq/6KA28R
+         Bcqil7x3kileoFA5ha1N9tAhZLfA2XwRweyPw6m1IW2mrEV/i/ud3+wjk4OHHy4yjQ3j
+         JGcbk3pFh1TYHXWxKKzEhPM6ht4wVXuDxOIGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CdjtSJDgHKJru6yUdFHRXvszC0gLu6QOE1jwOSiM3wo=;
+        b=k446F6r+RKRim2lBoqoLYOSHwt2xDC/Bcee/Tp8GB16ByL19GByiJA764L7OYVkH3x
+         loSOyWeqxt6VhpNVO/esoRpAFQ79lBtV4MWSBzSiahVyHHYpLSqshBC1ORqNurG6Mwci
+         5d/OENtomFI25Gqe9A0+itq9b/+w1PY8FnNroSzQiNI6hmzuAIuDfSEyp+6fCRHCyBoD
+         sDNKYyLXc8l1ZN0J/ZZTDCy0KxXXLf/hIWypwUxU/XJX13y4N0x9Utg0GMAydafUfb+d
+         iuthOLOm6ztuy962Ise1o8/35evd5n0q5Ck6bcz7YUVnba+KJJ9zR/Y4jhvS5J89M+1f
+         qGzw==
+X-Gm-Message-State: APjAAAXr+qOrNVMBfW4fJkzIMEA6TzbqFzj8/sL6PQ3lTXcBgYgx3lO+
+        bei60l2Vsa6Gjqn2LtU8vjqmuw==
+X-Google-Smtp-Source: APXvYqxP05gur/nI+G/dnr2eF92/8BJsDmSRYeo90ro2iYEHKz6691iRSzkpJvaIIMPYa1GHHjs8sA==
+X-Received: by 2002:a65:5343:: with SMTP id w3mr51446957pgr.232.1555053563699;
+        Fri, 12 Apr 2019 00:19:23 -0700 (PDT)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id k124sm67466862pgc.65.2019.04.12.00.19.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 00:19:23 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
+        (REMOTEPROC) SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v8 1/7] dt-bindings: Add a binding for Mediatek SCP
+Date:   Fri, 12 Apr 2019 15:18:45 +0800
+Message-Id: <20190412071851.60332-2-pihsun@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190412071851.60332-1-pihsun@chromium.org>
+References: <20190412071851.60332-1-pihsun@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190411130458.GA11390@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:qyehZw4BxFk0EO6zWqfZLo+RVqSCdP13a+fDHUYtMLpXvZmb1V7
- Uf8rxcfwsa+Is2nUXaMYrKL59zcMQLpmPKwnA09g/mwFr/2pNhUokBoMajczvn3uk2xbZjC
- i75NxWRvdPHOfJQITlt/zyt0yUO2uUFnXcw9uGci3D+VmGJotav4EHOdUa19zYmiwy85m4V
- 6psMZrBfZ2IfkqyWrty+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:907ZcZ8n834=:C4LhqoM3TQG9w8qqzWPGMf
- MPrkSdammynho9pr4IpsNLSZpLa+4CLq0OE+DeTsLgxw8Alyhqv5V/fTsixhfYm8h4wy93yAr
- Nv03iNFPUyxIx0W+7/hO9mctH80ar9A93E6jbaY+xBG0AT1OFQOu0qFUxBjRz8QNYJnekAK3Q
- isU+Mboe7VZOa81azFn4v0CMjpVIlz/Cb7xuqRoTczi9k8PiaIiyKerYnEK4ehZgZ8D3z9ujl
- UKP3WbPy+Bsc4rJlGiaioS3O3T672y3VemDvXJLptsUJQP1f9zBgRFZI1NCkSJuP38wVJLuIG
- uBw/KEVc27dRuu6+7ywY86GqM3Hhtr1n2GgY2rPTah/dOiG+Uzj0lPU9Ikexl4hgEpwxLOdpU
- GxkbVl836D0ExTCHRf9kO+zpw8P0HbSdeyfv0W03zVfphJCD0rI8N1YufQKeYcadKJEwynxxz
- gd4aUzOOBOfTeZBU/e/C321erOxk8kc/nT2c+KgaNWLkIg5ui7Dh9cZTYCPFTwCyCh2ezzwLx
- JhRkltL7194IXYne0qcxYKPRkcWokPrbqTP60EDZlHgbj3bDdCZHcUuYTT2Ze9ndsNApM/Uux
- K151IScG4jjeNNhVXHehHkouzA8Fug1DwXXY7cvYbQIz6waZk0NakisYDxhWV2wsy1oXSN3GB
- ZeXJned62K+pDSK8GkCJXid8RjdQn6sQ7OrvgoG+gH6FRFMVPlQyUqpdbeEusHLvorjq6CepK
- rjvEGiGa0W/849Fb5nSgSmFlGZIDqLEusV9AqNypxHysBR2/GSsS8EYN0e4=
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.19 15:05, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
+From: Erin Lo <erin.lo@mediatek.com>
 
-> There are (embedded) cases where the kernel ring buffer is stored for> log inspection and all the logs that are *not* wanted there (like>
-interactive debug logs, some progress bar, etc) are send specifically
-to> /dev/console to avoid sending them to normal log store (as they are
-only> useful when debugging over console). In non-debug mode
-/dev/console> becomes /dev/null to speed things up.
-So, in your case, it doesn't need to be an actual tty, any file/chardev
-already do it, correct ? But then, why is that new driver needed ?
---mtx
+Add a DT binding documentation of SCP for the
+MT8183 SoC from Mediatek.
 
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes from v7:
+ - No change.
+
+Changes from v6:
+ - No change.
+
+Changes from v5:
+ - Remove dependency on CONFIG_RPMSG_MTK_SCP.
+
+Changes from v4:
+ - Add detail of more properties.
+ - Document the usage of mtk,rpmsg-name in subnode from the new design.
+
+Changes from v3:
+ - No change.
+
+Changes from v2:
+ - No change. I realized that for this patch series, there's no need to
+   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+   created by SCP name service.
+
+Changes from v1:
+ - No change.
+---
+ .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+new file mode 100644
+index 000000000000..3ba668bab14b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+@@ -0,0 +1,36 @@
++Mediatek SCP Bindings
++----------------------------------------
++
++This binding provides support for ARM Cortex M4 Co-processor found on some
++Mediatek SoCs.
++
++Required properties:
++- compatible		Should be "mediatek,mt8183-scp"
++- reg			Should contain the address ranges for the two memory
++			regions, SRAM and CFG.
++- reg-names		Contains the corresponding names for the two memory
++			regions. These should be named "sram" & "cfg".
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- clock-names		Contains the corresponding name for the clock. This
++			should be named "main".
++
++Subnodes
++--------
++
++Subnodes of the SCP represent rpmsg devices. The names of the devices are not
++important. The properties of these nodes are defined by the individual bindings
++for the rpmsg devices - but must contain the following property:
++
++- mtk,rpmsg-name	Contains the name for the rpmsg device. Used to match
++			the subnode to rpmsg device announced by SCP.
++
++Example:
++
++	scp: scp@10500000 {
++		compatible = "mediatek,mt8183-scp";
++		reg = <0 0x10500000 0 0x80000>,
++		      <0 0x105c0000 0 0x5000>;
++		reg-names = "sram", "cfg";
++		clocks = <&infracfg CLK_INFRA_SCPSYS>;
++		clock-names = "main";
++	};
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.21.0.392.gf8f6787159e-goog
+
