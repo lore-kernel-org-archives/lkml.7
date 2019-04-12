@@ -2,159 +2,161 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F1C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEE5C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB982186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YruH5Z8k"
+	by mail.kernel.org (Postfix) with ESMTP id DD27B20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfDLOPx (ORCPT
+        id S1727023AbfDLOQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:15:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36394 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfDLOPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:15:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y13so12207498wrd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isbfV1XuLmSpqEnWQt10kSQKeIpdWz/ULZrB6D6jy+I=;
-        b=YruH5Z8k4xgBUu9CWgTjJxHl9UejxUlH4wKD2JYwoVT1K9bMqY2J0WZ4aH0XowCf//
-         PLimMyeT9FQxLNkGP5+rF6qZrPR5v40N9+ob4Ni2vTf6QS1ojN17wnaqP1NF/ezgvNpL
-         q4t5yrXc2C1MhGV5BLsB7qRIA0KVy6rXdRmdCkue2x8a1iHwKrzOf7t6NJZUj8bUemYd
-         brERkcwx4YaBMgOPn1TycG4owa7UkE89eBHGApo1DDT3j34IjoqXmEjBefuTslWywqhW
-         s0NUzc7Bnjdn355uD7LTANNF9cpjTDWW2k0Rk6IRkQV79g997xLIlBWM5Rl12JJjGLcF
-         oM6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isbfV1XuLmSpqEnWQt10kSQKeIpdWz/ULZrB6D6jy+I=;
-        b=MuB3N91M4p+YuLP5djJkonCt6sez++e+nV03sq9ZiysSQD+pWU1NoHltLEtR4/OtVi
-         Th6S4GDGszVI/lxU8L4SKvMUSJHGPjqg23IH7HavRNk/ksbrqnVPJvuSUpnDZwZ5mZHS
-         79k5Fgmw1TBe/ImTJigFeMhDRSH7UNpX37FHDiBAr30EBBNZtHRuKFFct3XizW8mhucK
-         eNd2S+cQs3V4aFfW80xbHqR62PM3ZqhbhB5qNH2EjKn/plSxbsB8Nd4JVC9ykgpmSY9t
-         PVOZT3RJ45BTLpWNSXHDzzRU5GvG3wmifulT0cqBl4+LGXbn0a7tKFGb9iDzXbtstgOp
-         d2Qw==
-X-Gm-Message-State: APjAAAVVhesmTTLFC6cumeuBgYQBzWz6jlmvT5wgcG7AlBDwBcKeulND
-        kiuniJJwsp4ViH42oJ/Z0oPLfb8in9S5msckcTpv7Q==
-X-Google-Smtp-Source: APXvYqyTWIVUGogwRz9I6WBbV2kdbjd9f4qSSX9DwdSED9R2DW1oXEigJDSNwpZHBM55VZPccwUi49k0BSHfPsU/Kdc=
-X-Received: by 2002:adf:cf0c:: with SMTP id o12mr16912460wrj.16.1555078549686;
- Fri, 12 Apr 2019 07:15:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190411014353.113252-1-surenb@google.com> <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org> <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
- <CAKOZuetFU4tXE27bxA86zzDfNSCbw83p8fPxfkQ_d_Em0C04Sg@mail.gmail.com>
- <20190411173649.GF22763@bombadil.infradead.org> <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
- <20190412064925.GB13373@dhcp22.suse.cz>
-In-Reply-To: <20190412064925.GB13373@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Fri, 12 Apr 2019 07:15:38 -0700
-Message-ID: <CAJuCfpEHhcrGFxsCmPsZu=aPmYDB0yCeb2Fhs405eH3os-amuQ@mail.gmail.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        Fri, 12 Apr 2019 10:16:34 -0400
+Received: from foss.arm.com ([217.140.101.70]:33794 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbfDLOQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:16:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72D17374;
+        Fri, 12 Apr 2019 07:16:33 -0700 (PDT)
+Received: from [10.1.199.35] (e107154-lin.cambridge.arm.com [10.1.199.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0813F557;
+        Fri, 12 Apr 2019 07:16:23 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] arm64: Define Documentation/arm64/elf_at_flags.txt
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        yuzhoujian@didichuxing.com,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dave Martin <Dave.Martin@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Graeme Barnes <Graeme.Barnes@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+References: <cover.1552679409.git.andreyknvl@google.com>
+ <20190318163533.26838-1-vincenzo.frascino@arm.com>
+ <20190318163533.26838-3-vincenzo.frascino@arm.com>
+ <859341c2-b352-e914-312a-d3de652495b6@arm.com>
+ <20190403165031.GE34351@arrakis.emea.arm.com>
+From:   Kevin Brodsky <kevin.brodsky@arm.com>
+Message-ID: <d2292560-54cf-8dc3-da96-4ccdd72d090e@arm.com>
+Date:   Fri, 12 Apr 2019 15:16:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
+MIME-Version: 1.0
+In-Reply-To: <20190403165031.GE34351@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 11:49 PM Michal Hocko <mhocko@kernel.org> wrote:
+On 03/04/2019 17:50, Catalin Marinas wrote:
+> On Fri, Mar 22, 2019 at 03:52:49PM +0000, Kevin Brodsky wrote:
+>> On 18/03/2019 16:35, Vincenzo Frascino wrote:
+>>> +2. Features exposed via AT_FLAGS
+>>> +--------------------------------
+>>> +
+>>> +bit[0]: ARM64_AT_FLAGS_SYSCALL_TBI
+>>> +
+>>> +    On arm64 the TCR_EL1.TBI0 bit has been always enabled on the arm64
+>>> +    kernel, hence the userspace (EL0) is allowed to set a non-zero value
+>>> +    in the top byte but the resulting pointers are not allowed at the
+>>> +    user-kernel syscall ABI boundary.
+>>> +    When bit[0] is set to 1 the kernel is advertising to the userspace
+>>> +    that a relaxed ABI is supported hence this type of pointers are now
+>>> +    allowed to be passed to the syscalls, when these pointers are in
+>>> +    memory ranges privately owned by a process and obtained by the
+>>> +    process in accordance with the definition of "valid tagged pointer"
+>>> +    in paragraph 3.
+>>> +    In these cases the tag is preserved as the pointer goes through the
+>>> +    kernel. Only when the kernel needs to check if a pointer is coming
+>>> +    from userspace an untag operation is required.
+>> I would leave this last sentence out, because:
+>> 1. It is an implementation detail that doesn't impact this user ABI.
+>> 2. It is not entirely accurate: untagging the pointer may be needed for
+>> various kinds of address lookup (like finding the corresponding VMA), at
+>> which point the kernel usually already knows it is a userspace pointer.
+> I fully agree, the above paragraph should not be part of the user ABI
+> document.
 >
-> On Thu 11-04-19 10:47:50, Daniel Colascione wrote:
-> > On Thu, Apr 11, 2019 at 10:36 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Thu, Apr 11, 2019 at 10:33:32AM -0700, Daniel Colascione wrote:
-> > > > On Thu, Apr 11, 2019 at 10:09 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > > On Thu, Apr 11, 2019 at 8:33 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > > > >
-> > > > > > On Wed, Apr 10, 2019 at 06:43:53PM -0700, Suren Baghdasaryan wrote:
-> > > > > > > Add new SS_EXPEDITE flag to be used when sending SIGKILL via
-> > > > > > > pidfd_send_signal() syscall to allow expedited memory reclaim of the
-> > > > > > > victim process. The usage of this flag is currently limited to SIGKILL
-> > > > > > > signal and only to privileged users.
-> > > > > >
-> > > > > > What is the downside of doing expedited memory reclaim?  ie why not do it
-> > > > > > every time a process is going to die?
-> > > > >
-> > > > > I think with an implementation that does not use/abuse oom-reaper
-> > > > > thread this could be done for any kill. As I mentioned oom-reaper is a
-> > > > > limited resource which has access to memory reserves and should not be
-> > > > > abused in the way I do in this reference implementation.
-> > > > > While there might be downsides that I don't know of, I'm not sure it's
-> > > > > required to hurry every kill's memory reclaim. I think there are cases
-> > > > > when resource deallocation is critical, for example when we kill to
-> > > > > relieve resource shortage and there are kills when reclaim speed is
-> > > > > not essential. It would be great if we can identify urgent cases
-> > > > > without userspace hints, so I'm open to suggestions that do not
-> > > > > involve additional flags.
-> > > >
-> > > > I was imagining a PI-ish approach where we'd reap in case an RT
-> > > > process was waiting on the death of some other process. I'd still
-> > > > prefer the API I proposed in the other message because it gets the
-> > > > kernel out of the business of deciding what the right signal is. I'm a
-> > > > huge believer in "mechanism, not policy".
-> > >
-> > > It's not a question of the kernel deciding what the right signal is.
-> > > The kernel knows whether a signal is fatal to a particular process or not.
-> > > The question is whether the killing process should do the work of reaping
-> > > the dying process's resources sometimes, always or never.  Currently,
-> > > that is never (the process reaps its own resources); Suren is suggesting
-> > > sometimes, and I'm asking "Why not always?"
-> >
-> > FWIW, Suren's initial proposal is that the oom_reaper kthread do the
-> > reaping, not the process sending the kill. Are you suggesting that
-> > sending SIGKILL should spend a while in signal delivery reaping pages
-> > before returning? I thought about just doing it this way, but I didn't
-> > like the idea: it'd slow down mass-killing programs like killall(1).
-> > Programs expect sending SIGKILL to be a fast operation that returns
-> > immediately.
+>>> +3. ARM64_AT_FLAGS_SYSCALL_TBI
+>>> +-----------------------------
+>>> +
+>>> +From the kernel syscall interface prospective, we define, for the purposes
+>>> +of this document, a "valid tagged pointer" as a pointer that either it has
+>>> +a zero value set in the top byte or it has a non-zero value, it is in memory
+>>> +ranges privately owned by a userspace process and it is obtained in one of
+>>> +the following ways:
+>>> +  - mmap() done by the process itself, where either:
+>>> +    * flags = MAP_PRIVATE | MAP_ANONYMOUS
+>>> +    * flags = MAP_PRIVATE and the file descriptor refers to a regular
+>>> +      file or "/dev/zero"
+>>> +  - a mapping below sbrk(0) done by the process itself
+>> I don't think that's very clear, this doesn't say how the mapping is
+>> obtained. Maybe "a mapping obtained by the process using brk() or sbrk()"?
+> I think what we mean here is anything in the "[heap]" section as per
+> /proc/*/maps (in the kernel this would be start_brk to brk).
 >
-> I was thinking about this as well. And SYNC_SIGKILL would workaround the
-> current expectations of how quick the current implementation is. The
-> harder part would what is the actual semantic. Does the kill wait until
-> the target task is TASK_DEAD or is there an intermediate step that would
-> we could call it end of the day and still have a reasonable semantic
-> (e.g. the original pid is really not alive anymore).
+>>> +  - any memory mapped by the kernel in the process's address space during
+>>> +    creation and following the restrictions presented above (i.e. data, bss,
+>>> +    stack).
+>> With the rules above, the code section is included as well. Replacing "i.e."
+>> with "e.g." would avoid having to list every single section (which is
+>> probably not a good idea anyway).
+> We could mention [stack] explicitly as that's documented in the
+> Documentation/filesystems/proc.txt and it's likely considered ABI
+> already.
+>
+> The code section is MAP_PRIVATE, and can be done by the dynamic loader
+> (user process), so it falls under the mmap() rules listed above. I guess
+> we could simply drop "done by the process itself" here and allow
+> MAP_PRIVATE|MAP_ANONYMOUS or MAP_PRIVATE of regular file. This would
+> cover the [heap] and [stack] and we won't have to debate the brk() case
+> at all.
 
-I think Daniel's proposal was trying to address that. With an input of
-how many pages user wants to reclaim asynchronously and return value
-of how much was actually reclaimed it contains the condition when to
-stop and the reply how successful we could accomplish that. Since it
-returns the number of pages reclaimed I assume the call does not
-return until it reaped enough pages.
+That's probably the best option. I initially used this wording because I was worried 
+that there could be cases where the kernel allocates "magic" memory for userspace 
+that is MAP_PRIVATE|MAP_ANONYMOUS, but in fact it's probably not the case (presumably 
+such mapping should always be done via install_special_mapping(), which is definitely 
+not MAP_PRIVATE).
 
-> --
-> Michal Hocko
-> SUSE Labs
+> We probably mention somewhere (or we should in the tagged pointers doc)
+> that we don't support tagged PC.
+
+I think that Documentation/arm64/tagged-pointers.txt already makes it reasonably 
+clear (anyway, with the architecture not supporting it, you can't expect much from 
+the kernel).
+
+Kevin
