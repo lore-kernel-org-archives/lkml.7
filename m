@@ -3,37 +3,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDDAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC72DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD1820818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEA5218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfDLWu2 (ORCPT
+        id S1727289AbfDLWuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:50:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36610 "EHLO
+        Fri, 12 Apr 2019 18:50:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36616 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLWu1 (ORCPT
+        with ESMTP id S1726765AbfDLWug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:50:27 -0400
-Received: from [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d] (unknown [IPv6:2804:431:9718:a5e8:c168:522a:50d5:d06d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
+        Fri, 12 Apr 2019 18:50:36 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 47321281631;
-        Fri, 12 Apr 2019 23:49:35 +0100 (BST)
-Subject: Re: [PATCH v2 08/15] media: vimc: cap: Add multiplanar default format
+        with ESMTPSA id 4ADC5281631
+Subject: Re: [PATCH v2 10/15] media: vimc: Propagate multiplanar state in the
+ stream
 To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
         linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         lkcamp@lists.libreplanetbr.org
 References: <20190327151743.18528-1-andrealmeid@collabora.com>
- <20190327151743.18528-9-andrealmeid@collabora.com>
+ <20190327151743.18528-11-andrealmeid@collabora.com>
 From:   Helen Koike <helen.koike@collabora.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=helen.koike@collabora.com; keydata=
@@ -110,12 +108,12 @@ Autocrypt: addr=helen.koike@collabora.com; keydata=
  iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
  46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
  eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <9f3290ab-c0d0-a56a-c6dc-64b1b791fa6c@collabora.com>
-Date:   Fri, 12 Apr 2019 19:49:31 -0300
+Message-ID: <50b63adb-b52a-584f-fca6-ca6fff97f7e6@collabora.com>
+Date:   Fri, 12 Apr 2019 19:50:26 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190327151743.18528-9-andrealmeid@collabora.com>
+In-Reply-To: <20190327151743.18528-11-andrealmeid@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -127,111 +125,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 3/27/19 12:17 PM, André Almeida wrote:
-> vimc already have a default single planar default format.
-
-The word "default" is repeated twice.
-
-> Add a multiplanar default pixel format to perform those
-> same actions. Change where the default pixelformat is set to make sure
-> that the vcap is with the right capabilities.
+> Add a multiplanar flag in vimc_stream in order to propagate the
+> state (singleplanar/multiplanar) to subdevices at the stream.
 > 
 > Signed-off-by: André Almeida <andrealmeid@collabora.com>
 > ---
 > Change in v2:
-> - Move here the default format is set to verify if the device have a
-> multiplanar capability before assign the default format
+> - New commit
 > 
->  drivers/media/platform/vimc/vimc-capture.c | 38 +++++++++++++++++-----
->  1 file changed, 30 insertions(+), 8 deletions(-)
+>  drivers/media/platform/vimc/vimc-capture.c  | 7 +++++--
+>  drivers/media/platform/vimc/vimc-streamer.h | 3 +++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index a65611be63bb..c344d04ed8ea 100644
+> index 57bc2b64b093..3c93fbd51629 100644
 > --- a/drivers/media/platform/vimc/vimc-capture.c
 > +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -104,6 +104,15 @@ static const struct v4l2_format fmt_default = {
->  	.fmt.pix.colorspace = V4L2_COLORSPACE_DEFAULT,
+> @@ -454,12 +454,15 @@ static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  		return ret;
+>  	}
+>  
+> -	if (IS_MULTIPLANAR(vcap))
+> +	if (IS_MULTIPLANAR(vcap)) {
+>  		vcap->stream.producer_pixfmt =
+>  			vcap->format.fmt.pix_mp.pixelformat;
+> -	else
+> +		vcap->stream.multiplanar = true;
+> +	} else {
+>  		vcap->stream.producer_pixfmt =
+>  			vcap->format.fmt.pix.pixelformat;
+> +		vcap->stream.multiplanar = false;
+> +	}
+
+I believe you could have just:
+
+vcap->stream.multiplanar = IS_MULTIPLANAR(vcap);
+
+>  
+>  	ret = vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 1);
+>  	if (ret) {
+> diff --git a/drivers/media/platform/vimc/vimc-streamer.h b/drivers/media/platform/vimc/vimc-streamer.h
+> index 2b3667408794..4878e0b72ea7 100644
+> --- a/drivers/media/platform/vimc/vimc-streamer.h
+> +++ b/drivers/media/platform/vimc/vimc-streamer.h
+> @@ -25,6 +25,8 @@
+>   * processed in the pipeline.
+>   * @pipe_size:		size of @ved_pipeline
+>   * @kthread:		thread that generates the frames of the stream.
+> + * @multiplanar:	sets if the stream is running in multiplanar or
+> + * singleplanar format mode
+>   * @producer_pixfmt:	the pixel format requested from the pipeline. This must
+>   * be set just before calling vimc_streamer_s_stream(ent, 1). This value is
+>   * propagated up to the source of the base image (usually a sensor node) and
+> @@ -40,6 +42,7 @@ struct vimc_stream {
+>  	struct vimc_ent_device *ved_pipeline[VIMC_STREAMER_PIPELINE_MAX_SIZE];
+>  	unsigned int pipe_size;
+>  	struct task_struct *kthread;
+> +	bool multiplanar;
+>  	u32 producer_pixfmt;
 >  };
 >  
-> +static const struct v4l2_format fmt_default_mp = {
-
-I would just add a "_sp" sufix to the sp version to make it consistent
-with previous patches.
-
-> +	.type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-> +	.fmt.pix_mp.width = 640,
-> +	.fmt.pix_mp.height = 480,
-> +	.fmt.pix_mp.pixelformat = V4L2_PIX_FMT_YVU420M,
-> +	.fmt.pix_mp.field = V4L2_FIELD_NONE,
-> +	.fmt.pix_mp.colorspace = V4L2_COLORSPACE_DEFAULT,
-> +};
-> +
->  struct vimc_cap_buffer {
->  	/*
->  	 * struct vb2_v4l2_buffer must be the first element
-> @@ -153,6 +162,7 @@ static int _vimc_cap_try_fmt_vid_cap_mp(struct file *file, void *priv,
->  				    struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *format = &f->fmt.pix_mp;
-> +	struct vimc_cap_device *vcap = video_drvdata(file);
->  
->  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
->  				VIMC_FRAME_MAX_WIDTH) & ~1;
-> @@ -168,7 +178,9 @@ static int _vimc_cap_try_fmt_vid_cap_mp(struct file *file, void *priv,
->  
->  	/* Don't accept a pixelformat that is not on the table */
->  	if (!v4l2_format_info(format->pixelformat))
-> -		format->pixelformat = fmt_default.fmt.pix.pixelformat;
-> +		format->pixelformat = IS_MULTIPLANAR(vcap) ?
-> +				fmt_default_mp.fmt.pix_mp.pixelformat :
-> +				fmt_default.fmt.pix.pixelformat;
->  
->  	return v4l2_fill_pixfmt_mp(format, format->pixelformat,
->  				   format->width, format->height);
-> @@ -651,13 +663,6 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->  	INIT_LIST_HEAD(&vcap->buf_list);
->  	spin_lock_init(&vcap->qlock);
->  
-> -	/* Set default frame format */
-> -	vcap->format = fmt_default;
-> -	v4l2_fill_pixfmt(&vcap->format.fmt.pix,
-> -			 vcap->format.fmt.pix.pixelformat,
-> -			 vcap->format.fmt.pix.width,
-> -			 vcap->format.fmt.pix.height);
-> -
->  	/* Fill the vimc_ent_device struct */
->  	vcap->ved.ent = &vcap->vdev.entity;
->  	vcap->ved.process_frame = vimc_cap_process_frame;
-> @@ -679,6 +684,23 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
->  	strscpy(vdev->name, pdata->entity_name, sizeof(vdev->name));
->  	video_set_drvdata(vdev, &vcap->ved);
->  
-> +	dev_dbg(vcap->dev, "vimc-capture is in %s mode", IS_MULTIPLANAR(vcap) ?
-> +		"multiplanar" : "singleplanar");
-
-I think if you put the check in the second line it would be better:
-
-IS_MULTIPLANAR(vcap) ? "multiplanar" : "singleplanar"
-
-(this is just a suggestion, feel free to take it or not).
-
-Helen
-
-> +
-> +	if (IS_MULTIPLANAR(vcap)) {
-> +		vcap->format = fmt_default_mp;
-> +		v4l2_fill_pixfmt_mp(&vcap->format.fmt.pix_mp,
-> +				vcap->format.fmt.pix_mp.pixelformat,
-> +				vcap->format.fmt.pix_mp.width,
-> +				vcap->format.fmt.pix_mp.height);
-> +	} else {
-> +		vcap->format = fmt_default;
-> +		v4l2_fill_pixfmt(&vcap->format.fmt.pix,
-> +				vcap->format.fmt.pix.pixelformat,
-> +				vcap->format.fmt.pix.width,
-> +				vcap->format.fmt.pix.height);
-> +	}
-> +
->  	/* Register the video_device with the v4l2 and the media framework */
->  	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
->  	if (ret) {
 > 
