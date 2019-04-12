@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97969C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BEC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7418A2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC60D2186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfDLGBu (ORCPT
+        id S1727015AbfDLGB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:01:50 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:50730 "EHLO mxct.zte.com.cn"
+        Fri, 12 Apr 2019 02:01:58 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:30258 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfDLGBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:01:38 -0400
+        id S1726061AbfDLGBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:01:35 -0400
 Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 4E785C5B7025EE087238;
-        Fri, 12 Apr 2019 14:01:36 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 99E1B5981A68DA46C248;
+        Fri, 12 Apr 2019 14:01:32 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x3C61RbO088889;
-        Fri, 12 Apr 2019 14:01:27 +0800 (GMT-8)
+        by mse01.zte.com.cn with ESMTP id x3C61PjJ088850;
+        Fri, 12 Apr 2019 14:01:25 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019041214020665-8432948 ;
-          Fri, 12 Apr 2019 14:02:06 +0800 
+          with ESMTP id 2019041214020516-8432935 ;
+          Fri, 12 Apr 2019 14:02:05 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 5/5] pinctrl: zte: fix leaked of_node references
-Date:   Fri, 12 Apr 2019 14:02:23 +0800
-Message-Id: <1555048943-39589-6-git-send-email-wen.yang99@zte.com.cn>
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH 2/5] pinctrl: rockchip: fix leaked of_node references
+Date:   Fri, 12 Apr 2019 14:02:20 +0800
+Message-Id: <1555048943-39589-3-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn>
 References: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-04-12 14:02:06,
+ 21, 2013) at 2019-04-12 14:02:05,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-04-12 14:01:13,
-        Serialize complete at 2019-04-12 14:01:13
-X-MAIL: mse01.zte.com.cn x3C61RbO088889
+ 2019-04-12 14:01:12,
+        Serialize complete at 2019-04-12 14:01:12
+X-MAIL: mse01.zte.com.cn x3C61PjJ088850
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,35 +59,32 @@ incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3221:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
+./drivers/pinctrl/pinctrl-rockchip.c:3223:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3196, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
 Cc: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/pinctrl/zte/pinctrl-zx.c | 1 +
+ drivers/pinctrl/pinctrl-rockchip.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
-index caa44dd..3cb6930 100644
---- a/drivers/pinctrl/zte/pinctrl-zx.c
-+++ b/drivers/pinctrl/zte/pinctrl-zx.c
-@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
- 	}
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 16bf21b..e22d387 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -3195,6 +3195,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
  
- 	zpctl->aux_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!zpctl->aux_base)
- 		return -ENOMEM;
- 
+ 		node = of_parse_phandle(bank->of_node->parent,
+ 					"rockchip,pmu", 0);
++		of_node_put(node);
+ 		if (!node) {
+ 			if (of_address_to_resource(bank->of_node, 1, &res)) {
+ 				dev_err(info->dev, "cannot find IO resource for bank\n");
 -- 
 2.9.5
 
