@@ -2,128 +2,142 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D73C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57C6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607C22171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E292186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N7csTN6U"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="y/EpSJ0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfDLICD (ORCPT
+        id S1727258AbfDLICU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:02:03 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:1962 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfDLICB (ORCPT
+        Fri, 12 Apr 2019 04:02:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33053 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfDLICU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:02:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb045e80000>; Fri, 12 Apr 2019 01:01:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 12 Apr 2019 01:02:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 12 Apr 2019 01:02:00 -0700
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Apr
- 2019 08:02:00 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 2105641B97; Fri, 12 Apr 2019 11:01:58 +0300 (EEST)
-Date:   Fri, 12 Apr 2019 11:01:58 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 3/3] ARM: dts: tegra30: Add External Memory Controller
- node
-Message-ID: <20190412080158.GG12975@pdeschrijver-desktop.Nvidia.com>
-References: <20190411230221.31362-1-digetx@gmail.com>
- <20190411230221.31362-4-digetx@gmail.com>
+        Fri, 12 Apr 2019 04:02:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t16so4743621plo.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 01:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pFtD6XTcrj9w2SnuHqodWDjdloefY+ALagCjvVxogs=;
+        b=y/EpSJ0C1eHt/lvss8ZPJr7850TfkJ5XeXJKMTlnxIVhNOyQInppg9d9H+x22KCvUg
+         W1t0RD+j46OZ9Oh6hFJ2Mo6ZvQgFAL9bufLooT8qROiIZkcsBcZn7noKE8CIBCGQbjw7
+         x45loZaGQtSgJpv8fqZKkWLI4M1Ps4Rd6PaOV9Om5p4RfaQu0zimZ9D7zoxOqMzySNnB
+         6dJaDrCeP901Bh5GYqxxR2l4ZJcoCwUx1RQFwSnw/QA8TrYUnpdRgWqknmPsLTZPd36k
+         u9TqZbaTq2vE8ktgrN2p45qDyT8/cmcqkXcy61JPnLYvCb3oTWQFuoWwLRIhvUfCDxT/
+         R75w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8pFtD6XTcrj9w2SnuHqodWDjdloefY+ALagCjvVxogs=;
+        b=RcPRW9zVaoGOgRZlrpyWVVZkO7p112rvTi9Z0GpNtu01C1ln8dXF8JW5gsSTQyZIl5
+         hX/oIUNoWc4qXcymftjVlFdNzlahgbSTSYcHDKIQVR/2NcgXhuKvj9/RAuLeDR9INomU
+         SqeiReY4SJ18Xn3KfA6Urryh0DrLsaenokjbe7Ti/USMVTPGultHVGGWMBDFrmwMMAyJ
+         vvOQcDmhhskEJ7UyMxb/CvoZbHM1W1gQLyttuHu+dLFPMuDfc1SAzy2N66LD4LMAMnPn
+         redMdXL6zkG0o2Xfha1stpFYHyd/pEIp5QtgX2N2rqT3YpqJb8GH5k3PCHnazVKS0qTz
+         Bgtg==
+X-Gm-Message-State: APjAAAWWaT+EWmoptMQNW10ISPpAESKPHPBPMLZeM7hk2WYGpdrfye8l
+        MF8uE6AxzSB1MvQnbxJUeIS4pHT5d4k=
+X-Google-Smtp-Source: APXvYqyZ8btl473eNeekUjE/S4UDO344hauxAtTngUTvm4nsnDJPStwhz3QT9Wcd8xs1L14m/Yyj8g==
+X-Received: by 2002:a17:902:266:: with SMTP id 93mr17516167plc.201.1555056139064;
+        Fri, 12 Apr 2019 01:02:19 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id j14sm44337556pfa.57.2019.04.12.01.02.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 01:02:18 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>
+Subject: [PATCH v2] x86/reboot: Use efi reboot for Acer TravelMate X514-51T
+Date:   Fri, 12 Apr 2019 16:01:53 +0800
+Message-Id: <20190412080152.3718-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190411230221.31362-4-digetx@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555056104; bh=BK9NQTQz9YD156sUw/1DYb+sHj7A+1jttdjImZHJPMY=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=N7csTN6U6jTwNKcmPlm5U0gR8648fg1M7H+WLjqihekMHTGFNRz32FjVweZyuO74G
-         rXmWQ43HBnplLtqmI03ftYDLsQ/Bib6w8o1vq0az6Urzn5a5c/7CpHUI3aU3v7uDiy
-         xgkwvaM9dYOCZUS4x99b8A0+m63FAyvnicndzuqhSBAhV3Wnv26ZTATnphgixDTwE5
-         U8ix6cAlcLlJZv23/mbHZpgfdMiYwnbqNd7VB4X96Jp0FzOxKf8P4B6eZ7T3d08gF4
-         +goVaiKxEY6Sjc5gcrhLgQ/JeT9Thq+0CCNwpYTIjIZX0OIOPsF8JyIetbkvbTrFsB
-         UOzV8sKgEmMOg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 02:02:21AM +0300, Dmitry Osipenko wrote:
-> Add Add External Memory Controller node to the device-tree.
-> 
+Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
+shutdown process, but then it hangs in BIOS POST with a black screen.
 
-One 'Add' is enough I think :)
+The problem is intermittent - at some points it has appeared related to
+Secure Boot settings or different kernel builds, but ultimately we have
+not been able to identify the exact conditions that trigger the issue to
+come and go.
 
-Peter.
+Besides, the EFI mode cannot be disabled in the BIOS of this model.
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/boot/dts/tegra30.dtsi     | 11 +++++++++++
->  drivers/memory/tegra/tegra30-emc.c |  3 ++-
->  2 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-> index e074258d4518..92c4aeafab29 100644
-> --- a/arch/arm/boot/dts/tegra30.dtsi
-> +++ b/arch/arm/boot/dts/tegra30.dtsi
-> @@ -732,6 +732,17 @@
->  		#reset-cells = <1>;
->  	};
->  
-> +	memory-controller@7000f400 {
-> +		compatible = "nvidia,tegra30-emc";
-> +		reg = <0x7000f400 0x400>;
-> +		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		nvidia,memory-controller = <&mc>;
-> +	};
-> +
->  	fuse@7000f800 {
->  		compatible = "nvidia,tegra30-efuse";
->  		reg = <0x7000f800 0x400>;
-> diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
-> index 38ebdb076ccd..defdb38bde54 100644
-> --- a/drivers/memory/tegra/tegra30-emc.c
-> +++ b/drivers/memory/tegra/tegra30-emc.c
-> @@ -980,7 +980,8 @@ static long emc_round_rate(unsigned long rate,
->  	}
->  
->  	if (!timing) {
-> -		dev_err(emc->dev, "no timing for rate %lu\n", rate);
-> +		dev_err(emc->dev, "no timing for rate %lu min %lu max %lu\n",
-> +			rate, min_rate, max_rate);
->  		return -EINVAL;
->  	}
->  
-> -- 
-> 2.21.0
-> 
+However, after extensive testing, we observe that using the EFI reboot
+method reliably avoids the issue in all cases.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+---
+v2:
+- Add the EFI runtime state checking in set_efi_reboot function for the
+  quirk.
+- Refine the printing information by writing "EFI" in the string
+  directly.
+
+ arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 725624b6c0c0..07111b8c41dd 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
++/*
++ * Some machines require the "reboot=e" commandline options
++ */
++static int __init set_efi_reboot(const struct dmi_system_id *d)
++{
++	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
++		reboot_type = BOOT_EFI;
++		pr_info("%s series board detected. Selecting EFI-method for reboots.\n",
++			d->ident);
++	}
++	return 0;
++}
++
+ void __noreturn machine_real_restart(unsigned int type)
+ {
+ 	local_irq_disable();
+@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+ 		},
+ 	},
++	{	/* Handle reboot issue on Acer TravelMate X514-51T */
++		.callback = set_efi_reboot,
++		.ident = "Acer TravelMate X514-51T",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
++		},
++	},
+ 
+ 	/* Apple */
+ 	{	/* Handle problems with rebooting on Apple MacBook5 */
+-- 
+2.20.1
+
