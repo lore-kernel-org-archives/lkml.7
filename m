@@ -2,135 +2,102 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E436C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB325C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667EC2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1EDF20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 12:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfDLMVe convert rfc822-to-8bit (ORCPT
+        id S1726937AbfDLMYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 08:21:34 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39688 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbfDLMVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 08:21:33 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hEvBL-0005TL-57; Fri, 12 Apr 2019 14:21:23 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Christoph =?ISO-8859-1?Q?M=FCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-Cc:     Elaine Zhang <zhangqing@rock-chips.com>, mturquette@baylibre.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Finley Xiao <finley.xiao@rock-chips.com>
-Subject: Re: [PATCH v1 1/6] clk: rockchip: Add supprot to limit input rate for fractional divider
-Date:   Fri, 12 Apr 2019 14:21:22 +0200
-Message-ID: <3395739.hcHkC3K37q@diego>
-In-Reply-To: <818a6e0a-d99b-7350-9c4a-9e0a0d12122a@theobroma-systems.com>
-References: <1554284549-24916-1-git-send-email-zhangqing@rock-chips.com> <8338364.h4JqnAax9Z@diego> <818a6e0a-d99b-7350-9c4a-9e0a0d12122a@theobroma-systems.com>
+        Fri, 12 Apr 2019 08:24:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59782 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbfDLMYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 08:24:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC349374;
+        Fri, 12 Apr 2019 05:24:14 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C54E3F718;
+        Fri, 12 Apr 2019 05:24:13 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] iommu: Bind process address spaces to devices
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>
+References: <20190410151516.47754-1-jean-philippe.brucker@arm.com>
+ <20190410151516.47754-2-jean-philippe.brucker@arm.com>
+ <20190411152803.GB29810@8bytes.org>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <aa213d61-2351-73f4-629c-08a18320fbec@arm.com>
+Date:   Fri, 12 Apr 2019 13:23:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190411152803.GB29810@8bytes.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-Am Freitag, 12. April 2019, 14:12:52 CEST schrieb Christoph Müllner:
-> On 12.04.19 13:52, Heiko Stübner wrote:
-> > Am Mittwoch, 3. April 2019, 11:42:24 CEST schrieb Elaine Zhang:
-> >> From: Finley Xiao <finley.xiao@rock-chips.com>
-> >>
-> >> From Rockchips fractional divider usage, some clocks can be generated
-> >> by fractional divider, but the input clock frequency of fractional
-> >> divider should be less than a specified value.
-> >>
-> >> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> >> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> > 
-> > can you tell me where these maximum input values come from?
-> > 
-> > I talked to Christoph from Theobroma (Cc'ed) last week and he mentioned
-> > that they're using the fractional divider with a higher input frequency
-> > to create a very specific frequency [some details are gone from my memory
-> > though] they can't get otherwise.
-> > 
-> > So I really don't want to break their working setup by introducing barriers
-> > that are not strictly necessary.
-> > 
-> > @Christoph: can you describe the bits from your fractional setup that
-> > I've forgotten please?
+On 11/04/2019 16:28, Joerg Roedel wrote:
+> On Wed, Apr 10, 2019 at 04:15:16PM +0100, Jean-Philippe Brucker wrote:
+>>  drivers/iommu/iommu.c | 104 ++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/iommu.h |  70 ++++++++++++++++++++++++++++
+>>  2 files changed, 174 insertions(+)
 > 
-> We need to set the I2S0 clock to 24.56 MHz.
+> Applied to the api-features branch for now, thanks Jean-Philippe!
 > 
-> When restricting the input frequency to a maximum of 600 Mhz,
-> we could use the integer divider to get 400 Mhz (dividing by 2).
-> However, with the 400 Mhz as input to the frac divider,
-> we run into the problem, that the maximum possible output frequency
-> is 20 MHz (there is another restriction which states that the
-> fraction input : output frequency must be >= 20).
-
-just for clarification, what is the current input frequency you
-already use sucessfully?
-
-
-Heiko
-
-> > 
-> >> diff --git a/drivers/clk/rockchip/clk-px30.c b/drivers/clk/rockchip/clk-px30.c
-> >> index 601a77f1af78..ccabce35580b 100644
-> >> --- a/drivers/clk/rockchip/clk-px30.c
-> >> +++ b/drivers/clk/rockchip/clk-px30.c
-> >> @@ -21,6 +21,7 @@
-> >>  #include "clk.h"
-> >>  
-> >>  #define PX30_GRF_SOC_STATUS0		0x480
-> >> +#define PX30_FRAC_MAX_PRATE		600000000
-> > 
-> > 
-> >> diff --git a/drivers/clk/rockchip/clk-rk3368.c b/drivers/clk/rockchip/clk-rk3368.c
-> >> index 7c4d242f19c1..67c2da5e7d61 100644
-> >> --- a/drivers/clk/rockchip/clk-rk3368.c
-> >> +++ b/drivers/clk/rockchip/clk-rk3368.c
-> >> @@ -20,6 +20,9 @@
-> >>  #include "clk.h"
-> >>  
-> >>  #define RK3368_GRF_SOC_STATUS0	0x480
-> >> +#define RK3368_I2S_FRAC_MAX_PRATE       600000000
-> >> +#define RK3368_UART_FRAC_MAX_PRATE	600000000
-> >> +#define RK3368_SPDIF_FRAC_MAX_PRATE	600000000
-> > 
-> >> diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk-rk3399.c
-> >> index 5a628148f3f0..1d81382bd3e0 100644
-> >> --- a/drivers/clk/rockchip/clk-rk3399.c
-> >> +++ b/drivers/clk/rockchip/clk-rk3399.c
-> >> @@ -21,6 +21,12 @@
-> >>  #include <dt-bindings/clock/rk3399-cru.h>
-> >>  #include "clk.h"
-> >>  
-> >> +#define RK3399_I2S_FRAC_MAX_PRATE       600000000
-> >> +#define RK3399_UART_FRAC_MAX_PRATE	600000000
-> >> +#define RK3399_SPDIF_FRAC_MAX_PRATE	600000000
-> >> +#define RK3399_VOP_FRAC_MAX_PRATE	600000000
-> >> +#define RK3399_WIFI_FRAC_MAX_PRATE	600000000
-> >> +
-> > 
-> > 
-> > 
+> 'for now' because I have a question below.
 > 
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index ed6738c358ca..87fe1cddd817 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -51,10 +51,13 @@ struct device;
+>>  struct iommu_domain;
+>>  struct notifier_block;
+>>  struct iommu_fault_event;
+>> +struct iommu_sva;
+> 
+> The iommu_fault_event doesn't yet exist in my tree, is this patch based
+> on something else I need besided Lu Baolus work? I got quite some
+> conflicts while applying the patch because of this.
 
+Ugh, sorry about this, I forgot to rebase onto master. The only required
+patch is Lu Baolu's "iommu: Add APIs for multiple domains per device".
+The iommu_fault_event is introduced by Jacob's fault reporting work, but
+is independent from this patch.
 
+There also is a small conflict with the SMMUv3 ATS work, which I'm
+hoping to get in v5.2 as well (but will probably require more work).
+I'll send next version of ATS applied on top of this patch.
 
+I pushed a cleaner version to git://linux-arm.org/linux-jpb.git sva/api
+(with the below mistake fixed as well) and can resend if necessary.
+
+Thanks,
+Jean
+
+> 
+>> + * @sva_set_ops: Set ops for a SVA handle
+> 
+> I also removed this line.
+> 
+> Regards,
+> 
+>         Joerg
 
