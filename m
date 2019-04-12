@@ -2,164 +2,116 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26BAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5422C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECD82171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpCeaRot"
+	by mail.kernel.org (Postfix) with ESMTP id 962242171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555101180;
+	bh=x1EjrIohq+tGRXeEF3KJf/4m9Sterb+q/h16tr9lCdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gQ/DNy7nMC+SsogEAOHAR5xGeJBi9W/Na+UaKpWwg89T2/CRJnc/g90gIvgWCljGz
+	 kEcBYVp13Wy1g3+af2bEFnjww34S8eBsG/SZxMF0zIbGPehkAIHwMC8vHM41IJtRfh
+	 XuIzoGLsMUpbzYNUlWY2aaCdYgHIS7VrASan74so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfDLUcQ (ORCPT
+        id S1727052AbfDLUc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:32:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42691 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfDLUcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:32:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g3so13481545wrx.9;
-        Fri, 12 Apr 2019 13:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=shRu0w6LOGNuM8eR6LVuZyZO1EnLS3eaLumjGGzE81Y=;
-        b=MpCeaRotYXIrnj0Pm+OPm5DM8q7Gi7fXsFYAYpxsT22yY253scGOLOWgHsICdMYrdi
-         z1kc0URnkrtZxmVMv5RAni5G6zAtVSO931/qv/Q/Fgv88wt4Rpc7cG1cmjmxiBbstL+K
-         9RxaGqvriEZcqjlVjDX7ztrXYu3qAp/16eETbBRESWt+gIUNaQZseVl7rE9G0EZeZktn
-         WtvYLDbnRAM3/nKg5z05G/mvTl/LxhRCIn33mWVD9gYKMZeuyu8RfvJRyUmfloX0HMOz
-         CaxUWfMO0/xC8v6q9d2DwVmBIvfmVOVqVgGJj6Eq8RiJ4j522t4Nu+4bDi2TLx967Rjj
-         Q7cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=shRu0w6LOGNuM8eR6LVuZyZO1EnLS3eaLumjGGzE81Y=;
-        b=rC2d0Ctwm0pbEpxncSugu1WyKd+2wgJsT9pnQWyLmXDfY2dL8YhgybuWZ0dPUltug5
-         /bjBJ7Ke/76mzvHRZXXAbfjAJo2R5Jt+WUujy9Tcs+qudlrsksnsmYx9RzVtdgSYELzq
-         fS8CJGQ/P1RK7DxBS0E/EUTl3hYABhokZ+2ODFV20DgtESJziNAiCH1k1pBun7a/BRBP
-         2ehSH3shqWkluFY532t+sTNMRMOEJjXzzKrk7J4EP+nDHwS/wLbJii4pUq86OvNm5EHd
-         u3PDkfaKMxkGQ5vig9LMQCjm7Ui5KGLlt7jrCnkUqYaViKwHGu3DW1GMPXjChHHVc8us
-         miag==
-X-Gm-Message-State: APjAAAUTUkPhyq9hxPwIF1sQi4X9RL5GXMazMqamV3WxcRhP4z9JZz4U
-        DSjkMo0SXcuX/2sJjwwh5IozvmnqbCI=
-X-Google-Smtp-Source: APXvYqxCVqshd8bEfJb6FRpVXpHrXvUeuzayS49Rd3Mu3ylmyOJJ2TJ65WqBhyVGZAqsC2UK6K3dkw==
-X-Received: by 2002:adf:df08:: with SMTP id y8mr1058320wrl.91.1555101133727;
-        Fri, 12 Apr 2019 13:32:13 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id b204sm13251457wmh.29.2019.04.12.13.32.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 13:32:13 -0700 (PDT)
-Subject: Re: [PATCH v2 05/11] platform/x86: asus-wmi: Support queued WMI event
- codes
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <777027ac-921e-ee37-493e-974b49242d18@gmail.com>
- <142fe2e3-b560-6136-32df-b14bb4ac46f7@gmail.com>
- <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Message-ID: <b7b1834f-42e2-b652-9944-eb9b45b81cd0@gmail.com>
-Date:   Fri, 12 Apr 2019 22:32:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 16:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726923AbfDLUc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 16:32:58 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C78C12171F;
+        Fri, 12 Apr 2019 20:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555101178;
+        bh=x1EjrIohq+tGRXeEF3KJf/4m9Sterb+q/h16tr9lCdc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uWtfBIMSMqY8H8g6jqks8Tv2XuBIhJg5zMW8sIxf2F3LN0dfBoUVvFnAAE9WyMqWJ
+         qabFo2gxmWBZziQ9VsfKCmHtYmCmzzq7OYs8uqF55bZ+oH5zCyL5abMLpT933vtu/A
+         i2ZBh/CTdCqNbQWFCqFPMRyIlnZtjtattKyyIdj4=
+Date:   Fri, 12 Apr 2019 15:32:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI: Fix issue with "pci=disable_acs_redir"
+ parameter being ignored
+Message-ID: <20190412203256.GF141472@google.com>
+References: <20190410210532.4538-1-logang@deltatee.com>
+ <20190410210532.4538-2-logang@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190410210532.4538-2-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12.04.19 09:48, Daniel Drake wrote:
-> On Thu, Apr 11, 2019 at 1:44 PM Yurii Pavlovskyi
-> <yurii.pavlovskyi@gmail.com> wrote:
->> Event codes are expected to be polled from a queue on at least some
->> models.
+On Wed, Apr 10, 2019 at 03:05:31PM -0600, Logan Gunthorpe wrote:
+> In most cases, kmalloc will not be available early in boot when
+> pci_setup() is called. Thus, the kstrdup call that was added to fix the
+> __initdata bug with the disable_acs_redir parameter usually returns
+> NULL. Thus the parameter is discarded and it does not take into effect.
 > 
-> Maybe avoid the word "poll" since it suggests something else (at least to me).
-
-Ok, will change this in the code as well.
-
->>> The fix flushes the old key codes out of the queue on load and after
->> receiving event the queue is read until either ..FFFF or 1 is encountered.
->>
->> It might be considered a minor issue and no normal user would likely to
->> observe this (there is little reason unloading the driver), but it does
->> significantly frustrate a developer who is unlucky enough to encounter
->> this.
->>
->> Introduce functionality for flushing and processing queued codes, which is
->> enabled via quirk flag for ASUS7000. It might be considered if it is
->> reasonable to enable it everywhere (might introduce regressions) or always
->> try to flush the queue on module load and try to detect if this quirk is
->> present in the future.
->>
->> This patch limits the effect to the specific hardware defined by ASUS7000
->> device that is used for driver detection by vendor driver of Fx505. The
->> fallback is also implemented in case initial flush fails.
+> To fix this, we store the string that's in initdata until a initcall
+> function can allocate the memory appropriately. This way we
+> don't need any additional static memory.
 > 
-> Which vendor driver are you referring to here?
+> Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
 
-The ASUS Keyboard hotkeys Driver V2.0.5 which is available to download for
-FX505 has this in his INF file:
-[ATKP.ntamd64]
+Applied to for-linus for v5.1, thanks, Logan!
 
-%DeviceDesc1% = NO_DRV64, ACPI\ASUS7000
-
-But this driver is not generic. It is limited to very specific hardware,
-I'd guess gaming series (for instance K54C does not have this device). It
-was rather a way to avoid breaking anything. I think your suggestion below
-is much better.
-
+> ---
+>  drivers/pci/pci.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
 > 
-> Researching more:
-> In our database of 144 Asus models, 142 of them have GANQ.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 7c1b362f599a..766f5779db92 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6262,8 +6262,7 @@ static int __init pci_setup(char *str)
+>  			} else if (!strncmp(str, "pcie_scan_all", 13)) {
+>  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+>  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+> -				disable_acs_redir_param =
+> -					kstrdup(str + 18, GFP_KERNEL);
+> +				disable_acs_redir_param = str + 18;
+>  			} else {
+>  				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+>  						str);
+> @@ -6274,3 +6273,19 @@ static int __init pci_setup(char *str)
+>  	return 0;
+>  }
+>  early_param("pci", pci_setup);
+> +
+> +/*
+> + * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
+> + * to data in the __initdata section which will be freed after the init
+> + * sequence is complete. We can't allocate memory in pci_setup() because some
+> + * architectures do not have any memory allocation service available during
+> + * an early_param() call. So we allocate memory and copy the variable here
+> + * before the init section is freed.
+> + */
+> +static int __init pci_realloc_setup_params(void)
+> +{
+> +	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
+> +
+> +	return 0;
+> +}
+> +pure_initcall(pci_realloc_setup_params);
+> -- 
+> 2.20.1
 > 
-> Of those 142, 9 of them return One in the empty-queue case. The other
-> 133 match your FX505GM device exactly. So it seems valid to interpret
-> both 0xffff and 0x1 as queue-end markers.
-> 
-> The 2 devices that do not have GANQ are not laptops. They also do not
-> have the _UID "ATK" WMI device, they only have "ASUSWMI" and their WMI
-> _WED method does not use a queue.
-> There are a few more units that have both ASUSWMI and ATK devices, and
-> the ASUSWMI device appears to never be queued.
-> Another observation is that the ASUSWMI device works with notify code
-> 0xD2, and the ATK device works with 0xFF.
-> 
-> Nailing this down a bit further, I found a DSDT for EEEPC X101H: that
-> one only has ASUSWMI and it is also not queued.
-> 
-> So I think you should make this queue behaviour applied more
-> generically, but either avoid it when the WMI device _UID is not "ATK"
-> (as discussed in the DCTS/DSTS thread), or avoid it when the notify
-> code is not 0x>
-> Thanks
-> Daniel
-
-Thanks a lot for your research, it's much appreciated! That seems to
-confirm that these two quirks are actually connected with ATK device. I
-guess it makes sense to combine the detection for both of them. Also to
-flush the queue we need to know the notify code beforehand, because it is
-checked in _WED so checking for ATK seems reasonable to me.
-
-Best regards,
-Yurii
