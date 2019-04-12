@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87220C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5055C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BBF2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D142186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfDLLqO (ORCPT
+        id S1727826AbfDLLqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:46:14 -0400
-Received: from mail-it1-f199.google.com ([209.85.166.199]:58648 "EHLO
-        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfDLLqN (ORCPT
+        Fri, 12 Apr 2019 07:46:23 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43732 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfDLLqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:46:13 -0400
-Received: by mail-it1-f199.google.com with SMTP id j203so8850556itb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:46:12 -0700 (PDT)
+        Fri, 12 Apr 2019 07:46:14 -0400
+Received: by mail-io1-f71.google.com with SMTP id n23so7525832ioj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:46:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A5MbKlZV/gN0hGXRyGBiJJWLBqEoLEmnUi7jlNLzI4k=;
-        b=EQLXLO1SVlG2ZxaD9qSyvOFFSix2nmBcM6LB8s/cxZNetducsgu4QdabaIn5sqLzO0
-         i1SLTUEA/AdMz1H5GIc3fzZ8yvHnobv86WencQvKR7oq/XajPFzFkIOTXuxg9OCNJ5rq
-         dn/PBgv0FLUfsIBIWeO7pkqRULLcUmZNBdfg7b98UZEQbSt5AQu5gQOUqOyBTgafPVMg
-         if0OktzTDpELLI0eBSivpthQVAQUKoaNHpYaXX/CATRjIBLn7KFJrGPB/g2MWqa1LQHr
-         ePDv/R6LE9Yq0IlPDzW1Qgpu12N21LUWGkOMfVbHEOaPavK5drJl3qqgndkPGsnxJ8UC
-         H94A==
-X-Gm-Message-State: APjAAAUKL7siyqtk5lk+6RFe0g8zGp3efXHDEo08MY5ZSkv58KG3IZg7
-        ccgiNeAKINrblpHbdw8kN0hKkAfT+RTEODemoxfkHqESF3A3
-X-Google-Smtp-Source: APXvYqz+jh+gWIfvK7INkXwjXU4lafC4oYeE4mijMTRpTVx05WeKKIK7pYDUopXIZbqjlWq3qqZasROTnPtk2P5f1X3/RQg5vtGn
+        bh=daElYsJolZnOy5KuYjuTPYeF39jQUM+ooVFS23wD6NI=;
+        b=gZ2fQZjVkSnMf75zfzFwOjYsY+hSQ5V6pdUUZT/M9bqj2Hy5Zq4eP2BvKwGxJmEdT9
+         mP6KtpZBhYrsIfuQojVdjd3Ec6zYTp11Vu/hl8izwwPN8LNoYPTbPuLot7/ZR0ISYC7v
+         EpSaddYcG9UP5MwZeILf4eROlh3cCOyIRjbsXf13CAl3Hb9eVrLz8c+n5Kpv8tXknn2V
+         x2jKtEcaOhfbdG0K7FgWzGdU4qiGnHOIE8dHbeblRgTit0LMaY/x2UiM65T+7cIs3WRN
+         uOOpoG0J1bpMyWcl99kfRApdGbQL0U5/p8+YBxPJre8F33mfa5HmFqzZ/7HNSY3b2CDI
+         QM5Q==
+X-Gm-Message-State: APjAAAUo6Fz0l+k+rOmR6O0x7cbkvGAlTcSsdJa04rO5fY+Js6DEc2bQ
+        oYHtiYwtTbXaqypM44/h1RGw0BlBiNZpHLk5AZSIZ8YxHNs+
+X-Google-Smtp-Source: APXvYqwyIArcZOdv1Ub2eKz8K+/84RHhZTA8N8eRD2uryTG6N2arSDCecDrQuITsLLY3x8B91ESJFImrJ80pq1TY5Z2VZGsC/L7g
 MIME-Version: 1.0
-X-Received: by 2002:a24:5c12:: with SMTP id q18mr3648769itb.13.1555069572113;
- Fri, 12 Apr 2019 04:46:12 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 04:46:12 -0700
+X-Received: by 2002:a24:4e86:: with SMTP id r128mr3606662ita.27.1555069573251;
+ Fri, 12 Apr 2019 04:46:13 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 04:46:13 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000727264058653d9a7@google.com>
-Subject: INFO: trying to register non-static key in rtl_c2hcmd_launcher
-From:   syzbot <syzbot+1fcc5ef45175fc774231@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        pkshih@realtek.com, syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000083d0ba058653d9c2@google.com>
+Subject: BUG: corrupted list in snd_info_free_entry
+From:   syzbot <syzbot+90cf07b4a2473213d16b@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
+        joe@perches.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, perex@perex.cz,
+        syzkaller-bugs@googlegroups.com, tiwai@suse.com, vkoul@kernel.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,95 +60,59 @@ syzbot found the following crash on:
 
 HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d4c1af200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14edefa7200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=1fcc5ef45175fc774231
+dashboard link: https://syzkaller.appspot.com/bug?extid=90cf07b4a2473213d16b
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b6f0f3200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140c7c2d200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15aba2b7200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1fcc5ef45175fc774231@syzkaller.appspotmail.com
+Reported-by: syzbot+90cf07b4a2473213d16b@syzkaller.appspotmail.com
 
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-rtl_usb: reg 0xf0, usbctrl_vendorreq TimeOut! status:0xffffffb9 value=0x0
-rtl8192cu: Chip version 0x10
-rtl_usb: reg 0xa, usbctrl_vendorreq TimeOut! status:0xffffffb9 value=0x0
-rtl_usb: Too few input end points found
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
+snd_usb_toneport: probe of 6-1:0.0 failed with error -71
+snd_usb_toneport 2-1:0.0: Line 6 POD Studio UX2 now disconnected
+usb 5-1: USB disconnect, device number 5
+list_del corruption. prev->next should be ffff8880a725e9a8, but was  
+ffff8880a725e228
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:51!
+invalid opcode: 0000 [#1] SMP KASAN PTI
+usb 6-1: USB disconnect, device number 5
 CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  assign_lock_key kernel/locking/lockdep.c:786 [inline]
-  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
-  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
-  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
-  rtl_c2hcmd_launcher+0xd1/0x390  
-drivers/net/wireless/realtek/rtlwifi/base.c:2344
-  rtl_deinit_core+0x25/0x2d0 drivers/net/wireless/realtek/rtlwifi/base.c:574
-  rtl_usb_probe.cold+0x861/0xa70  
-drivers/net/wireless/realtek/rtlwifi/usb.c:1093
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:rtl_free_entries_from_scan_list  
-drivers/net/wireless/realtek/rtlwifi/base.c:1933 [inline]
-RIP: 0010:rtl_deinit_core+0x84/0x2d0  
-drivers/net/wireless/realtek/rtlwifi/base.c:575
-Code: 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 52 02 00 00 4d 8b bc 24 c8 c4  
-00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 22 02 00 00 4d 39 f7 4d 8b 2f 4c 89 ff 0f 84 3d
-RSP: 0018:ffff8880a84b7278 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 1ffffffff27960ab
-RDX: 0000000000000000 RSI: ffffffff88da7445 RDI: ffff888093c00b68
-RBP: ffff888093c00b20 R08: ffff8880a8498000 R09: ffffed101278051d
-R10: ffffed101278051c R11: ffff888093c028e3 R12: ffff888093c02540
-R13: ffff88821add7848 R14: ffff888093c0ea08 R15: 0000000000000000
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 69 e7 e9 fd 0f 0b 48 89 f1 48 c7 c7 00 94 b3 8e 4c 89 e6 e8 55 e7  
+e9 fd 0f 0b 48 89 ee 48 c7 c7 a0 95 b3 8e e8 44 e7 e9 fd <0f> 0b 4c 89 ea  
+48 89 ee 48 c7 c7 e0 94 b3 8e e8 30 e7 e9 fd 0f 0b
+RSP: 0018:ffff8880a84b7118 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff8880a725e8b0 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed1015096e15
+RBP: ffff8880a725e9a8 R08: 0000000000000054 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88809cb90868
+R13: ffff8880a7068e98 R14: ffff8880a725e8b0 R15: ffff8880a725e998
 FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd01db19000 CR3: 000000009c01a000 CR4: 00000000001406f0
+CR2: 00007fff9de9dfc8 CR3: 00000000963ea000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  rtl_usb_probe.cold+0x861/0xa70  
-drivers/net/wireless/realtek/rtlwifi/usb.c:1093
+  __list_del_entry include/linux/list.h:117 [inline]
+  list_del include/linux/list.h:125 [inline]
+  snd_info_free_entry+0x137/0x340 sound/core/info.c:795
+  snd_info_card_free+0x43/0x90 sound/core/info.c:606
+  snd_card_do_free sound/core/init.c:469 [inline]
+  release_card_device+0x8b/0x100 sound/core/init.c:156
+  device_release+0x7d/0x210 drivers/base/core.c:1064
+  kobject_cleanup lib/kobject.c:662 [inline]
+  kobject_release lib/kobject.c:691 [inline]
+  kref_put include/linux/kref.h:67 [inline]
+  kobject_put+0x1df/0x4f0 lib/kobject.c:708
+  put_device+0x21/0x30 drivers/base/core.c:2205
+  snd_card_free_when_closed+0x3a/0x50 sound/core/init.c:493
+  line6_disconnect.cold+0xa3/0xbc sound/usb/line6/driver.c:833
+  line6_probe+0xb23/0x1150 sound/usb/line6/driver.c:799
   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
   really_probe+0x2da/0xb10 drivers/base/dd.c:509
   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
@@ -163,8 +127,11 @@ drivers/net/wireless/realtek/rtlwifi/usb.c:1093
   really_probe+0x2da/0xb10 drivers/base/dd.c:509
   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+usb 1-1: new high-speed USB device number 6 using dummy_hcd
   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+usb 6-1: new high-speed USB device number 6 using dummy_hcd
+usb 5-1: new high-speed USB device number 6 using dummy_hcd
   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
   device_add+0xad2/0x16e0 drivers/base/core.c:2106
   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
@@ -173,27 +140,27 @@ drivers/net/wireless/realtek/rtlwifi/usb.c:1093
   port_event drivers/usb/core/hub.c:5350 [inline]
   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
   kthread+0x313/0x420 kernel/kthread.c:253
   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 Modules linked in:
----[ end trace 38ab7b2a1beef511 ]---
-RIP: 0010:rtl_free_entries_from_scan_list  
-drivers/net/wireless/realtek/rtlwifi/base.c:1933 [inline]
-RIP: 0010:rtl_deinit_core+0x84/0x2d0  
-drivers/net/wireless/realtek/rtlwifi/base.c:575
-Code: 4c 89 f2 48 c1 ea 03 80 3c 02 00 0f 85 52 02 00 00 4d 8b bc 24 c8 c4  
-00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 22 02 00 00 4d 39 f7 4d 8b 2f 4c 89 ff 0f 84 3d
-RSP: 0018:ffff8880a84b7278 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 1ffffffff27960ab
-RDX: 0000000000000000 RSI: ffffffff88da7445 RDI: ffff888093c00b68
-RBP: ffff888093c00b20 R08: ffff8880a8498000 R09: ffffed101278051d
-R10: ffffed101278051c R11: ffff888093c028e3 R12: ffff888093c02540
-R13: ffff88821add7848 R14: ffff888093c0ea08 R15: 0000000000000000
+---[ end trace 8111524f564d7b8a ]---
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 69 e7 e9 fd 0f 0b 48 89 f1 48 c7 c7 00 94 b3 8e 4c 89 e6 e8 55 e7  
+e9 fd 0f 0b 48 89 ee 48 c7 c7 a0 95 b3 8e e8 44 e7 e9 fd <0f> 0b 4c 89 ea  
+48 89 ee 48 c7 c7 e0 94 b3 8e e8 30 e7 e9 fd 0f 0b
+RSP: 0018:ffff8880a84b7118 EFLAGS: 00010282
+RAX: 0000000000000054 RBX: ffff8880a725e8b0 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed1015096e15
+RBP: ffff8880a725e9a8 R08: 0000000000000054 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88809cb90868
+R13: ffff8880a7068e98 R14: ffff8880a725e8b0 R15: ffff8880a725e998
 FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd01db19000 CR3: 000000009c01a000 CR4: 00000000001406f0
+CR2: 00007fff9de9dfc8 CR3: 00000000963ea000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
