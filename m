@@ -2,160 +2,148 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C30EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC92C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7707D20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A7F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555069945;
+	bh=hmfkwHbCbx7jkbhUfwdPVGeJFc+0Mz3x9HDNpLBk5tg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=j+e3xIec+87y8xD+sEovOxT6gaz8Y3Bl4Dp8wlqZ2no5z8pOI1U5NtvkLVOWdtEl9
+	 nm6Nq7vb1gzo8oRNl05PNktowhL2a5hq24U8eoO+iv3y5WYPbOvFIbcVG043X2+NMC
+	 NPLk3isQm1k0b2uHXXfUHaOjtNbkEbUylsOxU1dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfDLLuy (ORCPT
+        id S1726920AbfDLLwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:50:54 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:53546 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726244AbfDLLuw (ORCPT
+        Fri, 12 Apr 2019 07:52:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46947 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfDLLwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:50:52 -0400
-Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Euhkh0iYANG8zEuhlhCfnb; Fri, 12 Apr 2019 13:50:50 +0200
-Subject: Re: [PATCH 1/3] media: atmel: atmel-isc: limit incoming pixels per
- frame
-To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Nicolas.Ferre@microchip.com, mchehab@kernel.org,
-        ksloat@aampglobal.com
-References: <1555064098-19310-1-git-send-email-eugen.hristev@microchip.com>
- <1555064098-19310-2-git-send-email-eugen.hristev@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <7978caee-9ae1-a428-af14-34bfa12ad223@xs4all.nl>
-Date:   Fri, 12 Apr 2019 13:50:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 07:52:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t17so11516160wrw.13
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 04:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=xeiNOodHiuGjY5I9D6c17AQP3wYOqXEepJEbJGhHFVI=;
+        b=q8MWSdxoP+9+yQYArtfoVljbXy1x7AjfgI4wjx7msbUe+apzp6VPuHqoyEhx4cZEFC
+         5Q5cCx+WXkipnOEozhVESa2LBkd407dur8HVDMkgO5Q7BZUiZriUpygyKNWQvvMzkXFn
+         SixS+/MGHg2L4mwygy+OSWTWgdFFyXTqYF7RqML//uLftNvOK+hjIh6oow/vqL+04pyo
+         yZ/WgOdH50K6UUUHO9RH7DaoeK39gB5MtLg0dtdPYGTKTyQ0u6bjXjvSE+5s4xJjTDUg
+         JgOcBJ2zQHKlXrQtFkE66znbV1zX6ABW8nbx1ZtiNgyohhz4ifGVbrwUwMR5H+X7gxrN
+         EpvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=xeiNOodHiuGjY5I9D6c17AQP3wYOqXEepJEbJGhHFVI=;
+        b=i2h02oML7EIRd2aRsKG078rmmH6npUC8XUeZlH/vLx3q8wEEonDpGRStTKZneRG6ic
+         RHSk9MLK+MtkeG5G4Vc1ofzMgJidf/E838IGVfEfYJzY1jxDcsUfvpPL0pDBsOnDthK1
+         kFp78DcLM16H7IWl75LFJiF9+Z+9qfE4qoogDlUsJYQmAHBZD1jeocRJ7JXZhGLn6yOj
+         /lFqaAtwXuT0jAOaVJfze99V2W9JzmCi1F+gy/ZQ0CF9gAlv4zZiouXjGusqlfh1n/yL
+         yBet+ebEddWgEkXW9hDyy2dxDdAEYAIgYXYoE3XAIjDa1YlmbC7GC38Qwt4jvFh52q4/
+         cc9A==
+X-Gm-Message-State: APjAAAWV544cQZ0G0Bs2WEB4zG8MhLI6ZLGZSwuVPAZRUVfChuGrp6AE
+        Ei0pFAOS1q3wZD0+A6oTjAw=
+X-Google-Smtp-Source: APXvYqzlTw9luJg5oStFAnsoaHrmHtunliMGieA6OR77+a08f53I44yikVq/XrcPL2iF9nHugDt+Ug==
+X-Received: by 2002:adf:e84b:: with SMTP id d11mr33918513wrn.289.1555069942932;
+        Fri, 12 Apr 2019 04:52:22 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id m6sm52186775wrr.53.2019.04.12.04.52.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 04:52:21 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 13:52:19 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] IRQ fixes
+Message-ID: <20190412115219.GA20767@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1555064098-19310-2-git-send-email-eugen.hristev@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfObd+IznRAxpG5y9GHT36uCPYTReQP7MFZeJlIoRs0WEHHcHg++remlLZ7i8/Jg6yGNg+LHOYO2slfHigZZApyQhunsy928mEty2rcENoLYCOa7uwscU
- ruxQvJZ1Y8SXD4+sEhL/oouNPcp5rbxNTwqgjUXTfM2/QCBOrJ0NX+fTwuG9mJqBSKMY1i8gEdNW5B5I+jk3AMvKv4HKApeytGMJ29vn0WiQiXZ5XT/qvpGZ
- 67aAZp/COI3+cyIM6zPcX3vAMIGPKEKo+On8SVyvF/mEwxgyLM748/pUU4MOlerMw/0Rm94xtTakDftH/CxXHxMMQgBzKCNjQi2FhY0cV5NkCMCZOKYjAXdY
- Jiz1Hj8RCR7V9W+meu9Zjsm6bI6kPHCbb6XZyWw/th9N9dxNPTVhEzSM77+FycX8bPiJlvt9qcCQtIieOohYHHZFOA78BLlNQXfQy1OTkjoDMXBkDNyCbKbH
- VEuNFv7qARWcwBIkCh9r7DCi/LGVYKXDaEvErpeMcAlx7Kj2k+UhpoCwVOQ=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 12:19 PM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> This will limit the incoming pixels per frame from the sensor.
-> Currently, the ISC will stop sampling the frame only when the vsync/hsync
-> are detected.
-> If we misconfigure the resolution in the sensor w.r.t. resolution in the ISC,
-> the buffer used for DMA in the ISC will be smaller than the number of pixels
-> that the ISC DMA engine will copy.
-> In this case it happens that the DMA will overwrite parts of the memory which
-> should not be written, leading to memory corruption.
-> To avoid this situation, use the PFE CFG1 and PFE CFG2 registers, which crop
-> the incoming frame to the resolution that we configure.
-> This way the DMA engine will never write more data than we expect it to.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  drivers/media/platform/atmel/atmel-isc-regs.h | 19 +++++++++++++++
->  drivers/media/platform/atmel/atmel-isc.c      | 34 +++++++++++++++++++++++++++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/drivers/media/platform/atmel/atmel-isc-regs.h b/drivers/media/platform/atmel/atmel-isc-regs.h
-> index 2aadc19..768a5ad 100644
-> --- a/drivers/media/platform/atmel/atmel-isc-regs.h
-> +++ b/drivers/media/platform/atmel/atmel-isc-regs.h
-> @@ -35,6 +35,25 @@
->  #define ISC_PFG_CFG0_BPS_TWELVE (0x0 << 28)
->  #define ISC_PFE_CFG0_BPS_MASK   GENMASK(30, 28)
->  
-> +#define ISC_PFE_CFG0_COLEN	BIT(12)
-> +#define ISC_PFE_CFG0_ROWEN	BIT(13)
-> +
-> +/* ISC Parallel Front End Configuration 1 Register */
-> +#define ISC_PFE_CFG1    0x00000010
-> +
-> +#define ISC_PFE_CFG1_COLMIN(v)		((v))
-> +#define ISC_PFE_CFG1_COLMIN_MASK	GENMASK(15, 0)
-> +#define ISC_PFE_CFG1_COLMAX(v)		((v) << 16)
-> +#define ISC_PFE_CFG1_COLMAX_MASK	GENMASK(31, 16)
-> +
-> +/* ISC Parallel Front End Configuration 2 Register */
-> +#define ISC_PFE_CFG2    0x00000014
-> +
-> +#define ISC_PFE_CFG2_ROWMIN(v)		((v))
-> +#define ISC_PFE_CFG2_ROWMIN_MASK	GENMASK(15, 0)
-> +#define ISC_PFE_CFG2_ROWMAX(v)		((v) << 16)
-> +#define ISC_PFE_CFG2_ROWMAX_MASK	GENMASK(31, 16)
-> +
->  /* ISC Clock Enable Register */
->  #define ISC_CLKEN               0x00000018
->  
-> diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
-> index a10db16..ea7520a 100644
-> --- a/drivers/media/platform/atmel/atmel-isc.c
-> +++ b/drivers/media/platform/atmel/atmel-isc.c
-> @@ -721,6 +721,40 @@ static void isc_start_dma(struct isc_device *isc)
->  	u32 sizeimage = isc->fmt.fmt.pix.sizeimage;
->  	u32 dctrl_dview;
->  	dma_addr_t addr0;
-> +	u32 h, w;
-> +
-> +	h = isc->fmt.fmt.pix.height;
-> +	w = isc->fmt.fmt.pix.width;
-> +
-> +	/*
-> +	 * In case the sensor is not RAW, it will output a pixel (12-16 bits)
-> +	 * with two samples on the ISC Data bus (which is 8-12)
-> +	 * ISC will count each sample, so, we need to multiply these values
-> +	 * by two, to get the real number of samples for the required pixels.
-> +	 */
-> +	if (!ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code)) {
+Linus,
 
-The ISC_IS_FORMAT_RAW define doesn't exist?!
+Please pull the latest irq-urgent-for-linus git tree from:
 
-Something clearly went wrong...
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-for-linus
 
-Regards,
+   # HEAD: 325aa19598e410672175ed50982f902d4e3f31c5 genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
 
-	Hans
+Two genirq fixes, plus an irqchip driver error handling fix.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Dan Carpenter (1):
+      irqchip/irq-ls1x: Missing error code in ls1x_intc_of_init()
+
+Kefeng Wang (1):
+      genirq: Initialize request_mutex if CONFIG_SPARSE_IRQ=n
+
+Stephen Boyd (1):
+      genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
 
 
-> +		h <<= 1;
-> +		w <<= 1;
-> +	}
-> +
-> +	/*
-> +	 * We limit the column/row count that the ISC will output according
-> +	 * to the configured resolution that we want.
-> +	 * This will avoid the situation where the sensor is misconfigured,
-> +	 * sending more data, and the ISC will just take it and DMA to memory,
-> +	 * causing corruption.
-> +	 */
-> +	regmap_write(regmap, ISC_PFE_CFG1,
-> +		     (ISC_PFE_CFG1_COLMIN(0) & ISC_PFE_CFG1_COLMIN_MASK) |
-> +		     (ISC_PFE_CFG1_COLMAX(w - 1) & ISC_PFE_CFG1_COLMAX_MASK));
-> +
-> +	regmap_write(regmap, ISC_PFE_CFG2,
-> +		     (ISC_PFE_CFG2_ROWMIN(0) & ISC_PFE_CFG2_ROWMIN_MASK) |
-> +		     (ISC_PFE_CFG2_ROWMAX(h - 1) & ISC_PFE_CFG2_ROWMAX_MASK));
-> +
-> +	regmap_update_bits(regmap, ISC_PFE_CFG0,
-> +			   ISC_PFE_CFG0_COLEN | ISC_PFE_CFG0_ROWEN,
-> +			   ISC_PFE_CFG0_COLEN | ISC_PFE_CFG0_ROWEN);
->  
->  	addr0 = vb2_dma_contig_plane_dma_addr(&isc->cur_frm->vb.vb2_buf, 0);
->  	regmap_write(regmap, ISC_DAD0, addr0);
-> 
+ drivers/irqchip/irq-ls1x.c | 1 +
+ kernel/irq/chip.c          | 4 ++++
+ kernel/irq/irqdesc.c       | 1 +
+ 3 files changed, 6 insertions(+)
 
+diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+index 86b72fbd3b45..353111a10413 100644
+--- a/drivers/irqchip/irq-ls1x.c
++++ b/drivers/irqchip/irq-ls1x.c
+@@ -130,6 +130,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 					     NULL);
+ 	if (!priv->domain) {
+ 		pr_err("ls1x-irq: cannot add IRQ domain\n");
++		err = -ENOMEM;
+ 		goto out_iounmap;
+ 	}
+ 
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 3faef4a77f71..51128bea3846 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1449,6 +1449,10 @@ int irq_chip_set_vcpu_affinity_parent(struct irq_data *data, void *vcpu_info)
+ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
+ {
+ 	data = data->parent_data;
++
++	if (data->chip->flags & IRQCHIP_SKIP_SET_WAKE)
++		return 0;
++
+ 	if (data->chip->irq_set_wake)
+ 		return data->chip->irq_set_wake(data, on);
+ 
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 13539e12cd80..9f8a709337cf 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -558,6 +558,7 @@ int __init early_irq_init(void)
+ 		alloc_masks(&desc[i], node);
+ 		raw_spin_lock_init(&desc[i].lock);
+ 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
++		mutex_init(&desc[i].request_mutex);
+ 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
+ 	}
+ 	return arch_early_irq_init();
