@@ -2,105 +2,133 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3488C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF6E2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911AE2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555064196;
+	bh=01LUp7TppCEJfyRZN7JdgmR/yQbauCDTUWlOFV2b2q0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HfMUK1L72tNjZr8RkcTGTwxU5SEdldayQ9XFkMPQzR05txrUImbak13UC6PBZk/tB
+	 NlgAmqvzxjwsnQW6wmyCqL6rtioV2SNnyq0Vq0ttEnPExMMA8VR0gvrcaZzTbGx7tf
+	 iTCZRtjnF/1JGmm6vKjL+OGkKsArbacjNVPALRUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfDLKQI (ORCPT
+        id S1727104AbfDLKQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:16:08 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:52154 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726755AbfDLKQI (ORCPT
+        Fri, 12 Apr 2019 06:16:35 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39675 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfDLKQe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:16:08 -0400
-Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id EtDth01lNNG8zEtDuhCHKq; Fri, 12 Apr 2019 12:16:06 +0200
-Subject: Re: [PATCH v2 0/2] drm/sun4i: dw-hdmi: Improve CEC support
-To:     Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@bootlin.com
-Cc:     narmstrong@baylibre.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        wens@csie.org, Laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20190401191513.23159-1-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <57d23024-b67b-cf16-93da-2ff47518c079@xs4all.nl>
-Date:   Fri, 12 Apr 2019 12:15:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 06:16:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j9so11212629wrn.6
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 03:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7vRlQAko5KVEPu4wliiXc2KZK6U9PlVj69UuRDsMMLs=;
+        b=AKF6qSdBYA58w0itzilne/hWgttaOkmmw4NVgKFhBzBIRRhvdp7LfldhqnGXUgWG3C
+         iXCQNg5LtcPWuekj7rpzJb7hnuNV10qT6zjXQTDmiKp5/yryVnTkT78y9yMbkYWfTq/Z
+         CZ/RhXEMRhrUlEO3Hyqdyh+5yyvaeSOr7m8ag7N6vsbGduOS34ba52CDizWA297lxRhc
+         EI/MUTh401B6vGa8FmqP6O6fJoh0GM0zUPZ4u4F51fJvqaRZd4EVRdo1jAd2N6HihiEv
+         dc7s/ZCWwGqCw5oqOLGx5vuQ8NJGdE9r+pRbRFMq322Yege0q6OGDvBocXASZlihrgpp
+         1kcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=7vRlQAko5KVEPu4wliiXc2KZK6U9PlVj69UuRDsMMLs=;
+        b=p4sdiRMDPSjh7ljhErO/ocSb16r5SPIzOTov00wvu7YEVNGRnTopAn4+qjyqp9F5Pc
+         SIKbNwTTlOiScIbFE/6YOf7O8M+LfLubcj6uyNfdrh99o6oqUqN/d1+DN6LbhjtLjVHE
+         Df/55eT1QAA2VxD1MVVjNbEWUQBfjwRq7sKeXr4YKu+jaNvu6JLgAZpjJcd3ZWwvylNE
+         +snAYJ0VVbL6o4SHRPrB/9NjU0NVKosa8G4+ODk7TIme+NU+rtOHRP5Rw69x7snPge22
+         TwyD5V0MNaQNNCJJVwzkGEQo7lKxA7WVpNbkLBMxEQVpvuW/FEt0dNBStB1+W9ZpEm3x
+         iLbw==
+X-Gm-Message-State: APjAAAXnsv7XULhShxM33VsZRaBpnEf/bKhTZyci6S6Xf5eEaYWN5OKO
+        VVuoY/vXSkdfk2872RAevyA=
+X-Google-Smtp-Source: APXvYqyjuA48vzSlJCYaF166xpVnhVOc+7Kgd0N7PcQF6dxuX3hSphSuGkMXZYDLeVf136gR1AAHYg==
+X-Received: by 2002:adf:f78d:: with SMTP id q13mr34867340wrp.194.1555064193086;
+        Fri, 12 Apr 2019 03:16:33 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f10sm48525734wrs.17.2019.04.12.03.16.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 12 Apr 2019 03:16:32 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 12:16:30 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] core/urgent fixes
+Message-ID: <20190412101630.GA89501@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190401191513.23159-1-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfE2ob9XPYKx/066OK9rsuo8l/dP+sUg6zpXvoPvxzygyFtpc9TlsTBfHQUHsuXyXqM4/CpFeXTpvUzSjKf9LfGeQURKCHTl4g8P1KkYoWRL7xQfP5z2X
- g4eZs6+XWXJCWMf4yYfpWyx/5rAbsp9QK9zXB3NCCtADYtW223mPOpwBJaEZOqNOoRC9g9M5j2P0udYp6lAVUuz/2q74R2a2tCLiXgsQy9gLVKuPWw3xedS8
- iVB9VwptpjyE415n+goRr/0Na6dl6va3yVfBUGqmxyADYnHYnufCsVkbuwLRdMdzZVnAWjukSJkp8BBnKCHjwHk2tCXRBvACw8TzTUM5DqhJvRbFmLFI3H+Y
- d439Y/OyuV9plcUqP6kZV9ID2vld30+lLwPnWd7GlZQXWkid/PYlXz497S9EtW0sNEyBRNZLY+j55EGiHWsb/Wab2ejzpnYJ9TXZ/MkOqBvEh0qBoQ+wj3+N
- UxfeG2hAvQS1aAoy2vO/AT3Sip+f5cCL5atAkQ26mZ7BC744CzLZRfFDofVRN1fZmDwayPmXpE7sZXE1lNAdJWFdq7WXj6cIbAsAtEdqnuNLRIRktaCcrHCE
- kFc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jernej,
+Linus,
 
-On 4/1/19 9:15 PM, Jernej Skrabec wrote:
-> It turns out that additional logic between HDMI CEC controller and
-> pins on PHY on some Allwinner SoCs prevents proper communication.
-> It might be possible to fix it, but it's much easier and less error
-> prone to just directly drive pins using software implementation of
-> CEC protocol.
+Please pull the latest core-urgent-for-linus git tree from:
 
-1) Please CC linux-media as well, I had almost missed this series.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
 
-2) Is this a SoC limitation or a board limitation?
+   # HEAD: 4fa5ecda2bf96be7464eb406df8aba9d89260227 objtool: Add rewind_stack_do_exit() to the noreturn list
 
-3) Is the bit-banging support sunxi specific? Or is it still using some
-   DW CEC functionality? It appears to be sunxi specific.
+Fix an objtool warning plus fix a u64_to_user_ptr() macro expansion bug.
 
-4) I had an old patch series: https://www.spinics.net/lists/dri-devel/msg170232.html
+ Thanks,
 
-Rob Herring disagreed with that, but the discussion fizzled out at the end.
-I still think doing this in the device tree is the right approach since this
-is very much hardware related.
+	Ingo
 
-If the DW CEC implementation doesn't work for some reason (CEC pins not hooked up,
-or for other reasons non-functional), then it should be disabled in the device
-tree. So then adding a new SUN8I option to enable bitbanging CEC support seems
-logical.
+------------------>
+Jann Horn (1):
+      linux/kernel.h: Use parentheses around argument in u64_to_user_ptr()
 
-Regards,
+Josh Poimboeuf (1):
+      objtool: Add rewind_stack_do_exit() to the noreturn list
 
-	Hans
 
-> 
-> Let me know what do you think.
-> 
-> Best regards,
-> Jernej
-> 
-> Changes from v1:
-> - renamed is_cec_unusable to disable_cec
-> - added review-by tag
-> 
-> Jernej Skrabec (2):
->   drm/bridge/synopsys: dw-hdmi: Add an option to suppress loading CEC
->     driver
->   drm/sun4i: dw-hdmi: Bit bang CEC on some SoCs
-> 
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c |  2 +-
->  drivers/gpu/drm/sun4i/Kconfig             | 10 +++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h     | 11 +++
->  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c    | 83 ++++++++++++++++++++++-
->  include/drm/bridge/dw_hdmi.h              |  2 +
->  5 files changed, 105 insertions(+), 3 deletions(-)
-> 
+ include/linux/kernel.h | 4 ++--
+ tools/objtool/check.c  | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 34a5036debd3..2d14e21c16c0 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -47,8 +47,8 @@
+ 
+ #define u64_to_user_ptr(x) (		\
+ {					\
+-	typecheck(u64, x);		\
+-	(void __user *)(uintptr_t)x;	\
++	typecheck(u64, (x));		\
++	(void __user *)(uintptr_t)(x);	\
+ }					\
+ )
+ 
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5dde107083c6..479196aeb409 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -165,6 +165,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"fortify_panic",
+ 		"usercopy_abort",
+ 		"machine_real_restart",
++		"rewind_stack_do_exit",
+ 	};
+ 
+ 	if (func->bind == STB_WEAK)
