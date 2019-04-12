@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57517C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7254EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1072B218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2E5218C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555093937;
-	bh=Hbes9ifb4OQdMNC/EuNRhWkJSSBV5O3Ajl4yOoxXj8g=;
+	s=default; t=1555093942;
+	bh=zLRmPqxlLQc3AN/GbT8QG3oWhXh1GCS3AdlYegAqcRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lu0NbDoKolVCmV0ks8NfRFDqIlYdtf894fej9MoZzWMOwqvw5nsQ2UjRM+RFXzgo+
-	 6oYSW01oxYx62VSPg0cuiDBxs3EEQ0HwY8277Mz5Z0oONcfnAP2v2e1nO62RPYrQ7c
-	 /b6TBaEvQdVr84Vidm7xs2+qzNfpbhz4mNNjTgVk=
+	b=Op6M92sgSf1n1Eg9KfYjJCboFRXAl7f+bMOBlPNVqRyFsEAkGgSQvPlNACh7pKdjR
+	 vQj8pETPH2HzGjEYNvnSL8qqfHLjAbvsiiLzUqENYiy83jupnc3F5R7LUJo96DCY3f
+	 hRV1G/f4YfWu7AAoOhVIGoCmPWBm6eGZL2CTdG3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfDLScQ (ORCPT
+        id S1727224AbfDLScU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50366 "EHLO mail.kernel.org"
+        Fri, 12 Apr 2019 14:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfDLSbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:31:55 -0400
+        id S1727027AbfDLSby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 14:31:54 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8BAB218FE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD47218FC;
         Fri, 12 Apr 2019 18:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555093914;
-        bh=Hbes9ifb4OQdMNC/EuNRhWkJSSBV5O3Ajl4yOoxXj8g=;
+        s=default; t=1555093913;
+        bh=zLRmPqxlLQc3AN/GbT8QG3oWhXh1GCS3AdlYegAqcRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdPJTYNvgjK8x/lHCdgSSltUyjL+T3JG9nt+cC85vgOb0a2Tcc1aDKs8B/GuSuKTO
-         b/dpuzH3Ha9YOFY+Y8pwyIxlAnXodiB9/KAO0C0MUpeqieJmTr2M+xdh/bTNh58wQ2
-         e8MIo+6Wbdt/edZwdO9qiAYS+z8yMrfw0Eq+ayJ8=
+        b=p9JmaqpgtwWfs0Y/DwXacpg/lotkuQDpJdkfcMMeA3b2fWgi6i4coXaYPZQwBbWKV
+         N3U6MLwCW5qdbi+59iWg6F15dt+XhA4a9Y+49CWjhYYkLmB6wosFgGD8lBRZ+bvceA
+         KCWy7PnvXORvl31kpYlmRcHTcltX3dWGgGjbdOos=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         Russell King <linux@armlinux.org.uk>,
         Jeffrey Hugo <jhugo@codeaurora.org>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 6/9] clk: Allow parents to be specified without string names
-Date:   Fri, 12 Apr 2019 11:31:47 -0700
-Message-Id: <20190412183150.102131-7-sboyd@kernel.org>
+Subject: [PATCH v4 5/9] clk: Add of_clk_hw_register() API for early clk drivers
+Date:   Fri, 12 Apr 2019 11:31:46 -0700
+Message-Id: <20190412183150.102131-6-sboyd@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190412183150.102131-1-sboyd@kernel.org>
 References: <20190412183150.102131-1-sboyd@kernel.org>
@@ -61,47 +61,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The common clk framework is lacking in ability to describe the clk
-topology without specifying strings for every possible parent-child
-link. There are a few drawbacks to the current approach:
-
- 1) String comparisons are used for everything, including describing
- topologies that are 'local' to a single clock controller.
-
- 2) clk providers (e.g. i2c clk drivers) need to create globally unique
- clk names to avoid collisions in the clk namespace, leading to awkward
- name generation code in various clk drivers.
-
- 3) DT bindings may not fully describe the clk topology and linkages
- between clk controllers because drivers can easily rely on globally unique
- strings to describe connections between clks.
-
-This leads to confusing DT bindings, complicated clk name generation
-code, and inefficient string comparisons during clk registration just so
-that the clk framework can detect the topology of the clk tree.
-Furthermore, some drivers call clk_get() and then __clk_get_name() to
-extract the globally unique clk name just so they can specify the parent
-of the clk they're registering. We have of_clk_parent_fill() but that
-mostly only works for single clks registered from a DT node, which isn't
-the norm. Let's simplify this all by introducing two new ways of
-specifying clk parents.
-
-The first method is an array of pointers to clk_hw structures
-corresponding to the parents at that index. This works for clks that are
-registered when we have access to all the clk_hw pointers for the
-parents.
-
-The second method is a mix of clk_hw pointers and strings of local and
-global parent clk names. If the .fw_name member of the map is set we'll
-look for that clk by performing a DT based lookup of the device the clk
-is registered with and the .name specified in the map. If that fails,
-we'll fallback to the .name member and perform a global clk name lookup
-like we've always done before.
-
-Using either one of these new methods is entirely optional. Existing
-drivers will continue to work, and they can migrate to this new approach
-as they see fit. Eventually, we'll want to get rid of the 'parent_names'
-array in struct clk_init_data and use one of these new methods instead.
+In some circumstances drivers register clks early and don't have access
+to a struct device because the device model isn't initialized yet. Add
+an API to let drivers register clks associated with a struct device_node
+so that these drivers can participate in getting parent clks through DT.
 
 Cc: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
@@ -112,438 +75,90 @@ Cc: Chen-Yu Tsai <wens@csie.org>
 Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/clk.c            | 262 ++++++++++++++++++++++++++---------
- include/linux/clk-provider.h |  19 +++
- 2 files changed, 219 insertions(+), 62 deletions(-)
+ drivers/clk/clk.c            | 26 +++++++++++++++++++++++---
+ include/linux/clk-provider.h |  1 +
+ 2 files changed, 24 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index ffa63ddcd408..de49a7c4214b 100644
+index d27775a73e67..ffa63ddcd408 100644
 --- a/drivers/clk/clk.c
 +++ b/drivers/clk/clk.c
-@@ -39,6 +39,13 @@ static LIST_HEAD(clk_notifier_list);
- 
- /***    private data structures    ***/
- 
-+struct clk_parent_map {
-+	const struct clk_hw	*hw;
-+	struct clk_core		*core;
-+	const char	 	*fw_name;
-+	const char	 	*name;
-+};
-+
- struct clk_core {
- 	const char		*name;
- 	const struct clk_ops	*ops;
-@@ -47,8 +54,7 @@ struct clk_core {
+@@ -45,6 +45,7 @@ struct clk_core {
+ 	struct clk_hw		*hw;
+ 	struct module		*owner;
  	struct device		*dev;
- 	struct device_node	*of_node;
++	struct device_node	*of_node;
  	struct clk_core		*parent;
--	const char		**parent_names;
--	struct clk_core		**parents;
-+	struct clk_parent_map	*parents;
- 	u8			num_parents;
- 	u8			new_parent_index;
- 	unsigned long		rate;
-@@ -317,17 +323,92 @@ static struct clk_core *clk_core_lookup(const char *name)
- 	return NULL;
- }
- 
-+/**
-+ * clk_core_get - Find the parent of a clk using a clock specifier in DT
-+ * @core: clk to find parent of
-+ * @name: name to search for in 'clock-names' of device providing clk
-+ *
-+ * This is the preferred method for clk providers to find the parent of a
-+ * clk when that parent is external to the clk controller. The parent_names
-+ * array is indexed and treated as a local name matching a string in the device
-+ * node's 'clock-names' property. This allows clk providers to use their own
-+ * namespace instead of looking for a globally unique parent string.
-+ *
-+ * For example the following DT snippet would allow a clock registered by the
-+ * clock-controller@c001 that has a clk_init_data::parent_data array
-+ * with 'xtal' in the 'name' member to find the clock provided by the
-+ * clock-controller@f00abcd without needing to get the globally unique name of
-+ * the xtal clk.
-+ *
-+ * 	parent: clock-controller@f00abcd {
-+ * 		reg = <0xf00abcd 0xabcd>;
-+ * 		#clock-cells = <0>;
-+ * 	};
-+ *
-+ * 	clock-controller@c001 {
-+ * 		reg = <0xc001 0xf00d>;
-+ * 		clocks = <&parent>;
-+ * 		clock-names = "xtal";
-+ * 		#clock-cells = <1>;
-+ * 	};
-+ *
-+ * Returns: -ENOENT when the provider can't be found or the clk doesn't
-+ * exist in the provider. -EINVAL when the name can't be found. NULL when the
-+ * provider knows about the clk but it isn't provided on this system.
-+ * A valid clk_core pointer when the clk can be found in the provider.
-+ */
-+static struct clk_core *clk_core_get(struct clk_core *core, const char *name)
-+{
-+	struct clk_hw *hw;
-+	struct device_node *np = core->of_node;
-+
-+	if (!np)
-+		return ERR_PTR(-ENOENT);
-+
-+	/* TODO: Support clkdev clk_lookups */
-+	hw = of_clk_get_hw(np, -1, name);
-+	if (IS_ERR_OR_NULL(hw))
-+		return ERR_CAST(hw);
-+
-+	return hw->core;
-+}
-+
-+static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
-+{
-+	struct clk_parent_map *entry = &core->parents[index];
-+	struct clk_core *parent = ERR_PTR(-ENOENT);
-+
-+	if (entry->hw) {
-+		parent = entry->hw->core;
-+		/*
-+		 * We have a direct reference but it isn't registered yet? Orphan it
-+		 * and let clk_reparent() update the orphan status when the parent
-+		 * is registered.
-+		 */
-+		if (!parent)
-+			parent = ERR_PTR(-EPROBE_DEFER);
-+	} else {
-+		if (entry->fw_name)
-+			parent = clk_core_get(core, entry->fw_name);
-+		if (IS_ERR(parent) && PTR_ERR(parent) == -ENOENT)
-+			parent = clk_core_lookup(entry->name);
-+	}
-+
-+	/* Only cache it if it's not an error */
-+	if (!IS_ERR(parent))
-+		entry->core = parent;
-+}
-+
- static struct clk_core *clk_core_get_parent_by_index(struct clk_core *core,
- 							 u8 index)
- {
--	if (!core || index >= core->num_parents)
-+	if (!core || index >= core->num_parents || !core->parents)
- 		return NULL;
- 
--	if (!core->parents[index])
--		core->parents[index] =
--				clk_core_lookup(core->parent_names[index]);
-+	if (!core->parents[index].core)
-+		clk_core_fill_parent_index(core, index);
- 
--	return core->parents[index];
-+	return core->parents[index].core;
- }
- 
- struct clk_hw *
-@@ -1520,15 +1601,15 @@ static int clk_fetch_parent_index(struct clk_core *core,
- 		return -EINVAL;
- 
- 	for (i = 0; i < core->num_parents; i++) {
--		if (core->parents[i] == parent)
-+		if (core->parents[i].core == parent)
- 			return i;
- 
--		if (core->parents[i])
-+		if (core->parents[i].core)
- 			continue;
- 
- 		/* Fallback to comparing globally unique names */
--		if (!strcmp(parent->name, core->parent_names[i])) {
--			core->parents[i] = parent;
-+		if (!strcmp(parent->name, core->parents[i].name)) {
-+			core->parents[i].core = parent;
- 			return i;
- 		}
- 	}
-@@ -2294,6 +2375,7 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
- bool clk_has_parent(struct clk *clk, struct clk *parent)
- {
- 	struct clk_core *core, *parent_core;
-+	int i;
- 
- 	/* NULL clocks should be nops, so return success if either is NULL. */
- 	if (!clk || !parent)
-@@ -2306,8 +2388,11 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
- 	if (core->parent == parent_core)
- 		return true;
- 
--	return match_string(core->parent_names, core->num_parents,
--			    parent_core->name) >= 0;
-+	for (i = 0; i < core->num_parents; i++)
-+		if (!strcmp(core->parents[i].name, parent_core->name))
-+			return true;
-+
-+	return false;
- }
- EXPORT_SYMBOL_GPL(clk_has_parent);
- 
-@@ -2890,9 +2975,9 @@ static int possible_parents_show(struct seq_file *s, void *data)
- 	int i;
- 
- 	for (i = 0; i < core->num_parents - 1; i++)
--		seq_printf(s, "%s ", core->parent_names[i]);
-+		seq_printf(s, "%s ", core->parents[i].name);
- 
--	seq_printf(s, "%s\n", core->parent_names[i]);
-+	seq_printf(s, "%s\n", core->parents[i].name);
- 
- 	return 0;
- }
-@@ -3026,7 +3111,7 @@ static inline void clk_debug_unregister(struct clk_core *core)
-  */
- static int __clk_core_init(struct clk_core *core)
- {
--	int i, ret;
-+	int ret;
- 	struct clk_core *orphan;
- 	struct hlist_node *tmp2;
- 	unsigned long rate;
-@@ -3080,12 +3165,6 @@ static int __clk_core_init(struct clk_core *core)
- 		goto out;
- 	}
- 
--	/* throw a WARN if any entries in parent_names are NULL */
--	for (i = 0; i < core->num_parents; i++)
--		WARN(!core->parent_names[i],
--				"%s: invalid NULL in %s's .parent_names\n",
--				__func__, core->name);
--
- 	core->parent = __clk_init_parent(core);
- 
- 	/*
-@@ -3314,10 +3393,102 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+ 	const char		**parent_names;
+ 	struct clk_core		**parents;
+@@ -3313,7 +3314,8 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
  	return clk;
  }
  
-+static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
-+{
-+	const char *dst;
-+
-+	if (!src) {
-+		if (must_exist)
-+			return -EINVAL;
-+		return 0;
-+	}
-+
-+	*dst_p = dst = kstrdup_const(src, GFP_KERNEL);
-+	if (!dst)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static int clk_core_populate_parent_map(struct clk_core *core)
-+{
-+	const struct clk_init_data *init = core->hw->init;
-+	u8 num_parents = init->num_parents;
-+	const char * const *parent_names = init->parent_names;
-+	const struct clk_hw **parent_hws = init->parent_hws;
-+	const struct clk_parent_data *parent_data = init->parent_data;
-+	int i, ret = 0;
-+	struct clk_parent_map *parents, *parent;
-+
-+	if (!num_parents)
-+		return 0;
-+
-+	/*
-+	 * Avoid unnecessary string look-ups of clk_core's possible parents by
-+	 * having a cache of names/clk_hw pointers to clk_core pointers.
-+	 */
-+	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
-+	core->parents = parents;
-+	if (!parents)
-+		return -ENOMEM;
-+
-+	/* Copy everything over because it might be __initdata */
-+	for (i = 0, parent = parents; i < num_parents; i++, parent++) {
-+		if (parent_names) {
-+			/* throw a WARN if any entries are NULL */
-+			WARN(!parent_names[i],
-+				"%s: invalid NULL in %s's .parent_names\n",
-+				__func__, core->name);
-+			ret = clk_cpy_name(&parent->name, parent_names[i],
-+					   true);
-+		} else if (parent_data) {
-+			parent->hw = parent_data[i].hw;
-+			ret = clk_cpy_name(&parent->fw_name,
-+					   parent_data[i].fw_name, false);
-+			if (!ret)
-+				ret = clk_cpy_name(&parent->name,
-+						   parent_data[i].name,
-+						   false);
-+		} else if (parent_hws) {
-+			parent->hw = parent_hws[i];
-+		} else {
-+			ret = -EINVAL;
-+			WARN(1, "Must specify parents if num_parents > 0\n");
-+		}
-+
-+		if (ret) {
-+			do {
-+				kfree_const(parents[i].name);
-+				kfree_const(parents[i].fw_name);
-+			} while (--i >= 0);
-+			kfree(parents);
-+
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void clk_core_free_parent_map(struct clk_core *core)
-+{
-+	int i = core->num_parents;
-+
-+	if (!core->num_parents)
-+		return;
-+
-+	while (--i >= 0) {
-+		kfree_const(core->parents[i].name);
-+		kfree_const(core->parents[i].fw_name);
-+	}
-+
-+	kfree(core->parents);
-+}
-+
- static struct clk *
- __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
+-static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
++static struct clk *
++__clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
  {
--	int i, ret;
-+	int ret;
+ 	int i, ret;
  	struct clk_core *core;
+@@ -3339,6 +3341,7 @@ static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
+ 	if (dev && pm_runtime_enabled(dev))
+ 		core->rpm_enabled = true;
+ 	core->dev = dev;
++	core->of_node = np;
+ 	if (dev && dev->driver)
+ 		core->owner = dev->driver->owner;
+ 	core->hw = hw;
+@@ -3429,7 +3432,7 @@ static struct clk *__clk_register(struct device *dev, struct clk_hw *hw)
+  */
+ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return __clk_register(dev, hw);
++	return __clk_register(dev, dev_of_node(dev), hw);
+ }
+ EXPORT_SYMBOL_GPL(clk_register);
  
- 	core = kzalloc(sizeof(*core), GFP_KERNEL);
-@@ -3351,33 +3522,9 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	core->max_rate = ULONG_MAX;
- 	hw->core = core;
+@@ -3445,10 +3448,27 @@ EXPORT_SYMBOL_GPL(clk_register);
+  */
+ int clk_hw_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return PTR_ERR_OR_ZERO(__clk_register(dev, hw));
++	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_of_node(dev), hw));
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register);
  
--	/* allocate local copy in case parent_names is __initdata */
--	core->parent_names = kcalloc(core->num_parents, sizeof(char *),
--					GFP_KERNEL);
--
--	if (!core->parent_names) {
--		ret = -ENOMEM;
--		goto fail_parent_names;
--	}
--
--
--	/* copy each string name in case parent_names is __initdata */
--	for (i = 0; i < core->num_parents; i++) {
--		core->parent_names[i] = kstrdup_const(hw->init->parent_names[i],
--						GFP_KERNEL);
--		if (!core->parent_names[i]) {
--			ret = -ENOMEM;
--			goto fail_parent_names_copy;
--		}
--	}
--
--	/* avoid unnecessary string look-ups of clk_core's possible parents. */
--	core->parents = kcalloc(core->num_parents, sizeof(*core->parents),
--				GFP_KERNEL);
--	if (!core->parents) {
--		ret = -ENOMEM;
-+	ret = clk_core_populate_parent_map(core);
-+	if (ret)
- 		goto fail_parents;
--	};
- 
- 	INIT_HLIST_HEAD(&core->clks);
- 
-@@ -3388,7 +3535,7 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	hw->clk = alloc_clk(core, NULL, NULL);
- 	if (IS_ERR(hw->clk)) {
- 		ret = PTR_ERR(hw->clk);
--		goto fail_parents;
-+		goto fail_create_clk;
- 	}
- 
- 	clk_core_link_consumer(hw->core, hw->clk);
-@@ -3404,13 +3551,9 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
- 	free_clk(hw->clk);
- 	hw->clk = NULL;
- 
-+fail_create_clk:
-+	clk_core_free_parent_map(core);
- fail_parents:
--	kfree(core->parents);
--fail_parent_names_copy:
--	while (--i >= 0)
--		kfree_const(core->parent_names[i]);
--	kfree(core->parent_names);
--fail_parent_names:
- fail_ops:
- 	kfree_const(core->name);
- fail_name:
-@@ -3473,15 +3616,10 @@ EXPORT_SYMBOL_GPL(of_clk_hw_register);
++/*
++ * of_clk_hw_register - register a clk_hw and return an error code
++ * @node: device_node of device that is registering this clock
++ * @hw: link to hardware-specific clock data
++ *
++ * of_clk_hw_register() is the primary interface for populating the clock tree
++ * with new clock nodes when a struct device is not available, but a struct
++ * device_node is. It returns an integer equal to zero indicating success or
++ * less than zero indicating failure. Drivers must test for an error code after
++ * calling of_clk_hw_register().
++ */
++int of_clk_hw_register(struct device_node *node, struct clk_hw *hw)
++{
++	return PTR_ERR_OR_ZERO(__clk_register(NULL, node, hw));
++}
++EXPORT_SYMBOL_GPL(of_clk_hw_register);
++
+ /* Free memory allocated for a clock. */
  static void __clk_release(struct kref *ref)
  {
- 	struct clk_core *core = container_of(ref, struct clk_core, ref);
--	int i = core->num_parents;
- 
- 	lockdep_assert_held(&prepare_lock);
- 
--	kfree(core->parents);
--	while (--i >= 0)
--		kfree_const(core->parent_names[i]);
--
--	kfree(core->parent_names);
-+	clk_core_free_parent_map(core);
- 	kfree_const(core->name);
- 	kfree(core);
- }
 diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 7d2d97e15b76..95d5a9d4e8c3 100644
+index b7cf80a71293..7d2d97e15b76 100644
 --- a/include/linux/clk-provider.h
 +++ b/include/linux/clk-provider.h
-@@ -250,6 +250,18 @@ struct clk_ops {
- 	void		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
- };
+@@ -773,6 +773,7 @@ struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
  
-+/**
-+ * struct clk_parent_data - clk parent information
-+ * @hw: parent clk_hw pointer (used for clk providers with internal clks)
-+ * @fw_name: parent name local to provider registering clk
-+ * @name: globally unique parent name (used as a fallback)
-+ */
-+struct clk_parent_data {
-+	const struct clk_hw 	*hw;
-+	const char		*fw_name;
-+	const char		*name;
-+};
-+
- /**
-  * struct clk_init_data - holds init data that's common to all clocks and is
-  * shared between the clock provider and the common clock framework.
-@@ -257,13 +269,20 @@ struct clk_ops {
-  * @name: clock name
-  * @ops: operations this clock supports
-  * @parent_names: array of string names for all possible parents
-+ * @parent_data: array of parent data for all possible parents (when some
-+ *               parents are external to the clk controller)
-+ * @parent_hws: array of pointers to all possible parents (when all parents
-+ *              are internal to the clk controller)
-  * @num_parents: number of possible parents
-  * @flags: framework-level hints and quirks
-  */
- struct clk_init_data {
- 	const char		*name;
- 	const struct clk_ops	*ops;
-+	/* Only one of the following three should be assigned */
- 	const char		* const *parent_names;
-+	const struct clk_parent_data	*parent_data;
-+	const struct clk_hw		**parent_hws;
- 	u8			num_parents;
- 	unsigned long		flags;
- };
+ int __must_check clk_hw_register(struct device *dev, struct clk_hw *hw);
+ int __must_check devm_clk_hw_register(struct device *dev, struct clk_hw *hw);
++int __must_check of_clk_hw_register(struct device_node *node, struct clk_hw *hw);
+ 
+ void clk_unregister(struct clk *clk);
+ void devm_clk_unregister(struct device *dev, struct clk *clk);
 -- 
 Sent by a computer through tubes
 
