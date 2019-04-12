@@ -3,82 +3,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011BBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F60C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48C52084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6EC2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfDLOiW (ORCPT
+        id S1727019AbfDLOim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:38:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60150 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726714AbfDLOiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:38:22 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B7EFF5BA23C32BEA7654;
-        Fri, 12 Apr 2019 22:38:19 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 12 Apr
- 2019 22:38:10 +0800
-Subject: Re: [PATCH v2] staging: erofs: fix unexpected out-of-bound data
- access
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-CC:     Chao Yu <yuchao0@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        Chao Yu <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20190412095314.224932-1-gaoxiang25@huawei.com>
- <20190412135145.GK6095@kadam>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <603ee7f3-aba4-de45-9bf3-8fe70fa2c638@huawei.com>
-Date:   Fri, 12 Apr 2019 22:38:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 12 Apr 2019 10:38:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35296 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfDLOim (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:38:42 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 8908D28018B;
+        Fri, 12 Apr 2019 15:38:37 +0100 (BST)
+Date:   Fri, 12 Apr 2019 16:38:35 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        dnicoara@chromium.org, daniels@collabora.com,
+        alexandros.frantzis@collabora.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, tomasz Figa <tfiga@chromium.org>,
+        tina.zhang@intel.com, Sean Paul <seanpaul@google.com>,
+        kernel@collabora.com, nicholas.kazlauskas@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Gustavo Padovan <gustavo.padovan@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        linux-doc@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-rockchip@lists.infradead.org,
+        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
+        Eric Anholt <eric@anholt.net>, Leo Li <sunpeng.li@amd.com>,
+        linux-arm-msm@vger.kernel.org,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 2/4] drm/atomic: rename async_{update,check} to
+ amend_{update,check}
+Message-ID: <20190412163835.5407984f@collabora.com>
+In-Reply-To: <bda69249-f193-9dbc-5186-7139fb2c365a@collabora.com>
+References: <20190412125827.5877-1-helen.koike@collabora.com>
+        <20190412125827.5877-3-helen.koike@collabora.com>
+        <20190412154957.558e49f8@collabora.com>
+        <bda69249-f193-9dbc-5186-7139fb2c365a@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190412135145.GK6095@kadam>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 12 Apr 2019 11:06:13 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
+> Hi Boris,
+> 
+> On 4/12/19 10:49 AM, Boris Brezillon wrote:
+> > Hi Helen,
+> > 
+> > On Fri, 12 Apr 2019 09:58:25 -0300
+> > Helen Koike <helen.koike@collabora.com> wrote:
+> >   
+> >> Asynchronous update is the ability change the hw state at any time, not
+> >> only during vblank.
+> >>
+> >> Amend mode is the ability to perform 1000 commits to be applied as soon
+> >> as possible without waiting for 1000 vblanks.
+> >>
+> >> async updates can be seen as amend, but the opposite is not true.
+> >>
+> >> &drm_plane_helper_funcs.atomic_async_{update,check}() was being used by
+> >> drivers to implement amend and not async. So rename them to amend.
+> >>
+> >> Also improve docs explaining the difference.
+> >>
+> >> If asynchronous is required, normal page flip can be performed using
+> >> DRM_MODE_PAGE_FLIP_ASYNC flag.
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >> Hello,
+> >>
+> >> I would like to officially clarify what async update means by adding it
+> >> in the docs.
+> >> Please correct me if I am wrong, but the current async_{update,check}
+> >> callbacks are being used to do amend (the legacy cursor behavior), i.e.
+> >> to allow 1000 updates without waiting for 1000 vblanks.  
+> > 
+> > Right now, the semantic of async update is driver dependent. Some
+> > drivers will amend the last commit touching that plane (amend semantic),
+> > others will update the plane buffer immediately which might cause
+> > tearing (async semantic).  
+> 
+> In my pov, async updates holds the properties of an amend update, so all
+> async updates we have are amend, but the opposite is not true.
 
-On 2019/4/12 21:51, Dan Carpenter wrote:
-> On Fri, Apr 12, 2019 at 05:53:14PM +0800, Gao Xiang wrote:
->> Unexpected out-of-bound data will be read in erofs_read_raw_page
->> after commit 07173c3ec276 ("block: enable multipage bvecs") since
->> one iovec could have multiple pages.
->>
->> Let's fix as what Ming's pointed out in the previous email [1].
->>
->> [1] https://lore.kernel.org/lkml/20190411080953.GE421@ming.t460p/
->>
-> 
-> Please also use the Fixes tag.
-> 
-> Fixes: 07173c3ec276 ("block: enable multipage bvecs")
+By doing that you keep the definition quite vague, and developers will
+still confused about what they should do when AMEND is requested. Why
+not distinguishing AMEND and ASYNC now?
 
-Thanks for reminder. Maybe Greg could add this line...
+AMEND: replace the pending plane update (if any) by the new one, and
+make sure things will be applied on the next VBLANK (if nothing else
+amends the commit in the meantime)
 
-Thanks,
-Gao Xiang
+ASYNC: update things immediately (don't wait for VBLANK)
 
 > 
->> Suggested-by: Ming Lei <ming.lei@redhat.com>
->> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> >   
+> >>
+> >> So I would like to clarify this in the docs and rename the current
+> >> callbacks to reflect this behaviour.  
+> > 
+> > I'm all for this clarification, but I don't think renaming the async
+> > hooks is a good idea, since some drivers will not do real 'amend'. So,
+> > you're changing the name, but it's still confusing :-).
+> > 
+> > How about adding new hooks (and/or flags) for the AMEND case, and
+> > keeping the async path untouched. We can then let drivers that
+> > currently implement async as amend implement the amend hooks instead.
+> > Once you've done that, you can hook that up to the legacy cursor update
+> > path so that it first tries one then the other and finally falls back
+> > to a sync update if none of ASYNC/AMEND is possible.  
 > 
-> regards,
-> dan carpenter
+> I kinda did this (I re-introduced async in the last patch in the
+> series). I know this order is confusing, but as rockchip doesn't
+> implement true async, I would have to do a bunch of modifs at once to
+> keep the commits consistent, but I can re-work on that if it makes
+> things clearer.
+
+Let's wait for more feedback before taking a decision on this aspect.
+
 > 
+> >   
+> >>
+> >> I also see that for real async updates, the flag
+> >> DRM_MODE_PAGE_FLIP_ASYNC can be used in a normal sync update (it is
+> >> already being used by some drivers actually, in the atomic path, not only
+> >> in the legacy page flip, at least is what I understood from
+> >> amdgpu_dm_atomic_commit_tail() implementation).  
+> > 
+> > Yes, right now, async does not necessarily imply non-block, but
+> > Daniel seemed to think that most users want non-block when they do an
+> > async page flip, so maybe it should be clarified too.  
+> 
+> users could combine NONBLOCK flag with PAGE_FLIP_ASYNC, no? (we need to
+> add code for it of course).
+
+I guess AMD goes through the sync update path to guarantee that fences
+are signaled before doing the page flip, but most of the time, when you
+do an async page flip you don't want to block :-).
