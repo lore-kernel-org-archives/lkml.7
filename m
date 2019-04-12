@@ -2,167 +2,102 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68469C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976FEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9EB2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC7D20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfDLQnG (ORCPT
+        id S1726894AbfDLQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:43:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55780 "EHLO mx1.redhat.com"
+        Fri, 12 Apr 2019 12:45:50 -0400
+Received: from smtp3.goneo.de ([85.220.129.37]:35808 "EHLO smtp3.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbfDLQnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:43:06 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 243E53087928;
-        Fri, 12 Apr 2019 16:43:06 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-71.phx2.redhat.com [10.3.117.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82CDB5D6A9;
-        Fri, 12 Apr 2019 16:43:03 +0000 (UTC)
-Subject: Re: [locking/rwsem] 1b94536f2d: stress-ng.bad-altstack.ops_per_sec
- -32.7% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
+        id S1726798AbfDLQpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 12:45:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 8BF8323FFBC;
+        Fri, 12 Apr 2019 18:45:45 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 38SmQFMpvigx; Fri, 12 Apr 2019 18:45:43 +0200 (CEST)
+Received: from [192.168.1.127] (dyndsl-091-248-139-154.ewe-ip-backbone.de [91.248.139.154])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id 24A2D23F802;
+        Fri, 12 Apr 2019 18:45:43 +0200 (CEST)
+Subject: Re: [PATCH 0/8] Prepare files under Documentation/*.txt to build with
+ Sphinx
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     David Howells <dhowells@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux-arch@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Akira Yokosawa <akiyks@gmail.com>,
         Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, tipbuild@zytor.com, lkp@01.org
-References: <20190412142005.GB24200@shao2-debian>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
- XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
- jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
- r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
- CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
- 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
- VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
- evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
- Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
- h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
- bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
- FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
- oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
- ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
- fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
- 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
- rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
- 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
- 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
- 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
- QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
- TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
- Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
- yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
- lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
- drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
- M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
- 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
- MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
- bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
- qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
- AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
- 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
- GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
- jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
- 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
- 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
- yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
- 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
- Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
- wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
- weim8xU=
-Organization: Red Hat
-Message-ID: <40dc40d5-58ff-e5b9-4e33-b0ce08ca0521@redhat.com>
-Date:   Fri, 12 Apr 2019 12:43:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>
+References: <94c47f05-0412-b938-908d-1ef8a91243ed@darmarit.de>
+ <cover.1554889999.git.mchehab+samsung@kernel.org>
+ <18261.1555064496@warthog.procyon.org.uk>
+ <27303.1555071586@warthog.procyon.org.uk>
+ <df609cad-fa5b-ac15-314f-ac8759771d90@darmarit.de>
+ <20190412093947.62913186@lwn.net>
+From:   Markus Heiser <markus.heiser@darmarit.de>
+Message-ID: <06b2aeb4-825a-28d6-fa7d-f1f5900e53d8@darmarit.de>
+Date:   Fri, 12 Apr 2019 18:45:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190412142005.GB24200@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 12 Apr 2019 16:43:06 +0000 (UTC)
+In-Reply-To: <20190412093947.62913186@lwn.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 10:20 AM, kernel test robot wrote:
-> Greeting,
->
-> FYI, we noticed a -32.7% regression of stress-ng.bad-altstack.ops_per_sec due to commit:
->
->
-> commit: 1b94536f2debc98260fb17b44f7f262e3336f7e0 ("locking/rwsem: Implement lock handoff to prevent lock starvation")
-> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git WIP.locking/core
->
-> in testcase: stress-ng
-> on test machine: 272 threads Intel(R) Xeon Phi(TM) CPU 7255 @ 1.10GHz with 112G memory
-> with following parameters:
->
-> 	nr_threads: 100%
-> 	disk: 1HDD
-> 	testtime: 5s
-> 	class: memory
-> 	cpufreq_governor: performance
->
->
->
->
-> Details are as below:
-> -------------------------------------------------------------------------------------------------->
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
->
-> =========================================================================================
-> class/compiler/cpufreq_governor/disk/kconfig/nr_threads/rootfs/tbox_group/testcase/testtime:
->   memory/gcc-7/performance/1HDD/x86_64-rhel-7.6/100%/debian-x86_64-2018-04-03.cgz/lkp-knm02/stress-ng/5s
->
-> commit: 
->   1bcfe0e4cb ("locking/rwsem: Improve scalability via a new locking scheme")
->   1b94536f2d ("locking/rwsem: Implement lock handoff to prevent lock starvation")
->
-> 1bcfe0e4cb0efdba 1b94536f2debc98260fb17b44f7 
-> ---------------- --------------------------- 
->        fail:runs  %reproduction    fail:runs
->            |             |             |    
->           1:4          -25%            :4     dmesg.WARNING:at_ip__mutex_lock/0x
->            :4           25%           1:4     kmsg.DHCP/BOOTP:Reply_not_for_us_on_eth#,op[#]xid[#]
->          %stddev     %change         %stddev
->              \          |                \  
->      52766 ± 19%     -32.8%      35434 ±  3%  stress-ng.bad-altstack.ops
->      10521 ± 19%     -32.7%       7081 ±  3%  stress-ng.bad-altstack.ops_per_sec
->      71472 ± 16%     -37.1%      44986        stress-ng.stackmmap.ops
->      14281 ± 16%     -37.0%       9001        stress-ng.stackmmap.ops_per_sec
 
-The lock handoff patch does have the side effect of reducing throughput
-for better fairness when there is extreme contention on a rwsem. I
-believe later patches that enable reader optimistic spinning should
-bring back some of the lost performance.
+Am 12.04.19 um 17:39 schrieb Jonathan Corbet:
+> On Fri, 12 Apr 2019 14:34:25 +0200
+> Markus Heiser <markus.heiser@darmarit.de> wrote:
+> 
+>> Am 12.04.19 um 14:19 schrieb David Howells:
+>>> Markus Heiser <markus.heiser@darmarit.de> wrote:
+>>>    
+>>>> Which is already named in our 'How to write kernel documentation' introduction
+>>>>
+>>>> - https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html#writing-documentation
+>>>
+>>> This should really be in Documentation/ directory.
+>>>    
+>>
+>> I agree with you, it is a kind of information hiding.  If you know proper
+>> places, please send a patch to Jon.
+> 
+> As Jani pointed out, it's in Documentation/doc-guide.
+> 
+> If you're saying it should be in the top level, I kind of disagree.
+> Documentation/ is an exercise in hiding information by placing it in the
+> middle of 200 other, unrelated files.  We've made some progress on that,
+> and I would like to continue to do so.
 
-Cheers,
-Longman
+For those who are new and are willing to document, it migth be a good idea
+to have a simple Documentation/README.txt  with a link to doc-guide?
+
+Just a few words, I find with my editor, this is what I find often helpful
+when I'am new to a project.
+
+-- Markus --
