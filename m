@@ -2,114 +2,482 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADD0C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C95C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788B520869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7291218D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hNryO1YE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5Aapv01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfDLVEO (ORCPT
+        id S1727080AbfDLVFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 17:04:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40124 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfDLVEO (ORCPT
+        Fri, 12 Apr 2019 17:05:35 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42531 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfDLVFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 17:04:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=47f99Mo+hydUFa/g/RdJ33gOWoAsO4NFmnQJgCAGVXk=; b=hNryO1YEnoE8oEpdDtnRTm8cf
-        JQ8mTLNe6qyVi3NbhxLCX4hE+lVbiJMP8XxnqGIS/wy4lodGJ2uSCJOLKMN2YHDKO91vuKZWTqu/7
-        jAUw3bgOhP8ucd+59v2q08TyCmpbK3hoQu7Ma9sb9owgfQHqDycjvAJuyzGkR1gLoRfb+ozgtYE/S
-        knL+iMLMxk+X79PVU1BCkGVacxHq1o1iyHAdYaGbDrI7BxLgxN5Zygn/+RH4yxLRBIuuZIjJLdObd
-        SjlkiVbsVlWMecRw3ZfbM64obc731htiPKdvWq2HUCiEmix3qnPZzmUnlNCl1+mNjYo7MyJInnBNE
-        QE151ghYw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hF3L1-0004EH-RX; Fri, 12 Apr 2019 21:03:55 +0000
-Date:   Fri, 12 Apr 2019 14:03:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        yuzhoujian@didichuxing.com,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, linux-mm <linux-mm@kvack.org>,
-        lsf-pc@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [RFC 2/2] signal: extend pidfd_send_signal() to allow expedited
- process killing
-Message-ID: <20190412210355.GC899@bombadil.infradead.org>
-References: <20190411014353.113252-1-surenb@google.com>
- <20190411014353.113252-3-surenb@google.com>
- <20190411153313.GE22763@bombadil.infradead.org>
- <CAJuCfpGQ8c-OCws-zxZyqKGy1CfZpjxDKMH__qAm5FFXBcnWOw@mail.gmail.com>
- <CAKOZuetFU4tXE27bxA86zzDfNSCbw83p8fPxfkQ_d_Em0C04Sg@mail.gmail.com>
- <20190411173649.GF22763@bombadil.infradead.org>
- <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
+        Fri, 12 Apr 2019 17:05:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id b74so6517107qkg.9;
+        Fri, 12 Apr 2019 14:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cg68eBLuEey0LZdtOrvOrXGoQYaOaIc/8mN/Rprf0To=;
+        b=f5Aapv01z9rS62+oVqiHPURqnbafFnexcUEAHyOpwrhNztk4hHf8GZ42IrlKiWTJXn
+         eg9BkKJBzMjf6TCcoWODJpJ7NvileIHPtOSVKksUPlStuyBvbzD+2vdwT58XHZguRIzX
+         2E5+o/Y1sRKUeJJpbGyduC+Zr0I9Mj9iGgMzfhI35YTSzUxpXbscCloSDrWsLazXiWAY
+         Wf4QiVuCogf5w9dvGfpGrNLta+b4F+OxBr1KDGR05U7A996f2NBBDzvJhjHtFu0sY8/U
+         QhRVfmeMtmr37rvkcyO+0dvNxVFtIiL5CqeMkhvQg68zjFu0YGJDocLPcRdkIlTavv9i
+         Z2Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cg68eBLuEey0LZdtOrvOrXGoQYaOaIc/8mN/Rprf0To=;
+        b=LPVNY7A9EcUVsT8UmH335cfIipmjz0kKdlcNjNHXqM6YHfaELeesF3ZRcDotu8CV2i
+         jdufA6BEpJFcfXTE7kNI+l5VipCUAwRyUPYQLMqK385ID3FdtMYO//iUg+mVcB20F3MA
+         dvSApmy3jOGr5/michwPlkhG+kfcT0GFFizyrinzgYfIxK1VW2ia1xEhM/1N87Cv5/Vn
+         ZU8pssqaT+xBFLv32pNAOmQstiYPA97FEwdR72GWHq5FK/p65XjMHcFVJ797lth71PXd
+         egY2rq9GfadaiST4j1ECIbueyoEFVRrroY2TGiSbd2/MQ8DK27EtQ4P9dIcPkJrvtoIu
+         OJGQ==
+X-Gm-Message-State: APjAAAXmcR4vJG0gPkTFeu5KS7dSmEL76znlJa21z2zU7ndHP7NY2Q8t
+        isGmFQWFxy2OWSKeVM/MgwhsunSINaYA4mFxYYM=
+X-Google-Smtp-Source: APXvYqzwcc59q9RW7NxWz3fRDixkVmai9S1+/s5gRxKqy6Zo33uYWPU+CAm3OghDrHzivP2KEChKSGwYhapct/Mj2u4=
+X-Received: by 2002:a37:4c85:: with SMTP id z127mr44906089qka.180.1555103133112;
+ Fri, 12 Apr 2019 14:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZuet8-en+tMYu_QqVCxmkak44T7MnmRgfJBot0+P_A+Qzkw@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-16-git-send-email-hao.wu@intel.com> <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
+In-Reply-To: <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
+From:   Moritz Fischer <moritz.fischer.private@gmail.com>
+Date:   Fri, 12 Apr 2019 14:05:21 -0700
+Message-ID: <CAJYdmeOMm0xTRbKTS68M4uiHJLfphPXNo+eFYguda+SuwnkqmQ@mail.gmail.com>
+Subject: Re: [PATCH 15/17] fpga: dfl: fme: add power management support
+To:     Alan Tull <atull@kernel.org>
+Cc:     Wu Hao <hao.wu@intel.com>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 10:47:50AM -0700, Daniel Colascione wrote:
-> On Thu, Apr 11, 2019 at 10:36 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > It's not a question of the kernel deciding what the right signal is.
-> > The kernel knows whether a signal is fatal to a particular process or not.
-> > The question is whether the killing process should do the work of reaping
-> > the dying process's resources sometimes, always or never.  Currently,
-> > that is never (the process reaps its own resources); Suren is suggesting
-> > sometimes, and I'm asking "Why not always?"
-> 
-> FWIW, Suren's initial proposal is that the oom_reaper kthread do the
-> reaping, not the process sending the kill. Are you suggesting that
-> sending SIGKILL should spend a while in signal delivery reaping pages
-> before returning? I thought about just doing it this way, but I didn't
-> like the idea: it'd slow down mass-killing programs like killall(1).
-> Programs expect sending SIGKILL to be a fast operation that returns
-> immediately.
+Hi Hao,
 
-Suren said that the implementation in this proposal wasn't to be taken
-literally.
+this looks suspiciously like a hwmon driver ;-)
 
-You've raised some good points here though.  Do mass-killing programs
-like kill with a pgid or killall expect the signal-sending process to
-be fast, or do they not really care?
+https://www.kernel.org/doc/Documentation/hwmon/hwmon-kernel-api.txt
 
-From the kernel's point of view, the same work has to be done, no matter
-whether the killer or the victim does it.  Should the work be accounted
-to the killer or the victim?  It probably doesn't matter.  The victim
-doing the work allows for parallelisation, but I'm not convinced that's
-important either.
+Cheers,
+Moritz
 
-I see another advantage for the killer doing the work -- if the task
-is currently blocking on I/O (eg to an NFS mount that has gone away),
-the killer can get rid of the task's page tables.  If we have to wait
-for the I/O to complete before the victim reaps its own page tables,
-we may be waiting forever.
+
+On Thu, Apr 11, 2019 at 1:08 PM Alan Tull <atull@kernel.org> wrote:
+>
+> On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
+>
+> Hi Hao,
+>
+> >
+> > This patch adds support for power management private feature under
+> > FPGA Management Engine (FME), sysfs interfaces are introduced for
+> > different power management functions, users could use these sysfs
+> > interface to get current number of consumed power, throttling
+>
+> How about
+> s/number/measurement/
+> ?
+>
+> > thresholds, threshold status and other information, and configure
+> > different value for throttling thresholds too.
+> >
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++
+> >  drivers/fpga/dfl-fme-main.c                      | 257 +++++++++++++++++++++++
+> >  2 files changed, 313 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > index d3aeb88..4b6448f 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > @@ -100,3 +100,59 @@ Description:       Read-only. Read this file to get the policy of temperature
+> >                 threshold1. It only supports two value (policy):
+> >                     0 - AP2 state (90% throttling)
+> >                     1 - AP1 state (50% throttling)
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/consumed
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. It returns current power consumed by FPGA.
+>
+> What are the units?
+>
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read/Write this file to get/set current power
+> > +               threshold1 in Watts.
+>
+> Perhaps document error codes here and for threshold2 below.
+>
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-Write. Read/Write this file to get/set current power
+> > +               threshold2 in Watts.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1_status
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. It returns 1 if power consumption reaches the
+> > +               threshold1, otherwise 0.
+>
+> I'm used to things like this requiring user to reset the status, so it
+> may be worth making it explicit that it will return to zero if
+> consumption drops below threshold if that's what's happening here.
+> If it's correct, perhaps could just say something like 'returns 1 if
+> power consumption is currently at or above threshold1, otherwise 0'
+>
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2_status
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. It returns 1 if power consumption reaches the
+> > +               threshold2, otherwise 0.
+>
+> Same here.
+>
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/ltr
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. Read this file to get current Latency Tolerance
+> > +               Reporting (ltr) value, it's only valid for integrated
+> > +               solution as it blocks CPU on low power state.
+>
+> If we're not on the integrated solution, it returns a value but it is
+> not really real?
+>
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/xeon_limit
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. Read this file to get power limit for xeon, it
+> > +               is only valid for integrated solution.
+> > +
+> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/fpga_limit
+> > +Date:          March 2019
+> > +KernelVersion:  5.2
+> > +Contact:       Wu Hao <hao.wu@intel.com>
+> > +Description:   Read-only. Read this file to get power limit for fpga, it
+> > +               is only valid for integrated solution.
+> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> > index 449a17d..dafa6580 100644
+> > --- a/drivers/fpga/dfl-fme-main.c
+> > +++ b/drivers/fpga/dfl-fme-main.c
+> > @@ -415,6 +415,259 @@ static const struct dfl_feature_ops fme_thermal_mgmt_ops = {
+> >         .uinit = fme_thermal_mgmt_uinit,
+> >  };
+> >
+> > +#define FME_PWR_STATUS         0x8
+> > +#define FME_LATENCY_TOLERANCE  BIT_ULL(18)
+> > +#define PWR_CONSUMED           GENMASK_ULL(17, 0)
+> > +
+> > +#define FME_PWR_THRESHOLD      0x10
+> > +#define PWR_THRESHOLD1         GENMASK_ULL(6, 0)       /* in Watts */
+> > +#define PWR_THRESHOLD2         GENMASK_ULL(14, 8)      /* in Watts */
+> > +#define PWR_THRESHOLD_MAX      0x7f
+> > +#define PWR_THRESHOLD1_STATUS  BIT_ULL(16)
+> > +#define PWR_THRESHOLD2_STATUS  BIT_ULL(17)
+> > +
+> > +#define FME_PWR_XEON_LIMIT     0x18
+> > +#define XEON_PWR_LIMIT         GENMASK_ULL(14, 0)
+> > +#define XEON_PWR_EN            BIT_ULL(15)
+> > +#define FME_PWR_FPGA_LIMIT     0x20
+> > +#define FPGA_PWR_LIMIT         GENMASK_ULL(14, 0)
+> > +#define FPGA_PWR_EN            BIT_ULL(15)
+> > +
+> > +#define POWER_ATTR(_name, _mode, _show, _store)        \
+> > +struct device_attribute power_attr_##_name =           \
+> > +       __ATTR(_name, _mode, _show, _store)
+> > +
+> > +#define POWER_ATTR_RO(_name, _show)                    \
+> > +       POWER_ATTR(_name, 0444, _show, NULL)
+> > +
+> > +#define POWER_ATTR_RW(_name, _show, _store)            \
+> > +       POWER_ATTR(_name, 0644, _show, _store)
+>
+> Are these #defines necessary?  Seems like you could just use DEVICE_ATTR*
+>
+> > +
+> > +static ssize_t pwr_consumed_show(struct device *dev,
+> > +                                struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_STATUS);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(PWR_CONSUMED, v));
+> > +}
+> > +static POWER_ATTR_RO(consumed, pwr_consumed_show);
+> > +
+> > +static ssize_t pwr_threshold1_show(struct device *dev,
+> > +                                  struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1, v));
+> > +}
+> > +
+> > +static ssize_t pwr_threshold1_store(struct device *dev,
+> > +                                   struct device_attribute *attr,
+> > +                                   const char *buf, size_t count)
+> > +{
+> > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
+> > +       void __iomem *base;
+> > +       u8 threshold;
+> > +       int ret;
+> > +       u64 v;
+> > +
+> > +       ret = kstrtou8(buf, 0, &threshold);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (threshold > PWR_THRESHOLD_MAX)
+> > +               return -EINVAL;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +       v &= ~PWR_THRESHOLD1;
+> > +       v |= FIELD_PREP(PWR_THRESHOLD1, threshold);
+> > +       writeq(v, base + FME_PWR_THRESHOLD);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return count;
+> > +}
+> > +static POWER_ATTR_RW(threshold1, pwr_threshold1_show, pwr_threshold1_store);
+> > +
+> > +static ssize_t pwr_threshold2_show(struct device *dev,
+> > +                                  struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2, v));
+> > +}
+> > +
+> > +static ssize_t pwr_threshold2_store(struct device *dev,
+> > +                                   struct device_attribute *attr,
+> > +                                   const char *buf, size_t count)
+> > +{
+> > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
+> > +       void __iomem *base;
+> > +       u8 threshold;
+> > +       int ret;
+> > +       u64 v;
+> > +
+> > +       ret = kstrtou8(buf, 0, &threshold);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (threshold > PWR_THRESHOLD_MAX)
+> > +               return -EINVAL;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       mutex_lock(&pdata->lock);
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +       v &= ~PWR_THRESHOLD2;
+> > +       v |= FIELD_PREP(PWR_THRESHOLD2, threshold);
+> > +       writeq(v, base + FME_PWR_THRESHOLD);
+> > +       mutex_unlock(&pdata->lock);
+> > +
+> > +       return count;
+> > +}
+> > +static POWER_ATTR_RW(threshold2, pwr_threshold2_show, pwr_threshold2_store);
+> > +
+> > +static ssize_t pwr_threshold1_status_show(struct device *dev,
+> > +                                         struct device_attribute *attr,
+> > +                                         char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1_STATUS, v));
+> > +}
+> > +static POWER_ATTR_RO(threshold1_status, pwr_threshold1_status_show);
+> > +
+> > +static ssize_t pwr_threshold2_status_show(struct device *dev,
+> > +                                         struct device_attribute *attr,
+> > +                                         char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_THRESHOLD);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2_STATUS, v));
+> > +}
+> > +static POWER_ATTR_RO(threshold2_status, pwr_threshold2_status_show);
+> > +
+> > +static ssize_t ltr_show(struct device *dev,
+> > +                       struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_STATUS);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
+> > +                        (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
+> > +}
+> > +static POWER_ATTR_RO(ltr, ltr_show);
+> > +
+> > +static ssize_t xeon_limit_show(struct device *dev,
+> > +                              struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u16 xeon_limit = 0;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_XEON_LIMIT);
+> > +
+> > +       if (FIELD_GET(XEON_PWR_EN, v))
+> > +               xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", xeon_limit);
+> > +}
+> > +static POWER_ATTR_RO(xeon_limit, xeon_limit_show);
+> > +
+> > +static ssize_t fpga_limit_show(struct device *dev,
+> > +                              struct device_attribute *attr, char *buf)
+> > +{
+> > +       void __iomem *base;
+> > +       u16 fpga_limit = 0;
+> > +       u64 v;
+> > +
+> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
+> > +
+> > +       v = readq(base + FME_PWR_FPGA_LIMIT);
+> > +
+> > +       if (FIELD_GET(FPGA_PWR_EN, v))
+> > +               fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
+> > +
+> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", fpga_limit);
+> > +}
+> > +static POWER_ATTR_RO(fpga_limit, fpga_limit_show);
+> > +
+> > +static struct attribute *power_mgmt_attrs[] = {
+> > +       &power_attr_consumed.attr,
+> > +       &power_attr_threshold1.attr,
+> > +       &power_attr_threshold2.attr,
+> > +       &power_attr_threshold1_status.attr,
+> > +       &power_attr_threshold2_status.attr,
+> > +       &power_attr_xeon_limit.attr,
+> > +       &power_attr_fpga_limit.attr,
+> > +       &power_attr_ltr.attr,
+>
+> This is a nit, but I would expect to see these listed in the same
+> order as their show/store functions above.  So ltr_attr would come
+> between threshold2_status_attr and xeon_limit_attr.
+>
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group power_mgmt_attr_group = {
+> > +       .attrs  = power_mgmt_attrs,
+> > +       .name   = "power_mgmt",
+> > +};
+> > +
+> > +static int fme_power_mgmt_init(struct platform_device *pdev,
+> > +                              struct dfl_feature *feature)
+> > +{
+> > +       return sysfs_create_group(&pdev->dev.kobj, &power_mgmt_attr_group);
+> > +}
+> > +
+> > +static void fme_power_mgmt_uinit(struct platform_device *pdev,
+> > +                                struct dfl_feature *feature)
+> > +{
+> > +       sysfs_remove_group(&pdev->dev.kobj, &power_mgmt_attr_group);
+> > +}
+> > +
+> > +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
+> > +       {.id = FME_FEATURE_ID_POWER_MGMT,},
+> > +       {0,}
+> > +};
+> > +
+> > +static const struct dfl_feature_ops fme_power_mgmt_ops = {
+> > +       .init = fme_power_mgmt_init,
+> > +       .uinit = fme_power_mgmt_uinit,
+> > +};
+> > +
+> >  static struct dfl_feature_driver fme_feature_drvs[] = {
+> >         {
+> >                 .id_table = fme_hdr_id_table,
+> > @@ -429,6 +682,10 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
+> >                 .ops = &fme_thermal_mgmt_ops,
+> >         },
+> >         {
+> > +               .id_table = fme_power_mgmt_id_table,
+> > +               .ops = &fme_power_mgmt_ops,
+> > +       },
+> > +       {
+> >                 .ops = NULL,
+> >         },
+> >  };
+> > --
+> > 2.7.4
+> >
+>
+> Thanks,
+> Alan
