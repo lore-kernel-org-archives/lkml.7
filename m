@@ -2,85 +2,168 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB7C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B3C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF562054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187DC2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfDLNQk (ORCPT
+        id S1727057AbfDLNRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:16:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:60385 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfDLNQg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:16:36 -0400
-Received: from [192.168.1.110] ([77.9.22.14]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MhDN4-1gblT52kvS-00eI4t; Fri, 12 Apr 2019 15:15:57 +0200
-Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
- <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <24771fbe-0c45-78b0-e96b-6ed31ccdcb7f@metux.net>
-Date:   Fri, 12 Apr 2019 15:15:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 12 Apr 2019 09:17:35 -0400
+Received: from foss.arm.com ([217.140.101.70]:60828 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbfDLNRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 09:17:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C902015AD;
+        Fri, 12 Apr 2019 06:17:33 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 204E33F68F;
+        Fri, 12 Apr 2019 06:17:29 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 14:17:27 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
+ BARRIER EFFECTS" section
+Message-ID: <20190412131727.GB29218@fuggles.cambridge.arm.com>
+References: <20190405135936.7266-1-will.deacon@arm.com>
+ <20190405135936.7266-2-will.deacon@arm.com>
+ <080d1ec73e3e29d6ffeeeb50b39b613da28afb37.camel@kernel.crashing.org>
+ <CAHk-=wgLLOmocrOw2uH9QxsV=SK236gv0Df8SWXGS8c8LAiyCA@mail.gmail.com>
+ <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
 MIME-Version: 1.0
-In-Reply-To: <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:P1HauobrqeS7Nxy1zjrWPNWz2bBbR9RkUCoH4BP5/j5iRvktL6o
- WlozQICSoUUD+JW+Nw+weARs7Ye6ZKZS9DR52s3B1bRmlx5FeZ5qioYBfzJpRERLEafjxU9
- FHLUEUz/JEHu+HcHhtBvGoCvOXVkxgJditdbymnXHEuUQrswxaL9utPXOoHqfCAZqLcHpHN
- s8xH1Ah8wV2sswdvtG8Qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pdel6vNP1mA=:lZgvkh+cmAQuHpCDUhmiOc
- Ls7n8sJuRHw1mPWp38vMQFT9MTtbXgss5ujytTFmju1b8uJuH1Ny6FrsvMSVIvyGMS6vkbe+a
- 9YifF91xGHQWsFR9gyDbH4JHwulAtlkb0uroPzLyHHoss7fkqrMo566cosLJLYUjKVL8Dtpkx
- JLBLdg8xvM//RpzzIkQdv4PsPbc8F1C1nVtusbf2avMaLvRyLlCg1UGWr0FKL8APqAZU5MAcM
- OYfpmYcOfTUAA40DPFyG++vfmZailhjxiJ+bhv4KSPZ15PzB+vVNp0jW6buu8opESzl1yUq5g
- jqxoGuf3uLRnkxc7fePaJnrC/pHia3HRrw6j8VpFsB1hKERVONsBsZqmF4fM/LnbeETkM3xW4
- 19aI0Ymrsz92X7XwrpXq+0DaZDBSISnhg/ki1s/gpYeJLzlyOaYV9Gi5pcA5MqVZjKukw7jwS
- +ZHmFzpHuCwyUkuBIvjxN20gRm/lyRN14vI3sHGVCw9TGTfDP0jUoOggWp1nYPrh7bImLugDN
- ljh7ix+FC1huXZB7lG8l0WFe+jCNfbxcDdgzDYPUN+5rwxpUyPnH+nS44AQbCdGWrGD4cMWpm
- i6u18+itSHijJDKZMncHVThgeXG31UDlan//quwlYJ5BMh1o3F7Z/IY+twst0s3uTe7/vz/V0
- zXh9Pm/ck5nGgymfsaiYLKTjLAZ6UXwz+sf6gANkhdm5Uu3kCS4qNykOrKbQvHnFtjSmZpVKS
- X4j87XPk2BUv8AaC6HgMPpTvDM51xLIWyYR9hbno3Qy2fK59P8XFMpY3bMA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.19 15:30, Stefan Wahren wrote:
-> This adds RPM support to the pwm-fan driver in order to use with
-> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
-> output signal, which generate a defined number of pulses per revolution.
+On Fri, Apr 12, 2019 at 12:07:09PM +1000, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-04-11 at 15:34 -0700, Linus Torvalds wrote:
+> > On Thu, Apr 11, 2019 at 3:13 PM Benjamin Herrenschmidt
+> > <benh@kernel.crashing.org> wrote:
+> > > 
+> > > Minor nit... I would have said "All readX() and writeX() accesses
+> > > _from
+> > > the same CPU_ to the same peripheral... and then s/the CPU/this
+> > > CPU.
+> > 
+> > Maybe talk about "same thread" rather than "same cpu", with the
+> > understanding that scheduling/preemption has to include the
+> > appropriate cross-CPU IO barrier?
+> 
+> Works for me, but why not spell all this out in the document ? We know,
+> but others might not.
 
-Wouldn't it be better to have a CONFIG_* flag for keeping the kernel
-image size smaller when this feature isn't needed ?
+Ok, how about the diff below on top of:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/mmiowb
 
---mtx
+?
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+I do plan to investigate ioremap_wc() and friends in the future, but it's
+been painful enough just dealing with the common case! I'll almost certainly
+need your help with that too.
+
+Will
+
+--->8
+
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 1660dde75e14..8ce298e09d54 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -2524,26 +2524,30 @@ guarantees:
+ 
+ 	1. All readX() and writeX() accesses to the same peripheral are ordered
+ 	   with respect to each other. This ensures that MMIO register writes by
+-	   the CPU to a particular device will arrive in program order.
+-
+-	2. A writeX() by the CPU to the peripheral will first wait for the
+-	   completion of all prior CPU writes to memory. This ensures that
+-	   writes by the CPU to an outbound DMA buffer allocated by
+-	   dma_alloc_coherent() will be visible to a DMA engine when the CPU
+-	   writes to its MMIO control register to trigger the transfer.
+-
+-	3. A readX() by the CPU from the peripheral will complete before any
+-	   subsequent CPU reads from memory can begin. This ensures that reads
+-	   by the CPU from an incoming DMA buffer allocated by
+-	   dma_alloc_coherent() will not see stale data after reading from the
+-	   DMA engine's MMIO status register to establish that the DMA transfer
+-	   has completed.
+-
+-	4. A readX() by the CPU from the peripheral will complete before any
+-	   subsequent delay() loop can begin execution. This ensures that two
+-	   MMIO register writes by the CPU to a peripheral will arrive at least
+-	   1us apart if the first write is immediately read back with readX()
+-	   and udelay(1) is called prior to the second writeX():
++	   the same CPU thread to a particular device will arrive in program
++	   order.
++
++	2. A writeX() by a CPU thread to the peripheral will first wait for the
++	   completion of all prior writes to memory either issued by the thread
++	   or issued while holding a spinlock that was subsequently taken by the
++	   thread. This ensures that writes by the CPU to an outbound DMA
++	   buffer allocated by dma_alloc_coherent() will be visible to a DMA
++	   engine when the CPU writes to its MMIO control register to trigger
++	   the transfer.
++
++	3. A readX() by a CPU thread from the peripheral will complete before
++	   any subsequent reads from memory by the same thread can begin. This
++	   ensures that reads by the CPU from an incoming DMA buffer allocated
++	   by dma_alloc_coherent() will not see stale data after reading from
++	   the DMA engine's MMIO status register to establish that the DMA
++	   transfer has completed.
++
++	4. A readX() by a CPU thread from the peripheral will complete before
++	   any subsequent delay() loop can begin execution on the same thread.
++	   This ensures that two MMIO register writes by the CPU to a peripheral
++	   will arrive at least 1us apart if the first write is immediately read
++	   back with readX() and udelay(1) is called prior to the second
++	   writeX():
+ 
+ 		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
+ 		readl(DEVICE_REGISTER_0);
+@@ -2600,8 +2604,10 @@ guarantees:
+ 	These will perform appropriately for the type of access they're actually
+ 	doing, be it inX()/outX() or readX()/writeX().
+ 
+-All of these accessors assume that the underlying peripheral is little-endian,
+-and will therefore perform byte-swapping operations on big-endian architectures.
++With the exception of the string accessors (insX(), outsX(), readsX() and
++writesX()), all of the above assume that the underlying peripheral is
++little-endian and will therefore perform byte-swapping operations on big-endian
++architectures.
+ 
+ 
+ ========================================
