@@ -2,145 +2,190 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5140C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7237C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ADC2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B0F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snjb58zJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfDLNuF (ORCPT
+        id S1727144AbfDLNuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:50:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34852 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfDLNuE (ORCPT
+        Fri, 12 Apr 2019 09:50:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42206 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfDLNuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:50:04 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EA2202813B7;
-        Fri, 12 Apr 2019 14:50:00 +0100 (BST)
-Date:   Fri, 12 Apr 2019 15:49:57 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        dnicoara@chromium.org, daniels@collabora.com,
-        alexandros.frantzis@collabora.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, tomasz Figa <tfiga@chromium.org>,
-        tina.zhang@intel.com, Sean Paul <seanpaul@google.com>,
-        kernel@collabora.com, nicholas.kazlauskas@amd.com,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>,
-        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
-        linux-doc@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-rockchip@lists.infradead.org,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
-        Eric Anholt <eric@anholt.net>, Leo Li <sunpeng.li@amd.com>,
-        linux-arm-msm@vger.kernel.org,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Francis <David.Francis@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        freedreno@lists.freedesktop.org,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 2/4] drm/atomic: rename async_{update,check} to
- amend_{update,check}
-Message-ID: <20190412154957.558e49f8@collabora.com>
-In-Reply-To: <20190412125827.5877-3-helen.koike@collabora.com>
-References: <20190412125827.5877-1-helen.koike@collabora.com>
-        <20190412125827.5877-3-helen.koike@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 12 Apr 2019 09:50:12 -0400
+Received: by mail-pf1-f194.google.com with SMTP id w25so5181359pfi.9;
+        Fri, 12 Apr 2019 06:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gwNSd5ymAndbjw0CTJFY/i3yz4ClVc3lWoUeN3NBssQ=;
+        b=snjb58zJYirgyrqzwW4GZVrTrBRog4j23aEBtL2pcva9gxWKVbdqYH/HiYmduzuenQ
+         NxbDdv+po2Ch7w9WfWPDrq/B+MlTYkOw5vOXCpXHDXJJUo7lETQCo1PsJRUMqpaWBN7o
+         4cSCULZahMMjOf9Cii+YKOVWd4VqIEUZqIMay1OgYSFdZSHjGs3/rhwwaMCBkuLDG5UP
+         t1MzdcgFdzvTSWeo2/6Muq+iN7ZyfI5TTE5cs7NRz3Wbigzm/KOARav3aDzHYJk0y3Sj
+         ZiNsCd+YgP5RE0aRijKzYNvmHiaCNgHai/oB/sKo9DAduZKdKNOm1IeU+hy30tGQwmG4
+         FRlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gwNSd5ymAndbjw0CTJFY/i3yz4ClVc3lWoUeN3NBssQ=;
+        b=Rx0EpYmpzVFMEVqOu+5NPUMF+f4s6vcgXcYd0iIJjZZSO7htbbQcRUb2Fi32agTw5n
+         ho/2s8vc++vOZ9+j8IioikwmX7FEZZHRxUOHrDjWuGByQ+NiVv9cJnWG23wXTlwxoEee
+         4yb8rFSOzSAA9mQ3W3DHwtbYPMOPqepf+wdeRt5gAFOmScR19FuZlkgidYbokvu01Mrd
+         PTCNgipgqw7Kd9gomd01dHqmO0KGbQuxMx1pN8sM3E6y3nnKE/dRNiM3kcoSW5/QDAWZ
+         wruY/vrf9XyOuJLTTfFmr5zBvsEgbazzSSPoCJtmHkc3hfSeA9Ozq8GVOxdr5b/TIE/k
+         P+fQ==
+X-Gm-Message-State: APjAAAXnPZwtRHBw0AHC83CE919mKRv9psH66Y+jq8A5SKTKe5b3gTNY
+        9x72G67AaHicejswhSANGLiYj+eF
+X-Google-Smtp-Source: APXvYqzUM/Y3iBuwH7AVgsq5NCN0yC6nNW/i0n+qKFikHtKT6iIVQJbmMmVsyms/kWgCB4HMEWtsCg==
+X-Received: by 2002:a65:5089:: with SMTP id r9mr53403673pgp.14.1555077010828;
+        Fri, 12 Apr 2019 06:50:10 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f6sm40738316pgq.11.2019.04.12.06.50.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 06:50:10 -0700 (PDT)
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+ <20190411165742.GA29395@roeck-us.net>
+ <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
+ <77c56129-d3e7-1518-9d1d-a15a20540269@arm.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <cfde0244-1faf-80cd-b49e-500654e5bad8@roeck-us.net>
+Date:   Fri, 12 Apr 2019 06:50:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <77c56129-d3e7-1518-9d1d-a15a20540269@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On 4/12/19 4:50 AM, Robin Murphy wrote:
+> On 12/04/2019 12:07, Stefan Wahren wrote:
+>> On 11.04.19 18:57, Guenter Roeck wrote:
+>>> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
+>>>>    
+>>>> -ATTRIBUTE_GROUPS(pwm_fan);
+>>>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>>>> +				     int n)
+>>>> +{
+>>>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>>>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>>>> +	struct device_attribute *devattr;
+>>>> +
+>>>> +	/* Hide fan_input in case no interrupt is available  */
+>>>> +	devattr = container_of(a, struct device_attribute, attr);
+>>> Field day for static analyzers - devattr is no longer used.
+>>> No need to resend. I'll let the series rest for a couple of days
+>>> and then apply to hwmon-next (after removing devattr) unless there are
+>>> additional comments.
+>>>
+>> Thank you
+> 
+> FWIW you can have a
+> 
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> for the whole series. The only minor comment that springs to mind
+> isn't actually specific to this patch, so is probably best made as
+> the follow-up below.
+> 
+> Robin.
+> 
 
-On Fri, 12 Apr 2019 09:58:25 -0300
-Helen Koike <helen.koike@collabora.com> wrote:
+Any chance you can send the patch below as separate patch ? I track patches
+using patchwork, and attachments don't show up there.
 
-> Asynchronous update is the ability change the hw state at any time, not
-> only during vblank.
+Thanks,
+Guenter
+
+> ----->8-----
+> From: Robin Murphy <robin.murphy@arm.com>
+> Subject: [PATCH] hwmon: pwm-fan: Report probe errors consistently
 > 
-> Amend mode is the ability to perform 1000 commits to be applied as soon
-> as possible without waiting for 1000 vblanks.
+> Printing the error code for a failure provides a head-start for
+> debugging, since it's often sufficient to pinpoint the origin of the
+> failure. We already do this for some probe-failure messages, so let's
+> make the rest of them consistent.
 > 
-> async updates can be seen as amend, but the opposite is not true.
-> 
-> &drm_plane_helper_funcs.atomic_async_{update,check}() was being used by
-> drivers to implement amend and not async. So rename them to amend.
-> 
-> Also improve docs explaining the difference.
-> 
-> If asynchronous is required, normal page flip can be performed using
-> DRM_MODE_PAGE_FLIP_ASYNC flag.
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > ---
-> Hello,
+>   drivers/hwmon/pwm-fan.c | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
 > 
-> I would like to officially clarify what async update means by adding it
-> in the docs.
-> Please correct me if I am wrong, but the current async_{update,check}
-> callbacks are being used to do amend (the legacy cursor behavior), i.e.
-> to allow 1000 updates without waiting for 1000 vblanks.
-
-Right now, the semantic of async update is driver dependent. Some
-drivers will amend the last commit touching that plane (amend semantic),
-others will update the plane buffer immediately which might cause
-tearing (async semantic).
-
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 8c4c5eefd4ca..556db4bef743 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -330,7 +330,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
 > 
-> So I would like to clarify this in the docs and rename the current
-> callbacks to reflect this behaviour.
-
-I'm all for this clarification, but I don't think renaming the async
-hooks is a good idea, since some drivers will not do real 'amend'. So,
-you're changing the name, but it's still confusing :-).
-
-How about adding new hooks (and/or flags) for the AMEND case, and
-keeping the async path untouched. We can then let drivers that
-currently implement async as amend implement the amend hooks instead.
-Once you've done that, you can hook that up to the legacy cursor update
-path so that it first tries one then the other and finally falls back
-to a sync update if none of ASYNC/AMEND is possible.
-
+>   	ret = pwm_apply_state(ctx->pwm, &state);
+>   	if (ret) {
+> -		dev_err(&pdev->dev, "Failed to configure PWM\n");
+> +		dev_err(&pdev->dev, "Failed to configure PWM: %d\n", ret);
+>   		goto err_reg_disable;
+>   	}
 > 
-> I also see that for real async updates, the flag
-> DRM_MODE_PAGE_FLIP_ASYNC can be used in a normal sync update (it is
-> already being used by some drivers actually, in the atomic path, not only
-> in the legacy page flip, at least is what I understood from
-> amdgpu_dm_atomic_commit_tail() implementation).
+> @@ -348,7 +348,8 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>   		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
+>   				       pdev->name, ctx);
+>   		if (ret) {
+> -			dev_err(&pdev->dev, "Can't get interrupt working.\n");
+> +			dev_err(&pdev->dev,
+> +				"Failed to request interrupt: %d\n", ret);
+>   			goto err_pwm_disable;
+>   		}
+>   		ctx->sample_start = ktime_get();
+> @@ -358,8 +359,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>   	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
+>   						       ctx, pwm_fan_groups);
+>   	if (IS_ERR(hwmon)) {
+> -		dev_err(&pdev->dev, "Failed to register hwmon device\n");
+>   		ret = PTR_ERR(hwmon);
+> +		dev_err(&pdev->dev,
+> +			"Failed to register hwmon device: %d\n", ret);
+>   		goto err_del_timer;
+>   	}
+> 
+> @@ -373,9 +375,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>   							  "pwm-fan", ctx,
+>   							  &pwm_fan_cooling_ops);
+>   		if (IS_ERR(cdev)) {
+> -			dev_err(&pdev->dev,
+> -				"Failed to register pwm-fan as cooling device");
+>   			ret = PTR_ERR(cdev);
+> +			dev_err(&pdev->dev,
+> +				"Failed to register pwm-fan as cooling device: %d\n",
+> +				ret);
+>   			goto err_del_timer;
+>   		}
+>   		ctx->cdev = cdev;
+> 
 
-Yes, right now, async does not necessarily imply non-block, but
-Daniel seemed to think that most users want non-block when they do an
-async page flip, so maybe it should be clarified too.
-
-Regards,
-
-Boris
