@@ -2,232 +2,282 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD66C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AF5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74942077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA79F20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 23:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="BPuvw68s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LgoozFzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfDLX2Q (ORCPT
+        id S1726992AbfDLXan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 19:28:16 -0400
-Received: from ushosting.nmnhosting.com ([167.160.173.127]:52634 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfDLX2P (ORCPT
+        Fri, 12 Apr 2019 19:30:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35766 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726850AbfDLXam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 19:28:15 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 4F9FF2F28FBD;
-        Fri, 12 Apr 2019 19:28:10 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1555111690;
-        bh=VgWLlyshljl98K0ypGNqKx0d62WSBvCH8NIxBzaHhak=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=BPuvw68smjn1JByoFoL8q1LPc54llaJtgGfFbJlZcDiDi5y77sKOyI1/8/W5DFNPa
-         /Nv2fqVkweHd40344J2PYYo2BW8hxo+AqNhmZT9PB/VNWHASY4bSfQX9Z9L4WX0PEY
-         v6JGqh15sI9uHBZPKC0Zmpb60hAdNikpE5T0W4KIoSbMJXwM1NE9Hw/9JZbBgsk1+y
-         fovHMb6tCbRfb0D2xD65rk/sMRiFMUNcWfugTsHLjlnwx2rh+xPnw+sTXKZ7FLG6u1
-         rUvTrGjEHh93EMZSBGmeDnaY0BNLga7Th43VqM33UtCDaC1g3Sd+UmgiUVv9jqAHer
-         0MWmU947eNNkD1CnZ5ANluJDOo050loocjm6JJo97JV1REpgQRL9x2gdEMYRO/ZBHS
-         MSU97doZ1eW/60HsKAaIkVY0iP45YA0enfSksvPeCtQM6GVpViR8ErBvi67emFbv69
-         LUYOTGDKZmZtx0bO7je8fU6BQs+DwYTkdvPq3Nde2GHNeDdrHoW37HK6/AY+iYbPWA
-         4q0Vp7R8xnfTEqP4W+sUIjBvdc1hejUkIWdzhxwtFrV4X+qMZ7fiCaS+6OO2ZohoWa
-         EeGFuKFmOyK4LxYCv6vy2Ui3jd/GU4tqaVMECK5jwRhRAWRRXRmfyTFxhfPPkewQBL
-         hw4q16R8L+HqOnFuyE21WxxQ=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3CNS3k6018835
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 09:28:04 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'Petr Mladek'" <pmladek@suse.com>,
-        "'Alastair D'Silva'" <alastair@au1.ibm.com>
-Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
-        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
-        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
-        "'David Airlie'" <airlied@linux.ie>,
-        "'Daniel Vetter'" <daniel@ffwll.ch>,
-        "'Karsten Keil'" <isdn@linux-pingi.de>,
-        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
-        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>,
-        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
-        "'Benson Leung'" <bleung@chromium.org>,
-        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
-        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
-        "'Steven Rostedt'" <rostedt@goodmis.org>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-3-alastair@au1.ibm.com> <20190412140353.mgvksn3yk6n65hbk@pathway.suse.cz>
-In-Reply-To: <20190412140353.mgvksn3yk6n65hbk@pathway.suse.cz>
-Subject: RE: [PATCH 2/4] lib/hexdump.c: Optionally suppress lines of filler bytes
-Date:   Sat, 13 Apr 2019 09:28:03 +1000
-Message-ID: <093101d4f187$612f0f20$238d2d60$@d-silva.org>
+        Fri, 12 Apr 2019 19:30:42 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g8so5899228pgf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 16:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZAUdYgRdVrq62jrwi9lZMGWEKv1DLidQ/KtN8lj5ZIs=;
+        b=LgoozFznk4qTb2N1RpCZrm2alKFn7ZKXl14JE3dSKJAgCye741UJLffehBrCxqEZey
+         qPpQ/TUeHVfPC8CALwUM0d0M0feo3lBUzKOkynxCetSf3gZLPAmF3N81eaazaPh4v3VS
+         4rmOryCRuXlAZLhRZ9dUQ4f0L/yrfZ5+ww0u3WU8kZAve8NON+Dv1C7WEwUlAPuZkBOp
+         FyOyHzUd5qjm79SGdt9Xb9Q5s57WSNW+L7+cOsNCmdsldNXFB6EL06PpaSRzp5Z+wAEU
+         SYz/MdiPULn3SVPfLbrGMmxaPpuCeu6IeOlHJ+u32U0grEa/ILw7lnpeQwamlhDZAfzg
+         oYgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZAUdYgRdVrq62jrwi9lZMGWEKv1DLidQ/KtN8lj5ZIs=;
+        b=TPdVJBtjnR+vMhCrI8N19AE/m+AqRbTc8Q3rVq1bjHMtAkq92MLIuZrbw97Ls8DZ0E
+         SyoW/OkdcYwitby0UsuPZcn1o6S77L5348AcPrtq15Id/sHZA20pNYaEqNjiHCgbhLhV
+         GKx+kaNNUadYXhOEeRUou5or/lutQsfmrwCpIicGxtJfiocg12bCMf86QasY72ODJtme
+         8Hji8EMMhrxqu0l0nUp6Uzb4ro7CyU1QPNWw9vCvjiNI73ohm4Eb7bOA9n/HHKNxCzcP
+         sotOouxyoEbdzXwrfvbeXZKzLLe3GaMcJFV9q31Tz/ngT73MgwAAk6caEJkwidk1sSxh
+         YoGw==
+X-Gm-Message-State: APjAAAVRzCSt7Vq1NPvMO8NM9eDrTbuEXmSsuJ5K1VW+3N4cRsaEaiXZ
+        ESp/JZTdqLvVLGV5MapY7/6/ii7twA8UFqlX/1hXkg==
+X-Google-Smtp-Source: APXvYqxw8zUXUxi8iG1zG5CQKB71MJjklKiDdxWPD+rsMaKCphjwemWsVxo5iWoB9JhOC72lu3u+C4TiOIR+HiPdkPk=
+X-Received: by 2002:a63:744b:: with SMTP id e11mr55779959pgn.327.1555111841072;
+ Fri, 12 Apr 2019 16:30:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AIaTVgFAud+bomjhfstAA==
-Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Sat, 13 Apr 2019 09:28:05 +1000 (AEST)
+References: <20190412203756.67329-1-venture@google.com> <68befc11-9d25-d2fb-2374-26ff7f3914ae@roeck-us.net>
+In-Reply-To: <68befc11-9d25-d2fb-2374-26ff7f3914ae@roeck-us.net>
+From:   Patrick Venture <venture@google.com>
+Date:   Fri, 12 Apr 2019 16:30:27 -0700
+Message-ID: <CAO=notySsUwTXuMfBjzo6evJyvAWMeCp1doyY2tyddFEp6i7yA@mail.gmail.com>
+Subject: Re: [PATCH v3] hwmon: (pmbus/ir38064): Add driver for Infineon
+ IR38064 Voltage Regulator
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, corbet@lwn.net,
+        Maxim Sloyko <maxims@google.com>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Petr Mladek <pmladek@suse.com>
-> Sent: Saturday, 13 April 2019 12:04 AM
-> To: Alastair D'Silva <alastair@au1.ibm.com>
-> Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>;
-Joonas
-> Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
-> <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
-> <daniel@ffwll.ch>; Karsten Keil <isdn@linux-pingi.de>; Jassi Brar
-> <jassisinghbrar@gmail.com>; Tom Lendacky <thomas.lendacky@amd.com>;
-> David S. Miller <davem@davemloft.net>; Jose Abreu
-> <Jose.Abreu@synopsys.com>; Kalle Valo <kvalo@codeaurora.org>;
-> Stanislaw Gruszka <sgruszka@redhat.com>; Benson Leung
-> <bleung@chromium.org>; Enric Balletbo i Serra
-> <enric.balletbo@collabora.com>; James E.J. Bottomley
-> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
-> <viro@zeniv.linux.org.uk>; Sergey Senozhatsky
-> <sergey.senozhatsky@gmail.com>; Steven Rostedt <rostedt@goodmis.org>;
-> Andrew Morton <akpm@linux-foundation.org>; intel-
-> gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
-> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
-> Subject: Re: [PATCH 2/4] lib/hexdump.c: Optionally suppress lines of
-filler
-> bytes
-> 
-> On Wed 2019-04-10 13:17:18, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> >
-> > Some buffers may only be partially filled with useful data, while the
-> > rest is padded (typically with 0x00 or 0xff).
-> >
-> > This patch introduces flags which allow lines of padding bytes to be
-> > suppressed, making the output easier to interpret:
-> > HEXDUMP_SUPPRESS_0X00, HEXDUMP_SUPPRESS_0XFF
-> >
-> > The first and last lines are not suppressed by default, so the
-> > function always outputs something. This behaviour can be further
-> > controlled with the HEXDUMP_SUPPRESS_FIRST &
-> HEXDUMP_SUPPRESS_LAST flags.
-> >
-> > An inline wrapper function is provided for backwards compatibility
-> > with existing code, which maintains the original behaviour.
-> >
-> 
-> > diff --git a/lib/hexdump.c b/lib/hexdump.c index
-> > b8a164814744..2f3bafb55a44 100644
-> > --- a/lib/hexdump.c
-> > +++ b/lib/hexdump.c
-> > +void print_hex_dump_ext(const char *level, const char *prefix_str,
-> > +			int prefix_type, int rowsize, int groupsize,
-> > +			const void *buf, size_t len, u64 flags)
-> >  {
-> >  	const u8 *ptr = buf;
-> > -	int i, linelen, remaining = len;
-> > +	int i, remaining = len;
-> >  	unsigned char linebuf[64 * 3 + 2 + 64 + 1];
-> > +	bool first_line = true;
-> >
-> >  	if (rowsize != 16 && rowsize != 32 && rowsize != 64)
-> >  		rowsize = 16;
-> >
-> >  	for (i = 0; i < len; i += rowsize) {
-> > -		linelen = min(remaining, rowsize);
-> > +		bool skip = false;
-> > +		int linelen = min(remaining, rowsize);
-> > +
-> >  		remaining -= rowsize;
-> >
-> > +		if (flags & HEXDUMP_SUPPRESS_0X00)
-> > +			skip = buf_is_all(ptr + i, linelen, 0x00);
-> > +
-> > +		if (!skip && (flags & HEXDUMP_SUPPRESS_0XFF))
-> > +			skip = buf_is_all(ptr + i, linelen, 0xff);
-> > +
-> > +		if (first_line && !(flags & HEXDUMP_SUPPRESS_FIRST))
-> > +			skip = false;
-> > +
-> > +		if (remaining <= 0 && !(flags & HEXDUMP_SUPPRESS_LAST))
-> > +			skip = false;
-> > +
-> > +		if (skip)
-> > +			continue;
-> 
-> IMHO, quietly skipping lines could cause a lot of confusion, espcially
-when
-> the address is not printed.
+On Fri, Apr 12, 2019 at 3:15 PM Guenter Roeck <linux@roeck-us.net> wrote:
 >
-It's up to the caller to decide how they want it displayed.
-
-> I wonder how it would look like when we print something like:
-> 
->     --- skipped XX lines full of 0x00 ---
-
-This could be added as a later enhancement, with a new flag (eg.
-HEXDUMP_SUPPRESS_VERBOSE).
-
-> 
-> Then we might even remove the SUPPRESS_FIRST, SUPPRESS_LAST and the
-> ambiguous QUIET flags.
-> 
-> > +
-> > +		first_line = false;
-> 
-> This should be above the if (skip).
-> 
-> > +
-> >  		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
-> > -				   linebuf, sizeof(linebuf), ascii);
-> > +				   linebuf, sizeof(linebuf),
-> > +				   flags & HEXDUMP_ASCII);
+> On 4/12/19 1:37 PM, Patrick Venture wrote:
+> > From: Maxim Sloyko <maxims@google.com>
 > >
-> >  		switch (prefix_type) {
-> >  		case DUMP_PREFIX_ADDRESS:
-> > @@ -272,7 +316,7 @@ void print_hex_dump(const char *level, const char
-> *prefix_str, int prefix_type,
-> >  		}
-> >  	}
-> >  }
-> > -EXPORT_SYMBOL(print_hex_dump);
-> > +EXPORT_SYMBOL(print_hex_dump_ext);
-> 
-> We should still export even the original function that is still used
-everywhere.
+> > Add the pmbus driver for the Infineon ir38064 voltage regulator.
+> >
+> > VOUT_MODE is not supported by the device.  The driver fakes linear16
+> > mode with exponent value -8.
+> >
+> > The device supports VOUT_PEAK, IOUT_PEAK, and TEMPERATURE_PEAK, however
+> > this driver does not enable them.
+> >
+>
+> I meant to add this into the driver as comment (where people can see it
+> going forward). Never mind, I'll apply the patch and add it myself.
 
-It's replaced with an inline wrapper function, there's no need to export it.
+Sorry, I definitely misunderstood your intent.  Thanks for handling it.
 
--- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva     msn: alastair@d-silva.org
-blog: http://alastair.d-silva.org    Twitter: @EvilDeece
-
-
-
+>
+> Guenter
+>
+> > Signed-off-by: Maxim Sloyko <maxims@google.com>
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > ---
+> > v3:
+> >   - Updated commit message to indicate behaviors.
+> > v2:
+> >   - Cleaned up weird tabbing behavior in doc.
+> > v1:
+> >   - Initial patchset.
+> > ---
+> >   Documentation/hwmon/ir38064   | 64 +++++++++++++++++++++++++++++++++++
+> >   drivers/hwmon/pmbus/Kconfig   |  9 +++++
+> >   drivers/hwmon/pmbus/Makefile  |  1 +
+> >   drivers/hwmon/pmbus/ir38064.c | 60 ++++++++++++++++++++++++++++++++
+> >   4 files changed, 134 insertions(+)
+> >   create mode 100644 Documentation/hwmon/ir38064
+> >   create mode 100644 drivers/hwmon/pmbus/ir38064.c
+> >
+> > diff --git a/Documentation/hwmon/ir38064 b/Documentation/hwmon/ir38064
+> > new file mode 100644
+> > index 0000000000000..618779a329da0
+> > --- /dev/null
+> > +++ b/Documentation/hwmon/ir38064
+> > @@ -0,0 +1,64 @@
+> > +Kernel driver ir38064
+> > +=====================
+> > +
+> > +Supported chips:
+> > +  * Infineon IR38064
+> > +    Prefix: 'ir38064'
+> > +    Addresses scanned: -
+> > +    Datasheet: Publicly available at the Infineon webiste
+> > +      https://www.infineon.com/dgdl/Infineon-IR38064MTRPBF-DS-v03_07-EN.pdf?fileId=5546d462584d1d4a0158db0d9efb67ca
+> > +
+> > +Datasheet is not publicly available.
+> > +
+> > +
+> > +Authors:
+> > +        Maxim Sloyko <maxims@google.com>
+> > +        Patrick Venture <venture@google.com>
+> > +
+> > +Description
+> > +-----------
+> > +
+> > +IR38064 is a Single-input Voltage, Synchronous Buck Regulator, DC-DC Converter.
+> > +
+> > +Usage Notes
+> > +-----------
+> > +
+> > +This driver does not probe for PMBus devices. You will have to instantiate
+> > +devices explicitly.
+> > +
+> > +Sysfs attributes
+> > +----------------
+> > +
+> > +curr1_label          "iout1"
+> > +curr1_input          Measured output current
+> > +curr1_crit           Critical maximum current
+> > +curr1_crit_alarm     Current critical high alarm
+> > +curr1_max            Maximum current
+> > +curr1_max_alarm      Current high alarm
+> > +
+> > +in1_label            "vin"
+> > +in1_input            Measured input voltage
+> > +in1_crit             Critical maximum input voltage
+> > +in1_crit_alarm               Input voltage critical high alarm
+> > +in1_min              Minimum input voltage
+> > +in1_min_alarm                Input voltage low alarm
+> > +
+> > +in2_label            "vout1"
+> > +in2_input            Measured output voltage
+> > +in2_lcrit            Critical minimum output voltage
+> > +in2_lcrit_alarm      Output voltage critical low alarm
+> > +in2_crit             Critical maximum output voltage
+> > +in2_crit_alarm               Output voltage critical high alarm
+> > +in2_max              Maximum output voltage
+> > +in2_max_alarm                Output voltage high alarm
+> > +in2_min              Minimum output voltage
+> > +in2_min_alarm                Output voltage low alarm
+> > +
+> > +power1_label         "pout1"
+> > +power1_input         Measured output power
+> > +
+> > +temp1_input          Measured temperature
+> > +temp1_crit           Critical high temperature
+> > +temp1_crit_alarm     Chip temperature critical high alarm
+> > +temp1_max            Maximum temperature
+> > +temp1_max_alarm      Chip temperature high alarm
+> > diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> > index 629cb45f8557a..de87abab990e5 100644
+> > --- a/drivers/hwmon/pmbus/Kconfig
+> > +++ b/drivers/hwmon/pmbus/Kconfig
+> > @@ -54,6 +54,15 @@ config SENSORS_IR35221
+> >         This driver can also be built as a module. If so, the module will
+> >         be called ir35521.
+> >
+> > +config SENSORS_IR38064
+> > +     tristate "Infineon IR38064"
+> > +     help
+> > +       If you say yes here you get hardware monitoring support for Infineon
+> > +       IR38064.
+> > +
+> > +       This driver can also be built as a module. If so, the module will
+> > +       be called ir38064.
+> > +
+> >   config SENSORS_LM25066
+> >       tristate "National Semiconductor LM25066 and compatibles"
+> >       help
+> > diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+> > index ea0e39518c216..7d1fa6b3c8c93 100644
+> > --- a/drivers/hwmon/pmbus/Makefile
+> > +++ b/drivers/hwmon/pmbus/Makefile
+> > @@ -8,6 +8,7 @@ obj-$(CONFIG_SENSORS_PMBUS)   += pmbus.o
+> >   obj-$(CONFIG_SENSORS_ADM1275)       += adm1275.o
+> >   obj-$(CONFIG_SENSORS_IBM_CFFPS)     += ibm-cffps.o
+> >   obj-$(CONFIG_SENSORS_IR35221)       += ir35221.o
+> > +obj-$(CONFIG_SENSORS_IR38064)        += ir38064.o
+> >   obj-$(CONFIG_SENSORS_LM25066)       += lm25066.o
+> >   obj-$(CONFIG_SENSORS_LTC2978)       += ltc2978.o
+> >   obj-$(CONFIG_SENSORS_LTC3815)       += ltc3815.o
+> > diff --git a/drivers/hwmon/pmbus/ir38064.c b/drivers/hwmon/pmbus/ir38064.c
+> > new file mode 100644
+> > index 0000000000000..4b957ebb6fa71
+> > --- /dev/null
+> > +++ b/drivers/hwmon/pmbus/ir38064.c
+> > @@ -0,0 +1,60 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Hardware monitoring driver for Infineon IR38064
+> > + *
+> > + * Copyright (c) 2017 Google Inc
+> > + *
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include "pmbus.h"
+> > +
+> > +static struct pmbus_driver_info ir38064_info = {
+> > +     .pages = 1,
+> > +     .format[PSC_VOLTAGE_IN] = linear,
+> > +     .format[PSC_VOLTAGE_OUT] = direct,
+> > +     .format[PSC_CURRENT_OUT] = linear,
+> > +     .format[PSC_POWER] = linear,
+> > +     .format[PSC_TEMPERATURE] = linear,
+> > +     .m[PSC_VOLTAGE_OUT] = 256,
+> > +     .b[PSC_VOLTAGE_OUT] = 0,
+> > +     .R[PSC_VOLTAGE_OUT] = 0,
+> > +     .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
+> > +         | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
+> > +         | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
+> > +         | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
+> > +         | PMBUS_HAVE_POUT,
+> > +};
+> > +
+> > +static int ir38064_probe(struct i2c_client *client,
+> > +                      const struct i2c_device_id *id)
+> > +{
+> > +     return pmbus_do_probe(client, id, &ir38064_info);
+> > +}
+> > +
+> > +static const struct i2c_device_id ir38064_id[] = {
+> > +     {"ir38064", 0},
+> > +     {}
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(i2c, ir38064_id);
+> > +
+> > +/* This is the driver that will be inserted */
+> > +static struct i2c_driver ir38064_driver = {
+> > +     .driver = {
+> > +                .name = "ir38064",
+> > +                },
+> > +     .probe = ir38064_probe,
+> > +     .remove = pmbus_do_remove,
+> > +     .id_table = ir38064_id,
+> > +};
+> > +
+> > +module_i2c_driver(ir38064_driver);
+> > +
+> > +MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
+> > +MODULE_DESCRIPTION("PMBus driver for Infineon IR38064");
+> > +MODULE_LICENSE("GPL");
+> >
+>
