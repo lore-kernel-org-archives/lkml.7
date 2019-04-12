@@ -2,85 +2,109 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B653FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238DDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EA721872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555053180;
-	bh=cUDRUvfw7fqVRmcYqiL+aO4CkbjdbUW/EnMoZrGCRKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dib+3ZyH6plU0vpSmdDygCNxX/Lc/oe+Xhwm0TuxGu5vSWL5yp6T+cGsOdgc1uXGN
-	 2dISClsBuaTYEJnWFCQWhPuIga1kFoYJqUd+oawp0Iljynw/62mbDU18fuBIIlwQ9/
-	 a6711g67NFGTxxAuJTuyVl0J33YMc2t3M7QOkg2k=
+	by mail.kernel.org (Postfix) with ESMTP id E628F2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfDLHM7 (ORCPT
+        id S1727101AbfDLHPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfDLHM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:12:59 -0400
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CFF52082E;
-        Fri, 12 Apr 2019 07:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555053178;
-        bh=cUDRUvfw7fqVRmcYqiL+aO4CkbjdbUW/EnMoZrGCRKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=G9/FVv217tAuNqtbpbaTOBZaQpwd/0V7RuiAQiQ4WEZkd7Bc51pHJv2J6nsilGeeh
-         HkjHEfovD9WgX8kP1SshShu4xDNuttLcAILrGo03AqFzGpRxwrS5WApkGpOuxwdvI3
-         RG3KTC9tKHCBRVGGRHh+YpLdBwBokUfYJoz8exBE=
-Received: by mail-lj1-f175.google.com with SMTP id f23so7911079ljc.0;
-        Fri, 12 Apr 2019 00:12:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAXSPkf4SQNoUp3E7REnY2kj+0LuE1IkVgSFMfVofzKwnKPCcnrE
-        Moto6zsvsUzfN4WwrMbcvON2NQZayS280DtsQnM=
-X-Google-Smtp-Source: APXvYqwTYS4RZuVj1M9zJZDlRcWM6wI7KyzDvtMWmb2a/4VN/zH8TB799yS4hwjDjLybX0IBvUd66BW0Gf7qlrulH5g=
-X-Received: by 2002:a2e:74f:: with SMTP id i15mr23842825ljd.156.1555053176438;
- Fri, 12 Apr 2019 00:12:56 -0700 (PDT)
+        Fri, 12 Apr 2019 03:15:43 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35409 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfDLHPn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 03:15:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s39so7425654edb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 00:15:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=13wQ/vIEQV4DmOqwYRy34cBX+EyJikzd0euuned94A0=;
+        b=R7gyZpKSNjn0LL/Qv7W60LkGVIeokTn3yTtTBsSxT4/8u4jxMdsxdSXidCIU/1ywFy
+         ivq8ef+LcMtC4BIGS5oFAv+4nJEhf76A4OliS5Jxw4tNVKjhpDBRnoJYHv9NYQRazwYV
+         +QBLoxkMuHcbH6ZWVGABw1wLlLS+b1fgMRjKrBdwvdrKviTZbdmpWkMM9/om9wKedAgk
+         EWSUrWQIMqzfnliOSYmp+7bKY0tH3ou5vP7oHQnLEXJszcDjubVmb2uHuAduo9moNqRc
+         ozvi4ksVmvhvFyBtk3S/0xFvolijRG/YVglt4WStBbzsgspm/z+LpWhmTTmveurEPGUf
+         yAKg==
+X-Gm-Message-State: APjAAAWlpmG0WIqcNGvTRrQLrkDffIq+5Xc8ebLzTjaCb4V9Scut5VTF
+        e3nLXPS70DnB+GEisNpK9nvltQ==
+X-Google-Smtp-Source: APXvYqzK/6fuXxE6062s4/zCLdjxlM/5d+nmRe3+teiJn9SHzjGZIeRDGp7rsK/mthyg0CEJe7SFRA==
+X-Received: by 2002:a17:906:b202:: with SMTP id p2mr30002206ejz.266.1555053341419;
+        Fri, 12 Apr 2019 00:15:41 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id g6sm11725674edp.4.2019.04.12.00.15.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 00:15:40 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: pmc_atom: Drop __initconst on dmi table
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        =?UTF-8?Q?David_M=c3=bcller?= <dave.mueller@gmx.ch>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <201904111738.Ncw2Vf01%lkp@intel.com>
+ <20190411172807.57796-1-sboyd@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4c95e469-c5fc-f043-8d54-f85ac812493b@redhat.com>
+Date:   Fri, 12 Apr 2019 09:15:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn> <1555048943-39589-5-git-send-email-wen.yang99@zte.com.cn>
-In-Reply-To: <1555048943-39589-5-git-send-email-wen.yang99@zte.com.cn>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 12 Apr 2019 09:12:45 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd3A102=S+U57-tQLPpBw=8j4f0t0-LP7SOp-47jXavMA@mail.gmail.com>
-Message-ID: <CAJKOXPd3A102=S+U57-tQLPpBw=8j4f0t0-LP7SOp-47jXavMA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] pinctrl: samsung: fix leaked of_node references
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190411172807.57796-1-sboyd@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 at 08:01, Wen Yang <wen.yang99@zte.com.cn> wrote:
->
-> The call to of_find_compatible_node returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
->
-> Detected by coccinelle with the following warnings:
-> ./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
-> ./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
->
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Hi Stephen,
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 11-04-19 19:28, Stephen Boyd wrote:
+> It's used by probe and that isn't an init function. Drop this so that we
+> don't get a section mismatch.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: David Müller <dave.mueller@gmx.ch>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-Best regards,
-Krzysztof
+Thank you for fixing this, I agree that this is the correct fix:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/platform/x86/pmc_atom.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+> index eaec2d306481..c7039f52ad51 100644
+> --- a/drivers/platform/x86/pmc_atom.c
+> +++ b/drivers/platform/x86/pmc_atom.c
+> @@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+>    * Some systems need one or more of their pmc_plt_clks to be
+>    * marked as critical.
+>    */
+> -static const struct dmi_system_id critclk_systems[] __initconst = {
+> +static const struct dmi_system_id critclk_systems[] = {
+>   	{
+>   		.ident = "MPL CEC1x",
+>   		.matches = {
+> 
