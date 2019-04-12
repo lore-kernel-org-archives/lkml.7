@@ -4,84 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988E3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6F4C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AFD2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A31B218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tO79s0XM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOIazxTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfDLRgY (ORCPT
+        id S1726937AbfDLRhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:36:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40783 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLRgX (ORCPT
+        Fri, 12 Apr 2019 13:37:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42235 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfDLRhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:36:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d31so5520414pgl.7;
-        Fri, 12 Apr 2019 10:36:23 -0700 (PDT)
+        Fri, 12 Apr 2019 13:37:50 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cv12so5467620plb.9;
+        Fri, 12 Apr 2019 10:37:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=/fU2XOZlNfHgVmFdbXsPhfVHyMpsWO0SNIj8so6yhYQ=;
-        b=tO79s0XMi16tqB7riO3zcRb+4oxmBi6bI5lS/DBM7NcAFcstfBEQXw9OQtL/ksIGI3
-         qa9NbsAwvwq4mr/HHr1G2qWzJ/5RnizxIJ2u22jqTaq7ATDCfBX3J4dpzugNAYL7r/zU
-         8a5Qg84plf7EKtL6PySs+ondyIc0M11m5OdYwgFtExa75MfZBp6Xcm36x4rc9oUEKlF1
-         siHt3BxKJBLsr6JQGu1bB1LRrzyEhka4sjbFqqZuZLzTJE9fct572SBvlHMI0yqPXatk
-         p9HEhnQRhwQHPhOMQz6xYTs4zGX497ejGCLLSiX3VmjXQITK0Y1eZhKIGbLDyIOQtE4L
-         g4QA==
+        bh=WQwj+VNsbN89uc9KNQnyoysq5Qv09ZoKMyKulbxkgXc=;
+        b=UOIazxTtFyu8YgBtqMepG51ldHCrXhWFOom93VUBY+NSQuazQmUpDxcjARtIM1BqIl
+         oR5P1/Lq0Ty+MrJlRgo/l/ULdU6nIB46fThbrCU1WBdDQzW/9NQZJBbGP/qTmf+m80Gc
+         h86/OMPlAtc0yu9mmwRn77EjqWSDqNZ5jOuSl/MDrk5B+s/e9yCnf/78KsgeEhAmfMhO
+         dK6x8XsqQ8IMTpe5nNiHph9rmCbHMJltllSd7eniN1vpbcREDpRS68SiQ6HUnNfUwxD1
+         pLkChLUlLt51T/8gEwbjOQe9JvX3k0me8+o7MiPe10w1f08yJcg4tuGJKMBMeWiITOLn
+         o8Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/fU2XOZlNfHgVmFdbXsPhfVHyMpsWO0SNIj8so6yhYQ=;
-        b=DePJ1pVCgH4Sq33UV1qnfmbz11w1+rpVs0XPPX3YDZx6YiXM7RQsAorv+rsqkqFzs0
-         5nQxTE83qM24jhXVWttsXMs2CbYnMTX1yFeIGyQ1ukh5qBNGaMXvye4qv94crGNcyUg6
-         GRoMYQVxikzTUmGWhha7szJdLmsY1pchyM24TyN9C35zEwUBncTFoyYSVJxMphV9TboD
-         o+RxtvQntTQHmXVHsa0qiExUz1Risa1IG6l1Yj4zoMvSD9+38TLRacGnmYZUFGrxDx/f
-         zjtNRQLfDnJQQaiKW4VJwP9eyWa6pknB8BF/IvcwG6m/GX6FhJffTxdgK7sUeh6fApfL
-         omEQ==
-X-Gm-Message-State: APjAAAVUItwEv8XQzatiNUZDgrFOXFvsZqcoMmCur0IVY7k7QLzo++pi
-        JYUNch1HgAc14kxVxCv4J6JjEXuF
-X-Google-Smtp-Source: APXvYqw0H9iGy+AND1qK7663RML7ro32Z6uvPomZpBUodig3Y9Ky3GiWUV0sxWja4ggjkjZRfgDiuA==
-X-Received: by 2002:a62:4815:: with SMTP id v21mr39907163pfa.224.1555090583020;
-        Fri, 12 Apr 2019 10:36:23 -0700 (PDT)
+        bh=WQwj+VNsbN89uc9KNQnyoysq5Qv09ZoKMyKulbxkgXc=;
+        b=YMOFynLNxkWSHt6V7VeDtJ372TLITPKfREKAXL7CIo3PBlmRrIOMEByQxqTwhJi9Zd
+         JiROk/zBRVdrLjgdsdO0BLXlMhlXDT/Y5dvOFEJm2Fc8LruJlyaeeOydm/pDLGeMsBQ/
+         cfgWB9b5Y/j0cNLNGH8TXj1YeqUlZDYP7EWZFLzJCVxcguw+7wPP5zLL1Y51ScoFZ38Z
+         F2E049nkxvbhvZncq8U06f9anixc62K2R2HB0FW318t3Drth5Zev1L0b+xK4STGpKVwn
+         jIZy0LbAhP3/gjK64C2zVdDX2qFI9Y5xjenaWszuf/qiblkG7IWhHOWhX5NP//6b0FPe
+         r+xQ==
+X-Gm-Message-State: APjAAAUs7nHu/tXNB+zYO5psn96qdJWLcAc831/smUFwJKnsvodn9gQa
+        M66vAtFeXAFS/iPIlJY7AIE=
+X-Google-Smtp-Source: APXvYqyJOFrq3CjcLTA7ek/kRbKHAxA+ZlxarcU7HPAz2Cc34cGP3Nc12rv3w2lpqhNBxnUmv6nwFg==
+X-Received: by 2002:a17:902:298b:: with SMTP id h11mr36684419plb.258.1555090670209;
+        Fri, 12 Apr 2019 10:37:50 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 6sm28337047pfp.143.2019.04.12.10.36.22
+        by smtp.gmail.com with ESMTPSA id g64sm98942049pfg.13.2019.04.12.10.37.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 10:36:22 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 10:36:21 -0700
+        Fri, 12 Apr 2019 10:37:49 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 10:37:48 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com,
-        stefan.wahren@i2se.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] hwmon: pwm-fan: Report probe errors consistently
-Message-ID: <20190412173621.GA1477@roeck-us.net>
-References: <69fabb7ca6c9d4a8f9c18bcf298d2ce9502a9547.1555069101.git.robin.murphy@arm.com>
+To:     Patrick Venture <venture@google.com>
+Cc:     jdelvare@suse.com, corbet@lwn.net, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: hwmon: ir35221: fix company name
+Message-ID: <20190412173748.GA22482@roeck-us.net>
+References: <20190412162742.65962-1-venture@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69fabb7ca6c9d4a8f9c18bcf298d2ce9502a9547.1555069101.git.robin.murphy@arm.com>
+In-Reply-To: <20190412162742.65962-1-venture@google.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 03:05:23PM +0100, Robin Murphy wrote:
-> Printing the error code for a failure provides a head-start for
-> debugging, since it's often sufficient to pinpoint the origin of the
-> failure. We already do this for some probe-failure messages, so let's
-> make the rest of them consistent.
+On Fri, Apr 12, 2019 at 09:27:42AM -0700, Patrick Venture wrote:
+> Fix the company name from "Infinion" to "Infineon."
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Patrick Venture <venture@google.com>
 
 Applied to hwmon-next.
 
