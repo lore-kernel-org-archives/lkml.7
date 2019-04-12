@@ -2,152 +2,130 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8A9C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A496B2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA5B2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f7rFTPmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfDLP40 (ORCPT
+        id S1727073AbfDLP4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:56:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48705 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfDLP40 (ORCPT
+        Fri, 12 Apr 2019 11:56:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfDLP4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:56:26 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hEyXK-0001Kl-Vn; Fri, 12 Apr 2019 17:56:18 +0200
-Message-ID: <1555084578.11529.32.camel@pengutronix.de>
-Subject: Re: [PATCH v3 05/11] PCI: dwc: imx6: Share PHY debug register
- definitions
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 12 Apr 2019 17:56:18 +0200
-In-Reply-To: <20190401042547.14067-6-andrew.smirnov@gmail.com>
-References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
-         <20190401042547.14067-6-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
+        Fri, 12 Apr 2019 11:56:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ieaNL9xoFtN+ckG62a9dnkgMnVgjTThPhbkh1gxR73k=; b=f7rFTPmgu8GKAjysL5GLfQXB/
+        CpiKYuQHgaNz7ptBzUx64ZjnLqKA6aQNAZxBaTwz35mWJtw/TjAlrUBKpmuq8iRKz1wTuwiXMKSU9
+        dWKB5cqfN2RsjcnTjpvR11wyKfsRf5X17hX2skY99EO6soLsfTR1b2Cq8oQ93cVYUHiZ322/I+cFU
+        QZwsWE7ciJMmuT/hJZSpFN3BZuWRuZwzz9yDrHwmH3SDvrhyhgusJmxqyv9T9IHeQw6cV/w8uTLkY
+        qynb0vIwXiO1dpfUOXxsoGYzKG9Kb8qjEnygi06ZJzHaGXqLEQhetZOOO2xEgUj/tMMISa1w1q3xQ
+        U6MT0vHng==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEyXZ-0004gx-Ri; Fri, 12 Apr 2019 15:56:33 +0000
+Subject: Re: linux-next: Tree for Apr 12 (orangefs)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devel@lists.orangefs.org
+References: <20190412181707.51c073c3@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c3628696-c14a-09a8-3cdf-0b5da5b7df64@infradead.org>
+Date:   Fri, 12 Apr 2019 08:56:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190412181707.51c073c3@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
-> Both pcie-designware.c and pci-imx6.c contain custom definitions for
-> PHY debug registers R0/R1 and on top of that there's already a
-> definition for R0 in pcie-designware.h. Move all of the definitions to
-> pcie-designware.h. No functional change intended.
+On 4/12/19 1:17 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: linux-imx@nxp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c        |  6 ++----
->  drivers/pci/controller/dwc/pcie-designware.c | 12 +++---------
->  drivers/pci/controller/dwc/pcie-designware.h |  3 +++
->  3 files changed, 8 insertions(+), 13 deletions(-)
+> Changes since 20190411:
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 92c40c250a34..bb95a3273ca2 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -103,8 +103,6 @@ struct imx6_pcie {
->  
->  /* PCIe Port Logic registers (memory-mapped) */
->  #define PL_OFFSET 0x700
-> -#define PCIE_PHY_DEBUG_R0 (PL_OFFSET + 0x28)
-> -#define PCIE_PHY_DEBUG_R1 (PL_OFFSET + 0x2c)
->  
->  #define PCIE_PHY_CTRL (PL_OFFSET + 0x114)
->  #define PCIE_PHY_CTRL_DATA_LOC 0
-> @@ -839,8 +837,8 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
->  
->  err_reset_phy:
-> >  	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
-> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R0),
-> > -		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R1));
-> > +		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
-> > +		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
-> >  	imx6_pcie_reset_phy(imx6_pcie);
-> >  	return ret;
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 31f6331ca46f..086e87a40316 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -14,12 +14,6 @@
->  
->  #include "pcie-designware.h"
->  
-> -/* PCIe Port Logic registers */
-> > -#define PLR_OFFSET			0x700
-> > -#define PCIE_PHY_DEBUG_R1		(PLR_OFFSET + 0x2c)
-> > -#define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
-> > -#define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
-> -
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->  {
-> >  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> @@ -334,9 +328,9 @@ int dw_pcie_link_up(struct dw_pcie *pci)
-> >  	if (pci->ops->link_up)
-> >  		return pci->ops->link_up(pci);
->  
-> > -	val = readl(pci->dbi_base + PCIE_PHY_DEBUG_R1);
-> > -	return ((val & PCIE_PHY_DEBUG_R1_LINK_UP) &&
-> > -		(!(val & PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING)));
-> > +	val = readl(pci->dbi_base + PCIE_PORT_DEBUG1);
-> > +	return ((val & PCIE_PORT_DEBUG1_LINK_UP) &&
-> > +		(!(val & PCIE_PORT_DEBUG1_LINK_IN_TRAINING)));
->  }
->  
->  void dw_pcie_setup(struct dw_pcie *pci)
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 377f4c0b52da..662bb9082c76 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -41,6 +41,9 @@
-> >  #define PCIE_PORT_DEBUG0		0x728
-> >  #define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
-> >  #define PORT_LOGIC_LTSSM_STATE_L0	0x11
-> > +#define PCIE_PORT_DEBUG1		0x72C
-> > +#define PCIE_PORT_DEBUG1_LINK_UP		(0x1 << 4)
-> > +#define PCIE_PORT_DEBUG1_LINK_IN_TRAINING	(0x1 << 29)
->  
-> >  #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
-> >  #define PORT_LOGIC_SPEED_CHANGE		BIT(17)
+> The orangefs tree lost its build failure.
+
+Not really.  In some config/options, it still has a few thousand
+build errors.  Out of 20 randconfig builds, there was one large
+failure in i386 and one in x86_64:
+
+linux-next-20190412> grep -c "orangefs.*error:" X*/build*.out
+X32/build-r4840.out:0
+X32/build-r4841.out:0
+X32/build-r4842.out:0
+X32/build-r4843.out:0
+X32/build-r4844.out:0
+X32/build-r4845.out:0
+X32/build-r4846.out:0
+X32/build-r4847.out:1118
+X32/build-r4848.out:0
+X32/build-r4849.out:0
+X64/build-r4850.out:0
+X64/build-r4851.out:0
+X64/build-r4852.out:0
+X64/build-r4853.out:0
+X64/build-r4854.out:0
+X64/build-r4855.out:0
+X64/build-r4856.out:0
+X64/build-r4857.out:0
+X64/build-r4858.out:2236
+X64/build-r4859.out:0
+
+as well as this warning on i386:
+fs/orangefs/inode.c:544:8: warning: format �%lu� expects argument of type �long unsigned int�, but argument 3 has type �size_t� [-Wformat=]
+
+
+
+But the build errors are easily fixed:
+
+---
+From: Randy Dunlap <rdunlap@infradead.org>
+
+#include the hashtable.h header file before it is needed/used.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Mike Marshall <hubcap@omnibond.com>
+Cc: Martin Brandenburg <martin@omnibond.com>
+Cc: devel@lists.orangefs.org
+---
+ fs/orangefs/orangefs-kernel.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- linux-next-20190412.orig/fs/orangefs/orangefs-kernel.h
++++ linux-next-20190412/fs/orangefs/orangefs-kernel.h
+@@ -27,6 +27,7 @@
+ #include <linux/mpage.h>
+ #include <linux/namei.h>
+ #include <linux/errno.h>
++#include <linux/hashtable.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+
+
+
+
+
+
+-- 
+~Randy
