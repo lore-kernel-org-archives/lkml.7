@@ -2,208 +2,242 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16AEC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E4DC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B9E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C382186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 10:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J9Jg2R5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfDLKz0 (ORCPT
+        id S1727290AbfDLK4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 06:55:26 -0400
-Received: from foss.arm.com ([217.140.101.70]:58152 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbfDLKz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 06:55:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A64615AB;
-        Fri, 12 Apr 2019 03:55:25 -0700 (PDT)
-Received: from red-moon (unknown [10.1.197.39])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CF983F718;
-        Fri, 12 Apr 2019 03:55:22 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 11:55:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: Re: [PATCH v3 18/26] PCI: endpoint: Add support to allocate aligned
- buffers to be mapped in BARs
-Message-ID: <20190412105520.GD8113@red-moon>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-19-kishon@ti.com>
- <20190411153238.GD6862@red-moon>
- <7e44bd0d-c450-cb0b-45b0-e96748482477@ti.com>
+        Fri, 12 Apr 2019 06:56:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41200 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfDLK4k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 06:56:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ngFAQdcMqMVNRpiFsEBZBxKngJSPU1lSHcrtbpHUw60=; b=J9Jg2R5gsQ02PmCTXqmXprt9P
+        T5ITwdjTav79v9DkbMhz5rdvN7e3qfbEGzNTW277SoE9BPBK7blCBnHG+lLI3rjH+LvAhOARWiExx
+        eGhhuyxAGIK1Yw0J5eguj+3ZlN1cF8vLt32XcMQ68LGMHR5IFZcm5L2eKFPYBiBTiVCY50VpqllLg
+        tozvrGvwjdydn3hhR4dcnFnyh04OCPFw3BeEVZio8KMWoSn3PbOSRkirsSRb8Gx/UGNavZAd/wDNX
+        ZtoLnnDrbpb6k+PBXLDCi+15kRu7nvkufY3hyc5QP5kWtgiKSgsSIb2yUVbW6teiUhtuwMyQsETZK
+        RVbZb0R5g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEtrH-0006rc-J8; Fri, 12 Apr 2019 10:56:35 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9CE092038C257; Fri, 12 Apr 2019 12:56:33 +0200 (CEST)
+Date:   Fri, 12 Apr 2019 12:56:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     LKP <lkp@01.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"):  BUG:
+ KASAN: stack-out-of-bounds in __change_page_attr_set_clr
+Message-ID: <20190412105633.GM14281@hirez.programming.kicks-ass.net>
+References: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com>
+ <20190411193906.GA12232@hirez.programming.kicks-ass.net>
+ <20190411195424.GL14281@hirez.programming.kicks-ass.net>
+ <20190411211348.GA8451@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e44bd0d-c450-cb0b-45b0-e96748482477@ti.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190411211348.GA8451@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 04:07:49PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
-> 
-> On 11/04/19 9:02 PM, Lorenzo Pieralisi wrote:
-> > On Mon, Mar 25, 2019 at 03:09:39PM +0530, Kishon Vijay Abraham I wrote:
-> >> Modify pci_epf_alloc_space API to take alignment size as argument in
-> >> order to argument in order to allocate aligned buffers to be mapped to
-> >> BARs.
-> >>
-> >> Add 'align' parameter to epc_features which can be used by platform
-> >> drivers to specifiy the BAR allocation alignment requirements and use
-> >> this while invoking pci_epf_alloc_space.
-> >>
-> >> This is mainly required for Synopsys Designware PCIe core which masks
-> >> the lower bits based on the BAR size (See "I/O and MEM Match Modes"
-> >> section in DesignWare Cores PCI Express Controller Databook version
-> >> 4.90a).
+On Thu, Apr 11, 2019 at 11:13:48PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 11, 2019 at 09:54:24PM +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 11, 2019 at 09:39:06PM +0200, Peter Zijlstra wrote:
+> > > I think this bisect is bad. If you look at your own logs this patch
+> > > merely changes the failure, but doesn't make it go away.
+> > > 
+> > > Before this patch (in fact, before tip/core/mm entirely) the errror
+> > > reads like the below, which suggests there is memory corruption
+> > > somewhere, and the fingered patch just makes it trigger differently.
+> > > 
+> > > It would be very good to find the source of this corruption, but I'm
+> > > fairly certain it is not here.
 > > 
-> > Hi Kishon,
-> > 
-> > isn't this a generic PCI BAR requirement rather than a Designware
-> > specific one ?
-> > 
-> > The patch is fine I just would like to understand the statement above.
+> > I went back to v4.20 to try and find a time when the below error did not
+> > occur, but even that reliably triggers the warning.
 > 
-> The address that is allocated using pci_epf_alloc_space would be directly
-> written to the target address of the Inbound address translation unit.
-> Designware IP has a configuration parameter (CX_ATU_MIN_REGION_SIZE [1]) which
-> has 64KB as default value and the lower 16 bits of the Base, Limit and Target
-> registers of the Inbound ATU are fixed to zero.  So if the programmed memory
-> address is not aligned to 64 KB boundary there will be memory corruption.
+> So I also tested v4.19 and found that that was good, which made me
+> bisect v4.19..v4.20
 > 
-> PCI spec has restrictions on the minimum memory address range requested by BAR
-> as 128 Bytes and the size to be a power of 2, however it doesn't have any
-> restriction on the local endpoint memory addresses that are mapped to BAR. That
-> is an endpoint controller restriction.
+> # bad: [8fe28cb58bcb235034b64cbbb7550a8a43fd88be] Linux 4.20
+> # good: [84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d] Linux 4.19
+> git bisect start 'v4.20' 'v4.19'
+> # bad: [ec9c166434595382be3babf266febf876327774d] Merge tag 'mips_fixes_4.20_1' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+> git bisect bad ec9c166434595382be3babf266febf876327774d
+> # bad: [50b825d7e87f4cff7070df6eb26390152bb29537] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
+> git bisect bad 50b825d7e87f4cff7070df6eb26390152bb29537
+> # good: [99e9acd85ccbdc8f5785f9e961d4956e96bd6aa5] Merge tag 'mlx5-updates-2018-10-17' of git://git.kernel.org/pub/scm/linux/kernel/git/saeed/linux
+> git bisect good 99e9acd85ccbdc8f5785f9e961d4956e96bd6aa5
+> # good: [c403993a41d50db1e7d9bc2d43c3c8498162312f] Merge tag 'for-linus-4.20' of https://github.com/cminyard/linux-ipmi
+> git bisect good c403993a41d50db1e7d9bc2d43c3c8498162312f
+> # good: [c05f3642f4304dd081876e77a68555b6aba4483f] Merge branch 'perf-core-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect good c05f3642f4304dd081876e77a68555b6aba4483f
+> # bad: [44786880df196a4200c178945c4d41675faf9fb7] Merge branch 'parisc-4.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
+> git bisect bad 44786880df196a4200c178945c4d41675faf9fb7
+> # bad: [99792e0cea1ed733cdc8d0758677981e0cbebfed] Merge branch 'x86-mm-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 99792e0cea1ed733cdc8d0758677981e0cbebfed
+> # good: [fec98069fb72fb656304a3e52265e0c2fc9adf87] Merge branch 'x86-cpu-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect good fec98069fb72fb656304a3e52265e0c2fc9adf87
+> # bad: [a31acd3ee8f7dbc0370bdf4a4bfef7a8c13c7542] x86/mm: Page size aware flush_tlb_mm_range()
+> git bisect bad a31acd3ee8f7dbc0370bdf4a4bfef7a8c13c7542
+> # good: [a7295fd53c39ce781a9792c9dd2c8747bf274160] x86/mm/cpa: Use flush_tlb_kernel_range()
+> git bisect good a7295fd53c39ce781a9792c9dd2c8747bf274160
+> # good: [9cf38d5559e813cccdba8b44c82cc46ba48d0896] kexec: Allocate decrypted control pages for kdump if SME is enabled
+> git bisect good 9cf38d5559e813cccdba8b44c82cc46ba48d0896
+> # good: [5b12904065798fee8b153a506ac7b72d5ebbe26c] x86/mm/doc: Clean up the x86-64 virtual memory layout descriptions
+> git bisect good 5b12904065798fee8b153a506ac7b72d5ebbe26c
+> # good: [cf089611f4c446285046fcd426d90c18f37d2905] proc/vmcore: Fix i386 build error of missing copy_oldmem_page_encrypted()
+> git bisect good cf089611f4c446285046fcd426d90c18f37d2905
+> # good: [a5b966ae42a70b194b03eaa5eaea70d8b3790c40] Merge branch 'tlb/asm-generic' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux into x86/mm
+> git bisect good a5b966ae42a70b194b03eaa5eaea70d8b3790c40
+> # first bad commit: [a31acd3ee8f7dbc0370bdf4a4bfef7a8c13c7542] x86/mm: Page size aware flush_tlb_mm_range()
 > 
-> [1] -> http://www.ti.com/lit/ug/spruid7c/spruid7c.pdf
+> And 'funnily' the bad patch is one of mine too :/
+> 
+> I'll go have a look at that tomorrow, because currrently I'm way past
+> tired.
 
-That's much clearer, it should go into the commit log, I will try
-to update it myself and notify you when I push it out.
+OK, so the below patchlet makes it all good. It turns out that the
+provided config has:
 
-Lorenzo
+CONFIG_X86_L1_CACHE_SHIFT=7
 
-> Thanks
-> Kishon
-> 
-> > Thanks,
-> > Lorenzo
-> > 
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >>  drivers/pci/endpoint/functions/pci-epf-test.c |  5 +++--
-> >>  drivers/pci/endpoint/pci-epf-core.c           | 10 ++++++++--
-> >>  include/linux/pci-epc.h                       |  2 ++
-> >>  include/linux/pci-epf.h                       |  3 ++-
-> >>  4 files changed, 15 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> index d0b91da49bf4..c0786ca74312 100644
-> >> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> >> @@ -438,7 +438,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
-> >>  	epc_features = epf_test->epc_features;
-> >>  
-> >>  	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-> >> -				   test_reg_bar);
-> >> +				   test_reg_bar, epc_features->align);
-> >>  	if (!base) {
-> >>  		dev_err(dev, "Failed to allocated register space\n");
-> >>  		return -ENOMEM;
-> >> @@ -453,7 +453,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
-> >>  		if (!!(epc_features->reserved_bar & (1 << bar)))
-> >>  			continue;
-> >>  
-> >> -		base = pci_epf_alloc_space(epf, bar_size[bar], bar);
-> >> +		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
-> >> +					   epc_features->align);
-> >>  		if (!base)
-> >>  			dev_err(dev, "Failed to allocate space for BAR%d\n",
-> >>  				bar);
-> >> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> >> index 8bfdcd291196..fb1306de8f40 100644
-> >> --- a/drivers/pci/endpoint/pci-epf-core.c
-> >> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> >> @@ -109,10 +109,12 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
-> >>   * pci_epf_alloc_space() - allocate memory for the PCI EPF register space
-> >>   * @size: the size of the memory that has to be allocated
-> >>   * @bar: the BAR number corresponding to the allocated register space
-> >> + * @align: alignment size for the allocation region
-> >>   *
-> >>   * Invoke to allocate memory for the PCI EPF register space.
-> >>   */
-> >> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
-> >> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-> >> +			  size_t align)
-> >>  {
-> >>  	void *space;
-> >>  	struct device *dev = epf->epc->dev.parent;
-> >> @@ -120,7 +122,11 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar)
-> >>  
-> >>  	if (size < 128)
-> >>  		size = 128;
-> >> -	size = roundup_pow_of_two(size);
-> >> +
-> >> +	if (align)
-> >> +		size = ALIGN(size, align);
-> >> +	else
-> >> +		size = roundup_pow_of_two(size);
-> >>  
-> >>  	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
-> >>  	if (!space) {
-> >> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> >> index c3ffa3917f88..f641badc2c61 100644
-> >> --- a/include/linux/pci-epc.h
-> >> +++ b/include/linux/pci-epc.h
-> >> @@ -109,6 +109,7 @@ struct pci_epc {
-> >>   * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
-> >>   * @bar_fixed_64bit: bitmap to indicate fixed 64bit BARs
-> >>   * @bar_fixed_size: Array specifying the size supported by each BAR
-> >> + * @align: alignment size required for BAR buffer allocation
-> >>   */
-> >>  struct pci_epc_features {
-> >>  	unsigned int	linkup_notifier : 1;
-> >> @@ -117,6 +118,7 @@ struct pci_epc_features {
-> >>  	u8	reserved_bar;
-> >>  	u8	bar_fixed_64bit;
-> >>  	u64	bar_fixed_size[BAR_5 + 1];
-> >> +	size_t	align;
-> >>  };
-> >>  
-> >>  #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
-> >> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> >> index ec02f58758c8..2d6f07556682 100644
-> >> --- a/include/linux/pci-epf.h
-> >> +++ b/include/linux/pci-epf.h
-> >> @@ -149,7 +149,8 @@ void pci_epf_destroy(struct pci_epf *epf);
-> >>  int __pci_epf_register_driver(struct pci_epf_driver *driver,
-> >>  			      struct module *owner);
-> >>  void pci_epf_unregister_driver(struct pci_epf_driver *driver);
-> >> -void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar);
-> >> +void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-> >> +			  size_t align);
-> >>  void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar);
-> >>  int pci_epf_bind(struct pci_epf *epf);
-> >>  void pci_epf_unbind(struct pci_epf *epf);
-> >> -- 
-> >> 2.17.1
-> >>
+which then, for some obscure raisin, results in flush_tlb_mm_range()
+compiling to use 320 bytes of stack:
+
+  sub    $0x140,%rsp
+
+Where a 'defconfig' build results in:
+
+  sub    $0x58,%rsp
+
+The thing that pushes it over the edge in the above fingered patch is
+the addition of a field to struct flush_tlb_info, which grows if from 32
+to 36 bytes.
+
+So my proposal is to basically revert that, unless we can come up with
+something that GCC can't screw up.
+
+---
+ arch/x86/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index bc4bc7b2f075..487b8474c01c 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -728,7 +728,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ {
+ 	int cpu;
+ 
+-	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
++	struct flush_tlb_info info = {
+ 		.mm = mm,
+ 		.stride_shift = stride_shift,
+ 		.freed_tables = freed_tables,
+
+
+> > > [   10.273617] rodata_test: all tests were successful
+> > > [   10.275015] x86/mm: Checking user space page tables
+> > > [   10.295444] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+> > > [   10.296334] Run /init as init process
+> > > [   10.301465] ==================================================================
+> > > [   10.302460] BUG: KASAN: stack-out-of-bounds in __unwind_start+0x7e/0x4fe
+> > > [   10.303355] Write of size 88 at addr ffff8880191efa28 by task init/1
+> > > [   10.304241]
+> > > [   10.304455] CPU: 0 PID: 1 Comm: init Not tainted 5.1.0-rc4-00288-ga131d61b43e0-dirty #10
+> > > [   10.305542] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > > [   10.306641] Call Trace:
+> > > [   10.306990]  print_address_description+0x9d/0x26b
+> > > [   10.307654]  ? __unwind_start+0x7e/0x4fe
+> > > [   10.308222]  ? __unwind_start+0x7e/0x4fe
+> > > [   10.308755]  __kasan_report+0x145/0x18a
+> > > [   10.309266]  ? __unwind_start+0x7e/0x4fe
+> > > [   10.309823]  kasan_report+0xe/0x12
+> > > [   10.310273]  memset+0x1f/0x31
+> > > [   10.310703]  __unwind_start+0x7e/0x4fe
+> > > [   10.311223]  ? unwind_next_frame+0x10a9/0x10a9
+> > > [   10.311839]  ? native_flush_tlb_one_user+0x54/0x95
+> > > [   10.312504]  ? kasan_unpoison_shadow+0xf/0x2e
+> > > [   10.313090]  __save_stack_trace+0x65/0xe7
+> > > [   10.313667]  ? trace_irq_enable_rcuidle+0x21/0xf5
+> > > [   10.314284]  ? tracer_hardirqs_on+0xb/0x1b
+> > > [   10.314830]  ? trace_hardirqs_on+0x2c/0x37
+> > > [   10.315369]  save_stack+0x32/0xa3
+> > > [   10.315842]  ? __put_compound_page+0x91/0x91
+> > > [   10.316458]  ? preempt_latency_start+0x22/0x68
+> > > [   10.317052]  ? free_swap_cache+0x51/0xd5
+> > > [   10.317586]  ? tlb_flush_mmu_free+0x31/0xca
+> > > [   10.318140]  ? arch_tlb_finish_mmu+0x8c/0x112
+> > > [   10.318759]  ? tlb_finish_mmu+0xc7/0xd6
+> > > [   10.319298]  ? unmap_region+0x275/0x2b9
+> > > [   10.319835]  ? special_mapping_fault+0x26d/0x26d
+> > > [   10.320448]  ? trace_irq_disable_rcuidle+0x21/0xf5
+> > > [   10.321085]  __kasan_slab_free+0xd3/0xf4
+> > > [   10.321623]  ? remove_vma+0xdf/0xe7
+> > > [   10.322105]  kmem_cache_free+0x4e/0xca
+> > > [   10.322600]  remove_vma+0xdf/0xe7
+> > > [   10.323038]  __do_munmap+0x72c/0x75e
+> > > [   10.323514]  __vm_munmap+0xd0/0x135
+> > > [   10.323980]  ? __x64_sys_brk+0x40e/0x40e
+> > > [   10.324496]  ? trace_irq_disable_rcuidle+0x21/0xf5
+> > > [   10.325160]  __x64_sys_munmap+0x6a/0x6f
+> > > [   10.325670]  do_syscall_64+0x3f0/0x462
+> > > [   10.326162]  ? syscall_return_slowpath+0x154/0x154
+> > > [   10.326810]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+> > > [   10.327485]  ? trace_irq_disable_rcuidle+0x21/0xf5
+> > > [   10.328153]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+> > > [   10.328873]  ? trace_hardirqs_off_caller+0x3e/0x40
+> > > [   10.329505]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+> > > [   10.330162]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > [   10.330830] RIP: 0033:0x7efc4d707457
+> > > [   10.331306] Code: f0 ff ff 73 01 c3 48 8d 0d 5a be 20 00 31 d2 48 29 c2 89 11 48 83 c8 ff eb eb 90 90 90 90 90 90 90 90 90 b8 0b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8d 0d 2d be 20 00 31 d2 48 29 c2 89
+> > > [   10.333711] RSP: 002b:00007fff973da398 EFLAGS: 00000203 ORIG_RAX: 000000000000000b
+> > > [   10.334728] RAX: ffffffffffffffda RBX: 00007efc4d9132c8 RCX: 00007efc4d707457
+> > > [   10.335670] RDX: 0000000000000000 RSI: 0000000000001d67 RDI: 00007efc4d90d000
+> > > [   10.336596] RBP: 00007fff973da4f0 R08: 0000000000000007 R09: 00000000ffffffff
+> > > [   10.337512] R10: 0000000000000000 R11: 0000000000000203 R12: 000000073dd74283
+> > > [   10.338457] R13: 000000073db1ab4f R14: 00007efc4d909700 R15: 00007efc4d9132c8
+> > > [   10.339373]
+> > > [   10.339585] The buggy address belongs to the page:
+> > > [   10.340224] page:ffff88801de82c48 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+> > > [   10.341338] flags: 0x680000000000()
+> > > [   10.341832] raw: 0000680000000000 ffff88801de82c50 ffff88801de82c50 0000000000000000
+> > > [   10.342846] raw: 0000000000000000 0000000000000000 00000000ffffffff
+> > > [   10.343679] page dumped because: kasan: bad access detected
+> > > [   10.344415]
+> > > [   10.344629] Memory state around the buggy address:
+> > > [   10.345254]  ffff8880191ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > [   10.346245]  ffff8880191ef980: 00 00 f1 f1 f1 f1 00 f2 f2 f2 00 00 00 00 00 00
+> > > [   10.347217] >ffff8880191efa00: 00 00 00 00 00 f2 f2 f2 00 00 00 00 00 00 00 00
+> > > [   10.348152]                                   ^
+> > > [   10.348755]  ffff8880191efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > [   10.349698]  ffff8880191efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > > [   10.350650] ==================================================================
