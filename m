@@ -2,103 +2,252 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD87C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C19C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6DCE2186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555057768;
-	bh=m95wPZoMShtbT0j117e4kcWLfFrCNmJj879lVNXhBh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qJ8AybZ8k6fRwiYqaLBMWaeQqyHvn9O2ZRzrRrbmY5BRThcmgodK8oKHSUShzHTdR
-	 YlaUFnFj2pEds1Jgmq48Znr8oqP7i1J9LsP7xryGVNsAi8Eq8kL70In7drNGGw1j1Y
-	 +hoKvRfnHT31d8HZxTtXj2SBjrniiaPBwYFBltSc=
+	by mail.kernel.org (Postfix) with ESMTP id 4B80A2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 08:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfDLI31 (ORCPT
+        id S1727244AbfDLIbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 04:29:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56412 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfDLI31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 04:29:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YQl2xlGDNjmPg52cOvHRm7U2++/LqJE8cGLpMQpXjJU=; b=rJEHdL5EpUVRauJ+cJ7odccO3
-        LBVT2MeeupjSFlcPiipWM5K3UDqnPCoaawqbrcfh0QaHK0KNTwxcCwAKUA6tthfm+a5WXeqlmxtss
-        AGxIbNrmt26cKU7OcAfhlcNH/86NC5L+jOU//EThZUAqi/cH+VJ32iJQazG84OjZYfdf0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hErYl-00065n-T7; Fri, 12 Apr 2019 08:29:19 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id CF5491127945; Fri, 12 Apr 2019 09:29:13 +0100 (BST)
-Date:   Fri, 12 Apr 2019 09:29:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] spi: SPI bus multiplexer
-Message-ID: <20190412082913.GA6909@sirena.org.uk>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Content-Disposition: inline
-In-Reply-To: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
-X-Cookie: Your present plans will be successful.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 12 Apr 2019 04:31:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51694 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726217AbfDLIbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 04:31:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5BDD1AEA9;
+        Fri, 12 Apr 2019 08:30:59 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 10:30:58 +0200
+Message-ID: <s5hr2a7pqv1.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.1-rc5
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+please pull sound fixes for v5.1-rc5 from:
 
-On Fri, Apr 12, 2019 at 05:02:10PM +1200, Chris Packham wrote:
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.1-rc5
 
-> Unfortunately recent changes have stopped my hacks from working. I've
-> tried adapting cs-gpios to work with my particular hardware but I came
-> to the realisation that the current cs-gpios support assumes a 1:1
-> mapping of gpio to SPI device whereas my hardware used the state of the
-> gpio selecting the device i.e. a 1:2 mapping.
+The topmost commit is 9b0dcd0e5a27958b57e3e390f63c098d63a055da
 
-> This is my attempt to implement a driver to deal with this. One nice
-> property is that it is pretty much self contained. The only change to
-> the core SPI infrastructure is exposing a function I needed to lookup
-> the spi_controller instance.
+----------------------------------------------------------------
 
-Why not implement the device that demuxes the GPIOs you're using for
-chip select as a GPIO controller?  Presumably it might get used for
-things other than chip selects.
+sound fixes for 5.1-rc5
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
+Well, this one became unpleasantly larger than previous pull requests,
+but it's a kind of usual pattern: now it contains a collection of ASoC
+fixes, and nothing to worry too much.
 
------BEGIN PGP SIGNATURE-----
+The fixes for ASoC core (DAPM, DPCM, topology) are all small and just
+covering corner cases.  The rest changes are driver-specific, many of
+which are for x86 platforms and new drivers like STM32, in addition to
+the usual fixups for HD-audio.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlywTFYACgkQJNaLcl1U
-h9BDOgf+IcHAaeWBs4Mx2UtTah7O0uKNJnMfEXCcEao8tcgoRcqci45sx2Nr76JE
-1qsM5/xGOsIBAnrP6saJ4hsY+oVuebCI/WOyy9VGgwSTYEtZCkObtVGxphM9aesN
-3/gIVxrga7JjARBZB71csTJ9CuzdBDMCQA44qfjbbrMv40WIX/OSvMMrG7+IGCqp
-cvYZ5Wh6gUjdoW1Bz795QnAxsmjJFrctcDYu7tSNBk92M5r+972l/27eDwjRnjKG
-xRj05HYDartmd4aSaiYIm/hjFYwb7Uc7oR2SFYa+5vZF6N/yjRuSL2AqSueEvp6y
-epJnfXiXFUSaDvAJRu/O22f97jHwbA==
-=1YqJ
------END PGP SIGNATURE-----
+----------------------------------------------------------------
 
---Nq2Wo0NMKNjxTN9z--
+Annaliese McDermond (2):
+      ASoC: tlv320aic32x4: Fix Common Pins
+      ASoC: tlv320aic32x4: Change author's name
+
+Arnaud Pouliquen (1):
+      ASoC: stm32: fix sai driver name initialisation
+
+Charles Keepax (6):
+      ASoC: wm_adsp: Correct handling of compressed streams that restart
+      ASoC: wm_adsp: Correct error messages in wm_adsp_buffer_get_error
+      ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
+      ASoC: wm_adsp: Shutdown any compressed streams on DSP watchdog timeout
+      ASoC: wm_adsp: Check for buffer in trigger stop
+      ASoC: cs35l35: Disable regulators on driver removal
+
+Daniel Mack (1):
+      ASoC: cs4270: Set auto-increment bit for register writes
+
+Daniel Mentz (1):
+      ALSA: uapi: #include <time.h> in asound.h
+
+Guenter Roeck (1):
+      ASoC: intel: Fix crash at suspend/resume after failed codec registration
+
+Gustavo A. R. Silva (1):
+      ASoC: ab8500: Mark expected switch fall-through
+
+Hans de Goede (1):
+      ASoC: Intel: cht_bsw_max98090_ti: Enable codec clock once and keep it enabled
+
+Hui Wang (1):
+      ALSA: hda - Add two more machines to the power_save_blacklist
+
+Jenny TC (1):
+      ASoC: Intel: Skylake: enable S24_LE format support
+
+Jerome Brunet (1):
+      ASoC: dpcm: skip missing substream while applying symmetry
+
+Jiada Wang (2):
+      ASoC: rsnd: src: Avoid a potential deadlock
+      ASoC: rsnd: src: fix compiler warnings
+
+Jian-Hong Pan (1):
+      ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+
+John Hsu (2):
+      ASoC: nau8824: fix the issue of the widget with prefix name
+      ASoC: nau8810: fix the issue of widget with prefixed name
+
+Jonathan Hunter (1):
+      ASoC: soc-core: Fix probe deferral following prelink failure
+
+KaiChieh Chuang (2):
+      ASoC: mediatek: btcvsd add loopback
+      ASoC: dpcm: prevent snd_soc_dpcm use after free
+
+Kailang Yang (1):
+      ALSA: hda/realtek - Move to ACT_INIT state
+
+Kuninori Morimoto (2):
+      ASoC: audio-graph-card: don't select DPCM via audio-graph-card
+      ASoC: simple-card: don't select DPCM via simple-audio-card
+
+Marc Gonzalez (1):
+      ASoC: wcd9335: Fix missing regmap requirement
+
+Oleksandr Andrushchenko (1):
+      ALSA: xen-front: Do not use stream buffer size before it is set
+
+Olivier Moysan (9):
+      ASoC: stm32: sai: fix iec958 controls indexation
+      ASoC: stm32: sai: fix exposed capabilities in spdif mode
+      ASoC: stm32: sai: fix race condition in irq handler
+      ASoC: stm32: sai: fix oversampling mode
+      ASoC: stm32: sai: fix set_sync service
+      ASoC: stm32: i2s: fix registers declaration in regmap
+      ASoC: stm32: dfsdm: manage multiple prepare
+      ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
+      ASoC: stm32: sai: fix master clock management
+
+Pankaj Bharadiya (1):
+      ASoC: dapm: Fix NULL pointer dereference in snd_soc_dapm_free_kcontrol
+
+Philipp Puschmann (1):
+      ASoC: tlv320aic3x: fix reset gpio reference counting
+
+Rander Wang (3):
+      ASoC:soc-pcm:fix a codec fixup issue in TDM case
+      ASoC:hdac_hda:use correct format to setup hda codec
+      ASoC:intel:skl:fix a simultaneous playback & capture issue on hda platform
+
+Ranjani Sridharan (6):
+      ASoC: dapm: set power_check callback for widgets that shouldnt be always on
+      ASoC: intel: skylake: add remove() callback for component driver
+      ASoC: topology: Use the correct dobj to free enum control values and texts
+      ASoC: core: conditionally increase module refcount on component open
+      ASoC: pcm: update module refcount if module_get_upon_open is set
+      ASoC: pcm: fix error handling when try_module_get() fails.
+
+Richard Sailer (1):
+      ALSA: hda/realtek - Add quirk for Tuxedo XC 1509
+
+Russell King (2):
+      ASoC: hdmi-codec: fix S/PDIF DAI
+      ASoC: hdmi-codec: avoid limiting params->msbits in hw_params()
+
+S.j. Wang (2):
+      ASoC: fsl_asrc: add constraint for the asrc of older version
+      ASoC: fsl_esai: fix channel swap issue when stream starts
+
+Shuming Fan (3):
+      ASoC: rt5682: Check JD status when system resume
+      ASoC: rt5682: fix jack type detection issue
+      ASoC: rt5682: recording has no sound after booting
+
+Sugar Zhang (2):
+      ASoC: rockchip: pdm: fix regmap_ops hang issue
+      ASoC: rockchip: pdm: change dma burst to 8
+
+Sylwester Nawrocki (2):
+      ASoC: samsung: i2s: Fix DAPM routes for capture stream
+      ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate
+
+Takashi Iwai (1):
+      ALSA: hda: Fix racy display power access
+
+Tzung-Bi Shih (2):
+      ASoC: mediatek: mt8183: skip for i2s5 in mck_disable
+      ASoC: Intel: kbl: fix wrong number of channels
+
+Zubin Mithra (1):
+      ALSA: seq: Fix OOB-reads from strlcpy
+
+---
+ include/sound/soc.h                                |  11 +-
+ include/uapi/sound/asound.h                        |   1 +
+ sound/core/seq/seq_clientmgr.c                     |   6 +-
+ sound/hda/ext/hdac_ext_bus.c                       |   1 -
+ sound/hda/hdac_bus.c                               |   1 +
+ sound/hda/hdac_component.c                         |   6 +-
+ sound/pci/hda/hda_intel.c                          |   4 +
+ sound/pci/hda/patch_realtek.c                      |  72 ++++++++----
+ sound/soc/codecs/Kconfig                           |   1 +
+ sound/soc/codecs/ab8500-codec.c                    |   1 +
+ sound/soc/codecs/cs35l35.c                         |  11 ++
+ sound/soc/codecs/cs4270.c                          |   1 +
+ sound/soc/codecs/hdac_hda.c                        |  53 ++++++---
+ sound/soc/codecs/hdac_hda.h                        |   1 +
+ sound/soc/codecs/hdmi-codec.c                      | 121 ++++++++++-----------
+ sound/soc/codecs/nau8810.c                         |   4 +-
+ sound/soc/codecs/nau8824.c                         |  46 ++++++--
+ sound/soc/codecs/rt5682.c                          |  56 +++++-----
+ sound/soc/codecs/tlv320aic32x4-i2c.c               |   4 +-
+ sound/soc/codecs/tlv320aic32x4-spi.c               |   4 +-
+ sound/soc/codecs/tlv320aic32x4.c                   |   2 +
+ sound/soc/codecs/tlv320aic3x.c                     |   4 +-
+ sound/soc/codecs/wm_adsp.c                         |  40 +++++--
+ sound/soc/codecs/wm_adsp.h                         |   1 +
+ sound/soc/fsl/fsl_asrc.c                           |  14 +++
+ sound/soc/fsl/fsl_esai.c                           |  47 ++++++--
+ sound/soc/generic/audio-graph-card.c               |  11 +-
+ sound/soc/generic/simple-card.c                    |  12 +-
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c       |   8 ++
+ sound/soc/intel/boards/cht_bsw_max98090_ti.c       |  47 +++++++-
+ .../soc/intel/boards/kbl_rt5663_rt5514_max98927.c  |   2 +-
+ sound/soc/intel/skylake/skl-messages.c             |   1 +
+ sound/soc/intel/skylake/skl-pcm.c                  |  28 ++++-
+ sound/soc/mediatek/common/mtk-btcvsd.c             |  69 +++++++++++-
+ sound/soc/mediatek/mt8183/mt8183-afe-clk.c         |   4 +
+ sound/soc/rockchip/rockchip_pdm.c                  |   4 +-
+ sound/soc/samsung/i2s.c                            |  10 +-
+ sound/soc/samsung/odroid.c                         |   4 +-
+ sound/soc/sh/rcar/core.c                           |   2 +
+ sound/soc/sh/rcar/rsnd.h                           |   5 +
+ sound/soc/sh/rcar/src.c                            |  21 ++--
+ sound/soc/soc-core.c                               |   6 +-
+ sound/soc/soc-dapm.c                               |  11 ++
+ sound/soc/soc-pcm.c                                |  66 +++++++++--
+ sound/soc/soc-topology.c                           |   7 +-
+ sound/soc/stm/stm32_adfsdm.c                       |  38 ++++++-
+ sound/soc/stm/stm32_i2s.c                          |   3 +-
+ sound/soc/stm/stm32_sai.c                          |   8 +-
+ sound/soc/stm/stm32_sai_sub.c                      | 114 ++++++++++++++-----
+ sound/xen/xen_snd_front_alsa.c                     |   2 +-
+ 50 files changed, 734 insertions(+), 262 deletions(-)
+
