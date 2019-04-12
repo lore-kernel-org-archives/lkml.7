@@ -2,108 +2,105 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48B7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A957C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FFE218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="f52LcHqg"
+	by mail.kernel.org (Postfix) with ESMTP id 579BE2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555098792;
+	bh=oKz4a0apd2S5GAl84dWoqNQpk7KVldE0lZD6TrChwWQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=azboOKFAg245tnUf0Mt5U32rXjw6ry4HdgFReMY4YwE4dR0+QJ2Qpr7wqeGcYjp8j
+	 TPt9YRi5+gBP139m4e27l25Cu/GbNC8EWlbmo2abFQoXseO7N6x8HP8xlY/muhKrts
+	 JVgisofCDi34na58bj/AtJEqXCuaZZ2q21F16luE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfDLTvq (ORCPT
+        id S1727085AbfDLTxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:51:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43994 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbfDLTvp (ORCPT
+        Fri, 12 Apr 2019 15:53:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33892 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfDLTxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:51:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z9so5666295pgu.10
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ac51ttLoTfv8HeommH7JkMauHEnPD70UoRAXyzUxjGM=;
-        b=f52LcHqgTtp6WVtNHlH83DiPrkhPwkO2GCCtYrmHADwJv3K2V5uFwlrao/KpGGbNlt
-         JnF5HNHRYfD4/zm1HDAxDu6bv4ByLQ4pMF8EgbQVhHHU+MTRSYGdqIztke0Z1WVfBmxB
-         VrwpNhKb2s0YI9TboHmOw3PRFFZYzx67/1ijg=
+        Fri, 12 Apr 2019 15:53:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x14so9413457eds.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:53:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ac51ttLoTfv8HeommH7JkMauHEnPD70UoRAXyzUxjGM=;
-        b=sty3y7CMjpiS+9edU952nHnYtVJApfoTPZdShHkgdtrbtzNOJX+tJSFoXxmGjZb3ph
-         QjT/CQdVfxrS0mcCqVeVMmmnykFVCXUxWucD2QhFRefKVHwTjkMLvOfHtaCvknNA/JyS
-         qyU3SNGBmxbXKBkDJkfDGsR8ThB/0nYh0m/YnTjV9jaxp5q0iJWOnictSGE94YkLqZiy
-         +6mDEb+x92+Fv12jXPxA0fp1kNT/px9iTY8VKu/XUxTmKhsqyV7Kf9U2+6pO77E8R2Mh
-         0TotFgih7tnAJ2H0tkS18yckdPz87AXOlP9uxEw5NLcmF6dFq8cdA/IWI2rorFPnaNS5
-         XJjA==
-X-Gm-Message-State: APjAAAVMiThnOeyaD6vD3UrS+CVqspi1QSAcd5r+RBoNIVFO1cQfu86m
-        6hgsIddQgFDX2DziMpmkgYY/dg/tQYo=
-X-Google-Smtp-Source: APXvYqxy1kfmSNyOMeuOxauS+XcQsXd6oe1eixksQbNmowhBeOj93+EgWnJre65tLFIzAy++Z4qe6A==
-X-Received: by 2002:a63:7943:: with SMTP id u64mr54795090pgc.91.1555098703514;
-        Fri, 12 Apr 2019 12:51:43 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e126sm106356796pfh.35.2019.04.12.12.51.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 12:51:42 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>, mhiramat@kernel.org,
-        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>, yhs@fb.com
-Subject: [PATCH v7 2/2] init/config: Do not select BUILD_BIN2C for IKCONFIG
-Date:   Fri, 12 Apr 2019 15:51:25 -0400
-Message-Id: <20190412195125.3891-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190412195125.3891-1-joel@joelfernandes.org>
-References: <20190412195125.3891-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jb4z3jW0thx7PVQQQPpt7VEpOEzDZAQnNlKDZUPhehA=;
+        b=LuwePai4gzSSuYBQt64mUP9zVzvMEUq9H4chiENOw5T8oq82IlrpZ5/yIiiFiFbsTB
+         4TJQLPoERBt3LTqYzoDo1doyBwZSd009Sz+yRojp5LR6fM3yjJYRtlEVG2uBKuSLmv9Y
+         PcE11ZY8hynBUFV8oGsu2Wh+meiZLL1LxZJQ/TxLsifzHb4OYfI6iM8o2NAsLNHYrgJx
+         MPJBiheEQBd/NrN+7Ys3L26CSdQr/vwrrcmSCEMzjRb/GR6/Mx3VXqY0KWBWkfXerJOv
+         iEcJ9AhyawW1UteT7wVLSAOwMGiqyWYU/nIerLS3Wz9piJ3ma87EsTB4S3hx3yrzaxbz
+         fWGw==
+X-Gm-Message-State: APjAAAVLvEO5VwIKR+Cd4MVie+8uGQJEKhg7dlkc8cauNj8sN20ihxpY
+        fDLbwVCt3q8Hz5cYvVcGRnzI/NBhEO1qIAFzQjg=
+X-Google-Smtp-Source: APXvYqwxXuULHr9PL/oKDHqGPLuJ84MqWIlBHFRADnpFtxGE/Vurvnn1U8m3WwKTN+jqpQXZF6Noid8kKEY/xBCN4pk=
+X-Received: by 2002:a50:9179:: with SMTP id f54mr36491145eda.207.1555098789573;
+ Fri, 12 Apr 2019 12:53:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190226062012.23746-1-lenb@kernel.org> <20190226185358.GQ2861@worktop.programming.kicks-ass.net>
+ <20190307145925.GD19434@e105550-lin.cambridge.arm.com> <alpine.DEB.2.21.1904052033220.1802@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904052033220.1802@nanos.tec.linutronix.de>
+From:   Len Brown <lenb@kernel.org>
+Date:   Fri, 12 Apr 2019 15:52:58 -0400
+Message-ID: <CAJvTdK=DNUmOLb9QBHVxn_EAL33zisH-_ZPo8GfFa++5hrK5zQ@mail.gmail.com>
+Subject: Re: [PATCH 0/14] v2 multi-die/package topology support
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 13610aa908dc ("kernel/configs: use .incbin directive to
-embed config_data.gz"), IKCONFIG no longer uses BUILD_BIN2C so prevent
-it from being selected in Kconfig.
+> > > I think I prefer 's/threads/cpus/g' on that. Threads makes me think SMT,
+> > > and I don't think there's any guarantee the part in question will have
+> > > SMT on.
+> >
+> > I think 'threads' is a bit confusing as well. We seem to be using 'cpu'
+> > everywhere for something we can schedule tasks on, including the sysfs
+> > /sys/devices/system/cpu/ subdirs for each SMT thread on SMT systems.
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- init/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+I agree with Peter and Morten.
+"cpu" is more clear and consistent than "thread" here.
+I'll spin the series with that string changed.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 47c0db6e63a5..26a364a95b57 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -562,7 +562,6 @@ config BUILD_BIN2C
- 
- config IKCONFIG
- 	tristate "Kernel .config support"
--	select BUILD_BIN2C
- 	---help---
- 	  This option enables the complete Linux kernel ".config" file
- 	  contents to be saved in the kernel. It provides documentation
--- 
-2.21.0.392.gf8f6787159e-goog
+> > Another thing that I find confusing is that with this series we a new
+> > die id/mask which is totally unrelated to the DIE level in the
+> > sched_domain hierarchy. We should rename DIE level to something that
+> > reflects what it really is. If we can agree on that ;-)
+> >
+> > NODE level?
 
+Cache topology and node interconnect topology impact performance, and so
+we what we look at, when we decided to run something on this CPU or that one.
+
+That logical topology lives within the physical package and die topology,
+but doesn't necessarily match it.  For example, caches can be shared
+or split into pieces inside a package or die.  Logical nodes may match
+die boundaries, or there may be multiple logical nodes within a single
+physical package or die.
+
+We have mechanisms for explicitly enumerating the caches,
+and for nodes.  This patch series does not touch those mechanisms.
+
+The reason we need to know about physical packages and die is that
+there are other things associated with them.
+eg. power and temperature domains, and certain system registers
+follow these physical boundaries.  Code that talks to those items
+needs to be able to understand these physical boundaries.
+
+I hope that helps.
+
+thanks,
+Len Brown, Intel Open Source Technology Center
