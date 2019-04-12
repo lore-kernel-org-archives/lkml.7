@@ -2,83 +2,126 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6F4C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A31B218A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOIazxTt"
+	by mail.kernel.org (Postfix) with ESMTP id 40069218A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555091036;
+	bh=jvAFMMDpae1p/IQ/PzkYrbtU7HE9oltIPZ6DneyxPHw=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=TbMu1J7yfSDb1JKYwBVsefLSwBS2LNpKvEIBwfqV0ekmQcxbB0ul6w9mc98CePP6J
+	 80/mF5zfDMY5tW0S9YWpz0NvMnKD0ZwSwZ2b+OObBV7i4BuZCkBGO1k8YX+H6Ty1vi
+	 cvbujRva0mnEt+ZKVFTK/uKf/GqFc6RU4tRtXF80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfDLRhv (ORCPT
+        id S1726844AbfDLRnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:37:51 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42235 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLRhu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:37:50 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so5467620plb.9;
-        Fri, 12 Apr 2019 10:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WQwj+VNsbN89uc9KNQnyoysq5Qv09ZoKMyKulbxkgXc=;
-        b=UOIazxTtFyu8YgBtqMepG51ldHCrXhWFOom93VUBY+NSQuazQmUpDxcjARtIM1BqIl
-         oR5P1/Lq0Ty+MrJlRgo/l/ULdU6nIB46fThbrCU1WBdDQzW/9NQZJBbGP/qTmf+m80Gc
-         h86/OMPlAtc0yu9mmwRn77EjqWSDqNZ5jOuSl/MDrk5B+s/e9yCnf/78KsgeEhAmfMhO
-         dK6x8XsqQ8IMTpe5nNiHph9rmCbHMJltllSd7eniN1vpbcREDpRS68SiQ6HUnNfUwxD1
-         pLkChLUlLt51T/8gEwbjOQe9JvX3k0me8+o7MiPe10w1f08yJcg4tuGJKMBMeWiITOLn
-         o8Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WQwj+VNsbN89uc9KNQnyoysq5Qv09ZoKMyKulbxkgXc=;
-        b=YMOFynLNxkWSHt6V7VeDtJ372TLITPKfREKAXL7CIo3PBlmRrIOMEByQxqTwhJi9Zd
-         JiROk/zBRVdrLjgdsdO0BLXlMhlXDT/Y5dvOFEJm2Fc8LruJlyaeeOydm/pDLGeMsBQ/
-         cfgWB9b5Y/j0cNLNGH8TXj1YeqUlZDYP7EWZFLzJCVxcguw+7wPP5zLL1Y51ScoFZ38Z
-         F2E049nkxvbhvZncq8U06f9anixc62K2R2HB0FW318t3Drth5Zev1L0b+xK4STGpKVwn
-         jIZy0LbAhP3/gjK64C2zVdDX2qFI9Y5xjenaWszuf/qiblkG7IWhHOWhX5NP//6b0FPe
-         r+xQ==
-X-Gm-Message-State: APjAAAUs7nHu/tXNB+zYO5psn96qdJWLcAc831/smUFwJKnsvodn9gQa
-        M66vAtFeXAFS/iPIlJY7AIE=
-X-Google-Smtp-Source: APXvYqyJOFrq3CjcLTA7ek/kRbKHAxA+ZlxarcU7HPAz2Cc34cGP3Nc12rv3w2lpqhNBxnUmv6nwFg==
-X-Received: by 2002:a17:902:298b:: with SMTP id h11mr36684419plb.258.1555090670209;
-        Fri, 12 Apr 2019 10:37:50 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g64sm98942049pfg.13.2019.04.12.10.37.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 10:37:49 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 10:37:48 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Patrick Venture <venture@google.com>
-Cc:     jdelvare@suse.com, corbet@lwn.net, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: hwmon: ir35221: fix company name
-Message-ID: <20190412173748.GA22482@roeck-us.net>
-References: <20190412162742.65962-1-venture@google.com>
+        Fri, 12 Apr 2019 13:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726685AbfDLRny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 13:43:54 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D099E2086D;
+        Fri, 12 Apr 2019 17:43:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555091033;
+        bh=jvAFMMDpae1p/IQ/PzkYrbtU7HE9oltIPZ6DneyxPHw=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=16ptWDuYN9R8/aKBaKbyxdFd67oDXmhjtt+sjQL0H7kDrS+Pfl3l9/oo2+ij5feJN
+         i8adI3x03Oe98+usRp/5o/oFOyDvlAJeThXFS+fSphTleoYocbU8bdEvIhjn0pFd/0
+         Ba7cOhkgHKnn4tC0rVJLnyo6WdgdK8JdWN8pR6oQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412162742.65962-1-venture@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190412150625.28384-2-luca@z3ntu.xyz>
+References: <20190412150625.28384-1-luca@z3ntu.xyz> <20190412150625.28384-2-luca@z3ntu.xyz>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 2/3] Input: add a driver for GPIO controllable vibrators
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Rob Herring <robh@kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:INPUT KEYBOARD, MOUSE, JOYSTICK , TOUCHSCREEN..." 
+        <linux-input@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Luca Weiss <luca@z3ntu.xyz>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Message-ID: <155509103299.20095.15957232326393337000@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 12 Apr 2019 10:43:52 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 09:27:42AM -0700, Patrick Venture wrote:
-> Fix the company name from "Infinion" to "Infineon."
-> 
-> Signed-off-by: Patrick Venture <venture@google.com>
+Quoting Luca Weiss (2019-04-12 08:06:24)
+> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vi=
+bra.c
+> new file mode 100644
+> index 000000000000..3fd2dfd4f670
+> --- /dev/null
+> +++ b/drivers/input/misc/gpio-vibra.c
+> @@ -0,0 +1,209 @@
+> +
+> +static int gpio_vibrator_probe(struct platform_device *pdev)
+> +{
+[...]
+> +       vibrator->input->id.bustype =3D BUS_HOST;
+> +       vibrator->input->close =3D gpio_vibrator_close;
+> +
+> +       input_set_drvdata(vibrator->input, vibrator);
+> +       input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
+> +
+> +       err =3D input_ff_create_memless(vibrator->input, NULL,
+> +                                     gpio_vibrator_play_effect);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
+> +               return err;
+> +       }
+> +
+> +       err =3D input_register_device(vibrator->input);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "Couldn't register input dev: %d", er=
+r);
 
-Applied to hwmon-next.
+All the printks in this file need a newline.
 
-Thanks,
-Guenter
+> +               return err;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, vibrator);
+> +
+> +       return 0;
+> +}
+> +
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gpio_vibra_dt_match_table[] =3D {
+> +       { .compatible =3D "gpio-vibrator" },
+> +       {},
+
+Nitpick: Drop the comma on the sentinel so nothing can go after it
+without causing a compilation error.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
+> +#endif
+> +
