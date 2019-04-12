@@ -2,66 +2,85 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD68AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4955BC282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD09C2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555062553;
-	bh=CsGKp0e/YhHueO2jmHUFN5h0ZBDlz58EfEN+zgSBNwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=du7f13j8LfbcnYZvBHFa9IAjcTyC+64Cym2VT2ZZqUBM9QJhM9rgP5JT2+wt6bxVT
-	 EO7sMcG0R1B9VnDcxgrpVYPgB9tj44P/U4glXzSMYgI+CKETwBQTC7PXxFFwHOkMRS
-	 0pQjhmtcF8F0oFLjmKiv8dtyuP2ApUMd8EwE7duk=
+	by mail.kernel.org (Postfix) with ESMTP id 1880520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfDLJtM (ORCPT
+        id S1726838AbfDLJva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:49:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38946 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726794AbfDLJtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:49:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2F650ABCF;
-        Fri, 12 Apr 2019 09:49:10 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 11:49:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: iwlwifi: BUG: unable to handle kernel paging request at
- ffffc90000e1c808
-Message-ID: <20190412094908.GA5223@dhcp22.suse.cz>
-References: <20190411210404.GC4743@dhcp22.suse.cz>
+        Fri, 12 Apr 2019 05:51:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:56506 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfDLJv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:51:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DEAA15AB;
+        Fri, 12 Apr 2019 02:51:29 -0700 (PDT)
+Received: from red-moon (unknown [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1C833F59C;
+        Fri, 12 Apr 2019 02:51:27 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 10:51:25 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Colin King <colin.king@canonical.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip: fix bitwise operations on status and
+ ROCKCHIP_PCIE_EP_CMD_STATUS_IS
+Message-ID: <20190412095125.GB8113@red-moon>
+References: <20190330150910.9389-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411210404.GC4743@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190330150910.9389-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 11-04-19 23:07:20, Michal Hocko wrote:
-> Hi,
-> I have just encountered the following splat with 5.1-rc4. Is this a
-> known problem? Greping throug older logs show that "Error sending SCAN_CFG_CMD"
-> is not new. In older kernels it was followed by "Start IWL Error Log Dump:"
-> but it oopsed now. I was running 5.0 previously. Let me know if you need
-> more information.
+On Sat, Mar 30, 2019 at 03:09:10PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the bitwise operations on the u16 variable 'status' with
+> the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
+> ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
+> u16 variable.  Fix this by making status a u32.  (Not tested).
+> 
+> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-FTR It happened again with 5.1.0-rc2-00001-ga3ac7917b730
+Shawn,
 
--- 
-Michal Hocko
-SUSE Labs
+I need your ACK on this patch, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index a5d799e2dff2..d743b0a48988 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+>  	struct rockchip_pcie *rockchip = &ep->rockchip;
+>  	u32 r = ep->max_regions - 1;
+>  	u32 offset;
+> -	u16 status;
+> +	u32 status;
+>  	u8 msg_code;
+>  
+>  	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
+> -- 
+> 2.20.1
+> 
