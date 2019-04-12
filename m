@@ -2,180 +2,109 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBD2C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF7C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9DA2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6267F2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfDLUkH (ORCPT
+        id S1727258AbfDLUkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:40:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41928 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbfDLUkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:40:05 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BC8F530842D1;
-        Fri, 12 Apr 2019 20:40:04 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40DEE601A5;
-        Fri, 12 Apr 2019 20:39:58 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Price <steven.price@arm.com>,
-        Phil Auld <pauld@redhat.com>
-Subject: [PATCH v2 5/5] arm64/speculation: Support 'mitigations=' cmdline option
-Date:   Fri, 12 Apr 2019 15:39:32 -0500
-Message-Id: <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1555085500.git.jpoimboe@redhat.com>
-References: <cover.1555085500.git.jpoimboe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 12 Apr 2019 20:40:05 +0000 (UTC)
+        Fri, 12 Apr 2019 16:40:52 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:20564 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726777AbfDLUkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 16:40:52 -0400
+X-IronPort-AV: E=Sophos;i="5.60,342,1549926000"; 
+   d="scan'208";a="378447535"
+Received: from 91-160-5-165.subs.proxad.net (HELO [192.168.44.23]) ([91.160.5.165])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 12 Apr 2019 22:40:49 +0200
+Subject: Re: [PATCH 0/14] v2 multi-die/package topology support
+To:     Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190226062012.23746-1-lenb@kernel.org>
+ <20190226185358.GQ2861@worktop.programming.kicks-ass.net>
+ <20190307145925.GD19434@e105550-lin.cambridge.arm.com>
+ <alpine.DEB.2.21.1904052033220.1802@nanos.tec.linutronix.de>
+ <CAJvTdK=DNUmOLb9QBHVxn_EAL33zisH-_ZPo8GfFa++5hrK5zQ@mail.gmail.com>
+From:   Brice Goglin <Brice.Goglin@inria.fr>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b0923e09-aa99-81a3-fc33-4694e39b96e6@inria.fr>
+Date:   Fri, 12 Apr 2019 22:40:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAJvTdK=DNUmOLb9QBHVxn_EAL33zisH-_ZPo8GfFa++5hrK5zQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configure arm64 runtime CPU speculation bug mitigations in accordance
-with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
-v2, and Speculative Store Bypass.
+Le 12/04/2019 à 21:52, Len Brown a écrit :
+>>>> I think I prefer 's/threads/cpus/g' on that. Threads makes me think SMT,
+>>>> and I don't think there's any guarantee the part in question will have
+>>>> SMT on.
+>>> I think 'threads' is a bit confusing as well. We seem to be using 'cpu'
+>>> everywhere for something we can schedule tasks on, including the sysfs
+>>> /sys/devices/system/cpu/ subdirs for each SMT thread on SMT systems.
+> I agree with Peter and Morten.
+> "cpu" is more clear and consistent than "thread" here.
+> I'll spin the series with that string changed.
 
-The default behavior is unchanged.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-NOTE: This is based on top of Jeremy Linton's patches:
-      https://lkml.kernel.org/r/20190410231237.52506-1-jeremy.linton@arm.com
+Agreed, I should have used that suffix from the beginning.
 
- Documentation/admin-guide/kernel-parameters.txt | 8 +++++---
- arch/arm64/kernel/cpu_errata.c                  | 6 +++++-
- arch/arm64/kernel/cpufeature.c                  | 8 +++++++-
- 3 files changed, 17 insertions(+), 5 deletions(-)
+Brice
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e84a01d90e92..79bfc755defe 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2545,8 +2545,8 @@
- 			http://repo.or.cz/w/linux-2.6/mini2440.git
- 
- 	mitigations=
--			[X86,PPC,S390] Control optional mitigations for CPU
--			vulnerabilities.  This is a set of curated,
-+			[X86,PPC,S390,ARM64] Control optional mitigations for
-+			CPU vulnerabilities.  This is a set of curated,
- 			arch-independent options, each of which is an
- 			aggregation of existing arch-specific options.
- 
-@@ -2555,11 +2555,13 @@
- 				improves system performance, but it may also
- 				expose users to several CPU vulnerabilities.
- 				Equivalent to: nopti [X86,PPC]
-+					       kpti=0 [ARM64]
- 					       nospectre_v1 [PPC]
- 					       nobp=0 [S390]
--					       nospectre_v2 [X86,PPC,S390]
-+					       nospectre_v2 [X86,PPC,S390,ARM64]
- 					       spectre_v2_user=off [X86]
- 					       spec_store_bypass_disable=off [X86,PPC]
-+					       ssbd=force-off [ARM64]
- 					       l1tf=off [X86]
- 
- 			auto (default)
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index a1f3188c7be0..65bcd7f0cca1 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -19,6 +19,7 @@
- #include <linux/arm-smccc.h>
- #include <linux/psci.h>
- #include <linux/types.h>
-+#include <linux/cpu.h>
- #include <asm/cpu.h>
- #include <asm/cputype.h>
- #include <asm/cpufeature.h>
-@@ -405,6 +406,9 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
- 		this_cpu_safe = true;
- 	}
- 
-+	if (cpu_mitigations_off())
-+		ssbd_state = ARM64_SSBD_FORCE_DISABLE;
-+
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0) {
- 		ssbd_state = ARM64_SSBD_UNKNOWN;
- 		if (!this_cpu_safe)
-@@ -599,7 +603,7 @@ check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
- 	}
- 
- 	/* forced off */
--	if (__nospectre_v2) {
-+	if (__nospectre_v2 || cpu_mitigations_off()) {
- 		pr_info_once("spectrev2 mitigation disabled by command line option\n");
- 		__hardenbp_enab = false;
- 		return false;
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 6b7e1556460a..d826b17f7820 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -25,6 +25,7 @@
- #include <linux/stop_machine.h>
- #include <linux/types.h>
- #include <linux/mm.h>
-+#include <linux/cpu.h>
- #include <asm/cpu.h>
- #include <asm/cpufeature.h>
- #include <asm/cpu_ops.h>
-@@ -966,7 +967,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- 		MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
- 		{ /* sentinel */ }
- 	};
--	char const *str = "command line option";
-+	char const *str = "kpti command line option";
- 	bool meltdown_safe;
- 
- 	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
-@@ -988,6 +989,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- 		__kpti_forced = -1;
- 	}
- 
-+	if (cpu_mitigations_off() && !__kpti_forced) {
-+		str = "mitigations=off";
-+		__kpti_forced = -1;
-+	}
-+
- 	/* Useful for KASLR robustness */
- 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0) {
- 		if (!__kpti_forced) {
--- 
-2.17.2
 
