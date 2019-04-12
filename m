@@ -2,144 +2,112 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93796C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B237C10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B1F2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="0wX2LM9R"
+	by mail.kernel.org (Postfix) with ESMTP id E70912083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfDLByi (ORCPT
+        id S1726925AbfDLBz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 21:54:38 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45690 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfDLByi (ORCPT
+        Thu, 11 Apr 2019 21:55:27 -0400
+Received: from regular1.263xmail.com ([211.150.70.204]:51732 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfDLBz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 21:54:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bf11so4267541plb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 18:54:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PV9y/LjvZV0f2+Sb4JbEcSaWuXw7nxo4jbyNdyngN94=;
-        b=0wX2LM9R0j5nn8XV1buOZTN84FgJN3gaTZcGVDxQpxj/sBgkKdNwbsBaBLRTXJ3WeB
-         nLaKq+kg2vGcCsNvTa+zdacVPoRiZjvoXBPOEdogp7ZiuhmtaEUsTm4k3pkqgcnYRyE5
-         fQ3n1D8tEribJ8nR719k5TLn55JptzPBA5ii6ywlR5cXIuLN7uuc71gqFFFYt/nrjBZd
-         Db2jb20AcyOcCxuo+HWeOZSZAvO5jQ7JthPQ9ri2ojpY2ima9J18DvNIN7tfysG2QxYt
-         rCi8Lq8EpLRkV+gJ9LSuqMfVkw0eV3oDzTmV44ETMUaCZmAUFYf1pUj1h2vgXhHCcJR7
-         oa3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PV9y/LjvZV0f2+Sb4JbEcSaWuXw7nxo4jbyNdyngN94=;
-        b=O9F28t7i1/acsep9NuGDm9jn2kuhrGzljEn5p2FB/hECYn7SPcXbJnoLgvgWiLhMO0
-         zud0aRwPPmrcs6DQbgraE9LbfXknsCc3mms/s+TgAxifWIFe2IoUtpwPrYI+5qLnsuvt
-         qyEvGfOxWm99XQKL+KUO5KHgV5pbJ7R9ZWnSb7obIwPEI6lg5oCUIID78Eww0zELcn61
-         Csm+e8KQPXiMbr0iMndpPdET2D69kuqM5M7sXe9P07P33yjrSTkwSb4hpcPqWJvS5m5M
-         gJM8KKgDGtRxleb6G2fzrJuAM/hq0GDaL0E7LRQlvDjAaaFCOKlklXzQMNsiqjDIZeQA
-         MrKw==
-X-Gm-Message-State: APjAAAX5oiVmdMD5cZbay5j/bhK8UPLCPPVNJHhjQK8OritUbUkSQFc7
-        XP3sJClAqpdWYaIPOBXuvahcWg==
-X-Google-Smtp-Source: APXvYqzh4xfZCgrbSz5POeqbxiaubJ8lxEoWXi2tvgKhwOAz3g6dFGTPBpbJRa2REWbAQAQ4dOxvXQ==
-X-Received: by 2002:a17:902:6b8b:: with SMTP id p11mr30219047plk.225.1555034077623;
-        Thu, 11 Apr 2019 18:54:37 -0700 (PDT)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id y12sm105977016pgq.64.2019.04.11.18.54.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Apr 2019 18:54:36 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Bengt Jonsson <bengt.g.jonsson@stericsson.com>,
-        Mattias Nilsson <mattias.i.nilsson@stericsson.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 3/3] regulator: dbx500-prcmu: Remove unused fields from struct dbx500_regulator_info
-Date:   Fri, 12 Apr 2019 09:54:21 +0800
-Message-Id: <20190412015421.27078-3-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190412015421.27078-1-axel.lin@ingics.com>
-References: <20190412015421.27078-1-axel.lin@ingics.com>
+        Thu, 11 Apr 2019 21:55:26 -0400
+Received: from zhangqing?rock-chips.com (unknown [192.168.167.129])
+        by regular1.263xmail.com (Postfix) with ESMTP id 2503B246;
+        Fri, 12 Apr 2019 09:55:21 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from [172.16.12.236] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P6496T140042209052416S1555034118987997_;
+        Fri, 12 Apr 2019 09:55:20 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <79770d4504433393c369bbd11632b8eb>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: linux-arm-kernel@lists.infradead.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH 5/5] ARM: dts: rockchip: vdd_gpu off in suspend for
+ rk3288-veyron
+To:     Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     dbasehore@chromium.org, amstan@chromium.org,
+        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
+        mka@chromium.org, ryandcase@chromium.org,
+        Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190411232157.55125-1-dianders@chromium.org>
+ <20190411232157.55125-5-dianders@chromium.org>
+From:   "elaine.zhang" <zhangqing@rock-chips.com>
+Organization: rockchip
+Message-ID: <70a7fea1-3818-b386-d951-013f94110f73@rock-chips.com>
+Date:   Fri, 12 Apr 2019 09:55:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190411232157.55125-5-dianders@chromium.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The *dev is assigned but not used, remove it.
-Current driver is using devm_regulator_register(), so no neeed to save
-*rdev for clean up. Use a local variable instead.
+hi,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/db8500-prcmu.c | 10 +++++-----
- drivers/regulator/dbx500-prcmu.h |  4 ----
- 2 files changed, 5 insertions(+), 9 deletions(-)
+ÔÚ 2019/4/12 ÉÏÎç7:21, Douglas Anderson Ð´µÀ:
+> At some point long long ago the downstream GPU driver would crash if
+> we turned the GPU off during suspend.  For some context you can see:
+>
+> https://chromium-review.googlesource.com/#/c/215780/5..6/arch/arm/boot/dts/rk3288-pinky-rev2.dts
+>
+> At some point in time not too long after that got fixed.
+>
+> It's unclear why the GPU is left enabled during suspend on the
+> mainline kernel.  Everything seems fine if I turn this off, so let's
+> do it.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>   arch/arm/boot/dts/rk3288-veyron.dtsi | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index 279d7f4ecce0..1252522392c7 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -217,8 +217,7 @@
+>   				regulator-max-microvolt = <1250000>;
+>   				regulator-ramp-delay = <6001>;
+>   				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1000000>;
+> +					regulator-off-in-suspend;
+>   				};
+>   			};
+>   
 
-diff --git a/drivers/regulator/db8500-prcmu.c b/drivers/regulator/db8500-prcmu.c
-index c2a3ccfc510e..eb317663f875 100644
---- a/drivers/regulator/db8500-prcmu.c
-+++ b/drivers/regulator/db8500-prcmu.c
-@@ -439,6 +439,7 @@ static int db8500_regulator_probe(struct platform_device *pdev)
- 	struct regulator_init_data *db8500_init_data;
- 	struct dbx500_regulator_info *info;
- 	struct regulator_config config = { };
-+	struct regulator_dev *rdev;
- 	int err, i;
- 
- 	db8500_init_data = dev_get_platdata(&pdev->dev);
-@@ -446,17 +447,16 @@ static int db8500_regulator_probe(struct platform_device *pdev)
- 	for (i = 0; i < ARRAY_SIZE(dbx500_regulator_info); i++) {
- 		/* assign per-regulator data */
- 		info = &dbx500_regulator_info[i];
--		info->dev = &pdev->dev;
- 
- 		config.driver_data = info;
- 		config.dev = &pdev->dev;
- 		if (db8500_init_data)
- 			config.init_data = &db8500_init_data[i];
- 
--		info->rdev = devm_regulator_register(&pdev->dev, &info->desc,
--						     &config);
--		if (IS_ERR(info->rdev)) {
--			err = PTR_ERR(info->rdev);
-+		rdev = devm_regulator_register(&pdev->dev, &info->desc,
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			err = PTR_ERR(rdev);
- 			dev_err(&pdev->dev, "failed to register %s: err %i\n",
- 				info->desc.name, err);
- 			return err;
-diff --git a/drivers/regulator/dbx500-prcmu.h b/drivers/regulator/dbx500-prcmu.h
-index c8e51ace9f06..6e20dab611ac 100644
---- a/drivers/regulator/dbx500-prcmu.h
-+++ b/drivers/regulator/dbx500-prcmu.h
-@@ -15,18 +15,14 @@
- 
- /**
-  * struct dbx500_regulator_info - dbx500 regulator information
-- * @dev: device pointer
-  * @desc: regulator description
-- * @rdev: regulator device pointer
-  * @is_enabled: status of the regulator
-  * @epod_id: id for EPOD (power domain)
-  * @is_ramret: RAM retention switch for EPOD (power domain)
-  *
-  */
- struct dbx500_regulator_info {
--	struct device *dev;
- 	struct regulator_desc desc;
--	struct regulator_dev *rdev;
- 	bool is_enabled;
- 	u16 epod_id;
- 	bool is_ramret;
--- 
-2.17.1
+Reviewed-by: Elaine Zhang<zhangqing@rock-chips.com>
+
+
 
