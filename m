@@ -2,109 +2,83 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238DDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E179AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E628F2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E352171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 07:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfDLHPn (ORCPT
+        id S1727019AbfDLHSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 03:15:43 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35409 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfDLHPn (ORCPT
+        Fri, 12 Apr 2019 03:18:18 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:39019 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfDLHSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 03:15:43 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s39so7425654edb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 00:15:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=13wQ/vIEQV4DmOqwYRy34cBX+EyJikzd0euuned94A0=;
-        b=R7gyZpKSNjn0LL/Qv7W60LkGVIeokTn3yTtTBsSxT4/8u4jxMdsxdSXidCIU/1ywFy
-         ivq8ef+LcMtC4BIGS5oFAv+4nJEhf76A4OliS5Jxw4tNVKjhpDBRnoJYHv9NYQRazwYV
-         +QBLoxkMuHcbH6ZWVGABw1wLlLS+b1fgMRjKrBdwvdrKviTZbdmpWkMM9/om9wKedAgk
-         EWSUrWQIMqzfnliOSYmp+7bKY0tH3ou5vP7oHQnLEXJszcDjubVmb2uHuAduo9moNqRc
-         ozvi4ksVmvhvFyBtk3S/0xFvolijRG/YVglt4WStBbzsgspm/z+LpWhmTTmveurEPGUf
-         yAKg==
-X-Gm-Message-State: APjAAAWlpmG0WIqcNGvTRrQLrkDffIq+5Xc8ebLzTjaCb4V9Scut5VTF
-        e3nLXPS70DnB+GEisNpK9nvltQ==
-X-Google-Smtp-Source: APXvYqzK/6fuXxE6062s4/zCLdjxlM/5d+nmRe3+teiJn9SHzjGZIeRDGp7rsK/mthyg0CEJe7SFRA==
-X-Received: by 2002:a17:906:b202:: with SMTP id p2mr30002206ejz.266.1555053341419;
-        Fri, 12 Apr 2019 00:15:41 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id g6sm11725674edp.4.2019.04.12.00.15.40
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 00:15:40 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: pmc_atom: Drop __initconst on dmi table
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        =?UTF-8?Q?David_M=c3=bcller?= <dave.mueller@gmx.ch>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <201904111738.Ncw2Vf01%lkp@intel.com>
- <20190411172807.57796-1-sboyd@kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4c95e469-c5fc-f043-8d54-f85ac812493b@redhat.com>
-Date:   Fri, 12 Apr 2019 09:15:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 03:18:18 -0400
+Received: from [192.168.1.110] ([77.9.22.14]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N5mWp-1gnDLm3t51-017GnO; Fri, 12 Apr 2019 09:17:30 +0200
+Subject: Re: [PATCH] tty: Add NULL TTY driver
+To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+ <20190403131213.GA4246@kroah.com> <20190403141109.3mdmqbt3mjxrie6k@axis.com>
+ <e8b1618a-545b-ee35-ec51-f831cbdff7fa@metux.net>
+ <20190405090043.vnsftwpdm56cx2hr@axis.com>
+ <de23cde3-c77f-cdbf-0968-d7f44c723120@metux.net>
+ <20190411130458.GA11390@localhost.localdomain>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c77474fd-96d6-392b-9a54-fd7e6a29b72d@metux.net>
+Date:   Fri, 12 Apr 2019 09:17:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190411172807.57796-1-sboyd@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190411130458.GA11390@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:qyehZw4BxFk0EO6zWqfZLo+RVqSCdP13a+fDHUYtMLpXvZmb1V7
+ Uf8rxcfwsa+Is2nUXaMYrKL59zcMQLpmPKwnA09g/mwFr/2pNhUokBoMajczvn3uk2xbZjC
+ i75NxWRvdPHOfJQITlt/zyt0yUO2uUFnXcw9uGci3D+VmGJotav4EHOdUa19zYmiwy85m4V
+ 6psMZrBfZ2IfkqyWrty+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:907ZcZ8n834=:C4LhqoM3TQG9w8qqzWPGMf
+ MPrkSdammynho9pr4IpsNLSZpLa+4CLq0OE+DeTsLgxw8Alyhqv5V/fTsixhfYm8h4wy93yAr
+ Nv03iNFPUyxIx0W+7/hO9mctH80ar9A93E6jbaY+xBG0AT1OFQOu0qFUxBjRz8QNYJnekAK3Q
+ isU+Mboe7VZOa81azFn4v0CMjpVIlz/Cb7xuqRoTczi9k8PiaIiyKerYnEK4ehZgZ8D3z9ujl
+ UKP3WbPy+Bsc4rJlGiaioS3O3T672y3VemDvXJLptsUJQP1f9zBgRFZI1NCkSJuP38wVJLuIG
+ uBw/KEVc27dRuu6+7ywY86GqM3Hhtr1n2GgY2rPTah/dOiG+Uzj0lPU9Ikexl4hgEpwxLOdpU
+ GxkbVl836D0ExTCHRf9kO+zpw8P0HbSdeyfv0W03zVfphJCD0rI8N1YufQKeYcadKJEwynxxz
+ gd4aUzOOBOfTeZBU/e/C321erOxk8kc/nT2c+KgaNWLkIg5ui7Dh9cZTYCPFTwCyCh2ezzwLx
+ JhRkltL7194IXYne0qcxYKPRkcWokPrbqTP60EDZlHgbj3bDdCZHcUuYTT2Ze9ndsNApM/Uux
+ K151IScG4jjeNNhVXHehHkouzA8Fug1DwXXY7cvYbQIz6waZk0NakisYDxhWV2wsy1oXSN3GB
+ ZeXJned62K+pDSK8GkCJXid8RjdQn6sQ7OrvgoG+gH6FRFMVPlQyUqpdbeEusHLvorjq6CepK
+ rjvEGiGa0W/849Fb5nSgSmFlGZIDqLEusV9AqNypxHysBR2/GSsS8EYN0e4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 11.04.19 15:05, Adamski, Krzysztof (Nokia - PL/Wroclaw) wrote:
 
-On 11-04-19 19:28, Stephen Boyd wrote:
-> It's used by probe and that isn't an init function. Drop this so that we
-> don't get a section mismatch.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Cc: David Müller <dave.mueller@gmx.ch>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> There are (embedded) cases where the kernel ring buffer is stored for> log inspection and all the logs that are *not* wanted there (like>
+interactive debug logs, some progress bar, etc) are send specifically
+to> /dev/console to avoid sending them to normal log store (as they are
+only> useful when debugging over console). In non-debug mode
+/dev/console> becomes /dev/null to speed things up.
+So, in your case, it doesn't need to be an actual tty, any file/chardev
+already do it, correct ? But then, why is that new driver needed ?
+--mtx
 
-Thank you for fixing this, I agree that this is the correct fix:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> ---
->   drivers/platform/x86/pmc_atom.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index eaec2d306481..c7039f52ad51 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
->    * Some systems need one or more of their pmc_plt_clks to be
->    * marked as critical.
->    */
-> -static const struct dmi_system_id critclk_systems[] __initconst = {
-> +static const struct dmi_system_id critclk_systems[] = {
->   	{
->   		.ident = "MPL CEC1x",
->   		.matches = {
-> 
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
