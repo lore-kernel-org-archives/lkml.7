@@ -2,227 +2,135 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB5DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6778C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3314B20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GpTScXph";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ANdEk3o1"
+	by mail.kernel.org (Postfix) with ESMTP id AFF4520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 16:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfDLQOb (ORCPT
+        id S1727067AbfDLQPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 12:14:31 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:48042 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726785AbfDLQOa (ORCPT
+        Fri, 12 Apr 2019 12:15:33 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35549 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfDLQPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 12:14:30 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x3CGDodm014625;
-        Fri, 12 Apr 2019 09:14:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=GVG4lIJ/mePC9SPpb2xVLi+YiyfyJO/k/0X8Kt1eNXc=;
- b=GpTScXph3yy1v1f7lg4RRy5AjAAYkXzH2gAtZdm/BvkBE8XomxBN8Jm+3Lfsgpsubnz7
- efrPoo80Wvb8jegxvRJMslk/YLDLiEEMwDmb68Mkofllkr27wUENIzX0yZ5gDT/4lKJC
- lo40Cr4mnAm4O+165xteUy5oV4uL+l0huvg= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by m0089730.ppops.net with ESMTP id 2rtrh212h5-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 12 Apr 2019 09:14:03 -0700
-Received: from frc-hub04.TheFacebook.com (2620:10d:c021:18::174) by
- frc-hub02.TheFacebook.com (2620:10d:c021:18::172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 12 Apr 2019 09:14:01 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 12 Apr 2019 09:14:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GVG4lIJ/mePC9SPpb2xVLi+YiyfyJO/k/0X8Kt1eNXc=;
- b=ANdEk3o1mGRBe9yIoQoesZKRKDmNI2+ouI0k1QEMCTbc+y94F7kzK4506eapyO93XItcf62u6ONOIQKmfnGNcJ4G4ohi+pNvllXL1acNMhfaIdb9gY2tAYqOPQrzXXXhrgnaFns7ZYCwxD6KRFPrvvrGJSykq4Kuk/g2Wf2sATk=
-Received: from DM5PR15MB1163.namprd15.prod.outlook.com (10.173.208.149) by
- DM5PR15MB1788.namprd15.prod.outlook.com (10.174.246.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1771.21; Fri, 12 Apr 2019 16:14:01 +0000
-Received: from DM5PR15MB1163.namprd15.prod.outlook.com
- ([fe80::290e:d830:9d6c:e8a2]) by DM5PR15MB1163.namprd15.prod.outlook.com
- ([fe80::290e:d830:9d6c:e8a2%11]) with mapi id 15.20.1792.009; Fri, 12 Apr
- 2019 16:14:00 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Jiri Olsa" <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/7] perf header: Fix lock/unlock imbalances when
- processing BPF/BTF info
-Thread-Topic: [PATCH 3/7] perf header: Fix lock/unlock imbalances when
- processing BPF/BTF info
-Thread-Index: AQHU8TtUKB0gIkPsXEuGyDfbhWa13qY4swGA
-Date:   Fri, 12 Apr 2019 16:14:00 +0000
-Message-ID: <FDB4E0DB-9C30-486E-8A6E-407438F163C9@fb.com>
-References: <20190412142250.20595-1-acme@kernel.org>
- <20190412142250.20595-4-acme@kernel.org>
-In-Reply-To: <20190412142250.20595-4-acme@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:200::1:b0cf]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bf306407-eed1-441a-80c0-08d6bf61dff8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR15MB1788;
-x-ms-traffictypediagnostic: DM5PR15MB1788:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DM5PR15MB178847CB5858CDD66E333C3BB3280@DM5PR15MB1788.namprd15.prod.outlook.com>
-x-forefront-prvs: 0005B05917
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(4326008)(86362001)(446003)(11346002)(97736004)(6916009)(50226002)(2616005)(316002)(2906002)(476003)(305945005)(54906003)(53936002)(14444005)(8936002)(7416002)(6246003)(5660300002)(7736002)(256004)(99286004)(186003)(14454004)(57306001)(106356001)(36756003)(81166006)(6436002)(8676002)(81156014)(76176011)(6512007)(229853002)(486006)(478600001)(46003)(6116002)(105586002)(6486002)(6506007)(71200400001)(53546011)(71190400001)(82746002)(102836004)(25786009)(33656002)(966005)(83716004)(6306002)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1788;H:DM5PR15MB1163.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0EDdALk7cJF39qloJmzTgfCuxKlR6bUn2jHS/7UE71oT71bEdcCENNepebFzYpycZqlbDsEsDt3XexzeUMajxa1D4RL3+ZjE2wkdWrFqzFuhcE7eytHksczEO4PCo3qKzSmlQzsueOz2pYtOuHvX9E9xZwZM2/4/09bwZWuhfSSdExZh8Ym8n35i3vKvbChUtJnS6vzrOw3/1F2dKkljbPXv+G7Mjwjf4nmMDC9fHUJKLqY+T0PRMGV4Mj5z4y+cI+I0j0woS5pL7gRBG+wBu6gz2Kr8N6ViMHLfuMk/+IM1kvOBR+NAhf6yRP06hKOsyXw0U6N0pRutNAyOvaquVFZONw90/K+AY9NsjAg12Z7OcQU2w8Q83TKheGmIDzSdpmxnHNbLSzhYK2Ckn/neN9144zvpr4HUVSaH22S7ZlU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1F4384D30FEBAC4CBDF006E695174EC4@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf306407-eed1-441a-80c0-08d6bf61dff8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2019 16:14:00.7660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1788
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+        Fri, 12 Apr 2019 12:15:33 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hEypp-0003kY-6L; Fri, 12 Apr 2019 18:15:25 +0200
+Message-ID: <1555085724.11529.37.camel@pengutronix.de>
+Subject: Re: [PATCH v3 09/11] PCI: imx6: Restrict PHY register data to 16-bit
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 12 Apr 2019 18:15:24 +0200
+In-Reply-To: <20190401042547.14067-10-andrew.smirnov@gmail.com>
+References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+         <20190401042547.14067-10-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
+> PHY registers on i.MX6 are 16-bit wide, so we can get rid of explicit
+> masking if we restrict pcie_phy_read/pcie_phy_write to use 'u16'
+> instead of 'int'. No functional change intended.
+> 
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-
-> On Apr 12, 2019, at 7:22 AM, Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->=20
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
->=20
-> Fix lock/unlock imbalances by refactoring the code a bit and adding
-> calls to up_write() before return.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Acked-by: Song Liu <songliubraving@fb.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Addresses-Coverity-ID: 1444315 ("Missing unlock")
-> Addresses-Coverity-ID: 1444316 ("Missing unlock")
-> Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to perf.d=
-ata")
-> Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers=
- to perf.data")
-> Link: http://lkml.kernel.org/r/20190408173355.GA10501@embeddedor
-> [ Simplified the exit path to have just one up_write() + return ]
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Acked-by: Song Liu <songliubraving@fb.com>
-
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
 > ---
-> tools/perf/util/header.c | 22 +++++++++++++---------
-> 1 file changed, 13 insertions(+), 9 deletions(-)
->=20
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index b9e693825873..2d2af2ac2b1e 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff=
-, void *data __maybe_unused)
-> 		perf_env__insert_bpf_prog_info(env, info_node);
-> 	}
->=20
-> +	up_write(&env->bpf_progs.lock);
-> 	return 0;
-> out:
-> 	free(info_linear);
-> @@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff=
- __maybe_unused, void *data _
-> static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
-> {
-> 	struct perf_env *env =3D &ff->ph->env;
-> +	struct btf_node *node =3D NULL;
-> 	u32 count, i;
-> +	int err =3D -1;
->=20
-> 	if (ff->ph->needs_swap) {
-> 		pr_warning("interpreting btf from systems with endianity is not yet sup=
-ported\n");
-> @@ -2636,31 +2639,32 @@ static int process_bpf_btf(struct feat_fd *ff, vo=
-id *data __maybe_unused)
-> 	down_write(&env->bpf_progs.lock);
->=20
-> 	for (i =3D 0; i < count; ++i) {
-> -		struct btf_node *node;
-> 		u32 id, data_size;
->=20
-> 		if (do_read_u32(ff, &id))
-> -			return -1;
-> +			goto out;
-> 		if (do_read_u32(ff, &data_size))
-> -			return -1;
-> +			goto out;
->=20
-> 		node =3D malloc(sizeof(struct btf_node) + data_size);
-> 		if (!node)
-> -			return -1;
-> +			goto out;
->=20
-> 		node->id =3D id;
-> 		node->data_size =3D data_size;
->=20
-> -		if (__do_read(ff, node->data, data_size)) {
-> -			free(node);
-> -			return -1;
-> -		}
-> +		if (__do_read(ff, node->data, data_size))
-> +			goto out;
->=20
-> 		perf_env__insert_btf(env, node);
-> +		node =3D NULL;
-> 	}
->=20
-> +	err =3D 0;
-> +out:
-> 	up_write(&env->bpf_progs.lock);
-> -	return 0;
-> +	free(node);
-> +	return err;
-> }
->=20
-> struct feature_ops {
-> --=20
-> 2.20.1
->=20
-
+>  drivers/pci/controller/dwc/pci-imx6.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 7c3ffb751002..9c658ef55aa4 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -195,10 +195,10 @@ static int pcie_phy_wait_ack(struct imx6_pcie *imx6_pcie, int addr)
+>  }
+>  
+>  /* Read from the 16-bit PCIe PHY control registers (not memory-mapped) */
+> -static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
+> +static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, u16 *data)
+>  {
+> >  	struct dw_pcie *pci = imx6_pcie->pci;
+> > -	u32 val, phy_ctl;
+> > +	u32 phy_ctl;
+> >  	int ret;
+>  
+> >  	ret = pcie_phy_wait_ack(imx6_pcie, addr);
+> @@ -213,8 +213,7 @@ static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
+> >  	if (ret)
+> >  		return ret;
+>  
+> > -	val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
+> > -	*data = val & 0xffff;
+> > +	*data = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
+>  
+> >  	/* deassert Read signal */
+> >  	dw_pcie_writel_dbi(pci, PCIE_PHY_CTRL, 0x00);
+> @@ -222,7 +221,7 @@ static int pcie_phy_read(struct imx6_pcie *imx6_pcie, int addr, int *data)
+> >  	return pcie_phy_poll_ack(imx6_pcie, 0);
+>  }
+>  
+> -static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, int data)
+> +static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, u16 data)
+>  {
+> >  	struct dw_pcie *pci = imx6_pcie->pci;
+> >  	u32 var;
+> @@ -279,7 +278,7 @@ static int pcie_phy_write(struct imx6_pcie *imx6_pcie, int addr, int data)
+>  
+>  static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
+>  {
+> > -	u32 tmp;
+> > +	u16 tmp;
+>  
+> >  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_IMX6_PHY))
+> >  		return;
+> @@ -675,7 +674,7 @@ static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
+>  {
+> >  	unsigned long phy_rate = clk_get_rate(imx6_pcie->pcie_phy);
+> >  	int mult, div;
+> > -	u32 val;
+> > +	u16 val;
+>  
+> >  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_IMX6_PHY))
+> >  		return 0;
