@@ -2,482 +2,368 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C95C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12ABC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7291218D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5Aapv01"
+	by mail.kernel.org (Postfix) with ESMTP id 86B4B20869
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfDLVFf (ORCPT
+        id S1727020AbfDLVHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 17:05:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42531 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLVFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 17:05:34 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b74so6517107qkg.9;
-        Fri, 12 Apr 2019 14:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cg68eBLuEey0LZdtOrvOrXGoQYaOaIc/8mN/Rprf0To=;
-        b=f5Aapv01z9rS62+oVqiHPURqnbafFnexcUEAHyOpwrhNztk4hHf8GZ42IrlKiWTJXn
-         eg9BkKJBzMjf6TCcoWODJpJ7NvileIHPtOSVKksUPlStuyBvbzD+2vdwT58XHZguRIzX
-         2E5+o/Y1sRKUeJJpbGyduC+Zr0I9Mj9iGgMzfhI35YTSzUxpXbscCloSDrWsLazXiWAY
-         Wf4QiVuCogf5w9dvGfpGrNLta+b4F+OxBr1KDGR05U7A996f2NBBDzvJhjHtFu0sY8/U
-         QhRVfmeMtmr37rvkcyO+0dvNxVFtIiL5CqeMkhvQg68zjFu0YGJDocLPcRdkIlTavv9i
-         Z2Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cg68eBLuEey0LZdtOrvOrXGoQYaOaIc/8mN/Rprf0To=;
-        b=LPVNY7A9EcUVsT8UmH335cfIipmjz0kKdlcNjNHXqM6YHfaELeesF3ZRcDotu8CV2i
-         jdufA6BEpJFcfXTE7kNI+l5VipCUAwRyUPYQLMqK385ID3FdtMYO//iUg+mVcB20F3MA
-         dvSApmy3jOGr5/michwPlkhG+kfcT0GFFizyrinzgYfIxK1VW2ia1xEhM/1N87Cv5/Vn
-         ZU8pssqaT+xBFLv32pNAOmQstiYPA97FEwdR72GWHq5FK/p65XjMHcFVJ797lth71PXd
-         egY2rq9GfadaiST4j1ECIbueyoEFVRrroY2TGiSbd2/MQ8DK27EtQ4P9dIcPkJrvtoIu
-         OJGQ==
-X-Gm-Message-State: APjAAAXmcR4vJG0gPkTFeu5KS7dSmEL76znlJa21z2zU7ndHP7NY2Q8t
-        isGmFQWFxy2OWSKeVM/MgwhsunSINaYA4mFxYYM=
-X-Google-Smtp-Source: APXvYqzwcc59q9RW7NxWz3fRDixkVmai9S1+/s5gRxKqy6Zo33uYWPU+CAm3OghDrHzivP2KEChKSGwYhapct/Mj2u4=
-X-Received: by 2002:a37:4c85:: with SMTP id z127mr44906089qka.180.1555103133112;
- Fri, 12 Apr 2019 14:05:33 -0700 (PDT)
+        Fri, 12 Apr 2019 17:07:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfDLVHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 17:07:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECAFC70008;
+        Fri, 12 Apr 2019 21:07:48 +0000 (UTC)
+Received: from redhat.com (ovpn-125-94.rdu2.redhat.com [10.10.125.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D4135D6A9;
+        Fri, 12 Apr 2019 21:07:46 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 17:07:43 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Thomas Hellstrom <thellstrom@vmware.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 2/9] mm: Add an apply_to_pfn_range interface
+Message-ID: <20190412210743.GA19252@redhat.com>
+References: <20190412160338.64994-1-thellstrom@vmware.com>
+ <20190412160338.64994-3-thellstrom@vmware.com>
 MIME-Version: 1.0
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-16-git-send-email-hao.wu@intel.com> <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
-In-Reply-To: <CANk1AXTji9qm0Nfbme+2=nR-PNavnv__GwzDRazhH78hYkWN6g@mail.gmail.com>
-From:   Moritz Fischer <moritz.fischer.private@gmail.com>
-Date:   Fri, 12 Apr 2019 14:05:21 -0700
-Message-ID: <CAJYdmeOMm0xTRbKTS68M4uiHJLfphPXNo+eFYguda+SuwnkqmQ@mail.gmail.com>
-Subject: Re: [PATCH 15/17] fpga: dfl: fme: add power management support
-To:     Alan Tull <atull@kernel.org>
-Cc:     Wu Hao <hao.wu@intel.com>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190412160338.64994-3-thellstrom@vmware.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 12 Apr 2019 21:07:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hao,
+On Fri, Apr 12, 2019 at 04:04:18PM +0000, Thomas Hellstrom wrote:
+> This is basically apply_to_page_range with added functionality:
+> Allocating missing parts of the page table becomes optional, which
+> means that the function can be guaranteed not to error if allocation
+> is disabled. Also passing of the closure struct and callback function
+> becomes different and more in line with how things are done elsewhere.
+> 
+> Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
+> 
+> The reason for not using the page-walk code is that we want to perform
+> the page-walk on vmas pointing to an address space without requiring the
+> mmap_sem to be held rather thand on vmas belonging to a process with the
+> mmap_sem held.
+> 
+> Notable changes since RFC:
+> Don't export apply_to_pfn range.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> ---
+>  include/linux/mm.h |  10 ++++
+>  mm/memory.c        | 130 ++++++++++++++++++++++++++++++++++-----------
+>  2 files changed, 108 insertions(+), 32 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 80bb6408fe73..b7dd4ddd6efb 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2632,6 +2632,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
+>  extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+>  			       unsigned long size, pte_fn_t fn, void *data);
+>  
+> +struct pfn_range_apply;
+> +typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
+> +			 struct pfn_range_apply *closure);
+> +struct pfn_range_apply {
+> +	struct mm_struct *mm;
+> +	pter_fn_t ptefn;
+> +	unsigned int alloc;
+> +};
+> +extern int apply_to_pfn_range(struct pfn_range_apply *closure,
+> +			      unsigned long address, unsigned long size);
+>  
+>  #ifdef CONFIG_PAGE_POISONING
+>  extern bool page_poisoning_enabled(void);
+> diff --git a/mm/memory.c b/mm/memory.c
+> index a95b4a3b1ae2..60d67158964f 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1938,18 +1938,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
+>  }
+>  EXPORT_SYMBOL(vm_iomap_memory);
+>  
+> -static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+> -				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data)
+> +static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
+> +			      unsigned long addr, unsigned long end)
+>  {
+>  	pte_t *pte;
+>  	int err;
+>  	pgtable_t token;
+>  	spinlock_t *uninitialized_var(ptl);
+>  
+> -	pte = (mm == &init_mm) ?
+> +	pte = (closure->mm == &init_mm) ?
+>  		pte_alloc_kernel(pmd, addr) :
+> -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
+> +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
+>  	if (!pte)
+>  		return -ENOMEM;
+>  
+> @@ -1960,86 +1959,107 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>  	token = pmd_pgtable(*pmd);
+>  
+>  	do {
+> -		err = fn(pte++, token, addr, data);
+> +		err = closure->ptefn(pte++, token, addr, closure);
+>  		if (err)
+>  			break;
+>  	} while (addr += PAGE_SIZE, addr != end);
+>  
+>  	arch_leave_lazy_mmu_mode();
+>  
+> -	if (mm != &init_mm)
+> +	if (closure->mm != &init_mm)
+>  		pte_unmap_unlock(pte-1, ptl);
+>  	return err;
+>  }
+>  
+> -static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+> -				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data)
+> +static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
+> +			      unsigned long addr, unsigned long end)
+>  {
+>  	pmd_t *pmd;
+>  	unsigned long next;
+> -	int err;
+> +	int err = 0;
+>  
+>  	BUG_ON(pud_huge(*pud));
+>  
+> -	pmd = pmd_alloc(mm, pud, addr);
+> +	pmd = pmd_alloc(closure->mm, pud, addr);
+>  	if (!pmd)
+>  		return -ENOMEM;
+> +
+>  	do {
+>  		next = pmd_addr_end(addr, end);
+> -		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
+> +		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
+> +			continue;
+> +		err = apply_to_pte_range(closure, pmd, addr, next);
+>  		if (err)
+>  			break;
+>  	} while (pmd++, addr = next, addr != end);
+>  	return err;
+>  }
+>  
+> -static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+> -				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data)
+> +static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
+> +			      unsigned long addr, unsigned long end)
+>  {
+>  	pud_t *pud;
+>  	unsigned long next;
+> -	int err;
+> +	int err = 0;
+>  
+> -	pud = pud_alloc(mm, p4d, addr);
+> +	pud = pud_alloc(closure->mm, p4d, addr);
+>  	if (!pud)
+>  		return -ENOMEM;
+> +
+>  	do {
+>  		next = pud_addr_end(addr, end);
+> -		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
+> +		if (!closure->alloc && pud_none_or_clear_bad(pud))
+> +			continue;
+> +		err = apply_to_pmd_range(closure, pud, addr, next);
+>  		if (err)
+>  			break;
+>  	} while (pud++, addr = next, addr != end);
+>  	return err;
+>  }
+>  
+> -static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+> -				     unsigned long addr, unsigned long end,
+> -				     pte_fn_t fn, void *data)
+> +static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
+> +			      unsigned long addr, unsigned long end)
+>  {
+>  	p4d_t *p4d;
+>  	unsigned long next;
+> -	int err;
+> +	int err = 0;
+>  
+> -	p4d = p4d_alloc(mm, pgd, addr);
+> +	p4d = p4d_alloc(closure->mm, pgd, addr);
+>  	if (!p4d)
+>  		return -ENOMEM;
+> +
+>  	do {
+>  		next = p4d_addr_end(addr, end);
+> -		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
+> +		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
+> +			continue;
+> +		err = apply_to_pud_range(closure, p4d, addr, next);
+>  		if (err)
+>  			break;
+>  	} while (p4d++, addr = next, addr != end);
+>  	return err;
+>  }
+>  
+> -/*
+> - * Scan a region of virtual memory, filling in page tables as necessary
+> - * and calling a provided function on each leaf page table.
+> +/**
+> + * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
+> + * function on each leaf page table entry
+> + * @closure: Details about how to scan and what function to apply
+> + * @addr: Start virtual address
+> + * @size: Size of the region
+> + *
+> + * If @closure->alloc is set to 1, the function will fill in the page table
+> + * as necessary. Otherwise it will skip non-present parts.
+> + * Note: The caller must ensure that the range does not contain huge pages.
+> + * The caller must also assure that the proper mmu_notifier functions are
+> + * called. Either in the pte leaf function or before and after the call to
+> + * apply_to_pfn_range.
 
-this looks suspiciously like a hwmon driver ;-)
+This is wrong there should be a big FAT warning that this can only be use
+against mmap of device file. The page table walking above is broken for
+various thing you might find in any other vma like THP, device pte, hugetlbfs,
+...
 
-https://www.kernel.org/doc/Documentation/hwmon/hwmon-kernel-api.txt
+Also the mmu notifier can not be call from the pfn callback as that callback
+happens under page table lock (the change_pte notifier callback is useless
+and not enough). So it _must_ happen around the call to apply_to_pfn_range
 
-Cheers,
-Moritz
+apply_to_page_range was really not meant to be use in that way ... it was not
+for regular vma.
+
+Using this function for anything else is dangerous and having its uses spread
+more increase that risk. So there must be a big FAT warning saying that you
+should not use this lightly and that it should only be only on mmap of device
+file.
 
 
-On Thu, Apr 11, 2019 at 1:08 PM Alan Tull <atull@kernel.org> wrote:
->
-> On Sun, Mar 24, 2019 at 10:24 PM Wu Hao <hao.wu@intel.com> wrote:
->
-> Hi Hao,
->
-> >
-> > This patch adds support for power management private feature under
-> > FPGA Management Engine (FME), sysfs interfaces are introduced for
-> > different power management functions, users could use these sysfs
-> > interface to get current number of consumed power, throttling
->
-> How about
-> s/number/measurement/
-> ?
->
-> > thresholds, threshold status and other information, and configure
-> > different value for throttling thresholds too.
-> >
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++
-> >  drivers/fpga/dfl-fme-main.c                      | 257 +++++++++++++++++++++++
-> >  2 files changed, 313 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > index d3aeb88..4b6448f 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > @@ -100,3 +100,59 @@ Description:       Read-only. Read this file to get the policy of temperature
-> >                 threshold1. It only supports two value (policy):
-> >                     0 - AP2 state (90% throttling)
-> >                     1 - AP1 state (50% throttling)
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/consumed
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. It returns current power consumed by FPGA.
->
-> What are the units?
->
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-Write. Read/Write this file to get/set current power
-> > +               threshold1 in Watts.
->
-> Perhaps document error codes here and for threshold2 below.
->
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-Write. Read/Write this file to get/set current power
-> > +               threshold2 in Watts.
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold1_status
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. It returns 1 if power consumption reaches the
-> > +               threshold1, otherwise 0.
->
-> I'm used to things like this requiring user to reset the status, so it
-> may be worth making it explicit that it will return to zero if
-> consumption drops below threshold if that's what's happening here.
-> If it's correct, perhaps could just say something like 'returns 1 if
-> power consumption is currently at or above threshold1, otherwise 0'
->
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/threshold2_status
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. It returns 1 if power consumption reaches the
-> > +               threshold2, otherwise 0.
->
-> Same here.
->
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/ltr
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get current Latency Tolerance
-> > +               Reporting (ltr) value, it's only valid for integrated
-> > +               solution as it blocks CPU on low power state.
->
-> If we're not on the integrated solution, it returns a value but it is
-> not really real?
->
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/xeon_limit
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get power limit for xeon, it
-> > +               is only valid for integrated solution.
-> > +
-> > +What:          /sys/bus/platform/devices/dfl-fme.0/power_mgmt/fpga_limit
-> > +Date:          March 2019
-> > +KernelVersion:  5.2
-> > +Contact:       Wu Hao <hao.wu@intel.com>
-> > +Description:   Read-only. Read this file to get power limit for fpga, it
-> > +               is only valid for integrated solution.
-> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > index 449a17d..dafa6580 100644
-> > --- a/drivers/fpga/dfl-fme-main.c
-> > +++ b/drivers/fpga/dfl-fme-main.c
-> > @@ -415,6 +415,259 @@ static const struct dfl_feature_ops fme_thermal_mgmt_ops = {
-> >         .uinit = fme_thermal_mgmt_uinit,
-> >  };
-> >
-> > +#define FME_PWR_STATUS         0x8
-> > +#define FME_LATENCY_TOLERANCE  BIT_ULL(18)
-> > +#define PWR_CONSUMED           GENMASK_ULL(17, 0)
-> > +
-> > +#define FME_PWR_THRESHOLD      0x10
-> > +#define PWR_THRESHOLD1         GENMASK_ULL(6, 0)       /* in Watts */
-> > +#define PWR_THRESHOLD2         GENMASK_ULL(14, 8)      /* in Watts */
-> > +#define PWR_THRESHOLD_MAX      0x7f
-> > +#define PWR_THRESHOLD1_STATUS  BIT_ULL(16)
-> > +#define PWR_THRESHOLD2_STATUS  BIT_ULL(17)
-> > +
-> > +#define FME_PWR_XEON_LIMIT     0x18
-> > +#define XEON_PWR_LIMIT         GENMASK_ULL(14, 0)
-> > +#define XEON_PWR_EN            BIT_ULL(15)
-> > +#define FME_PWR_FPGA_LIMIT     0x20
-> > +#define FPGA_PWR_LIMIT         GENMASK_ULL(14, 0)
-> > +#define FPGA_PWR_EN            BIT_ULL(15)
-> > +
-> > +#define POWER_ATTR(_name, _mode, _show, _store)        \
-> > +struct device_attribute power_attr_##_name =           \
-> > +       __ATTR(_name, _mode, _show, _store)
-> > +
-> > +#define POWER_ATTR_RO(_name, _show)                    \
-> > +       POWER_ATTR(_name, 0444, _show, NULL)
-> > +
-> > +#define POWER_ATTR_RW(_name, _show, _store)            \
-> > +       POWER_ATTR(_name, 0644, _show, _store)
->
-> Are these #defines necessary?  Seems like you could just use DEVICE_ATTR*
->
-> > +
-> > +static ssize_t pwr_consumed_show(struct device *dev,
-> > +                                struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_STATUS);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(PWR_CONSUMED, v));
-> > +}
-> > +static POWER_ATTR_RO(consumed, pwr_consumed_show);
-> > +
-> > +static ssize_t pwr_threshold1_show(struct device *dev,
-> > +                                  struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1, v));
-> > +}
-> > +
-> > +static ssize_t pwr_threshold1_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf, size_t count)
-> > +{
-> > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +       void __iomem *base;
-> > +       u8 threshold;
-> > +       int ret;
-> > +       u64 v;
-> > +
-> > +       ret = kstrtou8(buf, 0, &threshold);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       if (threshold > PWR_THRESHOLD_MAX)
-> > +               return -EINVAL;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       mutex_lock(&pdata->lock);
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +       v &= ~PWR_THRESHOLD1;
-> > +       v |= FIELD_PREP(PWR_THRESHOLD1, threshold);
-> > +       writeq(v, base + FME_PWR_THRESHOLD);
-> > +       mutex_unlock(&pdata->lock);
-> > +
-> > +       return count;
-> > +}
-> > +static POWER_ATTR_RW(threshold1, pwr_threshold1_show, pwr_threshold1_store);
-> > +
-> > +static ssize_t pwr_threshold2_show(struct device *dev,
-> > +                                  struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2, v));
-> > +}
-> > +
-> > +static ssize_t pwr_threshold2_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf, size_t count)
-> > +{
-> > +       struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +       void __iomem *base;
-> > +       u8 threshold;
-> > +       int ret;
-> > +       u64 v;
-> > +
-> > +       ret = kstrtou8(buf, 0, &threshold);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       if (threshold > PWR_THRESHOLD_MAX)
-> > +               return -EINVAL;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       mutex_lock(&pdata->lock);
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +       v &= ~PWR_THRESHOLD2;
-> > +       v |= FIELD_PREP(PWR_THRESHOLD2, threshold);
-> > +       writeq(v, base + FME_PWR_THRESHOLD);
-> > +       mutex_unlock(&pdata->lock);
-> > +
-> > +       return count;
-> > +}
-> > +static POWER_ATTR_RW(threshold2, pwr_threshold2_show, pwr_threshold2_store);
-> > +
-> > +static ssize_t pwr_threshold1_status_show(struct device *dev,
-> > +                                         struct device_attribute *attr,
-> > +                                         char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD1_STATUS, v));
-> > +}
-> > +static POWER_ATTR_RO(threshold1_status, pwr_threshold1_status_show);
-> > +
-> > +static ssize_t pwr_threshold2_status_show(struct device *dev,
-> > +                                         struct device_attribute *attr,
-> > +                                         char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_THRESHOLD);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(PWR_THRESHOLD2_STATUS, v));
-> > +}
-> > +static POWER_ATTR_RO(threshold2_status, pwr_threshold2_status_show);
-> > +
-> > +static ssize_t ltr_show(struct device *dev,
-> > +                       struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_STATUS);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n",
-> > +                        (unsigned int)FIELD_GET(FME_LATENCY_TOLERANCE, v));
-> > +}
-> > +static POWER_ATTR_RO(ltr, ltr_show);
-> > +
-> > +static ssize_t xeon_limit_show(struct device *dev,
-> > +                              struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u16 xeon_limit = 0;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_XEON_LIMIT);
-> > +
-> > +       if (FIELD_GET(XEON_PWR_EN, v))
-> > +               xeon_limit = FIELD_GET(XEON_PWR_LIMIT, v);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", xeon_limit);
-> > +}
-> > +static POWER_ATTR_RO(xeon_limit, xeon_limit_show);
-> > +
-> > +static ssize_t fpga_limit_show(struct device *dev,
-> > +                              struct device_attribute *attr, char *buf)
-> > +{
-> > +       void __iomem *base;
-> > +       u16 fpga_limit = 0;
-> > +       u64 v;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_POWER_MGMT);
-> > +
-> > +       v = readq(base + FME_PWR_FPGA_LIMIT);
-> > +
-> > +       if (FIELD_GET(FPGA_PWR_EN, v))
-> > +               fpga_limit = FIELD_GET(FPGA_PWR_LIMIT, v);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", fpga_limit);
-> > +}
-> > +static POWER_ATTR_RO(fpga_limit, fpga_limit_show);
-> > +
-> > +static struct attribute *power_mgmt_attrs[] = {
-> > +       &power_attr_consumed.attr,
-> > +       &power_attr_threshold1.attr,
-> > +       &power_attr_threshold2.attr,
-> > +       &power_attr_threshold1_status.attr,
-> > +       &power_attr_threshold2_status.attr,
-> > +       &power_attr_xeon_limit.attr,
-> > +       &power_attr_fpga_limit.attr,
-> > +       &power_attr_ltr.attr,
->
-> This is a nit, but I would expect to see these listed in the same
-> order as their show/store functions above.  So ltr_attr would come
-> between threshold2_status_attr and xeon_limit_attr.
->
-> > +       NULL,
-> > +};
-> > +
-> > +static struct attribute_group power_mgmt_attr_group = {
-> > +       .attrs  = power_mgmt_attrs,
-> > +       .name   = "power_mgmt",
-> > +};
-> > +
-> > +static int fme_power_mgmt_init(struct platform_device *pdev,
-> > +                              struct dfl_feature *feature)
-> > +{
-> > +       return sysfs_create_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> > +}
-> > +
-> > +static void fme_power_mgmt_uinit(struct platform_device *pdev,
-> > +                                struct dfl_feature *feature)
-> > +{
-> > +       sysfs_remove_group(&pdev->dev.kobj, &power_mgmt_attr_group);
-> > +}
-> > +
-> > +static const struct dfl_feature_id fme_power_mgmt_id_table[] = {
-> > +       {.id = FME_FEATURE_ID_POWER_MGMT,},
-> > +       {0,}
-> > +};
-> > +
-> > +static const struct dfl_feature_ops fme_power_mgmt_ops = {
-> > +       .init = fme_power_mgmt_init,
-> > +       .uinit = fme_power_mgmt_uinit,
-> > +};
-> > +
-> >  static struct dfl_feature_driver fme_feature_drvs[] = {
-> >         {
-> >                 .id_table = fme_hdr_id_table,
-> > @@ -429,6 +682,10 @@ static struct dfl_feature_driver fme_feature_drvs[] = {
-> >                 .ops = &fme_thermal_mgmt_ops,
-> >         },
-> >         {
-> > +               .id_table = fme_power_mgmt_id_table,
-> > +               .ops = &fme_power_mgmt_ops,
-> > +       },
-> > +       {
-> >                 .ops = NULL,
-> >         },
-> >  };
-> > --
-> > 2.7.4
-> >
->
-> Thanks,
-> Alan
+> + *
+> + * Returns: Zero on success. If the provided function returns a non-zero status,
+> + * the page table walk will terminate and that status will be returned.
+> + * If @closure->alloc is set to 1, then this function may also return memory
+> + * allocation errors arising from allocating page table memory.
+>   */
+> -int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+> -			unsigned long size, pte_fn_t fn, void *data)
+> +int apply_to_pfn_range(struct pfn_range_apply *closure,
+> +		       unsigned long addr, unsigned long size)
+>  {
+>  	pgd_t *pgd;
+>  	unsigned long next;
+> @@ -2049,16 +2069,62 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  	if (WARN_ON(addr >= end))
+>  		return -EINVAL;
+>  
+> -	pgd = pgd_offset(mm, addr);
+> +	pgd = pgd_offset(closure->mm, addr);
+>  	do {
+>  		next = pgd_addr_end(addr, end);
+> -		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
+> +		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
+> +			continue;
+> +		err = apply_to_p4d_range(closure, pgd, addr, next);
+>  		if (err)
+>  			break;
+>  	} while (pgd++, addr = next, addr != end);
+>  
+>  	return err;
+>  }
+> +
+> +/**
+> + * struct page_range_apply - Closure structure for apply_to_page_range()
+> + * @pter: The base closure structure we derive from
+> + * @fn: The leaf pte function to call
+> + * @data: The leaf pte function closure
+> + */
+> +struct page_range_apply {
+> +	struct pfn_range_apply pter;
+> +	pte_fn_t fn;
+> +	void *data;
+> +};
+> +
+> +/*
+> + * Callback wrapper to enable use of apply_to_pfn_range for
+> + * the apply_to_page_range interface
+> + */
+> +static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
+> +				       unsigned long addr,
+> +				       struct pfn_range_apply *pter)
+> +{
+> +	struct page_range_apply *pra =
+> +		container_of(pter, typeof(*pra), pter);
+> +
+> +	return pra->fn(pte, token, addr, pra->data);
+> +}
+> +
+> +/*
+> + * Scan a region of virtual memory, filling in page tables as necessary
+> + * and calling a provided function on each leaf page table.
+> + */
+
+It would be good to improve that comment too and make it a warning of
+DO NOT USE ! THIS IS NOT SAFE ON REGULAR VMA !
+
+> +int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+> +			unsigned long size, pte_fn_t fn, void *data)
+> +{
+> +	struct page_range_apply pra = {
+> +		.pter = {.mm = mm,
+> +			 .alloc = 1,
+> +			 .ptefn = apply_to_page_range_wrapper },
+> +		.fn = fn,
+> +		.data = data
+> +	};
+> +
+> +	return apply_to_pfn_range(&pra.pter, addr, size);
+> +}
+>  EXPORT_SYMBOL_GPL(apply_to_page_range);
+>  
+>  /*
+> -- 
+> 2.20.1
+> 
