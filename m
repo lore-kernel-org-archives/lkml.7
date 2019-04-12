@@ -2,115 +2,127 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633E3C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B30BC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C49F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF38A2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J40k/k39"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Dwuqx/VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfDLR3P (ORCPT
+        id S1727047AbfDLR3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:29:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35834 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfDLR3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:29:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so5529906pgf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjZ4YMyKo+QbZAjVtELKpRi6NtVs0gJzGRZ9miVsfu8=;
-        b=J40k/k39s8tcNfMXc+f52TAYVBDF3zM1alSY7PFnlZELIYSpAVvVsaWIho/LoTm4Mm
-         dTw/f5/5pou8BOIqwwqtzyJC9r4i7Y39r/4saZrVdf/H70HHOeJPizo3ta0fQktyLAbo
-         cnwIg2LNqHLrPAzTfzjJf4oskeg5Ob1sjuC4e1FSDsuSKOs57g0k6vWliI2TlNrDWGLs
-         Haoaakd+rxydz0B+PS4k5NDUUSdRgW/IeP6mG/jP+FcREim7BSi6fCa8Vh7Qe4ULU1SG
-         EzNPLI7cbkBKwgWYOiXR/KxnE2usBWQ7delOJAt1VYrSvLsOZYveWcE3tlVRT0Z/ZnDc
-         AO6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjZ4YMyKo+QbZAjVtELKpRi6NtVs0gJzGRZ9miVsfu8=;
-        b=lmDVACwXEYH3IY8YSj+lhNNRUXUN3C7mzXFnMeM6Bg10uboBGacKSrIUdAknGlSTUj
-         XAvnWKFskkNBJ9P0+dH63HK5wqt8XDrmAzxE7sPnel9fmWjHIORwYMg0gHwYwJ4ciLrA
-         s0eHOIfpPr4HmCwZF1onLREN0DjP5GesAbSwNeKuVR3HdTxPRWrWIdlwX8OnXDP4mHBr
-         ucahCwWBq87HteUanInzoHcSTlQGLPeL/WDhTTuD+Vfl1iW70sZAWUoXavN2fB6jVE6I
-         HJUlNRX3Z4bF8QOx/IjAO5TM3sFj4oF7tykCrH8whijW4MCaaDC/czBlVS+WMPifRZCT
-         PXmQ==
-X-Gm-Message-State: APjAAAVI/nJY+JVZHGDARw2M/S/gpjd238v1mXtxmzLnja3wk5OmvSAh
-        71Ttw/Oxt6VMmaQYqcoiu59iSeEsu/7FFDcIa4QwSA==
-X-Google-Smtp-Source: APXvYqy5jxEfB76p9f+NH5/SAAqUtuQhzZpE8dqX1U54P0+GkAMjQuC7KpGW4z4Ny05H0jpBJE/Nhwu8fQStcW6lDlY=
-X-Received: by 2002:a63:d256:: with SMTP id t22mr51807898pgi.80.1555090153616;
- Fri, 12 Apr 2019 10:29:13 -0700 (PDT)
+        Fri, 12 Apr 2019 13:29:40 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36446 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbfDLR3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 13:29:40 -0400
+Received: from zn.tnic (p200300EC2F088400182D43E6467BCCF1.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:8400:182d:43e6:467b:ccf1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2799D1EC04B9;
+        Fri, 12 Apr 2019 19:29:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555090178;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZqF6laFPCLc2dscp6YczEFCerSEH+x8fhTe8pZPFxCA=;
+        b=Dwuqx/VVaIUgJX5HPLThflV7lLbCIY2OG/g5X2fG0dZAcYX52ECza/cfnhh4usfE1C1g0k
+        7/I9Z7lBT8y0+fuqqHOFfDVX4JhttXvVr3lu8WO0rqq9gpAVH/uvGA+fk8/ZQYgSNw4tpL
+        +muisXnp868GzPRSLl/mJQiZYaW6Mck=
+Date:   Fri, 12 Apr 2019 19:29:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 23/27] x86/fpu: Defer FPU state load until return to
+ userspace
+Message-ID: <20190412172931.GI19808@zn.tnic>
+References: <20190403164156.19645-1-bigeasy@linutronix.de>
+ <20190403164156.19645-24-bigeasy@linutronix.de>
+ <20190412143615.GE19808@zn.tnic>
+ <20190412152437.d2bswajqtx7hrpkb@linutronix.de>
+ <20190412162213.GF19808@zn.tnic>
+ <20190412163741.wq2iq44bnvcbne3a@linutronix.de>
+ <20190412164827.GG19808@zn.tnic>
+ <20190412171955.npe2pbomc6np326v@linutronix.de>
 MIME-Version: 1.0
-References: <20190411092933.6413-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190411092933.6413-1-yamada.masahiro@socionext.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 12 Apr 2019 10:29:02 -0700
-Message-ID: <CAKwvOdmyyOnfmy4Y-Yuhj2OnpdSmZ07N2LuDiEnefa9Xf4F7LQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: vdso: use $(LD) instead of $(CC) to link VDSO
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190412171955.npe2pbomc6np326v@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 2:30 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> My plan is to rewrite all VDSO Makefiles to use $(LD), then delete
-> cc-ldoption.
+On Fri, Apr 12, 2019 at 07:19:55PM +0200, Sebastian Andrzej Siewior wrote:
+> remove x86_fpu_activate_state.
 
-I too look forward to the removal of cc-ldoption. Thanks for the
-patch.  Based on some of the discussion in a similar patch for
-aarch64: https://lkml.org/lkml/2019/4/12/760:
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Ok, zapping it as part of this patch.
 
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  arch/arm/vdso/Makefile | 21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
-> index f4efff9d3afb..fadf554d9391 100644
-> --- a/arch/arm/vdso/Makefile
-> +++ b/arch/arm/vdso/Makefile
-> @@ -10,12 +10,12 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
->  ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
->  ccflags-y += -DDISABLE_BRANCH_PROFILING
->
-> -VDSO_LDFLAGS := -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
-> -VDSO_LDFLAGS += -Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096
-> -VDSO_LDFLAGS += -nostdlib -shared
-> -VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-> -VDSO_LDFLAGS += $(call cc-ldoption, -Wl$(comma)--build-id)
-> -VDSO_LDFLAGS += $(call cc-ldoption, -fuse-ld=bfd)
-> +ldflags-y = -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
-> +           -z max-page-size=4096 -z common-page-size=4096 \
+> We could also rip all trcepoints out, rethink the situation and add new
+> ones based on current code.
 
-This reminds me that I should resend:
-https://lore.kernel.org/patchwork/patch/1023578/
+Well, since this changes FPU regs handling considerably, I think the
+only correct step would be to adjust the tracepoints. BUT(!) we should
+not forget we're not supposed to break luserspace.
+
+> - on schedule out, we may need to save registers (depending on
+>   TIF_NEED_FPU_LOAD) which is new. Before the series we always did.
+
+That makes sense.
+
+> - on schedule in do nothing but set that TIF bit. This is probably
+>   boring.
+
+Yah.
+
+> - on return to userland we should load the registers but can avoid it if
+>   we assume that they are valid for the current task
+>   (fpregs_state_valid())
+
+That is interesting info.
+
+> - in kernel_fpu_begin() we may trash the task's FPU state (by saving its
+>   registers or by resetting fpu_fpregs_owner_ctx).
+
+Do we care?
+
+You mean, in case you have workloads which might involve a lot of
+in-kernel FPU use which would punish task context switches?
+
+> Those might be interesting.
+> 
+> Currently we have:
+>   "x86/fpu: %p load: %d xfeatures: %llx xcomp_bv: %llx"
+> 
+> and we have to find out what happens based on where that TP was
+> recorded. Also I'm not sure if the recorded xfeatures change over time.
+> I think they do not…
+
+Good question.
+
+> you mean trace_x86_fpu_activate_state and trace_x86_fpu_regs_activated?
+> They were added in d1898b733619b ("x86/fpu: Add tracepoints to dump FPU
+> state at key points") and we wouldn't have any otherwise.
+
+I guess it made sense then...
 
 -- 
-Thanks,
-~Nick Desaulniers
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
