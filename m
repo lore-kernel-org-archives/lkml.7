@@ -7,124 +7,123 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3882CC10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0332C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F394F20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6812186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="RQ/+NnbZ"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="0DWvam2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDLOML (ORCPT
+        id S1726973AbfDLOMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 10:12:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37383 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfDLOML (ORCPT
+        Fri, 12 Apr 2019 10:12:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34218 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726886AbfDLOMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 10:12:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so5278960pgc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:12:10 -0700 (PDT)
+        Fri, 12 Apr 2019 10:12:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so5230828pfd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 07:12:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=fJflmz6PFa1tCBvtzQ/6bcSxyx73G9r1lquodsIUxN4=;
-        b=RQ/+NnbZO6xchHZjV+/so1nxhSDsjLQSz3M0n9QOL7gZf+794qE1lOS8dp1n3xF0bU
-         O+Kz5JFMfMCdO35UIDmYEO/mcAmIeE0VJ8BtX7D1F/YrRgIX+DyXAqY+nWT13ZWElPwi
-         LiM8/1Lq1y5xLGmAxDzzR4tkyFae7nJZ4Wi7K82p6gE/M7e22UUqgjBtn2uYxIDiH9NK
-         gBoW8Xccwod1c4rD2ZGXPV3BEZO43A4PhssiFpg1EZ16GxpsSelgnZs4OQmqXS92+wkO
-         cx8KdYLoL9PsG5rmgtXye6dVbxlmcewtrZRkhefYxCvir8aGbXrgtUkJzqamoOweZWje
-         hzOA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=azKxIzMgxSgb98AAyQuWDMiwTVGcGS7UuzzPJpbLdXw=;
+        b=0DWvam2VOUBgJEOb9SUlBLfwj28zSRhmcMQ5pp5lp8n56XIpc0cNBfzdPhvjkllZH/
+         EpAuxY3DxN7+ynL7+XbLCC9ZSYnwf/4clbRShQCLCjbkBvMOQG7v1ofn7AMszK4D0M7H
+         ZERgPyGO+2XAK0aVtJ7a2iiGem6HwftYQTjfo19Ylv1O9WkYfsamDFYTK8skQHUaEJmR
+         +KZw1jzYyaJ/gVgitjeG13eyB02mYgMSPunDSu+thi3E67q+SlCUdNzBLzslfoWWWDk7
+         AOkQlpo78i7pBfo1NhwSBW3+m1dDR6MJXFNQnf1KQDFkNapwmQ3bCbbf5PInQyqm01GL
+         cVcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fJflmz6PFa1tCBvtzQ/6bcSxyx73G9r1lquodsIUxN4=;
-        b=pSLRaJOO7J4oLxHAFBqTm2Gxfje718Q0E/8Ac/xbOW0MPq4WltPxQzbbaBRLgEDrCC
-         UgXrrl4Dx0o/Sb57YhYcCrlW45QFZbiQ3T6lVCsq+EVndVvmcVFLwSIUhZp1C1xBtnQE
-         eeYCV+N//cJebGDcn9ZAJG4TCi7WuheVaTbEuAVOujeK7/aaAjyJIR5MzwbxGowR3TSj
-         k+L2mPjhG5pp0NRR9eXRV38VNEl2nzCDUFymcUgos6+WQf/cbt1zihGTAF//SD6497SS
-         0EYrfh84EV82xDPXoHIHG+oYquSf8LoZZlIOXL9goN6Hs09yY0Yt2Dr/XWgpjSvFZNJa
-         SrdA==
-X-Gm-Message-State: APjAAAWPxVWS+wRxrzTf814Cx9lgS7wNhnERzQNT+1k19OZf8fCud4Hl
-        /C6SYAOwmEV2WT5qJem2gVuk+w==
-X-Google-Smtp-Source: APXvYqyFb/53GA+6GqflfaW2XqWn6cerekOrBMzxHE1/k0WzJKOkjGBXFGpmjBeesR/HRg6beis9Zg==
-X-Received: by 2002:a63:2c55:: with SMTP id s82mr51523793pgs.356.1555078330462;
-        Fri, 12 Apr 2019 07:12:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=azKxIzMgxSgb98AAyQuWDMiwTVGcGS7UuzzPJpbLdXw=;
+        b=t1A8qENdYwEuu8G4ARXuM4tGibxD54YBmacBdOuGVa1BI0L60doRr5ijFI2ooZ59o2
+         Y/ZNHQUysJtQvteN4B8ZiXKodBDtyow4XldhnIZ4rIUkOt0///uSrbF3lLeWcl1YUEAF
+         ly/NM2fFdEKqrjaFj7yzL6IfklzeOqQ/PuUyvvVEfOqrt/IWaD/h/gjielKVgfKkOG83
+         mtPQ6doUcquHdawHW3wFNRNZMuoa0GZ35JGgWmD3E5WphrCtZfdBCHJl670nGFREzIt9
+         KvofesT5NSc+Icmp2gy5c2bC0YLoiKG41nt3TUGa//0WvxmMftiQ/G5iP7y43g2/bdGE
+         2CzA==
+X-Gm-Message-State: APjAAAUp4ca27RIue6m4MxXiZGqOXzBIFkTE5Ol58sra3u008HRDF8Y+
+        1plEEjG1nD8w0xqlftcGXCfa3Q==
+X-Google-Smtp-Source: APXvYqw46cv/llf70r1Mu6Wqv7zyuwUOJg11Y9zPdot57xjC/jmmXCop0M9XDm9resr1mheyg3dZQQ==
+X-Received: by 2002:a65:4083:: with SMTP id t3mr27484628pgp.332.1555078333582;
+        Fri, 12 Apr 2019 07:12:13 -0700 (PDT)
 Received: from localhost.localdomain (36-239-234-188.dynamic-ip.hinet.net. [36.239.234.188])
-        by smtp.gmail.com with ESMTPSA id j67sm76750819pfc.72.2019.04.12.07.12.06
+        by smtp.gmail.com with ESMTPSA id j67sm76750819pfc.72.2019.04.12.07.12.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 07:12:09 -0700 (PDT)
+        Fri, 12 Apr 2019 07:12:12 -0700 (PDT)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 1/2] regulator: ab8500: Constify regulator_ops
-Date:   Fri, 12 Apr 2019 22:11:57 +0800
-Message-Id: <20190412141158.21246-1-axel.lin@ingics.com>
+Subject: [PATCH 2/2] regulator: ab8500: Remove *regulator from struct ab8500_regulator_info
+Date:   Fri, 12 Apr 2019 22:11:58 +0800
+Message-Id: <20190412141158.21246-2-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190412141158.21246-1-axel.lin@ingics.com>
+References: <20190412141158.21246-1-axel.lin@ingics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These regulator_ops variables never need to be modified, make them const so
-compiler can put them to .rodata.
+Current code is using devm_regulator_register() so we don't need to save
+*regulator for clean up, use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/ab8500.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/regulator/ab8500.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
-index 83dba3fbfe0c..6b9a3463f1fd 100644
+index 6b9a3463f1fd..3fcb4cbaab02 100644
 --- a/drivers/regulator/ab8500.c
 +++ b/drivers/regulator/ab8500.c
-@@ -510,7 +510,7 @@ static int ab8500_regulator_set_voltage_sel(struct regulator_dev *rdev,
- 	return ret;
- }
+@@ -44,7 +44,6 @@ struct ab8500_shared_mode {
+  * struct ab8500_regulator_info - ab8500 regulator information
+  * @dev: device pointer
+  * @desc: regulator description
+- * @regulator_dev: regulator device
+  * @shared_mode: used when mode is shared between two regulators
+  * @load_lp_uA: maximum load in idle (low power) mode
+  * @update_bank: bank to control on/off
+@@ -65,7 +64,6 @@ struct ab8500_shared_mode {
+ struct ab8500_regulator_info {
+ 	struct device		*dev;
+ 	struct regulator_desc	desc;
+-	struct regulator_dev	*regulator;
+ 	struct ab8500_shared_mode *shared_mode;
+ 	int load_lp_uA;
+ 	u8 update_bank;
+@@ -1600,6 +1598,7 @@ static int ab8500_regulator_register(struct platform_device *pdev,
+ 	struct ab8500 *ab8500 = dev_get_drvdata(pdev->dev.parent);
+ 	struct ab8500_regulator_info *info = NULL;
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
  
--static struct regulator_ops ab8500_regulator_volt_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_volt_mode_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
-@@ -522,7 +522,7 @@ static struct regulator_ops ab8500_regulator_volt_mode_ops = {
- 	.list_voltage		= regulator_list_voltage_table,
- };
+ 	/* assign per-regulator data */
+ 	info = &abx500_regulator.info[id];
+@@ -1621,12 +1620,11 @@ static int ab8500_regulator_register(struct platform_device *pdev,
+ 	}
  
--static struct regulator_ops ab8500_regulator_volt_ops = {
-+static const struct regulator_ops ab8500_regulator_volt_ops = {
- 	.enable		= ab8500_regulator_enable,
- 	.disable	= ab8500_regulator_disable,
- 	.is_enabled	= ab8500_regulator_is_enabled,
-@@ -531,7 +531,7 @@ static struct regulator_ops ab8500_regulator_volt_ops = {
- 	.list_voltage	= regulator_list_voltage_table,
- };
+ 	/* register regulator with framework */
+-	info->regulator = devm_regulator_register(&pdev->dev, &info->desc,
+-						&config);
+-	if (IS_ERR(info->regulator)) {
++	rdev = devm_regulator_register(&pdev->dev, &info->desc, &config);
++	if (IS_ERR(rdev)) {
+ 		dev_err(&pdev->dev, "failed to register regulator %s\n",
+ 			info->desc.name);
+-		return PTR_ERR(info->regulator);
++		return PTR_ERR(rdev);
+ 	}
  
--static struct regulator_ops ab8500_regulator_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_mode_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
-@@ -541,14 +541,14 @@ static struct regulator_ops ab8500_regulator_mode_ops = {
- 	.list_voltage		= regulator_list_voltage_table,
- };
- 
--static struct regulator_ops ab8500_regulator_ops = {
-+static const struct regulator_ops ab8500_regulator_ops = {
- 	.enable			= ab8500_regulator_enable,
- 	.disable		= ab8500_regulator_disable,
- 	.is_enabled		= ab8500_regulator_is_enabled,
- 	.list_voltage		= regulator_list_voltage_table,
- };
- 
--static struct regulator_ops ab8500_regulator_anamic_mode_ops = {
-+static const struct regulator_ops ab8500_regulator_anamic_mode_ops = {
- 	.enable		= ab8500_regulator_enable,
- 	.disable	= ab8500_regulator_disable,
- 	.is_enabled	= ab8500_regulator_is_enabled,
+ 	return 0;
 -- 
 2.17.1
 
