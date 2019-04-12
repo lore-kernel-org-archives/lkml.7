@@ -2,182 +2,257 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C30CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C09BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39822184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S0wLQlRQ"
+	by mail.kernel.org (Postfix) with ESMTP id 327F02083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 03:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfDLDOM (ORCPT
+        id S1726736AbfDLDP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 23:14:12 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43292 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfDLDOM (ORCPT
+        Thu, 11 Apr 2019 23:15:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16495 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726682AbfDLDP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 23:14:12 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w3so7007771edu.10
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2019 20:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GbNAXqps9xM35Y1qLf6z4pd1dBjGUVG8C9gvux3yeDo=;
-        b=S0wLQlRQCoHmNALe9CEPyuUjxW8z6XNQk5U5Qa73DDhJc3MnjrlO062YSZPzKc6SQj
-         MiMxfhnzgrfV1b6/wmTVu1D6Rbs8TOabN3fQyCsWo4y8J1fhiHH1m0ykhKdS9pHOBIMo
-         cjFD3wv2x1JSQxhHbdgnMzf0Bvaqdl8ViTF6M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GbNAXqps9xM35Y1qLf6z4pd1dBjGUVG8C9gvux3yeDo=;
-        b=UQoh3QiAQR4Ek3qmxTi0DbyfqRer+KMkXlgFq5XfQarrelk1IDCF4CSMvx/fe92rWT
-         KDfmXh5rcrZ76bny3GcD4Rt+DDUK6zbVVDRFaR8IT3HRNV65Pvc9RDN35AtZ2p/M7XCZ
-         4SO7JrOsaWDQCTSvp7r/tJ8BXFWX/E8rjPDcjjmT29TY3Ex1q6HdONm/FjwtlNmndRyK
-         ZPqu8XxQ8Z7xQtq8J3adphe4HFRAaicWKcBIThQ4pt3ptYemiYXZzQ4YHLl7UIbkIl4C
-         pzwUdAazBtmsyn9Aulv8LlxtPR5607ZPrurMg803guXXj2U9rNJuJpaQPSY6Hy074H9J
-         KJUw==
-X-Gm-Message-State: APjAAAWFwaSdv1o2k8ZgOrJ67r4uu6TDtRNsKt1z+85pC70EYPPbLwa+
-        WkRq3/tAmAgdf88exOzSIlCEAg==
-X-Google-Smtp-Source: APXvYqzHe6MH7gX+enP6X3wR/O1UQC86FkJqmx4BItXItquiOmea3XDTEJQDg7fyInkPPZiGqMYLDg==
-X-Received: by 2002:a17:906:6a12:: with SMTP id o18mr29919543ejr.204.1555038850344;
-        Thu, 11 Apr 2019 20:14:10 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id c7sm11533352edt.70.2019.04.11.20.14.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 11 Apr 2019 20:14:09 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v4 3/3] PCI: iproc: Add sorted dma ranges resource entries to host bridge
-Date:   Fri, 12 Apr 2019 08:43:35 +0530
-Message-Id: <1555038815-31916-4-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com>
+        Thu, 11 Apr 2019 23:15:57 -0400
+X-UUID: a3abd988181146d6904a30a8a4b4adff-20190412
+X-UUID: a3abd988181146d6904a30a8a4b4adff-20190412
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1046906051; Fri, 12 Apr 2019 11:15:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 12 Apr 2019 11:15:47 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 12 Apr 2019 11:15:47 +0800
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH 1/1] pinctrl: Add alternative way for specifying register bases
+Date:   Fri, 12 Apr 2019 11:15:45 +0800
+Message-ID: <1555038945-10245-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPROC host has the limitation that it can use only those address ranges
-given by dma-ranges property as inbound address. So that the memory
-address holes in dma-ranges should be reserved to allocate as DMA address.
+The orginal PINCTRL_MTK_PARIS/PINCTRL_MTK_MOORE need more effort for
+specifying register bases when porting platform driver:
+1. Write mtXXXX_pinctrl_register_base_name[] array in pinctrl-mtXXXX.c
+   to specify names of register bases, for exmaple:
 
-Inbound address of host accessed by PCIe devices will not be translated
-before it comes to IOMMU or directly to PE. But the limitation of this
-host is, access to few address ranges are ignored. So that IOVA ranges
-for these address ranges have to be reserved.
+   	static const char * const mt6765_pinctrl_register_base_names[] = {
+		"iocfg0", "iocfg1", "iocfg2", "iocfg3", "iocfg4", "iocfg5",
+		"iocfg6", "iocfg7",
+   	};
+2. Write reg = <...>, ..., <...>; in mtXXXX.dts to specify register
+   bases. Each member of reg contain address range cloned from
+   pre-generated devicetree node.
+3. Write reg-names = "...", ..., "..."; in mtXXXX.dts to specify
+   names of register bases. The sequence of names in reg-names shall match
+   sequence of names that specified in pinctrl-mtXXXX.c.
+   Besides, the seqeunce of names in reg-names shall also match sequence of
+   address range in reg, for exmaple:
 
-All allowed address ranges are listed in dma-ranges DT parameter. These
-address ranges are converted as resource entries and listed in sorted
-order add added to dma_ranges list of PCI host bridge structure.
+   	pio: pinctrl {
+		compatible = "mediatek,mt6765-pinctrl";
+		reg = <0 0x10005000 0 0x1000>,
+		      <0 0x10002C00 0 0x200>,
+		      <0 0x10002800 0 0x200>,
+		      <0 0x10002A00 0 0x200>,
+		      <0 0x10002000 0 0x200>,
+		      <0 0x10002200 0 0x200>,
+		      <0 0x10002400 0 0x200>,
+		      <0 0x10002600 0 0x200>,
+		      <0 0x1000b000 0 0x1000>;
+		reg-names = "iocfg0", "iocfg1", "iocfg2", "iocfg3",
+			    "iocfg4", "iocfg5", "iocfg6", "iocfg7",
+			    "eint";
 
-Ex:
-dma-ranges = < \
-  0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-  0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-  0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+To reduce porting effort, this patch add an alternative way for specifying
+register bases:
+1. Write reg_bases = <...>, ..., <...>; and reg_base_eint = <&eint>;
+   in mtXXXX.dtsi where members in reg_bases and &eint are labels for
+   pre-generated devicetree nodes, for example:
+	pio: pinctrl {
+		compatible = "mediatek,mt6765-pinctrl";
+		reg_bases = <&gpio0>,
+			    <&iocfg0>,
+			    <&iocfg1>,
+			    <&iocfg2>,
+			    <&iocfg3>,
+			    <&iocfg4>,
+			    <&iocfg5>,
+			    <&iocfg6>,
+			    <&iocfg7>;
+		reg_base_eint = <&eint>;
 
-In the above example of dma-ranges, memory address from
-0x0 - 0x80000000,
-0x100000000 - 0x800000000,
-0x1000000000 - 0x8000000000 and
-0x10000000000 - 0xffffffffffffffff.
-are not allowed to use as inbound addresses.
+   Since this pre-generated nodes had already specify address range,
+   it is not necessary to specify address range again in pinctrl node.
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+Using this way, porting effort is reduced and therefore typo can occur with
+less chance.
+
+Change-Id: I55f5e328919f4f736ca4b9f8d1593e069f179637
 ---
- drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 19 +++++---
+ drivers/pinctrl/mediatek/pinctrl-paris.c         | 62 ++++++++++++++++--------
+ 2 files changed, 54 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index c20fd6b..94ba5c0 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
- 	return ret;
- }
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index b1c3684..16b4863 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -12,6 +12,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/of_irq.h>
++#include <linux/of_address.h>
  
-+static int
-+iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-+			 struct of_pci_range *range)
-+{
-+	struct resource *res;
-+	struct resource_entry *entry, *tmp;
-+	struct list_head *head = resources;
-+
-+	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	resource_list_for_each_entry(tmp, resources) {
-+		if (tmp->res->start < range->cpu_addr)
-+			head = &tmp->node;
-+	}
-+
-+	res->start = range->cpu_addr;
-+	res->end = res->start + range->size - 1;
-+
-+	entry = resource_list_create_entry(res, 0);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->offset = res->start - range->cpu_addr;
-+	resource_list_add(entry, head);
-+
-+	return 0;
-+}
-+
- static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
+ #include "mtk-eint.h"
+ #include "pinctrl-mtk-common-v2.h"
+@@ -310,7 +311,7 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
+ 
+ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
  {
-+	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
- 	int ret;
-+	LIST_HEAD(resources);
+-	struct device_node *np = pdev->dev.of_node;
++	struct device_node *np = pdev->dev.of_node, *node;
+ 	struct resource *res;
  
- 	/* Get the dma-ranges from DT */
- 	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-@@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
- 		return ret;
+ 	if (!IS_ENABLED(CONFIG_EINT_MTK))
+@@ -323,13 +324,19 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ 	if (!hw->eint)
+ 		return -ENOMEM;
  
- 	for_each_of_pci_range(&parser, &range) {
-+		ret = iproc_pcie_add_dma_range(pcie->dev,
-+					       &resources,
-+					       &range);
-+		if (ret)
-+			goto out;
- 		/* Each range entry corresponds to an inbound mapping region */
- 		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
- 		if (ret)
--			return ret;
-+			goto out;
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "eint");
+-	if (!res) {
+-		dev_err(&pdev->dev, "Unable to get eint resource\n");
+-		return -ENODEV;
++	node = of_parse_phandle(np, "reg_base_eint", 0);
++	if (node) {
++		hw->eint->base = of_iomap(node, 0);
++	} else {
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++			"eint");
++		if (!res) {
++			dev_err(&pdev->dev, "Unable to get eint resource\n");
++			return -ENODEV;
++		}
++		hw->eint->base = devm_ioremap_resource(&pdev->dev, res);
  	}
  
-+	list_splice_init(&resources, &host->dma_ranges);
-+
- 	return 0;
-+out:
-+	pci_free_resource_list(&resources);
-+	return ret;
- }
+-	hw->eint->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(hw->eint->base))
+ 		return PTR_ERR(hw->eint->base);
  
- static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index b59e108..8ddb995 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -9,6 +9,7 @@
+  *	   Hongzhou.Yang <hongzhou.yang@mediatek.com>
+  */
+ 
++#include <linux/of_address.h>
+ #include <linux/gpio/driver.h>
+ #include <dt-bindings/pinctrl/mt65xx.h>
+ #include "pinctrl-paris.h"
+@@ -815,10 +816,11 @@ static int mtk_pctrl_build_state(struct platform_device *pdev)
+ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+ 			    const struct mtk_pin_soc *soc)
+ {
++	struct device_node *np = pdev->dev.of_node, *node;
+ 	struct pinctrl_pin_desc *pins;
+ 	struct mtk_pinctrl *hw;
+ 	struct resource *res;
+-	int err, i;
++	int err, i, get_base_pass;
+ 
+ 	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
+ 	if (!hw)
+@@ -828,31 +830,49 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+ 	hw->soc = soc;
+ 	hw->dev = &pdev->dev;
+ 
+-	if (!hw->soc->nbase_names) {
+-		dev_err(&pdev->dev,
+-			"SoC should be assigned at least one register base\n");
+-		return -EINVAL;
+-	}
+-
+-	hw->base = devm_kmalloc_array(&pdev->dev, hw->soc->nbase_names,
++	if (hw->soc->nbase_names) {
++		hw->base = devm_kmalloc_array(&pdev->dev, hw->soc->nbase_names,
+ 				      sizeof(*hw->base), GFP_KERNEL);
+-	if (!hw->base)
+-		return -ENOMEM;
++		if (!hw->base)
++			return -ENOMEM;
++
++		for (i = 0; i < hw->soc->nbase_names; i++) {
++			res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++							hw->soc->base_names[i]);
++			if (!res) {
++				dev_err(&pdev->dev, "missing IO resource\n");
++				return -ENXIO;
++			}
+ 
+-	for (i = 0; i < hw->soc->nbase_names; i++) {
+-		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						   hw->soc->base_names[i]);
+-		if (!res) {
+-			dev_err(&pdev->dev, "missing IO resource\n");
+-			return -ENXIO;
++			hw->base[i] = devm_ioremap_resource(&pdev->dev, res);
++			if (IS_ERR(hw->base[i]))
++				return PTR_ERR(hw->base[i]);
+ 		}
+ 
+-		hw->base[i] = devm_ioremap_resource(&pdev->dev, res);
+-		if (IS_ERR(hw->base[i]))
+-			return PTR_ERR(hw->base[i]);
+-	}
++		hw->nbase = hw->soc->nbase_names;
++	} else {
++		for (get_base_pass = 0; get_base_pass < 2; get_base_pass++) {
++			for (i = 0;; i++) {
++				node = of_parse_phandle(np, "reg_bases", i);
++				if (!node)
++					break;
++				if (get_base_pass == 1)
++					hw->base[i] = of_iomap(node, 0);
++				of_node_put(node);
++			}
+ 
+-	hw->nbase = hw->soc->nbase_names;
++			if (i == 0)
++				return -EINVAL;
++			if (get_base_pass == 0) {
++				hw->nbase = i;
++				hw->base = devm_kmalloc_array(&pdev->dev, i,
++					sizeof(*hw->base),
++					GFP_KERNEL | __GFP_ZERO);
++				if (IS_ERR(hw->base))
++					return PTR_ERR(hw->base);
++			}
++		}
++	}
+ 
+ 	err = mtk_pctrl_build_state(pdev);
+ 	if (err) {
 -- 
-2.7.4
+1.8.1.1.dirty
 
