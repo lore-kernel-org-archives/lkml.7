@@ -2,364 +2,102 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30526C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E9EC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49E6218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD182171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfDLPao (ORCPT
+        id S1727415AbfDLPas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:30:44 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:35135 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfDLPan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:30:43 -0400
-Received: by mail-it1-f196.google.com with SMTP id w15so16197063itc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:30:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QLS7YvoLSBZUZi7e7JMqfzREH0OvC2Yxgw+Vg828YAA=;
-        b=P1tc5XpMFzRvUzNZdIOpMTyHm4bB4h8jHLAT2luqYRYldYCRGGvXrlY4JdK+LebvZA
-         8gYpQgxo7lsBk41WDMBsVHC8wgXxE4b+rLiNcKRebs5jhIbTlVMcFnunKGhHfNUQRzd+
-         501Xjg6ozFGopxccsOcQ7EPWJ1TOeVeGoZj7I2aO7Ru9EzbBZilktkm1QNDsAF+gJBSF
-         nXqStlcgn57fO7r5jYOdasUjzdVPPeyxJdqaCj+59VVIS3Q21mauQRUUuj9t22MFrY2+
-         KyUGbt1mNc2PJY4A7HedM/CjRoh3Qw6XjYTMuseYDzsBBxcmuUeud5xiaUh6RhqHmfkX
-         0vHA==
-X-Gm-Message-State: APjAAAXuBgEhgZAU2CghG/KqF4u8MpGohyN+N9f1IX3bY4VAEbx8djBd
-        +cCZOf4yasm5CYFIm/2Q3ikbjw==
-X-Google-Smtp-Source: APXvYqz8ipRM8zzQZeRfQVWvRMm/z9qsX2YmAGIqsJqSK/bpYI7KD36zYsR0fHNTUE8Yg4lMOnSOVA==
-X-Received: by 2002:a24:78c8:: with SMTP id p191mr13521651itc.58.1555083042000;
-        Fri, 12 Apr 2019 08:30:42 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id z24sm15556865ioi.67.2019.04.12.08.30.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 12 Apr 2019 08:30:41 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 09:30:36 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-devel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@chromium.org, zwisler@chromium.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v1 1/4] trace_events: Add trace_print_register to print
- register fields
-Message-ID: <20190412153036.GB101407@google.com>
-References: <20190411220822.81845-1-rrangel@chromium.org>
- <20190411220822.81845-2-rrangel@chromium.org>
- <20190411183934.28e6ad65@gandalf.local.home>
+        Fri, 12 Apr 2019 11:30:48 -0400
+Received: from foss.arm.com ([217.140.101.70]:34846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727381AbfDLPap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:30:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6305915AB;
+        Fri, 12 Apr 2019 08:30:45 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 915923F557;
+        Fri, 12 Apr 2019 08:30:43 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 16:30:41 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        David Brown <david.brown@linaro.org>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: Add Lenovo Miix 630
+Message-ID: <20190412153040.GB7481@lakrids.cambridge.arm.com>
+References: <20190411205144.43557-1-jeffrey.l.hugo@gmail.com>
+ <20190412144712.GA7481@lakrids.cambridge.arm.com>
+ <CAOCk7Np+WTMuoRZOrQzbt1H6xENW2OhRFgpOc-vWn+9daBBqbg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411183934.28e6ad65@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOCk7Np+WTMuoRZOrQzbt1H6xENW2OhRFgpOc-vWn+9daBBqbg@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 06:39:34PM -0400, Steven Rostedt wrote:
-> On Thu, 11 Apr 2019 16:08:19 -0600
-> Raul E Rangel <rrangel@chromium.org> wrote:
+On Fri, Apr 12, 2019 at 09:19:18AM -0600, Jeffrey Hugo wrote:
+> > > +     keyboard@3a {
+> > > +             /* QTEC0001 is the ACPI HID, which could be used for quirks */
+> > > +             compatible = "QTEC0001", "hid-over-i2c";
+> >
+> > As mentioned last time, please drop the ACPI HID, and allocate a real
+> > compatible string.
 > 
-> > This is a hybrid method that combines the functionality of
-> > trace_print_flags_seq and trace_print_symbols_seq. It supports printing
-> > bit fields, enum fields, and numeric fields.
-> > 
-> > Given the following register definition:
-> >   * 0   - Enabled
-> >   * 1   - Width, 0 = 1-bits, 1 = 4-bits
-> >   * 2:3 - DMA, 0 = None, 1 = SDMA, 2 = ADMA, 3 = ADMA2
-> >   * 4:7 - Timeout Counter
-> > 
-> > The register fields could be defined as follows:
-> > 
-> >   const struct trace_print_field reg[] = {
-> >     {1<<0, "ENABLED"},
-> >     {
-> >       .mask = 1<<1,
-> >       .name = "WIDTH",
-> >       .symbols = (const struct trace_print_flags[]) {
-> >         {0, "1-BIT"},
-> >         {1, "4-BIT"},
-> >         {}
-> >       }
-> >     }, {
-> >       .mask = 3<<2,
-> >       .symbols = (const struct trace_print_flags[]) {
-> >         {0, "NONE"},
-> >         {1, "SDMA"},
-> >         {2, "ADMA"},
-> >         {3, "ADMA2"},
-> >         {}
-> >       }
-> >     },
-> >     {0xF<<4, "TIMEOUT"}
-> >   }
-> > 
-> > This would print out the following given value 0xAB:
-> > 
-> > ENABLED: 1 | WIDTH: 4-BIT | ADMA | TIMEOUT: 0xA
-> > 
+> So, I'm in a quandary with this device.  As far as I can tell, its an
+> off the shelf component, the device adheres to the "PNP0C50" spec (HID
+> over I2C), and can be driven by the full "hid-over-i2c" driver (which
+> is just a DT shim over the PNP0C50 ACPI driver).  However, the device
+> itself identifies itself as an ELAN 400 device, which is an ID that is
+> also used for standalone touchpad devices.  Per my understanding of
+> the Linux drivers, there is a separate ELAN driver for the standalone
+> touchpad devices as its been discovered though trial and error that
+> the Linux PNP0C50 driver cannot drive those devices.  To handle this,
+> there is a quirk in hid-quirks which rejects ELAN 400 devices, except
+> those which are "QTEC0001".
 > 
-> Note the rational for the __print_symbolic and __print_flags is that
-> they show how to translate into something that perf and trace-cmd can
-> read from userspace.
+> We need that quirk bypass for this device because the ELAN driver
+> cannot handle this device.
 
-Ah, I wasn't aware that the format was exposed via sysfs. That makes
-sense why the macros are used. I was using xhci-trace as my reference
-point which just calls arbitrary functions.
+This is useful context; thanks for writing this up!
 
-cat /sys/kernel/debug/tracing/events/xhci-hcd/xhci_handle_event/format
-print fmt: "%s: %s",
-xhci_ring_type_string(REC->type),
-xhci_decode_trb(REC->field0, REC->field1, REC->field2, REC->field3)
+> I'd much rather have a single identifier to quirk on, rather than
+> having one for DT and one for ACPI, and its not looking feasible to
+> get the vendor to update the ACPI, so it seems like using the ACPI
+> identifier is just simpler.
+>
+> So, if you want a different compatible string, I'll need to go put DT
+> in a driver that is primarily ACPI.  I'm not sure what the HID folks
+> will think of that. 
 
-I'm guessing calling out to a function is not the way the framework was
-intended to be used. Does this mean that every TRB type in xhci_decode_trb
-should be its own trace event so the printf format isn't hidden inside
-the code?
+My objection is that an ACPI HID is _not_ a DT compatible string, and
+the two should be treated separately. Munging the two together opens the
+door for other pain.
 
-> 
-> How does perf or trace-cmd parse this? To add something like this, you
-> need them to have the same output as what is displayed by the trace
-> file otherwise NAK.
+The driver in question has a DT probe function, i2c_hid_of_probe, so
+there's certainly a place to wire up that quirk.
 
-So for the short term I can remove __print_register. The SDHCI tracing
-doesn't use it, but instead calls out to a method that calls
-trace_print_register directly. Or I could move trace_print_register
-into the sdhci-trace module.
+> I'll propose it, but what do you view is a
+> "proper" compatible string?  "ELAN0400-msm8998-clamshell"?
 
-cat /sys/kernel/debug/tracing/events/sdhci/sdhci_read/format
+A proper compatible string has a vendor-prefix, and is documented
+somewhere in Documentation/devicetree/bindings.
 
-print fmt: "%s: %#x [%s] => %#x: %s",
-  __get_str(name),
-  REC->reg,
-  __print_symbolic(REC->reg & ~3UL, {0x00, "DMA_ADDRESS"}, ...),
-  REC->val,
-  sdhci_decode_register( p, REC->reg, REC->val, REC->mask )
+e.g. you could allocate something like:
 
-The format prints out the raw value, so using perf or trace-cmd
-will still have value, you just won't get the pretty print.
+	"qcom,msm8998-clamshell-hid-over-i2c"
 
-For the long term I could make event-parser handle __print_register. I'm
-assuming it just needs to handle the additional case?
-https://github.com/torvalds/linux/blob/master/tools/lib/traceevent/event-parse.c#L3040
-
-Thanks for the feedback,
-Raul
-
-> 
-> -- Steve
-> 
-> 
-> > See https://pastebin.com/x73d5cvL for this in action.
-> > 
-> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> > ---
-> > 
-> >  include/linux/trace_events.h    |   4 ++
-> >  include/linux/tracepoint-defs.h |   6 ++
-> >  include/trace/trace_events.h    |   9 +++
-> >  kernel/trace/trace_output.c     | 121 ++++++++++++++++++++++++++++++++
-> >  4 files changed, 140 insertions(+)
-> > 
-> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> > index 8a62731673f7..3c44909ce8b3 100644
-> > --- a/include/linux/trace_events.h
-> > +++ b/include/linux/trace_events.h
-> > @@ -23,6 +23,10 @@ const char *trace_print_flags_seq(struct trace_seq *p, const char *delim,
-> >  const char *trace_print_symbols_seq(struct trace_seq *p, unsigned long val,
-> >  				    const struct trace_print_flags *symbol_array);
-> >  
-> > +const char *trace_print_register(struct trace_seq *p,
-> > +				 const struct trace_print_field fields[],
-> > +				 unsigned long val, unsigned long mask);
-> > +
-> >  #if BITS_PER_LONG == 32
-> >  const char *trace_print_flags_seq_u64(struct trace_seq *p, const char *delim,
-> >  		      unsigned long long flags,
-> > diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
-> > index 49ba9cde7e4b..c3dc27c192f4 100644
-> > --- a/include/linux/tracepoint-defs.h
-> > +++ b/include/linux/tracepoint-defs.h
-> > @@ -16,6 +16,12 @@ struct trace_print_flags {
-> >  	const char		*name;
-> >  };
-> >  
-> > +struct trace_print_field {
-> > +	unsigned long			mask;
-> > +	const char			*name;
-> > +	const struct trace_print_flags	*symbols;
-> > +};
-> > +
-> >  struct trace_print_flags_u64 {
-> >  	unsigned long long	mask;
-> >  	const char		*name;
-> > diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-> > index 4ecdfe2e3580..6adc32fcb1c3 100644
-> > --- a/include/trace/trace_events.h
-> > +++ b/include/trace/trace_events.h
-> > @@ -300,6 +300,14 @@ TRACE_MAKE_SYSTEM_STR();
-> >  		trace_print_symbols_seq(p, value, symbols);		\
-> >  	})
-> >  
-> > +#undef __print_register
-> > +#define __print_register(value, mask, field_array...)			\
-> > +	({								\
-> > +		static const struct trace_print_field fields[] =	\
-> > +			{ field_array, {} };			\
-> > +		trace_print_register(p, value, mask, fields);		\
-> > +	})
-> > +
-> >  #undef __print_flags_u64
-> >  #undef __print_symbolic_u64
-> >  #if BITS_PER_LONG == 32
-> > @@ -744,6 +752,7 @@ static inline void ftrace_test_probe_##call(void)			\
-> >  
-> >  #undef __print_flags
-> >  #undef __print_symbolic
-> > +#undef __print_register
-> >  #undef __print_hex
-> >  #undef __print_hex_str
-> >  #undef __get_dynamic_array
-> > diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> > index 54373d93e251..cd5727ad54c3 100644
-> > --- a/kernel/trace/trace_output.c
-> > +++ b/kernel/trace/trace_output.c
-> > @@ -124,6 +124,127 @@ trace_print_symbols_seq(struct trace_seq *p, unsigned long val,
-> >  }
-> >  EXPORT_SYMBOL(trace_print_symbols_seq);
-> >  
-> > +/**
-> > + * trace_print_register - Prints all the fields of a register.
-> > + *
-> > + * This is a hybrid method that combines the functionality of
-> > + * trace_print_flags_seq and trace_print_symbols_seq. It supports printing
-> > + * bit fields, enum fields, and numeric fields.
-> > + *
-> > + * Given the following register definition:
-> > + *   * 0   - Enabled
-> > + *   * 1   - Width, 0 = 1-bits, 1 = 4-bits
-> > + *   * 2:3 - DMA, 0 = None, 1 = SDMA, 2 = ADMA, 3 = ADMA2
-> > + *   * 4:7 - Timeout Counter
-> > + *
-> > + * The register fields could be defined as follows:
-> > + *
-> > + *   const struct trace_print_field reg[] = {
-> > + *     {1<<0, "ENABLED"},
-> > + *     {
-> > + *       .mask = 1<<1,
-> > + *       .name = "WIDTH",
-> > + *       .symbols = (const struct trace_print_flags[]) {
-> > + *         {0, "1-BIT"},
-> > + *         {1, "4-BIT"},
-> > + *         {}
-> > + *       }
-> > + *     }, {
-> > + *       .mask = 3<<2,
-> > + *       .symbols = (const struct trace_print_flags[]) {
-> > + *         {0, "NONE"},
-> > + *         {1, "SDMA"},
-> > + *         {2, "ADMA"},
-> > + *         {3, "ADMA2"},
-> > + *         {}
-> > + *       }
-> > + *     },
-> > + *     {0xF<<4, "TIMEOUT"}
-> > + *   }
-> > + *
-> > + * This would print out the following given value 0xAB:
-> > + *
-> > + * ENABLED: 1 | WIDTH: 4-BIT | ADMA | TIMEOUT: 0xA
-> > + *
-> > + * @p: trace buffer
-> > + * @fields: Array of fields that describe the register. Must be terminated with
-> > + *          an empty value.
-> > + * @val: register value
-> > + * @mask: Mask that defines the bits present in @val. Useful if only a subset
-> > + *        of the register was read. Any fields that fall outside of the mask
-> > + *        will not be printed.
-> > + */
-> > +const char *trace_print_register(struct trace_seq *p,
-> > +				 const struct trace_print_field fields[],
-> > +				 unsigned long val, unsigned long mask)
-> > +{
-> > +	const char *ret = trace_seq_buffer_ptr(p);
-> > +	char *tail;
-> > +	unsigned long fval;
-> > +	int first = 1, symbol_found;
-> > +	const struct trace_print_field *field;
-> > +	const struct trace_print_flags *symbol;
-> > +
-> > +	for (field = fields; field->mask; field++) {
-> > +		/* Make sure the field mask is within the accessed bits */
-> > +		if ((mask & field->mask) != field->mask)
-> > +			continue;
-> > +
-> > +		if (!first)
-> > +			trace_seq_puts(p, " | ");
-> > +
-> > +		first = 0;
-> > +
-> > +		if (field->name) {
-> > +			trace_seq_puts(p, field->name);
-> > +			trace_seq_puts(p, ": ");
-> > +		}
-> > +
-> > +		fval = val & field->mask;
-> > +		fval >>= ffs(field->mask) - 1;
-> > +
-> > +		val &= ~field->mask;
-> > +
-> > +		symbol_found = 0;
-> > +		for (symbol = field->symbols; symbol && symbol->name;
-> > +		     symbol++) {
-> > +			if (symbol->mask != fval)
-> > +				continue;
-> > +			trace_seq_puts(p, symbol->name);
-> > +			symbol_found = 1;
-> > +			break;
-> > +		}
-> > +
-> > +		if (!symbol_found) {
-> > +			if (fval == 0) {
-> > +				trace_seq_puts(p, "0");
-> > +			} else if (fval == 1) {
-> > +				trace_seq_puts(p, "1");
-> > +			} else {
-> > +				trace_seq_printf(p, "%#x", fval);
-> > +
-> > +				/* Strip off the null terminator */
-> > +				for (tail = trace_seq_buffer_ptr(p) - 1;
-> > +				     tail > ret && !*tail; tail--) {
-> > +					p->seq.len--;
-> > +				}
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	/* Print any left over bits */
-> > +	if (val) {
-> > +		if (!first)
-> > +			trace_seq_puts(p, " | ");
-> > +		trace_seq_printf(p, "%#x", val);
-> > +	}
-> > +
-> > +	trace_seq_putc(p, 0);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL(trace_print_register);
-> > +
-> >  #if BITS_PER_LONG == 32
-> >  const char *
-> >  trace_print_flags_seq_u64(struct trace_seq *p, const char *delim,
-> 
+Thanks,
+Mark.
