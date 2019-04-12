@@ -2,135 +2,84 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UPPERCASE_50_75 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2321C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A0FC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC7F20818
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF59820818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfDLTCN (ORCPT
+        id S1726973AbfDLTEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:02:13 -0400
-Received: from foss.arm.com ([217.140.101.70]:38402 "EHLO foss.arm.com"
+        Fri, 12 Apr 2019 15:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbfDLTCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:02:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C004A374;
-        Fri, 12 Apr 2019 12:02:07 -0700 (PDT)
-Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2069E3F718;
-        Fri, 12 Apr 2019 12:02:05 -0700 (PDT)
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     linux-mm@kvack.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, jglisse@redhat.com,
-        oohall@gmail.com, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 2/3] mm: clean up is_device_*_page() definitions
-Date:   Fri, 12 Apr 2019 20:01:57 +0100
-Message-Id:
- <2adb3982a790078fe49fd454414a7b9c0fd60bcb.1555093412.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.21.0.dirty
-In-Reply-To: <cover.1555093412.git.robin.murphy@arm.com>
-References: <cover.1555093412.git.robin.murphy@arm.com>
+        id S1726832AbfDLTEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:04:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 007CC20818;
+        Fri, 12 Apr 2019 19:04:39 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 15:04:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     linux-trace-devel@vger.kernel.org, eballetbo@gmail.com,
+        zwisler@chromium.org, djkurtz@chromium.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Subject: Re: [PATCH v2] chrome/platform: cros_ec_proto:: Add trace event to
+ trace EC commands
+Message-ID: <20190412150438.56ba4429@gandalf.local.home>
+In-Reply-To: <20190412184944.125338-1-rrangel@chromium.org>
+References: <20190412184944.125338-1-rrangel@chromium.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190412190157.O83IdKoXwnssSbzDlAeBQwzTZSSTT7p-ohrXscQ4-RI@z>
 
-Refactor is_device_{public,private}_page() with is_pci_p2pdma_page()
-to make them all consistent in depending on their respective config
-options even when CONFIG_DEV_PAGEMAP_OPS is enabled for other reasons.
-This allows a little more compile-time optimisation as well as the
-conceptual and cosmetic cleanup.
+On Fri, 12 Apr 2019 12:49:44 -0600
+Raul E Rangel <rrangel@chromium.org> wrote:
 
-Suggested-by: Jerome Glisse <jglisse@redhat.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- include/linux/mm.h | 43 +++++++++++++------------------------------
- 1 file changed, 13 insertions(+), 30 deletions(-)
+> +#define ec_cmds \
+> +	{EC_CMD_PROTO_VERSION, "PROTO_VERSION"}, \
+> +	{EC_CMD_HELLO, "HELLO"}, \
+> +	{EC_CMD_GET_VERSION, "GET_VERSION"}, \
+> +	{EC_CMD_READ_TEST, "READ_TEST"}, \
+> +	{EC_CMD_GET_BUILD_INFO, "GET_BUILD_INFO"}, \
+> +	{EC_CMD_GET_CHIP_INFO, "GET_CHIP_INFO"}, \
+> +	{EC_CMD_GET_BOARD_VERSION, "GET_BOARD_VERSION"}, \
+> +	{EC_CMD_READ_MEMMAP, "READ_MEMMAP"}, \
+> +	{EC_CMD_GET_CMD_VERSIONS, "GET_CMD_VERSIONS"}, \
+> +	{EC_CMD_GET_COMMS_STATUS, "GET_COMMS_STATUS"}, \
+> +	{EC_CMD_TEST_PROTOCOL, "TEST_PROTOCOL"}, \
+> +	{EC_CMD_GET_PROTOCOL_INFO, "GET_PROTOCOL_INFO"}, \
+> +	{EC_CMD_GSV_PAUSE_IN_S5, "GSV_PAUSE_IN_S5"}, \
+> +	{EC_CMD_GET_FEATURES, "GET_FEATURES"}, \
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 76769749b5a5..d76dfb7ac617 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -910,32 +910,6 @@ static inline bool put_devmap_managed_page(struct page *page)
- 	}
- 	return false;
- }
--
--static inline bool is_device_private_page(const struct page *page)
--{
--	return is_zone_device_page(page) &&
--		page->pgmap->type == MEMORY_DEVICE_PRIVATE;
--}
--
--static inline bool is_device_public_page(const struct page *page)
--{
--	return is_zone_device_page(page) &&
--		page->pgmap->type == MEMORY_DEVICE_PUBLIC;
--}
--
--#ifdef CONFIG_PCI_P2PDMA
--static inline bool is_pci_p2pdma_page(const struct page *page)
--{
--	return is_zone_device_page(page) &&
--		page->pgmap->type == MEMORY_DEVICE_PCI_P2PDMA;
--}
--#else /* CONFIG_PCI_P2PDMA */
--static inline bool is_pci_p2pdma_page(const struct page *page)
--{
--	return false;
--}
--#endif /* CONFIG_PCI_P2PDMA */
--
- #else /* CONFIG_DEV_PAGEMAP_OPS */
- static inline void dev_pagemap_get_ops(void)
- {
-@@ -949,22 +923,31 @@ static inline bool put_devmap_managed_page(struct page *page)
- {
- 	return false;
- }
-+#endif /* CONFIG_DEV_PAGEMAP_OPS */
- 
- static inline bool is_device_private_page(const struct page *page)
- {
--	return false;
-+	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
-+		IS_ENABLED(CONFIG_DEVICE_PRIVATE) &&
-+		is_zone_device_page(page) &&
-+		page->pgmap->type == MEMORY_DEVICE_PRIVATE;
- }
- 
- static inline bool is_device_public_page(const struct page *page)
- {
--	return false;
-+	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
-+		IS_ENABLED(CONFIG_DEVICE_PUBLIC) &&
-+		is_zone_device_page(page) &&
-+		page->pgmap->type == MEMORY_DEVICE_PUBLIC;
- }
- 
- static inline bool is_pci_p2pdma_page(const struct page *page)
- {
--	return false;
-+	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
-+		IS_ENABLED(CONFIG_PCI_P2PDMA) &&
-+		is_zone_device_page(page) &&
-+		page->pgmap->type == MEMORY_DEVICE_PCI_P2PDMA;
- }
--#endif /* CONFIG_DEV_PAGEMAP_OPS */
- 
- static inline void get_page(struct page *page)
- {
--- 
-2.21.0.dirty
+Usually, if I have something like this, I would do:
 
+
+#define ec_cmds \
+	EC(PROTO_VERSION), \
+	EC(HELLO), \
+	EC(GET_VERSION), \
+	EC(READ_TEST), \
+	[...]
+
+Then:
+
+#define EC(a) {EC_CMD_##a, #a}
+
+and then ec_cmds ends up with the same result with much less typing and
+little risk for copy past errors.
+
+-- Steve
