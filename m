@@ -2,118 +2,106 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F0CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D8C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37F020869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09C420652
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sStHq6af"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="QzAfqT25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfDLEtZ (ORCPT
+        id S1726812AbfDLE7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 00:49:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:34239 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfDLEtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 00:49:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gQR60FJFz9s55;
-        Fri, 12 Apr 2019 14:49:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555044562;
-        bh=4ROZz66TCwprqdEGczlv7RNfxf2WM6TUZvJnNrUVLuY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sStHq6af4yfWtdYsqBCk64siiFvkyZyeV68xuTRVPJ1JAw0zRm85kSERVfz2wXfR6
-         L8ka/6rXoO5XcO912tFKWvEzvszFHiDMAWtj65HtXyZ/8xtHzKRRq/Lp4kdNS5wXHC
-         SLX33avXbxuHe9mR2JP6BBvyhXFK18njG0tfOaNnNiNIZytSEHnRScixNNOTIvOOM7
-         DBUvUBy6ruJHEtN7Z47nt5h7SALa9+EUSgoAt35Q/8A3vr0iHchBU62dq/SYz/K/gS
-         nWpzgMj9Y4Cu74T+0LYfGOqf0fLJEF7ZAF83pPeZ6wBMsnhRgjJfJT8KvjrHdUjIVu
-         y8k5Sxrc2ddrw==
-Date:   Fri, 12 Apr 2019 14:49:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Shawn Guo <shawn.guo@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Robert Yang <decatf@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Subject: linux-next: manual merge of the staging tree with the imx-mxs tree
-Message-ID: <20190412144921.3a152478@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/a9VId0sWDIARXq36H946r=_"; protocol="application/pgp-signature"
+        Fri, 12 Apr 2019 00:59:08 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:34746 "EHLO
+        h2641619.stratoserver.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfDLE7H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 00:59:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oVCTSjPkwdx6tRas2KGgRjrRoqpSskzQHkdp+NNCgec=; b=QzAfqT25HCNSS1sGe5UNaWSZz0
+        ncK3CuOHetNof7LPKV8VzexdSVRmaz9hSGbf89B0eT6dXJcmbiWUWWAwqfe5ZYa81DO5ghIT5M5mG
+        V4CX/OfeUqw9M0F9i1Sek7lE9/7CJ2U1v+E5vDVhMmEmsCE4u3F1h1oTwrPWFvP6CkQM=;
+Received: from p200300ccfbcd83001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:fbcd:8300:1a3d:a2ff:febf:d33a] helo=aktux)
+        by h2641619.stratoserver.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hEoHB-0002hr-P5; Fri, 12 Apr 2019 06:58:57 +0200
+Received: from andi by aktux with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hEoHD-0001LL-Hw; Fri, 12 Apr 2019 06:58:59 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, maxime.ripard@bootlin.com
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Date:   Fri, 12 Apr 2019 06:58:32 +0200
+Message-Id: <20190412045832.5109-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a9VId0sWDIARXq36H946r=_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+with Broadcom internals attached to UART1 and some gpios.
+This addition is in line with similar boards.
 
-Hi Greg,
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+changes in v3: spelling fixes
+changes in v2: remove pinctrl things
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Today's linux-next merge of the staging tree got a conflict in:
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 1db2541135a7..57432d0500b1 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -69,6 +69,8 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
+ 
+@@ -122,7 +124,20 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vcc3v3>;
++		vddio-supply = <&reg_vcc3v3>;
++		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
++		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	};
++
+ };
+ 
+ &usb_otg {
+-- 
+2.11.0
 
-  Documentation/devicetree/bindings/vendor-prefixes.txt
-
-between commit:
-
-  189733b0a7e4 ("dt-bindings: Add vendor prefix for Rakuten Kobo, Inc.")
-
-from the imx-mxs tree and commit:
-
-  2e5cee6c7622 ("dt-bindings: Add vendor prefix for Kionix, Inc.")
-
-from the staging tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/devicetree/bindings/vendor-prefixes.txt
-index 5f2b185a04e6,93753f447c20..000000000000
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@@ -211,7 -210,7 +211,8 @@@ kiebackpeter    Kieback & Peter Gmb
-  kinetic Kinetic Technologies
-  kingdisplay	King & Display Technology Co., Ltd.
-  kingnovel	Kingnovel Technology Co., Ltd.
-+ kionix	Kionix, Inc.
- +kobo	Rakuten Kobo Inc.
-  koe	Kaohsiung Opto-Electronics Inc.
-  kosagi	Sutajio Ko-Usagi PTE Ltd.
-  kyo	Kyocera Corporation
-
---Sig_/a9VId0sWDIARXq36H946r=_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlywGNEACgkQAVBC80lX
-0GxX0Qf/RyeVmwoWjw/cwDhEpO/ExAPZYuImXDgfxo1mjw/EuqR7CPh9oJI38SNm
-SkVTxDToJPzWk7TdjsergbLqaaKohVpyB7S5ZhOjOvDxytmWaWAaZicASlztDhhY
-FvYhfHSfeRb+FmQA1kG4Bo/iDgN9p1PFzeH7/oLciHvTjbovimJn0C/psHo822e7
-pXEYGr+k0yYvuxR6GImtQMvYLJHpSRkzILp81TwVxzdmmjgiyzvEg+8O+fSLcOHg
-CelSksLoRNCa5t9nH8MHJdwiGjo3fj6JISpQBjz/jqcpExtm5kU4FkNWs+XIO+On
-0vmC1Nd4M5JmyxkzqHMDpooGLsbXPw==
-=oDxS
------END PGP SIGNATURE-----
-
---Sig_/a9VId0sWDIARXq36H946r=_--
