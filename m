@@ -4,34 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC72DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74496C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA5218C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427DA20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 22:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfDLWuh (ORCPT
+        id S1727298AbfDLWu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 18:50:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36616 "EHLO
+        Fri, 12 Apr 2019 18:50:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36638 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDLWug (ORCPT
+        with ESMTP id S1726765AbfDLWu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 18:50:36 -0400
+        Fri, 12 Apr 2019 18:50:56 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 4ADC5281631
-Subject: Re: [PATCH v2 10/15] media: vimc: Propagate multiplanar state in the
- stream
+        with ESMTPSA id 3DAC7281631
+Subject: Re: [PATCH v2 15/15] media: vimc: Create multiplanar parameter
 To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
         linux-media@vger.kernel.org
 Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, lucmaga@gmail.com,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         lkcamp@lists.libreplanetbr.org
 References: <20190327151743.18528-1-andrealmeid@collabora.com>
- <20190327151743.18528-11-andrealmeid@collabora.com>
+ <20190327151743.18528-16-andrealmeid@collabora.com>
 From:   Helen Koike <helen.koike@collabora.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=helen.koike@collabora.com; keydata=
@@ -108,12 +107,12 @@ Autocrypt: addr=helen.koike@collabora.com; keydata=
  iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
  46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
  eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <50b63adb-b52a-584f-fca6-ca6fff97f7e6@collabora.com>
-Date:   Fri, 12 Apr 2019 19:50:26 -0300
+Message-ID: <9e832497-9ea1-1758-5a7f-c4bfcbebc382@collabora.com>
+Date:   Fri, 12 Apr 2019 19:50:42 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190327151743.18528-11-andrealmeid@collabora.com>
+In-Reply-To: <20190327151743.18528-16-andrealmeid@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -125,64 +124,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 3/27/19 12:17 PM, André Almeida wrote:
-> Add a multiplanar flag in vimc_stream in order to propagate the
-> state (singleplanar/multiplanar) to subdevices at the stream.
+> Create multiplanar kernel module parameter to define if the driver is
+> running in single planar or in multiplanar mode. Define the device
+> capabilities according to the multiplanar kernel parameter. A device can't
+> support both CAP_VIDEO_CAPTURE and CAP_VIDEO_CAPTURE_MPLANAR at the
+> same time.
 > 
 > Signed-off-by: André Almeida <andrealmeid@collabora.com>
 > ---
 > Change in v2:
-> - New commit
+> - Squash commits to create multiplanar module parameter and to define
+> the device capabilities
+> - Move the creation of the multiplanar parameter to the end of
+> history, so it's only added when all required changes are applied
 > 
->  drivers/media/platform/vimc/vimc-capture.c  | 7 +++++--
->  drivers/media/platform/vimc/vimc-streamer.h | 3 +++
->  2 files changed, 8 insertions(+), 2 deletions(-)
+>  drivers/media/platform/vimc/vimc-capture.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 57bc2b64b093..3c93fbd51629 100644
+> index f5bfb36a145c..3666fcca6812 100644
 > --- a/drivers/media/platform/vimc/vimc-capture.c
 > +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -454,12 +454,15 @@ static int vimc_cap_start_streaming(struct vb2_queue *vq, unsigned int count)
->  		return ret;
->  	}
+> @@ -28,6 +28,10 @@
 >  
-> -	if (IS_MULTIPLANAR(vcap))
-> +	if (IS_MULTIPLANAR(vcap)) {
->  		vcap->stream.producer_pixfmt =
->  			vcap->format.fmt.pix_mp.pixelformat;
-> -	else
-> +		vcap->stream.multiplanar = true;
-> +	} else {
->  		vcap->stream.producer_pixfmt =
->  			vcap->format.fmt.pix.pixelformat;
-> +		vcap->stream.multiplanar = false;
-> +	}
-
-I believe you could have just:
-
-vcap->stream.multiplanar = IS_MULTIPLANAR(vcap);
-
+>  #define VIMC_CAP_DRV_NAME "vimc-capture"
 >  
->  	ret = vimc_streamer_s_stream(&vcap->stream, &vcap->ved, 1);
->  	if (ret) {
-> diff --git a/drivers/media/platform/vimc/vimc-streamer.h b/drivers/media/platform/vimc/vimc-streamer.h
-> index 2b3667408794..4878e0b72ea7 100644
-> --- a/drivers/media/platform/vimc/vimc-streamer.h
-> +++ b/drivers/media/platform/vimc/vimc-streamer.h
-> @@ -25,6 +25,8 @@
->   * processed in the pipeline.
->   * @pipe_size:		size of @ved_pipeline
->   * @kthread:		thread that generates the frames of the stream.
-> + * @multiplanar:	sets if the stream is running in multiplanar or
-> + * singleplanar format mode
->   * @producer_pixfmt:	the pixel format requested from the pipeline. This must
->   * be set just before calling vimc_streamer_s_stream(ent, 1). This value is
->   * propagated up to the source of the base image (usually a sensor node) and
-> @@ -40,6 +42,7 @@ struct vimc_stream {
->  	struct vimc_ent_device *ved_pipeline[VIMC_STREAMER_PIPELINE_MAX_SIZE];
->  	unsigned int pipe_size;
->  	struct task_struct *kthread;
-> +	bool multiplanar;
->  	u32 producer_pixfmt;
->  };
+> +static unsigned int multiplanar;
+> +module_param(multiplanar, uint, 0000);
+> +MODULE_PARM_DESC(multiplanar, "0 (default) creates a single planar device, 1 creates a multiplanar device.");
+> +
+>  /* Checks if the device supports multiplanar capture */
+>  #define IS_MULTIPLANAR(vcap) \
+>  	(vcap->vdev.device_caps & V4L2_CAP_VIDEO_CAPTURE_MPLANE)
+> @@ -681,7 +685,9 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
 >  
+>  	/* Initialize the vb2 queue */
+>  	q = &vcap->queue;
+> -	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+> +	q->type = multiplanar ?
+> +		V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE :
+> +		V4L2_BUF_TYPE_VIDEO_CAPTURE;
+>  	q->io_modes = VB2_MMAP | VB2_DMABUF | VB2_USERPTR;
+>  	q->drv_priv = vcap;
+>  	q->buf_struct_size = sizeof(struct vimc_cap_buffer);
+> @@ -709,9 +715,12 @@ static int vimc_cap_comp_bind(struct device *comp, struct device *master,
+>  	dev_set_drvdata(comp, &vcap->ved);
+>  	vcap->dev = comp;
+>  
+> +
+>  	/* Initialize the video_device struct */
+>  	vdev = &vcap->vdev;
+> -	vdev->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
+> +	vdev->device_caps = (multiplanar ?
+> +			V4L2_CAP_VIDEO_CAPTURE_MPLANE :
+> +			V4L2_BUF_TYPE_VIDEO_CAPTURE) | V4L2_CAP_STREAMING;
+
+s/V4L2_BUF_TYPE_VIDEO_CAPTURE/V4L2_CAP_VIDEO_CAPTURE
+
+>  	vdev->entity.ops = &vimc_cap_mops;
+>  	vdev->release = vimc_cap_release;
+>  	vdev->fops = &vimc_cap_fops;
 > 
