@@ -2,123 +2,206 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA15C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61C4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749DA2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB4720652
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 17:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCsP3gQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfDLRUB convert rfc822-to-8bit (ORCPT
+        id S1726857AbfDLRYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 13:20:01 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38121 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfDLRUA (ORCPT
+        Fri, 12 Apr 2019 13:24:23 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44046 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLRYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 13:20:00 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hEzqG-0000zL-1E; Fri, 12 Apr 2019 19:19:56 +0200
-Date:   Fri, 12 Apr 2019 19:19:55 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 23/27] x86/fpu: Defer FPU state load until return to
- userspace
-Message-ID: <20190412171955.npe2pbomc6np326v@linutronix.de>
-References: <20190403164156.19645-1-bigeasy@linutronix.de>
- <20190403164156.19645-24-bigeasy@linutronix.de>
- <20190412143615.GE19808@zn.tnic>
- <20190412152437.d2bswajqtx7hrpkb@linutronix.de>
- <20190412162213.GF19808@zn.tnic>
- <20190412163741.wq2iq44bnvcbne3a@linutronix.de>
- <20190412164827.GG19808@zn.tnic>
+        Fri, 12 Apr 2019 13:24:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i2so5496965pgj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 10:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mDBd90xKsrcm6fQT2OHL92uvFvh0KfrpQFA/w2s8GW8=;
+        b=rCsP3gQlEL9RVkXn83BZq26uvx4aZ49c7YuqCfSlzqAcMcjnqcn4pq9aZVed751EPf
+         22HqJNOyg86LWZZgr8EfXeXqJAPw2xGVhRidruPUeGNG8mZ+eJjG4kuB3uIFkcO1S4Yz
+         KbW4r087BoVjzMOsPOOXmrHFzl5ITzfjj5dNa3fmkrb8dKI9JBibQip7gNQk6SFmp1GG
+         Ig9dqwnS4tmJRijynefL+Q3m/wwYW7FUCqSA7wxAFJBirHTmM1n1DpPX7FMG/dkioFwm
+         fnIwqDocTCQv14Vu30+sdKU9D9llw1fPGSw9DZHvcThuN3sk1QeuNdMrkbA1szhWX86S
+         drQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mDBd90xKsrcm6fQT2OHL92uvFvh0KfrpQFA/w2s8GW8=;
+        b=ttSB3xTP+zUjpEPeo8Wv2FOcHqgVKGDuyvw3GltpqtgBSw4IipRGa2mtGNWmz3qAuo
+         PF/BkpUN8kfnIixCF9CWPQhq26g9gKKc1y3hehdPn0/xFvmaZY4dQ65xj2GZtQT722IQ
+         dfXNHfBPsvYQAar8E7E9zZcSWqX1t3Am/oPSaSmO3af7+dTNPth+kzD6vRZGn2yVa7KR
+         WaPE1NvkUBrC/9ykTL6ojoatj6r7cMQaqPBLrWUyOmbHnVVitR7zCKD1egWx0RFMkO/c
+         vSmvB+jMcdxxdkx1AM3TT6nQS9IXUParKYEzj4uE5tJFyni/vMmRYdg/nnYMPTJVXvTe
+         Lk4Q==
+X-Gm-Message-State: APjAAAVbGjALuLQvrWZ+jqxi2QNKB4esWfcYlZEKJN1IbFGbXzMa7wVQ
+        XCG/oXbVjyRR/bOHV+JlRFp8DsD1mfDCHmDQrNL8P+0Ky34=
+X-Google-Smtp-Source: APXvYqyOKTtylgCWfXbb+31mjRhXy50uTucTm/GvRL2l5irsvyAFYZsDTMgWB2DtoNDwcRb7/OhPPH4LTDSVT0tMEAQ=
+X-Received: by 2002:a62:4558:: with SMTP id s85mr58166070pfa.171.1555089860942;
+ Fri, 12 Apr 2019 10:24:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190412164827.GG19808@zn.tnic>
-User-Agent: NeoMutt/20180716
+References: <20190411093015.6529-1-yamada.masahiro@socionext.com>
+ <CAKwvOd=es2zG74T+BGbt_T8cHCPNATkmHBA4Hboyy_7=9Bgipg@mail.gmail.com>
+ <CAK7LNAT3=tbf+1KZ+VQRdiBKk9p90EqXL9D8Hk6Ucbv92CRyNQ@mail.gmail.com> <20190412085013.GA11629@fuggles.cambridge.arm.com>
+In-Reply-To: <20190412085013.GA11629@fuggles.cambridge.arm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 12 Apr 2019 10:24:09 -0700
+Message-ID: <CAKwvOdmdzK7N1nPNc5KTM1-7U=dYyDn74BdgDGRocDxv7v8foQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: vdso: use $(LD) instead of $(CC) to link VDSO
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-12 18:48:28 [+0200], Borislav Petkov wrote:
-> On Fri, Apr 12, 2019 at 06:37:41PM +0200, Sebastian Andrzej Siewior wrote:
-> > (as you mentioned) so we would always record both trace points.
-> > Therefore I would suggest to remove it.
-> 
-> Remove which one?
+On Fri, Apr 12, 2019 at 1:50 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi all,
+>
+> On Fri, Apr 12, 2019 at 10:21:38AM +0900, Masahiro Yamada wrote:
+> > On Fri, Apr 12, 2019 at 3:20 AM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > > On Thu, Apr 11, 2019 at 2:30 AM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > > >
+> > > > We use $(LD) to link vmlinux, modules, decompressors, etc.
+> > > >
+> > > > VDSO is the only exceptional case where $(CC) is used as the linker
+> > > > driver, but I do not know why we need to do so. VDSO uses a special
+> > > > linker script, and does not link standard libraries at all.
+> > > >
+> > > > I changed the Makefile to use $(LD) rather than $(CC). I tested this,
+> > > > and VDSO worked for me.
+> > > >
+> > > > Users will be able to use their favorite linker (e.g. lld instead of
+> > > > of bfd) by passing LD= from the command line.
+> > > >
+> > > > My plan is to rewrite all VDSO Makefiles to use $(LD), then delete
+> > > > cc-ldoption.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > ---
+> > > >
+> > > >  arch/arm64/kernel/vdso/Makefile | 13 +++----------
+> > > >  1 file changed, 3 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> > > > index a0af6bf6c11b..744b9dbaba03 100644
+> > > > --- a/arch/arm64/kernel/vdso/Makefile
+> > > > +++ b/arch/arm64/kernel/vdso/Makefile
+> > > > @@ -12,17 +12,12 @@ obj-vdso := gettimeofday.o note.o sigreturn.o
+> > > >  targets := $(obj-vdso) vdso.so vdso.so.dbg
+> > > >  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+> > > >
+> > > > -ccflags-y := -shared -fno-common -fno-builtin
+> > >
+> > > Thanks for the patch; in general LGTM. Just some small questions:
+> > >
+> > > Looks like -shared and -fno-common are linker flags forwarded along,
+> > > but -fno-builtin is meant for the compiler, right?
+> >
+> > Definitely, -shared must be passed to the linker
+> > to create a shared object.
+> > It is listed in the linker option list:
+> > https://gcc.gnu.org/onlinedocs/gcc-8.3.0/gcc/Link-Options.html#Link-Options
+> >
+> >
+> >
+> > I think -fno-common is a compiler flag instead of a linker one
+> > as far as I understand this:
+> > https://gcc.gnu.org/onlinedocs/gcc-8.3.0/gcc/Code-Gen-Options.html#Code-Gen-Options
+> >
+> >
+> > -fno-builtin is a compiler flag:
+> > https://gcc.gnu.org/onlinedocs/gcc-8.3.0/gcc/C-Dialect-Options.html#C-Dialect-Options
+> >
+> >
+> >
+> > > Do we want to keep
+> > > that in ccflags?
+> >
+> > All source files in arch/arm64/kernel/vdso/
+> > are written in assembly (gettimeofday.S note.S sigreturn.S).
+> >
+> > So, -fno-common -fno-builtin for ccflags-y
+> > are not used.
+> >
+> > That's why I dropped them.
+> >
+> > If we want to keep them just in case,
+> > it is fine with me too.
+>
+> I think dropping this is fine for now, but be aware that there is ongoing
+> work to rewrite the vdso in C, in which case we may want that back. Much
+> of the Makefile will probably get reworked when that happens anyway, so
+> no need to worry.
+>
+> > >  I'm not sure why it would have been added
+> > > intentionally; maybe Will knows?  Maybe it's ok to drop.
+> >
+> > They have been here since the initial VDSO support
+> > by commit 9031fefde6f2a.
+> >
+> > Will, do you remember why you added these flags?
+>
+> Shamelessly lifted from ppc :)
+>
+> > > > -ccflags-y += -nostdlib -Wl,-soname=linux-vdso.so.1 \
+> > > > -               $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+> > > > +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
+> > > > +               $(call ld-option, --hash-style=sysv) -n -T
+> > >
+> > > Forgive my ignorance, but the man page for ld makes it looks like the
+> > > -T argument requires a subsequent argument `scriptfile`.  Is that what
+> > > `$(real-prereqs)` was doing below? If so, is dropping it in this patch
+> > > intentional?
+> >
+> > I just re-used cmd_ld in scripts/Makefile.lib
+> >
+> >
+> > It will be expanded like follows:
+> >
+> > cmd_ld = $(LD) $(ld_flags) $(real-prereqs) -o $@
+> >
+> >  ->
+> >
+> >  $(LD) $(KBUILD_LDFLAGS) $(ldflags-y) $(LDFLAGS_$(@F)) $(real-prereqs) -o $@
+> >
+> >  ->
+> >
+> > $(LD) -shared -nostdlib -soname=linux-vdso.so.1 \
+> >      --hash-style=sysv -n -T \
+> >     $(obj)/vdso.lds $(obj-vdso) -o $(obj)/vdso.so.dbg
+>
+> Yeah, this still works, but boy is it ugly to have that dangling -T and
+> then grabbing the linker script from extra-y! That's also my fault though,
+> so I think your patch is ok.
+>
+> Will
 
-remove x86_fpu_activate_state.
+Will, thanks for the additional context.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> Recording both TPs seems to make sense unless it doesn't make a whole
-> lotta sense to have:
-> 
-> fpregs_mark_activate
-> |-> trace_x86_fpu_activate_state		<-- TP1
-> |-> fpregs_activate
->     |-> trace_x86_fpu_regs_activated		<-- TP2
-
-> Yeah, looks like the two are too much and too close for no good
-> reason. There's nothing particularly spectacular in-between in
-> fpregs_activate().
-
-correct.
-
-> > Maybe we could add a new one to __fpregs_load_activate() one in case we
-> > avoid loading registers because of fpregs_state_valid(). This might make
-> > sense.
-> 
-> But that's only the switch_fpu_return() path. Is fpregs_mark_activate()
-> is going to use only the trace_x86_fpu_regs_activated() one? Note the
-> "d" at the end.
-
-You could have a trace-point in case we return to userland and we don't
-load FPU registers because it looks like they are valid.
-It was just an idea.
-
-We could also rip all trcepoints out, rethink the situation and add new
-ones based on current code.
-- on schedule out, we may need to save registers (depending on
-  TIF_NEED_FPU_LOAD) which is new. Before the series we always did.
-
-- on schedule in do nothing but set that TIF bit. This is probably
-  boring.
-
-- on return to userland we should load the registers but can avoid it if
-  we assume that they are valid for the current task
-  (fpregs_state_valid())
-
-- in kernel_fpu_begin() we may trash the task's FPU state (by saving its
-  registers or by resetting fpu_fpregs_owner_ctx).
-
-Those might be interesting.
-
-Currently we have:
-  "x86/fpu: %p load: %d xfeatures: %llx xcomp_bv: %llx"
-
-and we have to find out what happens based on where that TP was
-recorded. Also I'm not sure if the recorded xfeatures change over time.
-I think they do not…
-
->   [ Btw, those two names need adjusting too: who came up with such close,
->      confusing names?!
->      ]
-
-you mean trace_x86_fpu_activate_state and trace_x86_fpu_regs_activated?
-They were added in d1898b733619b ("x86/fpu: Add tracepoints to dump FPU
-state at key points") and we wouldn't have any otherwise.
-
-Sebastian
+-- 
+Thanks,
+~Nick Desaulniers
