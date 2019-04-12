@@ -3,37 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF605C282DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6906CC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81515218D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D50218FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 19:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfDLTCI (ORCPT
+        id S1726911AbfDLTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 15:02:08 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38380 "EHLO
+        Fri, 12 Apr 2019 15:02:13 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38422 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbfDLTCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 15:02:06 -0400
+        id S1726812AbfDLTCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 15:02:10 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6D9115AD;
-        Fri, 12 Apr 2019 12:02:05 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA18A15BE;
+        Fri, 12 Apr 2019 12:02:09 -0700 (PDT)
 Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3843C3F718;
-        Fri, 12 Apr 2019 12:02:04 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A7B93F718;
+        Fri, 12 Apr 2019 12:02:07 -0700 (PDT)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     linux-mm@kvack.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, jglisse@redhat.com,
         oohall@gmail.com, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
         anshuman.khandual@arm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/3] mm/memremap: Rename and consolidate SECTION_SIZE
-Date:   Fri, 12 Apr 2019 20:01:56 +0100
+Subject: [PATCH RESEND 3/3] mm: introduce ARCH_HAS_PTE_DEVMAP
+Date:   Fri, 12 Apr 2019 20:01:58 +0100
 Message-Id:
- <029d4af64642019a6d73c804d362d840f4eb0941.1555093412.git.robin.murphy@arm.com>
+ <25525e4dab6ebc49e233f21f7c29821223431647.1555093412.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.21.0.dirty
 In-Reply-To: <cover.1555093412.git.robin.murphy@arm.com>
 References: <cover.1555093412.git.robin.murphy@arm.com>
@@ -44,90 +44,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190412190156.0C--yiHHZzukyCBZlWJPDrbpZ1WoaAIeciJGjtH5d1w@z>
+Message-ID: <20190412190158.HVCp9fWu45jyp3ArG4Rhg8D_oS83hErbxvcvCB11llQ@z>
 
-Trying to activatee ZONE_DEVICE for arm64 reveals that memremap's
-internal helpers for sparsemem sections conflict with and arm64's
-definitions for hugepages, which inherit the name of "sections" from
-earlier versions of the ARM architecture.
+ARCH_HAS_ZONE_DEVICE is somewhat meaningless in itself, and combined
+with the long-out-of-date comment can lead to the impression than an
+architecture may just enable it (since __add_pages() now "comprehends
+device memory" for itself) and expect things to work.
 
-Disambiguate memremap (and now HMM too) by propagating sparsemem's PA_
-prefix, to clarify that these values are in terms of addresses rather
-than PFNs (and because it's a heck of a lot easier than changing all the
-arch code). SECTION_MASK is unused, so it can just go.
+In practice, however, ZONE_DEVICE users have little chance of
+functioning correctly without __HAVE_ARCH_PTE_DEVMAP, so let's clean
+that up the same way as ARCH_HAS_PTE_SPECIAL and make it the proper
+dependency so the real situation is clearer.
 
-[anshuman: Consolidated mm/hmm.c instance and updated the commit message]
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- include/linux/mmzone.h |  1 +
- kernel/memremap.c      | 10 ++++------
- mm/hmm.c               |  2 --
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ arch/powerpc/Kconfig                         | 2 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 1 -
+ arch/x86/Kconfig                             | 2 +-
+ arch/x86/include/asm/pgtable.h               | 4 ++--
+ arch/x86/include/asm/pgtable_types.h         | 1 -
+ include/linux/mm.h                           | 4 ++--
+ include/linux/pfn_t.h                        | 4 ++--
+ mm/Kconfig                                   | 5 ++---
+ mm/gup.c                                     | 2 +-
+ 9 files changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index fba7741533be..ed7dd27ee94a 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1081,6 +1081,7 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
-  * PFN_SECTION_SHIFT		pfn to/from section number
-  */
- #define PA_SECTION_SHIFT	(SECTION_SIZE_BITS)
-+#define PA_SECTION_SIZE		(1UL << PA_SECTION_SHIFT)
- #define PFN_SECTION_SHIFT	(SECTION_SIZE_BITS - PAGE_SHIFT)
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 5e3d0853c31d..77e1993bba80 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -135,6 +135,7 @@ config PPC
+ 	select ARCH_HAS_MMIOWB			if PPC64
+ 	select ARCH_HAS_PHYS_TO_DMA
+ 	select ARCH_HAS_PMEM_API                if PPC64
++	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC64
+@@ -142,7 +143,6 @@ config PPC
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+-	select ARCH_HAS_ZONE_DEVICE		if PPC_BOOK3S_64
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 581f91be9dd4..02c22ac8f387 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -90,7 +90,6 @@
+ #define _PAGE_SOFT_DIRTY	_RPAGE_SW3 /* software: software dirty tracking */
+ #define _PAGE_SPECIAL		_RPAGE_SW2 /* software: special page */
+ #define _PAGE_DEVMAP		_RPAGE_SW1 /* software: ZONE_DEVICE page */
+-#define __HAVE_ARCH_PTE_DEVMAP
  
- #define NR_MEM_SECTIONS		(1UL << SECTIONS_SHIFT)
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index a856cb5ff192..dda1367b385d 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -14,8 +14,6 @@
- #include <linux/hmm.h>
+ /*
+  * Drivers request for cache inhibited pte mapping using _PAGE_NO_CACHE
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5ad92419be19..ffd50f27f395 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -60,6 +60,7 @@ config X86
+ 	select ARCH_HAS_KCOV			if X86_64
+ 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	select ARCH_HAS_PMEM_API		if X86_64
++	select ARCH_HAS_PTE_DEVMAP		if X86_64
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_REFCOUNT
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE	if X86_64
+@@ -69,7 +70,6 @@ config X86
+ 	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+-	select ARCH_HAS_ZONE_DEVICE		if X86_64
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 2779ace16d23..89a1f6fd48bf 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -254,7 +254,7 @@ static inline int has_transparent_hugepage(void)
+ 	return boot_cpu_has(X86_FEATURE_PSE);
+ }
  
- static DEFINE_XARRAY(pgmap_array);
--#define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
--#define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+-#ifdef __HAVE_ARCH_PTE_DEVMAP
++#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
+ static inline int pmd_devmap(pmd_t pmd)
+ {
+ 	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
+@@ -715,7 +715,7 @@ static inline int pte_present(pte_t a)
+ 	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
+ }
  
- #if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
- vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-@@ -98,8 +96,8 @@ static void devm_memremap_pages_release(void *data)
- 		put_page(pfn_to_page(pfn));
+-#ifdef __HAVE_ARCH_PTE_DEVMAP
++#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
+ static inline int pte_devmap(pte_t a)
+ {
+ 	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index d6ff0bbdb394..b5e49e6bac63 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -103,7 +103,6 @@
+ #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
+ #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
+ #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
+-#define __HAVE_ARCH_PTE_DEVMAP
+ #else
+ #define _PAGE_NX	(_AT(pteval_t, 0))
+ #define _PAGE_DEVMAP	(_AT(pteval_t, 0))
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d76dfb7ac617..fe05c94f23e9 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -504,7 +504,7 @@ struct inode;
+ #define page_private(page)		((page)->private)
+ #define set_page_private(page, v)	((page)->private = (v))
  
- 	/* pages are dead and unused, undo the arch mapping */
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
+-#if !defined(__HAVE_ARCH_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
++#if !defined(CONFIG_ARCH_HAS_PTE_DEVMAP) || !defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ static inline int pmd_devmap(pmd_t pmd)
+ {
+ 	return 0;
+@@ -1698,7 +1698,7 @@ static inline void sync_mm_rss(struct mm_struct *mm)
+ }
+ #endif
  
- 	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
-@@ -154,8 +152,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	if (!pgmap->ref || !pgmap->kill)
- 		return ERR_PTR(-EINVAL);
+-#ifndef __HAVE_ARCH_PTE_DEVMAP
++#ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
+ static inline int pte_devmap(pte_t pte)
+ {
+ 	return 0;
+diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
+index 7bb77850c65a..de8bc66b10a4 100644
+--- a/include/linux/pfn_t.h
++++ b/include/linux/pfn_t.h
+@@ -104,7 +104,7 @@ static inline pud_t pfn_t_pud(pfn_t pfn, pgprot_t pgprot)
+ #endif
+ #endif
  
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
- 	align_end = align_start + align_size - 1;
+-#ifdef __HAVE_ARCH_PTE_DEVMAP
++#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
+ static inline bool pfn_t_devmap(pfn_t pfn)
+ {
+ 	const u64 flags = PFN_DEV|PFN_MAP;
+@@ -122,7 +122,7 @@ pmd_t pmd_mkdevmap(pmd_t pmd);
+ 	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
+ pud_t pud_mkdevmap(pud_t pud);
+ #endif
+-#endif /* __HAVE_ARCH_PTE_DEVMAP */
++#endif /* CONFIG_ARCH_HAS_PTE_DEVMAP */
  
-diff --git a/mm/hmm.c b/mm/hmm.c
-index fe1cd87e49ac..ef9e4e6c9f92 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -33,8 +33,6 @@
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+ static inline bool pfn_t_special(pfn_t pfn)
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 25c71eb8a7db..fcb7ab08e294 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -655,8 +655,7 @@ config IDLE_PAGE_TRACKING
+ 	  See Documentation/admin-guide/mm/idle_page_tracking.rst for
+ 	  more details.
  
--#define PA_SECTION_SIZE (1UL << PA_SECTION_SHIFT)
--
- #if IS_ENABLED(CONFIG_HMM_MIRROR)
- static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
+-# arch_add_memory() comprehends device memory
+-config ARCH_HAS_ZONE_DEVICE
++config ARCH_HAS_PTE_DEVMAP
+ 	bool
  
+ config ZONE_DEVICE
+@@ -664,7 +663,7 @@ config ZONE_DEVICE
+ 	depends on MEMORY_HOTPLUG
+ 	depends on MEMORY_HOTREMOVE
+ 	depends on SPARSEMEM_VMEMMAP
+-	depends on ARCH_HAS_ZONE_DEVICE
++	depends on ARCH_HAS_PTE_DEVMAP
+ 	select XARRAY_MULTI
+ 
+ 	help
+diff --git a/mm/gup.c b/mm/gup.c
+index f84e22685aaa..72a5c7d1e1a7 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1623,7 +1623,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ }
+ #endif /* CONFIG_ARCH_HAS_PTE_SPECIAL */
+ 
+-#if defined(__HAVE_ARCH_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
++#if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr)
+ {
 -- 
 2.21.0.dirty
 
