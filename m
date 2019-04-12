@@ -2,368 +2,172 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12ABC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF01C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B4B20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0522171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 21:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555103801;
+	bh=scMJmpjNzoXcxWBmnorpgbPGsgZ52M7EB/p8Qgxi7Jk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QWP8/BhbK033KQf8qlmqsKfBpvJluVtjuyZDZ0k84iMvxbmylk8Gb9PqgqBzj6TE4
+	 tdwdvIOvIlitPxJV2rKYxGU9iAeoDXpky1trcgH08nRAxT2nioKxEqIOasT0r1PpAq
+	 K8fBGkXXD/qXVSO6c9X6W6K0Mc4wXyxXquGMxjMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfDLVHu (ORCPT
+        id S1726964AbfDLVQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 17:07:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50528 "EHLO mx1.redhat.com"
+        Fri, 12 Apr 2019 17:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfDLVHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 17:07:49 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726765AbfDLVQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 17:16:38 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECAFC70008;
-        Fri, 12 Apr 2019 21:07:48 +0000 (UTC)
-Received: from redhat.com (ovpn-125-94.rdu2.redhat.com [10.10.125.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D4135D6A9;
-        Fri, 12 Apr 2019 21:07:46 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 17:07:43 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Thomas Hellstrom <thellstrom@vmware.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH 2/9] mm: Add an apply_to_pfn_range interface
-Message-ID: <20190412210743.GA19252@redhat.com>
-References: <20190412160338.64994-1-thellstrom@vmware.com>
- <20190412160338.64994-3-thellstrom@vmware.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E71FE218FF
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 21:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555103797;
+        bh=scMJmpjNzoXcxWBmnorpgbPGsgZ52M7EB/p8Qgxi7Jk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OT82jNcBddOfrrP3efKaOAwmQ8D8E42h0AkjlsKpKqqLJePIVXrKvjoCFEp5/lnFf
+         Q/zeAp0gR8ICtXMLRt1MYmAuEzdgglfwsYtLfwKSgEGbY2omTSt/QfZF96av6jpJvk
+         SzbBKs6LHEBpVeUqxSynmWd6dk1Q2ls5FiX0eVqg=
+Received: by mail-wm1-f42.google.com with SMTP id r186so1300435wmf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 14:16:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAVcFeot0ZDo5nqD2monlmLttTs9TARXfWDVWI73JJvWo90DwnBa
+        moTcovWviPq6N3h5Ns6lPQtCKcdX2RnVKGCAwiH7mg==
+X-Google-Smtp-Source: APXvYqxJYkS9UPoBreObJziw5s9dPw+j34SXCtF5qd2P3ctZPysMi97EDpDU6d9rxIGzPYtvn5hfUCYsh7XtjyU2D2E=
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr13208641wmh.9.1555103795421;
+ Fri, 12 Apr 2019 14:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190412160338.64994-3-thellstrom@vmware.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 12 Apr 2019 21:07:49 +0000 (UTC)
+References: <20190408061358.21288-1-elena.reshetova@intel.com>
+ <20190408124940.hb4d2mvwue7aydjj@treble> <20190410082642.GA35032@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C48943@IRSMSX102.ger.corp.intel.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C48B15@IRSMSX102.ger.corp.intel.com>
+ <CALCETrWA8r6_zbfrYV-E-iykoEj-Fw=HeRQ5mAM4iSPrfU8jKw@mail.gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C4C052@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C4C052@IRSMSX102.ger.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 12 Apr 2019 14:16:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrUj1LymrDiZ02tY8xbr8a7kiimWq68D5DyuPfYsVLeO=Q@mail.gmail.com>
+Message-ID: <CALCETrUj1LymrDiZ02tY8xbr8a7kiimWq68D5DyuPfYsVLeO=Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 04:04:18PM +0000, Thomas Hellstrom wrote:
-> This is basically apply_to_page_range with added functionality:
-> Allocating missing parts of the page table becomes optional, which
-> means that the function can be guaranteed not to error if allocation
-> is disabled. Also passing of the closure struct and callback function
-> becomes different and more in line with how things are done elsewhere.
-> 
-> Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
-> 
-> The reason for not using the page-walk code is that we want to perform
-> the page-walk on vmas pointing to an address space without requiring the
-> mmap_sem to be held rather thand on vmas belonging to a process with the
-> mmap_sem held.
-> 
-> Notable changes since RFC:
-> Don't export apply_to_pfn range.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> ---
->  include/linux/mm.h |  10 ++++
->  mm/memory.c        | 130 ++++++++++++++++++++++++++++++++++-----------
->  2 files changed, 108 insertions(+), 32 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 80bb6408fe73..b7dd4ddd6efb 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2632,6 +2632,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
->  extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
->  			       unsigned long size, pte_fn_t fn, void *data);
->  
-> +struct pfn_range_apply;
-> +typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
-> +			 struct pfn_range_apply *closure);
-> +struct pfn_range_apply {
-> +	struct mm_struct *mm;
-> +	pter_fn_t ptefn;
-> +	unsigned int alloc;
-> +};
-> +extern int apply_to_pfn_range(struct pfn_range_apply *closure,
-> +			      unsigned long address, unsigned long size);
->  
->  #ifdef CONFIG_PAGE_POISONING
->  extern bool page_poisoning_enabled(void);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index a95b4a3b1ae2..60d67158964f 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -1938,18 +1938,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
->  }
->  EXPORT_SYMBOL(vm_iomap_memory);
->  
-> -static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pte_t *pte;
->  	int err;
->  	pgtable_t token;
->  	spinlock_t *uninitialized_var(ptl);
->  
-> -	pte = (mm == &init_mm) ?
-> +	pte = (closure->mm == &init_mm) ?
->  		pte_alloc_kernel(pmd, addr) :
-> -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
-> +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
->  	if (!pte)
->  		return -ENOMEM;
->  
-> @@ -1960,86 +1959,107 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
->  	token = pmd_pgtable(*pmd);
->  
->  	do {
-> -		err = fn(pte++, token, addr, data);
-> +		err = closure->ptefn(pte++, token, addr, closure);
->  		if (err)
->  			break;
->  	} while (addr += PAGE_SIZE, addr != end);
->  
->  	arch_leave_lazy_mmu_mode();
->  
-> -	if (mm != &init_mm)
-> +	if (closure->mm != &init_mm)
->  		pte_unmap_unlock(pte-1, ptl);
->  	return err;
->  }
->  
-> -static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pmd_t *pmd;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
->  	BUG_ON(pud_huge(*pud));
->  
-> -	pmd = pmd_alloc(mm, pud, addr);
-> +	pmd = pmd_alloc(closure->mm, pud, addr);
->  	if (!pmd)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = pmd_addr_end(addr, end);
-> -		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
-> +		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
-> +			continue;
-> +		err = apply_to_pte_range(closure, pmd, addr, next);
->  		if (err)
->  			break;
->  	} while (pmd++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	pud_t *pud;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
-> -	pud = pud_alloc(mm, p4d, addr);
-> +	pud = pud_alloc(closure->mm, p4d, addr);
->  	if (!pud)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = pud_addr_end(addr, end);
-> -		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
-> +		if (!closure->alloc && pud_none_or_clear_bad(pud))
-> +			continue;
-> +		err = apply_to_pmd_range(closure, pud, addr, next);
->  		if (err)
->  			break;
->  	} while (pud++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
-> -				     unsigned long addr, unsigned long end,
-> -				     pte_fn_t fn, void *data)
-> +static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
-> +			      unsigned long addr, unsigned long end)
->  {
->  	p4d_t *p4d;
->  	unsigned long next;
-> -	int err;
-> +	int err = 0;
->  
-> -	p4d = p4d_alloc(mm, pgd, addr);
-> +	p4d = p4d_alloc(closure->mm, pgd, addr);
->  	if (!p4d)
->  		return -ENOMEM;
-> +
->  	do {
->  		next = p4d_addr_end(addr, end);
-> -		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
-> +		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
-> +			continue;
-> +		err = apply_to_pud_range(closure, p4d, addr, next);
->  		if (err)
->  			break;
->  	} while (p4d++, addr = next, addr != end);
->  	return err;
->  }
->  
-> -/*
-> - * Scan a region of virtual memory, filling in page tables as necessary
-> - * and calling a provided function on each leaf page table.
-> +/**
-> + * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
-> + * function on each leaf page table entry
-> + * @closure: Details about how to scan and what function to apply
-> + * @addr: Start virtual address
-> + * @size: Size of the region
-> + *
-> + * If @closure->alloc is set to 1, the function will fill in the page table
-> + * as necessary. Otherwise it will skip non-present parts.
-> + * Note: The caller must ensure that the range does not contain huge pages.
-> + * The caller must also assure that the proper mmu_notifier functions are
-> + * called. Either in the pte leaf function or before and after the call to
-> + * apply_to_pfn_range.
+On Thu, Apr 11, 2019 at 10:36 PM Reshetova, Elena
+<elena.reshetova@intel.com> wrote:
+>
+> > On Wed, Apr 10, 2019 at 3:24 AM Reshetova, Elena
+> > <elena.reshetova@intel.com> wrote:
+> > >
+> > >
+> > > > > > On Mon, Apr 08, 2019 at 09:13:58AM +0300, Elena Reshetova wrote:
+> > > > > > > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> > > > > > > index 7bc105f47d21..38ddc213a5e9 100644
+> > > > > > > --- a/arch/x86/entry/common.c
+> > > > > > > +++ b/arch/x86/entry/common.c
+> > > > > > > @@ -35,6 +35,12 @@
+> > > > > > >  #define CREATE_TRACE_POINTS
+> > > > > > >  #include <trace/events/syscalls.h>
+> > > > > > >
+> > > > > > > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> > > > > > > +#include <linux/random.h>
+> > > > > > > +
+> > > > > > > +void *alloca(size_t size);
+> > > > > > > +#endif
+> > > > > > > +
+> > > > > > >  #ifdef CONFIG_CONTEXT_TRACKING
+> > > > > > >  /* Called on entry from user mode with IRQs off. */
+> > > > > > >  __visible inline void enter_from_user_mode(void)
+> > > > > > > @@ -273,6 +279,13 @@ __visible void do_syscall_64(unsigned long nr,
+> > struct
+> > > > > pt_regs *regs)
+> > > > > > >  {
+> > > > > > >         struct thread_info *ti;
+> > > > > > >
+> > > > > > > +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> > > > > > > +       size_t offset = ((size_t)prandom_u32()) % 256;
+> > > > > > > +       char *ptr = alloca(offset);
+> > > > > > > +
+> > > > > > > +       asm volatile("":"=m"(*ptr));
+> > > > > > > +#endif
+> > > > > > > +
+> > > > > > >         enter_from_user_mode();
+> > > > > > >         local_irq_enable();
+> > > > > > >         ti = current_thread_info();
+> > > > > >
+> > > > > > Would it make sense to also do this for the compat syscalls
+> > > > > > (do_fast_syscall_32, do_int80_syscall_32)?
+> > > > >
+> > > > > Could someone please include the full patch, with justification and
+> > > > > performance impact analysis etc.? Can only find the code part of the
+> > > > > thread on lkml, which leaves out this context.
+> > > > >
+> > > >
+> > > > Sorry, this is very weird, I cannot find it either from lkml, but it was sent there
+> > > > to begin with (and as visible from reply-to headers).
+> > > >
+> > > > Do you want me to resent original version or with "do_fast_syscall_32,
+> > > > do_int80_syscall_32" additions (I am finishing testing them now).
+> > >
+> > > I will resend the original x86_64 now since this is the one I tested and
+> > > measured properly. The 32 bit changes seem to work fine inside my 32 bit VM,
+> > > but since I don't have any real 32 bit HW, I am hesitant to send them out without
+> > > real HW testing and measuring.
+> > >
+> > > This is the asm code for 32 bits (note it requires __builtin_alloca definition and not
+> > just alloca,
+> > > so I will change the 64 bit version to use it also):
+> > >
+> > > #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> > >     size_t offset = ((size_t)prandom_u32()) % 256;
+> > > 0xc10025b6 call   0xc146f7d0 <prandom_u32>
+> > > 0xc10025bb movzbl %al,%eax
+> > >     char *ptr = __builtin_alloca(offset);
+> > > 0xc10025be add    $0x12,%eax
+> > > 0xc10025c1 and    $0x1fc,%eax
+> > > 0xc10025c6 sub    %eax,%esp
+> > > 0xc10025c8 lea    0x27(%esp),%eax
+> > > 0xc10025cc and    $0xfffffff0,%eax
+> > >
+> > > Also, the result is 47 different random offsets produced,
+> > > which is slightly better than 33 offsets for x86_64.
+> > >
+> >
+> > I would suggest that you macro-ify this thing:
+> >
+> > #ifdef WHATEVER
+> > #define add_random_stack_offset() do { void *addr = ... } while (0)
+> > #else
+> > #define add_random_stack_offset() do {} while (0)
+> > #endif
+> >
+> > since you'll end up with more than one call site.
+>
+> Sure, will do. So, you are ok for this to be also called from do_fast_syscall_32
+> and do_int80_syscall_32? I can send the resulting patch, just cannot test on any
+> real 32 bit HW, only VM.
+>
 
-This is wrong there should be a big FAT warning that this can only be use
-against mmap of device file. The page table walking above is broken for
-various thing you might find in any other vma like THP, device pte, hugetlbfs,
-...
-
-Also the mmu notifier can not be call from the pfn callback as that callback
-happens under page table lock (the change_pte notifier callback is useless
-and not enough). So it _must_ happen around the call to apply_to_pfn_range
-
-apply_to_page_range was really not meant to be use in that way ... it was not
-for regular vma.
-
-Using this function for anything else is dangerous and having its uses spread
-more increase that risk. So there must be a big FAT warning saying that you
-should not use this lightly and that it should only be only on mmap of device
-file.
-
-
-> + *
-> + * Returns: Zero on success. If the provided function returns a non-zero status,
-> + * the page table walk will terminate and that status will be returned.
-> + * If @closure->alloc is set to 1, then this function may also return memory
-> + * allocation errors arising from allocating page table memory.
->   */
-> -int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
-> -			unsigned long size, pte_fn_t fn, void *data)
-> +int apply_to_pfn_range(struct pfn_range_apply *closure,
-> +		       unsigned long addr, unsigned long size)
->  {
->  	pgd_t *pgd;
->  	unsigned long next;
-> @@ -2049,16 +2069,62 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
->  	if (WARN_ON(addr >= end))
->  		return -EINVAL;
->  
-> -	pgd = pgd_offset(mm, addr);
-> +	pgd = pgd_offset(closure->mm, addr);
->  	do {
->  		next = pgd_addr_end(addr, end);
-> -		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
-> +		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
-> +			continue;
-> +		err = apply_to_p4d_range(closure, pgd, addr, next);
->  		if (err)
->  			break;
->  	} while (pgd++, addr = next, addr != end);
->  
->  	return err;
->  }
-> +
-> +/**
-> + * struct page_range_apply - Closure structure for apply_to_page_range()
-> + * @pter: The base closure structure we derive from
-> + * @fn: The leaf pte function to call
-> + * @data: The leaf pte function closure
-> + */
-> +struct page_range_apply {
-> +	struct pfn_range_apply pter;
-> +	pte_fn_t fn;
-> +	void *data;
-> +};
-> +
-> +/*
-> + * Callback wrapper to enable use of apply_to_pfn_range for
-> + * the apply_to_page_range interface
-> + */
-> +static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
-> +				       unsigned long addr,
-> +				       struct pfn_range_apply *pter)
-> +{
-> +	struct page_range_apply *pra =
-> +		container_of(pter, typeof(*pra), pter);
-> +
-> +	return pra->fn(pte, token, addr, pra->data);
-> +}
-> +
-> +/*
-> + * Scan a region of virtual memory, filling in page tables as necessary
-> + * and calling a provided function on each leaf page table.
-> + */
-
-It would be good to improve that comment too and make it a warning of
-DO NOT USE ! THIS IS NOT SAFE ON REGULAR VMA !
-
-> +int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
-> +			unsigned long size, pte_fn_t fn, void *data)
-> +{
-> +	struct page_range_apply pra = {
-> +		.pter = {.mm = mm,
-> +			 .alloc = 1,
-> +			 .ptefn = apply_to_page_range_wrapper },
-> +		.fn = fn,
-> +		.data = data
-> +	};
-> +
-> +	return apply_to_pfn_range(&pra.pter, addr, size);
-> +}
->  EXPORT_SYMBOL_GPL(apply_to_page_range);
->  
->  /*
-> -- 
-> 2.20.1
-> 
+Sounds good to me.
