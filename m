@@ -2,87 +2,123 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8902C10F13
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A9BC10F13
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBD12084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F402084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 01:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F8YMVv3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfDLBCJ (ORCPT
+        id S1726736AbfDLBFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 11 Apr 2019 21:02:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2184 "EHLO mga17.intel.com"
+        Thu, 11 Apr 2019 21:05:23 -0400
+Received: from ozlabs.org ([203.11.71.1]:50311 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfDLBCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 11 Apr 2019 21:02:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 18:02:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,339,1549958400"; 
-   d="scan'208";a="135081015"
-Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
-  by orsmga006.jf.intel.com with ESMTP; 11 Apr 2019 18:02:06 -0700
-Subject: Re: [RFC PATCH v3 3/4] x86: Use HYPERVISOR_CALLBACK_VECTOR for
- acrn_guest upcall vector
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-References: <1554711131-21514-1-git-send-email-yakui.zhao@intel.com>
- <1554711131-21514-4-git-send-email-yakui.zhao@intel.com>
- <20190408150011.GH15689@zn.tnic>
- <36ff9827-da90-0736-f0a4-2f38b9c8bf3b@intel.com>
- <20190411135547.GH30080@zn.tnic>
-From:   "Zhao, Yakui" <yakui.zhao@intel.com>
-Message-ID: <1aaea739-ded7-13da-c2d0-54423de0eab0@intel.com>
-Date:   Fri, 12 Apr 2019 09:00:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        id S1726636AbfDLBFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 11 Apr 2019 21:05:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gKSb4D0Dz9s6w;
+        Fri, 12 Apr 2019 11:05:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555031120;
+        bh=pLq/b5V1krU1w9zGS5n9Xr4O5CxmDKdq1DcFmeD+taY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F8YMVv3LJJpnPkPvdBxy4IUU9Bi6PdaSSJCDaYO8l7wtiUI4lKwta8f+MxjY+okRN
+         wWOkNcqyI2X2q0C5lkswK3hnrvl32Y0iweClvWySMJupgszWE2ObWFCqMlnu4/RBHE
+         WOXdV7t1AxQXpkU0AtYWDwnMREVLjOSVPuICZ5hSoGphHUnYacsMMTlYvW3noY3xCx
+         43fUcymLHJnghYeGRjG46XbV22b42zpoclxHPeUotQRsbeYn1PTop68F1nD/HNVC6b
+         IMocSgrYQm0W4y8hOasLrizL27VEBuXTad+J1J1f1prNEcdGm+Tv2jg+I1ReB2saId
+         femhX+GXp4suQ==
+Date:   Fri, 12 Apr 2019 11:05:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Subject: linux-next: manual merge of the bpf-next tree with the jc_docs tree
+Message-ID: <20190412110518.46e329af@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190411135547.GH30080@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/emHHSzS8SwAffydAoVO3eI_"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/emHHSzS8SwAffydAoVO3eI_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2019年04月11日 21:55, Borislav Petkov wrote:
-> On Wed, Apr 10, 2019 at 03:57:08PM +0800, Zhao, Yakui wrote:
->> It is used to avoid that one function declaration has no definition
->> when asm/acrnhyper.h is included and ACRN_GUEST is not enabled.
-> 
-> And that is a problem because...?
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-This is not a problem.
-I take a look at the header file of mshyperv.h and xen/events.h.
-It seems that they have no such extra conditional definition.
-To follow the same style, I will remove it.
+  .mailmap
 
-> 
->> Do you have any suggestion about the header order?
->>>
->>> linux/ path includes still need to come first, of course.
-> 
-> As said above:
-> 
-> linux/ path first, then asm/
-> 
-> Feel free to look around the tree for inspiration :)
+between commit:
 
-I take a look at the file of vwmare.c/mshyperv.c under the directory of 
-arch/x86/kernel/cpu. It seems that the header file only follows the 
-order of: linux/ path first and then asm/.
+  9b628c6ab437 ("mailmap: update my obsolete email address")
 
-Anyway, I will follow your idea in previous email and use the alphabetic 
-order.
+from the jc_docs tree and commit:
 
-Thanks
-> 
+  fa0dcb3fe2ca ("mailmap: add entry for email addresses")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc .mailmap
+index 151501c73503,e7984bb6b4b0..000000000000
+--- a/.mailmap
++++ b/.mailmap
+@@@ -16,8 -16,9 +16,11 @@@ Alan Cox <alan@lxorguk.ukuu.org.uk
+  Alan Cox <root@hraefn.swansea.linux.org.uk>
+  Aleksey Gorelov <aleksey_gorelov@phoenix.com>
+  Aleksandar Markovic <aleksandar.markovic@mips.com> <aleksandar.markovic@i=
+mgtec.com>
+ +Alex Shi <alex.shi@linux.alibaba.com> <alex.shi@intel.com>
+ +Alex Shi <alex.shi@linux.alibaba.com> <alex.shi@linaro.org>
++ Alexei Starovoitov <ast@kernel.org> <ast@plumgrid.com>
++ Alexei Starovoitov <ast@kernel.org> <alexei.starovoitov@gmail.com>
++ Alexei Starovoitov <ast@kernel.org> <ast@fb.com>
+  Al Viro <viro@ftp.linux.org.uk>
+  Al Viro <viro@zenIV.linux.org.uk>
+  Andi Shyti <andi@etezian.org> <andi.shyti@samsung.com>
+
+--Sig_/emHHSzS8SwAffydAoVO3eI_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyv5E4ACgkQAVBC80lX
+0Gy9MQf9HV3njCxmY/t9eYQlrQRRYFcqtKBWXcQBaLUONuT5S+uqDlU9o8yGqZFz
+v72XOw+gU8HaFr/Xa0gd0LIiLVBrCmDibOlEvSq8N3giHIJUhKiCMcVTkf3lfQ7m
+QdKBBRC23YFTAGcJC17uEY8nvBQINVH5QZ9P0+RgwzjoGHOedPd41rb+GiY/M8D8
+5ooqo5v1qZPTSnteB23esVCxvxwRjALz3ZfegsQnPaXN4TJ30WrnGnVzqQSt638m
+SrBdmo8iAQL14U/Fq5HvYdAA3w+MIAso5r/tiAhYmSQRLW5SAl2DIytYVVxGOM6w
+7VKUxvPEvSpdPbuyKSBm0rC6fdO2Sw==
+=/QdY
+-----END PGP SIGNATURE-----
+
+--Sig_/emHHSzS8SwAffydAoVO3eI_--
