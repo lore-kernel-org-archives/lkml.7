@@ -2,151 +2,166 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17756C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2616C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D232D20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B0RJ73yG"
+	by mail.kernel.org (Postfix) with ESMTP id BA8F22073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 04:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfDLEIr (ORCPT
+        id S1726767AbfDLETb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 00:08:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37442 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfDLEIr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 00:08:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3C48VmC080407;
-        Thu, 11 Apr 2019 23:08:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555042111;
-        bh=+1Vslevu6ugpmdOGljCOkiKev4xk0y0cVIbkx7aJAww=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B0RJ73yGwmAbbMLW7g0x8yEX1u1D6ZHrrtTOY2f+9Tk90g0sxLMmExgYPCKJjQRNz
-         WBz11bYGj+XaifvlL/rr1wiPacihHDcoRLu38yIk1SoVClbMylnQFy2e3X30cwwJkA
-         ewjKlAiUyGt16kmvwDhErOeylSQfM6vZuGeH31J0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3C48VGM072081
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Apr 2019 23:08:31 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 11
- Apr 2019 23:08:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 11 Apr 2019 23:08:31 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3C48QGY021121;
-        Thu, 11 Apr 2019 23:08:27 -0500
-Subject: Re: [PATCH v6 04/12] firmware: ti_sci: Add RM mapping table for am654
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Marc Zyngier <marc.zyngier@arm.com>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <jason@lakedaemon.net>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-5-lokeshvutla@ti.com>
- <20190411145416.GP2839@atomide.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <49dd19bf-f5bd-e048-75ad-2d4cb708bcf9@ti.com>
-Date:   Fri, 12 Apr 2019 09:38:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190411145416.GP2839@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 12 Apr 2019 00:19:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45315 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbfDLETb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 00:19:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Apr 2019 21:19:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,340,1549958400"; 
+   d="scan'208";a="142094928"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Apr 2019 21:19:27 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>
+Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        yi.l.liu@intel.com, yi.y.sun@intel.com, peterx@redhat.com,
+        tiwei.bie@intel.com, xin.zeng@intel.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v9 1/3] vfio/mdev: Add iommu related member in mdev_device
+Date:   Fri, 12 Apr 2019 12:13:24 +0800
+Message-Id: <20190412041326.19914-2-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190412041326.19914-1-baolu.lu@linux.intel.com>
+References: <20190412041326.19914-1-baolu.lu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A parent device might create different types of mediated
+devices. For example, a mediated device could be created
+by the parent device with full isolation and protection
+provided by the IOMMU. One usage case could be found on
+Intel platforms where a mediated device is an assignable
+subset of a PCI, the DMA requests on behalf of it are all
+tagged with a PASID. Since IOMMU supports PASID-granular
+translations (scalable mode in VT-d 3.0), this mediated
+device could be individually protected and isolated by an
+IOMMU.
 
+This patch adds a new member in the struct mdev_device to
+indicate that the mediated device represented by mdev could
+be isolated and protected by attaching a domain to a device
+represented by mdev->iommu_device. It also adds a helper to
+add or set the iommu device.
 
-On 11/04/19 8:24 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
->> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> index b56a02c10ae6..6f0cd31c1520 100644
->> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> @@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
->>  
->>  Required properties:
->>  -------------------
->> -- compatible: should be "ti,k2g-sci"
->> +- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
->> +		should be "ti,am654-sci" for for TI AM654 SoC
->>  - mbox-names:
->>  	"rx" - Mailbox corresponding to receive path
->>  	"tx" - Mailbox corresponding to transmit path
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index d303f5a14da9..88e461498def 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
->> @@ -2297,10 +2297,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
->>  	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
->>  	.max_msgs = 20,
->>  	.max_msg_size = 64,
->> +	.rm_type_map = NULL,
->> +};
->> +
->> +static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
->> +	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
->> +	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
->> +	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
->> +	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
->> +	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
->> +	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
->> +	{.dev_id = 0, .type = 0x000}, /* end of table */
->> +};
->> +
->> +/* Description for AM654 */
->> +static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
->> +	.default_host_id = 12,
->> +	/* Conservative duration */
->> +	.max_rx_timeout_ms = 10000,
->> +	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
->> +	.max_msgs = 20,
->> +	.max_msg_size = 60,
->> +	.rm_type_map = ti_sci_am654_rm_type_map,
->>  };
->>  
->>  static const struct of_device_id ti_sci_of_match[] = {
->>  	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
->> +	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
->>  	{ /* Sentinel */ },
->>  };
->>  MODULE_DEVICE_TABLE(of, ti_sci_of_match);
-> 
-> Great, this approach with mapping table in the driver based on
-> the compatible looks good to me and avoids stuffing the IDs
-> into device tree:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
+* mdev_device->iommu_device
+  - This, if set, indicates that the mediated device could
+    be fully isolated and protected by IOMMU via attaching
+    an iommu domain to this device. If empty, it indicates
+    using vendor defined isolation, hence bypass IOMMU.
 
-Thanks, but I don't think you understood what the patch is actually doing.
-Please look at the rest of the series on how this table is being used.
+* mdev_set/get_iommu_device(dev, iommu_device)
+  - Set or get the iommu device which represents this mdev
+    in IOMMU's device scope. Drivers don't need to set the
+    iommu device if it uses vendor defined isolation.
 
-Thanks and regards,
-Lokesh
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Liu Yi L <yi.l.liu@intel.com>
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/vfio/mdev/mdev_core.c    | 18 ++++++++++++++++++
+ drivers/vfio/mdev/mdev_private.h |  1 +
+ include/linux/mdev.h             | 14 ++++++++++++++
+ 3 files changed, 33 insertions(+)
+
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 9d29c71bcf99..318959a994e4 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -396,6 +396,24 @@ int mdev_device_remove(struct device *dev, bool force_remove)
+ 	return 0;
+ }
+ 
++int mdev_set_iommu_device(struct device *dev, struct device *iommu_device)
++{
++	struct mdev_device *mdev = to_mdev_device(dev);
++
++	mdev->iommu_device = iommu_device;
++
++	return 0;
++}
++EXPORT_SYMBOL(mdev_set_iommu_device);
++
++struct device *mdev_get_iommu_device(struct device *dev)
++{
++	struct mdev_device *mdev = to_mdev_device(dev);
++
++	return mdev->iommu_device;
++}
++EXPORT_SYMBOL(mdev_get_iommu_device);
++
+ static int __init mdev_init(void)
+ {
+ 	return mdev_bus_register();
+diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+index 379758c52b1b..f4eba723fea5 100644
+--- a/drivers/vfio/mdev/mdev_private.h
++++ b/drivers/vfio/mdev/mdev_private.h
+@@ -33,6 +33,7 @@ struct mdev_device {
+ 	struct kref ref;
+ 	struct list_head next;
+ 	struct kobject *type_kobj;
++	struct device *iommu_device;
+ 	bool active;
+ };
+ 
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index 12354ab4164a..f4a88a6dd054 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -15,6 +15,20 @@
+ 
+ struct mdev_device;
+ 
++/*
++ * Called by the parent device driver to set the device which represents
++ * this mdev in iommu protection scope. By default, the iommu device is
++ * NULL, that indicates using vendor defined isolation.
++ *
++ * @dev: the mediated device that iommu will isolate.
++ * @iommu_device: a pci device which represents the iommu for @dev.
++ *
++ * Return 0 for success, otherwise negative error value.
++ */
++int mdev_set_iommu_device(struct device *dev, struct device *iommu_device);
++
++struct device *mdev_get_iommu_device(struct device *dev);
++
+ /**
+  * struct mdev_parent_ops - Structure to be registered for each parent device to
+  * register the device to mdev module.
+-- 
+2.17.1
+
