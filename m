@@ -2,408 +2,138 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC05C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E192171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845F12171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555061316;
+	bh=xWrBx6+oTY/WaLpNPIz9WwDRzDnmK+NRBn7xB5bcwCk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lpdXaen+BtMAtywCRHPE0Cm1o1FVikNWsXwq4ZoXrsWqN4ObSaqDLNsDvsC13LNb3
+	 FdXjP+skYxRep4mkHO3ZmSiXrsRM54Vuyvkbw0pOBI9OpCdpZcdCw6cW9DdE43wGty
+	 yrfUEF0ICc4yaHtH5myCu4Y2IA1lHEvYcYRYHYus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfDLJ1h (ORCPT
+        id S1727543AbfDLJ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:27:37 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42200 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726838AbfDLJ1h (ORCPT
+        Fri, 12 Apr 2019 05:28:35 -0400
+Received: from casper.infradead.org ([85.118.1.10]:42328 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfDLJ2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:27:37 -0400
-Received: from [IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68] ([IPv6:2001:983:e9a7:1:f507:24ec:6ad2:dc68])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id EsT6hzc8UNG8zEsT7hC333; Fri, 12 Apr 2019 11:27:33 +0200
-Subject: Re: [PATCH v9 4/4] [media] cxusb: add raw mode support for Medion
- MD95700
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Andy Walls <awalls@md.metrocast.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org
-References: <cover.1553903063.git.mail@maciej.szmigiero.name>
- <9ee1804b53cdeccde17826a58c17092400795b67.1553903063.git.mail@maciej.szmigiero.name>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <9f526004-c431-3b1e-71bf-9cb1a795ae81@xs4all.nl>
-Date:   Fri, 12 Apr 2019 11:27:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 05:28:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WdL/F/RraVaWl4C+zv5obLRbC5DtbEUQ8VLCWL3vU0I=; b=Cxmjv6Bo9ZbULcdLj9ZXPVA7rn
+        GDJBhJsaA95unpN+Xtht+KVQ77YLKicnSvbJzrFg8eD9gViUB4PjPRNj19Cs3ze1pc1f9lrddTIKy
+        c/QjDGiZgwzZYVG9c73/GKohd+kW83gNuK+NGsbpBPGqALHA04Pd2JrSGMwneLa75A7cbdmOEOqTl
+        +RLC5kLSvq627UDxodIS3tj2dJ3MpuQb9QGreDZL1owplKXpe5jMU6x000Q9oepngOe0qJxLPqT8C
+        Ki8BZ9tr1ZrhCmdvZcrvg9bfXPF+LhG9m5rfFXK020EevSDKomsQHOar75sOZtnl0qRuE15Fe7G7p
+        mZjDtejQ==;
+Received: from 201.86.162.146.dynamic.adsl.gvt.net.br ([201.86.162.146] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hEsU2-0005DL-Nx; Fri, 12 Apr 2019 09:28:31 +0000
+Date:   Fri, 12 Apr 2019 06:28:26 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] Add all documentation files to an html/pdf
+ produced book
+Message-ID: <20190412062826.7681c803@coco.lan>
+In-Reply-To: <20190411124904.12e61bc7@lwn.net>
+References: <cover.1554742526.git.mchehab+samsung@kernel.org>
+        <20190408161820.6a12657f@lwn.net>
+        <20190410064939.2a9dca9a@coco.lan>
+        <20190411124904.12e61bc7@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9ee1804b53cdeccde17826a58c17092400795b67.1553903063.git.mail@maciej.szmigiero.name>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGQakSGi8pzZeQeIi+XmPoJ3GxEqdvOqOz0MiyXCeizoge/jYXpGP2p/hrzH72nDUkUhN/pw00iG5Hfmc1ruTicjk0WPhguodgTOD1c7m7njc80byeh/
- n70DfeNM8vJY5VXhMwP2Gt6LfaSBzIsEN29NyuhF8iJ1vNtlREoKd5LGq9g7BndonSrwwjzHw5q1kUHaxFj4QKq0id5HmxO2fNi98mvnNNAOPEdT78qXmjXB
- 3y+WbFEVPfeeBMs9rnhR/9ErQJwK6drMvwa2DbPKg2zOdBAyO7wXyengTEK68HnXgGq2VC90sBmEWie2MPP172ErFBjDHAt8YI6Y/3LIUxm40Mb4fwMYhEej
- iW+N5T6EQPVmPI60mCsURsUxgeHgIzzxtw1plMBRKL+a3RFM0C8j6P/NHqvibZAyFVc9rsWye3VFkypaJhOOtuDFUEkdckLzR7qNHs1TTo3035z7Kok=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/19 12:51 AM, Maciej S. Szmigiero wrote:
-> This adds raw (unprocessed) BT.656 stream capturing support for the analog
-> part of Medion 95700.
-> It can be enabled by setting CXUSB_EXTENDEDMODE_CAPTURE_RAW flag in
-> parm.capture.extendedmode passed to VIDIOC_S_PARM.
+Em Thu, 11 Apr 2019 12:49:04 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-What is the point of this feature? I think this should just be dropped.
-
-Regards,
-
-	Hans
-
+> On Wed, 10 Apr 2019 06:49:39 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 > 
-> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> ---
->  drivers/media/usb/dvb-usb/cxusb-analog.c | 190 +++++++++++++++++++----
->  drivers/media/usb/dvb-usb/cxusb.h        |   4 +
->  drivers/media/v4l2-core/v4l2-ioctl.c     |   3 +-
->  3 files changed, 163 insertions(+), 34 deletions(-)
+> [I'm just responding to one little piece of this for the moment...]
 > 
-> diff --git a/drivers/media/usb/dvb-usb/cxusb-analog.c b/drivers/media/usb/dvb-usb/cxusb-analog.c
-> index c726e578b5da..f8dcb8240d5c 100644
-> --- a/drivers/media/usb/dvb-usb/cxusb-analog.c
-> +++ b/drivers/media/usb/dvb-usb/cxusb-analog.c
-> @@ -44,7 +44,9 @@ static int cxusb_medion_v_queue_setup(struct vb2_queue *q,
->  {
->  	struct dvb_usb_device *dvbdev = vb2_get_drv_priv(q);
->  	struct cxusb_medion_dev *cxdev = dvbdev->priv;
-> -	unsigned int size = cxdev->width * cxdev->height * 2;
-> +	unsigned int size = cxdev->raw_mode ?
-> +		CXUSB_VIDEO_MAX_FRAME_SIZE :
-> +		cxdev->width * cxdev->height * 2;
->  
->  	if (*num_planes > 0) {
->  		if (*num_planes != 1)
-> @@ -67,8 +69,13 @@ static int cxusb_medion_v_buf_init(struct vb2_buffer *vb)
->  
->  	cxusb_vprintk(dvbdev, OPS, "buffer init\n");
->  
-> -	if (vb2_plane_size(vb, 0) < cxdev->width * cxdev->height * 2)
-> -		return -ENOMEM;
-> +	if (cxdev->raw_mode) {
-> +		if (vb2_plane_size(vb, 0) < CXUSB_VIDEO_MAX_FRAME_SIZE)
-> +			return -ENOMEM;
-> +	} else {
-> +		if (vb2_plane_size(vb, 0) < cxdev->width * cxdev->height * 2)
-> +			return -ENOMEM;
-> +	}
->  
->  	cxusb_vprintk(dvbdev, OPS, "buffer OK\n");
->  
-> @@ -442,6 +449,45 @@ static bool cxusb_medion_copy_field(struct dvb_usb_device *dvbdev,
->  	return true;
->  }
->  
-> +static void cxusb_medion_v_process_urb_raw(struct cxusb_medion_dev *cxdev,
-> +					   struct urb *urb)
-> +{
-> +	struct dvb_usb_device *dvbdev = cxdev->dvbdev;
-> +	u8 *buf;
-> +	struct cxusb_medion_vbuffer *vbuf;
-> +	int i;
-> +	unsigned long len;
-> +
-> +	if (list_empty(&cxdev->buflist)) {
-> +		dev_warn(&dvbdev->udev->dev, "no free buffers\n");
-> +		cxdev->vbuf_sequence++;
-> +		return;
-> +	}
-> +
-> +	vbuf = list_first_entry(&cxdev->buflist, struct cxusb_medion_vbuffer,
-> +				list);
-> +	list_del(&vbuf->list);
-> +
-> +	vbuf->vb2.field = V4L2_FIELD_NONE;
-
-This isn't right. It should likely be FIELD_INTERLACED, since that's what the
-cx25840 (and most other SDTV video receivers) gives you.
-
-> +	vbuf->vb2.sequence = cxdev->vbuf_sequence++;
-> +	vbuf->vb2.vb2_buf.timestamp = ktime_get_ns();
-> +
-> +	buf = vb2_plane_vaddr(&vbuf->vb2.vb2_buf, 0);
-> +
-> +	for (i = 0, len = 0; i < urb->number_of_packets; i++) {
-> +		memcpy(buf, urb->transfer_buffer +
-> +		       urb->iso_frame_desc[i].offset,
-> +		       urb->iso_frame_desc[i].actual_length);
-> +
-> +		buf += urb->iso_frame_desc[i].actual_length;
-> +		len += urb->iso_frame_desc[i].actual_length;
-> +	}
-> +
-> +	vb2_set_plane_payload(&vbuf->vb2.vb2_buf, 0, len);
-> +
-> +	vb2_buffer_done(&vbuf->vb2.vb2_buf, VB2_BUF_STATE_DONE);
-> +}
-> +
->  static bool cxusb_medion_v_process_auxbuf(struct cxusb_medion_dev *cxdev,
->  					  bool reset)
->  {
-> @@ -566,22 +612,26 @@ static bool cxusb_medion_v_complete_handle_urb(struct cxusb_medion_dev *cxdev,
->  			      len);
->  
->  		if (len > 0) {
-> -			cxusb_vprintk(dvbdev, URB, "appending URB\n");
-> -
-> -			/*
-> -			 * append new data to auxbuf while
-> -			 * overwriting old data if necessary
-> -			 *
-> -			 * if any overwrite happens then we can no
-> -			 * longer rely on consistency of the whole
-> -			 * data so let's start again the current
-> -			 * auxbuf frame assembling process from
-> -			 * the beginning
-> -			 */
-> -			*auxbuf_reset =
-> -				!cxusb_auxbuf_append_urb(dvbdev,
-> -							 &cxdev->auxbuf,
-> -							 urb);
-> +			if (cxdev->raw_mode)
-> +				cxusb_medion_v_process_urb_raw(cxdev, urb);
-> +			else {
-> +				cxusb_vprintk(dvbdev, URB, "appending URB\n");
-> +
-> +				/*
-> +				 * append new data to auxbuf while
-> +				 * overwriting old data if necessary
-> +				 *
-> +				 * if any overwrite happens then we can no
-> +				 * longer rely on consistency of the whole
-> +				 * data so let's start again the current
-> +				 * auxbuf frame assembling process from
-> +				 * the beginning
-> +				 */
-> +				*auxbuf_reset =
-> +					!cxusb_auxbuf_append_urb(dvbdev,
-> +								 &cxdev->auxbuf,
-> +								 urb);
-> +			}
->  		}
->  	}
->  
-> @@ -616,7 +666,8 @@ static void cxusb_medion_v_complete_work(struct work_struct *work)
->  
->  	reschedule = cxusb_medion_v_complete_handle_urb(cxdev, &auxbuf_reset);
->  
-> -	if (cxusb_medion_v_process_auxbuf(cxdev, auxbuf_reset))
-> +	if (!cxdev->raw_mode && cxusb_medion_v_process_auxbuf(cxdev,
-> +							      auxbuf_reset))
->  		/* reschedule us until auxbuf no longer can produce any frame */
->  		reschedule = true;
->  
-> @@ -755,9 +806,13 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
->  		goto ret_unstream_cx;
->  	}
->  
-> -	ret = cxusb_medion_v_ss_auxbuf_alloc(cxdev, &npackets);
-> -	if (ret != 0)
-> -		goto ret_unstream_md;
-> +	if (cxdev->raw_mode)
-> +		npackets = CXUSB_VIDEO_MAX_FRAME_PKTS;
-> +	else {
-> +		ret = cxusb_medion_v_ss_auxbuf_alloc(cxdev, &npackets);
-> +		if (ret != 0)
-> +			goto ret_unstream_md;
-> +	}
->  
->  	for (i = 0; i < CXUSB_VIDEO_URBS; i++) {
->  		int framen;
-> @@ -813,9 +868,11 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
->  	cxdev->nexturb = 0;
->  	cxdev->vbuf_sequence = 0;
->  
-> -	cxdev->vbuf = NULL;
-> -	cxdev->bt656.mode = NEW_FRAME;
-> -	cxdev->bt656.buf = NULL;
-> +	if (!cxdev->raw_mode) {
-> +		cxdev->vbuf = NULL;
-> +		cxdev->bt656.mode = NEW_FRAME;
-> +		cxdev->bt656.buf = NULL;
-> +	}
->  
->  	for (i = 0; i < CXUSB_VIDEO_URBS; i++)
->  		if (cxdev->streamurbs[i] != NULL) {
-> @@ -833,7 +890,8 @@ static int cxusb_medion_v_start_streaming(struct vb2_queue *q,
->  	cxusb_medion_urbs_free(cxdev);
->  
->  ret_freeab:
-> -	vfree(cxdev->auxbuf.buf);
-> +	if (!cxdev->raw_mode)
-> +		vfree(cxdev->auxbuf.buf);
->  
->  ret_unstream_md:
->  	cxusb_ctrl_msg(dvbdev, CMD_STREAMING_OFF, NULL, 0, NULL, 0);
-> @@ -880,7 +938,8 @@ static void cxusb_medion_v_stop_streaming(struct vb2_queue *q)
->  	mutex_lock(cxdev->videodev->lock);
->  
->  	/* free transfer buffer and URB */
-> -	vfree(cxdev->auxbuf.buf);
-> +	if (!cxdev->raw_mode)
-> +		vfree(cxdev->auxbuf.buf);
->  
->  	cxusb_medion_urbs_free(cxdev);
->  
-> @@ -953,9 +1012,11 @@ static int cxusb_medion_g_fmt_vid_cap(struct file *file, void *fh,
->  	f->fmt.pix.height = cxdev->height;
->  	f->fmt.pix.pixelformat = V4L2_PIX_FMT_UYVY;
->  	f->fmt.pix.field = V4L2_FIELD_SEQ_TB;
-> -	f->fmt.pix.bytesperline = cxdev->width * 2;
-> +	f->fmt.pix.bytesperline = cxdev->raw_mode ? 0 : cxdev->width * 2;
->  	f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
-> -	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
-> +	f->fmt.pix.sizeimage =
-> +		cxdev->raw_mode ? CXUSB_VIDEO_MAX_FRAME_SIZE :
-> +		f->fmt.pix.bytesperline * f->fmt.pix.height;
->  	f->fmt.pix.priv = 0;
->  
->  	return 0;
-> @@ -1010,8 +1071,10 @@ static int cxusb_medion_try_s_fmt_vid_cap(struct file *file,
->  	f->fmt.pix.height = subfmt.format.height;
->  	f->fmt.pix.pixelformat = V4L2_PIX_FMT_UYVY;
->  	f->fmt.pix.field = V4L2_FIELD_SEQ_TB;
-> -	f->fmt.pix.bytesperline = f->fmt.pix.width * 2;
-> -	f->fmt.pix.sizeimage = f->fmt.pix.bytesperline * f->fmt.pix.height;
-> +	f->fmt.pix.bytesperline = cxdev->raw_mode ? 0 : f->fmt.pix.width * 2;
-> +	f->fmt.pix.sizeimage =
-> +		cxdev->raw_mode ? CXUSB_VIDEO_MAX_FRAME_SIZE :
-> +		f->fmt.pix.bytesperline * f->fmt.pix.height;
->  	f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
->  	f->fmt.pix.priv = 0;
->  
-> @@ -1340,6 +1403,67 @@ static int cxusb_medion_s_std(struct file *file, void *fh,
->  	return 0;
->  }
->  
-> +static int cxusb_medion_g_s_parm(struct file *file, void *fh,
-> +				 struct v4l2_streamparm *param)
-> +{
-> +	v4l2_std_id std;
-> +
-> +	if (param->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> +		return -EINVAL;
-> +
-> +	param->parm.capture.readbuffers = 2;
-> +
-> +	if (cxusb_medion_g_std(file, fh, &std) == 0)
-> +		v4l2_video_std_frame_period(std,
-> +					    &param->parm.capture.timeperframe);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxusb_medion_g_parm(struct file *file, void *fh,
-> +			       struct v4l2_streamparm *param)
-> +{
-> +	struct dvb_usb_device *dvbdev = video_drvdata(file);
-> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
-> +	int ret;
-> +
-> +	ret = cxusb_medion_g_s_parm(file, fh, param);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	if (cxdev->raw_mode)
-> +		param->parm.capture.extendedmode |=
-> +			CXUSB_EXTENDEDMODE_CAPTURE_RAW;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxusb_medion_s_parm(struct file *file, void *fh,
-> +			       struct v4l2_streamparm *param)
-> +{
-> +	struct dvb_usb_device *dvbdev = video_drvdata(file);
-> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
-> +	int ret;
-> +	bool want_raw;
-> +
-> +	ret = cxusb_medion_g_s_parm(file, fh, param);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	want_raw = param->parm.capture.extendedmode &
-> +		CXUSB_EXTENDEDMODE_CAPTURE_RAW;
-> +
-> +	if (want_raw != cxdev->raw_mode) {
-> +		if (vb2_start_streaming_called(&cxdev->videoqueue) ||
-> +		    cxdev->stop_streaming)
-> +			return -EBUSY;
-> +
-> +		cxdev->raw_mode = want_raw;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int cxusb_medion_log_status(struct file *file, void *fh)
->  {
->  	struct dvb_usb_device *dvbdev = video_drvdata(file);
-> @@ -1359,6 +1483,8 @@ static const struct v4l2_ioctl_ops cxusb_video_ioctl = {
->  	.vidioc_enum_input = cxusb_medion_enum_input,
->  	.vidioc_g_input = cxusb_medion_g_input,
->  	.vidioc_s_input = cxusb_medion_s_input,
-> +	.vidioc_g_parm = cxusb_medion_g_parm,
-> +	.vidioc_s_parm = cxusb_medion_s_parm,
->  	.vidioc_g_tuner = cxusb_medion_g_tuner,
->  	.vidioc_s_tuner = cxusb_medion_s_tuner,
->  	.vidioc_g_frequency = cxusb_medion_g_frequency,
-> diff --git a/drivers/media/usb/dvb-usb/cxusb.h b/drivers/media/usb/dvb-usb/cxusb.h
-> index edd7e873e619..e08c946f7c35 100644
-> --- a/drivers/media/usb/dvb-usb/cxusb.h
-> +++ b/drivers/media/usb/dvb-usb/cxusb.h
-> @@ -130,6 +130,7 @@ struct cxusb_medion_dev {
->  	u32 input;
->  	bool stop_streaming;
->  	u32 width, height;
-> +	bool raw_mode;
->  	struct cxusb_medion_auxbuf auxbuf;
->  	v4l2_std_id norm;
->  
-> @@ -153,6 +154,9 @@ struct cxusb_medion_vbuffer {
->  	struct list_head list;
->  };
->  
-> +/* Capture streaming parameters extendedmode field flags */
-> +#define CXUSB_EXTENDEDMODE_CAPTURE_RAW 1
-> +
->  /* defines for "debug" module parameter */
->  #define CXUSB_DBG_RC BIT(0)
->  #define CXUSB_DBG_I2C BIT(1)
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index ac87c3e37280..0b9ca5acdd35 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -2023,7 +2023,7 @@ static int v4l_s_parm(const struct v4l2_ioctl_ops *ops,
->  	if (ret)
->  		return ret;
->  
-> -	/* Note: extendedmode is never used in drivers */
-> +	/* Note: extendedmode is never used in output drivers */
->  	if (V4L2_TYPE_IS_OUTPUT(p->type)) {
->  		memset(p->parm.output.reserved, 0,
->  		       sizeof(p->parm.output.reserved));
-> @@ -2032,7 +2032,6 @@ static int v4l_s_parm(const struct v4l2_ioctl_ops *ops,
->  	} else {
->  		memset(p->parm.capture.reserved, 0,
->  		       sizeof(p->parm.capture.reserved));
-> -		p->parm.capture.extendedmode = 0;
->  		p->parm.capture.capturemode &= V4L2_MODE_HIGHQUALITY;
->  	}
->  	return ops->vidioc_s_parm(file, fh, p);
+> > In any case, IMHO, the best would be to add a new
+> > crap^h^h^h^hstaging group were we could place all legacy random stuff.
+> > Then, gradually fix those, splitting stuff and promoting them to the
+> > main books, in a similar way to what we do with staging.  
 > 
+> Now that's an interesting idea; I hadn't thought about that.  Doing so,
+> though, implies a willingness to stage unloved docs *out*,
 
+That sounds like a plus! 
+
+> and my experience is that there is little appetite for that. 
+
+Heh, I guess most of us are biased to avoid dropping stuff. Yet, it
+happens with time. I wouldn't mind dropping something too outdated
+if, after some time, nobody fixes the issues there.
+
+> It also kind of
+> implies moving docs twice - at least for the ones that get updates - and
+> that may not be entirely appreciated.
+
+True, but avoiding moving twice is not trivial. I mean, files
+need to be renamed anyway. Only if we get it right the first
+time (converting the file and placing at the right place), we'll
+avoid a double move.
+
+I considered an alternative of just including a *.txt file
+at a ReST TOC, but Sphinx doesn't allow including a file that
+it is not specified at source_suffix. Worse than that, if a
+suffix is added there, it will parse (and crash) if the file
+has things like:
+        some indented title
+        ===================
+
+or even:
+	- item
+	- ....
+
+With a sort of pattern that we have on several text files.
+
+There's an alternative: we could have an "index_staging.rst" file
+with the documents that require serious work. So, instead of
+actually moving stuff, we'll just place their location there
+(but files still need to be renamed). When the document is fixed,
+all we need is to move from the staging index to the main one.
+
+> > > I feel like it would, if anything, reduce the incentive to
+> > > deal with these leftover documents properly.      
+> > 
+> > IMHO, it is just the opposite. Let's face it: ReST build was added around
+> > May, 2016, for Kernel 4.7. People had quite some time and kernel versions
+> > to do conversions. If nothing is done, I doubt we would have any boom on
+> > patches addressing the issues.  
+> 
+> So I don't have any hard numbers, but my feeling is that this work is
+> continuing apace and perhaps even picking up.  Certainly I'm having a
+> harder time keeping up with it, even when you're busy with other things :)
+> These things take time; I'm not really ready to give up on it yet.
+
+Ok. I'm working on a series of patches converting stuff from some random
+subsystems. I should be sending the series soon.
+
+
+Thanks,
+Mauro
