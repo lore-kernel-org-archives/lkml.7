@@ -2,115 +2,110 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EABBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D0DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEE42171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555083181;
-	bh=WzX8XGkOY041LE4RUQ/RFMWNbG+GGbzcioro+MbFIBg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mK1r/izYnumvNNiu+8z0XTat+K+/iN7iKMPJ0phVGuknV/zIkj8MMMVXIwKtCdkl0
-	 INv+UQXyXIbfFRTKcQmSYnI2wI6AVKLQwDUBtiiVel85rIKBmbd0x9sjkdHa6YwW3V
-	 hBshRTOFpaMb2opXHOoM6gW7iAU8DhhkPATfCj/k=
+	by mail.kernel.org (Postfix) with ESMTP id 4D7FF21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfDLPc7 (ORCPT
+        id S1727113AbfDLPd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:32:59 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:32978 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfDLPc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:32:59 -0400
-Received: by mail-lf1-f49.google.com with SMTP id j11so7842798lfm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NXbKfjDtbjJTyw5Ef0Kix1bfyNOyzTYwEKpGgqOg0TQ=;
-        b=b29dvSdD9cfYHQabi8DqTd65SPCA4obhIln3RU66IajZ136WcOn3NOWVgBFDYVDptF
-         Pp2/5FS6XX6lmgEFeW+6w+62lN8PLub/YTGNvXWjkP9nQCUx99g1ArdD+fsyH0+QY+kM
-         Dy3/6RufoCQqG8kSbDLFyrVvMcECFbfR4KUgE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NXbKfjDtbjJTyw5Ef0Kix1bfyNOyzTYwEKpGgqOg0TQ=;
-        b=XYxI670BljsxMIgawK0srciRvoJOB+nHDbWu9kV+15IqVgv+3ZYafvJAUeZBrpgCYt
-         bG65bEDrp/7qiJLsRYHj6zaq097cUj8RkYbmceWSCcZll4AXal+gcdjBD5XyU+RIVICp
-         atf8kPyk9wWRREIFYZpv5cJHmSmgu3O5zitOhJT+j+SeAPannovbAdzO9GaAHqzjcrpV
-         UCJBqPlMPRhKTbgBP9QwuELthGeb1KtIrjayV4jLJJWY7xKRmFqtd75CD/78GhMof9lZ
-         Pg/AUTdMoOxAFWz9zvqZczWh5c6TADq43LEvrQ9O/NQqqtnd7eGzqU134Q+tKrED7gRs
-         vYeg==
-X-Gm-Message-State: APjAAAVjw9ZDNjZ+aAY/kJmBZr8Oxm+pm3Dk0J332cEB/IdDZCIrV0PL
-        1acaAJK2sur3XszNdnPnwgIpGKWliqc=
-X-Google-Smtp-Source: APXvYqyKKxlM4QaekPYCFKiOvdMUkzmUPtETBIVyQaKqZsp5KyPoZZuwcMvgb3TnQcqHY25ywqvPVQ==
-X-Received: by 2002:ac2:518b:: with SMTP id u11mr14094492lfi.46.1555083176265;
-        Fri, 12 Apr 2019 08:32:56 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id n9sm7896773lfl.35.2019.04.12.08.32.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 08:32:55 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id h16so9228314ljg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 08:32:55 -0700 (PDT)
-X-Received: by 2002:a2e:9a91:: with SMTP id p17mr30639609lji.127.1555083174727;
- Fri, 12 Apr 2019 08:32:54 -0700 (PDT)
+        Fri, 12 Apr 2019 11:33:27 -0400
+Received: from muru.com ([72.249.23.125]:45608 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726850AbfDLPd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 11:33:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 803F880F3;
+        Fri, 12 Apr 2019 15:33:40 +0000 (UTC)
+Date:   Fri, 12 Apr 2019 08:33:21 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v6 06/12] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Message-ID: <20190412153321.GV2839@atomide.com>
+References: <20190410041358.16809-1-lokeshvutla@ti.com>
+ <20190410041358.16809-7-lokeshvutla@ti.com>
+ <20190411150023.GQ2839@atomide.com>
+ <9cd4b818-905c-08a4-5675-a5ee763cea98@ti.com>
+ <7e41405b-74e2-dc53-982a-766dee8a6884@ti.com>
 MIME-Version: 1.0
-References: <5cae03c4.iIPk2cWlfmzP0Zgy%lkp@intel.com> <20190411193906.GA12232@hirez.programming.kicks-ass.net>
- <20190411195424.GL14281@hirez.programming.kicks-ass.net> <20190411211348.GA8451@worktop.programming.kicks-ass.net>
- <20190412105633.GM14281@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190412105633.GM14281@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 12 Apr 2019 08:32:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wieBr3G=_ZGoCndi8XnuG1wtkedaGqkWB+=AVq65=_8sQ@mail.gmail.com>
-Message-ID: <CAHk-=wieBr3G=_ZGoCndi8XnuG1wtkedaGqkWB+=AVq65=_8sQ@mail.gmail.com>
-Subject: Re: 1808d65b55 ("asm-generic/tlb: Remove arch_tlb*_mmu()"): BUG:
- KASAN: stack-out-of-bounds in __change_page_attr_set_clr
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel test robot <lkp@intel.com>, LKP <lkp@01.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nadav Amit <namit@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e41405b-74e2-dc53-982a-766dee8a6884@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 3:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -728,7 +728,7 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
->  {
->         int cpu;
->
-> -       struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
-> +       struct flush_tlb_info info = {
->                 .mm = mm,
->                 .stride_shift = stride_shift,
->                 .freed_tables = freed_tables,
->
+* Tero Kristo <t-kristo@ti.com> [190412 08:43]:
+> On 12/04/2019 07:24, Lokesh Vutla wrote:
+> > 
+> > 
+> > On 11/04/19 8:30 PM, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Lokesh Vutla <lokeshvutla@ti.com> [190410 04:15]:
+> > > > +Example:
+> > > > +--------
+> > > > +The following example demonstrates both interrupt router node and the consumer
+> > > > +node(main gpio) on the AM654 SoC:
+> > > > +
+> > > > +main_intr: interrupt-controller0 {
+> > > > +	compatible = "ti,sci-intr";
+> > > > +	ti,intr-trigger-type = <1>;
+> > > > +	interrupt-controller;
+> > > > +	interrupt-parent = <&gic500>;
+> > > > +	#interrupt-cells = <3>;
+> > > > +	ti,sci = <&dmsc>;
+> > > > +	ti,sci-dst-id = <56>;
+> > > > +	ti,sci-rm-range-girq = <0x1>;
+> > > > +};
+> > > 
+> > > To me it seems there should not be too many of these interrupt
+> > > controller nodes for each SoC. Maybe you're already planning on
+> > > doing it, but I suggest that you just add more specific compatibles
+> > > and then look up the dst-id from a mapping table in the driver
+> > > similar to what patch 04/12 in this series is already doing.
+> > > 
+> > > That way you don't need to add custom TI specific (firmware
+> > > defined) device tree properties listed above ;)
+> > 
+> 
+> < snip: I think Lokesh had a bad day or something :) >
 
-Ack.
+Certainly custom bindings need to be discussed properly on the lists :)
 
-We should never have stack alignment bigger than 16 bytes.  And
-preferably not even that. Trying to align stack at a cacheline
-boundary is wrong - if you *really* need things to be that aligned, do
-something else (regular kmalloc, percpu temp area, static allocation -
-whatever).
+> Anyways, the reason why we want these as custom properties in the DT is that
+> there are multiple instances of the routers within one SoC. On AM65x we have
+> MAIN NAVSS, MCU NAVSS, GPIOs for both etc., if we add driver data for each
+> of these, it easily explodes quite a bit. Especially going forward with new
+> SoCs.
 
-           Linus
+Yup and I keep getting worried about this every time I see it still. But like
+I've mentioned when we chatted offline, as long as Arnd, Marc and Rob ack this
+use, I can live with it.
+
+I'm just trying to avoid another "ti,hwmods" type custom property here..
+We are still dealing with it to replace it with just standard use of
+"compatible" property, and every time Rob sees it he still comments on it :)
+
+Reagrds,
+
+Tony
