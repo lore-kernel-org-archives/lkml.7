@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B165C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57892C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AC02082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260FE2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 15:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IM020o81"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOVK5LW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfDLPhK (ORCPT
+        id S1727070AbfDLPhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 11:37:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42560 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfDLPhJ (ORCPT
+        Fri, 12 Apr 2019 11:37:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39725 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfDLPhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 11:37:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g3so12489878wrx.9;
-        Fri, 12 Apr 2019 08:37:07 -0700 (PDT)
+        Fri, 12 Apr 2019 11:37:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so11554007wmk.4;
+        Fri, 12 Apr 2019 08:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ElXle+eADIRz3EBMmMcLyCtORPRQhAKuVrkbpHYvZ+w=;
-        b=IM020o81/7sOpX+9oxR6E6G68NAVjgFBnWYC9RoAxuFUqvjMgbpLgTkxEN1bKsorQB
-         FRYEAYzZADg4TkcKfDVnlW0WxVUiq64K0E31D5cGoLehKzAN9mp/63gITAiMhra+NwRh
-         TQpRrA4GIV1edblW2PMI5S16ZNucOrk2d6bu1VosuddA6zqgM4/4M4EByrzjz96D8Vtj
-         HP1iKZZgD1bdgHfkLKXmIMCMetyIW5knaNimEj1TU5GeuWea/5JWhvMj3/N0VZAah9l/
-         bqDJAIaZJY2sur0KavHy6ZzQj4W1OP6D6FNYsYTLV2WdjYvyqebx35tBkaBjD6w4vnKs
-         SAAw==
+        bh=vNStv2a1Zhwm7TEz+PTCA4TZ7hONU8Mj3fdHdsl9aCw=;
+        b=kOVK5LW9l5jmelTX6bcRJmbhT8B1pLCy+AGNRKbawan0kIaRBItZpGzuZn7T3ashOK
+         R4HRxXFrZZlWDW8epKGxQ3DgnzSsA0BFUmS1P5G9Egc5y5kgG5vs+qA0ifgbKHWYEuY5
+         rR95KnX5eJBnGVlHg8yEhK9grywP4T+qeUyRwEtm7RY0sC0R5mo4qmdWJw2OkYtXh1S/
+         uqiFXxfgbVOxnqLmDvByTaAF+/Xl0Tt1803Vf87KBZYEfpyteDvtHu2lfIOYi2bDKa3v
+         6gTh8e74d3zGdIlI0gq+TmPU5jGypz4R3EgOtExRGEQCxbHIH5y4YzpYGvk+bGqZlrpw
+         yX9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ElXle+eADIRz3EBMmMcLyCtORPRQhAKuVrkbpHYvZ+w=;
-        b=IiVNp1e6ZKeeB/06Dx2RD/NuX7GOM9FCJsK3g0yQYw7LesA/KHne4B8S1lIryn4E9p
-         0WctTwSfC/7M/pCi2+V/aaWwcptv+8vsrA4dH4mGWczu4rSrUiYc+uHxS/zCZUS9hYGu
-         q/oYpsJKtA41w2zbugbNVYfaI2/oOc1q+Tj64x8LckeRRCjv2UP/HWqfAF3d/Xh4WpZ1
-         2wjDnOSOrNflYeRkYxygYaehYzzA73S4y1O3u2YSxDqxcQEiVINONQcXgBMaYMZKUGka
-         s7mQXy0QFhRGzE84kcux93IglafAnua2P6CqXXIXYHDseNt9/f1Reize8EHKnFvkdRCw
-         ZDqw==
-X-Gm-Message-State: APjAAAWXpKK7TOf3hwUJbxgp4GLdt49kNrxQySrvHAe9ZAlIe6WqQJ8W
-        wFexorT5r7xPfeWjR2fOCMU=
-X-Google-Smtp-Source: APXvYqxapE9Sf+tg/4TZUQejyL92O4xLVZZX2T4FJvQAajGu2QZuLbFiL071QFh2L/hKRHBUuJjYKg==
-X-Received: by 2002:adf:ef0c:: with SMTP id e12mr35432112wro.170.1555083427044;
-        Fri, 12 Apr 2019 08:37:07 -0700 (PDT)
+        bh=vNStv2a1Zhwm7TEz+PTCA4TZ7hONU8Mj3fdHdsl9aCw=;
+        b=ssrW7Fo7dMKiujYcVnQX41Vusaz12e+eguy5PjNeXZdx1X85OzXHYN4y4knu7nVZsk
+         xOe2XRIfsG0JGaBTCDdBtVu9kUkXSKWG9IfeCwPGcKi7LEUYKbm+CKteR2fTdmPqVkjf
+         i8/pjJynRtbtv5qvuiHByYAvTPJfcWIPaJFe9JdTmhnl1JmIOg67ha2tX19X8/7ooHBk
+         4YrPmnyaE3Kg2HWbL2P3PxFN0XTxaRiZujWBWJZkiOrr978oz2Lyd/oCrHyJZOEqHAFS
+         LvpEHCq5jDlaHZNsg5ScZZN1WaGFfvMzFeBZdA4VxkhARhitYALWTGPB0kcOK9v4er+C
+         li/g==
+X-Gm-Message-State: APjAAAV7lAI803Gnxw/xP6NcK7M/Vi6N/FVXF2MSr993j9/cOk9cRANl
+        JuaPb6AN1SIR0nlNGwELyJ8=
+X-Google-Smtp-Source: APXvYqwN+PkF0tie9lIYJHVixy8J0ZmXAi5N2ohjpylab4I3d6u1KRNQW03lN6RsCJX0wmh2az3lPA==
+X-Received: by 2002:a1c:e912:: with SMTP id q18mr11284217wmc.137.1555083442480;
+        Fri, 12 Apr 2019 08:37:22 -0700 (PDT)
 Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id z7sm40547200wrt.10.2019.04.12.08.37.05
+        by smtp.gmail.com with ESMTPSA id o10sm64169010wru.54.2019.04.12.08.37.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 08:37:06 -0700 (PDT)
-Date:   Fri, 12 Apr 2019 17:37:03 +0200
+        Fri, 12 Apr 2019 08:37:21 -0700 (PDT)
+Date:   Fri, 12 Apr 2019 17:37:21 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
@@ -65,14 +65,16 @@ Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         anrao@nvidia.com, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V1 1/2] arm64: tegra: fix default tap and trim values
-Message-ID: <20190412153703.GA21159@ulmo>
+Subject: Re: [PATCH V1 2/2] arm64: tegra: enable command queue for tegra186
+ sdmmc4
+Message-ID: <20190412153721.GB21159@ulmo>
 References: <1555011474-20107-1-git-send-email-skomatineni@nvidia.com>
+ <1555011474-20107-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+        protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
 Content-Disposition: inline
-In-Reply-To: <1555011474-20107-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1555011474-20107-2-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,43 +82,42 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---PEIAKu/WMn1b1Hv9
+--FkmkrVfFsRoUs1wW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2019 at 12:37:53PM -0700, Sowjanya Komatineni wrote:
-> Default tap and trim values are incorrect for Tegra186 SDMMC4.
-> This patch fixes it.
+On Thu, Apr 11, 2019 at 12:37:54PM -0700, Sowjanya Komatineni wrote:
+> This patch enables command queue support for Tegra186 SDMMC4.
 >=20
 > Tested-by: Jon Hunter <jonathanh@nvidia.com>
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
 Applied, thanks.
 
 Thierry
 
---PEIAKu/WMn1b1Hv9
+--FkmkrVfFsRoUs1wW
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlywsJsACgkQ3SOs138+
-s6E6Mw//WDz1hmJP1EYdChf14F9QRTs2GQTtCBtMxETTnnXyy2UK8OBXD1evPufF
-aGhnAsAUt/T54d+yclfb0u3eN6htIslO3OR/uxX/QQH0rptJEB3xEqbq4dQB66lf
-6V2a03V/U41cM4UrXy0/pcYbMY04TlDejqV52inpt5I1wQEehCcFT8pqKGCd/MdH
-4H2Vyoo4ffcosaa8WHsYZJnOb3lye3IH5UOeAMMihywH0LU7B5ZT9KZ0phC16dmm
-V6SG67mV2MwWpELHCtYrzADJoR/CFjlvVSFipbFqUTthWPCxScQh5A6YIjEb7LZk
-ZsGB0AoZH+XV5iignr3mnoj4K8xccp50vhGXuXKYUBMvzInJLyXc/L5vK5kfljeJ
-ffwOq5AOnyvSqN+t5OdwnYlS0yKTQyOrfalEo+dXNjCX8W8UgnLaY0JeHFkBR4kE
-HIRNBDh9uzt9wJkOJuXrR05UEsIbbeX21Ag0EXNdZ4E4G96gbypiBgtupSQmG6XN
-Awj5P54XIv/XLC0mBDEU8X+k1rnoFTWUvL5P4X5toEATvGDxIH9So6cud7luAxQI
-BQC7hpEk9uRY05DSVzU1mdTYQpg/kMJU6l6djdJ67dVTLespiYyo9VcEDc19miNP
-+DQpVYLW9eZeCZPA1ca1EUjDLpqQZ7Ojfz39e0+JjNqnix8Oyw8=
-=L8ba
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlywsLAACgkQ3SOs138+
+s6Ez6w/9G4OglGZXk/Rwe6TE1G1g92cvW4k1u/TwGWo/UyM5xrs9deo04ZSns8dJ
+svV/yRsNRMIh3yyDAxj/nBmsybtMDzhtUTK6YmZMrPkZtbgrzOINaYltP8Yjd9Lj
++Fj3sDyak3pD9CJo9r3fni24rIbdqMhCYx3ozspf72NOdRG3IF0OecbqI3o+oxKZ
+HiNs3e10cvSSWurK3oyIxLVvk0RO+PqL4TKGn2GXlXJbP7Zp5JL0c5nSohTzqfrQ
+mC/qPXR4z8UBIwdHysffk/CoJYOQmQ0G6PGqoDC2yCjy8r+6pyx1K8ZTSFY1KamD
+xCZ339xQyRYERDPxLZWv7tRDYf00sY8YRetbZKUP0+87yxwwVJtjUN6sHzE/5iua
+qGklQU+uUBI3FxDUZulv8MHsRFUc2gW9HMU5XnUP0BwW/7H9cr89JoIwla0t2d1P
+jFqYZLjUXtXaMlbNAoX5vh+Jblj9TSYplJ17olPdLZ/kvju8wnIi4atLhNI9P7LC
+6NK+8b0IQGmPfibNXzAumlC9EJB/gEoo2BA6Wuj++AxAPJXUqXBDMnjqb+CJ+IQj
+McazrlPUA6HD8D3hN2rVDf+ThGROADQnOrgjaUm9ZbkwB0/VD9l85SejOrpQ922w
+sdXzrZxS7KQlYkCR950cgb7HhJv13C1SqA9LAzBsgWP4mN0g4nA=
+=0Tdg
 -----END PGP SIGNATURE-----
 
---PEIAKu/WMn1b1Hv9--
+--FkmkrVfFsRoUs1wW--
