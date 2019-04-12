@@ -2,111 +2,171 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC0BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A473C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1AB2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E90F2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gff7s060"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qat6M4p3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDLSOs (ORCPT
+        id S1727006AbfDLSOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:14:48 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39165 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfDLSOs (ORCPT
+        Fri, 12 Apr 2019 14:14:52 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34451 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfDLSOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:14:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z9so8159434lfh.6;
-        Fri, 12 Apr 2019 11:14:46 -0700 (PDT)
+        Fri, 12 Apr 2019 14:14:49 -0400
+Received: by mail-it1-f195.google.com with SMTP id z17so1084816itc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 11:14:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pf8HOcVDxGx+uRf35HlC+wiwfnwurmQHN03wRbrD37M=;
-        b=gff7s060Zrc92xxYzWOQvoNIaT/t4kvnlUqoOUGRwS6hfK4MmQwq+gJ3epRqOGozIM
-         9W5PyD2tCllXmXFld8j51Ptmy+z4jWPqqi+eSA4OGNdrJH+E3gFdYF1TyTHiqB4XMXRa
-         fg11HHm26X3GqHIIL/k0ZZp04ZrTWIc1youioPBAyYKsKLMq4KOZSArvfrG6pPLrH+/0
-         cbHQIr2GPc2emSa39sUDxsODZN+vNVmjbxEUz93QiDnJWGtD3zR+nLEip+5LJtl+dFj4
-         cJrxS+vU1KPeQ7NgGS/16zFM1acCeCTHQyaZmj9+EnkvfK7FcVM+yu9SGijLuVr5APaN
-         tWSQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vy1RTJNul8Gq4kA2LdEWHyvJv8U3hvPPKDySjtoIuxI=;
+        b=Qat6M4p3JWchst2c5rWTulSkKl6l4tu2zvHfsz6x1FLayqa6sq04hQCvHuRogWsr91
+         MdT1Wp+lxIxlhOQWah4baFSQiFqxPvwGhJIP7c+EurKNREeulGQbJ2UnXnh76yhIYjDq
+         BA9xWL/94yYp7aYgn2Exz60PFDjBW6A8nPi4M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pf8HOcVDxGx+uRf35HlC+wiwfnwurmQHN03wRbrD37M=;
-        b=oWCC0rK6O0yqMl7STnscELcFM++j8JQzMz8qHBiucbOaoDe1woVVGP+sEwXi7Ieft4
-         BSJo6UO0z4/iHGGIxWdO13l/4J1Yp6Qewxz/t6tbYQlhsgTjarzx4O2lWmR1olP/M+XS
-         Muqe1Cxn+52pkpgGSKZS59+jDlI0Z3towVbKaHsPdHoB6yy8zwxNV3XA/ue+D8WiWSo2
-         19/KG/a9WeeIDhIf2N53pjH9xVzvD25UlVYiCU4Ehw7g2w3L6RgxdUA9lSA2mGNMUsPF
-         SUU8OqvlM5NcmBxJkxB8qKJwZ1IS537QdB1SYmsxKoiWvI12wGseh2BwXWfcAPHVb+fS
-         BFoQ==
-X-Gm-Message-State: APjAAAUlyQcp5NKaQKHxh7dcYPfDbCFrN/rp7sbyY5Efo/Yjz52S7Tf6
-        5vx/yto9gddcK1sOKxO2JAod8dze
-X-Google-Smtp-Source: APXvYqxESyMwd6yTnCiD8ouiwIzTG4pekpkNjOp8n25bW1ipaBAT683ypXPe8CRBct6xgXeb4DS5Sw==
-X-Received: by 2002:ac2:490b:: with SMTP id n11mr1145325lfi.24.1555092885355;
-        Fri, 12 Apr 2019 11:14:45 -0700 (PDT)
-Received: from [192.168.1.19] (chg144.neoplus.adsl.tpnet.pl. [83.31.4.144])
-        by smtp.gmail.com with ESMTPSA id n23sm1185417lfh.86.2019.04.12.11.14.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 11:14:44 -0700 (PDT)
-Subject: Re: [PATCH v2 2/7] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Marek Behun <marek.behun@nic.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, pavel@ucw.cz, rdunlap@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-References: <20190411193848.23140-1-dmurphy@ti.com>
- <20190411193848.23140-3-dmurphy@ti.com> <20190412000707.70f8319f@nic.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <4e22f95f-8658-99cd-145e-b96f9e8314f7@gmail.com>
-Date:   Fri, 12 Apr 2019 20:14:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        bh=Vy1RTJNul8Gq4kA2LdEWHyvJv8U3hvPPKDySjtoIuxI=;
+        b=GffY75/tXdKkxjFneS9n45JumGvMS0tjfw1UtvEcB3+JuHUxhgNU2w46IzMsYeFfcH
+         G6+LplitaE4NN71wMT3F7SywpG7EQY6Kk75yogejxF91Bd3jiyOISghkXQIDCntf5gAp
+         W7LWXCwTzH7TIJIAZ3aE4IDvgfJCSkNrkVc7C4ykcFOvyP5Od9697/RIoV7Hbd1WH0Hl
+         4iteXHMtLeOQCGif+tG9yIqBr93mebrqxi1B1yOuHe4XZiUp1ljW5YBbUoRyiaKp2MgP
+         vg9nf/kTrB8V9xwwWwIpI1kybNzXZZGLQYhGH9i0mj4/oq13u1jJxaWuAebb0JmVNcqc
+         Tu1g==
+X-Gm-Message-State: APjAAAW12d/jXsho9ALkAUhLf5DFjsG+yRNFtkqieD9KK+h0KChNUt96
+        6wMdzoeBFB4puesehU9M/2dtfw==
+X-Google-Smtp-Source: APXvYqzQ0AF/m/NUEtjm4G4/BuIfKcTcji6aSWW8VFx7T3j//Cu+cDzd0ACO4T00Kf7tg4nzpNDBEg==
+X-Received: by 2002:a24:e85:: with SMTP id 127mr14575469ite.4.1555092887973;
+        Fri, 12 Apr 2019 11:14:47 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id m30sm4276605iti.41.2019.04.12.11.14.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 12 Apr 2019 11:14:47 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        derat@google.com, groeck@google.com, dtor@google.com,
+        sjg@chromium.org, alevkoy@chromium.org, keithshort@chromium.org,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v4 1/2] platform/chrome: wilco_ec: Fix documentation for debugfs raw attribute
+Date:   Fri, 12 Apr 2019 12:14:42 -0600
+Message-Id: <20190412181443.239166-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190412000707.70f8319f@nic.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+In a previous refactor [repo chrome-platform, branch for-next,
+commit 9cced499d6fdb60434ffa94f8f4b5087ad35802b
+("platform/chrome: wilco_ec: Standardize mailbox interface")], the
+documentation for the raw debugfs attribute became incorrect, but I
+forgot to fix it. This patch fixes it, as well as de-duplicates
+the documentation by removing it from the source file header comment.
 
-On 4/12/19 12:07 AM, Marek Behun wrote:
-> Hi Dan,
-> this probaly was discussed, but I did not follow brightness model
-> discussions:
-> what will happen if I set yellow by writing into yellow mode
-> brightness, and then orange by writing orange model brightness?
-> Will the resulting color be a mix of yellow and orange, or will the
-> orange overwrite the yellow setting?
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+---
+ Documentation/ABI/testing/debugfs-wilco-ec | 32 ++++++++++++++--------
+ drivers/platform/chrome/wilco_ec/debugfs.c | 27 +-----------------
+ 2 files changed, 22 insertions(+), 37 deletions(-)
 
-Orange will overwrite yellow settings. When color name is given
-it should be treated as a hue. Then changing brightness level
-should affect the lightness of a hue, similarly like changing
-L component of HSL color model. This will be however entirely
-up to DT brightness-model designer how they will design their models.
-We are not going to verify that in the LED multi color class.
-
-It implies that it will be possible to define arbitrary range
-of color levels, not necessarily adhering to any established color
-model. I think it could be useful to define brightness model
-that allows to go from blue color (for cold) up to red (hot)
-for representing a temperature for instance.
-
-These ideas will need however more documentation. Generally
-we aim to propose only a convention.
-
+diff --git a/Documentation/ABI/testing/debugfs-wilco-ec b/Documentation/ABI/testing/debugfs-wilco-ec
+index f814f112e213..7ff6b45be703 100644
+--- a/Documentation/ABI/testing/debugfs-wilco-ec
++++ b/Documentation/ABI/testing/debugfs-wilco-ec
+@@ -4,20 +4,30 @@ KernelVersion:	5.1
+ Description:
+ 		Write and read raw mailbox commands to the EC.
+ 
+-		For writing:
+-		Bytes 0-1 indicate the message type:
+-			00 F0 = Execute Legacy Command
+-			00 F2 = Read/Write NVRAM Property
+-		Byte 2 provides the command code
+-		Bytes 3+ consist of the data passed in the request
++		You can write a hexadecimal sentence to raw, and that series of
++		bytes will be sent to the EC. Then, you can read the bytes of
++		response by reading from raw.
+ 
+-		At least three bytes are required, for the msg type and command,
+-		with additional bytes optional for additional data.
++		For writing, bytes 0-1 indicate the message type, one of enum
++		wilco_ec_msg_type. Byte 2+ consist of the data passed in the
++		request, starting at MBOX[0]
++
++		At least three bytes are required for writing, two for the type
++		and at least a single byte of data. Only the first
++		EC_MAILBOX_DATA_SIZE bytes of MBOX will be used.
+ 
+ 		Example:
+ 		// Request EC info type 3 (EC firmware build date)
+-		$ echo 00 f0 38 00 03 00 > raw
++		// Corresponds with sending type 0x00f0 with
++		// MBOX = [38, 00, 03, 00]
++		$ echo 00 f0 38 00 03 00 > /sys/kernel/debug/wilco_ec/raw
+ 		// View the result. The decoded ASCII result "12/21/18" is
+ 		// included after the raw hex.
+-		$ cat raw
+-		00 31 32 2f 32 31 2f 31 38 00 38 00 01 00 2f 00  .12/21/18.8...
++		// Corresponds with MBOX = [00, 00, 31, 32, 2f, 32, 31, 38, ...]
++		$ cat /sys/kernel/debug/wilco_ec/raw
++		00 00 31 32 2f 32 31 2f 31 38 00 38 00 01 00 2f 00  ..12/21/18.8...
++
++		Note that the first 32 bytes of the received MBOX[] will be
++		printed, even if some of the data is junk. It is up to you to
++		know how many of the first bytes of data are the actual
++		response.
+diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
+index 17c4c9068aaf..8d307378c1cb 100644
+--- a/drivers/platform/chrome/wilco_ec/debugfs.c
++++ b/drivers/platform/chrome/wilco_ec/debugfs.c
+@@ -4,32 +4,7 @@
+  *
+  * Copyright 2019 Google LLC
+  *
+- * There is only one attribute used for debugging, called raw.
+- * You can write a hexadecimal sentence to raw, and that series of bytes
+- * will be sent to the EC. Then, you can read the bytes of response
+- * by reading from raw.
+- *
+- * For writing:
+- * Bytes 0-1 indicate the message type, one of enum wilco_ec_msg_type
+- * Byte 2+ consist of the data passed in the request, starting at MBOX[0]
+- *
+- * At least three bytes are required for writing, two for the type and at
+- * least a single byte of data. Only the first EC_MAILBOX_DATA_SIZE bytes
+- * of MBOX will be used.
+- *
+- * Example:
+- * // Request EC info type 3 (EC firmware build date)
+- * // Corresponds with sending type 0x00f0 with MBOX = [38, 00, 03, 00]
+- * $ echo 00 f0 38 00 03 00 > /sys/kernel/debug/wilco_ec/raw
+- * // View the result. The decoded ASCII result "12/21/18" is
+- * // included after the raw hex.
+- * // Corresponds with MBOX = [00, 00, 31, 32, 2f, 32, 31, ...]
+- * $ cat /sys/kernel/debug/wilco_ec/raw
+- * 00 00 31 32 2f 32 31 2f 31 38 00 38 00 01 00 2f 00  ..12/21/18.8...
+- *
+- * Note that the first 32 bytes of the received MBOX[] will be printed,
+- * even if some of the data is junk. It is up to you to know how many of
+- * the first bytes of data are the actual response.
++ * See Documentation/ABI/testing/debugfs-wilco-ec for usage.
+  */
+ 
+ #include <linux/ctype.h>
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
