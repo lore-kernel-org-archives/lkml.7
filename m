@@ -3,123 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB23C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7412BC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E032083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2D72083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfDLLF0 (ORCPT
+        id S1726827AbfDLLIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:05:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36797 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfDLLF0 (ORCPT
+        Fri, 12 Apr 2019 07:08:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:59483 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfDLLIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:05:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id u57so7331304edm.3;
-        Fri, 12 Apr 2019 04:05:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zaKFhWGsxVpRdCCIz9fwH4TbtZfXGmrssA2IH/ersho=;
-        b=CkRgVs6m7bDhVyvecNjAYCQRp2JIg829FboRALHzmSijr6OR83iim3TuhZKRFtNodK
-         Wz5YyzzFtR4Z4KXLQMyq7CEXcgT++nWeknbOb/mT1+vPEi35eHg3ecdubvtxTua4ygfR
-         HtcNLHwdsnmg+WjMTqr/wflfi49hvID72AjmroVkkui0bT9cPxtTAhnObzLhTdEciRi8
-         xcxnOK5d8oCyhImD2MI8uKuJz0T+4EwfG4tAJEZ9J/YetwBMNYnWb1MV3L6T5evnm4cn
-         IIoQJ3R1goZ17vXVBTs7XMWdvB7T3XxtuwqH6hDleLexMOjuzh27eyCHTKmgDzx4HCxd
-         7rXw==
-X-Gm-Message-State: APjAAAVnwcJNzxrZa1AHPu1VGwhteul4Va0hVmqhu0QE1gUG/uGBBCYn
-        fYbvozVelLKMjEyJafkyt+a0fg+pqcs=
-X-Google-Smtp-Source: APXvYqzNMpxDOwGpfXbr04b/Bpzdfx3IsaA63mUoM79+8UpNpsucE/GZ6U4KWP+IWfxKX82+IclWEw==
-X-Received: by 2002:a17:906:b80e:: with SMTP id dv14mr30711410ejb.157.1555067122478;
-        Fri, 12 Apr 2019 04:05:22 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id c16sm10178301edc.75.2019.04.12.04.05.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 04:05:19 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id h18so10494530wml.1;
-        Fri, 12 Apr 2019 04:05:19 -0700 (PDT)
-X-Received: by 2002:a1c:ca07:: with SMTP id a7mr10487981wmg.104.1555067119122;
- Fri, 12 Apr 2019 04:05:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190411101951.30223-1-megous@megous.com>
-In-Reply-To: <20190411101951.30223-1-megous@megous.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 12 Apr 2019 19:05:05 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64HgPePM=rk_kSdS7yFx4S4TR=tpGC2yQ6ruDCvBnosiA@mail.gmail.com>
-Message-ID: <CAGb2v64HgPePM=rk_kSdS7yFx4S4TR=tpGC2yQ6ruDCvBnosiA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v3 00/11] Add support for Orange Pi 3
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Fri, 12 Apr 2019 07:08:16 -0400
+Received: from [192.168.178.52] ([109.104.50.142]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MCKSA-1h6cYe1kA6-009ROX; Fri, 12 Apr 2019 13:07:42 +0200
+Subject: Re: [PATCH V5 3/3] hwmon: pwm-fan: Add RPM support via external
+ interrupt
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1554989411-23666-1-git-send-email-stefan.wahren@i2se.com>
+ <1554989411-23666-4-git-send-email-stefan.wahren@i2se.com>
+ <20190411165742.GA29395@roeck-us.net>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <019733e8-6b12-f5c1-e251-fd7eabe2891b@i2se.com>
+Date:   Fri, 12 Apr 2019 13:07:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190411165742.GA29395@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:o0QXvLSdqXxmNy4CXgonbNSrTq6A3Sb13dDV4/PC6Q0OiIpX7by
+ 0mupAL1ECnulfZgJWZxC0Rz93jdnKUcIzoSOSeghywiNIBXlcS6m+Qr7LOJvhfm6bsMUVuW
+ D+5a/euBkDlIxLx4K/fVPhqGhSsNZm7FRyWWcbv/8otk2ju2HBe41jju/sgdjBk5Z3DZP99
+ xd7NCA2j/cOlXJ3DtmdBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0NyLlMniSkk=:dh39u8LoxPVa1laAJRMxKR
+ w96x4AE3MfuH8b71fee0PMjQ0h2q58ZrK05Qvtk0ywm2opcO8/99PCjMoNN4DjII+0iBIJP1L
+ ZVgHe2cTFQStAjcAfs/PsEiltn5BvCl4PpWsIb1lP+TyXW6M6b9t3x4iP8RAsdEXJQKbVJVlo
+ lO8MeXtlmLZtieW3QeVR2WmP4H9qKfVGBGuKwVTzvN2uFnrx6ZUZzJf36mXgSv3QxRv3/Ohs/
+ Zp7XlsS5vIOv7Q6b0xIAi5OcrxPSKRvQOEOlf5YXwXO0tw9F1r3zM0COWlr2yJdGB0t7j5YUe
+ OwIBbdq5HGkEg78VO5LD/vJ7LwM2W1Uk2vq2ORvoEqqQh8LC8eP4B8xDFJoGJ5MRzGk/IoQ2Y
+ m6UP/0fXYEkDqBaozj3G7rIz/r7/mXE2XW5d3sryAc7RhLktmspimKwfzRYIZoA7AFnK3Pd85
+ BSjNsh06uRgm4RngJqaFZyFIMWXbOd0kLIKSGs662Qog+1iRYeZU6Lwa4/wRgodJeekxDByZt
+ +iZjvCaVA4ZACsg6s8s0tD/5g3qgweFeo1d3BJ0d79YUfe4busXvrSjzDCbWHWu5GcRgdMBtq
+ 3qINp1pgHqPobg1YHy46XSfcZp4njWL3rJ4H89xz5nMqXI1wmXDyMeGq/pg5FIsYErwMZKhZd
+ FMXZkObL9+hKbyAJM5HGhVL5WE79EdxmnjkawnqTHxXeLg2hpUdD0e8QFPp2xCgd0V9ZIopIa
+ SBNuhTSRKjG0dyVRetMrZapJcXGt/GXzgUS+aKy6lk3GGoLLZq2RiZnZvFk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 6:19 PM megous via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
+On 11.04.19 18:57, Guenter Roeck wrote:
+> On Thu, Apr 11, 2019 at 03:30:11PM +0200, Stefan Wahren wrote:
+>>  
+>> -ATTRIBUTE_GROUPS(pwm_fan);
+>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
+>> +				     int n)
+>> +{
+>> +	struct device *dev = container_of(kobj, struct device, kobj);
+>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>> +	struct device_attribute *devattr;
+>> +
+>> +	/* Hide fan_input in case no interrupt is available  */
+>> +	devattr = container_of(a, struct device_attribute, attr);
+> Field day for static analyzers - devattr is no longer used.
+> No need to resend. I'll let the series rest for a couple of days
+> and then apply to hwmon-next (after removing devattr) unless there are
+> additional comments.
 >
-> From: Ondrej Jirman <megous@megous.com>
->
-> This series implements support for Xunlong Orange Pi 3 board.
->
-> Unfortunately, this board needs some small driver patches, so I have
-> split the boards DT patch into chunks that require patches for drivers
-> in various subsystems.
->
-> Suggested merging plan/dependencies:
->
-> - Pinctrl and stmmac patches are needed for ethernet support.
->   (patches 1-5)
-> - HDMI support was changed, please review. (patches 6-8)
-> - brcmfmac patch 9, fixing firmware file selection, can be merged
->   now, after review, as it doesn't depend on anything (please
->   review :))
-> - mmc1 pinconf (patch 10) can probably be merged now, too (it will
->   certainly be used soon by all the other WiFi featuring boards
->   based on H6)
-> - WiFi dts patch will have to wait for H6 RTC patches, which in turn
->   depend on ChenYu's RTC series, to be merged. That will take a
->   while yet. I'm just keeping it in the series for completness.
->   (patch 11)
+Thank you
 
-Unfortunately I will not have time to tackle this for the next release.
-Furthermore, I'd like to do this after the new clk parenting stuff lands.
-Otherwise it's going to be a mess, as the clock tree is a bit convoluted
-compared to previous SoCs.
+Stefan
 
-ChenYu
