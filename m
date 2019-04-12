@@ -2,30 +2,31 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16A6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A21C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4232171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A022077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 06:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfDLGz4 (ORCPT
+        id S1727065AbfDLG4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 02:55:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36034 "EHLO mx1.redhat.com"
+        Fri, 12 Apr 2019 02:56:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41066 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbfDLGzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 02:55:55 -0400
+        id S1726024AbfDLG4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 02:56:02 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C01530832DC;
-        Fri, 12 Apr 2019 06:55:55 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id AE28130842AF;
+        Fri, 12 Apr 2019 06:56:01 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-12-172.pek2.redhat.com [10.72.12.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA1A760C97;
-        Fri, 12 Apr 2019 06:55:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BB5160C97;
+        Fri, 12 Apr 2019 06:55:55 +0000 (UTC)
 From:   Baoquan He <bhe@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
@@ -34,41 +35,70 @@ Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
         herbert@gondor.apana.org.au, mike.travis@hpe.com,
         frank.ramsay@hpe.com, yamada.masahiro@socionext.com,
         Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 0/2] x86/mm/KASLR: Fix the wrong size of memory sections
-Date:   Fri, 12 Apr 2019 14:55:40 +0800
-Message-Id: <20190412065542.18431-1-bhe@redhat.com>
+Subject: [PATCH v2 1/2] x86/mm/KASLR: Fix the size of the direct mapping section
+Date:   Fri, 12 Apr 2019 14:55:41 +0800
+Message-Id: <20190412065542.18431-2-bhe@redhat.com>
+In-Reply-To: <20190412065542.18431-1-bhe@redhat.com>
+References: <20190412065542.18431-1-bhe@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 12 Apr 2019 06:55:55 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 12 Apr 2019 06:56:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1->v2:
-  Rewrite log of the two patches. No functionality change.
+kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
+the maximum amount of system RAM supported. The size of the direct
+mapping section is obtained from the smaller one of the below two
+values:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-v1 background:
-The fixes for these two bugs were carried in the earlier patchset, patch
-4/6 and patch 5/6:
+ (actual system RAM size + padding size) vs (max system RAM size supported)
 
-[PATCH v4 0/6] Several patches to fix code bugs, improve documents and clean up
-http://lkml.kernel.org/r/20190314094645.4883-1-bhe@redhat.com
+This calculation is wrong since commit:
+b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
 
-Later, Thomas suggested posting bug fixing patches separately from those
-clean up patches. So send both of them in a separate patchset.
+In commit b83ce5ee91471d, __PHYSICAL_MASK_SHIFT was changed to be 52,
+regardless of whether it's using 4-level or 5-level page tables.
+It will always use 4 PB as the maximum amount of system RAM, even
+in 4-level paging mode where it should be 64 TB.  Thus the size of
+the direct mapping section will always be the sum of the actual
+system RAM size plus the padding size.
 
-For another bug fix patch 6/6, it happened on SGI UV system. Mike and
-Frank have sent a machine with cards to our lab and loaned to me, I am
-still debugging and discussing with Mike about the verification.
+Even when the amount of system RAM is 64 TB, the following layout will
+still be used. Obviously KALSR will be weakened significantly.
 
-Baoquan He (2):
-  x86/mm/KASLR: Fix the size of the direct mapping section
-  x86/mm/KASLR: Fix the size of vmemmap section
+   |_______actual RAM_______|_padding_|______the rest_______ |
+   0            64TB          74TB                    ~120TB
 
- arch/x86/mm/kaslr.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+What we want is the following:
 
+   |_______actual RAM_______|_________the rest_______________|
+   0            64TB                                  ~120TB
+
+So the code should use MAX_PHYSMEM_BITS instead. Fix it by replacing
+__PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
+
+Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Thomas Garnier <thgarnie@google.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/x86/mm/kaslr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 9a8756517504..387d4ed25d7c 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -94,7 +94,7 @@ void __init kernel_randomize_memory(void)
+ 	if (!kaslr_memory_enabled())
+ 		return;
+ 
+-	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
++	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
+ 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
+ 
+ 	/*
 -- 
 2.17.2
 
