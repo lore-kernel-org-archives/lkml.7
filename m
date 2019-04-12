@@ -2,105 +2,104 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19272C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E0EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D127721872
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJnOHrjP"
+	by mail.kernel.org (Postfix) with ESMTP id 379A321872
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 09:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfDLJhg (ORCPT
+        id S1726968AbfDLJiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 05:37:36 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35597 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfDLJhd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 05:37:33 -0400
-Received: by mail-ua1-f67.google.com with SMTP id a46so3024427uae.2;
-        Fri, 12 Apr 2019 02:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GvmE54vyB2V1TH3b9XcIfl2rFpKkdQtVqNd4bYtbiCw=;
-        b=dJnOHrjPYRDcvpIqtkL/Vx7ixEGh6stpJQBfe6bInIfTGw1/UFKXrrc5h3XtStZ+WI
-         D4RFBYVZ3Ioa2ti/s94NUIZNnokdaTCkusUEQLFJOTeVOQqUe9xvbYeRNjUR7VoxfYFT
-         elHpN7Q5HlMBQkrkte11ZZB9lXce43Ipal188+FUsv7rsS8dFooDDpX3gJ8wp/AgwAUu
-         0TCRS7xXv5IEp7Sdcv8C6uMvlJvpV3BOK28/K9W7Hu/9j0/HpzR1Mhgf1AMqm0AOCeDI
-         j89/uZlm9yRhy+XB6hWr7kxQf54y0Z/wQDIHp6YQpbglgHk93tMkdFardQMFTFyubXcl
-         hXjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GvmE54vyB2V1TH3b9XcIfl2rFpKkdQtVqNd4bYtbiCw=;
-        b=jiMsWKALDT4Qhk5HRn7TEKmMAo6b8AO1ZVbrD4m/8uWkLemq3lLEnQyGijR8KpPrGv
-         +WvtpW7XmpLqUyyihEFnnS+aVkA29dv2Zl3FUUMZaKO/WBmCVg7J3peapPwjDa4B/qdw
-         RftzZMJVYBq2d9YU317G6kncGlMPQGpEE/IYQoMLojwVvALJ9ShtyabyVrbQSle4APEl
-         QivpyHke1zcFRn1Biz7rvaAMC0isY7HCzvdHr1mEOhoYGbBkJhfN/k5ayx3l6pKSOD+c
-         xmvYaaRCLPkuRk0Ui5sEsRywKOLmyAKTEYFJa5dGVe7aIVRCCBAwtFU2A5ASIrhKRpzt
-         Nfhw==
-X-Gm-Message-State: APjAAAVTSWaHIc8OzhrqKpNCioHsfHkmp/4Fc7dD/E/D7W9F6+je34bq
-        FsPhtuanp7duuyPVF2txNoatX15ch7oGtQLJNs8=
-X-Google-Smtp-Source: APXvYqwy/aGPPBprRKXvZmdWOFxrVvrjT+0ptLixHM1Ld02+9ohW2hrxc1bvP8ABknl0dIpYXWaDYcejYdUE/nC6Xp0=
-X-Received: by 2002:ab0:b90:: with SMTP id c16mr22854602uak.55.1555061852474;
- Fri, 12 Apr 2019 02:37:32 -0700 (PDT)
+        Fri, 12 Apr 2019 05:38:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6171 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726714AbfDLJiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 05:38:22 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9FDC115B402B7B235EFB;
+        Fri, 12 Apr 2019 17:38:20 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 12 Apr
+ 2019 17:38:12 +0800
+Subject: Re: [PATCH] staging: erofs: fix unexpected out-of-bound data access
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     Ming Lei <ming.lei@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        "Fang Wei" <fangwei1@huawei.com>
+References: <20190411105555.133551-1-gaoxiang25@huawei.com>
+ <0332f6b3-9705-50d2-6e1e-639d3e8e915f@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <c5ff4170-f01b-809c-3d19-055293188ba6@huawei.com>
+Date:   Fri, 12 Apr 2019 17:38:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <1555036767-31170-1-git-send-email-92siuyang@gmail.com>
- <878swf645i.fsf@miraculix.mork.no> <CAKgHYH05R2CQ1XmS-KCTtL0J49D2kpnkBgyYxdPc47SNpaf8vA@mail.gmail.com>
- <87mukv4mo6.fsf@miraculix.mork.no>
-In-Reply-To: <87mukv4mo6.fsf@miraculix.mork.no>
-From:   Yang Xiao <92siuyang@gmail.com>
-Date:   Fri, 12 Apr 2019 17:36:48 +0800
-Message-ID: <CAKgHYH1=BcnTqwEdmzsiRkyQmuqngCA0YHfbY7M6ObvVbqqj8w@mail.gmail.com>
-Subject: Re: [PATCH] USB: s2255 & stkwebcam: fix oops with malicious USB descriptors
-To:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Cc:     kbuild-all@01.org, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        greg@kroah.com, mchehab@kernel.org,
-        Kees Cook <keescook@chromium.org>, hans.verkuil@cisco.com,
-        Young Xiao <YangX92@hotmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0332f6b3-9705-50d2-6e1e-639d3e8e915f@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am so sorry. I misunderstood the reason of  CVE-2016-2188.
+Hi Chao,
 
-Sorry again!!!
+On 2019/4/12 17:28, Chao Yu wrote:
+> On 2019/4/11 18:55, Gao Xiang wrote:
+>> Unexpected out-of-bound data will be read in erofs_read_raw_page
+>> after commit 07173c3ec276 ("block: enable multipage bvecs") since
+>> one iovec could have multiple pages.
+>>
+>> Let's fix as what Ming's pointed out in the previous email.
+> 
+> It will be better to add link address of discussion thread in your commit
+> message, since discussion includes more details about how this issue happens.
 
-On Fri, Apr 12, 2019 at 5:07 PM Bj=C3=B8rn Mork <bjorn@mork.no> wrote:
->
-> Yang Xiao <92siuyang@gmail.com> writes:
->
-> > If given malicious descritors that spcify 0 for the number of endpoints=
-,
-> > then there is a null pointer deference when calling function
-> > usb_endpoint_is_bulk_in.
-> >
-> >        for (i =3D 0; i < iface_desc->desc.bNumEndpoints; ++i) {
->
-> Try this:
->
-> #include <stdio.h>
-> int main()
-> {
->         int i;
->         for (i=3D0; i<0; ++i)
->                 printf("%d\n");
->         return 0;
-> }
->
-> How many lines did it print?
->
->
-> Bj=C3=B8rn
+Thanks for your suggestion.
+OK, I will send v2 and add the corresponding link :)
+
+Thanks,
+Gao Xiang
+
+> 
+>>
+>> Suggested-by: Ming Lei <ming.lei@redhat.com>
+>> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+>> ---
+>>
+>> It should be fixed from linux-5.1-rc after multi-page bvec feature.
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>  drivers/staging/erofs/data.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
+>> index 0714061ba888..c64ec76643d4 100644
+>> --- a/drivers/staging/erofs/data.c
+>> +++ b/drivers/staging/erofs/data.c
+>> @@ -304,7 +304,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+>>  	*last_block = current_block;
+>>  
+>>  	/* shift in advance in case of it followed by too many gaps */
+>> -	if (unlikely(bio->bi_vcnt >= bio->bi_max_vecs)) {
+>> +	if (bio->bi_iter.bi_size >= bio->bi_max_vecs * PAGE_SIZE) {
+>>  		/* err should reassign to 0 after submitting */
+>>  		err = 0;
+>>  		goto submit_bio_out;
+>>
