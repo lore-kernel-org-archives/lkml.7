@@ -2,109 +2,293 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF7C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56DCC10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6267F2171F
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7019D2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v2b3aRAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfDLUkw (ORCPT
+        id S1727097AbfDLUl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:40:52 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:20564 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726777AbfDLUkw (ORCPT
+        Fri, 12 Apr 2019 16:41:28 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38853 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfDLUl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:40:52 -0400
-X-IronPort-AV: E=Sophos;i="5.60,342,1549926000"; 
-   d="scan'208";a="378447535"
-Received: from 91-160-5-165.subs.proxad.net (HELO [192.168.44.23]) ([91.160.5.165])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 12 Apr 2019 22:40:49 +0200
-Subject: Re: [PATCH 0/14] v2 multi-die/package topology support
-To:     Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190226062012.23746-1-lenb@kernel.org>
- <20190226185358.GQ2861@worktop.programming.kicks-ass.net>
- <20190307145925.GD19434@e105550-lin.cambridge.arm.com>
- <alpine.DEB.2.21.1904052033220.1802@nanos.tec.linutronix.de>
- <CAJvTdK=DNUmOLb9QBHVxn_EAL33zisH-_ZPo8GfFa++5hrK5zQ@mail.gmail.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Brice.Goglin@inria.fr; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b0923e09-aa99-81a3-fc33-4694e39b96e6@inria.fr>
-Date:   Fri, 12 Apr 2019 22:40:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 12 Apr 2019 16:41:27 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f36so5672664plb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 13:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8MbXQHPFKFs9QXh+4FcoXqj3E9S6gjKkLjMQR1K+xGQ=;
+        b=v2b3aRAZHPk3PMqTaGuLwmPFT7VCMq41xJ7xuhDT8eR5Vj/xZOHE3XXUuT+dDVCnoU
+         8P44f1PviyOgYDO9bIzlvhhhKdonzEDuBcgOdRH3ZmckISkOX8STZC8EQMRtve0UnQIZ
+         6vWOUldI+XAADrc3FEsT1+gJcrMqSvzTan5Jk+WTfe4pVNRTLAyOCIhNsNtG5ptBwO1k
+         Br20+fhO1qAjXdZwY+7e0PP7GSIFP0xuXv3Kn4AOqTrkE3r4Bzt8atw3t+K9ln42/VvV
+         6M0FB34+Wy+jIpYqFh2PdckWj6HaRky3vSErvO1IoDqj2JzPG4mxWE0NgUnMM/Egaal0
+         nAuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8MbXQHPFKFs9QXh+4FcoXqj3E9S6gjKkLjMQR1K+xGQ=;
+        b=KF4BbwcMFSxZzVAv0ISQJELDSoFG2F+OR2JNt6QnYyA3fDg61oH34mlSgc5O0E2UKN
+         ODAmfFyCt3WMq1lGh19qbiF9BkKe1Gqo6N/oz2tIEVVKqm5sK7hK5TGy1V4XJy45uDjB
+         ZzcocY65meosC8RBefKsjWZFYKkgTL/tajuVMv19Eh3TTj6/+P/NdvO/9KdCDYVPX0Kc
+         B0eKCMtM+KkyISv5yODhlMjfYfqbTIY1BJevVHbE164LC4pSWchudUe8sqkgyPy1BZOe
+         NGhxUHUM4Kgq7EL5jYhyHOPO/LTZf740dmPmAVOLZSkJKoJxww4k/B2n2huLB5GhikbS
+         rmWA==
+X-Gm-Message-State: APjAAAWrUChETm3un6W9O2cs5wrbrHeDOcpqnuuoWtW3Y1T5s0nCu2d/
+        /s7SE38ttw2cKnoZMT8mvukaD5E+Jir4GdIEekjUow==
+X-Google-Smtp-Source: APXvYqyBqQqbX0juWWXl3/d2E/RKVYFaBVA7OPlSQhfwmKIxfsQzVi0KmmGcIaCiOGExT4TfpXeDwuJcSz0ON0j+eIQ=
+X-Received: by 2002:a17:902:854c:: with SMTP id d12mr12445767plo.150.1555101686024;
+ Fri, 12 Apr 2019 13:41:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJvTdK=DNUmOLb9QBHVxn_EAL33zisH-_ZPo8GfFa++5hrK5zQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190412194348.225570-1-venture@google.com> <57e7d1e5-b980-fc80-ae2f-8a0ab12a0dbd@roeck-us.net>
+In-Reply-To: <57e7d1e5-b980-fc80-ae2f-8a0ab12a0dbd@roeck-us.net>
+From:   Patrick Venture <venture@google.com>
+Date:   Fri, 12 Apr 2019 13:41:15 -0700
+Message-ID: <CAO=notx0_F64goou+PNwmi4AmthRY28EvhM1e+6ERtvTi6yYSw@mail.gmail.com>
+Subject: Re: [PATCH v2] hwmon: (pmbus/ir38064): Add driver for Infineon
+ IR38064 Voltage Regulator
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, corbet@lwn.net,
+        Maxim Sloyko <maxims@google.com>, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 12/04/2019 à 21:52, Len Brown a écrit :
->>>> I think I prefer 's/threads/cpus/g' on that. Threads makes me think SMT,
->>>> and I don't think there's any guarantee the part in question will have
->>>> SMT on.
->>> I think 'threads' is a bit confusing as well. We seem to be using 'cpu'
->>> everywhere for something we can schedule tasks on, including the sysfs
->>> /sys/devices/system/cpu/ subdirs for each SMT thread on SMT systems.
-> I agree with Peter and Morten.
-> "cpu" is more clear and consistent than "thread" here.
-> I'll spin the series with that string changed.
+On Fri, Apr 12, 2019 at 1:28 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 4/12/19 12:43 PM, Patrick Venture wrote:
+> > From: Maxim Sloyko <maxims@google.com>
+> >
+> > Add the pmbus driver for the Infineon ir38064 voltage regulator.
+> >
+> > Signed-off-by: Maxim Sloyko <maxims@google.com>
+> > Signed-off-by: Patrick Venture <venture@google.com>
+> > ---
+> > v2:
+> >   - Cleaned up weird tabbing behavior in doc.
+> > v1:
+> >   - Initial patchset.
+> > ---
+> >   Documentation/hwmon/ir38064   | 64 +++++++++++++++++++++++++++++++++++
+> >   drivers/hwmon/pmbus/Kconfig   |  9 +++++
+> >   drivers/hwmon/pmbus/Makefile  |  1 +
+> >   drivers/hwmon/pmbus/ir38064.c | 60 ++++++++++++++++++++++++++++++++
+> >   4 files changed, 134 insertions(+)
+> >   create mode 100644 Documentation/hwmon/ir38064
+> >   create mode 100644 drivers/hwmon/pmbus/ir38064.c
+> >
+> > diff --git a/Documentation/hwmon/ir38064 b/Documentation/hwmon/ir38064
+> > new file mode 100644
+> > index 0000000000000..618779a329da0
+> > --- /dev/null
+> > +++ b/Documentation/hwmon/ir38064
+> > @@ -0,0 +1,64 @@
+> > +Kernel driver ir38064
+> > +=====================
+> > +
+> > +Supported chips:
+> > +  * Infineon IR38064
+> > +    Prefix: 'ir38064'
+> > +    Addresses scanned: -
+> > +    Datasheet: Publicly available at the Infineon webiste
+> > +      https://www.infineon.com/dgdl/Infineon-IR38064MTRPBF-DS-v03_07-EN.pdf?fileId=5546d462584d1d4a0158db0d9efb67ca
+> > +
+> > +Datasheet is not publicly available.
+> > +
+> > +
+> > +Authors:
+> > +        Maxim Sloyko <maxims@google.com>
+> > +        Patrick Venture <venture@google.com>
+> > +
+> > +Description
+> > +-----------
+> > +
+> > +IR38064 is a Single-input Voltage, Synchronous Buck Regulator, DC-DC Converter.
+> > +
+> > +Usage Notes
+> > +-----------
+> > +
+> > +This driver does not probe for PMBus devices. You will have to instantiate
+> > +devices explicitly.
+> > +
+> > +Sysfs attributes
+> > +----------------
+> > +
+> > +curr1_label          "iout1"
+> > +curr1_input          Measured output current
+> > +curr1_crit           Critical maximum current
+> > +curr1_crit_alarm     Current critical high alarm
+> > +curr1_max            Maximum current
+> > +curr1_max_alarm      Current high alarm
+> > +
+> > +in1_label            "vin"
+> > +in1_input            Measured input voltage
+> > +in1_crit             Critical maximum input voltage
+> > +in1_crit_alarm               Input voltage critical high alarm
+> > +in1_min              Minimum input voltage
+> > +in1_min_alarm                Input voltage low alarm
+> > +
+> > +in2_label            "vout1"
+> > +in2_input            Measured output voltage
+> > +in2_lcrit            Critical minimum output voltage
+> > +in2_lcrit_alarm      Output voltage critical low alarm
+> > +in2_crit             Critical maximum output voltage
+> > +in2_crit_alarm               Output voltage critical high alarm
+> > +in2_max              Maximum output voltage
+> > +in2_max_alarm                Output voltage high alarm
+> > +in2_min              Minimum output voltage
+> > +in2_min_alarm                Output voltage low alarm
+> > +
+> > +power1_label         "pout1"
+> > +power1_input         Measured output power
+> > +
+> > +temp1_input          Measured temperature
+> > +temp1_crit           Critical high temperature
+> > +temp1_crit_alarm     Chip temperature critical high alarm
+> > +temp1_max            Maximum temperature
+> > +temp1_max_alarm      Chip temperature high alarm
+> > diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> > index 629cb45f8557a..de87abab990e5 100644
+> > --- a/drivers/hwmon/pmbus/Kconfig
+> > +++ b/drivers/hwmon/pmbus/Kconfig
+> > @@ -54,6 +54,15 @@ config SENSORS_IR35221
+> >         This driver can also be built as a module. If so, the module will
+> >         be called ir35521.
+> >
+> > +config SENSORS_IR38064
+> > +     tristate "Infineon IR38064"
+> > +     help
+> > +       If you say yes here you get hardware monitoring support for Infineon
+> > +       IR38064.
+> > +
+> > +       This driver can also be built as a module. If so, the module will
+> > +       be called ir38064.
+> > +
+> >   config SENSORS_LM25066
+> >       tristate "National Semiconductor LM25066 and compatibles"
+> >       help
+> > diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+> > index ea0e39518c216..7d1fa6b3c8c93 100644
+> > --- a/drivers/hwmon/pmbus/Makefile
+> > +++ b/drivers/hwmon/pmbus/Makefile
+> > @@ -8,6 +8,7 @@ obj-$(CONFIG_SENSORS_PMBUS)   += pmbus.o
+> >   obj-$(CONFIG_SENSORS_ADM1275)       += adm1275.o
+> >   obj-$(CONFIG_SENSORS_IBM_CFFPS)     += ibm-cffps.o
+> >   obj-$(CONFIG_SENSORS_IR35221)       += ir35221.o
+> > +obj-$(CONFIG_SENSORS_IR38064)        += ir38064.o
+> >   obj-$(CONFIG_SENSORS_LM25066)       += lm25066.o
+> >   obj-$(CONFIG_SENSORS_LTC2978)       += ltc2978.o
+> >   obj-$(CONFIG_SENSORS_LTC3815)       += ltc3815.o
+> > diff --git a/drivers/hwmon/pmbus/ir38064.c b/drivers/hwmon/pmbus/ir38064.c
+> > new file mode 100644
+> > index 0000000000000..4b957ebb6fa71
+> > --- /dev/null
+> > +++ b/drivers/hwmon/pmbus/ir38064.c
+> > @@ -0,0 +1,60 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Hardware monitoring driver for Infineon IR38064
+> > + *
+> > + * Copyright (c) 2017 Google Inc
+> > + *
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include "pmbus.h"
+> > +
+> > +static struct pmbus_driver_info ir38064_info = {
+> > +     .pages = 1,
+> > +     .format[PSC_VOLTAGE_IN] = linear,
+> > +     .format[PSC_VOLTAGE_OUT] = direct,
+>
+> The datasheet says this is linear16 format with exponent=-8.
+> Oddly enough, the datasheet also suggests that VOUT_MODE is
+> not supported, which would normally report the exponent.
+> I think it would be is better to implement a local read function
+> and fake VOUT_MODE instead of declaring direct mode, but then
+> I understand that it would make the code more complex. I'll
+> leave it up to you, but if you want to keep it as-is,
+> please explain in a comment that you are faking linear16
+> mode with exponent -8.
 
+Added to commit message in v3.
 
-Agreed, I should have used that suffix from the beginning.
+>
+> > +     .format[PSC_CURRENT_OUT] = linear,
+> > +     .format[PSC_POWER] = linear,
+> > +     .format[PSC_TEMPERATURE] = linear,
+> > +     .m[PSC_VOLTAGE_OUT] = 256,
+> > +     .b[PSC_VOLTAGE_OUT] = 0,
+> > +     .R[PSC_VOLTAGE_OUT] = 0,
+> > +     .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
+> > +         | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
+> > +         | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
+> > +         | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
+> > +         | PMBUS_HAVE_POUT,
+> > +};
+> > +
+>
+> Not mandatory, but the chip does support VOUT_PEAK, IOUT_PEAK,
+> and TEMPERATURE_PEAK, just in case you are interested adding
+> support for it.
 
-Brice
+Added to commit message in v3.
 
+>
+> Thanks,
+> Guenter
 
+Thanks.
+
+>
+> > +static int ir38064_probe(struct i2c_client *client,
+> > +                      const struct i2c_device_id *id)
+> > +{
+> > +     return pmbus_do_probe(client, id, &ir38064_info);
+> > +}
+> > +
+> > +static const struct i2c_device_id ir38064_id[] = {
+> > +     {"ir38064", 0},
+> > +     {}
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(i2c, ir38064_id);
+> > +
+> > +/* This is the driver that will be inserted */
+> > +static struct i2c_driver ir38064_driver = {
+> > +     .driver = {
+> > +                .name = "ir38064",
+> > +                },
+> > +     .probe = ir38064_probe,
+> > +     .remove = pmbus_do_remove,
+> > +     .id_table = ir38064_id,
+> > +};
+> > +
+> > +module_i2c_driver(ir38064_driver);
+> > +
+> > +MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
+> > +MODULE_DESCRIPTION("PMBus driver for Infineon IR38064");
+> > +MODULE_LICENSE("GPL");
+> >
+>
