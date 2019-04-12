@@ -2,75 +2,83 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D4AC282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26BAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF53E2086D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECD82171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 20:32:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ckMFprP0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpCeaRot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfDLU2x (ORCPT
+        id S1726981AbfDLUcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 16:28:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40979 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfDLU2x (ORCPT
+        Fri, 12 Apr 2019 16:32:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42691 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfDLUcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 16:28:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f6so5714487pgs.8;
-        Fri, 12 Apr 2019 13:28:52 -0700 (PDT)
+        Fri, 12 Apr 2019 16:32:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so13481545wrx.9;
+        Fri, 12 Apr 2019 13:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ysJRxplC7zT+Urv9QVMthSe4YLMx0IpmJmrZfx5l7OI=;
-        b=ckMFprP0fdyX/c+T44JCY+y6NixIksxOrnlc0m7go8MmKGKtzE6RwPyzQDOEsA00eJ
-         f58vOyInmR8V9i/I9ZETFCjhInMOwT8ioawiBmGs17oaoQHSGC6hTeenquLN2Lf+OLep
-         vv2mQDVAyCfvt+mNgdfqe50kkTJX6rVx4cIUBIhF16XrN2C/ZfLzrTu75hJpONAFkhR4
-         U22KufUAq0FtosMeUAv6ysT3pXlPfsoevufVTbEWVgvYgapPCwt8y2cpv+oAk4rN1Mby
-         oR+kTehvM3GBNJcS0il2qkHMmY+HLP/Ybildc2bQ2DYPpSxPB0cg+WqMeEkJFGPTD+YM
-         G3bg==
+        bh=shRu0w6LOGNuM8eR6LVuZyZO1EnLS3eaLumjGGzE81Y=;
+        b=MpCeaRotYXIrnj0Pm+OPm5DM8q7Gi7fXsFYAYpxsT22yY253scGOLOWgHsICdMYrdi
+         z1kc0URnkrtZxmVMv5RAni5G6zAtVSO931/qv/Q/Fgv88wt4Rpc7cG1cmjmxiBbstL+K
+         9RxaGqvriEZcqjlVjDX7ztrXYu3qAp/16eETbBRESWt+gIUNaQZseVl7rE9G0EZeZktn
+         WtvYLDbnRAM3/nKg5z05G/mvTl/LxhRCIn33mWVD9gYKMZeuyu8RfvJRyUmfloX0HMOz
+         CaxUWfMO0/xC8v6q9d2DwVmBIvfmVOVqVgGJj6Eq8RiJ4j522t4Nu+4bDi2TLx967Rjj
+         Q7cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ysJRxplC7zT+Urv9QVMthSe4YLMx0IpmJmrZfx5l7OI=;
-        b=ph7DYmJHJ5PIRfiwNItBbRhycjMg2+HN2FbkH/yrQcPGuQZOLKhzXgRKyURa7Q6J3c
-         PyxG5Us++d38RIpWd+pFZ0sVPcwSv5v/sOBjNXrlaW8T2ZxleQ1+1YikziiHe2804p6i
-         hlsp6sA3DXD92AEFYHeTZOgLxNcUZ0fDO8RBI137EesoJyaQZBbnPlbAPjQnS16aTgHL
-         FSo1ZgaNty6BI5MovXuMktKgyC+gYW37/6tuhCb2Yw3Ip83tqyDVFOO5d98mi88A/yL5
-         tpkGfrh78b78C1ieVsPpVQLzttUzGeSwbzYQaeiUh7StpFDffjKS9le8ilHhyQnd386n
-         8ieA==
-X-Gm-Message-State: APjAAAV0P+uzK/Ibv9DvjfHeU/0BamXHSSS4i+9nYvEJNxs5T/juEL4m
-        /atLX+xhxR71XveZfDImGXsI82E6
-X-Google-Smtp-Source: APXvYqzFJHC3elfHB+5MakiaoezxPHhYAzvg/fiRc1hNNFx2eLMmYQIWLYlIwnQkInJQyh8h6vwepg==
-X-Received: by 2002:a65:44cd:: with SMTP id g13mr48266011pgs.258.1555100931985;
-        Fri, 12 Apr 2019 13:28:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c1sm19501119pgq.33.2019.04.12.13.28.49
+        bh=shRu0w6LOGNuM8eR6LVuZyZO1EnLS3eaLumjGGzE81Y=;
+        b=rC2d0Ctwm0pbEpxncSugu1WyKd+2wgJsT9pnQWyLmXDfY2dL8YhgybuWZ0dPUltug5
+         /bjBJ7Ke/76mzvHRZXXAbfjAJo2R5Jt+WUujy9Tcs+qudlrsksnsmYx9RzVtdgSYELzq
+         fS8CJGQ/P1RK7DxBS0E/EUTl3hYABhokZ+2ODFV20DgtESJziNAiCH1k1pBun7a/BRBP
+         2ehSH3shqWkluFY532t+sTNMRMOEJjXzzKrk7J4EP+nDHwS/wLbJii4pUq86OvNm5EHd
+         u3PDkfaKMxkGQ5vig9LMQCjm7Ui5KGLlt7jrCnkUqYaViKwHGu3DW1GMPXjChHHVc8us
+         miag==
+X-Gm-Message-State: APjAAAUTUkPhyq9hxPwIF1sQi4X9RL5GXMazMqamV3WxcRhP4z9JZz4U
+        DSjkMo0SXcuX/2sJjwwh5IozvmnqbCI=
+X-Google-Smtp-Source: APXvYqxCVqshd8bEfJb6FRpVXpHrXvUeuzayS49Rd3Mu3ylmyOJJ2TJ65WqBhyVGZAqsC2UK6K3dkw==
+X-Received: by 2002:adf:df08:: with SMTP id y8mr1058320wrl.91.1555101133727;
+        Fri, 12 Apr 2019 13:32:13 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id b204sm13251457wmh.29.2019.04.12.13.32.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 13:28:51 -0700 (PDT)
-Subject: Re: [PATCH v2] hwmon: (pmbus/ir38064): Add driver for Infineon
- IR38064 Voltage Regulator
-To:     Patrick Venture <venture@google.com>, jdelvare@suse.com,
-        corbet@lwn.net
-Cc:     Maxim Sloyko <maxims@google.com>, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190412194348.225570-1-venture@google.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <57e7d1e5-b980-fc80-ae2f-8a0ab12a0dbd@roeck-us.net>
-Date:   Fri, 12 Apr 2019 13:28:49 -0700
+        Fri, 12 Apr 2019 13:32:13 -0700 (PDT)
+Subject: Re: [PATCH v2 05/11] platform/x86: asus-wmi: Support queued WMI event
+ codes
+To:     Daniel Drake <drake@endlessm.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
+ <777027ac-921e-ee37-493e-974b49242d18@gmail.com>
+ <142fe2e3-b560-6136-32df-b14bb4ac46f7@gmail.com>
+ <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Message-ID: <b7b1834f-42e2-b652-9944-eb9b45b81cd0@gmail.com>
+Date:   Fri, 12 Apr 2019 22:32:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190412194348.225570-1-venture@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,213 +86,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 12:43 PM, Patrick Venture wrote:
-> From: Maxim Sloyko <maxims@google.com>
+
+
+On 12.04.19 09:48, Daniel Drake wrote:
+> On Thu, Apr 11, 2019 at 1:44 PM Yurii Pavlovskyi
+> <yurii.pavlovskyi@gmail.com> wrote:
+>> Event codes are expected to be polled from a queue on at least some
+>> models.
 > 
-> Add the pmbus driver for the Infineon ir38064 voltage regulator.
+> Maybe avoid the word "poll" since it suggests something else (at least to me).
+
+Ok, will change this in the code as well.
+
+>>> The fix flushes the old key codes out of the queue on load and after
+>> receiving event the queue is read until either ..FFFF or 1 is encountered.
+>>
+>> It might be considered a minor issue and no normal user would likely to
+>> observe this (there is little reason unloading the driver), but it does
+>> significantly frustrate a developer who is unlucky enough to encounter
+>> this.
+>>
+>> Introduce functionality for flushing and processing queued codes, which is
+>> enabled via quirk flag for ASUS7000. It might be considered if it is
+>> reasonable to enable it everywhere (might introduce regressions) or always
+>> try to flush the queue on module load and try to detect if this quirk is
+>> present in the future.
+>>
+>> This patch limits the effect to the specific hardware defined by ASUS7000
+>> device that is used for driver detection by vendor driver of Fx505. The
+>> fallback is also implemented in case initial flush fails.
 > 
-> Signed-off-by: Maxim Sloyko <maxims@google.com>
-> Signed-off-by: Patrick Venture <venture@google.com>
-> ---
-> v2:
->   - Cleaned up weird tabbing behavior in doc.
-> v1:
->   - Initial patchset.
-> ---
->   Documentation/hwmon/ir38064   | 64 +++++++++++++++++++++++++++++++++++
->   drivers/hwmon/pmbus/Kconfig   |  9 +++++
->   drivers/hwmon/pmbus/Makefile  |  1 +
->   drivers/hwmon/pmbus/ir38064.c | 60 ++++++++++++++++++++++++++++++++
->   4 files changed, 134 insertions(+)
->   create mode 100644 Documentation/hwmon/ir38064
->   create mode 100644 drivers/hwmon/pmbus/ir38064.c
+> Which vendor driver are you referring to here?
+
+The ASUS Keyboard hotkeys Driver V2.0.5 which is available to download for
+FX505 has this in his INF file:
+[ATKP.ntamd64]
+
+%DeviceDesc1% = NO_DRV64, ACPI\ASUS7000
+
+But this driver is not generic. It is limited to very specific hardware,
+I'd guess gaming series (for instance K54C does not have this device). It
+was rather a way to avoid breaking anything. I think your suggestion below
+is much better.
+
 > 
-> diff --git a/Documentation/hwmon/ir38064 b/Documentation/hwmon/ir38064
-> new file mode 100644
-> index 0000000000000..618779a329da0
-> --- /dev/null
-> +++ b/Documentation/hwmon/ir38064
-> @@ -0,0 +1,64 @@
-> +Kernel driver ir38064
-> +=====================
-> +
-> +Supported chips:
-> +  * Infineon IR38064
-> +    Prefix: 'ir38064'
-> +    Addresses scanned: -
-> +    Datasheet: Publicly available at the Infineon webiste
-> +      https://www.infineon.com/dgdl/Infineon-IR38064MTRPBF-DS-v03_07-EN.pdf?fileId=5546d462584d1d4a0158db0d9efb67ca
-> +
-> +Datasheet is not publicly available.
-> +
-> +
-> +Authors:
-> +        Maxim Sloyko <maxims@google.com>
-> +        Patrick Venture <venture@google.com>
-> +
-> +Description
-> +-----------
-> +
-> +IR38064 is a Single-input Voltage, Synchronous Buck Regulator, DC-DC Converter.
-> +
-> +Usage Notes
-> +-----------
-> +
-> +This driver does not probe for PMBus devices. You will have to instantiate
-> +devices explicitly.
-> +
-> +Sysfs attributes
-> +----------------
-> +
-> +curr1_label		"iout1"
-> +curr1_input		Measured output current
-> +curr1_crit		Critical maximum current
-> +curr1_crit_alarm	Current critical high alarm
-> +curr1_max		Maximum current
-> +curr1_max_alarm	Current high alarm
-> +
-> +in1_label		"vin"
-> +in1_input		Measured input voltage
-> +in1_crit		Critical maximum input voltage
-> +in1_crit_alarm		Input voltage critical high alarm
-> +in1_min		Minimum input voltage
-> +in1_min_alarm		Input voltage low alarm
-> +
-> +in2_label		"vout1"
-> +in2_input		Measured output voltage
-> +in2_lcrit		Critical minimum output voltage
-> +in2_lcrit_alarm	Output voltage critical low alarm
-> +in2_crit		Critical maximum output voltage
-> +in2_crit_alarm		Output voltage critical high alarm
-> +in2_max		Maximum output voltage
-> +in2_max_alarm		Output voltage high alarm
-> +in2_min		Minimum output voltage
-> +in2_min_alarm		Output voltage low alarm
-> +
-> +power1_label		"pout1"
-> +power1_input		Measured output power
-> +
-> +temp1_input		Measured temperature
-> +temp1_crit		Critical high temperature
-> +temp1_crit_alarm	Chip temperature critical high alarm
-> +temp1_max		Maximum temperature
-> +temp1_max_alarm	Chip temperature high alarm
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 629cb45f8557a..de87abab990e5 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -54,6 +54,15 @@ config SENSORS_IR35221
->   	  This driver can also be built as a module. If so, the module will
->   	  be called ir35521.
->   
-> +config SENSORS_IR38064
-> +	tristate "Infineon IR38064"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for Infineon
-> +	  IR38064.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called ir38064.
-> +
->   config SENSORS_LM25066
->   	tristate "National Semiconductor LM25066 and compatibles"
->   	help
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index ea0e39518c216..7d1fa6b3c8c93 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
->   obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
->   obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
->   obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
-> +obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
->   obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
->   obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
->   obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
-> diff --git a/drivers/hwmon/pmbus/ir38064.c b/drivers/hwmon/pmbus/ir38064.c
-> new file mode 100644
-> index 0000000000000..4b957ebb6fa71
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/ir38064.c
-> @@ -0,0 +1,60 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Hardware monitoring driver for Infineon IR38064
-> + *
-> + * Copyright (c) 2017 Google Inc
-> + *
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include "pmbus.h"
-> +
-> +static struct pmbus_driver_info ir38064_info = {
-> +	.pages = 1,
-> +	.format[PSC_VOLTAGE_IN] = linear,
-> +	.format[PSC_VOLTAGE_OUT] = direct,
-
-The datasheet says this is linear16 format with exponent=-8.
-Oddly enough, the datasheet also suggests that VOUT_MODE is
-not supported, which would normally report the exponent.
-I think it would be is better to implement a local read function
-and fake VOUT_MODE instead of declaring direct mode, but then
-I understand that it would make the code more complex. I'll
-leave it up to you, but if you want to keep it as-is,
-please explain in a comment that you are faking linear16
-mode with exponent -8.
-
-> +	.format[PSC_CURRENT_OUT] = linear,
-> +	.format[PSC_POWER] = linear,
-> +	.format[PSC_TEMPERATURE] = linear,
-> +	.m[PSC_VOLTAGE_OUT] = 256,
-> +	.b[PSC_VOLTAGE_OUT] = 0,
-> +	.R[PSC_VOLTAGE_OUT] = 0,
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-> +	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-> +	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-> +	    | PMBUS_HAVE_POUT,
-> +};
-> +
-
-Not mandatory, but the chip does support VOUT_PEAK, IOUT_PEAK,
-and TEMPERATURE_PEAK, just in case you are interested adding
-support for it.
-
-Thanks,
-Guenter
-
-> +static int ir38064_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	return pmbus_do_probe(client, id, &ir38064_info);
-> +}
-> +
-> +static const struct i2c_device_id ir38064_id[] = {
-> +	{"ir38064", 0},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, ir38064_id);
-> +
-> +/* This is the driver that will be inserted */
-> +static struct i2c_driver ir38064_driver = {
-> +	.driver = {
-> +		   .name = "ir38064",
-> +		   },
-> +	.probe = ir38064_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = ir38064_id,
-> +};
-> +
-> +module_i2c_driver(ir38064_driver);
-> +
-> +MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
-> +MODULE_DESCRIPTION("PMBus driver for Infineon IR38064");
-> +MODULE_LICENSE("GPL");
+> Researching more:
+> In our database of 144 Asus models, 142 of them have GANQ.
 > 
+> Of those 142, 9 of them return One in the empty-queue case. The other
+> 133 match your FX505GM device exactly. So it seems valid to interpret
+> both 0xffff and 0x1 as queue-end markers.
+> 
+> The 2 devices that do not have GANQ are not laptops. They also do not
+> have the _UID "ATK" WMI device, they only have "ASUSWMI" and their WMI
+> _WED method does not use a queue.
+> There are a few more units that have both ASUSWMI and ATK devices, and
+> the ASUSWMI device appears to never be queued.
+> Another observation is that the ASUSWMI device works with notify code
+> 0xD2, and the ATK device works with 0xFF.
+> 
+> Nailing this down a bit further, I found a DSDT for EEEPC X101H: that
+> one only has ASUSWMI and it is also not queued.
+> 
+> So I think you should make this queue behaviour applied more
+> generically, but either avoid it when the WMI device _UID is not "ATK"
+> (as discussed in the DCTS/DSTS thread), or avoid it when the notify
+> code is not 0x>
+> Thanks
+> Daniel
 
+Thanks a lot for your research, it's much appreciated! That seems to
+confirm that these two quirks are actually connected with ATK device. I
+guess it makes sense to combine the detection for both of them. Also to
+flush the queue we need to know the notify code beforehand, because it is
+checked in _WED so checking for ATK seems reasonable to me.
+
+Best regards,
+Yurii
