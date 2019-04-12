@@ -2,90 +2,71 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA929C10F14
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ED5C10F14
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744A62084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tkuHp5W2"
+	by mail.kernel.org (Postfix) with ESMTP id 34AA62186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 11:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfDLL1f (ORCPT
+        id S1727104AbfDLL2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 07:27:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:35153 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfDLL1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 07:27:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44gbGW32PCz9s9h;
-        Fri, 12 Apr 2019 21:27:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555068452;
-        bh=wafXje+ZkSF7atlrrE50tVbtZvjNFks/NVFAzxOuQJ4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tkuHp5W2pkisGU3WD840wx61dPPXRUy0kq+NlcjaJ18uIR9TRSmRFo3ycgqjfyQ37
-         kpH0buKjTYKwjX89MZDwOSAq16SGKiMihMgnaFVSxX/BXo86YPh1B44nRh2hq7TtS7
-         nRZCqYJUnbPZwQL3goLERm4TYWrXJOIQDn3n2HLPlXYN4r9dznvvFxgwssTk5mCMQH
-         e6fI0ibwl7HAdmVR7vHZrYVdZuFAaxCfTfk6i1SHC/5AqnoKiDHeSiDII3RoKj2ZdR
-         3q+2vJueT0Sy37nJjsLmkeffeOLP6RKbgOVMQuZk7YsjHbFIbOnVsFl56nb5bwrNzy
-         qMfaXm1uIdyow==
-Date:   Fri, 12 Apr 2019 21:27:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: linux-next: Signed-off-by missing for commits in the tip tree
-Message-ID: <20190412212724.125ed881@canb.auug.org.au>
+        Fri, 12 Apr 2019 07:28:20 -0400
+Received: from outbound-smtp17.blacknight.com ([46.22.139.234]:42963 "EHLO
+        outbound-smtp17.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726697AbfDLL2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 07:28:20 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp17.blacknight.com (Postfix) with ESMTPS id 984751C2F7F
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 12:28:18 +0100 (IST)
+Received: (qmail 4311 invoked from network); 12 Apr 2019 11:28:18 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 12 Apr 2019 11:28:18 -0000
+Date:   Fri, 12 Apr 2019 12:28:16 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Tejun Heo <tj@kernel.org>, Qian Cai <cai@lca.pw>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] mm: Remove the SLAB allocator
+Message-ID: <20190412112816.GD18914@techsingularity.net>
+References: <20190410024714.26607-1-tobin@kernel.org>
+ <f06aaeae-28c0-9ea4-d795-418ec3362d17@suse.cz>
+ <alpine.DEB.2.21.1904101452340.100430@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/NbGkMIaNCye7+UJ77Nhooe."; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904101452340.100430@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NbGkMIaNCye7+UJ77Nhooe.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 10, 2019 at 02:53:34PM -0700, David Rientjes wrote:
+> > FWIW, our enterprise kernel use it (latest is 4.12 based), and openSUSE
+> > kernels as well (with openSUSE Tumbleweed that includes latest
+> > kernel.org stables). AFAIK we don't enable SLAB_DEBUG even in general
+> > debug kernel flavours as it's just too slow.
+> > 
+> > IIRC last time Mel evaluated switching to SLUB, it wasn't a clear
+> > winner, but I'll just CC him for details :)
+> > 
+> 
+> We also use CONFIG_SLAB and disable CONFIG_SLAB_DEBUG for the same reason.
 
-Hi all,
+Would it be possible to re-evaluate using mainline kernel 5.0?
 
-Commits
-
-  899cbdfa8d14 ("overflow.h: Add comment documenting __ab_c_size()")
-  e106de2e4c01 ("x86/irq/64: Split the IRQ stack into its own pages")
-
-are missing a Signed-off-by from their committers.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/NbGkMIaNCye7+UJ77Nhooe.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlywdhwACgkQAVBC80lX
-0Gxwzwf9E2z0T7oEjLgaCjHMmwmjZ7YisfP8eKlC7zrSEke8U0kxTuFjhA/M/ejO
-3lQkx0TC8LczAjYrS9CK4Y0DsHFgGbjMrZ285sGcD9falZ2wz6laY/o53KizsEuf
-xpqk41diEboZTBziD2+ndSfk8RJ+8yum/I1hsMvo1T9uOdNgO+ARQnTmfeNzUviT
-0cT9w0lhSE63pteHDbH4tYPHVU443VYhSom6S4qosqHMI+YiwkuZf5XdIHbJb/zL
-Nz5Skt0FeF25q/LYlnXxuBhKpOn9/vAYyP6FPxJafqa1/vyyMMCOOtrNRTwKLHmm
-DJF17Kbnm28MbVhH0xDtVaR72w3bJw==
-=pSt0
------END PGP SIGNATURE-----
-
---Sig_/NbGkMIaNCye7+UJ77Nhooe.--
+-- 
+Mel Gorman
+SUSE Labs
