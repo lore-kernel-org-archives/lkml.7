@@ -2,134 +2,114 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C22C10F0E
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3413C282CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FC1206BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 13:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="raXhuTkt"
+	by mail.kernel.org (Postfix) with ESMTP id 8205E2171F
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 14:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555077645;
+	bh=nijqsap55XUBbZCPEQ18QWXyKoM2eiWnVLRWc9vjpFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OHIikFwYY2cWpE3xsHHDLI3RiBh/cjJzkawiO1PnChTIbywaiva98V7LFdjOR4fM/
+	 R7PR3H9eNBL8QDFDFNsGvtBK8QGGla4ZAKl2tevnrqZSxYkSUVXsjpelLPxr3BFekx
+	 lE7EjSZW9WoFM+q6SNcIO7dpJHwKk05rtjUrEepY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfDLN75 (ORCPT
+        id S1726913AbfDLOAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 09:59:57 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55109 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfDLN75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 09:59:57 -0400
-Received: by mail-it1-f193.google.com with SMTP id a190so7406395ite.4;
-        Fri, 12 Apr 2019 06:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ikgIFIv6KfAdT2IE3ELumyKYrYodKRPGbJs61/rWg7I=;
-        b=raXhuTktOAfOy05DpwVE5xb5lHsHHt5MoKOlU915ettgmqicVRPTqArm5a0suY5WbR
-         ZplY6W+Lz+1F9yAXQvNs60dcwiyS7y+k4YvveiSJaGN7Wgr2vYFGBqfagYe9RlxOS+YW
-         CygK8CAQkQRV6FYQZPAUi2aNbJm8zjfphOutQ3TFQwppOtUZMcKD2nI6rVConuSZo4oB
-         oc0Ysjj1bTzPe0w+5pPRkhKLMUWOUXwr/0jyqPsAtd/dIEPPrxK2WQOhx92rovqm5ueD
-         sBin4puatjp06bMPa0xghHMNScHnczDlfPgFUAycz+66/hcymqqRGLcOIwMjjQV4xRo9
-         tAxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ikgIFIv6KfAdT2IE3ELumyKYrYodKRPGbJs61/rWg7I=;
-        b=QsEYjPwBwlu+kNYwtFd+F9hzsALSQzFWKk1J/7bjV+KN0aNGC2o1sSz3dVWJwRsHYf
-         nnTN2YFOMK+nd0SqZBya5dLun9tC98UpOhN43KnH82Hv7KDwhrvOdB1nlgf+9chG2vdi
-         erpb5JgjjvulNpWHtuTskd2xOd2GD8Mpsxy9lJ0ynSUoH1bI28Y3xLR9BBVxW59xoM4D
-         PqghCYFZRaO2sBi0ksL4y1OLAjd6zZbDjIaMZseAoQvzieSYb6sxJNnWi2763NOkbou8
-         atqbDhf5gHv4kA7s3UJlMS+iKK7UgcTXk24GJPK2tuERSK5j/0HUeYJ03Uii3v8tPRbu
-         J/Rw==
-X-Gm-Message-State: APjAAAWzV9Zyi2s/w99qZE/0nRKFvp/CWur3wjf33jCxEYyXfQw8h+hc
-        C9OVHPTZ51IEgr1xUPqmPdCrGDpGwF+jGdRwxcc=
-X-Google-Smtp-Source: APXvYqwk6ozZkTY6JT08TtWQ7f3kB3slYsOiJqp+gNZrtZSIAlhJjus2FyjE/LyV3Sba/kbl3yqiulDZqUgDduSetOQ=
-X-Received: by 2002:a02:c843:: with SMTP id r3mr40803426jao.12.1555077596294;
- Fri, 12 Apr 2019 06:59:56 -0700 (PDT)
+        Fri, 12 Apr 2019 10:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbfDLOAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 10:00:44 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CBE206BA;
+        Fri, 12 Apr 2019 14:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555077643;
+        bh=nijqsap55XUBbZCPEQ18QWXyKoM2eiWnVLRWc9vjpFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UTpFg69Irfxx+z7ULeCgkbr6LWenQJGbARB0olr18CwrekCJQTkNbkgrM3/gVXS0O
+         t08W0Tebf8ESHMEbYQx+PXtEKGxRpCaQ0haI4tzur+xvuG8lB3AeuxoPmaN7Q/XSPW
+         4QLetd+Vax7ZNZUfJ6CNMFEmjYhJnbMYoA8pmZnQ=
+Date:   Fri, 12 Apr 2019 09:00:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv5 4/6] PCI: mobiveil: Add PCIe Gen4 RC driver for NXP
+ Layerscape SoCs
+Message-ID: <20190412140041.GA141472@google.com>
+References: <20190412095332.41370-1-Zhiqiang.Hou@nxp.com>
+ <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-3-brgl@bgdev.pl>
- <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com>
-In-Reply-To: <57fe079c-fd69-45ef-b4fb-a2c792218c21@ti.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 12 Apr 2019 08:59:44 -0500
-Message-ID: <CAHCN7x+BpuuNnV+wteD=JBwuYF3z7EDD4kig26Kj4rOdJcW+LA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ARM: dts: da850-evm: enable cpufreq
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190412095332.41370-5-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:06 AM Sekhar Nori <nsekhar@ti.com> wrote:
->
-> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> > tps6507 pmic with configurable output voltage, so all operating points
-> > can be enabled.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Adam, can you please ack? Looks good to me.
+On Fri, Apr 12, 2019 at 09:52:50AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> This PCIe controller is based on the Mobiveil GPEX IP, which is
+> compatible with the PCI Express™ Base Specification, Revision 4.0.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> ---
+> V5:
+>  - Corrected the subject.
+>  - Corrected 2 typos.
+>  - Updated the Copyright and driver description.
+>  - Changed to use BIT(x) to define verious functions of register's bits.
+>  - Unified the capitalization of error info.
+>  - Changed the IRQ handler name to ls_pcie_g4_isr().
+>  - Change 'irq' to 'IRQ' in error info.
+>  - Trimmed some functions without functionality change.
+> 
+>  drivers/pci/controller/mobiveil/Kconfig       |  10 +
+>  drivers/pci/controller/mobiveil/Makefile      |   1 +
 
-Sekhar,
-Based on what I read in the thread about the LCDK, I want to do some
-tests on the da850-evm before put my name on it.  I like what I see in
-general, so I am excited to this this here.
+>  .../controller/mobiveil/pci-layerscape-gen4.c | 256 ++++++++++++++++++
 
-Bartosz - which kernel branch should I use as a starting point to apply these?
+I would probably name this "pcie-layerscape-gen4.c" ("pcie" instead of
+"pci"), since that's more typical and this really is PCIe-specific.
 
-adam
->
-> Thanks,
-> Sekhar
->
-> > ---
-> >  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> > index f04bc3e15332..f94bb38fdad9 100644
-> > --- a/arch/arm/boot/dts/da850-evm.dts
-> > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > @@ -191,6 +191,19 @@
-> >       };
-> >  };
-> >
-> > +&cpu {
-> > +     cpu-supply = <&vdcdc3_reg>;
-> > +};
-> > +
-> > +/*
-> > + * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-> > + * point by default. Higher frequencies must be enabled for custom boards with
-> > + * other variants of the SoC.
-> > + */
-> > +&opp_375 {
-> > +     status = "okay";
-> > +};
-> > +
-> >  &sata {
-> >       status = "okay";
-> >  };
-> > --
-> > 2.21.0
-> >
->
+> +#define PCIE_PF_DBG			0x7fc
+> +#define PF_DBG_LTSSM_MASK		0x3f
+> +#define PF_DBG_WE			BIT(31)
+> +#define PF_DBG_PABR			BIT(27)
+> +
+> +#define LS_PCIE_G4_LTSSM_L0		0x2d /* L0 state */
+
+Maybe rename this and move it to make it obvious that it's related to
+PF_DBG_LTSSM_MASK?
+
+> +		dev_err(dev, "Poll PABRST&PABACT timeout.\n");
+
+No need for punctuation at end of messages.
