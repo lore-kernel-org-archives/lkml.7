@@ -2,116 +2,80 @@ Return-Path: <SRS0=nVcb=SO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A299C282CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEB4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D3E20869
-	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE94220818
+	for <linux-kernel@archiver.kernel.org>; Fri, 12 Apr 2019 18:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfDLSz2 convert rfc822-to-8bit (ORCPT
+        id S1727097AbfDLS5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 14:55:28 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:43502 "EHLO gloria.sntech.de"
+        Fri, 12 Apr 2019 14:57:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:38248 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbfDLSz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 14:55:28 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hF1Kc-0007TD-Mi; Fri, 12 Apr 2019 20:55:22 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] clk: rockchip: rk3288: Limit use of USB PHY clock to USB
-Date:   Fri, 12 Apr 2019 20:55:21 +0200
-Message-ID: <2234566.NSlXb2d66Y@diego>
-In-Reply-To: <20190412180255.GW112750@google.com>
-References: <20190411175917.173566-1-mka@chromium.org> <2029012.W0xZ3ly3fY@diego> <20190412180255.GW112750@google.com>
+        id S1726755AbfDLS5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 14:57:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A06A374;
+        Fri, 12 Apr 2019 11:57:21 -0700 (PDT)
+Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D0473F718;
+        Fri, 12 Apr 2019 11:57:19 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     linux-mm@kvack.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, jglisse@redhat.com,
+        ohall@gmail.com, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Device-memory-related cleanups
+Date:   Fri, 12 Apr 2019 19:55:59 +0100
+Message-Id: <cover.1555093412.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.21.0.dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 12. April 2019, 20:02:55 CEST schrieb Matthias Kaehlcke:
-> On Fri, Apr 12, 2019 at 11:30:37AM +0200, Heiko Stübner wrote:
-> > Am Freitag, 12. April 2019, 02:16:57 CEST schrieb Matthias Kaehlcke:
-> > > Hi Heiko,
-> > > 
-> > > On Thu, Apr 11, 2019 at 09:03:07PM +0200, Heiko Stübner wrote:
-> > > > Hi Matthias,
-> > > > 
-> > > > Am Donnerstag, 11. April 2019, 19:59:17 CEST schrieb Matthias Kaehlcke:
-> > > > > The USB PHY clock can be configured as (grand) parent of uart0_sclk and
-> > > > > sclk_gpu. It has been observed that UART0 doesn't work reliably in high
-> > > > > speed mode with the PHY clock as input when certain USB devices are
-> > > > > plugged to the USB HOST1 port (see https://crrev.com/c/320543).
-> > > > > 
-> > > > > Prefix the name of the PHY clock with a '.' in the non-USB muxes to
-> > > > > effectively remove the clock as input from these muxes.
-> > > > > 
-> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > ---
-> > > > >  drivers/clk/rockchip/clk-rk3288.c | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-> > > > > index 5a67b7869960..677bc5485201 100644
-> > > > > --- a/drivers/clk/rockchip/clk-rk3288.c
-> > > > > +++ b/drivers/clk/rockchip/clk-rk3288.c
-> > > > > @@ -200,8 +200,8 @@ PNAME(mux_aclk_cpu_src_p)	= { "cpll_aclk_cpu", "gpll_aclk_cpu" };
-> > > > >  PNAME(mux_pll_src_cpll_gpll_p)		= { "cpll", "gpll" };
-> > > > >  PNAME(mux_pll_src_npll_cpll_gpll_p)	= { "npll", "cpll", "gpll" };
-> > > > >  PNAME(mux_pll_src_cpll_gpll_npll_p)	= { "cpll", "gpll", "npll" };
-> > > > > -PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", "usbphy480m_src" };
-> > > > > -PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", "usbphy480m_src", "npll" };
-> > > > > +PNAME(mux_pll_src_cpll_gpll_usb480m_p)	= { "cpll", "gpll", ".usbphy480m_src" };
-> > > > > +PNAME(mux_pll_src_cpll_gll_usb_npll_p)	= { "cpll", "gpll", ".usbphy480m_src", "npll" };
-> > > > 
-> > > > In general I like to have things like the clock-tree described fully
-> > > > and let the kernel handle correct sourcing ... but:
-> > > > 
-> > > > As you write this seems like a systemic problem when just connecting
-> > > > random peripherals can create unstable clock source frequencies,
-> > > > so I tend to agree here ... but:
-> > > > 
-> > > > Can we please find a more "talking" name for this ... because as with the
-> > > > above someone will find the "." and submit a fix for it ;-) .
-> > > > 
-> > > > So just name it "unstable_dummy" or so?
-> > > 
-> > > I looked for some common pattern, but couldn't find one. I liked the
-> > > '.' since it leaves the name of the clock mostly intact, just hiding
-> > > it (similar to a leading '.' in a Linux file system). But I agree that
-> > > it might not be expressive enough. I still like the idea to keep the
-> > > clock name around for reference, maybe we could name it
-> > > "unstable:usbphy480m_src" or similar. If you don't object I'll send a
-> > > patch with this some time tomorrow.
-> > 
-> > I've just adapted the patch to use the new parent-name you suggested
-> > and applied it for 5.2 So no need to resend :-) .
-> 
-> Pefect, thanks!
-> 
-> I don't see the patch in the git.kernel.org repo (nor
-> https://lore.kernel.org/patchwork/patch/1060781/), looks like the push
-> is still pending.
+Hi,
 
-oops, I really had forgotten the push ... done now with your patch at
-https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/log/?h=v5.2-clk/next
+As promised, these are my preparatory cleanup patches that have so far
+fallen out of pmem DAX work for arm64. Patch #1 has already been out for
+a ride in Anshuman's hot-remove series, so I've collected the acks
+already given.
 
-Heiko
+Since we have various things in flight at the moment touching arm64
+pagetable code, I'm wary of conflicts and cross-tree dependencies for
+our actual ARCH_HAS_PTE_DEVMAP implementation. Thus it would be nice if
+these could be picked up for 5.2 via mm or nvdimm as appropriate, such
+that we can then handle the devmap patch itself via arm64 next cycle.
 
+Robin.
+
+
+Robin Murphy (3):
+  mm/memremap: Rename and consolidate SECTION_SIZE
+  mm: clean up is_device_*_page() definitions
+  mm: introduce ARCH_HAS_PTE_DEVMAP
+
+ arch/powerpc/Kconfig                         |  2 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  1 -
+ arch/x86/Kconfig                             |  2 +-
+ arch/x86/include/asm/pgtable.h               |  4 +-
+ arch/x86/include/asm/pgtable_types.h         |  1 -
+ include/linux/mm.h                           | 47 +++++++-------------
+ include/linux/mmzone.h                       |  1 +
+ include/linux/pfn_t.h                        |  4 +-
+ kernel/memremap.c                            | 10 ++---
+ mm/Kconfig                                   |  5 +--
+ mm/gup.c                                     |  2 +-
+ mm/hmm.c                                     |  2 -
+ 12 files changed, 29 insertions(+), 52 deletions(-)
+
+-- 
+2.21.0.dirty
 
