@@ -3,61 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A6C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA9AC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15E2214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCF0214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="M+aIDgBl";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Df58U1Km"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="hb+JmiKv";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="WZEzwXqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbfDMRYs (ORCPT
+        id S1728678AbfDMRYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 13:24:48 -0400
+        Sat, 13 Apr 2019 13:24:52 -0400
 Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:4245 "EHLO
         mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728634AbfDMRYp (ORCPT
+        by vger.kernel.org with ESMTP id S1728660AbfDMRYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 13:24:45 -0400
+        Sat, 13 Apr 2019 13:24:49 -0400
+X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Apr 2019 13:24:48 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=x0EtT+J5wWb+ZtJOdzWhHvTPnq3gOr8wqlzDcKgYIHc=;
- b=M+aIDgBlTZfjjveium1rmWMYQpDT5Vt0DJINLVrOu7EzxYh9KIstiMj83P+t0GsHw2hjE/5Faq0C
-   +QjmBnDHFAeFpu1tDZO4PLcWVD3dMZB1GG6KgMiNS8CO/pHE8TbSj9qxrQIxQoN+n+FkeAcdWOFs
-   molR2BVbRblcKl2cgM0=
-Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hm8dlo1jvmg4 for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 16:54:58 +0000 (envelope-from <bounce-md_31050260.5cb21462.v1-5812b76717be479c9ee26a57a5c6323c@mandrillapp.com>)
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=xGZrTYz6TLSvmvz29N6wq5H2asSjQwMgO6zBIVD6hNM=;
+ b=hb+JmiKv5KZdNWZL94U4wAxILt/fTaM377m4sX9X3b7bW+xc4OsCwQoIZR7AnlTr9bUPLu81PbWt
+   ZHqCypByVv/jN8iYCNh8WnMDWFVv2VSKL+oQxg8FwzfiDqjNqU/SkCfC2tR35lIVfPvDl09EmXce
+   /hIdClUvlBNLNQqK3Ak=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hm8dm01jvmgv for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 17:01:00 +0000 (envelope-from <bounce-md_31050260.5cb215cc.v1-5e827bb363bd4698a09627fe436bcf3d@mandrillapp.com>)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555174498; h=From : 
- Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555174860; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
  MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
  Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=x0EtT+J5wWb+ZtJOdzWhHvTPnq3gOr8wqlzDcKgYIHc=; 
- b=Df58U1KmARDYLy7edogUEpu6zpSnkkjOaOL6IU9aJIFwy2VkQBbPfmEgaA5fzz27ZS3dAa
- o/b4DzWf+az8t9OInh4eZvfxNawuycfuHY+nq9EqVMJI//NnDzVeljbYz9FDhMWw8q8XrwSU
- 3d7fnP4KcDr86KXd81kcJBi6XFpkY=
+ bh=xGZrTYz6TLSvmvz29N6wq5H2asSjQwMgO6zBIVD6hNM=; 
+ b=WZEzwXqESmNCNoApFpwdNIxnRggE7oCWhQ9r3vxSLQisGqUWjOT55s5diX2Ylq6wNacauP
+ oINZ2dMCMLMy8movoHD0Ms4uOG0wWZG2viwsvAaHHI/Wo+K1mVW9+pErI1i6jDE5nTslQ73k
+ G+URIkvDVPa7/jc7ytyx1SEoqwj3E=
 From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH 1/2] vfs: pass ppos=NULL to .read()/.write() of FMODE_STREAM files
-Received: from [87.98.221.171] by mandrillapp.com id 5812b76717be479c9ee26a57a5c6323c; Sat, 13 Apr 2019 16:54:58 +0000
-X-Mailer: git-send-email 2.21.0.593.g511ec345e1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-Id: <20190413165449.11168-1-kirr@nexedi.com>
-In-Reply-To: <20190413165116.GB10314@deco.navytux.spb.ru>
-References: 
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Received: from [87.98.221.171] by mandrillapp.com id 5e827bb363bd4698a09627fe436bcf3d; Sat, 13 Apr 2019 17:01:00 +0000
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        <kbuild-all@01.org>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-Id: <20190413170056.GA11293@deco.navytux.spb.ru>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+In-Reply-To: <alpine.DEB.2.21.1904131849350.2536@hadrien>
 X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.5812b76717be479c9ee26a57a5c6323c
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.5e827bb363bd4698a09627fe436bcf3d
 X-Mandrill-User: md_31050260
-Date:   Sat, 13 Apr 2019 16:54:58 +0000
+Date:   Sat, 13 Apr 2019 17:01:00 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
@@ -66,209 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This amends commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") in how position is passed into .read()/.write() handler for
-stream-like files:
+Hello everyone,
 
-Rasmus noticed that we currently pass 0 as position and ignore any position
-change if that is done by a file implementation. This papers over bugs if ppos
-is used in files that declare themselves as being stream-like as such bugs will
-go unnoticed. Even if a file implementation is correctly converted into using
-stream_open, its read/write later could be changed to use ppos and even though
-that won't be working correctly, that bug might go unnoticed without someone
-doing wrong behaviour analysis. It is thus better to pass ppos=NULL into
-read/write for stream-like files as that don't give any chance for ppos usage
-bugs because it will oops if ppos is ever used inside .read() or .write().
+On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
+> Hello,
+> 
+> Kirill will explain about this issue.
 
-Note 1: rw_verify_area, new_sync_{read,write} needs to be updated
-because they are called by vfs_read/vfs_write & friends before
-file_operations .read/.write .
+pci/switchtec switching to stream_open is already queued to merge
+window and it was acked by Logan Gunthorpe:
 
-Note 2: if file backend uses new-style .read_iter/.write_iter, position
-is still passed into there as non-pointer kiocb.ki_pos . Currently
-stream_open.cocci (semantic patch added by 10dce8af3422) ignores files
-whose file_operations has *_iter methods.
+        https://lore.kernel.org/lkml/CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com/
+        https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
 
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
----
- fs/open.c       |  5 ++--
- fs/read_write.c | 75 +++++++++++++++++++++++++++++--------------------
- 2 files changed, 47 insertions(+), 33 deletions(-)
+( there are too many Cc's in that patch and email with it and reply-all to
+  it did not get into mailing list probably due to being considered as spam )
 
-diff --git a/fs/open.c b/fs/open.c
-index a00350018a47..9c7d724a6f67 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1219,8 +1219,9 @@ EXPORT_SYMBOL(nonseekable_open);
- /*
-  * stream_open is used by subsystems that want stream-like file descriptors.
-  * Such file descriptors are not seekable and don't have notion of position
-- * (file.f_pos is always 0). Contrary to file descriptors of other regular
-- * files, .read() and .write() can run simultaneously.
-+ * (file.f_pos is always 0 and ppos passed to .read()/.write() is always NULL).
-+ * Contrary to file descriptors of other regular files, .read() and .write()
-+ * can run simultaneously.
-  *
-  * stream_open never fails and is marked to return int so that it could be
-  * directly used as file_operations.open .
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 61b43ad7608e..d62556be6848 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -371,7 +371,7 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
- 	inode = file_inode(file);
- 	if (unlikely((ssize_t) count < 0))
- 		return retval;
--	pos = *ppos;
-+	pos = (ppos ? *ppos : 0);
- 	if (unlikely(pos < 0)) {
- 		if (!unsigned_offsets(file))
- 			return retval;
-@@ -400,12 +400,13 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
- 	ssize_t ret;
- 
- 	init_sync_kiocb(&kiocb, filp);
--	kiocb.ki_pos = *ppos;
-+	kiocb.ki_pos = (ppos ? *ppos : 0);
- 	iov_iter_init(&iter, READ, &iov, 1, len);
- 
- 	ret = call_read_iter(filp, &kiocb, &iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
--	*ppos = kiocb.ki_pos;
-+	if (ppos)
-+		*ppos = kiocb.ki_pos;
- 	return ret;
- }
- 
-@@ -468,12 +469,12 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t
- 	ssize_t ret;
- 
- 	init_sync_kiocb(&kiocb, filp);
--	kiocb.ki_pos = *ppos;
-+	kiocb.ki_pos = (ppos ? *ppos : 0);
- 	iov_iter_init(&iter, WRITE, &iov, 1, len);
- 
- 	ret = call_write_iter(filp, &kiocb, &iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
--	if (ret > 0)
-+	if (ret > 0 && ppos)
- 		*ppos = kiocb.ki_pos;
- 	return ret;
- }
-@@ -558,15 +559,10 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
- 	return ret;
- }
- 
--static inline loff_t file_pos_read(struct file *file)
--{
--	return file->f_mode & FMODE_STREAM ? 0 : file->f_pos;
--}
--
--static inline void file_pos_write(struct file *file, loff_t pos)
-+/* file_ppos returns &file->f_pos or NULL if file is stream */
-+static inline loff_t *file_ppos(struct file *file)
- {
--	if ((file->f_mode & FMODE_STREAM) == 0)
--		file->f_pos = pos;
-+	return file->f_mode & FMODE_STREAM ? NULL : &file->f_pos;
- }
- 
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
-@@ -575,10 +571,14 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
- 	ssize_t ret = -EBADF;
- 
- 	if (f.file) {
--		loff_t pos = file_pos_read(f.file);
--		ret = vfs_read(f.file, buf, count, &pos);
--		if (ret >= 0)
--			file_pos_write(f.file, pos);
-+		loff_t pos, *ppos = file_ppos(f.file);
-+		if (ppos) {
-+			pos = *ppos;
-+			ppos = &pos;
-+		}
-+		ret = vfs_read(f.file, buf, count, ppos);
-+		if (ret >= 0 && ppos)
-+			f.file->f_pos = pos;
- 		fdput_pos(f);
- 	}
- 	return ret;
-@@ -595,10 +595,14 @@ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count)
- 	ssize_t ret = -EBADF;
- 
- 	if (f.file) {
--		loff_t pos = file_pos_read(f.file);
--		ret = vfs_write(f.file, buf, count, &pos);
--		if (ret >= 0)
--			file_pos_write(f.file, pos);
-+		loff_t pos, *ppos = file_ppos(f.file);
-+		if (ppos) {
-+			pos = *ppos;
-+			ppos = &pos;
-+		}
-+		ret = vfs_write(f.file, buf, count, ppos);
-+		if (ret >= 0 && ppos)
-+			f.file->f_pos = pos;
- 		fdput_pos(f);
- 	}
- 
-@@ -673,14 +677,15 @@ static ssize_t do_iter_readv_writev(struct file *filp, struct iov_iter *iter,
- 	ret = kiocb_set_rw_flags(&kiocb, flags);
- 	if (ret)
- 		return ret;
--	kiocb.ki_pos = *ppos;
-+	kiocb.ki_pos = (ppos ? *ppos : 0);
- 
- 	if (type == READ)
- 		ret = call_read_iter(filp, &kiocb, iter);
- 	else
- 		ret = call_write_iter(filp, &kiocb, iter);
- 	BUG_ON(ret == -EIOCBQUEUED);
--	*ppos = kiocb.ki_pos;
-+	if (ppos)
-+		*ppos = kiocb.ki_pos;
- 	return ret;
- }
- 
-@@ -1013,10 +1018,14 @@ static ssize_t do_readv(unsigned long fd, const struct iovec __user *vec,
- 	ssize_t ret = -EBADF;
- 
- 	if (f.file) {
--		loff_t pos = file_pos_read(f.file);
--		ret = vfs_readv(f.file, vec, vlen, &pos, flags);
--		if (ret >= 0)
--			file_pos_write(f.file, pos);
-+		loff_t pos, *ppos = file_ppos(f.file);
-+		if (ppos) {
-+			pos = *ppos;
-+			ppos = &pos;
-+		}
-+		ret = vfs_readv(f.file, vec, vlen, ppos, flags);
-+		if (ret >= 0 && ppos)
-+			f.file->f_pos = pos;
- 		fdput_pos(f);
- 	}
- 
-@@ -1033,10 +1042,14 @@ static ssize_t do_writev(unsigned long fd, const struct iovec __user *vec,
- 	ssize_t ret = -EBADF;
- 
- 	if (f.file) {
--		loff_t pos = file_pos_read(f.file);
--		ret = vfs_writev(f.file, vec, vlen, &pos, flags);
--		if (ret >= 0)
--			file_pos_write(f.file, pos);
-+		loff_t pos, *ppos = file_ppos(f.file);
-+		if (ppos) {
-+			pos = *ppos;
-+			ppos = &pos;
-+		}
-+		ret = vfs_writev(f.file, vec, vlen, ppos, flags);
-+		if (ret >= 0 && ppos)
-+			f.file->f_pos = pos;
- 		fdput_pos(f);
- 	}
- 
--- 
-2.21.0.593.g511ec345e1
+stream_open.cocci was issuing only warning for pci/switchtec, but after
+8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
+started to use wait_even_* inside read method and, since
+stream_open.cocci considers wait_event_* as blocking the warning became
+error. Previously it was completions there, but I added support for wait
+events only for simplicity.
+
+I can handle pci/switchtec switching via big nonseekable_open ->
+stream_open change at next merge window, or, alternatively please feel
+free to switch pci/switchtec now on its own. The change is correct - I
+was manually reviewing all changes that stream_open.cocci produces and
+pci/switchtec was there.
+
+Kirill
+
+> julia
+> 
+> ---------- Forwarded message ----------
+> Date: Sat, 13 Apr 2019 11:22:51 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> 
+> CC: kbuild-all@01.org
+> TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> CC: Logan Gunthorpe <logang@deltatee.com>
+> CC: Bjorn Helgaas <helgaas@kernel.org>
+> CC: linux-pci@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> 
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> 
+> Generated by: scripts/coccinelle/api/stream_open.cocci
+> 
+> Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> head:   794c294ae4483c240429c25a0d18e272e92c94de
+> commit: 8a29a3bae2a2dfb0116cd8791d9700515d6e765e [154/311] pci/switchtec: Don't use completion's wait queue
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 hours ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>  switchtec.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+>  		return PTR_ERR(stuser);
+> 
+>  	filp->private_data = stuser;
+> -	nonseekable_open(inode, filp);
+> +	stream_open(inode, filp);
+> 
+>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
