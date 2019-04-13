@@ -2,195 +2,118 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2585C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF18BC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A57C218D2
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="IJIRmPM0"
+	by mail.kernel.org (Postfix) with ESMTP id A0B542084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfDMQzh (ORCPT
+        id S1727543AbfDMQ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:55:37 -0400
-Received: from vps.xff.cz ([195.181.215.36]:49062 "EHLO vps.xff.cz"
+        Sat, 13 Apr 2019 12:56:42 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:45418 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727256AbfDMQyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:54:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1555174460; bh=uWFX8jAj5JCtgpScxODx75tXIzsjGiifzvL/hyBr8tU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJIRmPM0tt4T9q3cSjY93VIrPKBqoMeDjdgvz/g98QbWQo7KPchY5dEyHkMFUI/wK
-         6qyNCCuuQOa+Y5qPmyj7yCJTYS7dAsA6zmWhNySwLcgp/3MNw/+4E/okI8AzoLUj3X
-         JFGY8vy1GJ0mQAvS+PA+jH04cSnOMT+KeQ3n7fyQ=
-From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v4 3/9] pinctrl: sunxi: Prepare for alternative bias voltage setting methods
-Date:   Sat, 13 Apr 2019 18:54:12 +0200
-Message-Id: <20190413165418.27880-4-megous@megous.com>
-In-Reply-To: <20190413165418.27880-1-megous@megous.com>
-References: <20190413165418.27880-1-megous@megous.com>
+        id S1727256AbfDMQ4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 12:56:41 -0400
+Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hFLxI-00007e-70; Sat, 13 Apr 2019 10:56:41 -0600
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     kbuild-all@01.org, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <306cc455-0506-6561-c4ad-95478e106161@deltatee.com>
+Date:   Sat, 13 Apr 2019 10:56:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.191.165
+X-SA-Exim-Rcpt-To: kirr@nexedi.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org, kurt.schwemmer@microsemi.com, kbuild-all@01.org, bigeasy@linutronix.de, julia.lawall@lip6.fr
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
 
-H6 has a different I/O voltage bias setting method than A80. Prepare
-existing code for using alternative bias voltage setting methods.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c   |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c       | 47 ++++++++++++---------
- drivers/pinctrl/sunxi/pinctrl-sunxi.h       | 11 ++++-
- 4 files changed, 39 insertions(+), 23 deletions(-)
+On 2019-04-13 10:50 a.m., Julia Lawall wrote:
+> Hello,
+> 
+> Kirill will explain about this issue.
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-index e05dd9a5551d..a191a65217ac 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-@@ -153,7 +153,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_r_pinctrl_data = {
- 	.pin_base = PL_BASE,
- 	.irq_banks = 2,
- 	.disable_strict_mode = true,
--	.has_io_bias_cfg = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_GRP_CONFIG,
- };
- 
- static int sun9i_a80_r_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-index da37d594a13d..0633a03d5e13 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80.c
-@@ -722,7 +722,7 @@ static const struct sunxi_pinctrl_desc sun9i_a80_pinctrl_data = {
- 	.npins = ARRAY_SIZE(sun9i_a80_pins),
- 	.irq_banks = 5,
- 	.disable_strict_mode = true,
--	.has_io_bias_cfg = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_GRP_CONFIG,
- };
- 
- static int sun9i_a80_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index be04223591d4..98c4de5f4019 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -617,7 +617,7 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	u32 val, reg;
- 	int uV;
- 
--	if (!pctl->desc->has_io_bias_cfg)
-+	if (!pctl->desc->io_bias_cfg_variant)
- 		return 0;
- 
- 	uV = regulator_get_voltage(supply);
-@@ -628,25 +628,32 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 	if (uV == 0)
- 		return 0;
- 
--	/* Configured value must be equal or greater to actual voltage */
--	if (uV <= 1800000)
--		val = 0x0; /* 1.8V */
--	else if (uV <= 2500000)
--		val = 0x6; /* 2.5V */
--	else if (uV <= 2800000)
--		val = 0x9; /* 2.8V */
--	else if (uV <= 3000000)
--		val = 0xA; /* 3.0V */
--	else
--		val = 0xD; /* 3.3V */
--
--	pin -= pctl->desc->pin_base;
--
--	reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
--	reg &= ~IO_BIAS_MASK;
--	writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
--
--	return 0;
-+	switch (pctl->desc->io_bias_cfg_variant) {
-+	case BIAS_VOLTAGE_GRP_CONFIG:
-+		/*
-+		 * Configured value must be equal or greater to actual
-+		 * voltage.
-+		 */
-+		if (uV <= 1800000)
-+			val = 0x0; /* 1.8V */
-+		else if (uV <= 2500000)
-+			val = 0x6; /* 2.5V */
-+		else if (uV <= 2800000)
-+			val = 0x9; /* 2.8V */
-+		else if (uV <= 3000000)
-+			val = 0xA; /* 3.0V */
-+		else
-+			val = 0xD; /* 3.3V */
-+
-+		pin -= pctl->desc->pin_base;
-+
-+		reg = readl(pctl->membase + sunxi_grp_config_reg(pin));
-+		reg &= ~IO_BIAS_MASK;
-+		writel(reg | val, pctl->membase + sunxi_grp_config_reg(pin));
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- static int sunxi_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index ee15ab067b5f..a62b81357136 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -95,6 +95,15 @@
- #define PINCTRL_SUN7I_A20	BIT(7)
- #define PINCTRL_SUN8I_R40	BIT(8)
- 
-+enum sunxi_desc_bias_voltage {
-+	BIAS_VOLTAGE_NONE,
-+	/*
-+	 * Bias voltage configuration is done through
-+	 * Pn_GRP_CONFIG registers, as seen on A80 SoC.
-+	 */
-+	BIAS_VOLTAGE_GRP_CONFIG,
-+};
-+
- struct sunxi_desc_function {
- 	unsigned long	variant;
- 	const char	*name;
-@@ -117,7 +126,7 @@ struct sunxi_pinctrl_desc {
- 	const unsigned int		*irq_bank_map;
- 	bool				irq_read_needs_mux;
- 	bool				disable_strict_mode;
--	bool				has_io_bias_cfg;
-+	enum sunxi_desc_bias_voltage	io_bias_cfg_variant;
- };
- 
- struct sunxi_pinctrl_function {
--- 
-2.21.0
+I'm aware of this effort and Acked Kirill's original monolithic patch.
+So, for this patch:
 
+Acked-by: Logan Gunthorpe <logang@deltatee.com.
+
+Thanks,
+
+Logan
+
+
+> julia
+> 
+> ---------- Forwarded message ----------
+> Date: Sat, 13 Apr 2019 11:22:51 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> 
+> CC: kbuild-all@01.org
+> TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> CC: Logan Gunthorpe <logang@deltatee.com>
+> CC: Bjorn Helgaas <helgaas@kernel.org>
+> CC: linux-pci@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> 
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> 
+> Generated by: scripts/coccinelle/api/stream_open.cocci
+> 
+> Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> head:   794c294ae4483c240429c25a0d18e272e92c94de
+> commit: 8a29a3bae2a2dfb0116cd8791d9700515d6e765e [154/311] pci/switchtec: Don't use completion's wait queue
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 hours ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>  switchtec.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+>  		return PTR_ERR(stuser);
+> 
+>  	filp->private_data = stuser;
+> -	nonseekable_open(inode, filp);
+> +	stream_open(inode, filp);
+> 
+>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+> 
