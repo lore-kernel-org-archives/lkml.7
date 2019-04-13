@@ -2,93 +2,137 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086DC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFE9C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1522084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D382082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YfNY7SQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfDMKAD (ORCPT
+        id S1727039AbfDMKdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:00:03 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:38666 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfDMKAD (ORCPT
+        Sat, 13 Apr 2019 06:33:08 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54513 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfDMKdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:00:03 -0400
-X-Greylist: delayed 457 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Apr 2019 06:00:02 EDT
-Received: from jiaolitao?raisecom.com (unknown [192.168.167.201])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 70B0F571AA;
-        Sat, 13 Apr 2019 17:52:18 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED: 0
-X-ABS-CHECKED: 0
-X-SKE-CHECKED: 0
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [36.106.21.149])
-        by smtp.263.net (postfix) whith ESMTP id P18443T140378703386368S1555149129851949_;
-        Sat, 13 Apr 2019 17:52:17 +0800 (CST)
-X-UNIQUE-TAG: <072f6e018e707cc40dde5741654fad3e>
-X-RL-SENDER: jiaolitao@raisecom.com
-X-SENDER: 006714@raisecom.com
-X-LOGIN-NAME: jiaolitao@raisecom.com
-X-FST-TO: davem@davemloft.net
-X-SENDER-IP: 36.106.21.149
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Litao Jiao <jiaolitao@raisecom.com>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, idosch@mellanox.com, roopa@cumulusnetworks.com,
-        sbrivio@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiaolitao@raisecom.com
-Subject: [PATCH] vxlan: do not add dynamic fdb entry when the dev has been downed
-Date:   Sat, 13 Apr 2019 17:51:52 +0800
-Message-Id: <1555149112-14115-1-git-send-email-jiaolitao@raisecom.com>
-X-Mailer: git-send-email 1.9.1
+        Sat, 13 Apr 2019 06:33:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c1so14195314wml.4
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1D/vpZhkpnrNC5vrHmbmlzGbahsmNnMzAgArQrryVSk=;
+        b=YfNY7SQ6Zq+eYTr38wXqWsMz8zPfa9svoIKcauzdOdMYf1d0ne6rtbGTmkOVSYx9g9
+         M6CfAkkuft7sKLjDCuXSLrsA+cReq1OExiRiM8uhHoY4EBUYlheObTtZzU86DkLWP9/a
+         4TkciSkYxI0GPZa5nopOqabkXecVYM2ZxQ1x2v4XhExCxLuEORWMONA1iQx9jZBjudxH
+         UUQFb3WjqsmyE5UJOK+VFmAdDMblUDcyFBy9Bay3hJH/T0psSH44RhnqqDvY+IvgYZT5
+         SPpLTl+RdiezdBSPPrwsuJVfbxlB2TyqrVxxOMd1rY6dXv4PJmf/Y6PRHCBu2b5anyr+
+         Yxhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1D/vpZhkpnrNC5vrHmbmlzGbahsmNnMzAgArQrryVSk=;
+        b=o9LaC7454JBamRAsptRr7JscGf+7koxVYV6S6EBr0h4DOhW5F95eWGd0wtYye8p9Zu
+         43JxzWTv07qn4JD5dCgsm2Qb7/5/E3VWnnKpaiPDOXVwCuvQtQRpxvi31ANkhe14cnAy
+         yGkNalInkfyKBJmTdyOQ01bIILEv+tDXfVXloQi15icOK/r85dqArDyRjWPMQRNkYmrL
+         JJA7at6kkq1Nzl/qpv8VfWZuUvdXlGrkwg16OR1uObdSt0MtCKE5uHo2WOdqc5uO44bA
+         h5ucouN1hMMZxZyHgiWNjp+tQPwGxp8QpvOLcUoBEcWW7+JBEWw8zplynqr5UBZLkJKI
+         MjDQ==
+X-Gm-Message-State: APjAAAXO5fJs7uXHsXofqku6I76A92KNjns70VPAbYxgio3dReKpjWT/
+        OEhU8jX+REUCzy2XXy00WyolEQ==
+X-Google-Smtp-Source: APXvYqz/Bh8vyIu/+fLzaR76U7hL6dN/yWLvWd4u2s50YW4M54efrU5bbMr9MwgDkv41djF3FBWPTw==
+X-Received: by 2002:a1c:5459:: with SMTP id p25mr14175302wmi.20.1555151586710;
+        Sat, 13 Apr 2019 03:33:06 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 13 Apr 2019 03:33:06 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+Subject: [RESEND PATCH 00/20] nvmem: patches(set 1) for 5.2
+Date:   Sat, 13 Apr 2019 11:32:45 +0100
+Message-Id: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the dev has been downed or goes downing, it should not
-add dynamic fdb entry for the dev.
+Resending this with cc to linux-kernel@vger.kernel.org
 
-Signed-off-by: Litao Jiao <jiaolitao@raisecom.com>
----
- drivers/net/vxlan.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Hi Greg,
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index d76dfed..3b45fe4 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1125,11 +1125,13 @@ static int vxlan_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
- 	if (vxlan->default_dst.remote_ip.sa.sa_family != ip.sa.sa_family)
- 		return -EAFNOSUPPORT;
- 
-+	err = -EINVAL;
- 	spin_lock_bh(&vxlan->hash_lock);
--	err = vxlan_fdb_update(vxlan, addr, &ip, ndm->ndm_state, flags,
--			       port, src_vni, vni, ifindex,
--			       ndm->ndm_flags | NTF_VXLAN_ADDED_BY_USER,
--			       true, extack);
-+	if (netif_running(dev) || (ndm->ndm_state & NUD_PERMANENT))
-+		err = vxlan_fdb_update(vxlan, addr, &ip, ndm->ndm_state, flags,
-+				       port, src_vni, vni, ifindex,
-+				       ndm->ndm_flags | NTF_VXLAN_ADDED_BY_USER,
-+				       true, extack);
- 	spin_unlock_bh(&vxlan->hash_lock);
- 
- 	return err;
+Here are some nvmem patches for 5.2 which includes:
+- adding support to new stm32, sunix and imx providers
+- few general cleanups
+- fix for in place buffer reads.
+
+Can you please pick these for 5.2.
+
+thanks,
+srini
+
+Anson Huang (3):
+  nvmem: imx-ocotp: use devm_platform_ioremap_resource() to simplify
+    code
+  nvmem: mxs-ocotp: use devm_platform_ioremap_resource() to simplify
+    code
+  nvmem: imx-iim: use devm_platform_ioremap_resource() to simplify code
+
+Chen-Yu Tsai (5):
+  nvmem: sunxi_sid: Read out SID for randomness without looping
+  nvmem: sunxi_sid: Optimize register read-out method
+  nvmem: sunxi_sid: Dynamically allocate nvmem_config structure
+  nvmem: sunxi_sid: Read out data in native format
+  nvmem: sunxi_sid: Support SID on A83T and H5
+
+Fabrice Gasnier (4):
+  dt-bindings: nvmem: Add STM32 factory-programmed romem
+  nvmem: Add driver for STM32 factory-programmed read only mem
+  nvmem: stm32: add support for STM32MP15 BSEC to control OTP data
+  nvmem: core: add nvmem_cell_read_u16
+
+Jorge Ramirez-Ortiz (1):
+  nvmem: core: fix read buffer in place
+
+Lucas Stach (3):
+  dt-bindings: imx-ocotp: Add i.MX8MQ compatible
+  nvmem: imx-ocotp: add support for imx8mq
+  nvmem: imx-ocotp: broaden Kconfig dependency
+
+Yangtao Li (4):
+  nvmem: sunxi-sid: fix wrong description in kernel doc
+  nvmem: sunxi-sid: add binding for H6's SID controller
+  nvmem: sunxi-sid: convert to SPDX license tags
+  nvmem: sunxi_sid: Support SID on H6
+
+ .../bindings/nvmem/allwinner,sunxi-sid.txt    |   3 +-
+ .../devicetree/bindings/nvmem/imx-ocotp.txt   |   4 +-
+ .../bindings/nvmem/st,stm32-romem.txt         |  31 +++
+ drivers/nvmem/Kconfig                         |  14 +-
+ drivers/nvmem/Makefile                        |   2 +
+ drivers/nvmem/core.c                          |  52 ++++-
+ drivers/nvmem/imx-iim.c                       |   4 +-
+ drivers/nvmem/imx-ocotp.c                     |  11 +-
+ drivers/nvmem/mxs-ocotp.c                     |   4 +-
+ drivers/nvmem/stm32-romem.c                   | 202 ++++++++++++++++++
+ drivers/nvmem/sunxi_sid.c                     | 115 ++++------
+ include/linux/nvmem-consumer.h                |   7 +
+ 12 files changed, 362 insertions(+), 87 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+ create mode 100644 drivers/nvmem/stm32-romem.c
+
 -- 
-1.9.1
-
-
+2.21.0
 
