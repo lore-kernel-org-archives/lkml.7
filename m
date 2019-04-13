@@ -5,80 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F76EC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E79DC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B7E20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DFF20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Fz1+CEGn"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="V1ZWuQQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfDMLhb (ORCPT
+        id S1727041AbfDMLlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 07:37:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39891 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfDMLhb (ORCPT
+        Sat, 13 Apr 2019 07:41:31 -0400
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:33062 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfDMLlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 07:37:31 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f10so10658246otb.6;
-        Sat, 13 Apr 2019 04:37:30 -0700 (PDT)
+        Sat, 13 Apr 2019 07:41:31 -0400
+Received: by mail-oi1-f169.google.com with SMTP id e5so10161283oii.0;
+        Sat, 13 Apr 2019 04:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cPr5fJiz4nXGuDrFwW8vntfct74jRoGWcNEctADPJjc=;
-        b=Fz1+CEGnRVkcD4QngclFGONsO1Wixzn9nYeHtcDbKPw2nyfUQVOO4b9PsZaHKclgdy
-         ZQ19b/6A1HohZ/2Xi8ch0rlAV9VYB3c3SJA/ApdjxA2Az/V4/5swtRzTG6h/ICD1RCNU
-         Yn2whrjmth8wNfgyGUaRs/N02gHf0UDeDQ3Na63+Q7Zdm4DvCAA4zg0KQJLGT8V/TwZE
-         8y9OCv8r1qNA9LLNrLfqlpYMRID00z9it126zQmFN983nPb4TY0MMIYfdY+mp/8RnU6D
-         Lsr2UNxdUiPN4j+rOr69rfEsIvWoJTRJKPmvi9uJCXxa+ogKt0MD4fbb+vu/LDQcupVO
-         ICsA==
+        bh=Q13kuNkTBHkcWihycz+KK0I6eBNtjvR1vvA6Tk/zFZ4=;
+        b=V1ZWuQQkDMT1//qpcFkGoC2aB0YLJrrRq+qF3dz7XUtNX1GQgFS56T7GJbuam2wqOK
+         eMKjlsuRgTm3SXA195kuV9wJ7C7/a2V6FwFmcZtGPb48oCZcKXJfKZw7jjAA/VIsXW09
+         50Df+q0L2AL/7CPOsl5nQofExF4JQAuB2nG/Wwss6yPO56a7yfdJVIznl0MR3EylBBIA
+         Oi5GkzCUlvbxbMwBzkzXgSNaD/0HwhUupQ2E2xmixYvkYmfaJ+jEiMWZGTP/iD5jWml7
+         l3FM4bxOYinnDfARhGRhHYP3OvHrMbv6yezxoNCWpQGF8g3/aa3/DsSF+xWpSXBrpwHa
+         06HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cPr5fJiz4nXGuDrFwW8vntfct74jRoGWcNEctADPJjc=;
-        b=mvqcoy1HgVUXSY/cd19IsBDEnpbXhc0bqLRbqEZN4vCOfK0nxtHG7Ys/Gh2gTAEqCw
-         d7F1n3uO4NDHQ1K6b89EZwH8ngNAPZJEMuplJUuP8QFq0booYdDcQO5J5z/ay8Kj7Php
-         OIrSjZldu/0JNJfGYmlI68jh/4TP+M3ggePumlo3bW/m38FACbF19gfIsTDQVTspOt/9
-         jTk+PwbajF6CSJUNYTihzabMqT9eHF+MyCtxlV+l7DhLP5J+PAAn/A5XS/t0kZZJA88b
-         /ACjl37saWT7FxDDNVkUJ7A3ZSGlY2G9QTMTJvG6PmOZBHOzTHmHMMIkGpUBPT5UCv8u
-         bTRA==
-X-Gm-Message-State: APjAAAU5flqKQVIINv+g/9eFhNoK8s1bzMne+txSzu+QZpAL2XZkaYYA
-        ieioAHbPUk15BXh0kT4X0Ud28PgZAcBwyN4AIxg=
-X-Google-Smtp-Source: APXvYqxzGCfIyrIAv+u7k39uAGKbvbJJ4MpMp4GSs+6yxhCpJZVFMuXbhKBUhNys6IzPlNuSIUUdYS7bk7oPI+CyD/A=
-X-Received: by 2002:a9d:6e88:: with SMTP id a8mr4225415otr.117.1555155450171;
- Sat, 13 Apr 2019 04:37:30 -0700 (PDT)
+        bh=Q13kuNkTBHkcWihycz+KK0I6eBNtjvR1vvA6Tk/zFZ4=;
+        b=CEKSLFamIF2DvCaZjG619rbxX5tGF+Oe6APtjCKSCcqvK3Ixv2PUgLWmzmArIj/M1l
+         B10g4Ib7a6JSOXzLsoXXSolKBGVTOMHk+L+6r09sXOBTbRZf4txECYzvS25WAtN+a3B5
+         KlDyphkTG/RvndXKq+cdk3C8BqNzuyNmDGhpw7095oNbHhHP/Hu+qgIjPtjPERJwAOvj
+         AEGe8D1caFdVUqnSEF3X6WLlXWnupbwUY5yC/J8eaNBcqwqs6AnfbkhFUPz+WtAi6TXW
+         4cqBthhxecS/G/NurV/V8m+mh+/Lh4bExXNUX/SYTjY3zPIRyNxivpvpA9pW6jRsPvYx
+         baEg==
+X-Gm-Message-State: APjAAAWSVWFtLjqF2RduM7vo/Gj1WOri766SCvVNx4YwCZReQfJZgHYy
+        66T4F+p6qzgMuG5beIj3MvOMSM7Rp0mR2c2GPqepyg==
+X-Google-Smtp-Source: APXvYqyvBEoNM+100tF5Ew7Nv2paa0mwftXH+HmOHRp7JUWfyGWsV/q0zfmDL3q7w43lw52wTnk4ivATNrJaLoyjewc=
+X-Received: by 2002:aca:b68a:: with SMTP id g132mr13298471oif.47.1555155690122;
+ Sat, 13 Apr 2019 04:41:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412092337.6941-1-narmstrong@baylibre.com> <20190412092337.6941-4-narmstrong@baylibre.com>
-In-Reply-To: <20190412092337.6941-4-narmstrong@baylibre.com>
+References: <20190412100221.26740-1-glaroque@baylibre.com> <20190412100221.26740-2-glaroque@baylibre.com>
+In-Reply-To: <20190412100221.26740-2-glaroque@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 13 Apr 2019 13:37:19 +0200
-Message-ID: <CAFBinCDRFCo6GiTQ+zArqeuZCYK6BdfMVtRDUAhjG+oLEZyA8w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-g12a: Add PWM nodes
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
+Date:   Sat, 13 Apr 2019 13:41:19 +0200
+Message-ID: <CAFBinCCd1EkvcwX0aiKxPXepyndu8_VhKq+RFVU7KxzYNftUJA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clk: g12a-clkc: add Temperature
+ Sensor clock ID
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>,
+        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 11:24 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Fri, Apr 12, 2019 at 12:02 PM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
 >
-> This adds the EE and AO PWM nodes and the possible pinctrl settings.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-I reviewed the controller definitions and picked three pinctrl nodes -
-all of them are fine:
-Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+> Add clock id used by temperature sensor for G12A Socs
+nit-pick if you have to re-send if for some reason: "used by the
+temperature sensors for G12A SoCs" (because as far as I know the two
+temperature sensors share this clock)
 
-that said, I had two questions regarding the AO PWM controllers in
-PATCH 2/3 of this series which should be considered before applying
-this patch
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
