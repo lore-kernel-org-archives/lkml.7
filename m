@@ -2,153 +2,90 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB87C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D6C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524942075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7082075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okbhh2NE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfDMIQM (ORCPT
+        id S1727079AbfDMIS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 04:16:12 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:58985 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfDMIQL (ORCPT
+        Sat, 13 Apr 2019 04:18:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45155 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfDMIS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 04:16:11 -0400
-Received: by mail-it1-f197.google.com with SMTP id j203so11456227itb.8
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 01:16:11 -0700 (PDT)
+        Sat, 13 Apr 2019 04:18:26 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so10550068iom.12;
+        Sat, 13 Apr 2019 01:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ro/8oi0cBPQmJgI9XTWitEPaTVc12w+RDDTdqm88BUk=;
+        b=okbhh2NEli8PWXSrT8/+i+684bKpFkhEK4PZmycjsgVERYjhh/AX6RtCb98pOVa8SF
+         k0LEwZ8N2q+5XPUK2rnkWZDkH3Pd2F4eFBBL3FuEsqvotRi1Ur9RRFT8PmqKmSOuYIyn
+         r2+f6Irt5kEV5vT3PZPX5YrJQ3lZyJN4jy2WRWFj2eTu3ImnD3mNgIg+IDh/MFyFol2a
+         OnpESkGb52xEsVg2i6OR0gJXeg7+xQV2XUYODkmRKzJyAsU0YQjkX8CKZhP8ovaE281b
+         zn6LdmKSmMf0MyyD0pbuAVli5rnNLnDja+4NydqxFazZzcdMPkrexj0qXpprAZSMQBV1
+         z15g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JYwa0fO1NtQQxeN51+orwtMJaSYdGsjlNAoUd8rz2OQ=;
-        b=QZZX58dyv47K2oZnWwB7/zh7hsO2E7vfhDd/i96sKal2Bf8jcW/IEzZ5r6xbgUXVl2
-         itG3yrz8KuIoC7odZsDIcvlOVn3ekBESKPdqaNpJXBJPBYo+niAFI+TqdEz+lGJUdB0G
-         ydvqkerif4KWaaLo4xZsUArQO0+ysj88DAnFs/WcHcR4OQgz1l52LTtaMOLKTLacrV44
-         NtLu8LIZdt8X5xaGx5KnOqFMjXaIPri9+nSVttcNsM3YcbLwD/yEJKfPaRRWro3YApZk
-         353jW51qILfwByrsOnOpGltt7sIuvlwSj6SeGNp7Ilv93/mQq7SWoLabSQSFyTQNJjzy
-         qqZA==
-X-Gm-Message-State: APjAAAUbNq1ldrzFGX9nTySHRXQLnlWLVplH2ufc0Vi8tJZxO0Z0visb
-        y08glUD+Y0eIVT+6Vo97yFqs2XRG+jtGCpd256qrGYbR2w4+
-X-Google-Smtp-Source: APXvYqw7x4tx2VnF/fG0o2/iHwpHbtVdqt2T+HF0JxPCvxDZ98/fOAvN+GqhZ6Op4dgucBz1az+09NbHQtHKHNtBtZMPDa+Dp52k
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ro/8oi0cBPQmJgI9XTWitEPaTVc12w+RDDTdqm88BUk=;
+        b=hpsMPszap1JuyN1u3AlzzujKRQtUKhhtlvFzgZpAReaMMjtBa6dBTDJ8c6G9Yrr09Z
+         yeVYjvNzbkeFQR9w7HypMT0eQnrzJSuZwCt7v3o6tlvmupjsGiTGHW+FMrpqDKiqOV32
+         /AxB//Oe9dxtZXHsTLpz5SM5gf6M4c1xWYP7b+daan5LWFRchN6DLIMMZMU/LNtf3MU8
+         8x6w39m59ULsgpTDEmO7VVO5QCmM0IxujbgPbl7elCk+w/CpHeZmbG3QzP1fqEyXGtnn
+         CQib57PjLFzzjmBzCzXtwbLLjJf2b4tJAWoZltu+L6sJAdxwL0p475xkl+d4288UCn9U
+         AP3w==
+X-Gm-Message-State: APjAAAURhcP5hiYrtqFLIkiebU3FRxLh0BpGYGSjUvCZgBCbwYc4Kfe1
+        pVtfDiKd0RgEKoSES07LcVbpYfRtAeJrShBPh1w=
+X-Google-Smtp-Source: APXvYqx256zEOW1mkGiGQjarrjQlBXFGWzQVwTBU0vjQBGi81bF1WWeZPf3UjvsjzdRF3S6jMyZICn8heuCmbRgZWFY=
+X-Received: by 2002:a5e:d701:: with SMTP id v1mr42960664iom.276.1555143505617;
+ Sat, 13 Apr 2019 01:18:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:5a4a:: with SMTP id v71mr10917042jaa.22.1555143370974;
- Sat, 13 Apr 2019 01:16:10 -0700 (PDT)
-Date:   Sat, 13 Apr 2019 01:16:10 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000033aefc058665083c@google.com>
-Subject: WARNING in __kthread_bind_mask
-From:   syzbot <syzbot+6d4a92619eb0ad08602b@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, hare@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org> <20190404080647.8173-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20190404080647.8173-1-daniel.lezcano@linaro.org>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Sat, 13 Apr 2019 01:18:14 -0700
+Message-ID: <CAHQ1cqHXK8HHXCj0FtZUtCzafYCYdOkdHm_wA6_NqN8q=iB-yQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] thermal/drivers/of: Add a get_temp_id callback function
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Apr 4, 2019 at 1:07 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> Currently when we register a sensor, we specify the sensor id and a data
+> pointer to be passed when the get_temp function is called. However the
+> sensor_id is not passed to the get_temp callback forcing the driver to
+> do extra allocation and adding back pointer to find out from the sensor
+> information the driver data and then back to the sensor id.
+>
+> Add a new callback get_temp_id() which will be called if set. It will
+> call the get_temp_id() with the sensor id.
+>
+> That will be more consistent with the registering function.
+>
 
-syzbot found the following crash on:
+Tested both patches on i.MX8MQ, seem to work as expected.
 
-HEAD commit:    bcb67f0f Add linux-next specific files for 20190412
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=165912d3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=35c479ecf64ba753
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d4a92619eb0ad08602b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c9ebbb200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153f76dd200000
+Tested-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-The bug was bisected to:
-
-commit 6c271ce2f1d572f7fa225700a13cfe7ced492434
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Thu Jan 10 18:22:30 2019 +0000
-
-     io_uring: add submission polling
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143498f3200000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=163498f3200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=123498f3200000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6d4a92619eb0ad08602b@syzkaller.appspotmail.com
-Fixes: 6c271ce2f1d5 ("io_uring: add submission polling")
-
-WARNING: CPU: 0 PID: 7822 at kernel/kthread.c:399  
-__kthread_bind_mask+0x3b/0xc0 kernel/kthread.c:399
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7822 Comm: syz-executor030 Not tainted 5.1.0-rc4-next-20190412  
-#24
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x72b kernel/panic.c:214
-  __warn.cold+0x20/0x46 kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:__kthread_bind_mask+0x3b/0xc0 kernel/kthread.c:399
-Code: 48 89 fb e8 f7 ab 24 00 4c 89 e6 48 89 df e8 ac e1 02 00 31 ff 49 89  
-c4 48 89 c6 e8 7f ad 24 00 4d 85 e4 75 15 e8 d5 ab 24 00 <0f> 0b e8 ce ab  
-24 00 5b 41 5c 41 5d 41 5e 5d c3 e8 c0 ab 24 00 4c
-RSP: 0018:ffff8880a89bfbb8 EFLAGS: 00010293
-RAX: ffff88808ca7a280 RBX: ffff8880a98e4380 RCX: ffffffff814bdd11
-RDX: 0000000000000000 RSI: ffffffff814bdd1b RDI: 0000000000000007
-RBP: ffff8880a89bfbd8 R08: ffff88808ca7a280 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffffff87691148 R14: ffff8880a98e43a0 R15: ffffffff81c91e10
-  __kthread_bind kernel/kthread.c:412 [inline]
-  kthread_unpark+0x123/0x160 kernel/kthread.c:480
-  kthread_stop+0xfa/0x6c0 kernel/kthread.c:556
-  io_sq_thread_stop fs/io_uring.c:2057 [inline]
-  io_sq_thread_stop fs/io_uring.c:2052 [inline]
-  io_finish_async+0xab/0x180 fs/io_uring.c:2064
-  io_ring_ctx_free fs/io_uring.c:2534 [inline]
-  io_ring_ctx_wait_and_kill+0x133/0x510 fs/io_uring.c:2591
-  io_uring_release+0x42/0x50 fs/io_uring.c:2599
-  __fput+0x2e5/0x8d0 fs/file_table.c:278
-  ____fput+0x16/0x20 fs/file_table.c:309
-  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x90a/0x2fa0 kernel/exit.c:876
-  do_group_exit+0x135/0x370 kernel/exit.c:980
-  __do_sys_exit_group kernel/exit.c:991 [inline]
-  __se_sys_exit_group kernel/exit.c:989 [inline]
-  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43ee98
-Code: Bad RIP value.
-RSP: 002b:00007fff28656a18 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ee98
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004be6a8 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Andrey Smirnov
