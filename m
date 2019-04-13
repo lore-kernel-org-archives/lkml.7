@@ -2,95 +2,281 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06287C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2498C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79E72084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="gTEcBrVK"
+	by mail.kernel.org (Postfix) with ESMTP id 6133C20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfDMIvz (ORCPT
+        id S1726994AbfDMJJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 04:51:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41780 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfDMIvz (ORCPT
+        Sat, 13 Apr 2019 05:09:10 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:59998 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfDMJJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 04:51:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so10993462lja.8
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 01:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ve8OjLojDAr32NCY4CjJx01ZbEgIeFz3+fo38Qj3tXw=;
-        b=gTEcBrVKxxTUM+I3AADq6DjewEgGBS4r7XMY4miwxSFgDSy/E0a433DL1UqXOb5cvq
-         TMpegwt9mTgfGR10vecX3A6wz76i/GT1D1BI3Fi2T4eQTOj9HVM5hy7NqxlWBBERzFxf
-         8Ao7hAXB9VhTWY7jH03MV2O0gjQCrvySuUxHi4alQdXKAu9gUlOYgBGKyn9gdIw4x417
-         2+DssRtyukuHQflQmcxgWrdGGlKFxP9CCj0AQyR/gzHRBjuIi+bZlOgihlWacp5r0rdx
-         pvW1ILO5cf5IAqldYNrrSc50GWvwAnaK/uonWiz6bPPznJ216PXt/BKjJ2za3k35/T1A
-         owzQ==
+        Sat, 13 Apr 2019 05:09:09 -0400
+Received: by mail-it1-f197.google.com with SMTP id 75so11524343itz.9
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 02:09:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ve8OjLojDAr32NCY4CjJx01ZbEgIeFz3+fo38Qj3tXw=;
-        b=sLoghm77r7TUkYFMcOaEMRuI4vxEQNreAeyObwMYfIy4Rg7CLQFFJowfNdpG/YNJoJ
-         8ZYQp1eKCpJFtWD4fDcfhR0zrql0PEYQ5sd7HbwiunsE/TxxfDTBfH6DHLMWStS5r+Jo
-         D0cufGzW4oEXY0DL81NQHs+FtqA7EGp1Mgk+eZuMtk/i2dO2KX/R2fXGZ+bZv85iIEmx
-         /t9x0y2R/ziCrSn0ETdqx0HmeiJYfl6WRsDwgtyxVRVEpanYAhg9FDlRl4du/jwLVlWr
-         xBAGQmGc1co1Bj0yTpaQtkqX0Zj1Kq+oPaEf7GGSx8akPi6d03erWuGG1aijKjydUtZW
-         pcAQ==
-X-Gm-Message-State: APjAAAUNxKbY2bLS+xNHoMBQJd3Hfp3BOC96gRYLXWnHOIEqagrDp0Y1
-        Ek12wEIfv+yWRulGLpLbag5UJw==
-X-Google-Smtp-Source: APXvYqyb7er5dlqDQWzKVsqeL+ViwYHI2ySdsps5mJ6INdI9fbnG5vtbtW/fHuIa4m6Pquaeq97J9A==
-X-Received: by 2002:a2e:8149:: with SMTP id t9mr34958188ljg.2.1555145513115;
-        Sat, 13 Apr 2019 01:51:53 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.85.47])
-        by smtp.gmail.com with ESMTPSA id b25sm8632670lje.71.2019.04.13.01.51.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 01:51:52 -0700 (PDT)
-Subject: Re: [PATCH 1/2] mtd: nandsim: Embed struct nand_chip in struct
- nandsim
-To:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
-Cc:     bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org
-References: <20190413084052.15416-1-richard@nod.at>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <60d400af-245d-9eb4-c57b-ae5683c98da4@cogentembedded.com>
-Date:   Sat, 13 Apr 2019 11:51:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=LiJbXUtu5xUodZXvFh3I6wLvKqCAhDgzTKjsH9pmR90=;
+        b=FqfAkbEtlCLZU+6OvgZuadxc7L22TZx4Xw0AxmikuaS0CQbKdN7l5MRkDLARsHxS04
+         Qcfr9aAvwKfKoJn3aVuSToetyYE1fD2uAuKrzFu2avpQ/Ez/H1fk7q+UHQ94G1wTibvI
+         4uYCMdyA/44rsmWpXHCwRLG2oOz3VDyjD5/xEW9zTIYgCweJ2Y5bY1Z9Cpho2LRdbYnr
+         /P5drRTaQIn2bqgjdnMq8YvjiuAWGGuSEX7PSoC3m0UBOE22gz0Xpez+2hkEfxFg+6NO
+         SzHm7lDnruEI4uMH1ftq415iwOwWWlubwNaDkRVTViwnNTfUF2jxq0CiwWrYkknVEfCC
+         15ew==
+X-Gm-Message-State: APjAAAUCfNEk+xJ8mtZW5rEz8SvqGb5Ym/HZszacfUyF6KXtN9d5e0Ed
+        qc++QWmpYbpIxcXi38QJkO2Umxr/XKcapz18uge+54MCstiQ
+X-Google-Smtp-Source: APXvYqxtHP+gcZP0Tp28//gwMAwbX7hbkCCwisGAj8/WBEFkTspePtPlq8QTIhuRgt0rRugfPiz8KKrmg2bYMdiRam1x2J2BxxBU
 MIME-Version: 1.0
-In-Reply-To: <20190413084052.15416-1-richard@nod.at>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:4e46:: with SMTP id r67mr11204956jaa.8.1555146548728;
+ Sat, 13 Apr 2019 02:09:08 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 02:09:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009c60fe058665c584@google.com>
+Subject: INFO: task hung in __io_uring_register
+From:   syzbot <syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hello,
 
-On 13.04.2019 11:40, Richard Weinberger wrote:
+syzbot found the following crash on:
 
-> We well need struct nand_controller soon, so more stuff need to
+HEAD commit:    8ee15f32 Merge tag 'dma-mapping-5.1-1' of git://git.infrad..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1057cedd200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
+dashboard link: https://syzkaller.appspot.com/bug?extid=16dc03452dee970a0c3e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-    We will, maybe?
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> be parts of struct nandsim.
-> While we are here, rename "nand" to "ns" to use the same naming scheme
-> everywhere in nandsim.
-> 
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-[...]
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com
 
-MBR, Sergei
+INFO: task syz-executor.3:10489 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4+ #65
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D29480 10489   8136 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_timeout+0x8ca/0xfd0 kernel/time/timer.c:1779
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2925
+  __do_sys_io_uring_register fs/io_uring.c:2975 [inline]
+  __se_sys_io_uring_register fs/io_uring.c:2957 [inline]
+  __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2957
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f1b68525c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1b685266d4
+R13: 00000000004cb720 R14: 00000000004d2180 R15: 00000000ffffffff
+INFO: task syz-executor.3:10495 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4+ #65
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D30336 10495   8136 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  __do_sys_io_uring_enter fs/io_uring.c:2674 [inline]
+  __se_sys_io_uring_enter fs/io_uring.c:2633 [inline]
+  __x64_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2633
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f1b68504c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000003
+RBP: 000000000073bfa0 R08: 0000000000000000 R09: 000000000000050d
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1b685056d4
+R13: 00000000004bfe3c R14: 00000000004d2120 R15: 00000000ffffffff
+INFO: task syz-executor.3:10500 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4+ #65
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D29928 10500   8136 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_timeout+0x8ca/0xfd0 kernel/time/timer.c:1779
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2925
+  __do_sys_io_uring_register fs/io_uring.c:2975 [inline]
+  __se_sys_io_uring_register fs/io_uring.c:2957 [inline]
+  __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2957
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f1b684e3c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 000000000073c040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1b684e46d4
+R13: 00000000004cb720 R14: 00000000004d2180 R15: 00000000ffffffff
+INFO: task syz-executor.3:10721 blocked for more than 144 seconds.
+       Not tainted 5.1.0-rc4+ #65
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D30728 10721   8136 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  __do_sys_io_uring_enter fs/io_uring.c:2674 [inline]
+  __se_sys_io_uring_enter fs/io_uring.c:2633 [inline]
+  __x64_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2633
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f1b684c2c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000003
+RBP: 000000000073c0e0 R08: 0000000000000000 R09: 000000000000050d
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1b684c36d4
+R13: 00000000004bfe3c R14: 00000000004d2120 R15: 00000000ffffffff
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1042:
+  #0: 0000000064f7de01 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5061
+1 lock held by rsyslogd/8002:
+  #0: 000000003beb5bd7 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/8093:
+  #0: 00000000f8cf0898 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000b6b6ec31 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8094:
+  #0: 00000000fe7ef187 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000e78fcfd2 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8095:
+  #0: 000000008592152d (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000005540a126 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8096:
+  #0: 000000005c2264ca (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000021a80187 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8097:
+  #0: 00000000aa58b5ab (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000009d1abcd3 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8098:
+  #0: 00000000ab6caab2 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000932e1c20 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8099:
+  #0: 00000000d491671f (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000784f6bed (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor.3/10489:
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at:  
+__do_sys_io_uring_register fs/io_uring.c:2974 [inline]
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at:  
+__se_sys_io_uring_register fs/io_uring.c:2957 [inline]
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2957
+1 lock held by syz-executor.3/10495:
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
+fs/io_uring.c:2674 [inline]
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
+fs/io_uring.c:2633 [inline]
+  #0: 000000008d411992 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2633
+1 lock held by syz-executor.3/10500:
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at:  
+__do_sys_io_uring_register fs/io_uring.c:2974 [inline]
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at:  
+__se_sys_io_uring_register fs/io_uring.c:2957 [inline]
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2957
+1 lock held by syz-executor.3/10721:
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
+fs/io_uring.c:2674 [inline]
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
+fs/io_uring.c:2633 [inline]
+  #0: 00000000855b16b5 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2633
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1042 Comm: khungtaskd Not tainted 5.1.0-rc4+ #65
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
