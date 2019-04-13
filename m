@@ -2,159 +2,288 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687A2C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417B3C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40600206B6
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AB92084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="lJ8zXd9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfDMUiy (ORCPT
+        id S1727137AbfDMUrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:38:54 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45068 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfDMUix (ORCPT
+        Sat, 13 Apr 2019 16:47:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54974 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfDMUrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:38:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id o26so11251674edv.12
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 13:38:52 -0700 (PDT)
+        Sat, 13 Apr 2019 16:47:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c1so15376737wml.4
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 13:47:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uR9rShTJsizGsJzil5UPMran4uiRRQJNFMEPdPTMT5E=;
+        b=lJ8zXd9UlPdhQ+yGsawITu7yvXTi5iS2YVOYrLmtSvoB2u2cz5nWEI30ZhUKErgfqw
+         IfDZkX52IZOti48vUIk3Aycrzi0sD3s0TkfW18vl4qQzzWMNiHor9QrlgKOzQPqECije
+         dcTyjW6mPiYoz7Wo/BcydJbYD6aojMgq0XHRS2pucv1vC4W/2BVNBe8+tHWbk18C6er7
+         X71tkdFrXe9sJU8gbfWckqNfcnZ2rj8EFplt9SP9S6qDkhyf6Y1NM7Ngwr13UST2uHG+
+         wiybemqOFwbuWQww67slELdcj/J/lSmjjK0sRyN4be4N9JQeP1rSJZa9WsEhe/0zJl1u
+         uUIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZiCM0RO/92DahOkwyKD8HuHBHkhV62I5tXQ5to8Sh3U=;
-        b=LhTkKGGj5KSYEpY00WykJl6BK1ClMDzAd/IJc/4oBIH5yor6cUYtCMPCwkNqGhoMkd
-         pcXAkYWimfMXAKSzTF7sGpPByEA6Njsydc+h8lDZhC84ruFE6KWUyhS1iC9UsMuYY0Wx
-         XCt3ovJ8N4bz/6xKn+ZGX/29qOTTa7ZaI48oVYSWc2OQFUbe5unQdeeIUcRwXyvMaunH
-         6Hb1+Z6DY9U+PcDi+dL/Ox2Ow8khlxYlzxAFL7AYIbqfvbx8JXY1qKwseHo9VGYDh8AV
-         jMspPeLha9SiwVKO6Y8/lwn6PESiJdYL+ZgtdUbvEKOgj69uMRJAzJ+rfW2lx1Oycfq2
-         9vnA==
-X-Gm-Message-State: APjAAAV7FTkDiceKSj3+FouemCCzOSSsT6AgCRWUcpdAgvRng8FMHlt8
-        OVGg2QUbqXAI4w7RF7zcFxYpqXmZ794=
-X-Google-Smtp-Source: APXvYqzKc5fhn1Q6UZXIajWWRE56dECMmxAz3LeQHXAevL1M5sUq/3bED6DH+hQ68GwjclmYAUoB8Q==
-X-Received: by 2002:a50:f5c3:: with SMTP id x3mr11649166edm.28.1555187931559;
-        Sat, 13 Apr 2019 13:38:51 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id r1sm4275960edx.12.2019.04.13.13.38.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 13:38:50 -0700 (PDT)
-Subject: Re: [PATCH v2] usb: typec: tcpm: collision avoidance
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Kyle Tso <kyletso@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190322121745.159768-1-kyletso@google.com>
- <20190404141345.GF21319@kuha.fi.intel.com>
- <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net>
- <CAGZ6i=2zKLhS4By8Xanc863G+jSxPYg8SLU-UHkY94r5MiEYag@mail.gmail.com>
- <20190409130230.GC20058@kuha.fi.intel.com>
- <20190409130649.GD20058@kuha.fi.intel.com>
- <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com>
- <AM5PR1001MB099440C3AA6DA6BA2AB0F2AE802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <CAGZ6i=0rRgNH5bU-zcP58MNi+VSa+xeAQWL67egaZ-ui-ebmYA@mail.gmail.com>
- <9f9a2de9-2cfb-385c-8e99-54b2587113ce@redhat.com>
- <AM5PR1001MB09943830CFED9CB321CC883D802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <76a3c6df-63c0-78e7-c1ca-c83a30e95d38@redhat.com>
-Message-ID: <009662c6-2897-e2dd-03a7-992fc0a78599@redhat.com>
-Date:   Sat, 13 Apr 2019 22:38:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uR9rShTJsizGsJzil5UPMran4uiRRQJNFMEPdPTMT5E=;
+        b=UQdxobS3d8g0mxLcQFRI6oLR5BDXcYPLiyrjD4G9C/kuaVXpa8jUVSOnURLkj1cJZW
+         MGdOqE/Y4+11hGsh152Bebw3RPdHJogcn+X78OWqYl7x70RzCg3e00L9ZRWx5IQgnn1D
+         ndgCGo8FxTjyI27re0rzDpNPUy0jdMM5/jkd0CIdmGjnOw4zjuqFD90fubVZzIWX8DGR
+         JhXFu421M5/6ItxyX70CBnF+5vAR8VIEsCRns8uutiwPCpQO9MUDmAlEmHFSPLR1rC2S
+         BnbbhLfcfGMwV83Rm6+gt4mKSuHmzOdzOFiiENYUfnu5yjU6Vi4SoCD7GIColptsz68L
+         UjwQ==
+X-Gm-Message-State: APjAAAVEtTPr9XRORRs203xGxJK4FkLV5kdw6tm/xraTWL5dSHA9p3Wq
+        UWuV94PwbUvOxvo5MkrbG951Hg==
+X-Google-Smtp-Source: APXvYqwgXfNy1fmZtYINMNdNxsFhVcrtJAR96GcXHem7dTrUpjgLuB4lZ4XiaUqSf6EqitEGfOUcnw==
+X-Received: by 2002:a1c:6502:: with SMTP id z2mr15174503wmb.119.1555188459052;
+        Sat, 13 Apr 2019 13:47:39 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id n11sm73499439wrt.63.2019.04.13.13.47.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 13 Apr 2019 13:47:38 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 22:47:37 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
+Subject: Re: [PATCH v3 net-next 20/24] net: dsa: sja1105: Error out if RGMII
+ delays are requested in DT
+Message-ID: <20190413204737.GB2268@nanopsycho.orion>
+References: <20190413012822.30931-1-olteanv@gmail.com>
+ <20190413012822.30931-21-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <76a3c6df-63c0-78e7-c1ca-c83a30e95d38@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413012822.30931-21-olteanv@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 10-04-19 18:38, Hans de Goede wrote:
-> On 10-04-19 18:14, Adam Thomson wrote:
->> On 10 April 2019 16:45, Hans de Goede wrote:
-
-<snip>
-
->>> Starting toggling from tcpm_set_cc() just feels wrong; and currently power role
->>> swapping is broken with the fusb302, which IIRC used to work. I suspect this is
->>> related.
->>>
->>> I plan to write a patch tomorrow to functionally take tcpm_set_cc() back to the
->>> way it was before. This should fix your case and I hope this also fixes power-role
->>> swapping.
->>>
->>> This will re-introduce Adam Thomson's problem, but I have a feeling that that
->>> actually needs a fix in the tcpm.c code rather then at the fusb302 level.
->>
->> To be clear here, the names TOGGLING_MODE_SNK and TOGGLING_MODE_SRC are a
->> misnomer from the HW spec for fusb302. The device isn't toggling anything as far
->> as I'm aware, so I don't necessarily agree with your point.
+Sat, Apr 13, 2019 at 03:28:18AM CEST, olteanv@gmail.com wrote:
+>Documentation/devicetree/bindings/net/ethernet.txt is confusing because
+>it says what the MAC should not do, but not what it *should* do:
+>
+>  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
+>     should not add an RX delay in this case)
+>
+>The gap in semantics is threefold:
+>1. Is it illegal for the MAC to apply the Rx internal delay by itself,
+>   and simplify the phy_mode (mask off "rgmii-rxid" into "rgmii") before
+>   passing it to of_phy_connect? The documentation would suggest yes.
+>1. For "rgmii-rxid", while the situation with the Rx clock skew is more
+>   or less clear (needs to be added by the PHY), what should the MAC
+>   driver do about the Tx delays? Is it an implicit wild card for the
+>   MAC to apply delays in the Tx direction if it can? What if those were
+>   already added as serpentine PCB traces, how could that be made more
+>   obvious through DT bindings so that the MAC doesn't attempt to add
+>   them twice and again potentially break the link?
+>3. If the interface is a fixed-link and therefore the PHY object is
+>   fixed (a purely software entity that obviously cannot add clock
+>   skew), what is the meaning of the above property?
+>
+>So an interpretation of the RGMII bindings was chosen that hopefully
+>does not contradict their intention but also makes them more applied.
+>The SJA1105 driver understands to act upon "rgmii-*id" phy-mode bindings
+>if the port is in the PHY role (either explicitly, or if it is a
+>fixed-link). Otherwise it always passes the duty of setting up delays to
+>the PHY driver.
+>
+>The error behavior that this patch adds is required on SJA1105E/T where
+>the MAC really cannot apply internal delays. If the other end of the
+>fixed-link cannot apply RGMII delays either (this would be specified
+>through its own DT bindings), then the situation requires PCB delays.
+>
+>For SJA1105P/Q/R/S, this is however hardware supported and the error is
+>thus only temporary. I created a stub function pointer for configuring
+>delays per-port on RXC and TXC, and will implement it when I have access
+>to a board with this hardware setup.
+>
+>Meanwhile do not allow the user to select an invalid configuration.
+>
+>Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+>Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>---
+>Changes in v3:
+>None.
+>
+>Changes in v2:
+>Patch is new.
+>
+> drivers/net/dsa/sja1105/sja1105.h          |  3 ++
+> drivers/net/dsa/sja1105/sja1105_clocking.c |  7 ++++-
+> drivers/net/dsa/sja1105/sja1105_main.c     | 32 +++++++++++++++++++++-
+> drivers/net/dsa/sja1105/sja1105_spi.c      |  6 ++++
+> 4 files changed, 46 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+>index b7e745c0bb3a..3c16b991032c 100644
+>--- a/drivers/net/dsa/sja1105/sja1105.h
+>+++ b/drivers/net/dsa/sja1105/sja1105.h
+>@@ -22,6 +22,8 @@
 > 
-> If I understand the datasheet correctly:
+> struct sja1105_port {
+> 	struct dsa_port *dp;
+>+	bool rgmii_rx_delay;
+>+	bool rgmii_tx_delay;
+> 	struct work_struct xmit_work;
+> 	struct sja1105_skb_ring xmit_ring;
+> };
+>@@ -61,6 +63,7 @@ struct sja1105_info {
+> 	const struct sja1105_table_ops *static_ops;
+> 	const struct sja1105_regs *regs;
+> 	int (*reset_cmd)(const void *ctx, const void *data);
+>+	int (*setup_rgmii_delay)(const void *ctx, int port, bool rx, bool tx);
+> 	const char *name;
+> };
 > 
-> "The FUSB302 has the capability to do autonomous
-> DRP toggle. In autonomous toggle the FUSB302
-> internally controls the PDWN1, PDWN2, PU_EN1 and
-> PU_EN2, MEAS_CC1 and MEAS_CC2 and implements
-> a fixed DRP toggle between presenting as a SRC and
-> presenting as a SNK. Alternately, it can present as a
-> SRC or SNK only and poll CC1 and CC2 continuously."
+>diff --git a/drivers/net/dsa/sja1105/sja1105_clocking.c b/drivers/net/dsa/sja1105/sja1105_clocking.c
+>index d40da3d52464..c02fec181676 100644
+>--- a/drivers/net/dsa/sja1105/sja1105_clocking.c
+>+++ b/drivers/net/dsa/sja1105/sja1105_clocking.c
+>@@ -432,7 +432,12 @@ static int rgmii_clocking_setup(struct sja1105_private *priv, int port)
+> 		dev_err(dev, "Failed to configure Tx pad registers\n");
+> 		return rc;
+> 	}
+>-	return 0;
+>+	if (!priv->info->setup_rgmii_delay)
+>+		return 0;
+>+
+>+	return priv->info->setup_rgmii_delay(priv, port,
+>+					     priv->ports[port].rgmii_rx_delay,
+>+					     priv->ports[port].rgmii_tx_delay);
+> }
 > 
-> It is still attaching Rp resp Rd to CC1 or CC2 one at a time
-> to detect polarity, so it is still toggling, it just is not
-> doing dual-role toggling. This is also expected behavior for
-> a sink, a sink may not present Rd on both CC pins at the
-> same time, otherwise the source cannot detect the polarity
-> and the source also cannot detect if Vconn is necessary.
+> static int sja1105_cgu_rmii_ref_clk_config(struct sja1105_private *priv,
+>diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+>index e4abf8fb2013..5f7ddb1da006 100644
+>--- a/drivers/net/dsa/sja1105/sja1105_main.c
+>+++ b/drivers/net/dsa/sja1105/sja1105_main.c
+>@@ -555,6 +555,21 @@ static int sja1105_static_config_load(struct sja1105_private *priv,
+> 	return sja1105_static_config_upload(priv);
+> }
 > 
->> It's a mechanism to
->> have the HW report when the CC line changes on connection. Without that we have
->> no reporting from the HW for the fixed role scenarios.
+>+static void sja1105_parse_rgmii_delay(const struct sja1105_dt_port *in,
+>+				      struct sja1105_port *out)
+>+{
+>+	if (in->role == XMII_MAC)
+>+		return;
+>+
+>+	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
+>+	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
+>+		out->rgmii_rx_delay = true;
+>+
+>+	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
+>+	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
+>+		out->rgmii_tx_delay = true;
+>+}
+>+
+> static int sja1105_parse_ports_node(struct sja1105_private *priv,
+> 				    struct sja1105_dt_port *ports,
+> 				    struct device_node *ports_node)
+>@@ -1315,13 +1330,28 @@ static int sja1105_setup(struct dsa_switch *ds)
+> {
+> 	struct sja1105_dt_port ports[SJA1105_NUM_PORTS];
+> 	struct sja1105_private *priv = ds->priv;
+>-	int rc;
+>+	int rc, i;
 > 
-> Not just connection, also polarity detection. Notice that
-> the tcpm framework / the driver also has a start_drp_toggling()
-> method. I think we may also need a start_srp_toggling function
-> just like it and call that from the SNK_UNATTACHED and
-> SRC_UNATTACHED states for single-role ports. I agree that we
-> need to start toggling when in those states, but tcpm_set_cc gets
-> called in a lot of other places where AFAIK we should NOT
-> restart toggling and your patch causes us to restart
-> toggling in those cases.
+> 	rc = sja1105_parse_dt(priv, ports);
+> 	if (rc < 0) {
+> 		dev_err(ds->dev, "Failed to parse DT: %d\n", rc);
+> 		return rc;
+> 	}
+>+
+>+	/* Error out early if internal delays are required through DT
+>+	 * and we can't apply them.
+>+	 */
+>+	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
+>+		sja1105_parse_rgmii_delay(&ports[i], &priv->ports[i]);
+>+
+>+		if ((priv->ports[i].rgmii_rx_delay ||
+>+		     priv->ports[i].rgmii_tx_delay) &&
+>+		     !priv->info->setup_rgmii_delay) {
+>+			dev_err(ds->dev, "RGMII delay not supported\n");
+>+			return -EINVAL;
+>+		}
+>+	}
+>+
+> 	/* Create and send configuration down to device */
+> 	rc = sja1105_static_config_load(priv, ports);
+> 	if (rc < 0) {
+>diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+>index 09cb28e9be20..e4ef4d8048b2 100644
+>--- a/drivers/net/dsa/sja1105/sja1105_spi.c
+>+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+>@@ -499,6 +499,7 @@ struct sja1105_info sja1105e_info = {
+> 	.part_no		= SJA1105ET_PART_NO,
+> 	.static_ops		= sja1105e_table_ops,
+> 	.dyn_ops		= sja1105et_dyn_ops,
+>+	.setup_rgmii_delay	= NULL,
+> 	.reset_cmd		= sja1105et_reset_cmd,
+> 	.regs			= &sja1105et_regs,
+> 	.name			= "SJA1105E",
+>@@ -508,6 +509,7 @@ struct sja1105_info sja1105t_info = {
+> 	.part_no		= SJA1105ET_PART_NO,
+> 	.static_ops		= sja1105t_table_ops,
+> 	.dyn_ops		= sja1105et_dyn_ops,
+>+	.setup_rgmii_delay	= NULL,
+> 	.reset_cmd		= sja1105et_reset_cmd,
+> 	.regs			= &sja1105et_regs,
+> 	.name			= "SJA1105T",
+>@@ -517,6 +519,7 @@ struct sja1105_info sja1105p_info = {
+> 	.part_no		= SJA1105P_PART_NO,
+> 	.static_ops		= sja1105p_table_ops,
+> 	.dyn_ops		= sja1105pqrs_dyn_ops,
+>+	.setup_rgmii_delay	= NULL,
+> 	.reset_cmd		= sja1105pqrs_reset_cmd,
+> 	.regs			= &sja1105pqrs_regs,
+> 	.name			= "SJA1105P",
+>@@ -526,6 +529,7 @@ struct sja1105_info sja1105q_info = {
+> 	.part_no		= SJA1105Q_PART_NO,
+> 	.static_ops		= sja1105q_table_ops,
+> 	.dyn_ops		= sja1105pqrs_dyn_ops,
+>+	.setup_rgmii_delay	= NULL,
+> 	.reset_cmd		= sja1105pqrs_reset_cmd,
+> 	.regs			= &sja1105pqrs_regs,
+> 	.name			= "SJA1105Q",
+>@@ -535,6 +539,7 @@ struct sja1105_info sja1105r_info = {
+> 	.part_no		= SJA1105R_PART_NO,
+> 	.static_ops		= sja1105r_table_ops,
+> 	.dyn_ops		= sja1105pqrs_dyn_ops,
+>+	.setup_rgmii_delay	= NULL,
+> 	.reset_cmd		= sja1105pqrs_reset_cmd,
+> 	.regs			= &sja1105pqrs_regs,
+> 	.name			= "SJA1105R",
+>@@ -545,6 +550,7 @@ struct sja1105_info sja1105s_info = {
+> 	.static_ops		= sja1105s_table_ops,
+> 	.dyn_ops		= sja1105pqrs_dyn_ops,
+> 	.regs			= &sja1105pqrs_regs,
+>+	.setup_rgmii_delay	= NULL,
 
-Ok, so as I suspected, commit ea3b4d5523bc ("usb: typec: fusb302:
-Resolve fixed power role contract setup") is what caused the
-power-role swapping breakage I've been seeing.
+You don't need to set this to NULL. Please avoid that.
 
-So I've prepared a 3 patch series:
 
-1) Add a new start_srp_connection_detect function which, when
-implemented by the tcpc_dev, gets called instead of
-start_drp_toggling for single role ports (SRPs)
-
-2) Implement 1. for fusb302 to fix the SRP issue Adam was
-seeing, without depending on set_cc starting "toggling"
-or something like it for the fix
-
-3) Revert commit ea3b4d5523bc, restoring power-role swap
-functionality.
-
-This should also fix the issue Kyle Tso was seeing when
-trying to change from one Rp setting to another.
-
-I'll send out the series right after this email.
-
-Regards,
-
-Hans
-
+> 	.reset_cmd		= sja1105pqrs_reset_cmd,
+> 	.name			= "SJA1105S",
+> };
+>-- 
+>2.17.1
+>
