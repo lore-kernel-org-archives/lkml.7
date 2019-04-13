@@ -2,124 +2,89 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1D4C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33ECC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1006B218D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD7A20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7cQPDwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbfDMGB2 (ORCPT
+        id S1726749AbfDMGiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 02:01:28 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:33140 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726645AbfDMGB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 02:01:28 -0400
-Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id CD56470A9A3AE7D5149B;
-        Sat, 13 Apr 2019 14:01:24 +0800 (CST)
-Received: from DGGEML502-MBX.china.huawei.com ([169.254.2.153]) by
- DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
- 14.03.0415.000; Sat, 13 Apr 2019 14:01:24 +0800
-From:   Linhaifeng <haifeng.lin@huawei.com>
-To:     William Cohen <wcohen@redhat.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Topic: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Index: AQHU8TjwQPH5fZKzxkKUF8YFzmG5zqY5l6vw
-Date:   Sat, 13 Apr 2019 06:01:23 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
-In-Reply-To: <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.20.223]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 13 Apr 2019 02:38:50 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38225 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfDMGit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 02:38:49 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d13so13827367qth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 23:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UOzPa/neEIEvpY2nHAFZN2hmkw4d4+4re5hwN4eTKnY=;
+        b=d7cQPDwI5wIQySxWLQZdUDgBrRVnEW5V/TAkyWiJY/qWo7w7WXyVDINClqtqYuRFOc
+         OGMDwc8gZap3dtPEyv1ceXxeiCEVd47D3mRoRR/WA7t8hLbAiuoaqUWH/ubV9u0vIS0d
+         JKy2N1SRQfgdqFimHXZiDpdkJfQZNFVg7t0Y3xP2zUVegfqEXLHkoRFXTG2QjLq5yhOp
+         LIoKqfgP8ejG7ZkoPfSc9DubAQupAgS3ORbUt2rQ2xCgNBEvQCi/78x5AyWxQBJzm6hQ
+         vcBiIQ5TrizIEpWfo1AMJWMvI0wJE8Z1kHXJgRKJi28v+VH2woC52HO8OhvK7rBEInws
+         pvkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UOzPa/neEIEvpY2nHAFZN2hmkw4d4+4re5hwN4eTKnY=;
+        b=V1XY/zetDlU2cn43rSre1wMbwi7168TipThlYkXsbiPT5+C+0JdOPb1oSZydVftiZ0
+         sfYGwCMhq7zbUZmvpDDhl4EjZdWWuQ2rHYNceUEx0hYhWQmOs7G+YZsffIEBjVvij0XF
+         LvMczE5wvjef7aIlYRP3fL1L5xYgHAdVHKnWUHVb50dAEhtt6kNyHuZV5FTaR3yn6V+x
+         ygpZreMjUA6KFwfZXaE6jN5Cat76DNNoycSMaboksJ3pfaW7wJRafcoAfzr7KBY0arUU
+         tgZfvf/8w7g0jeqcaSEB3+qOwnThQZ8HaTNTqFx7IQXJ41gV5H8tVw2ZDg99bTRkVbxr
+         QHUQ==
+X-Gm-Message-State: APjAAAWOqodznM7gVOG9Pzx/+VjGQq//+sIWTY7ZhJVkNpTWYY+kJgBx
+        Ril1GWDYCw5ZYIOzDRICcEhIsdTlshFGIAxQelRgSzUK
+X-Google-Smtp-Source: APXvYqxfhvZ7yZLeL33fpsr13UjDGNyuoRxlmJO08B5rqw4HfT9ZEo5EfOu8NQc0jOCvd388dSLufol/2mhK/J6oj3A=
+X-Received: by 2002:ac8:2b65:: with SMTP id 34mr50392133qtv.93.1555137529089;
+ Fri, 12 Apr 2019 23:38:49 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20190402160244.32434-1-frederic@kernel.org> <20190402160244.32434-5-frederic@kernel.org>
+In-Reply-To: <20190402160244.32434-5-frederic@kernel.org>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Sat, 13 Apr 2019 14:38:38 +0800
+Message-ID: <CAHttsrYcHfcDBXXtCjXDSTgFbbOv=B2UKkEMq9GwvXB5WpMSdA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] locking/lockdep: Test all incompatible scenario at
+ once in check_irq_usage()
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29ycnksIHRoZSB2YWx1ZSAxMzEwODE0MDggaXMganVzdCBmb3IgZXhhbXBsZS4gQWN0dWFsbHkg
-dGhlIHJlc3VsdCBpcyBsaWtlIHRoaXM6DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUwOiA0Mzk2
-OA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCiBzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTI6IDQ5MDEyDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUzOiAzODE3Mg0KIHNxcnQgMjAx
-OS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU1OiA0
-MzYwMA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQNCiBzcXJ0IDIwMTktMDQtMTAg
-MjM6NTM6NTc6IDQ2ODgwDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU4OiA0NDMzMg0KIOKApuKA
-pg0KIHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTM2MzQ1ODc2DQog4oCm4oCmDQogc3FydCAy
-MDE5LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQNCiDigKbigKYNCg0KLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCkZyb206IFdpbGxpYW0gQ29oZW4gW21haWx0bzp3Y29oZW5AcmVkaGF0LmNv
-bV0gDQpTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjA2DQpUbzogTGluaGFpZmVuZyA8aGFpZmVu
-Zy5saW5AaHVhd2VpLmNvbT47IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTogcGVyZiB0b29sczpJcyB0aGVy
-ZSBhbnkgdG9vbHMgdG8gZm91bmQgb3V0IHRoZSBtYXggbGF0ZW5jeSBieSBpcnEgb3IgY3B1IGlk
-bGUNCg0KT24gNC8xMS8xOSA4OjU3IFBNLCBMaW5oYWlmZW5nIHdyb3RlOg0KPiBIaSwNCj4gSSBo
-YXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQo+IA0KPiBXaGlsZSAo
-MSkgew0KPiDCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KPiDCoMKgwqAgc3FydCAoMTAyNCk7wqDC
-oMKgwqDCoCANCj4g44CA44CAZW5kID0gcmR0c2MoKTsNCj4g44CA44CAY3ljbGVzID0gZW5kIOKA
-kyBzdGFydDsNCj4g44CA44CAcHJpbnRmKCJjeWNsZXM6ICVkLSUwMmQtJTAyZCAlMDJkOiUwMmQ6
-JTAyZDogJWx1XG4iLCANCj4g44CA44CA44CA44CA44CA44CAMTkwMCt0aW1laW5mby0+dG1feWVh
-ciwgMSt0aW1laW5mby0+dG1fbW9uLCB0aW1laW5mby0+dG1fbWRheSwgdGltZWluZm8tPnRtX2hv
-dXIsIHRpbWVpbmZvLT50bV9taW4sIHRpbWVpbmZvLT50bV9zZWMsDQo+IOOAgOOAgOOAgOOAgOOA
-gOOAgGN5Y2xlcyk7DQo+IH0NCj4gSXQgcHJpbnQgdGhlIGN5Y2xlcyBvZiBzcXJ0IGV2ZXJ5IHNl
-Y29uZCBhbmQgcnVuIHdpdGggdGFza3NldCDigJNjIDEgLi9zcXJ0Lg0KPiBUaGUgcmVzdWx0IG9m
-IHRlc3QgaXM6DQo+IA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTA6IDQzOTY4DQo+IHNxcnQg
-MjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUyOiA0
-OTAxMg0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTM6IDM4MTcyDQo+IHNxcnQgMjAxOS0wNC0x
-MCAyMzo1Mzo1NDogMTMxMDgxNDA4DQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogNDM2MDAN
-Cj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU2OiA0NjcwNA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTc6IDQ2ODgwDQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzINCj4g4oCm4oCm
-DQo+IHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4DQo+IOKApuKApg0KPiBzcXJ0
-IDIwMTktMDQtMTAgMDQ6NDA6MzU6IDEzMTA4MTQwOA0KPiDigKbigKYNCj4gDQo+IEV2ZXJ5IDJo
-b3VyMjNtaW4gdGhlcmUgd291bGQgYmUgYSBsYXJnZSBjeWNsZXMuIEkgdXNlIHBlcmYgc2NoZWQg
-bm90IGZvdW5kIGFueSBzY2hlZF9zd2l0Y2ggZXZlbnRzLg0KDQpIaSwNCg0KVGhlIGZhY3QgdGhh
-dCBpdCBpcyB0aGUgc2FtZSB2YWx1ZSAxMzEwODE0MDggZXZlcnkgMiBob3VycyAyMyBtaW51dGVz
-IGxvb2tzIHN1c3BlY3QuIE9uZSB3b3VsZCBleHBlY3Qgc29tZSB2YXJpYXRpb24gaW4gdGhlIGNv
-dW50cy4gIEl0IGxvb2tzIGxpa2UgdGhlcmUgaXMgc29tZSByb2xsb3ZlciBvciBvdmVyZmxvdyBp
-c3N1ZS4gIEl0IHdvdWxkIGJlIGhlbHBmdWwgdG8gcHJpbnQgb3V0IHRoZSBzdGFydCBhbmQgZW5k
-IHZhbHVlcyB0byBzZWUgd2hhdCBpcyBnb2luZyBvbiB3aXRoIHRoZSByYXcgcmRzdGMgdmFsdWVz
-LiAgTWF5YmUgdGhlIHRocmVhZCBpcyBiZWluZyBtb3ZlZCBiZXR3ZWVuIHByb2Nlc3NvcnMgYW5k
-IHRoZSBUU0MgYXJlIG91dCBvZiBzeW5jLiAgV2hhdCBwYXJ0aWN1bGFyIHByb2Nlc3NvciBtb2Rl
-bCB3YXMgdGhpcyBydW5uaW5nIG9uPyBXYXMgdGhpcyBydW5uaW5nIG9uIHBoeXNpY2FsIGhhcmR3
-YXJlIG9yIGluc2lkZSBhIGt2bSBndWVzdD8gDQoNCkFjY29yZGluZyB0byB0aGUgSW50ZWwgNjQg
-YW5kIElBLTMyIEFyY2hpdGVjdHVyZSBTb2Z0d2FyZSBEZXZsb3BlcidzIE1hbnVhbCBWb2x1bWUg
-MyAoMzI1Mzg0LXNkbS12b2wtM2FiY2QucGRmKToNCg0KVGhlIFJEVFNDIGluc3RydWN0aW9uIHJl
-YWRzIHRoZSB0aW1lLXN0YW1wIGNvdW50ZXIgYW5kIGlzIGd1YXJhbnRlZWQgdG8gcmV0dXJuIGEg
-bW9ub3RvbmljYWxseSBpbmNyZWFzaW5nIHVuaXF1ZSB2YWx1ZSB3aGVuZXZlciBleGVjdXRlZCwg
-ZXhjZXB0IGZvciBhIDY0LWJpdCBjb3VudGVyIHdyYXBhcm91bmQuIEludGVsIGd1YXJhbnRlZXMg
-dGhhdCB0aGUgdGltZS1zdGFtcCBjb3VudGVyIHdpbGwgbm90IHdyYXBhcm91bmQgd2l0aGluIDEw
-IHllYXJzIGFmdGVyIGJlaW5nIHJlc2V0LiBUaGUgcGVyaW9kIGZvciBjb3VudGVyIHdyYXAgaXMg
-bG9uZ2VyIGZvciBQZW50aXVtIDQsIEludGVsIFhlb24sIFA2IGZhbWlseSwgYW5kIFBlbnRpdW0g
-cHJvY2Vzc29ycy4NCg0KLVdpbGwgQ29oZW4NCg0KDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNw
-L3puICMgcGVyZiBzY2hlZCByZWNvcmQgLUMgNi0xMSAtbyBwZXJmLnNjaGVkIF5DWyANCj4gcGVy
-ZiByZWNvcmQ6IFdva2VuIHVwIDY0IHRpbWVzIHRvIHdyaXRlIGRhdGEgXSBbIHBlcmYgcmVjb3Jk
-OiBDYXB0dXJlZCANCj4gYW5kIHdyb3RlIDIwNC44NzggTUIgcGVyZi5zY2hlZCAoMTkxMTE4OSBz
-YW1wbGVzKSBdDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNwL3puICMgcGVyZiBzY2hlZCBsYXRl
-bmN5IC1pIHBlcmYuc2NoZWQNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiDCoCBUYXNrwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB8wqDCoCBSdW50aW1lIG1zwqAgfCBTd2l0Y2hlcyB8IEF2ZXJhZ2Ug
-ZGVsYXkgbXMgDQo+IHwgTWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDC
-oMKgwqAgfA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IMKgIFRPVEFMOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB8wqDCoMKgwqDCoCAwLjAwMCBtcyB8IMKgwqDCoMKgwqDCoMKgMCB8DQo+IC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gDQo+
-IA0KPiBJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0byBmb3VuZCBvdXQgdGhlIG1h
-eCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQo+IA0KPiANCg0K
+On Wed, 3 Apr 2019 at 00:05, Frederic Weisbecker <frederic@kernel.org> wrote:
+>
+> check_prev_add_irq() tests all incompatible scenarios one after the
+> other while adding a lock (@next) to a tree dependency (@prev):
+>
+>         LOCK_USED_IN_HARDIRQ          vs         LOCK_ENABLED_HARDIRQ
+>         LOCK_USED_IN_HARDIRQ_READ     vs         LOCK_ENABLED_HARDIRQ
+>         LOCK_USED_IN_SOFTIRQ          vs         LOCK_ENABLED_SOFTIRQ
+>         LOCK_USED_IN_SOFTIRQ_READ     vs         LOCK_ENABLED_SOFTIRQ
+
+May I ask why
+
+LOCK_USED_IN_*IRQ vs. LOCK_ENABLED_*IRQ_READ
+
+is not tested?
+
+Thanks,
+Yuyang
