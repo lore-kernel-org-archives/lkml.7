@@ -2,203 +2,94 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F9C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521DEC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B22208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176F2208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Uo2QLFLt";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KovqMYxR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lws8dH71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfDMPjA (ORCPT
+        id S1727308AbfDMPkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 11:39:00 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:6958 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfDMPir (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 11:38:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555170012; x=1586706012;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4tHpfIdvi6qydRvKMDWyV6PYnG4LFA/c15iKLM1Fzss=;
-  b=Uo2QLFLtXRBjdHhzmUK8/9GMMU94UmT8uhMkx1gc1rM24dWKyDEIp4lP
-   aDTX7f+nROJ0TZzeMc8qhNiHtDKkVSk52D8zjYo3/9dPZWf5SD5MjW3Tf
-   XuIFFqSE9I8VrbRxORSUQ5SAzo1HcHneH8RqyTWgnWWAYrr8MGYNe9fiz
-   UpgdyqO27c8/kdqWBlzZYpn60UtzrjRM6zdvEG7K1e1ajZA5blZJiMwq/
-   VW77OhC3CMQ24fEX6wmY4pcYTN1R7detg/OV4dOYAeFkb+74MeYXpyG7K
-   VrB7OG3u6aVKuF9CyN0ujSrFxJ4waMc+f8eWFfEm3d2aVE8RjMP1Il5UO
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,345,1549900800"; 
-   d="scan'208";a="204828661"
-Received: from mail-bl2nam02lp2055.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.55])
-  by ob1.hgst.iphmx.com with ESMTP; 13 Apr 2019 23:39:58 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4tHpfIdvi6qydRvKMDWyV6PYnG4LFA/c15iKLM1Fzss=;
- b=KovqMYxRCcWtxpXiAJ91DTTg4QaYjSXPiPf6ygQviRjDgR5amP09182JGU6HFKslrPmqRLuCsEWHPK2moo2XwQeOHbqGl+lyfnYgbYH9GNcmDlFaI1D+RyNcqxPZm3Iu2ny+3bTklU5+5Qxashc2I+iV2D2iEqYHYfNxnYIN+ks=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5501.namprd04.prod.outlook.com (20.178.245.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Sat, 13 Apr 2019 15:38:35 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2%5]) with mapi id 15.20.1792.018; Sat, 13 Apr 2019
- 15:38:35 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v2 1/3] RISC-V: Add separate asm/encoding.h for spec related
- defines
-Thread-Topic: [PATCH v2 1/3] RISC-V: Add separate asm/encoding.h for spec
- related defines
-Thread-Index: AQHU8g7103phegeQY0uauk1U9R6nkg==
-Date:   Sat, 13 Apr 2019 15:38:35 +0000
-Message-ID: <20190413153807.116227-2-anup.patel@wdc.com>
-References: <20190413153807.116227-1-anup.patel@wdc.com>
-In-Reply-To: <20190413153807.116227-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PN1PR0101CA0032.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:c::18) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.17.210]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d856da29-0045-4588-4d39-08d6c0261766
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5501;
-x-ms-traffictypediagnostic: MN2PR04MB5501:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB5501B20DD56AB1FD7D8322A98D290@MN2PR04MB5501.namprd04.prod.outlook.com>
-x-forefront-prvs: 00064751B6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(396003)(136003)(346002)(366004)(199004)(189003)(2906002)(71190400001)(71200400001)(97736004)(50226002)(1076003)(186003)(68736007)(102836004)(8936002)(6486002)(86362001)(110136005)(54906003)(316002)(9456002)(78486014)(55236004)(4326008)(81166006)(81156014)(6506007)(386003)(5660300002)(26005)(8676002)(36756003)(105586002)(44832011)(106356001)(14444005)(256004)(76176011)(3846002)(14454004)(478600001)(72206003)(6116002)(52116002)(6512007)(25786009)(99286004)(53936002)(11346002)(446003)(486006)(2171002)(66066001)(7736002)(6436002)(476003)(305945005)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5501;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +cApNlaprpSNpdpfy/jj43atMEcryZ3KbCk8sjdOF3f1lS76Obsn1IxHOLNN3SwmLrWMRBs/Ud2A+9HV91YQ2tTwP46D2+EH/jMWbDOUf+W1BmQuQp5sWszdGKv0BHDxit2n02e4x5LtmTuSplub9mK5bdIOemUBTVtu/4KPQUfSdtg0EFfCbsRTZTThmDoQn2fIMPKjOJm50c6fQkaPnNjRWU4fmQip2XRuqZnlWjLft2HKEwycoZMogrkQIo2jsy9IFaU5PL0vQ7ilLQzz9VTlYENLZPc1tQ/nsmmio81oo2UaWYvjagfoFTGlaVJN6waOWKL3l05HBgj75ujyi0lI6qyeRxy7su+9hw+GoNUXhWqqRXI08jxU56935NpFVTefpGegWPXCjVX6Oz/sfTOI5/D8y4sqUKrCFO37Xf0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 13 Apr 2019 11:40:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60258 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbfDMPkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 11:40:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AJMv/SnfHgeGPPvPpyyQCnsByRtq/H+V09Wt3JK8aqI=; b=lws8dH71OPYEElW3sd+RBaDfDM
+        69dwum5sVj29lUEAIH7QW7qjzZKlKwabZYdSUfZZ7y3/vkqlvPbQoDFrfrK0Mwu8g7ISixX1Erm8E
+        rn+H1vmpaCZvnnnCUxQqfzV0fsbLfGZ3OJE3iAPkgoAv+tobUkE6rpsNyvcVhryuNCoQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hFKl5-0004we-Ve; Sat, 13 Apr 2019 17:39:59 +0200
+Date:   Sat, 13 Apr 2019 17:39:59 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
+Subject: Re: [PATCH v3 net-next 13/24] net: dsa: Allow drivers to filter
+ packets they can decode source port from
+Message-ID: <20190413153959.GE17901@lunn.ch>
+References: <20190413012822.30931-1-olteanv@gmail.com>
+ <20190413012822.30931-14-olteanv@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d856da29-0045-4588-4d39-08d6c0261766
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2019 15:38:35.6556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5501
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413012822.30931-14-olteanv@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SXQncyBiZXR0ZXIgdG8gaGF2ZSBhbGwgUklTQy1WIHNwZWMgcmVsYXRlZCBkZWZpbmVzIGluIG9u
-ZSBwbGFjZQ0Kc28gdGhpcyBwYXRjaCBhZGRzIHNlcGFyYXRlIGFzbS9lbmNvZGluZy5oIGZvciBz
-dWNoIGRlZmluZXMgd2hpY2gNCmNhbiBiZSBpbmNsdWRlZCBpbiBhc3NlbWJseSBhcyB3ZWxsIGFz
-IEMgY29kZS4NCg0KU2lnbmVkLW9mZi1ieTogQW51cCBQYXRlbCA8YW51cC5wYXRlbEB3ZGMuY29t
-Pg0KLS0tDQogYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9jc3IuaCAgICAgIHwgNTIgKy0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCiBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VuY29kaW5nLmggfCA2
-MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2VkLCA2MyBp
-bnNlcnRpb25zKCspLCA1MSBkZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9y
-aXNjdi9pbmNsdWRlL2FzbS9lbmNvZGluZy5oDQoNCmRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2lu
-Y2x1ZGUvYXNtL2Nzci5oIGIvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9jc3IuaA0KaW5kZXggMjhh
-MGQxY2IzNzRjLi44Y2Y2OThlMzk0NjMgMTAwNjQ0DQotLS0gYS9hcmNoL3Jpc2N2L2luY2x1ZGUv
-YXNtL2Nzci5oDQorKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2Nzci5oDQpAQCAtMTQsNTcg
-KzE0LDcgQEANCiAjaWZuZGVmIF9BU01fUklTQ1ZfQ1NSX0gNCiAjZGVmaW5lIF9BU01fUklTQ1Zf
-Q1NSX0gNCiANCi0jaW5jbHVkZSA8bGludXgvY29uc3QuaD4NCi0NCi0vKiBTdGF0dXMgcmVnaXN0
-ZXIgZmxhZ3MgKi8NCi0jZGVmaW5lIFNSX1NJRQlfQUMoMHgwMDAwMDAwMiwgVUwpIC8qIFN1cGVy
-dmlzb3IgSW50ZXJydXB0IEVuYWJsZSAqLw0KLSNkZWZpbmUgU1JfU1BJRQlfQUMoMHgwMDAwMDAy
-MCwgVUwpIC8qIFByZXZpb3VzIFN1cGVydmlzb3IgSUUgKi8NCi0jZGVmaW5lIFNSX1NQUAlfQUMo
-MHgwMDAwMDEwMCwgVUwpIC8qIFByZXZpb3VzbHkgU3VwZXJ2aXNvciAqLw0KLSNkZWZpbmUgU1Jf
-U1VNCV9BQygweDAwMDQwMDAwLCBVTCkgLyogU3VwZXJ2aXNvciBtYXkgYWNjZXNzIFVzZXIgTWVt
-b3J5ICovDQotDQotI2RlZmluZSBTUl9GUyAgICAgICAgICAgX0FDKDB4MDAwMDYwMDAsIFVMKSAv
-KiBGbG9hdGluZy1wb2ludCBTdGF0dXMgKi8NCi0jZGVmaW5lIFNSX0ZTX09GRiAgICAgICBfQUMo
-MHgwMDAwMDAwMCwgVUwpDQotI2RlZmluZSBTUl9GU19JTklUSUFMICAgX0FDKDB4MDAwMDIwMDAs
-IFVMKQ0KLSNkZWZpbmUgU1JfRlNfQ0xFQU4gICAgIF9BQygweDAwMDA0MDAwLCBVTCkNCi0jZGVm
-aW5lIFNSX0ZTX0RJUlRZICAgICBfQUMoMHgwMDAwNjAwMCwgVUwpDQotDQotI2RlZmluZSBTUl9Y
-UyAgICAgICAgICAgX0FDKDB4MDAwMTgwMDAsIFVMKSAvKiBFeHRlbnNpb24gU3RhdHVzICovDQot
-I2RlZmluZSBTUl9YU19PRkYgICAgICAgX0FDKDB4MDAwMDAwMDAsIFVMKQ0KLSNkZWZpbmUgU1Jf
-WFNfSU5JVElBTCAgIF9BQygweDAwMDA4MDAwLCBVTCkNCi0jZGVmaW5lIFNSX1hTX0NMRUFOICAg
-ICBfQUMoMHgwMDAxMDAwMCwgVUwpDQotI2RlZmluZSBTUl9YU19ESVJUWSAgICAgX0FDKDB4MDAw
-MTgwMDAsIFVMKQ0KLQ0KLSNpZm5kZWYgQ09ORklHXzY0QklUDQotI2RlZmluZSBTUl9TRCAgIF9B
-QygweDgwMDAwMDAwLCBVTCkgLyogRlMvWFMgZGlydHkgKi8NCi0jZWxzZQ0KLSNkZWZpbmUgU1Jf
-U0QgICBfQUMoMHg4MDAwMDAwMDAwMDAwMDAwLCBVTCkgLyogRlMvWFMgZGlydHkgKi8NCi0jZW5k
-aWYNCi0NCi0vKiBTQVRQIGZsYWdzICovDQotI2lmIF9fcmlzY3ZfeGxlbiA9PSAzMg0KLSNkZWZp
-bmUgU0FUUF9QUE4gICAgIF9BQygweDAwM0ZGRkZGLCBVTCkNCi0jZGVmaW5lIFNBVFBfTU9ERV8z
-MiBfQUMoMHg4MDAwMDAwMCwgVUwpDQotI2RlZmluZSBTQVRQX01PREUgICAgU0FUUF9NT0RFXzMy
-DQotI2Vsc2UNCi0jZGVmaW5lIFNBVFBfUFBOICAgICBfQUMoMHgwMDAwMEZGRkZGRkZGRkZGLCBV
-TCkNCi0jZGVmaW5lIFNBVFBfTU9ERV8zOSBfQUMoMHg4MDAwMDAwMDAwMDAwMDAwLCBVTCkNCi0j
-ZGVmaW5lIFNBVFBfTU9ERSAgICBTQVRQX01PREVfMzkNCi0jZW5kaWYNCi0NCi0vKiBJbnRlcnJ1
-cHQgRW5hYmxlIGFuZCBJbnRlcnJ1cHQgUGVuZGluZyBmbGFncyAqLw0KLSNkZWZpbmUgU0lFX1NT
-SUUgX0FDKDB4MDAwMDAwMDIsIFVMKSAvKiBTb2Z0d2FyZSBJbnRlcnJ1cHQgRW5hYmxlICovDQot
-I2RlZmluZSBTSUVfU1RJRSBfQUMoMHgwMDAwMDAyMCwgVUwpIC8qIFRpbWVyIEludGVycnVwdCBF
-bmFibGUgKi8NCi0jZGVmaW5lIFNJRV9TRUlFIF9BQygweDAwMDAwMjAwLCBVTCkgLyogRXh0ZXJu
-YWwgSW50ZXJydXB0IEVuYWJsZSAqLw0KLQ0KLSNkZWZpbmUgRVhDX0lOU1RfTUlTQUxJR05FRCAg
-ICAgMA0KLSNkZWZpbmUgRVhDX0lOU1RfQUNDRVNTICAgICAgICAgMQ0KLSNkZWZpbmUgRVhDX0JS
-RUFLUE9JTlQgICAgICAgICAgMw0KLSNkZWZpbmUgRVhDX0xPQURfQUNDRVNTICAgICAgICAgNQ0K
-LSNkZWZpbmUgRVhDX1NUT1JFX0FDQ0VTUyAgICAgICAgNw0KLSNkZWZpbmUgRVhDX1NZU0NBTEwg
-ICAgICAgICAgICAgOA0KLSNkZWZpbmUgRVhDX0lOU1RfUEFHRV9GQVVMVCAgICAgMTINCi0jZGVm
-aW5lIEVYQ19MT0FEX1BBR0VfRkFVTFQgICAgIDEzDQotI2RlZmluZSBFWENfU1RPUkVfUEFHRV9G
-QVVMVCAgICAxNQ0KKyNpbmNsdWRlIDxhc20vZW5jb2RpbmcuaD4NCiANCiAjaWZuZGVmIF9fQVNT
-RU1CTFlfXw0KIA0KZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vZW5jb2Rpbmcu
-aCBiL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vZW5jb2RpbmcuaA0KbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4uMjk2OTk3MDVkYzM2DQotLS0gL2Rldi9udWxsDQorKysg
-Yi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2VuY29kaW5nLmgNCkBAIC0wLDAgKzEsNjIgQEANCisv
-KiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLw0KKy8qDQorICogQ29weXJpZ2h0
-IChDKSAyMDE1IFJlZ2VudHMgb2YgdGhlIFVuaXZlcnNpdHkgb2YgQ2FsaWZvcm5pYQ0KKyAqIENv
-cHlyaWdodCAoQykgMjAxOSBXZXN0ZXJuIERpZ2l0YWwgQ29ycG9yYXRpb24gb3IgaXRzIGFmZmls
-aWF0ZXMuDQorICovDQorDQorI2lmbmRlZiBfQVNNX1JJU0NWX0VOQ09ESU5HX0gNCisjZGVmaW5l
-IF9BU01fUklTQ1ZfRU5DT0RJTkdfSA0KKw0KKyNpbmNsdWRlIDxsaW51eC9jb25zdC5oPg0KKw0K
-Ky8qIFN0YXR1cyByZWdpc3RlciBmbGFncyAqLw0KKyNkZWZpbmUgU1JfU0lFCQlfQUMoMHgwMDAw
-MDAwMiwgVUwpIC8qIFN1cGVydmlzb3IgSW50ZXJydXB0IEVuYWJsZSAqLw0KKyNkZWZpbmUgU1Jf
-U1BJRQkJX0FDKDB4MDAwMDAwMjAsIFVMKSAvKiBQcmV2aW91cyBTdXBlcnZpc29yIElFICovDQor
-I2RlZmluZSBTUl9TUFAJCV9BQygweDAwMDAwMTAwLCBVTCkgLyogUHJldmlvdXNseSBTdXBlcnZp
-c29yICovDQorI2RlZmluZSBTUl9TVU0JCV9BQygweDAwMDQwMDAwLCBVTCkgLyogU3VwZXJ2aXNv
-ciBtYXkgYWNjZXNzIFVzZXIgTWVtb3J5ICovDQorDQorI2RlZmluZSBTUl9GUyAgICAgICAgICAg
-X0FDKDB4MDAwMDYwMDAsIFVMKSAvKiBGbG9hdGluZy1wb2ludCBTdGF0dXMgKi8NCisjZGVmaW5l
-IFNSX0ZTX09GRiAgICAgICBfQUMoMHgwMDAwMDAwMCwgVUwpDQorI2RlZmluZSBTUl9GU19JTklU
-SUFMICAgX0FDKDB4MDAwMDIwMDAsIFVMKQ0KKyNkZWZpbmUgU1JfRlNfQ0xFQU4gICAgIF9BQygw
-eDAwMDA0MDAwLCBVTCkNCisjZGVmaW5lIFNSX0ZTX0RJUlRZICAgICBfQUMoMHgwMDAwNjAwMCwg
-VUwpDQorDQorI2RlZmluZSBTUl9YUyAgICAgICAgICAgX0FDKDB4MDAwMTgwMDAsIFVMKSAvKiBF
-eHRlbnNpb24gU3RhdHVzICovDQorI2RlZmluZSBTUl9YU19PRkYgICAgICAgX0FDKDB4MDAwMDAw
-MDAsIFVMKQ0KKyNkZWZpbmUgU1JfWFNfSU5JVElBTCAgIF9BQygweDAwMDA4MDAwLCBVTCkNCisj
-ZGVmaW5lIFNSX1hTX0NMRUFOICAgICBfQUMoMHgwMDAxMDAwMCwgVUwpDQorI2RlZmluZSBTUl9Y
-U19ESVJUWSAgICAgX0FDKDB4MDAwMTgwMDAsIFVMKQ0KKw0KKyNpZm5kZWYgQ09ORklHXzY0QklU
-DQorI2RlZmluZSBTUl9TRAkJX0FDKDB4ODAwMDAwMDAsIFVMKSAvKiBGUy9YUyBkaXJ0eSAqLw0K
-KyNlbHNlDQorI2RlZmluZSBTUl9TRAkJX0FDKDB4ODAwMDAwMDAwMDAwMDAwMCwgVUwpIC8qIEZT
-L1hTIGRpcnR5ICovDQorI2VuZGlmDQorDQorLyogU0FUUCBmbGFncyAqLw0KKyNpZm5kZWYgQ09O
-RklHXzY0QklUDQorI2RlZmluZSBTQVRQX1BQTglfQUMoMHgwMDNGRkZGRiwgVUwpDQorI2RlZmlu
-ZSBTQVRQX01PREVfMzIJX0FDKDB4ODAwMDAwMDAsIFVMKQ0KKyNkZWZpbmUgU0FUUF9NT0RFCVNB
-VFBfTU9ERV8zMg0KKyNlbHNlDQorI2RlZmluZSBTQVRQX1BQTglfQUMoMHgwMDAwMEZGRkZGRkZG
-RkZGLCBVTCkNCisjZGVmaW5lIFNBVFBfTU9ERV8zOQlfQUMoMHg4MDAwMDAwMDAwMDAwMDAwLCBV
-TCkNCisjZGVmaW5lIFNBVFBfTU9ERQlTQVRQX01PREVfMzkNCisjZW5kaWYNCisNCisvKiBJbnRl
-cnJ1cHQgRW5hYmxlIGFuZCBJbnRlcnJ1cHQgUGVuZGluZyBmbGFncyAqLw0KKyNkZWZpbmUgU0lF
-X1NTSUUJX0FDKDB4MDAwMDAwMDIsIFVMKSAvKiBTb2Z0d2FyZSBJbnRlcnJ1cHQgRW5hYmxlICov
-DQorI2RlZmluZSBTSUVfU1RJRQlfQUMoMHgwMDAwMDAyMCwgVUwpIC8qIFRpbWVyIEludGVycnVw
-dCBFbmFibGUgKi8NCisjZGVmaW5lIFNJRV9TRUlFCV9BQygweDAwMDAwMjAwLCBVTCkgLyogRXh0
-ZXJuYWwgSW50ZXJydXB0IEVuYWJsZSAqLw0KKw0KKyNkZWZpbmUgRVhDX0lOU1RfTUlTQUxJR05F
-RAkwDQorI2RlZmluZSBFWENfSU5TVF9BQ0NFU1MJCTENCisjZGVmaW5lIEVYQ19CUkVBS1BPSU5U
-CQkzDQorI2RlZmluZSBFWENfTE9BRF9BQ0NFU1MJCTUNCisjZGVmaW5lIEVYQ19TVE9SRV9BQ0NF
-U1MJNw0KKyNkZWZpbmUgRVhDX1NZU0NBTEwJCTgNCisjZGVmaW5lIEVYQ19JTlNUX1BBR0VfRkFV
-TFQJMTINCisjZGVmaW5lIEVYQ19MT0FEX1BBR0VfRkFVTFQJMTMNCisjZGVmaW5lIEVYQ19TVE9S
-RV9QQUdFX0ZBVUxUCTE1DQorDQorI2VuZGlmIC8qIF9BU01fUklTQ1ZfRU5DT0RJTkdfSCAqLw0K
-LS0gDQoyLjE3LjENCg0K
+On Sat, Apr 13, 2019 at 04:28:11AM +0300, Vladimir Oltean wrote:
+> Frames get processed by DSA and redirected to switch port net devices
+> based on the ETH_P_XDSA multiplexed packet_type handler found by the
+> network stack when calling eth_type_trans().
+> 
+> The running assumption is that once the DSA .rcv function is called, DSA
+> is always able to decode the switch tag in order to change the skb->dev
+> from its master.
+> 
+> However there are tagging protocols (such as the new DSA_TAG_PROTO_SJA1105,
+> user of DSA_TAG_PROTO_8021Q) where this assumption is not completely
+> true, since switch tagging piggybacks on the absence of a vlan_filtering
+> bridge. Moreover, management traffic (BPDU, PTP) for this switch doesn't
+> rely on switch tagging, but on a different mechanism. So it would make
+> sense to at least be able to terminate that.
+
+Hi Vladimir
+
+Let me see if i get this correct.
+
+If the filter fails to match, the frame is received on the master
+interface? So BPDUs and PTT packets are going to go to the master
+interface?
+
+How does the bridge get these BPDUs, and associated to the correct
+slave port?
+
+How does the PTP core code get these frames, and associated to the
+correct slave port?
+
+You say there is a different mechanism to do this. Maybe a later patch
+i've not yet looked at. But cannot this mechanism be built into the
+tagger? That is what the tagger is there for, to demultiplex a frame
+to the correct slave. The current code assume the needed information
+is in the header, but there is nothing to stop it looking deeper into
+the packet if needed. So far, we have been reluctant for a tagger to
+call into the DSA driver, but if need be, it could happen.
+
+     Andrew
