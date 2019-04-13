@@ -2,284 +2,40 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DD6C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37EFC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AF22084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926132084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfDMVCC (ORCPT
+        id S1727349AbfDMVCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:02:02 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51877 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfDMVCC (ORCPT
+        Sat, 13 Apr 2019 17:02:44 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37504 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfDMVCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:02:02 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DL0n562267403
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 14:00:49 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DL0mbW2267400;
-        Sat, 13 Apr 2019 14:00:48 -0700
-Date:   Sat, 13 Apr 2019 14:00:48 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-926b21f37b072ae4c117052de45a975c6d468fec@git.kernel.org>
-Cc:     dave.hansen@intel.com, luto@kernel.org, x86@kernel.org,
-        jannh@google.com, tglx@linutronix.de, hpa@zytor.com,
-        mingo@kernel.org, Jason@zx2c4.com, aubrey.li@intel.com,
-        kvm@vger.kernel.org, riel@surriel.com,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de, bp@suse.de,
-        mingo@redhat.com, rkrcmar@redhat.com, pbonzini@redhat.com
-Reply-To: aubrey.li@intel.com, Jason@zx2c4.com, kvm@vger.kernel.org,
-          riel@surriel.com, linux-kernel@vger.kernel.org,
-          bigeasy@linutronix.de, bp@suse.de, mingo@redhat.com,
-          pbonzini@redhat.com, rkrcmar@redhat.com, dave.hansen@intel.com,
-          luto@kernel.org, x86@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, jannh@google.com, mingo@kernel.org
-In-Reply-To: <20190403164156.19645-22-bigeasy@linutronix.de>
-References: <20190403164156.19645-22-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Restore from kernel memory on the 64-bit
- path too
-Git-Commit-ID: 926b21f37b072ae4c117052de45a975c6d468fec
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 13 Apr 2019 17:02:44 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hFPnO-0002jy-Ks; Sat, 13 Apr 2019 21:02:42 +0000
+Date:   Sat, 13 Apr 2019 22:02:42 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: misuse of fget_raw() in perf_event_get()
+Message-ID: <20190413210242.GP2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  926b21f37b072ae4c117052de45a975c6d468fec
-Gitweb:     https://git.kernel.org/tip/926b21f37b072ae4c117052de45a975c6d468fec
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:50 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Fri, 12 Apr 2019 15:02:41 +0200
-
-x86/fpu: Restore from kernel memory on the 64-bit path too
-
-The 64-bit case (both 64-bit and 32-bit frames) loads the new state from
-user memory.
-
-However, doing this is not desired if the FPU state is going to be
-restored on return to userland: it would be required to disable
-preemption in order to avoid a context switch which would set
-TIF_NEED_FPU_LOAD. If this happens before the restore operation then the
-loaded registers would become volatile.
-
-Furthermore, disabling preemption while accessing user memory requires
-to disable the pagefault handler. An error during FXRSTOR would then
-mean that either a page fault occurred (and it would have to be retried
-with enabled page fault handler) or a #GP occurred because the xstate is
-bogus (after all, the signal handler can modify it).
-
-In order to avoid that mess, copy the FPU state from userland, validate
-it and then load it. The copy_kernel_…() helpers are basically just
-like the old helpers except that they operate on kernel memory and the
-fault handler just sets the error value and the caller handles it.
-
-copy_user_to_fpregs_zeroing() and its helpers remain and will be used
-later for a fastpath optimisation.
-
- [ bp: Clarify commit message. ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Aubrey Li <aubrey.li@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-22-bigeasy@linutronix.de
----
- arch/x86/include/asm/fpu/internal.h | 43 +++++++++++++++++++++++++
- arch/x86/kernel/fpu/signal.c        | 62 +++++++++++++++++++++++++++++--------
- 2 files changed, 92 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index da75d7b3e37d..2cf04fbcba5d 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -121,6 +121,21 @@ extern void fpstate_sanitize_xstate(struct fpu *fpu);
- 	err;								\
- })
- 
-+#define kernel_insn_err(insn, output, input...)				\
-+({									\
-+	int err;							\
-+	asm volatile("1:" #insn "\n\t"					\
-+		     "2:\n"						\
-+		     ".section .fixup,\"ax\"\n"				\
-+		     "3:  movl $-1,%[err]\n"				\
-+		     "    jmp  2b\n"					\
-+		     ".previous\n"					\
-+		     _ASM_EXTABLE(1b, 3b)				\
-+		     : [err] "=r" (err), output				\
-+		     : "0"(0), input);					\
-+	err;								\
-+})
-+
- #define kernel_insn(insn, output, input...)				\
- 	asm volatile("1:" #insn "\n\t"					\
- 		     "2:\n"						\
-@@ -149,6 +164,14 @@ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
- 		kernel_insn(fxrstorq %[fx], "=m" (*fx), [fx] "m" (*fx));
- }
- 
-+static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
-+{
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		return kernel_insn_err(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
-+	else
-+		return kernel_insn_err(fxrstorq %[fx], "=m" (*fx), [fx] "m" (*fx));
-+}
-+
- static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
- {
- 	if (IS_ENABLED(CONFIG_X86_32))
-@@ -162,6 +185,11 @@ static inline void copy_kernel_to_fregs(struct fregs_state *fx)
- 	kernel_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
- }
- 
-+static inline int copy_kernel_to_fregs_err(struct fregs_state *fx)
-+{
-+	return kernel_insn_err(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
-+}
-+
- static inline int copy_user_to_fregs(struct fregs_state __user *fx)
- {
- 	return user_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
-@@ -361,6 +389,21 @@ static inline int copy_user_to_xregs(struct xregs_state __user *buf, u64 mask)
- 	return err;
- }
- 
-+/*
-+ * Restore xstate from kernel space xsave area, return an error code instead of
-+ * an exception.
-+ */
-+static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
-+{
-+	u32 lmask = mask;
-+	u32 hmask = mask >> 32;
-+	int err;
-+
-+	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
-+
-+	return err;
-+}
-+
- /*
-  * These must be called with preempt disabled. Returns
-  * 'true' if the FPU state is still intact and we can
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index c2ff43fbbd07..9ea1eaa4c9b1 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -234,7 +234,8 @@ sanitize_restored_xstate(union fpregs_state *state,
- 		 */
- 		xsave->i387.mxcsr &= mxcsr_feature_mask;
- 
--		convert_to_fxsr(&state->fxsave, ia32_env);
-+		if (ia32_env)
-+			convert_to_fxsr(&state->fxsave, ia32_env);
- 	}
- }
- 
-@@ -337,28 +338,63 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		kfree(tmp);
- 		return err;
- 	} else {
-+		union fpregs_state *state;
-+		void *tmp;
- 		int ret;
- 
-+		tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
-+		if (!tmp)
-+			return -ENOMEM;
-+		state = PTR_ALIGN(tmp, 64);
-+
- 		/*
- 		 * For 64-bit frames and 32-bit fsave frames, restore the user
- 		 * state to the registers directly (with exceptions handled).
- 		 */
--		if (use_xsave()) {
--			if ((unsigned long)buf_fx % 64 || fx_only) {
--				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
--				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--				ret = copy_user_to_fxregs(buf_fx);
-+		if ((unsigned long)buf_fx % 64)
-+			fx_only = 1;
-+
-+		if (use_xsave() && !fx_only) {
-+			u64 init_bv = xfeatures_mask & ~xfeatures;
-+
-+			if (using_compacted_format()) {
-+				ret = copy_user_to_xstate(&state->xsave, buf_fx);
- 			} else {
--				u64 init_bv = xfeatures_mask & ~xfeatures;
--				if (unlikely(init_bv))
--					copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--				ret = copy_user_to_xregs(buf_fx, xfeatures);
-+				ret = __copy_from_user(&state->xsave, buf_fx, state_size);
-+
-+				if (!ret && state_size > offsetof(struct xregs_state, header))
-+					ret = validate_xstate_header(&state->xsave.header);
- 			}
-+			if (ret)
-+				goto err_out;
-+
-+			sanitize_restored_xstate(state, NULL, xfeatures, fx_only);
-+
-+			if (unlikely(init_bv))
-+				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-+			ret = copy_kernel_to_xregs_err(&state->xsave, xfeatures);
-+
- 		} else if (use_fxsr()) {
--			ret = copy_user_to_fxregs(buf_fx);
--		} else
--			ret = copy_user_to_fregs(buf_fx);
-+			ret = __copy_from_user(&state->fxsave, buf_fx, state_size);
-+			if (ret)
-+				goto err_out;
- 
-+			if (use_xsave()) {
-+				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
-+				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-+			}
-+			state->fxsave.mxcsr &= mxcsr_feature_mask;
-+
-+			ret = copy_kernel_to_fxregs_err(&state->fxsave);
-+		} else {
-+			ret = __copy_from_user(&state->fsave, buf_fx, state_size);
-+			if (ret)
-+				goto err_out;
-+			ret = copy_kernel_to_fregs_err(&state->fsave);
-+		}
-+
-+err_out:
-+		kfree(tmp);
- 		if (ret) {
- 			fpu__clear(fpu);
- 			return -1;
+	What's the point of using fget_raw(), if you do
+_not_ accept O_PATH descriptors?  That should be fget()...
