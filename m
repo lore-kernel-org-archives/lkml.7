@@ -2,181 +2,125 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58983C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A9BC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27046206BA
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B272084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfDMUyB (ORCPT
+        id S1727319AbfDMUyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:54:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35973 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfDMUyB (ORCPT
+        Sat, 13 Apr 2019 16:54:46 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:34869 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfDMUyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:54:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKqq3Y2265935
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 13:52:52 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKqq1n2265932;
-        Sat, 13 Apr 2019 13:52:52 -0700
-Date:   Sat, 13 Apr 2019 13:52:52 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-07baeb04f37c952981d63359ff840118ce8f5434@git.kernel.org>
-Cc:     riel@surriel.com, hpa@zytor.com, dave.hansen@intel.com,
-        tglx@linutronix.de, pbonzini@redhat.com, mingo@kernel.org,
-        x86@kernel.org, rkrcmar@redhat.com, Jason@zx2c4.com,
-        sergey.senozhatsky@gmail.com, bigeasy@linutronix.de, bp@suse.de,
-        kvm@vger.kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org
-Reply-To: riel@surriel.com, dave.hansen@intel.com, hpa@zytor.com,
-          tglx@linutronix.de, pbonzini@redhat.com, x86@kernel.org,
-          mingo@kernel.org, rkrcmar@redhat.com, Jason@zx2c4.com,
-          sergey.senozhatsky@gmail.com, bigeasy@linutronix.de, bp@suse.de,
-          luto@kernel.org, linux-kernel@vger.kernel.org,
-          kvm@vger.kernel.org, mingo@redhat.com
-In-Reply-To: <20190403164156.19645-11-bigeasy@linutronix.de>
-References: <20190403164156.19645-11-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Make __raw_xsave_addr() use a feature number
- instead of mask
-Git-Commit-ID: 07baeb04f37c952981d63359ff840118ce8f5434
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 13 Apr 2019 16:54:46 -0400
+Received: by mail-vk1-f194.google.com with SMTP id g24so2888508vki.2;
+        Sat, 13 Apr 2019 13:54:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ognk4lz2NDKt1DvD/X12198HfbOIyneoWr847fqKsa4=;
+        b=PHu1AI7nR3zd4DoKcBAeFTiDvpgzwNs5Im63A5Ykp0n/gcCbgdvzmm4Bmei3nG1HcH
+         eFsRmR9DqeVpgZl5vNJRSnXe1V11tlVPEIifq+Xn57esSCJwxodIjKA3VjCXrqCLZN2F
+         wzsDyr1lQoF41im5Hil+odH7mJLLqYmMZiL9LBu9yX9ln+dYLZDyeUF0NvUb3mPu1QAT
+         X5FBanLKOAmIq7zVPrpQ+br68fsk4h7Tmj8yr4KaUQSpBRT349a/ejxKCXeqZcgyx3hm
+         XT+ABt63RiEgVEIQRy6mpEm3DriYY+bSQX66yEATkBRNWy/oe3Q2ozC2EDsDT89/3EfQ
+         rsDw==
+X-Gm-Message-State: APjAAAXCfG9uNegTSVoc+lCeCQNAetg1POj1m9GOHyjebaajq4J5h16v
+        kABbcDUnb0VKThlZb5Zg8R8kUR53QXAGZg==
+X-Google-Smtp-Source: APXvYqwv3V8ZyHxCWYExIpQywnX8nFC3rJdZ1OA3aV4RypgIwI1SHfCFCKjKhnQm6jXi1nKzqGusqQ==
+X-Received: by 2002:a1f:23c5:: with SMTP id j188mr34821935vkj.39.1555188884730;
+        Sat, 13 Apr 2019 13:54:44 -0700 (PDT)
+Received: from localhost.localdomain ([201.240.145.139])
+        by smtp.gmail.com with ESMTPSA id g184sm11132244vkd.31.2019.04.13.13.54.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2019 13:54:44 -0700 (PDT)
+From:   Shawn Landden <shawn@git.icu>
+Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shawn Landden <shawn@git.icu>
+Subject: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
+Date:   Sat, 13 Apr 2019 15:54:39 -0500
+Message-Id: <20190413205439.9623-1-shawn@git.icu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  07baeb04f37c952981d63359ff840118ce8f5434
-Gitweb:     https://git.kernel.org/tip/07baeb04f37c952981d63359ff840118ce8f5434
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:39 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 10 Apr 2019 16:33:45 +0200
+If flags includes COPY_FILE_RANGE_FILESIZE then the length
+copied is the length of the file. off_in and off_out are
+ignored. len must be 0 or the file size.
 
-x86/fpu: Make __raw_xsave_addr() use a feature number instead of mask
+This implementation saves a call to stat() in the common case
+of copying files. It does not fix any race conditions, but that
+is possible in the future with this interface.
 
-Most users of __raw_xsave_addr() use a feature number, shift it to a
-mask and then __raw_xsave_addr() shifts it back to the feature number.
+EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
+or the file size.
 
-Make __raw_xsave_addr() use the feature number as an argument.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-11-bigeasy@linutronix.de
+Signed-off-by: Shawn Landden <shawn@git.icu>
+CC: <linux-api@vger.kernel.org>
 ---
- arch/x86/kernel/fpu/xstate.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ fs/read_write.c           | 14 +++++++++++++-
+ include/uapi/linux/stat.h |  4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 8bfcc5b9e04b..4f7f3c5d0d0c 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -805,20 +805,18 @@ void fpu__resume_cpu(void)
- }
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 61b43ad7608e..6d06361f0856 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	struct inode *inode_out = file_inode(file_out);
+ 	ssize_t ret;
  
- /*
-- * Given an xstate feature mask, calculate where in the xsave
-+ * Given an xstate feature nr, calculate where in the xsave
-  * buffer the state is.  Callers should ensure that the buffer
-  * is valid.
-  */
--static void *__raw_xsave_addr(struct xregs_state *xsave, int xstate_feature_mask)
-+static void *__raw_xsave_addr(struct xregs_state *xsave, int xfeature_nr)
- {
--	int feature_nr = fls64(xstate_feature_mask) - 1;
--
--	if (!xfeature_enabled(feature_nr)) {
-+	if (!xfeature_enabled(xfeature_nr)) {
- 		WARN_ON_FPU(1);
- 		return NULL;
- 	}
+-	if (flags != 0)
++	if ((flags & ~COPY_FILE_RANGE_FILESIZE) != 0)
+ 		return -EINVAL;
  
--	return (void *)xsave + xstate_comp_offsets[feature_nr];
-+	return (void *)xsave + xstate_comp_offsets[xfeature_nr];
- }
- /*
-  * Given the xsave area and a state inside, this function returns the
-@@ -840,6 +838,7 @@ static void *__raw_xsave_addr(struct xregs_state *xsave, int xstate_feature_mask
-  */
- void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
- {
-+	int xfeature_nr;
- 	/*
- 	 * Do we even *have* xsave state?
- 	 */
-@@ -867,7 +866,8 @@ void *get_xsave_addr(struct xregs_state *xsave, int xstate_feature)
- 	if (!(xsave->header.xfeatures & xstate_feature))
- 		return NULL;
+ 	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
+@@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
+ 		return -EINVAL;
  
--	return __raw_xsave_addr(xsave, xstate_feature);
-+	xfeature_nr = fls64(xstate_feature) - 1;
-+	return __raw_xsave_addr(xsave, xfeature_nr);
- }
- EXPORT_SYMBOL_GPL(get_xsave_addr);
++	if (flags & COPY_FILE_RANGE_FILESIZE) {
++		struct kstat stat;
++		int error;
++		error = vfs_getattr(&file_in->f_path, &stat,
++				    STATX_SIZE, 0);
++		if (error < 0)
++			return error;
++		if (!(len == 0 || len == stat.size))
++			return -EAGAIN;
++		len = stat.size;
++	}
++
+ 	ret = rw_verify_area(READ, file_in, &pos_in, len);
+ 	if (unlikely(ret))
+ 		return ret;
+diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+index 7b35e98d3c58..1075aa4666ef 100644
+--- a/include/uapi/linux/stat.h
++++ b/include/uapi/linux/stat.h
+@@ -170,5 +170,9 @@ struct statx {
  
-@@ -1014,7 +1014,7 @@ int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned int of
- 		 * Copy only in-use xstates:
- 		 */
- 		if ((header.xfeatures >> i) & 1) {
--			void *src = __raw_xsave_addr(xsave, 1 << i);
-+			void *src = __raw_xsave_addr(xsave, i);
+ #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
  
- 			offset = xstate_offsets[i];
- 			size = xstate_sizes[i];
-@@ -1100,7 +1100,7 @@ int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, unsigned i
- 		 * Copy only in-use xstates:
- 		 */
- 		if ((header.xfeatures >> i) & 1) {
--			void *src = __raw_xsave_addr(xsave, 1 << i);
-+			void *src = __raw_xsave_addr(xsave, i);
++/*
++ * Flags for copy_file_range()
++ */
++#define COPY_FILE_RANGE_FILESIZE	0x00000001 /* Copy the full length of the input file */
  
- 			offset = xstate_offsets[i];
- 			size = xstate_sizes[i];
-@@ -1157,7 +1157,7 @@ int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf)
- 		u64 mask = ((u64)1 << i);
- 
- 		if (hdr.xfeatures & mask) {
--			void *dst = __raw_xsave_addr(xsave, 1 << i);
-+			void *dst = __raw_xsave_addr(xsave, i);
- 
- 			offset = xstate_offsets[i];
- 			size = xstate_sizes[i];
-@@ -1211,7 +1211,7 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
- 		u64 mask = ((u64)1 << i);
- 
- 		if (hdr.xfeatures & mask) {
--			void *dst = __raw_xsave_addr(xsave, 1 << i);
-+			void *dst = __raw_xsave_addr(xsave, i);
- 
- 			offset = xstate_offsets[i];
- 			size = xstate_sizes[i];
+ #endif /* _UAPI_LINUX_STAT_H */
+-- 
+2.20.1
+
