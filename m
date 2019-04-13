@@ -2,105 +2,94 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC43FC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02934C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2FA2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CCE2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 09:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kt0rczLJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCE+jE3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfDMJQp (ORCPT
+        id S1727020AbfDMJ0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 05:16:45 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51649 "EHLO
+        Sat, 13 Apr 2019 05:26:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54846 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfDMJQo (ORCPT
+        with ESMTP id S1726270AbfDMJ0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 05:16:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 4so14080174wmf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 02:16:43 -0700 (PDT)
+        Sat, 13 Apr 2019 05:26:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so14083723wml.4
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 02:26:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl+uqjoeWS/UcgHLALZ6qCxkCHGd15eqjy0ND1OxQ38=;
-        b=kt0rczLJS0l2WB//H8zeSaoysdEPOxpVPz5hCZNKM+Djr13cBsf7raaBugU+SkLVOp
-         1+NIsotBMe9oSfCz78cEENx9qtlnEPpWU+Zl4Svfrv6vSe0R/OapU1xsvByBp5M6/N+u
-         H9z8z7V6c/XmTfrKgYqIlXgIqtnrKL3fpxpGnmsG7Q82KxtfyJk5dLuhkTCOaq9zRI4Y
-         BOE5U0SXHaPIr5WJconuyC332WkMRAzfgA8W1vVIfvjtAvp1BlF/go/6ojkotKUt7MNb
-         /YhXBXXQIyQ5VLjvntj8TZxCkf2ZnY1oq/H2DJ/lakRg4IQRoRiC9LQQChaE05H7IQHJ
-         CGAg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=L5k4AjfcQhtb2vk+GG1PuhrK51n5+tL2rKsNkgCukUE=;
+        b=WCE+jE3A/sEpKyvy2ESFMqUqnmlTMXKaQlJRyK0EJ+1XpKXuovEQjUQpZxV1bbeDJ5
+         csTPydIXP5HU1JWEq+va9KUDbhqOXpNuTIAUInwn98l/kWumnAL8tngtg+hswAnGYM7s
+         AkZn9PINDQI/yodwvJk496pkQHl5aICTxEwu7V1K3R5WedTkroCh96IleQYHoPsltXTy
+         KP+wtPLPu4C4aExUHzIix3UhwShtlmoXCQENBviQRLv5MSKbE+8t3H/riVAszLljfG6E
+         2WoPrAxaY9Z2tfb3C8HzNz0XEAgUBNC6Y47DGJgtQQZtgcIohd3jZADWbh/Tj0drQIys
+         Zgmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jl+uqjoeWS/UcgHLALZ6qCxkCHGd15eqjy0ND1OxQ38=;
-        b=Rk+EjIm2cJWpXJBIewrbBzkGiWNcm42AGCabqwoyN2LFOiOgRa9hj+uyc76XV0oev3
-         DyQGmyFaE1jHjL+qDZ2CYdpk3jZjBSCDRh8ftWjJiLfrcVtdJaWQxm5LKiojqQ69Bi2P
-         2H/UteDPUVd9W510Cxl8e+hYpDzMKnMdkpMHRi43xwO6yoUHGLi4FWpL0X7MhqcDQi4K
-         8KjAtrQTdHZPKsklhXCeWj6Yg+YCdW+r35MjFxTtMutB9cMYYp++c3eNW6FMf9nMGDQI
-         WniyaDCFWFm/XOt3RZFvg9jgky4R8KVyW4cEJJ8m56HARKQ2yln82UZfg9MhfLtu7Z4t
-         jmjA==
-X-Gm-Message-State: APjAAAXi1vxytYMouvickySYp3FqSziVLgaIgtexv6J/PT3jarUi6kWH
-        GaUR9aExM8tUS8wmV+Ctp55H6rUjeSwfMg==
-X-Google-Smtp-Source: APXvYqy9XbFNWkLCB4XsR2KSrlYNMqiBRD7wYV15yyOcjY0qoJWLnPoTqfBcggVFn8NMPyvvMDgwjQ==
-X-Received: by 2002:a1c:6587:: with SMTP id z129mr14551454wmb.84.1555147002937;
-        Sat, 13 Apr 2019 02:16:42 -0700 (PDT)
-Received: from localhost.localdomain ([37.161.76.141])
-        by smtp.gmail.com with ESMTPSA id c2sm33134379wrr.13.2019.04.13.02.16.41
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=L5k4AjfcQhtb2vk+GG1PuhrK51n5+tL2rKsNkgCukUE=;
+        b=ESv3JDpmxsKCEoO4NM+pG/jMFfs0dtJTKhu7yq7h7V6EHVxWwySrHbziupqGDBREjj
+         uxXbwSg8fUOK7vbYD0yVE2XZXYDq2Yiid1cnIAx7ZhCtB6NJdANiGwmHianK4hxvVVR+
+         CAMi29nKZ+0GeXfgqRWD3ZkGcWVUaTZ62b9ymeplCyxt4IlPt4/VoSmyyru4XpagTBJe
+         TNAXacORAaGCOdJDGuOCNnvYHIxbqfaF1tAL36pfDZFK/uRZicmLhHtRtuMvS3scL+Nm
+         +peiQuV+CLH8IuwnIXQfwDION4c81bqU2zCcJ+rxe0sXqWVok4T25vWm9HhSvb7caCC3
+         cZwA==
+X-Gm-Message-State: APjAAAXVqqlhvqpm1RahBtpVvjIGrNliY3e5pOFoIMqFJ6P7BYpZ5g4Y
+        fouElwlsPAg93kcC5VNHbj54Lv90
+X-Google-Smtp-Source: APXvYqyhJRgcoX4xqiRW0sL4xbO3tgsV6yjHvVSo9ef9oTviCa6CM+MbUVJzDkwcTfVFguu9BR44uw==
+X-Received: by 2002:a1c:a9d4:: with SMTP id s203mr13844254wme.117.1555147562897;
+        Sat, 13 Apr 2019 02:26:02 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2def:500:2ca3:f513:3ec4:694])
+        by smtp.gmail.com with ESMTPSA id h12sm42356702wrq.95.2019.04.13.02.26.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 02:16:42 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, Paolo Valente <paolo.valente@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] block, Kconfig.iosched: set default value of IOSCHED_BFQ to yes
-Date:   Sat, 13 Apr 2019 11:16:26 +0200
-Message-Id: <20190413091626.20286-1-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 13 Apr 2019 02:26:01 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Michael Hennerich <michael.hennerich@analog.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: normalize Michael Hennerich's email address
+Date:   Sat, 13 Apr 2019 11:25:48 +0200
+Message-Id: <20190413092548.13995-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I added bfq to Kconfig.iosched, I forgot to add the line that
-sets to yes the default value of IOSCHED_BFQ, as it is the case for
-the other two I/O schedulers. Such a piece of information is used by
-popular build systems, when making kernel configs automatically. So,
-the lack of this line for bfq makes it hard and confusing to have bfq
-in the kernel generated by these systems.
+MAINTAINERS contains a lower-case and upper-case variant of
+Michael Hennerich' s email address.
 
-This commit adds this missing line.
+Only keep the lower-case variant in MAINTAINERS.
 
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- block/Kconfig.iosched | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
-index 4626b88b2d5a..01d05ab68322 100644
---- a/block/Kconfig.iosched
-+++ b/block/Kconfig.iosched
-@@ -20,6 +20,7 @@ config MQ_IOSCHED_KYBER
+diff --git a/MAINTAINERS b/MAINTAINERS
+index afa019b5c461..b486b9e5d73c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -949,7 +949,7 @@ F:	drivers/dma/dma-axi-dmac.c
  
- config IOSCHED_BFQ
- 	tristate "BFQ I/O scheduler"
-+	default y
- 	---help---
- 	BFQ I/O scheduler for BLK-MQ. BFQ distributes the bandwidth of
- 	of the device among all processes according to their weights,
+ ANALOG DEVICES INC IIO DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+-M:	Michael Hennerich <Michael.Hennerich@analog.com>
++M:	Michael Hennerich <michael.hennerich@analog.com>
+ W:	http://wiki.analog.com/
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
 -- 
-2.20.1
+2.17.1
 
