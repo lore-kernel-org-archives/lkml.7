@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51435C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6409C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1361120850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A894A20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfDMIlO (ORCPT
+        id S1727201AbfDMIlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 13 Apr 2019 04:41:14 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:40744 "EHLO
+Received: from lilium.sigma-star.at ([109.75.188.150]:40724 "EHLO
         lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfDMIlO (ORCPT
+        with ESMTP id S1726968AbfDMIlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 13 Apr 2019 04:41:14 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 27BD11802199E;
-        Sat, 13 Apr 2019 10:41:11 +0200 (CEST)
+        by lilium.sigma-star.at (Postfix) with ESMTP id 87AAB1802DF5F;
+        Sat, 13 Apr 2019 10:41:10 +0200 (CEST)
 From:   Richard Weinberger <richard@nod.at>
 To:     linux-mtd@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
         miquel.raynal@bootlin.com, dwmw2@infradead.org,
         computersforpeace@gmail.com, marek.vasut@gmail.com,
         Richard Weinberger <richard@nod.at>
-Subject: [PATCH 2/2] mtd: nandsim: switch to exec_op interface
-Date:   Sat, 13 Apr 2019 10:40:52 +0200
-Message-Id: <20190413084052.15416-2-richard@nod.at>
+Subject: [PATCH 1/2] mtd: nandsim: Embed struct nand_chip in struct nandsim
+Date:   Sat, 13 Apr 2019 10:40:51 +0200
+Message-Id: <20190413084052.15416-1-richard@nod.at>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190413084052.15416-1-richard@nod.at>
-References: <20190413084052.15416-1-richard@nod.at>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,158 +40,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stop using the legacy interface.
+We well need struct nand_controller soon, so more stuff need to
+be parts of struct nandsim.
+While we are here, rename "nand" to "ns" to use the same naming scheme
+everywhere in nandsim.
 
 Signed-off-by: Richard Weinberger <richard@nod.at>
 ---
- drivers/mtd/nand/raw/nandsim.c | 78 ++++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 31 deletions(-)
+ drivers/mtd/nand/raw/nandsim.c | 49 +++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/mtd/nand/raw/nandsim.c b/drivers/mtd/nand/raw/nandsi=
 m.c
-index 3d80e2d23b6e..33c369f9a607 100644
+index 933d1a629c51..3d80e2d23b6e 100644
 --- a/drivers/mtd/nand/raw/nandsim.c
 +++ b/drivers/mtd/nand/raw/nandsim.c
-@@ -299,6 +299,7 @@ union ns_mem {
+@@ -298,6 +298,7 @@ union ns_mem {
+  * The structure which describes all the internal simulator data.
   */
  struct nandsim {
- 	struct nand_chip chip;
-+	struct nand_controller base;
++	struct nand_chip chip;
  	struct mtd_partition partitions[CONFIG_NANDSIM_MAX_PARTS];
  	unsigned int nbparts;
 =20
-@@ -645,9 +646,6 @@ static int __init init_nandsim(struct mtd_info *mtd)
- 		return -EIO;
+@@ -2216,7 +2217,7 @@ static const struct nand_controller_ops ns_controll=
+er_ops =3D {
+ static int __init ns_init_module(void)
+ {
+ 	struct nand_chip *chip;
+-	struct nandsim *nand;
++	struct nandsim *ns;
+ 	int retval =3D -ENOMEM, i;
+=20
+ 	if (bus_width !=3D 8 && bus_width !=3D 16) {
+@@ -2224,16 +2225,14 @@ static int __init ns_init_module(void)
+ 		return -EINVAL;
  	}
 =20
--	/* Force mtd to not do delays */
--	chip->legacy.chip_delay =3D 0;
--
- 	/* Initialize the NAND flash parameters */
- 	ns->busw =3D chip->options & NAND_BUSWIDTH_16 ? 16 : 8;
- 	ns->geom.totsz    =3D mtd->size;
-@@ -2077,24 +2075,6 @@ static void ns_nand_write_byte(struct nand_chip *c=
-hip, u_char byte)
- 	return;
- }
-=20
--static void ns_hwcontrol(struct nand_chip *chip, int cmd, unsigned int b=
-itmask)
--{
--	struct nandsim *ns =3D nand_get_controller_data(chip);
--
--	ns->lines.cle =3D bitmask & NAND_CLE ? 1 : 0;
--	ns->lines.ale =3D bitmask & NAND_ALE ? 1 : 0;
--	ns->lines.ce =3D bitmask & NAND_NCE ? 1 : 0;
--
--	if (cmd !=3D NAND_CMD_NONE)
--		ns_nand_write_byte(chip, cmd);
--}
--
--static int ns_device_ready(struct nand_chip *chip)
--{
--	NS_DBG("device_ready\n");
--	return 1;
--}
--
- static void ns_nand_write_buf(struct nand_chip *chip, const u_char *buf,
- 			      int len)
- {
-@@ -2146,7 +2126,7 @@ static void ns_nand_read_buf(struct nand_chip *chip=
-, u_char *buf, int len)
- 		int i;
-=20
- 		for (i =3D 0; i < len; i++)
--			buf[i] =3D chip->legacy.read_byte(chip);
-+			buf[i] =3D ns_nand_read_byte(chip);
-=20
- 		return;
+-	/* Allocate and initialize mtd_info, nand_chip and nandsim structures *=
+/
+-	chip =3D kzalloc(sizeof(struct nand_chip) + sizeof(struct nandsim),
+-		       GFP_KERNEL);
+-	if (!chip) {
++	ns =3D kzalloc(sizeof(struct nandsim), GFP_KERNEL);
++	if (!ns) {
+ 		NS_ERR("unable to allocate core structures.\n");
+ 		return -ENOMEM;
  	}
-@@ -2169,6 +2149,46 @@ static void ns_nand_read_buf(struct nand_chip *chi=
-p, u_char *buf, int len)
- 	return;
- }
-=20
-+static int ns_exec_op(struct nand_chip *chip, const struct nand_operatio=
-n *op,
-+		      bool check_only)
-+{
-+	int i;
-+	unsigned int op_id;
-+	const struct nand_op_instr *instr =3D NULL;
-+	struct nandsim *ns =3D nand_get_controller_data(chip);
-+
-+	ns->lines.ce =3D chip->cur_cs =3D=3D -1 ? 0 : 1;
-+
-+	for (op_id =3D 0; op_id < op->ninstrs; op_id++) {
-+		instr =3D &op->instrs[op_id];
-+		ns->lines.cle =3D 0;
-+		ns->lines.ale =3D 0;
-+
-+		switch (instr->type) {
-+		case NAND_OP_CMD_INSTR:
-+			ns->lines.cle =3D 1;
-+			ns_nand_write_byte(chip, instr->ctx.cmd.opcode);
-+			break;
-+		case NAND_OP_ADDR_INSTR:
-+			ns->lines.ale =3D 1;
-+			for (i =3D 0; i < instr->ctx.addr.naddrs; i++)
-+				ns_nand_write_byte(chip, instr->ctx.addr.addrs[i]);
-+			break;
-+		case NAND_OP_DATA_IN_INSTR:
-+			ns_nand_read_buf(chip, instr->ctx.data.buf.in, instr->ctx.data.len);
-+			break;
-+		case NAND_OP_DATA_OUT_INSTR:
-+			ns_nand_write_buf(chip, instr->ctx.data.buf.out, instr->ctx.data.len)=
-;
-+			break;
-+		case NAND_OP_WAITRDY_INSTR:
-+			/* we are always ready */
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int ns_attach_chip(struct nand_chip *chip)
- {
- 	unsigned int eccsteps, eccbytes;
-@@ -2209,6 +2229,7 @@ static int ns_attach_chip(struct nand_chip *chip)
-=20
- static const struct nand_controller_ops ns_controller_ops =3D {
- 	.attach_chip =3D ns_attach_chip,
-+	.exec_op =3D ns_exec_op,
- };
-=20
- /*
-@@ -2234,14 +2255,6 @@ static int __init ns_init_module(void)
++	chip	    =3D &ns->chip;
  	nsmtd       =3D nand_to_mtd(chip);
- 	nand_set_controller_data(chip, (void *)ns);
+-	nand        =3D (struct nandsim *)(chip + 1);
+-	nand_set_controller_data(chip, (void *)nand);
++	nand_set_controller_data(chip, (void *)ns);
 =20
--	/*
--	 * Register simulator's callbacks.
--	 */
--	chip->legacy.cmd_ctrl	 =3D ns_hwcontrol;
--	chip->legacy.read_byte  =3D ns_nand_read_byte;
--	chip->legacy.dev_ready  =3D ns_device_ready;
--	chip->legacy.write_buf  =3D ns_nand_write_buf;
--	chip->legacy.read_buf   =3D ns_nand_read_buf;
- 	chip->ecc.mode   =3D NAND_ECC_SOFT;
- 	chip->ecc.algo   =3D NAND_ECC_HAMMING;
- 	/* The NAND_SKIP_BBTSCAN option is necessary for 'overridesize' */
-@@ -2292,7 +2305,10 @@ static int __init ns_init_module(void)
- 	if ((retval =3D parse_gravepages()) !=3D 0)
- 		goto error;
+ 	/*
+ 	 * Register simulator's callbacks.
+@@ -2266,19 +2265,19 @@ static int __init ns_init_module(void)
+ 	 * the initial ID read command correctly
+ 	 */
+ 	if (id_bytes[6] !=3D 0xFF || id_bytes[7] !=3D 0xFF)
+-		nand->geom.idbytes =3D 8;
++		ns->geom.idbytes =3D 8;
+ 	else if (id_bytes[4] !=3D 0xFF || id_bytes[5] !=3D 0xFF)
+-		nand->geom.idbytes =3D 6;
++		ns->geom.idbytes =3D 6;
+ 	else if (id_bytes[2] !=3D 0xFF || id_bytes[3] !=3D 0xFF)
+-		nand->geom.idbytes =3D 4;
++		ns->geom.idbytes =3D 4;
+ 	else
+-		nand->geom.idbytes =3D 2;
+-	nand->regs.status =3D NS_STATUS_OK(nand);
+-	nand->nxstate =3D STATE_UNKNOWN;
+-	nand->options |=3D OPT_PAGE512; /* temporary value */
+-	memcpy(nand->ids, id_bytes, sizeof(nand->ids));
++		ns->geom.idbytes =3D 2;
++	ns->regs.status =3D NS_STATUS_OK(ns);
++	ns->nxstate =3D STATE_UNKNOWN;
++	ns->options |=3D OPT_PAGE512; /* temporary value */
++	memcpy(ns->ids, id_bytes, sizeof(ns->ids));
+ 	if (bus_width =3D=3D 16) {
+-		nand->busw =3D 16;
++		ns->busw =3D 16;
+ 		chip->options |=3D NAND_BUSWIDTH_16;
+ 	}
 =20
--	chip->legacy.dummy_controller.ops =3D &ns_controller_ops;
-+	nand_controller_init(&ns->base);
-+	ns->base.ops =3D &ns_controller_ops;
-+	chip->controller =3D &ns->base;
-+
- 	retval =3D nand_scan(chip, 1);
- 	if (retval) {
- 		NS_ERR("Could not scan NAND Simulator device\n");
+@@ -2323,27 +2322,27 @@ static int __init ns_init_module(void)
+ 	if ((retval =3D nand_create_bbt(chip)) !=3D 0)
+ 		goto err_exit;
+=20
+-	if ((retval =3D parse_badblocks(nand, nsmtd)) !=3D 0)
++	if ((retval =3D parse_badblocks(ns, nsmtd)) !=3D 0)
+ 		goto err_exit;
+=20
+ 	/* Register NAND partitions */
+-	retval =3D mtd_device_register(nsmtd, &nand->partitions[0],
+-				     nand->nbparts);
++	retval =3D mtd_device_register(nsmtd, &ns->partitions[0],
++				     ns->nbparts);
+ 	if (retval !=3D 0)
+ 		goto err_exit;
+=20
+-	if ((retval =3D nandsim_debugfs_create(nand)) !=3D 0)
++	if ((retval =3D nandsim_debugfs_create(ns)) !=3D 0)
+ 		goto err_exit;
+=20
+         return 0;
+=20
+ err_exit:
+-	free_nandsim(nand);
++	free_nandsim(ns);
+ 	nand_release(chip);
+-	for (i =3D 0;i < ARRAY_SIZE(nand->partitions); ++i)
+-		kfree(nand->partitions[i].name);
++	for (i =3D 0;i < ARRAY_SIZE(ns->partitions); ++i)
++		kfree(ns->partitions[i].name);
+ error:
+-	kfree(chip);
++	kfree(ns);
+ 	free_lists();
+=20
+ 	return retval;
+@@ -2364,7 +2363,7 @@ static void __exit ns_cleanup_module(void)
+ 	nand_release(chip); /* Unregister driver */
+ 	for (i =3D 0;i < ARRAY_SIZE(ns->partitions); ++i)
+ 		kfree(ns->partitions[i].name);
+-	kfree(mtd_to_nand(nsmtd));        /* Free other structures */
++	kfree(ns);        /* Free other structures */
+ 	free_lists();
+ }
+=20
 --=20
 2.21.0
 
