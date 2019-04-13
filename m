@@ -2,78 +2,93 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99147C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D21C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FE12082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ACCGQAGy"
+	by mail.kernel.org (Postfix) with ESMTP id 1AD2A2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727214AbfDMPMf (ORCPT
+        id S1727240AbfDMPNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 11:12:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60234 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfDMPMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 11:12:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=iQ/DHvGIQva+aqa0oHl0opYyfiBNukdEYQGTKN5Eotk=; b=ACCGQAGyXrxeNEqnoNxtzR2Pcs
-        2D+eANuXC2b9ZB13ZwQycauAUTrIm8w0fcBZvWtwVnj8vC56FijTk+cctCeeFN3cITiOnQxS7r+M/
-        szG/CU47blJfuWliEvXIHWgQa5wTXEpckKrrYCYRgJONtfQdFH48BGWS961bEZtERSMo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hFKJs-0004nR-Q1; Sat, 13 Apr 2019 17:11:52 +0200
-Date:   Sat, 13 Apr 2019 17:11:52 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
-Subject: Re: [PATCH v3 net-next 10/24] net: dsa: Unset vlan_filtering when
- ports leave the bridge
-Message-ID: <20190413151152.GB17901@lunn.ch>
-References: <20190413012822.30931-1-olteanv@gmail.com>
- <20190413012822.30931-11-olteanv@gmail.com>
+        Sat, 13 Apr 2019 11:13:13 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:43161 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfDMPNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 11:13:13 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id x3DFD6YH011570
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sat, 13 Apr 2019 08:13:07 -0700 (PDT)
+Received: from yow-cube1.wrs.com (128.224.56.98) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.439.0; Sat, 13 Apr 2019
+ 08:13:06 -0700
+From:   Paul Gortmaker <paul.gortmaker@windriver.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH] soundwire: intel: fix implicit header use of module.h/export.h
+Date:   Sat, 13 Apr 2019 11:12:52 -0400
+Message-ID: <1555168372-15171-1-git-send-email-paul.gortmaker@windriver.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413012822.30931-11-olteanv@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 04:28:08AM +0300, Vladimir Oltean wrote:
-> When ports are standalone (after they left the bridge), they should have
-> no VLAN filtering semantics (they should pass all traffic to the CPU).
-> Currently this is not true for switchdev drivers, because the bridge
-> "forgets" to unset that.
-> 
-> Normally one would think that doing this at the bridge layer would be a
-> better idea, i.e. call br_vlan_filter_toggle() from br_del_if(), similar
-> to how nbp_vlan_init() is called from br_add_if().
-> 
-> However what complicates that approach, and makes this one preferable,
-> is the fact that for the bridge core, vlan_filtering is a per-bridge
-> setting, whereas for switchdev/DSA it is per-port. Also there are
-> switches where the setting is per the entire device, and unsetting
-> vlan_filtering one by one, for each leaving port, would not be possible
-> from the bridge core without a certain level of awareness. So do this in
-> DSA and let drivers be unaware of it.
-> 
-> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+These two files are implicitly relying on an instance of including
+module.h from <linux/acpi.h>.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Ideally, header files under include/linux shouldn't be adding
+includes of other headers, in anticipation of their consumers,
+but just the headers needed for the header itself to pass
+parsing with CPP.
 
-    Andrew
+The module.h is particularly bad in this sense, as it itself does
+include a whole bunch of other headers, due to the complexity of
+module support.
+
+Here, we make those includes explicit, in order to allow a future
+removal of module.h from linux/acpi.h without causing build breakage.
+
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Sanyog Kale <sanyog.r.kale@intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index fd8d034cfec1..4a4a883f29f6 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
++#include <linux/module.h>
+ #include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+ #include <sound/pcm_params.h>
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index 5c8a20d99878..e0f2903101c7 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -8,6 +8,8 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/export.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/soundwire/sdw_intel.h>
+ #include "intel.h"
+-- 
+2.11.0
+
