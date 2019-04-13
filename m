@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1E9C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B118DC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303C12084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879352084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfDMVA1 (ORCPT
+        id S1727352AbfDMVAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:00:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38387 "EHLO
+        Sat, 13 Apr 2019 17:00:43 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39213 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfDMVA0 (ORCPT
+        with ESMTP id S1726964AbfDMVAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:00:26 -0400
+        Sat, 13 Apr 2019 17:00:42 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKxK8r2266971
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DL05uP2267162
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 13:59:20 -0700
+        Sat, 13 Apr 2019 14:00:05 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKxJZ12266968;
-        Sat, 13 Apr 2019 13:59:19 -0700
-Date:   Sat, 13 Apr 2019 13:59:19 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DL04Bt2267144;
+        Sat, 13 Apr 2019 14:00:04 -0700
+Date:   Sat, 13 Apr 2019 14:00:04 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-0d714dba162620fd8b9f5b3104a487e041353c4d@git.kernel.org>
-Cc:     riel@surriel.com, x86@kernel.org, jgross@suse.com,
-        linux-kernel@vger.kernel.org, bp@suse.de, mhocko@suse.cz,
-        ak@linux.intel.com, dave.hansen@intel.com, rkrcmar@redhat.com,
-        Jason@zx2c4.com, tglx@linutronix.de, mingo@redhat.com,
-        pbonzini@redhat.com, luto@kernel.org, bigeasy@linutronix.de,
-        mingo@kernel.org, kvm@vger.kernel.org, jroedel@suse.de,
-        kirill.shutemov@linux.intel.com, hpa@zytor.com
-Reply-To: luto@kernel.org, bigeasy@linutronix.de, mingo@kernel.org,
-          mingo@redhat.com, pbonzini@redhat.com, jroedel@suse.de,
-          kirill.shutemov@linux.intel.com, hpa@zytor.com,
-          kvm@vger.kernel.org, mhocko@suse.cz, ak@linux.intel.com,
-          x86@kernel.org, riel@surriel.com, jgross@suse.com,
-          linux-kernel@vger.kernel.org, bp@suse.de, dave.hansen@intel.com,
-          rkrcmar@redhat.com, tglx@linutronix.de, Jason@zx2c4.com
-In-Reply-To: <20190403164156.19645-20-bigeasy@linutronix.de>
-References: <20190403164156.19645-20-bigeasy@linutronix.de>
+Message-ID: <tip-e0d3602f933367881bddfff310a744e6e61c284c@git.kernel.org>
+Cc:     hpa@zytor.com, pbonzini@redhat.com, Jason@zx2c4.com,
+        luto@kernel.org, mingo@kernel.org, x86@kernel.org,
+        dave.hansen@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        riel@surriel.com, jannh@google.com, bp@suse.de, rkrcmar@redhat.com,
+        bigeasy@linutronix.de
+Reply-To: mingo@redhat.com, kvm@vger.kernel.org,
+          linux-kernel@vger.kernel.org, x86@kernel.org,
+          dave.hansen@intel.com, tglx@linutronix.de, pbonzini@redhat.com,
+          hpa@zytor.com, Jason@zx2c4.com, luto@kernel.org,
+          mingo@kernel.org, bigeasy@linutronix.de, rkrcmar@redhat.com,
+          riel@surriel.com, jannh@google.com, bp@suse.de
+In-Reply-To: <20190403164156.19645-21-bigeasy@linutronix.de>
+References: <20190403164156.19645-21-bigeasy@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Update xstate's PKRU value on write_pkru()
-Git-Commit-ID: 0d714dba162620fd8b9f5b3104a487e041353c4d
+Subject: [tip:x86/fpu] x86/fpu: Inline copy_user_to_fpregs_zeroing()
+Git-Commit-ID: e0d3602f933367881bddfff310a744e6e61c284c
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -64,82 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0d714dba162620fd8b9f5b3104a487e041353c4d
-Gitweb:     https://git.kernel.org/tip/0d714dba162620fd8b9f5b3104a487e041353c4d
+Commit-ID:  e0d3602f933367881bddfff310a744e6e61c284c
+Gitweb:     https://git.kernel.org/tip/e0d3602f933367881bddfff310a744e6e61c284c
 Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:48 +0200
+AuthorDate: Wed, 3 Apr 2019 18:41:49 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 11 Apr 2019 20:33:29 +0200
+CommitDate: Thu, 11 Apr 2019 20:45:20 +0200
 
-x86/fpu: Update xstate's PKRU value on write_pkru()
+x86/fpu: Inline copy_user_to_fpregs_zeroing()
 
-During the context switch the xstate is loaded which also includes the
-PKRU value.
-
-If xstate is restored on return to userland it is required
-that the PKRU value in xstate is the same as the one in the CPU.
-
-Save the PKRU in xstate during modification.
+Start refactoring __fpu__restore_sig() by inlining
+copy_user_to_fpregs_zeroing(). The original function remains and will be
+used to restore from userland memory if possible.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Michal Hocko <mhocko@suse.cz>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-20-bigeasy@linutronix.de
+Link: https://lkml.kernel.org/r/20190403164156.19645-21-bigeasy@linutronix.de
 ---
- arch/x86/include/asm/pgtable.h | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/x86/kernel/fpu/signal.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 9beb371b1adf..5cfbbb6d458d 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -23,6 +23,8 @@
- 
- #ifndef __ASSEMBLY__
- #include <asm/x86_init.h>
-+#include <asm/fpu/xstate.h>
-+#include <asm/fpu/api.h>
- 
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
- int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
-@@ -133,8 +135,23 @@ static inline u32 read_pkru(void)
- 
- static inline void write_pkru(u32 pkru)
- {
--	if (boot_cpu_has(X86_FEATURE_OSPKE))
--		__write_pkru(pkru);
-+	struct pkru_state *pk;
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 9b9dfdc96285..c2ff43fbbd07 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -337,11 +337,29 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		kfree(tmp);
+ 		return err;
+ 	} else {
++		int ret;
 +
-+	if (!boot_cpu_has(X86_FEATURE_OSPKE))
-+		return;
+ 		/*
+ 		 * For 64-bit frames and 32-bit fsave frames, restore the user
+ 		 * state to the registers directly (with exceptions handled).
+ 		 */
+-		if (copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only)) {
++		if (use_xsave()) {
++			if ((unsigned long)buf_fx % 64 || fx_only) {
++				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
++				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
++				ret = copy_user_to_fxregs(buf_fx);
++			} else {
++				u64 init_bv = xfeatures_mask & ~xfeatures;
++				if (unlikely(init_bv))
++					copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
++				ret = copy_user_to_xregs(buf_fx, xfeatures);
++			}
++		} else if (use_fxsr()) {
++			ret = copy_user_to_fxregs(buf_fx);
++		} else
++			ret = copy_user_to_fregs(buf_fx);
 +
-+	pk = get_xsave_addr(&current->thread.fpu.state.xsave, XFEATURE_PKRU);
-+
-+	/*
-+	 * The PKRU value in xstate needs to be in sync with the value that is
-+	 * written to the CPU. The FPU restore on return to userland would
-+	 * otherwise load the previous value again.
-+	 */
-+	fpregs_lock();
-+	if (pk)
-+		pk->pkru = pkru;
-+	__write_pkru(pkru);
-+	fpregs_unlock();
- }
- 
- static inline int pte_young(pte_t pte)
++		if (ret) {
+ 			fpu__clear(fpu);
+ 			return -1;
+ 		}
