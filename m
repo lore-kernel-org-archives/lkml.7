@@ -2,100 +2,111 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47896C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034E2C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1199D20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F2620850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raLvbQlr"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YkJ1s7nQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="for+cnyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfDMKew (ORCPT
+        id S1727019AbfDMLD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:34:52 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50581 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfDMKev (ORCPT
+        Sat, 13 Apr 2019 07:03:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36820 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfDMLD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:34:51 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z11so14282702wmi.0
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xB7d15HDtlm2Iw4UdBy0TeItX/FDCpsJFoIKT0Z/+rI=;
-        b=raLvbQlre//k5BpAeG2FSg2rNSOHqQIZ80YqB7jMNk05CChZyCivxmIOXam/LY+6jj
-         aG6co5E3ZM0rEMHUTEa9b20NyYDMJlZ4ZxzGidDEvIqffHN0v/dGBFt/FHV/cNKyKUw1
-         NckxSLiyOy8GDb8CTYDb0XiAVImRI/NVT72Qj9veagTOnpbIAjAjl0avmojIAY5rRkB1
-         Vo/mjQToRKHsB+9oo2LgB0WwEbH7qHA+Y/ZOqn2+Vi+PiVMdMgGiAWL/c5YF+j4YKK+a
-         b9NeVd3hVW+QYGOdO2Fg0mQOd30y39p0hvXW1bIhuKsS9BdK/zzF3SwPAiLWKOdJIQmw
-         rXGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xB7d15HDtlm2Iw4UdBy0TeItX/FDCpsJFoIKT0Z/+rI=;
-        b=oZK4aPxGIpvdVKQ4NkhLNT/515k1bWItx8mLDZSGZA7mo/RNeCPlYHZH2BRCJlL6OR
-         IUcxdj0hUdInHvUfgBw2bLeVUhXN+jSmkp0ji2kvQbW//uNfIO0YY1xvzdqZ50g0XLW6
-         0UqEX8Om8wMSWUkVPx7Aa90tSY1O39P2PM4if1tVDkRoXKgm9RDyMJtiwk3m+fgWNvNc
-         n/waB4mT+MnUE6y8zFidD6D3SQfbQBplfwFjmEaFPHasiMOkcuBBLramH0z0qbfxitnI
-         0iYFeLhN5F92orImzRj0xKs+39do0fvWwMlxaX112Nk/KugKGCI/sBKDRhQNv+3t78+H
-         BfzA==
-X-Gm-Message-State: APjAAAXPtkfVCk3S78Q62KdrTeWtRxpvGmD6mXvQwe6j8KHZEaxID2pb
-        9F6Cwa4dtrZ7CoLE+UK2Y5IE0AzBSvo=
-X-Google-Smtp-Source: APXvYqzRfUHq15VFjdxoveR++k8apquWr118w5OMac45MB6NWoxo5dNYjLU01e1ddZRVR6gUV2HNfg==
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr14406088wmh.32.1555151689392;
-        Sat, 13 Apr 2019 03:34:49 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id h9sm8155844wmb.5.2019.04.13.03.34.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:34:48 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [PATCH] slimbus: fix a NULL pointer dereference in of_qcom_slim_ngd_register
-Date:   Sat, 13 Apr 2019 11:34:47 +0100
-Message-Id: <20190413103447.10011-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Sat, 13 Apr 2019 07:03:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 156F461786; Sat, 13 Apr 2019 11:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555153405;
+        bh=nZL2BL0AzTzvR5gi44kn2G1BM0TT7rS2aq+pThuRUes=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=YkJ1s7nQKWGDMYkqsIhjlCxGYU4QJUihEXibHTP3O8rbpjjKYf4CR9OEYF5KvT4yI
+         Dik+yzAXlXBNkLGIU2B+uDlT9O1YKoD8YlMnSxS7fn6aavFWPa5g8llwr4UbKjp+U2
+         Wn9bFK3fsWJKVEJhephiLAwYaaIQbEI0y8IodvbQ=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB0B761577;
+        Sat, 13 Apr 2019 11:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555153404;
+        bh=nZL2BL0AzTzvR5gi44kn2G1BM0TT7rS2aq+pThuRUes=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=for+cnybbQ9F+eaJt7MSYntNDed8wBKQVgHWLm7QOhko4rcI2fjHQ4psiy7y77U3j
+         EwZ+xSA9Gmoj7guuK7MgjihNKID2MxJCnTgCJiNR9gE0iyVJ4ddknps8vDhLI+Nxuu
+         cOtPhqxIRREDd891CnNfjRz39vDHjlJXXnnVYpCg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB0B761577
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] brcmfmac: Use struct_size() in kzalloc()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190403164611.GA29107@embeddedor>
+References: <20190403164611.GA29107@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190413110325.156F461786@smtp.codeaurora.org>
+Date:   Sat, 13 Apr 2019 11:03:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-In case platform_device_alloc fails, the fix returns an error
-code to avoid the NULL pointer dereference.
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct foo {
+>     int stuff;
+>     struct boo entry[];
+> };
+> 
+> size = sizeof(struct foo) + count * sizeof(struct boo);
+> instance = kzalloc(size, GFP_KERNEL)
+> 
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+> 
+> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
+> 
+> Notice that, in this case, variable reqsz is not necessary,
+> hence it is removed.
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Patch applied to wireless-drivers-next.git, thanks.
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 71f094c9ec68..f3585777324c 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1342,6 +1342,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 			return -ENOMEM;
- 
- 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
-+		if (!ngd->pdev) {
-+			kfree(ngd);
-+			return -ENOMEM;
-+		}
- 		ngd->id = id;
- 		ngd->pdev->dev.parent = parent;
- 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
+0cf83903aad0 brcmfmac: Use struct_size() in kzalloc()
+
 -- 
-2.21.0
+https://patchwork.kernel.org/patch/10884189/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
