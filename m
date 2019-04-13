@@ -2,288 +2,250 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417B3C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8DDC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AB92084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="lJ8zXd9U"
+	by mail.kernel.org (Postfix) with ESMTP id BE72C2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfDMUrm (ORCPT
+        id S1727230AbfDMUru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:47:42 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54974 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfDMUrl (ORCPT
+        Sat, 13 Apr 2019 16:47:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55489 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbfDMUrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:47:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so15376737wml.4
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 13:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uR9rShTJsizGsJzil5UPMran4uiRRQJNFMEPdPTMT5E=;
-        b=lJ8zXd9UlPdhQ+yGsawITu7yvXTi5iS2YVOYrLmtSvoB2u2cz5nWEI30ZhUKErgfqw
-         IfDZkX52IZOti48vUIk3Aycrzi0sD3s0TkfW18vl4qQzzWMNiHor9QrlgKOzQPqECije
-         dcTyjW6mPiYoz7Wo/BcydJbYD6aojMgq0XHRS2pucv1vC4W/2BVNBe8+tHWbk18C6er7
-         X71tkdFrXe9sJU8gbfWckqNfcnZ2rj8EFplt9SP9S6qDkhyf6Y1NM7Ngwr13UST2uHG+
-         wiybemqOFwbuWQww67slELdcj/J/lSmjjK0sRyN4be4N9JQeP1rSJZa9WsEhe/0zJl1u
-         uUIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uR9rShTJsizGsJzil5UPMran4uiRRQJNFMEPdPTMT5E=;
-        b=UQdxobS3d8g0mxLcQFRI6oLR5BDXcYPLiyrjD4G9C/kuaVXpa8jUVSOnURLkj1cJZW
-         MGdOqE/Y4+11hGsh152Bebw3RPdHJogcn+X78OWqYl7x70RzCg3e00L9ZRWx5IQgnn1D
-         ndgCGo8FxTjyI27re0rzDpNPUy0jdMM5/jkd0CIdmGjnOw4zjuqFD90fubVZzIWX8DGR
-         JhXFu421M5/6ItxyX70CBnF+5vAR8VIEsCRns8uutiwPCpQO9MUDmAlEmHFSPLR1rC2S
-         BnbbhLfcfGMwV83Rm6+gt4mKSuHmzOdzOFiiENYUfnu5yjU6Vi4SoCD7GIColptsz68L
-         UjwQ==
-X-Gm-Message-State: APjAAAVEtTPr9XRORRs203xGxJK4FkLV5kdw6tm/xraTWL5dSHA9p3Wq
-        UWuV94PwbUvOxvo5MkrbG951Hg==
-X-Google-Smtp-Source: APXvYqwgXfNy1fmZtYINMNdNxsFhVcrtJAR96GcXHem7dTrUpjgLuB4lZ4XiaUqSf6EqitEGfOUcnw==
-X-Received: by 2002:a1c:6502:: with SMTP id z2mr15174503wmb.119.1555188459052;
-        Sat, 13 Apr 2019 13:47:39 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id n11sm73499439wrt.63.2019.04.13.13.47.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 13 Apr 2019 13:47:38 -0700 (PDT)
-Date:   Sat, 13 Apr 2019 22:47:37 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
-Subject: Re: [PATCH v3 net-next 20/24] net: dsa: sja1105: Error out if RGMII
- delays are requested in DT
-Message-ID: <20190413204737.GB2268@nanopsycho.orion>
-References: <20190413012822.30931-1-olteanv@gmail.com>
- <20190413012822.30931-21-olteanv@gmail.com>
+        Sat, 13 Apr 2019 16:47:47 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKkXbB2264817
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 13 Apr 2019 13:46:33 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKkVVm2264814;
+        Sat, 13 Apr 2019 13:46:31 -0700
+Date:   Sat, 13 Apr 2019 13:46:31 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-39ea9baffda91df8bfee9b45610242a3191ea1ec@git.kernel.org>
+Cc:     riel@surriel.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        jannh@google.com, dave.hansen@intel.com, mingo@kernel.org,
+        mingo@redhat.com, x86@kernel.org, tglx@linutronix.de,
+        pbonzini@redhat.com, bigeasy@linutronix.de, Jason@zx2c4.com,
+        luto@kernel.org, rkrcmar@redhat.com, kvm@vger.kernel.org,
+        bp@suse.de
+Reply-To: bp@suse.de, kvm@vger.kernel.org, rkrcmar@redhat.com,
+          Jason@zx2c4.com, luto@kernel.org, bigeasy@linutronix.de,
+          pbonzini@redhat.com, tglx@linutronix.de, x86@kernel.org,
+          mingo@redhat.com, mingo@kernel.org, dave.hansen@intel.com,
+          jannh@google.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          riel@surriel.com
+In-Reply-To: <20190403164156.19645-2-bigeasy@linutronix.de>
+References: <20190403164156.19645-2-bigeasy@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/fpu] x86/fpu: Remove fpu->initialized usage in
+ __fpu__restore_sig()
+Git-Commit-ID: 39ea9baffda91df8bfee9b45610242a3191ea1ec
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190413012822.30931-21-olteanv@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sat, Apr 13, 2019 at 03:28:18AM CEST, olteanv@gmail.com wrote:
->Documentation/devicetree/bindings/net/ethernet.txt is confusing because
->it says what the MAC should not do, but not what it *should* do:
->
->  * "rgmii-rxid" (RGMII with internal RX delay provided by the PHY, the MAC
->     should not add an RX delay in this case)
->
->The gap in semantics is threefold:
->1. Is it illegal for the MAC to apply the Rx internal delay by itself,
->   and simplify the phy_mode (mask off "rgmii-rxid" into "rgmii") before
->   passing it to of_phy_connect? The documentation would suggest yes.
->1. For "rgmii-rxid", while the situation with the Rx clock skew is more
->   or less clear (needs to be added by the PHY), what should the MAC
->   driver do about the Tx delays? Is it an implicit wild card for the
->   MAC to apply delays in the Tx direction if it can? What if those were
->   already added as serpentine PCB traces, how could that be made more
->   obvious through DT bindings so that the MAC doesn't attempt to add
->   them twice and again potentially break the link?
->3. If the interface is a fixed-link and therefore the PHY object is
->   fixed (a purely software entity that obviously cannot add clock
->   skew), what is the meaning of the above property?
->
->So an interpretation of the RGMII bindings was chosen that hopefully
->does not contradict their intention but also makes them more applied.
->The SJA1105 driver understands to act upon "rgmii-*id" phy-mode bindings
->if the port is in the PHY role (either explicitly, or if it is a
->fixed-link). Otherwise it always passes the duty of setting up delays to
->the PHY driver.
->
->The error behavior that this patch adds is required on SJA1105E/T where
->the MAC really cannot apply internal delays. If the other end of the
->fixed-link cannot apply RGMII delays either (this would be specified
->through its own DT bindings), then the situation requires PCB delays.
->
->For SJA1105P/Q/R/S, this is however hardware supported and the error is
->thus only temporary. I created a stub function pointer for configuring
->delays per-port on RXC and TXC, and will implement it when I have access
->to a board with this hardware setup.
->
->Meanwhile do not allow the user to select an invalid configuration.
->
->Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
->Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->---
->Changes in v3:
->None.
->
->Changes in v2:
->Patch is new.
->
-> drivers/net/dsa/sja1105/sja1105.h          |  3 ++
-> drivers/net/dsa/sja1105/sja1105_clocking.c |  7 ++++-
-> drivers/net/dsa/sja1105/sja1105_main.c     | 32 +++++++++++++++++++++-
-> drivers/net/dsa/sja1105/sja1105_spi.c      |  6 ++++
-> 4 files changed, 46 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
->index b7e745c0bb3a..3c16b991032c 100644
->--- a/drivers/net/dsa/sja1105/sja1105.h
->+++ b/drivers/net/dsa/sja1105/sja1105.h
->@@ -22,6 +22,8 @@
-> 
-> struct sja1105_port {
-> 	struct dsa_port *dp;
->+	bool rgmii_rx_delay;
->+	bool rgmii_tx_delay;
-> 	struct work_struct xmit_work;
-> 	struct sja1105_skb_ring xmit_ring;
-> };
->@@ -61,6 +63,7 @@ struct sja1105_info {
-> 	const struct sja1105_table_ops *static_ops;
-> 	const struct sja1105_regs *regs;
-> 	int (*reset_cmd)(const void *ctx, const void *data);
->+	int (*setup_rgmii_delay)(const void *ctx, int port, bool rx, bool tx);
-> 	const char *name;
-> };
-> 
->diff --git a/drivers/net/dsa/sja1105/sja1105_clocking.c b/drivers/net/dsa/sja1105/sja1105_clocking.c
->index d40da3d52464..c02fec181676 100644
->--- a/drivers/net/dsa/sja1105/sja1105_clocking.c
->+++ b/drivers/net/dsa/sja1105/sja1105_clocking.c
->@@ -432,7 +432,12 @@ static int rgmii_clocking_setup(struct sja1105_private *priv, int port)
-> 		dev_err(dev, "Failed to configure Tx pad registers\n");
-> 		return rc;
-> 	}
->-	return 0;
->+	if (!priv->info->setup_rgmii_delay)
->+		return 0;
->+
->+	return priv->info->setup_rgmii_delay(priv, port,
->+					     priv->ports[port].rgmii_rx_delay,
->+					     priv->ports[port].rgmii_tx_delay);
-> }
-> 
-> static int sja1105_cgu_rmii_ref_clk_config(struct sja1105_private *priv,
->diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
->index e4abf8fb2013..5f7ddb1da006 100644
->--- a/drivers/net/dsa/sja1105/sja1105_main.c
->+++ b/drivers/net/dsa/sja1105/sja1105_main.c
->@@ -555,6 +555,21 @@ static int sja1105_static_config_load(struct sja1105_private *priv,
-> 	return sja1105_static_config_upload(priv);
-> }
-> 
->+static void sja1105_parse_rgmii_delay(const struct sja1105_dt_port *in,
->+				      struct sja1105_port *out)
->+{
->+	if (in->role == XMII_MAC)
->+		return;
->+
->+	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_RXID ||
->+	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
->+		out->rgmii_rx_delay = true;
->+
->+	if (in->phy_mode == PHY_INTERFACE_MODE_RGMII_TXID ||
->+	    in->phy_mode == PHY_INTERFACE_MODE_RGMII_ID)
->+		out->rgmii_tx_delay = true;
->+}
->+
-> static int sja1105_parse_ports_node(struct sja1105_private *priv,
-> 				    struct sja1105_dt_port *ports,
-> 				    struct device_node *ports_node)
->@@ -1315,13 +1330,28 @@ static int sja1105_setup(struct dsa_switch *ds)
-> {
-> 	struct sja1105_dt_port ports[SJA1105_NUM_PORTS];
-> 	struct sja1105_private *priv = ds->priv;
->-	int rc;
->+	int rc, i;
-> 
-> 	rc = sja1105_parse_dt(priv, ports);
-> 	if (rc < 0) {
-> 		dev_err(ds->dev, "Failed to parse DT: %d\n", rc);
-> 		return rc;
-> 	}
->+
->+	/* Error out early if internal delays are required through DT
->+	 * and we can't apply them.
->+	 */
->+	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
->+		sja1105_parse_rgmii_delay(&ports[i], &priv->ports[i]);
->+
->+		if ((priv->ports[i].rgmii_rx_delay ||
->+		     priv->ports[i].rgmii_tx_delay) &&
->+		     !priv->info->setup_rgmii_delay) {
->+			dev_err(ds->dev, "RGMII delay not supported\n");
->+			return -EINVAL;
->+		}
->+	}
->+
-> 	/* Create and send configuration down to device */
-> 	rc = sja1105_static_config_load(priv, ports);
-> 	if (rc < 0) {
->diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
->index 09cb28e9be20..e4ef4d8048b2 100644
->--- a/drivers/net/dsa/sja1105/sja1105_spi.c
->+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
->@@ -499,6 +499,7 @@ struct sja1105_info sja1105e_info = {
-> 	.part_no		= SJA1105ET_PART_NO,
-> 	.static_ops		= sja1105e_table_ops,
-> 	.dyn_ops		= sja1105et_dyn_ops,
->+	.setup_rgmii_delay	= NULL,
-> 	.reset_cmd		= sja1105et_reset_cmd,
-> 	.regs			= &sja1105et_regs,
-> 	.name			= "SJA1105E",
->@@ -508,6 +509,7 @@ struct sja1105_info sja1105t_info = {
-> 	.part_no		= SJA1105ET_PART_NO,
-> 	.static_ops		= sja1105t_table_ops,
-> 	.dyn_ops		= sja1105et_dyn_ops,
->+	.setup_rgmii_delay	= NULL,
-> 	.reset_cmd		= sja1105et_reset_cmd,
-> 	.regs			= &sja1105et_regs,
-> 	.name			= "SJA1105T",
->@@ -517,6 +519,7 @@ struct sja1105_info sja1105p_info = {
-> 	.part_no		= SJA1105P_PART_NO,
-> 	.static_ops		= sja1105p_table_ops,
-> 	.dyn_ops		= sja1105pqrs_dyn_ops,
->+	.setup_rgmii_delay	= NULL,
-> 	.reset_cmd		= sja1105pqrs_reset_cmd,
-> 	.regs			= &sja1105pqrs_regs,
-> 	.name			= "SJA1105P",
->@@ -526,6 +529,7 @@ struct sja1105_info sja1105q_info = {
-> 	.part_no		= SJA1105Q_PART_NO,
-> 	.static_ops		= sja1105q_table_ops,
-> 	.dyn_ops		= sja1105pqrs_dyn_ops,
->+	.setup_rgmii_delay	= NULL,
-> 	.reset_cmd		= sja1105pqrs_reset_cmd,
-> 	.regs			= &sja1105pqrs_regs,
-> 	.name			= "SJA1105Q",
->@@ -535,6 +539,7 @@ struct sja1105_info sja1105r_info = {
-> 	.part_no		= SJA1105R_PART_NO,
-> 	.static_ops		= sja1105r_table_ops,
-> 	.dyn_ops		= sja1105pqrs_dyn_ops,
->+	.setup_rgmii_delay	= NULL,
-> 	.reset_cmd		= sja1105pqrs_reset_cmd,
-> 	.regs			= &sja1105pqrs_regs,
-> 	.name			= "SJA1105R",
->@@ -545,6 +550,7 @@ struct sja1105_info sja1105s_info = {
-> 	.static_ops		= sja1105s_table_ops,
-> 	.dyn_ops		= sja1105pqrs_dyn_ops,
-> 	.regs			= &sja1105pqrs_regs,
->+	.setup_rgmii_delay	= NULL,
+Commit-ID:  39ea9baffda91df8bfee9b45610242a3191ea1ec
+Gitweb:     https://git.kernel.org/tip/39ea9baffda91df8bfee9b45610242a3191ea1ec
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Wed, 3 Apr 2019 18:41:30 +0200
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Tue, 9 Apr 2019 19:27:29 +0200
 
-You don't need to set this to NULL. Please avoid that.
+x86/fpu: Remove fpu->initialized usage in __fpu__restore_sig()
 
+This is a preparation for the removal of the ->initialized member in the
+fpu struct.
 
-> 	.reset_cmd		= sja1105pqrs_reset_cmd,
-> 	.name			= "SJA1105S",
-> };
->-- 
->2.17.1
->
+__fpu__restore_sig() is deactivating the FPU via fpu__drop() and then
+setting manually ->initialized followed by fpu__restore(). The result is
+that it is possible to manipulate fpu->state and the state of registers
+won't be saved/restored on a context switch which would overwrite
+fpu->state:
+
+fpu__drop(fpu):
+  ...
+  fpu->initialized = 0;
+  preempt_enable();
+
+  <--- context switch
+
+Don't access the fpu->state while the content is read from user space
+and examined/sanitized. Use a temporary kmalloc() buffer for the
+preparation of the FPU registers and once the state is considered okay,
+load it. Should something go wrong, return with an error and without
+altering the original FPU registers.
+
+The removal of fpu__initialize() is a nop because fpu->initialized is
+already set for the user task.
+
+ [ bp: Massage a bit. ]
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: kvm ML <kvm@vger.kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190403164156.19645-2-bigeasy@linutronix.de
+---
+ arch/x86/include/asm/fpu/signal.h |  2 +-
+ arch/x86/kernel/fpu/regset.c      |  5 ++---
+ arch/x86/kernel/fpu/signal.c      | 40 +++++++++++++++------------------------
+ 3 files changed, 18 insertions(+), 29 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/signal.h b/arch/x86/include/asm/fpu/signal.h
+index 44bbc39a57b3..7fb516b6893a 100644
+--- a/arch/x86/include/asm/fpu/signal.h
++++ b/arch/x86/include/asm/fpu/signal.h
+@@ -22,7 +22,7 @@ int ia32_setup_frame(int sig, struct ksignal *ksig,
+ 
+ extern void convert_from_fxsr(struct user_i387_ia32_struct *env,
+ 			      struct task_struct *tsk);
+-extern void convert_to_fxsr(struct task_struct *tsk,
++extern void convert_to_fxsr(struct fxregs_state *fxsave,
+ 			    const struct user_i387_ia32_struct *env);
+ 
+ unsigned long
+diff --git a/arch/x86/kernel/fpu/regset.c b/arch/x86/kernel/fpu/regset.c
+index bc02f5144b95..5dbc099178a8 100644
+--- a/arch/x86/kernel/fpu/regset.c
++++ b/arch/x86/kernel/fpu/regset.c
+@@ -269,11 +269,10 @@ convert_from_fxsr(struct user_i387_ia32_struct *env, struct task_struct *tsk)
+ 		memcpy(&to[i], &from[i], sizeof(to[0]));
+ }
+ 
+-void convert_to_fxsr(struct task_struct *tsk,
++void convert_to_fxsr(struct fxregs_state *fxsave,
+ 		     const struct user_i387_ia32_struct *env)
+ 
+ {
+-	struct fxregs_state *fxsave = &tsk->thread.fpu.state.fxsave;
+ 	struct _fpreg *from = (struct _fpreg *) &env->st_space[0];
+ 	struct _fpxreg *to = (struct _fpxreg *) &fxsave->st_space[0];
+ 	int i;
+@@ -350,7 +349,7 @@ int fpregs_set(struct task_struct *target, const struct user_regset *regset,
+ 
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &env, 0, -1);
+ 	if (!ret)
+-		convert_to_fxsr(target, &env);
++		convert_to_fxsr(&target->thread.fpu.state.fxsave, &env);
+ 
+ 	/*
+ 	 * update the header bit in the xsave header, indicating the
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 55b80de13ea5..7296a9bb78e7 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -207,11 +207,11 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ }
+ 
+ static inline void
+-sanitize_restored_xstate(struct task_struct *tsk,
++sanitize_restored_xstate(union fpregs_state *state,
+ 			 struct user_i387_ia32_struct *ia32_env,
+ 			 u64 xfeatures, int fx_only)
+ {
+-	struct xregs_state *xsave = &tsk->thread.fpu.state.xsave;
++	struct xregs_state *xsave = &state->xsave;
+ 	struct xstate_header *header = &xsave->header;
+ 
+ 	if (use_xsave()) {
+@@ -238,7 +238,7 @@ sanitize_restored_xstate(struct task_struct *tsk,
+ 		 */
+ 		xsave->i387.mxcsr &= mxcsr_feature_mask;
+ 
+-		convert_to_fxsr(tsk, ia32_env);
++		convert_to_fxsr(&state->fxsave, ia32_env);
+ 	}
+ }
+ 
+@@ -284,8 +284,6 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 	if (!access_ok(buf, size))
+ 		return -EACCES;
+ 
+-	fpu__initialize(fpu);
+-
+ 	if (!static_cpu_has(X86_FEATURE_FPU))
+ 		return fpregs_soft_set(current, NULL,
+ 				       0, sizeof(struct user_i387_ia32_struct),
+@@ -315,40 +313,32 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		 * header. Validate and sanitize the copied state.
+ 		 */
+ 		struct user_i387_ia32_struct env;
++		union fpregs_state *state;
+ 		int err = 0;
++		void *tmp;
+ 
+-		/*
+-		 * Drop the current fpu which clears fpu->initialized. This ensures
+-		 * that any context-switch during the copy of the new state,
+-		 * avoids the intermediate state from getting restored/saved.
+-		 * Thus avoiding the new restored state from getting corrupted.
+-		 * We will be ready to restore/save the state only after
+-		 * fpu->initialized is again set.
+-		 */
+-		fpu__drop(fpu);
++		tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
++		if (!tmp)
++			return -ENOMEM;
++		state = PTR_ALIGN(tmp, 64);
+ 
+ 		if (using_compacted_format()) {
+-			err = copy_user_to_xstate(&fpu->state.xsave, buf_fx);
++			err = copy_user_to_xstate(&state->xsave, buf_fx);
+ 		} else {
+-			err = __copy_from_user(&fpu->state.xsave, buf_fx, state_size);
++			err = __copy_from_user(&state->xsave, buf_fx, state_size);
+ 
+ 			if (!err && state_size > offsetof(struct xregs_state, header))
+-				err = validate_xstate_header(&fpu->state.xsave.header);
++				err = validate_xstate_header(&state->xsave.header);
+ 		}
+ 
+ 		if (err || __copy_from_user(&env, buf, sizeof(env))) {
+-			fpstate_init(&fpu->state);
+-			trace_x86_fpu_init_state(fpu);
+ 			err = -1;
+ 		} else {
+-			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
++			sanitize_restored_xstate(state, &env, xfeatures, fx_only);
++			copy_kernel_to_fpregs(state);
+ 		}
+ 
+-		local_bh_disable();
+-		fpu->initialized = 1;
+-		fpu__restore(fpu);
+-		local_bh_enable();
+-
++		kfree(tmp);
+ 		return err;
+ 	} else {
+ 		/*
