@@ -2,144 +2,106 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77B6C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9EAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854BE20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AEF218C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H/WN6u7E"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mVMDiEPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfDMBwg (ORCPT
+        id S1727101AbfDMCBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 21:52:36 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:45892 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbfDMBwf (ORCPT
+        Fri, 12 Apr 2019 22:01:21 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38885 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfDMCBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 21:52:35 -0400
-Received: by mail-ua1-f66.google.com with SMTP id c13so3854521uao.12
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 18:52:35 -0700 (PDT)
+        Fri, 12 Apr 2019 22:01:21 -0400
+Received: by mail-it1-f195.google.com with SMTP id f22so18856882ita.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 19:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ley2MiL8l84jX50Dn2h5Czl1aGPEqvnDOuoO900uIzI=;
-        b=H/WN6u7ESfScq5rF9An05z++oWff1g6k3o08uD6k6qFEpoOhq5vmMymBr5iPOm0DKN
-         MRR+x5UCBxmbCn/+GpDJdjzQWaZDc7cE9EdKU1Z5KQ1m19Jp8ndLxdHEWgxQ2cF8dGDy
-         hmjYfotKcxQu3RyvydjrPvEMnjlA+MBDJFYy99u4JKLWlI3s9bWruLL3QEDVXp0g2vtc
-         AJf8QbGiksu5mPOmfa65uK/whZkwRFYyieYes0cJogRBSO/tfbhbBMIEz+u5XItOksUh
-         P4s/B9E344NapQVUg9RtU83mKqjCUc+JwSS/aIjAzyZe58UD715iyCBNGAFfy4UeJ+XD
-         6IMQ==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+hzpRKro/N1+KjPsI2arcM04yh6Mwp469LzcJDDeQVM=;
+        b=mVMDiEPRK0liceAJb39tJZOJ7iuOEc4Wh3Eb1kJo7IGT1ZqtirUr8ka4ccKgcG4MJn
+         xRXk2kZPHIcFzQRoU0UR7nutGms0kPxL/3CkYfMTWrzaHcw9ii2Tplt+xDFBApZc5dHX
+         cLef80qZv+heFk8yVqakfBMTigeIaoG+AmG265eH8C/AaYMIuoWbHCV+rq9BuXDc3OsT
+         AV9vjck/IoxRGS9QrDm2sBeyF0IOox7b8gy8wuD1QFYaderw8VsS3dXLswLvodIJVe+V
+         q1sqtTksZWEi3muRji1hibls2sRKS48ICGSQ954jbyT9hpybY12JeGMjrzFEX74xKyqW
+         QFaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ley2MiL8l84jX50Dn2h5Czl1aGPEqvnDOuoO900uIzI=;
-        b=lqNl8SEJxtaIIck57T2EDxaH2N7lVfegKxTcl5IxzklVCREkipDdKB79z1xPO2hByz
-         koiKX1ghtkUK9TDIJgGrqFYXjZFIbqO0AuSNaWSd/dB7FgGK+wA8HhxBERjjmpqJZKsg
-         G59kR3+bNAOnyhW8lFQAajLGXZSgHRZy+J2IzOvD+D+KhYEn7eZQ6THIppF1ObfyLQC2
-         aOYmXL3HXejJ3lRm9p547UtS7Xu3ehXp+n4peZsNWGSn7lj4OFiyq2yhgELO19uore6+
-         xFbqepRhXyS/kLSOkVo9YkWK2IlttBWTvMS96VWcoDo6sH2GYHyEkfv7SZg36BZQiSYM
-         XfcQ==
-X-Gm-Message-State: APjAAAXPZ3n4w/pezQ+AddbPfFUy01Fsf+cSiecGtxN+fvK4W90BWFqS
-        mYHbjyxtxbOejCX3Y0sHRtaLTFiJaSS32d49nqarVSsCwwM=
-X-Google-Smtp-Source: APXvYqzizaJg/lGulyYWcyU09rFLPAiAQasm0MnzwQVVHHeb6mMq05XYuKlbSWAokic0j84LPkE7A4QMTSU8Lg3uNDs=
-X-Received: by 2002:a9f:2c09:: with SMTP id r9mr30586864uaj.56.1555120354009;
- Fri, 12 Apr 2019 18:52:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+hzpRKro/N1+KjPsI2arcM04yh6Mwp469LzcJDDeQVM=;
+        b=LYAm0rm68mF6XJysg0cD9z1oECxKVZNSMIhkMV9c3+vAf2Vhio1lVy5Khh6wraG8az
+         1RAwJSsjEnkhYT0/mOOGh32Q0dBeaCf7JszGxAgkyJtDK8het2Lk4V/SHmV/ehOczKP4
+         0FCdR/HD/5VuzNcusaiFnPtP5FJcMnxYWSu2ylkHaN0HlrLqu8OKD0JKXZNWD/xcRN8t
+         Vtgc3BBsYwygAemzdYfYXSgaG1jj3sWHx8qxS2EKp09QizHV2t+mUdEUNjjcrS2iFBtB
+         RqO/BeVtdDu+JVOqMSVaymFmJrSPA/Ewz8EvMjPYyemqTfSopvcAI2dAf0AEdZQAWTww
+         fcHA==
+X-Gm-Message-State: APjAAAWN2tlNa7ES20UudzlezWcZpCGjxBcBC6FvLjtbO4SFhKdoDT82
+        8h6OryU5P7wCnczdmhjvj2JaChz4tSU=
+X-Google-Smtp-Source: APXvYqwGbE8R8O1lyvCcVbMC1YOrPxSXhpmyliWHHsd2K+CctAuU+QvsGB/1igpfeN4hAAeYuSsxFg==
+X-Received: by 2002:a05:660c:18b:: with SMTP id v11mr16406208itj.147.1555120879991;
+        Fri, 12 Apr 2019 19:01:19 -0700 (PDT)
+Received: from viisi.lan (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id v187sm7198473ita.0.2019.04.12.19.01.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 19:01:19 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-riscv@lists.infradead.org, gregkh@linuxfoundation.org
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v5 0/2]  tty: serial: add DT bindings and serial driver for the SiFive FU540 UART
+Date:   Fri, 12 Apr 2019 19:01:09 -0700
+Message-Id: <20190413020111.23400-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190408212855.233198-1-joel@joelfernandes.org>
- <CAK7LNAQgvhozubW9b2yqnxHAVE17VHHZiq6N4Py_TzFCHN0YUQ@mail.gmail.com>
- <20190412180014.GA175945@google.com> <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
-In-Reply-To: <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 12 Apr 2019 18:52:22 -0700
-Message-ID: <CAKOZueuf8qM1O7c+m7zRHv1b6-YsZmWoTBfErBLY+yV1pyESmQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] Provide in-kernel headers to make extending kernel easier
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 6:49 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Sat, Apr 13, 2019 at 3:02 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> >
-> > > > +extern char kernel_headers_data;
-> > > > +extern char kernel_headers_data_end;
-> > > > +
-> > > > +static ssize_t
-> > > > +ikheaders_read_current(struct file *file, char __user *buf,
-> > >
-> > > Could you stretch this line ?
-> > > It will still fit in 80-cols.
-> > >
-> > > (This is a coding style error in kernel/configs.c)
-> >
-> > It takes 87 cols if I expand, so I'll leave it as is.
-> >
->
->
-> Sorry if what I said was unclear.
->
-> Since I just did not a good reason to put
-> "static ssize_t" in the previous line,
-> I meant like follows:
->
->
-> [Before]
-> static ssize_t
-> ikheaders_read_current(struct file *file, char __user *buf,
->                        size_t len, loff_t *offset)
->
->
->
-> [After]
-> static ssize_t ikheaders_read_current(struct file *file, char __user *buf,
->                                       size_t len, loff_t *offset)
->
->
-> (takes 74-cols.)
->
->
-> (I am sending this from Gmail, so I am not sure
-> how it will look like from you...)
->
->
-> Anyway, it is super-bikeshedding stuff.
-> It is OK as-is.
->
+This series adds a serial driver, with console support, for the
+UART IP block present on the SiFive FU540 SoC.  The programming
+model is straightforward, but unique.
 
-What about sorting the files for determinism?
+Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
+open-source FSBL (with appropriate patches to the DT data).
+
+This fifth version fixes a bug in the set_termios handler,
+found by Andreas Schwab <schwab@suse.de>.
+
+The patches in this series can also be found, with the PRCI patches,
+DT patches, and DT prerequisite patch, at:
+
+https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
+
+
+- Paul
+
+Paul Walmsley (2):
+  dt-bindings: serial: add documentation for the SiFive UART driver
+  tty: serial: add driver for the SiFive UART
+
+ .../bindings/serial/sifive-serial.txt         |   33 +
+ drivers/tty/serial/Kconfig                    |   24 +
+ drivers/tty/serial/Makefile                   |    1 +
+ drivers/tty/serial/sifive.c                   | 1056 +++++++++++++++++
+ include/uapi/linux/serial_core.h              |    3 +
+ 5 files changed, 1117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+ create mode 100644 drivers/tty/serial/sifive.c
+
+-- 
+2.20.1
+
