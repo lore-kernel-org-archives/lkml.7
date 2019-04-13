@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2EAC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F907C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A0720850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B7620850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCdxEQLy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5J/TuVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfDMB2q (ORCPT
+        id S1727322AbfDMB2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 21:28:46 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36929 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfDMB2n (ORCPT
+        Fri, 12 Apr 2019 21:28:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39556 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfDMB2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 21:28:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v14so13005837wmf.2;
-        Fri, 12 Apr 2019 18:28:42 -0700 (PDT)
+        Fri, 12 Apr 2019 21:28:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so12998286wmk.4;
+        Fri, 12 Apr 2019 18:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mRyDydjM/0jLstVpogiOU2WllXY8Mx2/SEIAR0LYjQQ=;
-        b=lCdxEQLyzdZ+Q7JnBHenfxMQTUJaNDd1DBnydWIieYUTKmh1JZ/TwFM5Kmko/otWk1
-         Gr4rTtLREsraNuCCuxstuxp33y1FFNBsMmfpWiYtwqNd25uZo96LhmdJGvns/NyJ9UPu
-         uKodS9Aozf9Qdu1fzksuaXq4J8BdrbrceSpjt502ZeNDRXELZZg+Hwxfin4AyvKxNHKH
-         fnxqlMd9wXw3NySQEED8f876Rhhr24yHXol0lBQum5LUbckmd44CTZBe5dRemWjLM2MV
-         fulFL8BXFl9E3WVsRoTZA4tTCdyQYFZb7ewPAPJYst+ldZw4zdgkEeNIhFYJV8k/3pqr
-         xtNQ==
+        bh=9cWj4xQqA+GWCHrHu4/kVBdzTRwBkOxunvX43iPa314=;
+        b=b5J/TuVwEodJuAjtGoToluhBcqW0/7F6U5VfXYd2ia2UlOLMKgycEjwB3ERs8KyiMx
+         vaeZwb+pAP9yZiYeQjtEGfKu+1osCYPd38Bubu5LOklA87aS8k8bz3ocp20HdYEpeFvS
+         2vwxAvsW554yd4tRK3ptH0JRAJfKiUZimKhwvHm7hGD2zaQlhurHtVnCw0EocIDqiRBe
+         DD9gN2c6KJnE1qaPQl8MZbOocG3WPihOFf8TjoEe8LdJjeRStOY0XujSHruF8cXGxmCQ
+         FACxz1N5+Tc81va9AM+15hpeTWOspQdXc895crP4vrOTqDQAIs3jpfpdyv6E9dWOu2hO
+         VBNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mRyDydjM/0jLstVpogiOU2WllXY8Mx2/SEIAR0LYjQQ=;
-        b=A/YOQOY549XoSOI0ZqLmq4DomcMHAVyjpyvLpxslbshmyFiYq+Zt5Y9TkTU0fdkyea
-         U+DmasgLqVHkuXK/pmvm2Gx7jSsNioOtBXkxW38Pbe0gjG+M68LQ5DDrbtspB9pBy75C
-         kzFh6Nznw6Pv5i46pLAzRFJc+uDNIQYexmQ6qHVikfpKNb1DCk/eD6Iw8aNCqXHNdNyT
-         tDrsbrnkQvs6GFtMMFLGXfKcN0Iaiay+gfPWgYASxJxgetSaAHZ7jD0NZfpOxbac8dMX
-         kbFExmQEKvTMYjOLp7mWnet4plWAhHTk0M9CZah2bflQdAIYKODUSBDhA5K39xqTuHx4
-         gT7w==
-X-Gm-Message-State: APjAAAV0LLcAOCqaU0RZLkvNiCgCMSsnCuFJlfttaveAiLburj1oqpz4
-        DX32eJFyvXpvkwEMojPJ/rHsn3+pb7s=
-X-Google-Smtp-Source: APXvYqweb8ZnSlNzgXre2H4B/K0SQ7D50wTn4s+jS/0ul8+DJhP1kKjYf7ihklG0c7uXdA0O1tUvyw==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr13720599wme.29.1555118921873;
-        Fri, 12 Apr 2019 18:28:41 -0700 (PDT)
+        bh=9cWj4xQqA+GWCHrHu4/kVBdzTRwBkOxunvX43iPa314=;
+        b=e/RXCIOQHjXjXUOoeqxVz4VpBAEm7lDamB+1Avq6zO1PGy6vBn8mx1jghkXalfEpNH
+         /Pzxjea6kfmZe7J6zAmAqV8ppQtH5P4vbOAuvIza+vOGBxasGTzvAzHPtl0mbf8ngciW
+         8aFO7xADcZ+5b9kOrrXli0LkoelJAdAtDCQghOhAcJ+RZXKsAp9MM0Dp6qfh6/qhXP3z
+         qS7a4Ril8cV80eX3mhYPsy0++GF4TUp7m75CLZSBaRjVQrCn6/Pg3F4XwKQeCg1kKiBf
+         PlfS4WkKPVlpw2qrP+JYsIQ0Sy2LphR4anw6u0b41e4N0gTB11b2dcu65DSwKWzkJzWK
+         3WzQ==
+X-Gm-Message-State: APjAAAW1bVYfPNybqd+JeCXCyucEb2QbsFum7JSpBvuSnBU1hH8bOQqO
+        FxAQXgdQeZxQbzK30teGnonwqHCF4v4=
+X-Google-Smtp-Source: APXvYqzRdigkm6D7IEqg4UVxo/JC13bzF1IDJZguiePFqnaZZ6JSGhLH3nctMKMLtbnXxrLLaAR+fw==
+X-Received: by 2002:a7b:c054:: with SMTP id u20mr13302990wmc.100.1555118925317;
+        Fri, 12 Apr 2019 18:28:45 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id r9sm8053141wmh.38.2019.04.12.18.28.40
+        by smtp.gmail.com with ESMTPSA id r9sm8053141wmh.38.2019.04.12.18.28.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 18:28:41 -0700 (PDT)
+        Fri, 12 Apr 2019 18:28:44 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         georg.waibel@sensor-technik.de, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3 net-next 10/24] net: dsa: Unset vlan_filtering when ports leave the bridge
-Date:   Sat, 13 Apr 2019 04:28:08 +0300
-Message-Id: <20190413012822.30931-11-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 13/24] net: dsa: Allow drivers to filter packets they can decode source port from
+Date:   Sat, 13 Apr 2019 04:28:11 +0300
+Message-Id: <20190413012822.30931-14-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190413012822.30931-1-olteanv@gmail.com>
 References: <20190413012822.30931-1-olteanv@gmail.com>
@@ -71,77 +71,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When ports are standalone (after they left the bridge), they should have
-no VLAN filtering semantics (they should pass all traffic to the CPU).
-Currently this is not true for switchdev drivers, because the bridge
-"forgets" to unset that.
+Frames get processed by DSA and redirected to switch port net devices
+based on the ETH_P_XDSA multiplexed packet_type handler found by the
+network stack when calling eth_type_trans().
 
-Normally one would think that doing this at the bridge layer would be a
-better idea, i.e. call br_vlan_filter_toggle() from br_del_if(), similar
-to how nbp_vlan_init() is called from br_add_if().
+The running assumption is that once the DSA .rcv function is called, DSA
+is always able to decode the switch tag in order to change the skb->dev
+from its master.
 
-However what complicates that approach, and makes this one preferable,
-is the fact that for the bridge core, vlan_filtering is a per-bridge
-setting, whereas for switchdev/DSA it is per-port. Also there are
-switches where the setting is per the entire device, and unsetting
-vlan_filtering one by one, for each leaving port, would not be possible
-from the bridge core without a certain level of awareness. So do this in
-DSA and let drivers be unaware of it.
+However there are tagging protocols (such as the new DSA_TAG_PROTO_SJA1105,
+user of DSA_TAG_PROTO_8021Q) where this assumption is not completely
+true, since switch tagging piggybacks on the absence of a vlan_filtering
+bridge. Moreover, management traffic (BPDU, PTP) for this switch doesn't
+rely on switch tagging, but on a different mechanism. So it would make
+sense to at least be able to terminate that.
+
+Having DSA receive traffic it can't decode would put it in an impossible
+situation: the eth_type_trans() function would invoke the DSA .rcv(),
+which could not change skb->dev, then eth_type_trans() would be invoked
+again, which again would call the DSA .rcv, and the packet would never
+be able to exit the DSA filter and would spiral in a loop until the
+whole system dies.
+
+This happens because eth_type_trans() doesn't actually look at the skb
+(so as to identify a potential tag) when it deems it as being
+ETH_P_XDSA. It just checks whether skb->dev has a DSA private pointer
+installed (therefore it's a DSA master) and that there exists a .rcv
+callback (everybody except DSA_TAG_PROTO_NONE has that). This is
+understandable as there are many switch tags out there, and exhaustively
+checking for all of them is far from ideal.
+
+The solution lies in introducing a filtering function for each tagging
+protocol. In the absence of a filtering function, all traffic is passed
+to the .rcv DSA callback. The tagging protocol should see the filtering
+function as a pre-validation that it can decode the incoming skb. The
+traffic that doesn't match the filter will bypass the DSA .rcv callback
+and be left on the master netdevice, which wasn't previously possible.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
 Changes in v3:
+Reworked from a simple boolean (uses_tag_protocol) into a function where
+the driver has full insight into both the skb as well as the state of
+the master netdevice (and implicitly the cpu_dp and the entire DSA
+switch tree).
+
+Changes in v2:
 Patch is new.
 
- net/dsa/switch.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ include/net/dsa.h  | 15 +++++++++++++++
+ net/dsa/dsa2.c     |  1 +
+ net/dsa/legacy.c   |  1 +
+ net/ethernet/eth.c |  6 +++++-
+ 4 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/net/dsa/switch.c b/net/dsa/switch.c
-index 03b8d8928651..7d8cd9bc0ecc 100644
---- a/net/dsa/switch.c
-+++ b/net/dsa/switch.c
-@@ -72,6 +72,9 @@ static int dsa_switch_bridge_join(struct dsa_switch *ds,
- static int dsa_switch_bridge_leave(struct dsa_switch *ds,
- 				   struct dsa_notifier_bridge_info *info)
- {
-+	bool unset_vlan_filtering = br_vlan_enabled(info->br);
-+	int err, i;
-+
- 	if (ds->index == info->sw_index && ds->ops->port_bridge_leave)
- 		ds->ops->port_bridge_leave(ds, info->port, info->br);
- 
-@@ -79,6 +82,31 @@ static int dsa_switch_bridge_leave(struct dsa_switch *ds,
- 		ds->ops->crosschip_bridge_leave(ds, info->sw_index, info->port,
- 						info->br);
- 
-+	/* If the bridge was vlan_filtering, the bridge core doesn't trigger an
-+	 * event for changing vlan_filtering setting upon slave ports leaving
-+	 * it. That is a good thing, because that lets us handle it and also
-+	 * handle the case where the switch's vlan_filtering setting is global
-+	 * (not per port). When that happens, the correct moment to trigger the
-+	 * vlan_filtering callback is only when the last port left this bridge.
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 94a9f096568d..e46c107507d8 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -55,6 +55,11 @@ struct dsa_device_ops {
+ 			       struct packet_type *pt);
+ 	int (*flow_dissect)(const struct sk_buff *skb, __be16 *proto,
+ 			    int *offset);
++	/* Used to determine which traffic should match the DSA filter in
++	 * eth_type_trans, and which, if any, should bypass it and be processed
++	 * as regular on the master net device.
 +	 */
-+	if (unset_vlan_filtering && ds->vlan_filtering_is_global) {
-+		for (i = 0; i < ds->num_ports; i++) {
-+			if (i == info->port)
-+				continue;
-+			if (dsa_to_port(ds, i)->bridge_dev == info->br) {
-+				unset_vlan_filtering = false;
-+				break;
-+			}
-+		}
-+	}
-+	if (unset_vlan_filtering) {
-+		struct switchdev_trans trans = {0};
-+
-+		err = dsa_port_vlan_filtering(&ds->ports[info->port],
-+					      false, &trans);
-+		if (err && err != EOPNOTSUPP)
-+			return err;
-+	}
- 	return 0;
++	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
+ 	unsigned int overhead;
+ };
+ 
+@@ -128,6 +133,7 @@ struct dsa_port {
+ 	struct dsa_switch_tree *dst;
+ 	struct sk_buff *(*rcv)(struct sk_buff *skb, struct net_device *dev,
+ 			       struct packet_type *pt);
++	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
+ 
+ 	enum {
+ 		DSA_PORT_TYPE_UNUSED = 0,
+@@ -508,6 +514,15 @@ static inline bool netdev_uses_dsa(struct net_device *dev)
+ 	return false;
  }
  
++static inline bool dsa_can_decode(const struct sk_buff *skb,
++				  struct net_device *dev)
++{
++#if IS_ENABLED(CONFIG_NET_DSA)
++	return !dev->dsa_ptr->filter || dev->dsa_ptr->filter(skb, dev);
++#endif
++	return false;
++}
++
+ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n);
+ void dsa_unregister_switch(struct dsa_switch *ds);
+ int dsa_register_switch(struct dsa_switch *ds);
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index 17817c1a7fbd..e28cc98cf358 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -584,6 +584,7 @@ static int dsa_port_parse_cpu(struct dsa_port *dp, struct net_device *master)
+ 	}
+ 
+ 	dp->type = DSA_PORT_TYPE_CPU;
++	dp->filter = tag_ops->filter;
+ 	dp->rcv = tag_ops->rcv;
+ 	dp->tag_ops = tag_ops;
+ 	dp->master = master;
+diff --git a/net/dsa/legacy.c b/net/dsa/legacy.c
+index cb42939db776..33cb4e7cf74b 100644
+--- a/net/dsa/legacy.c
++++ b/net/dsa/legacy.c
+@@ -159,6 +159,7 @@ static int dsa_switch_setup_one(struct dsa_switch *ds,
+ 		dst->cpu_dp->tag_ops = tag_ops;
+ 
+ 		/* Few copies for faster access in master receive hot path */
++		dst->cpu_dp->filter = dst->cpu_dp->tag_ops->filter;
+ 		dst->cpu_dp->rcv = dst->cpu_dp->tag_ops->rcv;
+ 		dst->cpu_dp->dst = dst;
+ 	}
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index f7a3d7a171c7..0c984bb01c0a 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -183,8 +183,12 @@ __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
+ 	 * at all, so we check here whether one of those tagging
+ 	 * variants has been configured on the receiving interface,
+ 	 * and if so, set skb->protocol without looking at the packet.
++	 * The DSA tagging protocol may be able to decode some but not all
++	 * traffic (for example only for management). In that case give it the
++	 * option to filter the packets from which it can decode source port
++	 * information.
+ 	 */
+-	if (unlikely(netdev_uses_dsa(dev)))
++	if (unlikely(netdev_uses_dsa(dev)) && dsa_can_decode(skb, dev))
+ 		return htons(ETH_P_XDSA);
+ 
+ 	if (likely(eth_proto_is_802_3(eth->h_proto)))
 -- 
 2.17.1
 
