@@ -5,75 +5,92 @@ X-Spam-Level:
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FECBC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2215EC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176F42084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4132171F
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="X3w8IXwa"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="j718zd9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfDMLnY (ORCPT
+        id S1727019AbfDMMC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 07:43:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38134 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfDMLnX (ORCPT
+        Sat, 13 Apr 2019 08:02:26 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34484 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfDMMC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 07:43:23 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a6so10135097oie.5;
-        Sat, 13 Apr 2019 04:43:23 -0700 (PDT)
+        Sat, 13 Apr 2019 08:02:26 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v10so10180488oib.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 05:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8PhNdP0asdVObS6Xc/5QPUT8gFKo5WEOH+jVFHzdyF0=;
-        b=X3w8IXwa+SzR5FfzM9rOMzxd4hw8y+kSdy6o78ko467+SvDzG1kvjZP9lrs1c2Dhnw
-         Iv6GYbYxl32ta2f+S90yzujPiPggs4XH2TZLFcaQ6EHV09gN/tJBnYi17bqBIubR2Fzm
-         +5OEDDkZuZairFfga1GZpwZaxvULbunu0gtGJMgLDu2DDJidU42NyU92ptmh+z/2HdoN
-         f00KlPIpQS8G6NJbL6e1BUihId4CxNNGQMpaEpbrBdAvh/M0g4JcFqM9e1KbD2ipdtpD
-         h9j4ZBx19cCWBvyi3/1OW1rCUMALF90fAAuzDWiVwy62ATAgTKHAbUsZ6Y/ThNKqEQCk
-         XgPw==
+        bh=lYW1l5O3FluBf8+XNARKHUH9qJumpHRGxiYJg+cTA6M=;
+        b=j718zd9ijociYSwQhRpEiQC/8sCqLoJhrI/XIRABPfmVE90t2uL8UlrXRdw/TRie9t
+         QlrBfrouQ0Y6RhoDC8XkYRyTPz/LQFYt0TANlUQp11NcAoULMdSmMBBCarw3IU2ggnBI
+         AsKHgUMYNkyECx5T+L7h8mCllopo42N6V8OgN+had7EaaHOwrJkk9FUMTTvuFRLps+9Q
+         YjLbFRPhjInUO69rfKeYKCbv0CwtSeacI2ePkcgSQpTNjnjDAFAX1DA7OkKdshdMhL7L
+         EKQHGxbBEh8xSwsGk3FBV9UFLCSWDlhvg4gqJC1dt76Make8kzP+bW6I15jxctTaIOkp
+         cewA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8PhNdP0asdVObS6Xc/5QPUT8gFKo5WEOH+jVFHzdyF0=;
-        b=s3JVDaQwGO0tII92pULp/fYKdvxVwUJz2iEWI9X+3Q5YM/rVi/gXBJVJmzDpjX1KGR
-         pBOqlHLXg4loNc75aESo6xvVpnwgKdb9xLSh1pGcDWN1oloOvBhDp6Z0SBLmgozEG4Kc
-         wAqGZODqnHepjIesxi5KbQ91RNrCeQV38z4pIXiKixNlMGSmNT0B6rtFxg5pMnfL/K6o
-         7RK7junNRX94uNvjrVsHXngYj12h8Lnc0WNqMSTiqg2XnLaCLcQGgSLJxldP4fPX+fdW
-         FiPUb+7uFQbdSG1GJv1Ocl481mFeS2553b2AhfbC01PjkKkuRZ7MFVPAZYsSCyA7otNN
-         MJHg==
-X-Gm-Message-State: APjAAAXjnS7ppwFmqXjEtqpBZ4HdODj4m/73m3oWXhIM/5UF4eGLJBgn
-        dW4HElgjb8ytEx27FbdvA/nQrGieCSOlozWv9G0=
-X-Google-Smtp-Source: APXvYqxqXFZDeb3MD3FPgVmZ4ZsFdh+cixd6uEq+e7w+qpemMnK54guuTIMepO8ZQ/3ObliIu7U2Wb6CvLTe+yJydVg=
-X-Received: by 2002:aca:d487:: with SMTP id l129mr14029433oig.129.1555155802759;
- Sat, 13 Apr 2019 04:43:22 -0700 (PDT)
+        bh=lYW1l5O3FluBf8+XNARKHUH9qJumpHRGxiYJg+cTA6M=;
+        b=l69JjF1gsBTCP7v0d6vqF77b+AoL/Sd4gMLpsa31NWj9pSqUlZ7j/MUZMxqFCieh3q
+         JDBivk/0dPf2VfRtN2eXj/2w37a3pWEAF0tXAvIU7LM2oe+DFw0VnB+rmW4mcukEsSJU
+         U1tsQVYxcrDVuI5ywu+qfKU+N0fBkHalzJBr5jZN9hhTbGS3rtUByhDySdWHW5+bXfbh
+         2UmUgiDwTSaSUl1jBjvgUEk0ovB2QxChA/GV9GiPAcocs2psPUgmt0j0YirwrYRmOdE9
+         xMN/K5YJ7BfrIBWN1ePbgUVyksbZbiUIlYJcpIYC/dxqWC6CRzShUnBsMN+w0NPsj/wn
+         ZxjA==
+X-Gm-Message-State: APjAAAUH+wxxlOax93IKZLSWPjoUi9tix0gCeDql82pYNS88nI86fHSH
+        z2c00fSR90JaZKYpFq/h4I5HBlEnGKTRoTSJf44=
+X-Google-Smtp-Source: APXvYqzsKWcXSlWINfu/7neHTQkWozJwcAACSs3EG8yenqYsU7UgecbMArvvjB6K9A2LGvI0JPIguXUmwEVkVjUf+aY=
+X-Received: by 2002:aca:b68a:: with SMTP id g132mr13342536oif.47.1555156945654;
+ Sat, 13 Apr 2019 05:02:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412100221.26740-1-glaroque@baylibre.com> <20190412100221.26740-3-glaroque@baylibre.com>
-In-Reply-To: <20190412100221.26740-3-glaroque@baylibre.com>
+References: <20190412100518.24470-1-narmstrong@baylibre.com> <20190412100518.24470-2-narmstrong@baylibre.com>
+In-Reply-To: <20190412100518.24470-2-narmstrong@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 13 Apr 2019 13:43:12 +0200
-Message-ID: <CAFBinCAhf0EpnvUnYFEvAHo44a7OBoD-Hasx60Aow6ZfvWWEpw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] clk: meson-g12a: Add Temperature Sensor clock
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>,
-        khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Date:   Sat, 13 Apr 2019 14:02:14 +0200
+Message-ID: <CAFBinCDoxuM18+rRm0BR5usHYpBACXt+HzC6o3TFU-fqi3kkQQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: meson-g12a: Add IR nodes
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, baylibre-upstreaming@groups.io,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:03 PM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
+Hi Neil,
+
+On Fri, Apr 12, 2019 at 12:05 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Add TS clock used by two temperature sensor
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Amlogic G12A SoCs uses the exact same IR decoder as previous
+> families, add the IR node and the pintctrl setting.
+as far as I can tell there are either two IR decoders or one updated
+IR decoder in G12A and G12B.
+I'm using mesong12a.dtsi from
+buildroot_openlinux_kernel_4.9_fbdev_20180706 as reference:
+  remote:rc@0xff808040 {
+      compatible = "amlogic, aml_remote";
+      reg = <0x0 0xff808040 0x00 0x44>, /*Multi-format IR controller*/
+                <0x0 0xff808000 0x00 0x20>; /*Legacy IR controller*/
+      ...
+
+the registers which you are mapping are for the "Legacy IR
+controller", so our existing meson-ir driver will probably work (I
+haven't tested it myself yet).
+
+can you please be explicit about this in the patch description?
+
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+apart from the description you can add my:
 Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
