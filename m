@@ -2,76 +2,91 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF69C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E1C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEA12171F
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91B120818
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 12:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="a3ahAyDS"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="tXDwLwwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfDMMDM (ORCPT
+        id S1727057AbfDMMjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 08:03:12 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42127 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfDMMDM (ORCPT
+        Sat, 13 Apr 2019 08:39:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45845 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfDMMjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 08:03:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 103so10665671otd.9
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 05:03:12 -0700 (PDT)
+        Sat, 13 Apr 2019 08:39:40 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bf11so6381920plb.12
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 05:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6B0/4N/GgHHkXxtx0LaRaz4Tldr/FyYIlrssUyZNuJg=;
-        b=a3ahAyDSoWAsNWJqIgMOvYDIVZjjqh9H307hAu89hMVscpLRs/JLipPIyCEV2GmhrO
-         vFZDaLNeYmJEVEqB8EhcXdgPXBsF9nfevTLmIsr/5i+5Cm8+cDP+jicpNh7UipSNMKIC
-         I/3UL3l0nL8Pc9MmJVRdtSXFj80BRvQi3UAbUZQCaGehPqk34LOVN2X1EsVdXtHLvviy
-         pPA42/fkpYbXPsjwMIYmTdTq6SL9VdiWX579neehLvKbB1JzMUvjkeb1lV0SUX3qwe9c
-         KWXFSynkIkuAMf73EWWbwfXPnw4FfoUrhji+kq/UGLnFD1FK67II8WXoWkeqE/g2ddrB
-         V4Dg==
+        bh=9qUNfIj1zZXjHAJxneToEQSn8UoaPFAC1koUwQNNxEk=;
+        b=tXDwLwwbcCFznqaHSuSVEw40fpaKECsOLJ7+azmWb0IstTJjZIpv0yIBkkiD9fGW9s
+         L7hiN8Zs7JUOTgvJnUyKZ3pVOP3Cn/iflBpPq4udRJMZRQndVCr5oqmjYwVN4toi1/4q
+         /GBrpTM8/0+GzUdQlCX+ZbCYHSM9f4vWPbXcYXV+DXm37icIqpPDCuLqfNAT3KhQnKAT
+         x+vdBqvigkQXmFiFaB3CCyGWV8z4lNCg+RqcSfLw1hZdb7BqS1AsnwyrnGiH8FuYNalj
+         vwLGvMe5kpep9GVJXOazLX0tBPO7Nk4SljmrbP1QHUJmbGwBeeXKG+5nhdq+x/aBAVsf
+         POnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6B0/4N/GgHHkXxtx0LaRaz4Tldr/FyYIlrssUyZNuJg=;
-        b=Zii2NVIuswqadwc/jrY0UjgWcmDucoJJzPtYymyYf9yzrJtCPOZv0HlwuN2QiZ1wAl
-         fYzhShYsim4P8NHyD7w7GRdUZOSOlwvvpMW6gmOtmibmp+UgXW1E7Dq37K4dXyY9fYRQ
-         zuD0KlrIKhJ8JEdQzEq47nVLw4yKXwDLGkrUiIoNEPievgsk5JvCFtrz/uKn0Kv6ARWa
-         lwQnwuTJ+3s+NmoVUgvXjbZM/CJCuwJuNBEmcNGsu1IVZLUQrzk7ZZ1M+pBpEWCyz2N1
-         55T7kIcmMXlUWXlKtwph3G27dUwqLY7w0ToItpzT745oPo1J8Fmz4IR0mY/NhF6TFXto
-         vv6w==
-X-Gm-Message-State: APjAAAU7K3F6jh5XJS6OFr6L2a1Zi4isgKWzwGLoXTl4FeWNFzezL23j
-        UjxrxPDxbyYiBQECBO1Am/yURNlp6s3MwO/L+RoPfmld
-X-Google-Smtp-Source: APXvYqzaY8ICJlDJarIx5dKM0+Gi0Nx3J1tOSWEUB7j1NRB/T0TSrnrOAei+1hdboPzLXnddeDt2dOLislIGnVtHJBg=
-X-Received: by 2002:a9d:4d0d:: with SMTP id n13mr19526835otf.191.1555156990347;
- Sat, 13 Apr 2019 05:03:10 -0700 (PDT)
+        bh=9qUNfIj1zZXjHAJxneToEQSn8UoaPFAC1koUwQNNxEk=;
+        b=me3qdSBDfRMFOSoXmYYmWyMLWCrscsTRfp1ZvtgmN45LT1Q+wHW/imUfAo+z4crUCm
+         PDzoe9YalHzo/Cguz5GHWNwYuII598KmEnuQyTX3rMNFE2DxlMy2/hmGNS7f7Z99aTZT
+         fI6ZC8eXdiPnBi6G9ZEYg6KtpHgBaLMQnKWibaeMq62Ula49jgd1z3/RCUj6iybTt5H5
+         UVUdQT+bFxhWmBxa4fa5yOkO7uVTidI7qI8vkLXxrfn5WWazXgj6QZP4DNSBKo9T7iCT
+         ohTlcQ+8cnS5Sl/ZX+h+DNTHp9MqIvjJrMSnF7Keunq8CNfJ30lLoF65KLooSgVuZPpR
+         nEXA==
+X-Gm-Message-State: APjAAAWwCYqaLnCE9RMulXDRvG8IomJC91teX3wJ9Y1W2JH1TBJCIJZ/
+        nbZVRIbUZPmW8RiWMGsU3J/7kqkvxFtpQAosrJgp4w==
+X-Google-Smtp-Source: APXvYqzhKXdiULaS2mDPq7CuoGVq1XQ37IgL+IqRrc2VL+3EAnN8ukwSlYYN9Qm7o7/iomss+cQC7Fe7eMgkST0XRyo=
+X-Received: by 2002:a17:902:2702:: with SMTP id c2mr44535520plb.37.1555159179157;
+ Sat, 13 Apr 2019 05:39:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412100518.24470-1-narmstrong@baylibre.com> <20190412100518.24470-4-narmstrong@baylibre.com>
-In-Reply-To: <20190412100518.24470-4-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 13 Apr 2019 14:02:59 +0200
-Message-ID: <CAFBinCBo8Z77mDk3Z6WpdKoSemPkopFDd=VvCR7LjsU4LYamfQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-g12a-u200: enable IR decoder
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, baylibre-upstreaming@groups.io,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+References: <20190405163126.7278-1-jeffrin@rajagiritech.edu.in> <20190405164746.pfc6wxj4nrynjma4@breakpoint.cc>
+In-Reply-To: <20190405164746.pfc6wxj4nrynjma4@breakpoint.cc>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Sat, 13 Apr 2019 18:09:02 +0530
+Message-ID: <CAG=yYwnN37OoL1DSN8qPeKWhzVJOcUFtR-7Q9fVT5AULk5S54w@mail.gmail.com>
+Subject: Re: [PATCH] selftests : netfilter: Wrote a error and exit code for a
+ command which needed veth kernel module.
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>, linu-kselftest@vger.kernel.org,
+        pablo@netfilter.org, lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:05 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+Hello Shuah,
+
+did you get the mail related stuff below ?
+
+On Fri, Apr 5, 2019 at 10:17 PM Florian Westphal <fw@strlen.de> wrote:
 >
-> Add support for the IR decoder input on the U200 Reference Design board.
+> Jeffrin Jose T <jeffrin@rajagiritech.edu.in> wrote:
+> > A test for  the basic NAT functionality uses ip command which
+> > needs veth device.There is a condition where the kernel support
+> > for veth is not compiled into the kernel and the test script
+> > breaks.This patch contains code for reasonable error display
+> > and correct code exit.
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+> Looks good to me, thanks for following up on this.
+>
+> Acked-by: Florian Westphal <fw@strlen.de>
+
+
+
+-- 
+software engineer
+rajagiri school of engineering and technology
