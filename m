@@ -2,130 +2,91 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8730C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99E3C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2D121721
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAE02084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XmxtZ/RJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Qi4BLp65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfDMQjt (ORCPT
+        id S1727287AbfDMQmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:39:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40706 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfDMQjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:39:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a28so9831087lfo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 09:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lqQQjxlwy5s4k0pOdM4r1SzrqLbFpvl1fvNdiYMAO2M=;
-        b=XmxtZ/RJ3uEon5LcxKWuTGNZqwGwW9JpyTqI3i2q4f5x8GA/gO9YWdpY8WKts5sd5j
-         q1lh3qzEZA1FqphCx8kXgG16NrGW9PK4UWQxzF6XhrtAYQZCqbeojXY2P3GkXgaatPlh
-         0hFNETg7LYtx6P97YMBc8hRjCx5etAfa4yRgg7Ekq2ZAfSrim64Qn2uhWug6AACRCBxR
-         ZwfloAgHzIbrven7C+C7jQcJ6pnyKwWEQ1K7NJPSJK9EIq2dsG19E0WJnEkz8xFdq+PQ
-         nVM6RJMIif9q9ZkiCF0gIMx00NPjoGBuQBlDHVawWL3zKspIcPWswF+3DtUgb4qtMnTZ
-         z+hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lqQQjxlwy5s4k0pOdM4r1SzrqLbFpvl1fvNdiYMAO2M=;
-        b=r01W6A+5tP41lHUwOWtjehgx+yV+bOWBq83IR/6SUWMRENjv9bvwD0OILupHHHeOmt
-         wQQA6O46f8oJUSJJe4AhQOzwPZ1yUeqXSeU7ATTsnQfACOclgGlraFH/aq6VVOrU5H/g
-         upsEmhstQD9kbdxK0OkuUWVND8uELp+Irs7CdXwsWCOVWfIloVYV9fphdep2B0VQLZgH
-         d10xiY/Hre7vZ5zMyb5SNSrNOQWPNqtn7Mkz8g9+X6f0q9rD9C7WbGh/430C4Fx92ery
-         DmQg0CDmsY03RJXDShWTiBJbgyjyhST+Hhwe2L6lfvyew7B16Qs0qo/zZ6thtFbGqmC3
-         Sf/g==
-X-Gm-Message-State: APjAAAWeDnFlnZKRoE6bCtoFOFRCST6FREfI3uJdFOK/HpQGzkmRwhJP
-        AqCkf1GGKy/w4wMflKsE1l/Jdg==
-X-Google-Smtp-Source: APXvYqyUCjC7TPk4faI89BkwaoYfCTZv+IVuLNIViSvu+F6qAAypK30dSWChJ5r09RoGJl48oObM5w==
-X-Received: by 2002:ac2:4a86:: with SMTP id l6mr24144454lfp.51.1555173587224;
-        Sat, 13 Apr 2019 09:39:47 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.85.44])
-        by smtp.gmail.com with ESMTPSA id v21sm8843680lfg.26.2019.04.13.09.39.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 09:39:46 -0700 (PDT)
-Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, lee.jones@linaro.org
-Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
-        zhengxunli@mxic.com.tw
-References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
- <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
- <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
-Date:   Sat, 13 Apr 2019 19:39:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sat, 13 Apr 2019 12:42:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60342 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726972AbfDMQmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 12:42:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JPZfYo3LPJOBslPQwLim6XXf19GaxAFw2vR85TWDR0w=; b=Qi4BLp65pjsiffwvXMUAsL8v62
+        +osGMHahDUPNjX96ujpqx+qqNCwZTBbimJrurY0/SLejzAobkyAXa99dF8khT1isgKi6JPGB7GHdi
+        IiP8KM8rObEUPTITPbeCLgO0xMbLeWe1ds5S0Bv5w0SQGXWHbtptT6b4VY3ljmjBr63c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hFLin-0005Q8-LR; Sat, 13 Apr 2019 18:41:41 +0200
+Date:   Sat, 13 Apr 2019 18:41:41 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
+Subject: Re: [PATCH v3 net-next 19/24] net: dsa: sja1105: Add support for
+ Spanning Tree Protocol
+Message-ID: <20190413164141.GH17901@lunn.ch>
+References: <20190413012822.30931-1-olteanv@gmail.com>
+ <20190413012822.30931-20-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413012822.30931-20-olteanv@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/13/2019 07:38 PM, Sergei Shtylyov wrote:
-
->> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
->>
->> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> [...]
->> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
->> new file mode 100644
->> index 0000000..037f273
->> --- /dev/null
->> +++ b/drivers/spi/spi-renesas-rpc.c
-> [...]
->> +static int rpc_spi_probe(struct platform_device *pdev)
->> +{
->> +	struct spi_controller *ctlr;
->> +	struct rpc_mfd *rpc_mfd = dev_get_drvdata(pdev->dev.parent);
->> +	struct rpc_spi *rpc;
->> +	int ret;
->> +
->> +	ctlr = spi_alloc_master(&pdev->dev, sizeof(*rpc));
->> +	if (!ctlr)
->> +		return -ENOMEM;
->> +
->> +	platform_set_drvdata(pdev, ctlr);
->> +
->> +	rpc = spi_controller_get_devdata(ctlr);
->> +
->> +	ctlr->dev.of_node = pdev->dev.of_node;
-> [...]
->> +
->> +	pm_runtime_enable(&pdev->dev);
->> +	ctlr->auto_runtime_pm = true;
+On Sat, Apr 13, 2019 at 04:28:17AM +0300, Vladimir Oltean wrote:
+> While not explicitly documented as supported in UM10944, compliance with
+> the STP states can be obtained by manipulating 3 settings at the
+> (per-port) MAC config level: dynamic learning, inhibiting reception of
+> regular traffic, and inhibiting transmission of regular traffic.
 > 
->    I think this line no longer works as expected with the new probing scheme.
-> Have you tested reading? v8 patch still works while v9 patches hang on doing:
+> In all these modes, transmission and reception of special BPDU frames
+> from the stack is still enabled (not inhibited by the MAC-level
+> settings).
 > 
-> $ cat /dev/mtd<n>...
+> On ingress, BPDUs are classified by the MAC filter as link-local
+> (01-80-C2-00-00-00) and forwarded to the CPU port.  This mechanism works
+> under all conditions (even without the custom 802.1Q tagging) because
+> the switch hardware inserts the source port and switch ID into bytes 4
+> and 5 of the MAC-filtered frames. Then the DSA .rcv handler needs to put
+> back zeroes into the MAC address after decoding the source port
+> information.
+> 
+> On egress, BPDUs are transmitted using management routes from the xmit
+> worker thread. Again this does not require switch tagging, as the switch
+> port is programmed through SPI to hold a temporary (single-fire) route
+> for a frame with the programmed destination MAC (01-80-C2-00-00-00).
+> 
+> STP is activated using the following commands and was tested by
+> connecting two front-panel ports together and noticing that switching
+> loops were prevented (one port remains in the blocking state):
+> 
+> $ ip link add name br0 type bridge stp_state 1 && ip link set br0 up
+> $ for eth in $(ls /sys/devices/platform/soc/2100000.spi/spi_master/spi0/spi0.1/net/);
+>   do ip link set ${eth} master br0 && ip link set ${eth} up; done
+> 
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 
-   Sorry, 'od -x', not 'cat'.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-WBR, Sergei
+    Andrew
