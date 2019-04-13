@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A599FC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1DCC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9FB2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3566321721
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfDMVES (ORCPT
+        id S1727314AbfDMVFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:04:18 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48711 "EHLO
+        Sat, 13 Apr 2019 17:05:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35751 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfDMVES (ORCPT
+        with ESMTP id S1727006AbfDMVFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:04:18 -0400
+        Sat, 13 Apr 2019 17:05:03 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DL2xhY2267566
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DL3hWx2267811
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 14:03:00 -0700
+        Sat, 13 Apr 2019 14:03:43 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DL2xMU2267563;
-        Sat, 13 Apr 2019 14:02:59 -0700
-Date:   Sat, 13 Apr 2019 14:02:59 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DL3giC2267808;
+        Sat, 13 Apr 2019 14:03:42 -0700
+Date:   Sat, 13 Apr 2019 14:03:42 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-1d731e731c4cd7cbd3b1aa295f0932e7610da82f@git.kernel.org>
-Cc:     pbonzini@redhat.com, mingo@kernel.org, x86@kernel.org,
-        riel@surriel.com, tglx@linutronix.de, bigeasy@linutronix.de,
-        Jason@zx2c4.com, dave.hansen@intel.com, luto@kernel.org,
-        bp@suse.de, hpa@zytor.com, jannh@google.com, rkrcmar@redhat.com,
-        mingo@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Reply-To: mingo@redhat.com, kvm@vger.kernel.org,
-          linux-kernel@vger.kernel.org, jannh@google.com,
-          rkrcmar@redhat.com, hpa@zytor.com, luto@kernel.org, bp@suse.de,
-          bigeasy@linutronix.de, Jason@zx2c4.com, dave.hansen@intel.com,
-          tglx@linutronix.de, x86@kernel.org, riel@surriel.com,
-          pbonzini@redhat.com, mingo@kernel.org
-In-Reply-To: <20190403164156.19645-25-bigeasy@linutronix.de>
-References: <20190403164156.19645-25-bigeasy@linutronix.de>
+Message-ID: <tip-da2f32fb8dc7cbd9433cb2e990693734b30a2465@git.kernel.org>
+Cc:     jannh@google.com, Jason@zx2c4.com, bigeasy@linutronix.de,
+        tglx@linutronix.de, rkrcmar@redhat.com, riel@surriel.com,
+        kvm@vger.kernel.org, dave.hansen@intel.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        bp@suse.de, luto@kernel.org, pbonzini@redhat.com, mingo@redhat.com
+Reply-To: jannh@google.com, tglx@linutronix.de, Jason@zx2c4.com,
+          bigeasy@linutronix.de, riel@surriel.com, rkrcmar@redhat.com,
+          dave.hansen@intel.com, mingo@kernel.org, kvm@vger.kernel.org,
+          x86@kernel.org, linux-kernel@vger.kernel.org,
+          pbonzini@redhat.com, mingo@redhat.com, hpa@zytor.com, bp@suse.de,
+          luto@kernel.org
+In-Reply-To: <20190403164156.19645-26-bigeasy@linutronix.de>
+References: <20190403164156.19645-26-bigeasy@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Add a fastpath to __fpu__restore_sig()
-Git-Commit-ID: 1d731e731c4cd7cbd3b1aa295f0932e7610da82f
+Subject: [tip:x86/fpu] x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
+Git-Commit-ID: da2f32fb8dc7cbd9433cb2e990693734b30a2465
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -61,25 +61,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1d731e731c4cd7cbd3b1aa295f0932e7610da82f
-Gitweb:     https://git.kernel.org/tip/1d731e731c4cd7cbd3b1aa295f0932e7610da82f
+Commit-ID:  da2f32fb8dc7cbd9433cb2e990693734b30a2465
+Gitweb:     https://git.kernel.org/tip/da2f32fb8dc7cbd9433cb2e990693734b30a2465
 Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:53 +0200
+AuthorDate: Wed, 3 Apr 2019 18:41:54 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Fri, 12 Apr 2019 20:04:49 +0200
+CommitDate: Fri, 12 Apr 2019 20:05:36 +0200
 
-x86/fpu: Add a fastpath to __fpu__restore_sig()
+x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
 
-The previous commits refactor the restoration of the FPU registers so
-that they can be loaded from in-kernel memory. This overhead can be
-avoided if the load can be performed without a pagefault.
+Try to save the FPU registers directly to the userland stack frame if
+the CPU holds the FPU registers for the current task. This has to be
+done with the pagefault disabled because we can't fault (while the FPU
+registers are locked) and therefore the operation might fail. If it
+fails try the slowpath which can handle faults.
 
-Attempt to restore FPU registers by invoking
-copy_user_to_fpregs_zeroing(). If it fails try the slowpath which can
-handle pagefaults.
-
- [ bp: Add a comment over the fastpath to be able to find one's way
-   around the function. ]
+ [ bp: Massage a bit. ]
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
@@ -95,53 +92,74 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-25-bigeasy@linutronix.de
+Link: https://lkml.kernel.org/r/20190403164156.19645-26-bigeasy@linutronix.de
 ---
- arch/x86/kernel/fpu/signal.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ arch/x86/kernel/fpu/signal.c | 34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 6df1f15e0cd5..a1bd7be70206 100644
+index a1bd7be70206..3c3167576216 100644
 --- a/arch/x86/kernel/fpu/signal.c
 +++ b/arch/x86/kernel/fpu/signal.c
-@@ -242,10 +242,10 @@ sanitize_restored_xstate(union fpregs_state *state,
- /*
-  * Restore the extended state if present. Otherwise, restore the FP/SSE state.
-  */
--static inline int copy_user_to_fpregs_zeroing(void __user *buf, u64 xbv, int fx_only)
-+static int copy_user_to_fpregs_zeroing(void __user *buf, u64 xbv, int fx_only)
- {
- 	if (use_xsave()) {
--		if ((unsigned long)buf % 64 || fx_only) {
-+		if (fx_only) {
- 			u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
- 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
- 			return copy_user_to_fxregs(buf);
-@@ -327,8 +327,27 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		if (ret)
- 			goto err_out;
- 		envp = &env;
-+	} else {
-+		/*
-+		 * Attempt to restore the FPU registers directly from user
-+		 * memory. For that to succeed, the user access cannot cause
-+		 * page faults. If it does, fall back to the slow path below,
-+		 * going through the kernel buffer with the enabled pagefault
-+		 * handler.
-+		 */
-+		fpregs_lock();
+@@ -144,8 +144,10 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+  *	buf == buf_fx for 64-bit frames and 32-bit fsave frame.
+  *	buf != buf_fx for 32-bit frames with fxstate.
+  *
+- * Save the state to task's fpu->state and then copy it to the user frame
+- * pointed to by the aligned pointer 'buf_fx'.
++ * Try to save it directly to the user frame with disabled page fault handler.
++ * If this fails then do the slow path where the FPU state is first saved to
++ * task's fpu->state and then copy it to the user frame pointed to by the
++ * aligned pointer 'buf_fx'.
+  *
+  * If this is a 32-bit frame with fxstate, put a fsave header before
+  * the aligned state at 'buf_fx'.
+@@ -159,6 +161,7 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 	struct xregs_state *xsave = &fpu->state.xsave;
+ 	struct task_struct *tsk = current;
+ 	int ia32_fxstate = (buf != buf_fx);
++	int ret = -EFAULT;
+ 
+ 	ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
+ 			 IS_ENABLED(CONFIG_IA32_EMULATION));
+@@ -173,23 +176,30 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 
+ 	/*
+ 	 * If we do not need to load the FPU registers at return to userspace
+-	 * then the CPU has the current state and we need to save it. Otherwise,
+-	 * it has already been done and we can skip it.
++	 * then the CPU has the current state. Try to save it directly to
++	 * userland's stack frame if it does not cause a pagefault. If it does,
++	 * try the slowpath.
+ 	 */
+ 	fpregs_lock();
+ 	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
+-		copy_fpregs_to_fpstate(fpu);
 +		pagefault_disable();
-+		ret = copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only);
++		ret = copy_fpregs_to_sigframe(buf_fx);
 +		pagefault_enable();
-+		if (!ret) {
-+			fpregs_mark_activate();
-+			fpregs_unlock();
-+			return 0;
++		if (ret)
++			copy_fpregs_to_fpstate(fpu);
+ 		set_thread_flag(TIF_NEED_FPU_LOAD);
+ 	}
+ 	fpregs_unlock();
+ 
+-	if (using_compacted_format()) {
+-		if (copy_xstate_to_user(buf_fx, xsave, 0, size))
+-			return -1;
+-	} else {
+-		fpstate_sanitize_xstate(fpu);
+-		if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-			return -1;
++	if (ret) {
++		if (using_compacted_format()) {
++			if (copy_xstate_to_user(buf_fx, xsave, 0, size))
++				return -1;
++		} else {
++			fpstate_sanitize_xstate(fpu);
++			if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
++				return -1;
 +		}
-+		fpregs_unlock();
  	}
  
-+
- 	if (use_xsave() && !fx_only) {
- 		u64 init_bv = xfeatures_mask & ~xfeatures;
- 
+ 	/* Save the fsave header for the 32-bit frames. */
