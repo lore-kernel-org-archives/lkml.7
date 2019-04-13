@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A355C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5474C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305BA21721
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8863E21721
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfDMHaY (ORCPT
+        id S1727280AbfDMHai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:30:24 -0400
-Received: from www.osadl.org ([62.245.132.105]:36563 "EHLO www.osadl.org"
+        Sat, 13 Apr 2019 03:30:38 -0400
+Received: from www.osadl.org ([62.245.132.105]:36571 "EHLO www.osadl.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727224AbfDMHaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:30:21 -0400
+        id S1727224AbfDMHah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 03:30:37 -0400
 Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7Sohc010572;
-        Sat, 13 Apr 2019 09:28:56 +0200
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7Sohf010572;
+        Sat, 13 Apr 2019 09:29:12 +0200
 From:   Nicholas Mc Guire <hofrat@osadl.org>
 To:     Russell King <linux@armlinux.org.uk>
 Cc:     Shawn Guo <shawnguo@kernel.org>,
@@ -36,9 +36,9 @@ Cc:     Shawn Guo <shawnguo@kernel.org>,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH 1/4 RFC] ARM: imx legacy: warn on failed allocation
-Date:   Sat, 13 Apr 2019 09:23:30 +0200
-Message-Id: <1555140213-1081-2-git-send-email-hofrat@osadl.org>
+Subject: [PATCH 4/4] ARM: imx legacy: add an SPDX license identifier
+Date:   Sat, 13 Apr 2019 09:23:33 +0200
+Message-Id: <1555140213-1081-5-git-send-email-hofrat@osadl.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1555140213-1081-1-git-send-email-hofrat@osadl.org>
 References: <1555140213-1081-1-git-send-email-hofrat@osadl.org>
@@ -47,40 +47,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even in init the allocation can fail and thus should at least warn so
-that the cause can be identified.
+The header clearly identifies this code as GPL V2 or later - so pop
+in the SPDX license identifier.
 
 Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
 ---
-
-Problem located with an experimental coccinelle script
-
-Note sure if there is a better solution as this is early in the boot
-process so not that could be done anyway but fuss - anyway unchecked
-allocation is not a good thing.
-
-Patch was compile-tested with: imx_v4_v5_defconfig (implies
-CONFIG_MACH_MX27ADS=y)
-(with some unrelated sparse warnings about unimplemented syscalls
- and a few checkpatch warnings - covered in the other patches)
-
-Patch is against 5.1-rc4 (localversion-next is 20190412)
-
  arch/arm/mach-imx/mach-mx27ads.c | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/mach-imx/mach-mx27ads.c b/arch/arm/mach-imx/mach-mx27ads.c
-index 6dd7f57..528846f 100644
+index c83fdd3..3f68972 100644
 --- a/arch/arm/mach-imx/mach-mx27ads.c
 +++ b/arch/arm/mach-imx/mach-mx27ads.c
-@@ -247,6 +247,7 @@ static void __init mx27ads_regulator_init(void)
- 	struct gpio_chip *vchip;
- 
- 	vchip = kzalloc(sizeof(*vchip), GFP_KERNEL);
-+	WARN_ON(!vchip);
- 	vchip->owner		= THIS_MODULE;
- 	vchip->label		= "LCD";
- 	vchip->base		= MX27ADS_LCD_GPIO;
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  *  Copyright (C) 2000 Deep Blue Solutions Ltd
+  *  Copyright (C) 2002 Shane Nay (shane@minirl.com)
 -- 
 2.1.4
 
