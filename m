@@ -2,88 +2,80 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBBCC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF4C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF2320850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4A320850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IAe1TLu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfDMH6Q (ORCPT
+        id S1727130AbfDMIB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:58:16 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:33517 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726207AbfDMH6P (ORCPT
+        Sat, 13 Apr 2019 04:01:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfDMIB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:58:15 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 5533018224D75;
-        Sat, 13 Apr 2019 07:58:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: farm08_2a691f63a644d
-X-Filterd-Recvd-Size: 2143
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 13 Apr 2019 07:58:11 +0000 (UTC)
-Message-ID: <1dd04eada63b51d768d568c9f09e59f6afbe963b.camel@perches.com>
-Subject: Re: [PATCH 0/4] ARM: imx legacy: cleanups
-From:   Joe Perches <joe@perches.com>
-To:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Sat, 13 Apr 2019 00:58:10 -0700
-In-Reply-To: <1555139666-948-1-git-send-email-hofrat@osadl.org>
-References: <1555139666-948-1-git-send-email-hofrat@osadl.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 13 Apr 2019 04:01:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3vllFzFMPO37wu0NMKvD5Z8CRVSUwa/lYv/Pg2RfA5M=; b=IAe1TLu1o1Z6y6/xMwIHH1N23
+        FhX1USEYTM/bQS7Xcsz+0hjWV99pEzZxYJxw+IXRsY4H4nn9y3ubcbsOJd05sYZtxvmYez2OIff2P
+        Qvoo/KmhTBm0uU/8o566+RgQVX0lUuet7OP9fVPchAZH+zHx87eEdOVB9kwLjA46+grPXtPQ95Z0R
+        cOiGnZ6nDSd/YmjCtoGTdkM4mSVGzYU10iyf6Uyz0BNdx15j674HQKcQkY69gXQZ4m8M7io1kIevk
+        mJdTPg0bpwqUoJhirzSMSharYlRr3HvrERyCcaYeKV8gtIskS62TsFBbZWUqRQfqXzD6HhFn1aV0o
+        j/jivQkOQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hFDbq-0002fX-A2; Sat, 13 Apr 2019 08:01:58 +0000
+Date:   Sat, 13 Apr 2019 01:01:58 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mao Han <han_mao@c-sky.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org, guoren@kernel.org
+Subject: Re: [PATCH 2/3] riscv: Add support for perf registers sampling
+Message-ID: <20190413080158.GA3891@infradead.org>
+References: <cover.1554961908.git.han_mao@c-sky.com>
+ <20190411141435.GA8343@infradead.org>
+ <20190412093851.GA4961@vmh-VirtualBox>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190412093851.GA4961@vmh-VirtualBox>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-04-13 at 09:14 +0200, Nicholas Mc Guire wrote:
-> While preparing a proposed fix for a missing check on zmalloc a few
-> other checkpatch warnings poped up - this little set fixes those
-> warnings. There is one remaining checkpatch warning but that looks
-> like a false-positive to me:
+On Fri, Apr 12, 2019 at 05:38:53PM +0800, Mao Han wrote:
+> > 
+> > > +	fp = user_backtrace(entry, fp, regs->ra);
+> > > +	while ((entry->nr < entry->max_stack) &&
+> > > +		fp && !((unsigned long)fp & 0x3))
+> > > +		fp = user_backtrace(entry, fp, 0);
+> > 
+> > Please don't indent the condition continuation and the loop body
+> > by the same amount.
 > 
-> ERROR: Use of __initconst requires a separate use of const
-> #171: FILE: arch/arm/mach-imx/mach-mx27ads.c:171:
-> +mx27ads_nand_board_info __initconst = {
-> 
-> The false positive seems due to the definition spanning two lines
-> anyway looks good to me
-> 
-> <snip>
-> static const struct mxc_nand_platform_data
-> mx27ads_nand_board_info __initconst = {
->         .width = 1,
->         .hw_ecc = 1,
-> };
+> Like this?
+> 	while ((entry->nr < entry->max_stack) &&
+> 					fp && !((unsigned long)fp & 0x3))
+> 		fp = user_backtrace(entry, fp, 0);
 
-Yeah, it's a false positive.
+We tend to either use indentations to the same level as the condition,
+or two tabs indents.  But I also noticed that we shouldn't even need
+the cast here as fp already is unsigned long, so it should all fit on
+one line anyway:
 
-You could use
-
-static const __initconst etc...
-
-if you really wanted to avoid this but feel free
-to ignore checkpatch anyway when it's dumb.
-
-
+	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
+		fp = user_backtrace(entry, fp, 0);
