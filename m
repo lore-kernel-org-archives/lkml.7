@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C0C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD095C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFF621721
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA3020869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lnVeOVFJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zlz5gKwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfDMKeb (ORCPT
+        id S1727697AbfDMKel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:34:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40781 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfDMKdS (ORCPT
+        Sat, 13 Apr 2019 06:34:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36530 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfDMKdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:33:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so15138338wre.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:17 -0700 (PDT)
+        Sat, 13 Apr 2019 06:33:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so13887888wml.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9V+TJFDFFCIM8e1FXxwOAxvWSYjX8RCZCP7tk0faJT8=;
-        b=lnVeOVFJQGEyFSwu51J7Ga/uPAG8kxMWBIIyeKG28u42MYy4B0PwZZY7PPggI13V1r
-         WVA0fvixU7O9NLoo5wZNVyP+OJSzBgvtAidsEYCtklPJW3aqs5iMVX3lsWoK6ujjO0b6
-         Dem/ZwXvXB6Xe14SJaroRtSF9xWVe3OB8NmbKh44XN36cziRiIYto524iKH9B/1q4XbR
-         aCjGvEdXVxOeJAATkG5vxfKfqoJU/0CnpwON0dJr45aaZvwfSC+OL8f0JdOoZ+oF4kut
-         g/7AiChKN3LPj5ao3O8oYCaXryW8xC6DwllOV/T3m/CVyhUKsE+l7uHyr/2q4XWWZUd8
-         HPPQ==
+        bh=BMLyru0cyPr/VpDb34zq0Nxx/FQp28s73ZIdoYf+fi0=;
+        b=zlz5gKwXEsDl6pN5xym6O5aY5HbGefR+vvd2xxY2hZKgU55joBEyXzBEW9gwXNCGRz
+         PRQsWa7asM9EgwUueUWIaHXHUhOxUMyaQ+r0X2D1PZ9gjt1ZybNtTgx2AWoWLxT1KQk4
+         Lpqh6SqWbKOLb7jUK1gsH+cX0IUhW47oSEnDrwkJ9pkyT2i0voglRU0mkpYCymVKVvyM
+         uqO3/J3sEGUKyeESWpEopV7+K/3/JZEn2BmQMHB2/r+7PMIXBDznnI6psjyU//TgXAuD
+         VrDdd2svzQPgmj6dd5cW1icbqlqOa7GKtW2zD6gthstwjhf1Nlcg5SAE56941A3p61IB
+         3Dow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9V+TJFDFFCIM8e1FXxwOAxvWSYjX8RCZCP7tk0faJT8=;
-        b=fUEhP7pArihmAs7VNAHBY0D2zNNaYR4ugLg+Bv0i4Kf3whxDuvC6jVycNTYpk2In92
-         Wp97faphLBmIdbDjO1VOnktv2OulF74jM3oCwIVCE9cUoV/LuMv5a6TAww2OIChfTJxM
-         ooFu/jkrXA6jzz/7GAaEsFLVU2eLLoW8kUpsaVuwl82o0ChQBPMmmzOK3abYzcWRe0wq
-         +YuZVQZ7LC9XP2vk4fCKq4LeQN+wr24UHBreEAmPVB39B3hFEeaMf248WE4m8/moFkSV
-         RzF8PD8ch696Y9sqei0d5RlMVSml4YcBDNQ+TYuLjNJAKizrkvnozxrshsMJz9pg1l/E
-         GPEg==
-X-Gm-Message-State: APjAAAXqZKvfBQVd/LBLgFXhAIR3RBsu2566wMFfMnIlIgtCVgONGFq3
-        oBWiBLxpnpuQ8PxFmj8kacIWQQ==
-X-Google-Smtp-Source: APXvYqxQpLp4Rbk1+4B3XeKCxEz9xl73k8JgYNG8eMFwWy0NTRKYAi/g4LRQK9SgCItGPipN01weYA==
-X-Received: by 2002:adf:e78e:: with SMTP id n14mr16873353wrm.14.1555151597180;
-        Sat, 13 Apr 2019 03:33:17 -0700 (PDT)
+        bh=BMLyru0cyPr/VpDb34zq0Nxx/FQp28s73ZIdoYf+fi0=;
+        b=iiYR8OuTUocap4r6ghDfrbpEr1BJxAVhHhIDH7hd278ZmsuM6lS0SOErGckvX/oywi
+         nNr0TZr6fqtZeZJNV+8qjPcK/IqylGz13Ae8I2dsWDmll5mL2dC9CFn6epS+P5x7FBgW
+         SJWhYR6nZroBaltLhG3RyBGImtQyh3zIzNQj2icU5wydjfE8HkywY1xyNvqBCIGDftXX
+         6JU4fleRjJqOaWsg8p1UE/YOvw2EiwK3gWD4DmoxQnSFW4PMP1qOEkh2/NgC1iimc2ao
+         sJKN+Ct1xwOVkSNPA6wGI/N7m18rRor4WuTMXkSrbrY5wghG7CvW80HHwv8um/MGmGRU
+         2tZQ==
+X-Gm-Message-State: APjAAAWPzAvqi88+fdGaAaR4HBV3Fum/psqvgRwUTSjHTa8A3wZWocWj
+        hawxXxMazg1WHQ93un/SbmjkjA==
+X-Google-Smtp-Source: APXvYqzbSfQh6xkSEVxrKs8uq7HICNMLAufHhQgNsJkCR+uClkWrg1W4zRakKp55+0ly+784I8F2Qg==
+X-Received: by 2002:a05:600c:2055:: with SMTP id p21mr13719536wmg.118.1555151588608;
+        Sat, 13 Apr 2019 03:33:08 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.16
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:33:16 -0700 (PDT)
+        Sat, 13 Apr 2019 03:33:08 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 09/20] dt-bindings: nvmem: Add STM32 factory-programmed romem
-Date:   Sat, 13 Apr 2019 11:32:54 +0100
-Message-Id: <20190413103305.9576-10-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH 02/20] nvmem: imx-ocotp: add support for imx8mq
+Date:   Sat, 13 Apr 2019 11:32:47 +0100
+Message-Id: <20190413103305.9576-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
 References: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
@@ -72,56 +72,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Add documentation for STMicroelectronics STM32 Factory-programmed
-read only memory area.
+The i.MX8MQ uses the same OCOTP block as the i.MX7D, but with
+fourfold increase in fuse banks.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../bindings/nvmem/st,stm32-romem.txt         | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+ drivers/nvmem/imx-ocotp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-new file mode 100644
-index 000000000000..142a51d5a9be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-@@ -0,0 +1,31 @@
-+STMicroelectronics STM32 Factory-programmed data device tree bindings
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index 08a9b1ef8ae4..e0b22b6c045b 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -444,6 +444,12 @@ static const struct ocotp_params imx7ulp_params = {
+ 	.bank_address_words = 0,
+ };
+ 
++static const struct ocotp_params imx8mq_params = {
++	.nregs = 256,
++	.bank_address_words = 4,
++	.set_timing = imx_ocotp_set_imx7_timing,
++};
 +
-+This represents STM32 Factory-programmed read only non-volatile area: locked
-+flash, OTP, read-only HW regs... This contains various information such as:
-+analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
-+internal vref (VREFIN_CAL), unique device ID...
-+
-+Required properties:
-+- compatible:		Should be one of:
-+			"st,stm32f4-otp"
-+			"st,stm32mp15-bsec"
-+- reg:			Offset and length of factory-programmed area.
-+- #address-cells:	Should be '<1>'.
-+- #size-cells:		Should be '<1>'.
-+
-+Optional Data cells:
-+- Must be child nodes as described in nvmem.txt.
-+
-+Example on stm32f4:
-+	romem: nvmem@1fff7800 {
-+		compatible = "st,stm32f4-otp";
-+		reg = <0x1fff7800 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* Data cells: ts_cal1 at 0x1fff7a2c */
-+		ts_cal1: calib@22c {
-+			reg = <0x22c 0x2>;
-+		};
-+		...
-+	};
+ static const struct of_device_id imx_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx6q-ocotp",  .data = &imx6q_params },
+ 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
+@@ -453,6 +459,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7d-ocotp",  .data = &imx7d_params },
+ 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
+ 	{ .compatible = "fsl,imx7ulp-ocotp", .data = &imx7ulp_params },
++	{ .compatible = "fsl,imx8mq-ocotp", .data = &imx8mq_params },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
 -- 
 2.21.0
 
