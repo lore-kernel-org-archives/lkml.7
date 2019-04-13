@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43272C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8392AC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198F02084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2852084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfDMUuh (ORCPT
+        id S1727278AbfDMUvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:50:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:36507 "EHLO
+        Sat, 13 Apr 2019 16:51:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58395 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbfDMUuh (ORCPT
+        with ESMTP id S1726998AbfDMUvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:50:37 -0400
+        Sat, 13 Apr 2019 16:51:17 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKnOdg2265328
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKo4KN2265429
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 13:49:24 -0700
+        Sat, 13 Apr 2019 13:50:04 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKnNsQ2265325;
-        Sat, 13 Apr 2019 13:49:23 -0700
-Date:   Sat, 13 Apr 2019 13:49:23 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKo3Ss2265422;
+        Sat, 13 Apr 2019 13:50:03 -0700
+Date:   Sat, 13 Apr 2019 13:50:03 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e@git.kernel.org>
-Cc:     Jason@zx2c4.com, mingo@redhat.com, tglx@linutronix.de,
-        pbonzini@redhat.com, dave.hansen@intel.com, rkrcmar@redhat.com,
-        riel@surriel.com, bp@suse.de, jannh@google.com,
-        kvm@vger.kernel.org, bigeasy@linutronix.de, mingo@kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org, luto@kernel.org,
-        hpa@zytor.com
-Reply-To: jannh@google.com, riel@surriel.com, bp@suse.de,
-          pbonzini@redhat.com, dave.hansen@intel.com, rkrcmar@redhat.com,
-          Jason@zx2c4.com, mingo@redhat.com, tglx@linutronix.de,
-          hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
-          mingo@kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+Message-ID: <tip-39388e80f9b0c3788bfb6efe3054bdce0c3ead45@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jannh@google.com, bigeasy@linutronix.de, rkrcmar@redhat.com,
+        hpa@zytor.com, mingo@kernel.org, luto@kernel.org, riel@surriel.com,
+        Jason@zx2c4.com, tglx@linutronix.de, pbonzini@redhat.com,
+        x86@kernel.org, bp@suse.de, mingo@redhat.com, dave.hansen@intel.com
+Reply-To: tglx@linutronix.de, Jason@zx2c4.com, riel@surriel.com,
+          luto@kernel.org, mingo@kernel.org, dave.hansen@intel.com,
+          mingo@redhat.com, bp@suse.de, x86@kernel.org,
+          pbonzini@redhat.com, jannh@google.com, kvm@vger.kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, rkrcmar@redhat.com,
           bigeasy@linutronix.de
-In-Reply-To: <20190403164156.19645-6-bigeasy@linutronix.de>
-References: <20190403164156.19645-6-bigeasy@linutronix.de>
+In-Reply-To: <20190403164156.19645-7-bigeasy@linutronix.de>
+References: <20190403164156.19645-7-bigeasy@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Remove fpu->initialized usage in
+Subject: [tip:x86/fpu] x86/fpu: Don't save fxregs for ia32 frames in
  copy_fpstate_to_sigframe()
-Git-Commit-ID: fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
+Git-Commit-ID: 39388e80f9b0c3788bfb6efe3054bdce0c3ead45
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,47 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
-Gitweb:     https://git.kernel.org/tip/fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
+Commit-ID:  39388e80f9b0c3788bfb6efe3054bdce0c3ead45
+Gitweb:     https://git.kernel.org/tip/39388e80f9b0c3788bfb6efe3054bdce0c3ead45
 Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:34 +0200
+AuthorDate: Wed, 3 Apr 2019 18:41:35 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Tue, 9 Apr 2019 20:48:11 +0200
+CommitDate: Wed, 10 Apr 2019 14:46:35 +0200
 
-x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
+x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()
 
-With lazy-FPU support the (now named variable) ->initialized was set to
-true if the CPU's FPU registers were holding a valid state of the
-FPU registers for the active process. If it was set to false then the
-FPU state was saved in fpu->state and the FPU was deactivated.
+In commit
 
-With lazy-FPU gone, ->initialized is always true for user threads and
-kernel threads never call this function so ->initialized is always true
-in copy_fpstate_to_sigframe().
+  72a671ced66db ("x86, fpu: Unify signal handling code paths for x86 and x86_64 kernels")
 
-The using_compacted_format() check is also a leftover from the lazy-FPU
-time. In the
+the 32bit and 64bit path of the signal delivery code were merged.
 
-  ->initialized == false
+The 32bit version:
 
-case copy_to_user() would copy the compacted buffer while userland would
-expect the non-compacted format instead. So in order to save the FPU
-state in the non-compacted form it issues XSAVE to save the *current*
-FPU state.
+  int save_i387_xstate_ia32(void __user *buf)
+  …
+         if (cpu_has_xsave)
+                 return save_i387_xsave(fp);
+         if (cpu_has_fxsr)
+                 return save_i387_fxsave(fp);
 
-If the FPU is not enabled, the attempt raises the FPU trap, the trap
-restores the FPU contents and re-enables the FPU and XSAVE is invoked
-again and succeeds.
+The 64bit version:
 
-*This* does not longer work since commit
+  int save_i387_xstate(void __user *buf)
+  …
+         if (user_has_fpu()) {
+                 if (use_xsave())
+                         err = xsave_user(buf);
+                 else
+                         err = fxsave_user(buf);
 
-  bef8b6da9522 ("x86/fpu: Handle #NM without FPU emulation as an error")
+                 if (unlikely(err)) {
+                         __clear_user(buf, xstate_size);
+                         return err;
 
-Remove the check for ->initialized because it is always true and remove
-the false condition. Update the comment to reflect that the state is
-always live.
+The merge:
 
- [ bp: Massage. ]
+  int save_xstate_sig(void __user *buf, void __user *buf_fx, int size)
+  …
+         if (user_has_fpu()) {
+                 /* Save the live register state to the user directly. */
+                 if (save_user_xstate(buf_fx))
+                         return -1;
+                 /* Update the thread's fxstate to save the fsave header. */
+                 if (ia32_fxstate)
+                         fpu_fxsave(&tsk->thread.fpu);
+
+I don't think that we needed to save the FPU registers to ->thread.fpu
+because the registers were stored in buf_fx. Today the state will be
+restored from buf_fx after the signal was handled (I assume that this
+was also the case with lazy-FPU).
+
+Since commit
+
+  66463db4fc560 ("x86, fpu: shift drop_init_fpu() from save_xstate_sig() to handle_signal()")
+
+it is ensured that the signal handler starts with clear/fresh set of FPU
+registers which means that the previous store is futile.
+
+Remove the copy_fxregs_to_kernel() call because task's FPU state is
+cleared later in handle_signal() via fpu__clear().
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
@@ -119,68 +141,30 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-6-bigeasy@linutronix.de
+Link: https://lkml.kernel.org/r/20190403164156.19645-7-bigeasy@linutronix.de
 ---
- arch/x86/kernel/fpu/signal.c | 35 ++++++++---------------------------
- 1 file changed, 8 insertions(+), 27 deletions(-)
+ arch/x86/kernel/fpu/signal.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 7296a9bb78e7..c1a5999affa0 100644
+index c1a5999affa0..34989d2a8893 100644
 --- a/arch/x86/kernel/fpu/signal.c
 +++ b/arch/x86/kernel/fpu/signal.c
-@@ -144,9 +144,8 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
-  *	buf == buf_fx for 64-bit frames and 32-bit fsave frame.
-  *	buf != buf_fx for 32-bit frames with fxstate.
-  *
-- * If the fpu, extended register state is live, save the state directly
-- * to the user frame pointed by the aligned pointer 'buf_fx'. Otherwise,
-- * copy the thread's fpu state to the user frame starting at 'buf_fx'.
-+ * Save the state directly to the user frame pointed by the aligned pointer
-+ * 'buf_fx'.
-  *
-  * If this is a 32-bit frame with fxstate, put a fsave header before
-  * the aligned state at 'buf_fx'.
-@@ -157,7 +156,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+@@ -155,7 +155,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+  */
  int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
  {
- 	struct fpu *fpu = &current->thread.fpu;
--	struct xregs_state *xsave = &fpu->state.xsave;
+-	struct fpu *fpu = &current->thread.fpu;
  	struct task_struct *tsk = current;
  	int ia32_fxstate = (buf != buf_fx);
  
-@@ -172,29 +170,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
- 			sizeof(struct user_i387_ia32_struct), NULL,
- 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
- 
--	if (fpu->initialized || using_compacted_format()) {
--		/* Save the live register state to the user directly. */
--		if (copy_fpregs_to_sigframe(buf_fx))
--			return -1;
--		/* Update the thread's fxstate to save the fsave header. */
--		if (ia32_fxstate)
--			copy_fxregs_to_kernel(fpu);
--	} else {
--		/*
--		 * It is a *bug* if kernel uses compacted-format for xsave
--		 * area and we copy it out directly to a signal frame. It
--		 * should have been handled above by saving the registers
--		 * directly.
--		 */
--		if (boot_cpu_has(X86_FEATURE_XSAVES)) {
--			WARN_ONCE(1, "x86/fpu: saving compacted-format xsave area to a signal frame!\n");
--			return -1;
--		}
--
--		fpstate_sanitize_xstate(fpu);
--		if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
--			return -1;
--	}
-+	/* Save the live registers state to the user frame directly. */
-+	if (copy_fpregs_to_sigframe(buf_fx))
-+		return -1;
-+	/* Update the thread's fxstate to save the fsave header. */
-+	if (ia32_fxstate)
-+		copy_fxregs_to_kernel(fpu);
+@@ -173,9 +172,6 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 	/* Save the live registers state to the user frame directly. */
+ 	if (copy_fpregs_to_sigframe(buf_fx))
+ 		return -1;
+-	/* Update the thread's fxstate to save the fsave header. */
+-	if (ia32_fxstate)
+-		copy_fxregs_to_kernel(fpu);
  
  	/* Save the fsave header for the 32-bit frames. */
  	if ((ia32_fxstate || !use_fxsr()) && save_fsave_header(tsk, buf))
