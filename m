@@ -2,96 +2,71 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA00BC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E564C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A033C20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E788B20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6xqvnBb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P1HPZ99D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfDMHw0 (ORCPT
+        id S1727212AbfDMHx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:52:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53670 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfDMHw0 (ORCPT
+        Sat, 13 Apr 2019 03:53:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40074 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfDMHx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:52:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q16so13924916wmj.3;
-        Sat, 13 Apr 2019 00:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GY4d+NuTqiwQyUOOnbyEYbtFF/qVE3bSnQ0D1IhfHQk=;
-        b=E6xqvnBbec8JgJGROdyogTcAe8J8naQqwefjbw+g8kxolGCmoIwxtJHQnOSNcTGt1S
-         BFUJm/YrQXv41rRw9iuhBrj1CNxn/De125zrUIibtflw5/6QwvPeXRfAq6EqcSBL/qQx
-         KAFuO+SvJ1wAnpZMrAnzhHRKIqUtCRCn/kYQ2KU2SXEnXj5wF0MGfs19lvXwAkkbv2y9
-         16tc0UdWD5GIijM6ml/eZyACongiuAR22olXY8wC6hSK6bqWFoddnJzg+wrFtJ1plVRD
-         XQJsa76KJaA3vLdeRFLptx3GBXeZe7lYAAFnBl6lOMeccnA5FMnx9ey30MHF4Vo4Cf2X
-         34sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GY4d+NuTqiwQyUOOnbyEYbtFF/qVE3bSnQ0D1IhfHQk=;
-        b=pztz0bBARW7Lz9JViFy1wqvuDhPF0hpgKWMhJWey3TgGe7ycrDbu7G2zULn+/8gA9i
-         B+z3YQD5v3V1E/9HqaGcI0dDLIcCFYZvOuolXLny+OJKhAGomTGgLMAK2u8EnBxU5J3Z
-         QIN+7253vc+lgPLwlj1AgWvjyMh49DPug8llmEktUGndHeps0IHC4WheqdxWg2EBjWw3
-         fJNu5khVC1MEylCIPCkPqkFFoNP0xF5cAfgaXEZ35+lFy5qlvnit01+HlXARtAwTQ56C
-         Ime/MnbwPJ00jeDFHVpmpxf5dLlWqFdvTwdPRXdF3BVBS/NbKQD5KZmN2OSPuKoTc1UA
-         Zqqw==
-X-Gm-Message-State: APjAAAV6tcT7VolIGEwFlazPPeO1S7WNvK8ITgUkFeK5nskMCip3x9Oi
-        9I2Y0Tx6AzrymqDL5mUjbY8=
-X-Google-Smtp-Source: APXvYqxy4SDzj4+iFTksOksMnBy9KvBHp5aKVo0S6f3WnMKDq55mflB8U+jOrLEKQhWjfDB2ACwFcw==
-X-Received: by 2002:a1c:20c1:: with SMTP id g184mr14263983wmg.137.1555141944383;
-        Sat, 13 Apr 2019 00:52:24 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2def:500:2ca3:f513:3ec4:694])
-        by smtp.gmail.com with ESMTPSA id c16sm12892401wme.31.2019.04.13.00.52.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 00:52:23 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Woojung Huh <woojung.huh@microchip.com>
-Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: normalize Woojung Huh's email address
-Date:   Sat, 13 Apr 2019 09:52:15 +0200
-Message-Id: <20190413075215.11889-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Apr 2019 03:53:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OKL2bgXFvu/qx9sw+X/h2Tm3lT/Fyuo+IjvFHTXkV04=; b=P1HPZ99DqYyqOD9J4xGMpOOXf
+        TtX2PZpSo224m4Xu2WTPXlmWuXg28vbKs8L4V5AFwph2UNGuo6M/eaDchvjKjT6zvwPOjL+jsjyBX
+        jSby68JEtkrxRrs1I/FsymBq0Hgf7szsHzV2yf+whpssoIFoV2P/4g+Ks14ROXnZ5k3U8A+xNssRW
+        wGL1k7juwuN+4eDcVTtxOi2pFB3c0NcqsY65QtW/sSTGclcRMRAxfTcArOGeF8sITGilugJWXv5li
+        VOHo6jWFnesftmUkxA+AysQBMGrfP+M0P6gomO4XCjvkRfgpqiiiUD/FZUuggxC5efeIIX5+Pdj3W
+        kWcchCBYA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hFDU4-00083G-1x; Sat, 13 Apr 2019 07:53:56 +0000
+Date:   Sat, 13 Apr 2019 00:53:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH 1/3] RISC-V: Add separate asm/encoding.h for spec related
+ defines
+Message-ID: <20190413075355.GA30428@infradead.org>
+References: <20190413073906.53676-1-anup.patel@wdc.com>
+ <20190413073906.53676-2-anup.patel@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413073906.53676-2-anup.patel@wdc.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MAINTAINERS contains a lower-case and upper-case variant of
-Woojung Huh' s email address.
+On Sat, Apr 13, 2019 at 07:39:35AM +0000, Anup Patel wrote:
+> It's better to have all RISC-V spec related defines in one place
+> so this patch adds separate asm/encoding.h for such defines which
+> can be included in assembly as well as C code.
 
-Only keep the lower-case variant in MAINTAINERS.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2359e12e4c41..afa019b5c461 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10145,7 +10145,7 @@ F:	drivers/spi/spi-at91-usart.c
- F:	Documentation/devicetree/bindings/mfd/atmel-usart.txt
- 
- MICROCHIP KSZ SERIES ETHERNET SWITCH DRIVER
--M:	Woojung Huh <Woojung.Huh@microchip.com>
-+M:	Woojung Huh <woojung.huh@microchip.com>
- M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--- 
-2.17.1
-
+<asm/csr.h> can be included from assembly just fine already.
+and we already do that.  So I don't really see much of a point
+in splitting it.
