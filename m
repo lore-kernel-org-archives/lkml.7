@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B0C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18659C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E99D20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D279020869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eHW8eSLU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKRCYL/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfDMKdd (ORCPT
+        id S1727340AbfDMKdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:33:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54541 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfDMKd3 (ORCPT
+        Sat, 13 Apr 2019 06:33:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37499 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbfDMKd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:33:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c1so14195870wml.4
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:28 -0700 (PDT)
+        Sat, 13 Apr 2019 06:33:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so13880810wmf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nptnDJR99QeM/FrXgUlEziNHJ0JezRkAyQKy55fvHkU=;
-        b=eHW8eSLURcZAhLZQSigqQbpnc7W9hsOtj9DtyxZhveO9mNmXOajfwMRvYU6v2eiaqF
-         y2dhYCpwCceSi8tuHSOtk9rx0XzbVsgd0uAukQvFr25hGb+sy3BgXyjekSGUv2V3xdSG
-         fBC1lvshCdwtQCZdD94ELjABYs5GvG6lZU2HhGofCmT1cTgt++Cl6grGI73mYUVZ+1qZ
-         wBvaJck/ibyLStYf1rY8lr77IR/B+ybwTuFbuZvUrzkaLP3NLc3pY3R1yoiLypwslkCm
-         Mgw5qDwfd2dFoMuW2dHn7O8B/IaFgwP5bInxAgzw4RUeD5CKJOzvejO+L4Y3M7RQs8Jc
-         6g1g==
+        bh=5jA6D7OJ9pvsmQ14gC9C8Sc1eaZLUKPQp7K1Sjy19+I=;
+        b=UKRCYL/WK9NYcWZFqvmyXZROjuqZTIURzvo6WlvyRqCAkSFWRGFSuBvTdfRHY6SfOn
+         7NOky5zWzvKZlJXte5MimROoFpRLXXeSDgP8izp5erl7u58Wc2Vd+dEzh7GspgicrrpM
+         z/16YVLJ7QP/TmqeyKl6n6zxX0xFIu/7LdnZeZnf4z8Cl+Wjtw0N4/EHJgg+CXuBb2ax
+         hHxc6TtHEyyB9kp34y5Eth3NTJ5B+Tnnyl8Q7Kx5D9eUIEwmxle0Rvg3O9CSnfvJvz93
+         3pFjfzv4pXDO30fH2ChKZR8FHsw89we5DnSb9dy2JvW9lAR/Qsf/DdHq82hdNQKRAQ6B
+         VZAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nptnDJR99QeM/FrXgUlEziNHJ0JezRkAyQKy55fvHkU=;
-        b=QHaV2pryuAhd0wvHyQY8pDOKRPGkTvFV0NIgHZaliuiQaHhfR6a37iMbe9t42pZ03X
-         etk2BKgBpovmH+Pa7WJt7GAMfHcO2CqMUH8fbdI3Q06RbxfQwVpJq+a9x19BHQdYiyGq
-         dr8/fttuvQWTOepVJmip8Qdk1Orcd6/e9ZolVPB+EqnMfjI2lw26cnB8RjstvyU/c+f3
-         YRWfVKlqCNQkQALfFsdUi423S7An9LB/oivDATMtVxcuzRbzka2hmyYwghoWVHIuwPg+
-         DICQt79vC4DGuCNCtd1CAItc7KkeyeVpM0rmufMJQdAXIZk5PfXPloEAjOMS+IjtMBDq
-         TGBw==
-X-Gm-Message-State: APjAAAW2+u8/yvMPU7kly3bEe4C7t+AK2GwznJ/9So4PjnWeFcdFgJdj
-        OALv+9F4I8T3bueRG+iO67kZaA==
-X-Google-Smtp-Source: APXvYqx+QsTRXQQo9wW3DCXC0WruTsT3E3/+VgMeMKv8HLjsbmrcarPPPd2vftyH3XhNn/HN62qfRA==
-X-Received: by 2002:a1c:1d97:: with SMTP id d145mr14050463wmd.136.1555151607702;
-        Sat, 13 Apr 2019 03:33:27 -0700 (PDT)
+        bh=5jA6D7OJ9pvsmQ14gC9C8Sc1eaZLUKPQp7K1Sjy19+I=;
+        b=aeMwg2dxb1hf6L8eK7ngXC/W9P3+KYlhM42lV1LSqLAoVPj+IcfLpsWZok4YkCUv9o
+         vr5hqiVvrB6KG1nTiKxpGZmhjtBB8wckBxwcSaGmDVfc6Gcli+ZdLRInxu5HM0hxmq/1
+         bUg9M1v/w+ZzfN1qdf/Zs4us+Uovrflgdh4zgW5OG2MrJpcCQ4DW3epR+USWNoImlPaP
+         CfIb/YtpAb7quxA7pqwpJXTEwKF92XOjXBLfYy7Ht1/IFLB3gJ4iDOgr41aKVHN0jm2K
+         +lq8o/QzWIx12y68xPB9JoM2nDDyp7BF2B+vBhDau1R/bLCYvA83HZ1olbkGnfM41YLA
+         osRg==
+X-Gm-Message-State: APjAAAXvNgIGs5J4kdzM1qhf5jlp1428cezzjOy3Qde7kwOw20DAxMYT
+        3yW7hHIpPTKQ98N5TNQuXSeUng==
+X-Google-Smtp-Source: APXvYqx5xN0FecUqjKn7zV4ZtW7LGbx/4lQh+2nDBgtZwK4DhRcpu5a5RJegc4Pm4RoVl7bBHZjcMQ==
+X-Received: by 2002:a7b:c309:: with SMTP id k9mr14437930wmj.45.1555151606681;
+        Sat, 13 Apr 2019 03:33:26 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.26
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:33:27 -0700 (PDT)
+        Sat, 13 Apr 2019 03:33:26 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 20/20] nvmem: sunxi_sid: Support SID on H6
-Date:   Sat, 13 Apr 2019 11:33:05 +0100
-Message-Id: <20190413103305.9576-21-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH 19/20] nvmem: sunxi-sid: convert to SPDX license tags
+Date:   Sat, 13 Apr 2019 11:33:04 +0100
+Message-Id: <20190413103305.9576-20-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
 References: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
@@ -74,40 +74,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-Add support for H6's SID controller. It supports 4K-bit
-EFUSE, bigger than before.
+Updates license to use SPDX-License-Identifier.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sunxi_sid.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/nvmem/sunxi_sid.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 7013f9cc43c7..a079a80ddf2c 100644
+index e7936380ce89..7013f9cc43c7 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -188,6 +188,11 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
- 	.size = 0x100,
- };
+@@ -1,18 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Allwinner sunXi SoCs Security ID support.
+  *
+  * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
+  * Copyright (C) 2014 Maxime Ripard <maxime.ripard@free-electrons.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
  
-+static const struct sunxi_sid_cfg sun50i_h6_cfg = {
-+	.value_offset = 0x200,
-+	.size = 0x200,
-+};
-+
- static const struct of_device_id sunxi_sid_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
-@@ -195,6 +200,7 @@ static const struct of_device_id sunxi_sid_of_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
- 	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
-+	{ .compatible = "allwinner,sun50i-h6-sid", .data = &sun50i_h6_cfg },
- 	{/* sentinel */},
- };
- MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
+ #include <linux/device.h>
 -- 
 2.21.0
 
