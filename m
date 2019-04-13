@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB609C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BAFC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712E52082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF18F2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kdl1SMFY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ka7IQxU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfDMKdX (ORCPT
+        id S1727447AbfDMKeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:33:23 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39224 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfDMKdN (ORCPT
+        Sat, 13 Apr 2019 06:34:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52310 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727260AbfDMKdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:33:13 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j9so15130702wrn.6
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:12 -0700 (PDT)
+        Sat, 13 Apr 2019 06:33:24 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a184so14214632wma.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ha/EwT9JIQJ8acUTtqE5mB27okMdtBeOqTiWB8z6ahU=;
-        b=kdl1SMFYKVzRFDhoZyx9G2BqRlRt6ezTS1kO5zgFoNRukLeaRNX6x2E6w+fW9GLJnc
-         WCDrg0aPR3zqo89okobQc1HijhB69sVPiZ8PDIBWshPgjL2HJzPG835Tg2I9V4PXL+yZ
-         fov5VtjY2ScWC37vkzVdbipsiKDCDO5n2MQfSevlNHt8YAG4jqWbJ5dZqbIzIl1uzYMU
-         wUE4kMUWfZScuJFU//EaWx7HcXYl5fqevJGJcVbbUgObhKaFE+qal3M2s1d4zjO0Bm5C
-         rEFqNsH92MkYzK5O7Y4TwbktZ2zwoTJew2EzhdJppS5w1RVgjcyN9MHGvVE3FoKgV/0b
-         1Ubw==
+        bh=C0a8sdiQYaX4oWrE+7muICmRubcJy65i2pEeJPhC6s0=;
+        b=Ka7IQxU0wxrOaMULh9S/Y+VuJKQmWMuqf1Msqk6rpgXone3/tl96A5jwiaci9BiwKo
+         CcZ5p/+aZMx8qwNyAfezsyxOG2mH2bz0AxidTPzD2aaGLym8t2hVMB3HZ50/l9w2ykqY
+         TxdDQyAmUAeVQFEj9JmAkMAB439+F5xeNGr6It0/v5c8X96Ax2FAlZqzwxFHg3dHB8au
+         x7OKv+GkPnuS4VThKvau5dBcelHgtnbeNCkqYCBX0z0OPXPUbDZfacbknRSfJyGRxX4T
+         LAFo5nXL4GEPTnWxnmLcpAsGuo312wcXYEdAD8YwTu40FJlHBDyfvIf7JpLCNMOJFUAx
+         VFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ha/EwT9JIQJ8acUTtqE5mB27okMdtBeOqTiWB8z6ahU=;
-        b=mFzTaF1JdGu4n65GhmBQaLSizo0xcK+v5gseVp3gGLdQOy793X0W44ebDJSxUoJtHN
-         4V5iXp154cDjNTTiGc2SRejPQLGLew3YooTJAYsFTI5UkEgGkIKmbiPwSii4G6pfnjGC
-         gNcNcT1wyrJ25OGY6MoznIrmHNhIyF5YDr2P9Viy7DvOkKPkqtsOvH06jcFXXBDEM9PR
-         FrLixqeKXam7In+LnFyy9TfkMKOgbBLB0prlI+x8WtxdrSa7KJD2xi+8hV4S/kL6jkSK
-         fdoR3P+QmJrDYVMg7qUE+bP2P5YSySxXIIDEsF61jOfcv6ughABMSXzB5Pre3Qso6Nwe
-         hX3Q==
-X-Gm-Message-State: APjAAAXkfuANRMbdJhIKh6X5pFPk0y7CK8RdUUQdOUjvwuobV78DO8fX
-        OY60qrjFJsP9+DW3sKvQJ62jtQ==
-X-Google-Smtp-Source: APXvYqwuoup90r4R1WbN5QHMJ2gC0Z695fuqPKVdrlhYZDu7KFCuAeK/ywh+OdwOOUQERJ5vlvtFiA==
-X-Received: by 2002:adf:ef91:: with SMTP id d17mr38390472wro.78.1555151591792;
-        Sat, 13 Apr 2019 03:33:11 -0700 (PDT)
+        bh=C0a8sdiQYaX4oWrE+7muICmRubcJy65i2pEeJPhC6s0=;
+        b=uThryIy9ToUwOqD4SpkzD9OBUX/nF9jeFWkwfenRBOEWWjECAo+G0OnNkim38LBMnw
+         FO6KN5B7Dqa2uQmygaOn3boEPMGdLES9odo02wdDA/VWJjHgKu+TOE/y/NdFJ2mxtXnd
+         z8flF45jwcM5Dly9fkG8qma92ZekvnRwM1QS2PLmOZ2dPAvqGRY1Vy9Yar7zUyOuxFY3
+         BYaLppy4MNa5nsRx6Am7feJXudYHbb177Z4qB1KHLprzIJfwCYrz/Stq26/kkWfyQcVm
+         piHHv7PNzeOfO1eBWZ7tRdovh3VQohOqx7MNcrBmlPptqtrUL1DSiJatQG31Cfk8U329
+         IMZQ==
+X-Gm-Message-State: APjAAAXdbdMIR3AaRLWEqkJM8mFlyC3UcKcooQY7N340iiUeyWB95FKE
+        +yG656/8LJ9ZrAO2p6q8Xg+P/Q==
+X-Google-Smtp-Source: APXvYqxaHhE384z1PDeqL15KAnma/XuYjQTt8e+kGww5eh23aVgVce0WrtTJ6enp9V3slAujLC2U5Q==
+X-Received: by 2002:a1c:9cd1:: with SMTP id f200mr14800540wme.91.1555151602683;
+        Sat, 13 Apr 2019 03:33:22 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.10
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:33:11 -0700 (PDT)
+        Sat, 13 Apr 2019 03:33:22 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 05/20] nvmem: sunxi_sid: Optimize register read-out method
-Date:   Sat, 13 Apr 2019 11:32:50 +0100
-Message-Id: <20190413103305.9576-6-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH 15/20] nvmem: mxs-ocotp: use devm_platform_ioremap_resource() to simplify code
+Date:   Sat, 13 Apr 2019 11:33:00 +0100
+Message-Id: <20190413103305.9576-16-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
 References: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
@@ -72,91 +72,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Anson Huang <anson.huang@nxp.com>
 
-SID cells are 32-bit aligned, and a multiple of 32 bits in length. The
-only outlier is the thermal sensor calibration data, which is 16 bits
-per sensor. However a whole 64 bits is allocated for this purpose, so
-we could consider it conforming to the rule above.
+Use the new helper devm_platform_ioremap_resource() which wraps the
+platform_get_resource() and devm_ioremap_resource() together, to
+simplify the code.
 
-Also, the register read-out method assumes native endian, unlike the
-direct MMIO method, which assumes big endian. Thus no endian conversion
-is involved.
-
-Under these assumptions, the register read-out method can be slightly
-optimized. Instead of reading one word then discarding 3 bytes, read
-the whole word directly into the buffer. However, for reads under 4
-bytes or trailing bytes, we still use a scratch buffer to extract the
-requested bytes.
-
-We could go one step further if .word_size was 4, but changing that
-would affect the sysfs interface's behavior.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/sunxi_sid.c | 38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+ drivers/nvmem/mxs-ocotp.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 704c35edf796..15fbfab62595 100644
---- a/drivers/nvmem/sunxi_sid.c
-+++ b/drivers/nvmem/sunxi_sid.c
-@@ -115,36 +115,34 @@ static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
-  * to be not reliable at all.
-  * Read by the registers instead.
-  */
--static int sun8i_sid_read_byte_by_reg(const struct sunxi_sid *sid,
--				      const unsigned int offset,
--				      u8 *out)
--{
--	u32 word;
--	int ret;
--
--	ret = sun8i_sid_register_readout(sid, offset & ~0x03, &word);
--
--	if (ret)
--		return ret;
--
--	*out = (word >> ((offset & 0x3) * 8)) & 0xff;
--
--	return 0;
--}
--
- static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
- 				 void *val, size_t bytes)
- {
- 	struct sunxi_sid *sid = context;
--	u8 *buf = val;
-+	u32 word;
+diff --git a/drivers/nvmem/mxs-ocotp.c b/drivers/nvmem/mxs-ocotp.c
+index 53122f59c4b2..fbb7db6ee1f5 100644
+--- a/drivers/nvmem/mxs-ocotp.c
++++ b/drivers/nvmem/mxs-ocotp.c
+@@ -145,7 +145,6 @@ static int mxs_ocotp_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	const struct mxs_data *data;
+ 	struct mxs_ocotp *otp;
+-	struct resource *res;
+ 	const struct of_device_id *match;
  	int ret;
  
--	while (bytes--) {
--		ret = sun8i_sid_read_byte_by_reg(sid, offset++, buf++);
-+	/* .stride = 4 so offset is guaranteed to be aligned */
-+	while (bytes >= 4) {
-+		ret = sun8i_sid_register_readout(sid, offset, val);
- 		if (ret)
- 			return ret;
-+
-+		val += 4;
-+		offset += 4;
-+		bytes -= 4;
- 	}
+@@ -157,8 +156,7 @@ static int mxs_ocotp_probe(struct platform_device *pdev)
+ 	if (!otp)
+ 		return -ENOMEM;
  
-+	if (!bytes)
-+		return 0;
-+
-+	/* Handle any trailing bytes */
-+	ret = sun8i_sid_register_readout(sid, offset, &word);
-+	if (ret)
-+		return ret;
-+
-+	memcpy(val, &word, bytes);
-+
- 	return 0;
- }
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	otp->base = devm_ioremap_resource(dev, res);
++	otp->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(otp->base))
+ 		return PTR_ERR(otp->base);
  
 -- 
 2.21.0
