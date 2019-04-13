@@ -2,92 +2,153 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D059C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB87C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16592075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="zsgFh4ii"
+	by mail.kernel.org (Postfix) with ESMTP id 524942075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 08:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfDMIPU (ORCPT
+        id S1727303AbfDMIQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 04:15:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34488 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfDMIPU (ORCPT
+        Sat, 13 Apr 2019 04:16:12 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:58985 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfDMIQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 04:15:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r186so2055051wmf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 01:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sGAqxRlimZcOm/Xnh2p9ngnwXcLC61Kd6elJxjX23VM=;
-        b=zsgFh4iiVEwsELbHacinBUU3Cnmzy1mXBMRvQJPYvIInH4pi4yjZ+WtapkeRGZcYws
-         oTVMNZNBiz0c9aRuaHcPOmJ2lToCZGL8GD3dHk2IdY1hB5DUa6qqk+j8ajt/dc7p0wqP
-         k2/0FTtqFuak7qUrPpcJcrb/r9jJSyvpLOqxd4UJD/Sb/YxaKJNUyN9j4kc6EYgb6pAJ
-         0Pq2nuzH3dc+q74dGuq2t/ZnNhAoUb6+q0m3ZmIxxySKhH0N06gP5yznnfaLb3zEDnZc
-         7zBKMJAqMbojJDRwVu9TC4CCiy0XeViK6j1F9PyX1u3f8r5WG3rjqXRzR2+X9AiA47BV
-         9Idg==
+        Sat, 13 Apr 2019 04:16:11 -0400
+Received: by mail-it1-f197.google.com with SMTP id j203so11456227itb.8
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 01:16:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sGAqxRlimZcOm/Xnh2p9ngnwXcLC61Kd6elJxjX23VM=;
-        b=dxSJOT4FOYULbNbhjeBiYIYu4mbFM6OFtH6fVijYeilxEcfyDIkrsGt91WlXTtj0gi
-         QourVOmlw2/8nMGwhU3LKHCrHLvcIIbkb/qMPiLldJIUOy7QdHXDLR7wdcxi+Q6YwYjo
-         nETr5KTo+GAMxUJf+IDWiPTraf+3lFxjZEHshHNGPv+6y1i5g5Na7uIvW9QBO56uojp/
-         u1FSWeq3qpLoh2I4h+11ck8JwqXIg4/lsvyaIkuNOcCOdLk0h8GDZiM1WwZiUYhyMjvY
-         +GgwKGX8+aGuv0NAe3ztO7Z0rvFZOKS9rC6VPl0CcZ/yzwn1uPU6xZ48JEWaqqze12GX
-         5PJg==
-X-Gm-Message-State: APjAAAU6R5rHeJLtVWY6Gge0dOiWo8lmXAkRpXMuHkEDNwC84sqQ6EUf
-        6x4c++5/IOyjwlcuu+y0zD+DQWvBYN9qvPoyc3q+HA==
-X-Google-Smtp-Source: APXvYqzxTOptLpLvIZ+s4YBYwiUgW/U2Oo9cQPEaaI40BOJY/WK61fjvQvyk45Z6tkeCofkvMQzRf+3HRccRPa5FUDg=
-X-Received: by 2002:a1c:544f:: with SMTP id p15mr13683726wmi.65.1555143318269;
- Sat, 13 Apr 2019 01:15:18 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JYwa0fO1NtQQxeN51+orwtMJaSYdGsjlNAoUd8rz2OQ=;
+        b=QZZX58dyv47K2oZnWwB7/zh7hsO2E7vfhDd/i96sKal2Bf8jcW/IEzZ5r6xbgUXVl2
+         itG3yrz8KuIoC7odZsDIcvlOVn3ekBESKPdqaNpJXBJPBYo+niAFI+TqdEz+lGJUdB0G
+         ydvqkerif4KWaaLo4xZsUArQO0+ysj88DAnFs/WcHcR4OQgz1l52LTtaMOLKTLacrV44
+         NtLu8LIZdt8X5xaGx5KnOqFMjXaIPri9+nSVttcNsM3YcbLwD/yEJKfPaRRWro3YApZk
+         353jW51qILfwByrsOnOpGltt7sIuvlwSj6SeGNp7Ilv93/mQq7SWoLabSQSFyTQNJjzy
+         qqZA==
+X-Gm-Message-State: APjAAAUbNq1ldrzFGX9nTySHRXQLnlWLVplH2ufc0Vi8tJZxO0Z0visb
+        y08glUD+Y0eIVT+6Vo97yFqs2XRG+jtGCpd256qrGYbR2w4+
+X-Google-Smtp-Source: APXvYqw7x4tx2VnF/fG0o2/iHwpHbtVdqt2T+HF0JxPCvxDZ98/fOAvN+GqhZ6Op4dgucBz1az+09NbHQtHKHNtBtZMPDa+Dp52k
 MIME-Version: 1.0
-References: <20190413073906.53676-1-anup.patel@wdc.com> <20190413073906.53676-4-anup.patel@wdc.com>
- <20190413075548.GC30428@infradead.org>
-In-Reply-To: <20190413075548.GC30428@infradead.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sat, 13 Apr 2019 13:45:07 +0530
-Message-ID: <CAAhSdy2MJVOLQ_nTTf6FvSOPbyaCxL-J-eT2PfGMubptBL+rnw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] RISC-V: Access CSRs using CSR numbers
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:5a4a:: with SMTP id v71mr10917042jaa.22.1555143370974;
+ Sat, 13 Apr 2019 01:16:10 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 01:16:10 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033aefc058665083c@google.com>
+Subject: WARNING in __kthread_bind_mask
+From:   syzbot <syzbot+6d4a92619eb0ad08602b@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, hare@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 1:25 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Sat, Apr 13, 2019 at 07:39:44AM +0000, Anup Patel wrote:
-> > We should prefer accessing CSRs using their CSR numbers because:
-> > 1. It compiles fine with older toolchains.
-> > 2. We can use latest CSR names in #define macro names of CSR numbers
-> >    as-per RISC-V spec.
-> > 3. We can access newly added CSRs even if toolchain does not recognize
-> >    newly addes CSRs by name.
->
-> This looks mostly fine, but also please remove all the comments
-> regarding using sptbr instead of satp now that they are not true
-> anymore.
+Hello,
 
-Sure, will do.
+syzbot found the following crash on:
 
-Regards,
-Anup
+HEAD commit:    bcb67f0f Add linux-next specific files for 20190412
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=165912d3200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=35c479ecf64ba753
+dashboard link: https://syzkaller.appspot.com/bug?extid=6d4a92619eb0ad08602b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14c9ebbb200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153f76dd200000
+
+The bug was bisected to:
+
+commit 6c271ce2f1d572f7fa225700a13cfe7ced492434
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Thu Jan 10 18:22:30 2019 +0000
+
+     io_uring: add submission polling
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=143498f3200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=163498f3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=123498f3200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6d4a92619eb0ad08602b@syzkaller.appspotmail.com
+Fixes: 6c271ce2f1d5 ("io_uring: add submission polling")
+
+WARNING: CPU: 0 PID: 7822 at kernel/kthread.c:399  
+__kthread_bind_mask+0x3b/0xc0 kernel/kthread.c:399
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7822 Comm: syz-executor030 Not tainted 5.1.0-rc4-next-20190412  
+#24
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x72b kernel/panic.c:214
+  __warn.cold+0x20/0x46 kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:__kthread_bind_mask+0x3b/0xc0 kernel/kthread.c:399
+Code: 48 89 fb e8 f7 ab 24 00 4c 89 e6 48 89 df e8 ac e1 02 00 31 ff 49 89  
+c4 48 89 c6 e8 7f ad 24 00 4d 85 e4 75 15 e8 d5 ab 24 00 <0f> 0b e8 ce ab  
+24 00 5b 41 5c 41 5d 41 5e 5d c3 e8 c0 ab 24 00 4c
+RSP: 0018:ffff8880a89bfbb8 EFLAGS: 00010293
+RAX: ffff88808ca7a280 RBX: ffff8880a98e4380 RCX: ffffffff814bdd11
+RDX: 0000000000000000 RSI: ffffffff814bdd1b RDI: 0000000000000007
+RBP: ffff8880a89bfbd8 R08: ffff88808ca7a280 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffffff87691148 R14: ffff8880a98e43a0 R15: ffffffff81c91e10
+  __kthread_bind kernel/kthread.c:412 [inline]
+  kthread_unpark+0x123/0x160 kernel/kthread.c:480
+  kthread_stop+0xfa/0x6c0 kernel/kthread.c:556
+  io_sq_thread_stop fs/io_uring.c:2057 [inline]
+  io_sq_thread_stop fs/io_uring.c:2052 [inline]
+  io_finish_async+0xab/0x180 fs/io_uring.c:2064
+  io_ring_ctx_free fs/io_uring.c:2534 [inline]
+  io_ring_ctx_wait_and_kill+0x133/0x510 fs/io_uring.c:2591
+  io_uring_release+0x42/0x50 fs/io_uring.c:2599
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+  do_group_exit+0x135/0x370 kernel/exit.c:980
+  __do_sys_exit_group kernel/exit.c:991 [inline]
+  __se_sys_exit_group kernel/exit.c:989 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43ee98
+Code: Bad RIP value.
+RSP: 002b:00007fff28656a18 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ee98
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be6a8 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
