@@ -2,117 +2,125 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09012C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C048AC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3592070D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D20220818
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="eldfW6Dt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpcoiE4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfDMNG6 (ORCPT
+        id S1727092AbfDMNUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 09:06:58 -0400
-Received: from nbd.name ([46.4.11.11]:59018 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfDMNG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 09:06:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qr6cHkY9JEuLSsUMKgBlqIfxqu4G93W4ly6TZ45cmzw=; b=eldfW6DtO1//HTsFI0XQTBjmCn
-        1Tq69cEKBRnGJ+CtZ7chj9BufrvtfLo6wgr+CpcxwIFX8CvRC1rh3MZMfQtNB9FDvOCMHCR5MZPGJ
-        BOaRtgi+egYOHGJrYsVh075dIKBuFhvW3oVR9XbnZYR2KYUtJnkXnryL5HEO3BWJ4g6Q=;
-Received: from p4ff13bac.dip0.t-ipconnect.de ([79.241.59.172] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1hFIMq-0004RU-Vp; Sat, 13 Apr 2019 15:06:50 +0200
-Subject: Re: [PATCH v3 1/4] mt76: add mac80211 driver for MT7615 PCIe-based
- chipsets
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
-        Nelson Chang <nelson.chang@mediatek.com>,
-        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
-        Rorscha Yang <rorscha.yang@mediatek.com>,
-        Kyle Lee <kyle.lee@mediatek.com>,
-        Miller Shen <miller.shen@mediatek.com>,
-        Haipin Liang <haipin.liang@mediatek.com>,
-        KL Huang <kl.huang@mediatek.com>,
-        YH chen <yh.chen@mediatek.com>, linux-wireless@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo@kernel.org>
-References: <cover.1554102584.git.ryder.lee@mediatek.com>
- <4e974271e93b719e0463aa0269b4b970cc2b267f.1554102584.git.ryder.lee@mediatek.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <1d8ef32e-32ef-d3f9-2b49-5dfcbc04990f@nbd.name>
-Date:   Sat, 13 Apr 2019 15:06:47 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <4e974271e93b719e0463aa0269b4b970cc2b267f.1554102584.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 13 Apr 2019 09:20:23 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53991 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfDMNUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 09:20:23 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so14511747wmj.3;
+        Sat, 13 Apr 2019 06:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0Ps806CbdF+Vy9hVqCMx6Y1YhgnAdCgwxnXGiSyCaEg=;
+        b=BpcoiE4Adxrg4N1BoLEAfDPPJuKsGZ/w9WV0r1Nbo6vbMprxGid6Wh+qz4xHZBaepI
+         bwl/eA16HWdC1PPOibh41/yN50JQ1WArFm0rNHZLUzJn/BrOxBGsIhveWn5YCq8xUCJS
+         +T1zKo36iZuT3EsHhYhjB8LytfF4GKHfpm+zSqaGZJhTZ/ips5ag3fGXLkU8kk7ITC18
+         3ydyeVs1FTX/jqp5CgUQq1w/EhUGlnFAlEhOGkUSfBDE3mTlQ+r+Xm+jIOQA9xoQNuaR
+         Pfx6VjVb179l4ozTCl8r2r39l0GF1FhvIyj4m1YUUPFGvU46eIO4IvW529Q9VhmmMYxB
+         1inQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0Ps806CbdF+Vy9hVqCMx6Y1YhgnAdCgwxnXGiSyCaEg=;
+        b=YtrKlmN4Ftn3FZrIJ6l9QwRRyZEzHME+exZisR8lYPqLSk0C3LN/UpNfnyBfCfNqJQ
+         A4nVAW83D926TEapE/3rALrcwuWt3ASYckticHPzpDLyymks4alVBCYmrOG2+zF3HzaP
+         OJaG0W2NNQh6zL38J/N2javF4RZWbhKnDRQH9FwkV7MoIgTqc+1IQjaZY/9uhVS7Yaak
+         SEDN7YWKWmIFAPAaR14dmTdkqMuWC2amTu8Et9hH2hAI6oUkkuHx0DGDXi6P2uajUKVc
+         VA5wjazV3hnXwT3ncsCUMTNFz7p2O3kGYxSfBDHB7il5qZRbUEG0EFMJ29nVgeaDF6PH
+         ONIw==
+X-Gm-Message-State: APjAAAUr7vT+weFQGW1VOk60jpz25r+qoDa0mNId9PigeyH4k0w0QSI5
+        p7ZSB8tpY37GyLFTiQW5j1Q=
+X-Google-Smtp-Source: APXvYqwndRez9Ma90oSRugf9B3xHU/oB5jsPkQSqvwWCZoZzKixi8v0HBnq+8WDJ7i876bVZUqhnRg==
+X-Received: by 2002:a1c:2d45:: with SMTP id t66mr15236392wmt.106.1555161621194;
+        Sat, 13 Apr 2019 06:20:21 -0700 (PDT)
+Received: from armhf-buildhost.asgard.net (ipbcc343bd.dynamic.kabel-deutschland.de. [188.195.67.189])
+        by smtp.gmail.com with ESMTPSA id g8sm71659835wro.77.2019.04.13.06.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 13 Apr 2019 06:20:20 -0700 (PDT)
+From:   Markus Kueffner <kueffner.markus@gmail.com>
+Cc:     Markus Kueffner <kueffner.markus@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Date:   Sat, 13 Apr 2019 15:19:36 +0200
+Message-Id: <1555161577-1533-1-git-send-email-kueffner.markus@gmail.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <20190411065440.GB26817@dragon>
+References: <20190411065440.GB26817@dragon>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-01 09:16, Ryder Lee wrote:
-> This driver is for a newer generation of MediaTek MT7615 4x4 802.11ac
-> PCIe-based chipsets, which support wave2 MU-MIMO up to 4 users/group
-> and also support up to 160MHz bandwidth.
-> 
-> The driver fully supports AP, station and monitor mode.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Roy Luo <royluo@google.com>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>I'll fold in the following missing bit when I apply this patch.
+Add Pincfgs to enable the i.MX6's OTG feature for UDOO
 
-- Felix
-
+Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
 ---
---- a/mt76.h
-+++ b/mt76.h
-@@ -69,6 +69,7 @@ enum mt76_txq_id {
- 	MT_TXQ_MCU,
- 	MT_TXQ_BEACON,
- 	MT_TXQ_CAB,
-+	MT_TXQ_FWDL,
- 	__MT_TXQ_MAX
- };
+Changes in v2:
+- put pinctrl_usbotg node after pinctrl_usbh as suggested
+- remove unsupported properties from &usbotg
 
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index 776bfc7..828dd20 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -210,6 +210,14 @@
+ 			>;
+ 		};
+ 
++		pinctrl_usbotg: usbotg {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++				MX6QDL_PAD_EIM_D22__USB_OTG_PWR 0x17059
++				MX6QDL_PAD_EIM_D21__USB_OTG_OC 0x17059
++			>;
++		};
++
+ 		pinctrl_usdhc3: usdhc3grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
+@@ -287,6 +295,12 @@
+ 	status = "okay";
+ };
+ 
++&usbotg {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	status = "okay";
++};
++
+ &usdhc3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+-- 
+2.1.4
 
