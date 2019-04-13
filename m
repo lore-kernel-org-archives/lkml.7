@@ -2,119 +2,162 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9F3C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8478FC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796042147A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F02520870
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4UJ8Ms4"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="mcQrIs3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfDMVkJ (ORCPT
+        id S1727156AbfDMVsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:40:09 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34372 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfDMVkI (ORCPT
+        Sat, 13 Apr 2019 17:48:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42593 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbfDMVsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:40:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h5so7208677lfm.1;
-        Sat, 13 Apr 2019 14:40:07 -0700 (PDT)
+        Sat, 13 Apr 2019 17:48:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cv12so6757669plb.9
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 14:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3WM9+U+xqebGhe2yULQ1djRoc5FHNKF/KatTj8+fcIg=;
-        b=t4UJ8Ms4Ce3iP8rNGMCgpUL6UpbdmDAcXEyB+BmVmSUKWKJAMTCtbPs0nw3sWqVE7t
-         K0MTya3U9p2IDXvcJ64Eyza4noBSRtRggfLbvhKWdvnv6jzAsLNW+mPqSPL8aN23rXF+
-         +RCrpnIeb8L33iMSmOCNXN3zmOcOneaRmObhzQ8a5AD5JkLX45VUsNMinPWy1LBWfu7g
-         7NLDw2jMa342fJG3/e/mHwyS0tWppQbQutymW2VvMskWw3kwNw2zRHRb8cby01Y6U6pH
-         XqPE2gtxCFFHbpr4lQZiwRqkItL9E0o1cN8z8vimWBCpJfzN+r2wCrEQQqGqJxsHGMyy
-         C+bw==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zWHQFrxQ5ALEL7e28WuS09c9TVADIx4+Uu943gYarPE=;
+        b=mcQrIs3MsenKCn846ImL7z1F5wO+h8oXflpilDQP0Ra+4ev2WG/AGd4odQSRuGZJLP
+         tw6wdX5l+MY5tAruHcaZ3UG8FabivNUyagOxF9XJ1XkNAv3SjeYZZEDp8fDZwGRdQkEx
+         GzioCt82HcKH1JIOH19Ahd4LKLzafpvbv3tuFDafKre8JYCtasLnIodQ/Tydbh4wYPnu
+         DNmITr+JmHp6DpeK355pds29xmtOx4f21AS2wmN8MWpnoRCgEPGj8YDvOWhLZq/J2+6n
+         9Qc6moLGsQaq6DDofnuRtP8t3JcMHlpEh25PSkC8eunbhqeDJnJUTIexM1+C7M73XYl3
+         umiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3WM9+U+xqebGhe2yULQ1djRoc5FHNKF/KatTj8+fcIg=;
-        b=Xs8GWvQnDMAwNTqgEr7DuJ7fRyakTnbphnYf4D4PPDxjOm9lP3WBO0rDQ2iXsblmum
-         as5cr7iUrWqGEPFWoO1giBLxQonAwaoo8VKRFv8pbpll4yTkz3boJNWP3m9TjTmPcRx9
-         Cx9mPJlK+90rK6OSjns3u80me6qIRe6c60St63xreh0TeLFwySmD/EwfzcjVbFXm2ADE
-         iStHyl9Ah26qy4ZzNh2mQpvnZNQrH5OhutZ/MPpl87t510iqxhabadxaDKARWhiukmn9
-         P8dpTnABB4SAfG9nHQQjxBUN4PrndPw5AuaSUvJsWFU0QraqE91RlHv36nd9Ht1at95f
-         19TA==
-X-Gm-Message-State: APjAAAXAn3xVckVf8ZlbBjFubKPc1knM9ySU07FmU9YmX+XkDpDD/EUl
-        Pf/F5qWxKRk69d3tITGYKt7n1S7JC4EcTJVKYaI=
-X-Google-Smtp-Source: APXvYqz8lvzeE+ftYypSUbZk60lCvU7KPY1+LsoXFhJD5prqrpi9RCJOvh+IxVW6FgVfr2X/5qIUYhy1cw4sMXdk1rA=
-X-Received: by 2002:ac2:48bb:: with SMTP id u27mr8646491lfg.17.1555191606341;
- Sat, 13 Apr 2019 14:40:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190413012822.30931-1-olteanv@gmail.com> <20190413012822.30931-17-olteanv@gmail.com>
- <20190413205629.GD2268@nanopsycho.orion>
-In-Reply-To: <20190413205629.GD2268@nanopsycho.orion>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 14 Apr 2019 00:39:55 +0300
-Message-ID: <CA+h21hpStYyyg=BD4n=RppQx-4a1y03k45qKrJnAeF8xuj3ruQ@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 16/24] net: dsa: sja1105: Add support for VLAN operations
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
-        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Georg Waibel <georg.waibel@sensor-technik.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zWHQFrxQ5ALEL7e28WuS09c9TVADIx4+Uu943gYarPE=;
+        b=BQrJH/BNBjY+IKlLQlRKB86I0MMGKBiuL6ZyB4ry25u8Qkpkn8wQa71HX1n+dTguPb
+         H1SIetO4CtXxR90GfWHPjD/+U2Ffbp24tIwLY4nP0+WdmUKq4By5bzishIk0t5ms3i6K
+         2skR5l5rG5KERzDYcOJ86aY5QX+SWxR0ulMJEu3CW7s7X8XuNOf0KAQromg70i1rk2Tl
+         rmLMEevI1tA4IunMt2VW5IVcoD0AffxBLJsd3MhlQQ3E0a4KD+VP70vWQIZ5fPfk45Xs
+         MI4Kq/BWWa7EvyPfhY2yv6gG1rICpWYKIAdyoeczFZ7VHNLIBaGXsNaJMKxu5II48SML
+         vOXg==
+X-Gm-Message-State: APjAAAUebsCf3Yiz5mhnrtXcPyx0MXSyQ1nYshbsNMhlnq02Q2JAAg+c
+        niCM3Q08eRyd672X/ew7yL1Gu8Zd+q8=
+X-Google-Smtp-Source: APXvYqxJcIC6nBtFc9phwWayjV8Y9NS2lRuIiTE28pcGdlM5rkn+qdwuh8AxN/1BIKyXinwdE2uqBw==
+X-Received: by 2002:a17:902:294b:: with SMTP id g69mr16951876plb.57.1555192124506;
+        Sat, 13 Apr 2019 14:48:44 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b02d:84af:491a:f204:96d6:e161? ([2600:1010:b02d:84af:491a:f204:96d6:e161])
+        by smtp.gmail.com with ESMTPSA id e13sm68110611pgb.37.2019.04.13.14.48.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2019 14:48:42 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190413204947.9394-1-shawn@git.icu>
+Date:   Sat, 13 Apr 2019 14:48:41 -0700
+Cc:     linux-api@vger.kernel, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <40254CBE-34B0-4783-8B19-FE7EA0BDA1E3@amacapital.net>
+References: <20190413204947.9394-1-shawn@git.icu>
+To:     Shawn Landden <shawn@git.icu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Apr 2019 at 23:56, Jiri Pirko <jiri@resnulli.us> wrote:
->
-> Sat, Apr 13, 2019 at 03:28:14AM CEST, olteanv@gmail.com wrote:
-> >VLAN filtering cannot be properly disabled in SJA1105. So in order to
-> >emulate the "no VLAN awareness" behavior (not dropping traffic that is
-> >tagged with a VID that isn't configured on the port), we need to hack
-> >another switch feature: programmable TPID (which is 0x8100 for 802.1Q).
-> >We are reprogramming the TPID to a bogus value (ETH_P_EDSA) which leaves
-> >the switch thinking that all traffic is untagged, and therefore accepts
-> >it.
-> >
-> >Under a vlan_filtering bridge, the proper TPID of ETH_P_8021Q is
-> >installed again, and the switch starts identifying 802.1Q-tagged
-> >traffic.
-> >
-> >Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-> >Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> >---
-> >Changes from v3:
-> >Changed back to ETH_P_EDSA.
-> >
-> >Changes from v2:
-> >Changed the TPID from ETH_P_EDSA (0xDADA) to a newly introduced one:
-> >ETH_P_DSA_8021Q (0xDADB).
-> >
-> > drivers/net/dsa/sja1105/sja1105_main.c        | 254 +++++++++++++++++-
-> > .../net/dsa/sja1105/sja1105_static_config.c   |  38 +++
-> > .../net/dsa/sja1105/sja1105_static_config.h   |   3 +
-> > 3 files changed, 293 insertions(+), 2 deletions(-)
-> >
->
-> [...]
->
->
-> >+#define sja1105_vlan_filtering_enabled(priv) \
-> >+      (((struct sja1105_general_params_entry *) \
-> >+      ((struct sja1105_private *)priv)->static_config. \
-> >+      tables[BLK_IDX_GENERAL_PARAMS].entries)->tpid == ETH_P_8021Q)
->
-> This is unreadable. Please have it as function.
->
 
-I admit to that. If I reach to a consensus with Andrew on 12/24
-ideally I could just say cpu_dp->vlan_filtering.
 
-Thanks,
--Vladimir
+> On Apr 13, 2019, at 1:49 PM, Shawn Landden <shawn@git.icu> wrote:
+>=20
+> If flags includes COPY_FILE_RANGE_FILESIZE then the length
+> copied is the length of the file. off_in and off_out are
+> ignored. len must be 0 or the file size.
+>=20
+> This implementation saves a call to stat() in the common case
+> of copying files. It does not fix any race conditions, but that
+> is possible in the future with this interface.
+>=20
+> EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
+> or the file size.
+
+I think you=E2=80=99re asking for trouble here. I assume you have some kind o=
+f race prevention in mind here.  The trouble is that passing zero means copy=
+ the whole thing, but the size-checking behavior is only available for nonze=
+ro sizes. This means that anyone who passes their idea of the size needs to a=
+ccount for inconsistent behavior if the size is zero.
+
+Also, what happens if the file size changes mid copy?  I assume the result i=
+s more or less arbitrary, but you should document what behavior is allowed. =
+ The docs should cover the case where you race against an O_APPEND write.
+
+>=20
+> Signed-off-by: Shawn Landden <shawn@git.icu>
+> CC: <linux-api@vger.kernel.org>
+> ---
+> fs/read_write.c           | 14 +++++++++++++-
+> include/uapi/linux/stat.h |  4 ++++
+> 2 files changed, 17 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 61b43ad7608e..6d06361f0856 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, lo=
+ff_t pos_in,
+>    struct inode *inode_out =3D file_inode(file_out);
+>    ssize_t ret;
+>=20
+> -    if (flags !=3D 0)
+> +    if ((flags & ~COPY_FILE_RANGE_FILESIZE) !=3D 0)
+>        return -EINVAL;
+>=20
+>    if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
+> @@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, l=
+off_t pos_in,
+>    if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
+>        return -EINVAL;
+>=20
+> +    if (flags & COPY_FILE_RANGE_FILESIZE) {
+> +        struct kstat stat;
+> +        int error;
+> +        error =3D vfs_getattr(&file_in->f_path, &stat,
+> +                    STATX_SIZE, 0);
+> +        if (error < 0)
+> +            return error;
+> +        if (!(len =3D=3D 0 || len =3D=3D stat.size))
+> +            return -EAGAIN;
+> +        len =3D stat.size;
+> +    }
+> +
+>    ret =3D rw_verify_area(READ, file_in, &pos_in, len);
+>    if (unlikely(ret))
+>        return ret;
+> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+> index 7b35e98d3c58..1075aa4666ef 100644
+> --- a/include/uapi/linux/stat.h
+> +++ b/include/uapi/linux/stat.h
+> @@ -170,5 +170,9 @@ struct statx {
+>=20
+> #define STATX_ATTR_AUTOMOUNT        0x00001000 /* Dir: Automount trigger *=
+/
+>=20
+> +/*
+> + * Flags for copy_file_range()
+> + */
+> +#define COPY_FILE_RANGE_FILESIZE    0x00000001 /* Copy the full length of=
+ the input file */
+>=20
+> #endif /* _UAPI_LINUX_STAT_H */
+> --=20
+> 2.20.1
+>=20
