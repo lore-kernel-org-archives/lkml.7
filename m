@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59070C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C844C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1861D2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A0D2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlzGsSGC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaTf/Kz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfDMKeX (ORCPT
+        id S1727204AbfDMKdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:34:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36138 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfDMKdU (ORCPT
+        Sat, 13 Apr 2019 06:33:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51656 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfDMKdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:33:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y13so15172444wrd.3
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:18 -0700 (PDT)
+        Sat, 13 Apr 2019 06:33:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so14208215wmf.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qZCyvxSqtHZuTKU0YyR6pxILemoezqOlmpXqetBXKH4=;
-        b=BlzGsSGChFoHqRHyIoeGcynhhyi0mAbnxBCWbHt5h37j29mm6R6CL7+qQKyxovQF3b
-         ry6BSYxWAWRnaHHwfffgq2JijUAzr2KeMgsthhoPszprNY07VZF8FuCZLx1r9siFH/Uh
-         ihpyqQ0sNkaBcVd++7Ns8udda70xEVyh8T0QDQkqHAmjA50G/0lNJLbByhEHj7jVccYk
-         DiTvmnF6fwVXAfJzHc2srjpvsgSZOP3iXh75hA1FiEpkEPAYT5T8c4chBbEej1LTcRKD
-         zgtgqyQcY/khvx3jbJMOrtMkj6DZ91R6GB3LvbS4sP/TN4+JN6ieijHIZbUQaoyCKsAw
-         TzHQ==
+        bh=NSmhCvxGmxJOFjEyMP/iqXk2ZY7OelNbJh9A4LaXIZg=;
+        b=gaTf/Kz5tbpMYnMmKTPqjpDTgXLUIJVJnlOrsb0+Wj73hdN4xlAAfyN2P438hH37zi
+         7DEp69vV5K8Gu0pxeGqCL3K10aC3s3ed+w+/XjCENhNwZvy9loVeCkjghTt/XflEwBbI
+         /QJVK2EAjgGmKY7BIJNNXOmS8+Hm/ogNZA6E2ChR6QU8RMDrgztVOOSXiaTjRr+jesk6
+         eezO54eysEZArvDy9APJxoxYrIqCo3dsyjvc/J4+u6yhZBJV0V8yNB5bnUSbUQaWHtjM
+         nORz7JpuNmcQ1x7s9vhVeFds90deDFTbBMkdj7WKPZmR9dtfLlS81TAfDNNufMi20I/1
+         24Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qZCyvxSqtHZuTKU0YyR6pxILemoezqOlmpXqetBXKH4=;
-        b=kHfZrf8cPVnVc7eDlgZ4dK6ALorfharJWGGthtesu835pFsuCfkvX9si9LRrDx7OCx
-         MjaD9NGijNeUjb5TftQrBzmp7w9A/JHTwrUMv+5b83lZrHwt/N2o32VGB25wmcTF74qn
-         SJ86KAL9hPxB9IcaOutRoduKZXlT1uGs3Oo0stIGArmJpYs1fP8LbAqqsrOZ424C7WOu
-         /4D3m8n4qoY945Lu3oKw7ukWesPIc8QBuCvOKYF/i9hohooCcxK6lAt2P9NWRPwolij8
-         xnzR2ho2W7DM+59HbftzFTAeyPfeghjrHX+NnyYw8Cn0/RMStyHEeJNR+rfKMbNypP8D
-         cTSQ==
-X-Gm-Message-State: APjAAAWWtebzzcS9YlVJYV3BYiPJKOMI//SJX0GEczyU6b87h+CF/ikX
-        1BoxQ2h2JbSsLF3JZeGaS1hMyQ==
-X-Google-Smtp-Source: APXvYqz5hohkS76jfEg4oqDz2sQjBYeJMy2TC72CmHoVVlfhuatUckA1bWiOIraup9gZXSmlVyrngw==
-X-Received: by 2002:a5d:458d:: with SMTP id p13mr40994123wrq.224.1555151598276;
-        Sat, 13 Apr 2019 03:33:18 -0700 (PDT)
+        bh=NSmhCvxGmxJOFjEyMP/iqXk2ZY7OelNbJh9A4LaXIZg=;
+        b=SVkpz5QOx0N6znJmsrmNL3ILerZpwef1NeadYagETCePVZJix/R6GY15ZmA+FMnBeG
+         vC0cxdGi5cFYhoU25tkFnnR4pRfK8dlgIkW3gSKgwtmGsX/7RNhCzeDvJEZdOgt+18OJ
+         M+IWKKijHets5FfQjh/mF0FKT65v3i19J615TlZfWuEmElqflHKehlelvunGgO5z/Lmi
+         ra7iSUS0CZSJgW3m1UbmybPMsX16VXEuoTmqTch07UVVuahU4jlGfZzOJkczyjxUC2h5
+         Wq3kBRAhj7XjLTssm8hmNqiJ8kvPsnIjypGYVJnKtyFAK3+KmTJmF/K9mqMZSzOdgtqT
+         CX1Q==
+X-Gm-Message-State: APjAAAWudQ8pbNBH7t3ZR8henurcrnz2MixnyFup/zA2+NdblyLYaBzQ
+        8AJocLmkOPPY2Qn7pxuRVMECpg==
+X-Google-Smtp-Source: APXvYqwNmXkjG7OwQ2d1uZ2Dzcu6GGScNP4WiFn5OChDdxzHK0rKETSeWUy7DhcyrMqZLP2UIK8+8g==
+X-Received: by 2002:a7b:c304:: with SMTP id k4mr15112053wmj.22.1555151594984;
+        Sat, 13 Apr 2019 03:33:14 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.17
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:33:17 -0700 (PDT)
+        Sat, 13 Apr 2019 03:33:14 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 10/20] nvmem: Add driver for STM32 factory-programmed read only mem
-Date:   Sat, 13 Apr 2019 11:32:55 +0100
-Message-Id: <20190413103305.9576-11-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH 07/20] nvmem: sunxi_sid: Read out data in native format
+Date:   Sat, 13 Apr 2019 11:32:52 +0100
+Message-Id: <20190413103305.9576-8-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
 References: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
@@ -72,138 +72,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-Add a read only nvmem driver for STM32 factory-programmed memory area
-(on-chip non-volatile storage).
+Originally the SID e-fuses were thought to be in big-endian format.
+Later sources show that they are in fact native or little-endian.
+The most compelling evidence is the thermal sensor calibration data,
+which is a set of one to three 16-bit values. In native-endian they
+are in 16-bit cells with increasing offsets, whereas with big-endian
+they are in the wrong order, and a gap with no data will show if there
+are one or three cells.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Switch to a native endian representation for the nvmem device. For the
+H3, the register read-out method was already returning data in native
+endian. This only affects the other SoCs.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/Kconfig       | 10 +++++
- drivers/nvmem/Makefile      |  2 +
- drivers/nvmem/stm32-romem.c | 78 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 90 insertions(+)
- create mode 100644 drivers/nvmem/stm32-romem.c
+ drivers/nvmem/sunxi_sid.c | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 9e1d83643e9c..a90e9a1ebe55 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -113,6 +113,16 @@ config NVMEM_BCM_OCOTP
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem-bcm-ocotp.
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index 75c1f48cb3d0..14c114620ed6 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -46,33 +46,12 @@ struct sunxi_sid {
+ 	u32			value_offset;
+ };
  
-+config NVMEM_STM32_ROMEM
-+	tristate "STMicroelectronics STM32 factory-programmed memory support"
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	  Say y here to enable read-only access for STMicroelectronics STM32
-+	  factory-programmed memory area.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem-stm32-romem.
-+
- config NVMEM_SUNXI_SID
- 	tristate "Allwinner SoCs SID support"
- 	depends on ARCH_SUNXI
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 2ece8ffffdda..4c7ba12a7005 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -26,6 +26,8 @@ nvmem_qfprom-y			:= qfprom.o
- obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
- nvmem_rockchip_efuse-y		:= rockchip-efuse.o
- obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
-+nvmem_stm32_romem-y 		:= stm32-romem.o
-+obj-$(CONFIG_NVMEM_STM32_ROMEM) += nvmem_stm32_romem.o
- nvmem_sunxi_sid-y		:= sunxi_sid.o
- obj-$(CONFIG_UNIPHIER_EFUSE)	+= nvmem-uniphier-efuse.o
- nvmem-uniphier-efuse-y		:= uniphier-efuse.o
-diff --git a/drivers/nvmem/stm32-romem.c b/drivers/nvmem/stm32-romem.c
-new file mode 100644
-index 000000000000..07e98b53b391
---- /dev/null
-+++ b/drivers/nvmem/stm32-romem.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * STM32 Factory-programmed memory read access driver
-+ *
-+ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
-+ * Author: Fabrice Gasnier <fabrice.gasnier@st.com> for STMicroelectronics.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of_device.h>
-+
-+struct stm32_romem_priv {
-+	void __iomem *base;
-+	struct nvmem_config cfg;
-+};
-+
-+static int stm32_romem_read(void *context, unsigned int offset, void *buf,
-+			    size_t bytes)
-+{
-+	struct stm32_romem_priv *priv = context;
-+	u8 *buf8 = buf;
-+	int i;
-+
-+	for (i = offset; i < offset + bytes; i++)
-+		*buf8++ = readb_relaxed(priv->base + i);
-+
-+	return 0;
-+}
-+
-+static int stm32_romem_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stm32_romem_priv *priv;
-+	struct resource *res;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->cfg.name = "stm32-romem";
-+	priv->cfg.read_only = true;
-+	priv->cfg.word_size = 1;
-+	priv->cfg.stride = 1;
-+	priv->cfg.size = resource_size(res);
-+	priv->cfg.reg_read = stm32_romem_read;
-+	priv->cfg.dev = dev;
-+	priv->cfg.priv = priv;
-+	priv->cfg.owner = THIS_MODULE;
-+
-+	return PTR_ERR_OR_ZERO(devm_nvmem_register(dev, &priv->cfg));
-+}
-+
-+static const struct of_device_id stm32_romem_of_match[] = {
-+	{ .compatible = "st,stm32f4-otp", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_romem_of_match);
-+
-+static struct platform_driver stm32_romem_driver = {
-+	.probe = stm32_romem_probe,
-+	.driver = {
-+		.name = "stm32-romem",
-+		.of_match_table = of_match_ptr(stm32_romem_of_match),
-+	},
-+};
-+module_platform_driver(stm32_romem_driver);
-+
-+MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 RO-MEM");
-+MODULE_ALIAS("platform:nvmem-stm32-romem");
-+MODULE_LICENSE("GPL v2");
+-/* We read the entire key, due to a 32 bit read alignment requirement. Since we
+- * want to return the requested byte, this results in somewhat slower code and
+- * uses 4 times more reads as needed but keeps code simpler. Since the SID is
+- * only very rarely probed, this is not really an issue.
+- */
+-static u8 sunxi_sid_read_byte(const struct sunxi_sid *sid,
+-			      const unsigned int offset)
+-{
+-	u32 sid_key;
+-
+-	sid_key = ioread32be(sid->base + round_down(offset, 4));
+-	sid_key >>= (offset % 4) * 8;
+-
+-	return sid_key; /* Only return the last byte */
+-}
+-
+ static int sunxi_sid_read(void *context, unsigned int offset,
+ 			  void *val, size_t bytes)
+ {
+ 	struct sunxi_sid *sid = context;
+-	u8 *buf = val;
+-
+-	/* Offset the read operation to the real position of SID */
+-	offset += sid->value_offset;
+ 
+-	while (bytes--)
+-		*buf++ = sunxi_sid_read_byte(sid, offset++);
++	memcpy_fromio(val, sid->base + sid->value_offset + offset, bytes);
+ 
+ 	return 0;
+ }
 -- 
 2.21.0
 
