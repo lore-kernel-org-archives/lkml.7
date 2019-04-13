@@ -2,98 +2,82 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D175C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 14:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3706BC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 14:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CEF20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 14:11:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSSG7wPz"
+	by mail.kernel.org (Postfix) with ESMTP id 05E11206B7
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 14:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfDMOLH (ORCPT
+        id S1727185AbfDMONB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 10:11:07 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40146 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfDMOLH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 10:11:07 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a28so9661384lfo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 07:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WDhyszRqYnE59eo76sqXHTlepefi7Fg6L1WR10CmH3Y=;
-        b=YSSG7wPzBPdRONipc2kC9eoz+ffU3+xIUWbZsmA5Z/hGRzRjDuv0H5bmNlYJ8P6xi+
-         Q6ZoLjVtCkK0A7PY9RQO87xvhIGA71VgG3MlvXXApRserCMTGO+ru+3cTz+IwcUAa0BW
-         n7qCgHRJRrw3VYpOSYfkJIjFinZPgEr/hQ4ztC/Jmq5pbdXR/C87A/a25HTsTIUZFhXl
-         f13jjqP0aVQx2AYJZp6fTjHJtyUMZlHu+wri526nnRn/4wYT+SsRZqVcMHBI4va9HM2K
-         iOa2gHG0cAZ6xj/zkoFy3ncZevWtEbGMljthSrkd4aH+Su1vH53ZJZL8vkaU6ueje6oT
-         jVpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WDhyszRqYnE59eo76sqXHTlepefi7Fg6L1WR10CmH3Y=;
-        b=ljdAAr3/gHF+rh2mGEf0wZPYnjypzXeh4D0kjZJ4MLSGF+O0gPzYAwCYQPoNdbOmE8
-         UI5yQAs/6eUvKfaIqpWSkiFfgD91Xq6S9P4WwrBgbkI36gLx2ZZTc8ogOFyZkRKHUg5u
-         ja/ANdgfnbRApqQ+FuEUeg99p36S45jkba1Y+ClWIb1UdjEWwiRzLlOKqDSy2XAGDZTs
-         PCocda/SFNDPgSEYTeIS9m23MB6wWkMp7E07/b+sE5pIiw7ihTl9XFEgcLE18EBR28FY
-         nmPk8bv6LJskqAQeZOg66+grw3nSN/jkraJiQyPJ7uy/nkKcOhgOMWuceZBThRsRDC4w
-         3TkQ==
-X-Gm-Message-State: APjAAAUUgXvxWNrImSygNQTgv3bxsZ7S0p5vO9M9Sjh/Tney8KaMgk0T
-        +SufWxdY3ThTyiC3kT7wxUFudiEypQX6ZNBBP8E=
-X-Google-Smtp-Source: APXvYqzB7shYrIFb0Pi4xTKAsE6TKnAmXH2d/Hps8fCtqTkTwvj0AcxBVYokW8nv72t6AyAkk1HZgtd9CwUPNEQETCE=
-X-Received: by 2002:a19:c51a:: with SMTP id w26mr32546620lfe.59.1555164665732;
- Sat, 13 Apr 2019 07:11:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <1555140213-1081-1-git-send-email-hofrat@osadl.org> <1555140213-1081-5-git-send-email-hofrat@osadl.org>
-In-Reply-To: <1555140213-1081-5-git-send-email-hofrat@osadl.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sat, 13 Apr 2019 11:11:05 -0300
-Message-ID: <CAOMZO5DV=fyefeazCE0EEnBQC5_zvBW5JyHdFoZA5ROCxQVTdQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: imx legacy: add an SPDX license identifier
-To:     Nicholas Mc Guire <hofrat@osadl.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Sat, 13 Apr 2019 10:13:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58732 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727025AbfDMONA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 10:13:00 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7CAA648618FA8893DE35;
+        Sat, 13 Apr 2019 22:12:58 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Sat, 13 Apr 2019
+ 22:12:47 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <ssantosh@kernel.org>, <tony@atomide.com>
+CC:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soc: ti: pm33xx: Make two symbols static
+Date:   Sat, 13 Apr 2019 22:12:43 +0800
+Message-ID: <20190413141243.38620-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 4:30 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
->
-> The header clearly identifies this code as GPL V2 or later - so pop
-> in the SPDX license identifier.
->
-> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-> ---
->  arch/arm/mach-imx/mach-mx27ads.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/mach-imx/mach-mx27ads.c b/arch/arm/mach-imx/mach-mx27ads.c
-> index c83fdd3..3f68972 100644
-> --- a/arch/arm/mach-imx/mach-mx27ads.c
-> +++ b/arch/arm/mach-imx/mach-mx27ads.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+From: YueHaibing <yuehaibing@huawei.com>
 
-As you are adding the SPDX line you could also remove the legal text below.
+Fix sparse warnings:
+
+drivers/soc/ti/pm33xx.c:144:27: warning: symbol 'rtc_wake_src' was not declared. Should it be static?
+drivers/soc/ti/pm33xx.c:160:5: warning: symbol 'am33xx_rtc_only_idle' was not declared. Should it be static?
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/soc/ti/pm33xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/soc/ti/pm33xx.c b/drivers/soc/ti/pm33xx.c
+index fc5802c..b22383c 100644
+--- a/drivers/soc/ti/pm33xx.c
++++ b/drivers/soc/ti/pm33xx.c
+@@ -141,7 +141,7 @@ static int __init am43xx_map_gic(void)
+ }
+ 
+ #ifdef CONFIG_SUSPEND
+-struct wkup_m3_wakeup_src rtc_wake_src(void)
++static struct wkup_m3_wakeup_src rtc_wake_src(void)
+ {
+ 	u32 i;
+ 
+@@ -157,7 +157,7 @@ struct wkup_m3_wakeup_src rtc_wake_src(void)
+ 	return rtc_ext_wakeup;
+ }
+ 
+-int am33xx_rtc_only_idle(unsigned long wfi_flags)
++static int am33xx_rtc_only_idle(unsigned long wfi_flags)
+ {
+ 	omap_rtc_power_off_program(&omap_rtc->dev);
+ 	am33xx_do_wfi_sram(wfi_flags);
+-- 
+2.7.4
+
+
