@@ -2,81 +2,110 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A10C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA792C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392A221721
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CAC20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sm1YrjiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfDMFRY (ORCPT
+        id S1727011AbfDMFzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 01:17:24 -0400
-Received: from smtp.gentoo.org ([140.211.166.183]:55972 "EHLO smtp.gentoo.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfDMFRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 01:17:23 -0400
-Received: from [192.168.1.13] (c-73-128-14-11.hsd1.md.comcast.net [73.128.14.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kumba)
-        by smtp.gentoo.org (Postfix) with ESMTPSA id 480A6340F00;
-        Sat, 13 Apr 2019 05:17:22 +0000 (UTC)
-Subject: Re: [PATCH 2/3] rtc: ds1685: use correct device struct to get
- platform device struct
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411143323.20945-1-tbogendoerfer@suse.de>
- <20190411143323.20945-2-tbogendoerfer@suse.de>
- <20190412101106.GU3578@piout.net>
- <20190412134459.446ef705c86aa1c7b926abc7@suse.de>
-From:   Joshua Kinard <kumba@gentoo.org>
-Openpgp: preference=signencrypt
-Message-ID: <462d6bfd-c91a-3c5c-1dfd-69d8b48449e6@gentoo.org>
-Date:   Sat, 13 Apr 2019 01:17:19 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412134459.446ef705c86aa1c7b926abc7@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 13 Apr 2019 01:55:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42022 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfDMFzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 01:55:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g3so14562771wrx.9;
+        Fri, 12 Apr 2019 22:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7kPnzm2JkTCyO+F1wvn6GNnMXZwa00o8M2W4gddE+0M=;
+        b=Sm1YrjiDIYiaw+NB3hDgfJYPnuqkVpwpzJRPenxUL+IzhJdwVpHpsBXFWBgq+rC3Ou
+         qyiQPVhc9Gt0KIOM54Gz6n6i8/oY9DmWLcEnu8o28F2D2w101Pxf5V1v1zQnF91yy7Lj
+         G0aThmNwbaVWnGZGBrY+TMFbio+zGFqRqBHjnWS86+LEace7NY22jr8Leb0/4KlOylz8
+         BVscnMKMnpzAkByPqjiTmj+MmyKVa9miWbsgvBIOcg3JHM4ZCrbVjXNynrcqR45JMWXP
+         k87mRS0cfsFQXrRbkCEHUZvCmz2PHxmRzvMQnx/X7iykl9N1r38CdJ7bCSdADG+onDfo
+         XKmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7kPnzm2JkTCyO+F1wvn6GNnMXZwa00o8M2W4gddE+0M=;
+        b=sYk5LPiq8W5P/Of8XlrqfAHtqAteK1oeckCNIwh1q9JljDHSHWyXO20YzV/3sTAgSF
+         okTH2qx6Hc36c50yjaDT4B/2i4O1/qoSYSP/ffMcMtGyudqYkcpdxI8+3QnnRPOkH15N
+         HTYd0lBfGbfyy0YcJaBr+U0M9psBfnWXPBpNNaG1zjM64mS/HbOoVK9q3wMSTo0X3mW5
+         tkCeorGLEFO5gFQ85pB9Rx99zBEY1/q7HePkRVfDDFpqN35x5auuCUca2PbGbHNGq2Gi
+         Mljr/AtZu4oZLz8xeSoqI4JZWb015uRTERVaDGewHAAqgiFckQHDT/cEQUKVxNS5GNaz
+         ufaw==
+X-Gm-Message-State: APjAAAV5GDExGJ6uCiJQFFQJwxmdhINZlxkpQ5welWQYYYrmWdlOkrdo
+        z0/ajrlnid+PXzKRupBpMQI=
+X-Google-Smtp-Source: APXvYqwIzidec8wTcXaGYZC/WqlNcMl/5D/NJcVt+xRiyV/gWicnEEzoCX7WBjsuliRyfZBcIDjfmw==
+X-Received: by 2002:adf:ef8e:: with SMTP id d14mr36156780wro.81.1555134904011;
+        Fri, 12 Apr 2019 22:55:04 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2def:500:2ca3:f513:3ec4:694])
+        by smtp.gmail.com with ESMTPSA id n13sm47649062wrw.67.2019.04.12.22.55.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 22:55:02 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v2] MAINTAINERS: fix style in KEYS-TRUSTED entry
+Date:   Sat, 13 Apr 2019 07:54:48 +0200
+Message-Id: <20190413055448.5434-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/2019 07:44, Thomas Bogendoerfer wrote:
-> On Fri, 12 Apr 2019 12:11:06 +0200
-> Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
-> 
->> Every patch need a commit message. Maybe you could indicate that this
->> never gave any issue because parent is the first member of struct
->> device.
-> 
-> I'll update the commit message, I get a nice stacktrace because of that
-> bug, so the path from work_queue calling ds1685_rtc_poweroff never worked.
-> 
-> Thomas.
+Mimi Zohar used spaces instead of a tab when adding Jarkko Sakkinen as
+further maintainer to the KEYS-TRUSTED section entry.
 
-I'll wager that's why the thing stopped powering off my Octane.  It *used*
-to work when I wrote the driver, but stopped after some unidentified point,
-and I never found the time to try and track it down.
+In fact, ./scripts/checkpatch.pl -f MAINTAINERS complains:
 
-Which machine are you testing on, out of curiosity?
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #8581: FILE: MAINTAINERS:8581:
+  +M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
+The issue was detected when writing a script that parses MAINTAINERS.
+
+Fixes: 34bccd61b139 ("MAINTAINERS: add Jarkko as maintainer for trusted keys")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+v1: https://lore.kernel.org/patchwork/patch/1040412/
+  - Joe Perches clarified that this is a style defect. 
+
+v2: applies cleanly to v5.1-rc4 and next-20190412
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2359e12e4c41..75bb276aed1c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8578,7 +8578,7 @@ F:	security/keys/encrypted-keys/
+ 
+ KEYS-TRUSTED
+ M:	James Bottomley <jejb@linux.ibm.com>
+-M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
++M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+ M:	Mimi Zohar <zohar@linux.ibm.com>
+ L:	linux-integrity@vger.kernel.org
+ L:	keyrings@vger.kernel.org
 -- 
-Joshua Kinard
-Gentoo/MIPS
-kumba@gentoo.org
-rsa6144/5C63F4E3F5C6C943 2015-04-27
-177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
+2.17.1
 
-"The past tempts us, the present confuses us, the future frightens us.  And
-our lives slip away, moment by moment, lost in that vast, terrible in-between."
-
---Emperor Turhan, Centauri Republic
