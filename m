@@ -2,138 +2,119 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF45C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9F3C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66DA2147A
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796042147A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="aXLKdbeT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4UJ8Ms4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfDMVj5 (ORCPT
+        id S1727220AbfDMVkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:39:57 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:33885 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfDMVj5 (ORCPT
+        Sat, 13 Apr 2019 17:40:09 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34372 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfDMVkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:39:57 -0400
-Received: by mail-wm1-f43.google.com with SMTP id r186so3089370wmf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 14:39:55 -0700 (PDT)
+        Sat, 13 Apr 2019 17:40:08 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h5so7208677lfm.1;
+        Sat, 13 Apr 2019 14:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NltJFvUkFPAAEBpx8MoWkiwpJTDuphCP3bx5XvrZP7s=;
-        b=aXLKdbeTCvGr/lEtbI6JMmCjNrOejt5N5HmOsXcOJxCEyic3KgkXXPrjYZqGL3lFR1
-         wEsSIxnRvdtLcZadA8G43DJxFqKLxKoqtBUiQdp3QoB6NiPjjVFjxMQTo+iHUv373wC4
-         lN8KfHDTdXbfTvw+P/lSX9DDjb2zCpiDZKqCQ=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3WM9+U+xqebGhe2yULQ1djRoc5FHNKF/KatTj8+fcIg=;
+        b=t4UJ8Ms4Ce3iP8rNGMCgpUL6UpbdmDAcXEyB+BmVmSUKWKJAMTCtbPs0nw3sWqVE7t
+         K0MTya3U9p2IDXvcJ64Eyza4noBSRtRggfLbvhKWdvnv6jzAsLNW+mPqSPL8aN23rXF+
+         +RCrpnIeb8L33iMSmOCNXN3zmOcOneaRmObhzQ8a5AD5JkLX45VUsNMinPWy1LBWfu7g
+         7NLDw2jMa342fJG3/e/mHwyS0tWppQbQutymW2VvMskWw3kwNw2zRHRb8cby01Y6U6pH
+         XqPE2gtxCFFHbpr4lQZiwRqkItL9E0o1cN8z8vimWBCpJfzN+r2wCrEQQqGqJxsHGMyy
+         C+bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NltJFvUkFPAAEBpx8MoWkiwpJTDuphCP3bx5XvrZP7s=;
-        b=aTujLgIcb+5Lz1p+coJMfI7Wp44o7UW8ngn3sVqp/Lv44Ei07kiGCWqEe8u48aPi6K
-         C6kaiy44H9+6WEqnP49TTdZEfRkleWwXgl2xI0md3me01FTKGKFDDyVq5K08lzVdcCSs
-         +IJm+LB2tIX9DNFPDUXFNgTwftshE0jq8aCRrmutopRJuoi8DthSQif8TWh3ITeC7Kbu
-         Sog5dnsSA191eevZYsj+Ew9ngAmAVRzg4Rvbc1+U09E68bnkKTi0qxxoFVOiBGGnSudr
-         rMF3SYR8z6FWBuaxAh69/1t1TIjOImRyUfBuy957GQqmb3k95TyQ2budw0ykgy9V804f
-         jrDQ==
-X-Gm-Message-State: APjAAAX6Ml0kglwIvBfcS28jGK7rFyX8D+SMmejaAdJYRrV937ZQaOux
-        Xs8LwAJItAW8q0Yrn9HSihLreQ==
-X-Google-Smtp-Source: APXvYqy/37K5acMZSqsgWvEHj0N6hTdMO66EnuWu0i4yTK9RgfuG5ge2kwdLlLDG7XFstiEvRpriHQ==
-X-Received: by 2002:a1c:ed12:: with SMTP id l18mr15142977wmh.13.1555191594698;
-        Sat, 13 Apr 2019 14:39:54 -0700 (PDT)
-Received: from andrea ([89.22.71.151])
-        by smtp.gmail.com with ESMTPSA id r6sm39782225wrt.38.2019.04.13.14.39.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 14:39:53 -0700 (PDT)
-Date:   Sat, 13 Apr 2019 23:39:38 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Daniel Kroening <kroening@cs.ox.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Adding plain accesses and detecting data races in the LKMM
-Message-ID: <20190413213938.GA4371@andrea>
-References: <20190408055117.GA25135@andrea>
- <Pine.LNX.4.44L0.1904081010090.1440-100000@iolanthe.rowland.org>
- <20190409013618.GA3824@andrea>
- <20190409150132.GB14111@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3WM9+U+xqebGhe2yULQ1djRoc5FHNKF/KatTj8+fcIg=;
+        b=Xs8GWvQnDMAwNTqgEr7DuJ7fRyakTnbphnYf4D4PPDxjOm9lP3WBO0rDQ2iXsblmum
+         as5cr7iUrWqGEPFWoO1giBLxQonAwaoo8VKRFv8pbpll4yTkz3boJNWP3m9TjTmPcRx9
+         Cx9mPJlK+90rK6OSjns3u80me6qIRe6c60St63xreh0TeLFwySmD/EwfzcjVbFXm2ADE
+         iStHyl9Ah26qy4ZzNh2mQpvnZNQrH5OhutZ/MPpl87t510iqxhabadxaDKARWhiukmn9
+         P8dpTnABB4SAfG9nHQQjxBUN4PrndPw5AuaSUvJsWFU0QraqE91RlHv36nd9Ht1at95f
+         19TA==
+X-Gm-Message-State: APjAAAXAn3xVckVf8ZlbBjFubKPc1knM9ySU07FmU9YmX+XkDpDD/EUl
+        Pf/F5qWxKRk69d3tITGYKt7n1S7JC4EcTJVKYaI=
+X-Google-Smtp-Source: APXvYqz8lvzeE+ftYypSUbZk60lCvU7KPY1+LsoXFhJD5prqrpi9RCJOvh+IxVW6FgVfr2X/5qIUYhy1cw4sMXdk1rA=
+X-Received: by 2002:ac2:48bb:: with SMTP id u27mr8646491lfg.17.1555191606341;
+ Sat, 13 Apr 2019 14:40:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409150132.GB14111@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190413012822.30931-1-olteanv@gmail.com> <20190413012822.30931-17-olteanv@gmail.com>
+ <20190413205629.GD2268@nanopsycho.orion>
+In-Reply-To: <20190413205629.GD2268@nanopsycho.orion>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 14 Apr 2019 00:39:55 +0300
+Message-ID: <CA+h21hpStYyyg=BD4n=RppQx-4a1y03k45qKrJnAeF8xuj3ruQ@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 16/24] net: dsa: sja1105: Add support for VLAN operations
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
+        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Georg Waibel <georg.waibel@sensor-technik.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 08:01:32AM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 09, 2019 at 03:36:18AM +0200, Andrea Parri wrote:
-> > > > The formula was more along the line of "do not assume either of these
-> > > > cases to hold; use barrier() is you need an unconditional barrier..."
-> > > > AFAICT, all current implementations of smp_mb__{before,after}_atomic()
-> > > > provides a compiler barrier with either barrier() or "memory" clobber.
-> > > 
-> > > Well, we have two reasonable choices: Say that 
-> > > smp_mb__{before,after}_atomic will always provide a compiler barrier, 
-> > > or don't say this.  I see no point in saying that the combination of 
-> > > Before-atomic followed by RMW provides a barrier.
-> > 
-> > ;-/ I'm fine with the first choice. I don't see how the second choice
-> > (this proposal/patch) would be consistent with some documentation and
-> > with the current implementations; for example,
-> > 
-> > 1) Documentation/atomic_t.txt says:
-> > 
-> > Thus:
-> > 
-> >   atomic_fetch_add();
-> > 
-> > is equivalent to:
-> > 
-> >   smp_mb__before_atomic();
-> >   atomic_fetch_add_relaxed();
-> >   smp_mb__after_atomic();
-> > 
-> > [...]
-> > 
-> > 2) Some implementations of the _relaxed() variants do not provide any
-> > compiler barrier currently.
-> 
-> But don't all implementations of smp_mb__before_atomic() and
-> smp_mb__after_atomic() currently supply a compiler barrier?
+On Sat, 13 Apr 2019 at 23:56, Jiri Pirko <jiri@resnulli.us> wrote:
+>
+> Sat, Apr 13, 2019 at 03:28:14AM CEST, olteanv@gmail.com wrote:
+> >VLAN filtering cannot be properly disabled in SJA1105. So in order to
+> >emulate the "no VLAN awareness" behavior (not dropping traffic that is
+> >tagged with a VID that isn't configured on the port), we need to hack
+> >another switch feature: programmable TPID (which is 0x8100 for 802.1Q).
+> >We are reprogramming the TPID to a bogus value (ETH_P_EDSA) which leaves
+> >the switch thinking that all traffic is untagged, and therefore accepts
+> >it.
+> >
+> >Under a vlan_filtering bridge, the proper TPID of ETH_P_8021Q is
+> >installed again, and the switch starts identifying 802.1Q-tagged
+> >traffic.
+> >
+> >Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> >Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >---
+> >Changes from v3:
+> >Changed back to ETH_P_EDSA.
+> >
+> >Changes from v2:
+> >Changed the TPID from ETH_P_EDSA (0xDADA) to a newly introduced one:
+> >ETH_P_DSA_8021Q (0xDADB).
+> >
+> > drivers/net/dsa/sja1105/sja1105_main.c        | 254 +++++++++++++++++-
+> > .../net/dsa/sja1105/sja1105_static_config.c   |  38 +++
+> > .../net/dsa/sja1105/sja1105_static_config.h   |   3 +
+> > 3 files changed, 293 insertions(+), 2 deletions(-)
+> >
+>
+> [...]
+>
+>
+> >+#define sja1105_vlan_filtering_enabled(priv) \
+> >+      (((struct sja1105_general_params_entry *) \
+> >+      ((struct sja1105_private *)priv)->static_config. \
+> >+      tables[BLK_IDX_GENERAL_PARAMS].entries)->tpid == ETH_P_8021Q)
+>
+> This is unreadable. Please have it as function.
+>
 
-Yes, AFAICS, all implementations of smp_mb__{before,after}_atomic() currently
-supply a compiler barrier.
+I admit to that. If I reach to a consensus with Andrew on 12/24
+ideally I could just say cpu_dp->vlan_filtering.
 
-Nevertheless, there's a difference between:  (1) Specify that these barriers
-supply a compiler barrier,  (2) Specify that (certain) combinations of these
-barriers and RMWs supply a compiler barrier, and  (3) This patch...  ;-)
-
-FWIW, I'm not aware of current/informal documentation following (the arguably
-simpler but slightly stronger) (1).  But again (amending my last remark): (1)
-and (2) both make sense to me.
-
-Thanx,
-  Andrea
-
-
-> 
-> 							Thanx, Paul
-> 
+Thanks,
+-Vladimir
