@@ -2,26 +2,26 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBDBC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDA6C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E92218AF
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CE620869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfDMHVM (ORCPT
+        id S1727287AbfDMHVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:21:12 -0400
-Received: from www.osadl.org ([62.245.132.105]:36415 "EHLO www.osadl.org"
+        Sat, 13 Apr 2019 03:21:16 -0400
+Received: from www.osadl.org ([62.245.132.105]:36422 "EHLO www.osadl.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfDMHVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:21:12 -0400
+        id S1726258AbfDMHVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 03:21:15 -0400
 Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7JfAZ003435;
-        Sat, 13 Apr 2019 09:20:40 +0200
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7JfAO003435;
+        Sat, 13 Apr 2019 09:19:41 +0200
 From:   Nicholas Mc Guire <hofrat@osadl.org>
 To:     Russell King <linux@armlinux.org.uk>
 Cc:     Shawn Guo <shawnguo@kernel.org>,
@@ -36,54 +36,34 @@ Cc:     Shawn Guo <shawnguo@kernel.org>,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH 2/4] ARM: imx legacy: declare unsigned int rather than unsigned
-Date:   Sat, 13 Apr 2019 09:14:23 +0200
-Message-Id: <1555139666-948-12-git-send-email-hofrat@osadl.org>
+Subject: [PATCH 0/4] ARM: imx legacy: cleanups
+Date:   Sat, 13 Apr 2019 09:14:12 +0200
+Message-Id: <1555139666-948-1-git-send-email-hofrat@osadl.org>
 X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1555139666-948-1-git-send-email-hofrat@osadl.org>
-References: <1555139666-948-1-git-send-email-hofrat@osadl.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-provide the proper type for unsigned int.
+While preparing a proposed fix for a missing check on zmalloc a few
+other checkpatch warnings poped up - this little set fixes those
+warnings. There is one remaining checkpatch warning but that looks
+like a false-positive to me:
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
----
+ERROR: Use of __initconst requires a separate use of const
+#171: FILE: arch/arm/mach-imx/mach-mx27ads.c:171:
++mx27ads_nand_board_info __initconst = {
 
-Problem reported by checkpatch
+The false positive seems due to the definition spanning two lines
+anyway looks good to me
 
-Patch was compile-tested with: imx_v4_v5_defconfig (implies
-CONFIG_MACH_MX27ADS=y)
+<snip>
+static const struct mxc_nand_platform_data
+mx27ads_nand_board_info __initconst = {
+        .width = 1,
+        .hw_ecc = 1,
+};
+<snip>
 
-Patch is against 5.1-rc4 (localversion-next is 20190412)
-
- arch/arm/mach-imx/mach-mx27ads.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-imx/mach-mx27ads.c b/arch/arm/mach-imx/mach-mx27ads.c
-index 528846f..49ac898 100644
---- a/arch/arm/mach-imx/mach-mx27ads.c
-+++ b/arch/arm/mach-imx/mach-mx27ads.c
-@@ -202,7 +202,7 @@ static const struct imxi2c_platform_data mx27ads_i2c1_data __initconst = {
- static struct i2c_board_info mx27ads_i2c_devices[] = {
- };
- 
--static void vgpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+static void vgpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	if (value)
- 		imx_writew(PBC_BCTRL1_LCDON, PBC_BCTRL1_SET_REG);
-@@ -210,7 +210,7 @@ static void vgpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 		imx_writew(PBC_BCTRL1_LCDON, PBC_BCTRL1_CLEAR_REG);
- }
- 
--static int vgpio_dir_out(struct gpio_chip *chip, unsigned offset, int value)
-+static int vgpio_dir_out(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	return 0;
- }
--- 
-2.1.4
-
+thx!
+hofrat
