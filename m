@@ -2,177 +2,164 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB87C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 03:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35474C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 03:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E103620869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 03:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aSBOYv2S"
+	by mail.kernel.org (Postfix) with ESMTP id 0E62D20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 03:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfDMDTC (ORCPT
+        id S1727113AbfDMD0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 23:19:02 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33584 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfDMDTB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 23:19:01 -0400
-Received: by mail-vs1-f68.google.com with SMTP id a190so6684436vsd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 20:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qAmpE3G0oOsflpcYUOecHLM2RaT+tXXFiDXT/2FM05k=;
-        b=aSBOYv2SXshliFLxSy4uYTsfmpZPFXrOFc84rPFriHb3qm3rzjl1mGUwpHCSxqcpxR
-         g7jt3WCjgzBJ0+BqzTOcD3JPCxC2bB7Vk7UHUwtlBMsRdNPK4Okp5IGmSG5OrBFjy8eJ
-         N/HDnZiJP2nyUmMBtxy5DSbTT7IPjR+YH+SYQeo8MnKl6DH/4yVWJnWSG0WT/X6rrMKp
-         33an5f/Pu5geWlAzxi0fCXCgcZzftxzxNEbtgoH0S2exKJT+vKWD+/56L7pZ0HNggAZD
-         kvFy94aRQtKN0sgRclWG9E+ub3DntOG94yjGRovBiWAejeltQ9aZqa2tEXAnjOfdOAhA
-         bW1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qAmpE3G0oOsflpcYUOecHLM2RaT+tXXFiDXT/2FM05k=;
-        b=b3it2ILiPOTB0E2EhQEf73EBriVqR8kSpfuE48eZa0gP1KS6MAJSObmHwAtNwspBGE
-         EblYzTjS/16ZZ8wPpoZt/KOyjnwwvH5pzSpWuwpR/uYLfh9uMY4W1Sg34pnZKxyAnh11
-         BTp4FtLFuHUlBzrxdBiQihghNwUTinGtS3Fml1tD3QR3/6xFaLaiSm2BioM/JLO2J4U+
-         mdKbgbi9fuFaEl7VbV4chvZoDBDyl/qcQbYpg24e8BS+s6fpxK6xtOdlYkGq2vc/oOyT
-         sgt+hxPrRkKWQDTD8E5jrAJrDSlbJEtW8kTdiSgZ4sYIcm8M9hzUc9VHZKF9kp3uXKQm
-         xGdg==
-X-Gm-Message-State: APjAAAX7ZXarRGiXxC6OXR1i4O02jlT9eabO5UNWWE+OLxoRX7ZTS98o
-        ZDuNi6thkhI4qd4kmGRqfxjky00ZbQvfJ+MDiVOWnw==
-X-Google-Smtp-Source: APXvYqxV4TtiwDsxsirehWHSbYq4591Y8OO46Atnr9GDtlWJwOcktgDhlMV+aMMJrbGwwhR0oR1tOaInjum0Tt05F7Q=
-X-Received: by 2002:a67:e9c8:: with SMTP id q8mr31353496vso.120.1555125540368;
- Fri, 12 Apr 2019 20:19:00 -0700 (PDT)
+        Fri, 12 Apr 2019 23:26:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44620 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726964AbfDMD0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 23:26:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 65B8312948CB023D649B;
+        Sat, 13 Apr 2019 11:26:41 +0800 (CST)
+Received: from huawei.com (10.175.104.193) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Sat, 13 Apr 2019
+ 11:26:35 +0800
+From:   Cheng Jian <cj.chengjian@huawei.com>
+To:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <yangyingliang@huawei.com>,
+        <mingo@redhat.com>, <peterz@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH] sched/fair: Use 'unsigned long' for group_shares,group_runnable
+Date:   Sat, 13 Apr 2019 03:32:34 +0000
+Message-ID: <20190413033234.30002-1-cj.chengjian@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190408212855.233198-1-joel@joelfernandes.org>
- <CAK7LNAQgvhozubW9b2yqnxHAVE17VHHZiq6N4Py_TzFCHN0YUQ@mail.gmail.com>
- <20190412180014.GA175945@google.com> <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
- <CAKOZueuf8qM1O7c+m7zRHv1b6-YsZmWoTBfErBLY+yV1pyESmQ@mail.gmail.com>
- <CAK7LNATW0EQ+uYqGgEbzp1pzajs2CBOWT937JOCNnepP3AAD1g@mail.gmail.com> <CAK7LNAS8LroP_N76ZS2OLZKaxSMA3UubdE1r7QzkqCt-TFmnWA@mail.gmail.com>
-In-Reply-To: <CAK7LNAS8LroP_N76ZS2OLZKaxSMA3UubdE1r7QzkqCt-TFmnWA@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Fri, 12 Apr 2019 20:18:49 -0700
-Message-ID: <CAKOZuetDdtGoN8aNm6KF2N3Oz-QGO3PeTex=7VLoem_jDeaknw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] Provide in-kernel headers to make extending kernel easier
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:10 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Sat, Apr 13, 2019 at 11:58 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > On Sat, Apr 13, 2019 at 10:53 AM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > On Fri, Apr 12, 2019 at 6:49 PM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > >
-> > > > On Sat, Apr 13, 2019 at 3:02 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > >
-> > > > >
-> > > > > > > +extern char kernel_headers_data;
-> > > > > > > +extern char kernel_headers_data_end;
-> > > > > > > +
-> > > > > > > +static ssize_t
-> > > > > > > +ikheaders_read_current(struct file *file, char __user *buf,
-> > > > > >
-> > > > > > Could you stretch this line ?
-> > > > > > It will still fit in 80-cols.
-> > > > > >
-> > > > > > (This is a coding style error in kernel/configs.c)
-> > > > >
-> > > > > It takes 87 cols if I expand, so I'll leave it as is.
-> > > > >
-> > > >
-> > > >
-> > > > Sorry if what I said was unclear.
-> > > >
-> > > > Since I just did not a good reason to put
-> > > > "static ssize_t" in the previous line,
-> > > > I meant like follows:
-> > > >
-> > > >
-> > > > [Before]
-> > > > static ssize_t
-> > > > ikheaders_read_current(struct file *file, char __user *buf,
-> > > >                        size_t len, loff_t *offset)
-> > > >
-> > > >
-> > > >
-> > > > [After]
-> > > > static ssize_t ikheaders_read_current(struct file *file, char __user *buf,
-> > > >                                       size_t len, loff_t *offset)
-> > > >
-> > > >
-> > > > (takes 74-cols.)
-> > > >
-> > > >
-> > > > (I am sending this from Gmail, so I am not sure
-> > > > how it will look like from you...)
-> > > >
-> > > >
-> > > > Anyway, it is super-bikeshedding stuff.
-> > > > It is OK as-is.
-> > > >
-> > >
-> > > What about sorting the files for determinism?
-> >
-> >
-> > Do you mean the order of files in the tar archive?
+group_share and group_runnable are tracked as 'unsigned long',
+however some functions using them as 'long' which is ultimately
+assigned back to 'unsigned long' variables in reweight_entity.
 
-Yes.
+Since there is not scope on using a different and signed type,
+this change improves code consistency and avoids further type
+conversions. More important, to prevent undefined behavior
+caused by overflow.
 
-> > I think it is a good idea for reproducible build.
-> >
-> >
-> >
-> > It looks like the tar command supports --sort=name option,
-> > but I did not test it at all.
-> >
-> >
-> >
-> > Perhaps, the sorting policy could be affected by locale.
-> > We saw it for the 'find' command.
->
->
-> 'sort' command is affected by locale.
+Using them as 'long' resulted in the following stack trace (on top
+of v4.19.34)
 
-It should be independent of locale if you set LC_ALL=C in the
-environment while running it.
+==============================================================================
+UBSAN: Undefined behaviour in kernel/sched/fair.c:3055:9
+signed integer overflow:
+1048576 * 9144968455305 cannot be represented in type 'long int'
+dump_backtrace+0x0/0x338
+show_stack+0x28/0x38
+dump_stack+0xc8/0x100
+ubsan_epilogue+0x18/0x6c
+handle_overflow+0x170/0x1c0
+__ubsan_handle_mul_overflow+0x34/0x44
+update_cfs_group+0x244/0x248
+dequeue_entity+0x478/0x12c0
+dequeue_task_fair+0x6c/0xd98
+__sched_setscheduler+0x320/0xdf0
+_sched_setscheduler+0xf4/0x158
+do_sched_setscheduler+0x118/0x1a0
+__arm64_sys_sched_setscheduler+0x50/0x70
+el0_svc_common+0xf4/0x258
+el0_svc_handler+0x50/0xa8
+
+==============================================================================
+
+UBSAN: Undefined behaviour in kernel/sched/fair.c:3111:11
+signed integer overflow:
+97833896519391 * 952504 cannot be represented in type 'long int'
+Call trace:
+dump_backtrace+0x0/0x338
+show_stack+0x28/0x38
+dump_stack+0xc8/0x100
+ubsan_epilogue+0x18/0x6c
+handle_overflow+0x170/0x1c0
+__ubsan_handle_mul_overflow+0x34/0x44
+update_cfs_group+0x210/0x248
+enqueue_entity+0x7b4/0x1868
+enqueue_task_fair+0x12c/0xe70
+__sched_setscheduler+0x4cc/0xdf0
+_sched_setscheduler+0xf4/0x158
+do_sched_setscheduler+0x118/0x1a0
+__arm64_sys_sched_setscheduler+0x50/0x70
+el0_svc_common+0xf4/0x258
+el0_svc_handler+0x50/0xa8
+el0_svc+0x8/0xc
+==============================================================================
+
+Cc: stable@vger.kernel.org 
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+---
+ kernel/sched/fair.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index fdab7eb6f351..cf003a31c220 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2920,9 +2920,9 @@ void reweight_task(struct task_struct *p, int prio)
+  *
+  * hence icky!
+  */
+-static long calc_group_shares(struct cfs_rq *cfs_rq)
++static unsigned long calc_group_shares(struct cfs_rq *cfs_rq)
+ {
+-	long tg_weight, tg_shares, load, shares;
++	unsigned long tg_weight, tg_shares, load, shares;
+ 	struct task_group *tg = cfs_rq->tg;
+ 
+ 	tg_shares = READ_ONCE(tg->shares);
+@@ -2951,7 +2951,7 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
+ 	 * case no task is runnable on a CPU MIN_SHARES=2 should be returned
+ 	 * instead of 0.
+ 	 */
+-	return clamp_t(long, shares, MIN_SHARES, tg_shares);
++	return clamp_t(unsigned long, shares, MIN_SHARES, tg_shares);
+ }
+ 
+ /*
+@@ -2981,9 +2981,9 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
+  * Where these max() serve both to use the 'instant' values to fix the slow
+  * from-idle and avoid the /0 on to-idle, similar to (6).
+  */
+-static long calc_group_runnable(struct cfs_rq *cfs_rq, long shares)
++static unsigned long calc_group_runnable(struct cfs_rq *cfs_rq, long shares)
+ {
+-	long runnable, load_avg;
++	unsigned long runnable, load_avg;
+ 
+ 	load_avg = max(cfs_rq->avg.load_avg,
+ 		       scale_load_down(cfs_rq->load.weight));
+@@ -2995,7 +2995,7 @@ static long calc_group_runnable(struct cfs_rq *cfs_rq, long shares)
+ 	if (load_avg)
+ 		runnable /= load_avg;
+ 
+-	return clamp_t(long, runnable, MIN_SHARES, shares);
++	return clamp_t(unsigned long, runnable, MIN_SHARES, shares);
+ }
+ #endif /* CONFIG_SMP */
+ 
+@@ -3008,7 +3008,7 @@ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq);
+ static void update_cfs_group(struct sched_entity *se)
+ {
+ 	struct cfs_rq *gcfs_rq = group_cfs_rq(se);
+-	long shares, runnable;
++	unsigned long shares, runnable;
+ 
+ 	if (!gcfs_rq)
+ 		return;
+-- 
+2.17.1
+
