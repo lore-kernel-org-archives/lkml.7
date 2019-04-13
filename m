@@ -2,190 +2,210 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D06C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D375E20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA27A2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="KDPxQtJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfDMCYu (ORCPT
+        id S1727059AbfDMC3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 22:24:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:63085 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfDMCYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 22:24:50 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 997E73089692;
-        Sat, 13 Apr 2019 02:24:49 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-125-232.rdu2.redhat.com [10.10.125.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC0F45C206;
-        Sat, 13 Apr 2019 02:24:47 +0000 (UTC)
-Subject: Re: [PATCH-tip v3 02/14] locking/rwsem: Make owner available even if
- !CONFIG_RWSEM_SPIN_ON_OWNER
-From:   Waiman Long <longman@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190410184231.6748-1-longman@redhat.com>
- <20190410184231.6748-3-longman@redhat.com>
- <20190411081224.GB4038@hirez.programming.kicks-ass.net>
- <29aca54a-536e-6e46-7e18-658914c34548@redhat.com>
- <20190412070209.GC129493@gmail.com>
- <20190412070545.GF11158@hirez.programming.kicks-ass.net>
- <20190412070904.GA45214@gmail.com>
- <b97eb5d5-1658-c405-e52e-2d20c4840948@redhat.com>
- <33b0111b-fe0f-eefc-59f4-f06d84d9cacc@redhat.com>
- <277e9c8e-8913-b251-4c98-dd2d4997d643@redhat.com>
- <20190412164123.GA119547@gmail.com>
- <4aefd2cd-f303-99ed-ada9-e7ba2ae9cd3c@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <00ce3ea9-0046-740f-6a6c-3b4aff2c3c6e@redhat.com>
-Date:   Fri, 12 Apr 2019 22:24:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <4aefd2cd-f303-99ed-ada9-e7ba2ae9cd3c@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Sat, 13 Apr 2019 02:24:49 +0000 (UTC)
+        Fri, 12 Apr 2019 22:29:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44862 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfDMC3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 22:29:19 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i2so6005803pgj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 19:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=yAFXPrMgigIXihGcQa7Lnv3A2PntZKJccF6sLLE81kI=;
+        b=KDPxQtJuChD64G/NyXgPj38v3g++YvJHjXOtjdXlGmzFIk0C09u4EEm/M658BNE3KB
+         9KCmEx22yhbdnLjkOgIA+U+/z961TesN77hUwro/XDcyrEErl84VYG3KoLlJf4sN46EW
+         9yR6WCiQo1svGf4ugQugSH7br6RIB5NVLcddsnFZHFtXokxdWzmXonvEt7mCc7v+yprS
+         BSfuLKTODlvMHcku1sgL3qHF+Y2VuoUSpRwW0HhpBQiVdZalWtLscQ7lwjc9k+fkT0/+
+         mY+dAz94yWoYihPkLBl49IrKJ+VusgZ0XUEXJX6p3ZLgWNgtfQUegA9WZEsSZWRnZCEx
+         f9Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yAFXPrMgigIXihGcQa7Lnv3A2PntZKJccF6sLLE81kI=;
+        b=qQuWaHG16AF2nlZEX5LvYW55cR5eYJ1AsspIIqq07SWJoOhCPJvTBYKab45uaabwPx
+         6ShOvfIsXJ7EHpsGeyErF32EW1Lsc6ALIV1PfwsWLLdAZWBSAHQRcn2kh4tsTZ7QaL9B
+         yeboeKt8i66h9bmKeXxGeP0zL/DTuP5qZGOBJyBFCixSp8nh+7Exn4NBJvI9sY+iUSsb
+         vW4hgvjeRL/TOqbci2XTg2kobkG5WRdVtAnsS9NeqUSH1TGintEYLiVQjIPnroRuK9RC
+         s31FkwSmZbz19ojh2maUxJIBUQKsGP4B2Bdq9qtUivvWhUADDxLZy5Ee/dztDjp1Qjp6
+         4hew==
+X-Gm-Message-State: APjAAAUABh7QsL31AJdkbp2hpCuYjuyK9u43phLsI5VZB4KtnesOqJpr
+        pBOUqyfspTNdNDTo07TrkI2D2Q==
+X-Google-Smtp-Source: APXvYqxkG4BUjgiDB8rplxbulmSBdHk/1xd0uow8koLnAYJ1jyZQps1nFcE5GYIiGtgCxnSLAKWtIw==
+X-Received: by 2002:a63:b64:: with SMTP id a36mr57570818pgl.58.1555122558111;
+        Fri, 12 Apr 2019 19:29:18 -0700 (PDT)
+Received: from localhost.localdomain (36-239-234-188.dynamic-ip.hinet.net. [36.239.234.188])
+        by smtp.gmail.com with ESMTPSA id j14sm46899317pfa.57.2019.04.12.19.29.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 12 Apr 2019 19:29:17 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>,
+        Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: tps65218: Convert to use regulator_get_current_limit_regmap
+Date:   Sat, 13 Apr 2019 10:29:07 +0800
+Message-Id: <20190413022907.24789-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDQvMTIvMjAxOSAwMjowNSBQTSwgV2FpbWFuIExvbmcgd3JvdGU6Cj4gT24gMDQvMTIv
-MjAxOSAxMjo0MSBQTSwgSW5nbyBNb2xuYXIgd3JvdGU6Cj4+Cj4+IFNvIGJleW9uZCB0aGUg
-cHJpbWFyeSBjb25zdHJhaW50IG9mIFBldGVyWiBPSy1pbmcgaXQgYWxsLCB0aGVyZSdzIGFs
-c28gCj4+IHRoZXNlIHR3byBzY2FsYWJpbGl0eSByZWdyZXNzaW9uIHJlcG9ydHMgZnJvbSB0
-aGUga3Rlc3QgYm90Ogo+Pgo+PiAgW2xvY2tpbmcvcndzZW1dIDFiOTQ1MzZmMmQ6IHN0cmVz
-cy1uZy5iYWQtYWx0c3RhY2sub3BzX3Blcl9zZWMgLTMyLjclIHJlZ3Jlc3Npb24KPiBBIHJl
-Z3Jlc3Npb24gZHVlIHRvIHRoZSBsb2NrIGhhbmRvZmYgcGF0Y2ggaXMga2luZCBvZiBleHBl
-Y3RlZCwgYnV0IEkKPiB3aWxsIGludG8gd2h5IHRoZXJlIGlzIHN1Y2ggYSBsYXJnZSBkcm9w
-LgoKSSBkb24ndCBoYXZlIGEgaGlnaCBjb3JlIGNvdW50IHN5c3RlbSBvbiBoYW5kLiBJIHJ1
-biB0aGUgc3RyZXNzLW5nIHRlc3QKb24gYSAyLXNvY2tldCA0MC1jb3JlIDgwLXRocmVhZCBT
-a3lsYWtlIHN5c3RlbToKCgpLZXJuZWxzOiAxKSBCZWZvcmUgbG9jayBoYW5kb2ZmIHBhdGNo
-CsKgwqDCoMKgwqDCoMKgwqAgMikgQWZ0ZXIgbG9jayBoYW5kb2ZmIHBhdGNoCsKgwqDCoMKg
-wqDCoMKgwqAgMykgQWZ0ZXIgd2FrZSBhbGwgcmVhZGVyIHBhdGNoCsKgwqDCoMKgwqDCoMKg
-wqAgNCkgQWZ0ZXIgcmVhZGVyIHNwaW4gb24gd3JpdGVyIHBhdGNoCsKgwqDCoMKgwqDCoMKg
-wqAgNSkgQWZ0ZXIgd3JpdGVyIHNwaW4gb24gcmVhZGVyIHBhdGNoCsKgwqDCoMKgwqDCoMKg
-wqAKwqDCoMKgIFRlc3RzwqDCoMKgwqDCoMKgwqDCoCBLMcKgwqDCoMKgwqAgSzLCoMKgwqDC
-oMKgIEszwqDCoMKgwqDCoCBLNMKgwqDCoMKgwqAgSzUKwqDCoMKgIC0tLS0twqDCoMKgwqDC
-oMKgwqDCoCAtLcKgwqDCoMKgwqAgLS3CoMKgwqDCoMKgIC0twqDCoMKgwqDCoCAtLcKgwqDC
-oMKgwqAgLS0KwqAgYmFkLWFsdHN0YWNrwqDCoCAzOTkyOMKgwqAgMzU4MDfCoMKgIDM2NDIy
-wqDCoCA0MDA2MsKgwqAgNDA3NDcKwqAgc3RhY2ttbWFwwqDCoMKgwqDCoMKgwqAgMTg3wqDC
-oMKgwqAgMzY1wqDCoMKgwqAgNDM1wqDCoMKgwqAgMjU1wqDCoMKgwqAgMTk4CsKgIHZtwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAzMDk1ODnCoCAyOTYwOTfCoCAyNjIwNDXCoCAyODE5NzTC
-oCAzMTA0MzkKwqAgdm0tc2VndsKgwqDCoMKgwqDCoCAxMTM3NzbCoCAxMTQwNTjCoCAxMTIz
-MTjCoCAxMTU0MjLCoCAxMTA1NTAKwqAKSGVyZSwgdGhlIGJhZC1hbHRzdGFjayBkcm9wcGVk
-IDEwJSBhZnRlciB0aGUgbG9jayBoYW5kb2ZmIHBhdGNoLiBIb3dldmVyLAp0aGUgcGVyZm9y
-bWFuY2UgaXMgcmVjb3ZlcmVkIHdpdGggbGF0ZXIgcGF0Y2hlcy4gVGhlIHN0YWNrbW1hcCBy
-ZXN1bHRzCmRvbid0IGxvb2sgcXVpdGUgcmlnaHQgYXMgdGhlIG51bWJlcnMgYXJlIG11Y2gg
-c21hbGxlciB0aGFuIHRoZSBudW1iZXJzCmluIHRoZSByZXBvcnQuCgpJIHdpbGwgcmVydW4g
-dGhlIHRlc3RzIGFnYWluIHdoZW4gSSBhY3F1aXJlIGEgaGlnaCBjb3JlIGNvdW50IHN5c3Rl
-bS4KCkFueXdheSwgdGhlIGxvY2sgaGFuZG9mZiBwYXRjaCBpcyBleHBlY3RlZCB0byByZWR1
-Y2UgdGhyb3VnaHB1dCB1bmRlcgpoZWF2eSBjb250ZW50aW9uLgoKPj4gIFtsb2NraW5nL3J3
-c2VtXSBhZGMzMmU4ODc3OiB3aWxsLWl0LXNjYWxlLnBlcl90aHJlYWRfb3BzIC0yMS4wJSBy
-ZWdyZXNzaW9uCj4gV2lsbCBsb29rIGludG8gdGhhdCBhbHNvLgoKSSBjYW4gcmVwcm9kdWNl
-IHRoZSByZWdyZXNzaW9uIG9uIHRoZSBzYW1lIHNreWxha2Ugc3lzdGVtLgoKVGhlIHJlc3Vs
-dHMgb2YgdGhlIHBhZ2VfZmF1bHQxIHdpbGwtaXQtc2NhbGUgdGVzdCBhcmUgYXMgZm9sbG93
-czoKCsKgVGhyZWFkc8KgwqAgSzLCoMKgwqDCoMKgIEszwqDCoMKgwqDCoMKgIEs0wqDCoMKg
-wqDCoMKgIEs1CsKgLS0tLS0tLcKgwqAgLS3CoMKgwqDCoMKgIC0twqDCoMKgwqDCoMKgIC0t
-wqDCoMKgwqDCoMKgIC0tCsKgwqDCoCAyMMKgIDU1NDk3NzLCoCA1NTUwMzMywqAgNTQ2Mzk2
-McKgIDU0MDAwNjQKwqDCoMKgIDQwwqAgOTU0MDQ0NSAxMDI4NjA3McKgIDk3MDUwNjLCoCA3
-NzA2MDgyCsKgwqDCoCA2MMKgIDgxODcyNDXCoCA4MjEyMzA3wqAgNzc3NzI0N8KgIDY2NDc3
-MDUKwqDCoMKgIDg5wqAgODM5MDc1OMKgIDk2MTkyNzHCoCA5MDE5NDU0wqAgNzEyNDQwNwoK
-U28gdGhlIHdha2UtYWxsLXJlYWRlciBwYXRjaCBpcyBnb29kIGZvciB0aGlzIGJlbmNobWFy
-ay4gVGhlIHBlcmZvcm1hbmNlCndhcyByZWR1Y2VkIGEgYml0IHdpdGggdGhlIHJlYWRlci1z
-cGluLW9uLXdyaXRlciBwYXRjaC4gSXQgZ290IGV2ZW4gd29yc2UKd2l0aCB0aGUgd3JpdGVy
-LXNwaW4tb24tcmVhZGVyIHBhdGNoLgoKSSBsb29rZWQgYXQgdGhlIHBlcmYgb3V0cHV0LCBy
-d3NlbSBjb250ZW50aW9uIGFjY291bnRlZCBmb3IgbGVzcyB0aGFuCjElIG9mIHRoZSB0b3Rh
-bCBjcHUgY3ljbGVzLiBTbyBJIGJlbGlldmUgdGhlIHJlZ3Jlc3Npb24gd2FzIGNhdXNlZCBi
-eQp0aGUgYmVoYXZpb3IgY2hhbmdlIGludHJvZHVjZWQgYnkgdGhlIHR3byByZWFkZXIgb3B0
-aW1pc3RpYyBzcGlubmluZwpwYXRjaGVzLiBUaGVzZSBwYXRjaCB3aWxsIG1ha2Ugd3JpdGVy
-IGxlc3MgcHJlZmVycmVkIHRoYW4gYmVmb3JlLiBJCnRoaW5rIHRoZSBwZXJmb3JtYW5jZSBv
-ZiB0aGlzIG1pY3JvYmVuY2htYXJrIG1heSBiZSBtb3JlIGRlcGVuZGVudCBvbgp3cml0ZXIg
-cGVyZm9ybWFuY2UuCgpMb29raW5nIGF0IHRoZSBsb2NrIGV2ZW50IGNvdW50cyBmb3IgSzU6
-CgrCoHJ3c2VtX29wdF9mYWlsPTI1MzY0NwrCoHJ3c2VtX29wdF9ub3NwaW49ODc3NgrCoHJ3
-c2VtX29wdF9ybG9jaz0yNTk5NDEKwqByd3NlbV9vcHRfd2xvY2s9MjU0MwrCoHJ3c2VtX3Js
-b2NrPTIzNzc0NwrCoHJ3c2VtX3Jsb2NrX2ZhaWw9MArCoHJ3c2VtX3Jsb2NrX2Zhc3Q9MArC
-oHJ3c2VtX3Jsb2NrX2hhbmRvZmY9MArCoHJ3c2VtX3NsZWVwX3JlYWRlcj0yMzc3NDcKwqBy
-d3NlbV9zbGVlcF93cml0ZXI9MjMwOTgKwqByd3NlbV93YWtlX3JlYWRlcj02MDMzCsKgcndz
-ZW1fd2FrZV93cml0ZXI9NDcwMzIKwqByd3NlbV93bG9jaz0xNTg5MArCoHJ3c2VtX3dsb2Nr
-X2ZhaWw9MTAKwqByd3NlbV93bG9ja19oYW5kb2ZmPTM5OTEKCkZvciBLNCwgaXQgd2FzCgrC
-oHJ3c2VtX29wdF9mYWlsPTQ3OTYyNgrCoHJ3c2VtX29wdF9ybG9jaz04ODc3CsKgcndzZW1f
-b3B0X3dsb2NrPTExNArCoHJ3c2VtX3Jsb2NrPTQ1Mzg3NArCoHJ3c2VtX3Jsb2NrX2ZhaWw9
-MArCoHJ3c2VtX3Jsb2NrX2Zhc3Q9MTIzNArCoHJ3c2VtX3Jsb2NrX2hhbmRvZmY9MArCoHJ3
-c2VtX3NsZWVwX3JlYWRlcj00NTMwNTgKwqByd3NlbV9zbGVlcF93cml0ZXI9MjU4MzYKwqBy
-d3NlbV93YWtlX3JlYWRlcj0xMTA1NArCoHJ3c2VtX3dha2Vfd3JpdGVyPTcxNTY4CsKgcndz
-ZW1fd2xvY2s9MjQ1MTUKwqByd3NlbV93bG9ja19mYWlsPTMKwqByd3NlbV93bG9ja19oYW5k
-b2ZmPTUyNDUKCkl0IGNhbiBiZSBzZWVuIHRoYXQgYSBsb3QgbW9yZSByZWFkZXJzIGdvdCB0
-aGUgbG9jayB2aWEgb3B0aW1pc3RpYwpzcGlubmluZy7CoCBPbmUgcG9zc2liaWxpdHkgaXMg
-dGhhdCByZWFkZXIgb3B0aW1pc3RpYyBzcGlubmluZyBjYXVzZXMKcmVhZGVycyB0byBzcHJl
-YWQgb3V0IGludG8gbW9yZSBsb2NrIGFjcXVpc2l0aW9uIGdyb3VwcyB0aGFuIHdpdGhvdXQu
-IFRoZQpLMyByZXN1bHRzIHNob3cgdGhhdCBncm91cGluZyBtb3JlIHJlYWRlcnMgaW50byBv
-bmUgbG9jayBhY3F1aXNpdGlvbgpncm91cCBoZWxwIHRvIGltcHJvdmUgcGVyZm9ybWFuY2Ug
-Zm9yIHRoaXMgbWljcm9iZW5jaG1hcmsuIEkgd2lsbCBuZWVkCnRvIHJ1biBtb3JlIHRlc3Rz
-IHRvIGZpbmQgb3V0IHRoZSByb290IGNhdXNlIG9mIHRoaXMgcmVncmVzc2lvbi4gSXQgaXMK
-bm90IGFuIGVhc3kgcHJvYmxlbSB0byBzb2x2ZS4KCkluIHRoZSBtZWFuIHRpbWUsIEkgYW0g
-Z29pbmcgdG8gc2VuZCBvdXQgYW4gdXBkYXRlZCBwYXRjaHNldCB0b21vcnJvdyBzbwp0aGF0
-IFBldGVyIGNhbiByZXZpZXcgdGhlIHBhdGNoIGFnYWluIHdoZW4gaGUgaXMgYXZhaWxhYmxl
-LgoKQ2hlZXJzLApMb25nbWFuCgo=
+Use regulator_get_current_limit_regmap helper to save some code.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/tps65218-regulator.c | 48 ++++++++++----------------
+ 1 file changed, 19 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+index 7aed3fbffecc..b72035610013 100644
+--- a/drivers/regulator/tps65218-regulator.c
++++ b/drivers/regulator/tps65218-regulator.c
+@@ -29,7 +29,8 @@
+ #include <linux/mfd/tps65218.h>
+ 
+ #define TPS65218_REGULATOR(_name, _of, _id, _type, _ops, _n, _vr, _vm, _er, \
+-			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm) \
++			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm, \
++			   _ct, _ncl) \
+ 	{							\
+ 		.name			= _name,		\
+ 		.of_match		= _of,			\
+@@ -42,6 +43,8 @@
+ 		.vsel_mask		= _vm,			\
+ 		.csel_reg		= _cr,			\
+ 		.csel_mask		= _cm,			\
++		.curr_table		= _ct,			\
++		.n_current_limits	= _ncl,			\
+ 		.enable_reg		= _er,			\
+ 		.enable_mask		= _em,			\
+ 		.volt_table		= NULL,			\
+@@ -188,8 +191,7 @@ static const struct regulator_ops tps65218_ldo1_dcdc34_ops = {
+ 	.set_suspend_disable	= tps65218_pmic_set_suspend_disable,
+ };
+ 
+-static const int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
+-
++static const unsigned int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
+ 
+ static int tps65218_pmic_set_input_current_lim(struct regulator_dev *dev,
+ 					       int lim_uA)
+@@ -229,29 +231,13 @@ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
+ 				 TPS65218_PROTECT_L1);
+ }
+ 
+-static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
+-{
+-	int retval;
+-	unsigned int index;
+-	struct tps65218 *tps = rdev_get_drvdata(dev);
+-
+-	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
+-	if (retval < 0)
+-		return retval;
+-
+-	index = (index & dev->desc->csel_mask) >>
+-					 __builtin_ctz(dev->desc->csel_mask);
+-
+-	return ls3_currents[index];
+-}
+-
+ static const struct regulator_ops tps65218_ls23_ops = {
+ 	.is_enabled		= regulator_is_enabled_regmap,
+ 	.enable			= tps65218_pmic_enable,
+ 	.disable		= tps65218_pmic_disable,
+ 	.set_input_current_limit = tps65218_pmic_set_input_current_lim,
+ 	.set_current_limit	= tps65218_pmic_set_current_limit,
+-	.get_current_limit	= tps65218_pmic_get_current_limit,
++	.get_current_limit	= regulator_get_current_limit_regmap,
+ };
+ 
+ /* Operations permitted on DCDC5, DCDC6 */
+@@ -270,53 +256,57 @@ static const struct regulator_desc regulators[] = {
+ 			   TPS65218_CONTROL_DCDC1_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC1_EN, 0, 0, dcdc1_dcdc2_ranges,
+ 			   2, 4000, 0, TPS65218_REG_SEQ3,
+-			   TPS65218_SEQ3_DC1_SEQ_MASK),
++			   TPS65218_SEQ3_DC1_SEQ_MASK, NULL, 0),
+ 	TPS65218_REGULATOR("DCDC2", "regulator-dcdc2", TPS65218_DCDC_2,
+ 			   REGULATOR_VOLTAGE, tps65218_dcdc12_ops, 64,
+ 			   TPS65218_REG_CONTROL_DCDC2,
+ 			   TPS65218_CONTROL_DCDC2_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC2_EN, 0, 0, dcdc1_dcdc2_ranges,
+ 			   2, 4000, 0, TPS65218_REG_SEQ3,
+-			   TPS65218_SEQ3_DC2_SEQ_MASK),
++			   TPS65218_SEQ3_DC2_SEQ_MASK, NULL, 0),
+ 	TPS65218_REGULATOR("DCDC3", "regulator-dcdc3", TPS65218_DCDC_3,
+ 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
+ 			   TPS65218_REG_CONTROL_DCDC3,
+ 			   TPS65218_CONTROL_DCDC3_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC3_EN, 0, 0, ldo1_dcdc3_ranges, 2,
+-			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK),
++			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK,
++			   NULL, 0),
+ 	TPS65218_REGULATOR("DCDC4", "regulator-dcdc4", TPS65218_DCDC_4,
+ 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 53,
+ 			   TPS65218_REG_CONTROL_DCDC4,
+ 			   TPS65218_CONTROL_DCDC4_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC4_EN, 0, 0, dcdc4_ranges, 2,
+-			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK),
++			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK,
++			   NULL, 0),
+ 	TPS65218_REGULATOR("DCDC5", "regulator-dcdc5", TPS65218_DCDC_5,
+ 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
+ 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC5_EN, 0,
+ 			   0, NULL, 0, 0, 1000000, TPS65218_REG_SEQ5,
+-			   TPS65218_SEQ5_DC5_SEQ_MASK),
++			   TPS65218_SEQ5_DC5_SEQ_MASK, NULL, 0),
+ 	TPS65218_REGULATOR("DCDC6", "regulator-dcdc6", TPS65218_DCDC_6,
+ 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
+ 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC6_EN, 0,
+ 			   0, NULL, 0, 0, 1800000, TPS65218_REG_SEQ5,
+-			   TPS65218_SEQ5_DC6_SEQ_MASK),
++			   TPS65218_SEQ5_DC6_SEQ_MASK, NULL, 0),
+ 	TPS65218_REGULATOR("LDO1", "regulator-ldo1", TPS65218_LDO_1,
+ 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
+ 			   TPS65218_REG_CONTROL_LDO1,
+ 			   TPS65218_CONTROL_LDO1_MASK, TPS65218_REG_ENABLE2,
+ 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
+ 			   2, 0, 0, TPS65218_REG_SEQ6,
+-			   TPS65218_SEQ6_LDO1_SEQ_MASK),
++			   TPS65218_SEQ6_LDO1_SEQ_MASK, NULL, 0),
+ 	TPS65218_REGULATOR("LS2", "regulator-ls2", TPS65218_LS_2,
+ 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
+ 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS2_EN,
+ 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS2ILIM_MASK,
+-			   NULL, 0, 0, 0, 0, 0),
++			   NULL, 0, 0, 0, 0, 0, ls3_currents,
++			   ARRAY_SIZE(ls3_currents)),
+ 	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
+ 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
+ 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
+ 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
+-			   NULL, 0, 0, 0, 0, 0),
++			   NULL, 0, 0, 0, 0, 0, ls3_currents,
++			   ARRAY_SIZE(ls3_currents)),
+ };
+ 
+ static int tps65218_regulator_probe(struct platform_device *pdev)
+-- 
+2.17.1
+
