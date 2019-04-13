@@ -2,88 +2,136 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3029AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4672C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D8420869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED7420869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tEg9kkhH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rX02K2pP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDMBrW (ORCPT
+        id S1727137AbfDMBtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 21:47:22 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44064 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfDMBrW (ORCPT
+        Fri, 12 Apr 2019 21:49:07 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:63412 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfDMBtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 21:47:22 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i21so9497128oib.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 18:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nJ6vgr19aFDh/LmrmlazKv6OS8jUUfAfcII11TY4ZGI=;
-        b=tEg9kkhH2/zP8WDNoLuFzLephtJm+P6MXVIUVbcFjHQh5VC9Xw/yoSR+G6HkGkHVmz
-         ECYyl65DP1AcCNbO6lxmevdKVUaAozq6ZDJabAjx1vdPdMlqWAwFxwkqVIJN0WI440Wv
-         VBvU0tp0fNz6CRnJrysIPEpP2Fd55hk5aWvSAU71H2yNvYwagdIxNihXtzzw6HO7L9Ag
-         53ikRJ5EvACgJdbeqLfCcqFxU2573cSxiA3RuWwF7Wy1+nVHf4TzH5Z21OlRX5bcBA3p
-         X/sUqTjPIifnCcmhZylIFkmasBmumT9mNt3fglbs6s+zRN8olnjO9njSUauFsShoaw3m
-         RQyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=nJ6vgr19aFDh/LmrmlazKv6OS8jUUfAfcII11TY4ZGI=;
-        b=lUirCCEazyLRpwfx0xdkEvlbYyttp91UeM9b42Aha3J7XMCyJNzOXg4lZhLsrw7+1h
-         pF1dLKruvUne55DE44r/X2JnkAYrZt4+HDYZHJ6ivVgbkiCmc3KEbtfvGSGn5QEYknMh
-         00RTaJayKfi3zYKiyawsnYPzyejGX0GmjccuzOjQhb/BYveeFmFoMKn3kuBY5Iatjtlg
-         pdL21FJt+AG6MOkaBoY7tmuKXkZQ2RkRgzLMWyRlVpn46xBdgeeMDLQS786GcVegN2Q+
-         3CG97GBX/xxNmu8RcXL3MCfLi/LdiLLCnXqHA8yZ1+HjdablLR4kypA+laKcobTrXBMm
-         JpxA==
-X-Gm-Message-State: APjAAAUac8PNAXy+Zf6Zn2brENV9rGB5r+b0edCIY4K9UfKLgqjkBPqi
-        l9e7Cn/PVOHedMM0O8OtgFGwECc=
-X-Google-Smtp-Source: APXvYqwFCG0RUFDHNQSbeyi2YB6AeiuGKqFp3/xobkUft3ntpFGfcdera2D7DnK44fYynNCswb6bag==
-X-Received: by 2002:aca:4b03:: with SMTP id y3mr2316359oia.21.1555120041035;
-        Fri, 12 Apr 2019 18:47:21 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.128.64])
-        by smtp.gmail.com with ESMTPSA id m124sm17402749oia.3.2019.04.12.18.47.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 12 Apr 2019 18:47:20 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
-        by serve.minyard.net (Postfix) with ESMTPSA id A8B071800CE;
-        Sat, 13 Apr 2019 01:47:19 +0000 (UTC)
-Date:   Fri, 12 Apr 2019 20:47:17 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [RFC] what's struct ipmi_file_private ->file for?
-Message-ID: <20190413014717.GJ25132@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190413004757.GM2217@ZenIV.linux.org.uk>
+        Fri, 12 Apr 2019 21:49:06 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x3D1mwOp005573;
+        Sat, 13 Apr 2019 10:48:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3D1mwOp005573
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555120139;
+        bh=O9oYvxK5r7nd0a5Qx5tmpDK2z46KhkmD2c6StVwobOI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rX02K2pPey6MLOBNniUHUhEepaFoLTpXkPW6jOqnfnhIgdH8uEY/at/4IsGUmLd4S
+         pzNTQpvr4IxzTr7QObRJb55oTvArpMkM+tfM/kLnLAAF8K150BZaeOVTd1O6XOXFGS
+         jufu1QPalN2xbwOwx9EA5gPaQn7pSQfOWDD4rVcQy2smBujGNO0LD66yBhbuR6VSnU
+         6V7igM59A6dEtF23lLgMqrBB65z77mNpkJjQuyZY6T1AV/97qUdWlgoga6NmTvWjTA
+         bhpGdflFkc+nTA9biRGga+4UNfmWE7Gp5ggo6APnyYPPgC/yjOKaTBIv+13RvwUn0D
+         7BJVxbEA6Uq5w==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id h71so2560605vkf.5;
+        Fri, 12 Apr 2019 18:48:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAVdQACJ+rVUzApltem6X9r6L5rjCTwH1HGoqQ11DNKE2FMCAyPQ
+        eIbun5ZauJjbBdaqHOGVIlFm3UjEjNxTffzCQhc=
+X-Google-Smtp-Source: APXvYqy3a6EW/rvEeRuVqGeMRTgJ3IxHSp31a9jvTjXxX6KZJKnc3dfv/qPtGxEnspXN/DVN7GxmktJeUmz6Ub8QeC4=
+X-Received: by 2002:a1f:39c:: with SMTP id f28mr33679288vki.19.1555120137746;
+ Fri, 12 Apr 2019 18:48:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413004757.GM2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190408212855.233198-1-joel@joelfernandes.org>
+ <CAK7LNAQgvhozubW9b2yqnxHAVE17VHHZiq6N4Py_TzFCHN0YUQ@mail.gmail.com> <20190412180014.GA175945@google.com>
+In-Reply-To: <20190412180014.GA175945@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 13 Apr 2019 10:48:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
+Message-ID: <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] Provide in-kernel headers to make extending kernel easier
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 01:47:57AM +0100, Al Viro wrote:
-> 	AFAICS, nothing has ever used that; am I, by any
-> chance, missing some nasty macros in there?  Just curious...
+On Sat, Apr 13, 2019 at 3:02 AM Joel Fernandes <joel@joelfernandes.org> wrote:
 
-I'm not sure why it's there, but it's been there since 2003 when
-the driver was first added.  I've queued a patch to remove it.
+>
+> > > +extern char kernel_headers_data;
+> > > +extern char kernel_headers_data_end;
+> > > +
+> > > +static ssize_t
+> > > +ikheaders_read_current(struct file *file, char __user *buf,
+> >
+> > Could you stretch this line ?
+> > It will still fit in 80-cols.
+> >
+> > (This is a coding style error in kernel/configs.c)
+>
+> It takes 87 cols if I expand, so I'll leave it as is.
+>
 
-Thanks,
 
--corey
+Sorry if what I said was unclear.
+
+Since I just did not a good reason to put
+"static ssize_t" in the previous line,
+I meant like follows:
+
+
+[Before]
+static ssize_t
+ikheaders_read_current(struct file *file, char __user *buf,
+                       size_t len, loff_t *offset)
+
+
+
+[After]
+static ssize_t ikheaders_read_current(struct file *file, char __user *buf,
+                                      size_t len, loff_t *offset)
+
+
+(takes 74-cols.)
+
+
+(I am sending this from Gmail, so I am not sure
+how it will look like from you...)
+
+
+Anyway, it is super-bikeshedding stuff.
+It is OK as-is.
+
+
+
+--
+Best Regards
+Masahiro Yamada
