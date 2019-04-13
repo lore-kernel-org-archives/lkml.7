@@ -3,25 +3,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AABC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C8420869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB0C20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfDMHVn (ORCPT
+        id S1727359AbfDMHVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:21:43 -0400
-Received: from www.osadl.org ([62.245.132.105]:36447 "EHLO www.osadl.org"
+        Sat, 13 Apr 2019 03:21:46 -0400
+Received: from www.osadl.org ([62.245.132.105]:36453 "EHLO www.osadl.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfDMHVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:21:42 -0400
+        id S1726953AbfDMHVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 03:21:45 -0400
 Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7JfAc003435;
-        Sat, 13 Apr 2019 09:20:55 +0200
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3D7JfAS003435;
+        Sat, 13 Apr 2019 09:20:03 +0200
 From:   Nicholas Mc Guire <hofrat@osadl.org>
 To:     Russell King <linux@armlinux.org.uk>
 Cc:     Shawn Guo <shawnguo@kernel.org>,
@@ -36,9 +36,9 @@ Cc:     Shawn Guo <shawnguo@kernel.org>,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH 4/4] ARM: imx legacy: add an SPDX license identifier
-Date:   Sat, 13 Apr 2019 09:14:26 +0200
-Message-Id: <1555139666-948-15-git-send-email-hofrat@osadl.org>
+Subject: [PATCH] ARM: imx: flag failure of of_iomap
+Date:   Sat, 13 Apr 2019 09:14:16 +0200
+Message-Id: <1555139666-948-5-git-send-email-hofrat@osadl.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1555139666-948-1-git-send-email-hofrat@osadl.org>
 References: <1555139666-948-1-git-send-email-hofrat@osadl.org>
@@ -47,23 +47,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header clearly identifies this code as GPL V2 or later - so pop
-in the SPDX license identifier.
+ imx_set_aips is assuming that the address returned from of_iomap is
+valid which it probably is in the normal case - as the call site
+is void error propagation is not possible but never the less at least
+a WARN_ON() seems warranted here.
 
 Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Fixes: commit e57e4ab5fc2e ("ARM: i.MX: allow disabling supervisor protect via DT")
 ---
- arch/arm/mach-imx/mach-mx27ads.c | 1 +
+
+Problem found by experimental coccinelle script
+
+Patch was compiletested with: multi_v7_defconfig
+
+Patch is against 4.18-rc3 (localversion-next is next-20180706)
+
+ arch/arm/mach-imx/cpu.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-imx/mach-mx27ads.c b/arch/arm/mach-imx/mach-mx27ads.c
-index c83fdd3..3f68972 100644
---- a/arch/arm/mach-imx/mach-mx27ads.c
-+++ b/arch/arm/mach-imx/mach-mx27ads.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  *  Copyright (C) 2000 Deep Blue Solutions Ltd
-  *  Copyright (C) 2002 Shane Nay (shane@minirl.com)
+diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
+index 32969f3..c6b1bf9 100644
+--- a/arch/arm/mach-imx/cpu.c
++++ b/arch/arm/mach-imx/cpu.c
+@@ -68,6 +68,7 @@ void __init imx_aips_allow_unprivileged_access(
+ 
+ 	for_each_compatible_node(np, NULL, compat) {
+ 		aips_base_addr = of_iomap(np, 0);
++		WARN_ON(!aips_base_addr);
+ 		imx_set_aips(aips_base_addr);
+ 	}
+ }
 -- 
 2.1.4
 
