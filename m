@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E79DC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FECBC282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DFF20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176F42084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 11:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="V1ZWuQQk"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="X3w8IXwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfDMLlb (ORCPT
+        id S1727064AbfDMLnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 07:41:31 -0400
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:33062 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfDMLlb (ORCPT
+        Sat, 13 Apr 2019 07:43:24 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38134 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfDMLnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 07:41:31 -0400
-Received: by mail-oi1-f169.google.com with SMTP id e5so10161283oii.0;
-        Sat, 13 Apr 2019 04:41:30 -0700 (PDT)
+        Sat, 13 Apr 2019 07:43:23 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a6so10135097oie.5;
+        Sat, 13 Apr 2019 04:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q13kuNkTBHkcWihycz+KK0I6eBNtjvR1vvA6Tk/zFZ4=;
-        b=V1ZWuQQkDMT1//qpcFkGoC2aB0YLJrrRq+qF3dz7XUtNX1GQgFS56T7GJbuam2wqOK
-         eMKjlsuRgTm3SXA195kuV9wJ7C7/a2V6FwFmcZtGPb48oCZcKXJfKZw7jjAA/VIsXW09
-         50Df+q0L2AL/7CPOsl5nQofExF4JQAuB2nG/Wwss6yPO56a7yfdJVIznl0MR3EylBBIA
-         Oi5GkzCUlvbxbMwBzkzXgSNaD/0HwhUupQ2E2xmixYvkYmfaJ+jEiMWZGTP/iD5jWml7
-         l3FM4bxOYinnDfARhGRhHYP3OvHrMbv6yezxoNCWpQGF8g3/aa3/DsSF+xWpSXBrpwHa
-         06HA==
+        bh=8PhNdP0asdVObS6Xc/5QPUT8gFKo5WEOH+jVFHzdyF0=;
+        b=X3w8IXwa+SzR5FfzM9rOMzxd4hw8y+kSdy6o78ko467+SvDzG1kvjZP9lrs1c2Dhnw
+         Iv6GYbYxl32ta2f+S90yzujPiPggs4XH2TZLFcaQ6EHV09gN/tJBnYi17bqBIubR2Fzm
+         +5OEDDkZuZairFfga1GZpwZaxvULbunu0gtGJMgLDu2DDJidU42NyU92ptmh+z/2HdoN
+         f00KlPIpQS8G6NJbL6e1BUihId4CxNNGQMpaEpbrBdAvh/M0g4JcFqM9e1KbD2ipdtpD
+         h9j4ZBx19cCWBvyi3/1OW1rCUMALF90fAAuzDWiVwy62ATAgTKHAbUsZ6Y/ThNKqEQCk
+         XgPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q13kuNkTBHkcWihycz+KK0I6eBNtjvR1vvA6Tk/zFZ4=;
-        b=CEKSLFamIF2DvCaZjG619rbxX5tGF+Oe6APtjCKSCcqvK3Ixv2PUgLWmzmArIj/M1l
-         B10g4Ib7a6JSOXzLsoXXSolKBGVTOMHk+L+6r09sXOBTbRZf4txECYzvS25WAtN+a3B5
-         KlDyphkTG/RvndXKq+cdk3C8BqNzuyNmDGhpw7095oNbHhHP/Hu+qgIjPtjPERJwAOvj
-         AEGe8D1caFdVUqnSEF3X6WLlXWnupbwUY5yC/J8eaNBcqwqs6AnfbkhFUPz+WtAi6TXW
-         4cqBthhxecS/G/NurV/V8m+mh+/Lh4bExXNUX/SYTjY3zPIRyNxivpvpA9pW6jRsPvYx
-         baEg==
-X-Gm-Message-State: APjAAAWSVWFtLjqF2RduM7vo/Gj1WOri766SCvVNx4YwCZReQfJZgHYy
-        66T4F+p6qzgMuG5beIj3MvOMSM7Rp0mR2c2GPqepyg==
-X-Google-Smtp-Source: APXvYqyvBEoNM+100tF5Ew7Nv2paa0mwftXH+HmOHRp7JUWfyGWsV/q0zfmDL3q7w43lw52wTnk4ivATNrJaLoyjewc=
-X-Received: by 2002:aca:b68a:: with SMTP id g132mr13298471oif.47.1555155690122;
- Sat, 13 Apr 2019 04:41:30 -0700 (PDT)
+        bh=8PhNdP0asdVObS6Xc/5QPUT8gFKo5WEOH+jVFHzdyF0=;
+        b=s3JVDaQwGO0tII92pULp/fYKdvxVwUJz2iEWI9X+3Q5YM/rVi/gXBJVJmzDpjX1KGR
+         pBOqlHLXg4loNc75aESo6xvVpnwgKdb9xLSh1pGcDWN1oloOvBhDp6Z0SBLmgozEG4Kc
+         wAqGZODqnHepjIesxi5KbQ91RNrCeQV38z4pIXiKixNlMGSmNT0B6rtFxg5pMnfL/K6o
+         7RK7junNRX94uNvjrVsHXngYj12h8Lnc0WNqMSTiqg2XnLaCLcQGgSLJxldP4fPX+fdW
+         FiPUb+7uFQbdSG1GJv1Ocl481mFeS2553b2AhfbC01PjkKkuRZ7MFVPAZYsSCyA7otNN
+         MJHg==
+X-Gm-Message-State: APjAAAXjnS7ppwFmqXjEtqpBZ4HdODj4m/73m3oWXhIM/5UF4eGLJBgn
+        dW4HElgjb8ytEx27FbdvA/nQrGieCSOlozWv9G0=
+X-Google-Smtp-Source: APXvYqxqXFZDeb3MD3FPgVmZ4ZsFdh+cixd6uEq+e7w+qpemMnK54guuTIMepO8ZQ/3ObliIu7U2Wb6CvLTe+yJydVg=
+X-Received: by 2002:aca:d487:: with SMTP id l129mr14029433oig.129.1555155802759;
+ Sat, 13 Apr 2019 04:43:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190412100221.26740-1-glaroque@baylibre.com> <20190412100221.26740-2-glaroque@baylibre.com>
-In-Reply-To: <20190412100221.26740-2-glaroque@baylibre.com>
+References: <20190412100221.26740-1-glaroque@baylibre.com> <20190412100221.26740-3-glaroque@baylibre.com>
+In-Reply-To: <20190412100221.26740-3-glaroque@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 13 Apr 2019 13:41:19 +0200
-Message-ID: <CAFBinCCd1EkvcwX0aiKxPXepyndu8_VhKq+RFVU7KxzYNftUJA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: clk: g12a-clkc: add Temperature
- Sensor clock ID
+Date:   Sat, 13 Apr 2019 13:43:12 +0200
+Message-ID: <CAFBinCAhf0EpnvUnYFEvAHo44a7OBoD-Hasx60Aow6ZfvWWEpw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] clk: meson-g12a: Add Temperature Sensor clock
 To:     Guillaume La Roque <glaroque@baylibre.com>
 Cc:     jbrunet@baylibre.com, Neil Armstrong <narmstrong@baylibre.com>,
         khilman@baylibre.com, linux-amlogic@lists.infradead.org,
@@ -71,13 +70,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:02 PM Guillaume La Roque
+On Fri, Apr 12, 2019 at 12:03 PM Guillaume La Roque
 <glaroque@baylibre.com> wrote:
 >
-> Add clock id used by temperature sensor for G12A Socs
-nit-pick if you have to re-send if for some reason: "used by the
-temperature sensors for G12A SoCs" (because as far as I know the two
-temperature sensors share this clock)
-
+> Add TS clock used by two temperature sensor
+>
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
