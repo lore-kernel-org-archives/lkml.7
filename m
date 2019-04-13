@@ -2,210 +2,174 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC7EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA27A2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCD620850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 02:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="KDPxQtJu"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RbVyPOZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfDMC3T (ORCPT
+        id S1727079AbfDMC7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 22:29:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44862 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbfDMC3T (ORCPT
+        Fri, 12 Apr 2019 22:59:38 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:19673 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfDMC7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 22:29:19 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i2so6005803pgj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 19:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=yAFXPrMgigIXihGcQa7Lnv3A2PntZKJccF6sLLE81kI=;
-        b=KDPxQtJuChD64G/NyXgPj38v3g++YvJHjXOtjdXlGmzFIk0C09u4EEm/M658BNE3KB
-         9KCmEx22yhbdnLjkOgIA+U+/z961TesN77hUwro/XDcyrEErl84VYG3KoLlJf4sN46EW
-         9yR6WCiQo1svGf4ugQugSH7br6RIB5NVLcddsnFZHFtXokxdWzmXonvEt7mCc7v+yprS
-         BSfuLKTODlvMHcku1sgL3qHF+Y2VuoUSpRwW0HhpBQiVdZalWtLscQ7lwjc9k+fkT0/+
-         mY+dAz94yWoYihPkLBl49IrKJ+VusgZ0XUEXJX6p3ZLgWNgtfQUegA9WZEsSZWRnZCEx
-         f9Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yAFXPrMgigIXihGcQa7Lnv3A2PntZKJccF6sLLE81kI=;
-        b=qQuWaHG16AF2nlZEX5LvYW55cR5eYJ1AsspIIqq07SWJoOhCPJvTBYKab45uaabwPx
-         6ShOvfIsXJ7EHpsGeyErF32EW1Lsc6ALIV1PfwsWLLdAZWBSAHQRcn2kh4tsTZ7QaL9B
-         yeboeKt8i66h9bmKeXxGeP0zL/DTuP5qZGOBJyBFCixSp8nh+7Exn4NBJvI9sY+iUSsb
-         vW4hgvjeRL/TOqbci2XTg2kobkG5WRdVtAnsS9NeqUSH1TGintEYLiVQjIPnroRuK9RC
-         s31FkwSmZbz19ojh2maUxJIBUQKsGP4B2Bdq9qtUivvWhUADDxLZy5Ee/dztDjp1Qjp6
-         4hew==
-X-Gm-Message-State: APjAAAUABh7QsL31AJdkbp2hpCuYjuyK9u43phLsI5VZB4KtnesOqJpr
-        pBOUqyfspTNdNDTo07TrkI2D2Q==
-X-Google-Smtp-Source: APXvYqxkG4BUjgiDB8rplxbulmSBdHk/1xd0uow8koLnAYJ1jyZQps1nFcE5GYIiGtgCxnSLAKWtIw==
-X-Received: by 2002:a63:b64:: with SMTP id a36mr57570818pgl.58.1555122558111;
-        Fri, 12 Apr 2019 19:29:18 -0700 (PDT)
-Received: from localhost.localdomain (36-239-234-188.dynamic-ip.hinet.net. [36.239.234.188])
-        by smtp.gmail.com with ESMTPSA id j14sm46899317pfa.57.2019.04.12.19.29.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 19:29:17 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>,
-        Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: tps65218: Convert to use regulator_get_current_limit_regmap
-Date:   Sat, 13 Apr 2019 10:29:07 +0800
-Message-Id: <20190413022907.24789-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 12 Apr 2019 22:59:38 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x3D2xTiD004358;
+        Sat, 13 Apr 2019 11:59:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x3D2xTiD004358
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555124370;
+        bh=Hozff6lorZMSkyN8e9FHdSjsJbtT6iJ1nOxxE5xlWNU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RbVyPOZ8HgzIDopUd9sYLQVKSzBBeVVoT0LsqetgB9Y1d/WolHno/wXtHwSqPt2ac
+         6umRXqwgmEVnyAUI02FPKr2pGC+t0IB7idDtcmYaVh7qIubN7byOS7evyHjMkYCyuj
+         6L758I/4KI6IUchnrO7iVNQ8L/Tqbpt5NBeUNJDq9NceeYKbi2j07JHR+wCddd1GSC
+         r1/CAAKJa3mi+YRBwNDFxOhfjFoLbuC1aPkHz+ILxFZsyLqJNvINxgoBc7OkadtjIi
+         vhOfM9ODCw1iccDJg9j5jlynAsPkDgNVRDSDE1/RegpDMTDkw+6SvIavLh+MbWoyw5
+         Nnd7WLSMBgNRw==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id s2so6661038vsi.5;
+        Fri, 12 Apr 2019 19:59:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAUeepsFqhfw6LBw/q+KMQojvbFv8BrIJyF9QOuhIOd+G132NucG
+        Sq5msyjWXsi2Wq62mgwxLEImJi5ACohN5RoXX/o=
+X-Google-Smtp-Source: APXvYqzhkVvx2hxm3NiAGHos34eYrsaF/sG7QfCezyI1KyNkTR0cwwluGFx16PyjEKKG4oqn/D4ek50dZIz32A8jVyo=
+X-Received: by 2002:a67:fbcc:: with SMTP id o12mr35478417vsr.60.1555124369020;
+ Fri, 12 Apr 2019 19:59:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190408212855.233198-1-joel@joelfernandes.org>
+ <CAK7LNAQgvhozubW9b2yqnxHAVE17VHHZiq6N4Py_TzFCHN0YUQ@mail.gmail.com>
+ <20190412180014.GA175945@google.com> <CAK7LNAT83SijpivFJA8GS=bOsgfnV03fo+-QJFgO1SgmLBOiQw@mail.gmail.com>
+ <CAKOZueuf8qM1O7c+m7zRHv1b6-YsZmWoTBfErBLY+yV1pyESmQ@mail.gmail.com>
+In-Reply-To: <CAKOZueuf8qM1O7c+m7zRHv1b6-YsZmWoTBfErBLY+yV1pyESmQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 13 Apr 2019 11:58:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATW0EQ+uYqGgEbzp1pzajs2CBOWT937JOCNnepP3AAD1g@mail.gmail.com>
+Message-ID: <CAK7LNATW0EQ+uYqGgEbzp1pzajs2CBOWT937JOCNnepP3AAD1g@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] Provide in-kernel headers to make extending kernel easier
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regulator_get_current_limit_regmap helper to save some code.
+On Sat, Apr 13, 2019 at 10:53 AM Daniel Colascione <dancol@google.com> wrote:
+>
+> On Fri, Apr 12, 2019 at 6:49 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Sat, Apr 13, 2019 at 3:02 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > >
+> > > > > +extern char kernel_headers_data;
+> > > > > +extern char kernel_headers_data_end;
+> > > > > +
+> > > > > +static ssize_t
+> > > > > +ikheaders_read_current(struct file *file, char __user *buf,
+> > > >
+> > > > Could you stretch this line ?
+> > > > It will still fit in 80-cols.
+> > > >
+> > > > (This is a coding style error in kernel/configs.c)
+> > >
+> > > It takes 87 cols if I expand, so I'll leave it as is.
+> > >
+> >
+> >
+> > Sorry if what I said was unclear.
+> >
+> > Since I just did not a good reason to put
+> > "static ssize_t" in the previous line,
+> > I meant like follows:
+> >
+> >
+> > [Before]
+> > static ssize_t
+> > ikheaders_read_current(struct file *file, char __user *buf,
+> >                        size_t len, loff_t *offset)
+> >
+> >
+> >
+> > [After]
+> > static ssize_t ikheaders_read_current(struct file *file, char __user *buf,
+> >                                       size_t len, loff_t *offset)
+> >
+> >
+> > (takes 74-cols.)
+> >
+> >
+> > (I am sending this from Gmail, so I am not sure
+> > how it will look like from you...)
+> >
+> >
+> > Anyway, it is super-bikeshedding stuff.
+> > It is OK as-is.
+> >
+>
+> What about sorting the files for determinism?
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/tps65218-regulator.c | 48 ++++++++++----------------
- 1 file changed, 19 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
-index 7aed3fbffecc..b72035610013 100644
---- a/drivers/regulator/tps65218-regulator.c
-+++ b/drivers/regulator/tps65218-regulator.c
-@@ -29,7 +29,8 @@
- #include <linux/mfd/tps65218.h>
- 
- #define TPS65218_REGULATOR(_name, _of, _id, _type, _ops, _n, _vr, _vm, _er, \
--			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm) \
-+			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm, \
-+			   _ct, _ncl) \
- 	{							\
- 		.name			= _name,		\
- 		.of_match		= _of,			\
-@@ -42,6 +43,8 @@
- 		.vsel_mask		= _vm,			\
- 		.csel_reg		= _cr,			\
- 		.csel_mask		= _cm,			\
-+		.curr_table		= _ct,			\
-+		.n_current_limits	= _ncl,			\
- 		.enable_reg		= _er,			\
- 		.enable_mask		= _em,			\
- 		.volt_table		= NULL,			\
-@@ -188,8 +191,7 @@ static const struct regulator_ops tps65218_ldo1_dcdc34_ops = {
- 	.set_suspend_disable	= tps65218_pmic_set_suspend_disable,
- };
- 
--static const int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
--
-+static const unsigned int ls3_currents[] = { 100000, 200000, 500000, 1000000 };
- 
- static int tps65218_pmic_set_input_current_lim(struct regulator_dev *dev,
- 					       int lim_uA)
-@@ -229,29 +231,13 @@ static int tps65218_pmic_set_current_limit(struct regulator_dev *dev,
- 				 TPS65218_PROTECT_L1);
- }
- 
--static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
--{
--	int retval;
--	unsigned int index;
--	struct tps65218 *tps = rdev_get_drvdata(dev);
--
--	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
--	if (retval < 0)
--		return retval;
--
--	index = (index & dev->desc->csel_mask) >>
--					 __builtin_ctz(dev->desc->csel_mask);
--
--	return ls3_currents[index];
--}
--
- static const struct regulator_ops tps65218_ls23_ops = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= tps65218_pmic_enable,
- 	.disable		= tps65218_pmic_disable,
- 	.set_input_current_limit = tps65218_pmic_set_input_current_lim,
- 	.set_current_limit	= tps65218_pmic_set_current_limit,
--	.get_current_limit	= tps65218_pmic_get_current_limit,
-+	.get_current_limit	= regulator_get_current_limit_regmap,
- };
- 
- /* Operations permitted on DCDC5, DCDC6 */
-@@ -270,53 +256,57 @@ static const struct regulator_desc regulators[] = {
- 			   TPS65218_CONTROL_DCDC1_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC1_EN, 0, 0, dcdc1_dcdc2_ranges,
- 			   2, 4000, 0, TPS65218_REG_SEQ3,
--			   TPS65218_SEQ3_DC1_SEQ_MASK),
-+			   TPS65218_SEQ3_DC1_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC2", "regulator-dcdc2", TPS65218_DCDC_2,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc12_ops, 64,
- 			   TPS65218_REG_CONTROL_DCDC2,
- 			   TPS65218_CONTROL_DCDC2_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC2_EN, 0, 0, dcdc1_dcdc2_ranges,
- 			   2, 4000, 0, TPS65218_REG_SEQ3,
--			   TPS65218_SEQ3_DC2_SEQ_MASK),
-+			   TPS65218_SEQ3_DC2_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC3", "regulator-dcdc3", TPS65218_DCDC_3,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
- 			   TPS65218_REG_CONTROL_DCDC3,
- 			   TPS65218_CONTROL_DCDC3_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC3_EN, 0, 0, ldo1_dcdc3_ranges, 2,
--			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK),
-+			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK,
-+			   NULL, 0),
- 	TPS65218_REGULATOR("DCDC4", "regulator-dcdc4", TPS65218_DCDC_4,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 53,
- 			   TPS65218_REG_CONTROL_DCDC4,
- 			   TPS65218_CONTROL_DCDC4_MASK, TPS65218_REG_ENABLE1,
- 			   TPS65218_ENABLE1_DC4_EN, 0, 0, dcdc4_ranges, 2,
--			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK),
-+			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK,
-+			   NULL, 0),
- 	TPS65218_REGULATOR("DCDC5", "regulator-dcdc5", TPS65218_DCDC_5,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
- 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC5_EN, 0,
- 			   0, NULL, 0, 0, 1000000, TPS65218_REG_SEQ5,
--			   TPS65218_SEQ5_DC5_SEQ_MASK),
-+			   TPS65218_SEQ5_DC5_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("DCDC6", "regulator-dcdc6", TPS65218_DCDC_6,
- 			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
- 			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC6_EN, 0,
- 			   0, NULL, 0, 0, 1800000, TPS65218_REG_SEQ5,
--			   TPS65218_SEQ5_DC6_SEQ_MASK),
-+			   TPS65218_SEQ5_DC6_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("LDO1", "regulator-ldo1", TPS65218_LDO_1,
- 			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
- 			   TPS65218_REG_CONTROL_LDO1,
- 			   TPS65218_CONTROL_LDO1_MASK, TPS65218_REG_ENABLE2,
- 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
- 			   2, 0, 0, TPS65218_REG_SEQ6,
--			   TPS65218_SEQ6_LDO1_SEQ_MASK),
-+			   TPS65218_SEQ6_LDO1_SEQ_MASK, NULL, 0),
- 	TPS65218_REGULATOR("LS2", "regulator-ls2", TPS65218_LS_2,
- 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
- 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS2_EN,
- 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS2ILIM_MASK,
--			   NULL, 0, 0, 0, 0, 0),
-+			   NULL, 0, 0, 0, 0, 0, ls3_currents,
-+			   ARRAY_SIZE(ls3_currents)),
- 	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
- 			   REGULATOR_CURRENT, tps65218_ls23_ops, 0, 0, 0,
- 			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
- 			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
--			   NULL, 0, 0, 0, 0, 0),
-+			   NULL, 0, 0, 0, 0, 0, ls3_currents,
-+			   ARRAY_SIZE(ls3_currents)),
- };
- 
- static int tps65218_regulator_probe(struct platform_device *pdev)
--- 
-2.17.1
+Do you mean the order of files in the tar archive?
+I think it is a good idea for reproducible build.
 
+
+
+It looks like the tar command supports --sort=name option,
+but I did not test it at all.
+
+
+
+Perhaps, the sorting policy could be affected by locale.
+We saw it for the 'find' command.
+I am not sure about the tar command though.
+
+
+
+commit f55f2328bb28a8517620518c5d124f5194673309
+Author: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Date:   Fri Aug 17 14:03:19 2018 +0200
+
+    kbuild: make sorting initramfs contents independent of locale
+
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
