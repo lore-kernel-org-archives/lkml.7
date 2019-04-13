@@ -2,162 +2,236 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8478FC10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D054FC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F02520870
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA6920870
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 21:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="mcQrIs3M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEzgHkWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfDMVsp (ORCPT
+        id S1727166AbfDMV4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 17:48:45 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42593 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbfDMVsp (ORCPT
+        Sat, 13 Apr 2019 17:56:06 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43975 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfDMV4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 17:48:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cv12so6757669plb.9
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 14:48:45 -0700 (PDT)
+        Sat, 13 Apr 2019 17:56:06 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f18so12031871lja.10;
+        Sat, 13 Apr 2019 14:56:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zWHQFrxQ5ALEL7e28WuS09c9TVADIx4+Uu943gYarPE=;
-        b=mcQrIs3MsenKCn846ImL7z1F5wO+h8oXflpilDQP0Ra+4ev2WG/AGd4odQSRuGZJLP
-         tw6wdX5l+MY5tAruHcaZ3UG8FabivNUyagOxF9XJ1XkNAv3SjeYZZEDp8fDZwGRdQkEx
-         GzioCt82HcKH1JIOH19Ahd4LKLzafpvbv3tuFDafKre8JYCtasLnIodQ/Tydbh4wYPnu
-         DNmITr+JmHp6DpeK355pds29xmtOx4f21AS2wmN8MWpnoRCgEPGj8YDvOWhLZq/J2+6n
-         9Qc6moLGsQaq6DDofnuRtP8t3JcMHlpEh25PSkC8eunbhqeDJnJUTIexM1+C7M73XYl3
-         umiw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R8aRVZE+vkmxua53iJHDKSM/xEco/FTj5uFLcAnfwB4=;
+        b=ZEzgHkWfY0We17yApEjHHjooUAZONjJ0xXXQEFuvC5UVbdmtHLyJrlcBNNb2aHK1cg
+         tfAXBtIt8tpEsbE51Uf3XGfu2JBVAzuW3T+xOK360DkMoI0qkwH8QHItFl65+B/6UBlH
+         CmlCXdCZy0Vw1n3iALFJs5fJMQxvbqyq06PCQtSXFgAi/O9vLALFQYo6BcRzKisTcgHo
+         6QSD6GPP9cGeTv/dsXvcGF6Nn7Paop02dEy0r/JKgZbOPFbSnNHrEHsTNmZ+u4AB3S6o
+         bD0Kd0YwUT1UxUrNRyW8sooKnhcAZllqZvS7NqHZ4ZAJPGHYpJopkL8FZY2Fykref7Wj
+         qtPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zWHQFrxQ5ALEL7e28WuS09c9TVADIx4+Uu943gYarPE=;
-        b=BQrJH/BNBjY+IKlLQlRKB86I0MMGKBiuL6ZyB4ry25u8Qkpkn8wQa71HX1n+dTguPb
-         H1SIetO4CtXxR90GfWHPjD/+U2Ffbp24tIwLY4nP0+WdmUKq4By5bzishIk0t5ms3i6K
-         2skR5l5rG5KERzDYcOJ86aY5QX+SWxR0ulMJEu3CW7s7X8XuNOf0KAQromg70i1rk2Tl
-         rmLMEevI1tA4IunMt2VW5IVcoD0AffxBLJsd3MhlQQ3E0a4KD+VP70vWQIZ5fPfk45Xs
-         MI4Kq/BWWa7EvyPfhY2yv6gG1rICpWYKIAdyoeczFZ7VHNLIBaGXsNaJMKxu5II48SML
-         vOXg==
-X-Gm-Message-State: APjAAAUebsCf3Yiz5mhnrtXcPyx0MXSyQ1nYshbsNMhlnq02Q2JAAg+c
-        niCM3Q08eRyd672X/ew7yL1Gu8Zd+q8=
-X-Google-Smtp-Source: APXvYqxJcIC6nBtFc9phwWayjV8Y9NS2lRuIiTE28pcGdlM5rkn+qdwuh8AxN/1BIKyXinwdE2uqBw==
-X-Received: by 2002:a17:902:294b:: with SMTP id g69mr16951876plb.57.1555192124506;
-        Sat, 13 Apr 2019 14:48:44 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02d:84af:491a:f204:96d6:e161? ([2600:1010:b02d:84af:491a:f204:96d6:e161])
-        by smtp.gmail.com with ESMTPSA id e13sm68110611pgb.37.2019.04.13.14.48.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 14:48:42 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190413204947.9394-1-shawn@git.icu>
-Date:   Sat, 13 Apr 2019 14:48:41 -0700
-Cc:     linux-api@vger.kernel, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <40254CBE-34B0-4783-8B19-FE7EA0BDA1E3@amacapital.net>
-References: <20190413204947.9394-1-shawn@git.icu>
-To:     Shawn Landden <shawn@git.icu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R8aRVZE+vkmxua53iJHDKSM/xEco/FTj5uFLcAnfwB4=;
+        b=r72GTXUGHffbOG2VPzvlU2ZoPLgK8QPkDkVioyNSInCcFPY3MgISxjq5sifYvL731U
+         gPHsC2pqG/WQa+AXpuf2Dm6JQUWh9YcfsFKa0lxCsGGsvlUBHDGdeRyOYOTaRt2FeHDK
+         X3HfeLLrhl8l0qSV+WtNRnBI/zPB62VEvwMm18ucGvi1sg3HzD058XOOwKPec2vXl88o
+         pCxfxqfv60QubSWav6rwpNWHVg4Kar3OaY8BlZlb43/4KZTX7Wuwrf2FvE2u/vCh4VRL
+         KV4frEPM6DIknsjOasHLDURwxyWzE0hFqunlV/AMjAGQ2FzIEguDQX3hogHhivnrcdCq
+         CKow==
+X-Gm-Message-State: APjAAAVjo7FqZM7ikUUr+zpdMX0OeLDHa/mJGb14GN5ufIKdSC+2vKom
+        XLSlY2T8LxN5UADrJt5OgjxmNOVgeGiKr3Dw3omUZVbM30g=
+X-Google-Smtp-Source: APXvYqyuqpVTOhkapLWpMyX1gI9AYM6404kCZ9DNVVmRCT6LqllwEFJFB7aW0ISjfe3mpckf/elkCsef/5VAmZcpUCo=
+X-Received: by 2002:a2e:96cb:: with SMTP id d11mr34128396ljj.157.1555192563511;
+ Sat, 13 Apr 2019 14:56:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190413012822.30931-1-olteanv@gmail.com> <20190413012822.30931-18-olteanv@gmail.com>
+ <20190413205311.GC2268@nanopsycho.orion>
+In-Reply-To: <20190413205311.GC2268@nanopsycho.orion>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sun, 14 Apr 2019 00:55:52 +0300
+Message-ID: <CA+h21hphrc0+H24zAjTNsrq4u-LgVBw630vpDgwoEXF96KrPkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 17/24] net: dsa: sja1105: Add support for
+ ethtool port counters
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
+        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Georg Waibel <georg.waibel@sensor-technik.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 13 Apr 2019 at 23:53, Jiri Pirko <jiri@resnulli.us> wrote:
+>
+> Sat, Apr 13, 2019 at 03:28:15AM CEST, olteanv@gmail.com wrote:
+> >Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> >Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> >---
+> >Changes in v3:
+> >None.
+> >
+> >Changes in v2:
+> >None functional. Moved the IS_ET() and IS_PQRS() device identification
+> >macros here since they are not used in earlier patches.
+> >
+> > drivers/net/dsa/sja1105/Makefile              |   1 +
+> > drivers/net/dsa/sja1105/sja1105.h             |   7 +-
+> > drivers/net/dsa/sja1105/sja1105_ethtool.c     | 414 ++++++++++++++++++
+> > drivers/net/dsa/sja1105/sja1105_main.c        |   3 +
+> > .../net/dsa/sja1105/sja1105_static_config.h   |  21 +
+> > 5 files changed, 445 insertions(+), 1 deletion(-)
+> > create mode 100644 drivers/net/dsa/sja1105/sja1105_ethtool.c
+> >
+> >diff --git a/drivers/net/dsa/sja1105/Makefile b/drivers/net/dsa/sja1105/Makefile
+> >index ed00840802f4..bb4404c79eb2 100644
+> >--- a/drivers/net/dsa/sja1105/Makefile
+> >+++ b/drivers/net/dsa/sja1105/Makefile
+> >@@ -3,6 +3,7 @@ obj-$(CONFIG_NET_DSA_SJA1105) += sja1105.o
+> > sja1105-objs := \
+> >     sja1105_spi.o \
+> >     sja1105_main.o \
+> >+    sja1105_ethtool.o \
+> >     sja1105_clocking.o \
+> >     sja1105_static_config.o \
+> >     sja1105_dynamic_config.o \
+> >diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+> >index 4c9df44a4478..80b20bdd8f9c 100644
+> >--- a/drivers/net/dsa/sja1105/sja1105.h
+> >+++ b/drivers/net/dsa/sja1105/sja1105.h
+> >@@ -120,8 +120,13 @@ typedef enum {
+> > int sja1105_clocking_setup_port(struct sja1105_private *priv, int port);
+> > int sja1105_clocking_setup(struct sja1105_private *priv);
+> >
+> >-/* From sja1105_dynamic_config.c */
+> >+/* From sja1105_ethtool.c */
+> >+void sja1105_get_ethtool_stats(struct dsa_switch *ds, int port, u64 *data);
+> >+void sja1105_get_strings(struct dsa_switch *ds, int port,
+> >+                       u32 stringset, u8 *data);
+> >+int sja1105_get_sset_count(struct dsa_switch *ds, int port, int sset);
+> >
+> >+/* From sja1105_dynamic_config.c */
+> > int sja1105_dynamic_config_read(struct sja1105_private *priv,
+> >                               enum sja1105_blk_idx blk_idx,
+> >                               int index, void *entry);
+> >diff --git a/drivers/net/dsa/sja1105/sja1105_ethtool.c b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+> >new file mode 100644
+> >index 000000000000..c082599702bd
+> >--- /dev/null
+> >+++ b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+> >@@ -0,0 +1,414 @@
+> >+// SPDX-License-Identifier: GPL-2.0
+> >+/* Copyright (c) 2018-2019, Vladimir Oltean <olteanv@gmail.com>
+> >+ */
+> >+#include "sja1105.h"
+> >+
+> >+#define SIZE_MAC_AREA         (0x02 * 4)
+> >+#define SIZE_HL1_AREA         (0x10 * 4)
+> >+#define SIZE_HL2_AREA         (0x4 * 4)
+> >+#define SIZE_QLEVEL_AREA      (0x8 * 4) /* 0x4 to 0xB */
+>
+> Please use prefixes for defines like this. For example "SIZE_MAC_AREA"
+> sounds way too generic.
+>
+
+What you propose sounds nice but then consistency would be a concern,
+so I'd have to redo the entire driver. And then there are tables named
+like "L2 Address Lookup Parameters Table", and as if
+SIZE_L2_LOOKUP_PARAMS_DYN_CMD_ET wasn't long enough, a prefix would
+top it off.
+I don't think it's as much of an issue for the reader (for the
+compiler it clearly isn't, as it's restricted to this C file only) as
+it is for tools like ctags?
+
+> [...]
+>
+>
+> >+static void
+> >+sja1105_port_status_hl1_unpack(void *buf,
+> >+                             struct sja1105_port_status_hl1 *status)
+> >+{
+> >+      /* Make pointer arithmetic work on 4 bytes */
+> >+      u32 *p = (u32 *)buf;
+>
+> You don't need to cast void *. Please avoid it in the whole patchset.
+>
+
+Ok.
+
+> [...]
+>
+>
+> >+      if (!IS_PQRS(priv->info->device_id))
+> >+              return;
+> >+
+> >+      memset(data + k, 0, ARRAY_SIZE(sja1105pqrs_extra_port_stats) *
+> >+                      sizeof(u64));
+> >+      for (i = 0; i < 8; i++) {
+>
+> Array size instead of "8"?
+>
+
+Perhaps SJA1105_NUM_TC, since the egress queue occupancy levels are
+per traffic class. The size of the array is 16.
+
+>
+> >+              data[k++] = status.hl2.qlevel_hwm[i];
+> >+              data[k++] = status.hl2.qlevel[i];
+> >+      }
+>
+> [...]
+>
+>
+> >
+> >+#define IS_PQRS(device_id) \
+> >+      (((device_id) == SJA1105PR_DEVICE_ID) || \
+> >+       ((device_id) == SJA1105QS_DEVICE_ID))
+> >+#define IS_ET(device_id) \
+> >+      (((device_id) == SJA1105E_DEVICE_ID) || \
+> >+       ((device_id) == SJA1105T_DEVICE_ID))
+> >+/* P and R have same Device ID, and differ by Part Number */
+> >+#define IS_P(device_id, part_nr) \
+> >+      (((device_id) == SJA1105PR_DEVICE_ID) && \
+> >+       ((part_nr) == SJA1105P_PART_NR))
+> >+#define IS_R(device_id, part_nr) \
+> >+      (((device_id) == SJA1105PR_DEVICE_ID) && \
+> >+       ((part_nr) == SJA1105R_PART_NR))
+> >+/* Same do Q and S */
+> >+#define IS_Q(device_id, part_nr) \
+> >+      (((device_id) == SJA1105QS_DEVICE_ID) && \
+> >+       ((part_nr) == SJA1105Q_PART_NR))
+> >+#define IS_S(device_id, part_nr) \
+>
+> Please have a prefix for macros like this. "IS_S" sounds way too
+> generic...
+>
+
+Ok, I can think of a more descriptive name, since there are under 5
+occurrences of these macros after the reorg, now that I have the
+sja1105_info structure which also holds per-revision function
+pointers.
+
+>
+> >+      (((device_id) == SJA1105QS_DEVICE_ID) && \
+> >+       ((part_nr) == SJA1105S_PART_NR))
+> >+
+> > struct sja1105_general_params_entry {
+> >       u64 vllupformat;
+> >       u64 mirr_ptacu;
+> >--
+> >2.17.1
+> >
 
 
-> On Apr 13, 2019, at 1:49 PM, Shawn Landden <shawn@git.icu> wrote:
->=20
-> If flags includes COPY_FILE_RANGE_FILESIZE then the length
-> copied is the length of the file. off_in and off_out are
-> ignored. len must be 0 or the file size.
->=20
-> This implementation saves a call to stat() in the common case
-> of copying files. It does not fix any race conditions, but that
-> is possible in the future with this interface.
->=20
-> EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
-> or the file size.
-
-I think you=E2=80=99re asking for trouble here. I assume you have some kind o=
-f race prevention in mind here.  The trouble is that passing zero means copy=
- the whole thing, but the size-checking behavior is only available for nonze=
-ro sizes. This means that anyone who passes their idea of the size needs to a=
-ccount for inconsistent behavior if the size is zero.
-
-Also, what happens if the file size changes mid copy?  I assume the result i=
-s more or less arbitrary, but you should document what behavior is allowed. =
- The docs should cover the case where you race against an O_APPEND write.
-
->=20
-> Signed-off-by: Shawn Landden <shawn@git.icu>
-> CC: <linux-api@vger.kernel.org>
-> ---
-> fs/read_write.c           | 14 +++++++++++++-
-> include/uapi/linux/stat.h |  4 ++++
-> 2 files changed, 17 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index 61b43ad7608e..6d06361f0856 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, lo=
-ff_t pos_in,
->    struct inode *inode_out =3D file_inode(file_out);
->    ssize_t ret;
->=20
-> -    if (flags !=3D 0)
-> +    if ((flags & ~COPY_FILE_RANGE_FILESIZE) !=3D 0)
->        return -EINVAL;
->=20
->    if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
-> @@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, l=
-off_t pos_in,
->    if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
->        return -EINVAL;
->=20
-> +    if (flags & COPY_FILE_RANGE_FILESIZE) {
-> +        struct kstat stat;
-> +        int error;
-> +        error =3D vfs_getattr(&file_in->f_path, &stat,
-> +                    STATX_SIZE, 0);
-> +        if (error < 0)
-> +            return error;
-> +        if (!(len =3D=3D 0 || len =3D=3D stat.size))
-> +            return -EAGAIN;
-> +        len =3D stat.size;
-> +    }
-> +
->    ret =3D rw_verify_area(READ, file_in, &pos_in, len);
->    if (unlikely(ret))
->        return ret;
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index 7b35e98d3c58..1075aa4666ef 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -170,5 +170,9 @@ struct statx {
->=20
-> #define STATX_ATTR_AUTOMOUNT        0x00001000 /* Dir: Automount trigger *=
-/
->=20
-> +/*
-> + * Flags for copy_file_range()
-> + */
-> +#define COPY_FILE_RANGE_FILESIZE    0x00000001 /* Copy the full length of=
- the input file */
->=20
-> #endif /* _UAPI_LINUX_STAT_H */
-> --=20
-> 2.20.1
->=20
+Thanks!
+-Vladimir
