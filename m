@@ -2,326 +2,81 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC010C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC4DC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EA8208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555168469;
-	bh=783VC/QydpuT0w9ckLzAeU3H5BiTsHTgiGaFVVIeaIA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZEAU+x+SKzL1wnSzLErbPf5fBFBeuiOlF2zBsRkh/ceOHliaeRXMHWRn/iWV9k2xT
-	 dX/4vaaPd42m49YkyVDxIOf8BysmR66EuwJyrkB5RU7Kra8+6f1wBLpcqoc0hDo+bC
-	 U5JkqTZzvwl6p7LwwbtZXQE3pgfuH4zv/+N19pY0=
+	by mail.kernel.org (Postfix) with ESMTP id D0E3A208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfDMPO2 (ORCPT
+        id S1727170AbfDMPSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 11:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
+        Sat, 13 Apr 2019 11:18:25 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:33006 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbfDMPO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 11:14:28 -0400
-Received: from localhost.localdomain (unknown [220.191.17.252])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D87BA2084D;
-        Sat, 13 Apr 2019 15:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555168467;
-        bh=783VC/QydpuT0w9ckLzAeU3H5BiTsHTgiGaFVVIeaIA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oLxkXpavNbCK9aGeuTI+c8Gd6LMxOXaZBHWvtN3VkLaZfCzjTp+XPFyPPmrPwriaJ
-         oCyMnsqECiwq75w0jcIqy4gYAUSSNDc1KR8drvNBMA6zJ7Di9GjOr8dhJlVRM0uqzv
-         UQrVYZH+1aTX4jI+RtYf45OGLDrCb2ChsmfmoOyQ=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH] csky: Support vmlinux bootup with MMU off
-Date:   Sat, 13 Apr 2019 23:14:00 +0800
-Message-Id: <1555168440-16497-1-git-send-email-guoren@kernel.org>
+        id S1727025AbfDMPSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 11:18:25 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3DFGKdZ009759
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sat, 13 Apr 2019 08:16:30 -0700
+Received: from yow-cube1.wrs.com (128.224.56.98) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.40) with Microsoft SMTP Server id 14.3.439.0; Sat, 13 Apr 2019
+ 08:16:09 -0700
+From:   Paul Gortmaker <paul.gortmaker@windriver.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: [PATCH] sound: soc-acpi: fix implicit header use of module.h/export.h
+Date:   Sat, 13 Apr 2019 11:15:18 -0400
+Message-ID: <1555168518-15287-1-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+This file is implicitly relying on an instance of including
+module.h from <linux/acpi.h>.
 
-Modify SETUP_MMU macro to fit on both MMU-on or MMU-off enviornment
-and vmlinux could bootup from MMU off enviornment for some cases.
+Ideally, header files under include/linux shouldn't be adding
+includes of other headers, in anticipation of their consumers,
+but just the headers needed for the header itself to pass
+parsing with CPP.
 
-Unify the style of _start and _start_smp_secondary in head.S to make
-head.S looks more concise and easy to understand.
+The module.h is particularly bad in this sense, as it itself does
+include a whole bunch of other headers, due to the complexity of
+module support.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
----
- arch/csky/abiv1/inc/abi/entry.h | 29 ++++++++-------
- arch/csky/abiv2/inc/abi/entry.h | 79 ++++++++++++++++++++++++++++++++---------
- arch/csky/kernel/head.S         | 60 ++++---------------------------
- arch/csky/kernel/setup.c        |  7 ++--
- 4 files changed, 90 insertions(+), 85 deletions(-)
+Here, we make the include explicit, in order to allow the future
+removal of module.h from linux/acpi.h without causing build breakage.
 
-diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
-index 18e2023..7ab78bd 100644
---- a/arch/csky/abiv1/inc/abi/entry.h
-+++ b/arch/csky/abiv1/inc/abi/entry.h
-@@ -143,7 +143,12 @@
- 	cpwcr   \rx, cpcr8
- .endm
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+
+diff --git a/sound/soc/soc-acpi.c b/sound/soc/soc-acpi.c
+index 4fb29f0e561e..444ce0602f76 100644
+--- a/sound/soc/soc-acpi.c
++++ b/sound/soc/soc-acpi.c
+@@ -4,6 +4,8 @@
+ //
+ // Copyright (c) 2013-15, Intel Corporation.
  
--.macro SETUP_MMU rx
-+.macro SETUP_MMU
-+	/* Init psr and enable ee */
-+	lrw	r6, DEFAULT_PSR_VALUE
-+	mtcr    r6, psr
-+	psrset  ee
-+
- 	/* Select MMU as co-processor */
- 	cpseti	cp15
++#include <linux/export.h>
++#include <linux/module.h>
+ #include <sound/soc-acpi.h>
  
-@@ -152,17 +157,17 @@
- 	 * 31 - 29 | 28 - 4 | 3 | 2 | 1 | 0
- 	 *   BA     Reserved  C   D   V
- 	 */
--	cprcr	\rx, cpcr30
--	lsri	\rx, 28
--	lsli	\rx, 28
--	addi	\rx, 0xe
--	cpwcr	\rx, cpcr30
--
--	lsri	\rx, 28
--	addi	\rx, 2
--	lsli	\rx, 28
--	addi	\rx, 0xe
--	cpwcr	\rx, cpcr31
-+	cprcr	r6, cpcr30
-+	lsri	r6, 28
-+	lsli	r6, 28
-+	addi	r6, 0xe
-+	cpwcr	r6, cpcr30
-+
-+	lsri	r6, 28
-+	addi	r6, 2
-+	lsli	r6, 28
-+	addi	r6, 0xe
-+	cpwcr	r6, cpcr31
- .endm
- 
- .macro ANDI_R3 rx, imm
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index c0a76c4..9897a16 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -162,31 +162,76 @@
- 	mtcr	\rx, cr<8, 15>
- .endm
- 
--.macro SETUP_MMU rx
--	/* Check MMU on | off */
--	mfcr	\rx, cr18
--	btsti	\rx, 0
-+.macro SETUP_MMU
-+	/* Init psr and enable ee */
-+	lrw	r6, DEFAULT_PSR_VALUE
-+	mtcr    r6, psr
-+	psrset  ee
-+
-+	/* Invalid I/Dcache BTB BHT */
-+	movi	r6, 7
-+	lsli	r6, 16
-+	addi	r6, (1<<4) | 3
-+	mtcr	r6, cr17
-+
-+	/* Invalid all TLB */
-+	bgeni   r6, 26
-+	mtcr	r6, cr<8, 15> /* Set MCIR */
-+
-+	/* Check MMU on/off */
-+	mfcr	r6, cr18
-+	btsti	r6, 0
- 	bt	1f
--	grs	\rx, 1f
-+
-+	/* MMU off: setup mapping tlb entry */
-+	movi	r6, 0
-+	mtcr	r6, cr<6, 15> /* Set MPR with 4K page size */
-+
-+	grs	r6, 1f /* Get current pa by PC */
-+	bmaski  r7, (PAGE_SHIFT + 1) /* r7 = 0x1fff */
-+	andn    r6, r7
-+	mtcr	r6, cr<4, 15> /* Set MEH */
-+
-+	mov	r8, r6
-+	movi    r7, 0x00000006
-+	or      r8, r7
-+	mtcr	r8, cr<2, 15> /* Set MEL0 */
-+	movi    r7, 0x00001006
-+	or      r8, r7
-+	mtcr	r8, cr<3, 15> /* Set MEL1 */
-+
-+	bgeni   r8, 28
-+	mtcr	r8, cr<8, 15> /* Set MCIR to write TLB */
-+
- 	br	2f
- 1:
- 	/*
--	 * cr<30, 15> format:
-+	 * MMU on: use origin MSA value from bootloader
-+	 *
-+	 * cr<30/31, 15> MSA register format:
- 	 * 31 - 29 | 28 - 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
- 	 *   BA     Reserved  SH  WA  B   SO SEC  C   D   V
- 	 */
--	mfcr	\rx, cr<30, 15>
-+	mfcr	r6, cr<30, 15> /* Get MSA0 */
- 2:
--	lsri	\rx, 28
--	lsli	\rx, 28
--	addi	\rx, 0x1ce
--	mtcr	\rx, cr<30, 15>
--
--	lsri	\rx, 28
--	addi	\rx, 2
--	lsli	\rx, 28
--	addi	\rx, 0x1ce
--	mtcr	\rx, cr<31, 15>
-+	lsri	r6, 28
-+	lsli	r6, 28
-+	addi	r6, 0x1ce
-+	mtcr	r6, cr<30, 15> /* Set MSA0 */
-+
-+	lsri	r6, 28
-+	addi	r6, 2
-+	lsli	r6, 28
-+	addi	r6, 0x1ce
-+	mtcr	r6, cr<31, 15> /* Set MSA1 */
-+
-+	/* enable MMU */
-+	mfcr    r6, cr18
-+	bseti	r6, 0
-+	mtcr    r6, cr18
-+
-+	jmpi	3f /* jump to va */
-+3:
- .endm
- 
- .macro ANDI_R3 rx, imm
-diff --git a/arch/csky/kernel/head.S b/arch/csky/kernel/head.S
-index 9c4ec47..61989f9 100644
---- a/arch/csky/kernel/head.S
-+++ b/arch/csky/kernel/head.S
-@@ -7,16 +7,11 @@
- 
- __HEAD
- ENTRY(_start)
--	/* set super user mode */
--	lrw	a3, DEFAULT_PSR_VALUE
--	mtcr    a3, psr
--	psrset  ee
--
--	SETUP_MMU a3
-+	SETUP_MMU
- 
- 	/* set stack point */
--	lrw     a3, init_thread_union + THREAD_SIZE
--	mov	sp, a3
-+	lrw     r6, init_thread_union + THREAD_SIZE
-+	mov	sp, r6
- 
- 	jmpi	csky_start
- END(_start)
-@@ -24,53 +19,12 @@ END(_start)
- #ifdef CONFIG_SMP
- .align 10
- ENTRY(_start_smp_secondary)
--	/* Invalid I/Dcache BTB BHT */
--	movi	a3, 7
--	lsli	a3, 16
--	addi	a3, (1<<4) | 3
--	mtcr	a3, cr17
--
--	tlbi.alls
--
--	/* setup PAGEMASK */
--	movi	a3, 0
--	mtcr	a3, cr<6, 15>
--
--	/* setup MEL0/MEL1 */
--	grs	a0, _start_smp_pc
--_start_smp_pc:
--	bmaski  a1, 13
--	andn    a0, a1
--	movi    a1, 0x00000006
--	movi    a2, 0x00001006
--	or      a1, a0
--	or      a2, a0
--	mtcr	a1, cr<2, 15>
--	mtcr	a2, cr<3, 15>
--
--	/* setup MEH */
--	mtcr	a0, cr<4, 15>
--
--	/* write TLB */
--	bgeni   a3, 28
--	mtcr	a3, cr<8, 15>
--
--	SETUP_MMU a3
--
--	/* enable MMU */
--	movi	a3, 1
--	mtcr    a3, cr18
--
--	jmpi	_goto_mmu_on
--_goto_mmu_on:
--	lrw	a3, DEFAULT_PSR_VALUE
--	mtcr    a3, psr
--	psrset  ee
-+	SETUP_MMU
- 
- 	/* set stack point */
--	lrw     a3, secondary_stack
--	ld.w	a3, (a3, 0)
--	mov	sp, a3
-+	lrw     r6, secondary_stack
-+	ld.w	r6, (r6, 0)
-+	mov	sp, r6
- 
- 	jmpi	csky_start_secondary
- END(_start_smp_secondary)
-diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
-index c377194..36fc04b 100644
---- a/arch/csky/kernel/setup.c
-+++ b/arch/csky/kernel/setup.c
-@@ -145,7 +145,8 @@ void __init setup_arch(char **cmdline_p)
- unsigned long phys_offset;
- EXPORT_SYMBOL(phys_offset);
- 
--asmlinkage __visible void __init csky_start(unsigned int unused, void *param)
-+asmlinkage __visible void __init csky_start(unsigned int unused,
-+					    void *dtb_start)
- {
- 	/* Clean up bss section */
- 	memset(__bss_start, 0, __bss_stop - __bss_start);
-@@ -155,10 +156,10 @@ asmlinkage __visible void __init csky_start(unsigned int unused, void *param)
- 	pre_trap_init();
- 	pre_mmu_init();
- 
--	if (param == NULL)
-+	if (dtb_start == NULL)
- 		early_init_dt_scan(__dtb_start);
- 	else
--		early_init_dt_scan(param);
-+		early_init_dt_scan(dtb_start);
- 
- 	start_kernel();
- 
+ struct snd_soc_acpi_mach *
 -- 
-2.7.4
+2.11.0
 
