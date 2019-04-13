@@ -2,96 +2,86 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F15C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64377C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACCF2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30762084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iprK3mg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfDMQvA (ORCPT
+        id S1727680AbfDMQyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:51:00 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:2633 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726998AbfDMQvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:51:00 -0400
-X-IronPort-AV: E=Sophos;i="5.60,346,1549926000"; 
-   d="scan'208";a="302789478"
-Received: from abo-75-106-68.mrs.modulonet.fr (HELO hadrien) ([85.68.106.75])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Apr 2019 18:50:57 +0200
-Date:   Sat, 13 Apr 2019 18:50:57 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc:     kbuild-all@01.org, Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Message-ID: <alpine.DEB.2.21.1904131849350.2536@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 13 Apr 2019 12:54:31 -0400
+Received: from vps.xff.cz ([195.181.215.36]:49208 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727415AbfDMQyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 12:54:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1555174461; bh=5oK+hUHvbPopzw2Jlb3qkR0ZnXTFnDc3XhhaDlcdJng=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iprK3mg59z6ND8JCV3qOma0YS4b9+cezL+KzJ/skxrZyvUzg57kDwZ8YGzwKafI4+
+         ynSY3b6KsPcR+ZxobsUQ6j5hyzPRSV9ij6yDrIXoKV5KJAWM8expTBDqDg0lRJEYPN
+         +DxFOdbQx+7/9cv9tivIS/WnkcSNDJdVfzJzvxMM=
+From:   megous@megous.com
+To:     linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v4 6/9] dt-bindings: display: hdmi-connector: Add DDC power supply
+Date:   Sat, 13 Apr 2019 18:54:15 +0200
+Message-Id: <20190413165418.27880-7-megous@megous.com>
+In-Reply-To: <20190413165418.27880-1-megous@megous.com>
+References: <20190413165418.27880-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Ondrej Jirman <megous@megous.com>
 
-Kirill will explain about this issue.
+Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
+on-board voltage shifting logic for the DDC bus to be usable. Use
+ddc-supply on the hdmi-connector to model this.
 
-julia
+Add binding documentation for optional ddc-supply property.
 
----------- Forwarded message ----------
-Date: Sat, 13 Apr 2019 11:22:51 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-
-CC: kbuild-all@01.org
-TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-CC: Logan Gunthorpe <logang@deltatee.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>
-CC: linux-pci@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-
-From: kbuild test robot <lkp@intel.com>
-
-drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-
-Generated by: scripts/coccinelle/api/stream_open.cocci
-
-Fixes: 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
+ .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
+ 1 file changed, 1 insertion(+)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-head:   794c294ae4483c240429c25a0d18e272e92c94de
-commit: 8a29a3bae2a2dfb0116cd8791d9700515d6e765e [154/311] pci/switchtec: Don't use completion's wait queue
-:::::: branch date: 7 hours ago
-:::::: commit date: 7 hours ago
-
-Please take the patch only if it's a positive warning. Thanks!
-
- switchtec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
- 		return PTR_ERR(stuser);
-
- 	filp->private_data = stuser;
--	nonseekable_open(inode, filp);
-+	stream_open(inode, filp);
-
- 	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+index 508aee461e0d..33085aeb0bb9 100644
+--- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+@@ -9,6 +9,7 @@ Optional properties:
+ - label: a symbolic name for the connector
+ - hpd-gpios: HPD GPIO number
+ - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
++- ddc-supply: the power supply for the DDC bus
+ 
+ Required nodes:
+ - Video port for HDMI input
+-- 
+2.21.0
 
