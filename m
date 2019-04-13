@@ -2,77 +2,150 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C6C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79E7208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24574208E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfDMQPO (ORCPT
+        id S1727300AbfDMQQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:15:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47745 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbfDMQPO (ORCPT
+        Sat, 13 Apr 2019 12:16:10 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:51915 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfDMQQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:15:14 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hFLId-0006XN-6v; Sat, 13 Apr 2019 16:14:39 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: check for null return from skb_copy
-Date:   Sat, 13 Apr 2019 17:14:38 +0100
-Message-Id: <20190413161438.6376-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 13 Apr 2019 12:16:09 -0400
+Received: by mail-it1-f198.google.com with SMTP id y127so12313944itb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 09:16:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ToOmTnsjNoVc5LpZgkf4LClGZjPRs6QIecJgsjkxmZo=;
+        b=Wuj+teNL7BYz7AoyEikRRClF4+4+n9WTcNpHXBnc9lRZTvSG4x8Xo5+sAFbrdUP72s
+         Jr+8hcpqzXE9mfIZ0sfmpJ8i2KWUImOxj9B5UyDDo13/z8s+CS8ExRqMgLU+vp/8D5tB
+         jowh83KwMXwtVbxGHSUIcWX2QBv9AAj5uCIeiTcJxAZUW7od6ZxH1DMqbDfhxJRNgQlF
+         eYfdqN6OYAB+hFtlXEJ9s9lnjMF0nDM6JlNWbBCHWW22UUWZZBG58lzLeXy53RdH3ZSo
+         v3Zx0yctPjPXdncyB+SF23r0l5NOZMGaUrh1jejcSmD/7YCSYRi/BDv4syn3wCohI6aC
+         EEuw==
+X-Gm-Message-State: APjAAAV9D05/Nt/zkqaOiOS30R02w8+IgRiz7cbYsHJp4+Ylz5E4OOxx
+        THCTPFF50/hnUy5fxHDCRhbkZMXOYjU9OqF5Z18SHf8578cd
+X-Google-Smtp-Source: APXvYqyEUVzCz4z0UqEdNP67gH+a/hZZEJXSHTIIAeYCzGG7f5UbPZ9BSuo6m9xvaDULdQUPEmy1GL6izkGyht5hbpZRf/xOwpmq
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a24:7f52:: with SMTP id r79mr4862810itc.33.1555172168580;
+ Sat, 13 Apr 2019 09:16:08 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 09:16:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ac48ed05866bbc2c@google.com>
+Subject: WARNING in smc_unhash_sk (2)
+From:   syzbot <syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hello,
 
-It is possible for skb_copy to return a null pointer and currently
-this will cause a null pointer dereference when the function
-mwifiex_uap_queue_bridged_pkt is called.  Fix this by checking for
-a null return from skb_copy and return -ENOMEM.
+syzbot found the following crash on:
 
-Addresses-Coverity: ("Dereference null return")
-Fixes: 838e4f449297 ("mwifiex: improve uAP RX handling")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+HEAD commit:    e0a092eb Merge branch 'smc-next'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10fb322d200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=94c460c3e4cd188a
+dashboard link: https://syzkaller.appspot.com/bug?extid=bd8cc73d665590a1fcad
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176c98f3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ea286b200000
+
+The bug was bisected to:
+
+commit 50717a37db032ce783f50685a73bb2ac68471a5a
+Author: Ursula Braun <ubraun@linux.ibm.com>
+Date:   Fri Apr 12 10:57:23 2019 +0000
+
+     net/smc: nonblocking connect rework
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14764e5b200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16764e5b200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12764e5b200000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
+Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
+
+WARNING: CPU: 0 PID: 7716 at include/net/sock.h:666 sk_del_node_init  
+include/net/sock.h:666 [inline]
+WARNING: CPU: 0 PID: 7716 at include/net/sock.h:666  
+smc_unhash_sk+0x1ea/0x260 net/smc/af_smc.c:95
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7716 Comm: syz-executor514 Not tainted 5.1.0-rc4+ #135
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:sk_del_node_init include/net/sock.h:666 [inline]
+RIP: 0010:smc_unhash_sk+0x1ea/0x260 net/smc/af_smc.c:95
+Code: ff ff ff ff e8 57 e6 95 fe e8 82 9e 92 fa 4c 89 ef e8 ca 21 38 00 48  
+83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 66 9e 92 fa <0f> 0b eb 86 4c  
+89 e7 e8 9a e7 ca fa e9 5f ff ff ff e8 b0 e7 ca fa
+RSP: 0018:ffff888085e3fbd8 EFLAGS: 00010293
+RAX: ffff888090874080 RBX: ffff8880914f9240 RCX: ffffffff86ddf01e
+RDX: 0000000000000000 RSI: ffffffff86ddf09a RDI: 0000000000000005
+RBP: ffff888085e3fc08 R08: ffff888090874080 R09: ffffed101229f259
+R10: ffffed101229f258 R11: ffff8880914f92c3 R12: ffff8880914f92c0
+R13: ffffffff895353e0 R14: ffff8880914f9268 R15: 0000000000000001
+  smc_release+0x337/0x820 net/smc/af_smc.c:164
+  __sock_release+0xd3/0x2b0 net/socket.c:599
+  sock_close+0x1b/0x30 net/socket.c:1247
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+  do_group_exit+0x135/0x370 kernel/exit.c:980
+  __do_sys_exit_group kernel/exit.c:991 [inline]
+  __se_sys_exit_group kernel/exit.c:989 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x43ee18
+Code: Bad RIP value.
+RSP: 002b:00007ffc9ebae588 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ee18
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be628 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- drivers/net/wireless/marvell/mwifiex/uap_txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/uap_txrx.c b/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
-index 5ce85d5727e4..b262dc78d638 100644
---- a/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
-@@ -256,6 +256,8 @@ int mwifiex_handle_uap_rx_forward(struct mwifiex_private *priv,
- 
- 	if (is_multicast_ether_addr(ra)) {
- 		skb_uap = skb_copy(skb, GFP_ATOMIC);
-+		if (!skb_uap)
-+			return -ENOMEM;
- 		mwifiex_uap_queue_bridged_pkt(priv, skb_uap);
- 	} else {
- 		if (mwifiex_get_sta_entry(priv, ra)) {
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
