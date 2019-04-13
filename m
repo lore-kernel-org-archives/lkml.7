@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873E5C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA71C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E28721721
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8632721721
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfDMRYJ (ORCPT
+        id S1728546AbfDMRYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 13:24:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39170 "EHLO mx1.redhat.com"
+        Sat, 13 Apr 2019 13:24:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32954 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbfDMRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 13:24:07 -0400
+        id S1727986AbfDMRYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 13:24:05 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 731523082E5F;
-        Sat, 13 Apr 2019 17:24:06 +0000 (UTC)
-Received: from llong.com (ovpn-120-133.rdu2.redhat.com [10.10.120.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 449A75D9C6;
+        by mx1.redhat.com (Postfix) with ESMTPS id 1E3922DC35B;
         Sat, 13 Apr 2019 17:24:05 +0000 (UTC)
+Received: from llong.com (ovpn-120-133.rdu2.redhat.com [10.10.120.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E25665D9C6;
+        Sat, 13 Apr 2019 17:24:03 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -38,129 +38,275 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Tim Chen <tim.c.chen@linux.intel.com>,
         huang ying <huang.ying.caritas@gmail.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v4 16/16] locking/rwsem: Remove redundant computation of writer lock word
-Date:   Sat, 13 Apr 2019 13:22:59 -0400
-Message-Id: <20190413172259.2740-17-longman@redhat.com>
+Subject: [PATCH v4 15/16] locking/rwsem: Merge owner into count on x86-64
+Date:   Sat, 13 Apr 2019 13:22:58 -0400
+Message-Id: <20190413172259.2740-16-longman@redhat.com>
 In-Reply-To: <20190413172259.2740-1-longman@redhat.com>
 References: <20190413172259.2740-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sat, 13 Apr 2019 17:24:06 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sat, 13 Apr 2019 17:24:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 64-bit architectures, each rwsem writer will have its unique lock
-word for acquiring the lock. Right now, the writer code recomputes the
-lock word every time it tries to acquire the lock. This is a waste of
-time. The lock word is now cached and reused when it is needed.
+With separate count and owner, there are timing windows where the two
+values are inconsistent. That can cause problem when trying to figure
+out the exact state of the rwsem. For instance, a RT task will stop
+optimistic spinning if the lock is acquired by a writer but the owner
+field isn't set yet. That can be solved by combining the count and
+owner together in a single atomic value.
 
-On 32-bit architectures, the extra constant argument to
-rwsem_try_write_lock() and rwsem_try_write_lock_unqueued() should be
-optimized out by the compiler.
+On 32-bit architectures, there aren't enough bits to hold both.
+64-bit architectures, however, can have enough bits to do that. For
+x86-64, the physical address can use up to 52 bits. That is 4PB of
+memory. That leaves 12 bits available for other use. The task structure
+pointer is aligned to the L1 cache size. That means another 6 bits
+(64 bytes cacheline) will be available. Reserving 2 bits for status
+flags, we will have 16 bits for the reader count and the read fail bit.
+That can supports up to (32k-1) readers.
+
+The owner value will still be duplicated in the owner field as that
+will ease debugging when looking at core dump.
+
+This change is currently enabled for x86-64 only. Other 64-bit
+architectures may be enabled in the future if the need arises.
+
+With a locking microbenchmark running on 5.1 based kernel, the total
+locking rates (in kops/s) on a 8-socket IvyBridge-EX system with
+writer-only locking threads and then equal numbers of readers and writers
+(mixed) before patch and after this and subsequent related patches were
+as follows:
+
+                  Before Patch      After Patch
+   # of Threads  wlock    mixed    wlock    mixed
+   ------------  -----    -----    -----    -----
+        1        30,422   31,034   30,323   30,379
+        2         6,427    6,684    7,804    9,436
+        4         6,742    6,738    7,568    8,268
+        8         7,092    7,222    5,679    7,041
+       16         6,882    7,163    6,848    7,652
+       32         7,458    7,316    7,975    2,189
+       64         7,906      520    8,269      534
+      128         1,680      425    8,047      448
+
+In the single thread case, the complex write-locking operation does
+introduce a little bit of overhead (about 0.3%). For the contended cases,
+except for some anomalies in the data, there is no evidence that this
+change will adversely impact performance.
+
+When running the same microbenchmark with RT locking threads instead,
+we got the following results:
+
+                  Before Patch      After Patch
+   # of Threads  wlock    mixed    wlock    mixed
+   ------------  -----    -----    -----    -----
+        2         4,065    3,642    4,756    5,062
+        4         2,254    1,907    3,460    2,496
+        8         2,386      964    3,012    1,964
+       16         2,095    1,596    3,083    1,862
+       32         2,388      530    3,717      359
+       64         1,424      322    4,060      401
+      128         1,642      510    4,488      628
+
+It is obvious that RT tasks can benefit pretty significantly with this set
+of patches.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/rwsem.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ kernel/locking/rwsem.c | 112 +++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 103 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 27219abb8bb6..2c8187690c7c 100644
+index f37ab6358fe0..27219abb8bb6 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -561,6 +561,7 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
-  * bit is set or the lock is acquired.
-  */
- static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
-+					const long wlock,
- 					enum writer_wait_state wstate)
- {
- 	long new;
-@@ -581,7 +582,7 @@ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
- 	if ((wstate == WRITER_NOT_FIRST) && RWSEM_COUNT_HANDOFF(count))
- 		return false;
+@@ -73,7 +73,41 @@
+ #endif
  
--	new = (count & ~RWSEM_FLAG_HANDOFF) + RWSEM_WRITER_LOCKED -
-+	new = (count & ~RWSEM_FLAG_HANDOFF) + wlock -
- 	      (list_is_singular(&sem->wait_list) ? RWSEM_FLAG_WAITERS : 0);
- 
- 	if (atomic_long_try_cmpxchg_acquire(&sem->count, &count, new)) {
-@@ -623,13 +624,14 @@ static inline bool rwsem_try_read_lock_unqueued(struct rw_semaphore *sem)
  /*
-  * Try to acquire write lock before the writer has been put on wait queue.
+- * On 64-bit architectures, the bit definitions of the count are:
++ * Enable the merging of owner into count for x86-64 only.
++ */
++#ifdef CONFIG_X86_64
++#define RWSEM_MERGE_OWNER_TO_COUNT
++#endif
++
++/*
++ * With separate count and owner, there are timing windows where the two
++ * values are inconsistent. That can cause problem when trying to figure
++ * out the exact state of the rwsem. That can be solved by combining
++ * the count and owner together in a single atomic value.
++ *
++ * On 64-bit architectures, the owner task structure pointer can be
++ * compressed and combined with reader count and other status flags.
++ * A simple compression method is to map the virtual address back to
++ * the physical address by subtracting PAGE_OFFSET. On 32-bit
++ * architectures, the long integer value just isn't big enough for
++ * combining owner and count. So they remain separate.
++ *
++ * For x86-64, the physical address can use up to 52 bits. That is 4PB
++ * of memory. That leaves 12 bits available for other use. The task
++ * structure pointer is also aligned to the L1 cache size. That means
++ * another 6 bits (64 bytes cacheline) will be available. Reserving
++ * 2 bits for status flags, we will have 16 bits for the reader count
++ * and read fail bit. That can supports up to (32k-1) active readers.
++ *
++ * On x86-64, the bit definitions of the count are:
++ *
++ * Bit   0    - waiters present bit
++ * Bit   1    - lock handoff bit
++ * Bits  2-47 - compressed task structure pointer
++ * Bits 48-62 - 15-bit reader counts
++ * Bit  63    - read fail bit
++ *
++ * On other 64-bit architectures, the bit definitions are:
+  *
+  * Bit  0    - writer locked bit
+  * Bit  1    - waiters present bit
+@@ -108,15 +142,30 @@
+  * be the first one in the wait_list to be eligible for setting the handoff
+  * bit. So concurrent setting/clearing of handoff bit is not possible.
   */
--static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
-+static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem,
-+						 const long wlock)
- {
- 	long count = atomic_long_read(&sem->count);
+-#define RWSEM_WRITER_LOCKED	(1UL << 0)
+-#define RWSEM_FLAG_WAITERS	(1UL << 1)
+-#define RWSEM_FLAG_HANDOFF	(1UL << 2)
++#define RWSEM_FLAG_WAITERS	(1UL << 0)
++#define RWSEM_FLAG_HANDOFF	(1UL << 1)
+ #define RWSEM_FLAG_READFAIL	(1UL << (BITS_PER_LONG - 1))
  
- 	while (!RWSEM_COUNT_LOCKED_OR_HANDOFF(count)) {
- 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
--					count + RWSEM_WRITER_LOCKED)) {
-+						    count + wlock)) {
- 			rwsem_set_owner(sem);
- 			lockevent_inc(rwsem_opt_wlock);
- 			return true;
-@@ -779,7 +781,7 @@ static inline u64 rwsem_rspin_threshold(struct rw_semaphore *sem)
- 		: 25 * NSEC_PER_USEC);
++
++#ifdef RWSEM_MERGE_OWNER_TO_COUNT
++
++#ifdef __PHYSICAL_MASK_SHIFT
++#define RWSEM_PA_MASK_SHIFT	__PHYSICAL_MASK_SHIFT
++#else
++#define RWSEM_PA_MASK_SHIFT	52
++#endif
++#define RWSEM_READER_SHIFT	(RWSEM_PA_MASK_SHIFT - L1_CACHE_SHIFT + 2)
++#define RWSEM_WRITER_MASK	((1UL << RWSEM_READER_SHIFT) - 4)
++#define RWSEM_WRITER_LOCKED	rwsem_owner_count(current)
++
++#else /* RWSEM_MERGE_OWNER_TO_COUNT */
+ #define RWSEM_READER_SHIFT	8
++#define RWSEM_WRITER_MASK	(1UL << 7)
++#define RWSEM_WRITER_LOCKED	RWSEM_WRITER_MASK
++#endif /* RWSEM_MERGE_OWNER_TO_COUNT */
++
+ #define RWSEM_READER_BIAS	(1UL << RWSEM_READER_SHIFT)
+ #define RWSEM_READER_MASK	(~(RWSEM_READER_BIAS - 1))
+-#define RWSEM_WRITER_MASK	RWSEM_WRITER_LOCKED
+ #define RWSEM_LOCK_MASK		(RWSEM_WRITER_MASK|RWSEM_READER_MASK)
+ #define RWSEM_READ_FAILED_MASK	(RWSEM_WRITER_MASK|RWSEM_FLAG_WAITERS|\
+ 				 RWSEM_FLAG_HANDOFF|RWSEM_FLAG_READFAIL)
+@@ -129,13 +178,34 @@
+ #define RWSEM_COUNT_WLOCKED_OR_HANDOFF(c)	\
+ 	((c) & (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))
+ 
++/*
++ * Task structure pointer compression (64-bit only):
++ * (owner - PAGE_OFFSET) >> (L1_CACHE_SHIFT - 2)
++ */
++static inline unsigned long rwsem_owner_count(struct task_struct *owner)
++{
++	return ((unsigned long)owner - PAGE_OFFSET) >> (L1_CACHE_SHIFT - 2);
++}
++
++static inline unsigned long rwsem_count_owner(long count)
++{
++	unsigned long writer = (unsigned long)count & RWSEM_WRITER_MASK;
++
++	return writer ? (writer << (L1_CACHE_SHIFT - 2)) + PAGE_OFFSET : 0;
++}
++
+ /*
+  * All writes to owner are protected by WRITE_ONCE() to make sure that
+  * store tearing can't happen as optimistic spinners may read and use
+  * the owner value concurrently without lock. Read from owner, however,
+  * may not need READ_ONCE() as long as the pointer value is only used
+  * for comparison and isn't being dereferenced.
++ *
++ * On 32-bit architectures, the owner and count are separate. On 64-bit
++ * architectures, however, the writer task structure pointer is written
++ * to the count as well in addition to the owner field.
+  */
++
+ static inline void rwsem_set_owner(struct rw_semaphore *sem)
+ {
+ 	WRITE_ONCE(sem->owner, current);
+@@ -146,10 +216,26 @@ static inline void rwsem_clear_owner(struct rw_semaphore *sem)
+ 	WRITE_ONCE(sem->owner, NULL);
  }
  
--static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
-+static bool rwsem_optimistic_spin(struct rw_semaphore *sem, const long wlock)
++#ifdef RWSEM_MERGE_OWNER_TO_COUNT
++/*
++ * Get the owner value from count to have early access to the task structure.
++ * Owner from sem->count should includes the RWSEM_ANONYMOUSLY_OWNED bit
++ * from sem->owner.
++ */
++static inline struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
++{
++	unsigned long cowner = rwsem_count_owner(atomic_long_read(&sem->count));
++	unsigned long sowner = (unsigned long)READ_ONCE(sem->owner);
++
++	return (struct task_struct *) (cowner
++		? cowner | (sowner & RWSEM_ANONYMOUSLY_OWNED) : sowner);
++}
++#else /* !RWSEM_MERGE_OWNER_TO_COUNT */
+ static inline struct task_struct *rwsem_get_owner(struct rw_semaphore *sem)
  {
- 	bool taken = false;
- 	bool is_rt_task = rt_task(current);
-@@ -808,7 +810,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
- 		/*
- 		 * Try to acquire the lock
- 		 */
--		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
-+		taken = wlock ? rwsem_try_write_lock_unqueued(sem, wlock)
- 			      : rwsem_try_read_lock_unqueued(sem);
- 
- 		if (taken)
-@@ -887,7 +889,8 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
- 	return false;
+ 	return READ_ONCE(sem->owner);
  }
++#endif /* RWSEM_MERGE_OWNER_TO_COUNT */
  
--static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
-+static inline bool rwsem_optimistic_spin(struct rw_semaphore *sem,
-+					 const long wlock)
+ /*
+  * The task_struct pointer of the last owning reader will be left in
+@@ -261,11 +347,11 @@ static inline void rwsem_set_nonspinnable(struct rw_semaphore *sem)
+ /*
+  * Guide to the rw_semaphore's count field.
+  *
+- * When the RWSEM_WRITER_LOCKED bit in count is set, the lock is owned
+- * by a writer.
++ * When any of the RWSEM_WRITER_MASK bits in count is set, the lock is
++ * owned by a writer.
+  *
+  * The lock is owned by readers when
+- * (1) the RWSEM_WRITER_LOCKED isn't set in count,
++ * (1) none of the RWSEM_WRITER_MASK bits is set in count,
+  * (2) some of the reader bits are set in count, and
+  * (3) the owner field has RWSEM_READ_OWNED bit set.
+  *
+@@ -281,6 +367,11 @@ static inline void rwsem_set_nonspinnable(struct rw_semaphore *sem)
+ void __init_rwsem(struct rw_semaphore *sem, const char *name,
+ 		  struct lock_class_key *key)
  {
- 	return false;
- }
-@@ -944,7 +947,7 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state, long count)
- 	 */
- 	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
- 	adjustment = 0;
--	if (rwsem_optimistic_spin(sem, false)) {
-+	if (rwsem_optimistic_spin(sem, 0)) {
- 		unsigned long flags;
- 
- 		/*
-@@ -1058,10 +1061,11 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
- 	struct rwsem_waiter waiter;
- 	struct rw_semaphore *ret = sem;
- 	DEFINE_WAKE_Q(wake_q);
-+	const long wlock = RWSEM_WRITER_LOCKED;
- 
- 	/* do optimistic spinning and steal lock if possible */
- 	if (rwsem_can_spin_on_owner(sem) &&
--	    rwsem_optimistic_spin(sem, true))
-+	    rwsem_optimistic_spin(sem, wlock))
- 		return sem;
- 
++	/*
++	 * We should support at least (4k-1) concurrent readers
++	 */
++	BUILD_BUG_ON(sizeof(long) * 8 - RWSEM_READER_SHIFT < 12);
++
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
  	/*
-@@ -1120,7 +1124,7 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
- 	/* wait until we successfully acquire the lock */
- 	set_current_state(state);
- 	while (true) {
--		if (rwsem_try_write_lock(count, sem, wstate))
-+		if (rwsem_try_write_lock(count, sem, wlock, wstate))
- 			break;
+ 	 * Make sure we are not reinitializing a held semaphore:
+@@ -1211,6 +1302,9 @@ static inline void __down_write(struct rw_semaphore *sem)
+ 						 RWSEM_WRITER_LOCKED)))
+ 		rwsem_down_write_failed(sem);
+ 	rwsem_set_owner(sem);
++#ifdef RWSEM_MERGE_OWNER_TO_COUNT
++	DEBUG_RWSEMS_WARN_ON(sem->owner != rwsem_get_owner(sem), sem);
++#endif
+ }
  
- 		raw_spin_unlock_irq(&sem->wait_lock);
+ static inline int __down_write_killable(struct rw_semaphore *sem)
+@@ -1261,7 +1355,7 @@ static inline void __up_write(struct rw_semaphore *sem)
+ 
+ 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
+ 	rwsem_clear_owner(sem);
+-	tmp = atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED, &sem->count);
++	tmp = atomic_long_fetch_and_release(~RWSEM_WRITER_MASK, &sem->count);
+ 	if (unlikely(tmp & RWSEM_FLAG_WAITERS))
+ 		rwsem_wake(sem, tmp);
+ }
 -- 
 2.18.1
 
