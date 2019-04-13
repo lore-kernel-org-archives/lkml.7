@@ -2,70 +2,143 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD5EC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A9BC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2FA214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="L2oT6bLV"
+	by mail.kernel.org (Postfix) with ESMTP id AFE29214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555170283;
+	bh=M0cC4PjgFnIKBfAPn9xubHpEuRhva+tnS31LyAoiiWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mTmiVKnr+sgVmL1zsAEVC22Z4BzqHJaWnkTYWeiOokr2sHSHlrdREGHm37HppLiK6
+	 o8we0Yg1S5iqATIIYDr3AeNINxi+bQ3RFIc8jMVkMFhlnQycLzIp72+EmkhqRptaWh
+	 ivo/rytGmW92xgPi/DXQuhGOmGEsyjQyuvKYZi8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfDMPn2 (ORCPT
+        id S1727278AbfDMPom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 11:43:28 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60263 "EHLO vps0.lunn.ch"
+        Sat, 13 Apr 2019 11:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfDMPn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 11:43:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=NDBktHRE6JmtUHzkUUBQFbGpZ1d1+BpvzdbrZhNFt5w=; b=L2oT6bLVMQFNvY2y1iyfFuruaj
-        jUBimCvJdis8bz//ugCfC2t6bcMI9V6LsGLbsXCNx8ADDN8B6xk6P73HReBxNisZd+99bGUzYaOL2
-        hr3zkAvdT3Vqf4wpr2uJtOIBrCjUHghmsCgGKTVtmo2bKpglsHMLpw9vM1oSO9WjY/n0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hFKnl-0004yx-SN; Sat, 13 Apr 2019 17:42:45 +0200
-Date:   Sat, 13 Apr 2019 17:42:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, georg.waibel@sensor-technik.de
-Subject: Re: [PATCH v3 net-next 14/24] net: dsa: Introduce driver for NXP
- SJA1105 5-port L2 switch
-Message-ID: <20190413154245.GF17901@lunn.ch>
-References: <20190413012822.30931-1-olteanv@gmail.com>
- <20190413012822.30931-15-olteanv@gmail.com>
+        id S1727048AbfDMPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 11:44:41 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D3F7214D8;
+        Sat, 13 Apr 2019 15:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555170280;
+        bh=M0cC4PjgFnIKBfAPn9xubHpEuRhva+tnS31LyAoiiWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kPOMWg0i+shPWMTgNPqGDHL/Brs+hgUiHtfZ3ZPtMXe9aXijlnXiCVUwLzBNQmWWG
+         QBjmIcXIsiknukTAV2X1tKH8aECkUzarDSp37olRkiXjdUhKI/Xcnk+5nIyHwKlYyv
+         Jl6Q6gd4t+DNH0BHThP3RWVpfQJLfhSJ060qEqIU=
+Date:   Sat, 13 Apr 2019 10:44:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>
+Subject: Re: [PATCH v3 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to
+ return correct capability offset
+Message-ID: <20190413154437.GG126710@google.com>
+References: <20190325093947.32633-1-kishon@ti.com>
+ <20190325093947.32633-21-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190413012822.30931-15-olteanv@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190325093947.32633-21-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 04:28:12AM +0300, Vladimir Oltean wrote:
-> At this moment the following is supported:
-> * Link state management through phylib
-> * Autonomous L2 forwarding managed through iproute2 bridge commands. The
->   switch ports are initialized in a mode where they can only talk to the
->   CPU port. However, IP termination must be done currently through the
->   master netdevice.
+On Mon, Mar 25, 2019 at 03:09:41PM +0530, Kishon Vijay Abraham I wrote:
+> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
+> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
+> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
+> 
+> However if MSI or MSIX capability is the last capability (i.e there are
+> no additional items in the capabilities list and the Next Capability
+> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
+> even though MSI or MSIX capability may be present. This is because of
+> incorrect ordering of "next_cap_ptr" check. Fix it here.
 
-Please could you explain that last sentence in more detail. Normally
-the master device is just a dumb pipe. Nothing, except tcpdump,
-uses it.
+Nice fix.  It looks like dw_pcie_ep_find_capability() is currently
+only used for MSI and MSI-X, but IIUC, it *could* be used for any
+capability, so this commit message seems a little too specific.
 
-Thanks
+It would be slightly less confusing if beb4641a787d ("PCI: dwc: Add
+MSI-X callbacks handler") had been split into a commit that added the
+general-purpose dw_pcie_ep_find_capability() and a commit that used it
+for MSI and MSI-X, but obviously we can't change history.
 
-     Andrew
+> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
+
+These commit references are longer than necessary (and different -
+19-char SHA1 here and 16 chars above).  I typically use 12 chars via
+
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index dc6a4bbd3ace..74477ad7467f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>  	u8 cap_id, next_cap_ptr;
+>  	u16 reg;
+>  
+> +	if (!cap_ptr)
+> +		return 0;
+> +
+>  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+> -	next_cap_ptr = (reg & 0xff00) >> 8;
+>  	cap_id = (reg & 0x00ff);
+>  
+> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+> +	if (cap_id > PCI_CAP_ID_MAX)
+>  		return 0;
+>  
+>  	if (cap_id == cap)
+>  		return cap_ptr;
+>  
+> +	next_cap_ptr = (reg & 0xff00) >> 8;
+>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>  }
+>  
+> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+>  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>  	next_cap_ptr = (reg & 0x00ff);
+>  
+> -	if (!next_cap_ptr)
+> -		return 0;
+> -
+>  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>  }
+>  
+> -- 
+> 2.17.1
+> 
