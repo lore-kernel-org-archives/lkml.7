@@ -2,96 +2,95 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5F4C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69945C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE7B214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A39214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:31:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="En8RBYuu"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ACvZS26t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727214AbfDMQal (ORCPT
+        id S1727280AbfDMQbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:30:41 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43507 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbfDMQak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:30:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c8so6565394pfd.10
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 09:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0/1XtYdFgP3o49tMxTMcOWeCG4XebFfbdD+lHttYzOY=;
-        b=En8RBYuuEURsWtlEBdMePx2Jar15L2wse2KZWEiD4/VJVfUMIjUHkaB3+9gpSb0VdM
-         YooLISHPk8Zh3GQuUx6kbI4UZEd6ZqcyLecZtU7u9+siP1OMbUvfoxKIF7GHF5AZGk0X
-         e8N9tZS8UWhCc1k0EEHyoyLY2apQH6X+A9Er64cc23Y0ZHLSX86sgWNPbh4skQceIPSA
-         enqtYLp8PHE+yrhCg0nOCZghbsVFvPH/iAMup367NB2Imq9WZk+d75/dov8YvzpAsyHy
-         I42xdxFWozDrSPy6eQnLUvtM/Ca4oG+w7Cei0pYR0M5WOb6VgZPIZOjrsCVmWyV+OxEY
-         DatA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0/1XtYdFgP3o49tMxTMcOWeCG4XebFfbdD+lHttYzOY=;
-        b=b/KG12shGfEalDbNed8woxAh3B/WrNs98tMh9kmOhzWgZ7dq2ZlE1XyYG1EGBfUb2P
-         cdpVCAu9eFnsqb1NgEuEEyKs4jyBMWUZVDC8uW03+KSeIgirNIjP/lJuqhnqaaChRm9Q
-         yPKnPGW1vfksu9R7x+rLtIYC2BqbPyJVA0gmbUMdIoXrwEggT/c6bxImg/Z552J1nGHd
-         16C6yVOqMYbvfPj5VHUCNyMknV3+TxfrZHGt/cShxQGeX1mXvFpLm/iqAdGK1Wj19Q8v
-         m166BYJHFKCCcB0c5+hEYic0ovhzwIMOBptvlff6R1LM8lxyffUcssN/78rX4q1PlNAx
-         WFyA==
-X-Gm-Message-State: APjAAAUR4PrD3pKZ9bKfbJ1iFa5y2WeD0tIOFqHxNt+jwh30CJfFFYSK
-        /VQiblHo0t5T7YA346DQOdI=
-X-Google-Smtp-Source: APXvYqxcj4vOlWTFBIxNRiI8DWIaZ/QOGbvi08ff+E/l+Cdf1CMp3oVRUsS5gK9geHuT1/uoSwupqg==
-X-Received: by 2002:a62:76c1:: with SMTP id r184mr61225090pfc.229.1555173040102;
-        Sat, 13 Apr 2019 09:30:40 -0700 (PDT)
-Received: from localhost.localdomain ([103.227.99.109])
-        by smtp.googlemail.com with ESMTPSA id 10sm61846358pft.100.2019.04.13.09.30.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 09:30:39 -0700 (PDT)
-From:   Moses Christopher <moseschristopherb@gmail.com>
-Cc:     moseschristopherb@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jacob Feder <jacobsfeder@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: axis-fifo: Add elaborate description in Kconfig
-Date:   Sat, 13 Apr 2019 21:59:03 +0530
-Message-Id: <20190413162905.29324-1-moseschristopherb@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 13 Apr 2019 12:31:15 -0400
+Received: from mout.gmx.net ([212.227.15.18]:54865 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbfDMQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 12:31:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1555173064;
+        bh=xkBRSWUEj0/UfcEeS3vCROCM0B0nHpxZ5MVxtsBeg8U=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ACvZS26tB0rKTvJn9APPS5FrsJKp6n1X3U+BqnkZoJ171Ke8yvqwbVVduEw9giq6R
+         Gc833ZUsa4uZgPkWhM2YhwQzbvz+il3BKU0IbSmjronuIJsaMYnXPeJtodcRu+TuIo
+         6o9fPCfY9O/qDOBXJJ9HdZllmh1phA2zt9jZrPaw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([84.118.159.3]) by mail.gmx.com
+ (mrgmx001 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 0Lev1D-1gW9Jv2aHX-00qn2K; Sat, 13 Apr 2019 18:31:04 +0200
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] arm: mm: Export __sync_icache_dcache() for xen-privcmd
+Date:   Sat, 13 Apr 2019 18:30:52 +0200
+Message-Id: <20190413163052.11407-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AzDUzibd36FOOQJxaC6fIZllBiq7Mn1e8uBjDFef53QzS9zOeAu
+ SJh3GGeTu4IGsEB2GN5k/SZMn0iRbT44T7tPyi5M48PZaTS3QKRO3jYsV6PWjQhgaNGly3k
+ NkQ/bqWiNtICI0y81YZ6rpkwEebAvVmmy1v1BeyWJ9Fban2qRzNRK5hYp5BpvAjN3KcYJH9
+ W3aBFqR3YmRpV7NiV9UXQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:h6FIh+ZF2Aw=:9MMWxFt5lwPXIdvEaHmDZV
+ 3mAZ2+jrnD5Cv8KRADik84+/g+dMLwWGyxnPa0j7q+Xy4PHq5wrvbEgXmvX5gt3VioJcpJAIw
+ YMeMg9E7S+x+MghxW/O7p1SBGFzfepPXhQefmfe0rjFsye0P/F1BPgayokqJHbJma1hyDsmP1
+ k2a/jUAz9QT9fNmjodUPyoG2mzCkay2y8u5mODftQewYBEYwvG8Gl8wrLBoC6BBxgnsWyRSbO
+ thLlfN8b8q7ojOoqVYNtGxy3ZNvx6yUUXxCsxTENG+DPiNtI1L7lBdRZ3uDRqGTFkXqnj50j+
+ 5inUQB9E7/+jDKlHvYSvBhZaqTWVW1egsrLXH3uhaQAqeAx6aM6ceU9Ej8mS3a3ZJqKaGILLi
+ 2w38BbXWHFq/Ctki39y9EjmkAV25JcTD3myac8D6pRMt9DMmbEvi810t+rSk/E07bBxXan5Ec
+ KycD/iO/W4mtHKeFu1v8BEEOAJqzQFhGIxg0jqSfGWLKhj03rgA/34Qj8YJpSS1C0Ii+bMncX
+ 8SSCz/3cwJLJ3jmJZvsd8hhTJIy0+Ti/Hlm4BtLAPvOzaWNtI4eKgC3371f19KNipxElcCOg1
+ 2zujpbuJaLebryfmp7FfY/h4MXB1lpu40/coUzJF4jJpkh22EJGhwcSUPDnR7WD2jasf7bqjI
+ Lkq/9+NWgLvA/MMu1KEArSOqqGMe1q8tYqUOU1CQfidztyCQVQ60baq4nA2nrR34XzHwchCZs
+ RBaAbEX78mcFpRtq7rXdNt8seQ1Mmk0S8pzUm8fTrPPMwv9SfdmgBXAxUTFd6zYF7lbFZpRJN
+ GL1kGSBZBQ63RDSPtysHPtq6ouWKEyAUc+wI8yWYa1EVC6o6VZkrU4t96dvMP2x+SGljSEkfd
+ lOhPB7dt66/c/vA2K7XXmJoWUoC3hsE2AVctxLabWx1etaw3b/DeyKWeihdycG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  - The Xilinx AXI-Stream FIFO IP core driver description is elaborated.
-  - References: Xilinx PG080 document, axis-fifo.txt
+This patch avoids
+ERROR: "__sync_icache_dcache" [drivers/xen/xen-privcmd.ko] undefined!
+observed when compiling v4.19.34.
 
-Signed-off-by: Moses Christopher <moseschristopherb@gmail.com>
----
- drivers/staging/axis-fifo/Kconfig | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The xen-privcmd driver, which can be modular, calls set_pte_at()
+which in turn may call __sync_icache_dcache().
 
-diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
-index d9725888af6f..ecb7811fd387 100644
---- a/drivers/staging/axis-fifo/Kconfig
-+++ b/drivers/staging/axis-fifo/Kconfig
-@@ -6,5 +6,7 @@ config XIL_AXIS_FIFO
- 	depends on OF
- 	default n
- 	help
--	  This adds support for the Xilinx AXI-Stream
--	  FIFO IP core driver.
-+	  This adds support for the Xilinx AXI-Stream FIFO IP core driver.
-+	  The AXI Streaming FIFO allows memory mapped access to a AXI Streaming
-+	  interface. The Xilinx AXI-Stream FIFO IP core can be used to interface
-+	  to the AXI Ethernet without the need to use DMA.
--- 
-2.17.1
+Cc: stable@vger.kernel.org
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ arch/arm/mm/flush.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mm/flush.c b/arch/arm/mm/flush.c
+index 58469623b015..5345f86c56d2 100644
+=2D-- a/arch/arm/mm/flush.c
++++ b/arch/arm/mm/flush.c
+@@ -295,6 +295,7 @@ void __sync_icache_dcache(pte_t pteval)
+ 	if (pte_exec(pteval))
+ 		__flush_icache_all();
+ }
++EXPORT_SYMBOL_GPL(__sync_icache_dcache);
+ #endif
+
+ /*
+=2D-
+2.20.1
 
