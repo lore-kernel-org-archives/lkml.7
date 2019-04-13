@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DB7C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3B3C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6912084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07AB2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QuvwOyNx"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MogMjauG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfDMQy2 (ORCPT
+        id S1727482AbfDMQyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:54:28 -0400
-Received: from vps.xff.cz ([195.181.215.36]:49202 "EHLO vps.xff.cz"
+        Sat, 13 Apr 2019 12:54:24 -0400
+Received: from vps.xff.cz ([195.181.215.36]:49012 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbfDMQyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:54:25 -0400
+        id S1727154AbfDMQyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 12:54:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1555174461; bh=IsaR7dDt8nOTyMWc3EVZ7VXz2M/dDBLCBbhMC8cbWJY=;
+        t=1555174460; bh=unyXzRpGhfWJQ+WLXU6ly2jmSYKOT8hB+V2vSbRnR30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QuvwOyNxIGWi1/NDgFvNERxbfDuDCNvwIgoMO0IZj78A2JTRz+KvD6b43EYtnFcW8
-         OKvK2x2NWFQBN979BzUFthfJiC9I9HvNhibH0DB5vHklYpJ6WqVXgCgBcgNwmpDAnz
-         fKsNFjhFJMTQngps3l2xu0kjh5ze53Mi4wh35N3g=
+        b=MogMjauG5NYWhrruiMDqHAz4P96F7/eJG3J0z3Kf5eqtYeQ9pwpmCTs0sT4jY1AXm
+         3JSXph5r19DpILqGk6p2hzxuwOnBKbGbXwesNnZtSO6zUOe2g6aGtkoI+BuRfzHOyF
+         88hHgbqf2aAR1YmWyep3++PG2e+kVP3cP/CctoX4=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
+Cc:     Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
@@ -43,10 +43,10 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v4 5/9] arm64: dts: allwinner: orange-pi-3: Enable ethernet
-Date:   Sat, 13 Apr 2019 18:54:14 +0200
-Message-Id: <20190413165418.27880-6-megous@megous.com>
+        linux-gpio@vger.kernel.org, Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v4 1/9] net: stmmac: sun8i: add support for Allwinner H6 EMAC
+Date:   Sat, 13 Apr 2019 18:54:10 +0200
+Message-Id: <20190413165418.27880-2-megous@megous.com>
 In-Reply-To: <20190413165418.27880-1-megous@megous.com>
 References: <20190413165418.27880-1-megous@megous.com>
 MIME-Version: 1.0
@@ -56,93 +56,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
-to the phy datasheet, both regulators need to be enabled at the same time,
-but we can only specify a single phy-supply in the DT.
+The EMAC on Allwinner H6 is just like the one on A64. The "internal PHY" on
+H6 is on a co-packaged AC200 chip, and it's not really internal (it's
+connected via RMII at PA GPIO bank).
 
-This can be achieved by making one regulator depedning on the other via
-vin-supply. While it's not a technically correct description of the
-hardware, it achieves the purpose.
+Add support for the Allwinner H6 EMAC in the dwmac-sun8i driver.
 
-All values of RX/TX delay were tested exhaustively and a middle one of the
-working values was chosen.
-
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c    | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 17d496990108..6d6b1f66796d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -15,6 +15,7 @@
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 195669f550f0..20c19afb8316 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -147,6 +147,20 @@ static const struct emac_variant emac_variant_a64 = {
+ 	.tx_delay_max = 7,
+ };
  
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
- 
- 	chosen {
-@@ -44,6 +45,27 @@
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
- 	};
-+
-+	/*
-+	 * The board uses 2.5V RGMII signalling. Power sequence to enable
-+	 * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
-+	 * at the same time and to wait 100ms.
++static const struct emac_variant emac_variant_h6 = {
++	.default_syscon_value = 0x50000,
++	.syscon_field = &sun8i_syscon_reg_field,
++	/* The "Internal PHY" of H6 is not on the die. It's on the
++	 * co-packaged AC200 chip instead.
 +	 */
-+	reg_gmac_2v5: gmac-2v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gmac-2v5";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-+
-+		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-+		 * enable two regulators to power the phy. This is one way
-+		 * to achieve that.
-+		 */
-+		vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
-+	};
- };
- 
- &cpu0 {
-@@ -58,6 +80,28 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ext_rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_gmac_2v5>;
-+	allwinner,rx-delay-ps = <1500>;
-+	allwinner,tx-delay-ps = <700>;
-+	status = "okay";
++	.soc_has_internal_phy = false,
++	.support_mii = true,
++	.support_rmii = true,
++	.support_rgmii = true,
++	.rx_delay_max = 31,
++	.tx_delay_max = 7,
 +};
 +
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+
-+		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-+		reset-assert-us = <15000>;
-+		reset-deassert-us = <40000>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+ #define EMAC_BASIC_CTL0 0x00
+ #define EMAC_BASIC_CTL1 0x04
+ #define EMAC_INT_STA    0x08
+@@ -1210,6 +1224,8 @@ static const struct of_device_id sun8i_dwmac_match[] = {
+ 		.data = &emac_variant_r40 },
+ 	{ .compatible = "allwinner,sun50i-a64-emac",
+ 		.data = &emac_variant_a64 },
++	{ .compatible = "allwinner,sun50i-h6-emac",
++		.data = &emac_variant_h6 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun8i_dwmac_match);
 -- 
 2.21.0
 
