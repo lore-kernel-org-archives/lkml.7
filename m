@@ -2,153 +2,185 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68161C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EE7C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344DC218C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555115751;
-	bh=pOAxgJi9RRNIdw7zzU7wbjBjEnrdsEqQ6Vyk6/a9SvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jjzK4LC9n0+hR8IX3iULO+l2c/AP2uFL9QjHKTOUS0PHDGiKKxbdWzkSq0qgXj+EL
-	 V9tzHJp6IGQPB1/PwT52MdrPBX9acpfprtEM2Wzsh0AxXItrJymuQKQHRH5N/CoU0X
-	 RNmtHF9nh5bLKDelJwryDHxQQ4bos+ctoFTMX7Vo=
+	by mail.kernel.org (Postfix) with ESMTP id 726A92084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GJNXk1n8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfDMAft (ORCPT
+        id S1727052AbfDMAhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 20:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726902AbfDMAft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 20:35:49 -0400
-Received: from localhost (lfbn-1-18355-218.w90-101.abo.wanadoo.fr [90.101.143.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E3D2084E;
-        Sat, 13 Apr 2019 00:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555115748;
-        bh=pOAxgJi9RRNIdw7zzU7wbjBjEnrdsEqQ6Vyk6/a9SvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O5SFpS9+6qVTYIoVUAtAi2MtWniZrE/uNUDclELXQcqor7wp1ul6YPZroLTi267B6
-         8gE7garNlU72u8RTqsxtLp90fQpwy64XiS1SzRymXxrNKMavohY12Ip0jeykkbzwQk
-         w5GeNP7OVqCxm7QnM+cyhM/Oaht3TEVR9wBRDjpU=
-Date:   Sat, 13 Apr 2019 02:35:45 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 4/4] locking/lockdep: Test all incompatible scenario at
- once in check_irq_usage()
-Message-ID: <20190413003543.GA9544@lenoir>
-References: <20190402160244.32434-1-frederic@kernel.org>
- <20190402160244.32434-5-frederic@kernel.org>
- <20190409130352.GV4038@hirez.programming.kicks-ass.net>
- <20190410022846.GA30602@lenoir>
- <20190411104632.GH4038@hirez.programming.kicks-ass.net>
+        Fri, 12 Apr 2019 20:37:10 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:42480 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfDMAhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 12 Apr 2019 20:37:09 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3D0Y7ic087176;
+        Sat, 13 Apr 2019 00:37:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=kRNQCwM8FpZHxwe8/9ezNk8fldWVvnUDKJOkQ9SWaoM=;
+ b=GJNXk1n8wFe5Wobm9wPHvnCw2jsnu/GB9nof231kdxyfwd0drOI4TQum1KksQjL/FumQ
+ 9HTdfEuaev0nd3DUEUCQpaVmT8XB1DLSE2M0XDzVk78GxkHsyppeGtwMh2y2rkqLHFTO
+ v6rcyGH+6jTdI1/KrT+A13thfJ5OR+ftazImL+M1e9qHHRGCNlX4g9s5yEGF0ICSpd6Z
+ OT0tSv7OuqxwemsHvvig+RFSyPk1G8wFv7FWcBnjKgrhfnPhKmTzaJLU+EmHMwtVy430
+ MhUuvC6tVxJmCjKRrWQ9rETolRipdushibBVm2+Mbd2WKKI9Vfn1Qlz2wpv9Zm7CLgzh 8g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2ru59cr09m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Apr 2019 00:37:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3D0a1QW072693;
+        Sat, 13 Apr 2019 00:37:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2rtyj2v5dp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Apr 2019 00:37:02 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3D0b1kM024131;
+        Sat, 13 Apr 2019 00:37:01 GMT
+Received: from [192.168.1.12] (/180.165.90.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 12 Apr 2019 17:37:01 -0700
+Subject: Re: [RESEND PATCH] blk-mq: fix hang caused by freeze/unfreeze
+ sequence
+To:     Jinpu Wang <jinpuwang@gmail.com>, r.peniaev@gmail.com
+Cc:     linux-block@vger.kernel.org, shirley.ma@oracle.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190409090828.16282-1-bob.liu@oracle.com>
+ <CAD9gYJKYu15b7ZuAvud-BzG5fRP=B33yPJuEq84nsN_8y3EC1Q@mail.gmail.com>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <5ba280ed-b4f8-dfe0-16ea-1a10b0de7eb4@oracle.com>
+Date:   Sat, 13 Apr 2019 08:36:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411104632.GH4038@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD9gYJKYu15b7ZuAvud-BzG5fRP=B33yPJuEq84nsN_8y3EC1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9225 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904130002
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9225 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904130002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 12:46:32PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 10, 2019 at 04:28:48AM +0200, Frederic Weisbecker wrote:
-> > Should I re-issue the set or you do the changes?
+On 4/9/19 5:29 PM, Jinpu Wang wrote:
+> Bob Liu <bob.liu@oracle.com> 于2019年4月9日周二 上午11:11写道：
+>>
+>> This patch was proposed by Roman Pen[3] years ago.
+>> Recently we hit a bug which is likely caused by the same reason,so rebased his
+>> fix to v5.1 and resend.
+>> Below is almost copied from that patch[3].
+>>
+>> ------
+>> Long time ago there was a similar fix proposed by Akinobu Mita[1],
+>> but it seems that time everyone decided to fix this subtle race in
+>> percpu-refcount and Tejun Heo[2] did an attempt (as I can see that
+>> patchset was not applied).
+>>
+>> The following is a description of a hang in blk_mq_freeze_queue_wait() -
+>> same fix but a bug from another angle.
+>>
+>> The hang happens on attempt to freeze a queue while another task does
+>> queue unfreeze.
+>>
+>> The root cause is an incorrect sequence of percpu_ref_reinit() and
+>> percpu_ref_kill() and as a result those two can be swapped:
+>>
+>>  CPU#0               CPU#1
+>>  ----------------    -----------------
+>>  percpu_ref_kill()
+>>
+>>                      percpu_ref_kill() << atomic reference does
+>>  percpu_ref_reinit()                   << not guarantee the order
+>>
+>>                      blk_mq_freeze_queue_wait() << HANG HERE
+>>
+>>                      percpu_ref_reinit()
+>>
+>> Firstly this wrong sequence raises two kernel warnings:
+>>
+>>   1st. WARNING at lib/percpu-recount.c:309
+>>        percpu_ref_kill_and_confirm called more than once
+>>
+>>   2nd. WARNING at lib/percpu-refcount.c:331
+>>
+>> But the most unpleasant effect is a hang of a blk_mq_freeze_queue_wait(),
+>> which waits for a zero of a q_usage_counter, which never happens
+>> because percpu-ref was reinited (instead of being killed) and stays in
+>> PERCPU state forever.
+>>
+>> The simplified sequence above can be reproduced on shared tags, when
+>> queue A is going to die meanwhile another queue B is in init state and
+>> is trying to freeze the queue A, which shares the same tags set:
+>>
+>>  CPU#0                           CPU#1
+>>  ------------------------------- ------------------------------------
+>>  q1 = blk_mq_init_queue(shared_tags)
+>>
+>>                                 q2 = blk_mq_init_queue(shared_tags):
+>>                                   blk_mq_add_queue_tag_set(shared_tags):
+>>                                     blk_mq_update_tag_set_depth(shared_tags):
+>>                                       blk_mq_freeze_queue(q1)
+>>  blk_cleanup_queue(q1)                 ...
+>>    blk_mq_freeze_queue(q1)   <<<->>>   blk_mq_unfreeze_queue(q1)
+>>
+>> [1] Message id: 1443287365-4244-7-git-send-email-akinobu.mita@gmail.com
+>> [2] Message id: 1443563240-29306-6-git-send-email-tj@kernel.org
+>> [3] https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.kernel.org_patch_9268199_&d=DwIFaQ&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=1ktT0U2YS_I8Zz2o-MS1YcCAzWZ6hFGtyTgvVMGM7gI&m=OcA07QqFechuCug2pqm_-JpGP_mOt0YouTXApdePMGw&s=VM_-8S5gkFo8zUjT5RoY0CkbxN6hQmTwVmslulwsFJM&e=
+>>
+>> Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+>> Signed-off-by: Bob Liu <bob.liu@oracle.com>
+>> Cc: Akinobu Mita <akinobu.mita@gmail.com>
+>> Cc: Tejun Heo <tj@kernel.org>
+>> Cc: Jens Axboe <axboe@kernel.dk>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: linux-block@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
 > 
-> I've made it like so; does that work? In particular, do the comments
-> make sense? It is always hard to write these things down.
+> Replaced Roman's email address.
+> 
+> We at 1 & 1 IONOS (former ProfitBricks) have been carried this patch
+> for some years,
+> it has been running in production for some years too,
 
-It's especially hard because we describe both the bits of the usage mask
-and the bits of the bit numbers of the usage mask. The resulting description
-can only be naughty :-)
+Nice to hear that!
 
-That said I can probably clarify that in lockdep_internals.h on further
-patches.
+> would be good to see it in upstream :)
 
-A few comments though:
+Yes.
+Could anyone have a review? Thanks!
 
-> +/*
-> + * The bit number is encoded like:
-> + *
-> + *  bit0: 0 exclusive, 1 read lock
-> + *  bit1: 0 used in irq, 1 irq enabled
-> + *  bit2-n: state
-> + */
->  static int exclusive_bit(int new_bit)
->  {
->  	int state = new_bit & LOCK_USAGE_STATE_MASK;
-> @@ -1988,45 +1968,158 @@ static int exclusive_bit(int new_bit)
->  	return state | (dir ^ LOCK_USAGE_DIR_MASK);
->  }
->  
-> +/*
-> + * Observe that when given a bitmask where each bitnr is encoded as above, a
-> + * right shift of the mask transforms the individual bitnrs as -1.
-> + *
-> + * So for all bits where bitnr1 == 1, we can create the mask where bitnr1 == 0
+> 
+> Thanks,
+> 
+> Jack Wang
+> Linux Kernel Developer @ 1 & 1 IONOS
+> 
 
-So by bitnr1 you're referring to direction, right?
-
-> + * by subtracting 2, or shifting the mask right by 2.
-
-In which case we can perhaps reformulate:
-
-  So for all bits whose number have LOCK_ENABLED_* set (bitnr1 == 1), we can create the
-  mask with those bit numbers using LOCK_USED_IN_* (bitnr1 == 0) instead by
-  subtracting the bit number by 2, or shifting the mask right by 2.
-
-And same would go for below.
-
-> + *
-> + * Similarly, bitnr1 == 0 becomes bitnr1 == 1 by adding 2, or shifting left 2.
-> + *
-> + * So split the mask (note that LOCKF_ENABLED_IRQ_ALL|LOCKF_USED_IN_IRQ_ALL is
-> + * all bits set) and recompose with bitnr1 flipped.
-> + */
-> +static unsigned long invert_dir_mask(unsigned long mask)
-> +{
-> +	unsigned long excl = 0;
-> +
-> +	/* Invert dir */
-> +	excl |= (mask & LOCKF_ENABLED_IRQ_ALL) >> LOCK_USAGE_DIR_MASK;
-> +	excl |= (mask & LOCKF_USED_IN_IRQ_ALL) << LOCK_USAGE_DIR_MASK;
-> +
-> +	return excl;
-> +}
-> +
-> +/*
-> + * As above, we clear bitnr0 with bitmask ops. First, for all bits with bitnr1
-> + * set, add those with bitnr1 cleared. And then mask out all bitnr1.
-> + */
-
-Same here:
-
-  As above, we clear bitnr0 (LOCK_*_READ off) with bitmask ops. First, for all bits
-  with bitnr1 set (LOCK_ENABLED_*) , add those with bitnr1 cleared (LOCK_USED_IN_*).
-  And then mask out all bitnr1.
-
-> +static unsigned long exclusive_mask(unsigned long mask)
-> +{
-> +	unsigned long excl = invert_dir_mask(mask);
-> +
-> +	/* Strip read */
-> +	excl |= (excl & LOCKF_IRQ_READ) >> LOCK_USAGE_READ_MASK;
-> +	excl &= ~LOCKF_IRQ_READ;
-> +
-> +	return excl;
-> +}
-
-Not sure I'm making things clearer but at least that's some more pointers
-to enum lock_usage_bit (defined on headers where I should add more layout
-explanations, especially to make it clear we play with bit number bits :-s  )
-
-Thanks.
