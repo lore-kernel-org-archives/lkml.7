@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7F4C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 22:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CD5C10F14
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 22:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E9F218D9
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 22:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE5C2147A
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 22:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555195497;
-	bh=ZLW/Kxa1smBLm3T1ptMC7Z7ED7tJEJp9hYLWmENfdNc=;
+	s=default; t=1555195499;
+	bh=2stfT+geA/JdXbolhmRocGFcWdKjcVzZ9oMU+o7Raiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGDKDUug50tR+pe0qT/sWsQwbPzCIYaxZfAkS/+sVkLNQgBUaFZ6hAUOA/5pOl4Ve
-	 4tQ474XTJwY2Ax/2s1OHOZcqI4yQk+2rtCCxeAA1nPsk/5ox98VnLfr/19lIVpuwBQ
-	 RskqzCFwpxKzyI0eJutmjFRIIs7FebfapZC+LBzA=
+	b=ARqVl4E4QxlXnuNGOF+W/kx1Wcrsr3phajJZaprVq4YWp9nXhErQwr/jI1U/14wVX
+	 lyfID9hh2B5fLqsHu5RMBMMS3x5UrmTPXdAvBoNwNPRDLSsmmWKBV7+fAdJpHMK2BA
+	 f8xgw+NUa4nmbPmUcxnUs1F1Zs+o3XBZMe0TIHaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfDMWox (ORCPT
+        id S1727303AbfDMWo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 18:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57458 "EHLO mail.kernel.org"
+        Sat, 13 Apr 2019 18:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfDMWow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 18:44:52 -0400
+        id S1727048AbfDMWo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 18:44:57 -0400
 Received: from sinanubuntu1604.mkjiurmyylmellclgttazegk5f.bx.internal.cloudapp.net (unknown [40.117.159.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58043218C3;
-        Sat, 13 Apr 2019 22:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B349E2147A;
+        Sat, 13 Apr 2019 22:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555195492;
-        bh=ZLW/Kxa1smBLm3T1ptMC7Z7ED7tJEJp9hYLWmENfdNc=;
+        s=default; t=1555195496;
+        bh=2stfT+geA/JdXbolhmRocGFcWdKjcVzZ9oMU+o7Raiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IOEsYA62YgXa0/f2SFNB62xWcApGzjBCsm4n+ZmxqanSkhHpsWQZmfL9Z3iVOZFxx
-         QBofqzirXFpi/xuvSrT2pHcTxUUhcj9eUfOsIMLNF4U2/doQojYUujoSVIHlfWoxu+
-         6pxx0QG6H+6Fo5Le+u8xsMRd/csw+p5mfbXoUlqM=
+        b=EZQbqdctg+x5tSAyxe6iwEq0lgINx5BVIvsbOn4HgGV2zVhIAq2jbANNexqswbLfs
+         ZY2Ef8P9Vokt0vHdEnyKQ3wKF3Uf5WkbetCnXoGAshXzpY4+GJsLd6gqFPmHlEUByw
+         RmduZAyJXuUx9t8bvF76PBnOvMZwOMFKDHZmEeRc=
 From:   Sinan Kaya <okaya@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     josh@joshtriplett.org, keescook@chromium.org,
-        Sinan Kaya <okaya@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org (open list:MIPS)
-Subject: [PATCH v5 3/5] mips: Replace CONFIG_DEBUG_KERNEL with CONFIG_DEBUG_MISC
-Date:   Sat, 13 Apr 2019 22:44:36 +0000
-Message-Id: <20190413224438.10802-4-okaya@kernel.org>
+        Sinan Kaya <okaya@kernel.org>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org (open list:TENSILICA XTENSA PORT (xtensa))
+Subject: [PATCH v5 4/5] xtensa: Replace CONFIG_DEBUG_KERNEL with CONFIG_DEBUG_MISC
+Date:   Sat, 13 Apr 2019 22:44:37 +0000
+Message-Id: <20190413224438.10802-5-okaya@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413224438.10802-1-okaya@kernel.org>
 References: <20190413224438.10802-1-okaya@kernel.org>
@@ -72,22 +63,36 @@ defined CONFIG_DEBUG_MISC instead to keep the current code.
 Signed-off-by: Sinan Kaya <okaya@kernel.org>
 Reviewed-by: Josh Triplett <josh@joshtriplett.org>
 ---
- arch/mips/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/include/asm/irqflags.h | 2 +-
+ arch/xtensa/kernel/smp.c           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 8d1dc6c71173..9fc8fadb8418 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -563,7 +563,7 @@ static void __init bootmem_init(void)
- 		offset = __pa_symbol(_text) - __pa_symbol(VMLINUX_LOAD_ADDRESS);
- 		memblock_free(__pa_symbol(VMLINUX_LOAD_ADDRESS), offset);
+diff --git a/arch/xtensa/include/asm/irqflags.h b/arch/xtensa/include/asm/irqflags.h
+index 9b5e8526afe5..12890681587b 100644
+--- a/arch/xtensa/include/asm/irqflags.h
++++ b/arch/xtensa/include/asm/irqflags.h
+@@ -27,7 +27,7 @@ static inline unsigned long arch_local_irq_save(void)
+ {
+ 	unsigned long flags;
+ #if XTENSA_FAKE_NMI
+-#if defined(CONFIG_DEBUG_KERNEL) && (LOCKLEVEL | TOPLEVEL) >= XCHAL_DEBUGLEVEL
++#if defined(CONFIG_DEBUG_MISC) && (LOCKLEVEL | TOPLEVEL) >= XCHAL_DEBUGLEVEL
+ 	unsigned long tmp;
  
--#if defined(CONFIG_DEBUG_KERNEL) && defined(CONFIG_DEBUG_INFO)
-+#if defined(CONFIG_DEBUG_MISC) && defined(CONFIG_DEBUG_INFO)
- 		/*
- 		 * This information is necessary when debugging the kernel
- 		 * But is a security vulnerability otherwise!
+ 	asm volatile("rsr	%0, ps\t\n"
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index 3699d6d3e479..83b244ce61ee 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -126,7 +126,7 @@ void secondary_start_kernel(void)
+ 
+ 	init_mmu();
+ 
+-#ifdef CONFIG_DEBUG_KERNEL
++#ifdef CONFIG_DEBUG_MISC
+ 	if (boot_secondary_processors == 0) {
+ 		pr_debug("%s: boot_secondary_processors:%d; Hanging cpu:%d\n",
+ 			__func__, boot_secondary_processors, cpu);
 -- 
 2.21.0
 
