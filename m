@@ -2,143 +2,101 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A9BC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A998BC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE29214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555170283;
-	bh=M0cC4PjgFnIKBfAPn9xubHpEuRhva+tnS31LyAoiiWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mTmiVKnr+sgVmL1zsAEVC22Z4BzqHJaWnkTYWeiOokr2sHSHlrdREGHm37HppLiK6
-	 o8we0Yg1S5iqATIIYDr3AeNINxi+bQ3RFIc8jMVkMFhlnQycLzIp72+EmkhqRptaWh
-	 ivo/rytGmW92xgPi/DXQuhGOmGEsyjQyuvKYZi8w=
+	by mail.kernel.org (Postfix) with ESMTP id 666C9214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 15:47:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVrh+AiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfDMPom (ORCPT
+        id S1727253AbfDMPrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 11:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfDMPol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 11:44:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3F7214D8;
-        Sat, 13 Apr 2019 15:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555170280;
-        bh=M0cC4PjgFnIKBfAPn9xubHpEuRhva+tnS31LyAoiiWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kPOMWg0i+shPWMTgNPqGDHL/Brs+hgUiHtfZ3ZPtMXe9aXijlnXiCVUwLzBNQmWWG
-         QBjmIcXIsiknukTAV2X1tKH8aECkUzarDSp37olRkiXjdUhKI/Xcnk+5nIyHwKlYyv
-         Jl6Q6gd4t+DNH0BHThP3RWVpfQJLfhSJ060qEqIU=
-Date:   Sat, 13 Apr 2019 10:44:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>
-Subject: Re: [PATCH v3 20/26] PCI: dwc: Fix dw_pcie_ep_find_capability to
- return correct capability offset
-Message-ID: <20190413154437.GG126710@google.com>
-References: <20190325093947.32633-1-kishon@ti.com>
- <20190325093947.32633-21-kishon@ti.com>
+        Sat, 13 Apr 2019 11:47:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44546 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbfDMPrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 11:47:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h16so11549764ljg.11;
+        Sat, 13 Apr 2019 08:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=97En/1yvmSzr0IDFlyDYuW05+KyWcS8Yc7Pu2w4LKrA=;
+        b=WVrh+AiZVqG70GUHRHNnuzvXTEeboILt9JZnT27SCYX7qCoG3DdzDPW0PuG12pNt5N
+         f74PpomgSEdWNPnUw9OFXz52ERPxjFm5z8vEMZq0vwq+KQKwvhJXNWR2Sp6C0Iu9higj
+         KxNbJbGm2t3u2xeUGXeSyuvnzaJUNArj3/zTWOdIRdrUS6adNCgMr9BmpuYMrqXHlBVh
+         2cXjZ5FS0oW2Krh5y0wHe8QNm/UdnEg1PRgbRoA9npvGgaTyBw7Wadtb3AKaegsKIrzq
+         dXethmLrP9JrnfQ2Wr/N66+GoyJ+9OBdI6DDADcRFr4jCaXnNwUApjkH/LGMRoixdlhK
+         2M3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=97En/1yvmSzr0IDFlyDYuW05+KyWcS8Yc7Pu2w4LKrA=;
+        b=IzGXPj/JWSPuKggu70eK9rNg5h/XyJv6X16BA+Uun2gv9DYmNYndQB+dttSvB6jg47
+         7qrSBIQLMvJRAYHo7UV0iJmpuxZf+9sLWMJkz74I2jX8mEba0vb4koJq8QWj00mhU8DP
+         MXZDYYk5iT0SMENHsyL+Onoi/QHzhSes2R8A41bmQLMlel7eGjm/cLL4VKPVr+nOJ/BC
+         vi9KNBfk7xnjhz4ptiGQz5yIRU9e3CQnes1sMHkX+Qq0CawkTNFSsNzn0cqvODdGUwb5
+         18k2wHa9oXgfMnWsmqPXeFZ9Ijhug8Wdgto7SuSJO9qqjm0W35y2w3fJrnyqFpBGhSKy
+         35UA==
+X-Gm-Message-State: APjAAAWZWBM5veDI1VH41O3vfpUUQnwvbYSd5ZSL/CnF2WESfFiRerNH
+        mPjlwRlimWNGR5CzLPmpPoZJmlVtJXe9EKkroB8=
+X-Google-Smtp-Source: APXvYqyYaz5jRFeKKj2I9yD33xd0MNqkAWb75jGRDdc0/3iL9tyFQmq9VPCGMlBjmaqqeAoNMi6Bh0ucPH5SxyK/jkk=
+X-Received: by 2002:a2e:6e14:: with SMTP id j20mr17310479ljc.172.1555170429280;
+ Sat, 13 Apr 2019 08:47:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325093947.32633-21-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190413012822.30931-1-olteanv@gmail.com> <20190413012822.30931-15-olteanv@gmail.com>
+ <20190413154245.GF17901@lunn.ch>
+In-Reply-To: <20190413154245.GF17901@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Sat, 13 Apr 2019 18:46:57 +0300
+Message-ID: <CA+h21hrPHmzxAqdcd455qvzv0KqO93Tf-Cagy7BxMXW9DsH0CQ@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 14/24] net: dsa: Introduce driver for NXP
+ SJA1105 5-port L2 switch
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Georg Waibel <georg.waibel@sensor-technik.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 03:09:41PM +0530, Kishon Vijay Abraham I wrote:
-> commit beb4641a787df79a ("PCI: dwc: Add MSI-X callbacks handler") while
-> adding MSI-X callback handler, introduced dw_pcie_ep_find_capability and
-> __dw_pcie_ep_find_next_cap for finding the MSI and MSIX capability.
-> 
-> However if MSI or MSIX capability is the last capability (i.e there are
-> no additional items in the capabilities list and the Next Capability
-> Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
-> even though MSI or MSIX capability may be present. This is because of
-> incorrect ordering of "next_cap_ptr" check. Fix it here.
+Hi Andrew,
 
-Nice fix.  It looks like dw_pcie_ep_find_capability() is currently
-only used for MSI and MSI-X, but IIUC, it *could* be used for any
-capability, so this commit message seems a little too specific.
+All I'm saying is that at this point in time (patch 14/24), the driver
+is being introduced with DSA_TAG_PROTO_NONE. Then support for traffic
+and switch tagging is added later on (18/24). I was just explaining
+what can be done with the driver up to this point in the patchset.
 
-It would be slightly less confusing if beb4641a787d ("PCI: dwc: Add
-MSI-X callbacks handler") had been split into a commit that added the
-general-purpose dw_pcie_ep_find_capability() and a commit that used it
-for MSI and MSI-X, but obviously we can't change history.
-
-> Fixes: beb4641a787df79a142 ("PCI: dwc: Add MSI-X callbacks handler")
-
-These commit references are longer than necessary (and different -
-19-char SHA1 here and 16 chars above).  I typically use 12 chars via
-
-  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+Thanks,
+-Vladimir
 
 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index dc6a4bbd3ace..74477ad7467f 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->  	u8 cap_id, next_cap_ptr;
->  	u16 reg;
->  
-> +	if (!cap_ptr)
-> +		return 0;
-> +
->  	reg = dw_pcie_readw_dbi(pci, cap_ptr);
-> -	next_cap_ptr = (reg & 0xff00) >> 8;
->  	cap_id = (reg & 0x00ff);
->  
-> -	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-> +	if (cap_id > PCI_CAP_ID_MAX)
->  		return 0;
->  
->  	if (cap_id == cap)
->  		return cap_ptr;
->  
-> +	next_cap_ptr = (reg & 0xff00) >> 8;
->  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->  }
->  
-> @@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->  	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->  	next_cap_ptr = (reg & 0x00ff);
->  
-> -	if (!next_cap_ptr)
-> -		return 0;
-> -
->  	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->  }
->  
-> -- 
-> 2.17.1
-> 
+On Sat, 13 Apr 2019 at 18:43, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Sat, Apr 13, 2019 at 04:28:12AM +0300, Vladimir Oltean wrote:
+> > At this moment the following is supported:
+> > * Link state management through phylib
+> > * Autonomous L2 forwarding managed through iproute2 bridge commands. The
+> >   switch ports are initialized in a mode where they can only talk to the
+> >   CPU port. However, IP termination must be done currently through the
+> >   master netdevice.
+>
+> Please could you explain that last sentence in more detail. Normally
+> the master device is just a dumb pipe. Nothing, except tcpdump,
+> uses it.
+>
+> Thanks
+>
+>      Andrew
