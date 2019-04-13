@@ -2,110 +2,124 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA792C282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1D4C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4CAC20850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 05:55:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sm1YrjiD"
+	by mail.kernel.org (Postfix) with ESMTP id 1006B218D9
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 06:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfDMFzG (ORCPT
+        id S1726973AbfDMGB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 01:55:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42022 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfDMFzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 01:55:06 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g3so14562771wrx.9;
-        Fri, 12 Apr 2019 22:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7kPnzm2JkTCyO+F1wvn6GNnMXZwa00o8M2W4gddE+0M=;
-        b=Sm1YrjiDIYiaw+NB3hDgfJYPnuqkVpwpzJRPenxUL+IzhJdwVpHpsBXFWBgq+rC3Ou
-         qyiQPVhc9Gt0KIOM54Gz6n6i8/oY9DmWLcEnu8o28F2D2w101Pxf5V1v1zQnF91yy7Lj
-         G0aThmNwbaVWnGZGBrY+TMFbio+zGFqRqBHjnWS86+LEace7NY22jr8Leb0/4KlOylz8
-         BVscnMKMnpzAkByPqjiTmj+MmyKVa9miWbsgvBIOcg3JHM4ZCrbVjXNynrcqR45JMWXP
-         k87mRS0cfsFQXrRbkCEHUZvCmz2PHxmRzvMQnx/X7iykl9N1r38CdJ7bCSdADG+onDfo
-         XKmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7kPnzm2JkTCyO+F1wvn6GNnMXZwa00o8M2W4gddE+0M=;
-        b=sYk5LPiq8W5P/Of8XlrqfAHtqAteK1oeckCNIwh1q9JljDHSHWyXO20YzV/3sTAgSF
-         okTH2qx6Hc36c50yjaDT4B/2i4O1/qoSYSP/ffMcMtGyudqYkcpdxI8+3QnnRPOkH15N
-         HTYd0lBfGbfyy0YcJaBr+U0M9psBfnWXPBpNNaG1zjM64mS/HbOoVK9q3wMSTo0X3mW5
-         tkCeorGLEFO5gFQ85pB9Rx99zBEY1/q7HePkRVfDDFpqN35x5auuCUca2PbGbHNGq2Gi
-         Mljr/AtZu4oZLz8xeSoqI4JZWb015uRTERVaDGewHAAqgiFckQHDT/cEQUKVxNS5GNaz
-         ufaw==
-X-Gm-Message-State: APjAAAV5GDExGJ6uCiJQFFQJwxmdhINZlxkpQ5welWQYYYrmWdlOkrdo
-        z0/ajrlnid+PXzKRupBpMQI=
-X-Google-Smtp-Source: APXvYqwIzidec8wTcXaGYZC/WqlNcMl/5D/NJcVt+xRiyV/gWicnEEzoCX7WBjsuliRyfZBcIDjfmw==
-X-Received: by 2002:adf:ef8e:: with SMTP id d14mr36156780wro.81.1555134904011;
-        Fri, 12 Apr 2019 22:55:04 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2def:500:2ca3:f513:3ec4:694])
-        by smtp.gmail.com with ESMTPSA id n13sm47649062wrw.67.2019.04.12.22.55.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 22:55:02 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH v2] MAINTAINERS: fix style in KEYS-TRUSTED entry
-Date:   Sat, 13 Apr 2019 07:54:48 +0200
-Message-Id: <20190413055448.5434-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 13 Apr 2019 02:01:28 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:33140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726645AbfDMGB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 02:01:28 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id CD56470A9A3AE7D5149B;
+        Sat, 13 Apr 2019 14:01:24 +0800 (CST)
+Received: from DGGEML502-MBX.china.huawei.com ([169.254.2.153]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0415.000; Sat, 13 Apr 2019 14:01:24 +0800
+From:   Linhaifeng <haifeng.lin@huawei.com>
+To:     William Cohen <wcohen@redhat.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: perf tools:Is there any tools to found out the max latency by
+ irq or cpu idle
+Thread-Topic: perf tools:Is there any tools to found out the max latency by
+ irq or cpu idle
+Thread-Index: AQHU8TjwQPH5fZKzxkKUF8YFzmG5zqY5l6vw
+Date:   Sat, 13 Apr 2019 06:01:23 +0000
+Message-ID: <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
+References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
+ <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
+In-Reply-To: <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
+Accept-Language: en-GB, zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.20.223]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mimi Zohar used spaces instead of a tab when adding Jarkko Sakkinen as
-further maintainer to the KEYS-TRUSTED section entry.
-
-In fact, ./scripts/checkpatch.pl -f MAINTAINERS complains:
-
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #8581: FILE: MAINTAINERS:8581:
-  +M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-The issue was detected when writing a script that parses MAINTAINERS.
-
-Fixes: 34bccd61b139 ("MAINTAINERS: add Jarkko as maintainer for trusted keys")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-v1: https://lore.kernel.org/patchwork/patch/1040412/
-  - Joe Perches clarified that this is a style defect. 
-
-v2: applies cleanly to v5.1-rc4 and next-20190412
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2359e12e4c41..75bb276aed1c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8578,7 +8578,7 @@ F:	security/keys/encrypted-keys/
- 
- KEYS-TRUSTED
- M:	James Bottomley <jejb@linux.ibm.com>
--M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
- M:	Mimi Zohar <zohar@linux.ibm.com>
- L:	linux-integrity@vger.kernel.org
- L:	keyrings@vger.kernel.org
--- 
-2.17.1
-
+U29ycnksIHRoZSB2YWx1ZSAxMzEwODE0MDggaXMganVzdCBmb3IgZXhhbXBsZS4gQWN0dWFsbHkg
+dGhlIHJlc3VsdCBpcyBsaWtlIHRoaXM6DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUwOiA0Mzk2
+OA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCiBzcXJ0IDIwMTktMDQtMTAgMjM6
+NTM6NTI6IDQ5MDEyDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUzOiAzODE3Mg0KIHNxcnQgMjAx
+OS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU1OiA0
+MzYwMA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQNCiBzcXJ0IDIwMTktMDQtMTAg
+MjM6NTM6NTc6IDQ2ODgwDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU4OiA0NDMzMg0KIOKApuKA
+pg0KIHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTM2MzQ1ODc2DQog4oCm4oCmDQogc3FydCAy
+MDE5LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQNCiDigKbigKYNCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IFdpbGxpYW0gQ29oZW4gW21haWx0bzp3Y29oZW5AcmVkaGF0LmNv
+bV0gDQpTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjA2DQpUbzogTGluaGFpZmVuZyA8aGFpZmVu
+Zy5saW5AaHVhd2VpLmNvbT47IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTogcGVyZiB0b29sczpJcyB0aGVy
+ZSBhbnkgdG9vbHMgdG8gZm91bmQgb3V0IHRoZSBtYXggbGF0ZW5jeSBieSBpcnEgb3IgY3B1IGlk
+bGUNCg0KT24gNC8xMS8xOSA4OjU3IFBNLCBMaW5oYWlmZW5nIHdyb3RlOg0KPiBIaSwNCj4gSSBo
+YXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQo+IA0KPiBXaGlsZSAo
+MSkgew0KPiDCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KPiDCoMKgwqAgc3FydCAoMTAyNCk7wqDC
+oMKgwqDCoCANCj4g44CA44CAZW5kID0gcmR0c2MoKTsNCj4g44CA44CAY3ljbGVzID0gZW5kIOKA
+kyBzdGFydDsNCj4g44CA44CAcHJpbnRmKCJjeWNsZXM6ICVkLSUwMmQtJTAyZCAlMDJkOiUwMmQ6
+JTAyZDogJWx1XG4iLCANCj4g44CA44CA44CA44CA44CA44CAMTkwMCt0aW1laW5mby0+dG1feWVh
+ciwgMSt0aW1laW5mby0+dG1fbW9uLCB0aW1laW5mby0+dG1fbWRheSwgdGltZWluZm8tPnRtX2hv
+dXIsIHRpbWVpbmZvLT50bV9taW4sIHRpbWVpbmZvLT50bV9zZWMsDQo+IOOAgOOAgOOAgOOAgOOA
+gOOAgGN5Y2xlcyk7DQo+IH0NCj4gSXQgcHJpbnQgdGhlIGN5Y2xlcyBvZiBzcXJ0IGV2ZXJ5IHNl
+Y29uZCBhbmQgcnVuIHdpdGggdGFza3NldCDigJNjIDEgLi9zcXJ0Lg0KPiBUaGUgcmVzdWx0IG9m
+IHRlc3QgaXM6DQo+IA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTA6IDQzOTY4DQo+IHNxcnQg
+MjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUyOiA0
+OTAxMg0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTM6IDM4MTcyDQo+IHNxcnQgMjAxOS0wNC0x
+MCAyMzo1Mzo1NDogMTMxMDgxNDA4DQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogNDM2MDAN
+Cj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU2OiA0NjcwNA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6
+NTM6NTc6IDQ2ODgwDQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzINCj4g4oCm4oCm
+DQo+IHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4DQo+IOKApuKApg0KPiBzcXJ0
+IDIwMTktMDQtMTAgMDQ6NDA6MzU6IDEzMTA4MTQwOA0KPiDigKbigKYNCj4gDQo+IEV2ZXJ5IDJo
+b3VyMjNtaW4gdGhlcmUgd291bGQgYmUgYSBsYXJnZSBjeWNsZXMuIEkgdXNlIHBlcmYgc2NoZWQg
+bm90IGZvdW5kIGFueSBzY2hlZF9zd2l0Y2ggZXZlbnRzLg0KDQpIaSwNCg0KVGhlIGZhY3QgdGhh
+dCBpdCBpcyB0aGUgc2FtZSB2YWx1ZSAxMzEwODE0MDggZXZlcnkgMiBob3VycyAyMyBtaW51dGVz
+IGxvb2tzIHN1c3BlY3QuIE9uZSB3b3VsZCBleHBlY3Qgc29tZSB2YXJpYXRpb24gaW4gdGhlIGNv
+dW50cy4gIEl0IGxvb2tzIGxpa2UgdGhlcmUgaXMgc29tZSByb2xsb3ZlciBvciBvdmVyZmxvdyBp
+c3N1ZS4gIEl0IHdvdWxkIGJlIGhlbHBmdWwgdG8gcHJpbnQgb3V0IHRoZSBzdGFydCBhbmQgZW5k
+IHZhbHVlcyB0byBzZWUgd2hhdCBpcyBnb2luZyBvbiB3aXRoIHRoZSByYXcgcmRzdGMgdmFsdWVz
+LiAgTWF5YmUgdGhlIHRocmVhZCBpcyBiZWluZyBtb3ZlZCBiZXR3ZWVuIHByb2Nlc3NvcnMgYW5k
+IHRoZSBUU0MgYXJlIG91dCBvZiBzeW5jLiAgV2hhdCBwYXJ0aWN1bGFyIHByb2Nlc3NvciBtb2Rl
+bCB3YXMgdGhpcyBydW5uaW5nIG9uPyBXYXMgdGhpcyBydW5uaW5nIG9uIHBoeXNpY2FsIGhhcmR3
+YXJlIG9yIGluc2lkZSBhIGt2bSBndWVzdD8gDQoNCkFjY29yZGluZyB0byB0aGUgSW50ZWwgNjQg
+YW5kIElBLTMyIEFyY2hpdGVjdHVyZSBTb2Z0d2FyZSBEZXZsb3BlcidzIE1hbnVhbCBWb2x1bWUg
+MyAoMzI1Mzg0LXNkbS12b2wtM2FiY2QucGRmKToNCg0KVGhlIFJEVFNDIGluc3RydWN0aW9uIHJl
+YWRzIHRoZSB0aW1lLXN0YW1wIGNvdW50ZXIgYW5kIGlzIGd1YXJhbnRlZWQgdG8gcmV0dXJuIGEg
+bW9ub3RvbmljYWxseSBpbmNyZWFzaW5nIHVuaXF1ZSB2YWx1ZSB3aGVuZXZlciBleGVjdXRlZCwg
+ZXhjZXB0IGZvciBhIDY0LWJpdCBjb3VudGVyIHdyYXBhcm91bmQuIEludGVsIGd1YXJhbnRlZXMg
+dGhhdCB0aGUgdGltZS1zdGFtcCBjb3VudGVyIHdpbGwgbm90IHdyYXBhcm91bmQgd2l0aGluIDEw
+IHllYXJzIGFmdGVyIGJlaW5nIHJlc2V0LiBUaGUgcGVyaW9kIGZvciBjb3VudGVyIHdyYXAgaXMg
+bG9uZ2VyIGZvciBQZW50aXVtIDQsIEludGVsIFhlb24sIFA2IGZhbWlseSwgYW5kIFBlbnRpdW0g
+cHJvY2Vzc29ycy4NCg0KLVdpbGwgQ29oZW4NCg0KDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNw
+L3puICMgcGVyZiBzY2hlZCByZWNvcmQgLUMgNi0xMSAtbyBwZXJmLnNjaGVkIF5DWyANCj4gcGVy
+ZiByZWNvcmQ6IFdva2VuIHVwIDY0IHRpbWVzIHRvIHdyaXRlIGRhdGEgXSBbIHBlcmYgcmVjb3Jk
+OiBDYXB0dXJlZCANCj4gYW5kIHdyb3RlIDIwNC44NzggTUIgcGVyZi5zY2hlZCAoMTkxMTE4OSBz
+YW1wbGVzKSBdDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNwL3puICMgcGVyZiBzY2hlZCBsYXRl
+bmN5IC1pIHBlcmYuc2NoZWQNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiDCoCBUYXNrwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8wqDCoCBSdW50aW1lIG1zwqAgfCBTd2l0Y2hlcyB8IEF2ZXJhZ2Ug
+ZGVsYXkgbXMgDQo+IHwgTWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDC
+oMKgwqAgfA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IMKgIFRPVEFMOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8wqDCoMKgwqDCoCAwLjAwMCBtcyB8IMKgwqDCoMKgwqDCoMKgMCB8DQo+IC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gDQo+
+IA0KPiBJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0byBmb3VuZCBvdXQgdGhlIG1h
+eCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQo+IA0KPiANCg0K
