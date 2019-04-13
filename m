@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD6C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FD3C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E8320850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CB820850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 01:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7y/a4PS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp0kSieE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfDMB3H (ORCPT
+        id S1727482AbfDMB27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 21:29:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34972 "EHLO
+        Fri, 12 Apr 2019 21:28:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36788 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbfDMB3C (ORCPT
+        with ESMTP id S1727338AbfDMB2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 21:29:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y197so1205352wmd.0;
-        Fri, 12 Apr 2019 18:29:00 -0700 (PDT)
+        Fri, 12 Apr 2019 21:28:52 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h18so13016239wml.1;
+        Fri, 12 Apr 2019 18:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9xk9YPvCpICmWc0yi+P0M4CR0XTCFKTPuJSAQwNcLJY=;
-        b=S7y/a4PSa4WkaOjIgqNKJpccMLxZhA4/MvQxLhOIoHf639y7Q9C7FwsWUWkZ4dUBIf
-         eI6NTAcaGHl+IsfYK52vCVkayhKAZhFbnoBxVUrrPmUJUQH4r3FzMJF/ga/jDkEUs3ES
-         kZreoGa2kxbEk91MYObd2QNCJIqW+est/zBRep4p6twFjfdpHwZ93HFprpES0CYMtkr/
-         cj00Bj1ln94NiJB6WxwCj12q1IYfONi/jYyfE7R37DTxez/Z1s7yIc6hnL1ysMKRjHtl
-         vGbWGX2xhobOCa05WZ9c/CJcvngPAP6XGpp37DWfhVDMGuXylOxiYVRkwgb+HdhxyOOR
-         qzXw==
+        bh=UWRBoV4WEI/+CjKLjstsfeCSgHXbu3PMsLM1jDgBqsA=;
+        b=Pp0kSieEeCn82LL5mxcbPb1XDzWWZFxvPvmlTbQpTl9agbEOFYCbpNYwt1apWJ5qcH
+         DtsI2vXQFfkl3vQMCs+ATU7VSi8RYQwfl0LEe+PPLY4kQv/mdyt2kTP5lBiIwTTpGw2J
+         Clhpvp9/nnROofUfyE850GaKTg+8MRxJwCbZ7h0mhn3vHwZiHIJEwIt8EqX+HV0Y956W
+         lHT2eocv60s3SJMJiGA5bPxebKzAJj+2GavcD+YXLXJoL/26EhQPk2BmBI9LPh05rLz5
+         cr9dagis+bAB/eZwd+HYRho2IAnD8AMqNV0b/F/CehsFdvaKRJIwDONgf1PQFtX2Fwl/
+         0D/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9xk9YPvCpICmWc0yi+P0M4CR0XTCFKTPuJSAQwNcLJY=;
-        b=mBV5OaTYTF2H153Rud9L+gp6j/ycuUYZLGIutpQFE8EZfjtabtsb9bAdX7IkZZpchi
-         MTS0nXkce70n/doTnbQo692DD/BMhtGaV+PU0vEQ3EMeJH47oPKkcEaDF/2i8nNn/N/r
-         oHxV8RmyEHPFLsKRZHHUKjY/axpS134fY4MY+GQHqzcEZWGd+ZAx5H3FLOMKLD2GX6WT
-         Sy5po4jXYjhQVv0UJ4ymMKL09kv9EcIOMtuGjyzm7I9X/0GYm/kfxRevxSR3DOMsNwfv
-         TJDbXH0UHqVA3qmPpQ9FSM6JyIcFxedoOyCFPQAdADG7XthX8759uYXH+JuA+Nl2pFKb
-         +FeA==
-X-Gm-Message-State: APjAAAV63B93FJ+0rxX8h8xYFEnDQeOYXLQLeI7umxZZqxHqsSGYgS2p
-        w7/K/41Xvol5aXaR5qQs0Ig=
-X-Google-Smtp-Source: APXvYqwwXA25Ut4A01zYAt91IQo5vGlPNlYCHbJlVOsvlSG2YB7Nfu9RI4WAbqGoesibaE4+m7/Mig==
-X-Received: by 2002:a1c:e185:: with SMTP id y127mr12127384wmg.76.1555118939597;
-        Fri, 12 Apr 2019 18:28:59 -0700 (PDT)
+        bh=UWRBoV4WEI/+CjKLjstsfeCSgHXbu3PMsLM1jDgBqsA=;
+        b=nGBPMbJhHlAirwWbzsg9eD7m+SnJOUs17WxJiLeRvH8AKUGAD4c8CPuzAZ7OnqutmM
+         ItifiqaHmqGjSXa3+3zCU6dKtqRk8PJ6eYSE/41N+bXVRmqgYYlp9yNMTjvJDTNN78zH
+         09HV8yVEvzR97PkkFKMkHlzJXgdgzAa+H3pTdWTSE0vuPteMEDLr9W0ZNu+ugUqIN288
+         NiPLy+93Pbgz9GNENTxIBlQ9CtolDTAQrY0NOHUyAwU4sW5FBgay3u6je+cmW5FV5suH
+         UXw00g6fGWmtZMWzhfcxU76V1/NqVm8nUbegphc8+zyGU5ZMKEA4AVTj9O0JnX51MPQM
+         s1pQ==
+X-Gm-Message-State: APjAAAXy5ruJ12+bfa0a7N69Fy5L7g3KWF36XfOp9YbHRz1MydUXLx3y
+        QCIckFa+APsHLR/uVB7mgmI=
+X-Google-Smtp-Source: APXvYqzZfciKvfvbJ7+zneazylt3WOMoTNGxFjdixfMle+nazgT5XdNZOS1k1Cxi65fXn3l8XlxNEg==
+X-Received: by 2002:a7b:cd95:: with SMTP id y21mr13447086wmj.29.1555118929325;
+        Fri, 12 Apr 2019 18:28:49 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id r9sm8053141wmh.38.2019.04.12.18.28.58
+        by smtp.gmail.com with ESMTPSA id r9sm8053141wmh.38.2019.04.12.18.28.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 18:28:58 -0700 (PDT)
+        Fri, 12 Apr 2019 18:28:48 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         georg.waibel@sensor-technik.de, Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v3 net-next 24/24] dt-bindings: net: dsa: Add documentation for NXP SJA1105 driver
-Date:   Sat, 13 Apr 2019 04:28:22 +0300
-Message-Id: <20190413012822.30931-25-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 16/24] net: dsa: sja1105: Add support for VLAN operations
+Date:   Sat, 13 Apr 2019 04:28:14 +0300
+Message-Id: <20190413012822.30931-17-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190413012822.30931-1-olteanv@gmail.com>
 References: <20190413012822.30931-1-olteanv@gmail.com>
@@ -71,183 +71,392 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VLAN filtering cannot be properly disabled in SJA1105. So in order to
+emulate the "no VLAN awareness" behavior (not dropping traffic that is
+tagged with a VID that isn't configured on the port), we need to hack
+another switch feature: programmable TPID (which is 0x8100 for 802.1Q).
+We are reprogramming the TPID to a bogus value (ETH_P_EDSA) which leaves
+the switch thinking that all traffic is untagged, and therefore accepts
+it.
+
+Under a vlan_filtering bridge, the proper TPID of ETH_P_8021Q is
+installed again, and the switch starts identifying 802.1Q-tagged
+traffic.
+
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-Changes in v3:
-None.
+Changes from v3:
+Changed back to ETH_P_EDSA.
 
-Changes in v2:
-Renamed sja1105,phy-mode to sja1105,role-phy and similarly for mac.
-Clarified the switch situation with RGMII delays.
+Changes from v2:
+Changed the TPID from ETH_P_EDSA (0xDADA) to a newly introduced one:
+ETH_P_DSA_8021Q (0xDADB).
 
- .../devicetree/bindings/net/dsa/sja1105.txt   | 157 ++++++++++++++++++
- 1 file changed, 157 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/sja1105.txt
+ drivers/net/dsa/sja1105/sja1105_main.c        | 254 +++++++++++++++++-
+ .../net/dsa/sja1105/sja1105_static_config.c   |  38 +++
+ .../net/dsa/sja1105/sja1105_static_config.h   |   3 +
+ 3 files changed, 293 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/sja1105.txt b/Documentation/devicetree/bindings/net/dsa/sja1105.txt
-new file mode 100644
-index 000000000000..529401cf01ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/sja1105.txt
-@@ -0,0 +1,157 @@
-+NXP SJA1105 switch driver
-+=========================
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index e37181bd2a6a..a0851d1c9d89 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -261,6 +261,13 @@ static int sja1105_init_static_vlan(struct sja1105_private *priv)
+ 	table = &priv->static_config.tables[BLK_IDX_VLAN_LOOKUP];
+ 
+ 	/* The static VLAN table will only contain the initial pvid of 0.
++	 * All other VLANs are to be configured through dynamic entries,
++	 * and kept in the static configuration table as backing memory.
++	 * The pvid of 0 is sufficient to pass traffic while the ports are
++	 * standalone and when vlan_filtering is disabled. When filtering
++	 * gets enabled, the switchdev core sets up the VLAN ID 1 and sets
++	 * it as the new pvid. Actually 'pvid 1' still comes up in 'bridge
++	 * vlan' even when vlan_filtering is off, but it has no effect.
+ 	 */
+ 	if (table->entry_count) {
+ 		kfree(table->entries);
+@@ -401,8 +408,11 @@ static int sja1105_init_general_params(struct sja1105_private *priv)
+ 		.vlmask = 0,
+ 		/* Only update correctionField for 1-step PTP (L2 transport) */
+ 		.ignore2stf = 0,
+-		.tpid = ETH_P_8021Q,
+-		.tpid2 = ETH_P_8021Q,
++		/* Forcefully disable VLAN filtering by telling
++		 * the switch that VLAN has a different EtherType.
++		 */
++		.tpid = ETH_P_EDSA,
++		.tpid2 = ETH_P_EDSA,
+ 		/* P/Q/R/S only */
+ 		.queue_ts = 0,
+ 		.egrmirrvid = 0,
+@@ -945,12 +955,240 @@ static void sja1105_bridge_leave(struct dsa_switch *ds, int port,
+ 	sja1105_bridge_member(ds, port, br, false);
+ }
+ 
++/* For situations where we need to change a setting at runtime that is only
++ * available through the static configuration, resetting the switch in order
++ * to upload the new static config is unavoidable. Back up the settings we
++ * modify at runtime (currently only MAC) and restore them after uploading,
++ * such that this operation is relatively seamless.
++ */
++static int sja1105_static_config_reload(struct sja1105_private *priv)
++{
++	struct sja1105_mac_config_entry *mac;
++	int speed_mbps[SJA1105_NUM_PORTS];
++	int rc, i;
 +
-+Required properties:
++	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
 +
-+- compatible:
-+	Must be one of:
-+	- "nxp,sja1105e"
-+	- "nxp,sja1105t"
-+	- "nxp,sja1105p"
-+	- "nxp,sja1105q"
-+	- "nxp,sja1105r"
-+	- "nxp,sja1105s"
++	/* Back up settings changed by sja1105_adjust_port_config and
++	 * and restore their defaults.
++	 */
++	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
++		speed_mbps[i] = sja1105_speed[mac[i].speed];
++		mac[i].speed = SJA1105_SPEED_AUTO;
++	}
 +
-+	Although the device ID could be detected at runtime, explicit bindings
-+	are required in order to be able to statically check their validity.
-+	For example, SGMII can only be specified on port 4 of R and S devices,
-+	and the non-SGMII devices, while pin-compatible, are not equal in terms
-+	of support for RGMII internal delays (supported on P/Q/R/S, but not on
-+	E/T).
++	/* Reset switch and send updated static configuration */
++	rc = sja1105_static_config_upload(priv);
++	if (rc < 0)
++		goto out;
 +
-+Optional properties:
++	/* Configure the CGU (PLLs) for MII and RMII PHYs.
++	 * For these interfaces there is no dynamic configuration
++	 * needed, since PLLs have same settings at all speeds.
++	 */
++	rc = sja1105_clocking_setup(priv);
++	if (rc < 0)
++		goto out;
 +
-+- sja1105,role-mac:
-+- sja1105,role-phy:
-+	Boolean properties that can be assigned under each port node. By
-+	default (unless otherwise specified) a port is configured as MAC if it
-+	is driving a PHY (phy-handle is present) or as PHY if it is PHY-less
-+	(fixed-link specified, presumably because it is connected to a MAC).
-+	The effect of this property (in either its implicit or explicit form)
-+	is:
-+	- In the case of MII or RMII it specifies whether the SJA1105 port is a
-+	  clock source or sink for this interface (not applicable for RGMII
-+	  where there is a Tx and an Rx clock).
-+	- In the case of RGMII it affects the behavior regarding internal
-+	  delays:
-+	  1. If sja1105,role-mac is specified, and the phy-mode property is one
-+	     of "rgmii-id", "rgmii-txid" or "rgmii-rxid", then the entity
-+	     designated to apply the delay/clock skew necessary for RGMII
-+	     is the PHY. The SJA1105 MAC does not apply any internal delays.
-+	  2. If sja1105,role-phy is specified, and the phy-mode property is one
-+	     of the above, the designated entity to apply the internal delays
-+	     is the SJA1105 MAC (if hardware-supported). This is only supported
-+	     by the second-generation (P/Q/R/S) hardware. On a first-generation
-+	     E or T device, it is an error to specify an RGMII phy-mode other
-+	     than "rgmii" for a port that is in fixed-link mode. In that case,
-+	     the clock skew must either be added by the MAC at the other end of
-+	     the fixed-link, or by PCB serpentine traces on the board.
-+	These properties are required, for example, in the case where SJA1105
-+	ports are at both ends of a MII/RMII PHY-less setup. One end would need
-+	to have sja1105,role-mac, while the other sja1105,role-phy.
++	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
++		bool enabled = (speed_mbps[i] != 0);
 +
-+See Documentation/devicetree/bindings/net/dsa/dsa.txt for the list of standard
-+DSA required and optional properties.
++		rc = sja1105_adjust_port_config(priv, i, speed_mbps[i],
++						enabled);
++		if (rc < 0)
++			goto out;
++	}
++out:
++	return rc;
++}
 +
-+Other observations
-+------------------
++#define sja1105_vlan_filtering_enabled(priv) \
++	(((struct sja1105_general_params_entry *) \
++	((struct sja1105_private *)priv)->static_config. \
++	tables[BLK_IDX_GENERAL_PARAMS].entries)->tpid == ETH_P_8021Q)
 +
-+The SJA1105 SPI interface requires a CS-to-CLK time (t2 in UM10944) of at least
-+one half of t_CLK. At an SPI frequency of 1MHz, this means a minimum
-+cs_sck_delay of 500ns. Ensuring that this SPI timing requirement is observed
-+depends on the SPI bus master driver.
++/* The TPID setting belongs to the General Parameters table,
++ * which can only be partially reconfigured at runtime (and not the TPID).
++ * So a switch reset is required.
++ */
++static int sja1105_change_tpid(struct sja1105_private *priv,
++			       u16 tpid, u16 tpid2)
++{
++	struct sja1105_general_params_entry *general_params;
++	struct sja1105_table *table;
 +
-+Example
-+-------
++	table = &priv->static_config.tables[BLK_IDX_GENERAL_PARAMS];
++	general_params = table->entries;
++	general_params->tpid = tpid;
++	general_params->tpid2 = tpid2;
++	return sja1105_static_config_reload(priv);
++}
 +
-+Ethernet switch connected via SPI to the host, CPU port wired to enet2:
++static int sja1105_pvid_apply(struct sja1105_private *priv, int port, u16 pvid)
++{
++	struct sja1105_mac_config_entry *mac;
 +
-+arch/arm/boot/dts/ls1021a-tsn.dts:
++	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
 +
-+/* SPI controller of the LS1021 */
-+&dspi0 {
-+	sja1105@1 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nxp,sja1105";
-+		spi-max-frequency = <4000000>;
-+		fsl,spi-cs-sck-delay = <1000>;
-+		fsl,spi-sck-cs-delay = <1000>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				/* ETH5 written on chassis */
-+				label = "swp5";
-+				phy-handle = <&rgmii_phy6>;
-+				phy-mode = "rgmii";
-+				reg = <0>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@1 {
-+				/* ETH2 written on chassis */
-+				label = "swp2";
-+				phy-handle = <&rgmii_phy3>;
-+				phy-mode = "rgmii";
-+				reg = <1>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@2 {
-+				/* ETH3 written on chassis */
-+				label = "swp3";
-+				phy-handle = <&rgmii_phy4>;
-+				phy-mode = "rgmii";
-+				reg = <2>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@3 {
-+				/* ETH4 written on chassis */
-+				phy-handle = <&rgmii_phy5>;
-+				label = "swp4";
-+				phy-mode = "rgmii";
-+				reg = <3>;
-+				/* Implicit "sja1105,role-mac;" */
-+			};
-+			port@4 {
-+				/* Internal port connected to eth2 */
-+				ethernet = <&enet2>;
-+				phy-mode = "rgmii";
-+				reg = <4>;
-+				/* Implicit "sja1105,role-phy;" */
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
++	mac[port].vlanid = pvid;
 +
-+/* MDIO controller of the LS1021 */
-+&mdio0 {
-+	/* BCM5464 */
-+	rgmii_phy3: ethernet-phy@3 {
-+		reg = <0x3>;
-+	};
-+	rgmii_phy4: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+	rgmii_phy5: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+	rgmii_phy6: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+};
++	return sja1105_dynamic_config_write(priv, BLK_IDX_MAC_CONFIG, port,
++					   &mac[port], true);
++}
 +
-+/* Ethernet master port of the LS1021 */
-+&enet2 {
-+	phy-connection-type = "rgmii";
-+	status = "ok";
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
++static int sja1105_is_vlan_configured(struct sja1105_private *priv, u16 vid)
++{
++	struct sja1105_vlan_lookup_entry *vlan;
++	int count, i;
 +
++	vlan = priv->static_config.tables[BLK_IDX_VLAN_LOOKUP].entries;
++	count = priv->static_config.tables[BLK_IDX_VLAN_LOOKUP].entry_count;
++
++	for (i = 0; i < count; i++)
++		if (vlan[i].vlanid == vid)
++			return i;
++
++	/* Return an invalid entry index if not found */
++	return -1;
++}
++
++static int sja1105_vlan_apply(struct sja1105_private *priv, int port, u16 vid,
++			      bool enabled, bool untagged)
++{
++	struct sja1105_vlan_lookup_entry *vlan;
++	struct sja1105_table *table;
++	bool keep = true;
++	int match, rc;
++
++	table = &priv->static_config.tables[BLK_IDX_VLAN_LOOKUP];
++
++	match = sja1105_is_vlan_configured(priv, vid);
++	if (match < 0) {
++		/* Can't delete a missing entry. */
++		if (!enabled)
++			return 0;
++		rc = sja1105_table_resize(table, table->entry_count + 1);
++		if (rc)
++			return rc;
++		match = table->entry_count - 1;
++	}
++	/* Assign pointer after the resize (it's new memory) */
++	vlan = table->entries;
++	vlan[match].vlanid = vid;
++	if (enabled) {
++		vlan[match].vlan_bc |= BIT(port);
++		vlan[match].vmemb_port |= BIT(port);
++	} else {
++		vlan[match].vlan_bc &= ~BIT(port);
++		vlan[match].vmemb_port &= ~BIT(port);
++	}
++	/* Also unset tag_port if removing this VLAN was requested,
++	 * just so we don't have a confusing bitmap (no practical purpose).
++	 */
++	if (untagged || !enabled)
++		vlan[match].tag_port &= ~BIT(port);
++	else
++		vlan[match].tag_port |= BIT(port);
++	/* If there's no port left as member of this VLAN,
++	 * it's time for it to go.
++	 */
++	if (!vlan[match].vmemb_port)
++		keep = false;
++
++	dev_dbg(priv->ds->dev,
++		"%s: port %d, vid %llu, broadcast domain 0x%llx, "
++		"port members 0x%llx, tagged ports 0x%llx, keep %d\n",
++		__func__, port, vlan[match].vlanid, vlan[match].vlan_bc,
++		vlan[match].vmemb_port, vlan[match].tag_port, keep);
++
++	rc = sja1105_dynamic_config_write(priv, BLK_IDX_VLAN_LOOKUP, vid,
++					  &vlan[match], keep);
++	if (rc < 0)
++		return rc;
++
++	if (!keep)
++		return sja1105_table_delete_entry(table, match);
++
++	return 0;
++}
++
+ static enum dsa_tag_protocol
+ sja1105_get_tag_protocol(struct dsa_switch *ds, int port)
+ {
+ 	return DSA_TAG_PROTO_NONE;
+ }
+ 
++/* This callback needs to be present */
++static int sja1105_vlan_prepare(struct dsa_switch *ds, int port,
++				const struct switchdev_obj_port_vlan *vlan)
++{
++	return 0;
++}
++
++static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
++{
++	struct sja1105_private *priv = ds->priv;
++	int rc;
++
++	if (enabled && !sja1105_vlan_filtering_enabled(priv))
++		/* Enable VLAN filtering. */
++		rc = sja1105_change_tpid(priv, ETH_P_8021Q, ETH_P_8021AD);
++	else if (!enabled && sja1105_vlan_filtering_enabled(priv))
++		/* Disable VLAN filtering. */
++		rc = sja1105_change_tpid(priv, ETH_P_EDSA, ETH_P_EDSA);
++	else
++		return 0;
++	if (rc)
++		dev_err(ds->dev, "Failed to change VLAN Ethertype\n");
++
++	return rc;
++}
++
++static void sja1105_vlan_add(struct dsa_switch *ds, int port,
++			     const struct switchdev_obj_port_vlan *vlan)
++{
++	struct sja1105_private *priv = ds->priv;
++	u16 vid;
++	int rc;
++
++	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
++		rc = sja1105_vlan_apply(priv, port, vid, true, vlan->flags &
++					BRIDGE_VLAN_INFO_UNTAGGED);
++		if (rc < 0) {
++			dev_err(ds->dev, "Failed to add VLAN %d to port %d: %d\n",
++				vid, port, rc);
++			return;
++		}
++		if (vlan->flags & BRIDGE_VLAN_INFO_PVID) {
++			rc = sja1105_pvid_apply(ds->priv, port, vid);
++			if (rc < 0) {
++				dev_err(ds->dev, "Failed to set pvid %d on port %d: %d\n",
++					vid, port, rc);
++				return;
++			}
++		}
++	}
++}
++
++static int sja1105_vlan_del(struct dsa_switch *ds, int port,
++			    const struct switchdev_obj_port_vlan *vlan)
++{
++	struct sja1105_private *priv = ds->priv;
++	u16 vid;
++	int rc;
++
++	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
++		rc = sja1105_vlan_apply(priv, port, vid, false, vlan->flags &
++					BRIDGE_VLAN_INFO_UNTAGGED);
++		if (rc < 0) {
++			dev_err(ds->dev, "Failed to remove VLAN %d from port %d: %d\n",
++				vid, port, rc);
++			return rc;
++		}
++	}
++	return 0;
++}
++
+ /* The programming model for the SJA1105 switch is "all-at-once" via static
+  * configuration tables. Some of these can be dynamically modified at runtime,
+  * but not the xMII mode parameters table.
+@@ -986,6 +1224,14 @@ static int sja1105_setup(struct dsa_switch *ds)
+ 		dev_err(ds->dev, "Failed to configure MII clocking: %d\n", rc);
+ 		return rc;
+ 	}
++	/* On SJA1105, VLAN filtering per se is always enabled in hardware.
++	 * The only thing we can do to disable it is lie about what the 802.1Q
++	 * EtherType is. So it will still try to apply VLAN filtering, but all
++	 * ingress traffic (except frames received with EtherType of
++	 * ETH_P_EDSA) will be internally tagged with a distorted VLAN header
++	 * where the TPID is ETH_P_EDSA, and the VLAN ID is the port pvid.
++	 */
++	ds->vlan_filtering_is_global = true;
+ 
+ 	return 0;
+ }
+@@ -999,6 +1245,10 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
+ 	.port_fdb_del		= sja1105_fdb_del,
+ 	.port_bridge_join	= sja1105_bridge_join,
+ 	.port_bridge_leave	= sja1105_bridge_leave,
++	.port_vlan_prepare	= sja1105_vlan_prepare,
++	.port_vlan_filtering	= sja1105_vlan_filtering,
++	.port_vlan_add		= sja1105_vlan_add,
++	.port_vlan_del		= sja1105_vlan_del,
+ 	.port_mdb_prepare	= sja1105_mdb_prepare,
+ 	.port_mdb_add		= sja1105_mdb_add,
+ 	.port_mdb_del		= sja1105_mdb_del,
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.c b/drivers/net/dsa/sja1105/sja1105_static_config.c
+index ae5c2551ad90..42f71e373d1c 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.c
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.c
+@@ -1002,3 +1002,41 @@ void sja1105_static_config_free(struct sja1105_static_config *config)
+ 	}
+ }
+ 
++int sja1105_table_delete_entry(struct sja1105_table *table, int i)
++{
++	size_t entry_size = table->ops->unpacked_entry_size;
++	u8 *entries = table->entries;
++
++	if (i > table->entry_count)
++		return -ERANGE;
++
++	memmove(entries + i * entry_size, entries + (i + 1) * entry_size,
++		(table->entry_count - i) * entry_size);
++
++	table->entry_count--;
++
++	return 0;
++}
++
++/* No pointers to table->entries should be kept when this is called. */
++int sja1105_table_resize(struct sja1105_table *table, size_t new_count)
++{
++	size_t entry_size = table->ops->unpacked_entry_size;
++	void *new_entries, *old_entries = table->entries;
++
++	if (new_count > table->ops->max_entry_count)
++		return -ERANGE;
++
++	new_entries = kcalloc(new_count, entry_size, GFP_KERNEL);
++	if (!new_entries)
++		return -ENOMEM;
++
++	memcpy(new_entries, old_entries, min(new_count, table->entry_count) *
++		entry_size);
++
++	table->entries = new_entries;
++	table->entry_count = new_count;
++	kfree(old_entries);
++	return 0;
++}
++
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
+index a2e2ef2a0d8b..c71ef9d366db 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.h
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
+@@ -263,6 +263,9 @@ int sja1105_static_config_init(struct sja1105_static_config *config,
+ 			       u64 device_id);
+ void sja1105_static_config_free(struct sja1105_static_config *config);
+ 
++int sja1105_table_delete_entry(struct sja1105_table *table, int i);
++int sja1105_table_resize(struct sja1105_table *table, size_t new_count);
++
+ u32 sja1105_crc32(const void *buf, size_t len);
+ 
+ void sja1105_pack(void *buf, const u64 *val, int start, int end, size_t len);
 -- 
 2.17.1
 
