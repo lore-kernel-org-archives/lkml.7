@@ -2,149 +2,159 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB88C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687A2C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E704B2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40600206B6
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfDMUGF (ORCPT
+        id S1727099AbfDMUiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:06:05 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53207 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfDMUGF (ORCPT
+        Sat, 13 Apr 2019 16:38:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45068 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfDMUix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:06:05 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 07929807A3; Sat, 13 Apr 2019 22:05:52 +0200 (CEST)
-Date:   Sat, 13 Apr 2019 22:06:05 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 5/5] leds: lm3697: Introduce the lm3697 driver
-Message-ID: <20190413200605.GA3013@amd>
-References: <20190325142403.30447-1-dmurphy@ti.com>
- <20190325142403.30447-6-dmurphy@ti.com>
+        Sat, 13 Apr 2019 16:38:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o26so11251674edv.12
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 13:38:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZiCM0RO/92DahOkwyKD8HuHBHkhV62I5tXQ5to8Sh3U=;
+        b=LhTkKGGj5KSYEpY00WykJl6BK1ClMDzAd/IJc/4oBIH5yor6cUYtCMPCwkNqGhoMkd
+         pcXAkYWimfMXAKSzTF7sGpPByEA6Njsydc+h8lDZhC84ruFE6KWUyhS1iC9UsMuYY0Wx
+         XCt3ovJ8N4bz/6xKn+ZGX/29qOTTa7ZaI48oVYSWc2OQFUbe5unQdeeIUcRwXyvMaunH
+         6Hb1+Z6DY9U+PcDi+dL/Ox2Ow8khlxYlzxAFL7AYIbqfvbx8JXY1qKwseHo9VGYDh8AV
+         jMspPeLha9SiwVKO6Y8/lwn6PESiJdYL+ZgtdUbvEKOgj69uMRJAzJ+rfW2lx1Oycfq2
+         9vnA==
+X-Gm-Message-State: APjAAAV7FTkDiceKSj3+FouemCCzOSSsT6AgCRWUcpdAgvRng8FMHlt8
+        OVGg2QUbqXAI4w7RF7zcFxYpqXmZ794=
+X-Google-Smtp-Source: APXvYqzKc5fhn1Q6UZXIajWWRE56dECMmxAz3LeQHXAevL1M5sUq/3bED6DH+hQ68GwjclmYAUoB8Q==
+X-Received: by 2002:a50:f5c3:: with SMTP id x3mr11649166edm.28.1555187931559;
+        Sat, 13 Apr 2019 13:38:51 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id r1sm4275960edx.12.2019.04.13.13.38.50
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2019 13:38:50 -0700 (PDT)
+Subject: Re: [PATCH v2] usb: typec: tcpm: collision avoidance
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Kyle Tso <kyletso@google.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190322121745.159768-1-kyletso@google.com>
+ <20190404141345.GF21319@kuha.fi.intel.com>
+ <08a6d422-e8f7-303e-7bf1-952344f2c182@roeck-us.net>
+ <CAGZ6i=2zKLhS4By8Xanc863G+jSxPYg8SLU-UHkY94r5MiEYag@mail.gmail.com>
+ <20190409130230.GC20058@kuha.fi.intel.com>
+ <20190409130649.GD20058@kuha.fi.intel.com>
+ <9c9d17e3-bd99-c877-359c-a0a1b10a8d73@redhat.com>
+ <AM5PR1001MB099440C3AA6DA6BA2AB0F2AE802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <CAGZ6i=0rRgNH5bU-zcP58MNi+VSa+xeAQWL67egaZ-ui-ebmYA@mail.gmail.com>
+ <9f9a2de9-2cfb-385c-8e99-54b2587113ce@redhat.com>
+ <AM5PR1001MB09943830CFED9CB321CC883D802E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <76a3c6df-63c0-78e7-c1ca-c83a30e95d38@redhat.com>
+Message-ID: <009662c6-2897-e2dd-03a7-992fc0a78599@redhat.com>
+Date:   Sat, 13 Apr 2019 22:38:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <20190325142403.30447-6-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <76a3c6df-63c0-78e7-c1ca-c83a30e95d38@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10-04-19 18:38, Hans de Goede wrote:
+> On 10-04-19 18:14, Adam Thomson wrote:
+>> On 10 April 2019 16:45, Hans de Goede wrote:
 
-On Mon 2019-03-25 09:24:03, Dan Murphy wrote:
-> Introduce the lm3697 LED driver for
-> backlighting and display.
->=20
-> Datasheet location:
-> http://www.ti.com/lit/ds/symlink/lm3697.pdf
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/leds/Kconfig       |   8 +-
->  drivers/leds/Makefile      |   1 +
->  drivers/leds/leds-lm3697.c | 401 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 409 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/leds/leds-lm3697.c
->=20
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 735009e73414..688bb9a6f275 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -776,9 +776,15 @@ config LEDS_NIC78BX
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called leds-nic78bx.
-> =20
-> +config LEDS_LM3697
-> +	tristate "LED driver for LM3697"
-> +	depends on LEDS_TI_LMU_COMMON
-> +	help
-> +	  Say Y to enable the LM3697 LED driver for TI LMU devices.
-> +	  This supports the LED device LM3697.
-> +
->  config LEDS_TI_LMU_COMMON
->  	tristate "LED driver for TI LMU"
-> -	depends on REGMAP
->  	help
->            Say Y to enable the LED driver for TI LMU devices.
->            This supports common features between the TI LM3532, LM3631, L=
-M3632,
+<snip>
 
-Is deleting "depends on REGMAP" intentional? AFAICT you are using it.
+>>> Starting toggling from tcpm_set_cc() just feels wrong; and currently power role
+>>> swapping is broken with the fusb302, which IIRC used to work. I suspect this is
+>>> related.
+>>>
+>>> I plan to write a patch tomorrow to functionally take tcpm_set_cc() back to the
+>>> way it was before. This should fix your case and I hope this also fixes power-role
+>>> swapping.
+>>>
+>>> This will re-introduce Adam Thomson's problem, but I have a feeling that that
+>>> actually needs a fix in the tcpm.c code rather then at the fusb302 level.
+>>
+>> To be clear here, the names TOGGLING_MODE_SNK and TOGGLING_MODE_SRC are a
+>> misnomer from the HW spec for fusb302. The device isn't toggling anything as far
+>> as I'm aware, so I don't necessarily agree with your point.
+> 
+> If I understand the datasheet correctly:
+> 
+> "The FUSB302 has the capability to do autonomous
+> DRP toggle. In autonomous toggle the FUSB302
+> internally controls the PDWN1, PDWN2, PU_EN1 and
+> PU_EN2, MEAS_CC1 and MEAS_CC2 and implements
+> a fixed DRP toggle between presenting as a SRC and
+> presenting as a SNK. Alternately, it can present as a
+> SRC or SNK only and poll CC1 and CC2 continuously."
+> 
+> It is still attaching Rp resp Rd to CC1 or CC2 one at a time
+> to detect polarity, so it is still toggling, it just is not
+> doing dual-role toggling. This is also expected behavior for
+> a sink, a sink may not present Rd on both CC pins at the
+> same time, otherwise the source cannot detect the polarity
+> and the source also cannot detect if Vconn is necessary.
+> 
+>> It's a mechanism to
+>> have the HW report when the CC line changes on connection. Without that we have
+>> no reporting from the HW for the fixed role scenarios.
+> 
+> Not just connection, also polarity detection. Notice that
+> the tcpm framework / the driver also has a start_drp_toggling()
+> method. I think we may also need a start_srp_toggling function
+> just like it and call that from the SNK_UNATTACHED and
+> SRC_UNATTACHED states for single-role ports. I agree that we
+> need to start toggling when in those states, but tcpm_set_cc gets
+> called in a lot of other places where AFAIK we should NOT
+> restart toggling and your patch causes us to restart
+> toggling in those cases.
 
-Plus we'd normally expect "COMMON" first and then specific driver. Not
-sure if Kconfig can handle it out-of-order...
+Ok, so as I suspected, commit ea3b4d5523bc ("usb: typec: fusb302:
+Resolve fixed power role contract setup") is what caused the
+power-role swapping breakage I've been seeing.
 
+So I've prepared a 3 patch series:
 
-> +static int lm3697_init(struct lm3697 *priv)
-> +{
-> +	struct lm3697_led *led;
-> +	int i, ret;
-> +
-> +	if (priv->enable_gpio) {
-> +		gpiod_direction_output(priv->enable_gpio, 1);
-> +	} else {
-> +		ret =3D regmap_write(priv->regmap, LM3697_RESET, LM3697_SW_RESET);
-> +		if (ret) {
-> +			dev_err(&priv->client->dev, "Cannot reset the device\n");
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	ret =3D regmap_write(priv->regmap, LM3697_CTRL_ENABLE, 0x0);
-> +	if (ret) {
-> +		dev_err(&priv->client->dev, "Cannot write ctrl enable\n");
-> +		goto out;
-> +	}
-> +
-> +	ret =3D regmap_write(priv->regmap, LM3697_OUTPUT_CONFIG, priv->bank_cfg=
-);
-> +	if (ret)
-> +		dev_err(&priv->client->dev, "Cannot write OUTPUT config\n");
+1) Add a new start_srp_connection_detect function which, when
+implemented by the tcpc_dev, gets called instead of
+start_drp_toggling for single role ports (SRPs)
 
-Missing goto out?
+2) Implement 1. for fusb302 to fix the SRP issue Adam was
+seeing, without depending on set_cc starting "toggling"
+or something like it for the fix
 
-> +	for (i =3D 0; i < LM3697_MAX_CONTROL_BANKS; i++) {
-> +		led =3D &priv->leds[i];
-> +		ret =3D ti_lmu_common_set_ramp(&led->lmu_data);
-> +		if (ret)
-> +			dev_err(&priv->client->dev, "Setting the ramp rate failed\n");
-> +	}
-> +out:
-> +	return ret;
-> +}
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+3) Revert commit ea3b4d5523bc, restoring power-role swap
+functionality.
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This should also fix the issue Kyle Tso was seeing when
+trying to change from one Rp setting to another.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I'll send out the series right after this email.
 
-iEYEARECAAYFAlyyQS0ACgkQMOfwapXb+vL00QCdGGMKXU+pkn1FlSPwGqjwH4ji
-xNYAn2oruAF4VI90Pl3mq0SHs1pcvvgv
-=/Je9
------END PGP SIGNATURE-----
+Regards,
 
---qMm9M+Fa2AknHoGS--
+Hans
+
