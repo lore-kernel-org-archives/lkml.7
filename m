@@ -2,90 +2,122 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A85C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 19:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28622C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 19:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F368208E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 19:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E882084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 19:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSuqpKKi"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LyfPZikj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfDMTY5 (ORCPT
+        id S1727216AbfDMT1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 15:24:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45805 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfDMTY4 (ORCPT
+        Sat, 13 Apr 2019 15:27:54 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:38016 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfDMT1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 15:24:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so6673327pfi.12
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 12:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nWhVTMUidFAcLf4NDz+Wba0U8xH/f3ZAlJwUYWr19zA=;
-        b=MSuqpKKiaND8eRcXZ30BtdolxfKk71i6YLpXbR1rLs+HvGA8A/N7L3vR4T65X72Z04
-         VXDmit5GfgjSiZ9+ugD+h8IkqD+xS5DZFCg2Sr7r5U0A8rdxmgt/NuOkNbSGzeE626hx
-         UZMIlo+D7Bf2oaTto7WUnte78emOfwuzk1Q68MVtpci8YJ5SCYsHvTzvKdj+akz61+Bk
-         B4jvuAf0im/QYmbP6osVDqX8LuAFd5D1EwWP9/iDdF51NnUhEq20BK7wAqm2vlfkPyDa
-         2YMOCoVEU1BSrglAdOOW0Lwx6jYF7BdPhfZC/Olcm4OirSBo8dyKHK5StUVrfFtg1xfK
-         f9AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nWhVTMUidFAcLf4NDz+Wba0U8xH/f3ZAlJwUYWr19zA=;
-        b=mYvtzLRqiUvRb2FWmj14Z2onH1gCCfYIAXT6RsCcboVxGGIxNVUep53c/alVuyh282
-         qEDcVyAHbIgy1jYl25XFkfrorSatTtJJ8iAta0uGGqiW25t4hC3m0K7iguVKtNeAhhLi
-         yN2h8zolfAaP6Ywdc11cdfeUJSlkarRL8ucisBVg2Aq0a0nPRCnJRWZKnca20IxeZx8Z
-         PTsWrqu4h7pmHCmNU4C9HN22JZxy7AEK5LSetKOecsPPZCbHEhEI0readWLHL6DGtfvt
-         oviM7XFNXVXyj4IHJChRBt2tdf84BkvDNDo078oXsMsUcI+p/Y4M44sC7OwAUPdb07mY
-         Opew==
-X-Gm-Message-State: APjAAAVDg83Xy6gzusYK2oZk15E2IkPSsiC+0tE2H1uKbRb799mlYAPZ
-        k0+yVfWMUK8yrrpi3PhksdU=
-X-Google-Smtp-Source: APXvYqw6Fq/Eycg3N5MvnoAAM1T6W+P12i6b8YtZXSito2dJBv7YUbVjINl4a9sNiKD8gdqyE/UzuQ==
-X-Received: by 2002:a62:ab14:: with SMTP id p20mr65080721pff.23.1555183496070;
-        Sat, 13 Apr 2019 12:24:56 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.55.56])
-        by smtp.gmail.com with ESMTPSA id m2sm77448201pgr.74.2019.04.13.12.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 12:24:54 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        sabyasachi.linux@gmail.com, Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] drm/panel: Remove duplicate header
-Date:   Sun, 14 Apr 2019 00:59:10 +0530
-Message-Id: <1555183750-11028-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sat, 13 Apr 2019 15:27:54 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3DJK93X011689;
+        Sat, 13 Apr 2019 19:27:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=4SLUZEGuXWiirW6qhrP/P50mnCtGoDoQsaieJXYSPjc=;
+ b=LyfPZikjcwKDoHv9AFXNa2aMhbtaEhB6b+31jZ4Bgv3ZfNJ8TUeCFLwUBUlBAJTrRfR0
+ 1ZF2HVLtxkkjMJkFTToT79KMyRIcAxLNoVngMHF7UfGjE8ljA2MDY4TmxvXnh9pp/aRV
+ eqO+GGUb4ZOiymLVcd8tzNJjrxQRmkhpMWbOOhrWirXl5lZ74Kxg0QQXmk6URSjj9QPh
+ s9psun/5l7dgCIM182onxqZHokV3Vf9LStwtWFPufy23+yToGYDQV6HR0IjiG6K+NF6A
+ FiXsHd/RnWfH0qyCA3UCs5Oci15pA6J0v3R6TxGegk1y4j8e4aod41vRTICITJujxMNe SQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2ru59cstcj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Apr 2019 19:27:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3DJQoUi184663;
+        Sat, 13 Apr 2019 19:27:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2ru4vryx5q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 13 Apr 2019 19:27:41 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3DJRdtM027579;
+        Sat, 13 Apr 2019 19:27:40 GMT
+Received: from kadam (/197.157.34.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 13 Apr 2019 12:27:39 -0700
+Date:   Sat, 13 Apr 2019 22:27:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mwifiex: check for null return from skb_copy
+Message-ID: <20190413192729.GL6095@kadam>
+References: <20190413161438.6376-1-colin.king@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413161438.6376-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9226 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904130137
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9226 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904130137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicate header which is included twice.
+On Sat, Apr 13, 2019 at 05:14:38PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> It is possible for skb_copy to return a null pointer and currently
+> this will cause a null pointer dereference when the function
+> mwifiex_uap_queue_bridged_pkt is called.  Fix this by checking for
+> a null return from skb_copy and return -ENOMEM.
+> 
+> Addresses-Coverity: ("Dereference null return")
+> Fixes: 838e4f449297 ("mwifiex: improve uAP RX handling")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/uap_txrx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/uap_txrx.c b/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
+> index 5ce85d5727e4..b262dc78d638 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/uap_txrx.c
+> @@ -256,6 +256,8 @@ int mwifiex_handle_uap_rx_forward(struct mwifiex_private *priv,
+>  
+>  	if (is_multicast_ether_addr(ra)) {
+>  		skb_uap = skb_copy(skb, GFP_ATOMIC);
+> +		if (!skb_uap)
+> +			return -ENOMEM;
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 -
- 1 file changed, 1 deletion(-)
+I think we would want to free dev_kfree_skb_any(skb) before returning.
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 2c9c972..1b708c8 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -57,7 +57,6 @@
- #include <drm/drmP.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_mipi_dsi.h>
--#include <drm/drm_panel.h>
- 
- #define RPI_DSI_DRIVER_NAME "rpi-ts-dsi"
- 
--- 
-1.9.1
+>  		mwifiex_uap_queue_bridged_pkt(priv, skb_uap);
+>  	} else {
+>  		if (mwifiex_get_sta_entry(priv, ra)) {
 
+regards,
+dan carpenter
