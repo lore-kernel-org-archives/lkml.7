@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1944C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59070C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6907E2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1861D2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 10:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rdLcW4tx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlzGsSGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfDMKeS (ORCPT
+        id S1727608AbfDMKeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 06:34:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41680 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfDMKdV (ORCPT
+        Sat, 13 Apr 2019 06:34:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36138 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727190AbfDMKdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 06:33:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so15095880wrq.8
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:20 -0700 (PDT)
+        Sat, 13 Apr 2019 06:33:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y13so15172444wrd.3
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 03:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=susrZ/t6ndqXD8gtL1bPnnTkE0wp/sBtA8tijngjVXE=;
-        b=rdLcW4txUmwM07tUHPT2l3M+l+eVZcPG/na6ShUXFajhnSMt2eiekl30h1qy1i30T6
-         AsUa8twbaAjzvT21dRHaYu2W3BTGKvkkQRSGBnxGyOtzI7QcUSEcuPEkQ7spBR5nBFh8
-         6cipjcQvTbdYihOZb9xFpR9MTS+po5v3hqgFY4EAckXeOy4oC9R84gVAnnYAzxBznt/W
-         wmebPIinsysxPhwkPK85tpfpBCl9gKQAyXJWkes3pYRKC0t+Zft5n1EusCaBdN9mkvTJ
-         6PyC6nVzySr4UNx6X0/183vGY186BTD1jb6PxK3l76B9fiDiEP9actBps1lsfjSlG+k/
-         Bg+g==
+        bh=qZCyvxSqtHZuTKU0YyR6pxILemoezqOlmpXqetBXKH4=;
+        b=BlzGsSGChFoHqRHyIoeGcynhhyi0mAbnxBCWbHt5h37j29mm6R6CL7+qQKyxovQF3b
+         ry6BSYxWAWRnaHHwfffgq2JijUAzr2KeMgsthhoPszprNY07VZF8FuCZLx1r9siFH/Uh
+         ihpyqQ0sNkaBcVd++7Ns8udda70xEVyh8T0QDQkqHAmjA50G/0lNJLbByhEHj7jVccYk
+         DiTvmnF6fwVXAfJzHc2srjpvsgSZOP3iXh75hA1FiEpkEPAYT5T8c4chBbEej1LTcRKD
+         zgtgqyQcY/khvx3jbJMOrtMkj6DZ91R6GB3LvbS4sP/TN4+JN6ieijHIZbUQaoyCKsAw
+         TzHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=susrZ/t6ndqXD8gtL1bPnnTkE0wp/sBtA8tijngjVXE=;
-        b=CVGZfC0UhOWS655Z49wTDgky3UNNjazTIbn5K1uwJ4m5R5cuq0V8NvE5FjcbvsnKTS
-         KyhRAaN2XUDj3QeSMmHYb69egoQcc/QtAhFTrKNV77P+SXs/RZoyrgOZX2QRYTe6ToWy
-         F4ajWJFTWNwIAWncHDLIYUBmPvhcMPfBw6mgzj1ez87OPeKV79DTSO30Mt06MXx6qY+Z
-         3oNk0jOt9EJZFcHXKTstQE4Z18XEWP6jPIMELhrM6+kecx5UIVFWWnyeWAw4dVIdlLgT
-         t1YvLd45YkqQBEenvNc+jxvZfMvpbjN/XrdBXx/yABM45+rL/lk8LpYdxwIjDYZuNgk9
-         dIbQ==
-X-Gm-Message-State: APjAAAVf3qbAyuMBPJpw1MYpXMsZ25lGC3d6oBrTPkhMq/Dh5jowKIi/
-        CO9iV7TEGa5UY9KyR8tz0tKq+A==
-X-Google-Smtp-Source: APXvYqzrsMkG/DCCra1JVb+pu5YvF6NnlYujwqN9NUsl/WAnu6hjaQ86nwM7JK+chN+zdgQ4iHYROQ==
-X-Received: by 2002:adf:b60a:: with SMTP id f10mr8879614wre.116.1555151600081;
-        Sat, 13 Apr 2019 03:33:20 -0700 (PDT)
+        bh=qZCyvxSqtHZuTKU0YyR6pxILemoezqOlmpXqetBXKH4=;
+        b=kHfZrf8cPVnVc7eDlgZ4dK6ALorfharJWGGthtesu835pFsuCfkvX9si9LRrDx7OCx
+         MjaD9NGijNeUjb5TftQrBzmp7w9A/JHTwrUMv+5b83lZrHwt/N2o32VGB25wmcTF74qn
+         SJ86KAL9hPxB9IcaOutRoduKZXlT1uGs3Oo0stIGArmJpYs1fP8LbAqqsrOZ424C7WOu
+         /4D3m8n4qoY945Lu3oKw7ukWesPIc8QBuCvOKYF/i9hohooCcxK6lAt2P9NWRPwolij8
+         xnzR2ho2W7DM+59HbftzFTAeyPfeghjrHX+NnyYw8Cn0/RMStyHEeJNR+rfKMbNypP8D
+         cTSQ==
+X-Gm-Message-State: APjAAAWWtebzzcS9YlVJYV3BYiPJKOMI//SJX0GEczyU6b87h+CF/ikX
+        1BoxQ2h2JbSsLF3JZeGaS1hMyQ==
+X-Google-Smtp-Source: APXvYqz5hohkS76jfEg4oqDz2sQjBYeJMy2TC72CmHoVVlfhuatUckA1bWiOIraup9gZXSmlVyrngw==
+X-Received: by 2002:a5d:458d:: with SMTP id p13mr40994123wrq.224.1555151598276;
+        Sat, 13 Apr 2019 03:33:18 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.19
+        by smtp.gmail.com with ESMTPSA id u17sm19547303wmu.36.2019.04.13.03.33.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 13 Apr 2019 03:33:19 -0700 (PDT)
+        Sat, 13 Apr 2019 03:33:17 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: [RESEND PATCH 12/20] nvmem: core: add nvmem_cell_read_u16
-Date:   Sat, 13 Apr 2019 11:32:57 +0100
-Message-Id: <20190413103305.9576-13-srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH 10/20] nvmem: Add driver for STM32 factory-programmed read only mem
+Date:   Sat, 13 Apr 2019 11:32:55 +0100
+Message-Id: <20190413103305.9576-11-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
 References: <20190413103305.9576-1-srinivas.kandagatla@linaro.org>
@@ -74,91 +74,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-Add nvmem_cell_read_u16() helper to ease read of an u16 value on consumer
-side. This is inspired by nvmem_cell_read_u32() function.
-This helper is useful on stm32 that has 16 bits data cells stored in non
-volatile memory.
+Add a read only nvmem driver for STM32 factory-programmed memory area
+(on-chip non-volatile storage).
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/core.c           | 37 ++++++++++++++++++++++++++++++++++
- include/linux/nvmem-consumer.h |  7 +++++++
- 2 files changed, 44 insertions(+)
+ drivers/nvmem/Kconfig       | 10 +++++
+ drivers/nvmem/Makefile      |  2 +
+ drivers/nvmem/stm32-romem.c | 78 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 90 insertions(+)
+ create mode 100644 drivers/nvmem/stm32-romem.c
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index f24008b66826..1d00f5671368 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -1334,6 +1334,43 @@ int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len)
- }
- EXPORT_SYMBOL_GPL(nvmem_cell_write);
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index 9e1d83643e9c..a90e9a1ebe55 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -113,6 +113,16 @@ config NVMEM_BCM_OCOTP
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called nvmem-bcm-ocotp.
  
-+/**
-+ * nvmem_cell_read_u16() - Read a cell value as an u16
++config NVMEM_STM32_ROMEM
++	tristate "STMicroelectronics STM32 factory-programmed memory support"
++	depends on ARCH_STM32 || COMPILE_TEST
++	help
++	  Say y here to enable read-only access for STMicroelectronics STM32
++	  factory-programmed memory area.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called nvmem-stm32-romem.
++
+ config NVMEM_SUNXI_SID
+ 	tristate "Allwinner SoCs SID support"
+ 	depends on ARCH_SUNXI
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 2ece8ffffdda..4c7ba12a7005 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -26,6 +26,8 @@ nvmem_qfprom-y			:= qfprom.o
+ obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
+ nvmem_rockchip_efuse-y		:= rockchip-efuse.o
+ obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
++nvmem_stm32_romem-y 		:= stm32-romem.o
++obj-$(CONFIG_NVMEM_STM32_ROMEM) += nvmem_stm32_romem.o
+ nvmem_sunxi_sid-y		:= sunxi_sid.o
+ obj-$(CONFIG_UNIPHIER_EFUSE)	+= nvmem-uniphier-efuse.o
+ nvmem-uniphier-efuse-y		:= uniphier-efuse.o
+diff --git a/drivers/nvmem/stm32-romem.c b/drivers/nvmem/stm32-romem.c
+new file mode 100644
+index 000000000000..07e98b53b391
+--- /dev/null
++++ b/drivers/nvmem/stm32-romem.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * STM32 Factory-programmed memory read access driver
 + *
-+ * @dev: Device that requests the nvmem cell.
-+ * @cell_id: Name of nvmem cell to read.
-+ * @val: pointer to output value.
-+ *
-+ * Return: 0 on success or negative errno.
++ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
++ * Author: Fabrice Gasnier <fabrice.gasnier@st.com> for STMicroelectronics.
 + */
-+int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *val)
++
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/of_device.h>
++
++struct stm32_romem_priv {
++	void __iomem *base;
++	struct nvmem_config cfg;
++};
++
++static int stm32_romem_read(void *context, unsigned int offset, void *buf,
++			    size_t bytes)
 +{
-+	struct nvmem_cell *cell;
-+	void *buf;
-+	size_t len;
++	struct stm32_romem_priv *priv = context;
++	u8 *buf8 = buf;
++	int i;
 +
-+	cell = nvmem_cell_get(dev, cell_id);
-+	if (IS_ERR(cell))
-+		return PTR_ERR(cell);
-+
-+	buf = nvmem_cell_read(cell, &len);
-+	if (IS_ERR(buf)) {
-+		nvmem_cell_put(cell);
-+		return PTR_ERR(buf);
-+	}
-+	if (len != sizeof(*val)) {
-+		kfree(buf);
-+		nvmem_cell_put(cell);
-+		return -EINVAL;
-+	}
-+	memcpy(val, buf, sizeof(*val));
-+	kfree(buf);
-+	nvmem_cell_put(cell);
++	for (i = offset; i < offset + bytes; i++)
++		*buf8++ = readb_relaxed(priv->base + i);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(nvmem_cell_read_u16);
 +
- /**
-  * nvmem_cell_read_u32() - Read a cell value as an u32
-  *
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 312bfa5efd80..8f8be5b00060 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -61,6 +61,7 @@ void nvmem_cell_put(struct nvmem_cell *cell);
- void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
- void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
- int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
-+int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *val);
- int nvmem_cell_read_u32(struct device *dev, const char *cell_id, u32 *val);
- 
- /* direct nvmem device read/write interface */
-@@ -122,6 +123,12 @@ static inline int nvmem_cell_write(struct nvmem_cell *cell,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int nvmem_cell_read_u16(struct device *dev,
-+				      const char *cell_id, u16 *val)
++static int stm32_romem_probe(struct platform_device *pdev)
 +{
-+	return -EOPNOTSUPP;
++	struct device *dev = &pdev->dev;
++	struct stm32_romem_priv *priv;
++	struct resource *res;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	priv->cfg.name = "stm32-romem";
++	priv->cfg.read_only = true;
++	priv->cfg.word_size = 1;
++	priv->cfg.stride = 1;
++	priv->cfg.size = resource_size(res);
++	priv->cfg.reg_read = stm32_romem_read;
++	priv->cfg.dev = dev;
++	priv->cfg.priv = priv;
++	priv->cfg.owner = THIS_MODULE;
++
++	return PTR_ERR_OR_ZERO(devm_nvmem_register(dev, &priv->cfg));
 +}
 +
- static inline int nvmem_cell_read_u32(struct device *dev,
- 				      const char *cell_id, u32 *val)
- {
++static const struct of_device_id stm32_romem_of_match[] = {
++	{ .compatible = "st,stm32f4-otp", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stm32_romem_of_match);
++
++static struct platform_driver stm32_romem_driver = {
++	.probe = stm32_romem_probe,
++	.driver = {
++		.name = "stm32-romem",
++		.of_match_table = of_match_ptr(stm32_romem_of_match),
++	},
++};
++module_platform_driver(stm32_romem_driver);
++
++MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
++MODULE_DESCRIPTION("STMicroelectronics STM32 RO-MEM");
++MODULE_ALIAS("platform:nvmem-stm32-romem");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
