@@ -4,90 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CB6C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D391C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86232218C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7532084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 07:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="an+ginnR"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="FZ1PSMDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDMHaQ (ORCPT
+        id S1727229AbfDMHaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 03:30:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41058 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfDMHaP (ORCPT
+        Sat, 13 Apr 2019 03:30:20 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44107 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfDMHaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 03:30:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so6190520pfd.8
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 00:30:14 -0700 (PDT)
+        Sat, 13 Apr 2019 03:30:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y13so6187359pfm.11
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 00:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=2Mygzz2I98mxvu5zJeBoQfPyaa6XVvE6Q0AyA7pm0VY=;
-        b=an+ginnRqrch6FcJJyBFqS43sRJv9esz/Ri62febck+sqJuSQhR6d6pjLgdQ9Xipak
-         +j8oF9cKz7WGct8IF8aU/9hpl20FccBsBAf785MfQO1KedpynTVAFGFUnkr0xkFLvaG7
-         rNjbjZIF6fmiKT4UNRC46geqr/3IPSukU4CkNWU/WqWeUTSQuxLhZd4xo5lN+yw61gh9
-         pUb3WFOCfm7VzndgvMiR7+3M4p9wRM8GkHJ9n07dmxhwQ1B8kyQTh/iNSaPRMP6Nwaei
-         r4M/82oNf0axXI//Mw5+GNio++V9gOo6MUMg2MYyy27f6EmHxISG+8BZUQvhKWPFTcjO
-         rsRg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=giBB1Ax8yawUBM/21xntSxct8s/aOn+EPzldC0qFaIE=;
+        b=FZ1PSMDXmkH6XgSVw+DmJDvchdSaKCgeohhjgH+D6K02mvDkvCGcBHzeXY6Yw6DrdV
+         CqAdu+3tzFja2PYgd2XzhBwS64c/D13LnI+MOixWRrbvnhhxQPKiFFO3N2bg+zr0RgrC
+         OHG5CbpVYBauAFFOJWiiTlsF5QsaNblIXORzZRWQI3Y87ApXwy5dzy7l60n/n+jO8ka/
+         GmoWOx8n67HwtzENxl3xjL7L0znMqUzipY/TQG23DHhUGiyMeNCXrEJIYdKjU9naaX0N
+         NAiZ3iUJTFaW8YzvOK3mXhSinYlEGyWyaYHq+skg0YxkSAvEG6AmCZ8loqffOfpKDic+
+         Q0fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2Mygzz2I98mxvu5zJeBoQfPyaa6XVvE6Q0AyA7pm0VY=;
-        b=Bvo2yuJTgKyp/Bw0tqSIqDFqjCa1sPT11IyiKN5/Saym4X6EAMftIj7mIKbD1gC8rF
-         TluEh+5qrKVKMSHLY4tigrqMvt4N0UwcwN9rbyQSG/3FB9UjI88KIxXfoAUnynZjNM1/
-         J4iAVgcyFzI8mRFq2TuVbv3dlcmJSb4b/zYhIq9Huxs7Dh4hl90v6CcBE7tEArgu678y
-         N2/f8tIvaUBqmBjTtbjy726rfZjghT3e0K/rAWc96lzRAJUkeJPKdKwQIu+aRzl3Jq/7
-         JEMF6Xg2+SBox4mWVzLotceLI+F2HhzpIQFnNVi7sA5jpq7MqEfBYVbH02i5hDSblxDQ
-         rSbQ==
-X-Gm-Message-State: APjAAAUzZCaPrkleGqwbtIx7hU1vR/Fb0rbG7C+UI6S4zPLeuEvLdH/j
-        M8/Mhj4XyMjMa4CNaSYhK13YNw==
-X-Google-Smtp-Source: APXvYqzgroXewGXzBjIq7gAYPdoGBweVuSy4Axt8Oj8PeDEzlyKLfY67HLEkB7lgKRHIYzYsfVJAxA==
-X-Received: by 2002:a62:4351:: with SMTP id q78mr63144271pfa.86.1555140613615;
-        Sat, 13 Apr 2019 00:30:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=giBB1Ax8yawUBM/21xntSxct8s/aOn+EPzldC0qFaIE=;
+        b=jmmd8/iP8xe7wiTRfb3cM9cZY5Joncaj2rcFIawgKM9sCqelOICKic09PftltZuaDj
+         jj3FvKLFZQ7YSlAMUuxnfXHdyr9Wqhk3JPATd+CLLBIE5WeZNNYGYTKjkjr9JvO100ut
+         5Sq4f3o3Iw20wGCTHk/GoteM2m6raWAe/suXTLup4JxAHlxlyopy2SRcdAighQ13CUMF
+         h1IlJ8uFFdKqjZ3kJO3xIlM97RYL/L4CrCMTNr7YmPpbRBCxmHMcJ3tQI1SHePW5gKAL
+         tQgXBMfPdkTh4WhQdu1RW8oqF5te7QBUmkTchYgRAsfiQuZuPc/mmvVESyeilf8PMYV9
+         CxSQ==
+X-Gm-Message-State: APjAAAXESBhCX8VbQr9dSK0Xx7tLfNHy1+QOKnewGLPJ8Vx0yX9pC1eA
+        8EPLGcl6s3JUlpSl4FLnAmZARg==
+X-Google-Smtp-Source: APXvYqzV7f/zD+ZCAxkuTJiuMR9Ldc+sXWnsgZvJc0LSWlP5qaWuyoNsC7ZOrQn4GjjdJGjgoNrjXg==
+X-Received: by 2002:a65:638f:: with SMTP id h15mr52821289pgv.147.1555140616357;
+        Sat, 13 Apr 2019 00:30:16 -0700 (PDT)
 Received: from localhost.localdomain (36-239-234-188.dynamic-ip.hinet.net. [36.239.234.188])
-        by smtp.gmail.com with ESMTPSA id q80sm84418286pfa.66.2019.04.13.00.30.10
+        by smtp.gmail.com with ESMTPSA id q80sm84418286pfa.66.2019.04.13.00.30.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 00:30:12 -0700 (PDT)
+        Sat, 13 Apr 2019 00:30:15 -0700 (PDT)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Cyril Chemparathy <cyril@ti.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 1/2] regulator: tps6524x: Constify regulator_ops
-Date:   Sat, 13 Apr 2019 15:30:01 +0800
-Message-Id: <20190413073002.764-1-axel.lin@ingics.com>
+Subject: [PATCH 2/2] regulator: tps6524x: Remove *rdev[N_REGULATORS] from struct tps6524x
+Date:   Sat, 13 Apr 2019 15:30:02 +0800
+Message-Id: <20190413073002.764-2-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190413073002.764-1-axel.lin@ingics.com>
+References: <20190413073002.764-1-axel.lin@ingics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regulator_ops is never changed, make it const.
+Current code is using devm_regulator_register() so we don't need to store
+*rdev for clean up, use a local variable instead.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/tps6524x-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/tps6524x-regulator.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/regulator/tps6524x-regulator.c b/drivers/regulator/tps6524x-regulator.c
-index 67cac2682f50..c09223c34dbf 100644
+index c09223c34dbf..740aeccdfb1f 100644
 --- a/drivers/regulator/tps6524x-regulator.c
 +++ b/drivers/regulator/tps6524x-regulator.c
-@@ -565,7 +565,7 @@ static int is_supply_enabled(struct regulator_dev *rdev)
- 	return read_field(hw, &info->enable);
- }
+@@ -137,7 +137,6 @@ struct tps6524x {
+ 	struct spi_device	*spi;
+ 	struct mutex		lock;
+ 	struct regulator_desc	desc[N_REGULATORS];
+-	struct regulator_dev	*rdev[N_REGULATORS];
+ };
  
--static struct regulator_ops regulator_ops = {
-+static const struct regulator_ops regulator_ops = {
- 	.is_enabled		= is_supply_enabled,
- 	.enable			= enable_supply,
- 	.disable		= disable_supply,
+ static int __read_reg(struct tps6524x *hw, int reg)
+@@ -584,6 +583,7 @@ static int pmic_probe(struct spi_device *spi)
+ 	const struct supply_info *info = supply_info;
+ 	struct regulator_init_data *init_data;
+ 	struct regulator_config config = { };
++	struct regulator_dev *rdev;
+ 	int i;
+ 
+ 	init_data = dev_get_platdata(dev);
+@@ -616,10 +616,9 @@ static int pmic_probe(struct spi_device *spi)
+ 		config.init_data = init_data;
+ 		config.driver_data = hw;
+ 
+-		hw->rdev[i] = devm_regulator_register(dev, &hw->desc[i],
+-						      &config);
+-		if (IS_ERR(hw->rdev[i]))
+-			return PTR_ERR(hw->rdev[i]);
++		rdev = devm_regulator_register(dev, &hw->desc[i], &config);
++		if (IS_ERR(rdev))
++			return PTR_ERR(rdev);
+ 	}
+ 
+ 	return 0;
 -- 
 2.17.1
 
