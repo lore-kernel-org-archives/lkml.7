@@ -2,126 +2,185 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6AEC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43272C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0192084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198F02084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfDMUuF (ORCPT
+        id S1727271AbfDMUuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:50:05 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37502 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfDMUuE (ORCPT
+        Sat, 13 Apr 2019 16:50:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36507 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfDMUuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:50:04 -0400
-Received: by mail-vs1-f67.google.com with SMTP id w13so7472201vsc.4;
-        Sat, 13 Apr 2019 13:50:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ognk4lz2NDKt1DvD/X12198HfbOIyneoWr847fqKsa4=;
-        b=tc+SgH3ATadYvtrtwOke3t9Weqt9+S5mLibnW/5yMTw7OZ8BPiZOLezVasDIlqzC6K
-         UhD1+88Mk5sEyrYag/nbOc1jJgL1TEcOMxgHQckPsn67dfJGsL0WYcPXpRkLupXmrCJg
-         +6TxAI9LLuBVijxd0m1Ta9RXjtLxiUWIVjNf1x1UC1lm2p4uOQ/MVKwiya+ADuMAhuWN
-         D+EAZ/zVFCfxeb5rpdE3egicvshcPjvwTOLOfYH/HUNenhLiynqKr3CVvLV+HWmBP1MB
-         Yo74Ox4fBs37uRQoAC7xWjVhj+6IaG3Rnuchd2Hit47sDrKPlWcY1gmjbVEK0iZ3dSu3
-         DrSw==
-X-Gm-Message-State: APjAAAXyfwzt1BIIIYydB3Th3nQ4kOXOZ8klhkdaKWHOgsB5DzKmL1NZ
-        DkevxzY01Gaa7/GLef9d3qw=
-X-Google-Smtp-Source: APXvYqyE83rpWGWIspg780ZXV/3dapuFKEimq8/6hxGQtN2KDEqruWA/Ie0RDTlktnOylAfOfM68ww==
-X-Received: by 2002:a67:c498:: with SMTP id d24mr16090328vsk.182.1555188602527;
-        Sat, 13 Apr 2019 13:50:02 -0700 (PDT)
-Received: from localhost.localdomain ([201.240.145.139])
-        by smtp.gmail.com with ESMTPSA id b197sm54074242vkd.9.2019.04.13.13.50.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 13:50:01 -0700 (PDT)
-From:   Shawn Landden <shawn@git.icu>
-Cc:     linux-api@vger.kernel, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shawn Landden <shawn@git.icu>,
-        linux-api@vger.kernel.org
-Subject: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
-Date:   Sat, 13 Apr 2019 15:49:47 -0500
-Message-Id: <20190413204947.9394-1-shawn@git.icu>
-X-Mailer: git-send-email 2.20.1
+        Sat, 13 Apr 2019 16:50:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKnOdg2265328
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sat, 13 Apr 2019 13:49:24 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKnNsQ2265325;
+        Sat, 13 Apr 2019 13:49:23 -0700
+Date:   Sat, 13 Apr 2019 13:49:23 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e@git.kernel.org>
+Cc:     Jason@zx2c4.com, mingo@redhat.com, tglx@linutronix.de,
+        pbonzini@redhat.com, dave.hansen@intel.com, rkrcmar@redhat.com,
+        riel@surriel.com, bp@suse.de, jannh@google.com,
+        kvm@vger.kernel.org, bigeasy@linutronix.de, mingo@kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org, luto@kernel.org,
+        hpa@zytor.com
+Reply-To: jannh@google.com, riel@surriel.com, bp@suse.de,
+          pbonzini@redhat.com, dave.hansen@intel.com, rkrcmar@redhat.com,
+          Jason@zx2c4.com, mingo@redhat.com, tglx@linutronix.de,
+          hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+          mingo@kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+          bigeasy@linutronix.de
+In-Reply-To: <20190403164156.19645-6-bigeasy@linutronix.de>
+References: <20190403164156.19645-6-bigeasy@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/fpu] x86/fpu: Remove fpu->initialized usage in
+ copy_fpstate_to_sigframe()
+Git-Commit-ID: fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If flags includes COPY_FILE_RANGE_FILESIZE then the length
-copied is the length of the file. off_in and off_out are
-ignored. len must be 0 or the file size.
+Commit-ID:  fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
+Gitweb:     https://git.kernel.org/tip/fbcc9e0c37ba3186c41b5eb1aee2f7f3b711bc1e
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Wed, 3 Apr 2019 18:41:34 +0200
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Tue, 9 Apr 2019 20:48:11 +0200
 
-This implementation saves a call to stat() in the common case
-of copying files. It does not fix any race conditions, but that
-is possible in the future with this interface.
+x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
 
-EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
-or the file size.
+With lazy-FPU support the (now named variable) ->initialized was set to
+true if the CPU's FPU registers were holding a valid state of the
+FPU registers for the active process. If it was set to false then the
+FPU state was saved in fpu->state and the FPU was deactivated.
 
-Signed-off-by: Shawn Landden <shawn@git.icu>
-CC: <linux-api@vger.kernel.org>
+With lazy-FPU gone, ->initialized is always true for user threads and
+kernel threads never call this function so ->initialized is always true
+in copy_fpstate_to_sigframe().
+
+The using_compacted_format() check is also a leftover from the lazy-FPU
+time. In the
+
+  ->initialized == false
+
+case copy_to_user() would copy the compacted buffer while userland would
+expect the non-compacted format instead. So in order to save the FPU
+state in the non-compacted form it issues XSAVE to save the *current*
+FPU state.
+
+If the FPU is not enabled, the attempt raises the FPU trap, the trap
+restores the FPU contents and re-enables the FPU and XSAVE is invoked
+again and succeeds.
+
+*This* does not longer work since commit
+
+  bef8b6da9522 ("x86/fpu: Handle #NM without FPU emulation as an error")
+
+Remove the check for ->initialized because it is always true and remove
+the false condition. Update the comment to reflect that the state is
+always live.
+
+ [ bp: Massage. ]
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: kvm ML <kvm@vger.kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190403164156.19645-6-bigeasy@linutronix.de
 ---
- fs/read_write.c           | 14 +++++++++++++-
- include/uapi/linux/stat.h |  4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ arch/x86/kernel/fpu/signal.c | 35 ++++++++---------------------------
+ 1 file changed, 8 insertions(+), 27 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 61b43ad7608e..6d06361f0856 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_out = file_inode(file_out);
- 	ssize_t ret;
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 7296a9bb78e7..c1a5999affa0 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -144,9 +144,8 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+  *	buf == buf_fx for 64-bit frames and 32-bit fsave frame.
+  *	buf != buf_fx for 32-bit frames with fxstate.
+  *
+- * If the fpu, extended register state is live, save the state directly
+- * to the user frame pointed by the aligned pointer 'buf_fx'. Otherwise,
+- * copy the thread's fpu state to the user frame starting at 'buf_fx'.
++ * Save the state directly to the user frame pointed by the aligned pointer
++ * 'buf_fx'.
+  *
+  * If this is a 32-bit frame with fxstate, put a fsave header before
+  * the aligned state at 'buf_fx'.
+@@ -157,7 +156,6 @@ static inline int copy_fpregs_to_sigframe(struct xregs_state __user *buf)
+ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ {
+ 	struct fpu *fpu = &current->thread.fpu;
+-	struct xregs_state *xsave = &fpu->state.xsave;
+ 	struct task_struct *tsk = current;
+ 	int ia32_fxstate = (buf != buf_fx);
  
--	if (flags != 0)
-+	if ((flags & ~COPY_FILE_RANGE_FILESIZE) != 0)
- 		return -EINVAL;
+@@ -172,29 +170,12 @@ int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+ 			sizeof(struct user_i387_ia32_struct), NULL,
+ 			(struct _fpstate_32 __user *) buf) ? -1 : 1;
  
- 	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
-@@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
- 		return -EINVAL;
+-	if (fpu->initialized || using_compacted_format()) {
+-		/* Save the live register state to the user directly. */
+-		if (copy_fpregs_to_sigframe(buf_fx))
+-			return -1;
+-		/* Update the thread's fxstate to save the fsave header. */
+-		if (ia32_fxstate)
+-			copy_fxregs_to_kernel(fpu);
+-	} else {
+-		/*
+-		 * It is a *bug* if kernel uses compacted-format for xsave
+-		 * area and we copy it out directly to a signal frame. It
+-		 * should have been handled above by saving the registers
+-		 * directly.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_XSAVES)) {
+-			WARN_ONCE(1, "x86/fpu: saving compacted-format xsave area to a signal frame!\n");
+-			return -1;
+-		}
+-
+-		fpstate_sanitize_xstate(fpu);
+-		if (__copy_to_user(buf_fx, xsave, fpu_user_xstate_size))
+-			return -1;
+-	}
++	/* Save the live registers state to the user frame directly. */
++	if (copy_fpregs_to_sigframe(buf_fx))
++		return -1;
++	/* Update the thread's fxstate to save the fsave header. */
++	if (ia32_fxstate)
++		copy_fxregs_to_kernel(fpu);
  
-+	if (flags & COPY_FILE_RANGE_FILESIZE) {
-+		struct kstat stat;
-+		int error;
-+		error = vfs_getattr(&file_in->f_path, &stat,
-+				    STATX_SIZE, 0);
-+		if (error < 0)
-+			return error;
-+		if (!(len == 0 || len == stat.size))
-+			return -EAGAIN;
-+		len = stat.size;
-+	}
-+
- 	ret = rw_verify_area(READ, file_in, &pos_in, len);
- 	if (unlikely(ret))
- 		return ret;
-diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-index 7b35e98d3c58..1075aa4666ef 100644
---- a/include/uapi/linux/stat.h
-+++ b/include/uapi/linux/stat.h
-@@ -170,5 +170,9 @@ struct statx {
- 
- #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
- 
-+/*
-+ * Flags for copy_file_range()
-+ */
-+#define COPY_FILE_RANGE_FILESIZE	0x00000001 /* Copy the full length of the input file */
- 
- #endif /* _UAPI_LINUX_STAT_H */
--- 
-2.20.1
-
+ 	/* Save the fsave header for the 32-bit frames. */
+ 	if ((ia32_fxstate || !use_fxsr()) && save_fsave_header(tsk, buf))
