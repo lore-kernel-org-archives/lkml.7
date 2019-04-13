@@ -2,75 +2,87 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6361FC282CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09012C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD5620869
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3592070D
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 13:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lnPbytdx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="eldfW6Dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDMNF6 (ORCPT
+        id S1727154AbfDMNG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 09:05:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40552 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfDMNF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 09:05:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so6420585plr.7
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 06:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2TaDZeyLwhStai5T9LlXtDxV7uzqf8jNMkPgvrLw7Y4=;
-        b=lnPbytdx/SP2fISLBimVzJZNDdE2C9WLskSI340PE+gCihO966ADogDdWT++mTxY31
-         XrsBpnLV+WR84PcIwyxXBNTyso29BliUuUsPivrC3ZoSxwUF1x6wDyA/38lnRUC0F7xe
-         L/3FlIZ24gEOG4qu4GLF2gSSxlb1LXNmTLXm2C1QZYMXik7lFqhBrKdQZ5YQsLSbrxHh
-         HvoMAqldEXXVsLqrDDptINiRZJNUf8K4+/TmuHkKrYzqq2bFlbKGV1igANuC/x31jCMY
-         rTzkDFgOeEKwxujHmXsBGrnS0T/p85/ttymvoGBTGgRl/aPgmMuxEqRpTki1PuPUphML
-         8euA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2TaDZeyLwhStai5T9LlXtDxV7uzqf8jNMkPgvrLw7Y4=;
-        b=lJX+OVdfLcK1sTayo8aUW9Mo004wdnFGlJ8OAeO4NQZxEgCLXsbRbJtoAjciCPgH3r
-         RxzTL9K7HPsh7INQWVufbLmjRYbojtZ3Z5LaNaJx4srlhlAtEsxKmMpr3wUD3j5z4DmP
-         l1OUZ1nY7KQbCj/hH7aEZV7gVdNclJY+qx3PsIl5FF7eqqOxNS7PhlFHnZ6QBQonMMWk
-         mnHP1Ln5HH77WaIsjDb+fvt3u9ri+W/QOFLDnD4VH1qhRjJ30SL7mD9MxSNfQ/cUo8Xm
-         JzXQgx6T51HVoZ4SEwEfBjx8wDTYYa1Pv7VicGgQoRu39mQm1wsWhCn3d3WqJMlHAXpV
-         FdmA==
-X-Gm-Message-State: APjAAAWyzaEWMulmiXjBfSDJTcDisM6XZWkxYDoiNACCdXhXT8/RkpAL
-        8+0CdreNOCysP02L/UCOFN/wbA==
-X-Google-Smtp-Source: APXvYqz4iSZMouFVdSablzLHEPnvUu1ELlNjulLQ9SLK/vBiskh1qdFicklb/YrhANa4GY9JFI3nOg==
-X-Received: by 2002:a17:902:3283:: with SMTP id z3mr7031127plb.281.1555160757763;
-        Sat, 13 Apr 2019 06:05:57 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id e13sm67182704pgb.37.2019.04.13.06.05.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 06:05:56 -0700 (PDT)
-Subject: Re: [PATCH] block, Kconfig.iosched: set default value of IOSCHED_BFQ
- to yes
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, Anders Roxell <anders.roxell@linaro.org>
-References: <20190413091626.20286-1-paolo.valente@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <802d43e0-1954-ddb8-9da6-973742e1bfb6@kernel.dk>
-Date:   Sat, 13 Apr 2019 07:05:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 13 Apr 2019 09:06:58 -0400
+Received: from nbd.name ([46.4.11.11]:59018 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbfDMNG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 09:06:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qr6cHkY9JEuLSsUMKgBlqIfxqu4G93W4ly6TZ45cmzw=; b=eldfW6DtO1//HTsFI0XQTBjmCn
+        1Tq69cEKBRnGJ+CtZ7chj9BufrvtfLo6wgr+CpcxwIFX8CvRC1rh3MZMfQtNB9FDvOCMHCR5MZPGJ
+        BOaRtgi+egYOHGJrYsVh075dIKBuFhvW3oVR9XbnZYR2KYUtJnkXnryL5HEO3BWJ4g6Q=;
+Received: from p4ff13bac.dip0.t-ipconnect.de ([79.241.59.172] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1hFIMq-0004RU-Vp; Sat, 13 Apr 2019 15:06:50 +0200
+Subject: Re: [PATCH v3 1/4] mt76: add mac80211 driver for MT7615 PCIe-based
+ chipsets
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
+        Rorscha Yang <rorscha.yang@mediatek.com>,
+        Kyle Lee <kyle.lee@mediatek.com>,
+        Miller Shen <miller.shen@mediatek.com>,
+        Haipin Liang <haipin.liang@mediatek.com>,
+        KL Huang <kl.huang@mediatek.com>,
+        YH chen <yh.chen@mediatek.com>, linux-wireless@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo@kernel.org>
+References: <cover.1554102584.git.ryder.lee@mediatek.com>
+ <4e974271e93b719e0463aa0269b4b970cc2b267f.1554102584.git.ryder.lee@mediatek.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <1d8ef32e-32ef-d3f9-2b49-5dfcbc04990f@nbd.name>
+Date:   Sat, 13 Apr 2019 15:06:47 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190413091626.20286-1-paolo.valente@linaro.org>
+In-Reply-To: <4e974271e93b719e0463aa0269b4b970cc2b267f.1554102584.git.ryder.lee@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,21 +91,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/19 3:16 AM, Paolo Valente wrote:
-> When I added bfq to Kconfig.iosched, I forgot to add the line that
-> sets to yes the default value of IOSCHED_BFQ, as it is the case for
-> the other two I/O schedulers. Such a piece of information is used by
-> popular build systems, when making kernel configs automatically. So,
-> the lack of this line for bfq makes it hard and confusing to have bfq
-> in the kernel generated by these systems.
+On 2019-04-01 09:16, Ryder Lee wrote:
+> This driver is for a newer generation of MediaTek MT7615 4x4 802.11ac
+> PCIe-based chipsets, which support wave2 MU-MIMO up to 4 users/group
+> and also support up to 160MHz bandwidth.
 > 
-> This commit adds this missing line.
+> The driver fully supports AP, station and monitor mode.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Roy Luo <royluo@google.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>I'll fold in the following missing bit when I apply this patch.
 
-This only makes sense to do for newly introduced symbols. Apart from
-that, we should not default to 'y' (or 'm' for that matter) what isn't
-strictly needed. Looking at the io schedulers, kyber shouldn't have had
-that added.
+- Felix
 
--- 
-Jens Axboe
+---
+--- a/mt76.h
++++ b/mt76.h
+@@ -69,6 +69,7 @@ enum mt76_txq_id {
+ 	MT_TXQ_MCU,
+ 	MT_TXQ_BEACON,
+ 	MT_TXQ_CAB,
++	MT_TXQ_FWDL,
+ 	__MT_TXQ_MAX
+ };
+
 
