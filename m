@@ -2,147 +2,273 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB354C10F14
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A6C10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E6F214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15E2214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 17:24:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="M+aIDgBl";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Df58U1Km"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfDMRYp (ORCPT
+        id S1728666AbfDMRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 13 Apr 2019 13:24:48 -0400
+Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:4245 "EHLO
+        mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728634AbfDMRYp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 13 Apr 2019 13:24:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57004 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfDMRXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 13:23:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0CB6E87627;
-        Sat, 13 Apr 2019 17:23:55 +0000 (UTC)
-Received: from llong.com (ovpn-120-133.rdu2.redhat.com [10.10.120.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCB1B5D9C6;
-        Sat, 13 Apr 2019 17:23:53 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v4 09/16] locking/rwsem: Ensure an RT task will not spin on reader
-Date:   Sat, 13 Apr 2019 13:22:52 -0400
-Message-Id: <20190413172259.2740-10-longman@redhat.com>
-In-Reply-To: <20190413172259.2740-1-longman@redhat.com>
-References: <20190413172259.2740-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 13 Apr 2019 17:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=x0EtT+J5wWb+ZtJOdzWhHvTPnq3gOr8wqlzDcKgYIHc=;
+ b=M+aIDgBlTZfjjveium1rmWMYQpDT5Vt0DJINLVrOu7EzxYh9KIstiMj83P+t0GsHw2hjE/5Faq0C
+   +QjmBnDHFAeFpu1tDZO4PLcWVD3dMZB1GG6KgMiNS8CO/pHE8TbSj9qxrQIxQoN+n+FkeAcdWOFs
+   molR2BVbRblcKl2cgM0=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hm8dlo1jvmg4 for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 16:54:58 +0000 (envelope-from <bounce-md_31050260.5cb21462.v1-5812b76717be479c9ee26a57a5c6323c@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555174498; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=x0EtT+J5wWb+ZtJOdzWhHvTPnq3gOr8wqlzDcKgYIHc=; 
+ b=Df58U1KmARDYLy7edogUEpu6zpSnkkjOaOL6IU9aJIFwy2VkQBbPfmEgaA5fzz27ZS3dAa
+ o/b4DzWf+az8t9OInh4eZvfxNawuycfuHY+nq9EqVMJI//NnDzVeljbYz9FDhMWw8q8XrwSU
+ 3d7fnP4KcDr86KXd81kcJBi6XFpkY=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH 1/2] vfs: pass ppos=NULL to .read()/.write() of FMODE_STREAM files
+Received: from [87.98.221.171] by mandrillapp.com id 5812b76717be479c9ee26a57a5c6323c; Sat, 13 Apr 2019 16:54:58 +0000
+X-Mailer: git-send-email 2.21.0.593.g511ec345e1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-Id: <20190413165449.11168-1-kirr@nexedi.com>
+In-Reply-To: <20190413165116.GB10314@deco.navytux.spb.ru>
+References: 
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.5812b76717be479c9ee26a57a5c6323c
+X-Mandrill-User: md_31050260
+Date:   Sat, 13 Apr 2019 16:54:58 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An RT task can do optimistic spinning only if the lock holder is
-actually running. If the state of the lock holder isn't known, there
-is a possibility that high priority of the RT task may block forward
-progress of the lock holder if it happens to reside on the same CPU.
-This will lead to deadlock. So we have to make sure that an RT task
-will not spin on a reader-owned rwsem.
+This amends commit 10dce8af3422 ("fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock") in how position is passed into .read()/.write() handler for
+stream-like files:
 
-When the owner is temporarily set to NULL, it is more tricky to decide
-if an RT task should stop spinning as it may be a temporary state
-where another writer may have just stolen the lock which then failed
-the task's trylock attempt. So one more retry is allowed to make sure
-that the lock is not spinnable by an RT task.
+Rasmus noticed that we currently pass 0 as position and ignore any position
+change if that is done by a file implementation. This papers over bugs if ppos
+is used in files that declare themselves as being stream-like as such bugs will
+go unnoticed. Even if a file implementation is correctly converted into using
+stream_open, its read/write later could be changed to use ppos and even though
+that won't be working correctly, that bug might go unnoticed without someone
+doing wrong behaviour analysis. It is thus better to pass ppos=NULL into
+read/write for stream-like files as that don't give any chance for ppos usage
+bugs because it will oops if ppos is ever used inside .read() or .write().
 
-When testing on a 8-socket IvyBridge-EX system, the one additional retry
-seems to improve locking performance of RT write locking threads under
-heavy contentions. The table below shows the locking rates (in kops/s)
-with various write locking threads before and after the patch.
+Note 1: rw_verify_area, new_sync_{read,write} needs to be updated
+because they are called by vfs_read/vfs_write & friends before
+file_operations .read/.write .
 
-    Locking threads     Pre-patch     Post-patch
-    ---------------     ---------     -----------
-            4             2,753          2,608
-            8             2,529          2,520
-           16             1,727          1,918
-           32             1,263          1,956
-           64               889          1,343
+Note 2: if file backend uses new-style .read_iter/.write_iter, position
+is still passed into there as non-pointer kiocb.ki_pos . Currently
+stream_open.cocci (semantic patch added by 10dce8af3422) ignores files
+whose file_operations has *_iter methods.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
 ---
- kernel/locking/rwsem.c | 36 +++++++++++++++++++++++++++++-------
- 1 file changed, 29 insertions(+), 7 deletions(-)
+ fs/open.c       |  5 ++--
+ fs/read_write.c | 75 +++++++++++++++++++++++++++++--------------------
+ 2 files changed, 47 insertions(+), 33 deletions(-)
 
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 2d6850c3e77b..8e19b5141595 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -539,6 +539,8 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
- static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+diff --git a/fs/open.c b/fs/open.c
+index a00350018a47..9c7d724a6f67 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1219,8 +1219,9 @@ EXPORT_SYMBOL(nonseekable_open);
+ /*
+  * stream_open is used by subsystems that want stream-like file descriptors.
+  * Such file descriptors are not seekable and don't have notion of position
+- * (file.f_pos is always 0). Contrary to file descriptors of other regular
+- * files, .read() and .write() can run simultaneously.
++ * (file.f_pos is always 0 and ppos passed to .read()/.write() is always NULL).
++ * Contrary to file descriptors of other regular files, .read() and .write()
++ * can run simultaneously.
+  *
+  * stream_open never fails and is marked to return int so that it could be
+  * directly used as file_operations.open .
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 61b43ad7608e..d62556be6848 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -371,7 +371,7 @@ int rw_verify_area(int read_write, struct file *file, const loff_t *ppos, size_t
+ 	inode = file_inode(file);
+ 	if (unlikely((ssize_t) count < 0))
+ 		return retval;
+-	pos = *ppos;
++	pos = (ppos ? *ppos : 0);
+ 	if (unlikely(pos < 0)) {
+ 		if (!unsigned_offsets(file))
+ 			return retval;
+@@ -400,12 +400,13 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
+ 	ssize_t ret;
+ 
+ 	init_sync_kiocb(&kiocb, filp);
+-	kiocb.ki_pos = *ppos;
++	kiocb.ki_pos = (ppos ? *ppos : 0);
+ 	iov_iter_init(&iter, READ, &iov, 1, len);
+ 
+ 	ret = call_read_iter(filp, &kiocb, &iter);
+ 	BUG_ON(ret == -EIOCBQUEUED);
+-	*ppos = kiocb.ki_pos;
++	if (ppos)
++		*ppos = kiocb.ki_pos;
+ 	return ret;
+ }
+ 
+@@ -468,12 +469,12 @@ static ssize_t new_sync_write(struct file *filp, const char __user *buf, size_t
+ 	ssize_t ret;
+ 
+ 	init_sync_kiocb(&kiocb, filp);
+-	kiocb.ki_pos = *ppos;
++	kiocb.ki_pos = (ppos ? *ppos : 0);
+ 	iov_iter_init(&iter, WRITE, &iov, 1, len);
+ 
+ 	ret = call_write_iter(filp, &kiocb, &iter);
+ 	BUG_ON(ret == -EIOCBQUEUED);
+-	if (ret > 0)
++	if (ret > 0 && ppos)
+ 		*ppos = kiocb.ki_pos;
+ 	return ret;
+ }
+@@ -558,15 +559,10 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
+ 	return ret;
+ }
+ 
+-static inline loff_t file_pos_read(struct file *file)
+-{
+-	return file->f_mode & FMODE_STREAM ? 0 : file->f_pos;
+-}
+-
+-static inline void file_pos_write(struct file *file, loff_t pos)
++/* file_ppos returns &file->f_pos or NULL if file is stream */
++static inline loff_t *file_ppos(struct file *file)
  {
- 	bool taken = false;
-+	bool is_rt_task = rt_task(current);
-+	int prev_owner_state = OWNER_NULL;
+-	if ((file->f_mode & FMODE_STREAM) == 0)
+-		file->f_pos = pos;
++	return file->f_mode & FMODE_STREAM ? NULL : &file->f_pos;
+ }
  
- 	preempt_disable();
+ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
+@@ -575,10 +571,14 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
+ 	ssize_t ret = -EBADF;
  
-@@ -556,7 +558,12 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 	 *  2) readers own the lock as we can't determine if they are
- 	 *     actively running or not.
- 	 */
--	while (rwsem_spin_on_owner(sem) & OWNER_SPINNABLE) {
-+	for (;;) {
-+		enum owner_state owner_state = rwsem_spin_on_owner(sem);
-+
-+		if (!(owner_state & OWNER_SPINNABLE))
-+			break;
-+
- 		/*
- 		 * Try to acquire the lock
- 		 */
-@@ -566,13 +573,28 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 		}
- 
- 		/*
--		 * When there's no owner, we might have preempted between the
--		 * owner acquiring the lock and setting the owner field. If
--		 * we're an RT task that will live-lock because we won't let
--		 * the owner complete.
-+		 * An RT task cannot do optimistic spinning if it cannot
-+		 * be sure the lock holder is running or live-lock may
-+		 * happen if the current task and the lock holder happen
-+		 * to run in the same CPU.
-+		 *
-+		 * When there's no owner or is reader-owned, an RT task
-+		 * will stop spinning if the owner state is not a writer
-+		 * at the previous iteration of the loop. This allows the
-+		 * RT task to recheck if the task that steals the lock is
-+		 * a spinnable writer. If so, it can keeps on spinning.
-+		 *
-+		 * If the owner is a writer, the need_resched() check is
-+		 * done inside rwsem_spin_on_owner(). If the owner is not
-+		 * a writer, need_resched() check needs to be done here.
- 		 */
--		if (!sem->owner && (need_resched() || rt_task(current)))
--			break;
-+		if (owner_state != OWNER_WRITER) {
-+			if (need_resched())
-+				break;
-+			if (is_rt_task && (prev_owner_state != OWNER_WRITER))
-+				break;
+ 	if (f.file) {
+-		loff_t pos = file_pos_read(f.file);
+-		ret = vfs_read(f.file, buf, count, &pos);
+-		if (ret >= 0)
+-			file_pos_write(f.file, pos);
++		loff_t pos, *ppos = file_ppos(f.file);
++		if (ppos) {
++			pos = *ppos;
++			ppos = &pos;
 +		}
-+		prev_owner_state = owner_state;
++		ret = vfs_read(f.file, buf, count, ppos);
++		if (ret >= 0 && ppos)
++			f.file->f_pos = pos;
+ 		fdput_pos(f);
+ 	}
+ 	return ret;
+@@ -595,10 +595,14 @@ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count)
+ 	ssize_t ret = -EBADF;
  
- 		/*
- 		 * The cpu_relax() call is a compiler barrier which forces
+ 	if (f.file) {
+-		loff_t pos = file_pos_read(f.file);
+-		ret = vfs_write(f.file, buf, count, &pos);
+-		if (ret >= 0)
+-			file_pos_write(f.file, pos);
++		loff_t pos, *ppos = file_ppos(f.file);
++		if (ppos) {
++			pos = *ppos;
++			ppos = &pos;
++		}
++		ret = vfs_write(f.file, buf, count, ppos);
++		if (ret >= 0 && ppos)
++			f.file->f_pos = pos;
+ 		fdput_pos(f);
+ 	}
+ 
+@@ -673,14 +677,15 @@ static ssize_t do_iter_readv_writev(struct file *filp, struct iov_iter *iter,
+ 	ret = kiocb_set_rw_flags(&kiocb, flags);
+ 	if (ret)
+ 		return ret;
+-	kiocb.ki_pos = *ppos;
++	kiocb.ki_pos = (ppos ? *ppos : 0);
+ 
+ 	if (type == READ)
+ 		ret = call_read_iter(filp, &kiocb, iter);
+ 	else
+ 		ret = call_write_iter(filp, &kiocb, iter);
+ 	BUG_ON(ret == -EIOCBQUEUED);
+-	*ppos = kiocb.ki_pos;
++	if (ppos)
++		*ppos = kiocb.ki_pos;
+ 	return ret;
+ }
+ 
+@@ -1013,10 +1018,14 @@ static ssize_t do_readv(unsigned long fd, const struct iovec __user *vec,
+ 	ssize_t ret = -EBADF;
+ 
+ 	if (f.file) {
+-		loff_t pos = file_pos_read(f.file);
+-		ret = vfs_readv(f.file, vec, vlen, &pos, flags);
+-		if (ret >= 0)
+-			file_pos_write(f.file, pos);
++		loff_t pos, *ppos = file_ppos(f.file);
++		if (ppos) {
++			pos = *ppos;
++			ppos = &pos;
++		}
++		ret = vfs_readv(f.file, vec, vlen, ppos, flags);
++		if (ret >= 0 && ppos)
++			f.file->f_pos = pos;
+ 		fdput_pos(f);
+ 	}
+ 
+@@ -1033,10 +1042,14 @@ static ssize_t do_writev(unsigned long fd, const struct iovec __user *vec,
+ 	ssize_t ret = -EBADF;
+ 
+ 	if (f.file) {
+-		loff_t pos = file_pos_read(f.file);
+-		ret = vfs_writev(f.file, vec, vlen, &pos, flags);
+-		if (ret >= 0)
+-			file_pos_write(f.file, pos);
++		loff_t pos, *ppos = file_ppos(f.file);
++		if (ppos) {
++			pos = *ppos;
++			ppos = &pos;
++		}
++		ret = vfs_writev(f.file, vec, vlen, ppos, flags);
++		if (ret >= 0 && ppos)
++			f.file->f_pos = pos;
+ 		fdput_pos(f);
+ 	}
+ 
 -- 
-2.18.1
-
+2.21.0.593.g511ec345e1
