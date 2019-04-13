@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33CDC10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9E7C282CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06DD21721
+	by mail.kernel.org (Postfix) with ESMTP id DD47B218AF
 	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 16:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Luudy5lA"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="r6QxrJ3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfDMQgk (ORCPT
+        id S1727278AbfDMQgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 12:36:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43518 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbfDMQgk (ORCPT
+        Sat, 13 Apr 2019 12:36:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38997 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbfDMQgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 12:36:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k17so11260953wrx.10
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 09:36:39 -0700 (PDT)
+        Sat, 13 Apr 2019 12:36:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so14550793wmk.4
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 09:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9AocJvaLHJoa4iYjdAkrd1jMBEY1Q6G0BQqKP8Q3BgM=;
-        b=Luudy5lA0Jr2vYj0t56JgKfgDY00UwatGRG1UI1cDJ7n7e8/X1uBfG6YcApvWFVo8V
-         2ZwDGVUicsELiTeIADUWV4D4RilQT0Wv3oZs4yV1IikKqgYq3xjyG3ltNM1Tp4knqaIg
-         XLZLpLLwhjwK1DjjR81w8qcAFYd/e88AfNu1ZgLDg55BnHP3oFBCu+VfsvAasSOr0djK
-         wacAUzg5quJDb3+xJuoSNhYEA47Fj5WkeH4/+rso/yMsKqwFNgUShA60SnnVOfgTKmu2
-         Aa/fDBjOREhr/G4zFfhnCCp/CBOlQChEwJuuHILUPMAi7qF/MjwUJ9CilFUo1AmY59jT
-         tjgg==
+        bh=kBXO1uZlskj4auakSoYtNTreOLcLzWrlcJFWLgQwR7A=;
+        b=r6QxrJ3RXltfeqSjUG/3ikq36RJSQtldcfRD+Sf4NCMbkal3+xTwF2uWL6bGX4iOzw
+         VR+XMb2JWqoqfoOLQJuQ8TbUX4G+WWFonRn16BWbg87dKQaebrCGFur+3IE+VrXrJZZG
+         WWXADlAf+0p1O7SfPUsCSnkLT+PGVy1ypErRUjQDKXU45W7AIi7MGZ1mffFsPMc1Cjss
+         xi5d06ydb8Rgl6IgMrxeLrhP/JzOH4nrS/N/EWH9ZcN9Cn1m0mG+vDq4aSXHH86U4jpM
+         ZcsbfuFWAy/wD+lT9wmaNoRtbBWO/EBO9+WIB9nfjU2PUH7wvikMy06ySwmFaMkCwe3A
+         4mTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9AocJvaLHJoa4iYjdAkrd1jMBEY1Q6G0BQqKP8Q3BgM=;
-        b=CDsqNImojAQuSbSQhPQwTysa3ZgHTV67nY5uI0h9hCnWOW12rr6yYBltIgYpHgjD4q
-         aka6MsMJ2ybNICVnpCZjo/wghIwrCVOWOuNZdnBvRmSMymJbc2eXf6N8BDaNkNIuNqRL
-         l+Y2EikUH2q6b4hKuV6BWeiKmiIjU3xdaeBTSFtytoAbpcp3zZQKosUEoO4TWCR+zhh3
-         4z76t41zFEB7JGWlS5EywUYQ7oByuhtMjkGtVz55t1aJYFw31+vp3Tf0xO+g2o1mGr82
-         6KsPzMTCqIuH7xUtUUs9pAgwslAF890El3GB+JkV8D3I9J4P1P7/piOiUiqjRdxj+aH5
-         Gv2w==
-X-Gm-Message-State: APjAAAXaGmbhUNS3P5cmk2X7mRO/adoUWWIWqIUOZWZquqRhxs6CK9Z0
-        V9frDnAsMi/KgopYuysReFI=
-X-Google-Smtp-Source: APXvYqxeR+dM/qboqMgoFunM3kgqRM3vJqoEnr7pd9afz0HJ9zGoF03qrolR2iMoYrFJi40vk2tIiQ==
-X-Received: by 2002:a5d:5343:: with SMTP id t3mr38812600wrv.49.1555173398286;
-        Sat, 13 Apr 2019 09:36:38 -0700 (PDT)
+        bh=kBXO1uZlskj4auakSoYtNTreOLcLzWrlcJFWLgQwR7A=;
+        b=s4V0MpsW/TEevZx6dwjXEkkMwNTU3CUWRcVKGH68L12b05FWxuhC4fgVsNnaU2K60x
+         rciWAS852Iozr93fu0w9LDmWFZVKmphK3NnHRwuxZsXFZ0P4z8M/D6ZsdppB5FJxHX8q
+         oaIE0Fq78jf+ti+qtetz9gPPtpexbeOVL/WvVZ1G4llQdWXSyoXSMLuuXkds3Sn+RFCB
+         s2CIN/MP/L8O6/h4UDnbvk+MnMn1Hx1lXUSdXjXgCGEMKcQSOjJ8eufstYkm1ss4F76I
+         5NLVNySiBq8isQTrQdCdDAmYrpma3SZ2/WkOfAWYley0+Us6x2IPtf0IfgiafVpTvjtk
+         7YNw==
+X-Gm-Message-State: APjAAAVAW5AwBKfnMb9yS774Bjj7EhZYPPe8jwn4TGOV0oUg8l6hZ+7L
+        FSazCf3V2/gryReb8TPLt5o=
+X-Google-Smtp-Source: APXvYqwiMXRIGA3sRw1d5JsyiSyE4RLl25K8bEL529FrgTJ0lQCzV6Ja5TnQ9bMJY+b7wt18hxZO0w==
+X-Received: by 2002:a1c:480b:: with SMTP id v11mr15222305wma.25.1555173399396;
+        Sat, 13 Apr 2019 09:36:39 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C8AD00714E418F6C82D049.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:714e:418f:6c82:d049])
-        by smtp.googlemail.com with ESMTPSA id j3sm106200069wre.51.2019.04.13.09.36.37
+        by smtp.googlemail.com with ESMTPSA id j3sm106200069wre.51.2019.04.13.09.36.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 09:36:37 -0700 (PDT)
+        Sat, 13 Apr 2019 09:36:38 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         jianxin.pan@amlogic.com, ccaione@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/3] ARM: dts: meson8b: ec100: enable the RTC
-Date:   Sat, 13 Apr 2019 18:34:22 +0200
-Message-Id: <20190413163423.15149-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/3] ARM: dts: meson8b: odroid-c1: prepare support for the RTC
+Date:   Sat, 13 Apr 2019 18:34:23 +0200
+Message-Id: <20190413163423.15149-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190413163423.15149-1-martin.blumenstingl@googlemail.com>
 References: <20190413163423.15149-1-martin.blumenstingl@googlemail.com>
@@ -74,49 +74,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RTC is always enabled on this board since the battery is already
-connected in the factory.
-According to the schematics the VCC_RTC regulator (which is either
-powered by the internal 3.3V or a battery) is connected to the 0.9V
-RTC_VDD input of the SoCs.
+The Odroid-C1 has the 32.768 kHz oscillator (X3 in the schematics) which
+is required for the RTC. A battery can be connected separately (to the
+BT1 header) - then the "rtc" node can be enabled manually. By default
+the RTC is disabled because the boards typically come without the RTC
+battery.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson8b-ec100.dts | 14 ++++++++++++++
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
-index 3ca9638fad09..9bf4249cb60d 100644
---- a/arch/arm/boot/dts/meson8b-ec100.dts
-+++ b/arch/arm/boot/dts/meson8b-ec100.dts
-@@ -88,6 +88,14 @@
- 		};
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 0157646e3a89..f3ad9397f670 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -124,6 +124,14 @@
+ 		io-channels = <&saradc 8>;
  	};
  
 +	rtc32k_xtal: rtc32k-xtal-clk {
-+		/* X2 in the schematics */
++		/* X3 in the schematics */
 +		compatible = "fixed-clock";
 +		clock-frequency = <32768>;
 +		clock-output-names = "RTC32K";
 +		#clock-cells = <0>;
 +	};
 +
- 	usb_vbus: regulator-usb-vbus {
+ 	vcc_1v8: regulator-vcc-1v8 {
  		/*
- 		 * Silergy SY6288CCAC-GP 2A Power Distribution Switch.
-@@ -347,6 +355,12 @@
+ 		 * RICHTEK RT9179 configured for a fixed output voltage of
+@@ -345,6 +353,12 @@
  	clock-names = "clkin0";
  };
  
 +&rtc {
-+	status = "okay";
++	/* needs to be enabled manually when a battery is connected */
 +	clocks = <&rtc32k_xtal>;
-+	vdd-supply = <&vcc_rtc>;
++	vdd-supply = <&vdd_rtc>;
 +};
 +
- /* exposed through the pin headers labeled "URDUG1" on the top of the PCB */
  &uart_AO {
  	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.21.0
 
