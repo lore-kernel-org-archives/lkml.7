@@ -2,145 +2,153 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99A6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32404C10F0E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2F120850
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0216D20850
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 00:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH1Zelfw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnLq3kDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfDMAwG (ORCPT
+        id S1727002AbfDMA4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 12 Apr 2019 20:52:06 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36928 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfDMAwG (ORCPT
+        Fri, 12 Apr 2019 20:56:13 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34526 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfDMA4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 12 Apr 2019 20:52:06 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w23so5893603ply.4;
-        Fri, 12 Apr 2019 17:52:05 -0700 (PDT)
+        Fri, 12 Apr 2019 20:56:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v10so9487764oib.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2019 17:56:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FAOFcqGmAyWqRgqK+hze86G4KUWhAcKaMXCl1prsD7U=;
-        b=WH1ZelfwVnWq8wfRpDlMD10uUdU4Yzwvl2MVee4roCocPTsQszssvpu7mYqNa7S26u
-         hqkFJQYJZLikHqgzZ7GxIYc25grjdbXDF92YLkUCGkFIy6fj+f8c/63ver9r867/734G
-         FgP+MqH/EjOOnF6DrHfr5w1JXmds0Rvo98YNl3tc67TRnEKqfgoshit9eXFZ+2eWfaCe
-         FtJg1pyFnhHK/T7VzvYSZjcWMtOrLxkRFTT2fj+VUa3EuPZC9WzzsexiAH1PB7UbjsfU
-         iGa42KAtl0SWUaxzxebYjUV5Tk/rzCAihMnzZAL+0hSTK3AssYuDL+VAR/DVBEsYAnkT
-         uxSw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JP8BGTDc+T+zCWF2hfOpIX7uaRUEDBwZZB4d0ncDIfE=;
+        b=BnLq3kDlBDmlcVNpDV/kMrmJlav2tzyaNAcmXlFhSL20OeyNWfdlMCDJjsfjitHvYG
+         Sd2l+PO7sufg3HMYlYZfyX1LAavN91C+dRxaAh0+/t3yry9GN9hxBx5bt48aRb0XZ0b7
+         AWbDETU+q5wj7730p4S5B6hkkp43AAp2JSYkIgmD49G09XhaMquyOTQ9lF1ScbI6mhkC
+         okC8hC64cU6CKT/ZDNRbm8Czn+h5QG/svGI3Q80OXubRhxiA88MXRa8Ogn6VKRTPWGkU
+         E8f/GEVxhl5FJgGikcAjZZI7qD+gEzRNQZyO0+aaPd9JbUpR1fK2OzgpTfbvT9O8SifE
+         a6wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FAOFcqGmAyWqRgqK+hze86G4KUWhAcKaMXCl1prsD7U=;
-        b=RjyXnWV8OyzNJGJhueu8fJxHYomqLkiFdVCYOf/aK9J2jfzypqaGmWl9PuR0AtB9Cb
-         3xB91tULeXhFi82hmGbxYa5Jd0vTxtrk8EdFoDBwDUsaaxKfUU56beDZE1R2RQ1IhxfD
-         q4JOKhsFEJUbscGPZEsr5QMIb6KOi2yUfU5qM+vuZ0unQXXpjzanSBXTuJdWhkb53iUI
-         CJYz+VrZ65hhvaklnWMBBPR2zLg5zLP2X825mVzXn82XtvR6Z/Ek1xZE0fR5f1s4hvc3
-         EgRy06P/2ic5x3W7393r1cvc4eNC7iPe+NnuFgMcwgvugENv9xGNmiMnkE6itHJnlMi9
-         WGHQ==
-X-Gm-Message-State: APjAAAVlMoMKCBtLTAXPWiEbzKpbSmH1/1jppzgl94QUdxUxi+9AhYpj
-        RMGML5Ati3rXIJqbEqO0nlfVbUfY
-X-Google-Smtp-Source: APXvYqw/Lx/YxaORzJCKB74OjskQexdw6lmOnEtqKF2cGzIqRN9VZsE8gDodjoH8h/y4lpDS8vTpAw==
-X-Received: by 2002:a17:902:bf07:: with SMTP id bi7mr31595426plb.87.1555116725223;
-        Fri, 12 Apr 2019 17:52:05 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i24sm58250206pfo.85.2019.04.12.17.52.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Apr 2019 17:52:04 -0700 (PDT)
-Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <cover.1554923967.git.mchehab+samsung@kernel.org>
- <20190411124324.3ed62fad@lwn.net> <20190411174357.251904f5@coco.lan>
- <20190411210731.GA29378@roeck-us.net> <20190412100451.6fe49de7@lwn.net>
- <8514ff97-3167-3c89-3468-e247d14c5086@roeck-us.net>
- <20190412212541.0cde9452@coco.lan>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <f1b5ebcd-bd8c-817f-1394-fd2742c5d8b3@roeck-us.net>
-Date:   Fri, 12 Apr 2019 17:52:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JP8BGTDc+T+zCWF2hfOpIX7uaRUEDBwZZB4d0ncDIfE=;
+        b=iJL//b4IRiCB2rlCaLiTledLnOBjm/xeos35DS6YM773WwoO8QrWeO5fZAyta9CD9S
+         zNh8LmEOj4I1SM4Et8+QFcy/j51nbrvcBrk4EVNC89I9iYnZRiTYmEIpDW4YRk/yNhFn
+         imP1SQld3D13wgWPq/NeHO9VX08xwQFCnQccWYl4HQhvpBwIPGR2ubudvclKBWcFChIM
+         qUIhGY9owxMHUhazqPCAQDUem2/Ir6BUjAvpZKrpWN8XIPDesrcp/WaH0eJcHAw3GXJa
+         vah4zcnWPZhrUZUky+C7AYpoc+p4wWMdqHLouMitz2LIqRUFfMjOVBarheKcOIVNMoej
+         SRxg==
+X-Gm-Message-State: APjAAAXubue3hCMjuV0xeybxuW0eIkcJWVxLWqX/J8xBuPW7WMo+VkUI
+        CbYfwu8M/38LgMm3AbRC6k8SPIk1jADmk/p+Mdgu9g==
+X-Google-Smtp-Source: APXvYqxrCtJYnWqhCgbcLl9uaNEbSB7G2294hsBbr9Q710ZvKsvsxA5EQ0MKHoCDLE3/gf5ex2Gv4jz5rtpufdeHXk0=
+X-Received: by 2002:aca:d5cf:: with SMTP id m198mr12040178oig.138.1555116971659;
+ Fri, 12 Apr 2019 17:56:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190412212541.0cde9452@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <CALCETrV7Hw50Bh=qQX86v_6euiGqX7eNboi50_7JmfQsyVR3_A@mail.gmail.com>
+ <20190413000941.GA53420@google.com> <CAKOZuetX4jMPDtDqAvGgSNo4BHf9BOnu79ufEiULfM5X5nDyyQ@mail.gmail.com>
+In-Reply-To: <CAKOZuetX4jMPDtDqAvGgSNo4BHf9BOnu79ufEiULfM5X5nDyyQ@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Fri, 12 Apr 2019 17:56:00 -0700
+Message-ID: <CAKOZuesgRPabwrx9pjf3p0S-7nsqeXoUVxeykOOmHokAL=5wqw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Oleg Nesterov <oleg@redhat.com>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 5:25 PM, Mauro Carvalho Chehab wrote:
-> Em Fri, 12 Apr 2019 09:12:52 -0700
-> Guenter Roeck <linux@roeck-us.net> escreveu:
-> 
->> On 4/12/19 9:04 AM, Jonathan Corbet wrote:
->>> On Thu, 11 Apr 2019 14:07:31 -0700
->>> Guenter Roeck <linux@roeck-us.net> wrote:
->>>    
->>>>> While nobody does such split, IMHO, the best would be to keep the
->>>>> information outside Documentation/admin-guide. But hey! You're
->>>>> the Doc maintainer. If you prefer to move, I'm perfectly fine
->>>>> with that.
->>>>>       
->>>>
->>>> Same here, but please don't move the files which are kernel facing only.
->>>
->>> Well, let's step back and think about this.  Who is the audience for
->>> these documents?  That will tell us a lot about where they should really
->>> be.
->>>    
+[Resending due to accidental HTML. I need to take Joel's advice and
+switch to a real email client]
+
+On Fri, Apr 12, 2019 at 5:54 PM Daniel Colascione <dancol@google.com> wrote:
+>
+> On Fri, Apr 12, 2019 at 5:09 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >>
->> Most of them are for users, some of them are for driver developers. A few
->> are for both, though that is generally not the intention (and one may argue
->> that driver internal documentation should be moved into the respective
->> driver source).
-> 
-> The big issue is really those files that contain both kernel internals
-> and userspace stuff.
-> 
-> This is a common pattern. I just finishing converting a lot more
-> documents to ReST and I found the same thing on almost all document
-> directories I touched.
-> 
->>> What I would prefer to avoid is the status quo where *everything* is in
->>> the top-level directory, and where documents are organized for the
->>> convenience of their maintainers rather than of their readers.  But
->>> sometimes I feel like I'm alone in that desire...:)
->>>    
->> I am fine with separating user pointing from kernel API/driver developer
->> guides, and I agree that it would make a lot of sense. As I said, please
->> just make sure that kernel facing files don't end up in the wrong directory.
-> 
-> I like the idea of splitting user faced documents from the rest, but
-> this is not an easy task. On several cases, there are just a couple
-> of paragraphs with things like sysfs entries in the middle of a big
-> file with Kernel internals.
-> 
+>> Hi Andy!
+>>
+>> On Fri, Apr 12, 2019 at 02:32:53PM -0700, Andy Lutomirski wrote:
+>> > On Thu, Apr 11, 2019 at 10:51 AM Joel Fernandes (Google)
+>> > <joel@joelfernandes.org> wrote:
+>> > >
+>> > > pidfd are /proc/pid directory file descriptors referring to a task group
+>> > > leader. Android low memory killer (LMK) needs pidfd polling support to
+>> > > replace code that currently checks for existence of /proc/pid for
+>> > > knowing a process that is signalled to be killed has died, which is both
+>> > > racy and slow. The pidfd poll approach is race-free, and also allows the
+>> > > LMK to do other things (such as by polling on other fds) while awaiting
+>> > > the process being killed to die.
+>> > >
+>> > > It prevents a situation where a PID is reused between when LMK sends a
+>> > > kill signal and checks for existence of the PID, since the wrong PID is
+>> > > now possibly checked for existence.
+>> > >
+>> > > In this patch, we follow the same mechanism used uhen the parent of the
+>> > > task group is to be notified, that is when the tasks waiting on a poll
+>> > > of pidfd are also awakened.
+>> > >
+>> > > We have decided to include the waitqueue in struct pid for the following
+>> > > reasons:
+>> > > 1. The wait queue has to survive for the lifetime of the poll. Including
+>> > > it in task_struct would not be option in this case because the task can
+>> > > be reaped and destroyed before the poll returns.
+>> >
+>> > Are you sure?  I admit I'm not all that familiar with the innards of
+>> > poll() on Linux, but I thought that the waitqueue only had to survive
+>> > long enough to kick the polling thread and did *not* have to survive
+>> > until poll() actually returned.
+>>
+>> I am not sure now. I thought epoll(2) was based on the wait_event APIs,
+>> however more closely looking at the eventpoll code, it looks like there are 2
+>> waitqueues involved, one that we pass and the other that is a part of the
+>> eventpoll session itself, so you could be right about that. Daniel Colascione
+>> may have some more thoughts about it since he brought up the possiblity of a
+>> wq life-time issue. Daniel?   We were just playing it safe.
 
-Yes, I know. I don't think that cleanup is going to happen anytime soon.
-
-Guenter
-
+I think you (Joel) and Andy are talking about different meanings of
+poll(). Joel is talking about the VFS method; Andy is talking about
+the system call. ISTM that the lifetime of wait queue we give to
+poll_wait needs to last through the poll. Normally the wait queue gets
+pinned by the struct file that we give to poll_wait (which takes a
+reference on the struct file), but the pidfd struct file doesn't pin
+the struct task, so we can't use a wait queue in struct task.
+(remove_wait_queue, which poll implementations call to undo wait queue
+additions, takes the wait queue head we pass to poll_wait, and we
+don't want to pass a dangling pointer to remove_wait_queue.) If the
+lifetime requirements for the queue aren't this strict, I don't see it
+documented anywhere. Besides: if we don't actually need to pin the
+waitqueue lifetime for the duration of the poll, why bother taking a
+reference on the polled struct file?
