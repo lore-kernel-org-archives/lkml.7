@@ -2,169 +2,126 @@ Return-Path: <SRS0=NhyN=SP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BC2C10F11
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6AEC10F11
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18CA02084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0192084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 13 Apr 2019 20:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfDMUuB (ORCPT
+        id S1727267AbfDMUuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 16:50:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40335 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfDMUuB (ORCPT
+        Sat, 13 Apr 2019 16:50:05 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37502 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfDMUuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 16:50:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3DKmhx62265251
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sat, 13 Apr 2019 13:48:43 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3DKmhVk2265248;
-        Sat, 13 Apr 2019 13:48:43 -0700
-Date:   Sat, 13 Apr 2019 13:48:43 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-88f5260a3bf9bfb276b5b4aac2e81587e425a1d7@git.kernel.org>
-Cc:     hpa@zytor.com, bp@suse.de, kvm@vger.kernel.org,
-        aubrey.li@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
-        tglx@linutronix.de, mingo@kernel.org, rkrcmar@redhat.com,
-        luto@kernel.org, bigeasy@linutronix.de, pbonzini@redhat.com,
-        jannh@google.com, mingo@redhat.com, Jason@zx2c4.com,
-        nstange@suse.de, riel@surriel.com, dave.hansen@intel.com,
-        billm@melbpc.org.au
-Reply-To: dave.hansen@intel.com, billm@melbpc.org.au, nstange@suse.de,
-          riel@surriel.com, mingo@redhat.com, Jason@zx2c4.com,
-          rkrcmar@redhat.com, luto@kernel.org, pbonzini@redhat.com,
-          bigeasy@linutronix.de, jannh@google.com, mingo@kernel.org,
-          tglx@linutronix.de, aubrey.li@intel.com, kvm@vger.kernel.org,
-          linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
-          bp@suse.de
-In-Reply-To: <20190403164156.19645-5-bigeasy@linutronix.de>
-References: <20190403164156.19645-5-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/fpu] x86/fpu: Always init the state in fpu__clear()
-Git-Commit-ID: 88f5260a3bf9bfb276b5b4aac2e81587e425a1d7
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sat, 13 Apr 2019 16:50:04 -0400
+Received: by mail-vs1-f67.google.com with SMTP id w13so7472201vsc.4;
+        Sat, 13 Apr 2019 13:50:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ognk4lz2NDKt1DvD/X12198HfbOIyneoWr847fqKsa4=;
+        b=tc+SgH3ATadYvtrtwOke3t9Weqt9+S5mLibnW/5yMTw7OZ8BPiZOLezVasDIlqzC6K
+         UhD1+88Mk5sEyrYag/nbOc1jJgL1TEcOMxgHQckPsn67dfJGsL0WYcPXpRkLupXmrCJg
+         +6TxAI9LLuBVijxd0m1Ta9RXjtLxiUWIVjNf1x1UC1lm2p4uOQ/MVKwiya+ADuMAhuWN
+         D+EAZ/zVFCfxeb5rpdE3egicvshcPjvwTOLOfYH/HUNenhLiynqKr3CVvLV+HWmBP1MB
+         Yo74Ox4fBs37uRQoAC7xWjVhj+6IaG3Rnuchd2Hit47sDrKPlWcY1gmjbVEK0iZ3dSu3
+         DrSw==
+X-Gm-Message-State: APjAAAXyfwzt1BIIIYydB3Th3nQ4kOXOZ8klhkdaKWHOgsB5DzKmL1NZ
+        DkevxzY01Gaa7/GLef9d3qw=
+X-Google-Smtp-Source: APXvYqyE83rpWGWIspg780ZXV/3dapuFKEimq8/6hxGQtN2KDEqruWA/Ie0RDTlktnOylAfOfM68ww==
+X-Received: by 2002:a67:c498:: with SMTP id d24mr16090328vsk.182.1555188602527;
+        Sat, 13 Apr 2019 13:50:02 -0700 (PDT)
+Received: from localhost.localdomain ([201.240.145.139])
+        by smtp.gmail.com with ESMTPSA id b197sm54074242vkd.9.2019.04.13.13.50.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2019 13:50:01 -0700 (PDT)
+From:   Shawn Landden <shawn@git.icu>
+Cc:     linux-api@vger.kernel, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shawn Landden <shawn@git.icu>,
+        linux-api@vger.kernel.org
+Subject: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
+Date:   Sat, 13 Apr 2019 15:49:47 -0500
+Message-Id: <20190413204947.9394-1-shawn@git.icu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  88f5260a3bf9bfb276b5b4aac2e81587e425a1d7
-Gitweb:     https://git.kernel.org/tip/88f5260a3bf9bfb276b5b4aac2e81587e425a1d7
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 3 Apr 2019 18:41:33 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Tue, 9 Apr 2019 19:28:06 +0200
+If flags includes COPY_FILE_RANGE_FILESIZE then the length
+copied is the length of the file. off_in and off_out are
+ignored. len must be 0 or the file size.
 
-x86/fpu: Always init the state in fpu__clear()
+This implementation saves a call to stat() in the common case
+of copying files. It does not fix any race conditions, but that
+is possible in the future with this interface.
 
-fpu__clear() only initializes the state if the CPU has FPU support.
-This initialisation is also required for FPU-less systems and takes
-place in math_emulate(). Since fpu__initialize() only performs the
-initialization if ->initialized is zero it does not matter that it
-is invoked each time an opcode is emulated. It makes the removal of
-->initialized easier if the struct is also initialized in the FPU-less
-case at the same time.
+EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
+or the file size.
 
-Move fpu__initialize() before the FPU feature check so it is also
-performed in the FPU-less case too.
-
- [ bp: Massage a bit. ]
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Aubrey Li <aubrey.li@intel.com>
-Cc: Bill Metzenthen <billm@melbpc.org.au>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: kvm ML <kvm@vger.kernel.org>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190403164156.19645-5-bigeasy@linutronix.de
+Signed-off-by: Shawn Landden <shawn@git.icu>
+CC: <linux-api@vger.kernel.org>
 ---
- arch/x86/include/asm/fpu/internal.h | 1 -
- arch/x86/kernel/fpu/core.c          | 5 ++---
- arch/x86/math-emu/fpu_entry.c       | 3 ---
- 3 files changed, 2 insertions(+), 7 deletions(-)
+ fs/read_write.c           | 14 +++++++++++++-
+ include/uapi/linux/stat.h |  4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 75a1d5f712ee..70ecb7c032cb 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -24,7 +24,6 @@
- /*
-  * High level FPU state handling functions:
-  */
--extern void fpu__initialize(struct fpu *fpu);
- extern void fpu__prepare_read(struct fpu *fpu);
- extern void fpu__prepare_write(struct fpu *fpu);
- extern void fpu__save(struct fpu *fpu);
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 1940319268ae..e43296854e37 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -223,7 +223,7 @@ int fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu)
-  * Activate the current task's in-memory FPU context,
-  * if it has not been used before:
-  */
--void fpu__initialize(struct fpu *fpu)
-+static void fpu__initialize(struct fpu *fpu)
- {
- 	WARN_ON_FPU(fpu != &current->thread.fpu);
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 61b43ad7608e..6d06361f0856 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	struct inode *inode_out = file_inode(file_out);
+ 	ssize_t ret;
  
-@@ -236,7 +236,6 @@ void fpu__initialize(struct fpu *fpu)
- 		fpu->initialized = 1;
- 	}
- }
--EXPORT_SYMBOL_GPL(fpu__initialize);
+-	if (flags != 0)
++	if ((flags & ~COPY_FILE_RANGE_FILESIZE) != 0)
+ 		return -EINVAL;
  
- /*
-  * This function must be called before we read a task's fpstate.
-@@ -365,8 +364,8 @@ void fpu__clear(struct fpu *fpu)
- 	/*
- 	 * Make sure fpstate is cleared and initialized.
- 	 */
-+	fpu__initialize(fpu);
- 	if (static_cpu_has(X86_FEATURE_FPU)) {
--		fpu__initialize(fpu);
- 		user_fpu_begin();
- 		copy_init_fpstate_to_fpregs();
- 	}
-diff --git a/arch/x86/math-emu/fpu_entry.c b/arch/x86/math-emu/fpu_entry.c
-index 9e2ba7e667f6..a873da6b46d6 100644
---- a/arch/x86/math-emu/fpu_entry.c
-+++ b/arch/x86/math-emu/fpu_entry.c
-@@ -113,9 +113,6 @@ void math_emulate(struct math_emu_info *info)
- 	unsigned long code_base = 0;
- 	unsigned long code_limit = 0;	/* Initialized to stop compiler warnings */
- 	struct desc_struct code_descriptor;
--	struct fpu *fpu = &current->thread.fpu;
--
--	fpu__initialize(fpu);
+ 	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
+@@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
+ 		return -EINVAL;
  
- #ifdef RE_ENTRANT_CHECKING
- 	if (emulating) {
++	if (flags & COPY_FILE_RANGE_FILESIZE) {
++		struct kstat stat;
++		int error;
++		error = vfs_getattr(&file_in->f_path, &stat,
++				    STATX_SIZE, 0);
++		if (error < 0)
++			return error;
++		if (!(len == 0 || len == stat.size))
++			return -EAGAIN;
++		len = stat.size;
++	}
++
+ 	ret = rw_verify_area(READ, file_in, &pos_in, len);
+ 	if (unlikely(ret))
+ 		return ret;
+diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+index 7b35e98d3c58..1075aa4666ef 100644
+--- a/include/uapi/linux/stat.h
++++ b/include/uapi/linux/stat.h
+@@ -170,5 +170,9 @@ struct statx {
+ 
+ #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+ 
++/*
++ * Flags for copy_file_range()
++ */
++#define COPY_FILE_RANGE_FILESIZE	0x00000001 /* Copy the full length of the input file */
+ 
+ #endif /* _UAPI_LINUX_STAT_H */
+-- 
+2.20.1
+
