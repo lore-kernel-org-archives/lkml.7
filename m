@@ -6,70 +6,69 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0496DC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE6C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C203F2148E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973E22148E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="O+D9Vzn3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YTnbtg6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfDNLrR (ORCPT
+        id S1727189AbfDNLrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 14 Apr 2019 07:47:17 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43880 "EHLO
+Received: from outils.crapouillou.net ([89.234.176.41]:43844 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfDNLrQ (ORCPT
+        with ESMTP id S1726296AbfDNLrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 14 Apr 2019 07:47:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1555242435; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1555242432; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=awiFMSIPL2Ydb2/a77PPVGyFLcCgToedvlcOQyvGzH0=;
-        b=O+D9Vzn33UuT+L4drhwXr9P5nXHkQa3N9x3GdMzCR/wTiuleRTgqguIMzFmgzZ4rXNHd8l
-        DoNCmZUVa46B3J5VmzUNRUqeWO4y5saWYwO3+moVbNaPMGt0mD08HFclPo2/H7WIorHMq2
-        hOINIDnxrFAJ2f77O978gW+e5KJ2Tzw=
+         content-transfer-encoding:in-reply-to:references;
+        bh=K8+KiOJplo0OKQ/yuRKlX43EKtDV6STI8snp1q6I/bk=;
+        b=YTnbtg6RegLzLHio4qmBpQQqsNFpf64UpXYr0pXHP4P7oKCHW9fd6wLDw23vWs+q/f5LYo
+        wR6aI/wuyLFox8btW4vheDkGHMR45il69TRXRfyT5yZdaCH7oGbZgOchCpzOFMk9dLFMw/
+        wPaFAYAAL4KzwZfWtugXR53n7CqFMtc=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Boris Brezillon <bbrezillon@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 RESEND 3/4] memory: jz4780-nemc: Reduce size of const array
-Date:   Sun, 14 Apr 2019 13:47:01 +0200
-Message-Id: <20190414114702.8236-3-paul@crapouillou.net>
-In-Reply-To: <20190414114702.8236-1-paul@crapouillou.net>
-References: <20190414114702.8236-1-paul@crapouillou.net>
+Subject: [PATCH v3 RESEND 1/4] dt-bindings: memory: jz4780: Add compatible string for JZ4740 SoC
+Date:   Sun, 14 Apr 2019 13:46:59 +0200
+Message-Id: <20190414114702.8236-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maximum value found in that array is 15, there's no need to store
-these values as uint32_t, a uint8_t is enough.
+Add a compatible string to support the memory controller built into the
+JZ4740 SoC from Ingenic.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
-v2: Remove casts to uint32_t
+v2: No change
 
-v3: No change
+v3: Change compatible string for jz4740 instead of j4725b
 
- drivers/memory/jz4780-nemc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt       | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index bcf06adefc96..66b8b43eaeff 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	 * Conversion of tBP and tAW cycle counts to values supported by the
- 	 * hardware (round up to the next supported value).
- 	 */
--	static const uint32_t convert_tBP_tAW[] = {
-+	static const u8 convert_tBP_tAW[] = {
- 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+index f936b5589b19..59b8dcc118ee 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+@@ -5,6 +5,7 @@ controller in Ingenic JZ4780
  
- 		/* 11 - 12 -> 12 cycles */
+ Required properties:
+ - compatible: Should be set to one of:
++    "ingenic,jz4740-nemc" (JZ4740)
+     "ingenic,jz4780-nemc" (JZ4780)
+ - reg: Should specify the NEMC controller registers location and length.
+ - clocks: Clock for the NEMC controller.
 -- 
 2.11.0
 
