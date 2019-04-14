@@ -2,80 +2,97 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAE1C10F11
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 02:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5C5C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EB22147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 02:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A0E21721
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAGESXIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfDNCzC (ORCPT
+        id S1727222AbfDNDL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 22:55:02 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:52916 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727201AbfDNCzB (ORCPT
+        Sat, 13 Apr 2019 23:11:29 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38090 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfDNDL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 22:55:01 -0400
-Received: by mail-it1-f197.google.com with SMTP id 73so13200268itl.2
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 19:55:01 -0700 (PDT)
+        Sat, 13 Apr 2019 23:11:29 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g1so7981574qki.5;
+        Sat, 13 Apr 2019 20:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rQQOlENLvv4KpM9p3RTTWDhnHxph1fAzjp1JzmNsB6U=;
+        b=UAGESXIGbcWFiHPRJjyGj1lov7n8aNXRVtmETZvkmrKkv0bFMrr7J2K7m2rUhbQlBp
+         i+dPXH3Vok0S516L0XC9nNv3t6p3FLX2HsdZs6vx809ZpkBtoxS3W4oj75uh/EhXH7Al
+         XL62nY+e0d4XBapcrYyhA7GLH3eTT17gIadybkQQ5DU731jP00bBkThiTv3XCH5WTkBh
+         Eph5RJxe3eIwZxYdgMEADNvfHr07TZMOn38CuqfRZbhjm+f0HSbC7OkDYJjYojzeiMcF
+         wPCyHu4rObaYJXG0ijyCSl2C7+knJamiqHN8Fo1tjLPMJswhuHuF4sZ8rocftaTvI9Vd
+         1bFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=EpmA7tOPMeXxvHBfABlmb8FTDps5VZ6P9Hzfo+3xEOc=;
-        b=TjrtE9IqtzGH9xke6Ux0m0YQBWPpFPD70vQ7by01natnyG0Be0sPYQsvPEyDSxkndU
-         nmvGsOrzvplxZcP6AlK947u7v95VubYcD6tj15V++ZR83IWN4tS1Rln3D6Ww9ywoCOv2
-         o/ZJxJMb6qXnK4ihyJQR7ivzwSFO+gXoYgiXFvJDvN1v91SlLUOrmFrYMT94wgx3/c31
-         tf60odDo5n42xf6nTRPRb6yDqzxu+hsX88/OP1cd0FJClp6+AtE3TRIBLpW3AjB/nz9F
-         DdrTEH3ro0x8ZRs3aRVoEowBYXrKdgxX2GGke0ph+OLLLsvuB/XxTpFQTOsPFNgnhJrC
-         ASnw==
-X-Gm-Message-State: APjAAAUB0yhFKN1ipumTLgn6YCNqh2T/KeLWIj1WTusUHcZMIvIbyLJe
-        P7WiIbQa3NFLmYWo5aI7sHtIG+aJqKWC8X3YGAlLxZadCX6x
-X-Google-Smtp-Source: APXvYqzxNqYArsgazGGOVEkorCoGxLAaBWKxHsEiTFGk8Oo2mZx5TvxIT9Dm+TrXC2QKEJLPhy/K+Offgzn9+L2tgZqNzDaG9X15
-MIME-Version: 1.0
-X-Received: by 2002:a24:6f81:: with SMTP id x123mr4742934itb.29.1555210500891;
- Sat, 13 Apr 2019 19:55:00 -0700 (PDT)
-Date:   Sat, 13 Apr 2019 19:55:00 -0700
-In-Reply-To: <000000000000e02bf505866414ae@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000074e9d5058674a94f@google.com>
-Subject: Re: INFO: task hung in do_exit
-From:   syzbot <syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com>
-To:     amitoj1606@gmail.com, ap420073@gmail.com, avagin@gmail.com,
-        dbueso@suse.de, ebiederm@xmission.com, jacek.anaszewski@gmail.com,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mm@kvack.org, oleg@redhat.com, pavel@ucw.cz,
-        prsood@codeaurora.org, rpurdie@rpsys.net,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rQQOlENLvv4KpM9p3RTTWDhnHxph1fAzjp1JzmNsB6U=;
+        b=iF/SkuZspYDNmcqT9uTecV4abrmfIsyQNKKjTHxQaWPOTlWvJPREoNpr0GxaNyyELH
+         avlK8ySzhOV6qHCP16bo3+ZcgfbRBr8GWjRz0KiBlNRR4ZAPuO5VkGHTqUGjrz5NlV8b
+         wDHj2TiP12FSwnn0UzVe158osdUvGW47jIlH1IykxFKGEIBmXWSkFpTijzKVWahS5yRq
+         sHvsp+TlgRymYYvMbzilonuiCp/XiemLpxSULxVAW5a8ocNQ7ShCIsOK7OqO7kIgNdHe
+         oAqakNtjN2ltxXR+sv65CU36w3e4Ih0jvdARRKF4sYv5uZ1mCzwaFB6AV+/1m/fLsnsQ
+         18ng==
+X-Gm-Message-State: APjAAAXWRkWwhIGaraGkRC/y95NirztrAcfg+FbVzARBh6zzqcy5PwS7
+        pZ0sB1lJrquVO617rBM4KSrdim7TU18=
+X-Google-Smtp-Source: APXvYqy5qMuSefUrzoBzUZMGIaWcHwuNLdn/+rsia0VkFLhpV0CMGB8RxcqNNAOzj9R2Wcs3O+8bbQ==
+X-Received: by 2002:a37:6c84:: with SMTP id h126mr52903072qkc.168.1555211487510;
+        Sat, 13 Apr 2019 20:11:27 -0700 (PDT)
+Received: from localhost.localdomain ([191.35.237.58])
+        by smtp.gmail.com with ESMTPSA id u44sm24668430qte.40.2019.04.13.20.11.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Apr 2019 20:11:26 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER)
+Subject: [PATCH 1/3] blk-mq.c: Add documention of function blk_mq_init_queue
+Date:   Sun, 14 Apr 2019 00:10:52 -0300
+Message-Id: <20190414031055.26350-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+---
+ block/blk-mq.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-commit 430e48ecf31f4f897047f22e02abdfa75730cad8
-Author: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Date:   Thu Aug 10 16:28:09 2017 +0000
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 9516304a38ee..4a8277a54c03 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2650,6 +2650,15 @@ void blk_mq_release(struct request_queue *q)
+ 	blk_mq_sysfs_deinit(q);
+ }
+ 
++/**
++ * blk_mq_init_queue - Create a new request queue associating a blk_mq_tag_set
++ * @set: tag_set to be associated with the request queue
++ *
++ * Description:
++ * This function creates a new request queue, associating @set with it.
++ *
++ * Returns a new request queue on success, or ERR_PTR() on failure.
++ */
+ struct request_queue *blk_mq_init_queue(struct blk_mq_tag_set *set)
+ {
+ 	struct request_queue *uninit_q, *q;
+-- 
+2.16.4
 
-     leds: lm3533: constify attribute_group structure
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15f4cee3200000
-start commit:   8ee15f32 Merge tag 'dma-mapping-5.1-1' of git://git.infrad..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17f4cee3200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f4cee3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
-dashboard link: https://syzkaller.appspot.com/bug?extid=9880e421ec82313d6527
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149b89af200000
-
-Reported-by: syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com
-Fixes: 430e48ecf31f ("leds: lm3533: constify attribute_group structure")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
