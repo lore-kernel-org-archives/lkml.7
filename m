@@ -5,64 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA770C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A784DC10F11
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E7E218C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D182084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 03:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gt9V7nld"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFsrY3pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfDNDLr (ORCPT
+        id S1727290AbfDNDLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 23:11:47 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44978 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfDNDLr (ORCPT
+        Sat, 13 Apr 2019 23:11:53 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44697 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfDNDLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 23:11:47 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y5so7962655qkc.11;
-        Sat, 13 Apr 2019 20:11:46 -0700 (PDT)
+        Sat, 13 Apr 2019 23:11:52 -0400
+Received: by mail-qt1-f194.google.com with SMTP id w5so15560458qtb.11;
+        Sat, 13 Apr 2019 20:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ioRJ93R4bxzTpNrBT/omYLG29991EfOPLpQtPqkqAgQ=;
-        b=Gt9V7nldqfsGfseiWXUTcvQun0RkP7BRiVDq+qjLeCcnrVOQ52i+jNnychqaL3vLQ5
-         9V4Q3aiX3gbtI/qp3XPeMa2P1pF0cNO3HVlKbVDiCIOCshr/ECkUIg0s7zzoA/p8aTGW
-         kLcrf5gA2HPMaFyxh8VFd4WseVbxdeNanrh8VE60kvYYRwKbR5/cQscMJP3DZYSAx1m2
-         goa0YCwtLa4O9yxnI4PT4AJ7w3RGUTsymQyJtBA1QB2ZlyauWOcEB0yjE2TMFaWQWNxY
-         RP8z1QP6O2/nFQ4CzxhNiCfoc+do2sqgrRzm4b2l+tIrpa9MlCjv61CST/vRHBMx2pXh
-         nZWA==
+        bh=pqEpMpq2ZMeZfBmIsXONVhx+1YLpbUMzYss/RTG9tGE=;
+        b=WFsrY3pl84XamdBkRXVOC8T345mqK7np0ATeJewLAO3Go8Nug/L41ewGPWk4oe+uxI
+         D8H3xjhB+g5scgpnHiP8/vDF5vCoI0xMp5hN2TLV3tZ9s+iJkpeXW1/be3X2GHcPaqFy
+         lqVHZ37AQxYa24JyoEIxrsEGWKEKPNiTRFMnY+36kOR4w1WedzZinl+1DPq4hwXcxaF0
+         VnOd9IMQPSfy3ZkgmtO5+N93tN3S4l/WK126KH+5MU9YN+adI017pVmDg4ijsRhSbJ+q
+         14em3lwbaYUTrnNjIWvgjnCqE/68ggnkafJF8O8CpUcHA9JDQN5UU/wgL4X+4x39BG+c
+         XaBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ioRJ93R4bxzTpNrBT/omYLG29991EfOPLpQtPqkqAgQ=;
-        b=Q4XbZRknr5bhKoHc+bUHaK8Ypik9fzNvROgNFVd/UrP0CPfMrSlDdr4IagBEriW1jS
-         4tt2l1YfwiZWG95uk1yt89/g5AzovqFvoLkNIFS0Tn9o4G62MzepsqukJDAYOgyggpn5
-         p9zxIfadE+b5j7gGBK9U45UZhgxJaO7ZPU4btn4OUQ+Yk3Hp1EBV3AIGWRkfghaXhCi5
-         nsOhBVI5L0poeAmqJdchRHCgAvthN8CUvEyOtO/8gMdusTkB/DXEXSNVIUsZb/44meq+
-         CYBdqO/knhcERzVYJ34Iga0ED2d485gv/5SSMnsj8OamghlT/KiaYpXbJAbv0Yz9ApQU
-         lk4Q==
-X-Gm-Message-State: APjAAAWuphwMBgiAY5G1ijTaIG9L6MLf5CEqPFWxgQ6x9EJIGP6+ibF2
-        RmLYongth8QbRA+A1lIh3M5HTULXpZQ=
-X-Google-Smtp-Source: APXvYqz8V3t9H81rbD8ATODHpg3/qZVqTU/c3ijWAkoxAU+ULR2T2GouPXsFYh8QJrfeUza9KUSxIQ==
-X-Received: by 2002:ae9:ef07:: with SMTP id d7mr53328282qkg.100.1555211506087;
-        Sat, 13 Apr 2019 20:11:46 -0700 (PDT)
+        bh=pqEpMpq2ZMeZfBmIsXONVhx+1YLpbUMzYss/RTG9tGE=;
+        b=k2qeYFqtttzsqO39TongJe48lmf7e+sXIrebsb3f4nLCaerDbDhlxjwCIQVw1mnvl7
+         i80W6UvhZBmfRFAtecAI4oQOx0EkRDLiKN5QBJ7NCbcsd8pkyNDkgdv38vT5xSIRT9xG
+         3MEG35vS0pFw3nD2I4t73lIDCFyehQM+rShvGPVf8/ENwMkjSFBfDUjJLafeFXRcxUOP
+         Tisnjf6PSsO0XReo/o2eSi0c2kEcdcVotZlwjSbyJe3g5dsuR/7ovEDztGlzgPixAxz3
+         FiVqZFxyaOrCW9SvGHvAGnFm2hzHZPRqCYTFG265H/tG7naIL6+FQd+axXPwm9GMd0aI
+         Jscw==
+X-Gm-Message-State: APjAAAWyqy+gH0jYQGz203eutJyP498+3uNdn2PGvFUO/nl+L1xzeAtz
+        qFcAKXPiGVia3je+g3SYn2VG++Z3ijw=
+X-Google-Smtp-Source: APXvYqyEI/7WNff3Zb5sPurf3Y4kzCAM4naDBy0RfI6Nk75n5MFyUM1pXWaW+ooE1VzLqk/ybwtjew==
+X-Received: by 2002:ac8:2368:: with SMTP id b37mr55091967qtb.50.1555211510827;
+        Sat, 13 Apr 2019 20:11:50 -0700 (PDT)
 Received: from localhost.localdomain ([191.35.237.58])
-        by smtp.gmail.com with ESMTPSA id u44sm24668430qte.40.2019.04.13.20.11.43
+        by smtp.gmail.com with ESMTPSA id u44sm24668430qte.40.2019.04.13.20.11.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Apr 2019 20:11:45 -0700 (PDT)
+        Sat, 13 Apr 2019 20:11:50 -0700 (PDT)
 From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER)
-Subject: [PATCH 2/3] blk-mq.c: Rework documention of blk_mq_init_sq_queue function
-Date:   Sun, 14 Apr 2019 00:10:53 -0300
-Message-Id: <20190414031055.26350-2-marcos.souza.org@gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION)
+Subject: [PATCH 3/3] Documentation: kernel-api.rst: Add block/blk-mq.c
+Date:   Sun, 14 Apr 2019 00:10:54 -0300
+Message-Id: <20190414031055.26350-3-marcos.souza.org@gmail.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190414031055.26350-1-marcos.souza.org@gmail.com>
 References: <20190414031055.26350-1-marcos.souza.org@gmail.com>
@@ -71,42 +74,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describing better what the function does, and what the arguments are
-meant for.
+Now documented functions of blk-mq.c will appear in the official kernel
+documentation.
 
 Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 ---
- block/blk-mq.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ Documentation/core-api/kernel-api.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4a8277a54c03..fd0bf89b8a73 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2675,9 +2675,20 @@ struct request_queue *blk_mq_init_queue(struct blk_mq_tag_set *set)
- }
- EXPORT_SYMBOL(blk_mq_init_queue);
+diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
+index 71f5d2fe39b7..cc323480ce0e 100644
+--- a/Documentation/core-api/kernel-api.rst
++++ b/Documentation/core-api/kernel-api.rst
+@@ -276,6 +276,12 @@ Block Devices
+ .. kernel-doc:: block/blk-map.c
+    :export:
  
--/*
-- * Helper for setting up a queue with mq ops, given queue depth, and
-- * the passed in mq ops flags.
-+/**
-+ * blk_mq_init_sq_queue - Create a new request queue with a SQ queue and tag set
-+ * @set: tag set to be associated by the newly created request queue
-+ * @ops: operations to be associated with @set
-+ * @queue_depth: number of tags of @set
-+ * @set_flags: flags of @set
-+ *
-+ * Description:
-+ * @set is initialized using @ops, @queue_depth, @set_flags, and using only one
-+ * hw_queue (SQ). Later on blk_mq_alloc_tag_set() is called to validate and/or
-+ * adjust values of the tag set. blk_mq_init_queue() is called passing @set as
-+ * argument, returning a new request queue with @set associated.
-+ *
-+ * Returns the newly created request queue on success, or ERR_PTR() on failure.
-  */
- struct request_queue *blk_mq_init_sq_queue(struct blk_mq_tag_set *set,
- 					   const struct blk_mq_ops *ops,
++.. kernel-doc:: block/blk-mq.c
++   :export:
++
++.. kernel-doc:: block/blk-mq.c
++   :internal:
++
+ .. kernel-doc:: block/blk-sysfs.c
+    :internal:
+ 
 -- 
 2.16.4
 
