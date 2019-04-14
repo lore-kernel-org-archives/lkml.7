@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECDEC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5B9C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B552175B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BE520896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfDNQDu (ORCPT
+        id S1727702AbfDNQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:03:50 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43350 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727692AbfDNQDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 14 Apr 2019 12:03:16 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43332 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbfDNQDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 12:03:13 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhb9-0002ko-5p; Sun, 14 Apr 2019 18:03:15 +0200
-Message-Id: <20190414160146.177558566@linutronix.de>
+        id 1hFhb3-0002jH-LX; Sun, 14 Apr 2019 18:03:09 +0200
+Message-Id: <20190414160145.824805922@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 18:00:05 +0200
+Date:   Sun, 14 Apr 2019 18:00:01 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 29/32] x86/irq/64: Init hardirq_stack_ptr during CPU hotplug
+Subject: [patch V3 25/32] x86/irq/32: Rename hard/softirq_stack to
+ hard/softirq_stack_ptr
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,63 +42,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preparatory change for distangling the irq stack union as a prerequisite
-for irq stacks with guard pages.
+The percpu storage holds a pointer to the stack not the stack
+itself. Rename it before sharing struct irq_stack with 64-bit.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/include/asm/irq.h   |    4 ----
- arch/x86/kernel/cpu/common.c |    4 +---
- arch/x86/kernel/irq_64.c     |   15 +++++++++++++++
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/processor.h |    4 ++--
+ arch/x86/kernel/dumpstack_32.c   |    4 ++--
+ arch/x86/kernel/irq_32.c         |   19 ++++++++++---------
+ 3 files changed, 14 insertions(+), 13 deletions(-)
 
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -16,11 +16,7 @@ static inline int irq_canonicalize(int i
- 	return ((irq == 2) ? 9 : irq);
- }
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -425,8 +425,8 @@ struct irq_stack {
+ 	char			stack[IRQ_STACK_SIZE];
+ } __aligned(IRQ_STACK_SIZE);
  
--#ifdef CONFIG_X86_32
- extern int irq_init_percpu_irqstack(unsigned int cpu);
--#else
--static inline int irq_init_percpu_irqstack(unsigned int cpu) { return 0; }
--#endif
+-DECLARE_PER_CPU(struct irq_stack *, hardirq_stack);
+-DECLARE_PER_CPU(struct irq_stack *, softirq_stack);
++DECLARE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
++DECLARE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
+ #endif	/* X86_64 */
  
- #define __ARCH_HAS_DO_SOFTIRQ
+ extern unsigned int fpu_kernel_xstate_size;
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -34,7 +34,7 @@ const char *stack_type_name(enum stack_t
  
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1510,9 +1510,7 @@ DEFINE_PER_CPU(struct task_struct *, cur
- 	&init_task;
- EXPORT_PER_CPU_SYMBOL(current_task);
+ static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
+ {
+-	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack);
++	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
+ 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
  
--DEFINE_PER_CPU(char *, hardirq_stack_ptr) =
--	init_per_cpu_var(irq_stack_union.irq_stack) + IRQ_STACK_SIZE;
--
-+DEFINE_PER_CPU(char *, hardirq_stack_ptr);
- DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
+ 	/*
+@@ -59,7 +59,7 @@ static bool in_hardirq_stack(unsigned lo
  
- DEFINE_PER_CPU(int, __preempt_count) = INIT_PREEMPT_COUNT;
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -87,3 +87,18 @@ bool handle_irq(struct irq_desc *desc, s
- 	generic_handle_irq_desc(desc);
- 	return true;
- }
-+
-+static int map_irq_stack(unsigned int cpu)
-+{
-+	void *va = per_cpu_ptr(irq_stack_union.irq_stack, cpu);
-+
-+	per_cpu(hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE;
-+	return 0;
-+}
-+
-+int irq_init_percpu_irqstack(unsigned int cpu)
-+{
+ static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
+ {
+-	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack);
++	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack_ptr);
+ 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
+ 
+ 	/*
+--- a/arch/x86/kernel/irq_32.c
++++ b/arch/x86/kernel/irq_32.c
+@@ -51,8 +51,8 @@ static inline int check_stack_overflow(v
+ static inline void print_stack_overflow(void) { }
+ #endif
+ 
+-DEFINE_PER_CPU(struct irq_stack *, hardirq_stack);
+-DEFINE_PER_CPU(struct irq_stack *, softirq_stack);
++DEFINE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
++DEFINE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
+ 
+ static void call_on_stack(void *func, void *stack)
+ {
+@@ -76,7 +76,7 @@ static inline int execute_on_irq_stack(i
+ 	u32 *isp, *prev_esp, arg1;
+ 
+ 	curstk = (struct irq_stack *) current_stack();
+-	irqstk = __this_cpu_read(hardirq_stack);
++	irqstk = __this_cpu_read(hardirq_stack_ptr);
+ 
+ 	/*
+ 	 * this is where we switch to the IRQ stack. However, if we are
+@@ -113,21 +113,22 @@ void irq_ctx_init(int cpu)
+ {
+ 	struct irq_stack *irqstk;
+ 
+-	if (per_cpu(hardirq_stack, cpu))
 +	if (per_cpu(hardirq_stack_ptr, cpu))
-+		return 0;
-+	return map_irq_stack(cpu);
-+}
+ 		return;
+ 
+ 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
+ 					       THREADINFO_GFP,
+ 					       THREAD_SIZE_ORDER));
+-	per_cpu(hardirq_stack, cpu) = irqstk;
++	per_cpu(hardirq_stack_ptr, cpu) = irqstk;
+ 
+ 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
+ 					       THREADINFO_GFP,
+ 					       THREAD_SIZE_ORDER));
+-	per_cpu(softirq_stack, cpu) = irqstk;
++	per_cpu(softirq_stack_ptr, cpu) = irqstk;
+ 
+-	printk(KERN_DEBUG "CPU %u irqstacks, hard=%p soft=%p\n",
+-	       cpu, per_cpu(hardirq_stack, cpu),  per_cpu(softirq_stack, cpu));
++	pr_debug("CPU %u irqstacks, hard=%p soft=%p\n",
++		 cpu, per_cpu(hardirq_stack_ptr, cpu),
++		 per_cpu(softirq_stack_ptr, cpu));
+ }
+ 
+ void do_softirq_own_stack(void)
+@@ -135,7 +136,7 @@ void do_softirq_own_stack(void)
+ 	struct irq_stack *irqstk;
+ 	u32 *isp, *prev_esp;
+ 
+-	irqstk = __this_cpu_read(softirq_stack);
++	irqstk = __this_cpu_read(softirq_stack_ptr);
+ 
+ 	/* build the stack frame on the softirq stack */
+ 	isp = (u32 *) ((char *)irqstk + sizeof(*irqstk));
 
 
