@@ -2,129 +2,189 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFBCC282DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E54C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 12:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F002A2148E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 11:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bzo5elIn"
+	by mail.kernel.org (Postfix) with ESMTP id 32CC22084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 12:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfDNLrS (ORCPT
+        id S1727136AbfDNMDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 07:47:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43902 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfDNLrR (ORCPT
+        Sun, 14 Apr 2019 08:03:47 -0400
+Received: from orcrist.hmeau.com ([104.223.48.154]:50378 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfDNMDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 07:47:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1555242435; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Qi0CXh0MJuE0eRvFoNjOgETnBX4qpXUhFY6eH5R9zyQ=;
-        b=bzo5elIn7CwRYszqUUG1yt8oGj5tzuMEodZQc9HBUrEz80q4dmroEDlBYjC+eLuB1JroOU
-        fEmc/lp73eIjTMm7W48tAqkxOWeXzEVcoy2vtSSyPs97T9ANtEPjujwMbvuj1Dg3h6QMvl
-        ANZkCsjiXwc2tk7h4yz5scq1ltrpgUY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Boris Brezillon <bbrezillon@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 RESEND 4/4] memory: jz4780_nemc: Add support for the JZ4740
-Date:   Sun, 14 Apr 2019 13:47:02 +0200
-Message-Id: <20190414114702.8236-4-paul@crapouillou.net>
-In-Reply-To: <20190414114702.8236-1-paul@crapouillou.net>
-References: <20190414114702.8236-1-paul@crapouillou.net>
+        Sun, 14 Apr 2019 08:03:47 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hFdrJ-0000Bi-Of; Sun, 14 Apr 2019 20:03:41 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hFdrG-0002Yg-Hy; Sun, 14 Apr 2019 20:03:38 +0800
+Date:   Sun, 14 Apr 2019 20:03:38 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     syzbot <syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: crypto: xts - Fix atomic sleep when walking skcipher
+Message-ID: <20190414120338.edioq25dkafp2m7h@gondor.apana.org.au>
+References: <0000000000002bb2b105867bcd11@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000002bb2b105867bcd11@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the JZ4740 SoC from Ingenic.
+On Sun, Apr 14, 2019 at 04:26:04AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e0a092eb Merge branch 'smc-next'
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=139878f3200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=94c460c3e4cd188a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6f72c20560060c98b566
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
+> 
+> BUG: sleeping function called from invalid context at crypto/skcipher.c:477
+> in_atomic(): 1, irqs_disabled(): 0, pid: 12, name: kworker/0:1
+> 2 locks held by kworker/0:1/12:
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: __write_once_size
+> include/linux/compiler.h:220 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: arch_atomic64_set
+> arch/x86/include/asm/atomic64_64.h:34 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: atomic64_set
+> include/asm-generic/atomic-instrumented.h:855 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: atomic_long_set
+> include/asm-generic/atomic-long.h:40 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: set_work_data
+> kernel/workqueue.c:619 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at:
+> set_work_pool_and_clear_pending kernel/workqueue.c:646 [inline]
+>  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at:
+> process_one_work+0x87e/0x1790 kernel/workqueue.c:2240
+>  #1: 000000008b3d6218 ((work_completion)(&cpu_queue->work)){+.+.}, at:
+> process_one_work+0x8b4/0x1790 kernel/workqueue.c:2244
+> Preemption disabled at:
+> [<ffffffff830d4130>] local_bh_disable include/linux/bottom_half.h:19
+> [inline]
+> [<ffffffff830d4130>] cryptd_skcipher_complete+0x90/0x170 crypto/cryptd.c:471
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4+ #135
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: crypto cryptd_queue_worker
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  ___might_sleep.cold+0x1bd/0x1f6 kernel/sched/core.c:6190
+>  __might_sleep+0x95/0x190 kernel/sched/core.c:6143
+>  skcipher_walk_virt+0x11e/0x150 crypto/skcipher.c:477
+>  xor_tweak+0x146/0x350 crypto/xts.c:105
+>  xor_tweak_post crypto/xts.c:133 [inline]
+>  crypt_done+0x87/0xa0 crypto/xts.c:141
+>  cryptd_skcipher_complete+0xbf/0x170 crypto/cryptd.c:472
+>  cryptd_skcipher_decrypt+0x2f7/0x420 crypto/cryptd.c:532
+>  cryptd_queue_worker+0x126/0x1f0 crypto/cryptd.c:193
+>  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+>  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+>  kthread+0x357/0x430 kernel/kthread.c:253
+>  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
----
+Thanks for the report.  Please try this patch:
 
-v2: No change
+---8<---
+When we perform a walk in the completion function, we need to ensure
+that it is atomic.
 
-v3: Support the JZ4740 instead of the JZ4725B (exact same functionality
-    but JZ4740 is already fully upstream)
+Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
+Fixes: 78105c7e769b ("crypto: xts - Drop use of auxiliary buffer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
- drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index 66b8b43eaeff..f3a19b9b76ac 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -44,9 +44,14 @@
- #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
- #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
+diff --git a/crypto/xts.c b/crypto/xts.c
+index 847f54f76789..c915a45711f5 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -88,7 +88,8 @@ static int setkey(struct crypto_skcipher *parent, const u8 *key,
+  * mutliple calls to the 'ecb(..)' instance, which usually would be slower than
+  * just doing the gf128mul_x_ble() calls again.
+  */
+-static int xor_tweak(struct skcipher_request *req, bool second_pass)
++static int xor_tweak(struct skcipher_request *req, bool second_pass,
++		     bool atomic)
+ {
+ 	struct rctx *rctx = skcipher_request_ctx(req);
+ 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+@@ -102,7 +103,7 @@ static int xor_tweak(struct skcipher_request *req, bool second_pass)
+ 		/* set to our TFM to enforce correct alignment: */
+ 		skcipher_request_set_tfm(req, tfm);
+ 	}
+-	err = skcipher_walk_virt(&w, req, false);
++	err = skcipher_walk_virt(&w, req, atomic);
  
-+struct jz_soc_info {
-+	u8 tas_tah_cycles_max;
-+};
-+
- struct jz4780_nemc {
- 	spinlock_t lock;
- 	struct device *dev;
-+	const struct jz_soc_info *soc_info;
- 	void __iomem *base;
- 	struct clk *clk;
- 	uint32_t clk_period;
-@@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAS_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAH_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	if (!nemc)
- 		return -ENOMEM;
+ 	while (w.nbytes) {
+ 		unsigned int avail = w.nbytes;
+@@ -125,12 +126,12 @@ static int xor_tweak(struct skcipher_request *req, bool second_pass)
  
-+	nemc->soc_info = device_get_match_data(dev);
-+	if (!nemc->soc_info)
-+		return -EINVAL;
-+
- 	spin_lock_init(&nemc->lock);
- 	nemc->dev = dev;
- 
-@@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct platform_device *pdev)
- 	return 0;
+ static int xor_tweak_pre(struct skcipher_request *req)
+ {
+-	return xor_tweak(req, false);
++	return xor_tweak(req, false, false);
  }
  
-+static const struct jz_soc_info jz4740_soc_info = {
-+	.tas_tah_cycles_max = 7,
-+};
-+
-+static const struct jz_soc_info jz4780_soc_info = {
-+	.tas_tah_cycles_max = 15,
-+};
-+
- static const struct of_device_id jz4780_nemc_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-nemc" },
-+	{ .compatible = "ingenic,jz4740-nemc", .data = &jz4740_soc_info, },
-+	{ .compatible = "ingenic,jz4780-nemc", .data = &jz4780_soc_info, },
- 	{},
- };
+-static int xor_tweak_post(struct skcipher_request *req)
++static int xor_tweak_post(struct skcipher_request *req, bool atomic)
+ {
+-	return xor_tweak(req, true);
++	return xor_tweak(req, true, atomic);
+ }
  
+ static void crypt_done(struct crypto_async_request *areq, int err)
+@@ -138,7 +139,7 @@ static void crypt_done(struct crypto_async_request *areq, int err)
+ 	struct skcipher_request *req = areq->data;
+ 
+ 	if (!err)
+-		err = xor_tweak_post(req);
++		err = xor_tweak_post(req, true);
+ 
+ 	skcipher_request_complete(req, err);
+ }
+@@ -166,7 +167,7 @@ static int encrypt(struct skcipher_request *req)
+ 	init_crypt(req);
+ 	return xor_tweak_pre(req) ?:
+ 		crypto_skcipher_encrypt(subreq) ?:
+-		xor_tweak_post(req);
++		xor_tweak_post(req, false);
+ }
+ 
+ static int decrypt(struct skcipher_request *req)
+@@ -177,7 +178,7 @@ static int decrypt(struct skcipher_request *req)
+ 	init_crypt(req);
+ 	return xor_tweak_pre(req) ?:
+ 		crypto_skcipher_decrypt(subreq) ?:
+-		xor_tweak_post(req);
++		xor_tweak_post(req, false);
+ }
+ 
+ static int init_tfm(struct crypto_skcipher *tfm)
 -- 
-2.11.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
