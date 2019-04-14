@@ -2,111 +2,128 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC338C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F60C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB52720850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAF220850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNnow3fL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfDNHCC (ORCPT
+        id S1726055AbfDNHK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 03:02:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52494 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725613AbfDNHCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 03:02:01 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2F6D1308212A;
-        Sun, 14 Apr 2019 07:02:01 +0000 (UTC)
-Received: from localhost (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3CE35C219;
-        Sun, 14 Apr 2019 07:01:58 +0000 (UTC)
-Date:   Sun, 14 Apr 2019 15:01:55 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
-        hpa@zytor.com, kirill@shutemov.name, keescook@chromium.org,
-        peterz@infradead.org, thgarnie@google.com,
-        herbert@gondor.apana.org.au, mike.travis@hpe.com,
-        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 1/2] x86/mm/KASLR: Fix the size of the direct mapping
- section
-Message-ID: <20190414070155.GB7065@MiWiFi-R3L-srv>
-References: <20190412065542.18431-1-bhe@redhat.com>
- <20190412065542.18431-2-bhe@redhat.com>
+        Sun, 14 Apr 2019 03:10:29 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36999 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfDNHK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 03:10:28 -0400
+Received: by mail-yw1-f68.google.com with SMTP id w66so4928818ywd.4;
+        Sun, 14 Apr 2019 00:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dopavWQTSlpzv4wKGexw1UjZUyWhobeaR088W7CR5S0=;
+        b=FNnow3fLRzVn0Ij/MuSoONf5XZ2qUNe7xpQw5jYRoMymKZvDG3jEasFyCPOhita18V
+         C5Pocx+64OfvSa62oZJR1JqPid8RB5WFUoXNJhYbY6H+OwVwGYYrZGSA4cLaca9KF/LE
+         ShG7nT0UuQc98jQUEn03Uvfwit+GSq5oi656DQqxcQUIgk3jpSpoXLLpf6VEGRXF0RvP
+         8ZwStE/OHTUS8jlDEOiqb20A7Bfp0qPgNofyHYJbk+QdsB3FZyqNgzM2d7ZcV8n6gj3t
+         Om2ELHBgJ1xnavKCp+vN6uHOgaHYn3MQNhrVZ3DwngNniHs0FX9Iy6+nKLGpriccFzHI
+         Auzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dopavWQTSlpzv4wKGexw1UjZUyWhobeaR088W7CR5S0=;
+        b=LV2kFHbBEdHRVzZgbw05ExJfpxmh6ygx0pBJwvlZAgZG4Pq8sZ2QCWENJstYR9qHtX
+         dcRQzjyp948PE+Wbxcs/4n7U/6uJYv4KEmN4d4kuvyuBgx3HObxU1iF62P9gX8nj92cB
+         6QiIPJ3BnfF/gxq1y7FMGOEzjRZbhRGHsQpE6ZOuXtT5JX3DsCA6RUy+PYszSke5GWFP
+         dOwyKaUII9APIMymA3YK2nccFrA1C7fWO2QdJ0DigAspXNH572Tr7O9TECtXtejvrT/Q
+         Bn6WFRT16lw9EPageu8vtcoKMe9nNWR2xPjahVrRf9VIY1nvmGcI6OMRPvefJpSbmVhM
+         UuEA==
+X-Gm-Message-State: APjAAAWsiLOAv16ge6ivS6zqXV58q78GOrJGMGxO886pvQxxKkj1Zcl7
+        oA5k5p+ZeKWrjcAhY0WoEsbL2Mellu7ZYSLPohs=
+X-Google-Smtp-Source: APXvYqx3IDLqWrSlHWPJeYniRZ9ruRFpYT2HjMTWW1qBa30d3e/XbPUqhYOgLB67pmDT5LxeGTzEJx5alaxhZMhRyFQ=
+X-Received: by 2002:a81:b554:: with SMTP id c20mr51312047ywk.169.1555225827636;
+ Sun, 14 Apr 2019 00:10:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412065542.18431-2-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 14 Apr 2019 07:02:01 +0000 (UTC)
+References: <20190413205439.9623-1-shawn@git.icu> <20190414010254.GA7408@magnolia>
+In-Reply-To: <20190414010254.GA7408@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sun, 14 Apr 2019 10:10:16 +0300
+Message-ID: <CAOQ4uxgkE+Ls+Sff1ptWtFwpT3dZrRayXsr4wX4Z9bZ=28Vxhw@mail.gmail.com>
+Subject: Re: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
+To:     Shawn Landden <shawn@git.icu>
+Cc:     linux-api@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/19 at 02:55pm, Baoquan He wrote:
-> kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
-> the maximum amount of system RAM supported. The size of the direct
-> mapping section is obtained from the smaller one of the below two
-> values:
-> 
->  (actual system RAM size + padding size) vs (max system RAM size supported)
-> 
-> This calculation is wrong since commit:
-> b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
-> 
-> In commit b83ce5ee91471d, __PHYSICAL_MASK_SHIFT was changed to be 52,
-> regardless of whether it's using 4-level or 5-level page tables.
-> It will always use 4 PB as the maximum amount of system RAM, even
-> in 4-level paging mode where it should be 64 TB.  Thus the size of
-> the direct mapping section will always be the sum of the actual
-> system RAM size plus the padding size.
-> 
-> Even when the amount of system RAM is 64 TB, the following layout will
-> still be used. Obviously KALSR will be weakened significantly.
-> 
->    |_______actual RAM_______|_padding_|______the rest_______ |
->    0            64TB          74TB                    ~120TB
-                                ~~ I could use tab, will resend to
-correct this.
-> 
-> What we want is the following:
-> 
->    |_______actual RAM_______|_________the rest_______________|
->    0            64TB                                  ~120TB
-> 
-> So the code should use MAX_PHYSMEM_BITS instead. Fix it by replacing
-> __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
-> 
-> Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Thomas Garnier <thgarnie@google.com>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/mm/kaslr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-> index 9a8756517504..387d4ed25d7c 100644
-> --- a/arch/x86/mm/kaslr.c
-> +++ b/arch/x86/mm/kaslr.c
-> @@ -94,7 +94,7 @@ void __init kernel_randomize_memory(void)
->  	if (!kaslr_memory_enabled())
->  		return;
->  
-> -	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
-> +	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
->  	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
->  
->  	/*
-> -- 
-> 2.17.2
-> 
+On Sun, Apr 14, 2019 at 4:04 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>
+> On Sat, Apr 13, 2019 at 03:54:39PM -0500, Shawn Landden wrote:
+>
+> /me pulls out his close-reading glasses and the copy_file_range manpage...
+>
+> > If flags includes COPY_FILE_RANGE_FILESIZE then the length
+> > copied is the length of the file. off_in and off_out are
+> > ignored.  len must be 0 or the file size.
+>
+> They're ignored?  As in the copy operation reads the number of bytes in
+> the file referenced by fd_in from fd_in at its current position and is
+> writes that out to fd_out at its current position?  I don't see why I
+> would want such an operation...
+>
+> ...but I can see how people could make use of a CFR_ENTIRE_FILE that
+> would check that both file descriptors are actually regular files, and
+> if so copy the entire contents of the fd_in file into the same position
+> in the fd_out file, and then set the fd_out file's length to match.  If
+> @off_in or @off_out are non-NULL then they'll be updated to the new EOFs
+> if the copy completes succesfully and @len can be anything.
+>
+
+IDGI. In what way would that be helpful?
+Would the syscall fail if it cannot copy entire file (like clone_file_range)
+or return bytes copied?
+If latter, then user will have to call syscall again until getting 0
+return value.
+User can already call copy_file_range with len=SSIZE_MAX and get almost
+the same thing.
+Unless the idea is to optimize for less syscalls for copying very large files??
+In that case, MAX_RW_COUNT limit for this syscall would need to be relaxed.
+
+While on the subject, something that has been discussed in the past is that
+copy_file_range() and sendfile() of a large file are not killable, so that is
+that should be fixed, especially if the interface is going to be used to copy
+more data in-kernel.
+
+IOW, the motivation of the patch is not clear to me:
+
+> This implementation saves a call to stat() in the common case
+
+What is the real life workload where this micro optimization would
+have any affect?
+
+> It does not fix any race conditions, but that is possible in the future
+> with this interface.
+
+Then please present a plan or an implementation of how that interface
+can solve race conditions and if that is the only motivation for the
+interface than I do not see why we should merge the interface before
+the implementation.
+
+Please let me know if I am missing something.
+
+Thanks,
+Amir.
