@@ -2,95 +2,85 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1283EC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A1C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E4B20818
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B123A20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="daDh6G31"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLg/VDGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfDNTNV (ORCPT
+        id S1726724AbfDNTPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 15:13:21 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60906 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfDNTNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 15:13:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=83Zt+sF62/UwECkI8XPRC/QymuI41c0gfQ0VRV+3PPM=; b=daDh6G316ZcEltEQncp5CvYPl3
-        bIrV+UFwTtdS/DeVHS1duE3Qfx2f7uMStXiXG9E9uoyXkUiugeKb1KthJ4RqZb2gsNnua5pZ5cnDC
-        oFbe2mp1MWjsXcZofPJfkYdioZKBNbjEjmKts3q04gCYd/lCErGcxZdZEF7TRwl174/8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hFkZ4-0004KM-1E; Sun, 14 Apr 2019 21:13:18 +0200
-Date:   Sun, 14 Apr 2019 21:13:18 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
-        davem@davemloft.net, netdev <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Georg Waibel <georg.waibel@sensor-technik.de>
-Subject: Re: [PATCH v3 net-next 18/24] net: dsa: sja1105: Add support for
- traffic through standalone ports
-Message-ID: <20190414191318.GE10323@lunn.ch>
-References: <20190413012822.30931-1-olteanv@gmail.com>
- <20190413012822.30931-19-olteanv@gmail.com>
- <20190413163754.GG17901@lunn.ch>
- <CA+h21hpKJS=TKGoMJMvsmK1DAtgciDsLOHAawqsKQ0xGW5dF6w@mail.gmail.com>
- <CA+h21hp=_LrGDZo3Jmoe2hNKqx7nrdqRbK3UWYntN-9My-z5Hg@mail.gmail.com>
- <CA+h21hp47bOwvEdF5KCV0bAo01mv+K11JSuP9AzEoWHTjmVAtQ@mail.gmail.com>
- <20190414161757.GB10323@lunn.ch>
- <CA+h21ho9AKSmX=6CU1P_fddcYSGB-DN0T-XqVYg8GnTRfuShVw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+h21ho9AKSmX=6CU1P_fddcYSGB-DN0T-XqVYg8GnTRfuShVw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 14 Apr 2019 15:15:09 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:38636 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfDNTPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 15:15:09 -0400
+Received: by mail-wm1-f53.google.com with SMTP id w15so17404491wmc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/WshFKwVEOSIDmK/jXaqIellNMbewgiCDoskQDtQ9tk=;
+        b=VLg/VDGJIgUw2fofdR/TgK4EhPCTTiduiQf83iqMWlGRtI0nuE00H33BTZvFiRNgcT
+         ska17eYtWMxAeZ2BXWOeMlnDJBLiJKXIsPeD+DqDG1Qsfkr49FwQDdk8A6ySLg6paemW
+         Haxl/Zzmp0jWeZiwjY74kDghz5wwwOKxKFqJLOuRWnvne1CSwdC6xQIp4f5f6vVvDJSm
+         5yk+mo2iriyuzMvRVhXieC11h3mzVFVrEo9MnY9pWV6sc4gM0x484joyKhqnyJSIms/e
+         +9dV8snSshP/Jr428V5sKrfx85oyFsxV2DK8Q0h09aUkWiu1vvQHf6yddNuatw287qhg
+         H+6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/WshFKwVEOSIDmK/jXaqIellNMbewgiCDoskQDtQ9tk=;
+        b=A4HzoAvq9Hbh2B+rOKGDup+79uxbd7UmSpTMO0QdVHxustnD76OLMxHeXWqb5PvL97
+         kIvYtRXDFvyHRV+pgum3Xz0l3G93/7d5/nPVJmvvV5ChT8RUEQv9Kb24yp/q4+x14qia
+         JYTAATIwe20UBHJlxPZiuQw+93+zLrgBZpKSucF3j/m3IiBkTn0MjLbds1HTIj6EJVY0
+         gaBUORteKLpQ7KG70xMQSsEf7TRFvYf3SovRIOONHfNbw3BWEgZ+ZxX+QoAJ/mjN5R/X
+         GBZC0zfPf/ll4O4b/Uei01ksnWfEdKCiv6F960M656+3zFda76c60KOUuUHl9bOpznEo
+         yayA==
+X-Gm-Message-State: APjAAAVJ4Qponk8MZ2D1qCsgexvKvbWOCKwTxPsKA0JFehPDFz06wxp4
+        O25kyoaPyDT5yAhW4+hYh9A=
+X-Google-Smtp-Source: APXvYqx+jDH6MmAkrZ+Timy7nHQDcQmWzrUIcxA/WT7cYjMlvS6JDBW9obXqMgmwG5+CKAqcncDVsw==
+X-Received: by 2002:a1c:acc8:: with SMTP id v191mr20193317wme.72.1555269307205;
+        Sun, 14 Apr 2019 12:15:07 -0700 (PDT)
+Received: from localhost.localdomain (p12.eregie.pub.ro. [141.85.0.112])
+        by smtp.gmail.com with ESMTPSA id v16sm96654246wro.48.2019.04.14.12.15.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 14 Apr 2019 12:15:06 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, daniel.baluta@gmail.com
+Subject: [PATCH 0/2] Fix invalid license IDS
+Date:   Sun, 14 Apr 2019 22:14:48 +0300
+Message-Id: <20190414191450.18377-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 09:53:42PM +0300, Vladimir Oltean wrote:
-> On Sun, 14 Apr 2019 at 19:18, Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > > > > > +             return dsa_8021q_xmit(skb, netdev, ETH_P_EDSA,
-> > > > > > > +                                  ((pcp << VLAN_PRIO_SHIFT) | tx_vid));
-> > > > > >
-> > > > > > Please don't reuse ETH_P_EDSA. Define an ETH_P_SJA1105.
-> > > > > >
-> > >
-> > > I'm receiving contradictory advice on this. Why should I define a new
-> > > ethertype, and if I do, what scope should the definition have (local
-> > > to the driver and the tagger, local to DSA, UAPI)?
-> >
-> > ETH_P_EDSA has a well defined meaning. It is a true global EtherType,
-> > and means a Marvell EtherType DSA header follows.
-> >
-> > You are polluting this meaning of ETH_P_EDSA. Would you put ETH_P_IP
-> > or ETH_P_8021AD here?
-> >
-> >    Andrew
-> 
-> You are putting an equality sign here between things that are not quite equal.
-> The MEDSA EtherType is used for the same purpose as what I'm using it for.
+This series of patches solves two issues reported by Thomas Gleixner
 
-I don't think it is. tcpdump will match on this EtherType and decode
-what follows as an EDSA header, just in the same way it matches a
-ETH_P_IP and decodes what comes next as an IP packet. I also have
-wireshark patches, which i never submitted, which do the same.
+Andra Danciu (2):
+  ASoC: mpc5200_dma: Fix invalid license ID
+  ASoC: mpc5200_psc_i2s: Fix invalid license ID
 
-Please run tcpdump on the master interface with your test system and
-see what it does.
+ sound/soc/fsl/mpc5200_dma.c     | 2 +-
+ sound/soc/fsl/mpc5200_psc_i2s.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-    Andrew
+-- 
+2.11.0
+
