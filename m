@@ -5,57 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E3CC10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D01C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6FB20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8EC20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0spRslg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2kwauP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfDNTPN (ORCPT
+        id S1727206AbfDNTPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 14 Apr 2019 15:15:13 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38532 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfDNTPK (ORCPT
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51055 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbfDNTPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 15:15:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w15so17404621wmc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:15:09 -0700 (PDT)
+        Sun, 14 Apr 2019 15:15:13 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z11so17834500wmi.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mNEsHRaFH3bUiAbsBbfcV45O7daG+K3xE7YuRVVXNPk=;
-        b=T0spRslgLJbgcplq0dNL1CcImHfhgGK+gAi6nYwJva8YY1xcEPAGeMxhXW1yzxean5
-         4t7Ea7LHj+Li+9zaVJ0cJ079DQ3VIbdWc5qrZ2nx7Y3R71ZsgAuOQXe2kbghx5XNLcwc
-         5BQtXKitkEsQmdkvjQ/GftLCAbHHFBu2Vbj4ymJwicnni5wS5o37sfhIiHny3AF1QFiy
-         SUOUIo1U6M66Vw4Wn9Vsnk+FuHD3+dbAlE26NjLBueAZOfTB4pZ+1eQhqdW+wEjaEJE6
-         UU3jmVoVZAaMYu3mv2lKq8tH9PGAZtuVt3x0wFHBKXtI1blNUZMNtch5BVztxGu9x+IY
-         Hzeg==
+        bh=IVWF5VbXq88Oe2XailmJT797hCzhKaf4Udl5bCUersw=;
+        b=E2kwauP9kAv6Vek9iveRlBPfygNSsknEEmkxfwpoNpkp1USB3nYhRie3JcVP6mBEcU
+         OvsC7buj8sI7kYXo9BEXOakenYHbfqh6FWNyy6NsKdu1cVMhIfa9gypEvuy19tpO8iV4
+         2m0Zw+FVVadWO0rION1dJrwpHk4sLsSf/4BtHVpa15w5t+1WWTHS5/y8UIdih9pTxK7q
+         vwfig9RJKrR9ur3xucSvMAmQJOIyxyvtYcviBytgn/mDiHfq5WsPewnH2xWoxR8Zjsze
+         t3rUzbucj7QFRoThDY3I8fN+k8SDbFhyY5PffDPyqGZH+slLdW4ctPNOfmY0HWA+59AJ
+         UsIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=mNEsHRaFH3bUiAbsBbfcV45O7daG+K3xE7YuRVVXNPk=;
-        b=c2kSlJEoVi4aZeaIGpiGlbXwpW1BYOoomued90zvvYpZqP3XEEhcRv4kFB798XQ/vH
-         lh3mWtjerS02prZWSyDyxSSRNjvTekW09oa6YYuWf6C6So0LKYmYSOyl9NBIHpCZliXP
-         EUZ/KL2bztmmte9g2VJDN0EEedMbs2gQA05wC7DhbdfePht/D0CFXgbdIJe1YEv8mSLd
-         Xz/2LjB1jmTUJ4RyBCPWj6bvjCPzX7jYicFzxDb4mmPpmAwuZWLYsGfizo2Z+gE0jJw4
-         ekN8vI12mBAJ2QuRdE0DCAGwIhy/Z8yldzxOI39XFKFzs+UmS5tIc487seJYttuxZM2W
-         ibNw==
-X-Gm-Message-State: APjAAAX697vR2EKQvzsMLKGbM6Z92HwYGdyXBtXY1UgCAGux7smZ7ezi
-        S4R4WIzdkXDobkhrJPMLcPM=
-X-Google-Smtp-Source: APXvYqxNw7Oej+ztm3MeI0gGZ3/lctXa61YeRHdJ3cSbZaM3vzek6YVKZgIe0kqYPCu+oR+9/1luuQ==
-X-Received: by 2002:a1c:a010:: with SMTP id j16mr18708650wme.40.1555269309146;
-        Sun, 14 Apr 2019 12:15:09 -0700 (PDT)
+        bh=IVWF5VbXq88Oe2XailmJT797hCzhKaf4Udl5bCUersw=;
+        b=nw6oqfix0NCVI4wSeOoqykX9WF+wbccHEAli3Xf+xF/Ru+WBqLvMMpNDhlWowMUMBb
+         czXhpNKOWXZe6oCxLaolCqSDIlVEDWIm+CXZ5YiDBaQ0o/yXzdNVvw3WsYTqpxA6WfHu
+         F6trd/9+tUMwyPMVgwcavs5lPFmhJOtVtf1DGPNQAQjcxCzBrj5anBZOVGd3veuN5lW9
+         YcA28tSpM0mK+DAineIII11I5lqOkm3tOYhXeJ64jbN4+3psfebcT6iMcddauomw1Jib
+         qzBsxgm2UcwzkdELmZO+7GRa6dTkNN9dRWQFW6EdR8FCZ7frbVaINoP29kNejA9VpENB
+         7WWw==
+X-Gm-Message-State: APjAAAV2faq/nDwa9mpI7+CM9HkWquJIhbRhLbyuhieZOz4iHYbqSNvj
+        zTPCovGRLOqXn1U94XJS+5Y=
+X-Google-Smtp-Source: APXvYqw9xtJOlYdm8kIIjs3GPTe1nPDZwu8LxNodAniOJpc5iVOjx7iA8wLMBdWjxLBImhYSqo6AHg==
+X-Received: by 2002:a1c:a742:: with SMTP id q63mr18522874wme.133.1555269311048;
+        Sun, 14 Apr 2019 12:15:11 -0700 (PDT)
 Received: from localhost.localdomain (p12.eregie.pub.ro. [141.85.0.112])
-        by smtp.gmail.com with ESMTPSA id v16sm96654246wro.48.2019.04.14.12.15.07
+        by smtp.gmail.com with ESMTPSA id v16sm96654246wro.48.2019.04.14.12.15.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Apr 2019 12:15:08 -0700 (PDT)
+        Sun, 14 Apr 2019 12:15:10 -0700 (PDT)
 From:   Andra Danciu <andradanciu1997@gmail.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -64,9 +63,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, daniel.baluta@gmail.com
-Subject: [PATCH 1/2] ASoC: mpc5200_dma: Fix invalid license ID
-Date:   Sun, 14 Apr 2019 22:14:49 +0300
-Message-Id: <20190414191450.18377-2-andradanciu1997@gmail.com>
+Subject: [PATCH 2/2] ASoC: mpc5200_psc_i2s: Fix invalid license ID
+Date:   Sun, 14 Apr 2019 22:14:50 +0300
+Message-Id: <20190414191450.18377-3-andradanciu1997@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190414191450.18377-1-andradanciu1997@gmail.com>
 References: <20190414191450.18377-1-andradanciu1997@gmail.com>
@@ -79,23 +78,23 @@ As the file had no other license notice/reference, it falls under the
 project license and therefore the proper SPDX id is: GPL-2.0-only
 
 Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Fixes: 1edfc2485d8dc ("ASoC: mpc5200_dma: Switch to SPDX identifier")
+Fixes: 864a8472c4412 ("ASoC: mpc5200_psc_i2s: Switch to SPDX identifier")
 Reported-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 ---
- sound/soc/fsl/mpc5200_dma.c | 2 +-
+ sound/soc/fsl/mpc5200_psc_i2s.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/mpc5200_dma.c b/sound/soc/fsl/mpc5200_dma.c
-index 4396442c2fdd..ccf9301889fe 100644
---- a/sound/soc/fsl/mpc5200_dma.c
-+++ b/sound/soc/fsl/mpc5200_dma.c
+diff --git a/sound/soc/fsl/mpc5200_psc_i2s.c b/sound/soc/fsl/mpc5200_psc_i2s.c
+index 6de97461ba25..9bc01f374b39 100644
+--- a/sound/soc/fsl/mpc5200_psc_i2s.c
++++ b/sound/soc/fsl/mpc5200_psc_i2s.c
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: GPL
 +// SPDX-License-Identifier: GPL-2.0-only
  //
- // Freescale MPC5200 PSC DMA
- // ALSA SoC Platform driver
+ // Freescale MPC5200 PSC in I2S mode
+ // ALSA SoC Digital Audio Interface (DAI) driver
 -- 
 2.11.0
 
