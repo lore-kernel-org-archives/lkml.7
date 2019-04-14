@@ -3,36 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB10C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A391C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6842148E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A03821904
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfDNQC3 (ORCPT
+        id S1727282AbfDNQCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:02:29 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43217 "EHLO
+        Sun, 14 Apr 2019 12:02:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43230 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfDNQC1 (ORCPT
+        with ESMTP id S1727260AbfDNQCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:02:27 -0400
+        Sun, 14 Apr 2019 12:02:30 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhaL-0002aA-6i; Sun, 14 Apr 2019 18:02:25 +0200
-Message-Id: <20190414160143.961241397@linutronix.de>
+        id 1hFhaO-0002b8-DY; Sun, 14 Apr 2019 18:02:28 +0200
+Message-Id: <20190414160144.227822695@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 17:59:41 +0200
+Date:   Sun, 14 Apr 2019 17:59:44 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 05/32] x86/irq/64: Sanitize the top/bottom confusion
+Subject: [patch V3 08/32] x86/exceptions: Remove unused stack defines on 32bit
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,62 +41,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On x86 stacks go top to bottom, but the stack overflow check uses it the
-other way round, which is just confusing. Clean it up and sanitize the
-warning string a bit.
+Nothing requires those for 32bit builds.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/irq_64.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/page_32_types.h |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -42,7 +42,7 @@ int sysctl_panic_on_stackoverflow;
- static inline void stack_overflow_check(struct pt_regs *regs)
- {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
--#define STACK_TOP_MARGIN	128
-+#define STACK_MARGIN	128
- 	struct orig_ist *oist;
- 	u64 irq_stack_top, irq_stack_bottom;
- 	u64 estack_top, estack_bottom;
-@@ -51,25 +51,25 @@ static inline void stack_overflow_check(
- 	if (user_mode(regs))
- 		return;
+--- a/arch/x86/include/asm/page_32_types.h
++++ b/arch/x86/include/asm/page_32_types.h
+@@ -22,11 +22,7 @@
+ #define THREAD_SIZE_ORDER	1
+ #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
  
--	if (regs->sp >= curbase + sizeof(struct pt_regs) + STACK_TOP_MARGIN &&
-+	if (regs->sp >= curbase + sizeof(struct pt_regs) + STACK_MARGIN &&
- 	    regs->sp <= curbase + THREAD_SIZE)
- 		return;
+-#define DOUBLEFAULT_STACK 1
+-#define NMI_STACK 0
+-#define DEBUG_STACK 0
+-#define MCE_STACK 0
+-#define N_EXCEPTION_STACKS 1
++#define N_EXCEPTION_STACKS	1
  
--	irq_stack_bottom = (u64)__this_cpu_read(irq_stack_ptr);
--	irq_stack_top = irq_stack_bottom - IRQ_STACK_SIZE + STACK_TOP_MARGIN;
--	if (regs->sp >= irq_stack_top && regs->sp <= irq_stack_bottom)
-+	irq_stack_top = (u64)__this_cpu_read(irq_stack_ptr);
-+	irq_stack_bottom = irq_stack_top - IRQ_STACK_SIZE + STACK_MARGIN;
-+	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
- 
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_bottom = (u64)oist->ist[DEBUG_STACK];
--	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
--	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
-+	estack_top = (u64)oist->ist[DEBUG_STACK];
-+	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
-+	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
- 		return;
- 
--	WARN_ONCE(1, "do_IRQ(): %s has overflown the kernel stack (cur:%Lx,sp:%lx,irq stk top-bottom:%Lx-%Lx,exception stk top-bottom:%Lx-%Lx,ip:%pF)\n",
-+	WARN_ONCE(1, "do_IRQ(): %s has overflown the kernel stack (cur:%Lx,sp:%lx, irq stack:%Lx-%Lx, exception stack: %Lx-%Lx, ip:%pF)\n",
- 		current->comm, curbase, regs->sp,
--		irq_stack_top, irq_stack_bottom,
--		estack_top, estack_bottom, (void *)regs->ip);
-+		irq_stack_bottom, irq_stack_top,
-+		estack_bottom, estack_top, (void *)regs->ip);
- 
- 	if (sysctl_panic_on_stackoverflow)
- 		panic("low stack detected by irq handler - check messages\n");
+ #ifdef CONFIG_X86_PAE
+ /*
 
 
