@@ -2,140 +2,111 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19082C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 06:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC338C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C0E20850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 06:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB52720850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfDNG6L (ORCPT
+        id S1726126AbfDNHCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 02:58:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38428 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfDNG6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 02:58:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so17431430wro.5
-        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 23:58:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Z54IX/IOP3iQTD3XT3aRxaB0/3WylPqvJxT6dm/Dn5c=;
-        b=cHr5YiBvXDu4Bi35POYCt/19M0FdEwDJ2NGfbllvix5oXKmCXlkedNaKste/ifMktf
-         503G3LYLABijuefWgI5IAJD7zZB57powvfuAHZwHsew5LQbxL/kMcXxNm/oFKUkieBei
-         WumHyL1p6DsGab4nU+QnfJTqJe+/BFrJTsK6cFTVCAnQZQJ42o7B9LT+V8t5ljRNkdEg
-         w2CD04njlsH/wJp13Qd4SzWGSnYMtf6YiGvKgbUatzcoKQKbtwxmhz17vQxxrvsveA1D
-         SDkWFp2DRWbI3IWr43H/Rsmex4YymULV6shb1gSJcg1YdotP+RjrQL5cR/fwLGqocJ+V
-         Gp6g==
-X-Gm-Message-State: APjAAAVZXDc5QVsFqDDXBgVTq9g4VLXohjSsYqoLbayBIViLilWq2Dc5
-        qQFCUzlbgL+5QJqwmhHovIl2FA==
-X-Google-Smtp-Source: APXvYqybIoQZ8wXGiqpDGs8dtXHwgj5AlnTP4DEqJ5OJbosWlii3C99RiqMPx3k7a+HknKD9/VHrnA==
-X-Received: by 2002:adf:f051:: with SMTP id t17mr21370413wro.73.1555225089444;
-        Sat, 13 Apr 2019 23:58:09 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-213-220-248-130.net.upcbroadband.cz. [213.220.248.130])
-        by smtp.gmail.com with ESMTPSA id z140sm33985037wmc.27.2019.04.13.23.58.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 13 Apr 2019 23:58:08 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
-        "apw\@canonical.com" <apw@canonical.com>,
-        "olaf\@aepfle.de" <olaf@aepfle.de>,
-        "jasowang\@redhat.com" <jasowang@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "riel\@surriel.com" <riel@surriel.com>,
-        "peterz\@infradead.org" <peterz@infradead.org>,
-        "jpoimboe\@redhat.com" <jpoimboe@redhat.com>,
-        "luto\@kernel.org" <luto@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] smp: Do not warn if smp_call_function_single() is doing a self call.
-In-Reply-To: <20190412235341.29379-1-decui@microsoft.com>
-References: <20190412235341.29379-1-decui@microsoft.com>
-Date:   Sun, 14 Apr 2019 08:58:10 +0200
-Message-ID: <875zrhf4zh.fsf@vitty.brq.redhat.com>
+        Sun, 14 Apr 2019 03:02:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52494 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725613AbfDNHCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 03:02:01 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2F6D1308212A;
+        Sun, 14 Apr 2019 07:02:01 +0000 (UTC)
+Received: from localhost (ovpn-12-23.pek2.redhat.com [10.72.12.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3CE35C219;
+        Sun, 14 Apr 2019 07:01:58 +0000 (UTC)
+Date:   Sun, 14 Apr 2019 15:01:55 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, kirill@shutemov.name, keescook@chromium.org,
+        peterz@infradead.org, thgarnie@google.com,
+        herbert@gondor.apana.org.au, mike.travis@hpe.com,
+        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 1/2] x86/mm/KASLR: Fix the size of the direct mapping
+ section
+Message-ID: <20190414070155.GB7065@MiWiFi-R3L-srv>
+References: <20190412065542.18431-1-bhe@redhat.com>
+ <20190412065542.18431-2-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190412065542.18431-2-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sun, 14 Apr 2019 07:02:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
-
-> If smp_call_function_single() is calling the function for itself, it's safe
-> to run with irqs_disabled() == true.
->
-> I hit the warning because I'm in the below path in the .suspend callback of
-> a "syscore_ops" to support hibernation for a VM running on Hyper-V:
->
->   hv_synic_cleanup() ->
->     clockevents_unbind_device() ->
->       clockevents_unbind() ->
->         smp_call_function_single().
->
-
-I'd suggest fixing clockevents_unbind() instead, something like
-(completely untested):
-
-diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-index 5e77662dd2d9..d14e881a8808 100644
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -418,8 +418,17 @@ static void __clockevents_unbind(void *arg)
- static int clockevents_unbind(struct clock_event_device *ced, int cpu)
- {
-        struct ce_unbind cu = { .ce = ced, .res = -ENODEV };
-+       int this_cpu;
-+
-+       this_cpu = get_cpu();
-+
-+       if (cpu != this_cpu)
-+               smp_call_function_single(cpu, __clockevents_unbind, &cu, 1);
-+       else
-+               __clockevents_unbind(&cu);
-+
-+       put_cpu();
- 
--       smp_call_function_single(cpu, __clockevents_unbind, &cu, 1);
-        return cu.res;
- }
-
-> When the .suspend callback runs, only CPU0 is online and irqs_disabled() is
-> true.
->
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+On 04/12/19 at 02:55pm, Baoquan He wrote:
+> kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
+> the maximum amount of system RAM supported. The size of the direct
+> mapping section is obtained from the smaller one of the below two
+> values:
+> 
+>  (actual system RAM size + padding size) vs (max system RAM size supported)
+> 
+> This calculation is wrong since commit:
+> b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
+> 
+> In commit b83ce5ee91471d, __PHYSICAL_MASK_SHIFT was changed to be 52,
+> regardless of whether it's using 4-level or 5-level page tables.
+> It will always use 4 PB as the maximum amount of system RAM, even
+> in 4-level paging mode where it should be 64 TB.  Thus the size of
+> the direct mapping section will always be the sum of the actual
+> system RAM size plus the padding size.
+> 
+> Even when the amount of system RAM is 64 TB, the following layout will
+> still be used. Obviously KALSR will be weakened significantly.
+> 
+>    |_______actual RAM_______|_padding_|______the rest_______ |
+>    0            64TB          74TB                    ~120TB
+                                ~~ I could use tab, will resend to
+correct this.
+> 
+> What we want is the following:
+> 
+>    |_______actual RAM_______|_________the rest_______________|
+>    0            64TB                                  ~120TB
+> 
+> So the code should use MAX_PHYSMEM_BITS instead. Fix it by replacing
+> __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
+> 
+> Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  kernel/smp.c | 2 +-
+>  arch/x86/mm/kaslr.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index f4cf1b0bb3b8..4fdf6a378def 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -288,7 +288,7 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
->  	 * can't happen.
->  	 */
->  	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
-> -		     && !oops_in_progress);
-> +		     && cpu != smp_processor_id() && !oops_in_progress);
-
-You already have 'this_cpu', no need to call smp_processor_id(). 
-
+> 
+> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+> index 9a8756517504..387d4ed25d7c 100644
+> --- a/arch/x86/mm/kaslr.c
+> +++ b/arch/x86/mm/kaslr.c
+> @@ -94,7 +94,7 @@ void __init kernel_randomize_memory(void)
+>  	if (!kaslr_memory_enabled())
+>  		return;
 >  
->  	csd = &csd_stack;
->  	if (!wait) {
-
--- 
-Vitaly
+> -	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
+> +	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
+>  	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
+>  
+>  	/*
+> -- 
+> 2.17.2
+> 
