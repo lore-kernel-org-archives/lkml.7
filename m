@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253DFC10F11
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E242C282CE
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AF520645
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EB22084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfDNBtB (ORCPT
+        id S1727279AbfDNBtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 13 Apr 2019 21:49:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41912 "EHLO huawei.com"
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41916 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbfDNBtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 21:49:00 -0400
+        id S1727191AbfDNBtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 21:49:01 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2FF2E33ACA3F69DC6DE7;
+        by Forcepoint Email with ESMTP id 33E9AAD14A54BED596EF;
         Sun, 14 Apr 2019 09:48:57 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.408.0; Sun, 14 Apr 2019 09:48:51 +0800
+ 14.3.408.0; Sun, 14 Apr 2019 09:48:49 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 11/12] net: hns3: free the pending skb when clean RX ring
-Date:   Sun, 14 Apr 2019 09:47:45 +0800
-Message-ID: <1555206466-44240-12-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 04/12] net: hns3: fix set port based VLAN issue for VF
+Date:   Sun, 14 Apr 2019 09:47:38 +0800
+Message-ID: <1555206466-44240-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555206466-44240-1-git-send-email-tanhuazhong@huawei.com>
 References: <1555206466-44240-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,39 +46,276 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Li <lipeng321@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-If there is pending skb in RX flow when close the port, and the
-pending buffer is not cleaned, the new packet will be added to
-the pending skb when the port opens again, and the first new
-packet has error data.
+In original codes, ndo_set_vf_vlan() in hns3 driver was implemented
+wrong. It adds or removes VLAN into VLAN filter for VF, but VF is
+unaware of it.
 
-This patch cleans the pending skb when clean RX ring.
+This patch fixes it. When VF loads up, it firstly queries the port
+based VLAN state from PF. When user change port based VLAN state
+from PF, PF firstly checks whether the VF is alive. If the VF is
+alive, then PF notifies the VF the modification; otherwise PF
+configure the port based VLAN state directly.
 
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  3 ++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 11 ++++-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  3 ++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 39 ++++++++++++++---
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 51 ++++++++++++++++++++++
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  2 +
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   | 11 ++++-
+ 7 files changed, 111 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index a67dfdd..9233438 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3960,6 +3960,13 @@ static int hns3_clear_rx_ring(struct hns3_enet_ring *ring)
- 		ring_ptr_move_fw(ring, next_to_use);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 9d3d45f..360463a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -43,6 +43,7 @@ enum HCLGE_MBX_OPCODE {
+ 	HCLGE_MBX_GET_QID_IN_PF,	/* (VF -> PF) get queue id in pf */
+ 	HCLGE_MBX_LINK_STAT_MODE,	/* (PF -> VF) link mode has changed */
+ 	HCLGE_MBX_GET_LINK_MODE,	/* (VF -> PF) get the link mode of pf */
++	HLCGE_MBX_PUSH_VLAN_INFO,	/* (PF -> VF) push port base vlan */
+ 	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
+ 
+ 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf reset status */
+@@ -63,6 +64,8 @@ enum hclge_mbx_vlan_cfg_subcode {
+ 	HCLGE_MBX_VLAN_FILTER = 0,	/* set vlan filter */
+ 	HCLGE_MBX_VLAN_TX_OFF_CFG,	/* set tx side vlan offload */
+ 	HCLGE_MBX_VLAN_RX_OFF_CFG,	/* set rx side vlan offload */
++	HCLGE_MBX_PORT_BASE_VLAN_CFG,	/* set port based vlan configuration */
++	HCLGE_MBX_GET_PORT_BASE_VLAN_STATE,	/* get port based vlan state */
+ };
+ 
+ #define HCLGE_MBX_MAX_MSG_SIZE	16
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 0a99a97..0d1cd3f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -7067,7 +7067,16 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
+ 		return ret;
  	}
  
-+	/* Free the pending skb in rx ring */
-+	if (ring->skb) {
-+		dev_kfree_skb_any(ring->skb);
-+		ring->skb = NULL;
-+		ring->pending_buf = 0;
+-	return -EOPNOTSUPP;
++	if (!test_bit(HCLGE_VPORT_STATE_ALIVE, &vport->state)) {
++		return hclge_update_port_base_vlan_cfg(vport, state,
++						       &vlan_info);
++	} else {
++		ret = hclge_push_vf_port_base_vlan_info(&hdev->vport[0],
++							(u8)vfid, state,
++							vlan, qos,
++							ntohs(proto));
++		return ret;
 +	}
-+
+ }
+ 
+ int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 45c9467..f04a52f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -941,4 +941,7 @@ void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list);
+ void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev);
+ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 				    struct hclge_vlan_info *vlan_info);
++int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
++				      u16 state, u16 vlan_tag, u16 qos,
++				      u16 vlan_proto);
+ #endif
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index fddbbca..24386bd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -289,9 +289,25 @@ static int hclge_set_vf_mc_mac_addr(struct hclge_vport *vport,
  	return 0;
  }
  
++int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
++				      u16 state, u16 vlan_tag, u16 qos,
++				      u16 vlan_proto)
++{
++#define MSG_DATA_SIZE	8
++
++	u8 msg_data[MSG_DATA_SIZE];
++
++	memcpy(&msg_data[0], &state, sizeof(u16));
++	memcpy(&msg_data[2], &vlan_proto, sizeof(u16));
++	memcpy(&msg_data[4], &qos, sizeof(u16));
++	memcpy(&msg_data[6], &vlan_tag, sizeof(u16));
++
++	return hclge_send_mbx_msg(vport, msg_data, sizeof(msg_data),
++				  HLCGE_MBX_PUSH_VLAN_INFO, vfid);
++}
++
+ static int hclge_set_vf_vlan_cfg(struct hclge_vport *vport,
+-				 struct hclge_mbx_vf_to_pf_cmd *mbx_req,
+-				 bool gen_resp)
++				 struct hclge_mbx_vf_to_pf_cmd *mbx_req)
+ {
+ 	int status = 0;
+ 
+@@ -310,11 +326,22 @@ static int hclge_set_vf_vlan_cfg(struct hclge_vport *vport,
+ 		bool en = mbx_req->msg[2] ? true : false;
+ 
+ 		status = hclge_en_hw_strip_rxvtag(handle, en);
++	} else if (mbx_req->msg[1] == HCLGE_MBX_PORT_BASE_VLAN_CFG) {
++		struct hclge_vlan_info *vlan_info;
++		u16 *state;
++
++		state = (u16 *)&mbx_req->msg[2];
++		vlan_info = (struct hclge_vlan_info *)&mbx_req->msg[4];
++		status = hclge_update_port_base_vlan_cfg(vport, *state,
++							 vlan_info);
++	} else if (mbx_req->msg[1] == HCLGE_MBX_GET_PORT_BASE_VLAN_STATE) {
++		u8 state;
++
++		state = vport->port_base_vlan_cfg.state;
++		status = hclge_gen_resp_to_vf(vport, mbx_req, 0, &state,
++					      sizeof(u8));
+ 	}
+ 
+-	if (gen_resp)
+-		status = hclge_gen_resp_to_vf(vport, mbx_req, status, NULL, 0);
+-
+ 	return status;
+ }
+ 
+@@ -584,7 +611,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 					ret);
+ 			break;
+ 		case HCLGE_MBX_SET_VLAN:
+-			ret = hclge_set_vf_vlan_cfg(vport, req, false);
++			ret = hclge_set_vf_vlan_cfg(vport, req);
+ 			if (ret)
+ 				dev_err(&hdev->pdev->dev,
+ 					"PF failed(%d) to config VF's VLAN\n",
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index b917960..2e277c9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -245,6 +245,27 @@ static int hclgevf_get_tc_info(struct hclgevf_dev *hdev)
+ 	return 0;
+ }
+ 
++static int hclgevf_get_port_base_vlan_filter_state(struct hclgevf_dev *hdev)
++{
++	struct hnae3_handle *nic = &hdev->nic;
++	u8 resp_msg;
++	int ret;
++
++	ret = hclgevf_send_mbx_msg(hdev, HCLGE_MBX_SET_VLAN,
++				   HCLGE_MBX_GET_PORT_BASE_VLAN_STATE,
++				   NULL, 0, true, &resp_msg, sizeof(u8));
++	if (ret) {
++		dev_err(&hdev->pdev->dev,
++			"VF request to get port based vlan state failed %d",
++			ret);
++		return ret;
++	}
++
++	nic->port_base_vlan_state = resp_msg;
++
++	return 0;
++}
++
+ static int hclgevf_get_queue_info(struct hclgevf_dev *hdev)
+ {
+ #define HCLGEVF_TQPS_RSS_INFO_LEN	6
+@@ -1834,6 +1855,11 @@ static int hclgevf_configure(struct hclgevf_dev *hdev)
+ {
+ 	int ret;
+ 
++	/* get current port based vlan state from PF */
++	ret = hclgevf_get_port_base_vlan_filter_state(hdev);
++	if (ret)
++		return ret;
++
+ 	/* get queue configuration from PF */
+ 	ret = hclgevf_get_queue_info(hdev);
+ 	if (ret)
+@@ -2790,6 +2816,31 @@ static void hclgevf_get_regs(struct hnae3_handle *handle, u32 *version,
+ 	}
+ }
+ 
++void hclgevf_update_port_base_vlan_info(struct hclgevf_dev *hdev, u16 state,
++					u8 *port_base_vlan_info, u8 data_size)
++{
++	struct hnae3_handle *nic = &hdev->nic;
++
++	rtnl_lock();
++	hclgevf_notify_client(hdev, HNAE3_DOWN_CLIENT);
++	rtnl_unlock();
++
++	/* send msg to PF and wait update port based vlan info */
++	hclgevf_send_mbx_msg(hdev, HCLGE_MBX_SET_VLAN,
++			     HCLGE_MBX_PORT_BASE_VLAN_CFG,
++			     port_base_vlan_info, data_size,
++			     false, NULL, 0);
++
++	if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
++		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_DISABLE;
++	else
++		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
++
++	rtnl_lock();
++	hclgevf_notify_client(hdev, HNAE3_UP_CLIENT);
++	rtnl_unlock();
++}
++
+ static const struct hnae3_ae_ops hclgevf_ops = {
+ 	.init_ae_dev = hclgevf_init_ae_dev,
+ 	.uninit_ae_dev = hclgevf_uninit_ae_dev,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index c128863..49e5bec 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -290,4 +290,6 @@ void hclgevf_update_speed_duplex(struct hclgevf_dev *hdev, u32 speed,
+ 				 u8 duplex);
+ void hclgevf_reset_task_schedule(struct hclgevf_dev *hdev);
+ void hclgevf_mbx_task_schedule(struct hclgevf_dev *hdev);
++void hclgevf_update_port_base_vlan_info(struct hclgevf_dev *hdev, u16 state,
++					u8 *port_base_vlan_info, u8 data_size);
+ #endif
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 3bcf49b..bf57084 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -198,6 +198,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 		case HCLGE_MBX_LINK_STAT_CHANGE:
+ 		case HCLGE_MBX_ASSERTING_RESET:
+ 		case HCLGE_MBX_LINK_STAT_MODE:
++		case HLCGE_MBX_PUSH_VLAN_INFO:
+ 			/* set this mbx event as pending. This is required as we
+ 			 * might loose interrupt event when mbx task is busy
+ 			 * handling. This shall be cleared when mbx task just
+@@ -243,8 +244,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ {
+ 	enum hnae3_reset_type reset_type;
+-	u16 link_status;
+-	u16 *msg_q;
++	u16 link_status, state;
++	u16 *msg_q, *vlan_info;
+ 	u8 duplex;
+ 	u32 speed;
+ 	u32 tail;
+@@ -299,6 +300,12 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 			hclgevf_reset_task_schedule(hdev);
+ 
+ 			break;
++		case HLCGE_MBX_PUSH_VLAN_INFO:
++			state = le16_to_cpu(msg_q[1]);
++			vlan_info = &msg_q[1];
++			hclgevf_update_port_base_vlan_info(hdev, state,
++							   (u8 *)vlan_info, 8);
++			break;
+ 		default:
+ 			dev_err(&hdev->pdev->dev,
+ 				"fetched unsupported(%d) message from arq\n",
 -- 
 2.7.4
 
