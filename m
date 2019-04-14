@@ -2,96 +2,80 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CD0C10F11
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAE1C10F11
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 02:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366F120645
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5EB22147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 02:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfDNBuW (ORCPT
+        id S1727240AbfDNCzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 21:50:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41910 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727148AbfDNBtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 21:49:01 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1D1E0FC5ED3DBA89E735;
-        Sun, 14 Apr 2019 09:48:57 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.408.0; Sun, 14 Apr 2019 09:48:48 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 00/12] code optimizations & bugfixes for HNS3 driver
-Date:   Sun, 14 Apr 2019 09:47:34 +0800
-Message-ID: <1555206466-44240-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 13 Apr 2019 22:55:02 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:52916 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbfDNCzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 22:55:01 -0400
+Received: by mail-it1-f197.google.com with SMTP id 73so13200268itl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 19:55:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=EpmA7tOPMeXxvHBfABlmb8FTDps5VZ6P9Hzfo+3xEOc=;
+        b=TjrtE9IqtzGH9xke6Ux0m0YQBWPpFPD70vQ7by01natnyG0Be0sPYQsvPEyDSxkndU
+         nmvGsOrzvplxZcP6AlK947u7v95VubYcD6tj15V++ZR83IWN4tS1Rln3D6Ww9ywoCOv2
+         o/ZJxJMb6qXnK4ihyJQR7ivzwSFO+gXoYgiXFvJDvN1v91SlLUOrmFrYMT94wgx3/c31
+         tf60odDo5n42xf6nTRPRb6yDqzxu+hsX88/OP1cd0FJClp6+AtE3TRIBLpW3AjB/nz9F
+         DdrTEH3ro0x8ZRs3aRVoEowBYXrKdgxX2GGke0ph+OLLLsvuB/XxTpFQTOsPFNgnhJrC
+         ASnw==
+X-Gm-Message-State: APjAAAUB0yhFKN1ipumTLgn6YCNqh2T/KeLWIj1WTusUHcZMIvIbyLJe
+        P7WiIbQa3NFLmYWo5aI7sHtIG+aJqKWC8X3YGAlLxZadCX6x
+X-Google-Smtp-Source: APXvYqzxNqYArsgazGGOVEkorCoGxLAaBWKxHsEiTFGk8Oo2mZx5TvxIT9Dm+TrXC2QKEJLPhy/K+Offgzn9+L2tgZqNzDaG9X15
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a24:6f81:: with SMTP id x123mr4742934itb.29.1555210500891;
+ Sat, 13 Apr 2019 19:55:00 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 19:55:00 -0700
+In-Reply-To: <000000000000e02bf505866414ae@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000074e9d5058674a94f@google.com>
+Subject: Re: INFO: task hung in do_exit
+From:   syzbot <syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com>
+To:     amitoj1606@gmail.com, ap420073@gmail.com, avagin@gmail.com,
+        dbueso@suse.de, ebiederm@xmission.com, jacek.anaszewski@gmail.com,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mm@kvack.org, oleg@redhat.com, pavel@ucw.cz,
+        prsood@codeaurora.org, rpurdie@rpsys.net,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set includes code optimizations and bugfixes for the HNS3
-ethernet controller driver.
+syzbot has bisected this bug to:
 
-[patch 1/12 - 4/12] optimizes the VLAN freature and adds support for port
-based VLAN, fixes some related bugs about the current implementation.
+commit 430e48ecf31f4f897047f22e02abdfa75730cad8
+Author: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Date:   Thu Aug 10 16:28:09 2017 +0000
 
-[patch 5/12 - 12/12] includes some other code optimizations for the HNS3
-ethernet controller driver.
+     leds: lm3533: constify attribute_group structure
 
-Change log:
-V1->V2: modifies some patches' commint log and code.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15f4cee3200000
+start commit:   8ee15f32 Merge tag 'dma-mapping-5.1-1' of git://git.infrad..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17f4cee3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f4cee3200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
+dashboard link: https://syzkaller.appspot.com/bug?extid=9880e421ec82313d6527
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149b89af200000
 
-Jian Shen (5):
-  net: hns3: modify VLAN initialization to be compatible with port based
-    VLAN
-  net: hns3: fix VLAN offload handle for VLAN inserted by port
-  net: hns3: fix set port based VLAN for PF
-  net: hns3: fix set port based VLAN issue for VF
-  net: hns3: do not initialize MDIO bus when PHY is inexistent
+Reported-by: syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com
+Fixes: 430e48ecf31f ("leds: lm3533: constify attribute_group structure")
 
-Peng Li (2):
-  net: hns3: free the pending skb when clean RX ring
-  net: hns3: code optimization for command queue' spin lock
-
-Weihang Li (1):
-  net: hns3: set dividual reset level for all RAS and MSI-X errors
-
-Yunsheng Lin (4):
-  net: hns3: minor refactor for hns3_rx_checksum
-  net: hns3: add hns3_gro_complete for HW GRO process
-  net: hns3: always assume no drop TC for performance reason
-  net: hns3: divide shared buffer between TC
-
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |   3 +
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   9 +
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 256 ++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c |   4 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 956 +++++++++++++--------
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   1 +
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 378 ++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  29 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  42 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c    |   8 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   |   4 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  51 ++
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   2 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  11 +-
- 14 files changed, 1224 insertions(+), 530 deletions(-)
-
--- 
-2.7.4
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
