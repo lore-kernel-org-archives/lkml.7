@@ -2,128 +2,105 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F60C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5816EC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAF220850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262182084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNnow3fL"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="k27NWz4l";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="NnBDonfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbfDNHK3 (ORCPT
+        id S1725972AbfDNH02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 03:10:29 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:36999 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfDNHK2 (ORCPT
+        Sun, 14 Apr 2019 03:26:28 -0400
+Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:38427 "EHLO
+        mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725681AbfDNH02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 03:10:28 -0400
-Received: by mail-yw1-f68.google.com with SMTP id w66so4928818ywd.4;
-        Sun, 14 Apr 2019 00:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dopavWQTSlpzv4wKGexw1UjZUyWhobeaR088W7CR5S0=;
-        b=FNnow3fLRzVn0Ij/MuSoONf5XZ2qUNe7xpQw5jYRoMymKZvDG3jEasFyCPOhita18V
-         C5Pocx+64OfvSa62oZJR1JqPid8RB5WFUoXNJhYbY6H+OwVwGYYrZGSA4cLaca9KF/LE
-         ShG7nT0UuQc98jQUEn03Uvfwit+GSq5oi656DQqxcQUIgk3jpSpoXLLpf6VEGRXF0RvP
-         8ZwStE/OHTUS8jlDEOiqb20A7Bfp0qPgNofyHYJbk+QdsB3FZyqNgzM2d7ZcV8n6gj3t
-         Om2ELHBgJ1xnavKCp+vN6uHOgaHYn3MQNhrVZ3DwngNniHs0FX9Iy6+nKLGpriccFzHI
-         Auzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dopavWQTSlpzv4wKGexw1UjZUyWhobeaR088W7CR5S0=;
-        b=LV2kFHbBEdHRVzZgbw05ExJfpxmh6ygx0pBJwvlZAgZG4Pq8sZ2QCWENJstYR9qHtX
-         dcRQzjyp948PE+Wbxcs/4n7U/6uJYv4KEmN4d4kuvyuBgx3HObxU1iF62P9gX8nj92cB
-         6QiIPJ3BnfF/gxq1y7FMGOEzjRZbhRGHsQpE6ZOuXtT5JX3DsCA6RUy+PYszSke5GWFP
-         dOwyKaUII9APIMymA3YK2nccFrA1C7fWO2QdJ0DigAspXNH572Tr7O9TECtXtejvrT/Q
-         Bn6WFRT16lw9EPageu8vtcoKMe9nNWR2xPjahVrRf9VIY1nvmGcI6OMRPvefJpSbmVhM
-         UuEA==
-X-Gm-Message-State: APjAAAWsiLOAv16ge6ivS6zqXV58q78GOrJGMGxO886pvQxxKkj1Zcl7
-        oA5k5p+ZeKWrjcAhY0WoEsbL2Mellu7ZYSLPohs=
-X-Google-Smtp-Source: APXvYqx3IDLqWrSlHWPJeYniRZ9ruRFpYT2HjMTWW1qBa30d3e/XbPUqhYOgLB67pmDT5LxeGTzEJx5alaxhZMhRyFQ=
-X-Received: by 2002:a81:b554:: with SMTP id c20mr51312047ywk.169.1555225827636;
- Sun, 14 Apr 2019 00:10:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190413205439.9623-1-shawn@git.icu> <20190414010254.GA7408@magnolia>
-In-Reply-To: <20190414010254.GA7408@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sun, 14 Apr 2019 10:10:16 +0300
-Message-ID: <CAOQ4uxgkE+Ls+Sff1ptWtFwpT3dZrRayXsr4wX4Z9bZ=28Vxhw@mail.gmail.com>
-Subject: Re: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
-To:     Shawn Landden <shawn@git.icu>
-Cc:     linux-api@vger.kernel.org,
+        Sun, 14 Apr 2019 03:26:28 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Apr 2019 03:26:27 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=CpRIjSQUR3adhoOiy1dNtcnl6hTH9Y4lP11nhbiW5+g=;
+ b=k27NWz4l9r4di4fxgLybjNmNIoLl+Q/yNxwST7rMUXNu+uv+419SsJ0u7Jxn7ExRXCwOFfPria5s
+   n+fX6W4YSCNMumdTBPGpIPHNTPalnFNtoSX3taK85ILNNXIYbNLxoWY0AgsNE0fdR0flTf3PYzvy
+   Rs3hzsIQmXHfVr0jGLk=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hmbga61jvmgr for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 07:11:26 +0000 (envelope-from <bounce-md_31050260.5cb2dd1d.v1-a0412a8a7c8f413ab314b472d4c48433@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555225885; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=CpRIjSQUR3adhoOiy1dNtcnl6hTH9Y4lP11nhbiW5+g=; 
+ b=NnBDonfisDQgx3h//L1usT1P0p9nE875fQmFEPnp+GcAS82B7kAVFq9Rt/MrRlqWjTlmDc
+ vq1YnGf3djOo/tLGmLTNNZsCvB127LPvohkCLtFQNZLtIW7C5nQURq3/TZY5htBdxgk+GVxS
+ /NQxMNBqeI5Dfiq6e7KE0mWdcBl/w=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH 1/3] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Received: from [87.98.221.171] by mandrillapp.com id a0412a8a7c8f413ab314b472d4c48433; Sun, 14 Apr 2019 07:11:25 +0000
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>
+Message-Id: <20190414071117.GA4842@deco.navytux.spb.ru>
+References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com> <CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com> <20190407200423.GA2829@deco.navytux.spb.ru> <CAHk-=whQQdoQsgEx1vO7OkfPDcV5hurPnMRLgzfXAPN63n5Sbg@mail.gmail.com>
+In-Reply-To: <CAHk-=whQQdoQsgEx1vO7OkfPDcV5hurPnMRLgzfXAPN63n5Sbg@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.a0412a8a7c8f413ab314b472d4c48433
+X-Mandrill-User: md_31050260
+Date:   Sun, 14 Apr 2019 07:11:25 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 4:04 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> On Sat, Apr 13, 2019 at 03:54:39PM -0500, Shawn Landden wrote:
->
-> /me pulls out his close-reading glasses and the copy_file_range manpage...
->
-> > If flags includes COPY_FILE_RANGE_FILESIZE then the length
-> > copied is the length of the file. off_in and off_out are
-> > ignored.  len must be 0 or the file size.
->
-> They're ignored?  As in the copy operation reads the number of bytes in
-> the file referenced by fd_in from fd_in at its current position and is
-> writes that out to fd_out at its current position?  I don't see why I
-> would want such an operation...
->
-> ...but I can see how people could make use of a CFR_ENTIRE_FILE that
-> would check that both file descriptors are actually regular files, and
-> if so copy the entire contents of the fd_in file into the same position
-> in the fd_out file, and then set the fd_out file's length to match.  If
-> @off_in or @off_out are non-NULL then they'll be updated to the new EOFs
-> if the copy completes succesfully and @len can be anything.
->
+On Sun, Apr 07, 2019 at 02:09:08PM -1000, Linus Torvalds wrote:
+> On Sun, Apr 7, 2019 at 10:04 AM Kirill Smelkov <kirr@nexedi.com> wrote:
+> >
+> > Fixing regression on FUSE side is my reason to do this whole work -
+> > that's why I care about it the most and ask.
+> 
+> Yeah, we can do the actual FUSE fix, I think. Preferably through the
+> FUSE tree. Miklos?
 
-IDGI. In what way would that be helpful?
-Would the syscall fail if it cannot copy entire file (like clone_file_range)
-or return bytes copied?
-If latter, then user will have to call syscall again until getting 0
-return value.
-User can already call copy_file_range with len=SSIZE_MAX and get almost
-the same thing.
-Unless the idea is to optimize for less syscalls for copying very large files??
-In that case, MAX_RW_COUNT limit for this syscall would need to be relaxed.
+Linus, thanks for feedback.
 
-While on the subject, something that has been discussed in the past is that
-copy_file_range() and sendfile() of a large file are not killable, so that is
-that should be fixed, especially if the interface is going to be used to copy
-more data in-kernel.
+I'm not sure what is going on, but I'm afraid we can wait very long
+here. It's been already 1 week, and I was also struggling to get
+feedback from Miklos on my FUSE patches starting from end of February
+without any luck:
 
-IOW, the motivation of the patch is not clear to me:
+https://lore.kernel.org/linux-fsdevel/cover.1553680185.git.kirr@nexedi.com/
+	https://lore.kernel.org/linux-fsdevel/12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com/
+	https://lore.kernel.org/linux-fsdevel/d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com/
 
-> This implementation saves a call to stat() in the common case
+https://lore.kernel.org/linux-fsdevel/cover.1553677194.git.kirr@nexedi.com/
+	https://lore.kernel.org/linux-fsdevel/d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com/
+	https://lore.kernel.org/linux-fsdevel/e0b43507976d6ea9010f1bacaef067f18de49f1f.1553677194.git.kirr@nexedi.com/
 
-What is the real life workload where this micro optimization would
-have any affect?
+https://lore.kernel.org/linux-fsdevel/dc47c061f20c464ccf46b43822b062dca6486e90.1553637462.git.kirr@nexedi.com/
 
-> It does not fix any race conditions, but that is possible in the future
-> with this interface.
+I'm not sure what to do with my FUSE patches. It feels like knocking
+into closed door...
 
-Then please present a plan or an implementation of how that interface
-can solve race conditions and if that is the only motivation for the
-interface than I do not see why we should merge the interface before
-the implementation.
-
-Please let me know if I am missing something.
-
-Thanks,
-Amir.
+Kirill
