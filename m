@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACDC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AECCC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8352084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D2D2148E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfDNQDQ (ORCPT
+        id S1727835AbfDNQDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:03:16 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43337 "EHLO
+        Sun, 14 Apr 2019 12:03:20 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43346 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbfDNQDN (ORCPT
+        with ESMTP id S1727635AbfDNQDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:03:13 -0400
+        Sun, 14 Apr 2019 12:03:16 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhb5-0002jo-6t; Sun, 14 Apr 2019 18:03:11 +0200
-Message-Id: <20190414160145.912584074@linutronix.de>
+        id 1hFhb8-0002kU-3H; Sun, 14 Apr 2019 18:03:14 +0200
+Message-Id: <20190414160146.089060584@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 18:00:02 +0200
+Date:   Sun, 14 Apr 2019 18:00:04 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 26/32] x86/irq/64: Rename irq_stack_ptr to hardirq_stack_ptr
+Subject: [patch V3 28/32] x86/irq/32: Handle irq stack allocation failure
+ proper
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,83 +42,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preparatory patch to share code with 32bit.
+irq_ctx_init() crashes hard on page allocation failures. While that's ok
+during early boot, it's just wrong in the CPU hotplug bringup code.
+
+Check the page allocation failure and return -ENOMEM and handle it at the
+call sites. On early boot the only way out is to BUG(), but on CPU hotplug
+there is no reason to crash, so just abort the operation.
+
+Rename the function to something more sensible while at it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S        |    2 +-
- arch/x86/include/asm/processor.h |    2 +-
- arch/x86/kernel/cpu/common.c     |    2 +-
- arch/x86/kernel/dumpstack_64.c   |    2 +-
- arch/x86/kernel/irq_64.c         |    2 +-
- arch/x86/kernel/setup_percpu.c   |    2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/irq.h |    4 ++--
+ arch/x86/include/asm/smp.h |    2 +-
+ arch/x86/kernel/irq_32.c   |   34 +++++++++++++++++-----------------
+ arch/x86/kernel/irqinit.c  |    2 +-
+ arch/x86/kernel/smpboot.c  |   15 ++++++++++++---
+ arch/x86/xen/smp_pv.c      |    4 +++-
+ 6 files changed, 36 insertions(+), 25 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -431,7 +431,7 @@ END(irq_entries_start)
- 	 */
- 
- 	movq	\old_rsp, PER_CPU_VAR(irq_stack_union + IRQ_STACK_SIZE - 8)
--	movq	PER_CPU_VAR(irq_stack_ptr), %rsp
-+	movq	PER_CPU_VAR(hardirq_stack_ptr), %rsp
- 
- #ifdef CONFIG_DEBUG_ENTRY
- 	/*
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -396,7 +396,7 @@ static inline unsigned long cpu_kernelmo
- 	return (unsigned long)per_cpu(irq_stack_union.gs_base, cpu);
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -17,9 +17,9 @@ static inline int irq_canonicalize(int i
  }
  
--DECLARE_PER_CPU(char *, irq_stack_ptr);
-+DECLARE_PER_CPU(char *, hardirq_stack_ptr);
- DECLARE_PER_CPU(unsigned int, irq_count);
- extern asmlinkage void ignore_sysret(void);
+ #ifdef CONFIG_X86_32
+-extern void irq_ctx_init(int cpu);
++extern int irq_init_percpu_irqstack(unsigned int cpu);
+ #else
+-# define irq_ctx_init(cpu) do { } while (0)
++static inline int irq_init_percpu_irqstack(unsigned int cpu) { return 0; }
+ #endif
  
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1510,7 +1510,7 @@ DEFINE_PER_CPU(struct task_struct *, cur
- 	&init_task;
- EXPORT_PER_CPU_SYMBOL(current_task);
+ #define __ARCH_HAS_DO_SOFTIRQ
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -131,7 +131,7 @@ void native_smp_prepare_boot_cpu(void);
+ void native_smp_prepare_cpus(unsigned int max_cpus);
+ void calculate_max_logical_packages(void);
+ void native_smp_cpus_done(unsigned int max_cpus);
+-void common_cpu_up(unsigned int cpunum, struct task_struct *tidle);
++int common_cpu_up(unsigned int cpunum, struct task_struct *tidle);
+ int native_cpu_up(unsigned int cpunum, struct task_struct *tidle);
+ int native_cpu_disable(void);
+ int common_cpu_die(unsigned int cpu);
+--- a/arch/x86/kernel/irq_32.c
++++ b/arch/x86/kernel/irq_32.c
+@@ -107,28 +107,28 @@ static inline int execute_on_irq_stack(i
+ }
  
--DEFINE_PER_CPU(char *, irq_stack_ptr) =
-+DEFINE_PER_CPU(char *, hardirq_stack_ptr) =
- 	init_per_cpu_var(irq_stack_union.irq_stack) + IRQ_STACK_SIZE;
- 
- DEFINE_PER_CPU(unsigned int, irq_count) __visible = -1;
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -120,7 +120,7 @@ static bool in_exception_stack(unsigned
- 
- static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+ /*
+- * allocate per-cpu stacks for hardirq and for softirq processing
++ * Allocate per-cpu stacks for hardirq and softirq processing
+  */
+-void irq_ctx_init(int cpu)
++int irq_init_percpu_irqstack(unsigned int cpu)
  {
--	unsigned long *end   = (unsigned long *)this_cpu_read(irq_stack_ptr);
-+	unsigned long *end   = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
- 	unsigned long *begin = end - (IRQ_STACK_SIZE / sizeof(long));
+-	struct irq_stack *irqstk;
++	int node = cpu_to_node(cpu);
++	struct page *ph, *ps;
  
- 	/*
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -56,7 +56,7 @@ static inline void stack_overflow_check(
- 	    regs->sp <= curbase + THREAD_SIZE)
- 		return;
+ 	if (per_cpu(hardirq_stack_ptr, cpu))
+-		return;
++		return 0;
  
--	irq_stack_top = (u64)__this_cpu_read(irq_stack_ptr);
-+	irq_stack_top = (u64)__this_cpu_read(hardirq_stack_ptr);
- 	irq_stack_bottom = irq_stack_top - IRQ_STACK_SIZE + STACK_MARGIN;
- 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -245,7 +245,7 @@ void __init setup_per_cpu_areas(void)
- 			early_per_cpu_map(x86_cpu_to_logical_apicid, cpu);
+-	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
+-					       THREADINFO_GFP,
+-					       THREAD_SIZE_ORDER));
+-	per_cpu(hardirq_stack_ptr, cpu) = irqstk;
+-
+-	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
+-					       THREADINFO_GFP,
+-					       THREAD_SIZE_ORDER));
+-	per_cpu(softirq_stack_ptr, cpu) = irqstk;
+-
+-	pr_debug("CPU %u irqstacks, hard=%p soft=%p\n",
+-		 cpu, per_cpu(hardirq_stack_ptr, cpu),
+-		 per_cpu(softirq_stack_ptr, cpu));
++	ph = alloc_pages_node(node, THREADINFO_GFP, THREAD_SIZE_ORDER);
++	if (!ph)
++		return -ENOMEM;
++	ps = alloc_pages_node(node, THREADINFO_GFP, THREAD_SIZE_ORDER);
++	if (!ps) {
++		__free_pages(ph, THREAD_SIZE_ORDER);
++		return -ENOMEM;
++	}
++
++	per_cpu(hardirq_stack_ptr, cpu) = page_address(ph);
++	per_cpu(softirq_stack_ptr, cpu) = page_address(ps);
++	return 0;
+ }
+ 
+ void do_softirq_own_stack(void)
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -91,7 +91,7 @@ void __init init_IRQ(void)
+ 	for (i = 0; i < nr_legacy_irqs(); i++)
+ 		per_cpu(vector_irq, 0)[ISA_IRQ_VECTOR(i)] = irq_to_desc(i);
+ 
+-	irq_ctx_init(smp_processor_id());
++	BUG_ON(irq_init_percpu_irqstack(smp_processor_id()));
+ 
+ 	x86_init.irqs.intr_init();
+ }
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -935,20 +935,27 @@ wakeup_cpu_via_init_nmi(int cpu, unsigne
+ 	return boot_error;
+ }
+ 
+-void common_cpu_up(unsigned int cpu, struct task_struct *idle)
++int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ {
++	int ret;
++
+ 	/* Just in case we booted with a single CPU. */
+ 	alternatives_enable_smp();
+ 
+ 	per_cpu(current_task, cpu) = idle;
+ 
++	/* Initialize the interrupt stack(s) */
++	ret = irq_init_percpu_irqstack(cpu);
++	if (ret)
++		return ret;
++
+ #ifdef CONFIG_X86_32
+ 	/* Stack for startup_32 can be just as for start_secondary onwards */
+-	irq_ctx_init(cpu);
+ 	per_cpu(cpu_current_top_of_stack, cpu) = task_top_of_stack(idle);
+ #else
+ 	initial_gs = per_cpu_offset(cpu);
  #endif
- #ifdef CONFIG_X86_64
--		per_cpu(irq_stack_ptr, cpu) =
-+		per_cpu(hardirq_stack_ptr, cpu) =
- 			per_cpu(irq_stack_union.irq_stack, cpu) +
- 			IRQ_STACK_SIZE;
- #endif
++	return 0;
+ }
+ 
+ /*
+@@ -1106,7 +1113,9 @@ int native_cpu_up(unsigned int cpu, stru
+ 	/* the FPU context is blank, nobody can own it */
+ 	per_cpu(fpu_fpregs_owner_ctx, cpu) = NULL;
+ 
+-	common_cpu_up(cpu, tidle);
++	err = common_cpu_up(cpu, tidle);
++	if (err)
++		return err;
+ 
+ 	err = do_boot_cpu(apicid, cpu, tidle, &cpu0_nmi_registered);
+ 	if (err) {
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -361,7 +361,9 @@ static int xen_pv_cpu_up(unsigned int cp
+ {
+ 	int rc;
+ 
+-	common_cpu_up(cpu, idle);
++	rc = common_cpu_up(cpu, idle);
++	if (rc)
++		return rc;
+ 
+ 	xen_setup_runstate_info(cpu);
+ 
 
 
