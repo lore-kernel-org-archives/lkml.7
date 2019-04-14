@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23B6C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D897BC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877F02084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22DD2084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfDNQC3 (ORCPT
+        id S1728409AbfDNQEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:02:29 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43220 "EHLO
+        Sun, 14 Apr 2019 12:04:46 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43224 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727214AbfDNQC2 (ORCPT
+        with ESMTP id S1727215AbfDNQC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:02:28 -0400
+        Sun, 14 Apr 2019 12:02:29 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhaM-0002ai-B3; Sun, 14 Apr 2019 18:02:26 +0200
-Message-Id: <20190414160144.050689789@linutronix.de>
+        id 1hFhaN-0002b0-Eg; Sun, 14 Apr 2019 18:02:27 +0200
+Message-Id: <20190414160144.139284839@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 17:59:42 +0200
+Date:   Sun, 14 Apr 2019 17:59:43 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 06/32] x86/idt: Remove unused macro SISTG
+Subject: [patch V3 07/32] x86/64: Remove stale CURRENT_MASK
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,27 +41,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit d8ba61ba58c8 ("x86/entry/64: Don't use IST entry for #BP stack")
-removed the last user but left the macro around.
+Nothing uses that and before people get the wrong ideas, get rid of it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/kernel/idt.c |    4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/include/asm/page_64_types.h |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -45,10 +45,6 @@ struct idt_data {
- #define ISTG(_vector, _addr, _ist)			\
- 	G(_vector, _addr, _ist, GATE_INTERRUPT, DPL0, __KERNEL_CS)
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -14,7 +14,6 @@
  
--/* System interrupt gate with interrupt stack */
--#define SISTG(_vector, _addr, _ist)			\
--	G(_vector, _addr, _ist, GATE_INTERRUPT, DPL3, __KERNEL_CS)
--
- /* Task gate */
- #define TSKG(_vector, _gdt)				\
- 	G(_vector, NULL, DEFAULT_STACK, GATE_TASK, DPL0, _gdt << 3)
+ #define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
+ #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
+-#define CURRENT_MASK (~(THREAD_SIZE - 1))
+ 
+ #define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
+ #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
 
 
