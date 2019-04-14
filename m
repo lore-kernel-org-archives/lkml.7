@@ -2,89 +2,85 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F8C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA5DC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC15A20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555251313;
-	bh=fK2vGpFSbUJzlCwZ6B42IpYzTqlphNu9vuH6GH0k7Kg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mrxEdi4pD1uM6tzOYofW3Fj8Du6hRc1oOQA84zebdC//YqzZFKNRn4sCD31uc94xp
-	 4NtlMc/PKxiw7YMZ7gKwZ5YIl/ZLDMisMWeiN41qdTULih7ep02AmlhvgS1oEh4ZJu
-	 Nk9gxoBjUadWVgs7MTRbDVYpNjfjdllWI/GM6P8U=
+	by mail.kernel.org (Postfix) with ESMTP id 4AD0B2084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ai6QHIky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfDNOPM (ORCPT
+        id S1726475AbfDNO3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 10:15:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Sun, 14 Apr 2019 10:29:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33084 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfDNOPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 10:15:12 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        id S1725829AbfDNO3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 10:29:31 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A134420880;
-        Sun, 14 Apr 2019 14:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555251311;
-        bh=fK2vGpFSbUJzlCwZ6B42IpYzTqlphNu9vuH6GH0k7Kg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NYSI9ZM0y4gqvDmMPZeV+pGvCyL1cRl/Q7dD87mS4FCDrrQ4imcWPN1I/yktTKwOF
-         MNzsZuaKs3ysyQrIz/fZACZjbE4UmQkQmL7GA7tNvyABmGiZqDNTS4rwoM9mKIlQOT
-         vNtuR8C2GJsj9caq1qyKLiorWX/rQ8VOXPJBeCjw=
-Date:   Sun, 14 Apr 2019 15:15:06 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mohan Kumar <mohankumar718@gmail.com>
-Cc:     linus.walleij@linaro.org, knaack.h@gmx.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/iio/gyro/mpu3050-core.c: This patch fix the
- following checkpatch warning.
-Message-ID: <20190414151506.6d8c671d@archlinux>
-In-Reply-To: <1555063763-2328-1-git-send-email-mohankumar718@gmail.com>
-References: <1555063763-2328-1-git-send-email-mohankumar718@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63AA31EC0104;
+        Sun, 14 Apr 2019 16:29:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555252169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0tP6hoqtQENoly861EN4P78bPYJcM/3W36gOx1YTfWw=;
+        b=Ai6QHIkyw2+/p1QNjJ0JSEz5HX+07Bkj/1NoSgV8QMZclo819VtGsPRNCr9/nRJejMd12r
+        jlod7Ujap5RMfGuMyu0ATt4c7LJodVRyjOmaYD6czyFJv0xYsl/mQWwq2/nCKynWzcv7hI
+        VKyuCuGiLsz/5jx9wTrWhbH8DpgCQj0=
+Date:   Sun, 14 Apr 2019 16:27:09 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Gary Guo <gary@garyguo.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [1/3] x86: Update DEBUG_TLBFLUSH options description.
+Message-ID: <20190414142709.GA569@zn.tnic>
+References: <20190410224449.10877-1-atish.patra@wdc.com>
+ <20190410224449.10877-2-atish.patra@wdc.com>
+ <20190411065617.GA29422@infradead.org>
+ <580d95d1-224f-a372-c656-1d2cbb19d868@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <580d95d1-224f-a372-c656-1d2cbb19d868@wdc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 13:09:23 +0300
-Mohan Kumar <mohankumar718@gmail.com> wrote:
-
-> As per Documentation/timers/timers-howto.txt Msleep < 20ms can sleep for
-> up to 20ms. so use usleep_range.
+On Fri, Apr 12, 2019 at 01:14:54PM -0700, Atish Patra wrote:
+> On 4/10/19 11:56 PM, Christoph Hellwig wrote:
+> > Given that this option enables generic code (which you reuse for RISC-V
+> > later in this series) please also move the config option to
+> > mm/Kconfig, proabbly keyed off another ARCH_HAVE_DEBUG_TLBFLUSH
+> > symbol that the architecture can select.
+> > 
 > 
-> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> Sure.
 
-Please resend, ccing the linux-iio@vger.kernel.org mailing list.
+And when you do that, instead of deleting the help text, make it
+generic. Otherwise, there's no explanation anymore, how that option is
+supposed to be used through tlb_flushall_shift.
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-Jonathan
-> ---
->  drivers/iio/gyro/mpu3050-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/gyro/mpu3050-core.c b/drivers/iio/gyro/mpu3050-core.c
-> index 85b7ac4..0a40616 100644
-> --- a/drivers/iio/gyro/mpu3050-core.c
-> +++ b/drivers/iio/gyro/mpu3050-core.c
-> @@ -865,7 +865,7 @@ static int mpu3050_power_up(struct mpu3050 *mpu3050)
->  		dev_err(mpu3050->dev, "error setting power mode\n");
->  		return ret;
->  	}
-> -	msleep(10);
-> +	usleep_range(10000, 20000);
->  
->  	return 0;
->  }
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
