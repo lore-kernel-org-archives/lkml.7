@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5B9C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366F1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BE520896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1982148E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfDNQDQ (ORCPT
+        id S1728174AbfDNQD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:03:16 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43332 "EHLO
+        Sun, 14 Apr 2019 12:03:59 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43344 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbfDNQDN (ORCPT
+        with ESMTP id S1726500AbfDNQDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:03:13 -0400
+        Sun, 14 Apr 2019 12:03:15 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhb3-0002jH-LX; Sun, 14 Apr 2019 18:03:09 +0200
-Message-Id: <20190414160145.824805922@linutronix.de>
+        id 1hFhb6-0002kE-Nd; Sun, 14 Apr 2019 18:03:12 +0200
+Message-Id: <20190414160146.001162606@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 18:00:01 +0200
+Date:   Sun, 14 Apr 2019 18:00:03 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 25/32] x86/irq/32: Rename hard/softirq_stack to
- hard/softirq_stack_ptr
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [patch V3 27/32] x86/irq/32: Invoke irq_ctx_init() from init_IRQ()
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -42,107 +42,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The percpu storage holds a pointer to the stack not the stack
-itself. Rename it before sharing struct irq_stack with 64-bit.
+irq_ctx_init() is invoked from native_init_IRQ() or from xen_init_IRQ()
+code. There is no reason to have this split. The interrupt stacks must be
+allocated no matter what.
+
+Invoke it from init_IRQ() before invoking the native or XEN init
+implementation.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 ---
- arch/x86/include/asm/processor.h |    4 ++--
- arch/x86/kernel/dumpstack_32.c   |    4 ++--
- arch/x86/kernel/irq_32.c         |   19 ++++++++++---------
- 3 files changed, 14 insertions(+), 13 deletions(-)
+ arch/x86/kernel/irqinit.c        |    4 ++--
+ drivers/xen/events/events_base.c |    1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -425,8 +425,8 @@ struct irq_stack {
- 	char			stack[IRQ_STACK_SIZE];
- } __aligned(IRQ_STACK_SIZE);
+--- a/arch/x86/kernel/irqinit.c
++++ b/arch/x86/kernel/irqinit.c
+@@ -91,6 +91,8 @@ void __init init_IRQ(void)
+ 	for (i = 0; i < nr_legacy_irqs(); i++)
+ 		per_cpu(vector_irq, 0)[ISA_IRQ_VECTOR(i)] = irq_to_desc(i);
  
--DECLARE_PER_CPU(struct irq_stack *, hardirq_stack);
--DECLARE_PER_CPU(struct irq_stack *, softirq_stack);
-+DECLARE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
-+DECLARE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- #endif	/* X86_64 */
- 
- extern unsigned int fpu_kernel_xstate_size;
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -34,7 +34,7 @@ const char *stack_type_name(enum stack_t
- 
- static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
- {
--	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack);
-+	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
- 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
- 
- 	/*
-@@ -59,7 +59,7 @@ static bool in_hardirq_stack(unsigned lo
- 
- static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
- {
--	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack);
-+	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack_ptr);
- 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
- 
- 	/*
---- a/arch/x86/kernel/irq_32.c
-+++ b/arch/x86/kernel/irq_32.c
-@@ -51,8 +51,8 @@ static inline int check_stack_overflow(v
- static inline void print_stack_overflow(void) { }
- #endif
- 
--DEFINE_PER_CPU(struct irq_stack *, hardirq_stack);
--DEFINE_PER_CPU(struct irq_stack *, softirq_stack);
-+DEFINE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
-+DEFINE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- 
- static void call_on_stack(void *func, void *stack)
- {
-@@ -76,7 +76,7 @@ static inline int execute_on_irq_stack(i
- 	u32 *isp, *prev_esp, arg1;
- 
- 	curstk = (struct irq_stack *) current_stack();
--	irqstk = __this_cpu_read(hardirq_stack);
-+	irqstk = __this_cpu_read(hardirq_stack_ptr);
- 
- 	/*
- 	 * this is where we switch to the IRQ stack. However, if we are
-@@ -113,21 +113,22 @@ void irq_ctx_init(int cpu)
- {
- 	struct irq_stack *irqstk;
- 
--	if (per_cpu(hardirq_stack, cpu))
-+	if (per_cpu(hardirq_stack_ptr, cpu))
- 		return;
- 
- 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
- 					       THREADINFO_GFP,
- 					       THREAD_SIZE_ORDER));
--	per_cpu(hardirq_stack, cpu) = irqstk;
-+	per_cpu(hardirq_stack_ptr, cpu) = irqstk;
- 
- 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
- 					       THREADINFO_GFP,
- 					       THREAD_SIZE_ORDER));
--	per_cpu(softirq_stack, cpu) = irqstk;
-+	per_cpu(softirq_stack_ptr, cpu) = irqstk;
- 
--	printk(KERN_DEBUG "CPU %u irqstacks, hard=%p soft=%p\n",
--	       cpu, per_cpu(hardirq_stack, cpu),  per_cpu(softirq_stack, cpu));
-+	pr_debug("CPU %u irqstacks, hard=%p soft=%p\n",
-+		 cpu, per_cpu(hardirq_stack_ptr, cpu),
-+		 per_cpu(softirq_stack_ptr, cpu));
++	irq_ctx_init(smp_processor_id());
++
+ 	x86_init.irqs.intr_init();
  }
  
- void do_softirq_own_stack(void)
-@@ -135,7 +136,7 @@ void do_softirq_own_stack(void)
- 	struct irq_stack *irqstk;
- 	u32 *isp, *prev_esp;
+@@ -104,6 +106,4 @@ void __init native_init_IRQ(void)
  
--	irqstk = __this_cpu_read(softirq_stack);
-+	irqstk = __this_cpu_read(softirq_stack_ptr);
+ 	if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs())
+ 		setup_irq(2, &irq2);
+-
+-	irq_ctx_init(smp_processor_id());
+ }
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -1687,7 +1687,6 @@ void __init xen_init_IRQ(void)
  
- 	/* build the stack frame on the softirq stack */
- 	isp = (u32 *) ((char *)irqstk + sizeof(*irqstk));
+ #ifdef CONFIG_X86
+ 	if (xen_pv_domain()) {
+-		irq_ctx_init(smp_processor_id());
+ 		if (xen_initial_domain())
+ 			pci_xen_initial_domain();
+ 	}
 
 
