@@ -2,177 +2,118 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33561C10F11
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61D1C282CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5172084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2882084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mTa+071Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKICTP/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfDNBDE (ORCPT
+        id S1727239AbfDNBEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 21:03:04 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:33164 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfDNBDD (ORCPT
+        Sat, 13 Apr 2019 21:04:21 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54534 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfDNBEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 21:03:03 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3E0wUCF015722;
-        Sun, 14 Apr 2019 01:02:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Jjtt1C4q5jJWXIAVbQkI9RXn6+bD9T+MgROnOkgii0s=;
- b=mTa+071ZJ/chh/hRCIC//XjFMdvfIw4Pfig3LFU8He+Snmuv3rmda4o4fknDCWGPaRX6
- BCYOkJEXvmX4jGJNetAfOHMHKvWYzwwcOiNOGEk0N7dk5xXmsDIO0/vxjcl35ygDQYiT
- DBrb7AqxwvzWWcOelvQuR6AJ7z8mXR0EsgIVdfas7np+ATlLyz8z/2hp47vs5CS33IYw
- N7/MjVtjvUQ1TkgxERPSWkVZKbi15P7gHiJKc+s8EQDvAFTignKulOFrp+bOWXdsDiVG
- HhyDiF58Hssu7MDvTxy20iFr5fStJkOBYnM3E26QK+ssYXA/J3P/vPsTTe9tIdjwk1Qs cg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2ru59ct5u6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Apr 2019 01:02:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3E12GKc039346;
-        Sun, 14 Apr 2019 01:02:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2rubq55y7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 Apr 2019 01:02:58 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3E12tNh017588;
-        Sun, 14 Apr 2019 01:02:56 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 13 Apr 2019 18:02:54 -0700
-Date:   Sat, 13 Apr 2019 18:02:54 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Shawn Landden <shawn@git.icu>
-Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] new flag COPY_FILE_RANGE_FILESIZE for copy_file_range()
-Message-ID: <20190414010254.GA7408@magnolia>
-References: <20190413205439.9623-1-shawn@git.icu>
+        Sat, 13 Apr 2019 21:04:20 -0400
+Received: by mail-it1-f193.google.com with SMTP id a190so5159332ite.4;
+        Sat, 13 Apr 2019 18:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TthJUdUqLVX4DpWSa0y1JjAzPtP4dPzxlxe7/SaEmIc=;
+        b=LKICTP/38wl/Sp/1TYzEd7nP71dXLQ3IflknZ/B12pQHCRI8TTkY7vkFAz7GhJItiz
+         k+ag1IkK1g0eRtAq9F47xpJqwOxrx/Ma3LfUtRj1V3M0V0JwmkcHMlZghOitdh8a4KhD
+         z/KWO4D2lmuQqUdMQEDGbBhGRXpJ2Q4m39goXeOt2afAqKe+ZuJO6uQmxVoR/NrYmlaG
+         wRA25yj4U/dR5xZXBVw9Jt74BlNvS5M3L4hnDlQSCUrMMv8193nhQP/CJ521uLHVWOF+
+         7tUlSt/M8lXDWFS7p7Y0pvgxzTe2e8pHX7FdKcv1tQzFbEbCuOeAqZpz/NgZ8gzrAgr3
+         +iUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TthJUdUqLVX4DpWSa0y1JjAzPtP4dPzxlxe7/SaEmIc=;
+        b=Gw4e/1A677mMMsf5v6JRrXHGFk+IoBueUuKM7gEJTNTi29k7dsA732sdYCvOYV5VOw
+         LXQMuCA7THX8Ub+n2fL7y5Kbt6f3fimWsIfF/nDR124rgtQvUz9qOjIp+Y/Gm4TQq4MJ
+         lmCMYAX9PC2jhr7OhDvXdZydXe7uhvyvXoZ8Bt/d27/wgq8EONRnR4h/l1MSI8ebHn0w
+         nU/2Gmf3W/a7Vr0Fvr7rChwRZU/qdjnwVLMlBsZgsk7ug8akqLWkDcDO0OeAvDzCKwYb
+         7Ukftqc9dmaXP00LcucMpopnjPb45EskCw2fLmFaArSyGzeeI7cf8c9uPqArjc292xNC
+         ByIw==
+X-Gm-Message-State: APjAAAXFnzMR+QuH+DsqdnOX74O9arSCI1lLmOu791ic1UJnq2tul+W1
+        ans2EGI615TQs3KKrVU/GFJFxhMC9Mei4r/i6wI=
+X-Google-Smtp-Source: APXvYqzp685M9zKbP1qSVCXG3/eF5NXoS7N5dn3LGRQOSk7mAN/wmu+Tssi0N3i6b5ZUw5T3MP9WrAceZqqCcqz/8H4=
+X-Received: by 2002:a24:9a86:: with SMTP id l128mr18553221ite.126.1555203859770;
+ Sat, 13 Apr 2019 18:04:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413205439.9623-1-shawn@git.icu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9226 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=100 mlxscore=100 mlxlogscore=-1000
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904140005
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9226 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=100 clxscore=1011
- lowpriorityscore=0 mlxscore=100 impostorscore=0 mlxlogscore=-1000
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904140005
+References: <20190403070325.1077-1-andrew.smirnov@gmail.com>
+ <20190403070325.1077-4-andrew.smirnov@gmail.com> <20190407120735.6fe78a5b@archlinux>
+In-Reply-To: <20190407120735.6fe78a5b@archlinux>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Sat, 13 Apr 2019 18:04:08 -0700
+Message-ID: <CAHQ1cqEWCib3tOFAEy_iGj2RkM1VdLx78EPR_V2BPm_TmUjXbA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] iio: imx7d_adc: Use devm_iio_device_register()
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Chris Healy <cphealy@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 03:54:39PM -0500, Shawn Landden wrote:
+On Sun, Apr 7, 2019 at 4:07 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Wed,  3 Apr 2019 00:03:22 -0700
+> Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> > Use devm_iio_device_register() and drop explicit call to
+> > iio_device_unregister().
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Hartmut Knaack <knaack.h@gmx.de>
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: linux-iio@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> No to this one.  The thing to think about is the resulting order
+> of the unwinding that happens in remove.
+>
+> Do take a look at the code flow, but in short what happens is:
+>
+> 1. driver.remove()
+> 2. Devm release functions run in the opposite order to they were
+>    called during setup.
+>
+> The upshot of the change you just made here is that we turn the power
+> off to the device before we remove the userspace interfaces, giving
+> potentially interesting failures..
+>
+> There are two options to avoid this:
+>
+> 1. Make everything use devm_ calls (often using devm_add_action_or_reset
+> for the ones that don't have their own versions).
+>
+> 2. Stop using devm managed functions at the first non devm_ call that needs
+> unwinding.  From that point onwards in probe / remove you have to do everything
+> manually.
+>
 
-/me pulls out his close-reading glasses and the copy_file_range manpage...
+Yeah, missed the ordering proble, sorry about that. I'll re-order
+changes such that this conversion happens last to avoid said problem
+in v2.
 
-> If flags includes COPY_FILE_RANGE_FILESIZE then the length
-> copied is the length of the file. off_in and off_out are
-> ignored.  len must be 0 or the file size.
-
-They're ignored?  As in the copy operation reads the number of bytes in
-the file referenced by fd_in from fd_in at its current position and is
-writes that out to fd_out at its current position?  I don't see why I
-would want such an operation...
-
-...but I can see how people could make use of a CFR_ENTIRE_FILE that
-would check that both file descriptors are actually regular files, and
-if so copy the entire contents of the fd_in file into the same position
-in the fd_out file, and then set the fd_out file's length to match.  If
-@off_in or @off_out are non-NULL then they'll be updated to the new EOFs
-if the copy completes succesfully and @len can be anything.
-
-Also: please update the manual page and the xfstests regression test for
-this syscall.
-
-> This implementation saves a call to stat() in the common case
-> of copying files. It does not fix any race conditions, but that
-> is possible in the future with this interface.
-> 
-> EAGAIN: If COPY_FILE_RANGE_FILESIZE was passed and len is not 0
-> or the file size.
-
-The values are invalid, so why would we tell userspace to try again
-instead of the EINVAL that we usually use?
-
-> Signed-off-by: Shawn Landden <shawn@git.icu>
-> CC: <linux-api@vger.kernel.org>
-> ---
->  fs/read_write.c           | 14 +++++++++++++-
->  include/uapi/linux/stat.h |  4 ++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index 61b43ad7608e..6d06361f0856 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1557,7 +1557,7 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->  	struct inode *inode_out = file_inode(file_out);
->  	ssize_t ret;
->  
-> -	if (flags != 0)
-> +	if ((flags & ~COPY_FILE_RANGE_FILESIZE) != 0)
-
-FWIW you might as well shorten the prefix to "CFR_" since nobody else is
-using it.
-
---D
-
->  		return -EINVAL;
->  
->  	if (S_ISDIR(inode_in->i_mode) || S_ISDIR(inode_out->i_mode))
-> @@ -1565,6 +1565,18 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
->  	if (!S_ISREG(inode_in->i_mode) || !S_ISREG(inode_out->i_mode))
->  		return -EINVAL;
->  
-> +	if (flags & COPY_FILE_RANGE_FILESIZE) {
-> +		struct kstat stat;
-> +		int error;
-> +		error = vfs_getattr(&file_in->f_path, &stat,
-> +				    STATX_SIZE, 0);
-> +		if (error < 0)
-> +			return error;
-> +		if (!(len == 0 || len == stat.size))
-> +			return -EAGAIN;
-> +		len = stat.size;
-> +	}
-> +
->  	ret = rw_verify_area(READ, file_in, &pos_in, len);
->  	if (unlikely(ret))
->  		return ret;
-> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> index 7b35e98d3c58..1075aa4666ef 100644
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -170,5 +170,9 @@ struct statx {
->  
->  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
->  
-> +/*
-> + * Flags for copy_file_range()
-> + */
-> +#define COPY_FILE_RANGE_FILESIZE	0x00000001 /* Copy the full length of the input file */
->  
->  #endif /* _UAPI_LINUX_STAT_H */
-> -- 
-> 2.20.1
-> 
+Thanks,
+Andrey Smirnov
