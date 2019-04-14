@@ -2,157 +2,114 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B46C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D193C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E412084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264892084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfDNQrI (ORCPT
+        id S1727164AbfDNQsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:47:08 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:37531 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfDNQrH (ORCPT
+        Sun, 14 Apr 2019 12:48:06 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:55774 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfDNQsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:47:07 -0400
-Received: by mail-it1-f198.google.com with SMTP id q203so13803579itb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:47:07 -0700 (PDT)
+        Sun, 14 Apr 2019 12:48:06 -0400
+Received: by mail-it1-f200.google.com with SMTP id g184so14323452ita.5
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:48:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=6QO5eg3i+vTilSvnK5Arp3jjxdI//KJSDlwl+1vqiJk=;
-        b=M+r9eH7g+FVfHLO1WJPr7KogD7ujvYlnXZQJw1YOqXQwN2m1X/FKrcPfl3CLbkEyEV
-         ft6AJ3s0tQ/H/vHaefbOAXlznfZCe1+tppJj9A0rfuomxXsOn8SgO3yTVYxVwcjj4Z5L
-         kYUYQOWD7z+EKUVy+1bf2GgCCYTsSFSZOzc/KmMQTifX+JnrHtkvjpEcz3ixG2eIGoQn
-         gkJLbn0fIqefFc+MFVGPPdGJh3EbvxZ9d+TKeMasR8iVQ8CQaKWmdbOj4Cv3JxLh5edy
-         l8pcjUxDUbZQaivEPFWM9zBtkCUXv8fIwBo6BBH9vO2G7N6KGOgYF+nhJ428j5/DI/4B
-         2TxA==
-X-Gm-Message-State: APjAAAU9m1iSgPxmiNg1UjZWb97jphGBuwECtI/zKt3SqnAf3lEuD8ET
-        zE+rcs+3Hf+bfqsDomsOIj/HP0cQ7dTCB05QQx9hmlVzMEp6
-X-Google-Smtp-Source: APXvYqyi8OcMTlBwCdEYVuMQ/PkSj0uND0qTu0ZTBhvG2T0hobY6JTrGiI7Yjki1ZSQ2LyubhsT1pZn+Mi6h9UjWO0gq4YjyMpnr
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=mTd7FlO4DVld4dGiRikhCQg6Ozanh+a6KILDmEGiA9g=;
+        b=BWnvo/t0RyDSs7S0xnuJLWLDrf8wFoxlLv7LCRmR6cYYq4U5ef9+YQM81ikhi2Y4Xo
+         biAz+ubyEYioia/JQ6pAf9zMh2JQjK6NWedrRXzYhAJiwm6xt08RF9BTNZoEXaFtSUWP
+         SSnGwpWjoMr4du4RIaLr6InMtxNKYx9EDmKP6rmRVcq7uPgkR0IRcN6vdFSRlmlRSAKr
+         LjIPPjzxC6MnICVH29KSlFGkB7+kUZ0G61OIGZTP9AQxfz5aSrcexj47Yu6M6IGPJtk9
+         aTYeKgbId+hLyul6su1ylyG5ANr9TjaHAT4rYSDKyzBQPFP7qc+Lre2nfDwBigpyoDc0
+         BDgA==
+X-Gm-Message-State: APjAAAUkPBkkJo08eeAyDVKoDvHkoXB4SV7sYzvg/82TAyZo/wHh5L2A
+        TdCfOn241shbJoS8V5jag9i1Q+Tn9eTG+t3fZiX8ldct8Can
+X-Google-Smtp-Source: APXvYqzEXO1IN1w+fzMp4vmi4LX+LFQsCs/wTEIfM9bUOnyCXKl/3RB0weMxeQbc4kY3wrr4swQcvKWBIEW+MxZOFm15oe6eZt8E
 MIME-Version: 1.0
-X-Received: by 2002:a24:1a41:: with SMTP id 62mr5529283iti.33.1555260426734;
- Sun, 14 Apr 2019 09:47:06 -0700 (PDT)
-Date:   Sun, 14 Apr 2019 09:47:06 -0700
+X-Received: by 2002:a5e:8b44:: with SMTP id z4mr1026481iom.1.1555260485497;
+ Sun, 14 Apr 2019 09:48:05 -0700 (PDT)
+Date:   Sun, 14 Apr 2019 09:48:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000044d2540586804913@google.com>
-Subject: general protection fault in ieee80211_debugfs_rename_netdev
-From:   syzbot <syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes@sipsolutions.net,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000c57e110586804ce9@google.com>
+Subject: WARNING in lockdep_unregister_key (2)
+From:   syzbot <syzbot+800069ac21123326861a@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgZWQwZGU0NWEgaXB2NDogcmVjb21waWxlIGlwIG9wdGlvbnMgaW4gaXB2NF9saW5r
-X2ZhaWx1cmUNCmdpdCB0cmVlOiAgICAgICBuZXQNCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5
-emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xNDQ5NWZjMzIwMDAwMA0Ka2VybmVsIGNv
-bmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94PTRmYjY0NDM5
-ZTA3YTFlYzANCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS9i
-dWc/ZXh0aWQ9NGVjZTFhMjhiOGY0NzMwNTQ3YzkNCmNvbXBpbGVyOiAgICAgICBnY2MgKEdDQykg
-OS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCg0KVW5mb3J0dW5hdGVseSwgSSBkb24ndCBo
-YXZlIGFueSByZXByb2R1Y2VyIGZvciB0aGlzIGNyYXNoIHlldC4NCg0KSU1QT1JUQU5UOiBpZiB5
-b3UgZml4IHRoZSBidWcsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1p
-dDoNClJlcG9ydGVkLWJ5OiBzeXpib3QrNGVjZTFhMjhiOGY0NzMwNTQ3YzlAc3l6a2FsbGVyLmFw
-cHNwb3RtYWlsLmNvbQ0KDQpuZXRsaW5rOiA5IGJ5dGVzIGxlZnRvdmVyIGFmdGVyIHBhcnNpbmcg
-YXR0cmlidXRlcyBpbiBwcm9jZXNzICANCmBzeXotZXhlY3V0b3IuNScuDQptYWM4MDIxMV9od3Np
-bSBod3NpbTE3IDAt77+9OiByZW5hbWVkIGZyb20gd2xhbjANCmthc2FuOiBDT05GSUdfS0FTQU5f
-SU5MSU5FIGVuYWJsZWQNCmthc2FuOiBHUEYgY291bGQgYmUgY2F1c2VkIGJ5IE5VTEwtcHRyIGRl
-cmVmIG9yIHVzZXIgbWVtb3J5IGFjY2Vzcw0KZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0OiAwMDAw
-IFsjMV0gUFJFRU1QVCBTTVAgS0FTQU4NCkNQVTogMSBQSUQ6IDE3MjI4IENvbW06IHN5ei1leGVj
-dXRvci41IE5vdCB0YWludGVkIDUuMS4wLXJjNCsgIzE2NQ0KSGFyZHdhcmUgbmFtZTogR29vZ2xl
-IEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgIA0KR29v
-Z2xlIDAxLzAxLzIwMTENClJJUDogMDAxMDppZWVlODAyMTFfZGVidWdmc19yZW5hbWVfbmV0ZGV2
-KzB4ZDEvMHgxNGQgIA0KbmV0L21hYzgwMjExL2RlYnVnZnNfbmV0ZGV2LmM6ODQ4DQpDb2RlOiAw
-NSAwMCAwMCA0OCBjNyBjNiAwMCA5MiAxMyA4OCA0YyA4OSBmYSA0YyA4OSBmNyBlOCAyNCA0MyA0
-NSAwMCA0OSA4ZCAgDQo3ZCA0MCA0OCBiOCAwMCAwMCAwMCAwMCAwMCBmYyBmZiBkZiA0OCA4OSBm
-YSA0OCBjMSBlYSAwMyA8ODA+IDNjIDAyIDAwIDc1ICANCjZmIDQ5IDhiIDdkIDQwIDRjIDg5IGYx
-IDRjIDg5IGVlIDQ4IDg5IGZhIGU4IDI3IGVlDQpSU1A6IDAwMTg6ZmZmZjg4ODA2NjAxZWRkMCBF
-RkxBR1M6IDAwMDEwMjA3DQpSQVg6IGRmZmZmYzAwMDAwMDAwMDAgUkJYOiBmZmZmODg4MDk5MTE5
-YWMwIFJDWDogMWZmZmYxMTAwY2MwM2Q4Yw0KUkRYOiAwMDAwMDAwMDAwMDAwMDA1IFJTSTogMDAw
-MDAwMDAwMDAwMDAwMCBSREk6IDAwMDAwMDAwMDAwMDAwMmYNClJCUDogZmZmZjg4ODA2NjAxZWU3
-MCBSMDg6IGZmZmY4ODgwNmViZjg0MDAgUjA5OiBmZmZmZWQxMDBjYzAzZGJmDQpSMTA6IGZmZmZl
-ZDEwMGNjMDNkYmUgUjExOiBmZmZmODg4MDY2MDFlZGY2IFIxMjogMWZmZmYxMTAwY2MwM2RiYQ0K
-UjEzOiBmZmZmZmZmZmZmZmZmZmVmIFIxNDogZmZmZjg4ODA2NjAxZWRmMCBSMTU6IGZmZmY4ODgw
-OTkxMWFiMTANCkZTOiAgMDAwMDdmNGMxMDRiMjcwMCgwMDAwKSBHUzpmZmZmODg4MGFlOTAwMDAw
-KDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAw
-MCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCkNSMjogMDAwMDAwMWIzMGMyNjAwMCBDUjM6IDAwMDAw
-MDAwYTYwMDYwMDAgQ1I0OiAwMDAwMDAwMDAwMTQwNmUwDQpEUjA6IDAwMDAwMDAwMDAwMDAwMDAg
-RFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMA0KRFIzOiAwMDAwMDAw
-MDAwMDAwMDAwIERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDANCkNh
-bGwgVHJhY2U6DQogIG5ldGRldl9ub3RpZnkrMHgxZjkvMHgyNjAgbmV0L21hYzgwMjExL2lmYWNl
-LmM6MTk5MQ0KICBub3RpZmllcl9jYWxsX2NoYWluKzB4YzcvMHgyNDAga2VybmVsL25vdGlmaWVy
-LmM6OTMNCiAgX19yYXdfbm90aWZpZXJfY2FsbF9jaGFpbiBrZXJuZWwvbm90aWZpZXIuYzozOTQg
-W2lubGluZV0NCiAgcmF3X25vdGlmaWVyX2NhbGxfY2hhaW4rMHgyZS8weDQwIGtlcm5lbC9ub3Rp
-Zmllci5jOjQwMQ0KICBjYWxsX25ldGRldmljZV9ub3RpZmllcnNfaW5mbysweDNmLzB4OTAgbmV0
-L2NvcmUvZGV2LmM6MTc1Mw0KICBjYWxsX25ldGRldmljZV9ub3RpZmllcnNfZXh0YWNrIG5ldC9j
-b3JlL2Rldi5jOjE3NjUgW2lubGluZV0NCiAgY2FsbF9uZXRkZXZpY2Vfbm90aWZpZXJzIG5ldC9j
-b3JlL2Rldi5jOjE3NzkgW2lubGluZV0NCiAgZGV2X2NoYW5nZV9uYW1lKzB4NWNjLzB4YTcwIG5l
-dC9jb3JlL2Rldi5jOjEyNDgNCiAgZG9fc2V0bGluaysweDJhNTEvMHgzNTEwIG5ldC9jb3JlL3J0
-bmV0bGluay5jOjI0NjYNCiAgcnRubF9zZXRsaW5rKzB4MjcxLzB4M2IwIG5ldC9jb3JlL3J0bmV0
-bGluay5jOjI3NDcNCiAgcnRuZXRsaW5rX3Jjdl9tc2crMHg0NjUvMHhiMDAgbmV0L2NvcmUvcnRu
-ZXRsaW5rLmM6NTE5Mg0KICBuZXRsaW5rX3Jjdl9za2IrMHgxN2EvMHg0NjAgbmV0L25ldGxpbmsv
-YWZfbmV0bGluay5jOjI0ODYNCiAgcnRuZXRsaW5rX3JjdisweDFkLzB4MzAgbmV0L2NvcmUvcnRu
-ZXRsaW5rLmM6NTIxMA0KICBuZXRsaW5rX3VuaWNhc3Rfa2VybmVsIG5ldC9uZXRsaW5rL2FmX25l
-dGxpbmsuYzoxMzExIFtpbmxpbmVdDQogIG5ldGxpbmtfdW5pY2FzdCsweDUzNi8weDcyMCBuZXQv
-bmV0bGluay9hZl9uZXRsaW5rLmM6MTMzNw0KICBuZXRsaW5rX3NlbmRtc2crMHg4YWUvMHhkNzAg
-bmV0L25ldGxpbmsvYWZfbmV0bGluay5jOjE5MjYNCiAgc29ja19zZW5kbXNnX25vc2VjIG5ldC9z
-b2NrZXQuYzo2NTEgW2lubGluZV0NCiAgc29ja19zZW5kbXNnKzB4ZGQvMHgxMzAgbmV0L3NvY2tl
-dC5jOjY2MQ0KICBzb2NrX3dyaXRlX2l0ZXIrMHgyN2MvMHgzZTAgbmV0L3NvY2tldC5jOjk4OA0K
-ICBjYWxsX3dyaXRlX2l0ZXIgaW5jbHVkZS9saW51eC9mcy5oOjE4NjYgW2lubGluZV0NCiAgZG9f
-aXRlcl9yZWFkdl93cml0ZXYrMHg1ZTEvMHg4ZTAgZnMvcmVhZF93cml0ZS5jOjY4MQ0KICBkb19p
-dGVyX3dyaXRlIGZzL3JlYWRfd3JpdGUuYzo5NTcgW2lubGluZV0NCiAgZG9faXRlcl93cml0ZSsw
-eDE4NC8weDYxMCBmcy9yZWFkX3dyaXRlLmM6OTM4DQogIHZmc193cml0ZXYrMHgxYjMvMHgyZjAg
-ZnMvcmVhZF93cml0ZS5jOjEwMDINCiAgZG9fd3JpdGV2KzB4MTVlLzB4MzcwIGZzL3JlYWRfd3Jp
-dGUuYzoxMDM3DQogIF9fZG9fc3lzX3dyaXRldiBmcy9yZWFkX3dyaXRlLmM6MTExMCBbaW5saW5l
-XQ0KICBfX3NlX3N5c193cml0ZXYgZnMvcmVhZF93cml0ZS5jOjExMDcgW2lubGluZV0NCiAgX194
-NjRfc3lzX3dyaXRldisweDc1LzB4YjAgZnMvcmVhZF93cml0ZS5jOjExMDcNCiAgZG9fc3lzY2Fs
-bF82NCsweDEwMy8weDYxMCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoyOTANCiAgZW50cnlfU1lT
-Q0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KUklQOiAwMDMzOjB4NDU4YzI5DQpDb2Rl
-OiBhZCBiOCBmYiBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCA2NiA5MCA0OCA4
-OSBmOCA0OCA4OSBmNyAgDQo0OCA4OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4
-YiA0YyAyNCAwOCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmICANCmZmIDBmIDgzIDdiIGI4IGZiIGZm
-IGMzIDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAwDQpSU1A6IDAwMmI6MDAwMDdmNGMxMDRiMWM3
-OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMDE0DQpSQVg6IGZmZmZm
-ZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwMDAwMDAzIFJDWDogMDAwMDAwMDAwMDQ1OGMyOQ0K
-UkRYOiAwMDAwMDAwMDAwMDAwMDAxIFJTSTogMDAwMDAwMDAyMDAwMDM0MCBSREk6IDAwMDAwMDAw
-MDAwMDAwMDMNClJCUDogMDAwMDAwMDAwMDczYmYwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5
-OiAwMDAwMDAwMDAwMDAwMDAwDQpSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAw
-MDAwMjQ2IFIxMjogMDAwMDdmNGMxMDRiMjZkNA0KUjEzOiAwMDAwMDAwMDAwNGM1OTk2IFIxNDog
-MDAwMDAwMDAwMDRkZjBlMCBSMTU6IDAwMDAwMDAwZmZmZmZmZmYNCk1vZHVsZXMgbGlua2VkIGlu
-Og0KLS0tWyBlbmQgdHJhY2UgM2Q5ZjNlYmI4Mjg1NTU4MiBdLS0tDQpSSVA6IDAwMTA6aWVlZTgw
-MjExX2RlYnVnZnNfcmVuYW1lX25ldGRldisweGQxLzB4MTRkICANCm5ldC9tYWM4MDIxMS9kZWJ1
-Z2ZzX25ldGRldi5jOjg0OA0KQ29kZTogMDUgMDAgMDAgNDggYzcgYzYgMDAgOTIgMTMgODggNGMg
-ODkgZmEgNGMgODkgZjcgZTggMjQgNDMgNDUgMDAgNDkgOGQgIA0KN2QgNDAgNDggYjggMDAgMDAg
-MDAgMDAgMDAgZmMgZmYgZGYgNDggODkgZmEgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCA3NSAg
-DQo2ZiA0OSA4YiA3ZCA0MCA0YyA4OSBmMSA0YyA4OSBlZSA0OCA4OSBmYSBlOCAyNyBlZQ0KUlNQ
-OiAwMDE4OmZmZmY4ODgwNjYwMWVkZDAgRUZMQUdTOiAwMDAxMDIwNw0KUkFYOiBkZmZmZmMwMDAw
-MDAwMDAwIFJCWDogZmZmZjg4ODA5OTExOWFjMCBSQ1g6IDFmZmZmMTEwMGNjMDNkOGMNClJEWDog
-MDAwMDAwMDAwMDAwMDAwNSBSU0k6IDAwMDAwMDAwMDAwMDAwMDAgUkRJOiAwMDAwMDAwMDAwMDAw
-MDJmDQpSQlA6IGZmZmY4ODgwNjYwMWVlNzAgUjA4OiBmZmZmODg4MDZlYmY4NDAwIFIwOTogZmZm
-ZmVkMTAwY2MwM2RiZg0KUjEwOiBmZmZmZWQxMDBjYzAzZGJlIFIxMTogZmZmZjg4ODA2NjAxZWRm
-NiBSMTI6IDFmZmZmMTEwMGNjMDNkYmENClIxMzogZmZmZmZmZmZmZmZmZmZlZiBSMTQ6IGZmZmY4
-ODgwNjYwMWVkZjAgUjE1OiBmZmZmODg4MDk5MTFhYjEwDQpGUzogIDAwMDA3ZjRjMTA0YjI3MDAo
-MDAwMCkgR1M6ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpD
-UzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6IDAw
-MDAwMDAwMDA0ZTY0NjAgQ1IzOiAwMDAwMDAwMGE2MDA2MDAwIENSNDogMDAwMDAwMDAwMDE0MDZl
-MA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAwMDAw
-MDAwMDAwMDAwMDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAg
-RFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQgYnkg
-YSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90cHNtRUog
-Zm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVycyBjYW4g
-YmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90IHdpbGwg
-a2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21F
-SiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    6d0a5984 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=178c986b200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
+dashboard link: https://syzkaller.appspot.com/bug?extid=800069ac21123326861a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+800069ac21123326861a@syzkaller.appspotmail.com
+
+WARNING: CPU: 0 PID: 7126 at kernel/locking/lockdep.c:4920  
+lockdep_unregister_key+0x3bf/0x510 kernel/locking/lockdep.c:4906
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7126 Comm: kworker/0:1 Not tainted 5.1.0-rc4+ #65
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events pwq_unbound_release_workfn
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:lockdep_unregister_key+0x3bf/0x510 kernel/locking/lockdep.c:4920
+Code: 00 00 00 00 48 8b 45 d0 65 48 33 04 25 28 00 00 00 0f 85 48 01 00 00  
+48 83 c4 70 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b eb c7 <0f> 0b e9 e9 fe  
+ff ff 0f 0b 0f 0b 48 c7 c2 e0 97 92 88 89 43 c0 48
+RSP: 0018:ffff888059cbfc50 EFLAGS: 00010046
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8156dfd8
+RDX: 1ffffffff1467ac7 RSI: 0000000000000004 RDI: ffffffff8a33d638
+RBP: ffff888059cbfce8 R08: 0000000000002010 R09: ffffed100b397f91
+R10: ffffed100b397f90 R11: 0000000000000003 R12: ffff88808d893dd8
+R13: 1ffff1100b397f8c R14: ffffffff8a0b9788 R15: dffffc0000000000
+  wq_unregister_lockdep kernel/workqueue.c:3455 [inline]
+  pwq_unbound_release_workfn+0x233/0x2f0 kernel/workqueue.c:3675
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
