@@ -4,206 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E57C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B46C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EE92148E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E412084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfDNQmH (ORCPT
+        id S1727032AbfDNQrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:42:07 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:39873 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfDNQmH (ORCPT
+        Sun, 14 Apr 2019 12:47:08 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:37531 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726159AbfDNQrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:42:07 -0400
-Received: by mail-it1-f200.google.com with SMTP id z125so13744515itf.4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:42:06 -0700 (PDT)
+        Sun, 14 Apr 2019 12:47:07 -0400
+Received: by mail-it1-f198.google.com with SMTP id q203so13803579itb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:47:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=r+Qr4jZyW79WGL/BfJtQpxRO1LNuAzql4OucEtTkgLc=;
-        b=gnWVSeITxT1th87Qvk36Wv1+lSkBRYeT80x2hQKfkgEDdD8YOjvzz4ObphR1s1kXnl
-         EgYDBRDXSyCwR2/sXcCt4BgApw3Wk64y4ZdOY3ZUXlvZF7E3KyC7oBHD+jbHo7AZVNGB
-         nBZNDTqI7xxbwOJwuEqzJgMyvRve+xojJmUfwqCrvaUy2B9Gyf0SA4cKO/lHrrYqh5VX
-         ziz2m7YEX3s1ea5hdV32CgdXIyvC1xFiNc0TOZ3dfSsiF7ubu9E8jRG2shyuZbr1O69m
-         AYBQILk6Hmb6ZtHGtsv97nkbaxvLm+iB+riSgEXb1IEgRCdAWu9WC5Ea1FdSw7wwvF2f
-         uaDw==
-X-Gm-Message-State: APjAAAUhPeTTXF5nC89QUnZDsNgBpDhCciPUigvQxJqeM62x8NHge0XO
-        conR3PqO4qGT+PGKN1S9mZTzaNASKxfM5NeC7jQDQ9biEsWV
-X-Google-Smtp-Source: APXvYqwsh4hl6evIqF7z9nmn6xPb8mzJSDvEL/lT9ufy51+yf3t/PAhjSeFSaFNmeI/YUHtYXmGdCBze4UUudZIpNUzXD9LUJaag
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=6QO5eg3i+vTilSvnK5Arp3jjxdI//KJSDlwl+1vqiJk=;
+        b=M+r9eH7g+FVfHLO1WJPr7KogD7ujvYlnXZQJw1YOqXQwN2m1X/FKrcPfl3CLbkEyEV
+         ft6AJ3s0tQ/H/vHaefbOAXlznfZCe1+tppJj9A0rfuomxXsOn8SgO3yTVYxVwcjj4Z5L
+         kYUYQOWD7z+EKUVy+1bf2GgCCYTsSFSZOzc/KmMQTifX+JnrHtkvjpEcz3ixG2eIGoQn
+         gkJLbn0fIqefFc+MFVGPPdGJh3EbvxZ9d+TKeMasR8iVQ8CQaKWmdbOj4Cv3JxLh5edy
+         l8pcjUxDUbZQaivEPFWM9zBtkCUXv8fIwBo6BBH9vO2G7N6KGOgYF+nhJ428j5/DI/4B
+         2TxA==
+X-Gm-Message-State: APjAAAU9m1iSgPxmiNg1UjZWb97jphGBuwECtI/zKt3SqnAf3lEuD8ET
+        zE+rcs+3Hf+bfqsDomsOIj/HP0cQ7dTCB05QQx9hmlVzMEp6
+X-Google-Smtp-Source: APXvYqyi8OcMTlBwCdEYVuMQ/PkSj0uND0qTu0ZTBhvG2T0hobY6JTrGiI7Yjki1ZSQ2LyubhsT1pZn+Mi6h9UjWO0gq4YjyMpnr
 MIME-Version: 1.0
-X-Received: by 2002:a24:3d8e:: with SMTP id n136mr5838434itn.3.1555260125982;
- Sun, 14 Apr 2019 09:42:05 -0700 (PDT)
-Date:   Sun, 14 Apr 2019 09:42:05 -0700
+X-Received: by 2002:a24:1a41:: with SMTP id 62mr5529283iti.33.1555260426734;
+ Sun, 14 Apr 2019 09:47:06 -0700 (PDT)
+Date:   Sun, 14 Apr 2019 09:47:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000057bb08058680371f@google.com>
-Subject: INFO: task hung in __x64_sys_io_uring_enter
-From:   syzbot <syzbot+91ba19608804b5c53ca7@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Message-ID: <00000000000044d2540586804913@google.com>
+Subject: general protection fault in ieee80211_debugfs_rename_netdev
+From:   syzbot <syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johannes@sipsolutions.net,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    bcb67f0f Add linux-next specific files for 20190412
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c15fc3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=35c479ecf64ba753
-dashboard link: https://syzkaller.appspot.com/bug?extid=91ba19608804b5c53ca7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+91ba19608804b5c53ca7@syzkaller.appspotmail.com
-
-INFO: task syz-executor.3:27713 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc4-next-20190412 #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D29480 27713   7953 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  __do_sys_io_uring_enter fs/io_uring.c:2697 [inline]
-  __se_sys_io_uring_enter fs/io_uring.c:2634 [inline]
-  __x64_sys_io_uring_enter+0x7de/0xac0 fs/io_uring.c:2634
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
-30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
-48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
-RSP: 002b:00007f6f44f0ec78 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
-RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000458c29
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000003 R11: 0000000000000246 R12: 00007f6f44f0f6d4
-R13: 00000000004bfe3c R14: 00000000004d2120 R15: 00000000ffffffff
-INFO: task syz-executor.3:27724 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc4-next-20190412 #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.3  D30320 27724   7953 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1783
-  do_wait_for_common kernel/sched/completion.c:83 [inline]
-  __wait_for_common kernel/sched/completion.c:104 [inline]
-  wait_for_common kernel/sched/completion.c:115 [inline]
-  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
-  __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2926
-  __do_sys_io_uring_register fs/io_uring.c:2976 [inline]
-  __se_sys_io_uring_register fs/io_uring.c:2958 [inline]
-  __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2958
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
-30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
-48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
-RSP: 002b:00007f6f44eccc78 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458c29
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 000000000073c040 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6f44ecd6d4
-R13: 00000000004cb6f0 R14: 00000000004d2168 R15: 00000000ffffffff
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1041:
-  #0: 00000000646c174a (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5061
-2 locks held by getty/7909:
-  #0: 000000004ed5ef6e (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000015f069f9 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7910:
-  #0: 0000000028dc5235 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000003e5c2584 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7911:
-  #0: 0000000009c1d545 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000097341bd0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7912:
-  #0: 00000000e304bd09 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000fbaacf70 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7913:
-  #0: 00000000aac8c1e7 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000eb37cc5c (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7914:
-  #0: 00000000dd76f9bc (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000003dfcb9c8 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7915:
-  #0: 00000000859ecc38 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000086483d71 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-1 lock held by syz-executor.3/27713:
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
-fs/io_uring.c:2697 [inline]
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
-fs/io_uring.c:2634 [inline]
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
-__x64_sys_io_uring_enter+0x7de/0xac0 fs/io_uring.c:2634
-1 lock held by syz-executor.3/27724:
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
-__do_sys_io_uring_register fs/io_uring.c:2975 [inline]
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
-__se_sys_io_uring_register fs/io_uring.c:2958 [inline]
-  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
-__x64_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2958
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1041 Comm: khungtaskd Not tainted 5.1.0-rc4-next-20190412 #24
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
-  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
-  kthread+0x357/0x430 kernel/kthread.c:254
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgZWQwZGU0NWEgaXB2NDogcmVjb21waWxlIGlwIG9wdGlvbnMgaW4gaXB2NF9saW5r
+X2ZhaWx1cmUNCmdpdCB0cmVlOiAgICAgICBuZXQNCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5
+emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xNDQ5NWZjMzIwMDAwMA0Ka2VybmVsIGNv
+bmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94PTRmYjY0NDM5
+ZTA3YTFlYzANCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS9i
+dWc/ZXh0aWQ9NGVjZTFhMjhiOGY0NzMwNTQ3YzkNCmNvbXBpbGVyOiAgICAgICBnY2MgKEdDQykg
+OS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCg0KVW5mb3J0dW5hdGVseSwgSSBkb24ndCBo
+YXZlIGFueSByZXByb2R1Y2VyIGZvciB0aGlzIGNyYXNoIHlldC4NCg0KSU1QT1JUQU5UOiBpZiB5
+b3UgZml4IHRoZSBidWcsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1p
+dDoNClJlcG9ydGVkLWJ5OiBzeXpib3QrNGVjZTFhMjhiOGY0NzMwNTQ3YzlAc3l6a2FsbGVyLmFw
+cHNwb3RtYWlsLmNvbQ0KDQpuZXRsaW5rOiA5IGJ5dGVzIGxlZnRvdmVyIGFmdGVyIHBhcnNpbmcg
+YXR0cmlidXRlcyBpbiBwcm9jZXNzICANCmBzeXotZXhlY3V0b3IuNScuDQptYWM4MDIxMV9od3Np
+bSBod3NpbTE3IDAt77+9OiByZW5hbWVkIGZyb20gd2xhbjANCmthc2FuOiBDT05GSUdfS0FTQU5f
+SU5MSU5FIGVuYWJsZWQNCmthc2FuOiBHUEYgY291bGQgYmUgY2F1c2VkIGJ5IE5VTEwtcHRyIGRl
+cmVmIG9yIHVzZXIgbWVtb3J5IGFjY2Vzcw0KZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0OiAwMDAw
+IFsjMV0gUFJFRU1QVCBTTVAgS0FTQU4NCkNQVTogMSBQSUQ6IDE3MjI4IENvbW06IHN5ei1leGVj
+dXRvci41IE5vdCB0YWludGVkIDUuMS4wLXJjNCsgIzE2NQ0KSGFyZHdhcmUgbmFtZTogR29vZ2xl
+IEdvb2dsZSBDb21wdXRlIEVuZ2luZS9Hb29nbGUgQ29tcHV0ZSBFbmdpbmUsIEJJT1MgIA0KR29v
+Z2xlIDAxLzAxLzIwMTENClJJUDogMDAxMDppZWVlODAyMTFfZGVidWdmc19yZW5hbWVfbmV0ZGV2
+KzB4ZDEvMHgxNGQgIA0KbmV0L21hYzgwMjExL2RlYnVnZnNfbmV0ZGV2LmM6ODQ4DQpDb2RlOiAw
+NSAwMCAwMCA0OCBjNyBjNiAwMCA5MiAxMyA4OCA0YyA4OSBmYSA0YyA4OSBmNyBlOCAyNCA0MyA0
+NSAwMCA0OSA4ZCAgDQo3ZCA0MCA0OCBiOCAwMCAwMCAwMCAwMCAwMCBmYyBmZiBkZiA0OCA4OSBm
+YSA0OCBjMSBlYSAwMyA8ODA+IDNjIDAyIDAwIDc1ICANCjZmIDQ5IDhiIDdkIDQwIDRjIDg5IGYx
+IDRjIDg5IGVlIDQ4IDg5IGZhIGU4IDI3IGVlDQpSU1A6IDAwMTg6ZmZmZjg4ODA2NjAxZWRkMCBF
+RkxBR1M6IDAwMDEwMjA3DQpSQVg6IGRmZmZmYzAwMDAwMDAwMDAgUkJYOiBmZmZmODg4MDk5MTE5
+YWMwIFJDWDogMWZmZmYxMTAwY2MwM2Q4Yw0KUkRYOiAwMDAwMDAwMDAwMDAwMDA1IFJTSTogMDAw
+MDAwMDAwMDAwMDAwMCBSREk6IDAwMDAwMDAwMDAwMDAwMmYNClJCUDogZmZmZjg4ODA2NjAxZWU3
+MCBSMDg6IGZmZmY4ODgwNmViZjg0MDAgUjA5OiBmZmZmZWQxMDBjYzAzZGJmDQpSMTA6IGZmZmZl
+ZDEwMGNjMDNkYmUgUjExOiBmZmZmODg4MDY2MDFlZGY2IFIxMjogMWZmZmYxMTAwY2MwM2RiYQ0K
+UjEzOiBmZmZmZmZmZmZmZmZmZmVmIFIxNDogZmZmZjg4ODA2NjAxZWRmMCBSMTU6IGZmZmY4ODgw
+OTkxMWFiMTANCkZTOiAgMDAwMDdmNGMxMDRiMjcwMCgwMDAwKSBHUzpmZmZmODg4MGFlOTAwMDAw
+KDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAw
+MCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCkNSMjogMDAwMDAwMWIzMGMyNjAwMCBDUjM6IDAwMDAw
+MDAwYTYwMDYwMDAgQ1I0OiAwMDAwMDAwMDAwMTQwNmUwDQpEUjA6IDAwMDAwMDAwMDAwMDAwMDAg
+RFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMA0KRFIzOiAwMDAwMDAw
+MDAwMDAwMDAwIERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDANCkNh
+bGwgVHJhY2U6DQogIG5ldGRldl9ub3RpZnkrMHgxZjkvMHgyNjAgbmV0L21hYzgwMjExL2lmYWNl
+LmM6MTk5MQ0KICBub3RpZmllcl9jYWxsX2NoYWluKzB4YzcvMHgyNDAga2VybmVsL25vdGlmaWVy
+LmM6OTMNCiAgX19yYXdfbm90aWZpZXJfY2FsbF9jaGFpbiBrZXJuZWwvbm90aWZpZXIuYzozOTQg
+W2lubGluZV0NCiAgcmF3X25vdGlmaWVyX2NhbGxfY2hhaW4rMHgyZS8weDQwIGtlcm5lbC9ub3Rp
+Zmllci5jOjQwMQ0KICBjYWxsX25ldGRldmljZV9ub3RpZmllcnNfaW5mbysweDNmLzB4OTAgbmV0
+L2NvcmUvZGV2LmM6MTc1Mw0KICBjYWxsX25ldGRldmljZV9ub3RpZmllcnNfZXh0YWNrIG5ldC9j
+b3JlL2Rldi5jOjE3NjUgW2lubGluZV0NCiAgY2FsbF9uZXRkZXZpY2Vfbm90aWZpZXJzIG5ldC9j
+b3JlL2Rldi5jOjE3NzkgW2lubGluZV0NCiAgZGV2X2NoYW5nZV9uYW1lKzB4NWNjLzB4YTcwIG5l
+dC9jb3JlL2Rldi5jOjEyNDgNCiAgZG9fc2V0bGluaysweDJhNTEvMHgzNTEwIG5ldC9jb3JlL3J0
+bmV0bGluay5jOjI0NjYNCiAgcnRubF9zZXRsaW5rKzB4MjcxLzB4M2IwIG5ldC9jb3JlL3J0bmV0
+bGluay5jOjI3NDcNCiAgcnRuZXRsaW5rX3Jjdl9tc2crMHg0NjUvMHhiMDAgbmV0L2NvcmUvcnRu
+ZXRsaW5rLmM6NTE5Mg0KICBuZXRsaW5rX3Jjdl9za2IrMHgxN2EvMHg0NjAgbmV0L25ldGxpbmsv
+YWZfbmV0bGluay5jOjI0ODYNCiAgcnRuZXRsaW5rX3JjdisweDFkLzB4MzAgbmV0L2NvcmUvcnRu
+ZXRsaW5rLmM6NTIxMA0KICBuZXRsaW5rX3VuaWNhc3Rfa2VybmVsIG5ldC9uZXRsaW5rL2FmX25l
+dGxpbmsuYzoxMzExIFtpbmxpbmVdDQogIG5ldGxpbmtfdW5pY2FzdCsweDUzNi8weDcyMCBuZXQv
+bmV0bGluay9hZl9uZXRsaW5rLmM6MTMzNw0KICBuZXRsaW5rX3NlbmRtc2crMHg4YWUvMHhkNzAg
+bmV0L25ldGxpbmsvYWZfbmV0bGluay5jOjE5MjYNCiAgc29ja19zZW5kbXNnX25vc2VjIG5ldC9z
+b2NrZXQuYzo2NTEgW2lubGluZV0NCiAgc29ja19zZW5kbXNnKzB4ZGQvMHgxMzAgbmV0L3NvY2tl
+dC5jOjY2MQ0KICBzb2NrX3dyaXRlX2l0ZXIrMHgyN2MvMHgzZTAgbmV0L3NvY2tldC5jOjk4OA0K
+ICBjYWxsX3dyaXRlX2l0ZXIgaW5jbHVkZS9saW51eC9mcy5oOjE4NjYgW2lubGluZV0NCiAgZG9f
+aXRlcl9yZWFkdl93cml0ZXYrMHg1ZTEvMHg4ZTAgZnMvcmVhZF93cml0ZS5jOjY4MQ0KICBkb19p
+dGVyX3dyaXRlIGZzL3JlYWRfd3JpdGUuYzo5NTcgW2lubGluZV0NCiAgZG9faXRlcl93cml0ZSsw
+eDE4NC8weDYxMCBmcy9yZWFkX3dyaXRlLmM6OTM4DQogIHZmc193cml0ZXYrMHgxYjMvMHgyZjAg
+ZnMvcmVhZF93cml0ZS5jOjEwMDINCiAgZG9fd3JpdGV2KzB4MTVlLzB4MzcwIGZzL3JlYWRfd3Jp
+dGUuYzoxMDM3DQogIF9fZG9fc3lzX3dyaXRldiBmcy9yZWFkX3dyaXRlLmM6MTExMCBbaW5saW5l
+XQ0KICBfX3NlX3N5c193cml0ZXYgZnMvcmVhZF93cml0ZS5jOjExMDcgW2lubGluZV0NCiAgX194
+NjRfc3lzX3dyaXRldisweDc1LzB4YjAgZnMvcmVhZF93cml0ZS5jOjExMDcNCiAgZG9fc3lzY2Fs
+bF82NCsweDEwMy8weDYxMCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoyOTANCiAgZW50cnlfU1lT
+Q0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KUklQOiAwMDMzOjB4NDU4YzI5DQpDb2Rl
+OiBhZCBiOCBmYiBmZiBjMyA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCA2NiA5MCA0OCA4
+OSBmOCA0OCA4OSBmNyAgDQo0OCA4OSBkNiA0OCA4OSBjYSA0ZCA4OSBjMiA0ZCA4OSBjOCA0YyA4
+YiA0YyAyNCAwOCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmICANCmZmIDBmIDgzIDdiIGI4IGZiIGZm
+IGMzIDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAwDQpSU1A6IDAwMmI6MDAwMDdmNGMxMDRiMWM3
+OCBFRkxBR1M6IDAwMDAwMjQ2IE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMDE0DQpSQVg6IGZmZmZm
+ZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwMDAwMDAzIFJDWDogMDAwMDAwMDAwMDQ1OGMyOQ0K
+UkRYOiAwMDAwMDAwMDAwMDAwMDAxIFJTSTogMDAwMDAwMDAyMDAwMDM0MCBSREk6IDAwMDAwMDAw
+MDAwMDAwMDMNClJCUDogMDAwMDAwMDAwMDczYmYwMCBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5
+OiAwMDAwMDAwMDAwMDAwMDAwDQpSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAw
+MDAwMjQ2IFIxMjogMDAwMDdmNGMxMDRiMjZkNA0KUjEzOiAwMDAwMDAwMDAwNGM1OTk2IFIxNDog
+MDAwMDAwMDAwMDRkZjBlMCBSMTU6IDAwMDAwMDAwZmZmZmZmZmYNCk1vZHVsZXMgbGlua2VkIGlu
+Og0KLS0tWyBlbmQgdHJhY2UgM2Q5ZjNlYmI4Mjg1NTU4MiBdLS0tDQpSSVA6IDAwMTA6aWVlZTgw
+MjExX2RlYnVnZnNfcmVuYW1lX25ldGRldisweGQxLzB4MTRkICANCm5ldC9tYWM4MDIxMS9kZWJ1
+Z2ZzX25ldGRldi5jOjg0OA0KQ29kZTogMDUgMDAgMDAgNDggYzcgYzYgMDAgOTIgMTMgODggNGMg
+ODkgZmEgNGMgODkgZjcgZTggMjQgNDMgNDUgMDAgNDkgOGQgIA0KN2QgNDAgNDggYjggMDAgMDAg
+MDAgMDAgMDAgZmMgZmYgZGYgNDggODkgZmEgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCA3NSAg
+DQo2ZiA0OSA4YiA3ZCA0MCA0YyA4OSBmMSA0YyA4OSBlZSA0OCA4OSBmYSBlOCAyNyBlZQ0KUlNQ
+OiAwMDE4OmZmZmY4ODgwNjYwMWVkZDAgRUZMQUdTOiAwMDAxMDIwNw0KUkFYOiBkZmZmZmMwMDAw
+MDAwMDAwIFJCWDogZmZmZjg4ODA5OTExOWFjMCBSQ1g6IDFmZmZmMTEwMGNjMDNkOGMNClJEWDog
+MDAwMDAwMDAwMDAwMDAwNSBSU0k6IDAwMDAwMDAwMDAwMDAwMDAgUkRJOiAwMDAwMDAwMDAwMDAw
+MDJmDQpSQlA6IGZmZmY4ODgwNjYwMWVlNzAgUjA4OiBmZmZmODg4MDZlYmY4NDAwIFIwOTogZmZm
+ZmVkMTAwY2MwM2RiZg0KUjEwOiBmZmZmZWQxMDBjYzAzZGJlIFIxMTogZmZmZjg4ODA2NjAxZWRm
+NiBSMTI6IDFmZmZmMTEwMGNjMDNkYmENClIxMzogZmZmZmZmZmZmZmZmZmZlZiBSMTQ6IGZmZmY4
+ODgwNjYwMWVkZjAgUjE1OiBmZmZmODg4MDk5MTFhYjEwDQpGUzogIDAwMDA3ZjRjMTA0YjI3MDAo
+MDAwMCkgR1M6ZmZmZjg4ODBhZTkwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAwMDAwMDAwDQpD
+UzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQpDUjI6IDAw
+MDAwMDAwMDA0ZTY0NjAgQ1IzOiAwMDAwMDAwMGE2MDA2MDAwIENSNDogMDAwMDAwMDAwMDE0MDZl
+MA0KRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6IDAwMDAw
+MDAwMDAwMDAwMDANCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBmZjAg
+RFI3OiAwMDAwMDAwMDAwMDAwNDAwDQoNCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5lcmF0ZWQgYnkg
+YSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5nbC90cHNtRUog
+Zm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2luZWVycyBjYW4g
+YmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6Ym90IHdpbGwg
+a2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29vLmdsL3Rwc21F
+SiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
