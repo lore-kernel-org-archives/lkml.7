@@ -2,268 +2,154 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E6C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBA4C282CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD3D20848
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2038E20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:47:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1fAspbI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvqUnDX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfDNSmt (ORCPT
+        id S1726743AbfDNSrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 14:42:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41595 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfDNSms (ORCPT
+        Sun, 14 Apr 2019 14:47:05 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34956 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfDNSrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 14:42:48 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k8so13516274lja.8;
-        Sun, 14 Apr 2019 11:42:46 -0700 (PDT)
+        Sun, 14 Apr 2019 14:47:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id p16so12792862iod.2;
+        Sun, 14 Apr 2019 11:47:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7TfuA0z9XkTzeRotfI4BfqAiqQ0bvh06gPLl+kc/FV0=;
-        b=O1fAspbIkfTvFTZBwcbJtCXeTyDeoquOhG8FLZa14/lImiQ+Hp5RZZkm34ioH1hMFn
-         Yujkb9VvYVJnyq16LzO1Rxvck2o3r0cIfK4DbsOVaublQXLFpibifhYN/SKzniMWGh+k
-         190sebM2AWeYO4U9gXnpg0MAjwHZMlEG7mdhQU8WxxUZrGNwvU80mkCKecHmZQgGFHch
-         yF8zZMU0+X4FHlR2Gs0G/CQfjW4qndyEWp/hwswWMqlTesVMlBSS01+ri7NN6wI07uvy
-         6B4Orz3d+EToVkOKbmP28PI7vWuevQBipnAAG05Fr9sIEjb2Y8XJkCz2jsLFceLQFr+B
-         bncg==
+        bh=dqu9krHIbKjaQcsq7mCVfA57RsiBKmmVtQ1eJQ+C2/A=;
+        b=kvqUnDX1m6tndAv9WJGkRpoRATLXO2N7D3ixbeyBi6T1RnVjpoNfkomsmv1XiWOpPb
+         O/321ft8sg9U/er1N4HCBfU/qHI4dkbhEOPQ25KFVbjSt7OGzypJImMpkNBrEnXVTaDP
+         8aHttjUsZv92ePzcRBAgfHhwqb+/ZW/Aa0K1oLE4+UxvIAterWudTRIyCQXFI8+CnUh3
+         fX5+39AWbbBfWdzHwm1UYGlMtRfW3PzCX2C+ieEmHVsn2BEUKq35f9Sj8UK6L+w8Dazq
+         snN2yPtpMO6NtjhH59rF+fnxA2QMtS0nMDqCLpa7FiHI+WVxCiWynAY6ijHrETIp188n
+         v7ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7TfuA0z9XkTzeRotfI4BfqAiqQ0bvh06gPLl+kc/FV0=;
-        b=a7bmUa41mkp44d4bSrM43H5bwwS5C9+NWcK00i0TLyP94g9uh7pETxM0a7yJxsX4GQ
-         zr1nbjmrFNrXsj+jdhX3OAkntPOX4YQqNqKbVei+n95Puc2kPYqcJVDU1V8mnnHmeTL+
-         98zf93QR2OScitSrwhkxGfXOLBk+ZtkZv0nO4XqbYWbBlF2A9V/qSTUjtCRnR/agtVyU
-         95x1Bv9CMtjr/6eX16zP7MWh0jQHTh20U/Wnp8/pL4cFEyQh5Zat0rYvjl1sIvGDiZsR
-         GAgjykjxj9mbxWzQsnvxD253oXZRtMOEkqnqIsTWSIUokS6h3oe7IJ0V+RLqV6olZist
-         H55g==
-X-Gm-Message-State: APjAAAUlZExsam7t2OLPkafUTfQLMvBbvJg6HQQuMCikBVWd1C2yKBGB
-        odhn8ZaWhtNuG6Aj0dKYc4wQI262X4bvVElJO4g=
-X-Google-Smtp-Source: APXvYqzCx1IMI9CkOGjXMr+deuARf8q4IbsNKu0N5hItjyU4sPno2T4owY94upHkKpU0hsmZwdsYDL+dlxmTQSpL4is=
-X-Received: by 2002:a2e:86c7:: with SMTP id n7mr13687528ljj.44.1555267365995;
- Sun, 14 Apr 2019 11:42:45 -0700 (PDT)
+        bh=dqu9krHIbKjaQcsq7mCVfA57RsiBKmmVtQ1eJQ+C2/A=;
+        b=Umneg3It7t8/MB5J3vRfvpnaUPutCxvd6flzSo+G591X+yd8TWriebLobU5kakSRmv
+         F1iIfdNRGMAI/QeTR8L/93pOUBmnOu85M/TBO1TgFwmtsEAZkFR4riFrEtY1magXQVnj
+         oOJ6ojnJ9xwtTLsfoGs9d90Q1AR+eD9scMyNGI/k4f3t1kucOLcVSPoMcvFVQUV1YQXS
+         F4g/51+IWsP5tI51UNzcRgeARZzCJw9jJyJgnvwXNRBrMAzP25LaQwVJvSG1QER61jGZ
+         KUK+04thASAZKrGDLzMqb/6CZ77hdgKqhn42jIkJLvuu1my5mCm3iBPrx1EqPXlLX/Kv
+         qmvw==
+X-Gm-Message-State: APjAAAXwdXVL8nxTAcVrdGRG3AyB5fBFklNNDdhlpFi8JzyHeJw9wM35
+        +zAJpiluR2dvoIdZjilOkZbHA1eYAc9VlqKiXbs=
+X-Google-Smtp-Source: APXvYqysNHpvf+ZHwu/r0IkykU6Ay9gm7nAUK9mH1b/mvWD9RnfiY/KQsc0Fa+cyZm7w4osqrHaRUPk/QIH6HL4d8FI=
+X-Received: by 2002:a6b:c909:: with SMTP id z9mr44231920iof.244.1555267623624;
+ Sun, 14 Apr 2019 11:47:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190413012822.30931-1-olteanv@gmail.com> <20190413012822.30931-19-olteanv@gmail.com>
- <20190413163754.GG17901@lunn.ch> <CA+h21hpKJS=TKGoMJMvsmK1DAtgciDsLOHAawqsKQ0xGW5dF6w@mail.gmail.com>
- <20190414160510.GA10323@lunn.ch>
-In-Reply-To: <20190414160510.GA10323@lunn.ch>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sun, 14 Apr 2019 21:42:34 +0300
-Message-ID: <CA+h21hoG8hRPoakx0Wvx1XyPVo2wmB-L=Y-7hGir5Pk1_NgaEg@mail.gmail.com>
-Subject: Re: [PATCH v3 net-next 18/24] net: dsa: sja1105: Add support for
- traffic through standalone ports
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
-        davem@davemloft.net, netdev <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Georg Waibel <georg.waibel@sensor-technik.de>
+References: <20190401042547.14067-1-andrew.smirnov@gmail.com>
+ <20190401042547.14067-9-andrew.smirnov@gmail.com> <1555085573.11529.36.camel@pengutronix.de>
+In-Reply-To: <1555085573.11529.36.camel@pengutronix.de>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Sun, 14 Apr 2019 11:46:52 -0700
+Message-ID: <CAHQ1cqGFkj8GcFc-A9u0EGT9Xc-D9r7p39jkvss4OMU8bW=-0Q@mail.gmail.com>
+Subject: Re: [PATCH v3 08/11] PCI: imx6: Simplify pcie_phy_poll_ack()
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "A.s. Dong" <aisheng.dong@nxp.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Apr 2019 at 19:05, Andrew Lunn <andrew@lunn.ch> wrote:
+On Fri, Apr 12, 2019 at 9:12 AM Lucas Stach <l.stach@pengutronix.de> wrote:
 >
-> On Sun, Apr 14, 2019 at 12:27:50AM +0300, Vladimir Oltean wrote:
-> > > > +             mgmt_route.macaddr = ether_addr_to_u64(hdr->h_dest);
-> > > > +             mgmt_route.destports = BIT(port);
-> > > > +             mgmt_route.enfport = 1;
-> > > > +             mgmt_route.tsreg = 0;
-> > > > +             mgmt_route.takets = false;
-> > > > +
-> > > > +             rc = sja1105_dynamic_config_write(priv, BLK_IDX_MGMT_ROUTE,
-> > > > +                                               port, &mgmt_route, true);
->
-> >         rc = sja1105_dynamic_config_write(priv, BLK_IDX_MGMT_ROUTE,
-> >                           *port*, &mgmt_route, true);
+> Am Sonntag, den 31.03.2019, 21:25 -0700 schrieb Andrey Smirnov:
+> > Simplify pcie_phy_poll_ack() by incorporating shifting into constant
+> > definition and convert the code to use 'bool'. No functional change
+> > intended.
 > >
-> > The switch IP aptly allocates 4 slots for management routes. And it's
-> > a 5-port switch where 1 port is the management port. I think the
-> > structure is fine.
->
-> So does the hardware look over all the slots and find the first one
-> which has a matching mgmt_route.macaddr destination MAC address? You
-> wait for the enfport to be cleared. I assume a slot with enfport
-> cleared is not active and won't match?
->
-> So we need to consider if there is a race condition where we have
-> multiple slots with the same destination MAC address, but different
-> destination ports? Say the bridge sends out BPDU to all ports of a
-> bridge in quick succession.
->
-> These work queues run in any order, and can sleep. Can we get into a
-> situation where we get the two slots setup, and then the frames sent
-> in reverse order? The match then happens backwards, and the frames get
-> sent out the wrong port?
->
-
-Yes, it looks like the hardware isn't doing me any favors on this one.
-From UM10944: "If the host provides several management route entries
-with identical values for the MACADDR, the one at the lowest index is
-used first."
-So the 4 hardware management slots serve no purpose unless I'm willing
-to lock the sja1105_xmit_work_handler with a mutex. And even then
-there's no reason to use separate slots since the workers are
-serialized anyway. Weird.
-
-> Or say the two slots are setup, the two frames are sent in order, but
-> the stack decided to drop the first frame because buffers are
-> full. Can the second frame make it to the switch and match on the
-> first slot and go out the wrong port?
->
-
-Yes if waiting for enfport times out there's some cleanup work I'm
-currently not doing.
-
-> > > Also, please move all this code into the tagger. Just add exports for
-> > > sja1105_dynamic_config_write() and sja1105_dynamic_config_read().
-> > >
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > Cc: Chris Healy <cphealy@gmail.com>
+> > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pci@vger.kernel.org
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-imx6.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
 > >
-> > Well, you see, the tagger code is part of the dsa_core object. If I
-> > export function symbols from the driver, those still won't be there if
-> > I compile the driver as a module. On the other hand, the way I'm doing
-> > it, I think the schedule_work() gives me a pretty good separation.
->
-> That is solvable via Kconfig, don't allow it to be built as a module.
->
-> Also, DSA has been very successful, we keep getting more switches from
-> different vendors, and hence more taggers. So at some point, we should
-> turn the taggers into modules. I'm not saying that should happen now,
-> but when it does happen, this driver can then become a module.
->
-> The real reason is, tagger as all about handling frames, where as
-> drivers are all about configuring the switch. The majority of this
-> code is about frames, so it belongs in the tagger.
->
-
-The xmit worker needs to configure the switch to be able to handle
-frames. Why doesn't that belong in the driver?
-Not allowing the driver to be built as module is hardly any cleaner
-than a schedule_work().
-I only need dsa_slave_to_master for the delayed enqueue. And if DSA
-supported a delayed enqueue method natively I wouldn't need it at all.
-
-> > > > +#include <linux/etherdevice.h>
-> > > > +#include <linux/if_vlan.h>
-> > > > +#include <linux/dsa/sja1105.h>
-> > > > +#include "../../drivers/net/dsa/sja1105/sja1105.h"
-> > >
-> > > Again, no, don't do this.
-> > >
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > index a49e5e491e12..7c3ffb751002 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -112,7 +112,7 @@ struct imx6_pcie {
+> > >  #define PCIE_PHY_CTRL_RD           BIT(19)
 > >
-> > This separation between driver and tagger is fairly arbitrary.
-> > I need access to the driver's private structure, in order to get a
-> > hold of the private shadow of the dsa_port. Moving the driver private
-> > structure to include/linux/dsa/ would pull in quite a number of
-> > dependencies. Maybe I could provide declarations for the most of them,
-> > but anyway the private structure wouldn't be so private any longer,
-> > would it?
-> > Otherwise put, would you prefer a dp->priv similar to the already
-> > existing ds->priv? struct sja1105_port is much more lightweight to
-> > keep in include/linux/dsa/.
+> >  #define PCIE_PHY_STAT (PL_OFFSET + 0x110)
+> > -#define PCIE_PHY_STAT_ACK_LOC 16
+> > > +#define PCIE_PHY_STAT_ACK          BIT(16)
+> >
+> > >  #define PCIE_LINK_WIDTH_SPEED_CONTROL      0x80C
+> >
+> > @@ -151,16 +151,16 @@ struct imx6_pcie {
+> > >  #define PHY_RX_OVRD_IN_LO_RX_DATA_EN               BIT(5)
+> > >  #define PHY_RX_OVRD_IN_LO_RX_PLL_EN                BIT(3)
+> >
+> > -static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, int exp_val)
+> > +static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
 >
-> Linux simply does not make use of relative paths going between
-> directories like this. That is the key point here. Whatever you need
-> to share between the tagger and the driver has to be put into
-> include/linux/dsa/.
->
-> Assuming we are just exporting something like
-> sja1105_dynamic_config_write() and _read()
->
->
-> > > > +             rc = sja1105_dynamic_config_write(priv, BLK_IDX_MGMT_ROUTE,
-> > > > +                                               port, &mgmt_route, true);
->
-> priv can be replaced with ds, which the tagger has. port is
-> known. BLK_IDX_MGMT_ROUTE is implicit, and all that the tagger needs
-> to pass for mgmt_route is the destination MAC address, which it has.
->
-> The tagger does need somewhere to keep the queue of frames to be sent
-> and its workqueue. I would probably add a void *tagger_priv to
-> dsa_switch, and two new methods to dsa_device_ops, .probe and
-> .release, to allow it to create and destroy what it needs in
-> tagger_priv.
+> This looks like only going half the way to me. The parameter type is
+> changed to bool, but the callers still use 0 and 1 directly. If we use
+> bool here the callers should be changed to true/false.
 >
 
-I need to think about this.
+OK, will change in next version.
 
-> > > > +#include "dsa_priv.h"
-> > > > +
-> > > > +/* Similar to is_link_local_ether_addr(hdr->h_dest) but also covers PTP */
-> > > > +static inline bool sja1105_is_link_local(const struct sk_buff *skb)
-> > > > +{
-> > > > +     const struct ethhdr *hdr = eth_hdr(skb);
-> > > > +     u64 dmac = ether_addr_to_u64(hdr->h_dest);
-> > > > +
-> > > > +     if ((dmac & SJA1105_LINKLOCAL_FILTER_A_MASK) ==
-> > > > +                 SJA1105_LINKLOCAL_FILTER_A)
-> > > > +             return true;
-> > > > +     if ((dmac & SJA1105_LINKLOCAL_FILTER_B_MASK) ==
-> > > > +                 SJA1105_LINKLOCAL_FILTER_B)
-> > > > +             return true;
-> > > > +     return false;
-> > > > +}
-> > > > +
-> > > > +static bool sja1105_filter(const struct sk_buff *skb, struct net_device *dev)
-> > > > +{
-> > > > +     if (sja1105_is_link_local(skb))
-> > > > +             return true;
-> > > > +     if (!dev->dsa_ptr->vlan_filtering)
-> > > > +             return true;
-> > > > +     return false;
-> > > > +}
-> > >
-> > > Please add a comment here about what frames cannot be handled by the
-> > > tagger. However, i'm not too happy about this design...
-> > >
+> >  {
+> >       struct dw_pcie *pci = imx6_pcie->pci;
+> > -     u32 val;
+> > +     bool val;
+> >       u32 max_iterations = 10;
+> >       u32 wait_counter = 0;
+> >
+> >       do {
+> > -             val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT);
+> > -             val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
+> > +             val = dw_pcie_readl_dbi(pci, PCIE_PHY_STAT) &
+> > +                     PCIE_PHY_STAT_ACK;
 >
-> > What would you improve about this design (assuming you're talking
-> > about the filter function)?
->
-> I want to understand what frames get passed via the master device, and
-> how ultimately they get to where they should be going.
->
-> Once i understand what sort of frames they are and what is
-> generating/consuming them, maybe we can find a better solution which
-> preserves the DSA concepts.
->
-> To me, it looks like they are not management frames, at least not BPDU
-> or PTP, since they are link local. If VLAN filtering is off, the VLAN
-> tag tells us which port they came in, so we can strip the tag and pass
-> them to the correct slave.
->
-> So it looks like real user frames with a VLAN tag are getting passed
-> to the master device. So i then assume you put vlan interfaces on top
-> of the master device, and your application then uses the vlan
-> interfaces? Your application does not care where the frames came from,
-> it is using the switch as a dumb switch. The DSA slaves are unused?
+> I think this needs to be
+> val = !!(dw_pcie_readl_dbi(pci, PCIE_PHY_STAT) & PCIE_PHY_STAT_ACK);
+> as the ACK bit isn't shifted down into bit position 0 anymore.
 >
 
-Whatever the application may be, the DSA solution to switches that
-can't decode all incoming traffic is to drop the rest. In this case it
-means that the host port is no longer a valid destination for the L2
-switching process.
-
-> Could we enforce that a VLAN can only be assigned to a single port?
-> The tagger could then pass the tagged frame to the correct slave? Is
-> that too restrictive for your use case? Do you need the same VLAN on
-> multiple ports.
->
->          Andrew
-
-No we can't enforce that. The commit message of 07/24 has a pretty
-lengthy explanation why.
+That should already be taken care of by conversion to bool/_Bool(see
+"Using bool" in Documentation/process/coding-style.rst) and was one of
+the reasons I converted "val" to that type.
 
 Thanks,
--Vladimir
+Andrey Smirnov
