@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15525C10F13
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36986C282CE
 	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D9020850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14921214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfDNUGI (ORCPT
+        id S1727280AbfDNUGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 16:06:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40077 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfDNUGH (ORCPT
+        Sun, 14 Apr 2019 16:06:09 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48014 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbfDNUGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 14 Apr 2019 16:06:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id e72so12532586iof.7
+Received: by mail-io1-f70.google.com with SMTP id b199so12620004iof.14
         for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 13:06:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pG8X90FvGf2fjplmvbLtMTBmdPNswK6If5gFdTwKTvw=;
-        b=CVSVD35ql8RuSj8kxxM3QGECU3LWs0Hqu7x8IM4pM1JYmx/dHR3Ljg4Yi+MzRA1vgU
-         ygb8XQ+7hyzjEsX/5XQZ40VIi2iFDI9JxaNY8bpWiJYOdLoPEaNi9KCZe6fPzeMHGrE+
-         F+39bpe6U8cUf15iXG6+BkLzjg23LmRjDbjNopriSpbQEyQbgkAlwDuFFK+R6Ipe0Ovu
-         WEK1aIqud87XuVEAtsZQaKX0gNaZyh0dddXw4L2xs/IdRiIt/iJN9WtJTPAsv3xYDjiX
-         Grf8/ldozHIVCk/6665khc6yDKYeQmza4uJbux4u3/AWN7d9fXRI4Txe4xBeSs/7QBZu
-         IobA==
-X-Gm-Message-State: APjAAAXBXx3+x3+UDkP9OJFdqwhouIH9AIHl6+95enCmISI4dIJw40dJ
-        IhZB8jstMjifkjRnhIpEDRW3oSSxcOFUxbEqiYJCx0yvCJeD
-X-Google-Smtp-Source: APXvYqyxqVaJ4b3Vg2hyOK/Rmb3LNq2KY/kmQvLjpRf1ijUubg9W3mpaa6VBm2x5Ij7esICf7qeTeXH/962aigqQ/POJkiIrMjQ8
+        bh=mnR1ARR6w9OS6jp8tpfEg3THUER7MsGlQPhDdl9c5kg=;
+        b=VbeiFNsLgj6do4/XZJX8gDbq536PzbfwwpJi3uj5pwjGf1SBQU0Z3WqzXgnK2I6dt1
+         RBN6qzuELRU3mPscYXa/isdgsoZtRMWjrlsFhtUcdG3DkcuvjlBT0/+b3onfmQ9pWqRb
+         JMF2Hbm0sJ2x5XkOu9pq+hPWJzaexzBUA9ZDSV+sh/csnXIs1e50n42aMi3jH6oKR/ki
+         N0HcYi6y0VxqDZrmB/KSpdPi2DS6lC0q8tVLVG0hwZCrlhSjslyQilhBDCOoK3Uz8NDW
+         wCOlKZKtrMsMGNVMj+2gv2ok1093yNCsfwFYfns2clEQJtZAR7SQ2uj6vOy0MN8i4uPB
+         Mz2A==
+X-Gm-Message-State: APjAAAVvclYnrITGFauMu+IEIN0vPebyzEyFbN61RpmIgEQFXwn7iV3e
+        gmsFzWsDQfMPubsPMqSSWh9Hec09jWk4qyAkrsFviA9FUKEG
+X-Google-Smtp-Source: APXvYqxqs84iZ08v63U6oexgvaJ2ok316NHmTXOF8W++PKF54u79U05tURbtHj7j9dkvuYjfJZPV08oAmFp2g0QmAl616Zf8Qatx
 MIME-Version: 1.0
-X-Received: by 2002:a24:6243:: with SMTP id d64mr5877150itc.0.1555272366728;
+X-Received: by 2002:a6b:720b:: with SMTP id n11mr3413980ioc.3.1555272366966;
  Sun, 14 Apr 2019 13:06:06 -0700 (PDT)
 Date:   Sun, 14 Apr 2019 13:06:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f2b23d05868310f9@google.com>
-Subject: KASAN: stack-out-of-bounds Read in hfcsusb_probe
-From:   syzbot <syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, bigeasy@linutronix.de, davem@davemloft.net,
-        gustavo@embeddedor.com, isdn@linux-pingi.de,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, pakki001@umn.edu,
+Message-ID: <000000000000f64e71058683105b@google.com>
+Subject: INFO: trying to register non-static key in mxl111sf_ctrl_msg
+From:   syzbot <syzbot+5ca0bf339f13c4243001@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, mkrufky@linuxtv.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,26 +60,25 @@ syzbot found the following crash on:
 
 HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=171744f3200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1613e4f3200000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=8750abbc3a46ef47d509
+dashboard link: https://syzkaller.appspot.com/bug?extid=5ca0bf339f13c4243001
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ca062d200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154a87bb200000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1259bedd200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12763bbb200000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
+Reported-by: syzbot+5ca0bf339f13c4243001@syzkaller.appspotmail.com
 
-usb 1-1: config 0 interface 170 has no altsetting 0
-usb 1-1: New USB device found, idVendor=0742, idProduct=200a,  
-bcdDevice=c2.97
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-==================================================================
-BUG: KASAN: stack-out-of-bounds in hfcsusb_probe.cold+0x1a43/0x267f  
-drivers/isdn/hardware/mISDN/hfcsusb.c:1976
-Read of size 4 at addr ffff8880a84c72f0 by task kworker/0:1/12
-
+usb 1-1: dvb_usb_v2: found a 'Hauppauge 117xxx DVBT' in warm state
+usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the  
+software demuxer
+dvbdev: DVB: registering new adapter (Hauppauge 117xxx DVBT)
+usb 1-1: selecting invalid altsetting 2
+set interface failed
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
 CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
@@ -88,9 +86,25 @@ Workqueue: usb_hub_wq hub_event
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  print_address_description+0x6c/0x236 mm/kasan/report.c:187
-  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
-  hfcsusb_probe.cold+0x1a43/0x267f drivers/isdn/hardware/mISDN/hfcsusb.c:1976
+  assign_lock_key kernel/locking/lockdep.c:786 [inline]
+  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+  __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+  __mutex_lock+0xfe/0x12b0 kernel/locking/mutex.c:1072
+  mxl111sf_ctrl_msg+0xc7/0x250 drivers/media/usb/dvb-usb-v2/mxl111sf.c:69
+  mxl111sf_write_reg+0x9f/0x160 drivers/media/usb/dvb-usb-v2/mxl111sf.c:126
+  mxl1x1sf_soft_reset+0x70/0x190  
+drivers/media/usb/dvb-usb-v2/mxl111sf-phy.c:56
+  mxl111sf_attach_demod+0x291/0x770  
+drivers/media/usb/dvb-usb-v2/mxl111sf.c:768
+  dvb_usbv2_adapter_frontend_init  
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:654 [inline]
+  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:817  
+[inline]
+  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:878 [inline]
+  dvb_usbv2_probe.cold+0x2170/0x29f6  
+drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:993
   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
   really_probe+0x2da/0xb10 drivers/base/dd.c:509
   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
@@ -116,24 +130,7 @@ Call Trace:
   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the page:
-page:ffffea0002a131c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfff00000000000()
-raw: 00fff00000000000 ffffea0002a131c8 ffffea0002a131c8 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a84c7180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8880a84c7200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
-> ffff8880a84c7280: f1 f1 f1 f1 01 f2 00 00 00 00 00 00 00 00 f3 f3
-                                                              ^
-  ffff8880a84c7300: f3 f3 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8880a84c7380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
+  ? p
 
 
 ---
