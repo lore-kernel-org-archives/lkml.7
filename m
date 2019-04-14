@@ -5,68 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B592DC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB9DC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D3E2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2F82075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lyq3znX4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFAVI+1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfDNSgF (ORCPT
+        id S1727366AbfDNSgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 14:36:05 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36867 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfDNSgE (ORCPT
+        Sun, 14 Apr 2019 14:36:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41782 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfDNSgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 14:36:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w23so7468063ply.4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 11:36:04 -0700 (PDT)
+        Sun, 14 Apr 2019 14:36:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so7464892pfd.8
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 11:36:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z0+WFUhfHh8Y3rOmE5iCyW7yCgxYjduenscPtoIwkoQ=;
-        b=Lyq3znX43/qDICRqQTRf7O4XxDdffCSmKQ08uvguTY4Hg3B4b3HkjUJvo8T8Rtg33C
-         LskaaT5vaunxt8xEtkZMdEXBDB38FHh9BzmllgV0icTWoT6IJTodGiGbJ6NhoP5YhS8r
-         sJ5e6h33x3WaaqI1PJBo5eS8sQTcZCOBzjlk7f4SH5KhEeuLEhgKdXn/Hj6wOHR4Z0RW
-         CSMVnwDhLcy3jHSC2plNo1/dwobjqjAdcpz9N9yoeBmoYDnTliyzNDuCaSWKT+a5VHzF
-         9P7oNfzBg/kQu3yyx4Q++/O3yKgIxt15dP7Bm/BlNUvPpT3IXmqUYePsKr2W+1NGXPfK
-         JUuw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qQ5tNU+tULfpJP7FQ2kX3oNDyXYEdefvp/NORRCRFx0=;
+        b=uFAVI+1cZlxjsPuYLrr6NxgZPM1uBVaBSPIJAZtd+6WMumxTKyG6sNBrGVaZfAXogy
+         ihSUH6UhshNI9R+vs9QAXZ5McdXbqu8aL+pXoufPJh2bvc1JWAx/YDNWq7W3BRlmqtlD
+         K9LQx2QKgsxEAN0G8FXshEq67wRK99mN564bOfXkHjq58KRy6OWFXu8xzkkAlbuHXF9u
+         Ktr6C+EJXTwbzTCKYj37Cpz9OP5JDPwtrncsg6GCm3ADpieYaIDGn7CzStBV5H6IHrJR
+         8h2gKAPRuVFbd5oMlTQXgUE3szXKxxzfK4mq6dchqqJZxgdx8DN5KukQCPWwPUQjahT7
+         QSOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z0+WFUhfHh8Y3rOmE5iCyW7yCgxYjduenscPtoIwkoQ=;
-        b=ah6c6BYqNZ/NeNvMkRMHRfUcSpZc3w6Shqc+6xHpIbevH6+LMtKNj2mQ/bQRHWJq9c
-         3rHiKmOpeDuN7R9K2PHWsJlx/h5cIoWHSGMkmzJIQMy0FdghDoUhI8mYHVBPmboysiJ+
-         LVNhJOR4lSxm5mzp/grNKdeUwDZj7rfXJygT4n+BN4awcAl90C2LKCFMShviSMK7AZOF
-         8H2vY/HYtVqCwFlO5IgXyD884gc0lLu1uOagXB7IX68cQPQ1OQyWwl4r6Tc6KP74uZ7C
-         BwWH00ItAWplUJ0M324VM5oVNuwxdtyemTOlDhyYodcUNDPPn5wVR8ux6LNx3nQ+/Ulc
-         uKVg==
-X-Gm-Message-State: APjAAAW2DzzXuejcpcnPWmu5MVFUj+6+E5at6PfeSFkNgfCEHGr+NNKm
-        FXzsv7yFLNh3QwwiuWdwyQOVnk3k
-X-Google-Smtp-Source: APXvYqzy/wq5Bj7R0WoBkRqvutVbP7tceha4LYIrxv+dhzK0xj6NudSld0HoGLoqZOENX0Y1PPw1Kw==
-X-Received: by 2002:a17:902:7892:: with SMTP id q18mr69900452pll.163.1555266964211;
-        Sun, 14 Apr 2019 11:36:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qQ5tNU+tULfpJP7FQ2kX3oNDyXYEdefvp/NORRCRFx0=;
+        b=Q2OEvzr/7FSZwiJE6pVzYGG3gGlGk01ml0LpYEEcRg6G4OW41pxtoH0urZ2c4h4JX4
+         82mBga5LvW60WRX2G09sb9G/Enw8tHanlhh3QVAHsU0l+1+Hdx2ydRNET3RrxJUmjF1J
+         hRe5NWuncvYQjVDd99iJA3nQjB/PkkGxP0VYaulEnitkQya6Lj3wSc11MglBaerbeTqM
+         UZm2O1EzweicPO/DkXVEm1jVkcTxMkdF3XGW6/HnNzE8IQF4T1shhdYRQVliCJoXmsWU
+         nm8u4/8U/VooKFJzu+w09KcBW414Q2z10Sk0xxSGv6DwTVhphTyUxS1Ci15v3lupgiLA
+         3lAA==
+X-Gm-Message-State: APjAAAVlcitrFSanld/NNJxeeUAv/AWgPhGzXasBPfbjsaUYLW+QfpZg
+        yvsQu9LQtWS8oBzSeRa2wTc=
+X-Google-Smtp-Source: APXvYqyVfG4+eI4GLbOtnY2sW3vD0EkLZUSNC2iWU7PHOo29psv2bcZHUB2/4MS88gqTciKRj3ay0g==
+X-Received: by 2002:a62:1701:: with SMTP id 1mr71353999pfx.120.1555266965437;
+        Sun, 14 Apr 2019 11:36:05 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id v43sm45473300pgn.57.2019.04.14.11.36.03
+        by smtp.gmail.com with ESMTPSA id v43sm45473300pgn.57.2019.04.14.11.36.04
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 11:36:03 -0700 (PDT)
+        Sun, 14 Apr 2019 11:36:04 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
         Fabio Estevam <festevam@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: vf610-zii-dev: Mark i2c0 SCL as GPIO_OPEN_DRAIN
-Date:   Sun, 14 Apr 2019 11:35:57 -0700
-Message-Id: <20190414183558.25750-1-andrew.smirnov@gmail.com>
+Subject: [PATCH 2/2] ARM: dts: vf610-zii-dev-rev-b: Specify CS as GPIO_ACTIVE_LOW in spi0
+Date:   Sun, 14 Apr 2019 11:35:58 -0700
+Message-Id: <20190414183558.25750-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190414183558.25750-1-andrew.smirnov@gmail.com>
+References: <20190414183558.25750-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,9 +75,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark i2c0 SCL as GPIO_OPEN_DRAIN to fix the following warning:
+Specify CS as GPIO_ACTIVE_LOW in spi0 to fix the following warning:
 
-gpio-36 (scl): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+m25p128@0 enforce active low on chipselect handle
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>
@@ -85,21 +86,21 @@ Cc: Andrew Lunn <andrew@lunn.ch>
 Cc: Fabio Estevam <festevam@gmail.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/vf610-zii-dev.dtsi | 2 +-
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-index 19eb4a849efb..2d1e9b3203fa 100644
---- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-+++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-@@ -138,7 +138,7 @@
- 	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c0>;
- 	pinctrl-1 = <&pinctrl_i2c0_gpio>;
--	scl-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 	sda-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+index bd79e00bf615..87b4d2cbe106 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+@@ -334,7 +334,7 @@
+ 		gpio-sck  = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+ 		gpio-miso = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+-		cs-gpios  = <&gpio1  9 GPIO_ACTIVE_HIGH
++		cs-gpios  = <&gpio1  9 GPIO_ACTIVE_LOW
+ 			     &gpio1  8 GPIO_ACTIVE_HIGH>;
+ 		num-chipselects = <2>;
  
 -- 
 2.20.1
