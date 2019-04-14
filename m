@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411A3C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510C5C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FE6218FC
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2579420896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfDNQCp (ORCPT
+        id S1727406AbfDNQCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:02:45 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43270 "EHLO
+        Sun, 14 Apr 2019 12:02:48 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43276 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfDNQCl (ORCPT
+        with ESMTP id S1727337AbfDNQCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:02:41 -0400
+        Sun, 14 Apr 2019 12:02:43 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhaZ-0002dS-Ud; Sun, 14 Apr 2019 18:02:40 +0200
-Message-Id: <20190414160144.885741626@linutronix.de>
+        id 1hFhab-0002df-Bg; Sun, 14 Apr 2019 18:02:41 +0200
+Message-Id: <20190414160144.974900463@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 17:59:51 +0200
+Date:   Sun, 14 Apr 2019 17:59:52 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 15/32] x86/irq/64: Use cpu entry area instead of orig_ist
+Subject: [patch V3 16/32] x86/dumpstack/64: Use cpu_entry_area instead of
+ orig_ist
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -53,45 +54,84 @@ offsets of the various exception stacks.
 No functional change. Preparation for removing orig_ist.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/kernel/irq_64.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -18,6 +18,8 @@
- #include <linux/uaccess.h>
- #include <linux/smp.h>
- #include <linux/sched/task_stack.h>
-+
+ arch/x86/kernel/dumpstack_64.c |   39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
+
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -16,6 +16,7 @@
+ #include <linux/bug.h>
+ #include <linux/nmi.h>
+ 
 +#include <asm/cpu_entry_area.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
+ #include <asm/stacktrace.h>
  
-@@ -43,10 +45,9 @@ static inline void stack_overflow_check(
+ static const char *exception_stack_names[N_EXCEPTION_STACKS] = {
+@@ -25,11 +26,6 @@ static const char *exception_stack_names
+ 		[ ESTACK_MCE	]	= "#MC",
+ };
+ 
+-static const unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
+-	[0 ... N_EXCEPTION_STACKS - 1]		= EXCEPTION_STKSZ,
+-	[ESTACK_DB]				= DEBUG_STKSZ
+-};
+-
+ const char *stack_type_name(enum stack_type type)
  {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
- #define STACK_MARGIN	128
--	struct orig_ist *oist;
--	u64 irq_stack_top, irq_stack_bottom;
--	u64 estack_top, estack_bottom;
-+	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
- 	u64 curbase = (u64)task_stack_page(current);
-+	struct cea_exception_stacks *estacks;
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+@@ -52,25 +48,44 @@ const char *stack_type_name(enum stack_t
+ 	return NULL;
+ }
  
- 	if (user_mode(regs))
- 		return;
-@@ -60,9 +61,9 @@ static inline void stack_overflow_check(
- 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
++struct estack_layout {
++	unsigned int	begin;
++	unsigned int	end;
++};
++
++#define	ESTACK_ENTRY(x)	{						  \
++	.begin	= offsetof(struct cea_exception_stacks, x## _stack),	  \
++	.end	= offsetof(struct cea_exception_stacks, x## _stack_guard) \
++	}
++
++static const struct estack_layout layout[N_EXCEPTION_STACKS] = {
++	[ ESTACK_DF	]	= ESTACK_ENTRY(DF),
++	[ ESTACK_NMI	]	= ESTACK_ENTRY(NMI),
++	[ ESTACK_DB	]	= ESTACK_ENTRY(DB),
++	[ ESTACK_MCE	]	= ESTACK_ENTRY(MCE),
++};
++
+ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ {
+-	unsigned long *begin, *end;
++	unsigned long estacks, begin, end, stk = (unsigned long)stack;
+ 	struct pt_regs *regs;
+-	unsigned k;
++	unsigned int k;
  
--	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[ESTACK_DB];
--	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
-+	estacks = __this_cpu_read(cea_exception_stacks);
-+	estack_top = CEA_ESTACK_TOP(estacks, DB);
-+	estack_bottom = CEA_ESTACK_BOT(estacks, DB) + STACK_MARGIN;
- 	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
- 		return;
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
  
++	estacks = (unsigned long)__this_cpu_read(cea_exception_stacks);
++
+ 	for (k = 0; k < N_EXCEPTION_STACKS; k++) {
+-		end   = (unsigned long *)raw_cpu_ptr(&orig_ist)->ist[k];
+-		begin = end - (exception_stack_sizes[k] / sizeof(long));
++		begin = estacks + layout[k].begin;
++		end   = estacks + layout[k].end;
+ 		regs  = (struct pt_regs *)end - 1;
+ 
+-		if (stack < begin || stack >= end)
++		if (stk < begin || stk >= end)
+ 			continue;
+ 
+ 		info->type	= STACK_TYPE_EXCEPTION + k;
+-		info->begin	= begin;
+-		info->end	= end;
++		info->begin	= (unsigned long *)begin;
++		info->end	= (unsigned long *)end;
+ 		info->next_sp	= (unsigned long *)regs->sp;
+ 
+ 		return true;
 
 
