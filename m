@@ -2,150 +2,128 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324ECC10F11
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 00:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EB6C10F11
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 00:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE68D21721
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 00:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518BE2084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 00:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDNAJV (ORCPT
+        id S1727229AbfDNAQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 20:09:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38234 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727052AbfDNAJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 20:09:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B4C9C3082A4C;
-        Sun, 14 Apr 2019 00:09:20 +0000 (UTC)
-Received: from [10.10.120.173] (ovpn-120-173.rdu2.redhat.com [10.10.120.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7D0419C77;
-        Sun, 14 Apr 2019 00:09:19 +0000 (UTC)
-Subject: Re: perf tools:Is there any tools to found out the max latency by irq
- or cpu idle
-To:     Linhaifeng <haifeng.lin@huawei.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
- <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
-From:   William Cohen <wcohen@redhat.com>
-Message-ID: <5b1fc7cf-ddd5-ab2e-d87c-976c914bb01b@redhat.com>
-Date:   Sat, 13 Apr 2019 20:09:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 13 Apr 2019 20:16:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:44557 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfDNAQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 20:16:10 -0400
+Received: by mail-io1-f69.google.com with SMTP id c2so11067934ioh.11
+        for <linux-kernel@vger.kernel.org>; Sat, 13 Apr 2019 17:16:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xXuzSWyv+sKnNZGQm/vy9xDa4HZxZ8HxM06OLjDe5dQ=;
+        b=PtgDN/yxwoVR76efzyh0UzaiXTkid1k6GxgDTTgeXcgJwDjQ4j/6ZGL0nGBGqzLdRO
+         MZdNS9728UaiQcn2iE5aN92WozfhPG4EMSvcvK1RkjjGxqrKcmsWnowZn5ZphkZOboa9
+         cRfuWy98VCe/WjM2HoEyokxvEzdjosAxsusevqo8EdSnWIkRy0PAOpscf/9HSyYxdiGH
+         ExgKfHYQ5bskF1HzXsRa1GAFpXbRf1Q1HOgHevbrbUoTu1nqJQbrZsnbFR73vrCuAR0m
+         KrtzCMDhMep2RoY9L0oCyt8OdGGdRuxErm2/s2RitN5DThIS8mSA5yzyl+MLZRIO7XD3
+         bRpQ==
+X-Gm-Message-State: APjAAAX66m0qXSFr2/fP+f4UEkJxuToGp9bZ3B30Cq1In5WW0Uv8Ajgx
+        d6hDM4vQI1q0IFtcxcFBV9g6Usb/spnm+7P2odqmFFhvYTPf
+X-Google-Smtp-Source: APXvYqwUGnz4QR3rq23u0Tb5EQnl3SZDYcLL/lu5WB5Yds4ZRRkQnmGQ90dvx2ZX/4tZ5pAZL9g3c+Y5aZeNFf1MGCfm6GE8G6Wk
 MIME-Version: 1.0
-In-Reply-To: <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Sun, 14 Apr 2019 00:09:20 +0000 (UTC)
+X-Received: by 2002:a6b:8f01:: with SMTP id r1mr3846361iod.27.1555200969779;
+ Sat, 13 Apr 2019 17:16:09 -0700 (PDT)
+Date:   Sat, 13 Apr 2019 17:16:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005bb0ae05867271c1@google.com>
+Subject: KMSAN: uninit-value in hci_event_packet
+From:   syzbot <syzbot+4918ee47ac82d51de00d@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/13/19 2:01 AM, Linhaifeng wrote:
-> Sorry, the value 131081408 is just for example. Actually the result is like this:
->  sqrt 2019-04-10 23:53:50: 43968
->  sqrt 2019-04-10 23:53:51: 44060
->  sqrt 2019-04-10 23:53:52: 49012
->  sqrt 2019-04-10 23:53:53: 38172
->  sqrt 2019-04-10 23:53:54: 131081408
->  sqrt 2019-04-10 23:53:55: 43600
->  sqrt 2019-04-10 23:53:56: 46704
->  sqrt 2019-04-10 23:53:57: 46880
->  sqrt 2019-04-10 23:53:58: 44332
->  ……
->  sqrt 2019-04-10 02:17:15: 136345876
->  ……
->  sqrt 2019-04-10 04:40:35: 136335644
->  ……
+Hello,
 
-Hi,
+syzbot found the following crash on:
 
-Still it would be interesting to look at the two raw values used to compute the delta to better diagnose what is going on.
+HEAD commit:    c10a026b kmsan: use __free_pages() in kmsan_iounmap_page_r..
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c903a3200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5675814e8eae69e
+dashboard link: https://syzkaller.appspot.com/bug?extid=4918ee47ac82d51de00d
+compiler:       clang version 8.0.0 (trunk 350509)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b4634d200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150657ef200000
 
--Will
-> 
-> -----Original Message-----
-> From: William Cohen [mailto:wcohen@redhat.com] 
-> Sent: 2019年4月12日 22:06
-> To: Linhaifeng <haifeng.lin@huawei.com>; linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: perf tools:Is there any tools to found out the max latency by irq or cpu idle
-> 
-> On 4/11/19 8:57 PM, Linhaifeng wrote:
->> Hi,
->> I have a single thread application like this:
->>
->> While (1) {
->>     start = rdtsc();
->>     sqrt (1024);      
->> 　　end = rdtsc();
->> 　　cycles = end – start;
->> 　　printf("cycles: %d-%02d-%02d %02d:%02d:%02d: %lu\n", 
->> 　　　　　　1900+timeinfo->tm_year, 1+timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
->> 　　　　　　cycles);
->> }
->> It print the cycles of sqrt every second and run with taskset –c 1 ./sqrt.
->> The result of test is:
->>
->> sqrt 2019-04-10 23:53:50: 43968
->> sqrt 2019-04-10 23:53:51: 44060
->> sqrt 2019-04-10 23:53:52: 49012
->> sqrt 2019-04-10 23:53:53: 38172
->> sqrt 2019-04-10 23:53:54: 131081408
->> sqrt 2019-04-10 23:53:55: 43600
->> sqrt 2019-04-10 23:53:56: 46704
->> sqrt 2019-04-10 23:53:57: 46880
->> sqrt 2019-04-10 23:53:58: 44332
->> ……
->> sqrt 2019-04-10 02:17:15: 131081408
->> ……
->> sqrt 2019-04-10 04:40:35: 131081408
->> ……
->>
->> Every 2hour23min there would be a large cycles. I use perf sched not found any sched_switch events.
-> 
-> Hi,
-> 
-> The fact that it is the same value 131081408 every 2 hours 23 minutes looks suspect. One would expect some variation in the counts.  It looks like there is some rollover or overflow issue.  It would be helpful to print out the start and end values to see what is going on with the raw rdstc values.  Maybe the thread is being moved between processors and the TSC are out of sync.  What particular processor model was this running on? Was this running on physical hardware or inside a kvm guest? 
-> 
-> According to the Intel 64 and IA-32 Architecture Software Devloper's Manual Volume 3 (325384-sdm-vol-3abcd.pdf):
-> 
-> The RDTSC instruction reads the time-stamp counter and is guaranteed to return a monotonically increasing unique value whenever executed, except for a 64-bit counter wraparound. Intel guarantees that the time-stamp counter will not wraparound within 10 years after being reset. The period for counter wrap is longer for Pentium 4, Intel Xeon, P6 family, and Pentium processors.
-> 
-> -Will Cohen
-> 
-> 
->>
->> L2GW_2680:/home/fsp/zn # perf sched record -C 6-11 -o perf.sched ^C[ 
->> perf record: Woken up 64 times to write data ] [ perf record: Captured 
->> and wrote 204.878 MB perf.sched (1911189 samples) ]
->>
->> L2GW_2680:/home/fsp/zn # perf sched latency -i perf.sched
->>
->> ----------------------------------------------------------------------
->> -------------------------------------------
->>   Task                  |   Runtime ms  | Switches | Average delay ms 
->> | Maximum delay ms | Maximum delay at       |
->> ----------------------------------------------------------------------
->> -------------------------------------------
->> ----------------------------------------------------------------------
->> -------------------------------------------
->>   TOTAL:                |      0.000 ms |        0 |
->> ---------------------------------------------------
->>
->>
->>
->> Is there any other tools of perf to found out the max latency by irq or cpu idle ?
->>
->>
-> 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4918ee47ac82d51de00d@syzkaller.appspotmail.com
 
+IPVS: ftp: loaded support on port[0] = 21
+==================================================================
+BUG: KMSAN: uninit-value in hci_conn_complete_evt  
+net/bluetooth/hci_event.c:2440 [inline]
+BUG: KMSAN: uninit-value in hci_event_packet+0x126e8/0x35290  
+net/bluetooth/hci_event.c:5781
+CPU: 1 PID: 10735 Comm: kworker/u5:1 Not tainted 5.0.0+ #16
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: hci0 hci_rx_work
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+  kmsan_report+0x131/0x2a0 mm/kmsan/kmsan.c:636
+  __msan_warning+0x7a/0xf0 mm/kmsan/kmsan_instr.c:310
+  hci_conn_complete_evt net/bluetooth/hci_event.c:2440 [inline]
+  hci_event_packet+0x126e8/0x35290 net/bluetooth/hci_event.c:5781
+  hci_rx_work+0x478/0xcc0 net/bluetooth/hci_core.c:4412
+  process_one_work+0x1607/0x2010 kernel/workqueue.c:2173
+  worker_thread+0x111c/0x2460 kernel/workqueue.c:2319
+  kthread+0x4a1/0x4e0 kernel/kthread.c:247
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:205 [inline]
+  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:159
+  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:173
+  kmsan_slab_alloc+0xe/0x10 mm/kmsan/kmsan_hooks.c:182
+  slab_post_alloc_hook mm/slab.h:445 [inline]
+  slab_alloc_node mm/slub.c:2773 [inline]
+  __kmalloc_node_track_caller+0xe9e/0xff0 mm/slub.c:4398
+  __kmalloc_reserve net/core/skbuff.c:140 [inline]
+  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
+  alloc_skb include/linux/skbuff.h:1012 [inline]
+  bt_skb_alloc include/net/bluetooth/bluetooth.h:339 [inline]
+  bcsp_recv+0x1437/0x2050 drivers/bluetooth/hci_bcsp.c:685
+  hci_uart_tty_receive+0x35c/0x5d0 drivers/bluetooth/hci_ldisc.c:607
+  tty_ldisc_receive_buf+0x2ea/0x350 drivers/tty/tty_buffer.c:465
+  tty_port_default_receive_buf+0x14f/0x1e0 drivers/tty/tty_port.c:38
+  receive_buf drivers/tty/tty_buffer.c:481 [inline]
+  flush_to_ldisc+0x30c/0x7f0 drivers/tty/tty_buffer.c:533
+  process_one_work+0x1607/0x2010 kernel/workqueue.c:2173
+  worker_thread+0x111c/0x2460 kernel/workqueue.c:2319
+  kthread+0x4a1/0x4e0 kernel/kthread.c:247
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
