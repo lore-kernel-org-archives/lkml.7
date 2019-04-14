@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BFC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91127C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD9320870
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B07F20850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 20:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfDNUje (ORCPT
+        id S1727297AbfDNUkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 16:39:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42495 "EHLO
+        Sun, 14 Apr 2019 16:40:07 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34939 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfDNUjd (ORCPT
+        with ESMTP id S1725797AbfDNUkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 16:39:33 -0400
+        Sun, 14 Apr 2019 16:40:06 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3EKcrh62689345
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3EKdYTO2689592
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 14 Apr 2019 13:38:53 -0700
+        Sun, 14 Apr 2019 13:39:34 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3EKcqsO2689342;
-        Sun, 14 Apr 2019 13:38:52 -0700
-Date:   Sun, 14 Apr 2019 13:38:52 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3EKdYMU2689587;
+        Sun, 14 Apr 2019 13:39:34 -0700
+Date:   Sun, 14 Apr 2019 13:39:34 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-4f3bd6ca310b594df09c8f1e319cda9baf502ec8@git.kernel.org>
-Cc:     James.Bottomley@HansenPartnership.com, hpa@zytor.com,
-        glider@google.com, mingo@kernel.org, rostedt@goodmis.org,
-        luto@kernel.org, tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org, deller@gmx.de
-Reply-To: glider@google.com, James.Bottomley@HansenPartnership.com,
-          hpa@zytor.com, rostedt@goodmis.org, deller@gmx.de,
-          peterz@infradead.org, mingo@kernel.org, luto@kernel.org,
-          tglx@linutronix.de, jpoimboe@redhat.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190410103644.308534788@linutronix.de>
-References: <20190410103644.308534788@linutronix.de>
+Message-ID: <tip-6a28b4c2d93b812512d8d2e5179e61a14f578560@git.kernel.org>
+Cc:     schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        rostedt@goodmis.org, peterz@infradead.org, luto@kernel.org,
+        jpoimboe@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+        glider@google.com
+Reply-To: luto@kernel.org, peterz@infradead.org, glider@google.com,
+          hpa@zytor.com, jpoimboe@redhat.com, tglx@linutronix.de,
+          mingo@kernel.org, rostedt@goodmis.org,
+          linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com,
+          heiko.carstens@de.ibm.com
+In-Reply-To: <20190410103644.396788431@linutronix.de>
+References: <20190410103644.396788431@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/stacktrace] parisc/stacktrace: Remove the pointless
+Subject: [tip:core/stacktrace] s390/stacktrace: Remove the pointless
  ULONG_MAX marker
-Git-Commit-ID: 4f3bd6ca310b594df09c8f1e319cda9baf502ec8
+Git-Commit-ID: 6a28b4c2d93b812512d8d2e5179e61a14f578560
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,14 +61,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4f3bd6ca310b594df09c8f1e319cda9baf502ec8
-Gitweb:     https://git.kernel.org/tip/4f3bd6ca310b594df09c8f1e319cda9baf502ec8
+Commit-ID:  6a28b4c2d93b812512d8d2e5179e61a14f578560
+Gitweb:     https://git.kernel.org/tip/6a28b4c2d93b812512d8d2e5179e61a14f578560
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Wed, 10 Apr 2019 12:28:02 +0200
+AuthorDate: Wed, 10 Apr 2019 12:28:03 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Sun, 14 Apr 2019 19:58:29 +0200
 
-parisc/stacktrace: Remove the pointless ULONG_MAX marker
+s390/stacktrace: Remove the pointless ULONG_MAX marker
 
 Terminating the last trace entry with ULONG_MAX is a completely pointless
 exercise and none of the consumers can rely on it because it's
@@ -80,39 +81,42 @@ Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Alexander Potapenko <glider@google.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: linux-parisc@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190410103644.308534788@linutronix.de
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Link: https://lkml.kernel.org/r/20190410103644.396788431@linutronix.de
 
 ---
- arch/parisc/kernel/stacktrace.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/s390/kernel/stacktrace.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/parisc/kernel/stacktrace.c b/arch/parisc/kernel/stacktrace.c
-index ec5835e83a7a..6f0b9c8d8052 100644
---- a/arch/parisc/kernel/stacktrace.c
-+++ b/arch/parisc/kernel/stacktrace.c
-@@ -29,22 +29,17 @@ static void dump_trace(struct task_struct *task, struct stack_trace *trace)
- 	}
- }
+diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
+index 460dcfba7d4e..cc9ed9787068 100644
+--- a/arch/s390/kernel/stacktrace.c
++++ b/arch/s390/kernel/stacktrace.c
+@@ -45,8 +45,6 @@ void save_stack_trace(struct stack_trace *trace)
  
--
- /*
-  * Save stack-backtrace addresses into a stack_trace buffer.
-  */
- void save_stack_trace(struct stack_trace *trace)
- {
- 	dump_trace(current, trace);
+ 	sp = current_stack_pointer();
+ 	dump_trace(save_address, trace, NULL, sp);
 -	if (trace->nr_entries < trace->max_entries)
 -		trace->entries[trace->nr_entries++] = ULONG_MAX;
  }
  EXPORT_SYMBOL_GPL(save_stack_trace);
  
- void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
- {
- 	dump_trace(tsk, trace);
+@@ -58,8 +56,6 @@ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
+ 	if (tsk == current)
+ 		sp = current_stack_pointer();
+ 	dump_trace(save_address_nosched, trace, tsk, sp);
 -	if (trace->nr_entries < trace->max_entries)
 -		trace->entries[trace->nr_entries++] = ULONG_MAX;
  }
  EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
+ 
+@@ -69,7 +65,5 @@ void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
+ 
+ 	sp = kernel_stack_pointer(regs);
+ 	dump_trace(save_address, trace, NULL, sp);
+-	if (trace->nr_entries < trace->max_entries)
+-		trace->entries[trace->nr_entries++] = ULONG_MAX;
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_regs);
