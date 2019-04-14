@@ -2,142 +2,111 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFFFC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 17:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32CBC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E147A206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 17:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F3520850
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 18:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="y5DPwaXR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQkM3zb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfDNRz5 (ORCPT
+        id S1726968AbfDNSFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 13:55:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46075 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfDNRz5 (ORCPT
+        Sun, 14 Apr 2019 14:05:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41545 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfDNSFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 13:55:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y6so13427425ljd.12
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 10:55:56 -0700 (PDT)
+        Sun, 14 Apr 2019 14:05:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so7448314pfd.8;
+        Sun, 14 Apr 2019 11:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VlqTvvjVrSjyP0q+bjGrO5hfsUPGP+Ex9rx1HImXFm4=;
-        b=y5DPwaXRD5gfZwa9pC2WIw7SHydZKFqiY4hE2T9RMxSTBuvDs7x6t1enx0Ea9lDn2h
-         caTA2Hqq5RMXgeK1gzbqbkpj+z87CTRs+KREYs1ISwXyu52+PyS51KWR/7T+C96fNl8Q
-         +bsm4Z7OnsihlVv3YKWM4zlmEuH5ZrAR2Y8NSXAmnV27x5C1smhLPRHUSBVxmJsKUUG0
-         y/Kc/XCGSCX8whjZGi4vlWGUS6CZ+VBMmHWK/kmdgXCfrtHtLK0I7TQsJizAGzIIv/sz
-         QME5higUH4zetYy/ig/ZSk1CzNj5bkDoSdbILcVUY+LD7Zz3arw7wJSMnM4d7xvES2CG
-         IbOw==
+        bh=pxtAWt79LINx6AhQK0vzVvPhTuuv9NiQ9uCVJgHz65Q=;
+        b=oQkM3zb/X5vReshuvHnygcTT/6XAxKeMVV9wfjxwoU2whd/apLk7+7CqUZzn8Bffsw
+         bGbuYUF7tZH5Xy+XDZaAFBee8yf0w2joCleUxX/NLK8CeLEpntW7KDxLm68IXq2+Kenn
+         5OYYfZGcgoQ78dx5x3y1JqdRIV4YO15UFdHDpIKmKWUIfK/tAEFyFS3tBPeshpGQbnID
+         zhVPGUPglxdbA3FY9vwVONdNBIn4KSiDEfPXecpv1yIXUfBW+u/Xl6u4jAv1klHbVXFq
+         NlopcmFB89eqwqzLp8h0qm7icIhirzVOJUIU62juUris3N0u8Ot9XRV5R8NDZux1eyno
+         Btrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VlqTvvjVrSjyP0q+bjGrO5hfsUPGP+Ex9rx1HImXFm4=;
-        b=iIH4Up4gYcxE15Sf0BIl4Uy4wtzl0Ewq7rlTsuj6bll+D1WM8aHKJRnbK/jENkIFk6
-         uSw5b47zvMrOofpvRaqodxXhbpej+ywP6Lqo6aIPvLmeOZRQv3p0+Toit8GIkPsOVsoH
-         HhurQn2zSx4/JdjplgUIDdzAs+gCbbwHyJrMqMmxPmEZJVhtzAtlQooB0xM2JKeAkKuI
-         q/brcMLHJIcX+N2P3+78pfWTp1TpGdaOxLttY2niuFxpGRLwxdtg9TY7seTM3FQBRkMI
-         0EmKyJ/iBQBpAXVU/6MFqie87I8U9wHUDJel1HPPh4tTfkbo0a0IV57Zt8nU9kSQhhCy
-         6bmQ==
-X-Gm-Message-State: APjAAAVkgnVMrP8vSrwqgtkJBuLlY0UVrNCMApwAO/ysHGVhSZlLQMqS
-        1kc90Lw7TaSJcExSVLwzhYBFHl6LsMs=
-X-Google-Smtp-Source: APXvYqyGw/KeMzzhRJs/i3MTfsvOlfdfCkbG8iaSB3T08p7wAJnIWGc6FEufG85F2gvYieMaDPi7kQ==
-X-Received: by 2002:a2e:1257:: with SMTP id t84mr38626316lje.115.1555264555174;
-        Sun, 14 Apr 2019 10:55:55 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.85.5])
-        by smtp.gmail.com with ESMTPSA id p15sm9554630lfc.48.2019.04.14.10.55.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pxtAWt79LINx6AhQK0vzVvPhTuuv9NiQ9uCVJgHz65Q=;
+        b=Y/fTcBSJT5f/OAJ6bAckn5Hs37VOsRSN6qnkgIvDodInTHgCCzhH5rEenr8bE6coJK
+         bWdLqua0A+KSXiuHfDmeDhJUzTmxgDhWsix6r3LV6A9ryX1B9vDwL/hNaHG2AGDimU/7
+         nA0J8feOnsm7pJR+rM1jkci7QAbYQevnwdpCph1B0nu9qWyU+4+v4z7EM4kTT9nlEvaA
+         vp14lyNyhObzC/TS1cpmGd3jAOuRyU7K8y6kQYJqRTepmgYZWMOAFBtkPXK+4mZGJ74r
+         iFtbii/TpZlgkeJLwJshre9VUUlwBl+DIqhYbiYfTcqbCMTvIZJLYac/dUwiQ01i5OMH
+         pnYA==
+X-Gm-Message-State: APjAAAVgjsrLraaeb3OIKQaKKe5kXPYQbVprDtn5w/9530icFPBbF01r
+        YigPC1voXmrRT5bokb49Plk=
+X-Google-Smtp-Source: APXvYqwFpZ/4GfRnzlhZVPz3A/0bDRPJQFqwyJrpw/w3/SVtSkx+dklld3heOl3sRuodIkR5v8rwkQ==
+X-Received: by 2002:a63:e850:: with SMTP id a16mr62701283pgk.195.1555265146177;
+        Sun, 14 Apr 2019 11:05:46 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id e7sm43359712pfc.132.2019.04.14.11.05.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Apr 2019 10:55:54 -0700 (PDT)
-Subject: Re: [PATCH v3 4/5] dt-bindings: mtd: Add bindings for TI's AM654
- HyperBus memory controller
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, nsekhar@ti.com,
-        linux-kernel@vger.kernel.org
-References: <20190412092923.24919-1-vigneshr@ti.com>
- <20190412092923.24919-5-vigneshr@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <6a69ce6f-66c0-3f7c-a326-d76ee717cacf@cogentembedded.com>
-Date:   Sun, 14 Apr 2019 20:55:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sun, 14 Apr 2019 11:05:45 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 0/6] Introduce machine-specific regulators coupling API
+Date:   Sun, 14 Apr 2019 20:59:33 +0300
+Message-Id: <20190414175939.12368-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190412092923.24919-5-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 12:29 PM, Vignesh Raghavendra wrote:
+Hello,
 
-> Add binding documentation for TI's HyperBus memory controller present on
-> AM654 SoC.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 31 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> new file mode 100644
-> index 000000000000..00888482df25
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-> @@ -0,0 +1,31 @@
-[...]
-> +Optional properties:
-> +- mux-controls: phandle to the multiplexer that controls selection of
-> +		HBMC vs OSPI. Mux state of 1 indicates HBMC is selected.
+I was looking into how to properly implement regulators coupling for
+NVIDIA Tegra SoC's and ended up with this patchset that introduces
+machine-specific regulators coupling. Upstream kernel now has support
+for a simple variants of regulators coupling in a form of limiting
+maximum voltage spreading between two regulators, but that's not enough
+for the case of Tegra SoC's. It's a bit difficult to support universally
+all possible coupling restrictions in a form of device-tree description,
+so here comes the machine-specific coupling API which allow platforms
+to customize coupling algorithms.
 
-   I thought this is usually done with the help of drivers/pinctrl/..
+Dmitry Osipenko (6):
+  regulator: core: Introduce API for machine-specific regulators
+    coupling
+  regulator: core: Parse max-spread value per regulator couple
+  regulator: core: Expose some of core functions
+  regulator: core Bump MAX_COUPLED to 3
+  soc/tegra: regulators: Add regulators coupler for Tegra20
+  soc/tegra: regulators: Add regulators coupler for Tegra30
 
-> +
-> +Example:
-> +	hbmc: hbmc@47034000 {
-> +		compatible = "ti,am654-hbmc";
-> +		reg = <0x0 0x47034000 0x0 0x100>,
-> +			<0x5 0x00000000 0x1 0x0000000>;
-> +		power-domains = <&k3_pds 55>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-> +			 <0x1 0x5 0x04000000 0x4000000>; /* CS1 - 64MB
-> +
-> +		/* Slave flash node */
-> +		flash@0{
+ drivers/regulator/core.c               |  89 +++++---
+ drivers/regulator/of_regulator.c       |  49 ++--
+ drivers/soc/tegra/Kconfig              |  12 +
+ drivers/soc/tegra/Makefile             |   2 +
+ drivers/soc/tegra/regulators-tegra20.c | 304 +++++++++++++++++++++++++
+ drivers/soc/tegra/regulators-tegra30.c | 256 +++++++++++++++++++++
+ include/linux/regulator/driver.h       |  14 +-
+ include/linux/regulator/machine.h      |  22 +-
+ 8 files changed, 694 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/soc/tegra/regulators-tegra20.c
+ create mode 100644 drivers/soc/tegra/regulators-tegra30.c
 
-   Need space before {.
+-- 
+2.21.0
 
-> +			compatible = "cypress,hyperflash";
-> +			reg = <0x0 0x4000000>;
-> +		};
-> +	};
-[...]
-
-MBR, Sergei
