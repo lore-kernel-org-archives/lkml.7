@@ -3,37 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC01C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1283EC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97CD206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E4B20818
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4Zt9mdJn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="daDh6G31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbfDNTGm (ORCPT
+        id S1726810AbfDNTNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 15:06:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60899 "EHLO vps0.lunn.ch"
+        Sun, 14 Apr 2019 15:13:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60906 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfDNTGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 15:06:42 -0400
+        id S1725829AbfDNTNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 15:13:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=sA9PQyV94N6hguiurAqKkh0xPTEqDySVq8XxB/gLXO8=; b=4Zt9mdJnhgmonacpJ4S+bHSN88
-        hnnY55QT1GIv08VZaFfEBdPUGuZdh/1HBb2+K8V8/AtRbsb4AXiDlBbo2EzZNPh847AHhSELw96oh
-        +uLMttJd1ITHYw1NMIzCnnbDl4wpexjPG6evFBoaET19qcB75kZQV7IlfAzkmQs7qEx0=;
+        bh=83Zt+sF62/UwECkI8XPRC/QymuI41c0gfQ0VRV+3PPM=; b=daDh6G316ZcEltEQncp5CvYPl3
+        bIrV+UFwTtdS/DeVHS1duE3Qfx2f7uMStXiXG9E9uoyXkUiugeKb1KthJ4RqZb2gsNnua5pZ5cnDC
+        oFbe2mp1MWjsXcZofPJfkYdioZKBNbjEjmKts3q04gCYd/lCErGcxZdZEF7TRwl174/8=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
         (envelope-from <andrew@lunn.ch>)
-        id 1hFkSb-0004Es-GW; Sun, 14 Apr 2019 21:06:37 +0200
-Date:   Sun, 14 Apr 2019 21:06:37 +0200
+        id 1hFkZ4-0004KM-1E; Sun, 14 Apr 2019 21:13:18 +0200
+Date:   Sun, 14 Apr 2019 21:13:18 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Vladimir Oltean <olteanv@gmail.com>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
@@ -42,43 +42,55 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
         Georg Waibel <georg.waibel@sensor-technik.de>
 Subject: Re: [PATCH v3 net-next 18/24] net: dsa: sja1105: Add support for
  traffic through standalone ports
-Message-ID: <20190414190637.GD10323@lunn.ch>
+Message-ID: <20190414191318.GE10323@lunn.ch>
 References: <20190413012822.30931-1-olteanv@gmail.com>
  <20190413012822.30931-19-olteanv@gmail.com>
  <20190413163754.GG17901@lunn.ch>
  <CA+h21hpKJS=TKGoMJMvsmK1DAtgciDsLOHAawqsKQ0xGW5dF6w@mail.gmail.com>
- <20190414160510.GA10323@lunn.ch>
- <CA+h21hoG8hRPoakx0Wvx1XyPVo2wmB-L=Y-7hGir5Pk1_NgaEg@mail.gmail.com>
+ <CA+h21hp=_LrGDZo3Jmoe2hNKqx7nrdqRbK3UWYntN-9My-z5Hg@mail.gmail.com>
+ <CA+h21hp47bOwvEdF5KCV0bAo01mv+K11JSuP9AzEoWHTjmVAtQ@mail.gmail.com>
+ <20190414161757.GB10323@lunn.ch>
+ <CA+h21ho9AKSmX=6CU1P_fddcYSGB-DN0T-XqVYg8GnTRfuShVw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hoG8hRPoakx0Wvx1XyPVo2wmB-L=Y-7hGir5Pk1_NgaEg@mail.gmail.com>
+In-Reply-To: <CA+h21ho9AKSmX=6CU1P_fddcYSGB-DN0T-XqVYg8GnTRfuShVw@mail.gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes, it looks like the hardware isn't doing me any favors on this one.
-> >From UM10944: "If the host provides several management route entries
-> with identical values for the MACADDR, the one at the lowest index is
-> used first."
-> So the 4 hardware management slots serve no purpose unless I'm willing
-> to lock the sja1105_xmit_work_handler with a mutex. And even then
-> there's no reason to use separate slots since the workers are
-> serialized anyway. Weird.
+On Sun, Apr 14, 2019 at 09:53:42PM +0300, Vladimir Oltean wrote:
+> On Sun, 14 Apr 2019 at 19:18, Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > > > > > > +             return dsa_8021q_xmit(skb, netdev, ETH_P_EDSA,
+> > > > > > > +                                  ((pcp << VLAN_PRIO_SHIFT) | tx_vid));
+> > > > > >
+> > > > > > Please don't reuse ETH_P_EDSA. Define an ETH_P_SJA1105.
+> > > > > >
+> > >
+> > > I'm receiving contradictory advice on this. Why should I define a new
+> > > ethertype, and if I do, what scope should the definition have (local
+> > > to the driver and the tagger, local to DSA, UAPI)?
+> >
+> > ETH_P_EDSA has a well defined meaning. It is a true global EtherType,
+> > and means a Marvell EtherType DSA header follows.
+> >
+> > You are polluting this meaning of ETH_P_EDSA. Would you put ETH_P_IP
+> > or ETH_P_8021AD here?
+> >
+> >    Andrew
+> 
+> You are putting an equality sign here between things that are not quite equal.
+> The MEDSA EtherType is used for the same purpose as what I'm using it for.
 
-So you can simply this down to just using one queue. Maybe even one
-queue for all instances of this switch. You can then keep it all as
-static private structures in the tag driver, maybe not even needing
-ds->tag_priv.
+I don't think it is. tcpdump will match on this EtherType and decode
+what follows as an EDSA header, just in the same way it matches a
+ETH_P_IP and decodes what comes next as an IP packet. I also have
+wireshark patches, which i never submitted, which do the same.
 
-> > Also, DSA has been very successful, we keep getting more switches from
-> > different vendors, and hence more taggers. So at some point, we should
-> > turn the taggers into modules. I'm not saying that should happen now,
-> > but when it does happen, this driver can then become a module.
-
-FYI: I started on this already. There might be patches today to allow
-the tag drivers to be kernel modules.
+Please run tcpdump on the master interface with your test system and
+see what it does.
 
     Andrew
