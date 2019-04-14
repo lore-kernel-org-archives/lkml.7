@@ -2,139 +2,398 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0847FC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9B5C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36032084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jE3vBi7N"
+	by mail.kernel.org (Postfix) with ESMTP id 7B09D20693
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfDNQii (ORCPT
+        id S1726803AbfDNQlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:38:38 -0400
-Received: from mout.web.de ([217.72.192.78]:35063 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfDNQih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:38:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1555259907;
-        bh=FfS41OKkF9LftjWFvQaDoAYLm4ifKbz3rYhoKYfx5B4=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=jE3vBi7NpPL4PCY+qkeJQM5kvPmayaeV0UvWzSYXf5rPZXF1FHkhZnpxoebmbd8kH
-         kHS6kXPi2vsF+mym2i1Jmt/rBL+2iXsnIHvzPa2qrtkePEZT7hirqzc9RZqwhT/w0Z
-         31Eo7a6fp9bup22Wut+Herebtmoz6KpJ+NLjwPN8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.103.133]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LuLxD-1gpctI1Mu7-011ewh; Sun, 14
- Apr 2019 18:38:27 +0200
-To:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-References: <1550928043-14889-12-git-send-email-Julia.Lawall@lip6.fr>
-Subject: Re: [11/12] ARM: OMAP2+: add missing of_node_put after
- of_device_is_available
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <903ec107-46ed-f19f-56a7-c20031247503@web.de>
-Date:   Sun, 14 Apr 2019 18:38:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 14 Apr 2019 12:41:12 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:56327 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfDNQlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 12:41:12 -0400
+X-Originating-IP: 93.29.109.196
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D5C4FE0007;
+        Sun, 14 Apr 2019 16:41:07 +0000 (UTC)
+Message-ID: <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
+Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
+ decoder interface
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Sun, 14 Apr 2019 18:41:07 +0200
+In-Reply-To: <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
+References: <20190306080019.159676-1-acourbot@chromium.org>
+         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
-In-Reply-To: <1550928043-14889-12-git-send-email-Julia.Lawall@lip6.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vxN9B38wSUUg0K+RJ6bUpBRpyb1jGlswd5roAVzexAAWjKKi1BP
- sIOLcGG+uV69UAsjCrrvXFbQqoUFlcqFL+FImb3rRIz7rb5pKoilS3um5bNU7yaKi5Gh3wT
- xo2WtadAQ5P2nn6gWdbgC5SyU5w76znlu8vSzarJRa8GZsyOTdxolHs9341uOa+D8bDDglY
- 6mZ/OrmBx6QWDulJUBDzQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Fc8+cjLD+vA=:uVR45OvK/xTe142FlQ2d8d
- pdK6OMz+TpiumLILTu2vSKNgUYaChFu+70+iNnf7jCPjgQ5ZuObheiLs+9LtCUkXHxhv/muo5
- Gsy3cB9lHlw5dmc128w6Z4j0O484uZ7QjiFuTl0z1i4ekLrjaYlUjG5hAXsXbn/WYacd9WR8y
- V3iwFxAvK3bD3vn8biEt0i+I5EUHeN6V6PQyB9AO2AqvZAZUCowiLiOr9ZuTyXVIiNiVjF5t/
- YFD+1+wTYOG9jXuJdd73eRxQz+v7eQB8riXCF/X5oe36vCX1f9Yae6mA8W4NU1wQ8eNLjKWbU
- OTHlUesNJ3wSE/0E8+hs88PPtj1Vb+2u2PtjR3b8Fj6er5dXSUEP2iKBJPhsvDByu8x+t6OlA
- aEEBcG9agM7JGWf7Z1GWYHCB5XUUKVno4zy0Rrj6GT6Fz1YR2AdD99/HkyZEibVs2oNQG2jxD
- zdLTGSjvXdxWMgIqgwueWNCvIWlEmPzUIhZjvkKur18WCB3eZiERTS4nM27rnvYni62+N3Vml
- 9vn/khFEXGHfaPBHw7W4AqpWz6jZ3xzW2ypbownZXlsCxCAhxLEWilSm7eXzj7xu1t/HpvBni
- BFc9NWMYehHd+b6C+3RQyhN8VpXjj4+5+mL4Horrsp/FqFaNYeqw38E5h9oybn6MXkRWygKEa
- K8VooUYTmeE5OiYqXXAvtorsrXI/VfFksr70sbMD6eJ8CHJhJIFgnJZHdlwEbLWU0cqAu0Tem
- swngsud/Tyn9TxFZWEGtZMsmOcTKUNCJXLeVvfGsKNLpTu2+APSgrlTGgzpY9DNIbNLBhMTpG
- m+gtWeI17OYBii10J7lWnc6kZVh7/IfDAK8k8iKZEQKGS5tUpx7P8q4mmjXmCghrzO0woap1q
- f4gmveX+Bqoodr9QYqfW/tR1hwBXjnXPslpual4RV0ThG1AGys/kEQu5zjQEXKrk8jQ98O9Vr
- GMTHTfP1Xy9skgdMDRVEXhKkJrOaTNhMZR4RF1H6TIrDp4b+ZSdZZUG6STIiuPG1oaB3EcBy8
- gChA+xr38t6ier30QU6CtfICgn/L5C3slqEV0CqA64iGxWUQ1T4zdQHh5AnBSB9hEB1wHwkUf
- sC5rNHfHOSY/5sqEEtyFT0kfuo5mhCZqp+7yj7s3j69QBHohz8hQOXwVw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -250,8 +250,10 @@ static int __init omapdss_init_of(void)
->  	if (!node)
->  		return 0;
->
-> -	if (!of_device_is_available(node))
-> +	if (!of_device_is_available(node)) {
-> +		of_node_put(node);
->  		return 0;
-> +	}
->
->  	pdev =3D of_find_device_by_node(node);
+Hi,
 
-Is there a need to put the node also in subsequent if branches
-for complete exception handling in this function implementation?
+Le vendredi 12 avril 2019 à 16:47 -0400, Nicolas Dufresne a écrit :
+> Le mercredi 06 mars 2019 à 17:00 +0900, Alexandre Courbot a écrit :
+> > Documents the protocol that user-space should follow when
+> > communicating with stateless video decoders.
+> > 
+> > The stateless video decoding API makes use of the new request and tags
+> > APIs. While it has been implemented with the Cedrus driver so far, it
+> > should probably still be considered staging for a short while.
 
-Regards,
-Markus
+[...]
+
+> From an IRC discussion with Paul and some more digging, I have found a
+> design problem in the decoding process.
+> 
+> In H264 and HEVC you can have multiple decoding unit per frames
+> (slices). This type of encoding is increasingly popular, specially for
+> low latency streaming use cases. The wording of this spec does allow
+> for the notion of decoding unit, and in practice it has been proven to
+> work through some RFC FFMPEG patches and the Cedrus driver. But
+> something important to know is that the FFMPEG RFC implements decoding
+> in lock steps. Which means:
+> 
+>   1. It queues a single free capture buffer
+>   2. It queues an output buffer, set controls, queue the request
+>   3. It waits for a capture buffer to reach state done
+>   4. It dequeues that capture buffer, and queue it back again
+>   5. And then it runs step 2,4,3 again with following slices, until we 
+>      have a complete frame. After what, it restart at step 1
+> 
+> So the implementation makes no use of the queues. There is no batch
+> processing, so we might not be able to reach the maximum hardware
+> throughput.
+> 
+> So the optimal method would look like the following, but there comes
+> the design issue.
+> 
+>   1. Queue a single free capture buffer
+>   2. Queue output buffer for slice 1, set controls, queue the request
+>   3. Queue output buffer for slice 2, set controls, queue the request
+>   4. Wait for completion
+> 
+> The problem is in step 4. Completion means that the capture buffer done
+> decoding a single unit. So assuming the driver supports matching the
+> timestamp against the queued buffer, instead of waiting for a new
+> buffer, the driver would have to mark twice the same buffer to done
+> state, which is just not working to inform userspace that all slices
+> are decoded into the one capture buffer they share.
+
+Interestingly, I'm experiencing the exact same problem dealing with a
+2D graphics blitter that has limited ouput scaling abilities which
+imply handlnig a large scaling operation as multiple clipped smaller
+scaling operations. The issue is basically that multiple jobs have to
+be submitted to complete a single frame and relying on an indication
+from the destination buffer (such as a fence) doesn't work to indicate
+that all the operations were completed, since we get the indication at
+each step instead of at the end of the batch.
+
+One idea I see to solve this is to have a notion of batch in the driver
+(for our situation, that would be in v4l2) and provide means to get a
+done indication for that entity.
+
+I think we could extend the request API to allow this. We already
+represent requests as individual file descriptors, we could totally
+group requests in batches and get a sync fd for the batch to poll on
+when we need to return the frames. It would be good if we could expose
+this in a way that makes it work with DRM as an in fence for display.
+Then we can pretty much schedule our flip + decoding together (which is
+quite nice to have when we're running late on the decoding side).
+
+What do you think?
+
+It feels to me like the request API was designed to open up the way for
+these kinds of improvements, so I'm sure we can find an agreeable
+solution that extends the API.
+
+> To me, multi slice encoded stream are just too common, and they will
+> also exist for AV1. So we really need a solution to this that does not
+> require operating in lock steps. Specially that some HW can decode
+> multiple slices in parallel (multi core), we would not want to prevent
+> that HW from being used efficiently. On top of this, we need a solution
+> so that we can also keep queuing slice of the following frames if they
+> arrive before decoding is done.
+
+Agreed.
+
+> I don't have a solution yet myself, but it would be nice to come up
+> with something before we freeze this API.
+
+I think it's rather independent from the codec used and this is
+something that should be handled at the request API level. 
+
+I'm not sure we can always expect the hardware to be able to operate on
+a per-slice basis. I think it would be useful to reflect this in the
+pixel format, so that we also have a possibility for a gathered slice
+buffer (as the spec currently mentions for mpeg-2) for legacy decoder
+hardware that will need to decode one frame in one go from a contiguous
+buffer with all the slice data appended.
+
+This updates my pixel format proposition from IRC to the following:
+- V4L2_PIXFMT_H264_SLICE_APPENDED: single buffer for all the slices
+(appended buffer), slice params as v4l2 control (legacy);
+
+- V4L2_PIXFMT_H264_SLICE: one buffer/slice, slice params as control;
+
+- V4L2_PIXFMT_H264_SLICE_ANNEX_B: one buffer/slice in annex-b format, 
+slice params encoded in the buffer;
+
+- V4L2_PIXFMT_H264_SLICE_MIXED: one buffer/slice in annex-b format,
+slice params encoded in the buffer and in slice params control;
+
+Also, we need to make sure to have a per-slice bit offset to the
+encoded data in the slice params control so that the same slice buffer
+can be used with any of the _SLICE formats (e.g. ffmpeg would only have
+an annex-b slice and use any of the formats with it).
+
+For the legacy format, we need to specify that the appended slices
+don't repeat the annex-b start code and NAL header.
+
+What do you think?
+
+>  By the way, if we could queue
+> twice the same buffer, that would in principal work, but internally
+> there is only one state per buffer. If you do external allocation, then
+> in theory you could workaround that, but then it's ugly, because you'll
+> have two buffers with the same timestamp.
+
+One advantage of the request API is that buffers are actually queued
+when the request is processed, so this might not be too problematic.
+
+I think what we need boils down to:
+- Being able to queue the same output buffer to multiple requests,
+which the request API should already allow;
+- Being able to grab the right capture buffer based on the output
+timestamp so that the different requests for the slices are rendered to
+the same destination buffer.
+
+For the second point, I don't really have a clear idea of whether we
+can already expect v4l2 to allow picking a buffer that was marked done
+but was not de-queued by userspace yet. It might already be allowed and
+we could just implement something to lookup the buffer to grab by
+timestamp.
+
+> An argument that was made early was that we don't need to support this
+> right away because userspace can combine all the slices into one
+> buffer. But for H264_SLICE_RAW format it's inconvenient, you'd need an
+> extra control to tell the driver the offset to each slices, because the
+> raw H264 does not have enough information to be parsed. RAW slice are
+> also I believe de-emulated, which means the code use to prevent having
+> pattern looking like a start code has been removed, so you cannot just
+> prepend start codes. De-emulation seems better placed in userspace if
+> the HW does not take care.
+
+Mhh I'd like to avoid having having to specify the offset to each slice
+for the legacy case. Just appending the encoded data (excluding slice
+header and start code) works for cedrus and I think it makes sense more
+generally. The idea is to only expose a single slice params and act as
+if it was just one big slice buffer.
+
+Come to think of it, maybe we need annex-b and mixed fashions of that
+legacy pixfmt too...
+
+> I also very dislike the idea that we would enforce merging all slice
+> into the same buffer. The entire purpose of slices and the reason they
+> are used in practice is that you can start decoding slices before you
+> have all slices of a frame. This reduce drastically the latency for
+> streaming use cases, like video conferencing. So forcing the merging of
+> slices is basically like pretending slices have no benefits.
+
+Of course, we don't want things to stay like this and this rework is
+definitely needed to get serious performance and latency going.
+
+One thing you should also be aware of: we're currently using a
+workqueue between the job done irq and scheduling the next frame (in
+v4l2 m2m).
+
+Maybe we could manage to fit that into an atomic path to schedule the
+next request in the previous job done irq context.
+
+> I have just exposed the problem I see for now, to see what comes up.
+> But I hope we be able to propose solution too in the short term (in no
+> one beats me at it).
+
+Seems that we have good grounds for a discussion!
+
+Cheers,
+
+Paul
+
+> > +
+> > +A typical frame would thus be decoded using the following sequence:
+> > +
+> > +1. Queue an ``OUTPUT`` buffer containing one unit of encoded bitstream data for
+> > +   the decoding request, using :c:func:`VIDIOC_QBUF`.
+> > +
+> > +    * **Required fields:**
+> > +
+> > +      ``index``
+> > +          index of the buffer being queued.
+> > +
+> > +      ``type``
+> > +          type of the buffer.
+> > +
+> > +      ``bytesused``
+> > +          number of bytes taken by the encoded data frame in the buffer.
+> > +
+> > +      ``flags``
+> > +          the ``V4L2_BUF_FLAG_REQUEST_FD`` flag must be set.
+> > +
+> > +      ``request_fd``
+> > +          must be set to the file descriptor of the decoding request.
+> > +
+> > +      ``timestamp``
+> > +          must be set to a unique value per frame. This value will be propagated
+> > +          into the decoded frame's buffer and can also be used to use this frame
+> > +          as the reference of another.
+> > +
+> > +2. Set the codec-specific controls for the decoding request, using
+> > +   :c:func:`VIDIOC_S_EXT_CTRLS`.
+> > +
+> > +    * **Required fields:**
+> > +
+> > +      ``which``
+> > +          must be ``V4L2_CTRL_WHICH_REQUEST_VAL``.
+> > +
+> > +      ``request_fd``
+> > +          must be set to the file descriptor of the decoding request.
+> > +
+> > +      other fields
+> > +          other fields are set as usual when setting controls. The ``controls``
+> > +          array must contain all the codec-specific controls required to decode
+> > +          a frame.
+> > +
+> > +   .. note::
+> > +
+> > +      It is possible to specify the controls in different invocations of
+> > +      :c:func:`VIDIOC_S_EXT_CTRLS`, or to overwrite a previously set control, as
+> > +      long as ``request_fd`` and ``which`` are properly set. The controls state
+> > +      at the moment of request submission is the one that will be considered.
+> > +
+> > +   .. note::
+> > +
+> > +      The order in which steps 1 and 2 take place is interchangeable.
+> > +
+> > +3. Submit the request by invoking :c:func:`MEDIA_REQUEST_IOC_QUEUE` on the
+> > +   request FD.
+> > +
+> > +    If the request is submitted without an ``OUTPUT`` buffer, or if some of the
+> > +    required controls are missing from the request, then
+> > +    :c:func:`MEDIA_REQUEST_IOC_QUEUE` will return ``-ENOENT``. If more than one
+> > +    ``OUTPUT`` buffer is queued, then it will return ``-EINVAL``.
+> > +    :c:func:`MEDIA_REQUEST_IOC_QUEUE` returning non-zero means that no
+> > +    ``CAPTURE`` buffer will be produced for this request.
+> > +
+> > +``CAPTURE`` buffers must not be part of the request, and are queued
+> > +independently. They are returned in decode order (i.e. the same order as coded
+> > +frames were submitted to the ``OUTPUT`` queue).
+> > +
+> > +Runtime decoding errors are signaled by the dequeued ``CAPTURE`` buffers
+> > +carrying the ``V4L2_BUF_FLAG_ERROR`` flag. If a decoded reference frame has an
+> > +error, then all following decoded frames that refer to it also have the
+> > +``V4L2_BUF_FLAG_ERROR`` flag set, although the decoder will still try to
+> > +produce a (likely corrupted) frame.
+> > +
+> > +Buffer management while decoding
+> > +================================
+> > +Contrary to stateful decoders, a stateless decoder does not perform any kind of
+> > +buffer management: it only guarantees that dequeued ``CAPTURE`` buffers can be
+> > +used by the client for as long as they are not queued again. "Used" here
+> > +encompasses using the buffer for compositing or display.
+> > +
+> > +A dequeued capture buffer can also be used as the reference frame of another
+> > +buffer.
+> > +
+> > +A frame is specified as reference by converting its timestamp into nanoseconds,
+> > +and storing it into the relevant member of a codec-dependent control structure.
+> > +The :c:func:`v4l2_timeval_to_ns` function must be used to perform that
+> > +conversion. The timestamp of a frame can be used to reference it as soon as all
+> > +its units of encoded data are successfully submitted to the ``OUTPUT`` queue.
+> > +
+> > +A decoded buffer containing a reference frame must not be reused as a decoding
+> > +target until all the frames referencing it have been decoded. The safest way to
+> > +achieve this is to refrain from queueing a reference buffer until all the
+> > +decoded frames referencing it have been dequeued. However, if the driver can
+> > +guarantee that buffer queued to the ``CAPTURE`` queue will be used in queued
+> > +order, then user-space can take advantage of this guarantee and queue a
+> > +reference buffer when the following conditions are met:
+> > +
+> > +1. All the requests for frames affected by the reference frame have been
+> > +   queued, and
+> > +
+> > +2. A sufficient number of ``CAPTURE`` buffers to cover all the decoded
+> > +   referencing frames have been queued.
+> > +
+> > +When queuing a decoding request, the driver will increase the reference count of
+> > +all the resources associated with reference frames. This means that the client
+> > +can e.g. close the DMABUF file descriptors of reference frame buffers if it
+> > +won't need them afterwards.
+> > +
+> > +Seeking
+> > +=======
+> > +In order to seek, the client just needs to submit requests using input buffers
+> > +corresponding to the new stream position. It must however be aware that
+> > +resolution may have changed and follow the dynamic resolution change sequence in
+> > +that case. Also depending on the codec used, picture parameters (e.g. SPS/PPS
+> > +for H.264) may have changed and the client is responsible for making sure that a
+> > +valid state is sent to the decoder.
+> > +
+> > +The client is then free to ignore any returned ``CAPTURE`` buffer that comes
+> > +from the pre-seek position.
+> > +
+> > +Pause
+> > +=====
+> > +
+> > +In order to pause, the client can just cease queuing buffers onto the ``OUTPUT``
+> > +queue. Without source bitstream data, there is no data to process and the codec
+> > +will remain idle.
+> > +
+> > +Dynamic resolution change
+> > +=========================
+> > +
+> > +If the client detects a resolution change in the stream, it will need to perform
+> > +the initialization sequence again with the new resolution:
+> > +
+> > +1. Wait until all submitted requests have completed and dequeue the
+> > +   corresponding output buffers.
+> > +
+> > +2. Call :c:func:`VIDIOC_STREAMOFF` on both the ``OUTPUT`` and ``CAPTURE``
+> > +   queues.
+> > +
+> > +3. Free all ``CAPTURE`` buffers by calling :c:func:`VIDIOC_REQBUFS` on the
+> > +   ``CAPTURE`` queue with a buffer count of zero.
+> > +
+> > +4. Perform the initialization sequence again (minus the allocation of
+> > +   ``OUTPUT`` buffers), with the new resolution set on the ``OUTPUT`` queue.
+> > +   Note that due to resolution constraints, a different format may need to be
+> > +   picked on the ``CAPTURE`` queue.
+> > +
+> > +Drain
+> > +=====
+> > +
+> > +In order to drain the stream on a stateless decoder, the client just needs to
+> > +wait until all the submitted requests are completed. There is no need to send a
+> > +``V4L2_DEC_CMD_STOP`` command since requests are processed sequentially by the
+> > +decoder.
+
