@@ -2,140 +2,92 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD895C282CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 09:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BB3C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 09:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBC020850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 09:15:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Vx6SC+WB"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3502084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 09:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555235063;
+	bh=B4H8Q5QuxL7nl+IszEPdEPqQulj/Ysu1oi37Cp6gCxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SfvURFw8MybkiwbSvsYZvnysLB6iIwsja1syKP0sNKgo/0g0XHcMWwjjuIsN5uwaJ
+	 x3KHToFuRD7jeWNwxEGHR41SWLD6/80h/91Z14MtLzQzvXI8eMlCCq8hQMCPjQPIoT
+	 1TG0nGMBaZPi+RsTv4Z6iezGS2CKtL2WkX/iCzM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfDNJPh (ORCPT
+        id S1726147AbfDNJoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 05:15:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43166 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfDNJPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 05:15:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z9so7161259pgu.10
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 02:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nQJrrbue7c3N84Cd6mFZPA1Y1o7acbXS4cTb2nznlGA=;
-        b=Vx6SC+WBX6kmXBT4OP7H4eDk8pZHoU/6bnBya6zmdqnkmojK/Kyegi8oINArN7IYSn
-         +1/yKPRCgEiPL2mbV0UVrKN/5WOq6lk9U0eM7lknJ/LesMvOvavOIaIHTDuaUm2Sal0B
-         6L2RJwK2Dz0nII5LmzT4mcUBTnjEOkw+KlIkA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nQJrrbue7c3N84Cd6mFZPA1Y1o7acbXS4cTb2nznlGA=;
-        b=hbeMorxABLaM73PbFcRcOdKanQtXiinTXqQR93POaThShdSxQUPIzgMxAMbQjc/mW6
-         yZupMHESL9X1b7m93cDHdKaxyyqRAuNSrA718upVBCBwqf/BJ5L0kluir5jCddIaBAMW
-         pTn44rTiF0XAaFI8LgVWCvz4fv4yxXJn6c1SvsFNQxAGAzo2mp4YKtZ7orPz2VWvMu8H
-         5UCN9ICYuomUMPMMBWeON0UMUub38Q9CnTBimzApefFeHpWs3LEMOYPD8rFRqyYxWa0U
-         OymMhLIVMwEDiB8wzqAmv1rqeaJCDfOXXnWNjyZ+YDtZ+FZQLKmRJ1J9XUDKOi/2km1w
-         ifhw==
-X-Gm-Message-State: APjAAAUyOZO0PnKDHehm8hXl076OHDRWFD1sfvCW0GnqsbSPgTa/sgqk
-        Y904x2h9nXIHnOMH8h/nF93C/A==
-X-Google-Smtp-Source: APXvYqzJvZI8cg4NBQ48Y2+PvRZTxzZuXgdmiA69lcI6ZO8t6W2tPumqwfHBphvyyz1mE1fpT8Y3Og==
-X-Received: by 2002:a63:3188:: with SMTP id x130mr61423347pgx.64.1555233335889;
-        Sun, 14 Apr 2019 02:15:35 -0700 (PDT)
-Received: from localhost.localdomain ([42.111.19.105])
-        by smtp.googlemail.com with ESMTPSA id g10sm31344767pgq.54.2019.04.14.02.15.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Apr 2019 02:15:35 -0700 (PDT)
-From:   Shyam Saini <shyam.saini@amarulasolutions.com>
-To:     kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
-        kvm@vger.kernel.org, mayhs11saini@gmail.com,
-        Shyam Saini <shyam.saini@amarulasolutions.com>
-Subject: [PATCH 2/2] include: linux: Remove unused macros and their defination
-Date:   Sun, 14 Apr 2019 14:44:52 +0530
-Message-Id: <20190414091452.22275-2-shyam.saini@amarulasolutions.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190414091452.22275-1-shyam.saini@amarulasolutions.com>
-References: <20190414091452.22275-1-shyam.saini@amarulasolutions.com>
+        Sun, 14 Apr 2019 05:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfDNJoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 05:44:20 -0400
+Received: from localhost (unknown [106.199.53.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1362206B7;
+        Sun, 14 Apr 2019 09:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555235060;
+        bh=B4H8Q5QuxL7nl+IszEPdEPqQulj/Ysu1oi37Cp6gCxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u22rs7iN5nCONPzlFrI3h9zrmWib4uI1hwmehbPIBawFuaYkya4++uc++48V1w68i
+         s1IzM2k7RkzA2FIqsnzYUmRzmtaGXH0FIOiMraB7a1iQZodC+5x7ZvMUZhUexOLp3n
+         mqsQyPl8F8SSjwyJJYP8gKbCs4bWQIUv/fd4+ynA=
+Date:   Sun, 14 Apr 2019 15:14:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jan Kotas <jank@cadence.com>
+Cc:     sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soundwire: cdns: Fix compilation error on arm64
+Message-ID: <20190414094408.GF28103@vkoul-mobl>
+References: <20190404081221.341-1-jank@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404081221.341-1-jank@cadence.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In favour of FIELD_SIZEOF, lets deprecate other two similar macros
-sizeof_field and SIZEOF_FIELD, and remove them completely.
+On 04-04-19, 09:12, Jan Kotas wrote:
+> On arm64 the cadence_master.c file doesn't compile.
+> 
+> readl and writel are undefined.
+> This patch fixes that by including io.h.
 
-Signed-off-by: Shyam Saini <shyam.saini@amarulasolutions.com>
----
- arch/mips/cavium-octeon/executive/cvmx-bootmem.c | 7 -------
- include/linux/stddef.h                           | 8 --------
- tools/testing/selftests/bpf/bpf_util.h           | 4 ----
- 3 files changed, 19 deletions(-)
+And I cant verify that without hacking kconfig to force compile the lib.
 
-diff --git a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-index fc754d155002..44b506a14666 100644
---- a/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-+++ b/arch/mips/cavium-octeon/executive/cvmx-bootmem.c
-@@ -45,13 +45,6 @@ static struct cvmx_bootmem_desc *cvmx_bootmem_desc;
- /* See header file for descriptions of functions */
- 
- /**
-- * This macro returns the size of a member of a structure.
-- * Logically it is the same as "sizeof(s::field)" in C++, but
-- * C lacks the "::" operator.
-- */
--#define SIZEOF_FIELD(s, field) sizeof(((s *)NULL)->field)
--
--/**
-  * This macro returns a member of the
-  * cvmx_bootmem_named_block_desc_t structure. These members can't
-  * be directly addressed as they might be in memory not directly
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 63f2302bc406..b888eb7795a1 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -29,14 +29,6 @@ enum {
- #define FIELD_SIZEOF(t, f) (sizeof(((t *)0)->f))
- 
- /**
-- * sizeof_field(TYPE, MEMBER)
-- *
-- * @TYPE: The structure containing the field of interest
-- * @MEMBER: The field to return the size of
-- */
--#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
--
--/**
-  * offsetofend(TYPE, MEMBER)
-  *
-  * @TYPE: The type of the structure
-diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
-index 2e90a4315b55..815e7b48fa37 100644
---- a/tools/testing/selftests/bpf/bpf_util.h
-+++ b/tools/testing/selftests/bpf/bpf_util.h
-@@ -67,10 +67,6 @@ static inline unsigned int bpf_num_possible_cpus(void)
-  */
- #define FIELD_SIZEOF(t, f) (sizeof(((t *)0)->f))
- 
--#ifndef sizeof_field
--#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
--#endif
--
- #ifndef offsetofend
- #define offsetofend(TYPE, MEMBER) \
- 	(offsetof(TYPE, MEMBER)	+ FIELD_SIZEOF(TYPE, MEMBER))
+> 
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index cb6a331f4..0b5bcc209 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/io.h>
+
+Why not add asm/io.h which is the header that actually defines
+readl/writel?
+
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/soundwire/sdw_registers.h>
+> -- 
+> 2.15.0
+
 -- 
-2.11.0
-
+~Vinod
