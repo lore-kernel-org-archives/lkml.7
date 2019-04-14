@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BA2C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DCAC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB63120870
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C146020870
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 07:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfDNH2V (ORCPT
+        id S1725730AbfDNH22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 03:28:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57146 "EHLO mx1.redhat.com"
+        Sun, 14 Apr 2019 03:28:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47134 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfDNH2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 03:28:21 -0400
+        id S1725975AbfDNH20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 03:28:26 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C601DC058CB4;
-        Sun, 14 Apr 2019 07:28:20 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 972B8859FB;
+        Sun, 14 Apr 2019 07:28:26 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F33919C56;
-        Sun, 14 Apr 2019 07:28:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 608AD19C56;
+        Sun, 14 Apr 2019 07:28:21 +0000 (UTC)
 From:   Baoquan He <bhe@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
@@ -35,70 +35,74 @@ Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
         herbert@gondor.apana.org.au, mike.travis@hpe.com,
         frank.ramsay@hpe.com, yamada.masahiro@socionext.com,
         Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 RESEND 1/2] x86/mm/KASLR: Fix the size of the direct mapping section
-Date:   Sun, 14 Apr 2019 15:28:03 +0800
-Message-Id: <20190414072804.12560-2-bhe@redhat.com>
+Subject: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap section
+Date:   Sun, 14 Apr 2019 15:28:04 +0800
+Message-Id: <20190414072804.12560-3-bhe@redhat.com>
 In-Reply-To: <20190414072804.12560-1-bhe@redhat.com>
 References: <20190414072804.12560-1-bhe@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Sun, 14 Apr 2019 07:28:20 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sun, 14 Apr 2019 07:28:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
-the maximum amount of system RAM supported. The size of the direct
-mapping section is obtained from the smaller one of the below two
-values:
+kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
 
- (actual system RAM size + padding size) vs (max system RAM size supported)
+However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+very close to cpu_entry_area, and the actual area of vmemmap is much bigger
+than 1 TB.
 
-This calculation is wrong since commit:
-b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
+So here calculate the actual size of vmemmap region, then align up to 1 TB
+boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
+The current code reserves 0.5 PB for vmemmap in 5-level. In this new methor,
+the left space can be saved to join randomization to increase the entropy.
 
-In commit b83ce5ee91471d, __PHYSICAL_MASK_SHIFT was changed to be 52,
-regardless of whether it's using 4-level or 5-level page tables.
-It will always use 4 PB as the maximum amount of system RAM, even
-in 4-level paging mode where it should be 64 TB.  Thus the size of
-the direct mapping section will always be the sum of the actual
-system RAM size plus the padding size.
-
-Even when the amount of system RAM is 64 TB, the following layout will
-still be used. Obviously KALSR will be weakened significantly.
-
-   |____|_______actual RAM_______|_padding_|______the rest_______|
-   0            64TB                                            ~120TB
-
-What we want is the following:
-
-   |____|_______actual RAM_______|_________the rest______________|
-   0            64TB                                            ~120TB
-
-So the code should use MAX_PHYSMEM_BITS instead. Fix it by replacing
-__PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
-
-Fixes: b83ce5ee9147 ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52")
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Thomas Garnier <thgarnie@google.com>
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/mm/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/kaslr.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index 9a8756517504..387d4ed25d7c 100644
+index 387d4ed25d7c..4679a0075048 100644
 --- a/arch/x86/mm/kaslr.c
 +++ b/arch/x86/mm/kaslr.c
-@@ -94,7 +94,7 @@ void __init kernel_randomize_memory(void)
- 	if (!kaslr_memory_enabled())
- 		return;
+@@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
+ } kaslr_regions[] = {
+ 	{ &page_offset_base, 0 },
+ 	{ &vmalloc_base, 0 },
+-	{ &vmemmap_base, 1 },
++	{ &vmemmap_base, 0 },
+ };
  
--	kaslr_regions[0].size_tb = 1 << (__PHYSICAL_MASK_SHIFT - TB_SHIFT);
-+	kaslr_regions[0].size_tb = 1 << (MAX_PHYSMEM_BITS - TB_SHIFT);
- 	kaslr_regions[1].size_tb = VMALLOC_SIZE_TB;
+ /* Get size in bytes used by the memory region */
+@@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
+ 	unsigned long rand, memory_tb;
+ 	struct rnd_state rand_state;
+ 	unsigned long remain_entropy;
++	unsigned long vmemmap_size;
  
- 	/*
+ 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+ 	vaddr = vaddr_start;
+@@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
+ 	if (memory_tb < kaslr_regions[0].size_tb)
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
++	/**
++	 * Calculate how many TB vmemmap region needs, and aligned to
++	 * 1TB boundary.
++	 */
++	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
++		sizeof(struct page);
++	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
++
+ 	/* Calculate entropy available between regions */
+ 	remain_entropy = vaddr_end - vaddr_start;
+ 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
 -- 
 2.17.2
 
