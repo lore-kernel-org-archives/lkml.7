@@ -2,56 +2,357 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D43C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADC1C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EBE2148E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C90218FC
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555238291;
+	bh=eOlfsa98Gzg2skzbt7VhPXjrLji9qcTKQuDfolUs7pM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sU0RKURcHc36eAoQMHjcnubVXMmu9hlRh6Q0mrTPr49h0R8PlAMV6xseH+UL/Ueud
+	 IItiO1Duxf5ENgUTbTXIETn4FbjzX5F0VSxJu4BpWLiSV3fDhoc7sPvfTT9LC9n12W
+	 ymg/F/+x9wRLcnBbgZOTMxmlKuo10WRcg5UpiR/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfDNKgN (ORCPT
+        id S1726988AbfDNKiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 06:36:13 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42538 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfDNKgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 06:36:13 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hFcUc-0000eX-Uy; Sun, 14 Apr 2019 12:36:11 +0200
-Date:   Sun, 14 Apr 2019 12:36:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Huw Davies <huw@codeweavers.com>
-cc:     linux kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 1/3] x86/vdso: Remove unused 'mask' member
-In-Reply-To: <20190411101205.10006-2-huw@codeweavers.com>
-Message-ID: <alpine.DEB.2.21.1904141235240.4917@nanos.tec.linutronix.de>
-References: <20190411101205.10006-1-huw@codeweavers.com> <20190411101205.10006-2-huw@codeweavers.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 14 Apr 2019 06:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbfDNKiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 06:38:10 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B6C2148E;
+        Sun, 14 Apr 2019 10:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555238288;
+        bh=eOlfsa98Gzg2skzbt7VhPXjrLji9qcTKQuDfolUs7pM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NRcaN406fInN2QrNvy/vV+3rq5PVdBPtIf2jMftK1kfivtYMSxSx6Ieg6WK/cPhjR
+         uIRC0Y2gI/hJx+3kdMXV4LZBvIk29UkGuLWQJ4PtENOpPUD24jh5lHnrinlxGk0sEB
+         oAL9a8R/QVmPLyXdzbUkZPyWw9ZENCvE/cz1AveQ=
+Date:   Sun, 14 Apr 2019 11:37:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 4/4] power: supply: add Ingenic JZ47xx battery
+ driver.
+Message-ID: <20190414113758.07702982@archlinux>
+In-Reply-To: <20190407165234.is66vmnjfc35jnho@earth.universe>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
+        <20190323172809.14407-4-contact@artur-rojek.eu>
+        <20190324153137.04857cdf@archlinux>
+        <20190407165234.is66vmnjfc35jnho@earth.universe>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019, Huw Davies wrote:
+On Sun, 7 Apr 2019 18:52:34 +0200
+Sebastian Reichel <sre@kernel.org> wrote:
 
-> The 'mask' member of struct vsyscall_gtod_data is unused, so remove
-> it.  Its use was removed in commit a51e996d48ac (x86/vdso: Enforce
-> 64bit clocksource).
+> Hi,
+> 
+> On Sun, Mar 24, 2019 at 03:31:37PM +0000, Jonathan Cameron wrote:
+> > On Sat, 23 Mar 2019 18:28:09 +0100
+> > Artur Rojek <contact@artur-rojek.eu> wrote:
+> >   
+> > > Add a driver for battery present on Ingenic JZ47xx SoCs.
+> > > 
+> > > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>  
+> > The IIO parts look fine to me.
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Sebastian, assuming you are happy with this version,  
+> 
+> The driver itself looks ok. I'm a bit unhappy, that we already have
+> jz4740-battery. This driver is much cleaner, but does not yet seem
+> to be ready to replace it. Artur Rojek what are your plans regarding
+> to the existing driver? Is there currently work going on migrating
+> JZ47xx to DT?
+> 
+> > do you have any preference for how we handle this series?
+> > 
+> > Probably needs one of us to do an immutable branch with just this
+> > in it.  I'm happy to do so once all the relevant Acks etc are in
+> > place, but don't mind if you want to!  
+> 
+> I suppose you could provide an immutable branch with just the first
+> two patches in it. Then I can pull it and apply the power-supply
+> patches on top.
+Done. ib-jz47xx-battery-prereq branch of 
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
 
-That's true, but we are moving the VDSO to generic code, so the mask will stay.
+which is based on v5.0
+
+I'll pull that into the togreg branch of iio.git shortly.
 
 Thanks,
 
-	tglx
+Jonathan
+
+> 
+> -- Sebastian
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > > 
+> > > Changes:
+> > > 
+> > > v2: - rework the return logic in ingenic_battery_get_property,
+> > >     - make index offsets point forward in ingenic_battery_set_scale,
+> > >     - fix spacing around scale_raw[best_idx + 1]
+> > > 
+> > >  drivers/power/supply/Kconfig           |  11 ++
+> > >  drivers/power/supply/Makefile          |   1 +
+> > >  drivers/power/supply/ingenic-battery.c | 180 +++++++++++++++++++++++++
+> > >  3 files changed, 192 insertions(+)
+> > >  create mode 100644 drivers/power/supply/ingenic-battery.c
+> > > 
+> > > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> > > index e901b9879e7e..9bfb1637ec28 100644
+> > > --- a/drivers/power/supply/Kconfig
+> > > +++ b/drivers/power/supply/Kconfig
+> > > @@ -169,6 +169,17 @@ config BATTERY_COLLIE
+> > >  	  Say Y to enable support for the battery on the Sharp Zaurus
+> > >  	  SL-5500 (collie) models.
+> > >  
+> > > +config BATTERY_INGENIC
+> > > +	tristate "Ingenic JZ47xx SoCs battery driver"
+> > > +	depends on MIPS || COMPILE_TEST
+> > > +	depends on INGENIC_ADC
+> > > +	help
+> > > +	  Choose this option if you want to monitor battery status on
+> > > +	  Ingenic JZ47xx SoC based devices.
+> > > +
+> > > +	  This driver can also be built as a module. If so, the module will be
+> > > +	  called ingenic-battery.
+> > > +
+> > >  config BATTERY_IPAQ_MICRO
+> > >  	tristate "iPAQ Atmel Micro ASIC battery driver"
+> > >  	depends on MFD_IPAQ_MICRO
+> > > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> > > index b731c2a9b695..9e2c481d0187 100644
+> > > --- a/drivers/power/supply/Makefile
+> > > +++ b/drivers/power/supply/Makefile
+> > > @@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
+> > >  obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
+> > >  obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
+> > >  obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
+> > > +obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
+> > >  obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
+> > >  obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
+> > >  obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
+> > > diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
+> > > new file mode 100644
+> > > index 000000000000..822aee1c7b64
+> > > --- /dev/null
+> > > +++ b/drivers/power/supply/ingenic-battery.c
+> > > @@ -0,0 +1,180 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Battery driver for the Ingenic JZ47xx SoCs
+> > > + * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
+> > > + *
+> > > + * based on drivers/power/supply/jz4740-battery.c
+> > > + */
+> > > +
+> > > +#include <linux/iio/consumer.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/power_supply.h>
+> > > +#include <linux/property.h>
+> > > +
+> > > +struct ingenic_battery {
+> > > +	struct device *dev;
+> > > +	struct iio_channel *channel;
+> > > +	struct power_supply_desc desc;
+> > > +	struct power_supply *battery;
+> > > +	struct power_supply_battery_info info;
+> > > +};
+> > > +
+> > > +static int ingenic_battery_get_property(struct power_supply *psy,
+> > > +					enum power_supply_property psp,
+> > > +					union power_supply_propval *val)
+> > > +{
+> > > +	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
+> > > +	struct power_supply_battery_info *info = &bat->info;
+> > > +	int ret;
+> > > +
+> > > +	switch (psp) {
+> > > +	case POWER_SUPPLY_PROP_HEALTH:
+> > > +		ret = iio_read_channel_processed(bat->channel, &val->intval);
+> > > +		val->intval *= 1000;
+> > > +		if (val->intval < info->voltage_min_design_uv)
+> > > +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+> > > +		else if (val->intval > info->voltage_max_design_uv)
+> > > +			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+> > > +		else
+> > > +			val->intval = POWER_SUPPLY_HEALTH_GOOD;
+> > > +		return ret;
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> > > +		ret = iio_read_channel_processed(bat->channel, &val->intval);
+> > > +		val->intval *= 1000;
+> > > +		return ret;
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+> > > +		val->intval = info->voltage_min_design_uv;
+> > > +		return 0;
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
+> > > +		val->intval = info->voltage_max_design_uv;
+> > > +		return 0;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	};
+> > > +}
+> > > +
+> > > +/* Set the most appropriate IIO channel voltage reference scale
+> > > + * based on the battery's max voltage.
+> > > + */
+> > > +static int ingenic_battery_set_scale(struct ingenic_battery *bat)
+> > > +{
+> > > +	const int *scale_raw;
+> > > +	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
+> > > +	u64 max_mV;
+> > > +
+> > > +	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
+> > > +	if (ret) {
+> > > +		dev_err(bat->dev, "Unable to read max raw channel value\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
+> > > +					       &scale_type, &scale_len,
+> > > +					       IIO_CHAN_INFO_SCALE);
+> > > +	if (ret < 0) {
+> > > +		dev_err(bat->dev, "Unable to read channel avail scale\n");
+> > > +		return ret;
+> > > +	}
+> > > +	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
+> > > +		return -EINVAL;
+> > > +
+> > > +	max_mV = bat->info.voltage_max_design_uv / 1000;
+> > > +
+> > > +	for (i = 0; i < scale_len; i += 2) {
+> > > +		u64 scale_mV = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
+> > > +
+> > > +		if (scale_mV < max_mV)
+> > > +			continue;
+> > > +
+> > > +		if (best_idx >= 0 && scale_mV > best_mV)
+> > > +			continue;
+> > > +
+> > > +		best_mV = scale_mV;
+> > > +		best_idx = i;
+> > > +	}
+> > > +
+> > > +	if (best_idx < 0) {
+> > > +		dev_err(bat->dev, "Unable to find matching voltage scale\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	return iio_write_channel_attribute(bat->channel,
+> > > +					   scale_raw[best_idx],
+> > > +					   scale_raw[best_idx + 1],
+> > > +					   IIO_CHAN_INFO_SCALE);
+> > > +}
+> > > +
+> > > +static enum power_supply_property ingenic_battery_properties[] = {
+> > > +	POWER_SUPPLY_PROP_HEALTH,
+> > > +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> > > +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+> > > +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
+> > > +};
+> > > +
+> > > +static int ingenic_battery_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct ingenic_battery *bat;
+> > > +	struct power_supply_config psy_cfg = {};
+> > > +	struct power_supply_desc *desc;
+> > > +	int ret;
+> > > +
+> > > +	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
+> > > +	if (!bat)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	bat->dev = dev;
+> > > +	bat->channel = devm_iio_channel_get(dev, "battery");
+> > > +	if (IS_ERR(bat->channel))
+> > > +		return PTR_ERR(bat->channel);
+> > > +
+> > > +	desc = &bat->desc;
+> > > +	desc->name = "jz-battery";
+> > > +	desc->type = POWER_SUPPLY_TYPE_BATTERY;
+> > > +	desc->properties = ingenic_battery_properties;
+> > > +	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
+> > > +	desc->get_property = ingenic_battery_get_property;
+> > > +	psy_cfg.drv_data = bat;
+> > > +	psy_cfg.of_node = dev->of_node;
+> > > +
+> > > +	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
+> > > +	if (IS_ERR(bat->battery)) {
+> > > +		dev_err(dev, "Unable to register battery\n");
+> > > +		return PTR_ERR(bat->battery);
+> > > +	}
+> > > +
+> > > +	ret = power_supply_get_battery_info(bat->battery, &bat->info);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Unable to get battery info: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +	if (bat->info.voltage_min_design_uv < 0) {
+> > > +		dev_err(dev, "Unable to get voltage min design\n");
+> > > +		return bat->info.voltage_min_design_uv;
+> > > +	}
+> > > +	if (bat->info.voltage_max_design_uv < 0) {
+> > > +		dev_err(dev, "Unable to get voltage max design\n");
+> > > +		return bat->info.voltage_max_design_uv;
+> > > +	}
+> > > +
+> > > +	return ingenic_battery_set_scale(bat);
+> > > +}
+> > > +
+> > > +#ifdef CONFIG_OF
+> > > +static const struct of_device_id ingenic_battery_of_match[] = {
+> > > +	{ .compatible = "ingenic,jz4740-battery", },
+> > > +	{ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
+> > > +#endif
+> > > +
+> > > +static struct platform_driver ingenic_battery_driver = {
+> > > +	.driver = {
+> > > +		.name = "ingenic-battery",
+> > > +		.of_match_table = of_match_ptr(ingenic_battery_of_match),  
+> > 
+> > I guess we can be fairly sure no one will even user this with ACPI
+> > (magic DT) bindings?  That would make this a rare case where the
+> > of_match_pr protection and ifdef fun is still fine.
+> > 
+> >   
+> > > +	},
+> > > +	.probe = ingenic_battery_probe,
+> > > +};
+> > > +module_platform_driver(ingenic_battery_driver);  
+> >   
+
