@@ -2,123 +2,140 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F6CC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7BAC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB24C20848
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555237571;
-	bh=/dcERjg2sEn/phzonHtWup1Qx9cet1TXUFX1uCkcVb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LCnLPxrEerx5z8f4hCNdDP3EEyJLzfZOIC9MHTI7RsisiCBGSx+WwAsjulTHcOq6u
-	 T8k3t8ubw3vPHZ6E33rH0J6QOr8QDBEZ5Lef0EQ7yayk2iLAVqAh2Mj2k2zRZ3mab6
-	 YQ6gZmlkZKcR0Pmya5y+WsRjlTf6RT9p3yzWtCvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6DB212148E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 10:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfDNK0J (ORCPT
+        id S1726695AbfDNKe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 06:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfDNK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 06:26:09 -0400
-Received: from localhost (unknown [106.198.180.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E78206BA;
-        Sun, 14 Apr 2019 10:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555237568;
-        bh=/dcERjg2sEn/phzonHtWup1Qx9cet1TXUFX1uCkcVb0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TbAT4O1Flt5VpmLGPkeJuoZfUakm9z6foY6NblHMqM3Fxeo3L1p+76hbXHhoyoMhC
-         7UKe1x3HtrbPYaJibXntIKoyW9bqJN3otkAyAqlOn0UFvrBxqfPPe1C4DlEJbTTFce
-         37AtHAlgENLYMS9/o+voaS1Nx6Ifj5hJv3pDLbZc=
-Date:   Sun, 14 Apr 2019 15:56:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Jan Kotas <jank@cadence.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "sanyog.r.kale@intel.com" <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH] soundwire: fix pm_runtime_get_sync return
- code checks
-Message-ID: <20190414102601.GM28103@vkoul-mobl>
-References: <20190405072655.25995-1-jank@cadence.com>
- <367316fa-9d92-2dfc-32c4-3e0e8c76ef43@linux.intel.com>
- <92538D7E-C628-40AC-AFE9-52C97B3BC42D@global.cadence.com>
- <ace7e7f7-c3bf-f38c-0e70-da826175e3c5@linux.intel.com>
+        Sun, 14 Apr 2019 06:34:59 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:45428 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfDNKe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 06:34:59 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 709989E75AC;
+        Sun, 14 Apr 2019 11:34:56 +0100 (BST)
+Date:   Sun, 14 Apr 2019 11:34:54 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/4] iio: inkern: API for reading available iio
+ channel attribute values
+Message-ID: <20190414113454.53087ca6@archlinux>
+In-Reply-To: <20190324152725.35fed317@archlinux>
+References: <20190323172809.14407-1-contact@artur-rojek.eu>
+        <20190324152725.35fed317@archlinux>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ace7e7f7-c3bf-f38c-0e70-da826175e3c5@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-04-19, 12:43, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 4/8/19 2:12 AM, Jan Kotas wrote:
-> > 
-> > 
-> > > On 5 Apr 2019, at 17:04, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com> wrote:
-> > > 
-> > > On 4/5/19 2:26 AM, Jan Kotas wrote:
-> > > > 
-> > > >   	ret = pm_runtime_get_sync(slave->bus->dev);
-> > > > -	if (ret < 0)
-> > > > +	if (ret < 0 && ret != -EACCES)
-> > > > 
-> > > There was a patch submitted on 3/28 by Srinivas Kandagatla who suggested an alternate solution for exactly the same code.
-> > > 
-> > > +	if (pm_runtime_enabled(slave->bus->dev)) {
-> > > +		ret = pm_runtime_get_sync(slave->bus->dev);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > 
-> > > I am far from an expert on pm_runtime but Srinivas' solution looks more elegant to me.
-> > 
-> > Hello Pierre,
-> > 
-> > Please take a look at this patch, that was my inspiration:
-> > https://lists.linuxfoundation.org/pipermail/linux-pm/2011-June/031930.html
-> 
-> The two patches seems to be identical:
-> 
-> static inline bool pm_runtime_enabled(struct device *dev)
-> {
-> 	return !dev->power.disable_depth;
-> }
-> 
-> static int rpm_resume()
-> [...]
-> else if (dev->power.disable_depth > 0)
-> 		retval = -EACCES;
-> 
-> 
-> However I am still not clear on why this might fail.
-> 
-> I can only think of one possible explanation: there is no explicit
-> pm_runtime_enable() in the soundwire code, so maybe the expectation is that
-> the pm_runtime status is inherited from the parent (in the intel case the
-> PCI driver), and that's missing in non-intel configurations?
+On Sun, 24 Mar 2019 15:27:25 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-IIRC that needs to be called by the Intel driver and those patches were
-not upstreamed. So we dont have fully supported PM on upstream yet!
-
+> On Sat, 23 Mar 2019 18:28:06 +0100
+> Artur Rojek <contact@artur-rojek.eu> wrote:
 > 
-> > I also took a look, and it seems the value returned by
-> > pm_runtime_get_syncis simply ignored in a lot of places,
-> > so checking its value may be excessive.
-> But not checking seems careless at best...
+> > Extend the inkern API with a function for reading available
+> > attribute values of iio channels.
+> > 
+> > Signed-off-by: Artur Rojek <contact@artur-rojek.eu>  
+> If this goes through a route other than IIO (otherwise
+> I'll just add a signed-off-by...)
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
--- 
-~Vinod
+Applied to the ib-jz47xx-prereq branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+
+I'll merge that into the togreg branch as well shortly.
+
+Thanks,
+
+Jonathan
+> 
+> > ---
+> > 
+> > Changes:
+> > 
+> > v2: no change
+> > 
+> >  drivers/iio/inkern.c         | 20 ++++++++++++++++++++
+> >  include/linux/iio/consumer.h | 14 ++++++++++++++
+> >  2 files changed, 34 insertions(+)
+> > 
+> > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> > index 06ca3f7fcc44..f19dbde3c945 100644
+> > --- a/drivers/iio/inkern.c
+> > +++ b/drivers/iio/inkern.c
+> > @@ -733,6 +733,26 @@ static int iio_channel_read_avail(struct iio_channel *chan,
+> >  						 vals, type, length, info);
+> >  }
+> >  
+> > +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> > +				     const int **vals, int *type, int *length,
+> > +				     enum iio_chan_info_enum attribute)
+> > +{
+> > +	int ret;
+> > +
+> > +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> > +	if (!chan->indio_dev->info) {
+> > +		ret = -ENODEV;
+> > +		goto err_unlock;
+> > +	}
+> > +
+> > +	ret = iio_channel_read_avail(chan, vals, type, length, attribute);
+> > +err_unlock:
+> > +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(iio_read_avail_channel_attribute);
+> > +
+> >  int iio_read_avail_channel_raw(struct iio_channel *chan,
+> >  			       const int **vals, int *length)
+> >  {
+> > diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> > index 9887f4f8e2a8..b2d34831ed7c 100644
+> > --- a/include/linux/iio/consumer.h
+> > +++ b/include/linux/iio/consumer.h
+> > @@ -290,6 +290,20 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
+> >  int iio_read_avail_channel_raw(struct iio_channel *chan,
+> >  			       const int **vals, int *length);
+> >  
+> > +/**
+> > + * iio_read_avail_channel_attribute() - read available channel attribute values
+> > + * @chan:		The channel being queried.
+> > + * @vals:		Available values read back.
+> > + * @type:		Type of values read back.
+> > + * @length:		Number of entries in vals.
+> > + * @attribute:		info attribute to be read back.
+> > + *
+> > + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
+> > + */
+> > +int iio_read_avail_channel_attribute(struct iio_channel *chan,
+> > +				     const int **vals, int *type, int *length,
+> > +				     enum iio_chan_info_enum attribute);
+> > +
+> >  /**
+> >   * iio_get_channel_type() - get the type of a channel
+> >   * @channel:		The channel being queried.  
+> 
+
