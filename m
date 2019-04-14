@@ -2,108 +2,176 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44838C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F86AC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBBF20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55164206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGcrslUU"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="WDfzNPNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfDNTZY (ORCPT
+        id S1726733AbfDNTis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 15:25:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36323 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfDNTZY (ORCPT
+        Sun, 14 Apr 2019 15:38:48 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50876 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfDNTir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 15:25:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z5so7508268pfn.3;
-        Sun, 14 Apr 2019 12:25:23 -0700 (PDT)
+        Sun, 14 Apr 2019 15:38:47 -0400
+Received: by mail-it1-f193.google.com with SMTP id q14so8732569itk.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:38:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zovPM/xHGahVwDEXHkt+DO70vYHIf96ob+2SMB4kTc8=;
-        b=QGcrslUUvNUTW8LS3iH7a5dZ12Fi1oi91a7SF1vPda//aF9mm6vHLLRwQ9mCZn97q4
-         fA4Hy+lMi5/84B3Car0sg0sO576aKDGrjJDB9bfSeh/pjJP+qlH2kDaKLdnL0lMTD/IQ
-         weck56IGqWLgVuZHlj5uKxL+UMHgDGRVN7lbJNc7IcjttaA58Bz1IM+mhXJeJQLAp1Re
-         SDhI4lfsVqiBWWNskv4MO9zVSkiq2blJIBWlBCAh7uDf7OFZmTCZ5huO43h419AUOkEY
-         F/x4m+Rg4Lk3WJq/x5q2TA1bZQArMgqRjhJjWJPtIdKpfY5x4CfBH1IEcjT4cTGVlyaf
-         TkCg==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QOWtsughs8v5wa64yJxww8mtNQrcGzXPVL4jTOgzC/c=;
+        b=WDfzNPNq7XXUT+Vy97HPWh3UDNOGkcsiWIi4/1mGI47OsfGj/aBaJ0V5eP3WoLkFUm
+         Okq47hXhs9TB71pWkv9Z3Uq1ogtTvwdoOPn/2In/Mo0ZHLwkDmqMiulDWXCxW9p9w3jK
+         yNHQEgxW5nRBrKL3q02Dy1ki9B97+Po5aqDlcQuYRck+cKUYpA+XiKag5N/uTbiR6isX
+         4elBNcmJSATa2N3hIifcyWnY7iCZyrxbO5mdH99IPwzy8V5YjYLjgdWyYyfIdItvu7Ac
+         8rQbBKPtcGOcUzjRl1CiE+lIQBYppRfBgpHNLEQ6ykvJiFnYV3yCkiSPMXvZbYMZFYgz
+         AHSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zovPM/xHGahVwDEXHkt+DO70vYHIf96ob+2SMB4kTc8=;
-        b=VFSaD31UjUoucw0dRjyoQ5xfRzI0x2pESMKmpo2tKpPQtx7Ars56jX0ePDfOWug5J8
-         GDSZliljghslSLKVQ4eMVv7X4yqPuAHBmd03NAY7KVLrCm2+dhdPS14lSUks87VtA8JA
-         HKx2CXacesUUOimKGjzz4VtnbOFbs879nh4oK1yhdKd4cLgJrGiJJYZGOMqdnMzfTRTW
-         QmTiu3fmOEaGIiErpDO/0ZcxWjRruBnWmD83tdogjC5CJO1qfZk1u4uc1YBruDP+jW7h
-         /26uWlKT3Gz9W3fqJ7Kr+UGMgUaivmuAGJNu1ZhUC9iKz13nmAI9D0l9sHxPpWkMUSDu
-         IACA==
-X-Gm-Message-State: APjAAAX3cu3AtTb/G13filLFD/pnBvIxJxcYEHMuUbcwnphDnd8awDHj
-        TlnnFtXEvZL/ULyrV/8h5Hs=
-X-Google-Smtp-Source: APXvYqxHWDJ2iXSeaCG0JquPDbi9+AuCuVSD3kh/hoGoPVInRDUSDMyHmmOFVIB4sKoH/Q+2kDlNXg==
-X-Received: by 2002:a63:28c:: with SMTP id 134mr66929837pgc.278.1555269923576;
-        Sun, 14 Apr 2019 12:25:23 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id j4sm17837398pgi.71.2019.04.14.12.25.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Apr 2019 12:25:23 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>
-Cc:     linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] clk: tegra: divider: Mark Memory Controller clock as read-only
-Date:   Sun, 14 Apr 2019 22:23:21 +0300
-Message-Id: <20190414192321.23294-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190414192321.23294-1-digetx@gmail.com>
-References: <20190414192321.23294-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QOWtsughs8v5wa64yJxww8mtNQrcGzXPVL4jTOgzC/c=;
+        b=ru4JYyLeE51ecIYtCOmV32VQvHRuvhk3ExiPnUSUDxRhvbO0adk6qDUH91ykStlmsx
+         d+cL8sFf42giZZrNChG7s5Pyv6XqwMnou8VufKHl8Gi95OzBX7QapBWkwuQe9AYfJDRE
+         vjrBX+c+zlRD/zNruhaYi+XMF4MdWIGuvPRFUTpn/Z8NXVv/DMWNBBud9M5r3eJsvQmY
+         /ZFe+Zljasr354tY8a4GaXBpV05hYXq60rA9KAETWesAQkWiWYcJakXWgswu4j2pIJmI
+         yNt5gxl9lcjVKKQfCja31KORDKQEDld6XXtlLdlTEFy4m9oBTJTt7WzVT1t+DaE4+oXQ
+         u4HA==
+X-Gm-Message-State: APjAAAWBuPEoG4BhVcYTDlVN0hyjY/2nGZx1Dyqzx1jHKOaXathriqs2
+        y6CgdOKkLjtpf4yajaWf8qpnSoqDSjtGf78eiWfl2g==
+X-Google-Smtp-Source: APXvYqw1e1E6pqgqVUSjzULhu0+QVSb2v6ZJpDczRMWtqKRDHCkklZ/5N4hAkSSB8CVIDSZWj7xazJ3U9w1CNvAgGpY=
+X-Received: by 2002:a02:c7c8:: with SMTP id s8mr48885831jao.13.1555270726209;
+ Sun, 14 Apr 2019 12:38:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+ <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+ <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com> <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Sun, 14 Apr 2019 12:38:34 -0700
+Message-ID: <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Memory Controller (MC) clock rate can't be simply changed and nothing
-in kernel need to change the rate, hence let's make the clock read-only.
-This id also needed for the EMC driver because timing configuration may
-require the MC clock diver to be disabled, that is handled by the EMC
-clock / EMC driver integration and CLK framework shall not touch the
-MC divider configuration on the EMC clock rate change.
+On Wed, Apr 10, 2019 at 8:15 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
+> > On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
+> > >
+> > > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
+> > > [snip]
+> > > > > > Wouldn't it be more convenient to provide it in a standardized format
+> > > > > > such that you won't have to take an additional step, and always have
+> > > > > > This is that form IMO.
+> ...
+> > Compared to:
+> >  - Extract tarball
+> >  - Build and load
+> >  - Remove file tree from filesystem
+>
+> I think there are too many assumptions in this thread in regard to what
+> is more convenient for user space.
+> I think bcc should try to avoid extracting tarball into file system.
+> For example libbcc can uncompress kheader.tar.xz into virtual file system
+> of clang front-end. It's more or less std::map<string, string>
+> with key=path, value=content of the file. Access to such in-memory
+> 'files' is obviously faster than doing open/read syscalls.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-divider.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I think performance is a red herring, especially since you have to
+uncompress it on every compiler invocation. With this you'd need to
+read/touch/write _all_ header files, not just the one your current
+compiler invocation will use.
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index 205fe8ff63f0..2a1822a22740 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -175,6 +175,7 @@ struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
- 				  void __iomem *reg, spinlock_t *lock)
- {
- 	return clk_register_divider_table(NULL, name, parent_name,
--					  CLK_IS_CRITICAL, reg, 16, 1, 0,
-+					  CLK_IS_CRITICAL,
-+					  reg, 16, 1, CLK_DIVIDER_READ_ONLY,
- 					  mc_div_table, lock);
- }
--- 
-2.21.0
+In the grand scheme of things, open/mmap syscalls wouldn't necessarily
+be slower.
 
+> bcc already uses this approach for some bcc internal 'files' that
+> it passes to clang during compilation.
+> All of /proc/kheaders.tar.xz files can be passed the same way
+> without extracting them into real file system.
+
+This is now a circular argument. Joel was stating that the plain text
+headers took up too much memory, but now it's preferred to create such
+filesystem in userspace memory on *every compiler invocation*?
+That's... not better. And definitely worse if you want to compile in
+parallel.
+
+
+From my perspective, this is where we're at:
+
+This patch seems to have been met with a lot of responses in the tone
+of "this is not an appealing solution". Meanwhile, some of the
+suggested alternative solutions have not worked out, and we are now at
+a point where there's less interest in exploring alternatives and
+arguments to merge as-is with only minor adjustments.
+
+I understand the desire to solve this. It'd be really convenient to
+have a way to runtime build against the same structure layouts that
+the kernel was built with. But I haven't heard anyone say that they
+*like* the solution proposed, and I haven't seen many of those
+expressing concerns being converted to support it.
+
+Usually what we do at times like this is that we say "Yeah, this is a
+problem that should be solved, but this solution doesn't seem to be
+the right one and we would need to maintain it forever as part of the
+ABI. Let's wait until a better solution is found." With time,
+sometimes a better solution becomes obvious, or circumstances change
+enough to allow for some different approach, or someone has a new idea
+from a different perspective that solves the same problem.
+
+All of that being said, I don't have veto rights on code going into
+the kernel, even if I think picking up this patch would be the wrong
+thing to do.
+
+I'd be a *lot* less hesitant if this went into debugfs or another
+location than /proc, which is one of the most regression-sensitive
+interfaces we have in the kernel.
+
+> Joel, would be great if you can share corresponding bcc patch
+> that takes advantage of /proc/kheaders
+
+
+-Olof
