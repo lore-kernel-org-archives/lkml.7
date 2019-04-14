@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AFAC10F11
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6DC10F11
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35217218D2
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C978E21721
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 01:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfDNBtt (ORCPT
+        id S1727756AbfDNBt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 13 Apr 2019 21:49:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41984 "EHLO huawei.com"
+        Sat, 13 Apr 2019 21:49:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41982 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727191AbfDNBtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 13 Apr 2019 21:49:03 -0400
+        id S1727280AbfDNBtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 13 Apr 2019 21:49:02 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 391AF6922D2E7D2236A3;
+        by Forcepoint Email with ESMTP id 262DDD39635183DB7371;
         Sun, 14 Apr 2019 09:48:57 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.408.0; Sun, 14 Apr 2019 09:48:49 +0800
+ 14.3.408.0; Sun, 14 Apr 2019 09:48:50 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 03/12] net: hns3: fix set port based VLAN for PF
-Date:   Sun, 14 Apr 2019 09:47:37 +0800
-Message-ID: <1555206466-44240-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 08/12] net: hns3: divide shared buffer between TC
+Date:   Sun, 14 Apr 2019 09:47:42 +0800
+Message-ID: <1555206466-44240-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555206466-44240-1-git-send-email-tanhuazhong@huawei.com>
 References: <1555206466-44240-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,326 +46,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-In original codes, ndo_set_vf_vlan() in hns3 driver was implemented
-wrong. It adds or removes VLAN into VLAN filter for VF, but VF is
-unaware of it.
+Currently hardware may have not enough buffer to receive packet
+when it has used more than two MPS(maximum packet size) of
+buffer, but there are still a lot of shared buffer left unused
+when TC num is small.
 
-Indeed, ndo_set_vf_vlan() is expected to enable or disable port based
-VLAN (hardware inserts a specified VLAN tag to all TX packets for a
-specified VF) . When enable port based VLAN, we use port based VLAN id
-as VLAN filter entry. When disable port based VLAN, we use VLAN id of
-VLAN device.
+This patch divides shared buffer to be used between TC when
+the port supports DCB, and adjusts the waterline and threshold
+according to user manual for the port that does not support
+DCB.
 
-This patch fixes it for PF, enable/disable port based VLAN when calls
-ndo_set_vf_vlan().
+This patch also change hclge_get_tc_num's return type to u32
+to avoid signed-unsigned mix with divide.
 
-Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 229 ++++++++++++++++++---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   5 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   3 -
- 3 files changed, 203 insertions(+), 34 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 27 ++++++++++++++++------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 4bc2c07..0a99a97 100644
+index 7e7cdad..d2fb548 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -6585,30 +6585,6 @@ static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
+@@ -1422,7 +1422,7 @@ static int hclge_tx_buffer_alloc(struct hclge_dev *hdev,
  	return ret;
  }
  
--int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
--			  u16 vlan_id, bool is_kill)
--{
--	struct hclge_vport *vport = hclge_get_vport(handle);
--	struct hclge_dev *hdev = vport->back;
--
--	return hclge_set_vlan_filter_hw(hdev, proto, vport->vport_id, vlan_id,
--					0, is_kill);
--}
--
--static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
--				    u16 vlan, u8 qos, __be16 proto)
--{
--	struct hclge_vport *vport = hclge_get_vport(handle);
--	struct hclge_dev *hdev = vport->back;
--
--	if ((vfid >= hdev->num_alloc_vfs) || (vlan > 4095) || (qos > 7))
--		return -EINVAL;
--	if (proto != htons(ETH_P_8021Q))
--		return -EPROTONOSUPPORT;
--
--	return hclge_set_vlan_filter_hw(hdev, proto, vfid, vlan, qos, false);
--}
--
- static int hclge_set_vlan_tx_offload_cfg(struct hclge_vport *vport)
+-static int hclge_get_tc_num(struct hclge_dev *hdev)
++static u32 hclge_get_tc_num(struct hclge_dev *hdev)
  {
- 	struct hclge_tx_vtag_cfg *vcfg = &vport->txvlan_cfg;
-@@ -6833,7 +6809,8 @@ static int hclge_init_vlan_config(struct hclge_dev *hdev)
- 	return hclge_set_vlan_filter(handle, htons(ETH_P_8021Q), 0, false);
- }
+ 	int i, cnt = 0;
  
--void hclge_add_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id)
-+static void hclge_add_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
-+				       bool writen_to_tbl)
+@@ -1495,8 +1495,8 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
+ 				struct hclge_pkt_buf_alloc *buf_alloc,
+ 				u32 rx_all)
  {
- 	struct hclge_vport_vlan_cfg *vlan;
- 
-@@ -6845,14 +6822,38 @@ void hclge_add_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id)
- 	if (!vlan)
- 		return;
- 
--	vlan->hd_tbl_status = true;
-+	vlan->hd_tbl_status = writen_to_tbl;
- 	vlan->vlan_id = vlan_id;
- 
- 	list_add_tail(&vlan->node, &vport->vlan_list);
- }
- 
--void hclge_rm_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
--			       bool is_write_tbl)
-+static int hclge_add_vport_all_vlan_table(struct hclge_vport *vport)
-+{
-+	struct hclge_vport_vlan_cfg *vlan, *tmp;
-+	struct hclge_dev *hdev = vport->back;
-+	int ret;
-+
-+	list_for_each_entry_safe(vlan, tmp, &vport->vlan_list, node) {
-+		if (!vlan->hd_tbl_status) {
-+			ret = hclge_set_vlan_filter_hw(hdev, htons(ETH_P_8021Q),
-+						       vport->vport_id,
-+						       vlan->vlan_id, 0, false);
-+			if (ret) {
-+				dev_err(&hdev->pdev->dev,
-+					"restore vport vlan list failed, ret=%d\n",
-+					ret);
-+				return ret;
-+			}
-+		}
-+		vlan->hd_tbl_status = true;
+-	u32 shared_buf_min, shared_buf_tc, shared_std;
+-	int tc_num = hclge_get_tc_num(hdev);
++	u32 shared_buf_min, shared_buf_tc, shared_std, hi_thrd, lo_thrd;
++	u32 tc_num = hclge_get_tc_num(hdev);
+ 	u32 shared_buf, aligned_mps;
+ 	u32 rx_priv;
+ 	int i;
+@@ -1526,13 +1526,26 @@ static bool  hclge_is_rx_buf_ok(struct hclge_dev *hdev,
+ 	} else {
+ 		buf_alloc->s_buf.self.high = aligned_mps +
+ 						HCLGE_NON_DCB_ADDITIONAL_BUF;
+-		buf_alloc->s_buf.self.low =
+-			roundup(aligned_mps / 2, HCLGE_BUF_SIZE_UNIT);
++		buf_alloc->s_buf.self.low = aligned_mps;
 +	}
 +
-+	return 0;
-+}
-+
-+static void hclge_rm_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
-+				      bool is_write_tbl)
- {
- 	struct hclge_vport_vlan_cfg *vlan, *tmp;
- 	struct hclge_dev *hdev = vport->back;
-@@ -6929,6 +6930,178 @@ int hclge_en_hw_strip_rxvtag(struct hnae3_handle *handle, bool enable)
- 	return hclge_set_vlan_rx_offload_cfg(vport);
- }
- 
-+static int hclge_update_vlan_filter_entries(struct hclge_vport *vport,
-+					    u16 port_base_vlan_state,
-+					    struct hclge_vlan_info *new_info,
-+					    struct hclge_vlan_info *old_info)
-+{
-+	struct hclge_dev *hdev = vport->back;
-+	int ret;
-+
-+	if (port_base_vlan_state == HNAE3_PORT_BASE_VLAN_ENABLE) {
-+		hclge_rm_vport_all_vlan_table(vport, false);
-+		return hclge_set_vlan_filter_hw(hdev,
-+						 htons(new_info->vlan_proto),
-+						 vport->vport_id,
-+						 new_info->vlan_tag,
-+						 new_info->qos, false);
-+	}
-+
-+	ret = hclge_set_vlan_filter_hw(hdev, htons(old_info->vlan_proto),
-+				       vport->vport_id, old_info->vlan_tag,
-+				       old_info->qos, true);
-+	if (ret)
-+		return ret;
-+
-+	return hclge_add_vport_all_vlan_table(vport);
-+}
-+
-+int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
-+				    struct hclge_vlan_info *vlan_info)
-+{
-+	struct hnae3_handle *nic = &vport->nic;
-+	struct hclge_vlan_info *old_vlan_info;
-+	struct hclge_dev *hdev = vport->back;
-+	int ret;
-+
-+	old_vlan_info = &vport->port_base_vlan_cfg.vlan_info;
-+
-+	ret = hclge_vlan_offload_cfg(vport, state, vlan_info->vlan_tag);
-+	if (ret)
-+		return ret;
-+
-+	if (state == HNAE3_PORT_BASE_VLAN_MODIFY) {
-+		/* add new VLAN tag */
-+		ret = hclge_set_vlan_filter_hw(hdev, vlan_info->vlan_proto,
-+					       vport->vport_id,
-+					       vlan_info->vlan_tag,
-+					       vlan_info->qos, false);
-+		if (ret)
-+			return ret;
-+
-+		/* remove old VLAN tag */
-+		ret = hclge_set_vlan_filter_hw(hdev, old_vlan_info->vlan_proto,
-+					       vport->vport_id,
-+					       old_vlan_info->vlan_tag,
-+					       old_vlan_info->qos, true);
-+		if (ret)
-+			return ret;
-+
-+		goto update;
-+	}
-+
-+	ret = hclge_update_vlan_filter_entries(vport, state, vlan_info,
-+					       old_vlan_info);
-+	if (ret)
-+		return ret;
-+
-+	/* update state only when disable/enable port based VLAN */
-+	vport->port_base_vlan_cfg.state = state;
-+	if (state == HNAE3_PORT_BASE_VLAN_DISABLE)
-+		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_DISABLE;
-+	else
-+		nic->port_base_vlan_state = HNAE3_PORT_BASE_VLAN_ENABLE;
-+
-+update:
-+	vport->port_base_vlan_cfg.vlan_info.vlan_tag = vlan_info->vlan_tag;
-+	vport->port_base_vlan_cfg.vlan_info.qos = vlan_info->qos;
-+	vport->port_base_vlan_cfg.vlan_info.vlan_proto = vlan_info->vlan_proto;
-+
-+	return 0;
-+}
-+
-+static u16 hclge_get_port_base_vlan_state(struct hclge_vport *vport,
-+					  enum hnae3_port_base_vlan_state state,
-+					  u16 vlan)
-+{
-+	if (state == HNAE3_PORT_BASE_VLAN_DISABLE) {
-+		if (!vlan)
-+			return HNAE3_PORT_BASE_VLAN_NOCHANGE;
++	if (hnae3_dev_dcb_supported(hdev)) {
++		if (tc_num)
++			hi_thrd = (shared_buf - hdev->dv_buf_size) / tc_num;
 +		else
-+			return HNAE3_PORT_BASE_VLAN_ENABLE;
++			hi_thrd = shared_buf - hdev->dv_buf_size;
++
++		hi_thrd = max_t(u32, hi_thrd, 2 * aligned_mps);
++		hi_thrd = rounddown(hi_thrd, HCLGE_BUF_SIZE_UNIT);
++		lo_thrd = hi_thrd - aligned_mps / 2;
 +	} else {
-+		if (!vlan)
-+			return HNAE3_PORT_BASE_VLAN_DISABLE;
-+		else if (vport->port_base_vlan_cfg.vlan_info.vlan_tag == vlan)
-+			return HNAE3_PORT_BASE_VLAN_NOCHANGE;
-+		else
-+			return HNAE3_PORT_BASE_VLAN_MODIFY;
-+	}
-+}
-+
-+static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
-+				    u16 vlan, u8 qos, __be16 proto)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	struct hclge_vlan_info vlan_info;
-+	u16 state;
-+	int ret;
-+
-+	if (hdev->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
-+
-+	/* qos is a 3 bits value, so can not be bigger than 7 */
-+	if (vfid >= hdev->num_alloc_vfs || vlan > VLAN_N_VID - 1 || qos > 7)
-+		return -EINVAL;
-+	if (proto != htons(ETH_P_8021Q))
-+		return -EPROTONOSUPPORT;
-+
-+	vport = &hdev->vport[vfid];
-+	state = hclge_get_port_base_vlan_state(vport,
-+					       vport->port_base_vlan_cfg.state,
-+					       vlan);
-+	if (state == HNAE3_PORT_BASE_VLAN_NOCHANGE)
-+		return 0;
-+
-+	vlan_info.vlan_tag = vlan;
-+	vlan_info.qos = qos;
-+	vlan_info.vlan_proto = ntohs(proto);
-+
-+	/* update port based VLAN for PF */
-+	if (!vfid) {
-+		hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
-+		ret = hclge_update_port_base_vlan_cfg(vport, state, &vlan_info);
-+		hclge_notify_client(hdev, HNAE3_UP_CLIENT);
-+
-+		return ret;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+int hclge_set_vlan_filter(struct hnae3_handle *handle, __be16 proto,
-+			  u16 vlan_id, bool is_kill)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	bool writen_to_tbl = false;
-+	int ret = 0;
-+
-+	/* when port based VLAN enabled, we use port based VLAN as the VLAN
-+	 * filter entry. In this case, we don't update VLAN filter table
-+	 * when user add new VLAN or remove exist VLAN, just update the vport
-+	 * VLAN list. The VLAN id in VLAN list won't be writen in VLAN filter
-+	 * table until port based VLAN disabled
-+	 */
-+	if (handle->port_base_vlan_state == HNAE3_PORT_BASE_VLAN_DISABLE) {
-+		ret = hclge_set_vlan_filter_hw(hdev, proto, vport->vport_id,
-+					       vlan_id, 0, is_kill);
-+		writen_to_tbl = true;
-+	}
-+
-+	if (ret)
-+		return ret;
-+
-+	if (is_kill)
-+		hclge_rm_vport_vlan_table(vport, vlan_id, false);
-+	else
-+		hclge_add_vport_vlan_table(vport, vlan_id,
-+					   writen_to_tbl);
-+
-+	return 0;
-+}
-+
- static int hclge_set_mac_mtu(struct hclge_dev *hdev, int new_mps)
- {
- 	struct hclge_config_max_frm_size_cmd *req;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 4c7ea9f..45c9467 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -937,9 +937,8 @@ void hclge_rm_vport_mac_table(struct hclge_vport *vport, const u8 *mac_addr,
- void hclge_rm_vport_all_mac_table(struct hclge_vport *vport, bool is_del_list,
- 				  enum HCLGE_MAC_ADDR_TYPE mac_type);
- void hclge_uninit_vport_mac_table(struct hclge_dev *hdev);
--void hclge_add_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id);
--void hclge_rm_vport_vlan_table(struct hclge_vport *vport, u16 vlan_id,
--			       bool is_write_tbl);
- void hclge_rm_vport_all_vlan_table(struct hclge_vport *vport, bool is_del_list);
- void hclge_uninit_vport_vlan_table(struct hclge_dev *hdev);
-+int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
-+				    struct hclge_vlan_info *vlan_info);
- #endif
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 9aa9c64..fddbbca 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -305,9 +305,6 @@ static int hclge_set_vf_vlan_cfg(struct hclge_vport *vport,
- 		memcpy(&proto, &mbx_req->msg[5], sizeof(proto));
- 		status = hclge_set_vlan_filter(handle, cpu_to_be16(proto),
- 					       vlan, is_kill);
--		if (!status)
--			is_kill ? hclge_rm_vport_vlan_table(vport, vlan, false)
--			: hclge_add_vport_vlan_table(vport, vlan);
- 	} else if (mbx_req->msg[1] == HCLGE_MBX_VLAN_RX_OFF_CFG) {
- 		struct hnae3_handle *handle = &vport->nic;
- 		bool en = mbx_req->msg[2] ? true : false;
++		hi_thrd = aligned_mps + HCLGE_NON_DCB_ADDITIONAL_BUF;
++		lo_thrd = aligned_mps;
+ 	}
+ 
+ 	for (i = 0; i < HCLGE_MAX_TC_NUM; i++) {
+-		buf_alloc->s_buf.tc_thrd[i].low = aligned_mps;
+-		buf_alloc->s_buf.tc_thrd[i].high = 2 * aligned_mps;
++		buf_alloc->s_buf.tc_thrd[i].low = lo_thrd;
++		buf_alloc->s_buf.tc_thrd[i].high = hi_thrd;
+ 	}
+ 
+ 	return true;
 -- 
 2.7.4
 
