@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6521C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 05:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954BBC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 05:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD91B20693
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 05:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EE62175B
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 05:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfDNF7e (ORCPT
+        id S1726355AbfDNF7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 01:59:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:49590 "EHLO foss.arm.com"
+        Sun, 14 Apr 2019 01:59:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:49622 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfDNF7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 01:59:34 -0400
+        id S1726241AbfDNF7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 01:59:40 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABA6015AD;
-        Sat, 13 Apr 2019 22:59:33 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8110615AD;
+        Sat, 13 Apr 2019 22:59:39 -0700 (PDT)
 Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.41.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5496E3F557;
-        Sat, 13 Apr 2019 22:59:28 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2A6343F557;
+        Sat, 13 Apr 2019 22:59:33 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
@@ -34,9 +34,9 @@ Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
         arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
         david@redhat.com, cai@lca.pw, logang@deltatee.com,
         ira.weiny@intel.com
-Subject: [PATCH V2 1/2] mm/hotplug: Reorder arch_remove_memory() call in __remove_memory()
-Date:   Sun, 14 Apr 2019 11:29:12 +0530
-Message-Id: <1555221553-18845-2-git-send-email-anshuman.khandual@arm.com>
+Subject: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
+Date:   Sun, 14 Apr 2019 11:29:13 +0530
+Message-Id: <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
 References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
@@ -45,96 +45,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
-entries between memory block and node. It first checks pfn validity with
-pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
-(arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+Memory removal from an arch perspective involves tearing down two different
+kernel based mappings i.e vmemmap and linear while releasing related page
+table pages allocated for the physical memory range to be removed.
 
-pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
-which scans all mapped memblock regions with memblock_is_map_memory(). This
-creates a problem in memory hot remove path which has already removed given
-memory range from memory block with memblock_[remove|free] before arriving
-at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
-skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
-sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
-of existing sysfs entries.
+Define a common kernel page table tear down helper remove_pagetable() which
+can be used to unmap given kernel virtual address range. In effect it can
+tear down both vmemap or kernel linear mappings. This new helper is called
+from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+The argument 'direct' here identifies kernel linear mappings.
 
-[   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
-[   62.052517] ------------[ cut here ]------------
-[   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
-[   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[   62.054589] Modules linked in:
-[   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
-[   62.056274] Hardware name: linux,dummy-virt (DT)
-[   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
-[   62.058083] pc : add_memory_resource+0x1cc/0x1d8
-[   62.058961] lr : add_memory_resource+0x10c/0x1d8
-[   62.059842] sp : ffff0000168b3ce0
-[   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
-[   62.061501] x27: 0000000000000000 x26: 0000000000000000
-[   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
-[   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
-[   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
-[   62.065558] x19: 0000000000680000 x18: 0000000000000024
-[   62.066566] x17: 0000000000000000 x16: 0000000000000000
-[   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
-[   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
-[   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
-[   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
-[   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
-[   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
-[   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
-[   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
-[   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
-[   62.076930] Call trace:
-[   62.077411]  add_memory_resource+0x1cc/0x1d8
-[   62.078227]  __add_memory+0x70/0xa8
-[   62.078901]  probe_store+0xa4/0xc8
-[   62.079561]  dev_attr_store+0x18/0x28
-[   62.080270]  sysfs_kf_write+0x40/0x58
-[   62.080992]  kernfs_fop_write+0xcc/0x1d8
-[   62.081744]  __vfs_write+0x18/0x40
-[   62.082400]  vfs_write+0xa4/0x1b0
-[   62.083037]  ksys_write+0x5c/0xc0
-[   62.083681]  __arm64_sys_write+0x18/0x20
-[   62.084432]  el0_svc_handler+0x88/0x100
-[   62.085177]  el0_svc+0x8/0xc
+Vmemmap mappings page table pages are allocated through sparse mem helper
+functions like vmemmap_alloc_block() which does not cycle the pages through
+pgtable_page_ctor() constructs. Hence while removing it skips corresponding
+destructor construct pgtable_page_dtor().
 
-Re-ordering arch_remove_memory() with memblock_[free|remove] solves the
-problem on arm64 as pfn_valid() behaves correctly and returns positive
-as memblock for the address range still exists. arch_remove_memory()
-removes applicable memory sections from zone with __remove_pages() and
-tears down kernel linear mapping. Removing memblock regions afterwards
-is safe because there is no other memblock (bootmem) allocator user that
-late. So nobody is going to allocate from the removed range just to blow
-up later. Also nobody should be using the bootmem allocated range else
-we wouldn't allow to remove it. So reordering is indeed safe.
+While here update arch_add_mempory() to handle __add_pages() failures by
+just unmapping recently added kernel linear mapping. Now enable memory hot
+remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+This implementation is overall inspired from kernel page table tear down
+procedure on X86 architecture.
+
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- mm/memory_hotplug.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/Kconfig               |   3 +
+ arch/arm64/include/asm/pgtable.h |   2 +
+ arch/arm64/mm/mmu.c              | 221 ++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 224 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0082d69..71d0d79 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1872,11 +1872,10 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c383625..a870eb2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -267,6 +267,9 @@ config HAVE_GENERIC_GUP
+ config ARCH_ENABLE_MEMORY_HOTPLUG
+ 	def_bool y
  
- 	/* remove memmap entry */
- 	firmware_map_remove(start, start + size, "System RAM");
-+	arch_remove_memory(nid, start, size, NULL);
- 	memblock_free(start, size);
- 	memblock_remove(start, size);
++config ARCH_ENABLE_MEMORY_HOTREMOVE
++	def_bool y
++
+ config SMP
+ 	def_bool y
  
--	arch_remove_memory(nid, start, size, NULL);
--
- 	try_offline_node(nid);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index de70c1e..1ee22ff 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -555,6 +555,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
  
- 	mem_hotplug_done();
+ #else
+ 
++#define pmd_index(addr) 0
+ #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
+ 
+ /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
+@@ -612,6 +613,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+ 
+ #else
+ 
++#define pud_index(adrr)	0
+ #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
+ 
+ /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index ef82312..a4750fe 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -733,6 +733,194 @@ int kern_addr_valid(unsigned long addr)
+ 
+ 	return pfn_valid(pte_pfn(pte));
+ }
++
++#ifdef CONFIG_MEMORY_HOTPLUG
++static void free_pagetable(struct page *page, int order)
++{
++	unsigned long magic;
++	unsigned int nr_pages = 1 << order;
++
++	if (PageReserved(page)) {
++		__ClearPageReserved(page);
++
++		magic = (unsigned long)page->freelist;
++		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
++			while (nr_pages--)
++				put_page_bootmem(page++);
++		} else {
++			while (nr_pages--)
++				free_reserved_page(page++);
++		}
++	} else {
++		free_pages((unsigned long)page_address(page), order);
++	}
++}
++
++#if (CONFIG_PGTABLE_LEVELS > 2)
++static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
++{
++	pte_t *pte;
++	int i;
++
++	for (i = 0; i < PTRS_PER_PTE; i++) {
++		pte = pte_start + i;
++		if (!pte_none(*pte))
++			return;
++	}
++
++	free_pagetable(pmd_page(*pmd), 0);
++	spin_lock(&init_mm.page_table_lock);
++	pmd_clear(pmd);
++	spin_unlock(&init_mm.page_table_lock);
++}
++#else
++static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
++{
++}
++#endif
++
++#if (CONFIG_PGTABLE_LEVELS > 3)
++static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
++{
++	pmd_t *pmd;
++	int i;
++
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		pmd = pmd_start + i;
++		if (!pmd_none(*pmd))
++			return;
++	}
++
++	free_pagetable(pud_page(*pud), 0);
++	spin_lock(&init_mm.page_table_lock);
++	pud_clear(pud);
++	spin_unlock(&init_mm.page_table_lock);
++}
++
++static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
++{
++	pud_t *pud;
++	int i;
++
++	for (i = 0; i < PTRS_PER_PUD; i++) {
++		pud = pud_start + i;
++		if (!pud_none(*pud))
++			return;
++	}
++
++	free_pagetable(pgd_page(*pgd), 0);
++	spin_lock(&init_mm.page_table_lock);
++	pgd_clear(pgd);
++	spin_unlock(&init_mm.page_table_lock);
++}
++#else
++static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
++{
++}
++
++static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
++{
++}
++#endif
++
++static void
++remove_pte_table(pte_t *pte_start, unsigned long addr,
++			unsigned long end, bool direct)
++{
++	pte_t *pte;
++
++	pte = pte_start + pte_index(addr);
++	for (; addr < end; addr += PAGE_SIZE, pte++) {
++		if (!pte_present(*pte))
++			continue;
++
++		if (!direct)
++			free_pagetable(pte_page(*pte), 0);
++		spin_lock(&init_mm.page_table_lock);
++		pte_clear(&init_mm, addr, pte);
++		spin_unlock(&init_mm.page_table_lock);
++	}
++}
++
++static void
++remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
++			unsigned long end, bool direct)
++{
++	unsigned long next;
++	pte_t *pte_base;
++	pmd_t *pmd;
++
++	pmd = pmd_start + pmd_index(addr);
++	for (; addr < end; addr = next, pmd++) {
++		next = pmd_addr_end(addr, end);
++		if (!pmd_present(*pmd))
++			continue;
++
++		if (pmd_sect(*pmd)) {
++			if (!direct)
++				free_pagetable(pmd_page(*pmd),
++						get_order(PMD_SIZE));
++			spin_lock(&init_mm.page_table_lock);
++			pmd_clear(pmd);
++			spin_unlock(&init_mm.page_table_lock);
++			continue;
++		}
++		pte_base = pte_offset_kernel(pmd, 0UL);
++		remove_pte_table(pte_base, addr, next, direct);
++		free_pte_table(pte_base, pmd);
++	}
++}
++
++static void
++remove_pud_table(pud_t *pud_start, unsigned long addr,
++			unsigned long end, bool direct)
++{
++	unsigned long next;
++	pmd_t *pmd_base;
++	pud_t *pud;
++
++	pud = pud_start + pud_index(addr);
++	for (; addr < end; addr = next, pud++) {
++		next = pud_addr_end(addr, end);
++		if (!pud_present(*pud))
++			continue;
++
++		if (pud_sect(*pud)) {
++			if (!direct)
++				free_pagetable(pud_page(*pud),
++						get_order(PUD_SIZE));
++			spin_lock(&init_mm.page_table_lock);
++			pud_clear(pud);
++			spin_unlock(&init_mm.page_table_lock);
++			continue;
++		}
++		pmd_base = pmd_offset(pud, 0UL);
++		remove_pmd_table(pmd_base, addr, next, direct);
++		free_pmd_table(pmd_base, pud);
++	}
++}
++
++static void
++remove_pagetable(unsigned long start, unsigned long end, bool direct)
++{
++	unsigned long addr, next;
++	pud_t *pud_base;
++	pgd_t *pgd;
++
++	for (addr = start; addr < end; addr = next) {
++		next = pgd_addr_end(addr, end);
++		pgd = pgd_offset_k(addr);
++		if (!pgd_present(*pgd))
++			continue;
++
++		pud_base = pud_offset(pgd, 0UL);
++		remove_pud_table(pud_base, addr, next, direct);
++		free_pud_table(pud_base, pgd);
++	}
++	flush_tlb_kernel_range(start, end);
++}
++#endif
++
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+ #if !ARM64_SWAPPER_USES_SECTION_MAPS
+ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+@@ -780,6 +968,9 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ void vmemmap_free(unsigned long start, unsigned long end,
+ 		struct vmem_altmap *altmap)
+ {
++#ifdef CONFIG_MEMORY_HOTPLUG
++	remove_pagetable(start, end, false);
++#endif
+ }
+ #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
+ 
+@@ -1065,10 +1256,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
++static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
++{
++	WARN_ON(pgdir != init_mm.pgd);
++	remove_pagetable(start, start + size, true);
++}
++
+ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+ 		    bool want_memblock)
+ {
+-	int flags = 0;
++	int ret, flags = 0;
+ 
+ 	if (rodata_full || debug_pagealloc_enabled())
+ 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+@@ -1076,7 +1273,27 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+ 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+ 			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
+ 
+-	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
++	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+ 			   altmap, want_memblock);
++	if (ret)
++		__remove_pgd_mapping(swapper_pg_dir,
++					__phys_to_virt(start), size);
++	return ret;
+ }
++
++#ifdef CONFIG_MEMORY_HOTREMOVE
++int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
++{
++	unsigned long start_pfn = start >> PAGE_SHIFT;
++	unsigned long nr_pages = size >> PAGE_SHIFT;
++	struct zone *zone = page_zone(pfn_to_page(start_pfn));
++	int ret;
++
++	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
++	if (!ret)
++		__remove_pgd_mapping(swapper_pg_dir,
++					__phys_to_virt(start), size);
++	return ret;
++}
++#endif
+ #endif
 -- 
 2.7.4
 
