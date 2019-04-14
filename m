@@ -3,36 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C0FC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED35AC10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE1B2084E
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C221F2084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfDNQDY (ORCPT
+        id S1727936AbfDNQDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:03:24 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43370 "EHLO
+        Sun, 14 Apr 2019 12:03:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43364 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbfDNQDV (ORCPT
+        with ESMTP id S1727765AbfDNQDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:03:21 -0400
+        Sun, 14 Apr 2019 12:03:19 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhbC-0002lV-D2; Sun, 14 Apr 2019 18:03:18 +0200
-Message-Id: <20190414160146.466354762@linutronix.de>
+        id 1hFhbB-0002lG-AT; Sun, 14 Apr 2019 18:03:17 +0200
+Message-Id: <20190414160146.363733568@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 18:00:08 +0200
+Date:   Sun, 14 Apr 2019 18:00:07 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 32/32] x86/irq/64: Remove stack overflow debug code
+Subject: [patch V3 31/32] x86/irq/64: Remap the IRQ stack with guard pages
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -41,101 +41,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All stack types on x86 64-bit have guard pages now.
+From: Andy Lutomirski <luto@kernel.org>
 
-So there is no point in executing probabilistic overflow checks as the
-guard pages are a accurate and reliable overflow prevention.
+The IRQ stack lives in percpu space, so an IRQ handler that overflows it
+will overwrite other data structures.
 
+Use vmap() to remap the IRQ stack so that it will have the usual guard
+pages that vmap/vmalloc allocations have. With this the kernel will panic
+immediately on an IRQ stack overflow.
+
+[ tglx: Move the map code to a proper place and invoke it only when a CPU
+  	is about to be brought online. No point in installing the map at
+  	early boot for all possible CPUs. Fail the CPU bringup if the vmap
+  	fails as done for all other preparatory stages in cpu hotplug. ]
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/Kconfig         |    2 -
- arch/x86/kernel/irq_64.c |   56 -----------------------------------------------
- 2 files changed, 1 insertion(+), 57 deletions(-)
+ arch/x86/kernel/irq_64.c |   30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -14,6 +14,7 @@ config X86_32
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select CLKSRC_I8253
- 	select CLONE_BACKWARDS
-+	select HAVE_DEBUG_STACKOVERFLOW
- 	select MODULES_USE_ELF_REL
- 	select OLD_SIGACTION
- 
-@@ -138,7 +139,6 @@ config X86
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_C_RECORDMCOUNT
- 	select HAVE_DEBUG_KMEMLEAK
--	select HAVE_DEBUG_STACKOVERFLOW
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
 --- a/arch/x86/kernel/irq_64.c
 +++ b/arch/x86/kernel/irq_64.c
-@@ -26,64 +26,8 @@
- DEFINE_PER_CPU_PAGE_ALIGNED(struct irq_stack, irq_stack_backing_store) __visible;
- DECLARE_INIT_PER_CPU(irq_stack_backing_store);
+@@ -91,6 +91,35 @@ bool handle_irq(struct irq_desc *desc, s
+ 	return true;
+ }
  
--int sysctl_panic_on_stackoverflow;
--
--/*
-- * Probabilistic stack overflow check:
-- *
-- * Regular device interrupts can enter on the following stacks:
-- *
-- * - User stack
-- *
-- * - Kernel task stack
-- *
-- * - Interrupt stack if a device driver reenables interrupts
-- *   which should only happen in really old drivers.
-- *
-- * - Debug IST stack
-- *
-- * All other contexts are invalid.
-- */
--static inline void stack_overflow_check(struct pt_regs *regs)
--{
--#ifdef CONFIG_DEBUG_STACKOVERFLOW
--#define STACK_MARGIN	128
--	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
--	u64 curbase = (u64)task_stack_page(current);
--	struct cea_exception_stacks *estacks;
--
--	if (user_mode(regs))
--		return;
--
--	if (regs->sp >= curbase + sizeof(struct pt_regs) + STACK_MARGIN &&
--	    regs->sp <= curbase + THREAD_SIZE)
--		return;
--
--	irq_stack_top = (u64)__this_cpu_read(hardirq_stack_ptr);
--	irq_stack_bottom = irq_stack_top - IRQ_STACK_SIZE + STACK_MARGIN;
--	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
--		return;
--
--	estacks = __this_cpu_read(cea_exception_stacks);
--	estack_top = CEA_ESTACK_TOP(estacks, DB);
--	estack_bottom = CEA_ESTACK_BOT(estacks, DB) + STACK_MARGIN;
--	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
--		return;
--
--	WARN_ONCE(1, "do_IRQ(): %s has overflown the kernel stack (cur:%Lx,sp:%lx, irq stack:%Lx-%Lx, exception stack: %Lx-%Lx, ip:%pF)\n",
--		current->comm, curbase, regs->sp,
--		irq_stack_bottom, irq_stack_top,
--		estack_bottom, estack_top, (void *)regs->ip);
--
--	if (sysctl_panic_on_stackoverflow)
--		panic("low stack detected by irq handler - check messages\n");
--#endif
--}
--
- bool handle_irq(struct irq_desc *desc, struct pt_regs *regs)
++#ifdef CONFIG_VMAP_STACK
++/*
++ * VMAP the backing store with guard pages
++ */
++static int map_irq_stack(unsigned int cpu)
++{
++	char *stack = (char *)per_cpu_ptr(&irq_stack_backing_store, cpu);
++	struct page *pages[IRQ_STACK_SIZE / PAGE_SIZE];
++	void *va;
++	int i;
++
++	for (i = 0; i < IRQ_STACK_SIZE / PAGE_SIZE; i++) {
++		phys_addr_t pa = per_cpu_ptr_to_phys(stack + (i << PAGE_SHIFT));
++
++		pages[i] = pfn_to_page(pa >> PAGE_SHIFT);
++	}
++
++	va = vmap(pages, IRQ_STACK_SIZE / PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
++	if (!va)
++		return -ENOMEM;
++
++	per_cpu(hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE;
++	return 0;
++}
++#else
++/*
++ * If VMAP stacks are disabled due to KASAN, just use the per cpu
++ * backing store without guard pages.
++ */
+ static int map_irq_stack(unsigned int cpu)
  {
--	stack_overflow_check(regs);
--
- 	if (IS_ERR_OR_NULL(desc))
- 		return false;
+ 	void *va = per_cpu_ptr(&irq_stack_backing_store, cpu);
+@@ -98,6 +127,7 @@ static int map_irq_stack(unsigned int cp
+ 	per_cpu(hardirq_stack_ptr, cpu) = va + IRQ_STACK_SIZE;
+ 	return 0;
+ }
++#endif
  
+ int irq_init_percpu_irqstack(unsigned int cpu)
+ {
 
 
