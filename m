@@ -2,176 +2,150 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F86AC10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08EAC282CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55164206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="WDfzNPNq"
+	by mail.kernel.org (Postfix) with ESMTP id 73F8A20848
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 19:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfDNTis (ORCPT
+        id S1727111AbfDNT4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 15:38:48 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:50876 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfDNTir (ORCPT
+        Sun, 14 Apr 2019 15:56:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43206 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfDNT4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 15:38:47 -0400
-Received: by mail-it1-f193.google.com with SMTP id q14so8732569itk.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QOWtsughs8v5wa64yJxww8mtNQrcGzXPVL4jTOgzC/c=;
-        b=WDfzNPNq7XXUT+Vy97HPWh3UDNOGkcsiWIi4/1mGI47OsfGj/aBaJ0V5eP3WoLkFUm
-         Okq47hXhs9TB71pWkv9Z3Uq1ogtTvwdoOPn/2In/Mo0ZHLwkDmqMiulDWXCxW9p9w3jK
-         yNHQEgxW5nRBrKL3q02Dy1ki9B97+Po5aqDlcQuYRck+cKUYpA+XiKag5N/uTbiR6isX
-         4elBNcmJSATa2N3hIifcyWnY7iCZyrxbO5mdH99IPwzy8V5YjYLjgdWyYyfIdItvu7Ac
-         8rQbBKPtcGOcUzjRl1CiE+lIQBYppRfBgpHNLEQ6ykvJiFnYV3yCkiSPMXvZbYMZFYgz
-         AHSw==
+        Sun, 14 Apr 2019 15:56:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id n23so12572949ioj.10
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 12:56:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QOWtsughs8v5wa64yJxww8mtNQrcGzXPVL4jTOgzC/c=;
-        b=ru4JYyLeE51ecIYtCOmV32VQvHRuvhk3ExiPnUSUDxRhvbO0adk6qDUH91ykStlmsx
-         d+cL8sFf42giZZrNChG7s5Pyv6XqwMnou8VufKHl8Gi95OzBX7QapBWkwuQe9AYfJDRE
-         vjrBX+c+zlRD/zNruhaYi+XMF4MdWIGuvPRFUTpn/Z8NXVv/DMWNBBud9M5r3eJsvQmY
-         /ZFe+Zljasr354tY8a4GaXBpV05hYXq60rA9KAETWesAQkWiWYcJakXWgswu4j2pIJmI
-         yNt5gxl9lcjVKKQfCja31KORDKQEDld6XXtlLdlTEFy4m9oBTJTt7WzVT1t+DaE4+oXQ
-         u4HA==
-X-Gm-Message-State: APjAAAWBuPEoG4BhVcYTDlVN0hyjY/2nGZx1Dyqzx1jHKOaXathriqs2
-        y6CgdOKkLjtpf4yajaWf8qpnSoqDSjtGf78eiWfl2g==
-X-Google-Smtp-Source: APXvYqw1e1E6pqgqVUSjzULhu0+QVSb2v6ZJpDczRMWtqKRDHCkklZ/5N4hAkSSB8CVIDSZWj7xazJ3U9w1CNvAgGpY=
-X-Received: by 2002:a02:c7c8:: with SMTP id s8mr48885831jao.13.1555270726209;
- Sun, 14 Apr 2019 12:38:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JJk1ISI5HmD3aTUiZDHKLZINh41Fl9C7dn4cVG2mDmU=;
+        b=ALrz99m/4oCrbmo1B+Iv+8jhMQ13iiWnZn0VkbpRzjiyMkon+ZhT9IYTXKp/HIdzHJ
+         +JDpxxtc87vuS2i7unV5qon+kTISjy3lkklIXQCw+oy4/O++v2G/KsgshHol3F8u+EIh
+         vdIeMsMuGkESAyFI0LsLTK012kEZ6oLNKOINzaFrZ1RkA6J/d8CvAHWBZA+/18VwsZ2H
+         OFfVSKQAUJqgPIz7WBA3u2k4IKfdtIwmdfuzCmfYznvkvfrLT4cJBkx8pRr4D7i4qv10
+         gmkaN+6ggrdGsVeDW+z+6c6ISjMXDboNJmd5lrsSFMLWneYyW2BMyswZGFYUk9hEx8e7
+         ih/g==
+X-Gm-Message-State: APjAAAU0ELMC/rQZHP5hBhJOArxNyTHiL4aoiIYGYHVuJcWJVl7IEgWz
+        GwQo7+ONlB3xA42K6tp2o6YftL5mJPQ4P+CiM9SYLlo7LR77
+X-Google-Smtp-Source: APXvYqyiZGgShE1dNbinHI9S0ECWytlREVmnQcPY+2LzFXnBoa/ffIkRcsHuH+kuvyj6rVvzRXFVsVeU7R+TwVQKfzTdSK40725y
 MIME-Version: 1.0
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
- <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com> <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Sun, 14 Apr 2019 12:38:34 -0700
-Message-ID: <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:ea14:: with SMTP id m20mr3297993ioc.33.1555271765630;
+ Sun, 14 Apr 2019 12:56:05 -0700 (PDT)
+Date:   Sun, 14 Apr 2019 12:56:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001ea4d5058682ed7c@google.com>
+Subject: WARNING in __flush_work (3)
+From:   syzbot <syzbot+2e1ef9188251d9cc7944@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 8:15 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
-> > On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
-> > >
-> > > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
-> > > [snip]
-> > > > > > Wouldn't it be more convenient to provide it in a standardized format
-> > > > > > such that you won't have to take an additional step, and always have
-> > > > > > This is that form IMO.
-> ...
-> > Compared to:
-> >  - Extract tarball
-> >  - Build and load
-> >  - Remove file tree from filesystem
->
-> I think there are too many assumptions in this thread in regard to what
-> is more convenient for user space.
-> I think bcc should try to avoid extracting tarball into file system.
-> For example libbcc can uncompress kheader.tar.xz into virtual file system
-> of clang front-end. It's more or less std::map<string, string>
-> with key=path, value=content of the file. Access to such in-memory
-> 'files' is obviously faster than doing open/read syscalls.
+Hello,
 
-I think performance is a red herring, especially since you have to
-uncompress it on every compiler invocation. With this you'd need to
-read/touch/write _all_ header files, not just the one your current
-compiler invocation will use.
+syzbot found the following crash on:
 
-In the grand scheme of things, open/mmap syscalls wouldn't necessarily
-be slower.
+HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f389af200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+dashboard link: https://syzkaller.appspot.com/bug?extid=2e1ef9188251d9cc7944
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dd0fc3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e77a5b200000
 
-> bcc already uses this approach for some bcc internal 'files' that
-> it passes to clang during compilation.
-> All of /proc/kheaders.tar.xz files can be passed the same way
-> without extracting them into real file system.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2e1ef9188251d9cc7944@syzkaller.appspotmail.com
 
-This is now a circular argument. Joel was stating that the plain text
-headers took up too much memory, but now it's preferred to create such
-filesystem in userspace memory on *every compiler invocation*?
-That's... not better. And definitely worse if you want to compile in
-parallel.
+usb 1-1: config 0 has an invalid interface number: 246 but max is 0
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=06f8, idProduct=300c,  
+bcdDevice=68.91
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+WARNING: CPU: 0 PID: 12 at kernel/workqueue.c:3030 __flush_work+0x728/0x820  
+kernel/workqueue.c:3030
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  panic+0x29d/0x5f2 kernel/panic.c:214
+  __warn.cold+0x20/0x48 kernel/panic.c:571
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:__flush_work+0x728/0x820 kernel/workqueue.c:3030
+Code: ff e8 3c 37 27 00 0f 0b 45 31 e4 e9 7e fd ff ff e8 2d 37 27 00 4c 89  
+ef 45 31 e4 e8 f2 a6 bb 0c e9 69 fd ff ff e8 18 37 27 00 <0f> 0b 45 31 e4  
+e9 5a fd ff ff e8 b9 47 5e 00 e9 78 fc ff ff e8 cf
+RSP: 0018:ffff8880a84b6e48 EFLAGS: 00010293
+RAX: ffff8880a84a3100 RBX: ffff888091a6fcb0 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: ffffffff814a8e58 RDI: 0000000000000001
+RBP: ffff8880a84b6fb0 R08: ffff8880a84a3100 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000001 R14: 0000000000000200 R15: ffff888091a6fcc8
+  __cancel_work_timer+0x326/0x450 kernel/workqueue.c:3126
+  uvc_ctrl_cleanup_device+0x27/0x488 drivers/media/usb/uvc/uvc_ctrl.c:2353
+  uvc_delete+0x2e/0x2f0 drivers/media/usb/uvc/uvc_driver.c:1871
+  kref_put include/linux/kref.h:67 [inline]
+  uvc_probe+0xfa5/0x6588 drivers/media/usb/uvc/uvc_driver.c:2228
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-From my perspective, this is where we're at:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-This patch seems to have been met with a lot of responses in the tone
-of "this is not an appealing solution". Meanwhile, some of the
-suggested alternative solutions have not worked out, and we are now at
-a point where there's less interest in exploring alternatives and
-arguments to merge as-is with only minor adjustments.
-
-I understand the desire to solve this. It'd be really convenient to
-have a way to runtime build against the same structure layouts that
-the kernel was built with. But I haven't heard anyone say that they
-*like* the solution proposed, and I haven't seen many of those
-expressing concerns being converted to support it.
-
-Usually what we do at times like this is that we say "Yeah, this is a
-problem that should be solved, but this solution doesn't seem to be
-the right one and we would need to maintain it forever as part of the
-ABI. Let's wait until a better solution is found." With time,
-sometimes a better solution becomes obvious, or circumstances change
-enough to allow for some different approach, or someone has a new idea
-from a different perspective that solves the same problem.
-
-All of that being said, I don't have veto rights on code going into
-the kernel, even if I think picking up this patch would be the wrong
-thing to do.
-
-I'd be a *lot* less hesitant if this went into debugfs or another
-location than /proc, which is one of the most regression-sensitive
-interfaces we have in the kernel.
-
-> Joel, would be great if you can share corresponding bcc patch
-> that takes advantage of /proc/kheaders
-
-
--Olof
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
