@@ -2,138 +2,130 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE3C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63E9C282CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6BF20850
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:12:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="EnHWGSdd"
+	by mail.kernel.org (Postfix) with ESMTP id AE4E720880
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555258602;
+	bh=+Ku/5BjUoC4T6P/q2jGkMG43TTUSVUGvZJLf9C8ijZI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iv2OQXqVjEqNm0wlL0DHyPaC2oMY9umcatKMbOnQUffTvK/Smp5hxF33aqzWQNf8N
+	 5H58mUcjnJsAgNVB95q8YESbHpwzkBbvvnANGGxZs17JQhyrko6QdiTtDDU06HSisb
+	 CRJeQOfQh0u2lySGXx4mkIE8ijS4unIHn9DEAid4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfDNQMU (ORCPT
+        id S1726695AbfDNQQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:12:20 -0400
-Received: from mout.web.de ([212.227.17.12]:46275 "EHLO mout.web.de"
+        Sun, 14 Apr 2019 12:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfDNQMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:12:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1555258330;
-        bh=MC6rHgXpDT9txSGxLou386Gaxa7oimVA7a4ceiwrZJE=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=EnHWGSddTPQ9OU7FvkXsUvOixmNl55M57a+kg7L/zqxXBpsTwG0wqqE9tBtmYmqoI
-         HFQYRQuE16+T2BoeScVDlXCeZfL4bxN43IxamT/ZXtfUQeQ1KeSoDIX70OXx7tlzsX
-         JCA8hK3Gx7oJUyVZ3jHYBEUmFphPG7NNJlwUqF/s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.103.133]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M5wzV-1gvfhz0W1R-00xvL2; Sun, 14
- Apr 2019 18:12:10 +0200
-To:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1550928043-14889-10-git-send-email-Julia.Lawall@lip6.fr>
-Subject: Re: [PATCH 09/12] meson-gx-socinfo: add missing of_node_put after
- of_device_is_available
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <80bcfd1f-f7db-5d2a-a96b-4b63d2c97138@web.de>
-Date:   Sun, 14 Apr 2019 18:12:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726262AbfDNQQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 12:16:41 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 683FC20880
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 16:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555258599;
+        bh=+Ku/5BjUoC4T6P/q2jGkMG43TTUSVUGvZJLf9C8ijZI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gQ9mxgkMp/q5HEu1w4NYo9Kf+rtmLe9ex7uPphPQEZOuEIIKJvED5doHqdRjz8w7V
+         Nwy44nkFslAD5WFaZOeKskQvdS/HRUdKf/tTX2h11f/sDAtiGkEcj6n18HoFlkmD2m
+         X7WfgHXxN8dnXpEf9ShFrB5PHRCCTbx9QFqiT0Og=
+Received: by mail-wm1-f45.google.com with SMTP id r186so4343410wmf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:16:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAV8RmWfaMxQjjREAJHILtoxp51gvk8SFv2FUzrUbEK/lAT/kNVj
+        HcZAe9j7qoAe+vxhNzVUOkjEFoKC0rHeWi358k8WrQ==
+X-Google-Smtp-Source: APXvYqyFo54CjaUiNs0xTSZe1OHyO9KpVQjLN7XYrXilveopeKBtV9xGbxgugFA9c5riLNeOJ+PP9o6668KDpPuOrKo=
+X-Received: by 2002:a1c:6c04:: with SMTP id h4mr19021074wmc.135.1555258598010;
+ Sun, 14 Apr 2019 09:16:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1550928043-14889-10-git-send-email-Julia.Lawall@lip6.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2Z6reBu5noD8OkgZ1jNHiF0uSwSp0+7xSOBD2F3dfoA0EzPaUpp
- lVVbDFsJrj+MI2SqwTfP54+NMicqc+R9029X5b3gFX5+H21nTKY67F/8F2pc1efvcR5qcze
- 2AWw1ufcHOCkpd43RVXbitpSFMbnUtScz9exGqe3MiA2ZD9ZJKglGVfN12xo01Ka07KIwfE
- dz0Veu/i4LekkGSzJupDA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V3g1NtEsWBo=:rRrrWTZDP6rXB9NeAYRa8f
- 7yX5OUL/fgXwqGKv4fyq4/lw1wJLv9Wbmt2WT3LZk7FN+Q9A5EDz9qBGrcF9+wQOt597/L1A5
- W82yUqbJzZGBeTixoIpIhEEWDLvtKHNLtuPMz+mae/mR9bU4INAXuZqRyDyXHwM3yYMOPSmgy
- gyGWvYROyVKHpqOJ/zE1OkzuhD3xiJCn0WZwRyMq6utnNxo0+tyQ/gy79h3RpGeOFcJUyppRy
- cAxHc39lnguSwqQLAlt7qkYeuLgy1bjKy+lNPa6MFXX1ohHXINB4LDUjQ1ID5zeEQcmO2Ygtf
- sAOROcGtyBwAfi1fU8M1FKuME6lol8quiil713YT/vA3c6j0WG8jnkt3IYl4aTEAnkgRJf0D1
- 2XmsVlMkIKOwXPtS/C1DUhptLEtJY4K6K/FRhYm87+BEfzpxJWOTYSbglXMd5UuIdEirbqy1I
- S3eKzIU17uBJUTZfyrHa21QefC3MfpvVWc1/0oWSHmjMI5RKZhGkSQHFAQcj0CeGg8Arf1+IQ
- Kro2gEsz2NViFnEEvHUgU3gRu4ejdObKt+80uNj6Ak6zyt6mOrYjacdqs6WGqFn1+5RRorP30
- eO/zbCoN18sAKRCz5sKZqsDIdYiIQ3QsPd8t24KTIfC7ZyyxlnaNu8sLvtrBKRaJg1wO8NNe7
- V6DhXe4O4pHhr2YdWcEozsWd/KdAJ65y/YfOpjd1nN1vv2y/QJfXYinTQL3be7eRSX20xyBiJ
- +MNZamdrbgAbbIgIinM2/TSV32VAUHV4rETQW4A775uEL7iqoHB1n5cquEJX9/6vvxDa00YN6
- SmNhzQxGQ5abdk3/GXjSJdocvXrS0cVrEDExqEZ7R5gepHCu0v2ZqGBbNOhJRWHQIWITDwWh8
- mHGfpl5jqQy4O+Oknk8+VpDdsssa1RkPMEyVv3J4JMW+oMVn1n8TJg7o8ZMBIRKBFusXvLnuH
- 8YfrKPyTJ5Q==
+References: <20190414155936.679808307@linutronix.de> <20190414160143.591255977@linutronix.de>
+In-Reply-To: <20190414160143.591255977@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 14 Apr 2019 09:16:26 -0700
+X-Gmail-Original-Message-ID: <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com>
+Message-ID: <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com>
+Subject: Re: [patch V3 01/32] mm/slab: Fix broken stack trace storage
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -123,8 +123,10 @@  static int __init meson_gx_socinfo_init(
->  		return -ENODEV;
+On Sun, Apr 14, 2019 at 9:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->  	/* check if interface is enabled */
-> -	if (!of_device_is_available(np))
-> +	if (!of_device_is_available(np)) {
-> +		of_node_put(np);
->  		return -ENODEV;
-> +	}
+> kstack_end() is broken on interrupt stacks as they are not guaranteed to be
+> sized THREAD_SIZE and THREAD_SIZE aligned.
 >
->  	/* check if chip-id is available */
->  	if (!of_property_read_bool(np, "amlogic,has-chip-id"))
+> Use the stack tracer instead. Remove the pointless pointer increment at the
+> end of the function while at it.
+>
+> Fixes: 98eb235b7feb ("[PATCH] page unmapping debug") - History tree
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: linux-mm@kvack.org
+> ---
+>  mm/slab.c |   28 ++++++++++++----------------
+>  1 file changed, 12 insertions(+), 16 deletions(-)
+>
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -1470,33 +1470,29 @@ static bool is_debug_pagealloc_cache(str
+>  static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
+>                             unsigned long caller)
+>  {
+> -       int size = cachep->object_size;
+> +       int size = cachep->object_size / sizeof(unsigned long);
+>
+>         addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
+>
+> -       if (size < 5 * sizeof(unsigned long))
+> +       if (size < 5)
+>                 return;
+>
+>         *addr++ = 0x12345678;
+>         *addr++ = caller;
+>         *addr++ = smp_processor_id();
+> -       size -= 3 * sizeof(unsigned long);
+> +#ifdef CONFIG_STACKTRACE
+>         {
+> -               unsigned long *sptr = &caller;
+> -               unsigned long svalue;
+> -
+> -               while (!kstack_end(sptr)) {
+> -                       svalue = *sptr++;
+> -                       if (kernel_text_address(svalue)) {
+> -                               *addr++ = svalue;
+> -                               size -= sizeof(unsigned long);
+> -                               if (size <= sizeof(unsigned long))
+> -                                       break;
+> -                       }
+> -               }
+> +               struct stack_trace trace = {
+> +                       .max_entries    = size - 4;
+> +                       .entries        = addr;
+> +                       .skip           = 3;
+> +               };
 
-How do you think about to adjust the exception handling in this function
-implementation a bit more according to the Linux coding style?
+This looks correct, but I think that it would have been clearer if you
+left the size -= 3 above.  You're still incrementing addr, but you're
+not decrementing size, so they're out of sync and the resulting code
+is hard to follow.
 
-Regards,
-Markus
+--Andy
