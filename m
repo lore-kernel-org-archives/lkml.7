@@ -2,176 +2,142 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E08C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E04FC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 15:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A1720896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 14:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555253566;
-	bh=NxstMj+Bz/2ijvnCcxQWZ3/MSZ3aFE9+6Oz/hNYE5eA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Swh8taxcGRBq5vcW1Yp9x33GyCR3MEXvfRF5PwpBjkdVJocPi1b5zOK99WQSowOgC
-	 mDU2kDUCNHv3tklMb490Ov3bme1o3jSmcNFZpS1FA5TUv7I2OCxvKF5xLtlodV6bYE
-	 UPh0fO/UUGP21LTQHqdBZkJZKnkY1Ww12fUema9w=
+	by mail.kernel.org (Postfix) with ESMTP id 6525620880
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 15:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VKiz+78S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfDNOwp (ORCPT
+        id S1726695AbfDNPBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 10:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58980 "EHLO mail.kernel.org"
+        Sun, 14 Apr 2019 11:01:40 -0400
+Received: from mout.web.de ([212.227.17.11]:34865 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfDNOwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 10:52:45 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8520820684;
-        Sun, 14 Apr 2019 14:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555253563;
-        bh=NxstMj+Bz/2ijvnCcxQWZ3/MSZ3aFE9+6Oz/hNYE5eA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bCY3FL5Jxe7dnxZ5Gejr1OvXMBZwdvwqv3cNgsQ3H1a4Brw8dwD0QYzWcRFtaxxG6
-         IHmAvaNa6EV+4tOpbTPf7f0oJSlGKqLAd/YMW0JUTLsacokYsZKFjSEzvyK3ueu3ME
-         qCd++A/K1jB6s4/2RBqTgnAAeAum2mtadazBrFr4=
-Date:   Sun, 14 Apr 2019 23:52:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, naresh.kamboju@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Kconfig dependency issue on function-graph tracer and frame
- pointer on arm
-Message-Id: <20190414235238.e860b1ce234752eff2b8c61c@kernel.org>
-In-Reply-To: <20190414133458.zxdekgx6qwd562qa@shell.armlinux.org.uk>
-References: <20190414194705.2e10802aca2df36c8f27f349@kernel.org>
-        <20190414133458.zxdekgx6qwd562qa@shell.armlinux.org.uk>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726102AbfDNPBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 11:01:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1555254085;
+        bh=IDZDPyVdrNZ07lME+S7h+RcleTLsi5BPpeVJa/7UGxc=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=VKiz+78SIUrDHx8eNyE2cVfVQjzOl14h16bmG77Uv457HXU84blk1s7+yCJBPWe4a
+         S7oLAnJzl2A6OGtg1q0etRMY+G4e1IBFmGKHqnZ8Gnunw6J8J9PAs8sKC2d55GJmd6
+         3XlQQxzADO+y0erY6D1U3f+L2/hZ9Au2zhuG/39Y=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.103.133]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M2dg1-1gyz7w1c97-00sM9k; Sun, 14
+ Apr 2019 17:01:25 +0200
+To:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+References: <1550928043-14889-3-git-send-email-Julia.Lawall@lip6.fr>
+Subject: Re: [PATCH 02/12] drm/tegra: rgb: add missing of_node_put after
+ of_device_is_available
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <564652ed-d398-33ae-0f05-088d1235bf9f@web.de>
+Date:   Sun, 14 Apr 2019 17:01:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1550928043-14889-3-git-send-email-Julia.Lawall@lip6.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2IHVR4VWYbgcAMhBilZcWfr27SmN1zF4H0ZaRrIwOeVxNWuA7TF
+ wLCcg+8CgbKbPAd563s0vZ6txAqn5A6+vGTpAs9jT4HM6kQ3gRs7CbAuHOQ6X+FI+6l7054
+ Zzp7dwfj/X3NUIBhZP1XKyc++yocxb/9TSdp0StTCSEue8u8yecMCwTu6WuJCGt5C/zzKlY
+ JX/5wGjblEuTwgu/AOEew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gokQ1FClNiM=:SeNHIxkPnwY1uU/MN4yoYp
+ Q6TTyou8JXMl+ZFSWbK8Sk1j6pfiFKtaZs6pz9iUXSGO6E4iNQYpSPK9xF0oPGVLabW2waJtP
+ QAcXfBf1+OC+qdc85fpAJoQO1gPY2oidvMmEFhhQPhedmL9zz5R+Tav97tFgENzLt4fPqlmgs
+ ONHSXc4k26KgdENSQuY8dsXYXQ+BzzGBBKQ2p4Etr8DB6/Xtgao/ndHgYxV5RlwapD5vOxEMC
+ eti3uLpCKMEkfgvLMd7Cb4fy7zsEmWv0oiq5QMCMx3yQy8/ka25Q7y5h7FnHEP9eNFa8Mc6oS
+ J9aDeJzhTrUZu+e8UU9mphmdxDUvJMypOJezugxbPhxERCQJztNoAwLoCaAzqZ9Lq0J7y2/pY
+ f0GEomODenNnRzHJRrmey4Z9ex9WYz8G7o9zCYREbWd9fgdI6Xtcglor2tjFDFlSwtcIPuTX8
+ sIV3utuSczPa6nfxo2nH5VYsB4Oxev62yiauBO937C5Co1zUyOeIp5s7usqBtSXSo0MPWGb4z
+ tuVe2XuUxyQz7XzRVA95zDlN+DO9Mt8nYD7Vdm068xLHQXGqWLkpjrTbvYBHro6O0SwNzpTmy
+ LWid1Cus+/JBEh3gmIZXKUIO2TwmzPj0V5xyUAdrOZPrLPde4qTfweHJ0XcY9c73/QaBgVsve
+ xkkRvIBGlQ9eqBOe+xXvd3yjyGDeIVIKs3SIEBx2mI64ajidcJZEsWI+OFhxLEDZrvyRhMDUV
+ 25+1+PrUKLXSZwpcwao1C48kNGVBd9MT5F0zEiS0uq6Z+31SBhrK4ldV++aMoL0+ksLoZYmgL
+ xc+v87OG/CU0GdNjzd4DzjXx4FJwI+BRPGcpFifJRPVnv6/WhJk9/n53VrKJ6+NSYlgjfa5K9
+ P0XhkKcOAmL1GbIeePi62P1VzwZHGnnzAb+tViJ4ZeBGShIlfJUy7Yuq5uqd4kehR6qp6uCQE
+ fRkTvIy1Ekw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Apr 2019 14:34:58 +0100
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+> @@ -221,8 +221,10 @@  int tegra_dc_rgb_probe(struct tegra_dc *
+>  	int err;
+>
+>  	np =3D of_get_child_by_name(dc->dev->of_node, "rgb");
+> -	if (!np || !of_device_is_available(np))
+> +	if (!np || !of_device_is_available(np)) {
+> +		of_node_put(np);
+>  		return -ENODEV;
+> +	}
+>
+>  	rgb =3D devm_kzalloc(dc->dev, sizeof(*rgb), GFP_KERNEL);
+>  	if (!rgb)
 
-> On Sun, Apr 14, 2019 at 07:47:05PM +0900, Masami Hiramatsu wrote:
-> > Hello,
-> > 
-> > Recently, Naresh reported that the function-graph tracer on the latest
-> > kernel crashes on arm. I could reproduce it and bisected. I finally found
-> > the commit f9b58e8c7d03 ("ARM: 8800/1: use choice for kernel unwinders")
-> > was the first bad commit.
-> 
-> I don't think that littering the rest of the kernel Kconfig with ARM
-> specific stuff is really a viable solution to this.
-> 
-> If we examine the current situation, we have:
-> 
-> - THUMB2_KERNEL selecting ARM_UNWIND when enabled.
-> - UNWINDER_FRAME_POINTER disabled if THUMB2_KERNEL is enabled, provided
->   we're not using Clang.  This leaves UNWINDER_ARM as the only choice,
->   which also selects ARM_UNWIND.
-> - The default choice is dependent on the settings of AEABI and
->   FUNCTION_GRAPH_TRACER.
-> - HAVE_FUNCTION_GRAPH_TRACER is disabled if THUMB2_KERNEL is enabled.
-> 
-> which seems to be _way_ too messy.
-> 
-> Looking back before this commit, the function graph tracer never had a
-> strong dependence on frame pointers being enabled in the kernel, but it
-> seems the code relies upon them (see ftrace_return_to_handler() in
-> kernel/trace/ and return_to_handler in arch/arm/kernel/entry-frace.S).
-> There is also the __ftrace_graph_caller macro which seems to rely on it.
+How do you think about to move this function call to an additional jump ta=
+rget
+for the desired exception handling?
 
-Yes, so I think similar bug is hiding in other LTS kernels. It should
-have a dependency to FRAME_POINTER on arm.
-
-> Since Clang does not support frame pointers, we shouldn't even offer
-> the function graph tracer for Clang compilers, so let's do that with
-> the first hunk of the patch below.
-> 
-> The subsequent hunks remove the defaulting of the choice according to
-> the function graph tracer - this is not a "hint" where the user can
-> still choose either option irrespective of the state of the function
-> graph tracer.  They should only be able to select the frame pointer
-> option in that case.
-
-Agreed. Using default for making dependency is wrong.
-
-> 
-> Another way forward would be for someone to put the work in to making
-> the function graph tracer work without frame pointers.
-
-Yes, we eventually need that. But for fixing current released kernel
-(this bug is in v5.0 series), I think Kconfig fix is needed.
-
-> 
-> So, how about this:
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 850b4805e2d1..9aed25a6019b 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -73,7 +73,7 @@ config ARM
->  	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
->  	select HAVE_EXIT_THREAD
->  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> -	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
-> +	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
->  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
->  	select HAVE_GCC_PLUGINS
->  	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 6d6e0330930b..e388af4594a6 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -47,8 +47,8 @@ config DEBUG_WX
->  
->  choice
->  	prompt "Choose kernel unwinder"
-> -	default UNWINDER_ARM if AEABI && !FUNCTION_GRAPH_TRACER
-> -	default UNWINDER_FRAME_POINTER if !AEABI || FUNCTION_GRAPH_TRACER
-> +	default UNWINDER_ARM if AEABI
-> +	default UNWINDER_FRAME_POINTER if !AEABI
-
-If UNWINDER_ARM depends on ARM EABI, would we really need this "if !AEABI"?
-(I doubt we need these default...)
-
->  	help
->  	  This determines which method will be used for unwinding kernel stack
->  	  traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
-> @@ -65,7 +65,7 @@ config UNWINDER_FRAME_POINTER
->  
->  config UNWINDER_ARM
->  	bool "ARM EABI stack unwinder"
-> -	depends on AEABI
-> +	depends on AEABI && !FUNCTION_GRAPH_TRACER
-
-Hmm, AFAIK, FUNCTION_GRAPH_TRACER only depends on FRAME_POINTER, but not
-UNWINDER_FRAME_POINTER. So can user still choose UNWINDER_ARM even if
-FUNCTION_GRAPH_TRACER=y ? (Of course that may not be a meaningful option)
-
-Thank you,
-
->  	select ARM_UNWIND
->  	help
->  	  This option enables stack unwinding support in the kernel
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Markus
