@@ -2,237 +2,139 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7F3C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0847FC10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76E2175B
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555259718;
-	bh=lpf3FGVdUHnJmL4stdxGCKhIKSGRHyxxPAfenSxpt4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N3m5NgXxYkdsp199DpYSkcbOkkhd4oc4x4boqg1WRWEq7Sr20gRrtA6wy50Y/eRUp
-	 mgiAZoVWHSAd7do/6gK4skT9ooaslSJwp6unhjt6IFqtAbxkqtaLA/xWsxAgIaOBmV
-	 EJDXPa+JOdOY1flrDZ8M/5KgVDmVOMZ14Ys9TaY0=
+	by mail.kernel.org (Postfix) with ESMTP id C36032084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:38:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jE3vBi7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfDNQfR (ORCPT
+        id S1726743AbfDNQii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
+        Sun, 14 Apr 2019 12:38:38 -0400
+Received: from mout.web.de ([217.72.192.78]:35063 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfDNQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:35:17 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372E42084D;
-        Sun, 14 Apr 2019 16:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555259715;
-        bh=lpf3FGVdUHnJmL4stdxGCKhIKSGRHyxxPAfenSxpt4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AbI3rp9rFhlc9i1k277sLxcWTObJyP1CIJ5cFX5j6qWsnjlFrpzJUCJqne2KiuDnY
-         bN6dKMBt8851MIu7xKv1TSI2k6qX1WPf/1JyKBVb3N5XDb2jQ74YqkXSmLPQfFAAAt
-         xIMTLl2iGb7iFO1upf6dw0sz7NAQ14NApACh7hFk=
-Date:   Sun, 14 Apr 2019 09:35:13 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     syzbot <syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: crypto: xts - Fix atomic sleep when walking skcipher
-Message-ID: <20190414163512.GA644@sol.localdomain>
-References: <0000000000002bb2b105867bcd11@google.com>
- <20190414120338.edioq25dkafp2m7h@gondor.apana.org.au>
+        id S1726147AbfDNQih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 12:38:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1555259907;
+        bh=FfS41OKkF9LftjWFvQaDoAYLm4ifKbz3rYhoKYfx5B4=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=jE3vBi7NpPL4PCY+qkeJQM5kvPmayaeV0UvWzSYXf5rPZXF1FHkhZnpxoebmbd8kH
+         kHS6kXPi2vsF+mym2i1Jmt/rBL+2iXsnIHvzPa2qrtkePEZT7hirqzc9RZqwhT/w0Z
+         31Eo7a6fp9bup22Wut+Herebtmoz6KpJ+NLjwPN8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.103.133]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LuLxD-1gpctI1Mu7-011ewh; Sun, 14
+ Apr 2019 18:38:27 +0200
+To:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+References: <1550928043-14889-12-git-send-email-Julia.Lawall@lip6.fr>
+Subject: Re: [11/12] ARM: OMAP2+: add missing of_node_put after
+ of_device_is_available
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <903ec107-46ed-f19f-56a7-c20031247503@web.de>
+Date:   Sun, 14 Apr 2019 18:38:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190414120338.edioq25dkafp2m7h@gondor.apana.org.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1550928043-14889-12-git-send-email-Julia.Lawall@lip6.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vxN9B38wSUUg0K+RJ6bUpBRpyb1jGlswd5roAVzexAAWjKKi1BP
+ sIOLcGG+uV69UAsjCrrvXFbQqoUFlcqFL+FImb3rRIz7rb5pKoilS3um5bNU7yaKi5Gh3wT
+ xo2WtadAQ5P2nn6gWdbgC5SyU5w76znlu8vSzarJRa8GZsyOTdxolHs9341uOa+D8bDDglY
+ 6mZ/OrmBx6QWDulJUBDzQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Fc8+cjLD+vA=:uVR45OvK/xTe142FlQ2d8d
+ pdK6OMz+TpiumLILTu2vSKNgUYaChFu+70+iNnf7jCPjgQ5ZuObheiLs+9LtCUkXHxhv/muo5
+ Gsy3cB9lHlw5dmc128w6Z4j0O484uZ7QjiFuTl0z1i4ekLrjaYlUjG5hAXsXbn/WYacd9WR8y
+ V3iwFxAvK3bD3vn8biEt0i+I5EUHeN6V6PQyB9AO2AqvZAZUCowiLiOr9ZuTyXVIiNiVjF5t/
+ YFD+1+wTYOG9jXuJdd73eRxQz+v7eQB8riXCF/X5oe36vCX1f9Yae6mA8W4NU1wQ8eNLjKWbU
+ OTHlUesNJ3wSE/0E8+hs88PPtj1Vb+2u2PtjR3b8Fj6er5dXSUEP2iKBJPhsvDByu8x+t6OlA
+ aEEBcG9agM7JGWf7Z1GWYHCB5XUUKVno4zy0Rrj6GT6Fz1YR2AdD99/HkyZEibVs2oNQG2jxD
+ zdLTGSjvXdxWMgIqgwueWNCvIWlEmPzUIhZjvkKur18WCB3eZiERTS4nM27rnvYni62+N3Vml
+ 9vn/khFEXGHfaPBHw7W4AqpWz6jZ3xzW2ypbownZXlsCxCAhxLEWilSm7eXzj7xu1t/HpvBni
+ BFc9NWMYehHd+b6C+3RQyhN8VpXjj4+5+mL4Horrsp/FqFaNYeqw38E5h9oybn6MXkRWygKEa
+ K8VooUYTmeE5OiYqXXAvtorsrXI/VfFksr70sbMD6eJ8CHJhJIFgnJZHdlwEbLWU0cqAu0Tem
+ swngsud/Tyn9TxFZWEGtZMsmOcTKUNCJXLeVvfGsKNLpTu2+APSgrlTGgzpY9DNIbNLBhMTpG
+ m+gtWeI17OYBii10J7lWnc6kZVh7/IfDAK8k8iKZEQKGS5tUpx7P8q4mmjXmCghrzO0woap1q
+ f4gmveX+Bqoodr9QYqfW/tR1hwBXjnXPslpual4RV0ThG1AGys/kEQu5zjQEXKrk8jQ98O9Vr
+ GMTHTfP1Xy9skgdMDRVEXhKkJrOaTNhMZR4RF1H6TIrDp4b+ZSdZZUG6STIiuPG1oaB3EcBy8
+ gChA+xr38t6ier30QU6CtfICgn/L5C3slqEV0CqA64iGxWUQ1T4zdQHh5AnBSB9hEB1wHwkUf
+ sC5rNHfHOSY/5sqEEtyFT0kfuo5mhCZqp+7yj7s3j69QBHohz8hQOXwVw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
+> @@ -250,8 +250,10 @@ static int __init omapdss_init_of(void)
+>  	if (!node)
+>  		return 0;
+>
+> -	if (!of_device_is_available(node))
+> +	if (!of_device_is_available(node)) {
+> +		of_node_put(node);
+>  		return 0;
+> +	}
+>
+>  	pdev =3D of_find_device_by_node(node);
 
-On Sun, Apr 14, 2019 at 08:03:38PM +0800, Herbert Xu wrote:
-> On Sun, Apr 14, 2019 at 04:26:04AM -0700, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    e0a092eb Merge branch 'smc-next'
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=139878f3200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=94c460c3e4cd188a
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6f72c20560060c98b566
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > 
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
-> > 
-> > BUG: sleeping function called from invalid context at crypto/skcipher.c:477
-> > in_atomic(): 1, irqs_disabled(): 0, pid: 12, name: kworker/0:1
-> > 2 locks held by kworker/0:1/12:
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: __write_once_size
-> > include/linux/compiler.h:220 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: arch_atomic64_set
-> > arch/x86/include/asm/atomic64_64.h:34 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: atomic64_set
-> > include/asm-generic/atomic-instrumented.h:855 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: atomic_long_set
-> > include/asm-generic/atomic-long.h:40 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at: set_work_data
-> > kernel/workqueue.c:619 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at:
-> > set_work_pool_and_clear_pending kernel/workqueue.c:646 [inline]
-> >  #0: 000000000864d9ff ((wq_completion)crypto){+.+.}, at:
-> > process_one_work+0x87e/0x1790 kernel/workqueue.c:2240
-> >  #1: 000000008b3d6218 ((work_completion)(&cpu_queue->work)){+.+.}, at:
-> > process_one_work+0x8b4/0x1790 kernel/workqueue.c:2244
-> > Preemption disabled at:
-> > [<ffffffff830d4130>] local_bh_disable include/linux/bottom_half.h:19
-> > [inline]
-> > [<ffffffff830d4130>] cryptd_skcipher_complete+0x90/0x170 crypto/cryptd.c:471
-> > CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4+ #135
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: crypto cryptd_queue_worker
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> >  ___might_sleep.cold+0x1bd/0x1f6 kernel/sched/core.c:6190
-> >  __might_sleep+0x95/0x190 kernel/sched/core.c:6143
-> >  skcipher_walk_virt+0x11e/0x150 crypto/skcipher.c:477
-> >  xor_tweak+0x146/0x350 crypto/xts.c:105
-> >  xor_tweak_post crypto/xts.c:133 [inline]
-> >  crypt_done+0x87/0xa0 crypto/xts.c:141
-> >  cryptd_skcipher_complete+0xbf/0x170 crypto/cryptd.c:472
-> >  cryptd_skcipher_decrypt+0x2f7/0x420 crypto/cryptd.c:532
-> >  cryptd_queue_worker+0x126/0x1f0 crypto/cryptd.c:193
-> >  process_one_work+0x98e/0x1790 kernel/workqueue.c:2269
-> >  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-> >  kthread+0x357/0x430 kernel/kthread.c:253
-> >  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> 
-> Thanks for the report.  Please try this patch:
-> 
-> ---8<---
-> When we perform a walk in the completion function, we need to ensure
-> that it is atomic.
-> 
-> Reported-by: syzbot+6f72c20560060c98b566@syzkaller.appspotmail.com
-> Fixes: 78105c7e769b ("crypto: xts - Drop use of auxiliary buffer")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/crypto/xts.c b/crypto/xts.c
-> index 847f54f76789..c915a45711f5 100644
-> --- a/crypto/xts.c
-> +++ b/crypto/xts.c
-> @@ -88,7 +88,8 @@ static int setkey(struct crypto_skcipher *parent, const u8 *key,
->   * mutliple calls to the 'ecb(..)' instance, which usually would be slower than
->   * just doing the gf128mul_x_ble() calls again.
->   */
-> -static int xor_tweak(struct skcipher_request *req, bool second_pass)
-> +static int xor_tweak(struct skcipher_request *req, bool second_pass,
-> +		     bool atomic)
->  {
->  	struct rctx *rctx = skcipher_request_ctx(req);
->  	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-> @@ -102,7 +103,7 @@ static int xor_tweak(struct skcipher_request *req, bool second_pass)
->  		/* set to our TFM to enforce correct alignment: */
->  		skcipher_request_set_tfm(req, tfm);
->  	}
-> -	err = skcipher_walk_virt(&w, req, false);
-> +	err = skcipher_walk_virt(&w, req, atomic);
->  
->  	while (w.nbytes) {
->  		unsigned int avail = w.nbytes;
-> @@ -125,12 +126,12 @@ static int xor_tweak(struct skcipher_request *req, bool second_pass)
->  
->  static int xor_tweak_pre(struct skcipher_request *req)
->  {
-> -	return xor_tweak(req, false);
-> +	return xor_tweak(req, false, false);
->  }
->  
-> -static int xor_tweak_post(struct skcipher_request *req)
-> +static int xor_tweak_post(struct skcipher_request *req, bool atomic)
->  {
-> -	return xor_tweak(req, true);
-> +	return xor_tweak(req, true, atomic);
->  }
->  
->  static void crypt_done(struct crypto_async_request *areq, int err)
-> @@ -138,7 +139,7 @@ static void crypt_done(struct crypto_async_request *areq, int err)
->  	struct skcipher_request *req = areq->data;
->  
->  	if (!err)
-> -		err = xor_tweak_post(req);
-> +		err = xor_tweak_post(req, true);
->  
->  	skcipher_request_complete(req, err);
->  }
-> @@ -166,7 +167,7 @@ static int encrypt(struct skcipher_request *req)
->  	init_crypt(req);
->  	return xor_tweak_pre(req) ?:
->  		crypto_skcipher_encrypt(subreq) ?:
-> -		xor_tweak_post(req);
-> +		xor_tweak_post(req, false);
->  }
->  
->  static int decrypt(struct skcipher_request *req)
-> @@ -177,7 +178,7 @@ static int decrypt(struct skcipher_request *req)
->  	init_crypt(req);
->  	return xor_tweak_pre(req) ?:
->  		crypto_skcipher_decrypt(subreq) ?:
-> -		xor_tweak_post(req);
-> +		xor_tweak_post(req, false);
->  }
->  
->  static int init_tfm(struct crypto_skcipher *tfm)
-> -- 
+Is there a need to put the node also in subsequent if branches
+for complete exception handling in this function implementation?
 
-This isn't correct because skcipher_walk_virt() can still sleep when
-atomic=true, since it may need to copy the IV.  That's why I added might_sleep()
-to it in commit bb648291fc04, and that's what's triggering here.
-
-This is the correct fix:
-
-diff --git a/crypto/xts.c b/crypto/xts.c
-index aed11e63ca315..359ef15e1673e 100644
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -101,6 +101,7 @@ static int xor_tweak(struct skcipher_request *req, bool second_pass)
- 		req = &rctx->subreq;
- 		/* set to our TFM to enforce correct alignment: */
- 		skcipher_request_set_tfm(req, tfm);
-+		req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 	}
- 	err = skcipher_walk_virt(&w, req, false);
- 
-Likewise for LRW.
-
-With the crypto self-tests and CONFIG_DEBUG_ATOMIC_SLEEP enabled, this bug can
-be reproduced by trying to allocate the skcipher algorithm
-"xts(cryptd(ecb(aes-generic)))", e.g. by running in Python:
-
-	import socket
-
-	fd = socket.socket(socket.AF_ALG, 5, 0)
-	fd.bind(("skcipher", "xts(cryptd(ecb(aes-generic)))"))
-
-Likewise, use "lrw(cryptd(ecb(aes-generic)))" for LRW.
-
-- Eric
+Regards,
+Markus
