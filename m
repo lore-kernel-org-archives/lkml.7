@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EB2C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411A3C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D40520896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FE6218FC
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfDNQCm (ORCPT
+        id S1727370AbfDNQCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:02:42 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43265 "EHLO
+        Sun, 14 Apr 2019 12:02:45 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43270 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfDNQCk (ORCPT
+        with ESMTP id S1727326AbfDNQCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:02:40 -0400
+        Sun, 14 Apr 2019 12:02:41 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFhaY-0002d5-BB; Sun, 14 Apr 2019 18:02:38 +0200
-Message-Id: <20190414160144.784487230@linutronix.de>
+        id 1hFhaZ-0002dS-Ud; Sun, 14 Apr 2019 18:02:40 +0200
+Message-Id: <20190414160144.885741626@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 17:59:50 +0200
+Date:   Sun, 14 Apr 2019 17:59:51 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [patch V3 14/32] x86/traps: Use cpu_entry_area instead of orig_ist
+Subject: [patch V3 15/32] x86/irq/64: Use cpu entry area instead of orig_ist
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,27 +54,44 @@ No functional change. Preparation for removing orig_ist.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/mm/fault.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -28,6 +28,7 @@
- #include <asm/mmu_context.h>		/* vma_pkey()			*/
- #include <asm/efi.h>			/* efi_recover_from_page_fault()*/
- #include <asm/desc.h>			/* store_idt(), ...		*/
-+#include <asm/cpu_entry_area.h>		/* exception stack		*/
+ arch/x86/kernel/irq_64.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -18,6 +18,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/smp.h>
+ #include <linux/sched/task_stack.h>
++
++#include <asm/cpu_entry_area.h>
+ #include <asm/io_apic.h>
+ #include <asm/apic.h>
  
- #define CREATE_TRACE_POINTS
- #include <asm/trace/exceptions.h>
-@@ -793,7 +794,7 @@ no_context(struct pt_regs *regs, unsigne
- 	if (is_vmalloc_addr((void *)address) &&
- 	    (((unsigned long)tsk->stack - 1 - address < PAGE_SIZE) ||
- 	     address - ((unsigned long)tsk->stack + THREAD_SIZE) < PAGE_SIZE)) {
--		unsigned long stack = this_cpu_read(orig_ist.ist[ESTACK_DF]) - sizeof(void *);
-+		unsigned long stack = __this_cpu_ist_top_va(DF) - sizeof(void *);
- 		/*
- 		 * We're likely to be running with very little stack space
- 		 * left.  It's plausible that we'd hit this condition but
+@@ -43,10 +45,9 @@ static inline void stack_overflow_check(
+ {
+ #ifdef CONFIG_DEBUG_STACKOVERFLOW
+ #define STACK_MARGIN	128
+-	struct orig_ist *oist;
+-	u64 irq_stack_top, irq_stack_bottom;
+-	u64 estack_top, estack_bottom;
++	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
+ 	u64 curbase = (u64)task_stack_page(current);
++	struct cea_exception_stacks *estacks;
+ 
+ 	if (user_mode(regs))
+ 		return;
+@@ -60,9 +61,9 @@ static inline void stack_overflow_check(
+ 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
+ 		return;
+ 
+-	oist = this_cpu_ptr(&orig_ist);
+-	estack_top = (u64)oist->ist[ESTACK_DB];
+-	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
++	estacks = __this_cpu_read(cea_exception_stacks);
++	estack_top = CEA_ESTACK_TOP(estacks, DB);
++	estack_bottom = CEA_ESTACK_BOT(estacks, DB) + STACK_MARGIN;
+ 	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
+ 		return;
+ 
 
 
