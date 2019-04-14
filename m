@@ -2,117 +2,208 @@ Return-Path: <SRS0=avfD=SQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB98C10F13
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E57C10F14
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17BC320693
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59EE92148E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfDNQlp (ORCPT
+        id S1727160AbfDNQmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:41:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33671 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfDNQlo (ORCPT
+        Sun, 14 Apr 2019 12:42:07 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:39873 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfDNQmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:41:44 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3EGfNnN2618879
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 14 Apr 2019 09:41:24 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3EGfLA52618870;
-        Sun, 14 Apr 2019 09:41:21 -0700
-Date:   Sun, 14 Apr 2019 09:41:21 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Xiaochen Shen <tipbot@zytor.com>
-Message-ID: <tip-40fba00ffa431c8597ca785ea1cfa4d9f6503390@git.kernel.org>
-Cc:     xiaochen.shen@intel.com, fenghua.yu@intel.com, tglx@linutronix.de,
-        reinette.chatre@intel.com, mingo@redhat.com, tony.luck@intel.com,
-        mingo@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        bp@suse.de, x86@kernel.org
-Reply-To: fenghua.yu@intel.com, xiaochen.shen@intel.com,
-          tglx@linutronix.de, mingo@redhat.com, reinette.chatre@intel.com,
-          tony.luck@intel.com, mingo@kernel.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, bp@suse.de, x86@kernel.org
-In-Reply-To: <1554839629-5448-1-git-send-email-xiaochen.shen@intel.com>
-References: <1554839629-5448-1-git-send-email-xiaochen.shen@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/resctrl: Do not repeat rdtgroup mode
- initialization
-Git-Commit-ID: 40fba00ffa431c8597ca785ea1cfa4d9f6503390
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 14 Apr 2019 12:42:07 -0400
+Received: by mail-it1-f200.google.com with SMTP id z125so13744515itf.4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 09:42:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=r+Qr4jZyW79WGL/BfJtQpxRO1LNuAzql4OucEtTkgLc=;
+        b=gnWVSeITxT1th87Qvk36Wv1+lSkBRYeT80x2hQKfkgEDdD8YOjvzz4ObphR1s1kXnl
+         EgYDBRDXSyCwR2/sXcCt4BgApw3Wk64y4ZdOY3ZUXlvZF7E3KyC7oBHD+jbHo7AZVNGB
+         nBZNDTqI7xxbwOJwuEqzJgMyvRve+xojJmUfwqCrvaUy2B9Gyf0SA4cKO/lHrrYqh5VX
+         ziz2m7YEX3s1ea5hdV32CgdXIyvC1xFiNc0TOZ3dfSsiF7ubu9E8jRG2shyuZbr1O69m
+         AYBQILk6Hmb6ZtHGtsv97nkbaxvLm+iB+riSgEXb1IEgRCdAWu9WC5Ea1FdSw7wwvF2f
+         uaDw==
+X-Gm-Message-State: APjAAAUhPeTTXF5nC89QUnZDsNgBpDhCciPUigvQxJqeM62x8NHge0XO
+        conR3PqO4qGT+PGKN1S9mZTzaNASKxfM5NeC7jQDQ9biEsWV
+X-Google-Smtp-Source: APXvYqwsh4hl6evIqF7z9nmn6xPb8mzJSDvEL/lT9ufy51+yf3t/PAhjSeFSaFNmeI/YUHtYXmGdCBze4UUudZIpNUzXD9LUJaag
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Received: by 2002:a24:3d8e:: with SMTP id n136mr5838434itn.3.1555260125982;
+ Sun, 14 Apr 2019 09:42:05 -0700 (PDT)
+Date:   Sun, 14 Apr 2019 09:42:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000057bb08058680371f@google.com>
+Subject: INFO: task hung in __x64_sys_io_uring_enter
+From:   syzbot <syzbot+91ba19608804b5c53ca7@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  40fba00ffa431c8597ca785ea1cfa4d9f6503390
-Gitweb:     https://git.kernel.org/tip/40fba00ffa431c8597ca785ea1cfa4d9f6503390
-Author:     Xiaochen Shen <xiaochen.shen@intel.com>
-AuthorDate: Wed, 10 Apr 2019 03:53:49 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Sun, 14 Apr 2019 18:23:13 +0200
+Hello,
 
-x86/resctrl: Do not repeat rdtgroup mode initialization
+syzbot found the following crash on:
 
-When cache allocation is supported and the user creates a new resctrl
-resource group, the allocations of the new resource group are
-initialized to all regions that it can possibly use. At this time these
-regions are all that are shareable by other resource groups as well as
-regions that are not currently used. The new resource group's mode is
-also initialized to reflect this initialization and set to "shareable".
+HEAD commit:    bcb67f0f Add linux-next specific files for 20190412
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c15fc3200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=35c479ecf64ba753
+dashboard link: https://syzkaller.appspot.com/bug?extid=91ba19608804b5c53ca7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-The new resource group's mode is currently repeatedly initialized within
-the loop that configures the hardware with the resource group's default
-allocations.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Move the initialization of the resource group's mode outside the
-hardware configuration loop. The resource group's mode is now
-initialized only once as the final step to reflect that its configured
-allocations are "shareable".
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+91ba19608804b5c53ca7@syzkaller.appspotmail.com
 
-Fixes: 95f0b77efa57 ("x86/intel_rdt: Initialize new resource group with sane defaults")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: pei.p.jia@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1554839629-5448-1-git-send-email-xiaochen.shen@intel.com
+INFO: task syz-executor.3:27713 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4-next-20190412 #24
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D29480 27713   7953 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  __do_sys_io_uring_enter fs/io_uring.c:2697 [inline]
+  __se_sys_io_uring_enter fs/io_uring.c:2634 [inline]
+  __x64_sys_io_uring_enter+0x7de/0xac0 fs/io_uring.c:2634
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f6f44f0ec78 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 00007f6f44f0f6d4
+R13: 00000000004bfe3c R14: 00000000004d2120 R15: 00000000ffffffff
+INFO: task syz-executor.3:27724 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc4-next-20190412 #24
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.3  D30320 27724   7953 0x00000004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1783
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2926
+  __do_sys_io_uring_register fs/io_uring.c:2976 [inline]
+  __se_sys_io_uring_register fs/io_uring.c:2958 [inline]
+  __x64_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2958
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: cc 64 48 8b 0c 25 f8 ff ff ff 48 3b 61 10 0f 86 df 00 00 00 48 83 ec  
+30 48 89 6c 24 28 48 8d 6c 24 28 48 8b 42 08 48 8b 48 70 <48> 89 4c 24 20  
+48 8b 10 48 89 54 24 18 48 8b 40 08 48 89 44 24 10
+RSP: 002b:00007f6f44eccc78 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458c29
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000003
+RBP: 000000000073c040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6f44ecd6d4
+R13: 00000000004cb6f0 R14: 00000000004d2168 R15: 00000000ffffffff
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1041:
+  #0: 00000000646c174a (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5061
+2 locks held by getty/7909:
+  #0: 000000004ed5ef6e (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000015f069f9 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7910:
+  #0: 0000000028dc5235 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000003e5c2584 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7911:
+  #0: 0000000009c1d545 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000097341bd0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7912:
+  #0: 00000000e304bd09 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000fbaacf70 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7913:
+  #0: 00000000aac8c1e7 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000eb37cc5c (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7914:
+  #0: 00000000dd76f9bc (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000003dfcb9c8 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/7915:
+  #0: 00000000859ecc38 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000086483d71 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor.3/27713:
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
+fs/io_uring.c:2697 [inline]
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
+fs/io_uring.c:2634 [inline]
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_enter+0x7de/0xac0 fs/io_uring.c:2634
+1 lock held by syz-executor.3/27724:
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
+__do_sys_io_uring_register fs/io_uring.c:2975 [inline]
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
+__se_sys_io_uring_register fs/io_uring.c:2958 [inline]
+  #0: 0000000060ca5ec1 (&ctx->uring_lock){+.+.}, at:  
+__x64_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2958
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1041 Comm: khungtaskd Not tainted 5.1.0-rc4-next-20190412 #24
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+  kthread+0x357/0x430 kernel/kthread.c:254
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+
+
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 54b9eef3eea9..85212a32b54d 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2610,9 +2610,10 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
- 			rdt_last_cmd_puts("Failed to initialize allocations\n");
- 			return ret;
- 		}
--		rdtgrp->mode = RDT_MODE_SHAREABLE;
- 	}
- 
-+	rdtgrp->mode = RDT_MODE_SHAREABLE;
-+
- 	return 0;
- }
- 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
