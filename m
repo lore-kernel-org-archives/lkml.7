@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 23:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F34C10F13
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 23:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E28A206B6
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 23:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2092084E
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 23:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5m2ulI/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZaHshhj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfDNXhy (ORCPT
+        id S1726939AbfDNXh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 19:37:54 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35330 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbfDNXhx (ORCPT
+        Sun, 14 Apr 2019 19:37:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38243 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfDNXh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 19:37:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id a71so8840836qkg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 16:37:53 -0700 (PDT)
+        Sun, 14 Apr 2019 19:37:56 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d13so17229020qth.5
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 16:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lCqGPPK0U0RsupI+EaKEUzGq7H7/R4e4XV2uhzuZDaE=;
-        b=u5m2ulI/woHnvkyIpMTJy6BnOqUb05W3A6tmZHgdC93haFy19buttF4U/59TMsuWar
-         IRzQR3dKttQdQmDGQcuF6SKc2WQt2InXnqfw5Pf/nw4e/VDzG82fftkFEf5WdNgEH7Ow
-         FElZN2GaMzMTTWJzFB0hw9O71fNcqzjyLb5Mksgm+e7dRcBeRa9NEsLyThs6d4YQw6nj
-         UT89fdnZaD3FIlEDEiZSDfR7sRSU2W2DVt1WaqlWP3ju480gR+dZ9V4S75pVp5PzQjfq
-         M6X1sZkQ+blt9mn+itYS+HGQYLtpQ+GoLa0ibunSv5DO47ETrFv0gg1U8DPLe/CzlU1c
-         AlIg==
+        bh=apJnCVkg9SlI3LejkbS9xZBwpDP1otabvwHbIvfC50c=;
+        b=ZZaHshhj6swMBkXkMG5U9BNcG9CIr/BELD7OuMBpC02n6g1o2AtyD1wLfRMiLGv05M
+         zZb/CfarBOWdk/9RM4CAOOjm8yoef3nxUKtRvc3aHMImAwunIT1xn6j/RS4LYlWlqfLB
+         xIqKst9jGWgyVqw3OXkDThVlHtvFqkXMQxP/AuzntOQWJr9F23KToAzHsz1ENpZzkIx3
+         pdnjlZV09lgFGflePZsrnk+pVLUmvdheH7wMF+CWQFLbNrfhmwB1ycVMCjRpQAd8QZwJ
+         tAGIqo7laU5EFzfWwCJUxnAJ0HLw01af7t2PuUCWTgl6GcKtJ6h0rQVIFtoCAQ78/7Gf
+         t8/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lCqGPPK0U0RsupI+EaKEUzGq7H7/R4e4XV2uhzuZDaE=;
-        b=VE/nKS6ft4lovQc5zEr7FD68l+rDN+Oj9h78wPFd6YR+ty5LqRIcyum3Tj/xEdtdHp
-         mbAB5REKvn1pyYo5y3ZPWxhUItH76/NP6LvZvgzkrB1mv5ZpDVI3rEvTsAZeNwjELHvg
-         Ohj6muuWbD4f5RqQL4zQBAVIpH0H7VQeYqwjk5iRW++B25DXktloDu3tlkcnAdfKctuV
-         s7Bj7zHltm+AI8z74Jx7HR0k98RTWLi8fZh2W7qtmHCqiN2ghwdV73GYcGbSdOX3E12I
-         K4iMDc/XxgzgyZt3jrIxXMIa/Bxu73joPzFjhzR6BqzkrVUTqHGk4nLQt7e/UHqrjvdb
-         y7Vw==
-X-Gm-Message-State: APjAAAV5Ba+L8DifZ/WEqJ/gbevl4vbVFqm3WFh8ovxu2mKFnzzUDv/T
-        e8O+WibH0Iheq+6Uvny/Im4=
-X-Google-Smtp-Source: APXvYqwE7m23WgsRCTnUgIqvyswInRhxsUgkW71Nh8OYX9+6mUH3dz/VmKnYhqZ8Eockn7Cvloruuw==
-X-Received: by 2002:a37:ad15:: with SMTP id f21mr51644675qkm.152.1555285073149;
-        Sun, 14 Apr 2019 16:37:53 -0700 (PDT)
+        bh=apJnCVkg9SlI3LejkbS9xZBwpDP1otabvwHbIvfC50c=;
+        b=aLgeVp1Y+5x4TrsAC82lQZmgpLszdWm33bkkFpUOnN6nwvXvjUb8cRgcK0vV0qMDFE
+         Edio4pak0FgiqBtP9eqrzQ7JYJawc2tyZo5PjVot3tMFrv8F2Ja+Gf2PjOdP4W6WI9UQ
+         IMJlnqrDnAemqORpdg5C17Tb9rhv+o+sDkz28HMwJwchCGXCIdpXTIoByzmzd0HYwzPF
+         4IxZNMnwJ1a3JAslbxCsaqVhcDYGJgSnJejNr3tgB9Eo5eMrBoOPVIZUU0oCR2fGRSjX
+         s1T3ZzNEnv9uTj6VxOVCJVTLrL1Ub3nCIdu4pBsKEt5NLHhWkkK9KDBqXZPBfNSOcNkD
+         rhRQ==
+X-Gm-Message-State: APjAAAWkkqEFOAzeWevN38SfBSoM9Eri32ndI3FzoNhjxJ6NFufwsoKi
+        mKgPybCsPXbwYDUpe4IvKeJedi3o2Bg=
+X-Google-Smtp-Source: APXvYqxdkO/g/gHSY+RC72TrM04vEjOVJwcgF/9dzmwhMaXaLUFUlVqfH/LCLoxcOn2aSf+LRePocQ==
+X-Received: by 2002:a0c:b096:: with SMTP id o22mr44360249qvc.170.1555285075780;
+        Sun, 14 Apr 2019 16:37:55 -0700 (PDT)
 Received: from debian (hlfxns017vw-142-68-56-253.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.56.253])
-        by smtp.gmail.com with ESMTPSA id v58sm31167205qtv.66.2019.04.14.16.37.52
+        by smtp.gmail.com with ESMTPSA id q6sm31001548qkj.87.2019.04.14.16.37.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 16:37:52 -0700 (PDT)
+        Sun, 14 Apr 2019 16:37:55 -0700 (PDT)
 From:   Brian Yip <itsbriany@gmail.com>
 To:     christian.koenig@amd.com
 Cc:     ray.huang@amd.com, Jerry.Zhang@amd.com, airlied@linux.ie,
         daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, Brian Yip <itsbriany@gmail.com>
-Subject: [PATCH 2/3] drm/ttm: Fix ttm_mem_glob.kobj state on cleanup
-Date:   Sun, 14 Apr 2019 23:37:28 +0000
-Message-Id: <20190414233729.17956-3-itsbriany@gmail.com>
+Subject: [PATCH 3/3] drm/ttm: Fix ttm_bo_glob.kobj state on cleanup
+Date:   Sun, 14 Apr 2019 23:37:29 +0000
+Message-Id: <20190414233729.17956-4-itsbriany@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190414233729.17956-1-itsbriany@gmail.com>
 References: <20190414233729.17956-1-itsbriany@gmail.com>
@@ -74,31 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup ttm_mem_glob.kobj when its reference count hits 0
-so that it can be re-initialized by future ttm_mem_global_init calls
+Cleanup ttm_bo_glob.kobj when its reference count hits 0
+so that it can be re-initialized by future ttm_bo_global_init calls
 without dumping a stack trace.
 
 Signed-off-by: Brian Yip <itsbriany@gmail.com>
 ---
- drivers/gpu/drm/ttm/ttm_memory.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ttm/ttm_bo.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_memory.c b/drivers/gpu/drm/ttm/ttm_memory.c
-index 55ccb9800893..63d82a81912e 100644
---- a/drivers/gpu/drm/ttm/ttm_memory.c
-+++ b/drivers/gpu/drm/ttm/ttm_memory.c
-@@ -479,8 +479,10 @@ void ttm_mem_global_release(struct ttm_mem_global *glob)
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 988416fb8a0b..1e1844f4a4fa 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1535,6 +1535,10 @@ static void ttm_bo_global_release(void)
  	kobject_del(&glob->kobj);
  	kobject_put(&glob->kobj);
- 
--	if (!kref_read(&glob->kobj.kref))
-+	if (!kref_read(&glob->kobj.kref)) {
+ 	ttm_mem_global_release(&ttm_mem_glob);
++
++	if (!kref_read(&glob->kobj.kref))
 +		glob->kobj.state_initialized = 0;
- 		glob->num_zones = 0;
-+	}
++
+ out:
+ 	mutex_unlock(&ttm_global_mutex);
  }
- 
- static void ttm_check_swapping(struct ttm_mem_global *glob)
 -- 
 2.20.1
 
