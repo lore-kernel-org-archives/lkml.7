@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77197C282CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FFBC282CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDDE20896
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B85420896
+	for <linux-kernel@archiver.kernel.org>; Sun, 14 Apr 2019 16:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfDNQCQ (ORCPT
+        id S1727189AbfDNQCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 12:02:16 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43188 "EHLO
+        Sun, 14 Apr 2019 12:02:21 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43194 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfDNQCP (ORCPT
+        with ESMTP id S1726055AbfDNQCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 12:02:15 -0400
+        Sun, 14 Apr 2019 12:02:16 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hFha9-0002Y6-0B; Sun, 14 Apr 2019 18:02:13 +0200
-Message-Id: <20190414160143.591255977@linutronix.de>
+        id 1hFhaA-0002YL-EX; Sun, 14 Apr 2019 18:02:14 +0200
+Message-Id: <20190414160143.785651055@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sun, 14 Apr 2019 17:59:37 +0200
+Date:   Sun, 14 Apr 2019 17:59:39 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org
-Subject: [patch V3 01/32] mm/slab: Fix broken stack trace storage
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [patch V3 03/32] x86/dumpstack: Fix off-by-one errors in stack
+ identification
 References: <20190414155936.679808307@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,68 +42,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kstack_end() is broken on interrupt stacks as they are not guaranteed to be
-sized THREAD_SIZE and THREAD_SIZE aligned.
+From: Andy Lutomirski <luto@kernel.org>
 
-Use the stack tracer instead. Remove the pointless pointer increment at the
-end of the function while at it.
+The get_stack_info() function is off-by-one when checking whether an
+address is on a IRQ stack or a IST stack.  This prevents a overflowed IRQ
+or IST stack from being dumped properly.
 
-Fixes: 98eb235b7feb ("[PATCH] page unmapping debug") - History tree
+[ tglx: Do the same for 32-bit ]
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: linux-mm@kvack.org
----
- mm/slab.c |   28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1470,33 +1470,29 @@ static bool is_debug_pagealloc_cache(str
- static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
- 			    unsigned long caller)
- {
--	int size = cachep->object_size;
-+	int size = cachep->object_size / sizeof(unsigned long);
+---
+ arch/x86/kernel/dumpstack_32.c |    4 ++--
+ arch/x86/kernel/dumpstack_64.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -41,7 +41,7 @@ static bool in_hardirq_stack(unsigned lo
+ 	 * This is a software stack, so 'end' can be a valid stack pointer.
+ 	 * It just means the stack is empty.
+ 	 */
+-	if (stack <= begin || stack > end)
++	if (stack < begin || stack > end)
+ 		return false;
  
- 	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
+ 	info->type	= STACK_TYPE_IRQ;
+@@ -66,7 +66,7 @@ static bool in_softirq_stack(unsigned lo
+ 	 * This is a software stack, so 'end' can be a valid stack pointer.
+ 	 * It just means the stack is empty.
+ 	 */
+-	if (stack <= begin || stack > end)
++	if (stack < begin || stack > end)
+ 		return false;
  
--	if (size < 5 * sizeof(unsigned long))
-+	if (size < 5)
- 		return;
+ 	info->type	= STACK_TYPE_SOFTIRQ;
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -65,7 +65,7 @@ static bool in_exception_stack(unsigned
+ 		begin = end - (exception_stack_sizes[k] / sizeof(long));
+ 		regs  = (struct pt_regs *)end - 1;
  
- 	*addr++ = 0x12345678;
- 	*addr++ = caller;
- 	*addr++ = smp_processor_id();
--	size -= 3 * sizeof(unsigned long);
-+#ifdef CONFIG_STACKTRACE
- 	{
--		unsigned long *sptr = &caller;
--		unsigned long svalue;
--
--		while (!kstack_end(sptr)) {
--			svalue = *sptr++;
--			if (kernel_text_address(svalue)) {
--				*addr++ = svalue;
--				size -= sizeof(unsigned long);
--				if (size <= sizeof(unsigned long))
--					break;
--			}
--		}
-+		struct stack_trace trace = {
-+			.max_entries	= size - 4;
-+			.entries	= addr;
-+			.skip		= 3;
-+		};
+-		if (stack <= begin || stack >= end)
++		if (stack < begin || stack >= end)
+ 			continue;
  
-+		save_stack_trace(&trace);
-+		addr += trace.nr_entries;
- 	}
--	*addr++ = 0x87654321;
-+#endif
-+	*addr = 0x87654321;
- }
+ 		info->type	= STACK_TYPE_EXCEPTION + k;
+@@ -88,7 +88,7 @@ static bool in_irq_stack(unsigned long *
+ 	 * This is a software stack, so 'end' can be a valid stack pointer.
+ 	 * It just means the stack is empty.
+ 	 */
+-	if (stack <= begin || stack > end)
++	if (stack < begin || stack >= end)
+ 		return false;
  
- static void slab_kernel_map(struct kmem_cache *cachep, void *objp,
+ 	info->type	= STACK_TYPE_IRQ;
 
 
