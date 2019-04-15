@@ -7,56 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D48CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5319FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C2820833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A6720833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555318431;
-	bh=t0yKvFX+YpebcVhMasgHRa2zEJvLO/1bYKzmSV3fy8c=;
+	s=default; t=1555318434;
+	bh=Umlcx838bxRueMAKJ81E4zM0lftOx5Boa69vPav+NHg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NWbC50yxsmCL8zhPE2tBUEkdsTB+nCIB2NNTP95ncZePx1LWamsVQJ5blCc7n/v7F
-	 sjFYwSho2OQZtEJvTSPu31a4IkfHDWyKHLwdOz3km31iLKYC/KGthQ/iCJsFqKT4LL
-	 4j2HOwbBc7au2njdmjHfio3qpgNv1+EcQluktTI0=
+	b=L8Er47ieYwMqEi/gfP5pqxs+NX3QLawP5O7DZjjPQk2R4/D6lmHK8CZpbglL2cSAt
+	 T7WcPD9khrdhaVn8RxHjCnznU4hwOG1RF7D0vCwM9hny/JLJwO+MBBH5Wnjxu3WEjC
+	 WW7Gq/zAUSLDtXp0cJcyGahUz/fyavv9DSkL2/Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfDOIxt (ORCPT
+        id S1727105AbfDOIxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:53:49 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35824 "EHLO
+        Mon, 15 Apr 2019 04:53:46 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35734 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfDOIxn (ORCPT
+        with ESMTP id S1726696AbfDOIxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:53:43 -0400
+        Mon, 15 Apr 2019 04:53:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZF9x9H2PDzqMAoEltBi2LbFIaRMAX0z/MB3ubaBc8yE=; b=N/+Hmo6GrUVO
-        XgQdzwyGsjKv/c3Rr3ovunHymetijO2BjlajbNX3Lcb4V6GgOCpOtJTTg3H+jYoODpkXsG4oIPFXn
-        L40mU4SoYf7lofNcK8Ax2vUHvKXTg3Dcu0NJpjrkTlzKNT1mRw8LWl3AeVWbu6trzmO3wkgYKY41l
-        r2PW0=;
+        List-Archive; bh=LZwf/acHI+kQRSbyMjJZdqwVrcq8eOnfC/goSW/c9mA=; b=QigTeadmbR0r
+        cY6cEp4N/GzKAKgmIDZis/Iujiu0eRqd0k5K1npQkXoasuj82PbTGQxQxSk1ZiwaouXgDBMs1pjWY
+        pR1LwLvOVRloPOlAi/eLjTtKC/ajYo5jZTLCa0vb/5rAFuXVkiFLYBknXwy/luLHQH7lOKWZNY2N9
+        GTh2M=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hFxMq-0007j1-S1; Mon, 15 Apr 2019 08:53:33 +0000
+        id 1hFxMv-0007j6-UC; Mon, 15 Apr 2019 08:53:38 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id EBB551127B44; Mon, 15 Apr 2019 09:53:30 +0100 (BST)
+        id E40BF11279F6; Mon, 15 Apr 2019 09:53:31 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+Cc:     Lee Jones <lee.jones@linaro.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Lukasz Majewski <l.majewski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Applied "regulator: max8998: Constify regulator_ops" to the regulator tree
-In-Reply-To: <20190414124818.28161-1-axel.lin@ingics.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: ab8500: Constify regulator_ops" to the regulator tree
+In-Reply-To: <20190412141158.21246-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190415085330.EBB551127B44@debutante.sirena.org.uk>
-Date:   Mon, 15 Apr 2019 09:53:30 +0100 (BST)
+Message-Id: <20190415085331.E40BF11279F6@debutante.sirena.org.uk>
+Date:   Mon, 15 Apr 2019 09:53:31 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: max8998: Constify regulator_ops
+   regulator: ab8500: Constify regulator_ops
 
 has been applied to the regulator tree at
 
@@ -89,10 +87,10 @@ to this mail.
 Thanks,
 Mark
 
-From 7d695f20c27f33173f2149d4d1c6e994e5c0b08e Mon Sep 17 00:00:00 2001
+From 6d66d9952ec06f12197174018be76538150aea05 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 14 Apr 2019 20:48:17 +0800
-Subject: [PATCH] regulator: max8998: Constify regulator_ops
+Date: Fri, 12 Apr 2019 22:11:57 +0800
+Subject: [PATCH] regulator: ab8500: Constify regulator_ops
 
 These regulator_ops variables never need to be modified, make them const so
 compiler can put them to .rodata.
@@ -100,40 +98,57 @@ compiler can put them to .rodata.
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/max8998.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/regulator/ab8500.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/max8998.c b/drivers/regulator/max8998.c
-index 271bb736f3f5..43b69ebd086b 100644
---- a/drivers/regulator/max8998.c
-+++ b/drivers/regulator/max8998.c
-@@ -427,7 +427,7 @@ static int max8998_set_voltage_buck_time_sel(struct regulator_dev *rdev,
- 	return 0;
+diff --git a/drivers/regulator/ab8500.c b/drivers/regulator/ab8500.c
+index 83dba3fbfe0c..6b9a3463f1fd 100644
+--- a/drivers/regulator/ab8500.c
++++ b/drivers/regulator/ab8500.c
+@@ -510,7 +510,7 @@ static int ab8500_regulator_set_voltage_sel(struct regulator_dev *rdev,
+ 	return ret;
  }
  
--static struct regulator_ops max8998_ldo_ops = {
-+static const struct regulator_ops max8998_ldo_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
- 	.is_enabled		= max8998_ldo_is_enabled,
-@@ -437,7 +437,7 @@ static struct regulator_ops max8998_ldo_ops = {
- 	.set_voltage_sel	= max8998_set_voltage_ldo_sel,
+-static struct regulator_ops ab8500_regulator_volt_mode_ops = {
++static const struct regulator_ops ab8500_regulator_volt_mode_ops = {
+ 	.enable			= ab8500_regulator_enable,
+ 	.disable		= ab8500_regulator_disable,
+ 	.is_enabled		= ab8500_regulator_is_enabled,
+@@ -522,7 +522,7 @@ static struct regulator_ops ab8500_regulator_volt_mode_ops = {
+ 	.list_voltage		= regulator_list_voltage_table,
  };
  
--static struct regulator_ops max8998_buck_ops = {
-+static const struct regulator_ops max8998_buck_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
- 	.is_enabled		= max8998_ldo_is_enabled,
-@@ -448,7 +448,7 @@ static struct regulator_ops max8998_buck_ops = {
- 	.set_voltage_time_sel	= max8998_set_voltage_buck_time_sel,
+-static struct regulator_ops ab8500_regulator_volt_ops = {
++static const struct regulator_ops ab8500_regulator_volt_ops = {
+ 	.enable		= ab8500_regulator_enable,
+ 	.disable	= ab8500_regulator_disable,
+ 	.is_enabled	= ab8500_regulator_is_enabled,
+@@ -531,7 +531,7 @@ static struct regulator_ops ab8500_regulator_volt_ops = {
+ 	.list_voltage	= regulator_list_voltage_table,
  };
  
--static struct regulator_ops max8998_others_ops = {
-+static const struct regulator_ops max8998_others_ops = {
- 	.is_enabled		= max8998_ldo_is_enabled,
- 	.enable			= max8998_ldo_enable,
- 	.disable		= max8998_ldo_disable,
+-static struct regulator_ops ab8500_regulator_mode_ops = {
++static const struct regulator_ops ab8500_regulator_mode_ops = {
+ 	.enable			= ab8500_regulator_enable,
+ 	.disable		= ab8500_regulator_disable,
+ 	.is_enabled		= ab8500_regulator_is_enabled,
+@@ -541,14 +541,14 @@ static struct regulator_ops ab8500_regulator_mode_ops = {
+ 	.list_voltage		= regulator_list_voltage_table,
+ };
+ 
+-static struct regulator_ops ab8500_regulator_ops = {
++static const struct regulator_ops ab8500_regulator_ops = {
+ 	.enable			= ab8500_regulator_enable,
+ 	.disable		= ab8500_regulator_disable,
+ 	.is_enabled		= ab8500_regulator_is_enabled,
+ 	.list_voltage		= regulator_list_voltage_table,
+ };
+ 
+-static struct regulator_ops ab8500_regulator_anamic_mode_ops = {
++static const struct regulator_ops ab8500_regulator_anamic_mode_ops = {
+ 	.enable		= ab8500_regulator_enable,
+ 	.disable	= ab8500_regulator_disable,
+ 	.is_enabled	= ab8500_regulator_is_enabled,
 -- 
 2.20.1
 
