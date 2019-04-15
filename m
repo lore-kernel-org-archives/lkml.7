@@ -2,92 +2,93 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B19C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D78C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CB62146E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pVwFM9VK"
+	by mail.kernel.org (Postfix) with ESMTP id 68F4A218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfDOMPO (ORCPT
+        id S1727432AbfDOMPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:15:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40516 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727371AbfDOMPN (ORCPT
+        Mon, 15 Apr 2019 08:15:18 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33738 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfDOMPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:15:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c207so8501105pfc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=t+vSwNzAyzBEoNWHoDlCjFWrl4RmlReONvWp36xHfaU=;
-        b=pVwFM9VK51v9RJI/LLamcK3Akejm8iA1s4U95Gr8Epwg0bAtzqW8WBXStbihIyf9dP
-         iiiXsKupFcZaNuCDhnmnCZFKLquvkTQBy3tlErCbAjspdV2ZbMtBAWNvWTx2i+HRu0Bw
-         bW+exztTygY8H96Hb1eEujA0y8/yFoOcVhUb8HP8PD0+cCMSxAtw6DyObjQjfsddSZjK
-         1sakOBEh99JYPZn/wV6Ue5wwBScTje8M6g7wd86fRwGlTrm1TnqAQCQWlBP3Zk3+vb1v
-         gtPt6ELVPhHu5ne12rw3S5UfuCpSfJ84D5LeRIz9qzwwEKN4iYDwhbwJcJtdyUIAvT/p
-         Hxzg==
+        Mon, 15 Apr 2019 08:15:17 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k189so9660582qkc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t+vSwNzAyzBEoNWHoDlCjFWrl4RmlReONvWp36xHfaU=;
-        b=KCWBqGSDBuOm2CSmx7fRXTHxVQrTOJHhgvRNQdxPw2N1HOJxYlEeKW0Vd1lCTz0kkD
-         8kugJCWoQ8s5CuRogovNI2pSDm1lAdG9pOhSMzEP6ixSgrvjB2NJbMaTXDC4BTe5P+K2
-         mduyDKE3Mo3v+DpOry6VWFomm2Be6UGlSpe/KoW0MHhi2UpB04NYccw8l3DGPXeZIzxS
-         w4eVKVUDboyzW66hxEQEVNNrHxlEvmNsEmTxEfWCCys+uN+xNmbGbJTXTsbM3INz2Hbm
-         jEDnhrp5wfPclCprWj2rq6qac6r50fat8aPlCIUxZYBpxpJngAJd7hCL9dRY4cth12On
-         yV0A==
-X-Gm-Message-State: APjAAAUsHG0YcqtKxNQc8xDUNky5kOH75IuIbyHdIfCLO0Y4FGiLHSRO
-        w4nv1PQlKiyxCrnjnCJFaTABWw==
-X-Google-Smtp-Source: APXvYqwc3LNlpix1JQGclbvEm0ihO6EddmfMqqYVgeImL4wwyDKah6bvEjK+uUZQAzL+8EHaFoc2jg==
-X-Received: by 2002:aa7:8494:: with SMTP id u20mr47378388pfn.76.1555330512732;
-        Mon, 15 Apr 2019 05:15:12 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 6sm64157155pfj.95.2019.04.15.05.15.09
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 05:15:11 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     eric.long@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        broonie@kernel.org, baolin.wang@linaro.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] Fix some bugs and add new feature for Spreadtrum DMA engine
-Date:   Mon, 15 Apr 2019 20:14:54 +0800
-Message-Id: <cover.1555330115.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7unhlftixqJkBJ/xoqxwthgcxUvr22VS2Hsdja3tIGo=;
+        b=tcdwMQrprWb2nnso54DuNhvy3PtEccPagi4RE4GsNZR23x+4YWXPSmX/Mbz4Ka7i4o
+         N22BNAWKyfYQwobsmg5bN8HPsduEs0b1I49AoWYskR8m8pZbBh1xYKHoYTXuvVwCeZ3t
+         GHRjd27gV0Dvub4CxlQZy+nErfctFbRCoaDMn/pc4EvAICum79bDccu6ThvYnv3tua74
+         za7OAc4+frQ8EoC+wMTC1kNDZLTRwpntyqXVmDg63U0O8tegF48rDZcFgclcN4Ybu4kB
+         HbVXroB2BVjYyVg3HLmaFYjpyRJbTgYTbkHJ3mXdIWHyOEdCJ6avrN13z7akn3CW4SoO
+         CXtQ==
+X-Gm-Message-State: APjAAAU2dJSBPerD3DDxppYa3zFdi+80elrVAW+0QlLvOpSsl3ZngKt4
+        7uX6gLahJ+EQeKRuHdS4ZbuojA==
+X-Google-Smtp-Source: APXvYqzAKeHud5K2uh6vYJdS1SKBKtPQdZNPJct8AwIBQlHkNGzTJDKRP1DfepXOzTVYuAG+zqFOhA==
+X-Received: by 2002:ae9:c314:: with SMTP id n20mr56272144qkg.191.1555330516030;
+        Mon, 15 Apr 2019 05:15:16 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (host237-128-dynamic.51-79-r.retail.telecomitalia.it. [79.51.128.237])
+        by smtp.gmail.com with ESMTPSA id x5sm24424750qki.26.2019.04.15.05.15.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 05:15:15 -0700 (PDT)
+Subject: Re: [PATCH V5 7/7] x86/jump_label: Batch jump label updates
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+References: <cover.1554106794.git.bristot@redhat.com>
+ <725010896650bc040743b0479b103f5f6d28b404.1554106794.git.bristot@redhat.com>
+ <20190415115458.GM11158@hirez.programming.kicks-ass.net>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <e3ff2665-cf0a-a172-9484-f609adecbf25@redhat.com>
+Date:   Mon, 15 Apr 2019 14:15:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190415115458.GM11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 4/15/19 1:54 PM, Peter Zijlstra wrote:
+> So how about we do something like:
+> 
+> +static struct bp_patching_desc {
+> +       int nr_entries;
+> +       struct text_patch_loc vec[PAGE_SIZE / sizeof(struct text_patch_loc)];
+> +} bp_patching;
+> 
+> and call it a day?
 
-This patch set fixes some DMA engine bugs and adds interrupt support
-for 2-stage transfer.
+Sure!
 
-Baolin Wang (3):
-  dmaengine: sprd: Fix the possible crash when getting engine status
-  dmaengine: sprd: Add validation of current descriptor in irq handler
-  dmaengine: sprd: Add interrupt support for 2-stage transfer
+Actually, I used something like that in my first poc patches (for my own), but I
+thought people would complain...
 
-Eric Long (4):
-  dmaengine: sprd: Fix the incorrect start for 2-stage destination
-    channels
-  dmaengine: sprd: Add device validation to support multiple
-    controllers
-  dmaengine: sprd: Fix block length overflow
-  dmaengine: sprd: Fix the right place to configure 2-stage transfer
+If nobody else complains, I will use it in the next version.
 
- drivers/dma/sprd-dma.c |   54 ++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 43 insertions(+), 11 deletions(-)
-
--- 
-1.7.9.5
-
+-- Daniel
