@@ -2,86 +2,108 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57761C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B717FC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3033A2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872062147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:02:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KNYzNFpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfDONAO (ORCPT
+        id S1727405AbfDONB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:00:14 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34392 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfDONAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:00:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53E10374;
-        Mon, 15 Apr 2019 06:00:13 -0700 (PDT)
-Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1003F706;
-        Mon, 15 Apr 2019 06:00:11 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 14:00:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     thomas.petazzoni@bootlin.com, jason@lakedaemon.net,
-        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: mvebu: Make mvebu_pci_bridge_emul_ops static
-Message-ID: <20190415130009.GA12388@red-moon>
-References: <20190410140949.26716-1-yuehaibing@huawei.com>
+        Mon, 15 Apr 2019 09:01:59 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1379 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727117AbfDONB7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 09:01:59 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FCuF1O017226;
+        Mon, 15 Apr 2019 15:01:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Uoqg7Lij6gfSw8obSklSmoK1AEAdftOqV1de+IcUbno=;
+ b=KNYzNFpSzFx/QHKy/JzqaBrCKworDozun9OgeYec2uVzmRmkAeOgBVEEcaUg0HM/ueL9
+ J2tptZNE9mOJr/7zAHkY0wCFOPgnQz1x5kB+h3ZuNLHJDKgp1l/sxEfG0MVqVgcbyGeT
+ nejNR0GEPNFZGQCcxU40mzAAc2cheYgoBe8JPE4aJjEAfp+vtIsnRQ3Q7mL+iIvm3HhB
+ qW60PqHuNzY+mnPHH6v/oWhhNIJtTzM51jyFqDW8KJ0CvjPDLB8649Nnfu9mjnLwm94o
+ wC/EtgU4EG9qr5o+FbeaW1wauW02XxBwywnugOTqGf8OKNEP1vGEbb6Txs3EtfepuojB pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ru4w8300f-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 15 Apr 2019 15:01:09 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B698238;
+        Mon, 15 Apr 2019 13:01:08 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 852612511;
+        Mon, 15 Apr 2019 13:01:08 +0000 (GMT)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Apr 2019 15:01:08
+ +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>, <rdunlap@infradead.org>
+CC:     <sfr@canb.auug.org.au>, <benjamin.gaignard@linaro.org>,
+        <linux-next@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: [PATCH 1/2] iio: adc: stm32-dfsdm: fix unmet direct dependencies detected
+Date:   Mon, 15 Apr 2019 15:00:50 +0200
+Message-ID: <1555333251-4422-2-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555333251-4422-1-git-send-email-fabrice.gasnier@st.com>
+References: <1555333251-4422-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190410140949.26716-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 10:09:49PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warning:
-> 
-> drivers/pci/controller/pci-mvebu.c:557:28: warning:
->  symbol 'mvebu_pci_bridge_emul_ops' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
+This fixes unmet direct dependencies seen when CONFIG_STM32_DFSDM_ADC
+is selected:
 
-Is Mr.Robot reachable by email ?
+WARNING: unmet direct dependencies detected for IIO_BUFFER_HW_CONSUMER
+  Depends on [n]: IIO [=y] && IIO_BUFFER [=n]
+  Selected by [y]:
+  - STM32_DFSDM_ADC [=y] && IIO [=y] && (ARCH_STM32 [=y] && OF [=y] ||
+    COMPILE_TEST [=n])
 
-If it is a CI bot I doubt it is useful to leave this tag there unless
-you want it for accounting purposes, just let me know.
+Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
 
-Thanks,
-Lorenzo
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/pci/controller/pci-mvebu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index d3a0419..ed032e9 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -554,7 +554,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  	}
->  }
->  
-> -struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
-> +static struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
->  	.write_base = mvebu_pci_bridge_emul_base_conf_write,
->  	.read_pcie = mvebu_pci_bridge_emul_pcie_conf_read,
->  	.write_pcie = mvebu_pci_bridge_emul_pcie_conf_write,
-> -- 
-> 2.7.4
-> 
-> 
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 846c7ac..b1b2bde 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -821,6 +821,7 @@ config STM32_DFSDM_ADC
+ 	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+ 	select STM32_DFSDM_CORE
+ 	select REGMAP_MMIO
++	select IIO_BUFFER
+ 	select IIO_BUFFER_HW_CONSUMER
+ 	help
+ 	  Select this option to support ADCSigma delta modulator for
+-- 
+2.7.4
+
