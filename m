@@ -3,40 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5CEC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBD5C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7956206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56219206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfDOHbG (ORCPT
+        id S1726472AbfDOHbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:31:06 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2550 "EHLO huawei.com"
+        Mon, 15 Apr 2019 03:31:09 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:45664 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726034AbfDOHbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:31:05 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 21B70E263F8BA418CF45;
-        Mon, 15 Apr 2019 15:31:03 +0800 (CST)
+        id S1726481AbfDOHbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:31:06 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 8DBECCE26A4DDC442823;
+        Mon, 15 Apr 2019 15:31:04 +0800 (CST)
 Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 15 Apr 2019 15:31:02 +0800
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 15 Apr 2019 15:31:04 +0800
 Received: from szvp000201624.huawei.com (10.120.216.130) by
  dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 15 Apr 2019 15:31:02 +0800
+ 15.1.1591.10; Mon, 15 Apr 2019 15:31:03 +0800
 From:   Chao Yu <yuchao0@huawei.com>
 To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 10/13] f2fs: fix to do sanity check on valid block count of segment
-Date:   Mon, 15 Apr 2019 15:30:51 +0800
-Message-ID: <20190415073054.2577-2-yuchao0@huawei.com>
+Subject: [PATCH 13/13] f2fs: don't recovery orphan inode on readonly device
+Date:   Mon, 15 Apr 2019 15:30:54 +0800
+Message-ID: <20190415073054.2577-5-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
 In-Reply-To: <20190415073054.2577-1-yuchao0@huawei.com>
 References: <20190415073054.2577-1-yuchao0@huawei.com>
@@ -51,87 +51,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jungyeon reported in bugzilla:
+As JuHyung Park reported in mailing list:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+https://sourceforge.net/p/linux-f2fs/mailman/message/36639787/
 
-- Overview
-When mounting the attached crafted image and running program, following errors are reported.
-Additionally, it hangs on sync after running program.
+generic_make_request: Trying to write to read-only block-device loop0 (partno 0)
+WARNING: CPU: 0 PID: 23437 at block/blk-core.c:2174 generic_make_request_checks+0x594/0x630
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+ generic_make_request+0x46/0x3d0
+ submit_bio+0x30/0x110
+ __submit_merged_bio+0x68/0x390
+ f2fs_submit_page_write+0x1bb/0x7f0
+ f2fs_do_write_meta_page+0x7f/0x160
+ __f2fs_write_meta_page+0x70/0x140
+ f2fs_sync_meta_pages+0x140/0x250
+ f2fs_write_checkpoint+0x5c5/0x17b0
+ f2fs_sync_fs+0x9c/0x110
+ sync_filesystem+0x66/0x80
+ f2fs_recover_fsync_data+0x790/0xa30
+ f2fs_fill_super+0xe4e/0x1980
+ mount_bdev+0x518/0x610
+ mount_fs+0x34/0x13f
+ vfs_kern_mount.part.11+0x4f/0x120
+ do_mount+0x2d1/0xe40
+ __x64_sys_mount+0xbf/0xe0
+ do_syscall_64+0x4a/0xf0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-- Reproduces
-cc poc_13.c
-mkdir test
-mount -t f2fs tmp.img test
-cp a.out test
-cd test
-sudo ./a.out
-sync
+print_req_error: I/O error, dev loop0, sector 4096
 
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2102!
- RIP: 0010:update_sit_entry+0x394/0x410
- Call Trace:
-  f2fs_allocate_data_block+0x16f/0x660
-  do_write_page+0x62/0x170
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x372/0x1400
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+If block device is readonly, we should never trigger write IO from
+filesystem layer, but previously, orphan recovery didn't consider
+such condition, result in triggering above warning, fix it.
 
-sit.vblocks and sum valid block count in sit.valid_map may be
-inconsistent, segment w/ zero vblocks will be treated as free
-segment, while allocating in free segment, we may allocate a
-free block, if its bitmap is valid previously, it can cause
-kernel crash due to bitmap verification failure.
-
-Anyway, to avoid further serious metadata inconsistence and
-corruption, it is necessary and worth to detect SIT
-inconsistence. So let's enable check_block_count() to verify
-vblocks and valid_map all the time rather than do it only
-CONFIG_F2FS_CHECK_FS is enabled.
-
+Reported-by: JuHyung Park <qkrwngud825@gmail.com>
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/segment.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/f2fs/checkpoint.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index b333ecca6ed6..429007b8036e 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -673,7 +673,6 @@ static inline void verify_fio_blkaddr(struct f2fs_io_info *fio)
- static inline int check_block_count(struct f2fs_sb_info *sbi,
- 		int segno, struct f2fs_sit_entry *raw_sit)
- {
--#ifdef CONFIG_F2FS_CHECK_FS
- 	bool is_valid  = test_bit_le(0, raw_sit->valid_map) ? true : false;
- 	int valid_blocks = 0;
- 	int cur_pos = 0, next_pos;
-@@ -700,7 +699,7 @@ static inline int check_block_count(struct f2fs_sb_info *sbi,
- 		set_sbi_flag(sbi, SBI_NEED_FSCK);
- 		return -EINVAL;
- 	}
--#endif
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a7ad1b1e5750..90e1bab86269 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -674,6 +674,12 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+ 	if (!is_set_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG))
+ 		return 0;
+ 
++	if (bdev_read_only(sbi->sb->s_bdev)) {
++		f2fs_msg(sbi->sb, KERN_INFO, "write access "
++			"unavailable, skipping orphan cleanup");
++		return 0;
++	}
 +
- 	/* check segment usage, and check boundary of a given segment number */
- 	if (unlikely(GET_SIT_VBLOCKS(raw_sit) > sbi->blocks_per_seg
- 					|| segno > TOTAL_SEGS(sbi) - 1)) {
+ 	if (s_flags & SB_RDONLY) {
+ 		f2fs_msg(sbi->sb, KERN_INFO, "orphan cleanup on readonly fs");
+ 		sbi->sb->s_flags &= ~SB_RDONLY;
 -- 
 2.18.0.rc1
 
