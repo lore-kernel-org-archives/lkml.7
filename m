@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0FDC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6F4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898B92087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597CB218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354931;
-	bh=VKWwUx2Ht8LIULO6S8By7HCQxu2NApXzD6Dn3DPJJSI=;
+	s=default; t=1555354934;
+	bh=BdBY7f36xXKhSzZBeDcMW7F0qpD1zayM0QZpo5oN3X8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBfL5ESJiN2JrdQVhSJ1p1C1yUyja7IiKdF5X2zvM8HMk4OGZYuueb978DVPK75hr
-	 2UgqdUc6VOFnFj+hxRgIaNiXa33LuGqCuExGc7Kl8wGGnsLDZWOujcZ0pKE0Ygtt/j
-	 jNnHXA0t/0ifAW8aYJyAlbZDI/7CrRbETM9ACUtI=
+	b=1VE22HkfsOt3m3G1Toi5X5V1q6vhQdnpjxAJoid3bc17wU7yFoWat9W/BkvXK68Dg
+	 Hxlby4i7OQAhJJmZhh1fyuHAOszIyaFL3u7JrQoWbzoZ2fghQzlv+uYZFPZ7BqKLe5
+	 6zRZbJh5469Rx4eTYIRdXrnNMo+d04BHbg0ydB30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfDOTCK (ORCPT
+        id S1728589AbfDOTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60790 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbfDOTCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:02 -0400
+        id S1728528AbfDOTCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5734920880;
-        Mon, 15 Apr 2019 19:02:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C07220880;
+        Mon, 15 Apr 2019 19:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354921;
-        bh=VKWwUx2Ht8LIULO6S8By7HCQxu2NApXzD6Dn3DPJJSI=;
+        s=default; t=1555354927;
+        bh=BdBY7f36xXKhSzZBeDcMW7F0qpD1zayM0QZpo5oN3X8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eI9FArb1rMgu8qyorNFdq1dh8keHsuswRZhSq4/1AhWdWfVJOsKKI7piCVBo4rx41
-         M8FQHOJgS5nhcIEGcNdWsdcIPncxw371s+gnpcsoAVruguWGf10+osJxYr2w3tYMK4
-         w5SxK5NMLQMFVVLhC3DH+lShsDsxfXbv3lcNEQOk=
+        b=fjKWjjCBZNvUrQIgGUVTkxBLwbtCKAAo58vVEVlFKvUsNWBPfL+EFqUMV21IGQrc9
+         gnVeJY8hUEaogx2ep8S6/gSPMPWYcl4J67YBE5MYM+ImzCHQthBG5sBCWCBPPHEmdG
+         lYBH9FjEKzdrP2JgGVn2rfSp/jZGrKBGB2+H/t6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Alistair Strachan <astrachan@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, kernel-team@android.com,
+        joel@joelfernandes.org, Andi Kleen <andi.kleen@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/69] powerpc/tm: Limit TM code inside PPC_TRANSACTIONAL_MEM
-Date:   Mon, 15 Apr 2019 20:58:25 +0200
-Message-Id: <20190415183728.301100737@linuxfoundation.org>
+Subject: [PATCH 4.14 09/69] x86: vdso: Use $LD instead of $CC to link
+Date:   Mon, 15 Apr 2019 20:58:27 +0200
+Message-Id: <20190415183728.632579553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -62,71 +64,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 897bc3df8c5aebb54c32d831f917592e873d0559 ]
+commit 379d98ddf41344273d9718556f761420f4dc80b3 upstream.
 
-Commit e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
-moved a code block around and this block uses a 'msr' variable outside of
-the CONFIG_PPC_TRANSACTIONAL_MEM, however the 'msr' variable is declared
-inside a CONFIG_PPC_TRANSACTIONAL_MEM block, causing a possible error when
-CONFIG_PPC_TRANSACTION_MEM is not defined.
+The vdso{32,64}.so can fail to link with CC=clang when clang tries to find
+a suitable GCC toolchain to link these libraries with.
 
-	error: 'msr' undeclared (first use in this function)
+/usr/bin/ld: arch/x86/entry/vdso/vclock_gettime.o:
+  access beyond end of merged section (782)
 
-This is not causing a compilation error in the mainline kernel, because
-'msr' is being used as an argument of MSR_TM_ACTIVE(), which is defined as
-the following when CONFIG_PPC_TRANSACTIONAL_MEM is *not* set:
+This happens because the host environment leaked into the cross compiler
+environment due to the way clang searches for suitable GCC toolchains.
 
-	#define MSR_TM_ACTIVE(x) 0
+Clang is a retargetable compiler, and each invocation of it must provide
+--target=<something> --gcc-toolchain=<something> to allow it to find the
+correct binutils for cross compilation. These flags had been added to
+KBUILD_CFLAGS, but the vdso code uses CC and not KBUILD_CFLAGS (for various
+reasons) which breaks clang's ability to find the correct linker when cross
+compiling.
 
-This patch just fixes this issue avoiding the 'msr' variable usage outside
-the CONFIG_PPC_TRANSACTIONAL_MEM block, avoiding trusting in the
-MSR_TM_ACTIVE() definition.
+Most of the time this goes unnoticed because the host linker is new enough
+to work anyway, or is incompatible and skipped, but this cannot be reliably
+assumed.
 
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
-Fixes: e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This change alters the vdso makefile to just use LD directly, which
+bypasses clang and thus the searching problem. The makefile will just use
+${CROSS_COMPILE}ld instead, which is always what we want. This matches the
+method used to link vmlinux.
+
+This drops references to DISABLE_LTO; this option doesn't seem to be set
+anywhere, and not knowing what its possible values are, it's not clear how
+to convert it from CC to LD flag.
+
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel-team@android.com
+Cc: joel@joelfernandes.org
+Cc: Andi Kleen <andi.kleen@intel.com>
+Link: https://lkml.kernel.org/r/20180803173931.117515-1-astrachan@google.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_64.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ arch/x86/entry/vdso/Makefile | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index 979b9463e17b..927384d85faf 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -746,12 +746,25 @@ int sys_rt_sigreturn(unsigned long r3, unsigned long r4, unsigned long r5,
- 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
- 					   &uc_transact->uc_mcontext))
- 			goto badframe;
--	}
--	else
--	/* Fall through, for non-TM restore */
-+	} else
- #endif
--	if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
--		goto badframe;
-+	{
-+		/*
-+		 * Fall through, for non-TM restore
-+		 *
-+		 * Unset MSR[TS] on the thread regs since MSR from user
-+		 * context does not have MSR active, and recheckpoint was
-+		 * not called since restore_tm_sigcontexts() was not called
-+		 * also.
-+		 *
-+		 * If not unsetting it, the code can RFID to userspace with
-+		 * MSR[TS] set, but without CPU in the proper state,
-+		 * causing a TM bad thing.
-+		 */
-+		current->thread.regs->msr &= ~MSR_TS_MASK;
-+		if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
-+			goto badframe;
-+	}
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 0a550dc5c525..0defcc939ab4 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -48,10 +48,8 @@ targets += $(vdso_img_sodbg)
  
- 	if (restore_altstack(&uc->uc_stack))
- 		goto badframe;
+ export CPPFLAGS_vdso.lds += -P -C
+ 
+-VDSO_LDFLAGS_vdso.lds = -m64 -Wl,-soname=linux-vdso.so.1 \
+-			-Wl,--no-undefined \
+-			-Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096 \
+-			$(DISABLE_LTO)
++VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
++			-z max-page-size=4096 -z common-page-size=4096
+ 
+ $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
+ 	$(call if_changed,vdso)
+@@ -103,10 +101,8 @@ CFLAGS_REMOVE_vvar.o = -pg
+ #
+ 
+ CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
+-VDSO_LDFLAGS_vdsox32.lds = -Wl,-m,elf32_x86_64 \
+-			   -Wl,-soname=linux-vdso.so.1 \
+-			   -Wl,-z,max-page-size=4096 \
+-			   -Wl,-z,common-page-size=4096
++VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
++			   -z max-page-size=4096 -z common-page-size=4096
+ 
+ # 64-bit objects to re-brand as x32
+ vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
+@@ -134,7 +130,7 @@ $(obj)/vdsox32.so.dbg: $(src)/vdsox32.lds $(vobjx32s) FORCE
+ 	$(call if_changed,vdso)
+ 
+ CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
+-VDSO_LDFLAGS_vdso32.lds = -m32 -Wl,-m,elf_i386 -Wl,-soname=linux-gate.so.1
++VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
+ 
+ # This makes sure the $(obj) subdirectory exists even though vdso32/
+ # is not a kbuild sub-make subdirectory.
+@@ -180,13 +176,13 @@ $(obj)/vdso32.so.dbg: FORCE \
+ # The DSO images are built using a special linker script.
+ #
+ quiet_cmd_vdso = VDSO    $@
+-      cmd_vdso = $(CC) -nostdlib -o $@ \
++      cmd_vdso = $(LD) -nostdlib -o $@ \
+ 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
+-		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
++		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
+ 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
+ 
+-VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
+-	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
++VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
++	$(call ld-option, --build-id) -Bsymbolic
+ GCOV_PROFILE := n
+ 
+ #
 -- 
 2.19.1
 
