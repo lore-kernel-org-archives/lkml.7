@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B410CC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37563C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83879218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029EF20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355578;
-	bh=Jzj6Vje+UQ+k+tTLbwJjWim6C9H5Cuhi9WrSuC+FPBo=;
+	s=default; t=1555355583;
+	bh=Key9FMWI+ffgSogPQuAWE/2CND/D/u2S4sMLXY8Jph4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1xdBzjo6RNI/e34BHjQLwc0XHKuXk7fUIyJV8bx6mT+6+xcZgFjQD189fvCfF5KG
-	 hmJKGmB0xfebdFHYO4bHfljUbbUsDGKDkcGh2GvisExjoz37aDxkLPxUV1SzmKeC9l
-	 K2RmDKX6s+XORvEqKYbB2JJvMWC+X0y0P1D40Wck=
+	b=s+usgbr9wUOWKcdmXJlK9aHnCLPdYSbrRF6ixzYAy8UMotO9cXNUWAJoPOFajSocS
+	 a678+zILupuzQ3mOrFCh7vpbD8TqCbdV8MRrK+xwaOync9fMyCvxoCmtg7deLr2bW9
+	 Fr1GdKLCP9C3NFR5U5lpF4IJ69P6vFnGXK7a+65U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfDOTM5 (ORCPT
+        id S1731473AbfDOTNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:12:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50374 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731444AbfDOTMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:51 -0400
+        id S1729925AbfDOTM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FE5F2073F;
-        Mon, 15 Apr 2019 19:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24BDE2075B;
+        Mon, 15 Apr 2019 19:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355570;
-        bh=Jzj6Vje+UQ+k+tTLbwJjWim6C9H5Cuhi9WrSuC+FPBo=;
+        s=default; t=1555355578;
+        bh=Key9FMWI+ffgSogPQuAWE/2CND/D/u2S4sMLXY8Jph4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+yR0i8p4KpZhHw1ZCVGdDCuIvVPjRXdQwuAoaMBepHOT4Slu8KwzPWvfp4I4w9gW
-         VlF1P2CCQ2k6XAFWhEsfGsaNf+wgqGC30od94fFvg+2YWhhRfdJqT/0/bUUmBPvwL7
-         qE5XBAi6sPWP/dlgHk/ip70m5Jhy1Fl3Wl5cu7mo=
+        b=cgQKAIIZHXXkN5CNJ+sQca6GI0Hc4DEpCJc5VREb8dvknv+bckucj5BrLv9tJgHzT
+         SnQuFF6dpxsN2E9PCD1Wu7bDYCh1aijX3CCSN8QJc77Naeirl1HJXcO19G76jzqcyA
+         pgO0W96byT4G1c5kvtEraujyu8MJG2Li0xwELciY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 077/117] riscv: Fix syscall_get_arguments() and syscall_set_arguments()
-Date:   Mon, 15 Apr 2019 21:00:47 +0200
-Message-Id: <20190415183748.852374631@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Stable@vger.kernel.org
+Subject: [PATCH 5.0 088/117] ARM: dts: am335x-evm: Correct the regulators for the audio codec
+Date:   Mon, 15 Apr 2019 21:00:58 +0200
+Message-Id: <20190415183749.366301862@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -66,67 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry V. Levin <ldv@altlinux.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit 10a16997db3d99fc02c026cf2c6e6c670acafab0 upstream.
+commit 4f96dc0a3e79ec257a2b082dab3ee694ff88c317 upstream.
 
-RISC-V syscall arguments are located in orig_a0,a1..a5 fields
-of struct pt_regs.
+Correctly map the regulators used by tlv320aic3106.
+Both 1.8V and 3.3V for the codec is derived from VBAT via fixed regulators.
 
-Due to an off-by-one bug and a bug in pointer arithmetic
-syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
-Likewise, syscall_set_arguments() was writing s3..s7 fields
-instead of a1..a5.
-
-Link: http://lkml.kernel.org/r/20190329171221.GA32456@altlinux.org
-
-Fixes: e2c0cdfba7f69 ("RISC-V: User-facing API")
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Cc: stable@vger.kernel.org # v4.15+
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: <Stable@vger.kernel.org> # v4.14+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/include/asm/syscall.h |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/am335x-evm.dts |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/arch/riscv/include/asm/syscall.h
-+++ b/arch/riscv/include/asm/syscall.h
-@@ -79,10 +79,11 @@ static inline void syscall_get_arguments
- 	if (i == 0) {
- 		args[0] = regs->orig_a0;
- 		args++;
--		i++;
- 		n--;
-+	} else {
-+		i--;
- 	}
--	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
-+	memcpy(args, &regs->a1 + i, n * sizeof(args[0]));
- }
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -57,6 +57,24 @@
+ 		enable-active-high;
+ 	};
  
- static inline void syscall_set_arguments(struct task_struct *task,
-@@ -94,10 +95,11 @@ static inline void syscall_set_arguments
-         if (i == 0) {
-                 regs->orig_a0 = args[0];
-                 args++;
--                i++;
-                 n--;
--        }
--	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
-+	} else {
-+		i--;
-+	}
-+	memcpy(&regs->a1 + i, args, n * sizeof(regs->a1));
- }
++	/* TPS79501 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	/* TPS79501 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	matrix_keypad: matrix_keypad0 {
+ 		compatible = "gpio-matrix-keypad";
+ 		debounce-delay-ms = <5>;
+@@ -499,10 +517,10 @@
+ 		status = "okay";
  
- static inline int syscall_get_arch(void)
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
+ 
 
 
