@@ -2,217 +2,134 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D780C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E204C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2F220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC95D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QUBxy/7h"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="WtvXLRmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfDOXUa (ORCPT
+        id S1728035AbfDOXYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 19:20:30 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36851 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfDOXUa (ORCPT
+        Mon, 15 Apr 2019 19:24:45 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:58374 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfDOXYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 19:20:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o74so16004745ota.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 16:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VJYv08p7xKdlKE0XSqTwFIa5LOlK7JFFvok+WTACFKA=;
-        b=QUBxy/7hF9goC4WX/7A/VtHEL6sdMV/RMHo+1giQVsTTXLatuY8uF2XygoEg55PJ7T
-         +1XZmiIPzoraSCuvEQvRGwBq717kzDQggawDYxbhkLuPxxaTfPANTlW1bKDzxh6zFjsM
-         6z2e+DzRCBMW3U6CbiN3sjtCWvxJzKNkP8XKhKeSaZksrgXSJAyz5s16ariyEYs2TGev
-         cCi8+GutRiNIb3QcUnYUmw6Q9cns1dqteX2vJcgDJz+rHy2j7hirgjKJrTF5eBQ6qPTa
-         thgSKDb8h2YTAgapmYetplEkeK2KyTn7xMkMvpLt7RGFq0VroE5TjeY+xDEFv29FcpjI
-         hJrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VJYv08p7xKdlKE0XSqTwFIa5LOlK7JFFvok+WTACFKA=;
-        b=GvAm7vh79SWKoocZkCufKPWzbE7+MeLpAXjjJXBsFTduUhfxYsHe5gq1WU22SQr6Lc
-         7/uuqHKRji86qXkAn2DOK2wfTURHkbAXClAiqkYup5ssX+Bf0+Koy7WMAroUJ3KPycb+
-         alH/+rBeaKqbVm4vE14wL82N8El/a9UQJy5SkeYIMaNABzgoN7f8Qz0e/LPplKdh+r/W
-         DbZO8JXXpaby1q8G3R51VHkMIh9FJhhVaaLTf7mZTOeK5ACRKppQZpwxKmg9AhSoWAtF
-         wRCc89+yVE/M00d+3SYTgg7PPjDOY9/hC83qdfiCqfBRWVsGwcSt8GlAlBztPeqllPQu
-         CG8w==
-X-Gm-Message-State: APjAAAXnuEGp+KQlNnllnfB/3AChhpeoxYgJVku45xK8lTynt3RHzBFh
-        6+mmwsknyZy7Wsmp6XWPbv8UEitwyjbqgY7yiPx+tQ==
-X-Google-Smtp-Source: APXvYqxfGpratE7B+9j472wuHNgQk4ucrvbqBrjmoK3KZdz9dkIJDX2fSDr9ehf+PdRwavY+rVAjl9CA/K4ZXCcSE2Q=
-X-Received: by 2002:a9d:2281:: with SMTP id y1mr46528866ota.196.1555370429120;
- Mon, 15 Apr 2019 16:20:29 -0700 (PDT)
+        Mon, 15 Apr 2019 19:24:44 -0400
+Date:   Mon, 15 Apr 2019 16:24:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 129C5640133
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1555370684;
+        bh=n0g9qlwDf4pZRD6d0RrBxPByw6DAdhe8qSuIDBPnixg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WtvXLRmpFWKhTZL1L4lexYacxn6sZjlyYzr+hl7npJZ4AxzTi22PEXze9bWM3CCai
+         /FY/B6+HDZvotqKdfdWMPCpFqFiAGu/dKjSYqvWytTT8y8we3SYE0LUDR664usQVOj
+         pIO9zTYDsM5wwSOzzDLo2SfV6jLgS68wBm8vhvHNetU/PnSqVowrIkx7WHR1XuVHB4
+         5g4clyV0rX0c72V9I2YbWVhSPmCIE4nlLkRr2E+DypuXJIEorSdfr1URxa/mj8+DK3
+         tD6C4qzhG2oyypG0gm8mZQKNZRahr/XbxQ5s9WBQVbQWAlijYMb8PdJatO2emZAiDI
+         jQX7zxtLQg9Kg==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] drm/bridge: sil_sii8620: make remote control
+ optional.
+Message-ID: <20190415232444.GB13033@innovation.ch>
+References: <20190415081300.24831-1-ronald@innovation.ch>
+ <CGME20190415082007epcas2p431304d9b3a9ddb13ff6b7384d7b583ac@epcas2p4.samsung.com>
+ <20190415081300.24831-2-ronald@innovation.ch>
+ <76cf3079-f190-bed4-7a00-149d7fa0a650@samsung.com>
 MIME-Version: 1.0
-References: <94eb2c0ce3aa7551d30569658325@google.com> <96c750b3-fcb0-3d7f-45eb-45459078ef83@I-love.SAKURA.ne.jp>
-In-Reply-To: <96c750b3-fcb0-3d7f-45eb-45459078ef83@I-love.SAKURA.ne.jp>
-From:   Khazhismel Kumykov <khazhy@google.com>
-Date:   Mon, 15 Apr 2019 16:20:17 -0700
-Message-ID: <CACGdZYLPLF40cUK+-aZ6O4vOR1YLvHzLJ70SFneKJ7KOXwBOug@mail.gmail.com>
-Subject: Re: WARNING in notify_change
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+2b74da47f048a5046135@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000f2a294058699e5cd"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76cf3079-f190-bed4-7a00-149d7fa0a650@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000f2a294058699e5cd
-Content-Type: text/plain; charset="UTF-8"
 
-I was able to reproduce this by setting security.capability xattr on a
-blockdev file, then writing to it - when writing to the blockdev we
-never lock the inode, so when we clear the capability we hit this
-lockdep warning.
+  Hi Andrzej,
 
-Is the issue here that we can set this xattr in the first place so we
-have to clear it at all? Or should we really be locking the inode for
-blockdevs after all? I'm not too familiar, but my gut says former
+On Mon, Apr 15, 2019 at 10:58:09AM +0200, Andrzej Hajda wrote:
+> On 15.04.2019 10:12, Ronald Tschalär wrote:
+> > commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
+> > of RC_CORE) changed the driver to select both RC_CORE and INPUT.
+> > However, this causes problems with other drivers, in particular an input
+> > driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
+> > commit):
+> >
+> >   drivers/clk/Kconfig:9:error: recursive dependency detected!
+> >   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
+> >   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
+> >   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
+> >   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
+> >   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
+> >   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
+> >   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
+> >   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
+> >
+> > According to the docs and general consensus, select should only be used
+> > for non user-visible symbols, but both RC_CORE and INPUT are
+> > user-visible. Furthermore almost all other references to INPUT
+> > throughout the kernel config are depends, not selects. For this reason
+> > the first part of this change reverts commit d6abe6df706c.
+> >
+> > In order to address the original reason for commit d6abe6df706c, namely
+> > that not all boards use the remote controller functionality and hence
+> > should not need have to deal with RC_CORE, the second part of this
+> > change now makes the remote control support in the driver optional and
+> > contingent on RC_CORE being defined. And with this the hard dependency
+> > on INPUT also goes away as that is only needed if RC_CORE is defined
+> > (which in turn already depends on INPUT).
+> >
+> > CC: Inki Dae <inki.dae@samsung.com>
+> > CC: Andrzej Hajda <a.hajda@samsung.com>
+> > CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+> 
+> 
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-this reproducer is able to immediately crash machine running
-linux-next-20190415:
+Thanks for your reviews!
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <attr/xattr.h>
+> If there are no objections I will take it to drm-misc tomorrow.
 
-char *disk = "/dev/loop0";
+This brings us back to the discussion started in response to the first
+version of my patch (see
+https://lore.kernel.org/lkml/20190124082423.23139-1-ronald@innovation.ch/T/#m24f45fecd987a787a9554c8088f463fd10de2b00).
+To recap: the problem is that the applespi patch depends on this patch
+here, as make-config will break as described above otherwise. So if
+this patch is submitted through drm-misc, then it's unclear to me how
+to ensure that the two patches make it upstream in proper order,
+unless the applespi patch is also upstreamed through drm-misc, or the
+Kconfig for applespi is (temporarily) modified to not trigger the
+config error and another patch is later submitted to fix the Kconfig
+again (which seems somewhat ugly to me). Assuming that consensus is to
+merge both patches through one tree, then it would seem that because
+this patch here is relatively small that maybe it could be merged
+through the input tree along with the applespi patch?
 
-int main(void) {
-        int fd = open(disk, 0);
-        if (fd < 0)
-                printf("open: %d\n", errno);
 
-        system("dd if=/dev/zero of=a_file count=51200");
-        system("losetup /dev/loop0 a_file");
+  Cheers,
 
-        uint32_t value[5] = {
-                0x2000000,
-                7,
-                0x20d0,
-                6,
-                4
-        };
+  Ronald
 
-        int res = fsetxattr(fd, "security.capability", &value,
-sizeof(value), XATTR_CREATE);
-        if (res < 0)
-                printf ("xattr: %d\n", errno);
-
-        int fd2 = open(disk, O_RDWR);
-        write(fd2, "hello", 5);
-        return 0;
-}
-
---000000000000f2a294058699e5cd
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIS5wYJKoZIhvcNAQcCoIIS2DCCEtQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghBNMIIEXDCCA0SgAwIBAgIOSBtqDm4P/739RPqw/wcwDQYJKoZIhvcNAQELBQAwZDELMAkGA1UE
-BhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExOjA4BgNVBAMTMUdsb2JhbFNpZ24gUGVy
-c29uYWxTaWduIFBhcnRuZXJzIENBIC0gU0hBMjU2IC0gRzIwHhcNMTYwNjE1MDAwMDAwWhcNMjEw
-NjE1MDAwMDAwWjBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEiMCAG
-A1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBALR23lKtjlZW/17kthzYcMHHKFgywfc4vLIjfq42NmMWbXkNUabIgS8KX4PnIFsTlD6F
-GO2fqnsTygvYPFBSMX4OCFtJXoikP2CQlEvO7WooyE94tqmqD+w0YtyP2IB5j4KvOIeNv1Gbnnes
-BIUWLFxs1ERvYDhmk+OrvW7Vd8ZfpRJj71Rb+QQsUpkyTySaqALXnyztTDp1L5d1bABJN/bJbEU3
-Hf5FLrANmognIu+Npty6GrA6p3yKELzTsilOFmYNWg7L838NS2JbFOndl+ce89gM36CW7vyhszi6
-6LqqzJL8MsmkP53GGhf11YMP9EkmawYouMDP/PwQYhIiUO0CAwEAAaOCASIwggEeMA4GA1UdDwEB
-/wQEAwIBBjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEgYDVR0TAQH/BAgwBgEB/wIB
-ADAdBgNVHQ4EFgQUyzgSsMeZwHiSjLMhleb0JmLA4D8wHwYDVR0jBBgwFoAUJiSSix/TRK+xsBtt
-r+500ox4AAMwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9ncy9n
-c3BlcnNvbmFsc2lnbnB0bnJzc2hhMmcyLmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIG
-CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG
-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
-BQUHMAKGNGh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzaHZzbWltZWNhMS5j
-cnQwHQYDVR0OBBYEFKmLvcm3Ia5yfcpBAXvZPJQvNwYIMB8GA1UdIwQYMBaAFMs4ErDHmcB4koyz
-IZXm9CZiwOA/MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8v
-d3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDsGA1UdHwQ0MDIwMKAuoCyGKmh0dHA6Ly9j
-cmwuZ2xvYmFsc2lnbi5jb20vZ3NodnNtaW1lY2ExLmNybDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4IBAQAV9Ke+xXuLkzE6liqU
-yHyMQ1P0LVYdCKlZOyJIcaM5FY+j+7C+dJwCvhVsEKAT+a7Fox5a2NbXOxyLFPN1QfaWFSefFYnN
-iGoWjodq6mD4b4jK87qup40DrYGHL8qRgeG66TGoBrpm4S46655OCQo8iU0OE/aXr3uP3QIhHz9G
-++2p88zFfj2bDwDx0E2Wd7ZxYbYZBH3dG9isCYexTn3gikT9Roj8FQwgrbv62Yklh9qIYaClGRvd
-e0FTck3j3QEozkqeiTX2ENxGzTejkwBNVSXNEcgl9QDKDadAy//DTYfTW3VrW6CQsj8UvKt0QOXc
-QnI3xjacoILpfqGbX4WCMYICXjCCAloCAQEwXDBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xv
-YmFsU2lnbiBudi1zYTEiMCAGA1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMQIMUqKgP3W+
-3hLte8EVMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCA04YJt5JLOZf4r5Z7dLYla
-nVWGBr3HFxiDazck14KE6TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
-Fw0xOTA0MTUyMzIwMjlaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQB
-FjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglg
-hkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAqTgn0QFRQYtRayihUdEY+UhlkDGPKd5qrpxCEinr
-OaxGCIoxyNhnmaGfTMYTrsuYbI6mwx9MbVf6gOA5FyB58BvhBv+DnD1hFIO9rZqkP5DYj1MjsoXo
-JPLawwJBIFRfMMLIi+PTSZpKilxPmHwExIMfIedFlvf9S7ZAmkJJD/EbVr7T5wPWPHFrFhYDfFAt
-C9eYwNPmdhY/tN34d+s5UshvgBpL9TE5rCbKFvPm8YWkf+Hp9c/ltxQSDAAh2w+/PIYBxcG8NSHA
-1cagztzDj/c93NJNfK849XwnJ06ISSf3WhPiMOxqfexPrfxlNPtMaJSltor/82Rpy7+FevFvMg==
---000000000000f2a294058699e5cd--
