@@ -8,65 +8,66 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A50C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78434C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2272B20870
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441D220870
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DV7U3jVg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZWcBo51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfDOArr (ORCPT
+        id S1727222AbfDOAr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 20:47:47 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45595 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbfDOArl (ORCPT
+        Sun, 14 Apr 2019 20:47:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44232 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfDOArm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 20:47:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y3so7704218pgk.12;
-        Sun, 14 Apr 2019 17:47:41 -0700 (PDT)
+        Sun, 14 Apr 2019 20:47:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g12so7677660pll.11;
+        Sun, 14 Apr 2019 17:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dxSuTYLON4k2Acu5zoiaFP6YKp7Q+JzqRTJrEqqzkK8=;
-        b=DV7U3jVgs5Pb9ApK85mkLkstDpuk2sd2BMLX/4gbOh5xshFzFH1QwI5OscPSVAdDIA
-         +cgmK+y0x5f8Hy/HsCK2gQgiRZr81FnwyxeQyUnP3Y2dw1CaRM3h69dBisVGb4kDKEX9
-         uC60FVOQJIlPLKCl7N7QCPKgrKg27tAdNZtaY0vLsmg4cWkwXocrvexEdQINy8KHOGQw
-         7yxVgwqL9akaugiSIwbWOtQ1qWyrN7qX0KrpyGCF0o9yljYYUAJC9ze0qrTf1r1NGRuy
-         Fwm710aRlLJr4+96VeEncc5PXUW+bITng4HpWbG8ykQj+3Cpt0njkpHbe9wOtflFt0Km
-         crww==
+        bh=3VaYvWVwzOkdBmgVwNCUSm0J2jSP5fZYz6kavihb0vk=;
+        b=KZWcBo51AOew8nyqaGo3kd7C++QD9lIb/qtq2eBsUf2OxzI/HIRTAxSd5PuLV/2T4g
+         KvqA7KLH9VpIWqLe4L+zQpYzReb4UUTXvGatEzbDJwTHeHB7jcjppZpT5Be8uO1KfLCo
+         UprxIIZf//kePk7Zz7oHDmNZxJhqfeebTTi5AV32XhKSbosue9+csmaDTmU4IErNhhMs
+         kchMvx3aa+z+6dFeWYXDcJNrhcK2xCogY1W3+UMzBNmQM2/yaAwUsEODpvpJqB3JIjNr
+         zdsHsd9RRJE8I7znrw5HannwTPEls8gqxfwjxGperLfJ+cuHs4/xwgoMkuzZmkGVbhRW
+         dFmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dxSuTYLON4k2Acu5zoiaFP6YKp7Q+JzqRTJrEqqzkK8=;
-        b=gtzV123hAi9uZgUw8Wavk7NGLDHnGa3Xa4nfInZ/I//koRN/FqlJSCynwEecfdF3Pq
-         UZECIrxqQHjq3Um75hnL4gUTnz1ZgD8dd41zg1mxUgbbn+XymHXwL+Gc6toz6dbYaVRt
-         8S+POSUXQRTAC9lA7lTjO4Zgw+JuIcFwJsfj9wBDklPwkkMeCZ3inSC59/91AMVHlpo1
-         aiEOwvpu+KAqeW9dwH4nWLvynAlUkF3/uvf+49s+5xb6931Gjanl//zH7r/C7ssNNN1F
-         EsTaGu+/gRImWkZzUCgYtLnqUALxxrm6muwNCApWEYsv00G27Kf9xg0t1JYkFDZ7C5aE
-         3PkQ==
-X-Gm-Message-State: APjAAAXS3KZxX9Im1YDmOC+VCJ9IjcnrNS+brQk7AlzZbZsmGOBv91PK
-        hzL8eGR3b4ktwWk/M86BCtjGnORU
-X-Google-Smtp-Source: APXvYqyM68Fi5qwDdQa8Pie5oUjJ3L+HG8WftuWSEtyoz46DzbGVfsG2irR1v4jjKcpHyYVW6H7wlA==
-X-Received: by 2002:a62:2687:: with SMTP id m129mr70980078pfm.204.1555289260421;
-        Sun, 14 Apr 2019 17:47:40 -0700 (PDT)
+        bh=3VaYvWVwzOkdBmgVwNCUSm0J2jSP5fZYz6kavihb0vk=;
+        b=So3IB1UADYpZuky1osRB0HyifJa8Rnth1oWvO2Sth2i8j2oyIyNoda/mhfwTqbiGKQ
+         7aQW5BCVq4bV508WZbfOFd/sJuo8ilPaNJpel3B6Nlxy9EqfCTfArI/IueUEiIhxhtSD
+         fZItC7FUiGfa2TuQb+woW31FtzPmGss8+GBJMQqU9Lbq2e+R8CGKm1ZlPwri+RL0pbF1
+         87MQJo1skGJQOK0d1s+s24Vf/q6VMsKwMx3RYHmgqcwIDhbvXNO+TaJUrpztzGSZatCB
+         mQfjvrdsFhzWMPYyuJMeGTheLIym1QwhbDajUavNCUcFsM52yYmUAqvIbgYhFCugMy9a
+         /89g==
+X-Gm-Message-State: APjAAAWimSIaylUQ97MRFOohFJZucf2N4TCxNennIQX64BMXiVc9w0EZ
+        xmb5O0clZ0mSEdyZbidxjQyE6w9J
+X-Google-Smtp-Source: APXvYqz2zECm3zq6MDJMmsxC6n9r+1USMjhRz7oMfT9xqxy4W8H/wJJwDZgoFSCbeDn0YQsblUmoGw==
+X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr72889689plr.251.1555289261729;
+        Sun, 14 Apr 2019 17:47:41 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.39
+        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 17:47:39 -0700 (PDT)
+        Sun, 14 Apr 2019 17:47:40 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/11] PCI: imx6: Use flags to indicate support for suspend
-Date:   Sun, 14 Apr 2019 17:46:31 -0700
-Message-Id: <20190415004632.5907-11-andrew.smirnov@gmail.com>
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 11/11] PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
+Date:   Sun, 14 Apr 2019 17:46:32 -0700
+Message-Id: <20190415004632.5907-12-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
@@ -77,13 +78,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that driver data has flags variable that can be used to indicate
-quirks/features supported we can switch the code to use it instead of
-having a special function that does so based on variant alone. No
-functional change intended.
+imx6_pcie_enable_ref_clk() is never called in atomic context, so
+there's no need to use udelay(). Replace it with usleep_range().
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -91,67 +89,22 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 30e764b6cbcc..3e45f49b8a4f 100644
+index 3e45f49b8a4f..c6d6bde4d860 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -52,6 +52,7 @@ enum imx6_pcie_variants {
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
- #define IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE	BIT(1)
-+#define IMX6_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
- 
- struct imx6_pcie_drvdata {
- 	enum imx6_pcie_variants variant;
-@@ -965,17 +966,11 @@ static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
- 	}
- }
- 
--static inline bool imx6_pcie_supports_suspend(struct imx6_pcie *imx6_pcie)
--{
--	return (imx6_pcie->drvdata->variant == IMX7D ||
--		imx6_pcie->drvdata->variant == IMX6SX);
--}
--
- static int imx6_pcie_suspend_noirq(struct device *dev)
- {
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
- 
--	if (!imx6_pcie_supports_suspend(imx6_pcie))
-+	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
- 		return 0;
- 
- 	imx6_pcie_pm_turnoff(imx6_pcie);
-@@ -991,7 +986,7 @@ static int imx6_pcie_resume_noirq(struct device *dev)
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
- 	struct pcie_port *pp = &imx6_pcie->pci->pp;
- 
--	if (!imx6_pcie_supports_suspend(imx6_pcie))
-+	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
- 		return 0;
- 
- 	imx6_pcie_assert_core_reset(imx6_pcie);
-@@ -1221,7 +1216,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 	[IMX6SX] = {
- 		.variant = IMX6SX,
- 		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
--			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
-+			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
-+			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 	},
- 	[IMX6QP] = {
- 		.variant = IMX6QP,
-@@ -1230,6 +1226,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 	},
- 	[IMX7D] = {
- 		.variant = IMX7D,
-+		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 	},
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
+@@ -449,7 +449,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ 		 * reset time is too short, cannot meet the requirement.
+ 		 * add one ~10us delay here.
+ 		 */
+-		udelay(10);
++		usleep_range(10, 100);
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+ 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+ 		break;
 -- 
 2.20.1
 
