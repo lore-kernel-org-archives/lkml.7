@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AC8C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9709C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186182087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860652087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354251;
-	bh=F6vAXa6hdCxPYF4uvKhz5OrXvmiM0aKK28VgnEqL+/0=;
+	s=default; t=1555354256;
+	bh=/iBhd0db6RAHrS9uPkurLMWuvbwpHrvqpXA+58uELJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OD0Y++T9ritdr1a90FjqQCeli1Mw6vsiDnxf+sd69cG85dyeCB4uQrkMOlGUuvufx
-	 SIl0q+rw0XKyBrlQuzaZA4ep2XUF1SdSEvyokdXG/S4oWGaegiIqzYfi8M1Dox8b0c
-	 rwwxlQtPTULODbANBt2sY1peIuxPaWDUBQmp8I7k=
+	b=HPfR7MJOlrya4WuiR4Snwl27A7689Q37lJDJUypLm/v+IczcI6vRaVLTEGavZ75YW
+	 jkWSYFGH4atKtSD9c40OJo8jGhxeC1BB/3q/W7TEPWURvXRtEvm9rO9LzYgcM6hbsQ
+	 xU+IUcn5vlyhhGc2QTsi238mNbUVJFVslJi4OuAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfDOSqZ (ORCPT
+        id S1728549AbfDOSqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728577AbfDOSqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:23 -0400
+        id S1728523AbfDOSqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF1332087C;
-        Mon, 15 Apr 2019 18:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CE52073F;
+        Mon, 15 Apr 2019 18:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353982;
-        bh=F6vAXa6hdCxPYF4uvKhz5OrXvmiM0aKK28VgnEqL+/0=;
+        s=default; t=1555353968;
+        bh=/iBhd0db6RAHrS9uPkurLMWuvbwpHrvqpXA+58uELJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pm7s115eFCUMWYBX3zlIamihij0InYGVfnSDUhcvyfTJix1xKpUnDJia31MzJ9F3L
-         mgKXpZ4nwNenT2Gc69rGH+ROsEUWsQTjm31o07qoEHhzDlDZ9blaf1SpzcR3GvFSZl
-         jOgqYd6bfvthi5Jc43WZK1wmRZJiTvcHYdQlPhTY=
+        b=ScJ+uSCHX1KACXbkDFRXne00nhsSezekv3Fp/F5fqlQQdB6SqX+eDMXX9puOtey4a
+         vUPIzOM1dvA5nuxH5cpu4zUGKw234GAiNY4PEP4Z/6JIoCmEjy2Vz8TFzfOznQ5iT3
+         nP2dQYJHQavQUHI2L28uqSJbQDsTc+i5OcZSrimY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 27/76] powerpc/asm: Add a patch_site macro & helpers for patching instructions
-Date:   Mon, 15 Apr 2019 20:43:51 +0200
-Message-Id: <20190415183714.994496321@linuxfoundation.org>
+Subject: [PATCH 4.9 37/76] powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)
+Date:   Mon, 15 Apr 2019 20:44:01 +0200
+Message-Id: <20190415183717.331650481@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -59,96 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 06d0bbc6d0f56dacac3a79900e9a9a0d5972d818 upstream.
+commit 10c5e83afd4a3f01712d97d3bb1ae34d5b74a185 upstream.
 
-Add a macro and some helper C functions for patching single asm
-instructions.
+In order to protect against speculation attacks on
+indirect branches, the branch predictor is flushed at
+kernel entry to protect for the following situations:
+- userspace process attacking another userspace process
+- userspace process attacking the kernel
+Basically when the privillege level change (i.e. the
+kernel is entered), the branch predictor state is flushed.
 
-The gas macro means we can do something like:
-
-  1:	nop
-  	patch_site 1b, patch__foo
-
-Which is less visually distracting than defining a GLOBAL symbol at 1,
-and also doesn't pollute the symbol table which can confuse eg. perf.
-
-These are obviously similar to our existing feature sections, but are
-not automatically patched based on CPU/MMU features, rather they are
-designed to be manually patched by C code at some arbitrary point.
-
+Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/code-patching-asm.h | 18 ++++++++++++++++++
- arch/powerpc/include/asm/code-patching.h     |  2 ++
- arch/powerpc/lib/code-patching.c             | 16 ++++++++++++++++
- 3 files changed, 36 insertions(+)
- create mode 100644 arch/powerpc/include/asm/code-patching-asm.h
+ arch/powerpc/kernel/entry_64.S       |  5 +++++
+ arch/powerpc/kernel/exceptions-64e.S | 26 +++++++++++++++++++++++++-
+ arch/powerpc/mm/tlb_low_64e.S        |  7 +++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/code-patching-asm.h b/arch/powerpc/include/asm/code-patching-asm.h
-new file mode 100644
-index 000000000000..ed7b1448493a
---- /dev/null
-+++ b/arch/powerpc/include/asm/code-patching-asm.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright 2018, Michael Ellerman, IBM Corporation.
-+ */
-+#ifndef _ASM_POWERPC_CODE_PATCHING_ASM_H
-+#define _ASM_POWERPC_CODE_PATCHING_ASM_H
-+
-+/* Define a "site" that can be patched */
-+.macro patch_site label name
-+	.pushsection ".rodata"
-+	.balign 4
-+	.global \name
-+\name:
-+	.4byte	\label - .
-+	.popsection
-+.endm
-+
-+#endif /* _ASM_POWERPC_CODE_PATCHING_ASM_H */
-diff --git a/arch/powerpc/include/asm/code-patching.h b/arch/powerpc/include/asm/code-patching.h
-index b4ab1f497335..ab934f8232bd 100644
---- a/arch/powerpc/include/asm/code-patching.h
-+++ b/arch/powerpc/include/asm/code-patching.h
-@@ -28,6 +28,8 @@ unsigned int create_cond_branch(const unsigned int *addr,
- 				unsigned long target, int flags);
- int patch_branch(unsigned int *addr, unsigned long target, int flags);
- int patch_instruction(unsigned int *addr, unsigned int instr);
-+int patch_instruction_site(s32 *addr, unsigned int instr);
-+int patch_branch_site(s32 *site, unsigned long target, int flags);
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 6625cec9e7c0..390ebf4ef384 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -80,6 +80,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_TM)
+ 	std	r0,GPR0(r1)
+ 	std	r10,GPR1(r1)
+ 	beq	2f			/* if from kernel mode */
++#ifdef CONFIG_PPC_FSL_BOOK3E
++START_BTB_FLUSH_SECTION
++	BTB_FLUSH(r10)
++END_BTB_FLUSH_SECTION
++#endif
+ 	ACCOUNT_CPU_USER_ENTRY(r13, r10, r11)
+ 2:	std	r2,GPR2(r1)
+ 	std	r3,GPR3(r1)
+diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
+index ca03eb229a9a..79c6fee6368d 100644
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -295,7 +295,8 @@ ret_from_mc_except:
+ 	andi.	r10,r11,MSR_PR;		/* save stack pointer */	    \
+ 	beq	1f;			/* branch around if supervisor */   \
+ 	ld	r1,PACAKSAVE(r13);	/* get kernel stack coming from usr */\
+-1:	cmpdi	cr1,r1,0;		/* check if SP makes sense */	    \
++1:	type##_BTB_FLUSH		\
++	cmpdi	cr1,r1,0;		/* check if SP makes sense */	    \
+ 	bge-	cr1,exc_##n##_bad_stack;/* bad stack (TODO: out of line) */ \
+ 	mfspr	r10,SPRN_##type##_SRR0;	/* read SRR0 before touching stack */
  
- int instr_is_relative_branch(unsigned int instr);
- int instr_is_relative_link_branch(unsigned int instr);
-diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
-index c77c486fbf24..14535ad4cdd1 100644
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -40,6 +40,22 @@ int patch_branch(unsigned int *addr, unsigned long target, int flags)
- 	return patch_instruction(addr, create_branch(addr, target, flags));
- }
+@@ -327,6 +328,29 @@ ret_from_mc_except:
+ #define SPRN_MC_SRR0	SPRN_MCSRR0
+ #define SPRN_MC_SRR1	SPRN_MCSRR1
  
-+int patch_branch_site(s32 *site, unsigned long target, int flags)
-+{
-+	unsigned int *addr;
++#ifdef CONFIG_PPC_FSL_BOOK3E
++#define GEN_BTB_FLUSH			\
++	START_BTB_FLUSH_SECTION		\
++		beq 1f;			\
++		BTB_FLUSH(r10)			\
++		1:		\
++	END_BTB_FLUSH_SECTION
 +
-+	addr = (unsigned int *)((unsigned long)site + *site);
-+	return patch_instruction(addr, create_branch(addr, target, flags));
-+}
++#define CRIT_BTB_FLUSH			\
++	START_BTB_FLUSH_SECTION		\
++		BTB_FLUSH(r10)		\
++	END_BTB_FLUSH_SECTION
 +
-+int patch_instruction_site(s32 *site, unsigned int instr)
-+{
-+	unsigned int *addr;
++#define DBG_BTB_FLUSH CRIT_BTB_FLUSH
++#define MC_BTB_FLUSH CRIT_BTB_FLUSH
++#define GDBELL_BTB_FLUSH GEN_BTB_FLUSH
++#else
++#define GEN_BTB_FLUSH
++#define CRIT_BTB_FLUSH
++#define DBG_BTB_FLUSH
++#define GDBELL_BTB_FLUSH
++#endif
 +
-+	addr = (unsigned int *)((unsigned long)site + *site);
-+	return patch_instruction(addr, instr);
-+}
-+
- unsigned int create_branch(const unsigned int *addr,
- 			   unsigned long target, int flags)
- {
+ #define NORMAL_EXCEPTION_PROLOG(n, intnum, addition)			    \
+ 	EXCEPTION_PROLOG(n, intnum, GEN, addition##_GEN(n))
+ 
+diff --git a/arch/powerpc/mm/tlb_low_64e.S b/arch/powerpc/mm/tlb_low_64e.S
+index eb82d787d99a..b7e9c09dfe19 100644
+--- a/arch/powerpc/mm/tlb_low_64e.S
++++ b/arch/powerpc/mm/tlb_low_64e.S
+@@ -69,6 +69,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_EMB_HV)
+ 	std	r15,EX_TLB_R15(r12)
+ 	std	r10,EX_TLB_CR(r12)
+ #ifdef CONFIG_PPC_FSL_BOOK3E
++START_BTB_FLUSH_SECTION
++	mfspr r11, SPRN_SRR1
++	andi. r10,r11,MSR_PR
++	beq 1f
++	BTB_FLUSH(r10)
++1:
++END_BTB_FLUSH_SECTION
+ 	std	r7,EX_TLB_R7(r12)
+ #endif
+ 	TLB_MISS_PROLOG_STATS
 -- 
 2.19.1
 
