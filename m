@@ -2,113 +2,106 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B897BC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1509DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8858720880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C4620818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VpSW3UxN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGsacBF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfDOQKy (ORCPT
+        id S1727813AbfDOQLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:10:54 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37861 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfDOQKx (ORCPT
+        Mon, 15 Apr 2019 12:11:01 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35751 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfDOQLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:10:53 -0400
+        Mon, 15 Apr 2019 12:11:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so8802161plp.2;
+        Mon, 15 Apr 2019 09:11:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1555344652; x=1586880652;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=3p1H0rEmUCz/ZMlrjBdTnDWFO1f81fJ9H6swRiZsskM=;
-  b=VpSW3UxN5o7CVEDlR10AURcYfDbuuRIvC1CmG6VjXUT5eEeh5abqht9r
-   LEXrDjwcwoG9NvzZDquPCYDJ6sPef+sQV3T+ygUvb+4B27XZ1h1bvq557
-   Nx/WnkVvEXGkXdNRQA7p2z/fUsqGp8OhAe5VviqT2HDxAnH0JCfqDrear
-   4=;
-X-IronPort-AV: E=Sophos;i="5.60,354,1549929600"; 
-   d="scan'208";a="794389974"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 15 Apr 2019 16:05:04 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x3FG3Wof126457
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Mon, 15 Apr 2019 16:03:35 GMT
-Received: from EX13d09UWC001.ant.amazon.com (10.43.162.60) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 15 Apr 2019 16:03:34 +0000
-Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
- EX13d09UWC001.ant.amazon.com (10.43.162.60) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 15 Apr 2019 16:03:34 +0000
-Received: from EX13D02UWC004.ant.amazon.com ([10.43.162.236]) by
- EX13D02UWC004.ant.amazon.com ([10.43.162.236]) with mapi id 15.00.1367.000;
- Mon, 15 Apr 2019 16:03:34 +0000
-From:   "Saidi, Ali" <alisaidi@amazon.com>
-To:     Kees Cook <keescook@chromium.org>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>
-CC:     Dave Hansen <dave.hansen@linux.intel.com>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        X86 ML <x86@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
- mmap_base
-Thread-Topic: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
- mmap_base
-Thread-Index: AQHU2PmhiRz/TsWOLEOmeVSaHu1ISKYKLoIAgBXMf4CAHUjGgA==
-Date:   Mon, 15 Apr 2019 16:03:34 +0000
-Message-ID: <34381CFC-A90F-4979-9802-2BA0E6539C68@amazon.com>
-References: <20190312173248.13490-1-alisaidi@amazon.com>
- <20190312173248.13490-3-alisaidi@amazon.com>
- <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
- <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
-In-Reply-To: <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.93]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6AAB9B7BD5FCCF47AB714C3009212253@amazon.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=DQ8H7Nhhsa18x4UZUWx42/gvziYn/UG3Ch12n2tKxG0=;
+        b=WGsacBF1wdCB5D92cf/Vaa4BqbPhPlkJTP73aNTEMoT1nYXi3hWmXXoXmroXI3qDiz
+         3P/RUidInyHur02lsn+MihDH/C0lJrQZyAc6LRJ7+wdekepzBCrqA2kauZykILODq7Ut
+         v2e0mJfZLrq6f2FJZEuQQkF1TZEyVSvQ36mXtHKCPrfZ7sBcfaakZF0FeatTgPvYrbr5
+         zZlC1NYVW7OoSrF0qjDFmKr+5ehwp2ifbvOwnw1PiVdqo9MFYyFe2OhvzynyYjzrMXL6
+         wqwnQrKf7l52QF/LdswVb2hqP/srSrqltTIjUjwx7Xere121j+/gBkcr3yrwdJ1b/H40
+         7Rew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=DQ8H7Nhhsa18x4UZUWx42/gvziYn/UG3Ch12n2tKxG0=;
+        b=oq9b6I8ZaM9U8BK8LXZoC1qVZf5/5tb/NSPcUTfvUceoDEpjFn13AWELf8lu/KclFp
+         FesH6+bNt8altlEr2XDplL8q5RE/t3LXa6yGWFQqIn9LKyrAzUo3K3qSi6jHo68mq1mo
+         kn+Tccnv9ZU2qVi3LUZS0fnh/0tUvzg2x0bxT5XrVCsmrTAXFgc2BQrDf87+Od5reiOw
+         xVT85xQk5zCmRX+P5mh8JZ2RmyXwQYY887bAvFCsTX81aGfteH7ev4IiKfPdS4ygtjwM
+         QRj6rgYYQpAhA708eqG7xs3/xqCpR8TQ+4zWbOblEAG3yNRbPqSrBZUPhtDX18ljxxXZ
+         Cxbg==
+X-Gm-Message-State: APjAAAVlcOJ83g0pzKEPbXc37m7wnPjDnpNYu9aNfh/rf0C5m1011PKu
+        qNFWIu0KJhw+Yd7NcvhvFa8=
+X-Google-Smtp-Source: APXvYqwnhJHcgGMYYOaRxUu66dyzoT5hXcMSDiZ2t1c4VG2WfddCVt+tjSzoVGjbuchp9jWhq4DlBw==
+X-Received: by 2002:a17:902:4643:: with SMTP id o61mr65742800pld.249.1555344659824;
+        Mon, 15 Apr 2019 09:10:59 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id b72sm92794489pga.86.2019.04.15.09.10.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 09:10:59 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     lee.jones@linaro.org, bjorn.andersson@linaro.org,
+        dmitry.torokhov@gmail.com, agross@kernel.org,
+        david.brown@linaro.org, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v3 1/3] dt-bindings: input: add Elan 400 combo keyboard/touchpad over i2c
+Date:   Mon, 15 Apr 2019 09:10:55 -0700
+Message-Id: <20190415161055.16372-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
+References: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDMvMjcvMTksIDI6NTIgUE0sICJsaW51eC1hcm0ta2VybmVsIG9uIGJlaGFsZiBv
-ZiBLZWVzIENvb2siIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZyBvbiBiZWhhbGYgb2Yga2Vlc2Nvb2tAY2hyb21pdW0ub3JnPiB3cm90ZToNCg0KICAgIEFkZGlu
-ZyBzb21lIG1vcmUgcGVvcGxlIHRvIENDLi4uIHdoYXQgZG8gcGVvcGxlIHRoaW5rIGFib3V0IHRo
-aXMNCiAgICBtb3Zpbmcgb2YgdGhlIGJyayB0byBFTEZfRVRfRFlOX0JBU0UgaW4gdGhpcyBjb3Ju
-ZXItY2FzZT8gQW55dGhpbmcNCiAgICB0aGF0IHdvcmtlZCBiZWZvcmUgc2hvdWxkIHN0aWxsIHdv
-cmsgKGkuZS4gdGhlIHVsdGltYXRlbHktbGF1bmNoZWQNCiAgICBiaW5hcnkgYWxyZWFkeSBoYWQg
-dGhlIGJyayB2ZXJ5IGZhciBmcm9tIGl0cyB0ZXh0LCBzbyB0aGlzIHNob3VsZCBiZQ0KICAgIG5v
-IGRpZmZlcmVudCBmcm9tIGEgQ09NUEFUX0JSSyBzdGFuZHBvaW50KS4gVGhlIG9ubHkgcmlzayBJ
-IHNlZSBoZXJlDQogICAgaXMgdGhhdCBpZiBzb21lb25lIHN0YXJ0ZWQgdG8gc3VkZGVubHkgZGVw
-ZW5kIG9uIHRoZSBlbnRpcmUgbWVtb3J5DQogICAgc3BhY2UgYWJvdmUgdGhlIG1tYXAgcmVnaW9u
-IGJlaW5nIGF2YWlsYWJsZSB3aGVuIGxhdW5jaGluZyBiaW5hcmllcw0KICAgIHZpYSBhIGRpcmVj
-dCBsb2FkZXIgZXhlY3MuLi4gd2hpY2ggc2VlbXMgaGlnaGx5IHVubGlrZWx5LCBJJ2QgaG9wZToN
-CiAgICB0aGlzIHdvdWxkIG1lYW4gYSBiaW5hcnkgd291bGQgbm90IHdvcmsgd2hlbiBleGVjZWQg
-bm9ybWFsbHkuDQoNCktlZXMnIHByb3Bvc2FsIGFkZHJlc3NlcyB0aGUgaXNzdWUgZm9yIG1lLiBB
-bnlvbmUgaGF2ZSBjb25jZXJucyBvbiB0aGlzIHByb3Bvc2VkIHNvbHV0aW9uPw0KDQpBbGkNCg0K
-DQo=
+The Elan 400 combo keyboard/touchpad over i2c device is a distinct device
+from the Elan 400 standalone touchpad device.  The combo device has been
+found in the Lenovo Miix 630 and HP Envy x2 laptops.
+
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ .../devicetree/bindings/input/elan,combo400-i2c.txt   | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+
+diff --git a/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+new file mode 100644
+index 000000000000..fb700a29148d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
+@@ -0,0 +1,11 @@
++Elantech 0400 I2C combination Keyboard/Touchpad
++
++This binding describes an Elan device with pid 0x0400, that is a combination
++keyboard + touchpad device.  This binding does not cover an Elan device with
++pid 0x0400 that is solely a standalone touchpad device.
++
++Required properties:
++- compatible: should be "elan,combo400-i2c"
++
++This binding is compatible with the HID over I2C binding, which is specified
++in hid-over-i2c.txt in this directory.
+-- 
+2.17.1
+
