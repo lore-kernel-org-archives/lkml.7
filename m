@@ -2,156 +2,118 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD79C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6FDC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9507E206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAE8206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPCIyA7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfDOR3u (ORCPT
+        id S1727927AbfDORdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 13:29:50 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.29]:39709 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726980AbfDOR3u (ORCPT
+        Mon, 15 Apr 2019 13:33:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38892 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbfDORdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 13:29:50 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 6A5E86EBE2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:29:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id G5QShu2G8dnCeG5QShh5XF; Mon, 15 Apr 2019 12:29:48 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.55.242] (port=48192 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hG5QR-003Evo-QV; Mon, 15 Apr 2019 12:29:47 -0500
-Subject: Re: [PATCH] wil6210: fix potential out-of-bounds read
-To:     merez@codeaurora.org
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Kondratiev <qca_vkondrat@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless-owner@vger.kernel.org
-References: <20190415145646.GA16597@embeddedor>
- <514f4e102c3cbbd59f4ba0805b091b36@codeaurora.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <2062ed93-5729-cb58-7708-9bde957c5ff0@embeddedor.com>
-Date:   Mon, 15 Apr 2019 12:29:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 13:33:45 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so8913261pgl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 10:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1rLnkkecNajwW5lyTPKV/XOLxMWuUEA0pe+C9AUPzqY=;
+        b=pPCIyA7xNkZnsePL5+Cqm3wLsoFRWlTwwEiM5RaUEPm/1cFDJrA+Aklc1Jnk9pzOil
+         yc2YG8CdtT8rABcieGpAuU9OS4uIJYh//RGprmb5JhS9M/STWkfASpY/WrY/jWkggiw4
+         iyhvR6eqdTeFA/y/8fUno43FZQjW+1G3N+jcpE4PnZnPA6imzUQJbb771bCUgBzQQk5H
+         w6D/Zb3B2t/E9j/n/VTuU9cCOJmcHaMmuwCu0iMURnBoG6/t34R/65Eqk7n4PFpGyTQ4
+         iwn8XLSlZelk7oUCskdOaoScv4GMozaPyPPQN30W+mCj8ZKxQlCu5v4emiHaEz1sPS2U
+         dyfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1rLnkkecNajwW5lyTPKV/XOLxMWuUEA0pe+C9AUPzqY=;
+        b=KcmgyXUtk8PEBfLArim1QUq6X0tEZZCcXetehjUJY82LvC4DOrx2wNOlouR7XmYvO6
+         9FP8EkK0EDivgJM5eAkQXR7yjqtVCy2PXgebWi+PIllc68ut1pZC2PiTcmq7Q9xCav0w
+         JF3HySl/PxapB4MgeDjA/uxl4ESmtZohMqFd/8bg3Mhvxl03M8S/vkZLBD+JI4tbyO72
+         anPlYnY7JHX7eFaIH2GE9WNXXriWikAAy9zwBm+dw06dMyz6+3/4yfemVWVYYd/jufcB
+         WhJDH+sHb8F3TrG6se3uFd7G3gKrTjDt23OP6vSdM2jX1rFDGIn/kOYVWhM4z244wPXM
+         7mMw==
+X-Gm-Message-State: APjAAAUtBhDU5ecs1V9Ezp1Bg4d5TnQleL/81UIVSPbG6CSZr21FzApG
+        fgs5zCeNaqzm+Brhb2wGh3wMkmEGTtlonwVRVeWI2Q==
+X-Google-Smtp-Source: APXvYqy5T0kFXqo6biJZQb0aLThl4ni7kXyk02WJzRMTj/UYwyU4Y+eMwKRbHgcKyQv6Y/zgADgGug/kNsK+UFStR+w=
+X-Received: by 2002:a65:5304:: with SMTP id m4mr70495317pgq.281.1555349624322;
+ Mon, 15 Apr 2019 10:33:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <514f4e102c3cbbd59f4ba0805b091b36@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.55.242
-X-Source-L: No
-X-Exim-ID: 1hG5QR-003Evo-QV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.250.55.242]:48192
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190415164956.124067-1-samitolvanen@google.com>
+In-Reply-To: <20190415164956.124067-1-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 15 Apr 2019 10:33:33 -0700
+Message-ID: <CAKwvOdm=+jnvqeUOmSUY=OA9sWV53mvnEeWss2TVC+=GS2-AWw@mail.gmail.com>
+Subject: Re: [PATCH] x86: fix .bss with -fdata-sections
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 15, 2019 at 9:50 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> With LD_DEAD_CODE_DATA_ELIMINATION, we compile the kernel with
+> -fdata-sections, which also splits the .bss section. Use the
+> common BSS_MAIN macro in the linker script to properly merge all
+> the generated sections.
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/x86/kernel/vmlinux.lds.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index bad8c51fee6e..a5127b2c195f 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -362,7 +362,7 @@ SECTIONS
+>         .bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+>                 __bss_start = .;
+>                 *(.bss..page_aligned)
+> -               *(.bss)
+> +               *(BSS_MAIN)
+>                 BSS_DECRYPTED
+>                 . = ALIGN(PAGE_SIZE);
+>                 __bss_stop = .;
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
 
+Thanks for the patch!  I checked as well that this issue doesn't exist
+for .text, .data, .sdata, .rodata, and .sbss; just .bss had this
+issue.  Looks like this is "no functional change" when
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION is not set; it simply fixes the
+case where CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-On 4/15/19 12:24 PM, merez@codeaurora.org wrote:
-> On 2019-04-15 17:56, Gustavo A. R. Silva wrote:
->> Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
->>
->> enum gro_result {
->>         GRO_MERGED,
->>         GRO_MERGED_FREE,
->>         GRO_HELD,
->>         GRO_NORMAL,
->>         GRO_DROP,
->>         GRO_CONSUMED,
->> };
->> typedef enum gro_result gro_result_t;
->>
->> In case *rc* evaluates to 5, we end up having an out-of-bounds read
->> at drivers/net/wireless/ath/wil6210/txrx.c:821:
->>
->>     wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
->>              len, gro_res_str[rc]);
->>
->> Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
->>
->> Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
->> Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/net/wireless/ath/wil6210/txrx.c | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> Reviewed-by: Maya Erez <merez@codeaurora.org>
-> 
-
-Thanks, Maya.
---
-Gustavo
+Nicholas,
+I don't understand the comment about RODATA_MAIN from commit
+266ff2a8f51f ("kbuild: Fix asm-generic/vmlinux.lds.h for
+LD_DEAD_CODE_DATA_ELIMINATION").  It seems that there are no uses of
+RODATA_MAIN in the kernel.  Can we remove its definition and that
+comment? (That's neither here nor there for this patch).
+-- 
+Thanks,
+~Nick Desaulniers
