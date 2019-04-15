@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF726C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4A2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8448D20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F1C2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0wXy1DN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlYg36wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfDOMji (ORCPT
+        id S1727584AbfDOMjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:39:38 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33085 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfDOMjh (ORCPT
+        Mon, 15 Apr 2019 08:39:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44526 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfDOMjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:39:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k19so8539038pgh.0;
-        Mon, 15 Apr 2019 05:39:36 -0700 (PDT)
+        Mon, 15 Apr 2019 08:39:18 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i2so8510213pgj.11;
+        Mon, 15 Apr 2019 05:39:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H/HtOjFwWdAVHvbLVQPYvvZRvwmUCmReqPVGi7m85lw=;
-        b=D0wXy1DNq1xK0IaqHk7In1uCOlWLTABrMcIjtX2x01leLB1kdFztqaAh9KiGzrFQJ3
-         jtK3TfNEnarw614R4TY1wL8CT2HhbkB4iiYr2MMv/KXtnBfpGUEF0J/xoPSQ4K+E1ZNJ
-         m8cM46TUpqBSFnKeVzL74CP7xv/js2MbzNO4yhDzTIqCZlfemdKoum9G9QQP2duJ+Lgp
-         2ZZmiiVLBEKaOaqpOdQ5aBYRhM0Ywl7MLgA3sb2nx1liqv0eRXuRLwxqOkdHBkJnNSbD
-         qV0Y3htVMUMMvP0BO1m257Q3T/XBnXLqRS06uZvHN4vf7Bl6dVAyFt0vCoKl70tL7DgM
-         xi0g==
+        bh=fYO1rIghbgKhztOG84RTNsXjVm4pflx9mXpppRrl+9Q=;
+        b=PlYg36wOexW54J1RtiLMiIPf+i6CzvhLQlZVSGvZrbITJv26n1hGOxYZKpDtr7XV+2
+         pLKFCtSPT3QC3FZIR4j9TVBimDzC/ojfc8NghGgRPSnHFR5qKjfHWDTHkPQgpBRVrwFK
+         Qef63l/vSFs48fe2bVjT3XvDOHBprm/jmLg3DyzUkQ3H9JeNOSU4UbECZqhMd+tyuT4v
+         1g7EED+CwCHu4vkCm0gmmwLML0Ya5EXRcBRpFaQBcgq2Q+666ZgmSqxeD1vuMBW44Pr/
+         pRXb/D97QcAu36v9FVefs/JmM+hKZaFPVx8xacfIejYz/clzwCP6g4ucGXtzBzp1XxOF
+         WdIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H/HtOjFwWdAVHvbLVQPYvvZRvwmUCmReqPVGi7m85lw=;
-        b=p7CiOQMcsswuOhkKkisjGJbOJFwq9v5dvdYqag0ucd0REkWHflanqb7mTzF2N4Qlax
-         o84U7SD+SxbOd+ernm4hcirEBuG+hy4ohYhwXN+mjlO3FSMzVyOWXH2RkFZ7MgbJV9LN
-         w+gmDLLa8uVIOvaK6sn6m+oA2PLGr6znwJ72s9w6dkrPauB2uGyzca13N3oWn2LqSygw
-         IhUrbdRFabu55f3h+Lkxzolv1o9AwvCoZvRYtreFxyDhQqBkLmuPtDvIK5mbjvxXK6an
-         4ij1rwgNw5ni7qk52GcZ708jhdWVU6/MU8YUnXB9ngJ9OkelAWldZJxPxE5wW40HZYcg
-         f0sA==
-X-Gm-Message-State: APjAAAULogUKmgOnCtHhq7qgFQzgx+3ol0TWVOgEU2mGaXMrJKlDUFIa
-        JTXUkv3c5bGLHDjFALeRzdE5L0qCMLG2sDiviil3uOb+FH1sxg==
-X-Google-Smtp-Source: APXvYqwE9HovC5WjrBjQLfLVNTGkPsz39b9AhQAC8lcNRfvoQJJxQPuFZ4OwQaOLQuHUUg7uo3oA71epvicPrv+bodE=
-X-Received: by 2002:a65:6210:: with SMTP id d16mr67867747pgv.110.1555331976583;
- Mon, 15 Apr 2019 05:39:36 -0700 (PDT)
+        bh=fYO1rIghbgKhztOG84RTNsXjVm4pflx9mXpppRrl+9Q=;
+        b=IzkZmL8KMCOs71nmhCudAWYqoJLQA7WX/gNOESx/CDOfhk7BfWfkGON5My4LAtXkA9
+         7LUna3LZy676zixq2FaLbClpmLUvRNo/kW3kQYZbIztuB4E2h9/xpoFISMO6iNcpUdKb
+         e0jjE2hyy8epJgcLOWDmR7eBkT3HQ4zZP5pwLHcNqR2YnphAF/FRrWJSiW3MbIZpQP7y
+         +CyZbXKbOqV3Ptl1FXKPPGDEsrctBAZcSFepwEM6Ofjqy88hnJoSyRIYEZA5WZsOw2GU
+         91EDYz9tOnRJ1H1jic6ZfMrU9qSn/ORWtUV2+uQ+mi+seSEgj+oCHSbDT6WCNy+xW4ry
+         3kXA==
+X-Gm-Message-State: APjAAAURVP+Hgn61xyzgHTL/2/UDAC+aRidOwz8PU0NXUFfRuodJyLeq
+        ZSG9g7RhP3/BDWBNRI6XHBTAY4/FeOSwufBZas8=
+X-Google-Smtp-Source: APXvYqxYjb7KJ8LeoxUPDggINMXNPtZU9ryXSSMu4Fk9C5sDH04rJEUnkPMksjpD0w+j6FBQTpKAvtvxWh3j4DQ6dvg=
+X-Received: by 2002:a65:4302:: with SMTP id j2mr66543604pgq.291.1555331958137;
+ Mon, 15 Apr 2019 05:39:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-4-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190403124019.8947-4-wsa+renesas@sang-engineering.com>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-3-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190403124019.8947-3-wsa+renesas@sang-engineering.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 15 Apr 2019 15:39:25 +0300
-Message-ID: <CAHp75VfmwPHvyryqHiA+SLPd7f9VS7zMBQ98bU8YRcZNx6dCrw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] i2c: core: introduce callbacks for atomic transfers
+Date:   Mon, 15 Apr 2019 15:39:07 +0300
+Message-ID: <CAHp75VfvSWuXVJFsq7ZdWj3-XrpPXnFSV1Bk_oW9oS6Gm7msuA@mail.gmail.com>
+Subject: Re: [PATCH 02/12] i2c: core: use I2C locking behaviour also for SMBUS
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
@@ -79,147 +79,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Wed, Apr 3, 2019 at 3:43 PM Wolfram Sang
 <wsa+renesas@sang-engineering.com> wrote:
 >
-> We had the request to access devices very late when interrupts are not
-> available anymore multiple times now. Mostly to prepare shutdown or
-> reboot. Allow adapters to specify a specific callback for this case.
-> Note that we fall back to the generic {master|smbus}_xfer callback if
-> this new atomic one is not present. This is intentional to preserve the
-> previous behaviour and avoid regressions. Because there are drivers not
-> using interrupts or because it might have worked "accidently" before.
+> If I2C transfers are executed in atomic contexts, trylock is used
+> instead of lock. This behaviour was missing for SMBUS, although a lot of
+> transfers are of SMBUS type, either emulated or direct. So, factor out
+> the locking routine into a helper and use it for I2C and SMBUS.
 >
 
 Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+
 > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  drivers/i2c/i2c-core-base.c  |  6 +++++-
->  drivers/i2c/i2c-core-smbus.c | 18 ++++++++++++++----
->  drivers/i2c/i2c-core.h       |  7 +++++--
->  include/linux/i2c.h          | 15 ++++++++++++---
->  4 files changed, 36 insertions(+), 10 deletions(-)
+>  drivers/i2c/i2c-core-base.c  | 11 +++--------
+>  drivers/i2c/i2c-core-smbus.c |  7 ++++++-
+>  drivers/i2c/i2c-core.h       | 12 ++++++++++++
+>  3 files changed, 21 insertions(+), 9 deletions(-)
 >
 > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index ad14f38a67e4..4e6300dc2c4e 100644
+> index f8502064cd6b..ad14f38a67e4 100644
 > --- a/drivers/i2c/i2c-core-base.c
 > +++ b/drivers/i2c/i2c-core-base.c
-> @@ -1890,7 +1890,11 @@ int __i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
->         /* Retry automatically on arbitration loss */
->         orig_jiffies = jiffies;
->         for (ret = 0, try = 0; try <= adap->retries; try++) {
-> -               ret = adap->algo->master_xfer(adap, msgs, num);
-> +               if (i2c_in_atomic_xfer_mode() && adap->algo->master_xfer_atomic)
-> +                       ret = adap->algo->master_xfer_atomic(adap, msgs, num);
-> +               else
-> +                       ret = adap->algo->master_xfer(adap, msgs, num);
-> +
->                 if (ret != -EAGAIN)
->                         break;
->                 if (time_after(jiffies, orig_jiffies + adap->timeout))
+> @@ -1946,14 +1946,9 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>          *    one (discarding status on the second message) or errno
+>          *    (discarding status on the first one).
+>          */
+> -       if (i2c_in_atomic_xfer_mode()) {
+> -               ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
+> -               if (!ret)
+> -                       /* I2C activity is ongoing. */
+> -                       return -EAGAIN;
+> -       } else {
+> -               i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
+> -       }
+> +       ret = __i2c_lock_bus_helper(adap);
+> +       if (ret)
+> +               return ret;
+>
+>         ret = __i2c_transfer(adap, msgs, num);
+>         i2c_unlock_bus(adap, I2C_LOCK_SEGMENT);
 > diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-> index 357e083e8f45..fdb0fb9fb9aa 100644
+> index 132119112596..357e083e8f45 100644
 > --- a/drivers/i2c/i2c-core-smbus.c
 > +++ b/drivers/i2c/i2c-core-smbus.c
-> @@ -548,6 +548,9 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->                      unsigned short flags, char read_write,
->                      u8 command, int protocol, union i2c_smbus_data *data)
->  {
-> +       int (*xfer_func)(struct i2c_adapter *adap, u16 addr,
-> +                        unsigned short flags, char read_write,
-> +                        u8 command, int size, union i2c_smbus_data *data);
->         unsigned long orig_jiffies;
->         int try;
->         s32 res;
-> @@ -562,13 +565,20 @@ s32 __i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+> @@ -20,6 +20,8 @@
+>  #include <linux/i2c-smbus.h>
+>  #include <linux/slab.h>
 >
->         flags &= I2C_M_TEN | I2C_CLIENT_PEC | I2C_CLIENT_SCCB;
->
-> -       if (adapter->algo->smbus_xfer) {
-> +       xfer_func = adapter->algo->smbus_xfer;
-> +       if (i2c_in_atomic_xfer_mode()) {
-> +               if (adapter->algo->smbus_xfer_atomic)
-> +                       xfer_func = adapter->algo->smbus_xfer_atomic;
-> +               else if (adapter->algo->master_xfer_atomic)
-> +                       xfer_func = NULL; /* fallback to I2C emulation */
-> +       }
+> +#include "i2c-core.h"
 > +
-> +       if (xfer_func) {
->                 /* Retry automatically on arbitration loss */
->                 orig_jiffies = jiffies;
->                 for (res = 0, try = 0; try <= adapter->retries; try++) {
-> -                       res = adapter->algo->smbus_xfer(adapter, addr, flags,
-> -                                                       read_write, command,
-> -                                                       protocol, data);
-> +                       res = xfer_func(adapter, addr, flags, read_write,
-> +                                       command, protocol, data);
->                         if (res != -EAGAIN)
->                                 break;
->                         if (time_after(jiffies,
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/smbus.h>
+>
+> @@ -530,7 +532,10 @@ s32 i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
+>  {
+>         s32 res;
+>
+> -       i2c_lock_bus(adapter, I2C_LOCK_SEGMENT);
+> +       res = __i2c_lock_bus_helper(adapter);
+> +       if (res)
+> +               return res;
+> +
+>         res = __i2c_smbus_xfer(adapter, addr, flags, read_write,
+>                                command, protocol, data);
+>         i2c_unlock_bus(adapter, I2C_LOCK_SEGMENT);
 > diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-> index deea47c576e5..f9d0c417b5a5 100644
+> index 9d8526415b26..deea47c576e5 100644
 > --- a/drivers/i2c/i2c-core.h
 > +++ b/drivers/i2c/i2c-core.h
-> @@ -43,10 +43,13 @@ static inline int __i2c_lock_bus_helper(struct i2c_adapter *adap)
->  {
->         int ret = 0;
->
-> -       if (i2c_in_atomic_xfer_mode())
-> +       if (i2c_in_atomic_xfer_mode()) {
-> +               WARN(!adap->algo->master_xfer_atomic && !adap->algo->smbus_xfer_atomic,
-> +                    "No atomic I2C transfer handler for '%s'\n", dev_name(&adap->dev));
->                 ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT) ? 0 : -EAGAIN;
-> -       else
-> +       } else {
->                 i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
-> +       }
->
->         return ret;
+> @@ -39,6 +39,18 @@ static inline bool i2c_in_atomic_xfer_mode(void)
+>         return system_state > SYSTEM_RUNNING && irqs_disabled();
 >  }
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 758a6db864c9..03755d4c9229 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -499,9 +499,13 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   * @master_xfer: Issue a set of i2c transactions to the given I2C adapter
->   *   defined by the msgs array, with num messages available to transfer via
->   *   the adapter specified by adap.
-> + * @master_xfer_atomic: same as @master_xfer. Yet, only using atomic context
-> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @smbus_xfer: Issue smbus transactions to the given I2C adapter. If this
->   *   is not present, then the bus layer will try and convert the SMBus calls
->   *   into I2C transfers instead.
-> + * @smbus_xfer_atomic: same as @smbus_xfer. Yet, only using atomic context
-> + *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @functionality: Return the flags that this algorithm/adapter pair supports
->   *   from the I2C_FUNC_* flags.
->   * @reg_slave: Register given client to I2C slave mode of this adapter
-> @@ -512,9 +516,9 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   * be addressed using the same bus algorithms - i.e. bit-banging or the PCF8584
->   * to name two of the most common.
->   *
-> - * The return codes from the @master_xfer field should indicate the type of
-> - * error code that occurred during the transfer, as documented in the kernel
-> - * Documentation file Documentation/i2c/fault-codes.
-> + * The return codes from the @master_xfer{_atomic} fields should indicate the
-> + * type of error code that occurred during the transfer, as documented in the
-> + * Kernel Documentation file Documentation/i2c/fault-codes.
->   */
->  struct i2c_algorithm {
->         /*
-> @@ -528,9 +532,14 @@ struct i2c_algorithm {
->          */
->         int (*master_xfer)(struct i2c_adapter *adap, struct i2c_msg *msgs,
->                            int num);
-> +       int (*master_xfer_atomic)(struct i2c_adapter *adap,
-> +                                  struct i2c_msg *msgs, int num);
->         int (*smbus_xfer)(struct i2c_adapter *adap, u16 addr,
->                           unsigned short flags, char read_write,
->                           u8 command, int size, union i2c_smbus_data *data);
-> +       int (*smbus_xfer_atomic)(struct i2c_adapter *adap, u16 addr,
-> +                                unsigned short flags, char read_write,
-> +                                u8 command, int size, union i2c_smbus_data *data);
 >
->         /* To determine what the adapter supports */
->         u32 (*functionality)(struct i2c_adapter *adap);
+> +static inline int __i2c_lock_bus_helper(struct i2c_adapter *adap)
+> +{
+> +       int ret = 0;
+> +
+> +       if (i2c_in_atomic_xfer_mode())
+> +               ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT) ? 0 : -EAGAIN;
+> +       else
+> +               i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
+> +
+> +       return ret;
+> +}
+> +
+>  #ifdef CONFIG_ACPI
+>  const struct acpi_device_id *
+>  i2c_acpi_match_device(const struct acpi_device_id *matches,
 > --
 > 2.11.0
 >
