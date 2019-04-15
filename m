@@ -2,2265 +2,908 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E929C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF09C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8992F20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE61320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="Zoh6q8UI"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ewAuswAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfDOINR (ORCPT
+        id S1727068AbfDOIN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:13:17 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:38444 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfDOINN (ORCPT
+        Mon, 15 Apr 2019 04:13:56 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:11345 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfDOIN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:13:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by chill.innovation.ch (Postfix) with ESMTP id 16D22640114;
-        Mon, 15 Apr 2019 01:13:12 -0700 (PDT)
-X-Virus-Scanned: amavisd-new at 
-Received: from chill.innovation.ch ([127.0.0.1])
-        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 5Q7T75W5KxbC; Mon, 15 Apr 2019 01:13:07 -0700 (PDT)
-From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 06914640132
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1555315987;
-        bh=wQOR2EGYVD26WtrhKZh6SFM0FOwm5nlhOeWk9CPztds=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zoh6q8UIch5NmISpvjWA17EpL4CDptFbljelbOhXVzwH1y0mfKaWj4lTwAG7K3IyJ
-         SDnBt1n6ttIFY3mqYz8C/zhH3kGRogylLGgS2rGxqzEgIbZdeo9iKVojDyN4+X10Xx
-         qW28/ZrIrHVXrzzhlCuXSweFmTpWW2/wYyiSVPbJyPkSwp72I+8Fa8yY3mT7azVlA2
-         6YDQndMmkXns9os3XktsyJqhKW2kmIiWexETpX4+4CAE7tL0rXXn+DXyOT8Xj9lF9S
-         PFLBNqpKosug2Gv0vgJpwUAIsUL0DNbWY3IGNi/7GlVan7NWNKN3q8PMzKWvsJRTpn
-         GzbNv2ROhrM7w==
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] Input: add Apple SPI keyboard and trackpad driver.
-Date:   Mon, 15 Apr 2019 01:13:00 -0700
-Message-Id: <20190415081300.24831-3-ronald@innovation.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190415081300.24831-1-ronald@innovation.ch>
-References: <20190415081300.24831-1-ronald@innovation.ch>
+        Mon, 15 Apr 2019 04:13:56 -0400
+X-IronPort-AV: E=Sophos;i="5.60,352,1549954800"; 
+   d="scan'208";a="30126538"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 15 Apr 2019 01:13:53 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Mon, 15 Apr 2019 01:13:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i7x/ZpInWdspQVVKQku3eDU97G7CPMnVbcbiHgqvm0g=;
+ b=ewAuswAwtMqBfRmefmCwPRQlnXc7r+DS6MsWf20wRgmZoM1TNAxWPWVR9DDaZKUnAUiazixyFYkFtWTphO2A5z21yqQ2cIY8i8j175UEgBWCVzFTF7MM0mNnvMqE6FawZMiY/R0mWvM+1elanz2+npJC0TOCsv3fszOiz/snhVg=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB4003.namprd11.prod.outlook.com (10.255.129.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.19; Mon, 15 Apr 2019 08:13:50 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e4c0:24a5:9a32:46e3]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e4c0:24a5:9a32:46e3%9]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 08:13:50 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <bbrezillon@kernel.org>,
+        <marek.vasut@gmail.com>, <richard@nod.at>,
+        <miquel.raynal@bootlin.com>, <andrew.smirnov@gmail.com>
+CC:     <miquel.raynal@bootlin.com>, <frieder.schrempf@exceet.de>,
+        <yogeshnarayan.gaur@nxp.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH 1/2] mtd: spi-nor: Move m25p80 code in spi-nor.c
+Thread-Topic: [PATCH 1/2] mtd: spi-nor: Move m25p80 code in spi-nor.c
+Thread-Index: AQHU7vGMUc9bp27N7EqzfFVWCqlzqqY86GKA
+Date:   Mon, 15 Apr 2019 08:13:50 +0000
+Message-ID: <a81fd591-0894-727e-a99d-331f8e7d82b1@microchip.com>
+References: <20190409162651.24593-1-vigneshr@ti.com>
+ <20190409162651.24593-2-vigneshr@ti.com>
+In-Reply-To: <20190409162651.24593-2-vigneshr@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1P195CA0091.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:59::44) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tudor.Ambarus@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b847b7f-04c7-4921-ef54-08d6c17a4a26
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR11MB4003;
+x-ms-traffictypediagnostic: BN6PR11MB4003:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN6PR11MB400359B709CDC03EC9534218F02B0@BN6PR11MB4003.namprd11.prod.outlook.com>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(39860400002)(366004)(346002)(189003)(199004)(256004)(6486002)(186003)(14444005)(7736002)(68736007)(7416002)(305945005)(102836004)(76176011)(11346002)(71200400001)(71190400001)(229853002)(476003)(30864003)(6506007)(486006)(5660300002)(26005)(53546011)(6436002)(99286004)(446003)(52116002)(2616005)(386003)(316002)(54906003)(110136005)(4326008)(31696002)(86362001)(6512007)(6306002)(2906002)(6116002)(3846002)(966005)(25786009)(97736004)(72206003)(14454004)(478600001)(66066001)(105586002)(2501003)(53936002)(106356001)(36756003)(53946003)(31686004)(6246003)(8676002)(81156014)(81166006)(8936002)(2004002)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB4003;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SZSkX45mEyjGyeYCfeHKg+bhV2DUOspUsqfZ/MikVIfTPConABATuUxF3GJJOvK0gQ4Xp2/S7I+HnEBVduDnxxSHfmnrNKiOI2D590qQUyfw5kQWKKYcEYE2pCTfcPIxfgWR4ja9KE5t96b4bH4i0B1kF4H4Ew09Ka86JNUOlX/kR+p1Y5Su1nrwi2l0vWhKQ1MWs+j4JkvJDyadgyAm17v7F9MNbWHC2l7sIClP6KKB5g1UDlLjM1gNOAtPdwgFBjhMD+BEYXH1JcRtG4jSBK0fV35cN98nFMjT3Sk2cStyULAUZHBn/jw9XCFUkxj3mQxSQRQMfg4Uj69YmiuTXhX304lQtiES9d9SCnzmAIWX+n6esN4gsSqxvJ6Ahp1l1DI+KeJTi6lWctLpbbg6qqaZnFoH4rU0ht9D02XJdAw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9CA779ED1C910849BC6BBC86FF990D92@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b847b7f-04c7-4921-ef54-08d6c17a4a26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 08:13:50.1777
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB4003
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The keyboard and trackpad on recent MacBook's (since 8,1) and
-MacBookPro's (13,* and 14,*) are attached to an SPI controller instead
-of USB, as previously. The higher level protocol is not publicly
-documented and hence has been reverse engineered. As a consequence there
-are still a number of unknown fields and commands. However, the known
-parts have been working well and received extensive testing and use.
-
-In order for this driver to work, the proper SPI drivers need to be
-loaded too; for MB8,1 these are spi_pxa2xx_platform and spi_pxa2xx_pci;
-for all others they are spi_pxa2xx_platform and intel_lpss_pci. For this
-reason enabling this driver in the config implies enabling the above
-drivers.
-
-CC: Federico Lorenzi <federico@travelground.com>
-CC: Lukas Wunner <lukas@wunner.de>
-CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=99891
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=108331
-Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
----
- drivers/input/keyboard/Kconfig          |   15 +
- drivers/input/keyboard/Makefile         |    1 +
- drivers/input/keyboard/applespi.c       | 1985 +++++++++++++++++++++++
- drivers/input/keyboard/applespi.h       |   29 +
- drivers/input/keyboard/applespi_trace.h |   94 ++
- 5 files changed, 2124 insertions(+)
- create mode 100644 drivers/input/keyboard/applespi.c
- create mode 100644 drivers/input/keyboard/applespi.h
- create mode 100644 drivers/input/keyboard/applespi_trace.h
-
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index a878351f1643..d0a9e7fa2508 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -70,6 +70,21 @@ config KEYBOARD_AMIGA
- config ATARI_KBD_CORE
- 	bool
- 
-+config KEYBOARD_APPLESPI
-+	tristate "Apple SPI keyboard and trackpad"
-+	depends on ACPI && EFI
-+	depends on SPI
-+	depends on X86 || COMPILE_TEST
-+	imply SPI_PXA2XX
-+	imply SPI_PXA2XX_PCI
-+	imply MFD_INTEL_LPSS_PCI
-+	help
-+	  Say Y here if you are running Linux on any Apple MacBook8,1 or later,
-+	  or any MacBookPro13,* or MacBookPro14,*.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called applespi.
-+
- config KEYBOARD_ATARI
- 	tristate "Atari keyboard"
- 	depends on ATARI
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 182e92985dbf..9283fee2505a 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_KEYBOARD_ADP5520)		+= adp5520-keys.o
- obj-$(CONFIG_KEYBOARD_ADP5588)		+= adp5588-keys.o
- obj-$(CONFIG_KEYBOARD_ADP5589)		+= adp5589-keys.o
- obj-$(CONFIG_KEYBOARD_AMIGA)		+= amikbd.o
-+obj-$(CONFIG_KEYBOARD_APPLESPI)		+= applespi.o
- obj-$(CONFIG_KEYBOARD_ATARI)		+= atakbd.o
- obj-$(CONFIG_KEYBOARD_ATKBD)		+= atkbd.o
- obj-$(CONFIG_KEYBOARD_BCM)		+= bcm-keypad.o
-diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-new file mode 100644
-index 000000000000..5c3d7687e346
---- /dev/null
-+++ b/drivers/input/keyboard/applespi.c
-@@ -0,0 +1,1985 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * MacBook (Pro) SPI keyboard and touchpad driver
-+ *
-+ * Copyright (c) 2015-2018 Federico Lorenzi
-+ * Copyright (c) 2017-2018 Ronald Tschalär
-+ */
-+
-+/*
-+ * The keyboard and touchpad controller on the MacBookAir6, MacBookPro12,
-+ * MacBook8 and newer can be driven either by USB or SPI. However the USB
-+ * pins are only connected on the MacBookAir6 and 7 and the MacBookPro12.
-+ * All others need this driver. The interface is selected using ACPI methods:
-+ *
-+ * * UIEN ("USB Interface Enable"): If invoked with argument 1, disables SPI
-+ *   and enables USB. If invoked with argument 0, disables USB.
-+ * * UIST ("USB Interface Status"): Returns 1 if USB is enabled, 0 otherwise.
-+ * * SIEN ("SPI Interface Enable"): If invoked with argument 1, disables USB
-+ *   and enables SPI. If invoked with argument 0, disables SPI.
-+ * * SIST ("SPI Interface Status"): Returns 1 if SPI is enabled, 0 otherwise.
-+ * * ISOL: Resets the four GPIO pins used for SPI. Intended to be invoked with
-+ *   argument 1, then once more with argument 0.
-+ *
-+ * UIEN and UIST are only provided on models where the USB pins are connected.
-+ *
-+ * SPI-based Protocol
-+ * ------------------
-+ *
-+ * The device and driver exchange messages (struct message); each message is
-+ * encapsulated in one or more packets (struct spi_packet). There are two types
-+ * of exchanges: reads, and writes. A read is signaled by a GPE, upon which one
-+ * message can be read from the device. A write exchange consists of writing a
-+ * command message, immediately reading a short status packet, and then, upon
-+ * receiving a GPE, reading the response message. Write exchanges cannot be
-+ * interleaved, i.e. a new write exchange must not be started till the previous
-+ * write exchange is complete. Whether a received message is part of a read or
-+ * write exchange is indicated in the encapsulating packet's flags field.
-+ *
-+ * A single message may be too large to fit in a single packet (which has a
-+ * fixed, 256-byte size). In that case it will be split over multiple,
-+ * consecutive packets.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/crc16.h>
-+#include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/efi.h>
-+#include <linux/input.h>
-+#include <linux/input/mt.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/spinlock.h>
-+#include <linux/spi/spi.h>
-+#include <linux/wait.h>
-+#include <linux/workqueue.h>
-+
-+#include <asm/barrier.h>
-+#include <asm/unaligned.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include "applespi.h"
-+#include "applespi_trace.h"
-+
-+#define APPLESPI_PACKET_SIZE	256
-+#define APPLESPI_STATUS_SIZE	4
-+
-+#define PACKET_TYPE_READ	0x20
-+#define PACKET_TYPE_WRITE	0x40
-+#define PACKET_DEV_KEYB		0x01
-+#define PACKET_DEV_TPAD		0x02
-+#define PACKET_DEV_INFO		0xd0
-+
-+#define MAX_ROLLOVER		6
-+
-+#define MAX_FINGERS		11
-+#define MAX_FINGER_ORIENTATION	16384
-+#define MAX_PKTS_PER_MSG	2
-+
-+#define KBD_BL_LEVEL_MIN	32U
-+#define KBD_BL_LEVEL_MAX	255U
-+#define KBD_BL_LEVEL_SCALE	1000000U
-+#define KBD_BL_LEVEL_ADJ	\
-+	((KBD_BL_LEVEL_MAX - KBD_BL_LEVEL_MIN) * KBD_BL_LEVEL_SCALE / 255U)
-+
-+#define EFI_BL_LEVEL_NAME	L"KeyboardBacklightLevel"
-+#define EFI_BL_LEVEL_GUID	EFI_GUID(0xa076d2af, 0x9678, 0x4386, 0x8b, 0x58, 0x1f, 0xc8, 0xef, 0x04, 0x16, 0x19)
-+
-+#define APPLE_FLAG_FKEY		0x01
-+
-+#define SPI_RW_CHG_DELAY_US	100	/* from experimentation, in µs */
-+
-+#define SYNAPTICS_VENDOR_ID	0x06cb
-+
-+static unsigned int fnmode = 1;
-+module_param(fnmode, uint, 0644);
-+MODULE_PARM_DESC(fnmode, "Mode of Fn key on Apple keyboards (0 = disabled, [1] = fkeyslast, 2 = fkeysfirst)");
-+
-+static unsigned int fnremap;
-+module_param(fnremap, uint, 0644);
-+MODULE_PARM_DESC(fnremap, "Remap Fn key ([0] = no-remap; 1 = left-ctrl, 2 = left-shift, 3 = left-alt, 4 = left-meta, 6 = right-shift, 7 = right-alt, 8 = right-meta)");
-+
-+static bool iso_layout;
-+module_param(iso_layout, bool, 0644);
-+MODULE_PARM_DESC(iso_layout, "Enable/Disable hardcoded ISO-layout of the keyboard. ([0] = disabled, 1 = enabled)");
-+
-+static char touchpad_dimensions[40];
-+module_param_string(touchpad_dimensions, touchpad_dimensions,
-+		    sizeof(touchpad_dimensions), 0444);
-+MODULE_PARM_DESC(touchpad_dimensions, "The pixel dimensions of the touchpad, as XxY+W+H .");
-+
-+/**
-+ * struct keyboard_protocol - keyboard message.
-+ * message.type = 0x0110, message.length = 0x000a
-+ *
-+ * @unknown1:		unknown
-+ * @modifiers:		bit-set of modifier/control keys pressed
-+ * @unknown2:		unknown
-+ * @keys_pressed:	the (non-modifier) keys currently pressed
-+ * @fn_pressed:		whether the fn key is currently pressed
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct keyboard_protocol {
-+	__u8			unknown1;
-+	__u8			modifiers;
-+	__u8			unknown2;
-+	__u8			keys_pressed[MAX_ROLLOVER];
-+	__u8			fn_pressed;
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct tp_finger - single trackpad finger structure, le16-aligned
-+ *
-+ * @origin:		zero when switching track finger
-+ * @abs_x:		absolute x coodinate
-+ * @abs_y:		absolute y coodinate
-+ * @rel_x:		relative x coodinate
-+ * @rel_y:		relative y coodinate
-+ * @tool_major:		tool area, major axis
-+ * @tool_minor:		tool area, minor axis
-+ * @orientation:	16384 when point, else 15 bit angle
-+ * @touch_major:	touch area, major axis
-+ * @touch_minor:	touch area, minor axis
-+ * @unused:		zeros
-+ * @pressure:		pressure on forcetouch touchpad
-+ * @multi:		one finger: varies, more fingers: constant
-+ * @crc16:		on last finger: crc over the whole message struct
-+ *			(i.e. message header + this struct) minus the last
-+ *			@crc16 field; unknown on all other fingers.
-+ */
-+struct tp_finger {
-+	__le16 origin;
-+	__le16 abs_x;
-+	__le16 abs_y;
-+	__le16 rel_x;
-+	__le16 rel_y;
-+	__le16 tool_major;
-+	__le16 tool_minor;
-+	__le16 orientation;
-+	__le16 touch_major;
-+	__le16 touch_minor;
-+	__le16 unused[2];
-+	__le16 pressure;
-+	__le16 multi;
-+	__le16 crc16;
-+};
-+
-+/**
-+ * struct touchpad_protocol - touchpad message.
-+ * message.type = 0x0210
-+ *
-+ * @unknown1:		unknown
-+ * @clicked:		1 if a button-click was detected, 0 otherwise
-+ * @unknown2:		unknown
-+ * @number_of_fingers:	the number of fingers being reported in @fingers
-+ * @clicked2:		same as @clicked
-+ * @unknown3:		unknown
-+ * @fingers:		the data for each finger
-+ */
-+struct touchpad_protocol {
-+	__u8			unknown1[1];
-+	__u8			clicked;
-+	__u8			unknown2[28];
-+	__u8			number_of_fingers;
-+	__u8			clicked2;
-+	__u8			unknown3[16];
-+	struct tp_finger	fingers[0];
-+};
-+
-+/**
-+ * struct command_protocol_tp_info - get touchpad info.
-+ * message.type = 0x1020, message.length = 0x0000
-+ *
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct command_protocol_tp_info {
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct touchpad_info - touchpad info response.
-+ * message.type = 0x1020, message.length = 0x006e
-+ *
-+ * @unknown1:		unknown
-+ * @model_flags:	flags (vary by model number, but significance otherwise
-+ *			unknown)
-+ * @model_no:		the touchpad model number
-+ * @unknown2:		unknown
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct touchpad_info_protocol {
-+	__u8			unknown1[105];
-+	__u8			model_flags;
-+	__u8			model_no;
-+	__u8			unknown2[3];
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct command_protocol_mt_init - initialize multitouch.
-+ * message.type = 0x0252, message.length = 0x0002
-+ *
-+ * @cmd:		value: 0x0102
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct command_protocol_mt_init {
-+	__le16			cmd;
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct command_protocol_capsl - toggle caps-lock led
-+ * message.type = 0x0151, message.length = 0x0002
-+ *
-+ * @unknown:		value: 0x01 (length?)
-+ * @led:		0 off, 2 on
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct command_protocol_capsl {
-+	__u8			unknown;
-+	__u8			led;
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct command_protocol_bl - set keyboard backlight brightness
-+ * message.type = 0xB051, message.length = 0x0006
-+ *
-+ * @const1:		value: 0x01B0
-+ * @level:		the brightness level to set
-+ * @const2:		value: 0x0001 (backlight off), 0x01F4 (backlight on)
-+ * @crc16:		crc over the whole message struct (message header +
-+ *			this struct) minus this @crc16 field
-+ */
-+struct command_protocol_bl {
-+	__le16			const1;
-+	__le16			level;
-+	__le16			const2;
-+	__le16			crc16;
-+};
-+
-+/**
-+ * struct message - a complete spi message.
-+ *
-+ * Each message begins with fixed header, followed by a message-type specific
-+ * payload, and ends with a 16-bit crc. Because of the varying lengths of the
-+ * payload, the crc is defined at the end of each payload struct, rather than
-+ * in this struct.
-+ *
-+ * @type:	the message type
-+ * @zero:	always 0
-+ * @counter:	incremented on each message, rolls over after 255; there is a
-+ *		separate counter for each message type.
-+ * @rsp_buf_len:response buffer length (the exact nature of this field is quite
-+ *		speculative). On a request/write this is often the same as
-+ *		@length, though in some cases it has been seen to be much larger
-+ *		(e.g. 0x400); on a response/read this the same as on the
-+ *		request; for reads that are not responses it is 0.
-+ * @length:	length of the remainder of the data in the whole message
-+ *		structure (after re-assembly in case of being split over
-+ *		multiple spi-packets), minus the trailing crc. The total size
-+ *		of the message struct is therefore @length + 10.
-+ */
-+struct message {
-+	__le16		type;
-+	__u8		zero;
-+	__u8		counter;
-+	__le16		rsp_buf_len;
-+	__le16		length;
-+	union {
-+		struct keyboard_protocol	keyboard;
-+		struct touchpad_protocol	touchpad;
-+		struct touchpad_info_protocol	tp_info;
-+		struct command_protocol_tp_info	tp_info_command;
-+		struct command_protocol_mt_init	init_mt_command;
-+		struct command_protocol_capsl	capsl_command;
-+		struct command_protocol_bl	bl_command;
-+		__u8				data[0];
-+	};
-+};
-+
-+/* type + zero + counter + rsp_buf_len + length */
-+#define MSG_HEADER_SIZE	8
-+
-+/**
-+ * struct spi_packet - a complete spi packet; always 256 bytes. This carries
-+ * the (parts of the) message in the data. But note that this does not
-+ * necessarily contain a complete message, as in some cases (e.g. many
-+ * fingers pressed) the message is split over multiple packets (see the
-+ * @offset, @remaining, and @length fields). In general the data parts in
-+ * spi_packet's are concatenated until @remaining is 0, and the result is an
-+ * message.
-+ *
-+ * @flags:	0x40 = write (to device), 0x20 = read (from device); note that
-+ *		the response to a write still has 0x40.
-+ * @device:	1 = keyboard, 2 = touchpad
-+ * @offset:	specifies the offset of this packet's data in the complete
-+ *		message; i.e. > 0 indicates this is a continuation packet (in
-+ *		the second packet for a message split over multiple packets
-+ *		this would then be the same as the @length in the first packet)
-+ * @remaining:	number of message bytes remaining in subsequents packets (in
-+ *		the first packet of a message split over two packets this would
-+ *		then be the same as the @length in the second packet)
-+ * @length:	length of the valid data in the @data in this packet
-+ * @data:	all or part of a message
-+ * @crc16:	crc over this whole structure minus this @crc16 field. This
-+ *		covers just this packet, even on multi-packet messages (in
-+ *		contrast to the crc in the message).
-+ */
-+struct spi_packet {
-+	__u8			flags;
-+	__u8			device;
-+	__le16			offset;
-+	__le16			remaining;
-+	__le16			length;
-+	__u8			data[246];
-+	__le16			crc16;
-+};
-+
-+struct spi_settings {
-+	u64	spi_cs_delay;		/* cs-to-clk delay in us */
-+	u64	reset_a2r_usec;		/* active-to-receive delay? */
-+	u64	reset_rec_usec;		/* ? (cur val: 10) */
-+};
-+
-+/* this mimics struct drm_rect */
-+struct applespi_tp_info {
-+	int	x_min;
-+	int	y_min;
-+	int	x_max;
-+	int	y_max;
-+};
-+
-+struct applespi_data {
-+	struct spi_device		*spi;
-+	struct spi_settings		spi_settings;
-+	struct input_dev		*keyboard_input_dev;
-+	struct input_dev		*touchpad_input_dev;
-+
-+	u8				*tx_buffer;
-+	u8				*tx_status;
-+	u8				*rx_buffer;
-+
-+	u8				*msg_buf;
-+	unsigned int			saved_msg_len;
-+
-+	struct applespi_tp_info		tp_info;
-+
-+	u8				last_keys_pressed[MAX_ROLLOVER];
-+	u8				last_keys_fn_pressed[MAX_ROLLOVER];
-+	u8				last_fn_pressed;
-+	struct input_mt_pos		pos[MAX_FINGERS];
-+	int				slots[MAX_FINGERS];
-+	int				gpe;
-+	acpi_handle			sien;
-+	acpi_handle			sist;
-+
-+	struct spi_transfer		dl_t;
-+	struct spi_transfer		rd_t;
-+	struct spi_message		rd_m;
-+
-+	struct spi_transfer		ww_t;
-+	struct spi_transfer		wd_t;
-+	struct spi_transfer		wr_t;
-+	struct spi_transfer		st_t;
-+	struct spi_message		wr_m;
-+
-+	bool				want_tp_info_cmd;
-+	bool				want_mt_init_cmd;
-+	bool				want_cl_led_on;
-+	bool				have_cl_led_on;
-+	unsigned int			want_bl_level;
-+	unsigned int			have_bl_level;
-+	unsigned int			cmd_msg_cntr;
-+	/* lock to protect the above parameters and flags below */
-+	spinlock_t			cmd_msg_lock;
-+	bool				cmd_msg_queued;
-+	enum applespi_evt_type		cmd_evt_type;
-+
-+	struct led_classdev		backlight_info;
-+
-+	bool				suspended;
-+	bool				drain;
-+	wait_queue_head_t		drain_complete;
-+	bool				read_active;
-+	bool				write_active;
-+
-+	struct work_struct		work;
-+	struct touchpad_info_protocol	rcvd_tp_info;
-+
-+	struct dentry			*debugfs_root;
-+	bool				debug_tp_dim;
-+	char				tp_dim_val[40];
-+	int				tp_dim_min_x;
-+	int				tp_dim_max_x;
-+	int				tp_dim_min_y;
-+	int				tp_dim_max_y;
-+};
-+
-+static const unsigned char applespi_scancodes[] = {
-+	0, 0, 0, 0,
-+	KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J,
-+	KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
-+	KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z,
-+	KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0,
-+	KEY_ENTER, KEY_ESC, KEY_BACKSPACE, KEY_TAB, KEY_SPACE, KEY_MINUS,
-+	KEY_EQUAL, KEY_LEFTBRACE, KEY_RIGHTBRACE, KEY_BACKSLASH, 0,
-+	KEY_SEMICOLON, KEY_APOSTROPHE, KEY_GRAVE, KEY_COMMA, KEY_DOT, KEY_SLASH,
-+	KEY_CAPSLOCK,
-+	KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9,
-+	KEY_F10, KEY_F11, KEY_F12, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+	KEY_RIGHT, KEY_LEFT, KEY_DOWN, KEY_UP,
-+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_102ND,
-+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_RO, 0, KEY_YEN, 0, 0, 0, 0, 0,
-+	0, KEY_KATAKANAHIRAGANA, KEY_MUHENKAN
-+};
-+
-+/*
-+ * This must have exactly as many entries as there are bits in
-+ * struct keyboard_protocol.modifiers .
-+ */
-+static const unsigned char applespi_controlcodes[] = {
-+	KEY_LEFTCTRL,
-+	KEY_LEFTSHIFT,
-+	KEY_LEFTALT,
-+	KEY_LEFTMETA,
-+	0,
-+	KEY_RIGHTSHIFT,
-+	KEY_RIGHTALT,
-+	KEY_RIGHTMETA
-+};
-+
-+struct applespi_key_translation {
-+	u16 from;
-+	u16 to;
-+	u8 flags;
-+};
-+
-+static const struct applespi_key_translation applespi_fn_codes[] = {
-+	{ KEY_BACKSPACE, KEY_DELETE },
-+	{ KEY_ENTER,	KEY_INSERT },
-+	{ KEY_F1,	KEY_BRIGHTNESSDOWN,	APPLE_FLAG_FKEY },
-+	{ KEY_F2,	KEY_BRIGHTNESSUP,	APPLE_FLAG_FKEY },
-+	{ KEY_F3,	KEY_SCALE,		APPLE_FLAG_FKEY },
-+	{ KEY_F4,	KEY_DASHBOARD,		APPLE_FLAG_FKEY },
-+	{ KEY_F5,	KEY_KBDILLUMDOWN,	APPLE_FLAG_FKEY },
-+	{ KEY_F6,	KEY_KBDILLUMUP,		APPLE_FLAG_FKEY },
-+	{ KEY_F7,	KEY_PREVIOUSSONG,	APPLE_FLAG_FKEY },
-+	{ KEY_F8,	KEY_PLAYPAUSE,		APPLE_FLAG_FKEY },
-+	{ KEY_F9,	KEY_NEXTSONG,		APPLE_FLAG_FKEY },
-+	{ KEY_F10,	KEY_MUTE,		APPLE_FLAG_FKEY },
-+	{ KEY_F11,	KEY_VOLUMEDOWN,		APPLE_FLAG_FKEY },
-+	{ KEY_F12,	KEY_VOLUMEUP,		APPLE_FLAG_FKEY },
-+	{ KEY_RIGHT,	KEY_END },
-+	{ KEY_LEFT,	KEY_HOME },
-+	{ KEY_DOWN,	KEY_PAGEDOWN },
-+	{ KEY_UP,	KEY_PAGEUP },
-+	{ }
-+};
-+
-+static const struct applespi_key_translation apple_iso_keyboard[] = {
-+	{ KEY_GRAVE,	KEY_102ND },
-+	{ KEY_102ND,	KEY_GRAVE },
-+	{ }
-+};
-+
-+struct applespi_tp_model_info {
-+	u16			model;
-+	struct applespi_tp_info	tp_info;
-+};
-+
-+static const struct applespi_tp_model_info applespi_tp_models[] = {
-+	{
-+		.model = 0x04,	/* MB8 MB9 MB10 */
-+		.tp_info = { -5087, -182, 5579, 6089 },
-+	},
-+	{
-+		.model = 0x05,	/* MBP13,1 MBP13,2 MBP14,1 MBP14,2 */
-+		.tp_info = { -6243, -170, 6749, 7685 },
-+	},
-+	{
-+		.model = 0x06,	/* MBP13,3 MBP14,3 */
-+		.tp_info = { -7456, -163, 7976, 9283 },
-+	},
-+	{}
-+};
-+
-+typedef void (*applespi_trace_fun)(enum applespi_evt_type,
-+				   enum applespi_pkt_type, u8 *, size_t);
-+
-+static applespi_trace_fun applespi_get_trace_fun(enum applespi_evt_type type)
-+{
-+	switch (type) {
-+	case ET_CMD_TP_INI:
-+		return trace_applespi_tp_ini_cmd;
-+	case ET_CMD_BL:
-+		return trace_applespi_backlight_cmd;
-+	case ET_CMD_CL:
-+		return trace_applespi_caps_lock_cmd;
-+	case ET_RD_KEYB:
-+		return trace_applespi_keyboard_data;
-+	case ET_RD_TPAD:
-+		return trace_applespi_touchpad_data;
-+	case ET_RD_UNKN:
-+		return trace_applespi_unknown_data;
-+	default:
-+		WARN_ONCE(1, "Unknown msg type %d", type);
-+		return trace_applespi_unknown_data;
-+	}
-+}
-+
-+static void applespi_setup_read_txfrs(struct applespi_data *applespi)
-+{
-+	struct spi_message *msg = &applespi->rd_m;
-+	struct spi_transfer *dl_t = &applespi->dl_t;
-+	struct spi_transfer *rd_t = &applespi->rd_t;
-+
-+	memset(dl_t, 0, sizeof(*dl_t));
-+	memset(rd_t, 0, sizeof(*rd_t));
-+
-+	dl_t->delay_usecs = applespi->spi_settings.spi_cs_delay;
-+
-+	rd_t->rx_buf = applespi->rx_buffer;
-+	rd_t->len = APPLESPI_PACKET_SIZE;
-+
-+	spi_message_init(msg);
-+	spi_message_add_tail(dl_t, msg);
-+	spi_message_add_tail(rd_t, msg);
-+}
-+
-+static void applespi_setup_write_txfrs(struct applespi_data *applespi)
-+{
-+	struct spi_message *msg = &applespi->wr_m;
-+	struct spi_transfer *wt_t = &applespi->ww_t;
-+	struct spi_transfer *dl_t = &applespi->wd_t;
-+	struct spi_transfer *wr_t = &applespi->wr_t;
-+	struct spi_transfer *st_t = &applespi->st_t;
-+
-+	memset(wt_t, 0, sizeof(*wt_t));
-+	memset(dl_t, 0, sizeof(*dl_t));
-+	memset(wr_t, 0, sizeof(*wr_t));
-+	memset(st_t, 0, sizeof(*st_t));
-+
-+	/*
-+	 * All we need here is a delay at the beginning of the message before
-+	 * asserting cs. But the current spi API doesn't support this, so we
-+	 * end up with an extra unnecessary (but harmless) cs assertion and
-+	 * deassertion.
-+	 */
-+	wt_t->delay_usecs = SPI_RW_CHG_DELAY_US;
-+	wt_t->cs_change = 1;
-+
-+	dl_t->delay_usecs = applespi->spi_settings.spi_cs_delay;
-+
-+	wr_t->tx_buf = applespi->tx_buffer;
-+	wr_t->len = APPLESPI_PACKET_SIZE;
-+	wr_t->delay_usecs = SPI_RW_CHG_DELAY_US;
-+
-+	st_t->rx_buf = applespi->tx_status;
-+	st_t->len = APPLESPI_STATUS_SIZE;
-+
-+	spi_message_init(msg);
-+	spi_message_add_tail(wt_t, msg);
-+	spi_message_add_tail(dl_t, msg);
-+	spi_message_add_tail(wr_t, msg);
-+	spi_message_add_tail(st_t, msg);
-+}
-+
-+static int applespi_async(struct applespi_data *applespi,
-+			  struct spi_message *message, void (*complete)(void *))
-+{
-+	message->complete = complete;
-+	message->context = applespi;
-+
-+	return spi_async(applespi->spi, message);
-+}
-+
-+static inline bool applespi_check_write_status(struct applespi_data *applespi,
-+					       int sts)
-+{
-+	static u8 status_ok[] = { 0xac, 0x27, 0x68, 0xd5 };
-+
-+	if (sts < 0) {
-+		dev_warn(&applespi->spi->dev, "Error writing to device: %d\n",
-+			 sts);
-+		return false;
-+	}
-+
-+	if (memcmp(applespi->tx_status, status_ok, APPLESPI_STATUS_SIZE)) {
-+		dev_warn(&applespi->spi->dev, "Error writing to device: %*ph\n",
-+			 APPLESPI_STATUS_SIZE, applespi->tx_status);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static int applespi_get_spi_settings(struct applespi_data *applespi)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(&applespi->spi->dev);
-+	const union acpi_object *o;
-+	struct spi_settings *settings = &applespi->spi_settings;
-+
-+	if (!acpi_dev_get_property(adev, "spiCSDelay", ACPI_TYPE_BUFFER, &o))
-+		settings->spi_cs_delay = *(u64 *)o->buffer.pointer;
-+	else
-+		dev_warn(&applespi->spi->dev,
-+			 "Property spiCSDelay not found\n");
-+
-+	if (!acpi_dev_get_property(adev, "resetA2RUsec", ACPI_TYPE_BUFFER, &o))
-+		settings->reset_a2r_usec = *(u64 *)o->buffer.pointer;
-+	else
-+		dev_warn(&applespi->spi->dev,
-+			 "Property resetA2RUsec not found\n");
-+
-+	if (!acpi_dev_get_property(adev, "resetRecUsec", ACPI_TYPE_BUFFER, &o))
-+		settings->reset_rec_usec = *(u64 *)o->buffer.pointer;
-+	else
-+		dev_warn(&applespi->spi->dev,
-+			 "Property resetRecUsec not found\n");
-+
-+	dev_dbg(&applespi->spi->dev,
-+		"SPI settings: spi_cs_delay=%llu reset_a2r_usec=%llu reset_rec_usec=%llu\n",
-+		settings->spi_cs_delay, settings->reset_a2r_usec,
-+		settings->reset_rec_usec);
-+
-+	return 0;
-+}
-+
-+static int applespi_setup_spi(struct applespi_data *applespi)
-+{
-+	int sts;
-+
-+	sts = applespi_get_spi_settings(applespi);
-+	if (sts)
-+		return sts;
-+
-+	spin_lock_init(&applespi->cmd_msg_lock);
-+	init_waitqueue_head(&applespi->drain_complete);
-+
-+	return 0;
-+}
-+
-+static int applespi_enable_spi(struct applespi_data *applespi)
-+{
-+	acpi_status acpi_sts;
-+	unsigned long long spi_status;
-+
-+	/* check if SPI is already enabled, so we can skip the delay below */
-+	acpi_sts = acpi_evaluate_integer(applespi->sist, NULL, NULL,
-+					 &spi_status);
-+	if (ACPI_SUCCESS(acpi_sts) && spi_status)
-+		return 0;
-+
-+	/* SIEN(1) will enable SPI communication */
-+	acpi_sts = acpi_execute_simple_method(applespi->sien, NULL, 1);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev, "SIEN failed: %s\n",
-+			acpi_format_exception(acpi_sts));
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Allow the SPI interface to come up before returning. Without this
-+	 * delay, the SPI commands to enable multitouch mode may not reach
-+	 * the trackpad controller, causing pointer movement to break upon
-+	 * resume from sleep.
-+	 */
-+	msleep(50);
-+
-+	return 0;
-+}
-+
-+static int applespi_send_cmd_msg(struct applespi_data *applespi);
-+
-+static void applespi_msg_complete(struct applespi_data *applespi,
-+				  bool is_write_msg, bool is_read_compl)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	if (is_read_compl)
-+		applespi->read_active = false;
-+	if (is_write_msg)
-+		applespi->write_active = false;
-+
-+	if (applespi->drain && !applespi->write_active)
-+		wake_up_all(&applespi->drain_complete);
-+
-+	if (is_write_msg) {
-+		applespi->cmd_msg_queued = false;
-+		applespi_send_cmd_msg(applespi);
-+	}
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+}
-+
-+static void applespi_async_write_complete(void *context)
-+{
-+	struct applespi_data *applespi = context;
-+	enum applespi_evt_type evt_type = applespi->cmd_evt_type;
-+
-+	applespi_get_trace_fun(evt_type)(evt_type, PT_WRITE,
-+					 applespi->tx_buffer,
-+					 APPLESPI_PACKET_SIZE);
-+	applespi_get_trace_fun(evt_type)(evt_type, PT_STATUS,
-+					 applespi->tx_status,
-+					 APPLESPI_STATUS_SIZE);
-+
-+	if (!applespi_check_write_status(applespi, applespi->wr_m.status)) {
-+		/*
-+		 * If we got an error, we presumably won't get the expected
-+		 * response message either.
-+		 */
-+		applespi_msg_complete(applespi, true, false);
-+	}
-+}
-+
-+static int applespi_send_cmd_msg(struct applespi_data *applespi)
-+{
-+	u16 crc;
-+	int sts;
-+	struct spi_packet *packet = (struct spi_packet *)applespi->tx_buffer;
-+	struct message *message = (struct message *)packet->data;
-+	u16 msg_len;
-+	u8 device;
-+
-+	/* check if draining */
-+	if (applespi->drain)
-+		return 0;
-+
-+	/* check whether send is in progress */
-+	if (applespi->cmd_msg_queued)
-+		return 0;
-+
-+	/* set up packet */
-+	memset(packet, 0, APPLESPI_PACKET_SIZE);
-+
-+	/* are we processing init commands? */
-+	if (applespi->want_tp_info_cmd) {
-+		applespi->want_tp_info_cmd = false;
-+		applespi->want_mt_init_cmd = true;
-+		applespi->cmd_evt_type = ET_CMD_TP_INI;
-+
-+		/* build init command */
-+		device = PACKET_DEV_INFO;
-+
-+		message->type = cpu_to_le16(0x1020);
-+		msg_len = sizeof(message->tp_info_command);
-+
-+		message->zero = 0x02;
-+		message->rsp_buf_len = cpu_to_le16(0x0200);
-+
-+	} else if (applespi->want_mt_init_cmd) {
-+		applespi->want_mt_init_cmd = false;
-+		applespi->cmd_evt_type = ET_CMD_TP_INI;
-+
-+		/* build init command */
-+		device = PACKET_DEV_TPAD;
-+
-+		message->type = cpu_to_le16(0x0252);
-+		msg_len = sizeof(message->init_mt_command);
-+
-+		message->init_mt_command.cmd = cpu_to_le16(0x0102);
-+
-+	/* do we need caps-lock command? */
-+	} else if (applespi->want_cl_led_on != applespi->have_cl_led_on) {
-+		applespi->have_cl_led_on = applespi->want_cl_led_on;
-+		applespi->cmd_evt_type = ET_CMD_CL;
-+
-+		/* build led command */
-+		device = PACKET_DEV_KEYB;
-+
-+		message->type = cpu_to_le16(0x0151);
-+		msg_len = sizeof(message->capsl_command);
-+
-+		message->capsl_command.unknown = 0x01;
-+		message->capsl_command.led = applespi->have_cl_led_on ? 2 : 0;
-+
-+	/* do we need backlight command? */
-+	} else if (applespi->want_bl_level != applespi->have_bl_level) {
-+		applespi->have_bl_level = applespi->want_bl_level;
-+		applespi->cmd_evt_type = ET_CMD_BL;
-+
-+		/* build command buffer */
-+		device = PACKET_DEV_KEYB;
-+
-+		message->type = cpu_to_le16(0xB051);
-+		msg_len = sizeof(message->bl_command);
-+
-+		message->bl_command.const1 = cpu_to_le16(0x01B0);
-+		message->bl_command.level =
-+				cpu_to_le16(applespi->have_bl_level);
-+
-+		if (applespi->have_bl_level > 0)
-+			message->bl_command.const2 = cpu_to_le16(0x01F4);
-+		else
-+			message->bl_command.const2 = cpu_to_le16(0x0001);
-+
-+	/* everything's up-to-date */
-+	} else {
-+		return 0;
-+	}
-+
-+	/* finalize packet */
-+	packet->flags = PACKET_TYPE_WRITE;
-+	packet->device = device;
-+	packet->length = cpu_to_le16(MSG_HEADER_SIZE + msg_len);
-+
-+	message->counter = applespi->cmd_msg_cntr++ % (U8_MAX + 1);
-+
-+	message->length = cpu_to_le16(msg_len - 2);
-+	if (!message->rsp_buf_len)
-+		message->rsp_buf_len = message->length;
-+
-+	crc = crc16(0, (u8 *)message, le16_to_cpu(packet->length) - 2);
-+	put_unaligned_le16(crc, &message->data[msg_len - 2]);
-+
-+	crc = crc16(0, (u8 *)packet, sizeof(*packet) - 2);
-+	packet->crc16 = cpu_to_le16(crc);
-+
-+	/* send command */
-+	sts = applespi_async(applespi, &applespi->wr_m,
-+			     applespi_async_write_complete);
-+	if (sts) {
-+		dev_warn(&applespi->spi->dev,
-+			 "Error queueing async write to device: %d\n", sts);
-+		return sts;
-+	}
-+
-+	applespi->cmd_msg_queued = true;
-+	applespi->write_active = true;
-+
-+	return 0;
-+}
-+
-+static void applespi_init(struct applespi_data *applespi, bool is_resume)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	if (is_resume)
-+		applespi->want_mt_init_cmd = true;
-+	else
-+		applespi->want_tp_info_cmd = true;
-+	applespi_send_cmd_msg(applespi);
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+}
-+
-+static int applespi_set_capsl_led(struct applespi_data *applespi,
-+				  bool capslock_on)
-+{
-+	unsigned long flags;
-+	int sts;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	applespi->want_cl_led_on = capslock_on;
-+	sts = applespi_send_cmd_msg(applespi);
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+
-+	return sts;
-+}
-+
-+static void applespi_set_bl_level(struct led_classdev *led_cdev,
-+				  enum led_brightness value)
-+{
-+	struct applespi_data *applespi =
-+		container_of(led_cdev, struct applespi_data, backlight_info);
-+	unsigned long flags;
-+	int sts;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	if (value == 0) {
-+		applespi->want_bl_level = value;
-+	} else {
-+		/*
-+		 * The backlight does not turn on till level 32, so we scale
-+		 * the range here so that from a user's perspective it turns
-+		 * on at 1.
-+		 */
-+		applespi->want_bl_level =
-+			((value * KBD_BL_LEVEL_ADJ) / KBD_BL_LEVEL_SCALE +
-+			 KBD_BL_LEVEL_MIN);
-+	}
-+
-+	sts = applespi_send_cmd_msg(applespi);
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+}
-+
-+static int applespi_event(struct input_dev *dev, unsigned int type,
-+			  unsigned int code, int value)
-+{
-+	struct applespi_data *applespi = input_get_drvdata(dev);
-+
-+	switch (type) {
-+	case EV_LED:
-+		applespi_set_capsl_led(applespi, !!test_bit(LED_CAPSL, dev->led));
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+/* lifted from the BCM5974 driver and renamed from raw2int */
-+/* convert 16-bit little endian to signed integer */
-+static inline int le16_to_int(__le16 x)
-+{
-+	return (signed short)le16_to_cpu(x);
-+}
-+
-+static void applespi_debug_update_dimensions(struct applespi_data *applespi,
-+					     const struct tp_finger *f)
-+{
-+	applespi->tp_dim_min_x = min_t(int, applespi->tp_dim_min_x, f->abs_x);
-+	applespi->tp_dim_max_x = max_t(int, applespi->tp_dim_max_x, f->abs_x);
-+	applespi->tp_dim_min_y = min_t(int, applespi->tp_dim_min_y, f->abs_y);
-+	applespi->tp_dim_max_y = max_t(int, applespi->tp_dim_max_y, f->abs_y);
-+}
-+
-+static int applespi_tp_dim_open(struct inode *inode, struct file *file)
-+{
-+	struct applespi_data *applespi = inode->i_private;
-+
-+	file->private_data = applespi;
-+
-+	snprintf(applespi->tp_dim_val, sizeof(applespi->tp_dim_val),
-+		 "0x%.4x %dx%d+%u+%u\n",
-+		 applespi->touchpad_input_dev->id.product,
-+		 applespi->tp_dim_min_x, applespi->tp_dim_min_y,
-+		 applespi->tp_dim_max_x - applespi->tp_dim_min_x,
-+		 applespi->tp_dim_max_y - applespi->tp_dim_min_y);
-+
-+	return nonseekable_open(inode, file);
-+}
-+
-+static ssize_t applespi_tp_dim_read(struct file *file, char __user *buf,
-+				    size_t len, loff_t *off)
-+{
-+	struct applespi_data *applespi = file->private_data;
-+
-+	return simple_read_from_buffer(buf, len, off, applespi->tp_dim_val,
-+				       strlen(applespi->tp_dim_val));
-+}
-+
-+static const struct file_operations applespi_tp_dim_fops = {
-+	.owner = THIS_MODULE,
-+	.open = applespi_tp_dim_open,
-+	.read = applespi_tp_dim_read,
-+	.llseek = no_llseek,
-+};
-+
-+static void report_finger_data(struct input_dev *input, int slot,
-+			       const struct input_mt_pos *pos,
-+			       const struct tp_finger *f)
-+{
-+	input_mt_slot(input, slot);
-+	input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-+
-+	input_report_abs(input, ABS_MT_TOUCH_MAJOR,
-+			 le16_to_int(f->touch_major) << 1);
-+	input_report_abs(input, ABS_MT_TOUCH_MINOR,
-+			 le16_to_int(f->touch_minor) << 1);
-+	input_report_abs(input, ABS_MT_WIDTH_MAJOR,
-+			 le16_to_int(f->tool_major) << 1);
-+	input_report_abs(input, ABS_MT_WIDTH_MINOR,
-+			 le16_to_int(f->tool_minor) << 1);
-+	input_report_abs(input, ABS_MT_ORIENTATION,
-+			 MAX_FINGER_ORIENTATION - le16_to_int(f->orientation));
-+	input_report_abs(input, ABS_MT_POSITION_X, pos->x);
-+	input_report_abs(input, ABS_MT_POSITION_Y, pos->y);
-+}
-+
-+static void report_tp_state(struct applespi_data *applespi,
-+			    struct touchpad_protocol *t)
-+{
-+	const struct tp_finger *f;
-+	struct input_dev *input;
-+	const struct applespi_tp_info *tp_info = &applespi->tp_info;
-+	int i, n;
-+
-+	/* touchpad_input_dev is set async in worker */
-+	input = smp_load_acquire(&applespi->touchpad_input_dev);
-+	if (!input)
-+		return;	/* touchpad isn't initialized yet */
-+
-+	n = 0;
-+
-+	for (i = 0; i < t->number_of_fingers; i++) {
-+		f = &t->fingers[i];
-+		if (le16_to_int(f->touch_major) == 0)
-+			continue;
-+		applespi->pos[n].x = le16_to_int(f->abs_x);
-+		applespi->pos[n].y = tp_info->y_min + tp_info->y_max -
-+				     le16_to_int(f->abs_y);
-+		n++;
-+
-+		if (applespi->debug_tp_dim)
-+			applespi_debug_update_dimensions(applespi, f);
-+	}
-+
-+	input_mt_assign_slots(input, applespi->slots, applespi->pos, n, 0);
-+
-+	for (i = 0; i < n; i++)
-+		report_finger_data(input, applespi->slots[i],
-+				   &applespi->pos[i], &t->fingers[i]);
-+
-+	input_mt_sync_frame(input);
-+	input_report_key(input, BTN_LEFT, t->clicked);
-+
-+	input_sync(input);
-+}
-+
-+static const struct applespi_key_translation *
-+applespi_find_translation(const struct applespi_key_translation *table, u16 key)
-+{
-+	const struct applespi_key_translation *trans;
-+
-+	for (trans = table; trans->from; trans++)
-+		if (trans->from == key)
-+			return trans;
-+
-+	return NULL;
-+}
-+
-+static unsigned int applespi_translate_fn_key(unsigned int key, int fn_pressed)
-+{
-+	const struct applespi_key_translation *trans;
-+	int do_translate;
-+
-+	trans = applespi_find_translation(applespi_fn_codes, key);
-+	if (trans) {
-+		if (trans->flags & APPLE_FLAG_FKEY)
-+			do_translate = (fnmode == 2 && fn_pressed) ||
-+				       (fnmode == 1 && !fn_pressed);
-+		else
-+			do_translate = fn_pressed;
-+
-+		if (do_translate)
-+			key = trans->to;
-+	}
-+
-+	return key;
-+}
-+
-+static unsigned int applespi_translate_iso_layout(unsigned int key)
-+{
-+	const struct applespi_key_translation *trans;
-+
-+	trans = applespi_find_translation(apple_iso_keyboard, key);
-+	if (trans)
-+		key = trans->to;
-+
-+	return key;
-+}
-+
-+static unsigned int applespi_code_to_key(u8 code, int fn_pressed)
-+{
-+	unsigned int key = applespi_scancodes[code];
-+
-+	if (fnmode)
-+		key = applespi_translate_fn_key(key, fn_pressed);
-+	if (iso_layout)
-+		key = applespi_translate_iso_layout(key);
-+	return key;
-+}
-+
-+static void
-+applespi_remap_fn_key(struct keyboard_protocol *keyboard_protocol)
-+{
-+	unsigned char tmp;
-+	u8 bit = BIT(fnremap - 1);
-+
-+	if (!fnremap || fnremap > ARRAY_SIZE(applespi_controlcodes) ||
-+	    !applespi_controlcodes[fnremap - 1])
-+		return;
-+
-+	tmp = keyboard_protocol->fn_pressed;
-+	keyboard_protocol->fn_pressed = !!(keyboard_protocol->modifiers & bit);
-+	if (tmp)
-+		keyboard_protocol->modifiers |= bit;
-+	else
-+		keyboard_protocol->modifiers &= ~bit;
-+}
-+
-+static void
-+applespi_handle_keyboard_event(struct applespi_data *applespi,
-+			       struct keyboard_protocol *keyboard_protocol)
-+{
-+	unsigned int key;
-+	int i, j;
-+
-+	compiletime_assert(ARRAY_SIZE(applespi_controlcodes) ==
-+			   sizeof_field(struct keyboard_protocol, modifiers) * 8,
-+			   "applespi_controlcodes has wrong number of entries");
-+
-+	/* check for rollover overflow, which is signalled by all keys == 1 */
-+	for (i = 0; i < MAX_ROLLOVER; i++) {
-+		if (keyboard_protocol->keys_pressed[i] != 1)
-+			break;
-+	}
-+
-+	if (i == MAX_ROLLOVER)	/* all keys were 1 */
-+		return;
-+
-+	/* remap fn key if desired */
-+	applespi_remap_fn_key(keyboard_protocol);
-+
-+	/* check released keys */
-+	for (i = 0; i < MAX_ROLLOVER; i++) {
-+		for (j = 0; j < MAX_ROLLOVER; j++) {
-+			if (applespi->last_keys_pressed[i] ==
-+			    keyboard_protocol->keys_pressed[j])
-+				break;
-+		}
-+
-+		if (j < MAX_ROLLOVER)	/* key is still pressed */
-+			continue;
-+
-+		key = applespi_code_to_key(applespi->last_keys_pressed[i],
-+					   applespi->last_keys_fn_pressed[i]);
-+		input_report_key(applespi->keyboard_input_dev, key, 0);
-+		applespi->last_keys_fn_pressed[i] = 0;
-+	}
-+
-+	/* check pressed keys */
-+	for (i = 0; i < MAX_ROLLOVER; i++) {
-+		if (keyboard_protocol->keys_pressed[i] <
-+				ARRAY_SIZE(applespi_scancodes) &&
-+		    keyboard_protocol->keys_pressed[i] > 0) {
-+			key = applespi_code_to_key(
-+					keyboard_protocol->keys_pressed[i],
-+					keyboard_protocol->fn_pressed);
-+			input_report_key(applespi->keyboard_input_dev, key, 1);
-+			applespi->last_keys_fn_pressed[i] =
-+					keyboard_protocol->fn_pressed;
-+		}
-+	}
-+
-+	/* check control keys */
-+	for (i = 0; i < ARRAY_SIZE(applespi_controlcodes); i++) {
-+		if (keyboard_protocol->modifiers & BIT(i))
-+			input_report_key(applespi->keyboard_input_dev,
-+					 applespi_controlcodes[i], 1);
-+		else
-+			input_report_key(applespi->keyboard_input_dev,
-+					 applespi_controlcodes[i], 0);
-+	}
-+
-+	/* check function key */
-+	if (keyboard_protocol->fn_pressed && !applespi->last_fn_pressed)
-+		input_report_key(applespi->keyboard_input_dev, KEY_FN, 1);
-+	else if (!keyboard_protocol->fn_pressed && applespi->last_fn_pressed)
-+		input_report_key(applespi->keyboard_input_dev, KEY_FN, 0);
-+	applespi->last_fn_pressed = keyboard_protocol->fn_pressed;
-+
-+	/* done */
-+	input_sync(applespi->keyboard_input_dev);
-+	memcpy(&applespi->last_keys_pressed, keyboard_protocol->keys_pressed,
-+	       sizeof(applespi->last_keys_pressed));
-+}
-+
-+static const struct applespi_tp_info *applespi_find_touchpad_info(__u8 model)
-+{
-+	const struct applespi_tp_model_info *info;
-+
-+	for (info = applespi_tp_models; info->model; info++) {
-+		if (info->model == model)
-+			return &info->tp_info;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int
-+applespi_register_touchpad_device(struct applespi_data *applespi,
-+				  struct touchpad_info_protocol *rcvd_tp_info)
-+{
-+	const struct applespi_tp_info *tp_info;
-+	struct input_dev *touchpad_input_dev;
-+	int sts;
-+
-+	/* set up touchpad dimensions */
-+	tp_info = applespi_find_touchpad_info(rcvd_tp_info->model_no);
-+	if (!tp_info) {
-+		dev_warn(&applespi->spi->dev,
-+			 "Unknown touchpad model %x - falling back to MB8 touchpad\n",
-+			 rcvd_tp_info->model_no);
-+		tp_info = &applespi_tp_models[0].tp_info;
-+	}
-+
-+	applespi->tp_info = *tp_info;
-+
-+	if (touchpad_dimensions[0]) {
-+		int x, y, w, h;
-+
-+		sts = sscanf(touchpad_dimensions, "%dx%d+%u+%u", &x, &y, &w, &h);
-+		if (sts == 4) {
-+			dev_info(&applespi->spi->dev,
-+				 "Overriding touchpad dimensions from module param\n");
-+			applespi->tp_info.x_min = x;
-+			applespi->tp_info.y_min = y;
-+			applespi->tp_info.x_max = x + w;
-+			applespi->tp_info.y_max = y + h;
-+		} else {
-+			dev_warn(&applespi->spi->dev,
-+				 "Invalid touchpad dimensions '%s': must be in the form XxY+W+H\n",
-+				 touchpad_dimensions);
-+			touchpad_dimensions[0] = '\0';
-+		}
-+	}
-+	if (!touchpad_dimensions[0]) {
-+		snprintf(touchpad_dimensions, sizeof(touchpad_dimensions),
-+			 "%dx%d+%u+%u",
-+			 applespi->tp_info.x_min,
-+			 applespi->tp_info.y_min,
-+			 applespi->tp_info.x_max - applespi->tp_info.x_min,
-+			 applespi->tp_info.y_max - applespi->tp_info.y_min);
-+	}
-+
-+	/* create touchpad input device */
-+	touchpad_input_dev = devm_input_allocate_device(&applespi->spi->dev);
-+	if (!touchpad_input_dev) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to allocate touchpad input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	touchpad_input_dev->name = "Apple SPI Touchpad";
-+	touchpad_input_dev->phys = "applespi/input1";
-+	touchpad_input_dev->dev.parent = &applespi->spi->dev;
-+	touchpad_input_dev->id.bustype = BUS_SPI;
-+	touchpad_input_dev->id.vendor = SYNAPTICS_VENDOR_ID;
-+	touchpad_input_dev->id.product =
-+			rcvd_tp_info->model_no << 8 | rcvd_tp_info->model_flags;
-+
-+	/* basic properties */
-+	input_set_capability(touchpad_input_dev, EV_REL, REL_X);
-+	input_set_capability(touchpad_input_dev, EV_REL, REL_Y);
-+
-+	__set_bit(INPUT_PROP_POINTER, touchpad_input_dev->propbit);
-+	__set_bit(INPUT_PROP_BUTTONPAD, touchpad_input_dev->propbit);
-+
-+	/* finger touch area */
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_TOUCH_MAJOR,
-+			     0, 5000, 0, 0);
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_TOUCH_MINOR,
-+			     0, 5000, 0, 0);
-+
-+	/* finger approach area */
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_WIDTH_MAJOR,
-+			     0, 5000, 0, 0);
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_WIDTH_MINOR,
-+			     0, 5000, 0, 0);
-+
-+	/* finger orientation */
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_ORIENTATION,
-+			     -MAX_FINGER_ORIENTATION, MAX_FINGER_ORIENTATION,
-+			     0, 0);
-+
-+	/* finger position */
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_POSITION_X,
-+			     applespi->tp_info.x_min, applespi->tp_info.x_max,
-+			     0, 0);
-+	input_set_abs_params(touchpad_input_dev, ABS_MT_POSITION_Y,
-+			     applespi->tp_info.y_min, applespi->tp_info.y_max,
-+			     0, 0);
-+
-+	/* touchpad button */
-+	input_set_capability(touchpad_input_dev, EV_KEY, BTN_LEFT);
-+
-+	/* multitouch */
-+	input_mt_init_slots(touchpad_input_dev, MAX_FINGERS,
-+			    INPUT_MT_POINTER | INPUT_MT_DROP_UNUSED |
-+			    INPUT_MT_TRACK);
-+
-+	/* register input device */
-+	sts = input_register_device(touchpad_input_dev);
-+	if (sts) {
-+		dev_err(&applespi->spi->dev,
-+			"Unable to register touchpad input device (%d)\n", sts);
-+		return sts;
-+	}
-+
-+	/* touchpad_input_dev is read async in spi callback */
-+	smp_store_release(&applespi->touchpad_input_dev, touchpad_input_dev);
-+
-+	return 0;
-+}
-+
-+static void applespi_worker(struct work_struct *work)
-+{
-+	struct applespi_data *applespi =
-+		container_of(work, struct applespi_data, work);
-+
-+	applespi_register_touchpad_device(applespi, &applespi->rcvd_tp_info);
-+}
-+
-+static void applespi_handle_cmd_response(struct applespi_data *applespi,
-+					 struct spi_packet *packet,
-+					 struct message *message)
-+{
-+	if (packet->device == PACKET_DEV_INFO &&
-+	    le16_to_cpu(message->type) == 0x1020) {
-+		/*
-+		 * We're not allowed to sleep here, but registering an input
-+		 * device can sleep.
-+		 */
-+		applespi->rcvd_tp_info = message->tp_info;
-+		schedule_work(&applespi->work);
-+		return;
-+	}
-+
-+	if (le16_to_cpu(message->length) != 0x0000) {
-+		dev_warn_ratelimited(&applespi->spi->dev,
-+				     "Received unexpected write response: length=%x\n",
-+				     le16_to_cpu(message->length));
-+		return;
-+	}
-+
-+	if (packet->device == PACKET_DEV_TPAD &&
-+	    le16_to_cpu(message->type) == 0x0252 &&
-+	    le16_to_cpu(message->rsp_buf_len) == 0x0002)
-+		dev_info(&applespi->spi->dev, "modeswitch done.\n");
-+}
-+
-+static bool applespi_verify_crc(struct applespi_data *applespi, u8 *buffer,
-+				size_t buflen)
-+{
-+	u16 crc;
-+
-+	crc = crc16(0, buffer, buflen);
-+	if (crc) {
-+		dev_warn_ratelimited(&applespi->spi->dev,
-+				     "Received corrupted packet (crc mismatch)\n");
-+		trace_applespi_bad_crc(ET_RD_CRC, READ, buffer, buflen);
-+
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static void applespi_debug_print_read_packet(struct applespi_data *applespi,
-+					     struct spi_packet *packet)
-+{
-+	unsigned int evt_type;
-+
-+	if (packet->flags == PACKET_TYPE_READ &&
-+	    packet->device == PACKET_DEV_KEYB)
-+		evt_type = ET_RD_KEYB;
-+	else if (packet->flags == PACKET_TYPE_READ &&
-+		 packet->device == PACKET_DEV_TPAD)
-+		evt_type = ET_RD_TPAD;
-+	else if (packet->flags == PACKET_TYPE_WRITE)
-+		evt_type = applespi->cmd_evt_type;
-+	else
-+		evt_type = ET_RD_UNKN;
-+
-+	applespi_get_trace_fun(evt_type)(evt_type, PT_READ, applespi->rx_buffer,
-+					 APPLESPI_PACKET_SIZE);
-+}
-+
-+static void applespi_got_data(struct applespi_data *applespi)
-+{
-+	struct spi_packet *packet;
-+	struct message *message;
-+	unsigned int msg_len;
-+	unsigned int off;
-+	unsigned int rem;
-+	unsigned int len;
-+
-+	/* process packet header */
-+	if (!applespi_verify_crc(applespi, applespi->rx_buffer,
-+				 APPLESPI_PACKET_SIZE)) {
-+		unsigned long flags;
-+
-+		spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+		if (applespi->drain) {
-+			applespi->read_active = false;
-+			applespi->write_active = false;
-+
-+			wake_up_all(&applespi->drain_complete);
-+		}
-+
-+		spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+
-+		return;
-+	}
-+
-+	packet = (struct spi_packet *)applespi->rx_buffer;
-+
-+	applespi_debug_print_read_packet(applespi, packet);
-+
-+	off = le16_to_cpu(packet->offset);
-+	rem = le16_to_cpu(packet->remaining);
-+	len = le16_to_cpu(packet->length);
-+
-+	if (len > sizeof(packet->data)) {
-+		dev_warn_ratelimited(&applespi->spi->dev,
-+				     "Received corrupted packet (invalid packet length %u)\n",
-+				     len);
-+		goto msg_complete;
-+	}
-+
-+	/* handle multi-packet messages */
-+	if (rem > 0 || off > 0) {
-+		if (off != applespi->saved_msg_len) {
-+			dev_warn_ratelimited(&applespi->spi->dev,
-+					     "Received unexpected offset (got %u, expected %u)\n",
-+					     off, applespi->saved_msg_len);
-+			goto msg_complete;
-+		}
-+
-+		if (off + rem > MAX_PKTS_PER_MSG * APPLESPI_PACKET_SIZE) {
-+			dev_warn_ratelimited(&applespi->spi->dev,
-+					     "Received message too large (size %u)\n",
-+					     off + rem);
-+			goto msg_complete;
-+		}
-+
-+		if (off + len > MAX_PKTS_PER_MSG * APPLESPI_PACKET_SIZE) {
-+			dev_warn_ratelimited(&applespi->spi->dev,
-+					     "Received message too large (size %u)\n",
-+					     off + len);
-+			goto msg_complete;
-+		}
-+
-+		memcpy(applespi->msg_buf + off, &packet->data, len);
-+		applespi->saved_msg_len += len;
-+
-+		if (rem > 0)
-+			return;
-+
-+		message = (struct message *)applespi->msg_buf;
-+		msg_len = applespi->saved_msg_len;
-+	} else {
-+		message = (struct message *)&packet->data;
-+		msg_len = len;
-+	}
-+
-+	/* got complete message - verify */
-+	if (!applespi_verify_crc(applespi, (u8 *)message, msg_len))
-+		goto msg_complete;
-+
-+	if (le16_to_cpu(message->length) != msg_len - MSG_HEADER_SIZE - 2) {
-+		dev_warn_ratelimited(&applespi->spi->dev,
-+				     "Received corrupted packet (invalid message length %u - expected %u)\n",
-+				     le16_to_cpu(message->length),
-+				     msg_len - MSG_HEADER_SIZE - 2);
-+		goto msg_complete;
-+	}
-+
-+	/* handle message */
-+	if (packet->flags == PACKET_TYPE_READ &&
-+	    packet->device == PACKET_DEV_KEYB) {
-+		applespi_handle_keyboard_event(applespi, &message->keyboard);
-+
-+	} else if (packet->flags == PACKET_TYPE_READ &&
-+		   packet->device == PACKET_DEV_TPAD) {
-+		struct touchpad_protocol *tp;
-+		size_t tp_len;
-+
-+		tp = &message->touchpad;
-+		tp_len = sizeof(*tp) +
-+			 tp->number_of_fingers * sizeof(tp->fingers[0]);
-+
-+		if (le16_to_cpu(message->length) + 2 != tp_len) {
-+			dev_warn_ratelimited(&applespi->spi->dev,
-+					     "Received corrupted packet (invalid message length %u - num-fingers %u, tp-len %zu)\n",
-+					     le16_to_cpu(message->length),
-+					     tp->number_of_fingers, tp_len);
-+			goto msg_complete;
-+		}
-+
-+		if (tp->number_of_fingers > MAX_FINGERS) {
-+			dev_warn_ratelimited(&applespi->spi->dev,
-+					     "Number of reported fingers (%u) exceeds max (%u))\n",
-+					     tp->number_of_fingers,
-+					     MAX_FINGERS);
-+			tp->number_of_fingers = MAX_FINGERS;
-+		}
-+
-+		report_tp_state(applespi, tp);
-+
-+	} else if (packet->flags == PACKET_TYPE_WRITE) {
-+		applespi_handle_cmd_response(applespi, packet, message);
-+	}
-+
-+msg_complete:
-+	applespi->saved_msg_len = 0;
-+
-+	applespi_msg_complete(applespi, packet->flags == PACKET_TYPE_WRITE,
-+			      true);
-+}
-+
-+static void applespi_async_read_complete(void *context)
-+{
-+	struct applespi_data *applespi = context;
-+
-+	if (applespi->rd_m.status < 0) {
-+		dev_warn(&applespi->spi->dev, "Error reading from device: %d\n",
-+			 applespi->rd_m.status);
-+		/*
-+		 * We don't actually know if this was a pure read, or a response
-+		 * to a write. But this is a rare error condition that should
-+		 * never occur, so clearing both flags to avoid deadlock.
-+		 */
-+		applespi_msg_complete(applespi, true, true);
-+	} else {
-+		applespi_got_data(applespi);
-+	}
-+
-+	acpi_finish_gpe(NULL, applespi->gpe);
-+}
-+
-+static u32 applespi_notify(acpi_handle gpe_device, u32 gpe, void *context)
-+{
-+	struct applespi_data *applespi = context;
-+	int sts;
-+	unsigned long flags;
-+
-+	trace_applespi_irq_received(ET_RD_IRQ, PT_READ);
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	if (!applespi->suspended) {
-+		sts = applespi_async(applespi, &applespi->rd_m,
-+				     applespi_async_read_complete);
-+		if (sts)
-+			dev_warn(&applespi->spi->dev,
-+				 "Error queueing async read to device: %d\n",
-+				 sts);
-+		else
-+			applespi->read_active = true;
-+	}
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+
-+	return ACPI_INTERRUPT_HANDLED;
-+}
-+
-+static int applespi_get_saved_bl_level(struct applespi_data *applespi)
-+{
-+	struct efivar_entry *efivar_entry;
-+	u16 efi_data = 0;
-+	unsigned long efi_data_len;
-+	int sts;
-+
-+	efivar_entry = kmalloc(sizeof(*efivar_entry), GFP_KERNEL);
-+	if (!efivar_entry)
-+		return -ENOMEM;
-+
-+	memcpy(efivar_entry->var.VariableName, EFI_BL_LEVEL_NAME,
-+	       sizeof(EFI_BL_LEVEL_NAME));
-+	efivar_entry->var.VendorGuid = EFI_BL_LEVEL_GUID;
-+	efi_data_len = sizeof(efi_data);
-+
-+	sts = efivar_entry_get(efivar_entry, NULL, &efi_data_len, &efi_data);
-+	if (sts && sts != -ENOENT)
-+		dev_warn(&applespi->spi->dev,
-+			 "Error getting backlight level from EFI vars: %d\n",
-+			 sts);
-+
-+	kfree(efivar_entry);
-+
-+	return sts ? sts : efi_data;
-+}
-+
-+static void applespi_save_bl_level(struct applespi_data *applespi,
-+				   unsigned int level)
-+{
-+	efi_guid_t efi_guid;
-+	u32 efi_attr;
-+	unsigned long efi_data_len;
-+	u16 efi_data;
-+	int sts;
-+
-+	/* Save keyboard backlight level */
-+	efi_guid = EFI_BL_LEVEL_GUID;
-+	efi_data = (u16)level;
-+	efi_data_len = sizeof(efi_data);
-+	efi_attr = EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
-+		   EFI_VARIABLE_RUNTIME_ACCESS;
-+
-+	sts = efivar_entry_set_safe(EFI_BL_LEVEL_NAME, efi_guid, efi_attr, true,
-+				    efi_data_len, &efi_data);
-+	if (sts)
-+		dev_warn(&applespi->spi->dev,
-+			 "Error saving backlight level to EFI vars: %d\n", sts);
-+}
-+
-+static int applespi_probe(struct spi_device *spi)
-+{
-+	struct applespi_data *applespi;
-+	acpi_handle spi_handle = ACPI_HANDLE(&spi->dev);
-+	acpi_status acpi_sts;
-+	int sts, i;
-+	unsigned long long gpe, usb_status;
-+
-+	/* check if the USB interface is present and enabled already */
-+	acpi_sts = acpi_evaluate_integer(spi_handle, "UIST", NULL, &usb_status);
-+	if (ACPI_SUCCESS(acpi_sts) && usb_status) {
-+		/* let the USB driver take over instead */
-+		dev_info(&spi->dev, "USB interface already enabled\n");
-+		return -ENODEV;
-+	}
-+
-+	/* allocate driver data */
-+	applespi = devm_kzalloc(&spi->dev, sizeof(*applespi), GFP_KERNEL);
-+	if (!applespi)
-+		return -ENOMEM;
-+
-+	applespi->spi = spi;
-+
-+	INIT_WORK(&applespi->work, applespi_worker);
-+
-+	/* store the driver data */
-+	spi_set_drvdata(spi, applespi);
-+
-+	/* create our buffers */
-+	applespi->tx_buffer = devm_kmalloc(&spi->dev, APPLESPI_PACKET_SIZE,
-+					   GFP_KERNEL);
-+	applespi->tx_status = devm_kmalloc(&spi->dev, APPLESPI_STATUS_SIZE,
-+					   GFP_KERNEL);
-+	applespi->rx_buffer = devm_kmalloc(&spi->dev, APPLESPI_PACKET_SIZE,
-+					   GFP_KERNEL);
-+	applespi->msg_buf = devm_kmalloc_array(&spi->dev, MAX_PKTS_PER_MSG,
-+					       APPLESPI_PACKET_SIZE,
-+					       GFP_KERNEL);
-+
-+	if (!applespi->tx_buffer || !applespi->tx_status ||
-+	    !applespi->rx_buffer || !applespi->msg_buf)
-+		return -ENOMEM;
-+
-+	/* set up our spi messages */
-+	applespi_setup_read_txfrs(applespi);
-+	applespi_setup_write_txfrs(applespi);
-+
-+	/* cache ACPI method handles */
-+	acpi_sts = acpi_get_handle(spi_handle, "SIEN", &applespi->sien);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to get SIEN ACPI method handle: %s\n",
-+			acpi_format_exception(acpi_sts));
-+		return -ENODEV;
-+	}
-+
-+	acpi_sts = acpi_get_handle(spi_handle, "SIST", &applespi->sist);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to get SIST ACPI method handle: %s\n",
-+			acpi_format_exception(acpi_sts));
-+		return -ENODEV;
-+	}
-+
-+	/* switch on the SPI interface */
-+	sts = applespi_setup_spi(applespi);
-+	if (sts)
-+		return sts;
-+
-+	sts = applespi_enable_spi(applespi);
-+	if (sts)
-+		return sts;
-+
-+	/* setup the keyboard input dev */
-+	applespi->keyboard_input_dev = devm_input_allocate_device(&spi->dev);
-+
-+	if (!applespi->keyboard_input_dev)
-+		return -ENOMEM;
-+
-+	applespi->keyboard_input_dev->name = "Apple SPI Keyboard";
-+	applespi->keyboard_input_dev->phys = "applespi/input0";
-+	applespi->keyboard_input_dev->dev.parent = &spi->dev;
-+	applespi->keyboard_input_dev->id.bustype = BUS_SPI;
-+
-+	applespi->keyboard_input_dev->evbit[0] =
-+			BIT_MASK(EV_KEY) | BIT_MASK(EV_LED) | BIT_MASK(EV_REP);
-+	applespi->keyboard_input_dev->ledbit[0] = BIT_MASK(LED_CAPSL);
-+
-+	input_set_drvdata(applespi->keyboard_input_dev, applespi);
-+	applespi->keyboard_input_dev->event = applespi_event;
-+
-+	for (i = 0; i < ARRAY_SIZE(applespi_scancodes); i++)
-+		if (applespi_scancodes[i])
-+			input_set_capability(applespi->keyboard_input_dev,
-+					     EV_KEY, applespi_scancodes[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(applespi_controlcodes); i++)
-+		if (applespi_controlcodes[i])
-+			input_set_capability(applespi->keyboard_input_dev,
-+					     EV_KEY, applespi_controlcodes[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(applespi_fn_codes); i++)
-+		if (applespi_fn_codes[i].to)
-+			input_set_capability(applespi->keyboard_input_dev,
-+					     EV_KEY, applespi_fn_codes[i].to);
-+
-+	input_set_capability(applespi->keyboard_input_dev, EV_KEY, KEY_FN);
-+
-+	sts = input_register_device(applespi->keyboard_input_dev);
-+	if (sts) {
-+		dev_err(&applespi->spi->dev,
-+			"Unable to register keyboard input device (%d)\n", sts);
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * The applespi device doesn't send interrupts normally (as is described
-+	 * in its DSDT), but rather seems to use ACPI GPEs.
-+	 */
-+	acpi_sts = acpi_evaluate_integer(spi_handle, "_GPE", NULL, &gpe);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to obtain GPE for SPI slave device: %s\n",
-+			acpi_format_exception(acpi_sts));
-+		return -ENODEV;
-+	}
-+	applespi->gpe = (int)gpe;
-+
-+	acpi_sts = acpi_install_gpe_handler(NULL, applespi->gpe,
-+					    ACPI_GPE_LEVEL_TRIGGERED,
-+					    applespi_notify, applespi);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to install GPE handler for GPE %d: %s\n",
-+			applespi->gpe, acpi_format_exception(acpi_sts));
-+		return -ENODEV;
-+	}
-+
-+	applespi->suspended = false;
-+
-+	acpi_sts = acpi_enable_gpe(NULL, applespi->gpe);
-+	if (ACPI_FAILURE(acpi_sts)) {
-+		dev_err(&applespi->spi->dev,
-+			"Failed to enable GPE handler for GPE %d: %s\n",
-+			applespi->gpe, acpi_format_exception(acpi_sts));
-+		acpi_remove_gpe_handler(NULL, applespi->gpe, applespi_notify);
-+		return -ENODEV;
-+	}
-+
-+	/* trigger touchpad setup */
-+	applespi_init(applespi, false);
-+
-+	/*
-+	 * By default this device is not enabled for wakeup; but USB keyboards
-+	 * generally are, so the expectation is that by default the keyboard
-+	 * will wake the system.
-+	 */
-+	device_wakeup_enable(&spi->dev);
-+
-+	/* set up keyboard-backlight */
-+	sts = applespi_get_saved_bl_level(applespi);
-+	if (sts >= 0)
-+		applespi_set_bl_level(&applespi->backlight_info, sts);
-+
-+	applespi->backlight_info.name            = "spi::kbd_backlight";
-+	applespi->backlight_info.default_trigger = "kbd-backlight";
-+	applespi->backlight_info.brightness_set  = applespi_set_bl_level;
-+
-+	sts = devm_led_classdev_register(&spi->dev, &applespi->backlight_info);
-+	if (sts)
-+		dev_warn(&applespi->spi->dev,
-+			 "Unable to register keyboard backlight class dev (%d)\n",
-+			 sts);
-+
-+	/* set up debugfs entries for touchpad dimensions logging */
-+	applespi->debugfs_root = debugfs_create_dir("applespi", NULL);
-+	if (IS_ERR(applespi->debugfs_root)) {
-+		if (PTR_ERR(applespi->debugfs_root) != -ENODEV)
-+			dev_warn(&applespi->spi->dev,
-+				 "Error creating debugfs root entry (%ld)\n",
-+				 PTR_ERR(applespi->debugfs_root));
-+	} else {
-+		struct dentry *ret;
-+
-+		ret = debugfs_create_bool("enable_tp_dim", 0600,
-+					  applespi->debugfs_root,
-+					  &applespi->debug_tp_dim);
-+		if (IS_ERR(ret))
-+			dev_dbg(&applespi->spi->dev,
-+				"Error creating debugfs entry enable_tp_dim (%ld)\n",
-+				PTR_ERR(ret));
-+
-+		ret = debugfs_create_file("tp_dim", 0400,
-+					  applespi->debugfs_root, applespi,
-+					  &applespi_tp_dim_fops);
-+		if (IS_ERR(ret))
-+			dev_dbg(&applespi->spi->dev,
-+				"Error creating debugfs entry tp_dim (%ld)\n",
-+				PTR_ERR(ret));
-+	}
-+
-+	return 0;
-+}
-+
-+static void applespi_drain_writes(struct applespi_data *applespi)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	applespi->drain = true;
-+	wait_event_lock_irq(applespi->drain_complete, !applespi->write_active,
-+			    applespi->cmd_msg_lock);
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+}
-+
-+static void applespi_drain_reads(struct applespi_data *applespi)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	wait_event_lock_irq(applespi->drain_complete, !applespi->read_active,
-+			    applespi->cmd_msg_lock);
-+
-+	applespi->suspended = true;
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+}
-+
-+static int applespi_remove(struct spi_device *spi)
-+{
-+	struct applespi_data *applespi = spi_get_drvdata(spi);
-+
-+	applespi_drain_writes(applespi);
-+
-+	acpi_disable_gpe(NULL, applespi->gpe);
-+	acpi_remove_gpe_handler(NULL, applespi->gpe, applespi_notify);
-+	device_wakeup_disable(&spi->dev);
-+
-+	applespi_drain_reads(applespi);
-+
-+	debugfs_remove_recursive(applespi->debugfs_root);
-+
-+	return 0;
-+}
-+
-+static void applespi_shutdown(struct spi_device *spi)
-+{
-+	struct applespi_data *applespi = spi_get_drvdata(spi);
-+
-+	applespi_save_bl_level(applespi, applespi->have_bl_level);
-+}
-+
-+static int applespi_poweroff_late(struct device *dev)
-+{
-+	struct spi_device *spi = to_spi_device(dev);
-+	struct applespi_data *applespi = spi_get_drvdata(spi);
-+
-+	applespi_save_bl_level(applespi, applespi->have_bl_level);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int applespi_suspend(struct device *dev)
-+{
-+	struct spi_device *spi = to_spi_device(dev);
-+	struct applespi_data *applespi = spi_get_drvdata(spi);
-+	acpi_status acpi_sts;
-+	int sts;
-+
-+	/* turn off caps-lock - it'll stay on otherwise */
-+	sts = applespi_set_capsl_led(applespi, false);
-+	if (sts)
-+		dev_warn(&applespi->spi->dev,
-+			 "Failed to turn off caps-lock led (%d)\n", sts);
-+
-+	applespi_drain_writes(applespi);
-+
-+	/* disable the interrupt */
-+	acpi_sts = acpi_disable_gpe(NULL, applespi->gpe);
-+	if (ACPI_FAILURE(acpi_sts))
-+		dev_err(&applespi->spi->dev,
-+			"Failed to disable GPE handler for GPE %d: %s\n",
-+			applespi->gpe, acpi_format_exception(acpi_sts));
-+
-+	applespi_drain_reads(applespi);
-+
-+	return 0;
-+}
-+
-+static int applespi_resume(struct device *dev)
-+{
-+	struct spi_device *spi = to_spi_device(dev);
-+	struct applespi_data *applespi = spi_get_drvdata(spi);
-+	acpi_status acpi_sts;
-+	unsigned long flags;
-+
-+	/* ensure our flags and state reflect a newly resumed device */
-+	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
-+
-+	applespi->drain = false;
-+	applespi->have_cl_led_on = false;
-+	applespi->have_bl_level = 0;
-+	applespi->cmd_msg_queued = false;
-+	applespi->read_active = false;
-+	applespi->write_active = false;
-+
-+	applespi->suspended = false;
-+
-+	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
-+
-+	/* switch on the SPI interface */
-+	applespi_enable_spi(applespi);
-+
-+	/* re-enable the interrupt */
-+	acpi_sts = acpi_enable_gpe(NULL, applespi->gpe);
-+	if (ACPI_FAILURE(acpi_sts))
-+		dev_err(&applespi->spi->dev,
-+			"Failed to re-enable GPE handler for GPE %d: %s\n",
-+			applespi->gpe, acpi_format_exception(acpi_sts));
-+
-+	/* switch the touchpad into multitouch mode */
-+	applespi_init(applespi, true);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct acpi_device_id applespi_acpi_match[] = {
-+	{ "APP000D", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, applespi_acpi_match);
-+
-+const struct dev_pm_ops applespi_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(applespi_suspend, applespi_resume)
-+	.poweroff_late	= applespi_poweroff_late,
-+};
-+
-+static struct spi_driver applespi_driver = {
-+	.driver		= {
-+		.name			= "applespi",
-+		.acpi_match_table	= applespi_acpi_match,
-+		.pm			= &applespi_pm_ops,
-+	},
-+	.probe		= applespi_probe,
-+	.remove		= applespi_remove,
-+	.shutdown	= applespi_shutdown,
-+};
-+
-+module_spi_driver(applespi_driver)
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("MacBook(Pro) SPI Keyboard/Touchpad driver");
-+MODULE_AUTHOR("Federico Lorenzi");
-+MODULE_AUTHOR("Ronald Tschalär");
-diff --git a/drivers/input/keyboard/applespi.h b/drivers/input/keyboard/applespi.h
-new file mode 100644
-index 000000000000..7f5ab10c597a
---- /dev/null
-+++ b/drivers/input/keyboard/applespi.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * MacBook (Pro) SPI keyboard and touchpad driver
-+ *
-+ * Copyright (c) 2015-2019 Federico Lorenzi
-+ * Copyright (c) 2017-2019 Ronald Tschalär
-+ */
-+
-+#ifndef _APPLESPI_H_
-+#define _APPLESPI_H_
-+
-+enum applespi_evt_type {
-+	ET_CMD_TP_INI = BIT(0),
-+	ET_CMD_BL = BIT(1),
-+	ET_CMD_CL = BIT(2),
-+	ET_RD_KEYB = BIT(8),
-+	ET_RD_TPAD = BIT(9),
-+	ET_RD_UNKN = BIT(10),
-+	ET_RD_IRQ = BIT(11),
-+	ET_RD_CRC = BIT(12),
-+};
-+
-+enum applespi_pkt_type {
-+	PT_READ,
-+	PT_WRITE,
-+	PT_STATUS,
-+};
-+
-+#endif /* _APPLESPI_H_ */
-diff --git a/drivers/input/keyboard/applespi_trace.h b/drivers/input/keyboard/applespi_trace.h
-new file mode 100644
-index 000000000000..5e965e1974c7
---- /dev/null
-+++ b/drivers/input/keyboard/applespi_trace.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * MacBook (Pro) SPI keyboard and touchpad driver
-+ *
-+ * Copyright (c) 2015-2019 Federico Lorenzi
-+ * Copyright (c) 2017-2019 Ronald Tschalär
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM applespi
-+
-+#if !defined(_APPLESPI_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+#define _APPLESPI_TRACE_H_
-+
-+#include <linux/types.h>
-+#include <linux/tracepoint.h>
-+
-+#include "applespi.h"
-+
-+DECLARE_EVENT_CLASS(dump_message_template,
-+	TP_PROTO(enum applespi_evt_type evt_type,
-+		 enum applespi_pkt_type pkt_type,
-+		 u8 *buf,
-+		 size_t len),
-+
-+	TP_ARGS(evt_type, pkt_type, buf, len),
-+
-+	TP_STRUCT__entry(
-+		__field(enum applespi_evt_type, evt_type)
-+		__field(enum applespi_pkt_type, pkt_type)
-+		__field(size_t, len)
-+		__dynamic_array(u8, buf, len)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->evt_type = evt_type;
-+		__entry->pkt_type = pkt_type;
-+		__entry->len = len;
-+		memcpy(__get_dynamic_array(buf), buf, len);
-+	),
-+
-+	TP_printk("%-6s: %s",
-+		  __print_symbolic(__entry->pkt_type,
-+				   { PT_READ, "read" },
-+				   { PT_WRITE, "write" },
-+				   { PT_STATUS, "status" }
-+		  ),
-+		  __print_hex(__get_dynamic_array(buf), __entry->len))
-+);
-+
-+#define DEFINE_DUMP_MESSAGE_EVENT(name)			\
-+DEFINE_EVENT(dump_message_template, name,		\
-+	TP_PROTO(enum applespi_evt_type evt_type,	\
-+		 enum applespi_pkt_type pkt_type,	\
-+		 u8 *buf,				\
-+		 size_t len),				\
-+	TP_ARGS(evt_type, pkt_type, buf, len)		\
-+)
-+
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_tp_ini_cmd);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_backlight_cmd);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_caps_lock_cmd);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_keyboard_data);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_touchpad_data);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_unknown_data);
-+DEFINE_DUMP_MESSAGE_EVENT(applespi_bad_crc);
-+
-+TRACE_EVENT(applespi_irq_received,
-+	TP_PROTO(enum applespi_evt_type evt_type,
-+		 enum applespi_pkt_type pkt_type),
-+
-+	TP_ARGS(evt_type, pkt_type),
-+
-+	TP_STRUCT__entry(
-+		__field(enum applespi_evt_type, evt_type)
-+		__field(enum applespi_pkt_type, pkt_type)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->evt_type = evt_type;
-+		__entry->pkt_type = pkt_type;
-+	),
-+
-+	"\n"
-+);
-+
-+#endif /* _APPLESPI_TRACE_H_ */
-+
-+/* This part must be outside protection */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH ../../drivers/input/keyboard
-+#define TRACE_INCLUDE_FILE applespi_trace
-+#include <trace/define_trace.h>
-+
--- 
-2.20.1
-
+SGksDQoNClRoZSBnZW5lcmFsIGFwcHJvYWNoIGxvb2tzIGdvb2QsIGZldyBjb21tZW50cyBiZWxv
+dy4NCg0KT24gMDQvMDkvMjAxOSAwNzoyNiBQTSwgVmlnbmVzaCBSYWdoYXZlbmRyYSB3cm90ZToN
+Cj4gRXh0ZXJuYWwgRS1NYWlsDQo+IA0KPiANCj4gRnJvbTogQm9yaXMgQnJlemlsbG9uIDxib3Jp
+cy5icmV6aWxsb25AYm9vdGxpbi5jb20+DQo+IA0KPiBUaGUgbTI1cDgwIGRyaXZlciBpcyBhY3R1
+YWxseSBhIGdlbmVyaWMgd3JhcHBlciBhcm91bmQgdGhlIHNwaS1tZW0NCj4gbGF5ZXIuIE5vdCBv
+bmx5IHRoZSBkcml2ZXIgbmFtZSBpcyBtaXNsZWFkaW5nLCBidXQgd2UnZCBleHBlY3Qgc3VjaCBh
+DQo+IGNvbW1vbiBsb2dpYyB0byBiZSBkaXJlY3RseSBhdmFpbGFibGUgaW4gdGhlIGNvcmUuIEFu
+b3RoZXIgcmVhc29uIGZvcg0KPiBtb3ZpbmcgdGhpcyBjb2RlIGlzIHRoYXQgU1BJIE5PUiBjb250
+cm9sbGVyIGRyaXZlcnMgc2hvdWxkDQo+IHByb2dyZXNzaXZlbHkgYmUgcmVwbGFjZWQgYnkgU1BJ
+IGNvbnRyb2xsZXIgZHJpdmVycyBpbXBsZW1lbnRpbmcgdGhlDQo+IHNwaV9tZW1fb3BzIGludGVy
+ZmFjZSwgYW5kIHdoZW4gdGhlIGNvbnZlcnNpb24gaXMgZG9uZSwgd2Ugc2hvdWxkIGhhdmUNCj4g
+YSBzaW5nbGUgc3BpLW5vciBkcml2ZXIgZGlyZWN0bHkgaW50ZXJmYWNpbmcgd2l0aCB0aGUgc3Bp
+LW1lbSBsYXllci4NCj4gDQo+IFdoaWxlIG1vdmluZyB0aGUgY29kZSB3ZSBhbHNvIGZpeCBhIGxv
+bmdzdGFuZGluZyBpc3N1ZSB3aGVuDQo+IG5vbi1ETUEtYWJsZSBidWZmZXJzIGFyZSBwYXNzZWQg
+YnkgdGhlIE1URCBsYXllci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8
+Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPg0KPiBbdmlnbmVzaHJAdGkuY29tOiB1c2UgZGV2
+bV9rbWFsbG9jKCkgZm9yIGJvdW5jZSBidWZmZXIgYWxsb2NhdGlvbl0NCj4gU2lnbmVkLW9mZi1i
+eTogVmlnbmVzaCBSYWdoYXZlbmRyYSA8dmlnbmVzaHJAdGkuY29tPg0KPiAtLS0NCj4gQ2hhbmdl
+cyBmcm9tIFJGQzoNCj4gKiBVc2UgZGV2bV9rbWFsbG9jKCkgZm9yIGJvdW5jZSBidWZmZXIgYWxs
+b2NhdGlvbiBhcyBpdCBzdXBwb3J0cyBjYWNoZQ0KPiAgIGxpbmUgYWxpZ25lZCBidWZmZXJzIG5v
+dw0KDQp0aGVuIHNwaS1uYW5kIGhhcyB0byBiZSB1cGRhdGVkIHRvby4NCg0KPiAqIFJlYmFzZSBv
+bnRvIGxhdGVzdCBuZXh0DQo+ICogRml4IGJ1aWxkIHVzZXMgd2hlbiBzcGktbm9yIGlzIGJ1aWx0
+IGFzIGEgbW9kdWxlDQo+IA0KPiAgZHJpdmVycy9tdGQvZGV2aWNlcy9LY29uZmlnICAgfCAgMTgg
+LQ0KPiAgZHJpdmVycy9tdGQvZGV2aWNlcy9NYWtlZmlsZSAgfCAgIDEgLQ0KPiAgZHJpdmVycy9t
+dGQvZGV2aWNlcy9tMjVwODAuYyAgfCAzNTEgLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJz
+L210ZC9zcGktbm9yL0tjb25maWcgICB8ICAgMiArDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL3Nw
+aS1ub3IuYyB8IDY1OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ICBpbmNs
+dWRlL2xpbnV4L210ZC9zcGktbm9yLmggICB8ICAgOCArDQo+ICA2IGZpbGVzIGNoYW5nZWQsIDY0
+MyBpbnNlcnRpb25zKCspLCAzOTYgZGVsZXRpb25zKC0pDQo+ICBkZWxldGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVwODAuYw0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bXRkL2RldmljZXMvS2NvbmZpZyBiL2RyaXZlcnMvbXRkL2RldmljZXMvS2NvbmZpZw0KPiBpbmRl
+eCA3ZmNkYWY2YzI3OWQuLjI4MGVhOTBlYTJkMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tdGQv
+ZGV2aWNlcy9LY29uZmlnDQo+ICsrKyBiL2RyaXZlcnMvbXRkL2RldmljZXMvS2NvbmZpZw0KPiBA
+QCAtNzgsMjQgKzc4LDYgQEAgY29uZmlnIE1URF9EQVRBRkxBU0hfT1RQDQo+ICAJICBvdGhlciBr
+ZXkgcHJvZHVjdCBkYXRhLiAgVGhlIHNlY29uZCBoYWxmIGlzIHByb2dyYW1tZWQgd2l0aCBhDQo+
+ICAJICB1bmlxdWUtdG8tZWFjaC1jaGlwIGJpdCBwYXR0ZXJuIGF0IHRoZSBmYWN0b3J5Lg0KPiAg
+DQo+IC1jb25maWcgTVREX00yNVA4MA0KPiAtCXRyaXN0YXRlICJTdXBwb3J0IG1vc3QgU1BJIEZs
+YXNoIGNoaXBzIChBVDI2REYsIE0yNVAsIFcyNVgsIC4uLikiDQo+IC0JZGVwZW5kcyBvbiBTUElf
+TUFTVEVSICYmIE1URF9TUElfTk9SDQo+IC0Jc2VsZWN0IFNQSV9NRU0NCj4gLQloZWxwDQo+IC0J
+ICBUaGlzIGVuYWJsZXMgYWNjZXNzIHRvIG1vc3QgbW9kZXJuIFNQSSBmbGFzaCBjaGlwcywgdXNl
+ZCBmb3INCj4gLQkgIHByb2dyYW0gYW5kIGRhdGEgc3RvcmFnZS4gICBTZXJpZXMgc3VwcG9ydGVk
+IGluY2x1ZGUgQXRtZWwgQVQyNkRGLA0KPiAtCSAgU3BhbnNpb24gUzI1U0wsIFNTVCAyNVZGLCBT
+VCBNMjVQLCBhbmQgV2luYm9uZCBXMjVYLiAgT3RoZXIgY2hpcHMNCj4gLQkgIGFyZSBzdXBwb3J0
+ZWQgYXMgd2VsbC4gIFNlZSB0aGUgZHJpdmVyIHNvdXJjZSBmb3IgdGhlIGN1cnJlbnQgbGlzdCwN
+Cj4gLQkgIG9yIHRvIGFkZCBvdGhlciBjaGlwcy4NCj4gLQ0KPiAtCSAgTm90ZSB0aGF0IHRoZSBv
+cmlnaW5hbCBEYXRhRmxhc2ggY2hpcHMgKEFUNDUgc2VyaWVzLCBub3QgQVQyNkRGKSwNCj4gLQkg
+IG5lZWQgYW4gZW50aXJlbHkgZGlmZmVyZW50IGRyaXZlci4NCj4gLQ0KPiAtCSAgU2V0IHVwIHlv
+dXIgc3BpIGRldmljZXMgd2l0aCB0aGUgcmlnaHQgYm9hcmQtc3BlY2lmaWMgcGxhdGZvcm0gZGF0
+YSwNCj4gLQkgIGlmIHlvdSB3YW50IHRvIHNwZWNpZnkgZGV2aWNlIHBhcnRpdGlvbmluZyBvciB0
+byB1c2UgYSBkZXZpY2Ugd2hpY2gNCj4gLQkgIGRvZXNuJ3Qgc3VwcG9ydCB0aGUgSkVERUMgSUQg
+aW5zdHJ1Y3Rpb24uDQo+IC0NCj4gIGNvbmZpZyBNVERfTUNIUDIzSzI1Ng0KPiAgCXRyaXN0YXRl
+ICJNaWNyb2NoaXAgMjNLMjU2IFNSQU0iDQo+ICAJZGVwZW5kcyBvbiBTUElfTUFTVEVSDQo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL210ZC9kZXZpY2VzL01ha2VmaWxlIGIvZHJpdmVycy9tdGQvZGV2
+aWNlcy9NYWtlZmlsZQ0KPiBpbmRleCA5NDg5NWVhYjMwNjYuLjk5MWM4ZDEyYzAxNiAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9tdGQvZGV2aWNlcy9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL210
+ZC9kZXZpY2VzL01ha2VmaWxlDQo+IEBAIC0xMiw3ICsxMiw2IEBAIG9iai0kKENPTkZJR19NVERf
+TVREUkFNKQkrPSBtdGRyYW0ubw0KPiAgb2JqLSQoQ09ORklHX01URF9MQVJUKQkJKz0gbGFydC5v
+DQo+ICBvYmotJChDT05GSUdfTVREX0JMT0NLMk1URCkJKz0gYmxvY2sybXRkLm8NCj4gIG9iai0k
+KENPTkZJR19NVERfREFUQUZMQVNIKQkrPSBtdGRfZGF0YWZsYXNoLm8NCj4gLW9iai0kKENPTkZJ
+R19NVERfTTI1UDgwKQkrPSBtMjVwODAubw0KPiAgb2JqLSQoQ09ORklHX01URF9NQ0hQMjNLMjU2
+KQkrPSBtY2hwMjNrMjU2Lm8NCj4gIG9iai0kKENPTkZJR19NVERfU1BFQVJfU01JKQkrPSBzcGVh
+cl9zbWkubw0KPiAgb2JqLSQoQ09ORklHX01URF9TU1QyNUwpCSs9IHNzdDI1bC5vDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5jIGIvZHJpdmVycy9tdGQvZGV2aWNl
+cy9tMjVwODAuYw0KPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggNjUxYmFiNmQ0
+ZTMxLi4wMDAwMDAwMDAwMDANCj4gLS0tIGEvZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVwODAuYw0K
+PiArKysgL2Rldi9udWxsDQo+IEBAIC0xLDM1MSArMCwwIEBADQo+IC0vKg0KPiAtICogTVREIFNQ
+SSBkcml2ZXIgZm9yIFNUIE0yNVB4eCAoYW5kIHNpbWlsYXIpIHNlcmlhbCBmbGFzaCBjaGlwcw0K
+PiAtICoNCj4gLSAqIEF1dGhvcjogTWlrZSBMYXZlbmRlciwgbWlrZUBzdGVyb2lkbWljcm9zLmNv
+bQ0KPiAtICoNCj4gLSAqIENvcHlyaWdodCAoYykgMjAwNSwgSW50ZWMgQXV0b21hdGlvbiBJbmMu
+DQo+IC0gKg0KPiAtICogU29tZSBwYXJ0cyBhcmUgYmFzZWQgb24gbGFydC5jIGJ5IEFicmFoYW0g
+VmFuIERlciBNZXJ3ZQ0KPiAtICoNCj4gLSAqIENsZWFuZWQgdXAgYW5kIGdlbmVyYWxpemVkIGJh
+c2VkIG9uIG10ZF9kYXRhZmxhc2guYw0KPiAtICoNCj4gLSAqIFRoaXMgY29kZSBpcyBmcmVlIHNv
+ZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5DQo+IC0gKiBpdCB1
+bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24g
+MiBhcw0KPiAtICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uDQo+
+IC0gKg0KPiAtICovDQo+IC0NCj4gLSNpbmNsdWRlIDxsaW51eC9lcnIuaD4NCj4gLSNpbmNsdWRl
+IDxsaW51eC9lcnJuby5oPg0KPiAtI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiAtI2luY2x1
+ZGUgPGxpbnV4L2RldmljZS5oPg0KPiAtDQo+IC0jaW5jbHVkZSA8bGludXgvbXRkL210ZC5oPg0K
+PiAtI2luY2x1ZGUgPGxpbnV4L210ZC9wYXJ0aXRpb25zLmg+DQo+IC0NCj4gLSNpbmNsdWRlIDxs
+aW51eC9zcGkvc3BpLmg+DQo+IC0jaW5jbHVkZSA8bGludXgvc3BpL3NwaS1tZW0uaD4NCj4gLSNp
+bmNsdWRlIDxsaW51eC9zcGkvZmxhc2guaD4NCj4gLSNpbmNsdWRlIDxsaW51eC9tdGQvc3BpLW5v
+ci5oPg0KPiAtDQo+IC1zdHJ1Y3QgbTI1cCB7DQo+IC0Jc3RydWN0IHNwaV9tZW0JCSpzcGltZW07
+DQo+IC0Jc3RydWN0IHNwaV9ub3IJCXNwaV9ub3I7DQo+IC19Ow0KPiAtDQo+IC1zdGF0aWMgaW50
+IG0yNXA4MF9yZWFkX3JlZyhzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCBjb2RlLCB1OCAqdmFsLCBp
+bnQgbGVuKQ0KPiAtew0KPiAtCXN0cnVjdCBtMjVwICpmbGFzaCA9IG5vci0+cHJpdjsNCj4gLQlz
+dHJ1Y3Qgc3BpX21lbV9vcCBvcCA9IFNQSV9NRU1fT1AoU1BJX01FTV9PUF9DTUQoY29kZSwgMSks
+DQo+IC0JCQkJCSAgU1BJX01FTV9PUF9OT19BRERSLA0KPiAtCQkJCQkgIFNQSV9NRU1fT1BfTk9f
+RFVNTVksDQo+IC0JCQkJCSAgU1BJX01FTV9PUF9EQVRBX0lOKGxlbiwgTlVMTCwgMSkpOw0KPiAt
+CXZvaWQgKnNjcmF0Y2hidWY7DQo+IC0JaW50IHJldDsNCj4gLQ0KPiAtCXNjcmF0Y2hidWYgPSBr
+bWFsbG9jKGxlbiwgR0ZQX0tFUk5FTCk7DQo+IC0JaWYgKCFzY3JhdGNoYnVmKQ0KPiAtCQlyZXR1
+cm4gLUVOT01FTTsNCj4gLQ0KPiAtCW9wLmRhdGEuYnVmLmluID0gc2NyYXRjaGJ1ZjsNCj4gLQly
+ZXQgPSBzcGlfbWVtX2V4ZWNfb3AoZmxhc2gtPnNwaW1lbSwgJm9wKTsNCj4gLQlpZiAocmV0IDwg
+MCkNCj4gLQkJZGV2X2VycigmZmxhc2gtPnNwaW1lbS0+c3BpLT5kZXYsICJlcnJvciAlZCByZWFk
+aW5nICV4XG4iLCByZXQsDQo+IC0JCQljb2RlKTsNCj4gLQllbHNlDQo+IC0JCW1lbWNweSh2YWws
+IHNjcmF0Y2hidWYsIGxlbik7DQo+IC0NCj4gLQlrZnJlZShzY3JhdGNoYnVmKTsNCj4gLQ0KPiAt
+CXJldHVybiByZXQ7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyBpbnQgbTI1cDgwX3dyaXRlX3JlZyhz
+dHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCBvcGNvZGUsIHU4ICpidWYsIGludCBsZW4pDQo+IC17DQo+
+IC0Jc3RydWN0IG0yNXAgKmZsYXNoID0gbm9yLT5wcml2Ow0KPiAtCXN0cnVjdCBzcGlfbWVtX29w
+IG9wID0gU1BJX01FTV9PUChTUElfTUVNX09QX0NNRChvcGNvZGUsIDEpLA0KPiAtCQkJCQkgIFNQ
+SV9NRU1fT1BfTk9fQUREUiwNCj4gLQkJCQkJICBTUElfTUVNX09QX05PX0RVTU1ZLA0KPiAtCQkJ
+CQkgIFNQSV9NRU1fT1BfREFUQV9PVVQobGVuLCBOVUxMLCAxKSk7DQo+IC0Jdm9pZCAqc2NyYXRj
+aGJ1ZjsNCj4gLQlpbnQgcmV0Ow0KPiAtDQo+IC0Jc2NyYXRjaGJ1ZiA9IGttZW1kdXAoYnVmLCBs
+ZW4sIEdGUF9LRVJORUwpOw0KPiAtCWlmICghc2NyYXRjaGJ1ZikNCj4gLQkJcmV0dXJuIC1FTk9N
+RU07DQo+IC0NCj4gLQlvcC5kYXRhLmJ1Zi5vdXQgPSBzY3JhdGNoYnVmOw0KPiAtCXJldCA9IHNw
+aV9tZW1fZXhlY19vcChmbGFzaC0+c3BpbWVtLCAmb3ApOw0KPiAtCWtmcmVlKHNjcmF0Y2hidWYp
+Ow0KPiAtDQo+IC0JcmV0dXJuIHJldDsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIHNzaXplX3QgbTI1
+cDgwX3dyaXRlKHN0cnVjdCBzcGlfbm9yICpub3IsIGxvZmZfdCB0bywgc2l6ZV90IGxlbiwNCj4g
+LQkJCSAgICBjb25zdCB1X2NoYXIgKmJ1ZikNCj4gLXsNCj4gLQlzdHJ1Y3QgbTI1cCAqZmxhc2gg
+PSBub3ItPnByaXY7DQo+IC0Jc3RydWN0IHNwaV9tZW1fb3Agb3AgPQ0KPiAtCQkJU1BJX01FTV9P
+UChTUElfTUVNX09QX0NNRChub3ItPnByb2dyYW1fb3Bjb2RlLCAxKSwNCj4gLQkJCQkgICBTUElf
+TUVNX09QX0FERFIobm9yLT5hZGRyX3dpZHRoLCB0bywgMSksDQo+IC0JCQkJICAgU1BJX01FTV9P
+UF9OT19EVU1NWSwNCj4gLQkJCQkgICBTUElfTUVNX09QX0RBVEFfT1VUKGxlbiwgYnVmLCAxKSk7
+DQo+IC0JaW50IHJldDsNCj4gLQ0KPiAtCS8qIGdldCB0cmFuc2ZlciBwcm90b2NvbHMuICovDQo+
+IC0Jb3AuY21kLmJ1c3dpZHRoID0gc3BpX25vcl9nZXRfcHJvdG9jb2xfaW5zdF9uYml0cyhub3It
+PndyaXRlX3Byb3RvKTsNCj4gLQlvcC5hZGRyLmJ1c3dpZHRoID0gc3BpX25vcl9nZXRfcHJvdG9j
+b2xfYWRkcl9uYml0cyhub3ItPndyaXRlX3Byb3RvKTsNCj4gLQlvcC5kYXRhLmJ1c3dpZHRoID0g
+c3BpX25vcl9nZXRfcHJvdG9jb2xfZGF0YV9uYml0cyhub3ItPndyaXRlX3Byb3RvKTsNCj4gLQ0K
+PiAtCWlmIChub3ItPnByb2dyYW1fb3Bjb2RlID09IFNQSU5PUl9PUF9BQUlfV1AgJiYgbm9yLT5z
+c3Rfd3JpdGVfc2Vjb25kKQ0KPiAtCQlvcC5hZGRyLm5ieXRlcyA9IDA7DQo+IC0NCj4gLQlyZXQg
+PSBzcGlfbWVtX2FkanVzdF9vcF9zaXplKGZsYXNoLT5zcGltZW0sICZvcCk7DQo+IC0JaWYgKHJl
+dCkNCj4gLQkJcmV0dXJuIHJldDsNCj4gLQlvcC5kYXRhLm5ieXRlcyA9IGxlbiA8IG9wLmRhdGEu
+bmJ5dGVzID8gbGVuIDogb3AuZGF0YS5uYnl0ZXM7DQo+IC0NCj4gLQlyZXQgPSBzcGlfbWVtX2V4
+ZWNfb3AoZmxhc2gtPnNwaW1lbSwgJm9wKTsNCj4gLQlpZiAocmV0KQ0KPiAtCQlyZXR1cm4gcmV0
+Ow0KPiAtDQo+IC0JcmV0dXJuIG9wLmRhdGEubmJ5dGVzOw0KPiAtfQ0KPiAtDQo+IC0vKg0KPiAt
+ICogUmVhZCBhbiBhZGRyZXNzIHJhbmdlIGZyb20gdGhlIG5vciBjaGlwLiAgVGhlIGFkZHJlc3Mg
+cmFuZ2UNCj4gLSAqIG1heSBiZSBhbnkgc2l6ZSBwcm92aWRlZCBpdCBpcyB3aXRoaW4gdGhlIHBo
+eXNpY2FsIGJvdW5kYXJpZXMuDQo+IC0gKi8NCj4gLXN0YXRpYyBzc2l6ZV90IG0yNXA4MF9yZWFk
+KHN0cnVjdCBzcGlfbm9yICpub3IsIGxvZmZfdCBmcm9tLCBzaXplX3QgbGVuLA0KPiAtCQkJICAg
+dV9jaGFyICpidWYpDQo+IC17DQo+IC0Jc3RydWN0IG0yNXAgKmZsYXNoID0gbm9yLT5wcml2Ow0K
+PiAtCXN0cnVjdCBzcGlfbWVtX29wIG9wID0NCj4gLQkJCVNQSV9NRU1fT1AoU1BJX01FTV9PUF9D
+TUQobm9yLT5yZWFkX29wY29kZSwgMSksDQo+IC0JCQkJICAgU1BJX01FTV9PUF9BRERSKG5vci0+
+YWRkcl93aWR0aCwgZnJvbSwgMSksDQo+IC0JCQkJICAgU1BJX01FTV9PUF9EVU1NWShub3ItPnJl
+YWRfZHVtbXksIDEpLA0KPiAtCQkJCSAgIFNQSV9NRU1fT1BfREFUQV9JTihsZW4sIGJ1ZiwgMSkp
+Ow0KPiAtCXNpemVfdCByZW1haW5pbmcgPSBsZW47DQo+IC0JaW50IHJldDsNCj4gLQ0KPiAtCS8q
+IGdldCB0cmFuc2ZlciBwcm90b2NvbHMuICovDQo+IC0Jb3AuY21kLmJ1c3dpZHRoID0gc3BpX25v
+cl9nZXRfcHJvdG9jb2xfaW5zdF9uYml0cyhub3ItPnJlYWRfcHJvdG8pOw0KPiAtCW9wLmFkZHIu
+YnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9hZGRyX25iaXRzKG5vci0+cmVhZF9wcm90
+byk7DQo+IC0Jb3AuZHVtbXkuYnVzd2lkdGggPSBvcC5hZGRyLmJ1c3dpZHRoOw0KPiAtCW9wLmRh
+dGEuYnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9kYXRhX25iaXRzKG5vci0+cmVhZF9w
+cm90byk7DQo+IC0NCj4gLQkvKiBjb252ZXJ0IHRoZSBkdW1teSBjeWNsZXMgdG8gdGhlIG51bWJl
+ciBvZiBieXRlcyAqLw0KPiAtCW9wLmR1bW15Lm5ieXRlcyA9IChub3ItPnJlYWRfZHVtbXkgKiBv
+cC5kdW1teS5idXN3aWR0aCkgLyA4Ow0KPiAtDQo+IC0Jd2hpbGUgKHJlbWFpbmluZykgew0KPiAt
+CQlvcC5kYXRhLm5ieXRlcyA9IHJlbWFpbmluZyA8IFVJTlRfTUFYID8gcmVtYWluaW5nIDogVUlO
+VF9NQVg7DQo+IC0JCXJldCA9IHNwaV9tZW1fYWRqdXN0X29wX3NpemUoZmxhc2gtPnNwaW1lbSwg
+Jm9wKTsNCj4gLQkJaWYgKHJldCkNCj4gLQkJCXJldHVybiByZXQ7DQo+IC0NCj4gLQkJcmV0ID0g
+c3BpX21lbV9leGVjX29wKGZsYXNoLT5zcGltZW0sICZvcCk7DQo+IC0JCWlmIChyZXQpDQo+IC0J
+CQlyZXR1cm4gcmV0Ow0KPiAtDQo+IC0JCW9wLmFkZHIudmFsICs9IG9wLmRhdGEubmJ5dGVzOw0K
+PiAtCQlyZW1haW5pbmcgLT0gb3AuZGF0YS5uYnl0ZXM7DQo+IC0JCW9wLmRhdGEuYnVmLmluICs9
+IG9wLmRhdGEubmJ5dGVzOw0KPiAtCX0NCj4gLQ0KPiAtCXJldHVybiBsZW47DQo+IC19DQo+IC0N
+Cj4gLS8qDQo+IC0gKiBib2FyZCBzcGVjaWZpYyBzZXR1cCBzaG91bGQgaGF2ZSBlbnN1cmVkIHRo
+ZSBTUEkgY2xvY2sgdXNlZCBoZXJlDQo+IC0gKiBtYXRjaGVzIHdoYXQgdGhlIFJFQUQgY29tbWFu
+ZCBzdXBwb3J0cywgYXQgbGVhc3QgdW50aWwgdGhpcyBkcml2ZXINCj4gLSAqIHVuZGVyc3RhbmRz
+IEZBU1RfUkVBRCAoZm9yIGNsb2NrcyBvdmVyIDI1IE1IeikuDQo+IC0gKi8NCj4gLXN0YXRpYyBp
+bnQgbTI1cF9wcm9iZShzdHJ1Y3Qgc3BpX21lbSAqc3BpbWVtKQ0KPiAtew0KPiAtCXN0cnVjdCBz
+cGlfZGV2aWNlICpzcGkgPSBzcGltZW0tPnNwaTsNCj4gLQlzdHJ1Y3QgZmxhc2hfcGxhdGZvcm1f
+ZGF0YQkqZGF0YTsNCj4gLQlzdHJ1Y3QgbTI1cCAqZmxhc2g7DQo+IC0Jc3RydWN0IHNwaV9ub3Ig
+Km5vcjsNCj4gLQlzdHJ1Y3Qgc3BpX25vcl9od2NhcHMgaHdjYXBzID0gew0KPiAtCQkubWFzayA9
+IFNOT1JfSFdDQVBTX1JFQUQgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF9GQVNUIHwNCj4gLQkJ
+CVNOT1JfSFdDQVBTX1BQLA0KPiAtCX07DQo+IC0JY2hhciAqZmxhc2hfbmFtZTsNCj4gLQlpbnQg
+cmV0Ow0KPiAtDQo+IC0JZGF0YSA9IGRldl9nZXRfcGxhdGRhdGEoJnNwaW1lbS0+c3BpLT5kZXYp
+Ow0KPiAtDQo+IC0JZmxhc2ggPSBkZXZtX2t6YWxsb2MoJnNwaW1lbS0+c3BpLT5kZXYsIHNpemVv
+ZigqZmxhc2gpLCBHRlBfS0VSTkVMKTsNCj4gLQlpZiAoIWZsYXNoKQ0KPiAtCQlyZXR1cm4gLUVO
+T01FTTsNCj4gLQ0KPiAtCW5vciA9ICZmbGFzaC0+c3BpX25vcjsNCj4gLQ0KPiAtCS8qIGluc3Rh
+bGwgdGhlIGhvb2tzICovDQo+IC0Jbm9yLT5yZWFkID0gbTI1cDgwX3JlYWQ7DQo+IC0Jbm9yLT53
+cml0ZSA9IG0yNXA4MF93cml0ZTsNCj4gLQlub3ItPndyaXRlX3JlZyA9IG0yNXA4MF93cml0ZV9y
+ZWc7DQo+IC0Jbm9yLT5yZWFkX3JlZyA9IG0yNXA4MF9yZWFkX3JlZzsNCj4gLQ0KPiAtCW5vci0+
+ZGV2ID0gJnNwaW1lbS0+c3BpLT5kZXY7DQo+IC0Jc3BpX25vcl9zZXRfZmxhc2hfbm9kZShub3Is
+IHNwaS0+ZGV2Lm9mX25vZGUpOw0KPiAtCW5vci0+cHJpdiA9IGZsYXNoOw0KPiAtDQo+IC0Jc3Bp
+X21lbV9zZXRfZHJ2ZGF0YShzcGltZW0sIGZsYXNoKTsNCj4gLQlmbGFzaC0+c3BpbWVtID0gc3Bp
+bWVtOw0KPiAtDQo+IC0JaWYgKHNwaS0+bW9kZSAmIFNQSV9SWF9PQ1RBTCkgew0KPiAtCQlod2Nh
+cHMubWFzayB8PSBTTk9SX0hXQ0FQU19SRUFEXzFfMV84Ow0KPiAtDQo+IC0JCWlmIChzcGktPm1v
+ZGUgJiBTUElfVFhfT0NUQUwpDQo+IC0JCQlod2NhcHMubWFzayB8PSAoU05PUl9IV0NBUFNfUkVB
+RF8xXzhfOCB8DQo+IC0JCQkJCVNOT1JfSFdDQVBTX1BQXzFfMV84IHwNCj4gLQkJCQkJU05PUl9I
+V0NBUFNfUFBfMV84XzgpOw0KPiAtCX0gZWxzZSBpZiAoc3BpLT5tb2RlICYgU1BJX1JYX1FVQUQp
+IHsNCj4gLQkJaHdjYXBzLm1hc2sgfD0gU05PUl9IV0NBUFNfUkVBRF8xXzFfNDsNCj4gLQ0KPiAt
+CQlpZiAoc3BpLT5tb2RlICYgU1BJX1RYX1FVQUQpDQo+IC0JCQlod2NhcHMubWFzayB8PSAoU05P
+Ul9IV0NBUFNfUkVBRF8xXzRfNCB8DQo+IC0JCQkJCVNOT1JfSFdDQVBTX1BQXzFfMV80IHwNCj4g
+LQkJCQkJU05PUl9IV0NBUFNfUFBfMV80XzQpOw0KPiAtCX0gZWxzZSBpZiAoc3BpLT5tb2RlICYg
+U1BJX1JYX0RVQUwpIHsNCj4gLQkJaHdjYXBzLm1hc2sgfD0gU05PUl9IV0NBUFNfUkVBRF8xXzFf
+MjsNCj4gLQ0KPiAtCQlpZiAoc3BpLT5tb2RlICYgU1BJX1RYX0RVQUwpDQo+IC0JCQlod2NhcHMu
+bWFzayB8PSBTTk9SX0hXQ0FQU19SRUFEXzFfMl8yOw0KPiAtCX0NCj4gLQ0KPiAtCWlmIChkYXRh
+ICYmIGRhdGEtPm5hbWUpDQo+IC0JCW5vci0+bXRkLm5hbWUgPSBkYXRhLT5uYW1lOw0KPiAtDQo+
+IC0JaWYgKCFub3ItPm10ZC5uYW1lKQ0KPiAtCQlub3ItPm10ZC5uYW1lID0gc3BpX21lbV9nZXRf
+bmFtZShzcGltZW0pOw0KPiAtDQo+IC0JLyogRm9yIHNvbWUgKGhpc3RvcmljYWw/KSByZWFzb24g
+bWFueSBwbGF0Zm9ybXMgcHJvdmlkZSB0d28gZGlmZmVyZW50DQo+IC0JICogbmFtZXMgaW4gZmxh
+c2hfcGxhdGZvcm1fZGF0YTogIm5hbWUiIGFuZCAidHlwZSIuIFF1aXRlIG9mdGVuIG5hbWUgaXMN
+Cj4gLQkgKiBzZXQgdG8gIm0yNXA4MCIgYW5kIHRoZW4gInR5cGUiIHByb3ZpZGVzIGEgcmVhbCBj
+aGlwIG5hbWUuDQo+IC0JICogSWYgdGhhdCdzIHRoZSBjYXNlLCByZXNwZWN0ICJ0eXBlIiBhbmQg
+aWdub3JlIGEgIm5hbWUiLg0KPiAtCSAqLw0KPiAtCWlmIChkYXRhICYmIGRhdGEtPnR5cGUpDQo+
+IC0JCWZsYXNoX25hbWUgPSBkYXRhLT50eXBlOw0KPiAtCWVsc2UgaWYgKCFzdHJjbXAoc3BpLT5t
+b2RhbGlhcywgInNwaS1ub3IiKSkNCj4gLQkJZmxhc2hfbmFtZSA9IE5VTEw7IC8qIGF1dG8tZGV0
+ZWN0ICovDQo+IC0JZWxzZQ0KPiAtCQlmbGFzaF9uYW1lID0gc3BpLT5tb2RhbGlhczsNCj4gLQ0K
+PiAtCXJldCA9IHNwaV9ub3Jfc2Nhbihub3IsIGZsYXNoX25hbWUsICZod2NhcHMpOw0KPiAtCWlm
+IChyZXQpDQo+IC0JCXJldHVybiByZXQ7DQo+IC0NCj4gLQlyZXR1cm4gbXRkX2RldmljZV9yZWdp
+c3Rlcigmbm9yLT5tdGQsIGRhdGEgPyBkYXRhLT5wYXJ0cyA6IE5VTEwsDQo+IC0JCQkJICAgZGF0
+YSA/IGRhdGEtPm5yX3BhcnRzIDogMCk7DQo+IC19DQo+IC0NCj4gLQ0KPiAtc3RhdGljIGludCBt
+MjVwX3JlbW92ZShzdHJ1Y3Qgc3BpX21lbSAqc3BpbWVtKQ0KPiAtew0KPiAtCXN0cnVjdCBtMjVw
+CSpmbGFzaCA9IHNwaV9tZW1fZ2V0X2RydmRhdGEoc3BpbWVtKTsNCj4gLQ0KPiAtCXNwaV9ub3Jf
+cmVzdG9yZSgmZmxhc2gtPnNwaV9ub3IpOw0KPiAtDQo+IC0JLyogQ2xlYW4gdXAgTVREIHN0dWZm
+LiAqLw0KPiAtCXJldHVybiBtdGRfZGV2aWNlX3VucmVnaXN0ZXIoJmZsYXNoLT5zcGlfbm9yLm10
+ZCk7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyB2b2lkIG0yNXBfc2h1dGRvd24oc3RydWN0IHNwaV9t
+ZW0gKnNwaW1lbSkNCj4gLXsNCj4gLQlzdHJ1Y3QgbTI1cCAqZmxhc2ggPSBzcGlfbWVtX2dldF9k
+cnZkYXRhKHNwaW1lbSk7DQo+IC0NCj4gLQlzcGlfbm9yX3Jlc3RvcmUoJmZsYXNoLT5zcGlfbm9y
+KTsNCj4gLX0NCj4gLS8qDQo+IC0gKiBEbyBOT1QgYWRkIHRvIHRoaXMgYXJyYXkgd2l0aG91dCBy
+ZWFkaW5nIHRoZSBmb2xsb3dpbmc6DQo+IC0gKg0KPiAtICogSGlzdG9yaWNhbGx5LCBtYW55IGZs
+YXNoIGRldmljZXMgYXJlIGJvdW5kIHRvIHRoaXMgZHJpdmVyIGJ5IHRoZWlyIG5hbWUuIEJ1dA0K
+PiAtICogc2luY2UgbW9zdCBvZiB0aGVzZSBmbGFzaCBhcmUgY29tcGF0aWJsZSB0byBzb21lIGV4
+dGVudCwgYW5kIHRoZWlyDQo+IC0gKiBkaWZmZXJlbmNlcyBjYW4gb2Z0ZW4gYmUgZGlmZmVyZW50
+aWF0ZWQgYnkgdGhlIEpFREVDIHJlYWQtSUQgY29tbWFuZCwgd2UNCj4gLSAqIGVuY291cmFnZSBu
+ZXcgdXNlcnMgdG8gYWRkIHN1cHBvcnQgdG8gdGhlIHNwaS1ub3IgbGlicmFyeSwgYW5kIHNpbXBs
+eSBiaW5kDQo+IC0gKiBhZ2FpbnN0IGEgZ2VuZXJpYyBzdHJpbmcgaGVyZSAoZS5nLiwgImplZGVj
+LHNwaS1ub3IiKS4NCj4gLSAqDQo+IC0gKiBNYW55IGZsYXNoIG5hbWVzIGFyZSBrZXB0IGhlcmUg
+aW4gdGhpcyBsaXN0IChhcyB3ZWxsIGFzIGluIHNwaS1ub3IuYykgdG8NCj4gLSAqIGtlZXAgdGhl
+bSBhdmFpbGFibGUgYXMgbW9kdWxlIGFsaWFzZXMgZm9yIGV4aXN0aW5nIHBsYXRmb3Jtcy4NCj4g
+LSAqLw0KPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBzcGlfZGV2aWNlX2lkIG0yNXBfaWRzW10gPSB7
+DQo+IC0JLyoNCj4gLQkgKiBBbGxvdyBub24tRFQgcGxhdGZvcm0gZGV2aWNlcyB0byBiaW5kIHRv
+IHRoZSAic3BpLW5vciIgbW9kYWxpYXMsIGFuZA0KPiAtCSAqIGhhY2sgYXJvdW5kIHRoZSBmYWN0
+IHRoYXQgdGhlIFNQSSBjb3JlIGRvZXMgbm90IHByb3ZpZGUgdWV2ZW50DQo+IC0JICogbWF0Y2hp
+bmcgZm9yIC5vZl9tYXRjaF90YWJsZQ0KPiAtCSAqLw0KPiAtCXsic3BpLW5vciJ9LA0KPiAtDQo+
+IC0JLyoNCj4gLQkgKiBFbnRyaWVzIG5vdCB1c2VkIGluIERUcyB0aGF0IHNob3VsZCBiZSBzYWZl
+IHRvIGRyb3AgYWZ0ZXIgcmVwbGFjaW5nDQo+IC0JICogdGhlbSB3aXRoICJzcGktbm9yIiBpbiBw
+bGF0Zm9ybSBkYXRhLg0KPiAtCSAqLw0KPiAtCXsiczI1c2wwNjRhIn0sCXsidzI1eDE2In0sCXsi
+bTI1cDEwIn0sCXsibTI1cHg2NCJ9LA0KPiAtDQo+IC0JLyoNCj4gLQkgKiBFbnRyaWVzIHRoYXQg
+d2VyZSB1c2VkIGluIERUcyB3aXRob3V0ICJqZWRlYyxzcGktbm9yIiBmYWxsYmFjayBhbmQNCj4g
+LQkgKiBzaG91bGQgYmUga2VwdCBmb3IgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4NCj4gLQkgKi8N
+Cj4gLQl7ImF0MjVkZjMyMWEifSwJeyJhdDI1ZGY2NDEifSwJeyJhdDI2ZGYwODFhIn0sDQo+IC0J
+eyJteDI1bDQwMDVhIn0sCXsibXgyNWwxNjA2ZSJ9LAl7Im14MjVsNjQwNWQifSwJeyJteDI1bDEy
+ODA1ZCJ9LA0KPiAtCXsibXgyNWwyNTYzNWUifSx7Im14NjZsNTEyMzVsIn0sDQo+IC0JeyJuMjVx
+MDY0In0sCXsibjI1cTEyOGExMSJ9LAl7Im4yNXExMjhhMTMifSwJeyJuMjVxNTEyYSJ9LA0KPiAt
+CXsiczI1ZmwyNTZzMSJ9LAl7InMyNWZsNTEycyJ9LAl7InMyNXNsMTI4MDEifSwJeyJzMjVmbDAw
+OGsifSwNCj4gLQl7InMyNWZsMDY0ayJ9LA0KPiAtCXsic3N0MjV2ZjA0MGIifSx7InNzdDI1dmYw
+MTZiIn0seyJzc3QyNXZmMDMyYiJ9LHsic3N0MjV3ZjA0MCJ9LA0KPiAtCXsibTI1cDQwIn0sCXsi
+bTI1cDgwIn0sCXsibTI1cDE2In0sCXsibTI1cDMyIn0sDQo+IC0JeyJtMjVwNjQifSwJeyJtMjVw
+MTI4In0sDQo+IC0JeyJ3MjV4ODAifSwJeyJ3MjV4MzIifSwJeyJ3MjVxMzIifSwJeyJ3MjVxMzJk
+dyJ9LA0KPiAtCXsidzI1cTgwYmwifSwJeyJ3MjVxMTI4In0sCXsidzI1cTI1NiJ9LA0KPiAtDQo+
+IC0JLyogRmxhc2hlcyB0aGF0IGNhbid0IGJlIGRldGVjdGVkIHVzaW5nIEpFREVDICovDQo+IC0J
+eyJtMjVwMDUtbm9uamVkZWMifSwJeyJtMjVwMTAtbm9uamVkZWMifSwJeyJtMjVwMjAtbm9uamVk
+ZWMifSwNCj4gLQl7Im0yNXA0MC1ub25qZWRlYyJ9LAl7Im0yNXA4MC1ub25qZWRlYyJ9LAl7Im0y
+NXAxNi1ub25qZWRlYyJ9LA0KPiAtCXsibTI1cDMyLW5vbmplZGVjIn0sCXsibTI1cDY0LW5vbmpl
+ZGVjIn0sCXsibTI1cDEyOC1ub25qZWRlYyJ9LA0KPiAtDQo+IC0JLyogRXZlcnNwaW4gTVJBTXMg
+KG5vbi1KRURFQykgKi8NCj4gLQl7ICJtcjI1aDEyOCIgfSwgLyogMTI4IEtpYiwgNDAgTUh6ICov
+DQo+IC0JeyAibXIyNWgyNTYiIH0sIC8qIDI1NiBLaWIsIDQwIE1IeiAqLw0KPiAtCXsgIm1yMjVo
+MTAiIH0sICAvKiAgIDEgTWliLCA0MCBNSHogKi8NCj4gLQl7ICJtcjI1aDQwIiB9LCAgLyogICA0
+IE1pYiwgNDAgTUh6ICovDQo+IC0NCj4gLQl7IH0sDQo+IC19Ow0KPiAtTU9EVUxFX0RFVklDRV9U
+QUJMRShzcGksIG0yNXBfaWRzKTsNCj4gLQ0KPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
+Y2VfaWQgbTI1cF9vZl90YWJsZVtdID0gew0KPiAtCS8qDQo+IC0JICogR2VuZXJpYyBjb21wYXRp
+YmlsaXR5IGZvciBTUEkgTk9SIHRoYXQgY2FuIGJlIGlkZW50aWZpZWQgYnkgdGhlDQo+IC0JICog
+SkVERUMgUkVBRCBJRCBvcGNvZGUgKDB4OUYpLiBVc2UgdGhpcywgaWYgcG9zc2libGUuDQo+IC0J
+ICovDQo+IC0JeyAuY29tcGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIiB9LA0KPiAtCXt9DQo+IC19
+Ow0KPiAtTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbTI1cF9vZl90YWJsZSk7DQo+IC0NCj4gLXN0
+YXRpYyBzdHJ1Y3Qgc3BpX21lbV9kcml2ZXIgbTI1cDgwX2RyaXZlciA9IHsNCj4gLQkuc3BpZHJ2
+ID0gew0KPiAtCQkuZHJpdmVyID0gew0KPiAtCQkJLm5hbWUJPSAibTI1cDgwIiwNCj4gLQkJCS5v
+Zl9tYXRjaF90YWJsZSA9IG0yNXBfb2ZfdGFibGUsDQo+IC0JCX0sDQo+IC0JCS5pZF90YWJsZQk9
+IG0yNXBfaWRzLA0KPiAtCX0sDQo+IC0JLnByb2JlCT0gbTI1cF9wcm9iZSwNCj4gLQkucmVtb3Zl
+CT0gbTI1cF9yZW1vdmUsDQo+IC0JLnNodXRkb3duCT0gbTI1cF9zaHV0ZG93biwNCj4gLQ0KPiAt
+CS8qIFJFVklTSVQ6IG1hbnkgb2YgdGhlc2UgY2hpcHMgaGF2ZSBkZWVwIHBvd2VyLWRvd24gbW9k
+ZXMsIHdoaWNoDQo+IC0JICogc2hvdWxkIGNsZWFybHkgYmUgZW50ZXJlZCBvbiBzdXNwZW5kKCkg
+dG8gbWluaW1pemUgcG93ZXIgdXNlLg0KPiAtCSAqIEFuZCBhbHNvIHdoZW4gdGhleSdyZSBvdGhl
+cndpc2UgaWRsZS4uLg0KPiAtCSAqLw0KPiAtfTsNCj4gLQ0KPiAtbW9kdWxlX3NwaV9tZW1fZHJp
+dmVyKG0yNXA4MF9kcml2ZXIpOw0KPiAtDQo+IC1NT0RVTEVfTElDRU5TRSgiR1BMIik7DQo+IC1N
+T0RVTEVfQVVUSE9SKCJNaWtlIExhdmVuZGVyIik7DQo+IC1NT0RVTEVfREVTQ1JJUFRJT04oIk1U
+RCBTUEkgZHJpdmVyIGZvciBTVCBNMjVQeHggZmxhc2ggY2hpcHMiKTsNCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbXRkL3NwaS1ub3IvS2NvbmZpZyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvS2NvbmZp
+Zw0KPiBpbmRleCBkYWI5ODY2OTEyNjcuLjBjMWI3ODUxNjIxZiAxMDA2NDQNCj4gLS0tIGEvZHJp
+dmVycy9tdGQvc3BpLW5vci9LY29uZmlnDQo+ICsrKyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvS2Nv
+bmZpZw0KPiBAQCAtMSw2ICsxLDggQEANCj4gIG1lbnVjb25maWcgTVREX1NQSV9OT1INCj4gIAl0
+cmlzdGF0ZSAiU1BJLU5PUiBkZXZpY2Ugc3VwcG9ydCINCj4gIAlkZXBlbmRzIG9uIE1URA0KPiAr
+CWRlcGVuZHMgb24gTVREICYmIFNQSV9NQVNURVINCj4gKwlzZWxlY3QgU1BJX01FTQ0KPiAgCWhl
+bHANCj4gIAkgIFRoaXMgaXMgdGhlIGZyYW1ld29yayBmb3IgdGhlIFNQSSBOT1Igd2hpY2ggY2Fu
+IGJlIHVzZWQgYnkgdGhlIFNQSQ0KPiAgCSAgZGV2aWNlIGRyaXZlcnMgYW5kIHRoZSBTUEktTk9S
+IGRldmljZSBkcml2ZXIuDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1u
+b3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQo+IGluZGV4IDczMTcyZDdmNTEy
+Yi4uMDNjOGMzNDZjOWFlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1u
+b3IuYw0KPiArKysgYi9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYw0KPiBAQCAtMTksNiAr
+MTksNyBAQA0KPiAgDQo+ICAjaW5jbHVkZSA8bGludXgvbXRkL210ZC5oPg0KPiAgI2luY2x1ZGUg
+PGxpbnV4L29mX3BsYXRmb3JtLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvc2NoZWQvdGFza19zdGFj
+ay5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3NwaS9mbGFzaC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4
+L210ZC9zcGktbm9yLmg+DQo+ICANCj4gQEAgLTI4OCw2ICsyODksMTc0IEBAIHN0cnVjdCBmbGFz
+aF9pbmZvIHsNCj4gIA0KPiAgI2RlZmluZSBKRURFQ19NRlIoaW5mbykJKChpbmZvKS0+aWRbMF0p
+DQo+ICANCj4gK3N0YXRpYyBpbnQgc3BpX25vcl9leGVjX29wKHN0cnVjdCBzcGlfbm9yICpub3Is
+IHN0cnVjdCBzcGlfbWVtX29wICpvcCwNCj4gKwkJCSAgIHU2NCAqYWRkciwgdm9pZCAqYnVmLCB1
+bnNpZ25lZCBpbnQgbGVuKQ0KDQpzaXplX3QgZm9yIGxlbj8NCg0KPiArew0KPiArCWludCByZXQ7
+DQo+ICsJYm9vbCB1c2Vib3VuY2VidWY7DQo+ICsNCj4gKwlpZiAoIW9wIHx8IChsZW4gJiYgIWJ1
+ZikpDQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArDQo+ICsJaWYgKG9wLT5hZGRyLm5ieXRlcyAm
+JiBhZGRyKQ0KPiArCQlvcC0+YWRkci52YWwgPSAqYWRkcjsNCj4gKw0KPiArCW9wLT5kYXRhLm5i
+eXRlcyA9IGxlbjsNCj4gKw0KPiArCWlmIChvYmplY3RfaXNfb25fc3RhY2soYnVmKSB8fCAhdmly
+dF9hZGRyX3ZhbGlkKGJ1ZikpDQo+ICsJCXVzZWJvdW5jZWJ1ZiA9IHRydWU7DQo+ICsJaWYgKGxl
+biAmJiB1c2Vib3VuY2VidWYpIHsNCj4gKwkJaWYgKGxlbiA+IG5vci0+Ym91bmNlYnVmX3NpemUp
+DQo+ICsJCQlyZXR1cm4gLUVOT1RTVVBQOw0KPiArDQo+ICsJCWlmIChvcC0+ZGF0YS5kaXIgPT0g
+U1BJX01FTV9EQVRBX0lOKSB7DQo+ICsJCQlvcC0+ZGF0YS5idWYuaW4gPSBub3ItPmJvdW5jZWJ1
+ZjsNCj4gKwkJfSBlbHNlIHsNCj4gKwkJCW9wLT5kYXRhLmJ1Zi5vdXQgPSBub3ItPmJvdW5jZWJ1
+ZjsNCj4gKwkJCW1lbWNweShub3ItPmJvdW5jZWJ1ZiwgYnVmLCBsZW4pOw0KPiArCQl9DQo+ICsJ
+fSBlbHNlIHsNCj4gKwkJb3AtPmRhdGEuYnVmLm91dCA9IGJ1ZjsNCj4gKwl9DQo+ICsNCj4gKwly
+ZXQgPSBzcGlfbWVtX2V4ZWNfb3Aobm9yLT5zcGltZW0sIG9wKTsNCj4gKwlpZiAocmV0KQ0KPiAr
+CQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJaWYgKHVzZWJvdW5jZWJ1ZiAmJiBsZW4gJiYgb3AtPmRh
+dGEuZGlyID09IFNQSV9NRU1fREFUQV9JTikNCj4gKwkJbWVtY3B5KGJ1Ziwgbm9yLT5ib3VuY2Vi
+dWYsIGxlbik7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBz
+cGlfbm9yX2RhdGFfb3Aoc3RydWN0IHNwaV9ub3IgKm5vciwgc3RydWN0IHNwaV9tZW1fb3AgKm9w
+LA0KPiArCQkJICAgdm9pZCAqYnVmLCB1bnNpZ25lZCBpbnQgbGVuKQ0KDQpzaXplX3QgZm9yIGxl
+bj8NCg0KPiArew0KPiArCXJldHVybiBzcGlfbm9yX2V4ZWNfb3Aobm9yLCBvcCwgTlVMTCwgYnVm
+LCBsZW4pOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IHNwaV9ub3Jfbm9kYXRhX29wKHN0cnVj
+dCBzcGlfbm9yICpub3IsIHN0cnVjdCBzcGlfbWVtX29wICpvcCkNCj4gK3sNCj4gKwlyZXR1cm4g
+c3BpX25vcl9leGVjX29wKG5vciwgb3AsIE5VTEwsIE5VTEwsIDApOw0KPiArfQ0KPiArDQo+ICtz
+dGF0aWMgc3NpemVfdCBzcGlfbm9yX3NwaW1lbV9yZWFkX2RhdGEoc3RydWN0IHNwaV9ub3IgKm5v
+ciwgbG9mZl90IG9mcywNCj4gKwkJCQkJc2l6ZV90IGxlbiwgdTggKmJ1ZikNCj4gK3sNCj4gKwlz
+dHJ1Y3Qgc3BpX21lbV9vcCBvcCA9IFNQSV9NRU1fT1AoU1BJX01FTV9PUF9DTUQobm9yLT5yZWFk
+X29wY29kZSwgMSksDQo+ICsJCQkJCSAgU1BJX01FTV9PUF9BRERSKG5vci0+YWRkcl93aWR0aCwg
+b2ZzLA0KPiArCQkJCQkJCSAgMSksDQo+ICsJCQkJCSAgU1BJX01FTV9PUF9EVU1NWShub3ItPnJl
+YWRfZHVtbXksIDEpLA0KPiArCQkJCQkgIFNQSV9NRU1fT1BfREFUQV9JTihsZW4sIGJ1ZiwgMSkp
+Ow0KPiArCWJvb2wgdXNlYm91bmNlYnVmID0gZmFsc2U7DQo+ICsJc2l6ZV90IHJlbWFpbmluZyA9
+IGxlbjsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJaWYgKG9iamVjdF9pc19vbl9zdGFjayhidWYp
+IHx8ICF2aXJ0X2FkZHJfdmFsaWQoYnVmKSkgew0KPiArCQl1c2Vib3VuY2VidWYgPSB0cnVlOw0K
+PiArCQlvcC5kYXRhLmJ1Zi5pbiA9IG5vci0+Ym91bmNlYnVmOw0KPiArCX0NCj4gKw0KPiArCS8q
+IGdldCB0cmFuc2ZlciBwcm90b2NvbHMuICovDQo+ICsJb3AuY21kLmJ1c3dpZHRoID0gc3BpX25v
+cl9nZXRfcHJvdG9jb2xfaW5zdF9uYml0cyhub3ItPnJlYWRfcHJvdG8pOw0KPiArCW9wLmFkZHIu
+YnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9hZGRyX25iaXRzKG5vci0+cmVhZF9wcm90
+byk7DQo+ICsJb3AuZHVtbXkuYnVzd2lkdGggPSBvcC5hZGRyLmJ1c3dpZHRoOw0KPiArCW9wLmRh
+dGEuYnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9kYXRhX25iaXRzKG5vci0+cmVhZF9w
+cm90byk7DQo+ICsNCj4gKwkvKiBjb252ZXJ0IHRoZSBkdW1teSBjeWNsZXMgdG8gdGhlIG51bWJl
+ciBvZiBieXRlcyAqLw0KPiArCW9wLmR1bW15Lm5ieXRlcyA9IChub3ItPnJlYWRfZHVtbXkgKiBv
+cC5kdW1teS5idXN3aWR0aCkgLyA4Ow0KPiArDQo+ICsJd2hpbGUgKHJlbWFpbmluZykgew0KDQpD
+YW4ndCB3ZSBnZXQgcmlkIG9mIHRoaXMgd2hpbGU/IFNlZSBBbmRyZXkncyBwYXRjaCBhdA0KaHR0
+cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvNC8xLzMyLiBBbmRyZXkncyBwYXRjaGVzIGFyZSBub3Qg
+aW5jbHVkZWQgaW4gdGhpcw0KcGF0Y2guIFdlIHNob3VsZCBjb25zaWRlciBpbnRlZ3JhdGluZyBo
+aXMgd29yayBmaXJzdCwgb3Igc3F1YXNoIGhpcyB3b3JrIGluIHRoaXMNCnBhdGNoLCBvciBhc2sg
+aGltIHRvIHJld29yayB0aGUgc2VyaWVzIGFmdGVyIHRoaXMgcGF0Y2ggZ2V0cyBhY2NlcHRlZC4g
+SSdsbCBsZXQNCnlvdSBkZWNpZGUuDQoNCj4gKwkJb3AuZGF0YS5uYnl0ZXMgPSByZW1haW5pbmcg
+PCBVSU5UX01BWCA/IHJlbWFpbmluZyA6IFVJTlRfTUFYOw0KPiArCQlpZiAoIXVzZWJvdW5jZWJ1
+ZikNCj4gKwkJCW9wLmRhdGEuYnVmLm91dCA9IGJ1ZjsNCj4gKwkJZWxzZSBpZiAob3AuZGF0YS5u
+Ynl0ZXMgPiBub3ItPmJvdW5jZWJ1Zl9zaXplKQ0KPiArCQkJb3AuZGF0YS5uYnl0ZXMgPSBub3It
+PmJvdW5jZWJ1Zl9zaXplOw0KPiArDQo+ICsJCXJldCA9IHNwaV9tZW1fYWRqdXN0X29wX3NpemUo
+bm9yLT5zcGltZW0sICZvcCk7DQo+ICsJCWlmIChyZXQpDQo+ICsJCQlyZXR1cm4gcmV0Ow0KPiAr
+DQo+ICsJCXJldCA9IHNwaV9tZW1fZXhlY19vcChub3ItPnNwaW1lbSwgJm9wKTsNCj4gKwkJaWYg
+KHJldCkNCj4gKwkJCXJldHVybiByZXQ7DQo+ICsNCj4gKwkJaWYgKHVzZWJvdW5jZWJ1ZikNCj4g
+KwkJCW1lbWNweShidWYsIG5vci0+Ym91bmNlYnVmLCBvcC5kYXRhLm5ieXRlcyk7DQo+ICsNCj4g
+KwkJb3AuYWRkci52YWwgKz0gb3AuZGF0YS5uYnl0ZXM7DQo+ICsJCXJlbWFpbmluZyAtPSBvcC5k
+YXRhLm5ieXRlczsNCj4gKwkJYnVmICs9IG9wLmRhdGEubmJ5dGVzOw0KPiArCX0NCj4gKw0KPiAr
+CXJldHVybiBsZW47DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzc2l6ZV90IHNwaV9ub3JfcmVhZF9k
+YXRhKHN0cnVjdCBzcGlfbm9yICpub3IsIGxvZmZfdCBvZnMsIHNpemVfdCBsZW4sDQo+ICsJCQkJ
+IHU4ICpidWYpDQo+ICt7DQo+ICsJaWYgKG5vci0+c3BpbWVtKQ0KPiArCQlyZXR1cm4gc3BpX25v
+cl9zcGltZW1fcmVhZF9kYXRhKG5vciwgb2ZzLCBsZW4sIGJ1Zik7DQo+ICsNCj4gKwlyZXR1cm4g
+bm9yLT5yZWFkKG5vciwgb2ZzLCBsZW4sIGJ1Zik7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzc2l6
+ZV90IHNwaV9ub3Jfc3BpbWVtX3dyaXRlX2RhdGEoc3RydWN0IHNwaV9ub3IgKm5vciwgbG9mZl90
+IG9mcywNCj4gKwkJCQkJIHNpemVfdCBsZW4sIGNvbnN0IHU4ICpidWYpDQo+ICt7DQo+ICsJc3Ry
+dWN0IHNwaV9tZW1fb3Agb3AgPSBTUElfTUVNX09QKFNQSV9NRU1fT1BfQ01EKG5vci0+cHJvZ3Jh
+bV9vcGNvZGUsDQoNCmhvdyBhYm91dCBtb3ZpbmcgU1BJX01FTV9PUCgpIHRvIHRoZSBuZXh0IGxp
+bmUgdG8gYXZvaWQgYnJlYWtpbmcgbGluZXMgYmVsb3c/DQpHZW5lcmFsIGNvbW1lbnQuDQoNCj4g
+KwkJCQkJCQkgMSksDQo+ICsJCQkJCSAgU1BJX01FTV9PUF9BRERSKG5vci0+YWRkcl93aWR0aCwg
+b2ZzLA0KPiArCQkJCQkJCSAgMSksDQo+ICsJCQkJCSAgU1BJX01FTV9PUF9OT19EVU1NWSwNCj4g
+KwkJCQkJICBTUElfTUVNX09QX0RBVEFfT1VUKGxlbiwgTlVMTCwgMSkpOw0KPiArCWJvb2wgdXNl
+Ym91bmNlYnVmID0gZmFsc2U7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCWlmIChvYmplY3RfaXNf
+b25fc3RhY2soYnVmKSB8fCAhdmlydF9hZGRyX3ZhbGlkKGJ1ZikpIHsNCj4gKwkJdXNlYm91bmNl
+YnVmID0gdHJ1ZTsNCj4gKwkJb3AuZGF0YS5idWYub3V0ID0gbm9yLT5ib3VuY2VidWY7DQo+ICsJ
+fQ0KPiArDQo+ICsJLyogZ2V0IHRyYW5zZmVyIHByb3RvY29scy4gKi8NCj4gKwlvcC5jbWQuYnVz
+d2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9pbnN0X25iaXRzKG5vci0+d3JpdGVfcHJvdG8p
+Ow0KPiArCW9wLmFkZHIuYnVzd2lkdGggPSBzcGlfbm9yX2dldF9wcm90b2NvbF9hZGRyX25iaXRz
+KG5vci0+d3JpdGVfcHJvdG8pOw0KPiArCW9wLmRhdGEuYnVzd2lkdGggPSBzcGlfbm9yX2dldF9w
+cm90b2NvbF9kYXRhX25iaXRzKG5vci0+d3JpdGVfcHJvdG8pOw0KPiArDQo+ICsJaWYgKG5vci0+
+cHJvZ3JhbV9vcGNvZGUgPT0gU1BJTk9SX09QX0FBSV9XUCAmJiBub3ItPnNzdF93cml0ZV9zZWNv
+bmQpDQo+ICsJCW9wLmFkZHIubmJ5dGVzID0gMDsNCj4gKw0KPiArCW9wLmRhdGEubmJ5dGVzID0g
+bGVuIDwgVUlOVF9NQVggPyBsZW4gOiBVSU5UX01BWDsNCj4gKw0KPiArCWlmICghdXNlYm91bmNl
+YnVmKSB7DQo+ICsJCW9wLmRhdGEuYnVmLm91dCA9IGJ1ZjsNCj4gKwl9IGVsc2Ugew0KPiArCQlp
+ZiAob3AuZGF0YS5uYnl0ZXMgPiBub3ItPmJvdW5jZWJ1Zl9zaXplKQ0KPiArCQkJb3AuZGF0YS5u
+Ynl0ZXMgPSBub3ItPmJvdW5jZWJ1Zl9zaXplOw0KPiArDQo+ICsJCW1lbWNweShub3ItPmJvdW5j
+ZWJ1ZiwgYnVmLCBvcC5kYXRhLm5ieXRlcyk7DQo+ICsJfQ0KPiArDQo+ICsJcmV0ID0gc3BpX21l
+bV9hZGp1c3Rfb3Bfc2l6ZShub3ItPnNwaW1lbSwgJm9wKTsNCj4gKwlpZiAocmV0KQ0KPiArCQly
+ZXR1cm4gcmV0Ow0KPiArDQo+ICsJcmV0ID0gc3BpX21lbV9leGVjX29wKG5vci0+c3BpbWVtLCAm
+b3ApOw0KPiArCWlmIChyZXQpDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwlyZXR1cm4gb3Au
+ZGF0YS5uYnl0ZXM7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzc2l6ZV90IHNwaV9ub3Jfd3JpdGVf
+ZGF0YShzdHJ1Y3Qgc3BpX25vciAqbm9yLCBsb2ZmX3Qgb2ZzLCBzaXplX3QgbGVuLA0KPiArCQkJ
+CSAgY29uc3QgdTggKmJ1ZikNCj4gK3sNCj4gKwlpZiAobm9yLT5zcGltZW0pDQo+ICsJCXJldHVy
+biBzcGlfbm9yX3NwaW1lbV93cml0ZV9kYXRhKG5vciwgb2ZzLCBsZW4sIGJ1Zik7DQo+ICsNCj4g
+KwlyZXR1cm4gbm9yLT53cml0ZShub3IsIG9mcywgbGVuLCBidWYpOw0KPiArfQ0KPiArDQo+ICAv
+Kg0KPiAgICogUmVhZCB0aGUgc3RhdHVzIHJlZ2lzdGVyLCByZXR1cm5pbmcgaXRzIHZhbHVlIGlu
+IHRoZSBsb2NhdGlvbg0KPiAgICogUmV0dXJuIHRoZSBzdGF0dXMgcmVnaXN0ZXIgdmFsdWUuDQo+
+IEBAIC0yOTgsNyArNDY3LDE4IEBAIHN0YXRpYyBpbnQgcmVhZF9zcihzdHJ1Y3Qgc3BpX25vciAq
+bm9yKQ0KPiAgCWludCByZXQ7DQo+ICAJdTggdmFsOw0KPiAgDQo+IC0JcmV0ID0gbm9yLT5yZWFk
+X3JlZyhub3IsIFNQSU5PUl9PUF9SRFNSLCAmdmFsLCAxKTsNCj4gKwlpZiAobm9yLT5zcGltZW0p
+IHsNCj4gKwkJc3RydWN0IHNwaV9tZW1fb3Agb3AgPSBTUElfTUVNX09QKA0KPiArCQkJCQlTUElf
+TUVNX09QX0NNRChTUElOT1JfT1BfUkRTUiwgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQURE
+UiwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9EQVRB
+X0lOKDAsIE5VTEwsIDEpKTsNCj4gKw0KPiArCQlyZXQgPSBzcGlfbm9yX2RhdGFfb3Aobm9yLCAm
+b3AsICZ2YWwsIDEpOw0KPiArCX0gZWxzZSB7DQo+ICsJCXJldCA9IG5vci0+cmVhZF9yZWcobm9y
+LCBTUElOT1JfT1BfUkRTUiwgJnZhbCwgMSk7DQo+ICsJfQ0KPiArDQo+ICAJaWYgKHJldCA8IDAp
+IHsNCj4gIAkJcHJfZXJyKCJlcnJvciAlZCByZWFkaW5nIFNSXG4iLCAoaW50KSByZXQpOw0KPiAg
+CQlyZXR1cm4gcmV0Ow0KPiBAQCAtMzE3LDcgKzQ5NywxOCBAQCBzdGF0aWMgaW50IHJlYWRfZnNy
+KHN0cnVjdCBzcGlfbm9yICpub3IpDQo+ICAJaW50IHJldDsNCj4gIAl1OCB2YWw7DQo+ICANCj4g
+LQlyZXQgPSBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09QX1JERlNSLCAmdmFsLCAxKTsNCj4g
+KwlpZiAobm9yLT5zcGltZW0pIHsNCj4gKwkJc3RydWN0IHNwaV9tZW1fb3Agb3AgPSBTUElfTUVN
+X09QKA0KPiArCQkJCQlTUElfTUVNX09QX0NNRChTUElOT1JfT1BfUkRGU1IsIDEpLA0KPiArCQkJ
+CQlTUElfTUVNX09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJ
+CQkJCVNQSV9NRU1fT1BfREFUQV9JTigwLCBOVUxMLCAxKSk7DQo+ICsNCj4gKwkJcmV0ID0gc3Bp
+X25vcl9kYXRhX29wKG5vciwgJm9wLCAmdmFsLCAxKTsNCj4gKwl9IGVsc2Ugew0KPiArCQlyZXQg
+PSBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09QX1JERlNSLCAmdmFsLCAxKTsNCj4gKwl9DQo+
+ICsNCj4gIAlpZiAocmV0IDwgMCkgew0KPiAgCQlwcl9lcnIoImVycm9yICVkIHJlYWRpbmcgRlNS
+XG4iLCByZXQpOw0KPiAgCQlyZXR1cm4gcmV0Ow0KPiBAQCAtMzM2LDcgKzUyNywxOCBAQCBzdGF0
+aWMgaW50IHJlYWRfY3Ioc3RydWN0IHNwaV9ub3IgKm5vcikNCj4gIAlpbnQgcmV0Ow0KPiAgCXU4
+IHZhbDsNCj4gIA0KPiAtCXJldCA9IG5vci0+cmVhZF9yZWcobm9yLCBTUElOT1JfT1BfUkRDUiwg
+JnZhbCwgMSk7DQo+ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29w
+IG9wID0gU1BJX01FTV9PUCgNCj4gKwkJCQkJU1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX1JEQ1Is
+IDEpLA0KPiArCQkJCQlTUElfTUVNX09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9f
+RFVNTVksDQo+ICsJCQkJCVNQSV9NRU1fT1BfREFUQV9JTigwLCBOVUxMLCAxKSk7DQo+ICsNCj4g
+KwkJcmV0ID0gc3BpX25vcl9kYXRhX29wKG5vciwgJm9wLCAmdmFsLCAxKTsNCj4gKwl9IGVsc2Ug
+ew0KPiArCQlyZXQgPSBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09QX1JEQ1IsICZ2YWwsIDEp
+Ow0KPiArCX0NCj4gKw0KPiAgCWlmIChyZXQgPCAwKSB7DQo+ICAJCWRldl9lcnIobm9yLT5kZXYs
+ICJlcnJvciAlZCByZWFkaW5nIENSXG4iLCByZXQpOw0KPiAgCQlyZXR1cm4gcmV0Ow0KPiBAQCAt
+MzUxLDYgKzU1MywxNiBAQCBzdGF0aWMgaW50IHJlYWRfY3Ioc3RydWN0IHNwaV9ub3IgKm5vcikN
+Cj4gICAqLw0KPiAgc3RhdGljIGludCB3cml0ZV9zcihzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1OCB2
+YWwpDQo+ICB7DQo+ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29w
+IG9wID0gU1BJX01FTV9PUCgNCj4gKwkJCQkJU1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX1dSU1Is
+IDEpLA0KPiArCQkJCQlTUElfTUVNX09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9f
+RFVNTVksDQo+ICsJCQkJCVNQSV9NRU1fT1BfREFUQV9JTigxLCBOVUxMLCAxKSk7DQo+ICsNCj4g
+KwkJcmV0dXJuIHNwaV9ub3JfZGF0YV9vcChub3IsICZvcCwgJnZhbCwgMSk7DQo+ICsJfQ0KPiAr
+DQo+ICAJbm9yLT5jbWRfYnVmWzBdID0gdmFsOw0KPiAgCXJldHVybiBub3ItPndyaXRlX3JlZyhu
+b3IsIFNQSU5PUl9PUF9XUlNSLCBub3ItPmNtZF9idWYsIDEpOw0KPiAgfQ0KPiBAQCAtMzYxLDYg
+KzU3MywxNiBAQCBzdGF0aWMgaW50IHdyaXRlX3NyKHN0cnVjdCBzcGlfbm9yICpub3IsIHU4IHZh
+bCkNCj4gICAqLw0KPiAgc3RhdGljIGludCB3cml0ZV9lbmFibGUoc3RydWN0IHNwaV9ub3IgKm5v
+cikNCj4gIHsNCj4gKwlpZiAobm9yLT5zcGltZW0pIHsNCj4gKwkJc3RydWN0IHNwaV9tZW1fb3Ag
+b3AgPSBTUElfTUVNX09QKA0KPiArCQkJCQlTUElfTUVNX09QX0NNRChTUElOT1JfT1BfV1JFTiwg
+MSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19E
+VU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EQVRBKTsNCj4gKw0KPiArCQlyZXR1cm4gc3Bp
+X25vcl9ub2RhdGFfb3Aobm9yLCAmb3ApOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiBub3ItPndy
+aXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XUkVOLCBOVUxMLCAwKTsNCj4gIH0NCj4gIA0KPiBAQCAt
+MzY5LDYgKzU5MSwxNiBAQCBzdGF0aWMgaW50IHdyaXRlX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAq
+bm9yKQ0KPiAgICovDQo+ICBzdGF0aWMgaW50IHdyaXRlX2Rpc2FibGUoc3RydWN0IHNwaV9ub3Ig
+Km5vcikNCj4gIHsNCj4gKwlpZiAobm9yLT5zcGltZW0pIHsNCj4gKwkJc3RydWN0IHNwaV9tZW1f
+b3Agb3AgPSBTUElfTUVNX09QKA0KPiArCQkJCQlTUElfTUVNX09QX0NNRChTUElOT1JfT1BfV1JE
+SSwgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJCQkJU1BJX01FTV9PUF9O
+T19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EQVRBKTsNCj4gKw0KPiArCQlyZXR1cm4g
+c3BpX25vcl9ub2RhdGFfb3Aobm9yLCAmb3ApOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiBub3It
+PndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XUkRJLCBOVUxMLCAwKTsNCj4gIH0NCj4gIA0KPiBA
+QCAtNDY4LDEyICs3MDAsNDYgQEAgc3RhdGljIHZvaWQgc3BpX25vcl9zZXRfNGJ5dGVfb3Bjb2Rl
+cyhzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgCX0NCj4gIH0NCj4gIA0KPiArc3RhdGljIGludCBt
+YWNyb25peF9zZXRfNGJ5dGUoc3RydWN0IHNwaV9ub3IgKm5vciwgYm9vbCBlbmFibGUpDQo+ICt7
+DQo+ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJ
+X01FTV9PUCgNCj4gKwkJCQkJU1BJX01FTV9PUF9DTUQoZW5hYmxlID8NCj4gKwkJCQkJCSAgICAg
+ICBTUElOT1JfT1BfRU40QiA6DQo+ICsJCQkJCQkgICAgICAgU1BJTk9SX09QX0VYNEIsDQo+ICsJ
+CQkJCQkgICAgICAgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJCQkJU1BJ
+X01FTV9PUF9OT19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EQVRBKTsNCj4gKw0KPiAr
+CQlyZXR1cm4gc3BpX25vcl9ub2RhdGFfb3Aobm9yLCAmb3ApOw0KPiArCX0NCj4gKw0KPiArCXJl
+dHVybiBub3ItPndyaXRlX3JlZyhub3IsIGVuYWJsZSA/IFNQSU5PUl9PUF9FTjRCIDogU1BJTk9S
+X09QX0VYNEIsDQo+ICsJCQkgICAgICBOVUxMLCAwKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIGlu
+dCB3cml0ZV9lYXIoc3RydWN0IHNwaV9ub3IgKm5vciwgdTggZWFyKQ0KDQpzcGlfbm9yX3dyaXRl
+X2Vhcj8NCg0KPiArew0KPiArCWlmIChub3ItPnNwaW1lbSkgew0KPiArCQlzdHJ1Y3Qgc3BpX21l
+bV9vcCBvcCA9IFNQSV9NRU1fT1AoDQo+ICsJCQkJCVNQSV9NRU1fT1BfQ01EKFNQSU5PUl9PUF9X
+UkVBUiwgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJCQkJU1BJX01FTV9P
+UF9OT19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9EQVRBX09VVCgwLCBOVUxMLCAxKSk7DQo+
+ICsNCj4gKwkJcmV0dXJuIHNwaV9ub3JfZGF0YV9vcChub3IsICZvcCwgJmVhciwgMSk7DQo+ICsJ
+fQ0KPiArDQo+ICsJbm9yLT5jbWRfYnVmWzBdID0gZWFyOw0KDQpob3cgYWJvdXQgZHJvcHBpbmcg
+dGhpcyBpbml0IGFuZA0KCXJldHVybiBub3ItPndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XUkVB
+UiwgJmVhciwgMSk7DQoNCj4gKwlyZXR1cm4gbm9yLT53cml0ZV9yZWcobm9yLCBTUElOT1JfT1Bf
+V1JFQVIsIG5vci0+Y21kX2J1ZiwgMSk7DQo+ICt9DQo+ICsNCj4gIC8qIEVuYWJsZS9kaXNhYmxl
+IDQtYnl0ZSBhZGRyZXNzaW5nIG1vZGUuICovDQo+ICBzdGF0aWMgaW50IHNldF80Ynl0ZShzdHJ1
+Y3Qgc3BpX25vciAqbm9yLCBib29sIGVuYWJsZSkNCj4gIHsNCj4gIAlpbnQgc3RhdHVzOw0KPiAg
+CWJvb2wgbmVlZF93cmVuID0gZmFsc2U7DQo+IC0JdTggY21kOw0KPiAgDQo+ICAJc3dpdGNoIChK
+RURFQ19NRlIobm9yLT5pbmZvKSkgew0KPiAgCWNhc2UgU05PUl9NRlJfU1Q6DQo+IEBAIC00ODYs
+OCArNzUyLDcgQEAgc3RhdGljIGludCBzZXRfNGJ5dGUoc3RydWN0IHNwaV9ub3IgKm5vciwgYm9v
+bCBlbmFibGUpDQo+ICAJCWlmIChuZWVkX3dyZW4pDQo+ICAJCQl3cml0ZV9lbmFibGUobm9yKTsN
+Cj4gIA0KPiAtCQljbWQgPSBlbmFibGUgPyBTUElOT1JfT1BfRU40QiA6IFNQSU5PUl9PUF9FWDRC
+Ow0KPiAtCQlzdGF0dXMgPSBub3ItPndyaXRlX3JlZyhub3IsIGNtZCwgTlVMTCwgMCk7DQo+ICsJ
+CXN0YXR1cyA9IG1hY3Jvbml4X3NldF80Ynl0ZShub3IsIGVuYWJsZSk7DQo+ICAJCWlmIChuZWVk
+X3dyZW4pDQo+ICAJCQl3cml0ZV9kaXNhYmxlKG5vcik7DQo+ICANCj4gQEAgLTUwMCw4ICs3NjUs
+NyBAQCBzdGF0aWMgaW50IHNldF80Ynl0ZShzdHJ1Y3Qgc3BpX25vciAqbm9yLCBib29sIGVuYWJs
+ZSkNCj4gIAkJCSAqIFdlIG11c3QgY2xlYXIgdGhlIHJlZ2lzdGVyIHRvIGVuYWJsZSBub3JtYWwg
+YmVoYXZpb3IuDQo+ICAJCQkgKi8NCj4gIAkJCXdyaXRlX2VuYWJsZShub3IpOw0KPiAtCQkJbm9y
+LT5jbWRfYnVmWzBdID0gMDsNCj4gLQkJCW5vci0+d3JpdGVfcmVnKG5vciwgU1BJTk9SX09QX1dS
+RUFSLCBub3ItPmNtZF9idWYsIDEpOw0KPiArCQkJd3JpdGVfZWFyKG5vciwgMCk7DQo+ICAJCQl3
+cml0ZV9kaXNhYmxlKG5vcik7DQo+ICAJCX0NCj4gIA0KPiBAQCAtNTA5LDE2ICs3NzMsNDIgQEAg
+c3RhdGljIGludCBzZXRfNGJ5dGUoc3RydWN0IHNwaV9ub3IgKm5vciwgYm9vbCBlbmFibGUpDQo+
+ICAJZGVmYXVsdDoNCj4gIAkJLyogU3BhbnNpb24gc3R5bGUgKi8NCg0KaG93IGFib3V0IGludHJv
+ZHVjaW5nIGEgc3BhbnNpb25fc2V0XzRieXRlKCkgYW5kIHJldHVybiBpdCBkaXJlY3RseT8NCg0K
+PiAgCQlub3ItPmNtZF9idWZbMF0gPSBlbmFibGUgPDwgNzsNCj4gKw0KPiArCQlpZiAobm9yLT5z
+cGltZW0pIHsNCj4gKwkJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgNCj4gKwkJ
+CQkJU1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX0JSV1IsIDEpLA0KPiArCQkJCQlTUElfTUVNX09Q
+X05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJCVNQSV9NRU1f
+T1BfREFUQV9PVVQoMSwgTlVMTCwgMSkpOw0KPiArDQo+ICsJCQlyZXR1cm4gc3BpX25vcl9kYXRh
+X29wKG5vciwgJm9wLCBub3ItPmNtZF9idWYsIDEpOw0KPiArCX0NCj4gKw0KPiAgCQlyZXR1cm4g
+bm9yLT53cml0ZV9yZWcobm9yLCBTUElOT1JfT1BfQlJXUiwgbm9yLT5jbWRfYnVmLCAxKTsNCj4g
+IAl9DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgeHJlYWRfc3Ioc3RydWN0IHNwaV9ub3IgKm5v
+ciwgdTggKnNyKQ0KDQpzcGlfbm9yX3hyZWFkX3NyPw0KDQo+ICt7DQo+ICsJaWYgKG5vci0+c3Bp
+bWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgNCj4gKwkJCQkJ
+U1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX1hSRFNSLCAxKSwNCj4gKwkJCQkJU1BJX01FTV9PUF9O
+T19BRERSLA0KPiArCQkJCQlTUElfTUVNX09QX05PX0RVTU1ZLA0KPiArCQkJCQlTUElfTUVNX09Q
+X0RBVEFfSU4oMCwgTlVMTCwgMSkpOw0KPiArDQo+ICsJCXJldHVybiBzcGlfbm9yX2RhdGFfb3Ao
+bm9yLCAmb3AsIHNyLCAxKTsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gbm9yLT5yZWFkX3JlZyhu
+b3IsIFNQSU5PUl9PUF9YUkRTUiwgc3IsIDEpOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaW50IHMz
+YW5fc3JfcmVhZHkoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4gIHsNCj4gIAlpbnQgcmV0Ow0KPiAg
+CXU4IHZhbDsNCj4gIA0KPiAtCXJldCA9IG5vci0+cmVhZF9yZWcobm9yLCBTUElOT1JfT1BfWFJE
+U1IsICZ2YWwsIDEpOw0KPiArCXJldCA9IHhyZWFkX3NyKG5vciwgJnZhbCk7DQo+ICAJaWYgKHJl
+dCA8IDApIHsNCj4gIAkJZGV2X2Vycihub3ItPmRldiwgImVycm9yICVkIHJlYWRpbmcgWFJEU1Jc
+biIsIChpbnQpIHJldCk7DQo+ICAJCXJldHVybiByZXQ7DQo+IEBAIC01MjcsNiArODE3LDIxIEBA
+IHN0YXRpYyBpbnQgczNhbl9zcl9yZWFkeShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgCXJldHVy
+biAhISh2YWwgJiBYU1JfUkRZKTsNCj4gIH0NCj4gIA0KPiArc3RhdGljIGludCBjbGVhcl9zcihz
+dHJ1Y3Qgc3BpX25vciAqbm9yKQ0KDQpzcGlfbm9yX2NsZWFyX3NyPw0KDQo+ICt7DQo+ICsJaWYg
+KG5vci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgN
+Cj4gKwkJCQkJU1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX0NMU1IsIDEpLA0KPiArCQkJCQlTUElf
+TUVNX09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJCVNQ
+SV9NRU1fT1BfTk9fREFUQSk7DQo+ICsNCj4gKwkJcmV0dXJuIHNwaV9ub3Jfbm9kYXRhX29wKG5v
+ciwgJm9wKTsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gbm9yLT53cml0ZV9yZWcobm9yLCBTUElO
+T1JfT1BfQ0xTUiwgTlVMTCwgMCk7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQgc3BpX25vcl9z
+cl9yZWFkeShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgew0KPiAgCWludCBzciA9IHJlYWRfc3Io
+bm9yKTsNCj4gQEAgLTUzOSwxMyArODQ0LDI4IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9zcl9yZWFk
+eShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgCQllbHNlDQo+ICAJCQlkZXZfZXJyKG5vci0+ZGV2
+LCAiUHJvZ3JhbW1pbmcgRXJyb3Igb2NjdXJyZWRcbiIpOw0KPiAgDQo+IC0JCW5vci0+d3JpdGVf
+cmVnKG5vciwgU1BJTk9SX09QX0NMU1IsIE5VTEwsIDApOw0KPiArCQljbGVhcl9zcihub3IpOw0K
+PiAgCQlyZXR1cm4gLUVJTzsNCj4gIAl9DQo+ICANCj4gIAlyZXR1cm4gIShzciAmIFNSX1dJUCk7
+DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgY2xlYXJfZnNyKHN0cnVjdCBzcGlfbm9yICpub3Ip
+DQoNCnNwaV9ub3JfY2xlYXJfZnNyPw0KDQo+ICt7DQo+ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+
+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgNCj4gKwkJCQkJU1BJX01FTV9P
+UF9DTUQoU1BJTk9SX09QX0NMRlNSLCAxKSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19BRERSLA0K
+PiArCQkJCQlTUElfTUVNX09QX05PX0RVTU1ZLA0KPiArCQkJCQlTUElfTUVNX09QX05PX0RBVEEp
+Ow0KPiArDQo+ICsJCXJldHVybiBzcGlfbm9yX25vZGF0YV9vcChub3IsICZvcCk7DQo+ICsJfQ0K
+PiArDQo+ICsJcmV0dXJuIG5vci0+d3JpdGVfcmVnKG5vciwgU1BJTk9SX09QX0NMRlNSLCBOVUxM
+LCAwKTsNCj4gK30NCj4gKw0KPiAgc3RhdGljIGludCBzcGlfbm9yX2Zzcl9yZWFkeShzdHJ1Y3Qg
+c3BpX25vciAqbm9yKQ0KPiAgew0KPiAgCWludCBmc3IgPSByZWFkX2Zzcihub3IpOw0KPiBAQCAt
+NTYyLDcgKzg4Miw3IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9mc3JfcmVhZHkoc3RydWN0IHNwaV9u
+b3IgKm5vcikNCj4gIAkJCWRldl9lcnIobm9yLT5kZXYsDQo+ICAJCQkiQXR0ZW1wdGVkIHRvIG1v
+ZGlmeSBhIHByb3RlY3RlZCBzZWN0b3IuXG4iKTsNCj4gIA0KPiAtCQlub3ItPndyaXRlX3JlZyhu
+b3IsIFNQSU5PUl9PUF9DTEZTUiwgTlVMTCwgMCk7DQo+ICsJCWNsZWFyX2Zzcihub3IpOw0KPiAg
+CQlyZXR1cm4gLUVJTzsNCj4gIAl9DQo+ICANCj4gQEAgLTYzMCw2ICs5NTAsMTYgQEAgc3RhdGlj
+IGludCBlcmFzZV9jaGlwKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+ICB7DQo+ICAJZGV2X2RiZyhu
+b3ItPmRldiwgIiAlbGxkS2lCXG4iLCAobG9uZyBsb25nKShub3ItPm10ZC5zaXplID4+IDEwKSk7
+DQo+ICANCj4gKwlpZiAobm9yLT5zcGltZW0pIHsNCj4gKwkJc3RydWN0IHNwaV9tZW1fb3Agb3Ag
+PSBTUElfTUVNX09QKA0KPiArCQkJCQlTUElfTUVNX09QX0NNRChTUElOT1JfT1BfQ0hJUF9FUkFT
+RSwgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJCQkJU1BJX01FTV9PUF9O
+T19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EQVRBKTsNCj4gKw0KPiArCQlyZXR1cm4g
+c3BpX25vcl9ub2RhdGFfb3Aobm9yLCAmb3ApOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiBub3It
+PndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9DSElQX0VSQVNFLCBOVUxMLCAwKTsNCj4gIH0NCj4g
+IA0KPiBAQCAtNjkyLDYgKzEwMjIsMTcgQEAgc3RhdGljIGludCBzcGlfbm9yX2VyYXNlX3NlY3Rv
+cihzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1MzIgYWRkcikNCj4gIAlpZiAobm9yLT5lcmFzZSkNCj4g
+IAkJcmV0dXJuIG5vci0+ZXJhc2Uobm9yLCBhZGRyKTsNCj4gIA0KPiArCWlmIChub3ItPnNwaW1l
+bSkgew0KPiArCQlzdHJ1Y3Qgc3BpX21lbV9vcCBvcCA9IFNQSV9NRU1fT1AoDQo+ICsJCQkJCVNQ
+SV9NRU1fT1BfQ01EKG5vci0+ZXJhc2Vfb3Bjb2RlLCAxKSwNCj4gKwkJCQkJU1BJX01FTV9PUF9B
+RERSKG5vci0+YWRkcl93aWR0aCwgYWRkciwNCj4gKwkJCQkJCQkxKSwNCj4gKwkJCQkJU1BJX01F
+TV9PUF9OT19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9OT19EQVRBKTsNCj4gKw0KPiArCQly
+ZXR1cm4gc3BpX25vcl9ub2RhdGFfb3Aobm9yLCAmb3ApOw0KPiArCX0NCj4gKw0KPiAgCS8qDQo+
+ICAJICogRGVmYXVsdCBpbXBsZW1lbnRhdGlvbiwgaWYgZHJpdmVyIGRvZXNuJ3QgaGF2ZSBhIHNw
+ZWNpYWxpemVkIEhXDQo+ICAJICogY29udHJvbA0KPiBAQCAtMTQwNiw3ICsxNzQ3LDE4IEBAIHN0
+YXRpYyBpbnQgd3JpdGVfc3JfY3Ioc3RydWN0IHNwaV9ub3IgKm5vciwgdTggKnNyX2NyKQ0KPiAg
+DQo+ICAJd3JpdGVfZW5hYmxlKG5vcik7DQo+ICANCj4gLQlyZXQgPSBub3ItPndyaXRlX3JlZyhu
+b3IsIFNQSU5PUl9PUF9XUlNSLCBzcl9jciwgMik7DQo+ICsJaWYgKG5vci0+c3BpbWVtKSB7DQo+
+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgNCj4gKwkJCQkJU1BJX01FTV9P
+UF9DTUQoU1BJTk9SX09QX1dSU1IsIDEpLA0KPiArCQkJCQlTUElfTUVNX09QX05PX0FERFIsDQo+
+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJCVNQSV9NRU1fT1BfREFUQV9PVVQo
+MCwgTlVMTCwgMSkpOw0KPiArDQo+ICsJCXJldCA9IHNwaV9ub3JfZGF0YV9vcChub3IsICZvcCwg
+c3JfY3IsIDIpOw0KPiArCX0gZWxzZSB7DQo+ICsJCXJldCA9IG5vci0+d3JpdGVfcmVnKG5vciwg
+U1BJTk9SX09QX1dSU1IsIHNyX2NyLCAyKTsNCj4gKwl9DQo+ICsNCj4gIAlpZiAocmV0IDwgMCkg
+ew0KPiAgCQlkZXZfZXJyKG5vci0+ZGV2LA0KPiAgCQkJImVycm9yIHdoaWxlIHdyaXRpbmcgY29u
+ZmlndXJhdGlvbiByZWdpc3RlclxuIik7DQo+IEBAIC0xNTg1LDYgKzE5MzcsMzYgQEAgc3RhdGlj
+IGludCBzcGFuc2lvbl9yZWFkX2NyX3F1YWRfZW5hYmxlKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+
+ICAJcmV0dXJuIDA7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQgd3JpdGVfc3IyKHN0cnVjdCBz
+cGlfbm9yICpub3IsIHU4IHNyMikNCg0Kc3BpX25vcl93cml0ZV9zcjI/DQoNCj4gK3sNCj4gKwlp
+ZiAobm9yLT5zcGltZW0pIHsNCj4gKwkJc3RydWN0IHNwaV9tZW1fb3Agb3AgPSBTUElfTUVNX09Q
+KA0KPiArCQkJCQlTUElfTUVNX09QX0NNRChTUElOT1JfT1BfV1JTUjIsIDEpLA0KPiArCQkJCQlT
+UElfTUVNX09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJ
+CVNQSV9NRU1fT1BfREFUQV9PVVQoMCwgTlVMTCwgMSkpOw0KPiArDQo+ICsJCXJldHVybiBzcGlf
+bm9yX2RhdGFfb3Aobm9yLCAmb3AsICZzcjIsIDEpOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiBu
+b3ItPndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XUlNSMiwgJnNyMiwgMSk7DQo+ICt9DQo+ICsN
+Cj4gK3N0YXRpYyBpbnQgcmVhZF9zcjIoc3RydWN0IHNwaV9ub3IgKm5vciwgdTggKnNyMikNCg0K
+c3BpX25vcl9yZWFkX3NyMj8NCg0KPiArew0KPiArCWlmIChub3ItPnNwaW1lbSkgew0KPiArCQlz
+dHJ1Y3Qgc3BpX21lbV9vcCBvcCA9IFNQSV9NRU1fT1AoDQo+ICsJCQkJCVNQSV9NRU1fT1BfQ01E
+KFNQSU5PUl9PUF9SRFNSMiwgMSksDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fQUREUiwNCj4gKwkJ
+CQkJU1BJX01FTV9PUF9OT19EVU1NWSwNCj4gKwkJCQkJU1BJX01FTV9PUF9EQVRBX0lOKDAsIE5V
+TEwsIDEpKTsNCj4gKw0KPiArCQlyZXR1cm4gc3BpX25vcl9kYXRhX29wKG5vciwgJm9wLCBzcjIs
+IDEpOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09Q
+X1JEU1IyLCBzcjIsIDEpOw0KPiArfQ0KPiArDQo+ICAvKioNCj4gICAqIHNyMl9iaXQ3X3F1YWRf
+ZW5hYmxlKCkgLSBzZXQgUUUgYml0IGluIFN0YXR1cyBSZWdpc3RlciAyLg0KPiAgICogQG5vcjoJ
+cG9pbnRlciB0byBhICdzdHJ1Y3Qgc3BpX25vcicNCj4gQEAgLTE2MDMsNyArMTk4NSw3IEBAIHN0
+YXRpYyBpbnQgc3IyX2JpdDdfcXVhZF9lbmFibGUoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4gIAlp
+bnQgcmV0Ow0KPiAgDQo+ICAJLyogQ2hlY2sgY3VycmVudCBRdWFkIEVuYWJsZSBiaXQgdmFsdWUu
+ICovDQo+IC0JcmV0ID0gbm9yLT5yZWFkX3JlZyhub3IsIFNQSU5PUl9PUF9SRFNSMiwgJnNyMiwg
+MSk7DQo+ICsJcmV0ID0gcmVhZF9zcjIobm9yLCAmc3IyKTsNCj4gIAlpZiAocmV0KQ0KPiAgCQly
+ZXR1cm4gcmV0Ow0KPiAgCWlmIChzcjIgJiBTUjJfUVVBRF9FTl9CSVQ3KQ0KPiBAQCAtMTYxNCw3
+ICsxOTk2LDcgQEAgc3RhdGljIGludCBzcjJfYml0N19xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25v
+ciAqbm9yKQ0KPiAgDQo+ICAJd3JpdGVfZW5hYmxlKG5vcik7DQo+ICANCj4gLQlyZXQgPSBub3It
+PndyaXRlX3JlZyhub3IsIFNQSU5PUl9PUF9XUlNSMiwgJnNyMiwgMSk7DQo+ICsJcmV0ID0gd3Jp
+dGVfc3IyKG5vciwgc3IyKTsNCj4gIAlpZiAocmV0IDwgMCkgew0KPiAgCQlkZXZfZXJyKG5vci0+
+ZGV2LCAiZXJyb3Igd2hpbGUgd3JpdGluZyBzdGF0dXMgcmVnaXN0ZXIgMlxuIik7DQo+ICAJCXJl
+dHVybiAtRUlOVkFMOw0KPiBAQCAtMTYyNiw4ICsyMDA4LDcgQEAgc3RhdGljIGludCBzcjJfYml0
+N19xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPiAgCQlyZXR1cm4gcmV0Ow0KPiAg
+CX0NCj4gIA0KPiAtCS8qIFJlYWQgYmFjayBhbmQgY2hlY2sgaXQuICovDQo+IC0JcmV0ID0gbm9y
+LT5yZWFkX3JlZyhub3IsIFNQSU5PUl9PUF9SRFNSMiwgJnNyMiwgMSk7DQo+ICsJcmV0ID0gcmVh
+ZF9zcjIobm9yLCAmc3IyKTsNCj4gIAlpZiAoIShyZXQgPiAwICYmIChzcjIgJiBTUjJfUVVBRF9F
+Tl9CSVQ3KSkpIHsNCj4gIAkJZGV2X2Vycihub3ItPmRldiwgIlNSMiBRdWFkIGJpdCBub3Qgc2V0
+XG4iKTsNCj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+IEBAIC0yMDU0LDEzICsyNDM1LDI4IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgZmxhc2hfaW5mbyBzcGlfbm9yX2lkc1tdID0gew0KPiAgCXsgfSwN
+Cj4gIH07DQo+ICANCj4gK3N0YXRpYyBpbnQgcmVhZF9pZChzdHJ1Y3Qgc3BpX25vciAqbm9yLCB1
+OCAqaWQpDQoNCnRoaXMgZnVuY3Rpb24gaXMgY2FsbGVkIGp1c3QgZnJvbSBzcGlfbm9yX3JlYWRf
+aWQoKS4gSG93IGFib3V0IGluY29ycG9yYXRpbmcNCnRoaXMgY29kZSBpbnRvIHNwaV9ub3JfcmVh
+ZF9pZCgpIHNvIHRoYXQgd2UgdXNlIGZ1bmN0aW9ucyB0aGF0IGFyZSBwcmVwZW5kZWQNCndpdGgg
+InNwaV9ub3IiIHRvIG5vdCBwb2xsdXRlIHRoZSBuYW1lc3BhY2U/DQo+ICt7DQo+ICsJaWYgKG5v
+ci0+c3BpbWVtKSB7DQo+ICsJCXN0cnVjdCBzcGlfbWVtX29wIG9wID0gU1BJX01FTV9PUCgNCj4g
+KwkJCQkJU1BJX01FTV9PUF9DTUQoU1BJTk9SX09QX1JESUQsIDEpLA0KPiArCQkJCQlTUElfTUVN
+X09QX05PX0FERFIsDQo+ICsJCQkJCVNQSV9NRU1fT1BfTk9fRFVNTVksDQo+ICsJCQkJCVNQSV9N
+RU1fT1BfREFUQV9JTigwLCBOVUxMLCAxKSk7DQo+ICsNCj4gKwkJcmV0dXJuIHNwaV9ub3JfZGF0
+YV9vcChub3IsICZvcCwgaWQsIFNQSV9OT1JfTUFYX0lEX0xFTik7DQo+ICsJfQ0KPiArDQo+ICsJ
+cmV0dXJuIG5vci0+cmVhZF9yZWcobm9yLCBTUElOT1JfT1BfUkRJRCwgaWQsIFNQSV9OT1JfTUFY
+X0lEX0xFTik7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZmxhc2hfaW5mbyAq
+c3BpX25vcl9yZWFkX2lkKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+ICB7DQo+ICAJaW50CQkJdG1w
+Ow0KPiAgCXU4CQkJaWRbU1BJX05PUl9NQVhfSURfTEVOXTsNCj4gIAljb25zdCBzdHJ1Y3QgZmxh
+c2hfaW5mbwkqaW5mbzsNCj4gIA0KPiAtCXRtcCA9IG5vci0+cmVhZF9yZWcobm9yLCBTUElOT1Jf
+T1BfUkRJRCwgaWQsIFNQSV9OT1JfTUFYX0lEX0xFTik7DQo+ICsJdG1wID0gcmVhZF9pZChub3Is
+IGlkKTsNCj4gIAlpZiAodG1wIDwgMCkgew0KPiAgCQlkZXZfZGJnKG5vci0+ZGV2LCAiZXJyb3Ig
+JWQgcmVhZGluZyBKRURFQyBJRFxuIiwgdG1wKTsNCj4gIAkJcmV0dXJuIEVSUl9QVFIodG1wKTsN
+Cj4gQEAgLTIwOTYsNyArMjQ5Miw3IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9yZWFkKHN0cnVjdCBt
+dGRfaW5mbyAqbXRkLCBsb2ZmX3QgZnJvbSwgc2l6ZV90IGxlbiwNCj4gIAkJaWYgKG5vci0+Zmxh
+Z3MgJiBTTk9SX0ZfUzNBTl9BRERSX0RFRkFVTFQpDQo+ICAJCQlhZGRyID0gc3BpX25vcl9zM2Fu
+X2FkZHJfY29udmVydChub3IsIGFkZHIpOw0KPiAgDQo+IC0JCXJldCA9IG5vci0+cmVhZChub3Is
+IGFkZHIsIGxlbiwgYnVmKTsNCj4gKwkJcmV0ID0gc3BpX25vcl9yZWFkX2RhdGEobm9yLCBhZGRy
+LCBsZW4sIGJ1Zik7DQo+ICAJCWlmIChyZXQgPT0gMCkgew0KPiAgCQkJLyogV2Ugc2hvdWxkbid0
+IHNlZSAwLWxlbmd0aCByZWFkcyAqLw0KPiAgCQkJcmV0ID0gLUVJTzsNCj4gQEAgLTIxNDEsNyAr
+MjUzNyw3IEBAIHN0YXRpYyBpbnQgc3N0X3dyaXRlKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2Zm
+X3QgdG8sIHNpemVfdCBsZW4sDQo+ICAJCW5vci0+cHJvZ3JhbV9vcGNvZGUgPSBTUElOT1JfT1Bf
+QlA7DQo+ICANCj4gIAkJLyogd3JpdGUgb25lIGJ5dGUuICovDQo+IC0JCXJldCA9IG5vci0+d3Jp
+dGUobm9yLCB0bywgMSwgYnVmKTsNCj4gKwkJcmV0ID0gc3BpX25vcl93cml0ZV9kYXRhKG5vciwg
+dG8sIDEsIGJ1Zik7DQo+ICAJCWlmIChyZXQgPCAwKQ0KPiAgCQkJZ290byBzc3Rfd3JpdGVfZXJy
+Ow0KPiAgCQlXQVJOKHJldCAhPSAxLCAiV2hpbGUgd3JpdGluZyAxIGJ5dGUgd3JpdHRlbiAlaSBi
+eXRlc1xuIiwNCj4gQEAgLTIxNTcsNyArMjU1Myw3IEBAIHN0YXRpYyBpbnQgc3N0X3dyaXRlKHN0
+cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2ZmX3QgdG8sIHNpemVfdCBsZW4sDQo+ICAJCW5vci0+cHJv
+Z3JhbV9vcGNvZGUgPSBTUElOT1JfT1BfQUFJX1dQOw0KPiAgDQo+ICAJCS8qIHdyaXRlIHR3byBi
+eXRlcy4gKi8NCj4gLQkJcmV0ID0gbm9yLT53cml0ZShub3IsIHRvLCAyLCBidWYgKyBhY3R1YWwp
+Ow0KPiArCQlyZXQgPSBzcGlfbm9yX3dyaXRlX2RhdGEobm9yLCB0bywgMiwgYnVmICsgYWN0dWFs
+KTsNCj4gIAkJaWYgKHJldCA8IDApDQo+ICAJCQlnb3RvIHNzdF93cml0ZV9lcnI7DQo+ICAJCVdB
+Uk4ocmV0ICE9IDIsICJXaGlsZSB3cml0aW5nIDIgYnl0ZXMgd3JpdHRlbiAlaSBieXRlc1xuIiwN
+Cj4gQEAgLTIxODAsNyArMjU3Niw3IEBAIHN0YXRpYyBpbnQgc3N0X3dyaXRlKHN0cnVjdCBtdGRf
+aW5mbyAqbXRkLCBsb2ZmX3QgdG8sIHNpemVfdCBsZW4sDQo+ICAJCXdyaXRlX2VuYWJsZShub3Ip
+Ow0KPiAgDQo+ICAJCW5vci0+cHJvZ3JhbV9vcGNvZGUgPSBTUElOT1JfT1BfQlA7DQo+IC0JCXJl
+dCA9IG5vci0+d3JpdGUobm9yLCB0bywgMSwgYnVmICsgYWN0dWFsKTsNCj4gKwkJcmV0ID0gc3Bp
+X25vcl93cml0ZV9kYXRhKG5vciwgdG8sIDEsIGJ1ZiArIGFjdHVhbCk7DQo+ICAJCWlmIChyZXQg
+PCAwKQ0KPiAgCQkJZ290byBzc3Rfd3JpdGVfZXJyOw0KPiAgCQlXQVJOKHJldCAhPSAxLCAiV2hp
+bGUgd3JpdGluZyAxIGJ5dGUgd3JpdHRlbiAlaSBieXRlc1xuIiwNCj4gQEAgLTIyNDIsNyArMjYz
+OCw3IEBAIHN0YXRpYyBpbnQgc3BpX25vcl93cml0ZShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgbG9m
+Zl90IHRvLCBzaXplX3QgbGVuLA0KPiAgCQkJYWRkciA9IHNwaV9ub3JfczNhbl9hZGRyX2NvbnZl
+cnQobm9yLCBhZGRyKTsNCj4gIA0KPiAgCQl3cml0ZV9lbmFibGUobm9yKTsNCj4gLQkJcmV0ID0g
+bm9yLT53cml0ZShub3IsIGFkZHIsIHBhZ2VfcmVtYWluLCBidWYgKyBpKTsNCj4gKwkJcmV0ID0g
+c3BpX25vcl93cml0ZV9kYXRhKG5vciwgYWRkciwgcGFnZV9yZW1haW4sIGJ1ZiArIGkpOw0KPiAg
+CQlpZiAocmV0IDwgMCkNCj4gIAkJCWdvdG8gd3JpdGVfZXJyOw0KPiAgCQl3cml0dGVuID0gcmV0
+Ow0KPiBAQCAtMjI2MSw4ICsyNjU3LDEwIEBAIHN0YXRpYyBpbnQgc3BpX25vcl93cml0ZShzdHJ1
+Y3QgbXRkX2luZm8gKm10ZCwgbG9mZl90IHRvLCBzaXplX3QgbGVuLA0KPiAgDQo+ICBzdGF0aWMg
+aW50IHNwaV9ub3JfY2hlY2soc3RydWN0IHNwaV9ub3IgKm5vcikNCj4gIHsNCj4gLQlpZiAoIW5v
+ci0+ZGV2IHx8ICFub3ItPnJlYWQgfHwgIW5vci0+d3JpdGUgfHwNCj4gLQkJIW5vci0+cmVhZF9y
+ZWcgfHwgIW5vci0+d3JpdGVfcmVnKSB7DQo+ICsJaWYgKCFub3ItPmRldiB8fA0KPiArCSAgICAo
+IW5vci0+c3BpbWVtICYmDQo+ICsJICAgICghbm9yLT5yZWFkIHx8ICFub3ItPndyaXRlIHx8ICFu
+b3ItPnJlYWRfcmVnIHx8DQo+ICsJICAgICAgIW5vci0+d3JpdGVfcmVnKSkpIHsNCj4gIAkJcHJf
+ZXJyKCJzcGktbm9yOiBwbGVhc2UgZmlsbCBhbGwgdGhlIG5lY2Vzc2FyeSBmaWVsZHMhXG4iKTsN
+Cj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICAJfQ0KPiBAQCAtMjI3NSw3ICsyNjczLDcgQEAgc3Rh
+dGljIGludCBzM2FuX25vcl9zY2FuKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+ICAJaW50IHJldDsN
+Cj4gIAl1OCB2YWw7DQo+ICANCj4gLQlyZXQgPSBub3ItPnJlYWRfcmVnKG5vciwgU1BJTk9SX09Q
+X1hSRFNSLCAmdmFsLCAxKTsNCj4gKwlyZXQgPSB4cmVhZF9zcihub3IsICZ2YWwpOw0KPiAgCWlm
+IChyZXQgPCAwKSB7DQo+ICAJCWRldl9lcnIobm9yLT5kZXYsICJlcnJvciAlZCByZWFkaW5nIFhS
+RFNSXG4iLCAoaW50KSByZXQpOw0KPiAgCQlyZXR1cm4gcmV0Ow0KPiBAQCAtMjQwNSw3ICsyODAz
+LDcgQEAgc3RhdGljIGludCBzcGlfbm9yX3JlYWRfcmF3KHN0cnVjdCBzcGlfbm9yICpub3IsIHUz
+MiBhZGRyLCBzaXplX3QgbGVuLCB1OCAqYnVmKQ0KPiAgCWludCByZXQ7DQo+ICANCj4gIAl3aGls
+ZSAobGVuKSB7DQo+IC0JCXJldCA9IG5vci0+cmVhZChub3IsIGFkZHIsIGxlbiwgYnVmKTsNCj4g
+KwkJcmV0ID0gc3BpX25vcl9yZWFkX2RhdGEobm9yLCBhZGRyLCBsZW4sIGJ1Zik7DQo+ICAJCWlm
+ICghcmV0IHx8IHJldCA+IGxlbikNCj4gIAkJCXJldHVybiAtRUlPOw0KPiAgCQlpZiAocmV0IDwg
+MCkNCj4gQEAgLTQxODgsNiArNDU4NiwyMTUgQEAgaW50IHNwaV9ub3Jfc2NhbihzdHJ1Y3Qgc3Bp
+X25vciAqbm9yLCBjb25zdCBjaGFyICpuYW1lLA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTF9HUEwo
+c3BpX25vcl9zY2FuKTsNCj4gIA0KPiArc3RhdGljIGludCBzcGlfbm9yX3Byb2JlKHN0cnVjdCBz
+cGlfbWVtICpzcGltZW0pDQo+ICt7DQo+ICsJc3RydWN0IHNwaV9kZXZpY2UgKnNwaSA9IHNwaW1l
+bS0+c3BpOw0KPiArCXN0cnVjdCBmbGFzaF9wbGF0Zm9ybV9kYXRhICpkYXRhOw0KPiArCXN0cnVj
+dCBzcGlfbm9yICpub3I7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdjYXBzIGh3Y2FwcyA9IHsNCj4g
+KwkJLm1hc2sgPSBTTk9SX0hXQ0FQU19SRUFEIHwNCj4gKwkJCVNOT1JfSFdDQVBTX1JFQURfRkFT
+VCB8DQo+ICsJCQlTTk9SX0hXQ0FQU19QUCwNCj4gKwl9Ow0KPiArCWNoYXIgKmZsYXNoX25hbWU7
+DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCWRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKCZzcGktPmRl
+dik7DQoNCnlvdSBjYW4gZG8gdGhlIGluaXRpYWxpemF0aW9uIGF0IGRlY2xhcmF0aW9uDQoNCj4g
+Kw0KPiArCW5vciA9IGRldm1fa3phbGxvYygmc3BpLT5kZXYsIHNpemVvZigqbm9yKSwgR0ZQX0tF
+Uk5FTCk7DQo+ICsJaWYgKCFub3IpDQo+ICsJCXJldHVybiAtRU5PTUVNOw0KPiArDQo+ICsJLyoN
+Cj4gKwkgKiBXZSBuZWVkIHRoZSBib3VuY2UgYnVmZmVyIGVhcmx5IHRvIHJlYWQvd3JpdGUgcmVn
+aXN0ZXJzIHdoZW4gZ29pbmcNCj4gKwkgKiB0aHJvdWdoIHRoZSBzcGktbWVtIGxheWVyIChidWZm
+ZXJzIGhhdmUgdG8gYmUgRE1BLWFibGUpLg0KPiArCSAqIFdlJ2xsIHJlYWxsb2NhdGUgYSBuZXcg
+YnVmZmVyIGlmIG5vci0+cGFnZV9zaXplIHR1cm5zIG91dCB0byBiZQ0KPiArCSAqIGdyZWF0ZXIg
+dGhhbiBQQUdFX1NJWkUgKHdoaWNoIHNob3VsZG4ndCBoYXBwZW4gYmVmb3JlIGxvbmcgc2luY2Ug
+Tk9SDQo+ICsJICogcGFnZXMgYXJlIHVzdWFsbHkgbGVzcyB0aGFuIDFLQikgYWZ0ZXIgc3BpX25v
+cl9zY2FuKCkgcmV0dXJucy4NCj4gKwkgKi8NCj4gKwlub3ItPmJvdW5jZWJ1Zl9zaXplID0gUEFH
+RV9TSVpFOw0KPiArCW5vci0+Ym91bmNlYnVmID0gZGV2bV9rbWFsbG9jKCZzcGktPmRldiwgbm9y
+LT5ib3VuY2VidWZfc2l6ZSwNCj4gKwkJCQkgICAgICBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIW5v
+ci0+Ym91bmNlYnVmKQ0KPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArCW5vci0+c3BpbWVt
+ID0gc3BpbWVtOw0KPiArCW5vci0+ZGV2ID0gJnNwaS0+ZGV2Ow0KPiArCXNwaV9ub3Jfc2V0X2Zs
+YXNoX25vZGUobm9yLCBzcGktPmRldi5vZl9ub2RlKTsNCj4gKw0KPiArCXNwaV9tZW1fc2V0X2Ry
+dmRhdGEoc3BpbWVtLCBub3IpOw0KPiArDQo+ICsJaWYgKHNwaS0+bW9kZSAmIFNQSV9SWF9PQ1RB
+TCkgew0KPiArCQlod2NhcHMubWFzayB8PSBTTk9SX0hXQ0FQU19SRUFEXzFfMV84Ow0KPiArDQo+
+ICsJCWlmIChzcGktPm1vZGUgJiBTUElfVFhfT0NUQUwpDQo+ICsJCQlod2NhcHMubWFzayB8PSAo
+U05PUl9IV0NBUFNfUkVBRF8xXzhfOCB8DQo+ICsJCQkJCVNOT1JfSFdDQVBTX1BQXzFfMV84IHwN
+Cj4gKwkJCQkJU05PUl9IV0NBUFNfUFBfMV84XzgpOw0KPiArCX0gZWxzZSBpZiAoc3BpLT5tb2Rl
+ICYgU1BJX1JYX1FVQUQpIHsNCj4gKwkJaHdjYXBzLm1hc2sgfD0gU05PUl9IV0NBUFNfUkVBRF8x
+XzFfNDsNCj4gKw0KPiArCQlpZiAoc3BpLT5tb2RlICYgU1BJX1RYX1FVQUQpDQo+ICsJCQlod2Nh
+cHMubWFzayB8PSAoU05PUl9IV0NBUFNfUkVBRF8xXzRfNCB8DQo+ICsJCQkJCVNOT1JfSFdDQVBT
+X1BQXzFfMV80IHwNCj4gKwkJCQkJU05PUl9IV0NBUFNfUFBfMV80XzQpOw0KPiArCX0gZWxzZSBp
+ZiAoc3BpLT5tb2RlICYgU1BJX1JYX0RVQUwpIHsNCj4gKwkJaHdjYXBzLm1hc2sgfD0gU05PUl9I
+V0NBUFNfUkVBRF8xXzFfMjsNCj4gKw0KPiArCQlpZiAoc3BpLT5tb2RlICYgU1BJX1RYX0RVQUwp
+DQo+ICsJCQlod2NhcHMubWFzayB8PSBTTk9SX0hXQ0FQU19SRUFEXzFfMl8yOw0KPiArCX0NCj4g
+Kw0KPiArCWlmIChkYXRhICYmIGRhdGEtPm5hbWUpDQo+ICsJCW5vci0+bXRkLm5hbWUgPSBkYXRh
+LT5uYW1lOw0KPiArDQo+ICsJaWYgKCFub3ItPm10ZC5uYW1lKQ0KPiArCQlub3ItPm10ZC5uYW1l
+ID0gc3BpX21lbV9nZXRfbmFtZShzcGltZW0pOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBGb3Igc29t
+ZSAoaGlzdG9yaWNhbD8pIHJlYXNvbiBtYW55IHBsYXRmb3JtcyBwcm92aWRlIHR3byBkaWZmZXJl
+bnQNCj4gKwkgKiBuYW1lcyBpbiBmbGFzaF9wbGF0Zm9ybV9kYXRhOiAibmFtZSIgYW5kICJ0eXBl
+Ii4gUXVpdGUgb2Z0ZW4gbmFtZSBpcw0KPiArCSAqIHNldCB0byAibTI1cDgwIiBhbmQgdGhlbiAi
+dHlwZSIgcHJvdmlkZXMgYSByZWFsIGNoaXAgbmFtZS4NCj4gKwkgKiBJZiB0aGF0J3MgdGhlIGNh
+c2UsIHJlc3BlY3QgInR5cGUiIGFuZCBpZ25vcmUgYSAibmFtZSIuDQo+ICsJICovDQo+ICsJaWYg
+KGRhdGEgJiYgZGF0YS0+dHlwZSkNCj4gKwkJZmxhc2hfbmFtZSA9IGRhdGEtPnR5cGU7DQo+ICsJ
+ZWxzZSBpZiAoIXN0cmNtcChzcGktPm1vZGFsaWFzLCAic3BpLW5vciIpKQ0KPiArCQlmbGFzaF9u
+YW1lID0gTlVMTDsgLyogYXV0by1kZXRlY3QgKi8NCj4gKwllbHNlDQo+ICsJCWZsYXNoX25hbWUg
+PSBzcGktPm1vZGFsaWFzOw0KPiArDQo+ICsJcmV0ID0gc3BpX25vcl9zY2FuKG5vciwgZmxhc2hf
+bmFtZSwgJmh3Y2Fwcyk7DQo+ICsJaWYgKHJldCkNCj4gKwkJcmV0dXJuIHJldDsNCj4gKw0KPiAr
+CS8qDQo+ICsJICogTm9uZSBvZiB0aGUgZXhpc3RpbmcgcGFydHMgaGF2ZSA+IDUxMkIgcGFnZXMs
+IGJ1dCBsZXQncyBwbGF5IHNhZmUNCj4gKwkgKiBhbmQgYWRkIHRoaXMgbG9naWMgc28gdGhhdCBp
+ZiBhbnlvbmUgZXZlciBhZGRzIHN1cHBvcnQgZm9yIHN1Y2gNCj4gKwkgKiBhIE5PUiB3ZSBkb24n
+dCBlbmQgdXAgd2l0aCBidWZmZXIgb3ZlcmZsb3dzLg0KPiArCSAqLw0KPiArCWlmIChub3ItPnBh
+Z2Vfc2l6ZSA+IFBBR0VfU0laRSkgew0KPiArCQlub3ItPmJvdW5jZWJ1Zl9zaXplID0gbm9yLT5w
+YWdlX3NpemU7DQo+ICsJCWRldm1fa2ZyZWUobm9yLT5kZXYsIG5vci0+Ym91bmNlYnVmKTsNCj4g
+KwkJbm9yLT5ib3VuY2VidWYgPSBkZXZtX2ttYWxsb2Mobm9yLT5kZXYsDQo+ICsJCQkJCSAgICAg
+IG5vci0+Ym91bmNlYnVmX3NpemUsDQo+ICsJCQkJCSAgICAgIEdGUF9LRVJORUwpOw0KPiArCQlp
+ZiAoIW5vci0+Ym91bmNlYnVmKQ0KPiArCQkJcmV0dXJuIC1FTk9NRU07DQo+ICsJfQ0KPiArDQo+
+ICsJcmV0dXJuIG10ZF9kZXZpY2VfcmVnaXN0ZXIoJm5vci0+bXRkLCBkYXRhID8gZGF0YS0+cGFy
+dHMgOiBOVUxMLA0KPiArCQkJCSAgIGRhdGEgPyBkYXRhLT5ucl9wYXJ0cyA6IDApOw0KPiArfQ0K
+PiArDQo+ICtzdGF0aWMgaW50IHNwaV9ub3JfcmVtb3ZlKHN0cnVjdCBzcGlfbWVtICpzcGltZW0p
+DQo+ICt7DQo+ICsJc3RydWN0IHNwaV9ub3IgKm5vciA9IHNwaV9tZW1fZ2V0X2RydmRhdGEoc3Bp
+bWVtKTsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJc3BpX25vcl9yZXN0b3JlKG5vcik7DQo+ICsN
+Cj4gKwkvKiBDbGVhbiB1cCBNVEQgc3R1ZmYuICovDQo+ICsJcmV0ID0gbXRkX2RldmljZV91bnJl
+Z2lzdGVyKCZub3ItPm10ZCk7DQo+ICsJaWYgKHJldCkNCj4gKwkJcmV0dXJuIHJldDs+ICsNCj4g
+KwlyZXR1cm4gMDsNCg0KcmV0dXJuIG10ZF9kZXZpY2VfdW5yZWdpc3Rlcigmbm9yLT5tdGQpOyBk
+aXJlY3RseQ0KDQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIHNwaV9ub3Jfc2h1dGRvd24oc3Ry
+dWN0IHNwaV9tZW0gKnNwaW1lbSkNCj4gK3sNCj4gKwlzdHJ1Y3Qgc3BpX25vciAqbm9yID0gc3Bp
+X21lbV9nZXRfZHJ2ZGF0YShzcGltZW0pOw0KPiArDQo+ICsJc3BpX25vcl9yZXN0b3JlKG5vcik7
+DQo+ICt9DQo+ICsNCj4gKy8qDQo+ICsgKiBEbyBOT1QgYWRkIHRvIHRoaXMgYXJyYXkgd2l0aG91
+dCByZWFkaW5nIHRoZSBmb2xsb3dpbmc6DQo+ICsgKg0KPiArICogSGlzdG9yaWNhbGx5LCBtYW55
+IGZsYXNoIGRldmljZXMgYXJlIGJvdW5kIHRvIHRoaXMgZHJpdmVyIGJ5IHRoZWlyIG5hbWUuIEJ1
+dA0KPiArICogc2luY2UgbW9zdCBvZiB0aGVzZSBmbGFzaCBhcmUgY29tcGF0aWJsZSB0byBzb21l
+IGV4dGVudCwgYW5kIHRoZWlyDQo+ICsgKiBkaWZmZXJlbmNlcyBjYW4gb2Z0ZW4gYmUgZGlmZmVy
+ZW50aWF0ZWQgYnkgdGhlIEpFREVDIHJlYWQtSUQgY29tbWFuZCwgd2UNCj4gKyAqIGVuY291cmFn
+ZSBuZXcgdXNlcnMgdG8gYWRkIHN1cHBvcnQgdG8gdGhlIHNwaS1ub3IgbGlicmFyeSwgYW5kIHNp
+bXBseSBiaW5kDQo+ICsgKiBhZ2FpbnN0IGEgZ2VuZXJpYyBzdHJpbmcgaGVyZSAoZS5nLiwgImpl
+ZGVjLHNwaS1ub3IiKS4NCj4gKyAqDQo+ICsgKiBNYW55IGZsYXNoIG5hbWVzIGFyZSBrZXB0IGhl
+cmUgaW4gdGhpcyBsaXN0IChhcyB3ZWxsIGFzIGluIHNwaS1ub3IuYykgdG8NCj4gKyAqIGtlZXAg
+dGhlbSBhdmFpbGFibGUgYXMgbW9kdWxlIGFsaWFzZXMgZm9yIGV4aXN0aW5nIHBsYXRmb3Jtcy4N
+Cj4gKyAqLw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBzcGlfZGV2aWNlX2lkIHNwaV9ub3JfZGV2
+X2lkc1tdID0gew0KPiArCS8qDQo+ICsJICogQWxsb3cgbm9uLURUIHBsYXRmb3JtIGRldmljZXMg
+dG8gYmluZCB0byB0aGUgInNwaS1ub3IiIG1vZGFsaWFzLCBhbmQNCj4gKwkgKiBoYWNrIGFyb3Vu
+ZCB0aGUgZmFjdCB0aGF0IHRoZSBTUEkgY29yZSBkb2VzIG5vdCBwcm92aWRlIHVldmVudA0KPiAr
+CSAqIG1hdGNoaW5nIGZvciAub2ZfbWF0Y2hfdGFibGUNCj4gKwkgKi8NCj4gKwl7InNwaS1ub3Ii
+fSwNCj4gKw0KPiArCS8qDQo+ICsJICogRW50cmllcyBub3QgdXNlZCBpbiBEVHMgdGhhdCBzaG91
+bGQgYmUgc2FmZSB0byBkcm9wIGFmdGVyIHJlcGxhY2luZw0KPiArCSAqIHRoZW0gd2l0aCAic3Bp
+LW5vciIgaW4gcGxhdGZvcm0gZGF0YS4NCj4gKwkgKi8NCj4gKwl7InMyNXNsMDY0YSJ9LAl7Incy
+NXgxNiJ9LAl7Im0yNXAxMCJ9LAl7Im0yNXB4NjQifSwNCj4gKw0KPiArCS8qDQo+ICsJICogRW50
+cmllcyB0aGF0IHdlcmUgdXNlZCBpbiBEVHMgd2l0aG91dCAiamVkZWMsc3BpLW5vciIgZmFsbGJh
+Y2sgYW5kDQo+ICsJICogc2hvdWxkIGJlIGtlcHQgZm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHku
+DQo+ICsJICovDQo+ICsJeyJhdDI1ZGYzMjFhIn0sCXsiYXQyNWRmNjQxIn0sCXsiYXQyNmRmMDgx
+YSJ9LA0KPiArCXsibXgyNWw0MDA1YSJ9LAl7Im14MjVsMTYwNmUifSwJeyJteDI1bDY0MDVkIn0s
+CXsibXgyNWwxMjgwNWQifSwNCj4gKwl7Im14MjVsMjU2MzVlIn0seyJteDY2bDUxMjM1bCJ9LA0K
+PiArCXsibjI1cTA2NCJ9LAl7Im4yNXExMjhhMTEifSwJeyJuMjVxMTI4YTEzIn0sCXsibjI1cTUx
+MmEifSwNCj4gKwl7InMyNWZsMjU2czEifSwJeyJzMjVmbDUxMnMifSwJeyJzMjVzbDEyODAxIn0s
+CXsiczI1ZmwwMDhrIn0sDQo+ICsJeyJzMjVmbDA2NGsifSwNCj4gKwl7InNzdDI1dmYwNDBiIn0s
+eyJzc3QyNXZmMDE2YiJ9LHsic3N0MjV2ZjAzMmIifSx7InNzdDI1d2YwNDAifSwNCj4gKwl7Im0y
+NXA0MCJ9LAl7Im0yNXA4MCJ9LAl7Im0yNXAxNiJ9LAl7Im0yNXAzMiJ9LA0KPiArCXsibTI1cDY0
+In0sCXsibTI1cDEyOCJ9LA0KPiArCXsidzI1eDgwIn0sCXsidzI1eDMyIn0sCXsidzI1cTMyIn0s
+CXsidzI1cTMyZHcifSwNCj4gKwl7IncyNXE4MGJsIn0sCXsidzI1cTEyOCJ9LAl7IncyNXEyNTYi
+fSwNCj4gKw0KPiArCS8qIEZsYXNoZXMgdGhhdCBjYW4ndCBiZSBkZXRlY3RlZCB1c2luZyBKRURF
+QyAqLw0KPiArCXsibTI1cDA1LW5vbmplZGVjIn0sCXsibTI1cDEwLW5vbmplZGVjIn0sCXsibTI1
+cDIwLW5vbmplZGVjIn0sDQo+ICsJeyJtMjVwNDAtbm9uamVkZWMifSwJeyJtMjVwODAtbm9uamVk
+ZWMifSwJeyJtMjVwMTYtbm9uamVkZWMifSwNCj4gKwl7Im0yNXAzMi1ub25qZWRlYyJ9LAl7Im0y
+NXA2NC1ub25qZWRlYyJ9LAl7Im0yNXAxMjgtbm9uamVkZWMifSwNCj4gKw0KPiArCS8qIEV2ZXJz
+cGluIE1SQU1zIChub24tSkVERUMpICovDQo+ICsJeyAibXIyNWgxMjgiIH0sIC8qIDEyOCBLaWIs
+IDQwIE1IeiAqLw0KPiArCXsgIm1yMjVoMjU2IiB9LCAvKiAyNTYgS2liLCA0MCBNSHogKi8NCj4g
+Kwl7ICJtcjI1aDEwIiB9LCAgLyogICAxIE1pYiwgNDAgTUh6ICovDQo+ICsJeyAibXIyNWg0MCIg
+fSwgIC8qICAgNCBNaWIsIDQwIE1IeiAqLw0KPiArDQo+ICsJeyB9LA0KPiArfTsNCj4gK01PRFVM
+RV9ERVZJQ0VfVEFCTEUoc3BpLCBzcGlfbm9yX2Rldl9pZHMpOw0KPiArDQo+ICtzdGF0aWMgY29u
+c3Qgc3RydWN0IG9mX2RldmljZV9pZCBzcGlfbm9yX29mX3RhYmxlW10gPSB7DQo+ICsJLyoNCj4g
+KwkgKiBHZW5lcmljIGNvbXBhdGliaWxpdHkgZm9yIFNQSSBOT1IgdGhhdCBjYW4gYmUgaWRlbnRp
+ZmllZCBieSB0aGUNCj4gKwkgKiBKRURFQyBSRUFEIElEIG9wY29kZSAoMHg5RikuIFVzZSB0aGlz
+LCBpZiBwb3NzaWJsZS4NCj4gKwkgKi8NCj4gKwl7IC5jb21wYXRpYmxlID0gImplZGVjLHNwaS1u
+b3IiIH0sDQo+ICsJeyAvKiBzZW50aW5lbCAqLyB9LA0KPiArfTsNCj4gK01PRFVMRV9ERVZJQ0Vf
+VEFCTEUob2YsIHNwaV9ub3Jfb2ZfdGFibGUpOw0KPiArDQo+ICsvKg0KPiArICogUkVWSVNJVDog
+bWFueSBvZiB0aGVzZSBjaGlwcyBoYXZlIGRlZXAgcG93ZXItZG93biBtb2Rlcywgd2hpY2gNCj4g
+KyAqIHNob3VsZCBjbGVhcmx5IGJlIGVudGVyZWQgb24gc3VzcGVuZCgpIHRvIG1pbmltaXplIHBv
+d2VyIHVzZS4NCj4gKyAqIEFuZCBhbHNvIHdoZW4gdGhleSdyZSBvdGhlcndpc2UgaWRsZS4uLg0K
+PiArICovDQo+ICtzdGF0aWMgc3RydWN0IHNwaV9tZW1fZHJpdmVyIHNwaV9ub3JfZHJpdmVyID0g
+ew0KPiArCS5zcGlkcnYgPSB7DQo+ICsJCS5kcml2ZXIgPSB7DQo+ICsJCQkubmFtZSA9ICJzcGkt
+bm9yIiwNCj4gKwkJCS5vZl9tYXRjaF90YWJsZSA9IHNwaV9ub3Jfb2ZfdGFibGUsDQo+ICsJCX0s
+DQo+ICsJCS5pZF90YWJsZSA9IHNwaV9ub3JfZGV2X2lkcywNCj4gKwl9LA0KPiArCS5wcm9iZSA9
+IHNwaV9ub3JfcHJvYmUsDQo+ICsJLnJlbW92ZSA9IHNwaV9ub3JfcmVtb3ZlLA0KPiArCS5zaHV0
+ZG93biA9IHNwaV9ub3Jfc2h1dGRvd24sDQo+ICt9Ow0KPiArbW9kdWxlX3NwaV9tZW1fZHJpdmVy
+KHNwaV9ub3JfZHJpdmVyKTsNCj4gKw0KPiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiAg
+TU9EVUxFX0FVVEhPUigiSHVhbmcgU2hpamllIDxzaGlqaWU4QGdtYWlsLmNvbT4iKTsNCj4gIE1P
+RFVMRV9BVVRIT1IoIk1pa2UgTGF2ZW5kZXIiKTsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
+dXgvbXRkL3NwaS1ub3IuaCBiL2luY2x1ZGUvbGludXgvbXRkL3NwaS1ub3IuaA0KPiBpbmRleCBi
+M2QzNjBiMGVlM2QuLmFjMTY3NDVmNWVmOCAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9t
+dGQvc3BpLW5vci5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvbXRkL3NwaS1ub3IuaA0KPiBAQCAt
+OSw2ICs5LDcgQEANCj4gICNpbmNsdWRlIDxsaW51eC9iaXRvcHMuaD4NCj4gICNpbmNsdWRlIDxs
+aW51eC9tdGQvY2ZpLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvbXRkL210ZC5oPg0KPiArI2luY2x1
+ZGUgPGxpbnV4L3NwaS9zcGktbWVtLmg+DQo+ICANCj4gIC8qDQo+ICAgKiBNYW51ZmFjdHVyZXIg
+SURzDQo+IEBAIC0zNDQsNiArMzQ1LDEwIEBAIHN0cnVjdCBmbGFzaF9pbmZvOw0KPiAgICogQG10
+ZDoJCXBvaW50IHRvIGEgbXRkX2luZm8gc3RydWN0dXJlDQo+ICAgKiBAbG9jazoJCXRoZSBsb2Nr
+IGZvciB0aGUgcmVhZC93cml0ZS9lcmFzZS9sb2NrL3VubG9jayBvcGVyYXRpb25zDQo+ICAgKiBA
+ZGV2OgkJcG9pbnQgdG8gYSBzcGkgZGV2aWNlLCBvciBhIHNwaSBub3IgY29udHJvbGxlciBkZXZp
+Y2UuDQo+ICsgKiBAc3BpbWVtOgkJcG9pbnQgdG8gdGhlIHNwaSBtZW0gZGV2aWNlDQo+ICsgKiBA
+Ym91bmNlYnVmOgkJYm91bmNlIGJ1ZmZlciB1c2VkIHdoZW4gdGhlIGJ1ZmZlciBwYXNzZWQgYnkg
+dGhlIE1URA0KPiArICogICAgICAgICAgICAgICAgICAgICAgbGF5ZXIgaXMgbm90IERNQS1hYmxl
+DQo+ICsgKiBAYm91bmNlYnVmX3NpemU6CXNpemUgb2YgdGhlIGJvdW5jZSBidWZmZQ0KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5idWZmZXINCg0KPiAgICogQGlu
+Zm86CQlzcGktbm9yIHBhcnQgSkRFQyBNRlIgaWQgYW5kIG90aGVyIGluZm8NCj4gICAqIEBwYWdl
+X3NpemU6CQl0aGUgcGFnZSBzaXplIG9mIHRoZSBTUEkgTk9SDQo+ICAgKiBAYWRkcl93aWR0aDoJ
+CW51bWJlciBvZiBhZGRyZXNzIGJ5dGVzDQo+IEBAIC0zODAsNiArMzg1LDkgQEAgc3RydWN0IHNw
+aV9ub3Igew0KPiAgCXN0cnVjdCBtdGRfaW5mbwkJbXRkOw0KPiAgCXN0cnVjdCBtdXRleAkJbG9j
+azsNCj4gIAlzdHJ1Y3QgZGV2aWNlCQkqZGV2Ow0KPiArCXN0cnVjdCBzcGlfbWVtCQkqc3BpbWVt
+Ow0KPiArCXZvaWQJCQkqYm91bmNlYnVmOw0KPiArCXVuc2lnbmVkIGludAkJYm91bmNlYnVmX3Np
+emU7DQoNCnNpemVfdD8NCg0KUGxlYXNlIHJ1biBjaGVja3BhdGNoIC0tc3RyaWN0IG92ZXIgdGhl
+IHBhdGNoLCB0aGVyZSBhcmUgZmV3IHRoaW5ncyB0byBmaXguDQoNCkRvIHlvdSB0aGluayBpdCBp
+cyB3b3J0aCBkb2N1bWVudGluZyB0aGUgbmV3IGZ1bmN0aW9ucz8NCg0KQ2hlZXJzLA0KdGENCg==
