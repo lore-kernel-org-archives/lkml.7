@@ -2,123 +2,113 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1D8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931C720833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C60A20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M2f07Et4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfDONd7 (ORCPT
+        id S1727464AbfDONeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:33:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36718 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727186AbfDONd6 (ORCPT
+        Mon, 15 Apr 2019 09:34:16 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:56194 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfDONeP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:33:58 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FDTx3G029967
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:33:57 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvtrx0h1w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:33:56 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 15 Apr 2019 14:33:55 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Apr 2019 14:33:49 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FDXmHM16056362
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 13:33:49 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B27B6B2066;
-        Mon, 15 Apr 2019 13:33:48 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9424CB205F;
-        Mon, 15 Apr 2019 13:33:48 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Apr 2019 13:33:48 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 429D116C265F; Mon, 15 Apr 2019 06:33:52 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 06:33:52 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        keescook@chromium.org, srinivas.eeda@oracle.com
-Subject: Re: [PATCH 1/2] doc: Fixup definition of
- rcupdate.rcu_task_stall_timeout
-Reply-To: paulmck@linux.ibm.com
-References: <1555211464-28652-1-git-send-email-zhenzhong.duan@oracle.com>
+        Mon, 15 Apr 2019 09:34:15 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FDY1Sm107265;
+        Mon, 15 Apr 2019 13:34:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=cuT7jisv3fATtTHhvZF5cChcLoP2kJua7V5PMCULd+A=;
+ b=M2f07Et4NHJdlubKp6TKsV7syb8vXQNhIrPR6hCGnjNcEGvyGv+NYXNdqpLRdF2mLc7a
+ YUg74TapBrHuEFilYBcnXZihlksDNwpSL0EQiCOo4C0egVJh5QSEnH6pqLIu+yc1CUIN
+ TYtD9jtOSCr53E4JeSJShLCOiLoRMB6cYlI2FYYcFJlfViSD0BL55npR26a8ZTkjRWco
+ WqCRero9oeywfSWOeE7KlX8odC6ZJK7lZxbztnYFp93RIwu+C0RWV8z7dBj5qt3Mybsp
+ PQhGl4TVPl7IZCFUGaIhEiYqnjCOStBTDWuV76zY1HZt1TzRxy/ZYaNamY8Hu2Qk0Ygb Hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2ru59cxt1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 13:34:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FDWKUd193678;
+        Mon, 15 Apr 2019 13:34:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2rubq5ra6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 13:34:07 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3FDY5wv012985;
+        Mon, 15 Apr 2019 13:34:05 GMT
+Received: from kadam (/41.210.147.169)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Apr 2019 06:34:05 -0700
+Date:   Mon, 15 Apr 2019 16:33:57 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        devel@driverdev.osuosl.org, elder@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        greybus-dev@lists.linaro.org
+Subject: Re: [PATCH] Staging: greybus: Cleanup in header file control.h
+Message-ID: <20190415133357.GP6095@kadam>
+References: <20190405201437.3689-1-madhumithabiw@gmail.com>
+ <20190415131002.GC775@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555211464-28652-1-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19041513-0072-0000-0000-0000041A171C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010932; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01189443; UDB=6.00623207; IPR=6.00970229;
- MB=3.00026451; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-15 13:33:53
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041513-0073-0000-0000-00004BD5C834
-Message-Id: <20190415133352.GT14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150093
+In-Reply-To: <20190415131002.GC775@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904150093
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904150094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 11:11:03AM +0800, Zhenzhong Duan wrote:
-> A positive value of rcupdate.rcu_task_stall_timeout is an interval
-> in seconds rather than jiffies.
+On Mon, Apr 15, 2019 at 03:10:02PM +0200, Johan Hovold wrote:
+> On Fri, Apr 05, 2019 at 03:14:37PM -0500, Madhumitha Prabakaran wrote:
+> > Fix a blank line after function/struct/union/enum
+> > declarations. Also, convert to_gb_control()  macro into an inline
+> > function in order to maintain Linux kernel coding style based
+> > on which the inline function is preferable over the macro.
 > 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-
-Good catch, applied, thank you!
-
-Your other patch I must leave to others.
-
-							Thanx, Paul
-
-> ---
->  Documentation/RCU/stallwarn.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> There are about 1200 macros wrapping container_of() in the kernel, so
+> this is a common pattern which does not need to be changed (by contrast,
+> only a handful container_of are wrapped by functions).
 > 
-> diff --git a/Documentation/RCU/stallwarn.txt b/Documentation/RCU/stallwarn.txt
-> index 1ab70c3..13e88fc 100644
-> --- a/Documentation/RCU/stallwarn.txt
-> +++ b/Documentation/RCU/stallwarn.txt
-> @@ -153,7 +153,7 @@ rcupdate.rcu_task_stall_timeout
->  	This boot/sysfs parameter controls the RCU-tasks stall warning
->  	interval.  A value of zero or less suppresses RCU-tasks stall
->  	warnings.  A positive value sets the stall-warning interval
-> -	in jiffies.  An RCU-tasks stall warning starts with the line:
-> +	in seconds.  An RCU-tasks stall warning starts with the line:
->  
->  		INFO: rcu_tasks detected stalls on tasks:
->  
-> -- 
-> 1.8.3.1
-> 
+
+A handful?
+
+$ git grep "return container_of" | wc -l
+1856
+
+I'm like Donald Trump because I must have really small hands compared
+to the rest of y'all.
+
+I would prefer to apply these sorts of patches unless it causes an
+issue...  Functions *are* better than macros.  It's a minor improvement,
+but this is staging and we make tons minor style changes.  It's part of
+the blessing and curse of being in staging...
+
+regards,
+dan carpenter
 
