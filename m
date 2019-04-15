@@ -2,82 +2,320 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2467C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DF0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA6D2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="g5neISu3"
+	by mail.kernel.org (Postfix) with ESMTP id 4B5D52073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfDOSns (ORCPT
+        id S1728257AbfDOSnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:43:48 -0400
-Received: from smtprelay.synopsys.com ([198.182.60.111]:55500 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbfDOSnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:43:31 -0400
-Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
-        by smtprelay.synopsys.com (Postfix) with ESMTP id 6CDDB10C10F0;
-        Mon, 15 Apr 2019 11:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555353811; bh=GEZdOqtDmf3cGDISZQ11mIjshPILmaz5bfyTH6m/G24=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=g5neISu3/IUJHGfgPvxFAWhqBrC3/mMHYFWb0DwCt8lbo5skLRwkjDr2xjGe2Xyem
-         icU3uuOtccB8SYCGvXZxEnxPjgQbQ4a9f9vKdRKhaZa39wrP072do0d8SnbDiLi4iv
-         UR0ygYbZg3YrKtvo2VU8xCdCxAnDz2k5SGeWIOUHrrgCNHf8ucUBHt4MGq6XQb/IDl
-         0dKFyUdzJlATUEmmRXUK7uVNxnVfWrdsDFvhJxTa+ycZYW0TblMO8IcixPPzQPnKHm
-         ppya5i2nJInnP+u+g/iMvHXxEbd7WFuqJ+Mqey8wSXTy06jkZ4+utenaob9Q7MIxmk
-         l84+vmh4ZsocQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost1.synopsys.com (Postfix) with ESMTP id 510185B68;
-        Mon, 15 Apr 2019 11:43:00 -0700 (PDT)
-From:   Vitor Soares <vitor.soares@synopsys.com>
-To:     vitor.soares@synopsys.com
-Cc:     Vitor Soares <vitor.soares@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
+        Mon, 15 Apr 2019 14:43:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30894 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728206AbfDOSna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:43:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 11:43:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
+   d="scan'208";a="136032395"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.141])
+  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2019 11:43:29 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] i3c: dw: Add limited bus mode support
-Date:   Mon, 15 Apr 2019 20:42:47 +0200
-Message-Id: <8cf1b180c31c5908d667285fa4880167a5e80c8c.1555350118.git.vitor.soares@synopsys.com>
+Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 5/5] perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge
+Date:   Mon, 15 Apr 2019 11:41:56 -0700
+Message-Id: <1555353716-35041-5-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
+In-Reply-To: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
+References: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add limited bus mode support for DesignWare i3c master
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+IMC uncore unit can only be accessed via MMIO on Snow Ridge.
+The MMIO space of IMC uncore is at the specified offsets from the
+MEM0_BAR. Add snr_uncore_get_mc_dev() to locate the PCI device with
+MMIO_BASE and MEM0_BAR register.
+
+Add new ops to access the IMC registers via MMIO.
+
+Add 3 new free running counters for clocks, read and write bandwidth.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- drivers/i3c/master/dw-i3c-master.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/events/intel/uncore.c       |   3 +-
+ arch/x86/events/intel/uncore.h       |   2 +
+ arch/x86/events/intel/uncore_snbep.c | 197 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 201 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 0b01607..4005508 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -650,6 +650,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 39b0f96..f5db8dd 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -28,7 +28,7 @@ struct event_constraint uncore_constraint_empty =
  
- 	switch (bus->mode) {
- 	case I3C_BUS_MODE_MIXED_FAST:
-+	case I3C_BUS_MODE_MIXED_LIMITED:
- 		ret = dw_i2c_clk_cfg(master);
- 		if (ret)
- 			return ret;
+ MODULE_LICENSE("GPL");
+ 
+-static int uncore_pcibus_to_physid(struct pci_bus *bus)
++int uncore_pcibus_to_physid(struct pci_bus *bus)
+ {
+ 	struct pci2phy_map *map;
+ 	int phys_id = -1;
+@@ -1437,6 +1437,7 @@ static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
+ static const struct intel_uncore_init_fun snr_uncore_init __initconst = {
+ 	.cpu_init = snr_uncore_cpu_init,
+ 	.pci_init = snr_uncore_pci_init,
++	.mmio_init = snr_uncore_mmio_init,
+ };
+ 
+ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 738bed3..57641bf 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -163,6 +163,7 @@ struct pci2phy_map {
+ };
+ 
+ struct pci2phy_map *__find_pci2phy_map(int segment);
++int uncore_pcibus_to_physid(struct pci_bus *bus);
+ 
+ ssize_t uncore_event_show(struct kobject *kobj,
+ 			  struct kobj_attribute *attr, char *buf);
+@@ -555,6 +556,7 @@ int skx_uncore_pci_init(void);
+ void skx_uncore_cpu_init(void);
+ int snr_uncore_pci_init(void);
+ void snr_uncore_cpu_init(void);
++void snr_uncore_mmio_init(void);
+ 
+ /* uncore_nhmex.c */
+ void nhmex_uncore_cpu_init(void);
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 5303c0d..b34ea6a 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -374,6 +374,19 @@
+ #define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
+ #define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
+ 
++/* SNR IMC */
++#define SNR_IMC_MMIO_PMON_FIXED_CTL		0x54
++#define SNR_IMC_MMIO_PMON_FIXED_CTR		0x38
++#define SNR_IMC_MMIO_PMON_CTL0			0x40
++#define SNR_IMC_MMIO_PMON_CTR0			0x8
++#define SNR_IMC_MMIO_PMON_BOX_CTL		0x22800
++#define SNR_IMC_MMIO_OFFSET			0x4000
++#define SNR_IMC_MMIO_SIZE			0x4000
++#define SNR_IMC_MMIO_BASE_OFFSET		0xd0
++#define SNR_IMC_MMIO_BASE_MASK			0x1FFFFFFF
++#define SNR_IMC_MMIO_MEM0_OFFSET		0xd8
++#define SNR_IMC_MMIO_MEM0_MASK			0x7FF
++
+ DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
+ DEFINE_UNCORE_FORMAT_ATTR(event2, event, "config:0-6");
+ DEFINE_UNCORE_FORMAT_ATTR(event_ext, event, "config:0-7,21");
+@@ -4370,4 +4383,188 @@ int snr_uncore_pci_init(void)
+ 	return 0;
+ }
+ 
++static struct pci_dev *snr_uncore_get_mc_dev(int id)
++{
++	struct pci_dev *mc_dev = NULL;
++	int phys_id, pkg;
++
++	while (1) {
++		mc_dev = pci_get_device(PCI_VENDOR_ID_INTEL, 0x3451, mc_dev);
++		if (!mc_dev)
++			break;
++		phys_id = uncore_pcibus_to_physid(mc_dev->bus);
++		if (phys_id < 0)
++			continue;
++		pkg = topology_phys_to_logical_pkg(phys_id);
++		if (pkg < 0)
++			continue;
++		else if (pkg == id)
++			break;
++	}
++	return mc_dev;
++}
++
++static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
++{
++	struct pci_dev *pdev = snr_uncore_get_mc_dev(box->pkgid);
++	unsigned int box_ctl = uncore_mmio_box_ctl(box);
++	resource_size_t addr;
++	u32 pci_dword;
++
++	if (!pdev)
++		return;
++
++	pci_read_config_dword(pdev, SNR_IMC_MMIO_BASE_OFFSET, &pci_dword);
++	addr = (pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
++
++	pci_read_config_dword(pdev, SNR_IMC_MMIO_MEM0_OFFSET, &pci_dword);
++	addr |= (pci_dword & SNR_IMC_MMIO_MEM0_MASK) << 12;
++
++	addr += box_ctl;
++
++	box->io_addr = ioremap(addr, SNR_IMC_MMIO_SIZE);
++	if (!box->io_addr)
++		return;
++
++	writel(IVBEP_PMON_BOX_CTL_INT, box->io_addr);
++}
++
++static void snr_uncore_mmio_disable_box(struct intel_uncore_box *box)
++{
++	u32 config;
++
++	if (!box->io_addr)
++		return;
++
++	config = readl(box->io_addr);
++	config |= SNBEP_PMON_BOX_CTL_FRZ;
++	writel(config, box->io_addr);
++}
++
++static void snr_uncore_mmio_enable_box(struct intel_uncore_box *box)
++{
++	u32 config;
++
++	if (!box->io_addr)
++		return;
++
++	config = readl(box->io_addr);
++	config &= ~SNBEP_PMON_BOX_CTL_FRZ;
++	writel(config, box->io_addr);
++}
++
++static void snr_uncore_mmio_enable_event(struct intel_uncore_box *box,
++					   struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (!box->io_addr)
++		return;
++
++	writel(hwc->config | SNBEP_PMON_CTL_EN,
++	       box->io_addr + hwc->config_base);
++}
++
++static void snr_uncore_mmio_disable_event(struct intel_uncore_box *box,
++					    struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (!box->io_addr)
++		return;
++
++	writel(hwc->config, box->io_addr + hwc->config_base);
++}
++
++static struct intel_uncore_ops snr_uncore_mmio_ops = {
++	.init_box	= snr_uncore_mmio_init_box,
++	.exit_box	= uncore_mmio_exit_box,
++	.disable_box	= snr_uncore_mmio_disable_box,
++	.enable_box	= snr_uncore_mmio_enable_box,
++	.disable_event	= snr_uncore_mmio_disable_event,
++	.enable_event	= snr_uncore_mmio_enable_event,
++	.read_counter	= uncore_mmio_read_counter,
++};
++
++static struct uncore_event_desc snr_uncore_imc_events[] = {
++	INTEL_UNCORE_EVENT_DESC(clockticks,      "event=0x00,umask=0x00"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_read,  "event=0x04,umask=0x0f"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_read.scale, "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_read.unit, "MiB"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_write, "event=0x04,umask=0x30"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_write.scale, "6.103515625e-5"),
++	INTEL_UNCORE_EVENT_DESC(cas_count_write.unit, "MiB"),
++	{ /* end: all zeroes */ },
++};
++
++static struct intel_uncore_type snr_uncore_imc = {
++	.name		= "imc",
++	.num_counters   = 4,
++	.num_boxes	= 2,
++	.perf_ctr_bits	= 48,
++	.fixed_ctr_bits	= 48,
++	.fixed_ctr	= SNR_IMC_MMIO_PMON_FIXED_CTR,
++	.fixed_ctl	= SNR_IMC_MMIO_PMON_FIXED_CTL,
++	.event_descs	= snr_uncore_imc_events,
++	.perf_ctr	= SNR_IMC_MMIO_PMON_CTR0,
++	.event_ctl	= SNR_IMC_MMIO_PMON_CTL0,
++	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
++	.box_ctl	= SNR_IMC_MMIO_PMON_BOX_CTL,
++	.mmio_offset	= SNR_IMC_MMIO_OFFSET,
++	.ops		= &snr_uncore_mmio_ops,
++	.format_group	= &skx_uncore_format_group,
++};
++
++enum perf_uncore_snr_imc_freerunning_type_id {
++	SNR_IMC_DCLK,
++	SNR_IMC_DDR,
++
++	SNR_IMC_FREERUNNING_TYPE_MAX,
++};
++
++static struct freerunning_counters snr_imc_freerunning[] = {
++	[SNR_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
++	[SNR_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
++};
++
++static struct uncore_event_desc snr_uncore_imc_freerunning_events[] = {
++	INTEL_UNCORE_EVENT_DESC(dclk,		"event=0xff,umask=0x10"),
++
++	INTEL_UNCORE_EVENT_DESC(read,		"event=0xff,umask=0x20"),
++	INTEL_UNCORE_EVENT_DESC(read.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(read.unit,	"MiB"),
++	INTEL_UNCORE_EVENT_DESC(write,		"event=0xff,umask=0x21"),
++	INTEL_UNCORE_EVENT_DESC(write.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(write.unit,	"MiB"),
++};
++
++static struct intel_uncore_ops snr_uncore_imc_freerunning_ops = {
++	.init_box	= snr_uncore_mmio_init_box,
++	.exit_box	= uncore_mmio_exit_box,
++	.read_counter	= uncore_mmio_read_counter,
++	.hw_config	= uncore_freerunning_hw_config,
++};
++
++static struct intel_uncore_type snr_uncore_imc_free_running = {
++	.name			= "imc_free_running",
++	.num_counters		= 3,
++	.num_boxes		= 1,
++	.num_freerunning_types	= SNR_IMC_FREERUNNING_TYPE_MAX,
++	.freerunning		= snr_imc_freerunning,
++	.ops			= &snr_uncore_imc_freerunning_ops,
++	.event_descs		= snr_uncore_imc_freerunning_events,
++	.format_group		= &skx_uncore_iio_freerunning_format_group,
++};
++
++static struct intel_uncore_type *snr_mmio_uncores[] = {
++	&snr_uncore_imc,
++	&snr_uncore_imc_free_running,
++	NULL,
++};
++
++void snr_uncore_mmio_init(void)
++{
++	uncore_mmio_uncores = snr_mmio_uncores;
++}
++
+ /* end of SNR uncore support */
 -- 
 2.7.4
 
