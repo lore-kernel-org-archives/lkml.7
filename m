@@ -2,29 +2,29 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BB4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9C7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7862087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229692087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfDOVVg (ORCPT
+        id S1728024AbfDOVVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:21:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42860 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfDOVVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:21:36 -0400
+        Mon, 15 Apr 2019 17:21:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:42876 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbfDOVVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 17:21:38 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C348E374;
-        Mon, 15 Apr 2019 14:21:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35D2FA78;
+        Mon, 15 Apr 2019 14:21:38 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2F1723F68F;
-        Mon, 15 Apr 2019 14:21:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C0653F68F;
+        Mon, 15 Apr 2019 14:21:37 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
@@ -32,11 +32,15 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
         shankerd@codeaurora.org, julien.thierry@arm.com,
         mlangsdo@redhat.com, stefan.wahren@i2se.com,
         Andre.Przywara@arm.com, linux-kernel@vger.kernel.org,
-        Jeremy Linton <jeremy.linton@arm.com>
-Subject: [v8 00/10] arm64: add system vulnerability sysfs entries
-Date:   Mon, 15 Apr 2019 16:21:19 -0500
-Message-Id: <20190415212129.1112-1-jeremy.linton@arm.com>
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [v8 01/10] arm64: Provide a command line to disable spectre_v2 mitigation
+Date:   Mon, 15 Apr 2019 16:21:20 -0500
+Message-Id: <20190415212129.1112-2-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415212129.1112-1-jeremy.linton@arm.com>
+References: <20190415212129.1112-1-jeremy.linton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,62 +48,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm64 machines should be displaying a human readable
-vulnerability status to speculative execution attacks in
-/sys/devices/system/cpu/vulnerabilities 
+There are various reasons, including bencmarking, to disable spectrev2
+mitigation on a machine. Provide a command-line to do so.
 
-This series enables that behavior by providing the expected
-functions. Those functions expose the cpu errata and feature
-states, as well as whether firmware is responding appropriately
-to display the overall machine status. This means that in a
-heterogeneous machine we will only claim the machine is mitigated
-or safe if we are confident all booted cores are safe or
-mitigated.
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
+ arch/arm64/kernel/cpu_errata.c                  | 13 +++++++++++++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
-v7->v8: Fix latent build break when KVM_INDIRECT_VECTORS is not set.
-	Revert v7 ssbd tristate back to default safe bool. Since
-	       __ssb_safe should be reliable now, make overall print
-	       more dependent on it.
-	Tweak ssbd message to indicate prctl support.
-
-v6->v7: Invert ssb white/black list logic so that we only mark
-	       cores in the whitelist not affected when the firmware
-	       fails to respond. Removed reviewed/tested tags for
-	       just patch 9 because of this.
-
-v5->v6:
-	Invert meltdown logic to display that a core is safe rather
-	       than mitigated if the mitigation has been enabled on
-	       machines that are safe. This can happen when the
-	       mitigation was forced on via command line or KASLR.
-	       This means that in order to detect if kpti is enabled
-	       other methods must be used (look at dmesg) when the
-	       machine isn't itself susceptible to meltdown.
-	Trivial whitespace tweaks.
-
-Jeremy Linton (6):
-  arm64: Provide a command line to disable spectre_v2 mitigation
-  arm64: add sysfs vulnerability show for meltdown
-  arm64: Always enable spectrev2 vulnerability detection
-  arm64: add sysfs vulnerability show for spectre v2
-  arm64: Always enable ssb vulnerability detection
-  arm64: add sysfs vulnerability show for speculative store bypass
-
-Marc Zyngier (2):
-  arm64: Advertise mitigation of Spectre-v2, or lack thereof
-  arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
-
-Mian Yousaf Kaukab (2):
-  arm64: add sysfs vulnerability show for spectre v1
-  arm64: enable generic CPU vulnerabilites support
-
- .../admin-guide/kernel-parameters.txt         |   8 +-
- arch/arm64/Kconfig                            |   1 +
- arch/arm64/include/asm/cpufeature.h           |   4 -
- arch/arm64/kernel/cpu_errata.c                | 249 +++++++++++++-----
- arch/arm64/kernel/cpufeature.c                |  58 +++-
- 5 files changed, 232 insertions(+), 88 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..d153bb15c8c7 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2873,10 +2873,10 @@
+ 			check bypass). With this option data leaks are possible
+ 			in the system.
+ 
+-	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
+-			(indirect branch prediction) vulnerability. System may
+-			allow data leaks with this option, which is equivalent
+-			to spectre_v2=off.
++	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
++			the Spectre variant 2 (indirect branch prediction)
++			vulnerability. System may allow data leaks with this
++			option.
+ 
+ 	nospec_store_bypass_disable
+ 			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 9950bb0cbd52..d2b2c69d31bb 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -220,6 +220,14 @@ static void qcom_link_stack_sanitization(void)
+ 		     : "=&r" (tmp));
+ }
+ 
++static bool __nospectre_v2;
++static int __init parse_nospectre_v2(char *str)
++{
++	__nospectre_v2 = true;
++	return 0;
++}
++early_param("nospectre_v2", parse_nospectre_v2);
++
+ static void
+ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+ {
+@@ -231,6 +239,11 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+ 	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
+ 		return;
+ 
++	if (__nospectre_v2) {
++		pr_info_once("spectrev2 mitigation disabled by command line option\n");
++		return;
++	}
++
+ 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
+ 		return;
+ 
 -- 
 2.20.1
 
