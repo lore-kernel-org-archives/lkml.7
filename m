@@ -4,60 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3F5C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4504BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF3A218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C59218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353904;
-	bh=gPOzjF3Ah0fHfYf3kjNVVRihwvNCGPi5bn1dV1i4ZR4=;
+	s=default; t=1555353908;
+	bh=lbZ61vHLb9s/CkdEAJj/+ehwlNE4J/HwEJkBiVfG6SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xw6jbXf/Y28vc5JJl1D4Jy/H5RXQRDA4a+piytPLw1YXY0kaGlictvCiGLGO/ROD3
-	 w1cJCCQhJ6K9ifPeG3Whss3BSrQ/CrgcMUZI6EmIFhd85X3zI4hdNMocC7ROxEWJN2
-	 ZLy0oacgeupiX9RA14TYygsatE8NhqOGFli5k+T0=
+	b=v3U0cQHromyc8bpLI+kbNrLQ3ipLrdAT2ogVSfKQ6eYLjLyrQ79i9CXmgKqxNhjvj
+	 E+51JPuf/Zr854y4ONpCl7dp8RlY9Pc0gZZVaI1KmgZ1RMj4z/QwLX1Q5V6RwFBWjB
+	 nBUiXCGetoziBt8gbnc1N9ZDo4Q7EyK9CT+/4I5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfDOSpD (ORCPT
+        id S1728299AbfDOSpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47102 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfDOSpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:00 -0400
+        id S1728269AbfDOSpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 226262087C;
-        Mon, 15 Apr 2019 18:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CFD02073F;
+        Mon, 15 Apr 2019 18:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353899;
-        bh=gPOzjF3Ah0fHfYf3kjNVVRihwvNCGPi5bn1dV1i4ZR4=;
+        s=default; t=1555353904;
+        bh=lbZ61vHLb9s/CkdEAJj/+ehwlNE4J/HwEJkBiVfG6SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWUZEoT2xq/U2ZUF6zB82f7wyMs6Ize+yVaQDG8F/T+ZYxHkSIiika9LIo6IqSltB
-         s4lYaMdcf33S8iJ8uKhqiQi0uRqZ9NUNf7JBTzKMd/CRLa97RhQHNjY1NXuhJKVY3w
-         S8bu9mFZCjhOHJ1xYxhNPyX3bCXUZQN0OUoSVpwY=
+        b=0mEjzvnaHQssZKjdd/N1KN52fA3PY1Ltoa5di0freEppSSJXLpw1RDf2xB6cviYd/
+         WgYR6n3WoSJJlh5BhBwhGf2TyHtresmRslpBlfl4BlQO89hJ9HNGEhqdM5SNCUhHjs
+         DdQsD0jLoRthUI7WVu0IZQWNJRZLix8KAjDqAYoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bpetkov@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 03/76] x86/power/32: Move SYSENTER MSR restoration to fix_processor_context()
-Date:   Mon, 15 Apr 2019 20:43:27 +0200
-Message-Id: <20190415183708.371743815@linuxfoundation.org>
+        Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/76] powerpc/tm: Limit TM code inside PPC_TRANSACTIONAL_MEM
+Date:   Mon, 15 Apr 2019 20:43:29 +0200
+Message-Id: <20190415183708.770484882@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -70,60 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 896c80bef4d3b357814a476663158aaf669d0fb3 ]
+[ Upstream commit 897bc3df8c5aebb54c32d831f917592e873d0559 ]
 
-x86_64 restores system call MSRs in fix_processor_context(), and
-x86_32 restored them along with segment registers.  The 64-bit
-variant makes more sense, so move the 32-bit code to match the
-64-bit code.
+Commit e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
+moved a code block around and this block uses a 'msr' variable outside of
+the CONFIG_PPC_TRANSACTIONAL_MEM, however the 'msr' variable is declared
+inside a CONFIG_PPC_TRANSACTIONAL_MEM block, causing a possible error when
+CONFIG_PPC_TRANSACTION_MEM is not defined.
 
-No side effects are expected to runtime behavior.
+	error: 'msr' undeclared (first use in this function)
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bpetkov@suse.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Link: http://lkml.kernel.org/r/65158f8d7ee64dd6bbc6c1c83b3b34aaa854e3ae.1513286253.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This is not causing a compilation error in the mainline kernel, because
+'msr' is being used as an argument of MSR_TM_ACTIVE(), which is defined as
+the following when CONFIG_PPC_TRANSACTIONAL_MEM is *not* set:
+
+	#define MSR_TM_ACTIVE(x) 0
+
+This patch just fixes this issue avoiding the 'msr' variable usage outside
+the CONFIG_PPC_TRANSACTIONAL_MEM block, avoiding trusting in the
+MSR_TM_ACTIVE() definition.
+
+Cc: stable@vger.kernel.org
+Reported-by: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
+Fixes: e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/power/cpu.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/signal_64.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index ec923a1cdaf0..2335e8beb0cf 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -174,6 +174,9 @@ static void fix_processor_context(void)
- 	write_gdt_entry(desc, GDT_ENTRY_TSS, &tss, DESC_TSS);
- 
- 	syscall_init();				/* This sets MSR_*STAR and related */
-+#else
-+	if (boot_cpu_has(X86_FEATURE_SEP))
-+		enable_sep_cpu();
+diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
+index d929afab7b24..bdf2f7b995bb 100644
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -746,12 +746,25 @@ int sys_rt_sigreturn(unsigned long r3, unsigned long r4, unsigned long r5,
+ 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
+ 					   &uc_transact->uc_mcontext))
+ 			goto badframe;
+-	}
+-	else
+-	/* Fall through, for non-TM restore */
++	} else
  #endif
- 	load_TR_desc();				/* This does ltr */
- 	load_mm_ldt(current->active_mm);	/* This does lldt */
-@@ -233,12 +236,6 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
- 	loadsegment(fs, ctxt->fs);
- 	loadsegment(gs, ctxt->gs);
- 	loadsegment(ss, ctxt->ss);
--
--	/*
--	 * sysenter MSRs
--	 */
--	if (boot_cpu_has(X86_FEATURE_SEP))
--		enable_sep_cpu();
- #else
- /* CONFIG_X86_64 */
- 	asm volatile ("movw %0, %%ds" :: "r" (ctxt->ds));
+-	if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
+-		goto badframe;
++	{
++		/*
++		 * Fall through, for non-TM restore
++		 *
++		 * Unset MSR[TS] on the thread regs since MSR from user
++		 * context does not have MSR active, and recheckpoint was
++		 * not called since restore_tm_sigcontexts() was not called
++		 * also.
++		 *
++		 * If not unsetting it, the code can RFID to userspace with
++		 * MSR[TS] set, but without CPU in the proper state,
++		 * causing a TM bad thing.
++		 */
++		current->thread.regs->msr &= ~MSR_TS_MASK;
++		if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
++			goto badframe;
++	}
+ 
+ 	if (restore_altstack(&uc->uc_stack))
+ 		goto badframe;
 -- 
 2.19.1
 
