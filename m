@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F34C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F80EC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5CA218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CC8218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353945;
-	bh=O8ghSaqomER1TdRDCFfbm6Wh9mkw0U4JbgVizdDs5PI=;
+	s=default; t=1555353949;
+	bh=zV+L8fu2E1eV0Y+Fd7rC4gJXSkZRpWLe0Fd2xS3GM+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CqsYeMohNuL9f23mL5wJbl/9tjmAHxu7SeMvTgE24Xj0nswDZKzHCvcwakc7xDq7H
-	 EbCd831T0+/3DhwcK3g2pqsylMbEmh3FqXW0lVPCmPEAEmEZXq3YcSIM9CHEZthFdH
-	 twI+ZpP5fg3naq+WilUN31pzCVCNSRsaqivsUv2k=
+	b=afqBrGDUVTRcaDieJCtRUBS1BqorkYaSbpR631YvplvwuB3ANmfrhrkYZ+AAuMoSQ
+	 bVeiKRflveTFGQS9ES6TYu/DCIaFSwf9E9DplWoCk6FHRwUMAy2Wwx+jvrzGCO9y8t
+	 e9qxkVfGsCZ2a6xsaml3ThaKpKlYrwKfr9tHBfVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfDOSpo (ORCPT
+        id S1728460AbfDOSpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48182 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfDOSpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:43 -0400
+        id S1728434AbfDOSpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C17B2073F;
-        Mon, 15 Apr 2019 18:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A6F2087C;
+        Mon, 15 Apr 2019 18:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353942;
-        bh=O8ghSaqomER1TdRDCFfbm6Wh9mkw0U4JbgVizdDs5PI=;
+        s=default; t=1555353945;
+        bh=zV+L8fu2E1eV0Y+Fd7rC4gJXSkZRpWLe0Fd2xS3GM+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lFqCwSdQ5PqYZ3sDVtwu0XoV2rXvA40BK5IoqWV6f+9sxgSjzMAC3vVhHTWfUl/mz
-         Dz29+PUhbzAMVxZvPYbFtZRTivF47NTdisukkTf9TEF4onmKRel+qR4hdcFy3fawd1
-         Rd+3bCdriY1IUHKK8owToR0AWLQGT0h9xtGCF64I=
+        b=WFOBdE6FB5EMieHAJ+Cq3ZNWCBfHfjU0NOBHIkHR2d0eT6/bo2z/tMEtUJZqmA6px
+         Xmijr/s8Yj7x+MDOROFGlsI5Iv6zsDFE6b5TVnfq2Np/+wWwDrvOcr3wQwVHldXI1a
+         /yqc/mIuOtF7MiBJfwW5ox98ubo1mAz15x2rIXPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Neuling <mikey@neuling.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/76] powerpc: Avoid code patching freed init sections
-Date:   Mon, 15 Apr 2019 20:43:37 +0200
-Message-Id: <20190415183711.514716690@linuxfoundation.org>
+Subject: [PATCH 4.9 14/76] powerpc/64s: Patch barrier_nospec in modules
+Date:   Mon, 15 Apr 2019 20:43:38 +0200
+Message-Id: <20190415183711.746568294@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -62,99 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 51c3c62b58b357e8d35e4cc32f7b4ec907426fe3 upstream.
+commit 815069ca57c142eb71d27439bc27f41a433a67b3 upstream.
 
-This stops us from doing code patching in init sections after they've
-been freed.
+Note that unlike RFI which is patched only in kernel the nospec state
+reflects settings at the time the module was loaded.
 
-In this chain:
-  kvm_guest_init() ->
-    kvm_use_magic_page() ->
-      fault_in_pages_readable() ->
-	 __get_user() ->
-	   __get_user_nocheck() ->
-	     barrier_nospec();
+Iterating all modules and re-patching every time the settings change
+is not implemented.
 
-We have a code patching location at barrier_nospec() and
-kvm_guest_init() is an init function. This whole chain gets inlined,
-so when we free the init section (hence kvm_guest_init()), this code
-goes away and hence should no longer be patched.
+Based on lwsync patching.
 
-We seen this as userspace memory corruption when using a memory
-checker while doing partition migration testing on powervm (this
-starts the code patching post migration via
-/sys/kernel/mobility/migration). In theory, it could also happen when
-using /sys/kernel/debug/powerpc/barrier_nospec.
-
-Cc: stable@vger.kernel.org # 4.13+
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/setup.h | 1 +
- arch/powerpc/lib/code-patching.c | 8 ++++++++
- arch/powerpc/mm/mem.c            | 2 ++
- 3 files changed, 11 insertions(+)
+ arch/powerpc/include/asm/setup.h  |  7 +++++++
+ arch/powerpc/kernel/module.c      |  6 ++++++
+ arch/powerpc/kernel/security.c    |  2 +-
+ arch/powerpc/lib/feature-fixups.c | 16 +++++++++++++---
+ 4 files changed, 27 insertions(+), 4 deletions(-)
 
 diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
-index 703ddf752516..709f4e739ae8 100644
+index 709f4e739ae8..a225b5c42e76 100644
 --- a/arch/powerpc/include/asm/setup.h
 +++ b/arch/powerpc/include/asm/setup.h
-@@ -8,6 +8,7 @@ extern void ppc_printk_progress(char *s, unsigned short hex);
- 
- extern unsigned int rtas_data;
- extern unsigned long long memory_limit;
-+extern bool init_mem_is_free;
- extern unsigned long klimit;
- extern void *zalloc_maybe_bootmem(size_t size, gfp_t mask);
- 
-diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
-index 753d591f1b52..c77c486fbf24 100644
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -14,12 +14,20 @@
- #include <asm/page.h>
- #include <asm/code-patching.h>
- #include <asm/uaccess.h>
-+#include <asm/setup.h>
-+#include <asm/sections.h>
- 
- 
- int patch_instruction(unsigned int *addr, unsigned int instr)
- {
- 	int err;
- 
-+	/* Make sure we aren't patching a freed init section */
-+	if (init_mem_is_free && init_section_contains(addr, 4)) {
-+		pr_debug("Skipping init section patching addr: 0x%px\n", addr);
-+		return 0;
-+	}
+@@ -52,6 +52,13 @@ enum l1d_flush_type {
+ void setup_rfi_flush(enum l1d_flush_type, bool enable);
+ void do_rfi_flush_fixups(enum l1d_flush_type types);
+ void do_barrier_nospec_fixups(bool enable);
++extern bool barrier_nospec_enabled;
 +
- 	__put_user_size(instr, addr, 4, err);
- 	if (err)
- 		return err;
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 5f844337de21..1e93dbc88e80 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -62,6 +62,7 @@
++#ifdef CONFIG_PPC_BOOK3S_64
++void do_barrier_nospec_fixups_range(bool enable, void *start, void *end);
++#else
++static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
++#endif
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
+diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
+index 30b89d5cbb03..d30f0626dcd0 100644
+--- a/arch/powerpc/kernel/module.c
++++ b/arch/powerpc/kernel/module.c
+@@ -72,6 +72,12 @@ int module_finalize(const Elf_Ehdr *hdr,
+ 		do_feature_fixups(powerpc_firmware_features,
+ 				  (void *)sect->sh_addr,
+ 				  (void *)sect->sh_addr + sect->sh_size);
++
++	sect = find_section(hdr, sechdrs, "__spec_barrier_fixup");
++	if (sect != NULL)
++		do_barrier_nospec_fixups_range(barrier_nospec_enabled,
++				  (void *)sect->sh_addr,
++				  (void *)sect->sh_addr + sect->sh_size);
  #endif
  
- unsigned long long memory_limit;
-+bool init_mem_is_free;
+ 	sect = find_section(hdr, sechdrs, "__lwsync_fixup");
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index 8b1cf9c81b82..34d436fe2498 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -15,7 +15,7 @@
  
- #ifdef CONFIG_HIGHMEM
- pte_t *kmap_pte;
-@@ -396,6 +397,7 @@ void __init mem_init(void)
- void free_initmem(void)
+ unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
+ 
+-static bool barrier_nospec_enabled;
++bool barrier_nospec_enabled;
+ 
+ static void enable_barrier_nospec(bool enable)
  {
- 	ppc_md.progress = ppc_printk_progress;
-+	init_mem_is_free = true;
- 	free_initmem_default(POISON_FREE_INITMEM);
+diff --git a/arch/powerpc/lib/feature-fixups.c b/arch/powerpc/lib/feature-fixups.c
+index f82ae6bb2365..a1222c441df5 100644
+--- a/arch/powerpc/lib/feature-fixups.c
++++ b/arch/powerpc/lib/feature-fixups.c
+@@ -278,14 +278,14 @@ void do_rfi_flush_fixups(enum l1d_flush_type types)
+ 						: "unknown");
  }
  
+-void do_barrier_nospec_fixups(bool enable)
++void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
+ {
+ 	unsigned int instr, *dest;
+ 	long *start, *end;
+ 	int i;
+ 
+-	start = PTRRELOC(&__start___barrier_nospec_fixup),
+-	end = PTRRELOC(&__stop___barrier_nospec_fixup);
++	start = fixup_start;
++	end = fixup_end;
+ 
+ 	instr = 0x60000000; /* nop */
+ 
+@@ -304,6 +304,16 @@ void do_barrier_nospec_fixups(bool enable)
+ 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
+ }
+ 
++void do_barrier_nospec_fixups(bool enable)
++{
++	void *start, *end;
++
++	start = PTRRELOC(&__start___barrier_nospec_fixup),
++	end = PTRRELOC(&__stop___barrier_nospec_fixup);
++
++	do_barrier_nospec_fixups_range(enable, start, end);
++}
++
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+ 
+ void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
 -- 
 2.19.1
 
