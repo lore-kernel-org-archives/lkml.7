@@ -2,90 +2,94 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B0AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F73F206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB4B206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eg6z81qd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfDOKwP (ORCPT
+        id S1727260AbfDOKw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:52:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58360 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfDOKwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:52:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 48E3481F18;
-        Mon, 15 Apr 2019 10:52:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7BBC319C4F;
-        Mon, 15 Apr 2019 10:52:10 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 15 Apr 2019 12:52:14 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 12:52:09 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        tglx@linutronix.de, mtk.manpages@gmail.com,
-        akpm@linux-foundation.org, cyphar@cyphar.com,
-        joel@joelfernandes.org, dancol@google.com
-Subject: Re: [PATCH 2/4] clone: add CLONE_PIDFD
-Message-ID: <20190415105209.GA22204@redhat.com>
-References: <20190414201436.19502-1-christian@brauner.io>
- <20190414201436.19502-3-christian@brauner.io>
+        Mon, 15 Apr 2019 06:52:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60244 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfDOKw1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 06:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DlIj17HSmXj9nZCEjavudDP71Uz3owu6mPfUFnKUouM=; b=Eg6z81qdyNmU6IRF0IvZZ8Xpo
+        HjZnVzizSUjFBPoHIxJyxTHHxBubWFWpXclRmoRlm0DSXBRTmtzCr5ATLpBbeGcZtb1BdFSj7LdkV
+        tl++h7GkBmGuSDtNR6D/iy7/k4unVoBKWO+suyLosd7Grl18SR2F/oc7YA/zhxjQ4JPzg/Zi4Iu10
+        QXn7sIujv71lP2iJdtW0hme+uctNpnuUU2lMWi383W58zWGRRX4MGsEUNv9hXOJvIwKTvhmj1zzwQ
+        Agnx6nZMLSiw5oZiNyqk2BFrYDttrwjMPzsQg6uSW2mtiR1P82Dbimme3kRB99BpmfxAxmlyjE6Vd
+        F5mOzf7Zg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hFzDV-00006V-KO; Mon, 15 Apr 2019 10:52:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1A48A2038C257; Mon, 15 Apr 2019 12:51:59 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 12:51:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+Subject: Re: [PATCH V5 1/7] jump_label: Add for_each_label_entry helper
+Message-ID: <20190415105159.GI11158@hirez.programming.kicks-ass.net>
+References: <cover.1554106794.git.bristot@redhat.com>
+ <708f1d88826965ef5735c372cc9a17bb80613856.1554106794.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414201436.19502-3-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 15 Apr 2019 10:52:14 +0000 (UTC)
+In-Reply-To: <708f1d88826965ef5735c372cc9a17bb80613856.1554106794.git.bristot@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/14, Christian Brauner wrote:
->
-> @@ -2260,6 +2363,10 @@ long _do_fork(unsigned long clone_flags,
->  	}
->
->  	put_pid(pid);
+On Mon, Apr 01, 2019 at 10:58:13AM +0200, Daniel Bristot de Oliveira wrote:
+> Add a helper macro to make jump entry iteration code more readable.
+> 
+> Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+
+> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+> index 3e113a1fa0f1..7e91af98bbb1 100644
+> --- a/include/linux/jump_label.h
+> +++ b/include/linux/jump_label.h
+> @@ -227,6 +227,9 @@ extern void static_key_disable(struct static_key *key);
+>  extern void static_key_enable_cpuslocked(struct static_key *key);
+>  extern void static_key_disable_cpuslocked(struct static_key *key);
+>  
+> +#define for_each_label_entry(key, entry, stop)				  \
+> +	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++)
 > +
-> +	if (clone_flags & CLONE_PIDFD)
-> +		nr = pidfd;
-> +
 
-Well, this doesn't look nice ...
+I don't really like this naming; most (all?) for_each_*() loops start
+iteration and have the iteration variable as first argument.
 
-CLONE_PARENT_SETTID doesn't look very usefule, so what if we add
+This should maybe be called:
 
-	if ((clone_flags & (CLONE_PIDFD|CLONE_PARENT_SETTID)) ==
-	                   (CLONE_PIDFD|CLONE_PARENT_SETTID))
-		return ERR_PTR(-EINVAL);
+	for_each_jump_entry_by_key_cont(entry, stop, key)
 
-at the start of copy_process() ?
-
-Then it can do
-
-	if (clone_flags & CLONE_PIDFD) {
-		retval = pidfd_create(pid, &pidfdf);
-		if (retval < 0)
-			goto bad_fork_free_pid;
-		retval = put_user(retval, parent_tidptr)
-		if (retval < 0)
-			goto bad_fork_free_pid;
-	}
-
-Oleg.
-
+and I realize that is a horrible name too.
