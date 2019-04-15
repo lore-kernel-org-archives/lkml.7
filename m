@@ -2,90 +2,69 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E948AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51874C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29CA2147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271FF20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfDOKQA (ORCPT
+        id S1727247AbfDOKQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 15 Apr 2019 06:16:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50727 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbfDOKQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 06:16:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60016 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfDOKP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:15:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3356180D;
-        Mon, 15 Apr 2019 03:15:59 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69AA03F557;
-        Mon, 15 Apr 2019 03:15:58 -0700 (PDT)
-Subject: Re: [PATCH 2/3] x86/vdso: Allow clock specific mult and shift values
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Huw Davies <huw@codeweavers.com>
-Cc:     linux kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190411101205.10006-1-huw@codeweavers.com>
- <20190411101205.10006-3-huw@codeweavers.com>
- <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
- <20190415093042.GA21726@merlot.physics.ox.ac.uk>
- <alpine.DEB.2.21.1904151148160.17231@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <82a61daf-f6f9-8be0-2157-e9f9d7ba1cdf@arm.com>
-Date:   Mon, 15 Apr 2019 11:15:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hFyeZ-0004iv-K2; Mon, 15 Apr 2019 10:15:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
+        linux-wimax@intel.com, "David S . Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] wimax/i2400m: fix spelling mistake "accesibility" -> "accessibility"
+Date:   Mon, 15 Apr 2019 11:15:55 +0100
+Message-Id: <20190415101555.10584-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904151148160.17231@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+From: Colin Ian King <colin.king@canonical.com>
 
-On 15/04/2019 10:51, Thomas Gleixner wrote:
-> On Mon, 15 Apr 2019, Huw Davies wrote:
-> 
->> On Sun, Apr 14, 2019 at 12:53:32PM +0200, Thomas Gleixner wrote:
->>> So it stays in the same cache line, but as we move the VDSO to generic
->>> code, the mask field needs to stay and this will make basetime[CLOCK_MONOTONIC] 
->>> overlap into the next cache line.
->>
->> Thanks for the great review; this is a good point.
->>
->>> See https://lkml.kernel.org/r/alpine.DEB.2.21.1902231727060.1666@nanos.tec.linutronix.de
->>> for an alternate solution to this problem, which avoids this and just gives
->>> CLOCK_MONOTONIC_RAW a separate storage space alltogether.
->>
->> I can certainly do this for the x86 vdso.  Would that be useful or
->> should I wait for Vincenzo's work on the generic vdso first?
-> 
-> Depends. If Vincenzo comes along with his new version soon, then you might
-> get this for free :)
-> 
-> Vincenzo, what's the state of your work?
->
+There is a spelling mistake in the I2400M_MS_ACCESSIBILITY_ERROR message
+string, fix this.
 
-I am mostly done with the development, the only thing missing is the integration
-of the generic update_vsyscall. After this is complete, I will need to do some
-testing and extract the performance numbers.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wimax/i2400m/control.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Considering that I will be on Easter holiday from this Wednesday till the end of
-April, I think v6 will be ready around second week of May.
-
-> Thanks,
-> 
-> 	tglx
-> 
-
+diff --git a/drivers/net/wimax/i2400m/control.c b/drivers/net/wimax/i2400m/control.c
+index ef298d8525c5..6837fac3987b 100644
+--- a/drivers/net/wimax/i2400m/control.c
++++ b/drivers/net/wimax/i2400m/control.c
+@@ -254,7 +254,7 @@ static const struct
+ 	[I2400M_MS_ILLEGAL_VALUE] = { "illegal value", -EINVAL },
+ 	[I2400M_MS_MISSING_PARAMS] = { "missing parameters", -ENOMSG },
+ 	[I2400M_MS_VERSION_ERROR] = { "bad version", -EIO },
+-	[I2400M_MS_ACCESSIBILITY_ERROR] = { "accesibility error", -EIO },
++	[I2400M_MS_ACCESSIBILITY_ERROR] = { "accessibility error", -EIO },
+ 	[I2400M_MS_BUSY] = { "busy", -EBUSY },
+ 	[I2400M_MS_CORRUPTED_TLV] = { "corrupted TLV", -EILSEQ },
+ 	[I2400M_MS_UNINITIALIZED] = { "uninitialized", -EILSEQ },
 -- 
-Regards,
-Vincenzo
+2.20.1
+
