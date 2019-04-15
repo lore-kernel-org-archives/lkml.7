@@ -2,53 +2,51 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6837BC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061C3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D2820651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C079220818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356238;
-	bh=sEMSincRBeagLJeJzGhIaLf3tATgxZm72E2Tv4T11XY=;
+	s=default; t=1555356241;
+	bh=bZSfbFHcG3jH00gD3d3eKSTrGyCjUTsQJvkndIPrh+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2NGWGED+2uxFYPbVOvMHntvlQuTu76VNoAx16Br2CbJhfJetSswTAU3Bd9GooIFvV
-	 GO2+JGtgeaSb4apGaFaZRUAHMWb3Dbke59syjf36s2mzmx+P8ThfJomHweLvTNvqnH
-	 o1xWh+aOtZBoajARs8i00EfpGiSbx1RdkH5M4c3g=
+	b=YKhfkrzRNV0YRLPcK5LPOdL2EZqvCZnwpri37p89EeXTHGw3Bcc7rnJAA5FgTIzx+
+	 5ncKl8dhvkYAcqxqcPV/aTB9Ds6p3KBXuOAX6IRXtAwkqYbmqxgVpmU9hYum75xuR6
+	 5p4bX7ovnXEKD+e6H8vgi4BiXhWT20Eb6gPJmIpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfDOTGp (ORCPT
+        id S1729028AbfDOTGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbfDOTGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:06:41 -0400
+        id S1730005AbfDOTGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:06:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E31C218A1;
-        Mon, 15 Apr 2019 19:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E60DD218A1;
+        Mon, 15 Apr 2019 19:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355201;
-        bh=sEMSincRBeagLJeJzGhIaLf3tATgxZm72E2Tv4T11XY=;
+        s=default; t=1555355198;
+        bh=bZSfbFHcG3jH00gD3d3eKSTrGyCjUTsQJvkndIPrh+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvy9LVwSjMjEWirA94UWgdNzy0rEwF6OJOQachdQcGNTs6FYp3qkS+BOAolOjGZQA
-         NkI30Qb5Hx4ejbq7J6vKoa64AjNhc6HlSIvzuxM1lKNipA6GZWYihsSqbMZYNCPoq4
-         nr7NffouqSUPOpLQ6hLIbnaKBiZl4PQXv8SiKub8=
+        b=XgZc0rhDwXnUWyYII/CEeBQFN8rdOLMrvcA8+KE30PWOjWIUSa40vT1SPzvJhgHaZ
+         sBKevqIjAXBIQgRJwWJ0KS/IEnit+tFkmDxytJp+TLY9sxdcA/Sh5K5kO/pTpd2pjQ
+         gSY0FcwsMaggDpcn0OkgXW2MwDtvny+tt5zqS0jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Crowe <mac@mcrowe.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/101] r8169: disable default rx interrupt coalescing on RTL8168
-Date:   Mon, 15 Apr 2019 20:58:31 +0200
-Message-Id: <20190415183742.206867216@linuxfoundation.org>
+        stable@vger.kernel.org, Zubin Mithra <zsm@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 050/101] ALSA: seq: Fix OOB-reads from strlcpy
+Date:   Mon, 15 Apr 2019 20:58:48 +0200
+Message-Id: <20190415183743.215721697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,41 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 288ac524cf70a8e7ed851a61ed2a9744039dae8d ]
+From: Zubin Mithra <zsm@chromium.org>
 
-It was reported that re-introducing ASPM, in combination with RX
-interrupt coalescing, results in significantly increased packet
-latency, see [0]. Disabling ASPM or RX interrupt coalescing fixes
-the issue. Therefore change the driver's default to disable RX
-interrupt coalescing. Users still have the option to enable RX
-coalescing via ethtool.
+commit 212ac181c158c09038c474ba68068be49caecebb upstream.
 
-[0] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=925496
+When ioctl calls are made with non-null-terminated userspace strings,
+strlcpy causes an OOB-read from within strlen. Fix by changing to use
+strscpy instead.
 
-Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
-Reported-by: Mike Crowe <mac@mcrowe.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/realtek/r8169.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_clientmgr.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
-index 1d24884e9897..7a50b911b180 100644
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -5418,7 +5418,7 @@ static void rtl_hw_start_8168(struct rtl8169_private *tp)
- 	tp->cp_cmd |= PktCntrDisable | INTT_1;
- 	RTL_W16(tp, CPlusCmd, tp->cp_cmd);
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1252,7 +1252,7 @@ static int snd_seq_ioctl_set_client_info
  
--	RTL_W16(tp, IntrMitigate, 0x5151);
-+	RTL_W16(tp, IntrMitigate, 0x5100);
+ 	/* fill the info fields */
+ 	if (client_info->name[0])
+-		strlcpy(client->name, client_info->name, sizeof(client->name));
++		strscpy(client->name, client_info->name, sizeof(client->name));
  
- 	/* Work around for RxFIFO overflow. */
- 	if (tp->mac_version == RTL_GIGA_MAC_VER_11) {
--- 
-2.19.1
-
+ 	client->filter = client_info->filter;
+ 	client->event_lost = client_info->event_lost;
+@@ -1530,7 +1530,7 @@ static int snd_seq_ioctl_create_queue(st
+ 	/* set queue name */
+ 	if (!info->name[0])
+ 		snprintf(info->name, sizeof(info->name), "Queue-%d", q->queue);
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	snd_use_lock_free(&q->use_lock);
+ 
+ 	return 0;
+@@ -1592,7 +1592,7 @@ static int snd_seq_ioctl_set_queue_info(
+ 		queuefree(q);
+ 		return -EPERM;
+ 	}
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	queuefree(q);
+ 
+ 	return 0;
 
 
