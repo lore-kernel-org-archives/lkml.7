@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D31FC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0CCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334B42087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5D520880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355105;
-	bh=mF2BBxg4kqXaj9f2hI7ltrvsQ2w8gbMjYgy+7a7ZDXU=;
+	s=default; t=1555355108;
+	bh=w7aSaOuoA1FhkoVB4lx229H9iNUVi1cwmcPQ8Zbb0pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GlU1tkxac//CfplPnudoEQuV6PLQHCJl+h4m/KUPZYFyT94lgsNcBM9Y5WODeAWwh
-	 I091iBKhDqUOTEXGaH05DFtOr843dhySs3nKRB5GXKbsxkwObsI/s+aWTKGUhzRFGS
-	 gfQPHGQP5MK2CorKMLwxrcxKHhJJ5LpMDfy1pF0E=
+	b=nOB9zPMT795nnobgv3j/KlObXH/C6ABa7iIeXTJFuuKRjL9GLc2BF8z4PRt6fDUFh
+	 RvTKPbxVM9B7cU0ns3U1d37xvG8EIZ+kn3XVJKUBF2lOuuGi3zSxTbS3AIErg97fYX
+	 i9N/MZnnAZBpNWF1Fb9b7r0vgK7eklIVh678gaNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfDOTFD (ORCPT
+        id S1729094AbfDOTFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:05:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729640AbfDOTFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:05:01 -0400
+        id S1728276AbfDOTFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:05:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24357218A1;
-        Mon, 15 Apr 2019 19:04:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD95218DA;
+        Mon, 15 Apr 2019 19:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355100;
-        bh=mF2BBxg4kqXaj9f2hI7ltrvsQ2w8gbMjYgy+7a7ZDXU=;
+        s=default; t=1555355103;
+        bh=w7aSaOuoA1FhkoVB4lx229H9iNUVi1cwmcPQ8Zbb0pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q7DcZdj3PjWL4T2yXwjh+2Rwo1ntPaI3c1g3w+I5KOEckgcYLAZyKi/LBBYs+kSY/
-         iwTekA+vOlO0Hl8HJXEIanJsqinyO38T/LBmqtcUgE8wxt2iQO8VDSHYlMhr5AUbbl
-         SVEVjSraVMc08p8IzoInyxWSnWf6WEbcGbnJ4s2g=
+        b=kkxKy/7lk751a8HUyDAUCn/qEoHmcpwf6NCRZH2HrspZ2yrMmo1FTcJNrOFNkLIcH
+         fKIbeZi56shnEFHomrF7Sqe1GB3go/bpExDWcfaH0a9xf/rmotuqMG2C/mjjwZDle0
+         KIQYSdIKdl6LnXBQ32HY2gl1agbJDQaGAdFjcO64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
+        stable@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/101] powerpc/tm: Limit TM code inside PPC_TRANSACTIONAL_MEM
-Date:   Mon, 15 Apr 2019 20:58:01 +0200
-Message-Id: <20190415183740.520791587@linuxfoundation.org>
+Subject: [PATCH 4.19 004/101] hv_netvsc: Fix unwanted wakeup after tx_disable
+Date:   Mon, 15 Apr 2019 20:58:02 +0200
+Message-Id: <20190415183740.578207548@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -63,72 +61,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 897bc3df8c5aebb54c32d831f917592e873d0559 upstream.
+[ Upstream commit 1b704c4a1ba95574832e730f23817b651db2aa59 ]
 
-Commit e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
-moved a code block around and this block uses a 'msr' variable outside of
-the CONFIG_PPC_TRANSACTIONAL_MEM, however the 'msr' variable is declared
-inside a CONFIG_PPC_TRANSACTIONAL_MEM block, causing a possible error when
-CONFIG_PPC_TRANSACTION_MEM is not defined.
+After queue stopped, the wakeup mechanism may wake it up again
+when ring buffer usage is lower than a threshold. This may cause
+send path panic on NULL pointer when we stopped all tx queues in
+netvsc_detach and start removing the netvsc device.
 
-	error: 'msr' undeclared (first use in this function)
+This patch fix it by adding a tx_disable flag to prevent unwanted
+queue wakeup.
 
-This is not causing a compilation error in the mainline kernel, because
-'msr' is being used as an argument of MSR_TM_ACTIVE(), which is defined as
-the following when CONFIG_PPC_TRANSACTIONAL_MEM is *not* set:
-
-	#define MSR_TM_ACTIVE(x) 0
-
-This patch just fixes this issue avoiding the 'msr' variable usage outside
-the CONFIG_PPC_TRANSACTIONAL_MEM block, avoiding trusting in the
-MSR_TM_ACTIVE() definition.
-
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
-Fixes: e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Reported-by: Mohammed Gamal <mgamal@redhat.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/signal_64.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/hyperv/hyperv_net.h |  1 +
+ drivers/net/hyperv/netvsc.c     |  6 ++++--
+ drivers/net/hyperv/netvsc_drv.c | 32 ++++++++++++++++++++++++++------
+ 3 files changed, 31 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
-index bbd1c73243d7..14b0f5b6a373 100644
---- a/arch/powerpc/kernel/signal_64.c
-+++ b/arch/powerpc/kernel/signal_64.c
-@@ -755,12 +755,25 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
- 					   &uc_transact->uc_mcontext))
- 			goto badframe;
--	}
--	else
--	/* Fall through, for non-TM restore */
-+	} else
- #endif
--	if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
--		goto badframe;
-+	{
-+		/*
-+		 * Fall through, for non-TM restore
-+		 *
-+		 * Unset MSR[TS] on the thread regs since MSR from user
-+		 * context does not have MSR active, and recheckpoint was
-+		 * not called since restore_tm_sigcontexts() was not called
-+		 * also.
-+		 *
-+		 * If not unsetting it, the code can RFID to userspace with
-+		 * MSR[TS] set, but without CPU in the proper state,
-+		 * causing a TM bad thing.
-+		 */
-+		current->thread.regs->msr &= ~MSR_TS_MASK;
-+		if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
-+			goto badframe;
-+	}
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 42d284669b03..31d8d83c25ac 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -970,6 +970,7 @@ struct netvsc_device {
  
- 	if (restore_altstack(&uc->uc_stack))
- 		goto badframe;
+ 	wait_queue_head_t wait_drain;
+ 	bool destroy;
++	bool tx_disable; /* if true, do not wake up queue again */
+ 
+ 	/* Receive buffer allocated by us but manages by NetVSP */
+ 	void *recv_buf;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 1a942feab954..fb12b63439c6 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -110,6 +110,7 @@ static struct netvsc_device *alloc_net_device(void)
+ 
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
++	net_device->tx_disable = false;
+ 
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+@@ -716,7 +717,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
+ 	} else {
+ 		struct netdev_queue *txq = netdev_get_tx_queue(ndev, q_idx);
+ 
+-		if (netif_tx_queue_stopped(txq) &&
++		if (netif_tx_queue_stopped(txq) && !net_device->tx_disable &&
+ 		    (hv_get_avail_to_write_percent(&channel->outbound) >
+ 		     RING_AVAIL_PERCENT_HIWATER || queue_sends < 1)) {
+ 			netif_tx_wake_queue(txq);
+@@ -871,7 +872,8 @@ static inline int netvsc_send_pkt(
+ 	} else if (ret == -EAGAIN) {
+ 		netif_tx_stop_queue(txq);
+ 		ndev_ctx->eth_stats.stop_queue++;
+-		if (atomic_read(&nvchan->queue_sends) < 1) {
++		if (atomic_read(&nvchan->queue_sends) < 1 &&
++		    !net_device->tx_disable) {
+ 			netif_tx_wake_queue(txq);
+ 			ndev_ctx->eth_stats.wake_queue++;
+ 			ret = -ENOSPC;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index c8320405c8f1..9d699bd5f715 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -109,6 +109,15 @@ static void netvsc_set_rx_mode(struct net_device *net)
+ 	rcu_read_unlock();
+ }
+ 
++static void netvsc_tx_enable(struct netvsc_device *nvscdev,
++			     struct net_device *ndev)
++{
++	nvscdev->tx_disable = false;
++	virt_wmb(); /* ensure queue wake up mechanism is on */
++
++	netif_tx_wake_all_queues(ndev);
++}
++
+ static int netvsc_open(struct net_device *net)
+ {
+ 	struct net_device_context *ndev_ctx = netdev_priv(net);
+@@ -129,7 +138,7 @@ static int netvsc_open(struct net_device *net)
+ 	rdev = nvdev->extension;
+ 	if (!rdev->link_state) {
+ 		netif_carrier_on(net);
+-		netif_tx_wake_all_queues(net);
++		netvsc_tx_enable(nvdev, net);
+ 	}
+ 
+ 	if (vf_netdev) {
+@@ -184,6 +193,17 @@ static int netvsc_wait_until_empty(struct netvsc_device *nvdev)
+ 	}
+ }
+ 
++static void netvsc_tx_disable(struct netvsc_device *nvscdev,
++			      struct net_device *ndev)
++{
++	if (nvscdev) {
++		nvscdev->tx_disable = true;
++		virt_wmb(); /* ensure txq will not wake up after stop */
++	}
++
++	netif_tx_disable(ndev);
++}
++
+ static int netvsc_close(struct net_device *net)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(net);
+@@ -192,7 +212,7 @@ static int netvsc_close(struct net_device *net)
+ 	struct netvsc_device *nvdev = rtnl_dereference(net_device_ctx->nvdev);
+ 	int ret;
+ 
+-	netif_tx_disable(net);
++	netvsc_tx_disable(nvdev, net);
+ 
+ 	/* No need to close rndis filter if it is removed already */
+ 	if (!nvdev)
+@@ -918,7 +938,7 @@ static int netvsc_detach(struct net_device *ndev,
+ 
+ 	/* If device was up (receiving) then shutdown */
+ 	if (netif_running(ndev)) {
+-		netif_tx_disable(ndev);
++		netvsc_tx_disable(nvdev, ndev);
+ 
+ 		ret = rndis_filter_close(nvdev);
+ 		if (ret) {
+@@ -1899,7 +1919,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (rdev->link_state) {
+ 			rdev->link_state = false;
+ 			netif_carrier_on(net);
+-			netif_tx_wake_all_queues(net);
++			netvsc_tx_enable(net_device, net);
+ 		} else {
+ 			notify = true;
+ 		}
+@@ -1909,7 +1929,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 		}
+ 		kfree(event);
+ 		break;
+@@ -1918,7 +1938,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 			event->event = RNDIS_STATUS_MEDIA_CONNECT;
+ 			spin_lock_irqsave(&ndev_ctx->lock, flags);
+ 			list_add(&event->list, &ndev_ctx->reconfig_events);
 -- 
 2.19.1
 
