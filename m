@@ -2,55 +2,53 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30589C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81DD20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B038D20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356062;
-	bh=Px4SXH4Qu7IsscEnsCciKQ9BkMvPTyG3sP1QYiqjNto=;
+	s=default; t=1555356069;
+	bh=7iSCQcHpwreHNzuzccsBH9O9JonFlPR+0nj6AE4tS8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuxCZRm2TbNTvI+ZMdjKvXdnlWKC7CsyOLE/7ug5uk0jU6MWUbwhP3JlzO7WgTHCa
-	 svDSoD8nDah8J1/e8P5riQNUNpd2rihYQq5InIZ/CgP65CM18Ovy8rV4PqzRcKFfmc
-	 eIhnp1k6OioZifgQoLRiK14jRiCLk47aNxX1BDAc=
+	b=SUFEMXuFHsDNTq1Es5uQe2n2i767srpuqVA7t7e9OieuFZCJ9m1gaZn++PdTJ4m5G
+	 ASCAOeqvG7vcRkh7iUyWIFHiRiKuZNXBj0n4nz/JUvIRC5QgPaT0IQZFQ9dDv9ld+u
+	 IInkRL77fdCc031JsfmmG843cYrhAtgOTgznnTuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbfDOTVB (ORCPT
+        id S1730738AbfDOTJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbfDOTJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:09:37 -0400
+        id S1730717AbfDOTJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3333218A1;
-        Mon, 15 Apr 2019 19:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5660D20651;
+        Mon, 15 Apr 2019 19:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355377;
-        bh=Px4SXH4Qu7IsscEnsCciKQ9BkMvPTyG3sP1QYiqjNto=;
+        s=default; t=1555355363;
+        bh=7iSCQcHpwreHNzuzccsBH9O9JonFlPR+0nj6AE4tS8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgLpohPl1zsV+k3MHzx0n8pzG1f4+O4OKyhHki7G84ZQf9XCrg6x81B9F+7xNEzPN
-         W/iOokA0IdmJyfRs8RpF51k5ThrWZ4ZM3AnwEQsh5ksiKcEeMjM/8SwKWc3I++Gdn3
-         KzpK9RFrB/njxD+ef8GAqz2IjISevPpMZiZxFTRw=
+        b=2HN0ABlAQkcEBFudhUFBe2wC0NUIxh9KQ7FAUyAa7Y/nv1+4yuafDezf1hXovM8AR
+         4BOlC1GOui2glDJ9jVAM9VLvt0+7tn0jbWmnHRSRNGG4ukx2HOVQV2vuQPNcLgmvnN
+         lgiGX5M2pFvDMZayNbV1EAv18RXxxLo1Tr29tOP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 004/117] netfilter: nf_tables: use-after-free in dynamic operations
-Date:   Mon, 15 Apr 2019 20:59:34 +0200
-Message-Id: <20190415183745.109568968@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 095/101] dm table: propagate BDI_CAP_STABLE_WRITES to fix sporadic checksum errors
+Date:   Mon, 15 Apr 2019 20:59:33 +0200
+Message-Id: <20190415183745.398101293@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
-References: <20190415183744.887851196@linuxfoundation.org>
+In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
+References: <20190415183740.341577907@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,53 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f3a390dbd59d236f62cff8e8b20355ef7069e3d ]
+From: Ilya Dryomov <idryomov@gmail.com>
 
-Smatch reports:
+commit eb40c0acdc342b815d4d03ae6abb09e80c0f2988 upstream.
 
-       net/netfilter/nf_tables_api.c:2167 nf_tables_expr_destroy()
-        error: dereferencing freed memory 'expr->ops'
+Some devices don't use blk_integrity but still want stable pages
+because they do their own checksumming.  Examples include rbd and iSCSI
+when data digests are negotiated.  Stacking DM (and thus LVM) on top of
+these devices results in sporadic checksum errors.
 
-net/netfilter/nf_tables_api.c
-    2162 static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
-    2163                                   struct nft_expr *expr)
-    2164 {
-    2165        if (expr->ops->destroy)
-    2166                expr->ops->destroy(ctx, expr);
-                                                ^^^^
---> 2167        module_put(expr->ops->type->owner);
-                           ^^^^^^^^^
-    2168 }
+Set BDI_CAP_STABLE_WRITES if any underlying device has it set.
 
-Smatch says there are three functions which free expr->ops.
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: b8e204006340 ("netfilter: nft_compat: use .release_ops and remove list of extension")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/dm-table.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index dc3670f2860e..f20b904873c6 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2119,9 +2119,11 @@ static int nf_tables_newexpr(const struct nft_ctx *ctx,
- static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
- 				   struct nft_expr *expr)
- {
-+	const struct nft_expr_type *type = expr->ops->type;
-+
- 	if (expr->ops->destroy)
- 		expr->ops->destroy(ctx, expr);
--	module_put(expr->ops->type->owner);
-+	module_put(type->owner);
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1872,6 +1872,36 @@ static bool dm_table_supports_secure_era
+ 	return true;
  }
  
- struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
--- 
-2.19.1
-
++static int device_requires_stable_pages(struct dm_target *ti,
++					struct dm_dev *dev, sector_t start,
++					sector_t len, void *data)
++{
++	struct request_queue *q = bdev_get_queue(dev->bdev);
++
++	return q && bdi_cap_stable_pages_required(q->backing_dev_info);
++}
++
++/*
++ * If any underlying device requires stable pages, a table must require
++ * them as well.  Only targets that support iterate_devices are considered:
++ * don't want error, zero, etc to require stable pages.
++ */
++static bool dm_table_requires_stable_pages(struct dm_table *t)
++{
++	struct dm_target *ti;
++	unsigned i;
++
++	for (i = 0; i < dm_table_get_num_targets(t); i++) {
++		ti = dm_table_get_target(t, i);
++
++		if (ti->type->iterate_devices &&
++		    ti->type->iterate_devices(ti, device_requires_stable_pages, NULL))
++			return true;
++	}
++
++	return false;
++}
++
+ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 			       struct queue_limits *limits)
+ {
+@@ -1930,6 +1960,15 @@ void dm_table_set_restrictions(struct dm
+ 	dm_table_verify_integrity(t);
+ 
+ 	/*
++	 * Some devices don't use blk_integrity but still want stable pages
++	 * because they do their own checksumming.
++	 */
++	if (dm_table_requires_stable_pages(t))
++		q->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
++	else
++		q->backing_dev_info->capabilities &= ~BDI_CAP_STABLE_WRITES;
++
++	/*
+ 	 * Determine whether or not this queue's I/O timings contribute
+ 	 * to the entropy pool, Only request-based targets use this.
+ 	 * Clear QUEUE_FLAG_ADD_RANDOM if any underlying device does not
 
 
