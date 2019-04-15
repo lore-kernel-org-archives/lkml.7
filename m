@@ -2,118 +2,176 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5323C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E266C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7096920833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE8620833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfDOJqG (ORCPT
+        id S1726897AbfDOJqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:46:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56964 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725816AbfDOJqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:46:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 981F6B020;
-        Mon, 15 Apr 2019 09:46:04 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 15 Apr 2019 11:46:04 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Bob Liu <bob.liu@oracle.com>, linux-block@vger.kernel.org,
-        shirley.ma@oracle.com, martin.petersen@oracle.com,
-        Roman Pen <roman.penyaev@profitbricks.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block-owner@vger.kernel.org
-Subject: Re: [RESEND PATCH] blk-mq: fix hang caused by freeze/unfreeze
- sequence
-In-Reply-To: <0763cb5a-5598-69e3-e5ac-765989aab5b1@acm.org>
-References: <20190409090828.16282-1-bob.liu@oracle.com>
- <0763cb5a-5598-69e3-e5ac-765989aab5b1@acm.org>
-Message-ID: <84cf04edf8f3f3b87b78383a1837aff3@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+        Mon, 15 Apr 2019 05:46:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725816AbfDOJqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:46:36 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F9kURb096571
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:46:34 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvpaa429p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:46:32 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 15 Apr 2019 10:46:27 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Apr 2019 10:46:23 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3F9kM4K34144298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 09:46:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9740D5204E;
+        Mon, 15 Apr 2019 09:46:22 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4956E52052;
+        Mon, 15 Apr 2019 09:46:22 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/report: Report OOM in perf report status line
+Date:   Mon, 15 Apr 2019 11:46:17 +0200
+X-Mailer: git-send-email 2.16.4
+X-TM-AS-GCONF: 00
+x-cbid: 19041509-0016-0000-0000-0000026EE9B0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041509-0017-0000-0000-000032CB2D8A
+Message-Id: <20190415094617.30150-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904150068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-13 05:42, Bart Van Assche wrote:
-> On 4/9/19 2:08 AM, Bob Liu wrote:
->>  void blk_freeze_queue_start(struct request_queue *q)
->>  {
->> -	int freeze_depth;
->> -
->> -	freeze_depth = atomic_inc_return(&q->mq_freeze_depth);
->> -	if (freeze_depth == 1) {
->> +	mutex_lock(&q->mq_freeze_lock);
->> +	if (++q->mq_freeze_depth == 1) {
->>  		percpu_ref_kill(&q->q_usage_counter);
->> +		mutex_unlock(&q->mq_freeze_lock);
->>  		if (queue_is_mq(q))
->>  			blk_mq_run_hw_queues(q, false);
->> +	} else {
->> +		mutex_unlock(&q->mq_freeze_lock);
->>  	}
->>  }
-> Have you considered to move the mutex_unlock() call to the end of the 
-> function
-> such that there is only one mutex_unlock() call instead of two? In case 
-> you
-> would be worried about holding the mutex around the code that runs the 
-> queue,
-> how about changing the blk_mq_run_hw_queues() call such that the queues 
-> are
-> run async?
+An -ENOMEM error is not reported in the GTK GUI.
+Instead this error message pops up on the screen:
 
-Hi Bart,
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
 
-The only purpose of 'mq_freeze_lock' is to avoid race between 
-mq_freeze_depth
-variable and the following usage of q_usage_counter percpu ref.  I admit 
-that
-my original comment is quite unclear, but locked section should be as 
-short
-as possible, so returning to your question: better to have two unlock 
-calls
-instead of expanding locked critical section.
+	Processing events... [974K/3M]
+	Error:failed to process sample
 
-Unfortunately I do not have hardware to play again with the issue, but I 
-see
-there is a nice candidate for a quick reproduction:  null_blk queues 
-with
-shared tags.  Having several queues with shared tags and a script, which
-powers on/off (I mean 'power' entry of configfs of the null_blk) 
-different
-null devices from different cpus it is quite possible to trigger the 
-issue.
-Random short msdelay() in correct places can help to increase 
-probability to
-hit the issue quite fast.
+	0xf4198 [0x8]: failed to process type: 68
 
+However when I use the same perf.data file with --stdio it works:
 
-But Bob, what is the backtrace of the issue you hit?  What is the 
-device?
-Conditions to reproduce the issue are quite specific and frankly I did 
-not
-find any "naked" (without any locks) calls of blk_mq_freeze/unfreeze 
-sequence,
-the only candidate which I found, seems, null_blk (not 100% sure, but 
-worth to
-try).
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
+		| head -12
 
+  # Total Lost Samples: 0
+  #
+  # Samples: 76K of event 'cycles'
+  # Event count (approx.): 99056160000
+  #
+  # Overhead  Command          Shared Object      Symbol
+  # ........  ...............  .................  .........
+  #
+     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
+     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
+     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
+     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
 
---
-Roman
+The sample precentage is a bit low.....
+
+The GUI always fails in the FINISHED_ROUND event (68) and does not
+indicate the reason why.
+
+When happened is the following. Perf report calls a lot of functions and
+down deep when a FINISHED_ROUND event is processed, these functions are
+called:
+
+  perf_session__process_event()
+  + perf_session__process_user_event()
+    + process_finished_round()
+      + ordered_events__flush()
+        + __ordered_events__flush()
+	  + do_flush()
+	    + ordered_events__deliver_event()
+	      + perf_session__deliver_event()
+	        + machine__deliver_event()
+	          + perf_evlist__deliver_event()
+	            + process_sample_event()
+	              + hist_entry_iter_add() --> only called in GUI case!!!
+	                + hist_iter__report__callback()
+	                  + symbol__inc_addr_sample()
+
+	                    Now this functions runs out of memory and
+			    returns -ENOMEM. This is reported all the way up
+			    until function
+
+perf_session__process_event() returns to its caller, where -ENOMEM is
+changed to -EINVAL and processing stops:
+
+ if ((skip = perf_session__process_event(session, event, head)) < 0) {
+      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+	     head, event->header.size, event->header.type);
+      err = -EINVAL;
+      goto out_err;
+ }
+
+This occurred in the FINISHED_ROUND event when it has to process some
+10000 entries and ran out of memory.
+
+This patch indicates the root cause and displays it in the status line
+of ther perf report GUI.
+
+Output before (on GUI status line):
+0xf4198 [0x8]: failed to process type: 68
+
+Output after:
+0xf4198 [0x8]: failed to process type: 68 [not enough memory]
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+---
+ tools/perf/util/session.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..e89716175588 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, file_pos)) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
++		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
+ 		       file_offset + head, event->header.size,
+-		       event->header.type);
+-		err = -EINVAL;
++		       event->header.type, strerror(-skip));
++		err = skip;
+ 		goto out;
+ 	}
+ 
+-- 
+2.16.4
+
