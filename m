@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EE0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C9AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9298E218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5EF2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qLRP/D/h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XZ3GWmt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfDOMPZ (ORCPT
+        id S1727317AbfDOMP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:15:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46393 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfDOMPX (ORCPT
+        Mon, 15 Apr 2019 08:15:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38375 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfDOMP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:15:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 9so8476310pfj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:22 -0700 (PDT)
+        Mon, 15 Apr 2019 08:15:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 10so8509226pfo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=XiE8oaht+rMtBmlWqUkyAiRGtKqurxER2iPBNv/AZyQ=;
-        b=qLRP/D/hBzlVyCM9RDEp0f+vh3r0DuWzHyoLapUEEZa49Vw6obIm07znxPAArbNXDx
-         y6lOAS00ZKnidgR6SGOXa/t9lPXGvLz2q1ti+8fdgPMQz+fteVALwWaLWAie/7RPNYgl
-         g6ubl5Vdy9CbG1gzDzKSgBj6TNhnWikVKlpJld4b4VDeqtqp32k3aX7QErvNQEfWWE6e
-         iuq1j14ALAK4WEAVMOv7851BZgFKS2KkKlZ0dujn8lAzV3Twm+7blCirxwnLpnlfdlA+
-         FBtgU/fzY7iGtpk5ap8KVOqTRhlwfUHIGmPAcKDwT927EK3tNeHmrW5+kIdlQ4osChFs
-         FAxw==
+        bh=l9ir60nNJwBbII3Z7YfygeQjey9MNonvD8+mCs5l+c4=;
+        b=XZ3GWmt1mWC7qqDk0CPUMjbeP75BO7JsbiGnDALS1fBKvH9BaB8hWahTFAEy+c4eNd
+         bwLKGTd3LrMkmeBsQ4r81KbvlCg4JPSsx3nPRGh29o4erxiT+uTL4DJ0Yl+J1JG0pmWV
+         UROk08EZ3klQ2fO6BBKeLCN+dladovWVISj58XT/H0kjpcXZPMJZ0Nv/4DEpUU5b6jd4
+         ACocZm20dVGjbONsv8C7eLZZve99otr8o6wQDye6PjU8/eucZhH/oNQqVmCkr0Fc9YWA
+         +mMpDMi4f6QzajlBm23N/sz1qZ39Lf2doqpQN5upgUdgSWlrEvbjM2VDL2I8dNC0aEd9
+         QuPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=XiE8oaht+rMtBmlWqUkyAiRGtKqurxER2iPBNv/AZyQ=;
-        b=Rav1SxelHocZ2LtX/22n5I8tkCw0J/LKeUg1LGkdv1+SHpwHQJkSzDQITcVGAcUxwc
-         FWy3bO98YMemY59LFKUGkxN7M3aWdmZ4ObluWjCRVJmJ3v6H0E7OSy2LYNNDdv6EqOID
-         JmaBTRCVAWz4l1hZ1Xg3u7wYkhQY9LpwFcfx8lI6o9HQFRjYbpPm8dsX5IEbsx0/ncxR
-         DQaKSb9UkNO+k0UWv2vrI99wGMI6v16L/CTCSPMhc+lnZCyd1UgIsf1KniYaNpvh5fym
-         ZTciuZpE694oPN2hq3aSVoxRg4umpNYAnmnrpPtB3vMUHq40rEfwNjPBQaLdsl2TzhwV
-         TAoA==
-X-Gm-Message-State: APjAAAWmsEUAFSHCieGvgFhwf6b6ygko39owhV1/KWufkT8ycLrKrJ7B
-        bS7vUmEf4L6R/GogsUpcRFoEIg==
-X-Google-Smtp-Source: APXvYqxjlmrCVN54lGUd6cUjcklkpR8/UtXRZeB3Cgyt1f6wd//reg/A3MEZcNsaUsGIwwC8zLMF9Q==
-X-Received: by 2002:a63:185a:: with SMTP id 26mr43154699pgy.337.1555330522160;
-        Mon, 15 Apr 2019 05:15:22 -0700 (PDT)
+        bh=l9ir60nNJwBbII3Z7YfygeQjey9MNonvD8+mCs5l+c4=;
+        b=NJpuDVkAnVh7ar9/7DJbtT7YELv+B4Ifv9Iu4LHpVv+cEHfLIfOR5w7B+j3UzuSJ49
+         4t0w+3HyvUdeUynbbjjQgxM58mD64MS5J5tVTZzYhanw73oNp9xXk0Kje3IcOnMkMeQl
+         0FMCpOH0/WNmYqydbtrdCX2NFTbhnCwC5eVlnDjrV+kCe4i2mwm1gJyz/rWIUoaOpCUL
+         TxsoM35j/qj9FP3/tubV7eTp/aSkOskZNyCpY1OT2HzSkYF5OJ7NpCCe65g0v2dZTk0+
+         PEqsZ/StH587BiqUISm+6w4j/1mPyl8XG+x4HrdT5b5v9l8LaMiAqGhjmLgjyza1RTGI
+         wX2w==
+X-Gm-Message-State: APjAAAVcz4isiEi9Z1gbgW1jDEkfSRZe1c1LG/VqWXNFvj6ftX2OdMZv
+        okZdjRE3J5nEs+jXiVg8Hhwbyw==
+X-Google-Smtp-Source: APXvYqwvy3o1loKMe5y4T1evlTYCE1hZ0agu92GNiNDBU3S1WzJjPEqKOC428FOIh/6JILVAEfglmw==
+X-Received: by 2002:a62:62c3:: with SMTP id w186mr42971295pfb.73.1555330525672;
+        Mon, 15 Apr 2019 05:15:25 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 6sm64157155pfj.95.2019.04.15.05.15.18
+        by smtp.gmail.com with ESMTPSA id 6sm64157155pfj.95.2019.04.15.05.15.22
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 05:15:21 -0700 (PDT)
+        Mon, 15 Apr 2019 05:15:24 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     eric.long@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
         broonie@kernel.org, baolin.wang@linaro.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/7] dmaengine: sprd: Add validation of current descriptor in irq handler
-Date:   Mon, 15 Apr 2019 20:14:56 +0800
-Message-Id: <e2f3b8f2f5391565d0662d98524acf239ae8da6e.1555330115.git.baolin.wang@linaro.org>
+Subject: [PATCH 3/7] dmaengine: sprd: Fix the incorrect start for 2-stage destination channels
+Date:   Mon, 15 Apr 2019 20:14:57 +0800
+Message-Id: <035654558b82bc26ee78a815cc9287e478baac92.1555330115.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1555330115.git.baolin.wang@linaro.org>
 References: <cover.1555330115.git.baolin.wang@linaro.org>
@@ -74,40 +74,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When user terminates one DMA channel to free all its descriptors, but
-at the same time one transaction interrupt was triggered possibly, now
-we should not handle this interrupt by validating if the 'schan->cur_desc'
-was set as NULL to avoid crashing the kernel.
+From: Eric Long <eric.long@unisoc.com>
 
+The 2-stage destination channel will be triggered by source channel
+automatically, which means we should not trigger it by software request.
+
+Signed-off-by: Eric Long <eric.long@unisoc.com>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/dma/sprd-dma.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/dma/sprd-dma.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index e29342a..431e289 100644
+index 431e289..0f92e60 100644
 --- a/drivers/dma/sprd-dma.c
 +++ b/drivers/dma/sprd-dma.c
-@@ -552,12 +552,17 @@ static irqreturn_t dma_irq_handle(int irq, void *dev_id)
- 		schan = &sdev->channels[i];
+@@ -510,7 +510,9 @@ static void sprd_dma_start(struct sprd_dma_chn *schan)
+ 	sprd_dma_set_uid(schan);
+ 	sprd_dma_enable_chn(schan);
  
- 		spin_lock(&schan->vc.lock);
-+
-+		sdesc = schan->cur_desc;
-+		if (!sdesc) {
-+			spin_unlock(&schan->vc.lock);
-+			return IRQ_HANDLED;
-+		}
-+
- 		int_type = sprd_dma_get_int_type(schan);
- 		req_type = sprd_dma_get_req_type(schan);
- 		sprd_dma_clear_int(schan);
+-	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID)
++	if (schan->dev_id == SPRD_DMA_SOFTWARE_UID &&
++	    schan->chn_mode != SPRD_DMA_DST_CHN0 &&
++	    schan->chn_mode != SPRD_DMA_DST_CHN1)
+ 		sprd_dma_soft_request(schan);
+ }
  
--		sdesc = schan->cur_desc;
--
- 		/* cyclic mode schedule callback */
- 		cyclic = schan->linklist.phy_addr ? true : false;
- 		if (cyclic == true) {
 -- 
 1.7.9.5
 
