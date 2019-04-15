@@ -2,85 +2,89 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C81C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE90C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9C820880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dm/ieGao"
+	by mail.kernel.org (Postfix) with ESMTP id 568EE20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfDOPxy (ORCPT
+        id S1727659AbfDOPz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:53:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34518 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727628AbfDOPxv (ORCPT
+        Mon, 15 Apr 2019 11:55:26 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:57835 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfDOPzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:53:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LO1RllZ/71tnHIfUtwFXLB6BFIjHkbH0y5hcmUBDVA8=; b=dm/ieGaoYMyCpo9uwiKcCSrKz
-        Kl7yOtT5AwGoz0eus3tki78ToFCaIFC5a914DlkrKYRao+XxO5iOrLi0CQIXhNSPsVPTXLACwUut4
-        JI9V3jJ9eWKjy7dEqO/IS+w/UkKfFFDlIzySRTa6ec2gTxbMIg/YTCGj3fgFt/uEMxTmMFDY6a25J
-        4QAs6ydsGRssBHHFChnZgwl+M6WZuAx7Bp24JhD3bjPpJuoTFbE/U/Mgbwy6Vfl0y0n5KpbAB/f1s
-        axqSiz3anP9JaoBocQs77I7R+MN97vazixpW3GBgQQ2v8fgIRifK7EVTEhM2tcu764n2QsplDw/AC
-        vbg2l2ugg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hG3uv-0002d5-Tz; Mon, 15 Apr 2019 15:53:10 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 88F812038C257; Mon, 15 Apr 2019 17:53:08 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 17:53:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        ak@linux.intel.com, kan.liang@intel.com, mingo@elte.hu,
-        nelson.dsouza@intel.com, jolsa@redhat.com, tonyj@suse.com
-Subject: Re: [PATCH v2 1/2] perf/core: add perf_ctx_resched() as global
- function
-Message-ID: <20190415155308.GP14281@hirez.programming.kicks-ass.net>
-References: <20190408173252.37932-1-eranian@google.com>
- <20190408173252.37932-2-eranian@google.com>
- <20190415154537.GH12232@hirez.programming.kicks-ass.net>
+        Mon, 15 Apr 2019 11:55:25 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MYvLi-1hKVup0f3I-00Uonv; Mon, 15 Apr 2019 17:55:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Corey Minyard <minyard@acm.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ipmi: avoid atomic_inc in exit function
+Date:   Mon, 15 Apr 2019 17:55:00 +0200
+Message-Id: <20190415155509.3565087-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415154537.GH12232@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:yT5pRj1gEeKNHvX+QSSDe1YcoCPQ/mYdkbY06sbVOQPRdm3tdJR
+ c4dsDP/p/bGLUbCpToY4coCkxWjyEGExWboznimdUtIQ2XrZeLu8JvOou0fC7jZfS+s9KQ9
+ LZIVNrUPgYHtCiU+914HS21/mjKoSQY62YQW1BXT8cTAkvmCqY3iE5nO/DF2gcE7F9KL8wJ
+ TKmq8196/pridrG/t4UyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AZSHc6nS8fI=:ZfSwKGZsGAAhSzusOlnvk/
+ qGtMhxHiDFOOYHnrH8QKwI6Izx16uMUlQeGWhdUHYMzb+XXL/ZDGNf9jijJGkoYJqbxr+LdfF
+ l1H9n1kqzNSn20tRdp+K2jDhwqsPsbWHb4Ftbqt9AMXdtIIwDm0HB6mj9TbXzmyfnFrQlX1JE
+ vQ3nVnwSKKinD7vmR9UQOvqTgc5vh1NzmYRmHu0A1xVBAolLdUg/uctv4qRUnGL1w7JumTeIQ
+ 6y7BPb6jHAsGP475ZCMg1R+tmpxZtdrTD31d2ZaSrjm9pwZCOKt+eekhTewreZKh095yE4SI3
+ X5RtQdguB/Yrz201Ycu6j5o4huqz5oLaNLaWZ+Mu2RQWoFxD7dZLAKOj/xU6ZFtf2LOB+6GFH
+ EPqLCzXMlEdCqhOaywvp30FIY2MGPhB0jkonaHAg+Bh2XBr9uhjCThD9EHm426uZmyi7VMXTy
+ kRSx196fy/dkra9kI7fwPXawQIjAiuVFBR6NpzBTcOOJYd8TeDrh+fQUzzOw5Gtk/9kj4gHi2
+ SuWQLHU1ltRySpwf8Sx37MEeNrg5a6fN3FI4UMCgSKJSCzXY0LVj8/8EFU1rl5SeR4FoFdiP7
+ GPzV4KovxyHu/0q9LBG69csaCm98jQ53Cv2m1WdsFE4ErNd1MsxQQkorhetkP8erMJ76/FvKF
+ rhZa2g25oiyodCV01m1xeTI1LBBBREonvd8PpSAXfD6/3q8CUZcrm5dus8ITpcDdERyTJwVn/
+ NjKFqVw1Uq4dKN30U+ZwNKtuCtWQds1fxhPjhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:45:37PM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 08, 2019 at 10:32:51AM -0700, Stephane Eranian wrote:
-> > This patch add perf_ctx_resched() a global function that can be called
-> > to force rescheduling of events based on event types. The function locks
-> > both cpuctx and task_ctx internally. This will be used by a subsequent patch.
-> 
-> I took out the task_ctx and event_type arguments.
+This causes a link failure on ARM in certain configurations,
+when we reference each atomic operation from .alt.smp.init in
+order to patch out atomics on non-SMP systems:
 
-> +void perf_ctx_resched(struct perf_cpu_context *cpuctx)
-> +{
-> +	struct perf_event_context *task_ctx = cpuctx->task_ctx;
-> +
-> +	perf_ctx_lock(cpuctx, task_ctx);
-> +	ctx_resched(cpuctx, task_ctx, EVENT_ALL|EVENT_CPU);
-> +	perf_ctx_unlock(cpuctx, task_ctx);
-> +}
+`.exit.text' referenced in section `.alt.smp.init' of drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section `.exit.text' of drivers/char/ipmi/ipmi_msghandler.o
 
-Hmm... I might just rework the thing to:
+In this case, we can trivially replace the atomic_inc() with
+an atomic_set() that has the same effect and does not require
+a fixup.
 
-  perf_pmu_resched(struct pmu *pmu);
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As that is what we want; esp. in the light of that whole core context
-rewrite that i'm still sitting on :/
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index e8ba67834746..c48198eef510 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -5164,7 +5164,7 @@ static void __exit cleanup_ipmi(void)
+ 		 * avoids problems with race conditions removing the timer
+ 		 * here.
+ 		 */
+-		atomic_inc(&stop_operation);
++		atomic_set(&stop_operation, 1);
+ 		del_timer_sync(&ipmi_timer);
+ 
+ 		initialized = false;
+-- 
+2.20.0
+
