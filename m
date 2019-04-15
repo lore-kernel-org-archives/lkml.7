@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ADAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E1EC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939642073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378762075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355688;
-	bh=Q+jh8GSnk2gMzsHIfh+S60MXUdJtLyPwB6ZmMysJz0s=;
+	s=default; t=1555355698;
+	bh=LPYxgzrjn3gUx1Pjhl0CVwF+Ip40X+EZsm37eXdbZow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRKqcuhhfzr7s1qTHSWqesopGP4glaIFZKkMK7aIQsaqwUDw5NZ+sZgDf/lYkRxkN
-	 ZS2eL/SPUNkp0EHdCsNiwcL865xEg9H0j0iAfSyHoQNOeWO9fbXTb6CqrdHLTnggG2
-	 8axeAJy3OJM0usWYCN0ifIXi7zd1ZSHor1Inroos=
+	b=X1Bxe9c7H6YQzAS4xkzrzFBxEwHspZ/SiRWoqYiMBRm9aoLZO4mBel4R7ZKWH5Uea
+	 jHh4fp5+1Ce7dxkar+SKo7TsTO5nZNu0I6Q0e1NRWtPn8cEE9GFhC2iCcOHzVz1o3Q
+	 0D4k2JE9ppLNUDN/juQ9mrYExawUOfGfPOd3CsnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbfDOTOi (ORCPT
+        id S1731811AbfDOTO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731761AbfDOTOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:14:35 -0400
+        id S1731765AbfDOTOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:14:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9A8218DA;
-        Mon, 15 Apr 2019 19:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B9D2075B;
+        Mon, 15 Apr 2019 19:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355674;
-        bh=Q+jh8GSnk2gMzsHIfh+S60MXUdJtLyPwB6ZmMysJz0s=;
+        s=default; t=1555355672;
+        bh=LPYxgzrjn3gUx1Pjhl0CVwF+Ip40X+EZsm37eXdbZow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/sw2JOM8rDXuscw2lD5fm9qNj5pZXWY3Atsnf/on3nrqEMc168izb7cNLru9/mkM
-         A5yBgMyhzI5lXhAqITaHwLaaKCGmAB1lw3ZPG22SUn24FkLutf90znN7TYxI/r4SeF
-         QswgJuWUZoT5H6LTM89BLzmQAkvwcielx+j4K4lM=
+        b=Ft+7RJjBX4wcipEroowCQHYbXRbBa8ld2k5psVKUO6cRd9Q479zyFC0iMYyeWC4rf
+         /tpYS+EUNOA+hF6UcvfP0L+4Ewj07USyDQKB2buUqz6qB4aX7PYQVccKTBcyT2aEID
+         KAmEOLyfHYa5+Qdd0KU7lLDVx+HX8B5j3BQLGJXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.0 117/117] drm/virtio: do NOT reuse resource ids
-Date:   Mon, 15 Apr 2019 21:01:27 +0200
-Message-Id: <20190415183750.700572385@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Orr <marcorr@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 116/117] KVM: x86: nVMX: fix x2APIC VTPR read intercept
+Date:   Mon, 15 Apr 2019 21:01:26 +0200
+Message-Id: <20190415183750.654071873@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -58,64 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Marc Orr <marcorr@google.com>
 
-commit 16065fcdd19ddb9e093192914ac863884f308766 upstream.
+commit c73f4c998e1fd4249b9edfa39e23f4fda2b9b041 upstream.
 
-Bisected guest kernel changes crashing qemu.  Landed at
-"6c1cd97bda drm/virtio: fix resource id handling".  Looked again, and
-noticed we where not only leaking *some* ids, but *all* ids.  The old
-code never ever called virtio_gpu_resource_id_put().
+Referring to the "VIRTUALIZING MSR-BASED APIC ACCESSES" chapter of the
+SDM, when "virtualize x2APIC mode" is 1 and "APIC-register
+virtualization" is 0, a RDMSR of 808H should return the VTPR from the
+virtual APIC page.
 
-So, commit 6c1cd97bda effectively makes the linux kernel starting
-re-using IDs after releasing them, and apparently virglrenderer can't
-deal with that.  Oops.
+However, for nested, KVM currently fails to disable the read intercept
+for this MSR. This means that a RDMSR exit takes precedence over
+"virtualize x2APIC mode", and KVM passes through L1's TPR to L2,
+instead of sourcing the value from L2's virtual APIC page.
 
-This patch puts a temporary stopgap into place for the 5.0 release.
+This patch fixes the issue by disabling the read intercept, in VMCS02,
+for the VTPR when "APIC-register virtualization" is 0.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190208140409.15280-1-kraxel@redhat.com
+The issue described above and fix prescribed here, were verified with
+a related patch in kvm-unit-tests titled "Test VMX's virtualize x2APIC
+mode w/ nested".
+
+Signed-off-by: Marc Orr <marcorr@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Fixes: c992384bde84f ("KVM: vmx: speed up MSR bitmap merge")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/virtio/virtgpu_object.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/kvm/vmx/nested.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -28,10 +28,21 @@
- static int virtio_gpu_resource_id_get(struct virtio_gpu_device *vgdev,
- 				       uint32_t *resid)
- {
-+#if 0
- 	int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -578,7 +578,7 @@ static inline bool nested_vmx_prepare_ms
+ 		nested_vmx_disable_intercept_for_msr(
+ 			msr_bitmap_l1, msr_bitmap_l0,
+ 			X2APIC_MSR(APIC_TASKPRI),
+-			MSR_TYPE_W);
++			MSR_TYPE_R | MSR_TYPE_W);
  
- 	if (handle < 0)
- 		return handle;
-+#else
-+	static int handle;
-+
-+	/*
-+	 * FIXME: dirty hack to avoid re-using IDs, virglrenderer
-+	 * can't deal with that.  Needs fixing in virglrenderer, also
-+	 * should figure a better way to handle that in the guest.
-+	 */
-+	handle++;
-+#endif
- 
- 	*resid = handle + 1;
- 	return 0;
-@@ -39,7 +50,9 @@ static int virtio_gpu_resource_id_get(st
- 
- static void virtio_gpu_resource_id_put(struct virtio_gpu_device *vgdev, uint32_t id)
- {
-+#if 0
- 	ida_free(&vgdev->resource_ida, id - 1);
-+#endif
- }
- 
- static void virtio_gpu_ttm_bo_destroy(struct ttm_buffer_object *tbo)
+ 		if (nested_cpu_has_vid(vmcs12)) {
+ 			nested_vmx_disable_intercept_for_msr(
 
 
