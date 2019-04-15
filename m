@@ -2,167 +2,95 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116C5C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF94B218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F6220818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3/ILorc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SebjyULv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfDOTfW (ORCPT
+        id S1728377AbfDOTit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:35:22 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43864 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbfDOTfU (ORCPT
+        Mon, 15 Apr 2019 15:38:49 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35544 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbfDOTis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:35:20 -0400
-Received: by mail-pl1-f195.google.com with SMTP id n8so9051715plp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:35:20 -0700 (PDT)
+        Mon, 15 Apr 2019 15:38:48 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j20so1146693lfh.2;
+        Mon, 15 Apr 2019 12:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+ls/GUTFHxmWqNfbL8nZPHO/mEsZK+0BWBT3eOnQ4Qs=;
-        b=h3/ILorcTzTxllmLWIGP0BOGGDDA73Gwspt4hAlZrWzW4MCVkvokEi/eeXwp+0WPpc
-         +p/MQ30G89WjUmX/muWwWpO1A9Wdj1RfY5YT0NEqXpDTikCPGj2pKFb8ssUkh6BrI0cJ
-         DiIU4TsB+ko2elGnsPnQIvdPVe7Yg95X2PlCQpAowzj/O3O/nX96gb9cRP17TGlUh00G
-         9skfECkbRINt6+ZjxPpanM+V/udpVtXOym01rAqSLLOpebeAC2Do+s1fEgVzArIGiKev
-         8sE/CJBZ/76iZEIfaPOe9haJzcX10esIBCaF9tjwMciYa+iblqnvN5+P7ZbW29pDrHsb
-         VJRg==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EaDr5bdVula1JK134B8bIfe9kL0l466qTIWym3Gxnn0=;
+        b=SebjyULv5Li9KIHMGc+r+GWY9uvZdQOBYP1QV17Ytg6I7Mch6NW1v96X9DMPf6IBVJ
+         IZTp6OKS9gO3cYTBlZb4xrOI1peGM176aRB0bdIHhktrKLGgu9tt/Mrkmlo2GyiN0qyA
+         wmtshp+qwMDV8zkzwq7ZpBaGF1X6B/IK2mrcYfcI2hX7joYBGnhtgWA0jSFsj1YMD7tN
+         lrsSb5HDQJQYcVXagcLbcs+C7Qm7Jx+8szGP3GF/UYdT1QR3VRdqiQSY641rZeIYRflH
+         Mj60DzwbnXQNE3dtZaTvJSspUpqKiBDz80v4EtUlcCyXb/LiFF/eeBPFrXuKnRiP/AKh
+         gYtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ls/GUTFHxmWqNfbL8nZPHO/mEsZK+0BWBT3eOnQ4Qs=;
-        b=LTXO6ud7nYlK9SrIhRqEPaozE84DePZzuzOGM2cKP6FB7UyJMaL1NzuqNGLpeKgxz2
-         1FXx3SpnH447nD4td5elf+veH7i93w/KtaG5HOSnurT8PAUBETHw//+55Q8mPjJnqRjc
-         HEI4Y3CYnEYV2X9OsBz047H8WgMhKTUnHmigfE/75LPzcPLRcf/FNGmTwLvrfkw4gmmC
-         rsPjLjIfdnQTexPbiAGV2IUL8NF4PlJLlZbiAjazVWpEX3qCvi4+K/lz1ZMsXNNX80Mm
-         EB/cWrDYle1Qh0jH16VqCrA3VZQvPhLhXNkEUAuz34yXq+6SCj4gWFDx/Q9zcP/ede7i
-         oc6Q==
-X-Gm-Message-State: APjAAAXKWJES0oT3vxnx8EAKHk6Aae25BvEvqvygATsdxE6yVGVIZmvp
-        ahjAPmdbEqSIClYRuEpBIl6LS13ud22VS7/2vqYJjg==
-X-Google-Smtp-Source: APXvYqz8HDSJaoiNXjgVa9if3F4CzpMv18WCnMzhEjEajxJp+JjMXa6KXRAW0hf6jqctigS8e/kcyP8nXbY/EOjiK/Y=
-X-Received: by 2002:a17:902:b48c:: with SMTP id y12mr75396478plr.280.1555356919335;
- Mon, 15 Apr 2019 12:35:19 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EaDr5bdVula1JK134B8bIfe9kL0l466qTIWym3Gxnn0=;
+        b=GLE5EzOCFn/yEDpna6gW0O4pv+gaQ2+7kGgDvHwJ3aitIc2O4QhlI+b0kFix/1iy+J
+         1g45/A39TI8UqQdHQKIDeFySKKOTK4lIV+TSXZPO6dP/Nc/iGm2alxBxzlkGdu61lPhR
+         VyBySTKyHXaetuSb7i7y22LHCnel1zwUagKxkDqoMopAkLkr3XZTRxfCWyRkJ2gT0E9F
+         aBrr4owhLw0F9cBKloK+icq4GSM4csqw281uoz8WEzUUpo6PnREwuZoqfpVQ/yQcJI5J
+         yNznbSW7MeC1m5sob5AYXqs+oF3ghcbnPkJ0gRwh1fTFoCwUN1mrjPyG61FLgVRyYVca
+         pm2Q==
+X-Gm-Message-State: APjAAAXzmEq3wmPx45XVNewc4R3UIwWi50a0oIL/q/lnuotPfySs8ID2
+        kZNfSuIta1IffwwcrfTTZTHyhJRe
+X-Google-Smtp-Source: APXvYqwEWOCOBzv83eCtRKAWoEeMMOXS1x0m1laXHrX4GLyZN4u2LHtAVkvq6OYYkA5VPOzmBvPtxg==
+X-Received: by 2002:a19:a417:: with SMTP id q23mr4100140lfc.110.1555357126603;
+        Mon, 15 Apr 2019 12:38:46 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id g24sm10289335lfb.49.2019.04.15.12.38.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 12:38:45 -0700 (PDT)
+Subject: Re: [PATCH v1] ARM: tegra: cpuidle: Handle tick broadcasting within
+ cpuidle core on Tegra20/30
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190224152114.6161-1-digetx@gmail.com>
+Message-ID: <1351acef-d0aa-1a2b-eded-02d8fd99d0b0@gmail.com>
+Date:   Mon, 15 Apr 2019 22:38:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <0000000000006f1596058653d991@google.com> <Pine.LNX.4.44L0.1904121540001.1283-100000@iolanthe.rowland.org>
- <CAAeHK+wrF8Oh7ur+BcuyARvm2sx6KNVGFxqKHoyajApN+tOA_g@mail.gmail.com>
- <52ac871b-ac61-432e-3a85-47b8e97233d2@embeddedor.com> <20190415190054.GA10359@kroah.com>
-In-Reply-To: <20190415190054.GA10359@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 15 Apr 2019 21:35:08 +0200
-Message-ID: <CAAeHK+wgB+HsA_aAtL=ddJB51BNjkkRBHnK8NQ0ke94SLZ+Sqw@mail.gmail.com>
-Subject: Re: INFO: task hung in usb_kill_urb
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190224152114.6161-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 9:09 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Apr 15, 2019 at 01:39:57PM -0500, Gustavo A. R. Silva wrote:
-> >
-> >
-> > On 4/15/19 12:48 PM, Andrey Konovalov wrote:
-> > > On Fri, Apr 12, 2019 at 9:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >>
-> > >> Andrey:
-> > >>
-> > >> It's really hard to tell just what's going on here.
-> > >>
-> > >> On Fri, 12 Apr 2019, syzbot wrote:
-> > >>
-> > >>> Hello,
-> > >>>
-> > >>> syzbot found the following crash on:
-> > >>>
-> > >>> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> > >>> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > >>> console output: https://syzkaller.appspot.com/x/log.txt?x=14c4c1af200000
-> > >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> > >>> dashboard link: https://syzkaller.appspot.com/bug?extid=d919b0f29d7b5a4994b9
-> > >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14410dbb200000
-> > >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f0acd3200000
-> > >>>
-> > >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > >>> Reported-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
-> > >>>
-> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-> > >>> INFO: task kworker/0:2:532 blocked for more than 143 seconds.
-> > >>>        Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-> > >>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > >>> kworker/0:2     D26656   532      2 0x80000000
-> > >>> Workqueue: usb_hub_wq hub_event
-> > >>> Call Trace:
-> > >>>   schedule+0x8f/0x180 kernel/sched/core.c:3562
-> > >>>   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
-> > >>>   usb_kill_urb+0x22a/0x2c0 drivers/usb/core/urb.c:687
-> > >>>   usb_start_wait_urb+0x257/0x4d0 drivers/usb/core/message.c:63
-> > >>>   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
-> > >>>   usb_control_msg+0x321/0x4a0 drivers/usb/core/message.c:152
-> > >>
-> > >> It looks like something is stuck waiting for usb_kill_urb() to finish.
-> > >> But what happened before that?
-> > >
-> > > This crash is somewhat special. It happens quite often during USB
-> > > fuzzing, but at the same time it's a hang, which makes it a bit harder
-> > > debug. I initially thought that is somehow related to my custom USB
-> > > fuzzing kernel patches, but then I saw that someone else hit this
-> > > issue while doing USB fuzzing in a completely different way that
-> > > doesn't require kernel modifications. So it might be an actual issue
-> > > in the kernel.
-> > >
-> > > The full console output is provided by the syzbot, but I guess it's
-> > > not very useful in this case. I've just made sure that this issue is
-> > > manually reproducible, so we can easily retest it with debug patches
-> > > (syzbot should be also able to do that via the syz test command). Or
-> > > is there a way to turn on some verbose mode to see some USB debug
-> > > messages?
-> > >
-> > >>
-> > >> I can't tell from the reproducer source, because it uses a bunch of
-> > >> special stuff you added in your usb-fuzzer tree.
-> > >>
-> > >> Alan Stern
-> > >>
-> > >
-> > > I understand, for now I guess the simpler way to debug this is to run
-> > > the reproducer. I'll write you and Greg a separate email regarding all
-> > > that special stuff that I added.
-> > >
-> >
-> > Hi Andrey,
-> >
-> > Please, CC me on that email too.
->
-> Please cc: all of linux-usb@vger.kernel.org, no need to keep anything
-> private.
+24.02.2019 18:21, Dmitry Osipenko пишет:
+> Tegra20/30 drivers do not handle the tick_broadcast_enter() error which
+> potentially could happen when CPU timer isn't permitted to be stopped.
+> Let's just move out the broadcasting to the CPUIDLE core by setting the
+> respective flag in the Tegra20/30 drivers. This patch doesn't fix any
+> problem because currently tick_broadcast_enter() could fail only on
+> ARM64, so consider this change as a minor cleanup.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/cpuidle-tegra20.c | 11 ++---------
+>  arch/arm/mach-tegra/cpuidle-tegra30.c |  9 +--------
+>  2 files changed, 3 insertions(+), 17 deletions(-)
+Hello Jon and Thierry,
 
-Sure!
-
->
-> thanks,
->
-> greg k-h
->
+Could you please pick up this patch? Thanks in advance.
