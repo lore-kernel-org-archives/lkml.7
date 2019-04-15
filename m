@@ -2,130 +2,91 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0270FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BAB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA528206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfDOHbZ (ORCPT
+        id S1726443AbfDOHd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:31:25 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:45622 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfDOHbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:31:05 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id AA9E8B7DF60FF1B436AE;
-        Mon, 15 Apr 2019 15:31:03 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 15 Apr 2019 15:31:03 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 15 Apr 2019 15:31:02 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 11/13] f2fs: fix to avoid panic in f2fs_inplace_write_data()
-Date:   Mon, 15 Apr 2019 15:30:52 +0800
-Message-ID: <20190415073054.2577-3-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20190415073054.2577-1-yuchao0@huawei.com>
-References: <20190415073054.2577-1-yuchao0@huawei.com>
+        Mon, 15 Apr 2019 03:33:27 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:44674 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfDOHd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:33:27 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hFw6y-0001BF-In; Mon, 15 Apr 2019 09:33:04 +0200
+Date:   Mon, 15 Apr 2019 09:33:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+cc:     Fabio Estevam <festevam@gmail.com>,
+        Andra Danciu <andradanciu1997@gmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: mpc5200_dma: Fix invalid license ID
+In-Reply-To: <CAEnQRZAP6EWXkwfuR+83trtYrpDaRjA6zp-k5sp33bo5jUEjPg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904150931170.4917@nanos.tec.linutronix.de>
+References: <20190414191450.18377-1-andradanciu1997@gmail.com> <20190414191450.18377-2-andradanciu1997@gmail.com> <CAOMZO5C_esXni-N-U+hDXNG6Z5rJLC6ZrgKEseCW7mcK=aiyQw@mail.gmail.com> <CAEnQRZBD_M8Pp4RWXY4TS5MHAEBnkwUOyR16ttAitX-L+Z88Ew@mail.gmail.com>
+ <CAEnQRZAP6EWXkwfuR+83trtYrpDaRjA6zp-k5sp33bo5jUEjPg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jungyeon reported in bugzilla:
+On Mon, 15 Apr 2019, Daniel Baluta wrote:
+> On Mon, Apr 15, 2019 at 10:26 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+> > On Mon, Apr 15, 2019 at 12:53 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > > On Sun, Apr 14, 2019 at 4:15 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
+> > > > -// SPDX-License-Identifier: GPL
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > >
+> > > According to Documentation/process/license-rules.rst this should be:
+> > >
+> > > // SPDX-License-Identifier: GPL-2.0
+> >
+> 
+> Actually, according to
+> 
+> https://spdx.org/licenses/GPL-2.0-only.html
+> 
+> GPL-2.0 is another name for GPL-2.0-only
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203239
+See also: LICENSES/preferred/GPL-2.0
 
-- Overview
-When mounting the attached crafted image and running program, following errors are reported.
-Additionally, it hangs on sync after running program.
+    Valid-License-Identifier: GPL-2.0
+    Valid-License-Identifier: GPL-2.0-only
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+If the identifier would be invalid, scripts/spdxcheck.py would complain ...
 
-- Reproduces
-cc poc_15.c
-./run.sh f2fs
-sync
+Thanks,
 
-- Kernel messages
- ------------[ cut here ]------------
- kernel BUG at fs/f2fs/segment.c:3162!
- RIP: 0010:f2fs_inplace_write_data+0x12d/0x160
- Call Trace:
-  f2fs_do_write_data_page+0x3c1/0x820
-  __write_data_page+0x156/0x720
-  f2fs_write_cache_pages+0x20d/0x460
-  f2fs_write_data_pages+0x1b4/0x300
-  do_writepages+0x15/0x60
-  __filemap_fdatawrite_range+0x7c/0xb0
-  file_write_and_wait_range+0x2c/0x80
-  f2fs_do_sync_file+0x102/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The reason is f2fs_inplace_write_data() will trigger kernel panic due
-to data block locates in node type segment.
-
-To avoid panic, let's just return error code and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/segment.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index b59d1c85863b..8388d2abacb5 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3184,13 +3184,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
- {
- 	int err;
- 	struct f2fs_sb_info *sbi = fio->sbi;
-+	unsigned int segno;
- 
- 	fio->new_blkaddr = fio->old_blkaddr;
- 	/* i/o temperature is needed for passing down write hints */
- 	__get_segment_type(fio);
- 
--	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
--			GET_SEGNO(sbi, fio->new_blkaddr))->type));
-+	segno = GET_SEGNO(sbi, fio->new_blkaddr);
-+
-+	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
-+		set_sbi_flag(sbi, SBI_NEED_FSCK);
-+		return -EFAULT;
-+	}
- 
- 	stat_inc_inplace_blocks(fio->sbi);
- 
--- 
-2.18.0.rc1
+	tglx
 
