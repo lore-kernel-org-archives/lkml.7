@@ -2,105 +2,190 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FBAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE39DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A41E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD32218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfDOXBV (ORCPT
+        id S1727939AbfDOXHj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 19:01:21 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:38966 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfDOXBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 19:01:21 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3FN114E020887
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 08:01:01 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3FN10wP013772;
-        Tue, 16 Apr 2019 08:01:00 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3FN101m008501;
-        Tue, 16 Apr 2019 08:01:00 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.139] [10.38.151.139]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-4304439; Tue, 16 Apr 2019 08:00:27 +0900
-Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
- BPXC11GP.gisp.nec.co.jp ([10.38.151.139]) with mapi id 14.03.0319.002; Tue,
- 16 Apr 2019 08:00:26 +0900
-From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Dave Young <dyoung@redhat.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Topic: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Thread-Index: AQHU78DnNYRsXw6c0kywKGsyat34OKY1dZqAgACP04CAAAH9AIAABdcAgAAJ5YCAAAJaAIAAAziAgAACJICAADc+AIAA6YwAgABjYACAAE/IgIAESQcAgAAjCICAABXVgIAA0vGA
-Date:   Mon, 15 Apr 2019 23:00:25 +0000
-Message-ID: <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
-References: <2946b5e3-90bf-d617-16a4-d2225b490b5d@ce.jp.nec.com>
- <DFC5B552-9B44-422B-8EAE-A32C24BB7A88@alien8.de>
- <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
- <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
- <20190411125822.GE30080@zn.tnic>
- <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
- <20190412084956.GC19808@zn.tnic> <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic> <20190415102525.GB29317@zn.tnic>
-In-Reply-To: <20190415102525.GB29317@zn.tnic>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0BE12C17A1481C41BD1411DC7C61D5DC@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 19:07:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:14778 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfDOXHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 19:07:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 16:07:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
+   d="scan'208";a="223819111"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2019 16:07:37 -0700
+Date:   Mon, 15 Apr 2019 16:10:15 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 10/18] iommu/vt-d: Add custom allocator for IOASID
+Message-ID: <20190415161015.564cb071@jacob-builder>
+In-Reply-To: <20190415143711.13c29308@x1.home>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1554767973-30125-11-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20190415143711.13c29308@x1.home>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8xNS8xOSA3OjI1IFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+IE9uIE1vbiwgQXBy
-IDE1LCAyMDE5IGF0IDExOjA3OjE3QU0gKzAyMDAsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4+
-IE9uIE1vbiwgQXByIDE1LCAyMDE5IGF0IDA3OjAxOjU0QU0gKzAwMDAsIEp1bmljaGkgTm9tdXJh
-IHdyb3RlOg0KPj4+IE9LLiBUaGVuIEknbGwgZ28gYmFjayB0byB2MyBhbmQgbWFrZSBzdXJlIHRv
-IGhhbmcgd2hlbg0KPj4+IHNvbWV0aGluZyBpcyB3cm9uZyBkdXJpbmcga2V4ZWMgYm9vdCBvbiBF
-Rkkgc3lzdGVtLg0KPj4NCj4+IE5vIG5lZWQgLSBJIGhhdmUgaXQgaGVyZSBsb2NhbGx5LiBJJ2xs
-IGNsZWFuIGl0IHVwIGFuZCBwb3N0IGl0IGZvcg0KPj4gcmV2aWV3Lg0KPiANCj4gSGVyZSBpdCBp
-cy4gT2ssIG5vdCBvaz8NCg0KVGhhbmsgeW91LiAgQmFzaWNhbGx5IG9rLg0KSSBwdXQgc29tZSBj
-b21tZW50cyBiZWxvdyBhYm91dCB3aGV0aGVyIHRvIGhhbmcgb3IgcmV0dXJuLg0KDQo+ICtzdGF0
-aWMgYWNwaV9waHlzaWNhbF9hZGRyZXNzIGtleGVjX2dldF9yc2RwX2FkZHIodm9pZCkNCj4gK3sN
-Cj4gKwllZmlfc3lzdGVtX3RhYmxlXzY0X3QgKnN5c3RhYjsNCj4gKwlzdHJ1Y3QgZWZpX3NldHVw
-X2RhdGEgKmVzZDsNCj4gKwlzdHJ1Y3QgZWZpX2luZm8gKmVpOw0KPiArCWNoYXIgKnNpZzsNCj4g
-Kw0KPiArCWVzZCA9IChzdHJ1Y3QgZWZpX3NldHVwX2RhdGEgKilnZXRfa2V4ZWNfc2V0dXBfZGF0
-YV9hZGRyKCk7DQo+ICsJaWYgKCFlc2QpDQo+ICsJCXJldHVybiAwOw0KPiArDQo+ICsJaWYgKCFl
-c2QtPnRhYmxlcykgew0KPiArCQlkZWJ1Z19wdXRzdHIoIldyb25nIGtleGVjIFNFVFVQX0VGSSBk
-YXRhLlxuIik7DQo+ICsJCXJldHVybiAwOw0KPiArCX0NCg0KSSB0aG91Z2h0IHdlIHNob3VsZCBo
-YW5nIGhlcmUgaW5zdGVhZCBvZiByZXR1cm4gc28gdGhhdCB3ZQ0KZG9uJ3QgcnVuIGludG8gZWZp
-X2dldF9yc2RwX2FkZHIoKSBpbiBjYXNlIG9mIGtleGVjLg0KDQo+ICsJZWkgPSAmYm9vdF9wYXJh
-bXMtPmVmaV9pbmZvOw0KPiArCXNpZyA9IChjaGFyICopJmVpLT5lZmlfbG9hZGVyX3NpZ25hdHVy
-ZTsNCj4gKwlpZiAoc3RybmNtcChzaWcsIEVGSTY0X0xPQURFUl9TSUdOQVRVUkUsIDQpKSB7DQo+
-ICsJCWRlYnVnX3B1dHN0cigiV3Jvbmcga2V4ZWMgRUZJIGxvYWRlciBzaWduYXR1cmUuXG4iKTsN
-Cj4gKwkJcmV0dXJuIDA7DQo+ICsJfQ0KDQpTYW1lIGhlcmUuDQoNCj4gKwkvKiBHZXQgc3lzdGFi
-IGZyb20gYm9vdCBwYXJhbXMuICovDQo+ICsJc3lzdGFiID0gKGVmaV9zeXN0ZW1fdGFibGVfNjRf
-dCAqKSAoZWktPmVmaV9zeXN0YWIgfCAoKF9fdTY0KWVpLT5lZmlfc3lzdGFiX2hpIDw8IDMyKSk7
-DQo+ICsJaWYgKCFzeXN0YWIpDQo+ICsJCWVycm9yKCJFRkkgc3lzdGVtIHRhYmxlIG5vdCBmb3Vu
-ZCBpbiBrZXhlYyBib290X3BhcmFtcy4iKTsNCj4gKw0KPiArCXJldHVybiBfX2VmaV9nZXRfcnNk
-cF9hZGRyKCh1bnNpZ25lZCBsb25nKWVzZC0+dGFibGVzLCBzeXN0YWItPm5yX3RhYmxlcywgdHJ1
-ZSk7DQoNClNhbWUgaGVyZSB3aGVuIF9fZWZpX2dldF9yc2RwX2FkZHIoKSByZXR1cm5zIDAuDQoN
-CkknbSBmaW5lIHdpdGggZWl0aGVyIHdheSwgdGhvdWdoLg0KDQotLSANCkp1bidpY2hpIE5vbXVy
-YSwgTkVDIENvcnBvcmF0aW9uIC8gTkVDIFNvbHV0aW9uIElubm92YXRvcnMsIEx0ZC4=
+On Mon, 15 Apr 2019 14:37:11 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
+> On Mon,  8 Apr 2019 16:59:25 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> 
+> > When VT-d driver runs in the guest, PASID allocation must be
+> > performed via virtual command interface. This patch register a
+> > custom IOASID allocator which takes precedence over the default
+> > IDR based allocator. The resulting IOASID allocation will always
+> > come from the host. This ensures that PASID namespace is system-
+> > wide.
+> > 
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 50
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> > include/linux/intel-iommu.h |  1 + 2 files changed, 51 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 28cb713..a38d774 100644
+> > --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -4820,6 +4820,42 @@ static int __init
+> > platform_optin_force_iommu(void) return 1;
+> >  }
+> >  
+> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
+> > void *data) +{
+> > +	struct intel_iommu *iommu = data;
+> > +	ioasid_t ioasid;
+> > +
+> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> > +		return INVALID_IOASID;
+> > +	return ioasid;  
+> 
+> How does this honor min/max?
+> 
+> > +}
+> > +
+> > +static int intel_ioasid_free(ioasid_t ioasid, void *data)
+> > +{
+> > +	struct iommu_pasid_alloc_info *svm;
+> > +	struct intel_iommu *iommu = data;
+> > +
+> > +	if (!iommu || !cap_caching_mode(iommu->cap))
+> > +		return -EINVAL;
+> > +	/*
+> > +	 * Sanity check the ioasid owner is done at upper layer,
+> > e.g. VFIO
+> > +	 * We can only free the PASID when all the devices are
+> > unbond.
+> > +	 */
+> > +	svm = ioasid_find(NULL, ioasid, NULL);
+> > +	if (!svm) {
+> > +		pr_warn("Freeing unbond IOASID %d\n", ioasid);
+> > +		return -EBUSY;
+> > +	}
+> > +	vcmd_free_pasid(iommu, ioasid);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct ioasid_allocator intel_iommu_ioasid_allocator = {
+> > +	.alloc = intel_ioasid_alloc,
+> > +	.free = intel_ioasid_free,
+> > +};
+> > +
+> >  int __init intel_iommu_init(void)
+> >  {
+> >  	int ret = -ENODEV;
+> > @@ -4921,6 +4957,20 @@ int __init intel_iommu_init(void)
+> >  				       "%s", iommu->name);
+> >  		iommu_device_set_ops(&iommu->iommu,
+> > &intel_iommu_ops); iommu_device_register(&iommu->iommu);
+> > +		if (cap_caching_mode(iommu->cap) &&
+> > sm_supported(iommu)) {
+> > +			/*
+> > +			 * Register a custom ASID allocator if we
+> > are running
+> > +			 * in a guest, the purpose is to have a
+> > system wide PASID
+> > +			 * namespace among all PASID users.
+> > +			 * Note that only one vIOMMU in each guest
+> > is supported.  
+> 
+> Why one vIOMMU per guest?  This would prevent guests with multiple PCI
+> domains aiui.
+> 
+This is mainly for simplicity reasons. These are all virtual BDFs
+anyway. As long as guest BDF can be mapped to a host BDF, it should be
+sufficient, am I missing anything?
+
+From PASID allocation perspective, it is not tied to any PCI device
+until bind call. We only need to track PASID ownership per guest.
+
+virtio-IOMMU spec does support multiple PCI domains but I am not sure
+if that applies to all assigned devices, whether all assigned devices
+are under the same domain. Perhaps Jean can help to clarify how PASID
+allocation API looks like on virtio IOMMU.
+
+> > +			 */
+> > +			intel_iommu_ioasid_allocator.pdata = (void
+> > *)iommu;
+> > +			ret =
+> > ioasid_set_allocator(&intel_iommu_ioasid_allocator);
+> > +			if (ret == -EBUSY) {
+> > +				pr_info("Custom IOASID allocator
+> > already registered\n");
+> > +				break;
+> > +			}
+> > +		}
+> >  	}
+> >  
+> >  	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index b29c85c..bc09d80 100644
+> > --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/iommu.h>
+> >  #include <linux/io-64-nonatomic-lo-hi.h>
+> >  #include <linux/dmar.h>
+> > +#include <linux/ioasid.h>
+> >  
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/iommu.h>  
+> 
