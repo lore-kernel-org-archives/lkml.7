@@ -2,80 +2,89 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EAAC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBB8C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46562075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E292120880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555366083;
+	bh=b2cuajjF73VQmsKO5wsxLH6+hE4W9NTDx57OxKqZIlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Uucqy1W96LlkI75sOmozS1LO/6AidCqjCTsEaNtB8V+rOaS8jqnCC2V/xhwupNFkv
+	 T4VUevPA6xeMfSYMbxd28M/usQCKPIVvmHUg3SjX7PEyu6A0PVGdhB/obnui0TFi4C
+	 AKrLmcvc2DWhYNm6DC8teyWIURpJn0vStD4+oUx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfDOWGj (ORCPT
+        id S1728103AbfDOWIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:06:39 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53134 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbfDOWGj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:06:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TPPk8ij_1555365992;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPPk8ij_1555365992)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 16 Apr 2019 06:06:35 +0800
-Subject: Re: [v2 PATCH 7/9] mm: vmscan: check if the demote target node is
- contended or not
-To:     Dave Hansen <dave.hansen@intel.com>, mhocko@suse.com,
-        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, keith.busch@intel.com,
-        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
-        ying.huang@intel.com, ziy@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <1554955019-29472-8-git-send-email-yang.shi@linux.alibaba.com>
- <6d40d60e-dde4-7d70-c7a8-1a444c70c3ff@intel.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <5082655c-6a24-a3d7-1b7d-bb256597890c@linux.alibaba.com>
-Date:   Mon, 15 Apr 2019 15:06:27 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 15 Apr 2019 18:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727214AbfDOWIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 18:08:01 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 124152075B;
+        Mon, 15 Apr 2019 22:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555366080;
+        bh=b2cuajjF73VQmsKO5wsxLH6+hE4W9NTDx57OxKqZIlY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0CqOZAdroPzZR8Vzt2wv1Ye/473yZUpyLPl1l8G2MdZcqfQDy9q3w7bHHdbr10a5B
+         HqrZE0RyUfDfYV9MJUCpeHUCR3g2g7JbRE3VQpRMciOKlHVx+F1rlBEFjxcCb06NKo
+         +XaMvk3nuUcYLUGBL9HCJklTCkypoXt3LzqPFskE=
+Date:   Mon, 15 Apr 2019 18:07:55 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bpetkov@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Zhang Rui <rui.zhang@intel.com>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 4.14 04/69] x86/power/32: Move SYSENTER MSR restoration
+ to fix_processor_context()
+Message-ID: <20190415220755.GW11568@sasha-vm>
+References: <20190415183726.036654568@linuxfoundation.org>
+ <20190415183727.431075450@linuxfoundation.org>
+ <20190415200747.GC25908@amd>
 MIME-Version: 1.0
-In-Reply-To: <6d40d60e-dde4-7d70-c7a8-1a444c70c3ff@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190415200747.GC25908@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/11/19 9:06 AM, Dave Hansen wrote:
-> On 4/10/19 8:56 PM, Yang Shi wrote:
->> When demoting to PMEM node, the target node may have memory pressure,
->> then the memory pressure may cause migrate_pages() fail.
+On Mon, Apr 15, 2019 at 10:07:47PM +0200, Pavel Machek wrote:
+>On Mon 2019-04-15 20:58:22, Greg Kroah-Hartman wrote:
+>> [ Upstream commit 896c80bef4d3b357814a476663158aaf669d0fb3 ]
 >>
->> If the failure is caused by memory pressure (i.e. returning -ENOMEM),
->> tag the node with PGDAT_CONTENDED.  The tag would be cleared once the
->> target node is balanced again.
+>> x86_64 restores system call MSRs in fix_processor_context(), and
+>> x86_32 restored them along with segment registers.  The 64-bit
+>> variant makes more sense, so move the 32-bit code to match the
+>> 64-bit code.
 >>
->> Check if the target node is PGDAT_CONTENDED or not, if it is just skip
->> demotion.
-> This seems like an actively bad idea to me.
+>> No side effects are expected to runtime behavior.
 >
-> Why do we need an *active* note to say the node is contended?  Why isn't
-> just getting a failure back from migrate_pages() enough?  Have you
-> observed this in practice?
+>Again, this is cleanup, not a bugfix.
 
-The flag will be used to check if the target node is contended or not 
-before moving the page into the demotion list. If the target node is 
-contended (i.e. GFP_NOWAIT would likely fail), the page reclaim code 
-even won't scan anonymous page list on swapless system. It will just try 
-to reclaim page cache. This would save some scanning time.
+Indeed, these two are just preparatory patches rather than fixes.
+Patches that come later need these.
 
+--
 Thanks,
-Yang
-
-
+Sasha
