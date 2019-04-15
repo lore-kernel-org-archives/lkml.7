@@ -3,37 +3,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF57C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA53C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC5F2183F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CE82183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbfDOQGu (ORCPT
+        id S1727790AbfDOQGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:06:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:38114 "EHLO foss.arm.com"
+        Mon, 15 Apr 2019 12:06:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:38126 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbfDOQGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:06:48 -0400
+        id S1727784AbfDOQGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:06:50 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D64F80D;
-        Mon, 15 Apr 2019 09:06:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3F67A78;
+        Mon, 15 Apr 2019 09:06:49 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B54793F68F;
-        Mon, 15 Apr 2019 09:06:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7A3703F68F;
+        Mon, 15 Apr 2019 09:06:48 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         rjw@rjwysocki.net, robert.walker@arm.com,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 36/36] [RFC] coresight: Expose device connections via sysfs
-Date:   Mon, 15 Apr 2019 17:04:19 +0100
-Message-Id: <1555344260-12375-37-git-send-email-suzuki.poulose@arm.com>
+Subject: [TEST PATCH 37/36][EDK2] edk2-platform: juno: Update ACPI CoreSight Bindings
+Date:   Mon, 15 Apr 2019 17:04:20 +0100
+Message-Id: <1555344260-12375-38-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
 References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,232 +42,322 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coresight device connections are a bit complicated and is not
-exposed currently to the user. One has to look at the platform
-descriptions (DT bindings or ACPI bindings) to make an understanding.
-Given the new naming scheme, it will be helpful to have this information
-to choose the appropriate devices for tracing. This patch exposes
-the device connections via links in the sysfs directories.
+ACPI bindings for CoreSight components on the Juno-r0 board.
+Please note that the bindings apply only for the juno-r0.
+The layout on r1 and r2 are slightly different and will need
+dynamic ACPI table support to be able to use a single UEFI
+image.
 
-e.g, for a connection devA[OutputPort_X] -> devB[InputPort_Y]
-is represented as two symlinks:
-
-  /sys/bus/coresight/.../devA/out:X -> /sys/bus/coresight/.../devB
-  /sys/bus/coresight/.../devB/in:Y  -> /sys/bus/coresight/.../devA
-
-We could have segregated the links to separate directories aka
-attribute_groups, for input_ports and output_ports. But the sysfs won't
-let you create empty attribute_groups and thus it becomes complicated to
-dynamically create the attribute_groups.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight.c | 120 +++++++++++++++++++++++++++++---
- include/linux/coresight.h               |   4 ++
- 2 files changed, 113 insertions(+), 11 deletions(-)
+ Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl | 241 +++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 4d63063..50a1f29 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -981,9 +981,92 @@ static void coresight_device_release(struct device *dev)
- 	kfree(csdev);
- }
+diff --git a/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl b/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
+index 702b057..c70e8ac 100644
+--- a/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
++++ b/Platform/ARM/JunoPkg/AcpiTables/Dsdt.asl
+@@ -14,6 +14,51 @@
  
-+
-+/*
-+ * coresight_make_links: Make a link for a connection from a @orig
-+ * device to @target, represented by @conn.
-+ *
-+ *   e.g, for devOrig[output_X] -> devTarget[input_Y] is represented
-+ *   as two symbolic links :
-+ *
-+ *	/sys/.../devOrig/out:X	-> /sys/.../devTarget/
-+ *	/sys/.../devTarget/in:Y	-> /sys/.../devOrig/
-+ *
-+ * The link names are allocated for a device where it appears. i.e, the
-+ * "out" link on the master and "in" link on the slave device.
-+ * The link names are stored in the connection record for avoiding
-+ * the reconstruction of names for removal.
-+ */
-+static int coresight_make_links(struct coresight_device *orig,
-+				struct coresight_connection *conn,
-+				struct coresight_device *target)
-+{
-+	int ret = -ENOMEM;
-+	char *outs = NULL, *ins = NULL;
-+
-+	do {
-+		outs = devm_kasprintf(&orig->dev, GFP_KERNEL,
-+				      "out:%d", conn->outport);
-+		if (!outs)
-+			break;
-+		ins = devm_kasprintf(&target->dev, GFP_KERNEL,
-+				     "in:%d", conn->child_port);
-+		if (!ins)
-+			break;
-+		ret = sysfs_create_link(&orig->dev.kobj,
-+					&target->dev.kobj, outs);
-+		if (ret)
-+			break;
-+
-+		ret = sysfs_create_link(&target->dev.kobj,
-+					&orig->dev.kobj, ins);
-+		if (ret) {
-+			sysfs_remove_link(&orig->dev.kobj, outs);
-+			break;
-+		}
-+
-+		conn->inlink_name = ins;
-+		conn->outlink_name = outs;
-+		/*
-+		 * Install the device connection. This also indicates that
-+		 * the links are operational on both ends.
-+		 */
-+		conn->child_dev = target;
-+		return 0;
-+	} while (0);
-+
-+	if (outs)
-+		devm_kfree(&orig->dev, outs);
-+	if (ins)
-+		devm_kfree(&target->dev, ins);
-+	return ret;
-+}
-+
-+/*
-+ * coresight_remove_links: Remove the sysfs links for a given connection @conn,
-+ * from @orig device to @target device. See coresight_make_links() for more
-+ * details.
-+ */
-+static void coresight_remove_links(struct coresight_device *orig,
-+				   struct coresight_connection *conn)
-+{
-+	struct coresight_device *target = conn->child_dev;
-+
-+	if (!orig || !target)
-+		return;
-+
-+	sysfs_remove_link(&orig->dev.kobj, conn->outlink_name);
-+	sysfs_remove_link(&target->dev.kobj, conn->inlink_name);
-+
-+	devm_kfree(&target->dev, conn->inlink_name);
-+	devm_kfree(&orig->dev, conn->outlink_name);
-+	conn->inlink_name = conn->outlink_name = NULL;
-+	conn->child_dev = NULL;
-+}
-+
- static int coresight_orphan_match(struct device *dev, void *data)
- {
--	int i;
-+	int i, ret = 0;
- 	bool still_orphan = false;
- 	struct coresight_device *csdev, *i_csdev;
- 	struct coresight_connection *conn;
-@@ -1008,19 +1091,23 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 		/* We have found at least one orphan connection */
- 		if (conn->child_dev == NULL) {
- 			/* Does it match this newly added device? */
--			if (conn->child_fwnode ==  csdev->dev.fwnode)
--				conn->child_dev = csdev;
--			else
-+			if (conn->child_fwnode ==  csdev->dev.fwnode) {
-+				ret = coresight_make_links(i_csdev,
-+							   conn, csdev);
-+				if (ret)
-+					return ret;
-+			} else {
- 				/* This component still has an orphan */
- 				still_orphan = true;
-+			}
- 		}
- 	}
+ #include "ArmPlatform.h"
  
- 	i_csdev->orphan = still_orphan;
++#define ACPI_GRAPH_REV		0
++#define ACPI_GRAPH_UUID		"ab02a46b-74c7-45a2-bd68-f7d344ef2153"
++
++#define CORESIGHT_GRAPH_UUID	"3ecbc8b6-1d0e-4fb3-8107-e627f805c6cd"
++
++#define CS_LINK_MASTER		1
++#define CS_LINK_SLAVE		0
++
++
++#define DSD_CS_GRAPH_BEGIN(_nports)			\
++        Package () {					\
++          1,		// GraphID			\
++          ToUUID(CORESIGHT_GRAPH_UUID),			\
++          _nports,
++
++#define DSD_CS_GRAPH_END				\
++	}
++
++#define DSD_GRAPH_BEGIN(_nports)			\
++     ToUUID(ACPI_GRAPH_UUID),				\
++     Package() {					\
++       ACPI_GRAPH_REV,					\
++       1,						\
++       DSD_CS_GRAPH_BEGIN(_nports)
++
++#define DSD_GRAPH_END					\
++       DSD_CS_GRAPH_END					\
++     }
++
++#define DSD_PORTS_BEGIN(_nports)			\
++   Name (_DSD,  Package () {				\
++     DSD_GRAPH_BEGIN(_nports)
++
++#define DSD_PORTS_END					\
++   DSD_GRAPH_END					\
++  })
++
++#define CS_PORT(_port, _rport, _rphandle, _dir)		\
++    Package () { _port, _rport, _rphandle, _dir}
++
++#define CS_INPUT_PORT(_port, _rport, _rphandle)		\
++    CS_PORT(_port, _rport, _rphandle, CS_LINK_SLAVE)
++#define CS_OUTPUT_PORT(_port, _rport, _rphandle)		\
++    CS_PORT(_port, _rport, _rphandle, CS_LINK_MASTER)
++
+ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_OEM_REVISION) {
+   Scope(_SB) {
+     //
+@@ -122,15 +167,56 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++
++        Device(ETM0) { // ETM on Cluster0 CPU0
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x22040000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 0, \_SB_.CLU0.FUN0)
++          DSD_PORTS_END
++
++        } // ETM0
+       }
++
+       Device(CPU1) { // A57-1: Cluster 0, Cpu 1
+         Name(_HID, "ACPI0007")
+         Name(_UID, 5)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM1) { // ETM on Cluster0 CPU1
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x22140000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 1, \_SB_.CLU0.FUN0)
++          DSD_PORTS_END
++
++        } // ETM1
+       }
++
++      Device(FUN0) {
++        Name(_HID, "ARMHC9FF")
++        Name(_CID, "ARMHC9FF")
++        Name(_CRS, ResourceTemplate() {
++          Memory32Fixed(ReadWrite, 0x220c0000, 0x1000)
++        })
++
++        DSD_PORTS_BEGIN(3)
++        CS_OUTPUT_PORT(0, 0, \_SB_.MFUN),
++        CS_INPUT_PORT(0, 0, \_SB_.CLU0.CPU0.ETM0),
++        CS_INPUT_PORT(1, 0, \_SB_.CLU0.CPU1.ETM1)
++        DSD_PORTS_END
++      } // CL0.FUN0
+     }
++
+     Device (CLU1) { // Cluster1 state
+       Name(_HID, "ACPI0010")
+       Name(_UID, 2)
+@@ -208,19 +294,45 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+           "CorePwrDn"
+         },
+       })
++
+       Device(CPU2) { // A53-0: Cluster 1, Cpu 0
+         Name(_HID, "ACPI0007")
+         Name(_UID, 0)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM2) { // ETM on Cluster1, CPU0
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23040000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 0, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
++
++        } // ETM2
+       }
++
+       Device(CPU3) { // A53-1: Cluster 1, Cpu 1
+         Name(_HID, "ACPI0007")
+         Name(_UID, 1)
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM3) { // ETM on Cluster1, CPU1
++          Name (_HID, "ARMHC500")
++          Name (_CID, "ARMHC500")
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23140000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 1, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
++
++        } // ETM3
+       }
+       Device(CPU4) { // A53-2: Cluster 1, Cpu 2
+         Name(_HID, "ACPI0007")
+@@ -228,6 +340,18 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM4) { // ETM on Cluster1, CPU2
++          Name (_HID, "ARMHC500")	// ETM
++          Name (_CID, "ARMHC500")	// ETM
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23240000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 2, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
++
++        } // ETM4
+       }
+       Device(CPU5) { // A53-3: Cluster 1, Cpu 3
+         Name(_HID, "ACPI0007")
+@@ -235,9 +359,126 @@ DefinitionBlock("DsdtTable.aml", "DSDT", 1, "ARMLTD", "ARM-JUNO", EFI_ACPI_ARM_O
+         Method (_LPI, 0, NotSerialized) {
+           return(PLPI)
+         }
++        Device(ETM5) { // ETM on Cluster1, CPU3
++          Name (_HID, "ARMHC500")	// ETM
++          Name (_CID, "ARMHC500")	// ETM
++          Name (_CRS, ResourceTemplate() {
++            Memory32Fixed(ReadWrite, 0x23340000, 0x1000)
++          })
++
++          DSD_PORTS_BEGIN(1)
++          CS_OUTPUT_PORT(0, 3, \_SB_.CLU1.FUN1)
++          DSD_PORTS_END
++        } // ETM5
+       }
++      Device(FUN1) {
++        Name(_HID, "ARMHC9FF")
++        Name(_CID, "ARMHC9FF")
++        Name(_CRS, ResourceTemplate() {
++          Memory32Fixed(ReadWrite, 0x230c0000, 0x1000)
++        })
++
++        DSD_PORTS_BEGIN(5)
++        CS_OUTPUT_PORT(0, 1, \_SB_.MFUN),
++        CS_INPUT_PORT(0, 0, \_SB_.CLU1.CPU2.ETM2),
++        CS_INPUT_PORT(1, 0, \_SB_.CLU1.CPU3.ETM3),
++        CS_INPUT_PORT(2, 0, \_SB_.CLU1.CPU4.ETM4),
++        CS_INPUT_PORT(3, 0, \_SB_.CLU1.CPU5.ETM5)
++        DSD_PORTS_END
++      } // CL1.FUN1
+     }
  
- 	/*
--	 * Returning '0' ensures that all known component on the
--	 * bus will be checked.
-+	 * Returning '0' in case we didn't encounter any error,
-+	 * ensures that all known component on the bus will be checked.
- 	 */
- 	return 0;
- }
-@@ -1038,7 +1125,7 @@ static int coresight_fixup_orphan_conns(struct coresight_device *csdev)
- 
- static int coresight_fixup_device_conns(struct coresight_device *csdev)
- {
--	int i;
-+	int i, ret = 0;
- 
- 	for (i = 0; i < csdev->pdata->nr_outport; i++) {
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
-@@ -1048,9 +1135,12 @@ static int coresight_fixup_device_conns(struct coresight_device *csdev)
- 				      (void *)conn->child_fwnode,
- 				      device_fwnode_match);
- 		if (dev) {
--			conn->child_dev = to_coresight_device(dev);
-+			ret = coresight_make_links(csdev, conn,
-+						   to_coresight_device(dev));
- 			/* and put reference from 'bus_find_device()' */
- 			put_device(dev);
-+			if (ret)
-+				break;
- 		} else {
- 			csdev->orphan = true;
- 			conn->child_dev = NULL;
-@@ -1085,7 +1175,7 @@ static int coresight_remove_match(struct device *dev, void *data)
- 
- 		if (csdev->dev.fwnode == conn->child_fwnode) {
- 			iterator->orphan = true;
--			conn->child_dev = NULL;
-+			coresight_remove_links(iterator, conn);
- 			/*
- 			 * Drop the reference to the handle for the remote
- 			 * device acquired in parsing the connections from
-@@ -1179,10 +1269,18 @@ void coresight_release_platform_data(struct coresight_device *csdev,
- 				     struct coresight_platform_data *pdata)
- {
- 	int i;
-+	struct coresight_connection *conns = pdata->conns;
- 
- 	for (i = 0; i < pdata->nr_outport; i++) {
--		if (pdata->conns[i].child_fwnode) {
--			fwnode_handle_put(pdata->conns[i].child_fwnode);
-+		/* If we have made the links, remove them now */
-+		if (csdev && conns[i].child_dev)
-+			coresight_remove_links(csdev, &conns[i]);
-+		/*
-+		 * Drop the refcount and clear the handle as this device
-+		 * is going away
-+		 */
-+		if (conns[i].child_fwnode) {
-+			fwnode_handle_put(conns[i].child_fwnode);
- 			pdata->conns[i].child_fwnode = 0;
- 		}
- 	}
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index d6367a0..284d783 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -130,12 +130,16 @@ struct coresight_desc {
-  * @chid_fwnode: remote component's fwnode handle.
-  * @child_dev:	a @coresight_device representation of the component
- 		connected to @outport.
-+ * @inlink_name: Name for the "input" link
-+ * @outlink_name: Name for the "output" link
-  */
- struct coresight_connection {
- 	int outport;
- 	int child_port;
- 	struct fwnode_handle *child_fwnode;
- 	struct coresight_device *child_dev;
-+	const char *inlink_name;
-+	const char *outlink_name;
- };
- 
- /**
++    Device(STM0) {
++      Name(_HID, "ARMHC502")	// STM
++      Name(_CID, "ARMHC502")
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20100000, 0x1000)
++        Memory32Fixed(ReadWrite, 0x28000000, 0x1000000)
++      })
++      DSD_PORTS_BEGIN(1)
++      CS_OUTPUT_PORT(0, 2, \_SB_.MFUN)
++      DSD_PORTS_END
++    }
++
++    Device(MFUN) {
++      Name(_HID, "ARMHC9FF")	// Funnel
++      Name(_CID, "ARMHC9FF")	// Funnel
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20040000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(4)
++      CS_OUTPUT_PORT(0, 0, \_SB_.ETF0),
++      CS_INPUT_PORT(0, 0, \_SB_.CLU0.FUN0),
++      CS_INPUT_PORT(1, 0, \_SB_.CLU1.FUN1),
++      CS_INPUT_PORT(2, 0, \_SB_.STM0)
++      DSD_PORTS_END
++
++    } // MFUN-nel
++
++    Device(ETF0) {
++      Name(_HID, "ARMHC97C")	// TMC
++      Name(_CID, "ARMHC97C")	// TMC
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20010000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(2)
++      CS_OUTPUT_PORT(0, 1, \_SB_.RPL),
++      CS_INPUT_PORT(0, 0, \_SB_.MFUN)
++      DSD_PORTS_END
++
++    } // ETF0
++
++    Device(RPL) {
++      Name(_HID, "ARMHC98D")	// Replicator
++      Name(_CID, "ARMHC98D")	// Replicator
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20120000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(3)
++      CS_OUTPUT_PORT(0, 0, \_SB_.TPIU),
++      CS_OUTPUT_PORT(1, 0, \_SB_.ETR),
++      CS_INPUT_PORT(0, 0, \_SB_.ETF0)
++      DSD_PORTS_END
++
++    } // RPL
++
++    Device(ETR) {
++      Name(_HID, "ARMHC97C")	// TMC
++      Name(_CID, "ARMHC97C")	// TMC
++      Name(_CCA, 0) // The ETR on this platform is not coherent
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20070000, 0x1000)
++      })
++
++      Name(_DSD, Package() {
++         DSD_GRAPH_BEGIN(1)
++         CS_INPUT_PORT(0, 1, \_SB_.RPL)
++         DSD_GRAPH_END,
++
++         ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++         Package() {
++            Package(2) {"arm,scatter-gather", 1}
++         }
++      })
++
++    } // ETR
++
++    Device(TPIU) {
++      Name(_HID, "ARMHC979")	// TPIU
++      Name(_CID, "ARMHC979")	// TPIU
++      Name(_CRS, ResourceTemplate() {
++        Memory32Fixed(ReadWrite, 0x20030000, 0x1000)
++      })
++
++      DSD_PORTS_BEGIN(1)
++      CS_INPUT_PORT(0, 0, \_SB_.RPL)
++      DSD_PORTS_END
++
++    } // TPIU
++
+     //
+     // Keyboard and Mouse
+     //
 -- 
 2.7.4
 
