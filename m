@@ -2,102 +2,111 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798FDC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAA0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DCF2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDC82077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rUHeRu8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfDOMu4 (ORCPT
+        id S1727463AbfDOMvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:50:56 -0400
-Received: from sauhun.de ([88.99.104.3]:41598 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfDOMu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:50:56 -0400
-Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
-        by pokefinder.org (Postfix) with ESMTPSA id 949BB2C0114;
-        Mon, 15 Apr 2019 14:50:53 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 14:50:53 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
-Message-ID: <20190415125053.GB11768@kunai>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
- <20190403131510.GE9224@smile.fi.intel.com>
- <20190415120611.euidifhshkf5yqns@ninjato>
- <20190415123554.GQ9224@smile.fi.intel.com>
- <20190415124829.GR9224@smile.fi.intel.com>
+        Mon, 15 Apr 2019 08:51:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34032 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfDOMva (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:51:30 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3FCpOIA040924;
+        Mon, 15 Apr 2019 07:51:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555332685;
+        bh=tRgr5wDUWCiJJJDJx+tHgakdyNUXop3FMfqYdDNWE4k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rUHeRu8VLcr88g9hL0UQhVlKvfERL2SdxjG8nn6YGprJTWMWWnxl1slZvt06jPNK1
+         xystc89ID9glveic7g+iak6KSQWV2LaBjuCLPIlKKlReGw4CjzdPnVjFbjQsdZJl9i
+         5hHT2s1oZ9QfOTJZaqenih4Edq5f8zUAP6QlaG04=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3FCpOq4085632
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Apr 2019 07:51:24 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
+ Apr 2019 07:51:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 15 Apr 2019 07:51:24 -0500
+Received: from [158.218.117.39] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3FCpN8N062213;
+        Mon, 15 Apr 2019 07:51:23 -0500
+Subject: Re: [net-next PATCH 3/3] net: hsr: add tx stats for master interface
+To:     David Miller <davem@davemloft.net>
+CC:     <arvid.brodin@alten.se>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190412201325.29001-1-m-karicheri2@ti.com>
+ <20190412201325.29001-4-m-karicheri2@ti.com>
+ <20190412.171448.1969143158873595750.davem@davemloft.net>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <f238a9d4-6e1a-db04-0ad2-5d9a20ab2e25@ti.com>
+Date:   Mon, 15 Apr 2019 08:53:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
-Content-Disposition: inline
-In-Reply-To: <20190415124829.GR9224@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190412.171448.1969143158873595750.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi David,
 
---ftEhullJWpWg/VHq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04/12/2019 08:14 PM, David Miller wrote:
+> From: Murali Karicheri <m-karicheri2@ti.com>
+> Date: Fri, 12 Apr 2019 16:13:25 -0400
+> 
+>> Add tx stats to hsr interface. Without this
+>> ifconfig for hsr interface doesn't show tx packet stats.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>>   net/hsr/hsr_device.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+>> index 15c72065df79..f22902eac083 100644
+>> --- a/net/hsr/hsr_device.c
+>> +++ b/net/hsr/hsr_device.c
+>> @@ -229,6 +229,8 @@ static int hsr_dev_xmit(struct sk_buff *skb, struct net_device *dev)
+>>   	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
+>>   	skb->dev = master->dev;
+>>   	hsr_forward_skb(skb, master);
+>> +	master->dev->stats.tx_packets++;
+>> +	master->dev->stats.tx_bytes += skb->len;
+>>   
+> 
+> This introduced a use after free of 'skb' as hsr_forward_skb() can free it.
+You are right. I think I should move this to inside hsr_forward_skb().
+> 
+> Also, why are there so many changes in your "internal" tree and why are
+> they not all upstream already?
+> That is a good question. That was a management decision. Priority was 
+prototyping of hsr and prp solution internally first using TI' ICSS PRU 
+Ethernet for industrial applications and then once we have it working, 
+push the changes upstream. We are starting this process already 
+beginning with upstream of ICSS PRU driver. I have plan to send an RFC 
+patch for PRP support soon.
 
-On Mon, Apr 15, 2019 at 03:48:29PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 15, 2019 at 03:35:54PM +0300, Andy Shevchenko wrote:
-> > On Mon, Apr 15, 2019 at 02:06:11PM +0200, Wolfram Sang wrote:
-> > > On Wed, Apr 03, 2019 at 04:15:10PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
-> > > >=20
-> > > > FWIW,
-> > > >=20
-> > > > Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > >=20
-> > > > for patches 1-5,12.
-> > >=20
-> > > Thanks for the review, Andy! May I ask you once more to tag the patch=
-es
-> > > individually so patchwork can pick them up for me?
-> >=20
-> > It seems I already cleaned up them from my mailbox. I can check if it's
-> > available in another one.
->=20
-> Done!
-
-Thanks a ton!
-
-
---ftEhullJWpWg/VHq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0fi0ACgkQFA3kzBSg
-KbbLjRAAqfHD5UY9gFoiFgkPv39u6VVy20ibtN9AUHIFRnNxRkc+YqhXWNTAVr1T
-F510KWtG4S9JtrXCXf/N39bXtZZyLYfl0pFHdRc02z5cF7ChThHjX2MFYLQM72dH
-hzOvo/PHEk7efsNfF54sv72od4Tf8gIHMH1qYEL1OkZqMd2F5//7oV7zfOyksTXp
-sPZSj69Sq/eIuAtloMmKh4s6uJDzkj8epuXFw08Llr+oOzLXwbkrzIjGTTAUz62o
-i+1EKlLwMaCZLET8/4EQ4nPfeZDxacW+u2GAgn0q+UTxHO0dPbcZtPmGGwmvlGDH
-BA4Kwu16qhpfC8p88DrQ4Sr3Hee+1VbQ8ID1XhCbzSombf389iJfTMCAl7UajrAm
-MKbEHQnsTENys7Z+9gQG+A+Puhy9qnLWxMYr84v+qw/EaxzEI8jL2f5sgnc8qYLV
-R7ETEFNtyjKhb9lOrh34vgHfLYqNs15E5zuBJ4vKu1Q9cF7wiyDegbfFy6BmFF3s
-OHejKvXHxs8M2I93K5I72LmsApm6IGqDuK3eeenxzem5YCUOqxb2HGNfZzNj2L3q
-n7xbx3Dazss4rValbODKOQi2wvkgvh9vUDPyxZ3yYLkOz0NDwkntI5RSROOF5L2t
-acqUdHKMtgoLeaDAiCvMwpqj7vCKYZCcmVRCXLiUTC1GAGvLGsw=
-=XbuZ
------END PGP SIGNATURE-----
-
---ftEhullJWpWg/VHq--
+Murali
