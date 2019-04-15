@@ -2,171 +2,103 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8B2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B637C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D3220651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103E120651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWvIQ6U+"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Kf59bzCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfDOTdG (ORCPT
+        id S1728366AbfDOTeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:33:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41546 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbfDOTdF (ORCPT
+        Mon, 15 Apr 2019 15:34:46 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35990 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728061AbfDOTep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:33:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r4so23424246wrq.8;
-        Mon, 15 Apr 2019 12:33:04 -0700 (PDT)
+        Mon, 15 Apr 2019 15:34:45 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l203so14854748oia.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ma5uDlcJg/vAc/B3lffKq0xAllAv/cjyeMuwGpJId8U=;
-        b=MWvIQ6U+dwRQXBjdUoyeIhDPUeJLewF10K1omsHHKi1+xPKZzPN8kodzetTeAIse+3
-         xM2vn31dTbUwQ0TJRIxYb0lbR3bbtT6qe0yS2IhUQk/+0BCHM66lS3Vq9k0MN4tJn19K
-         Ot7m8Ph+DIpn7z4NX18fVCph/4IdtzJxAk8oAhD1n/27gfzSQjcJSEosGigevD3Ua8LN
-         YPSBzismWkwkW3VJ2uBcpG4ImzU0lLL8N+8DcvcagjRrd3Cryyi7NRh5BpCDf+L4iVKi
-         2Ij4wBMsDL0AG1kVBbJMJ7JdAVErVLnz4LsxmZZ/TZX+LOE/zi18H+9IF5s8rSGc7zJF
-         7OVg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=YgR4anGJYWT87aHsH2653ivpThZkVAfEIrVsIg/UD+w=;
+        b=Kf59bzCjjVWDrT23LS91GLArNsBHC7AH2aS1g8JT7qJMuZx7fE6sWPWTsX8HGznHcJ
+         l/nVU9CPjCS003poyu0cRJ+eB8GA98tvQfKhiakdHlObAGtupT/pzyENx4Diid2rsZcW
+         m457ivth0mvj1sNZhf8CVbtD6nagq9Kwwv9pcQT3fg6H0XbVITJz9mgdoZ4cbumCjMTf
+         BOPUyndIlInvqqgdr7iHlQ1GnPgQdVschnAF2iKdwmIRbHL5jyDopHFeor3yqBTCmAON
+         0wlR51qt6s3M22hdujvQ3b88dVcg96eUTTPmJFIjP4FwWiZVQJXpy6PjUkKkoqdVou0a
+         adQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ma5uDlcJg/vAc/B3lffKq0xAllAv/cjyeMuwGpJId8U=;
-        b=QprFPV+wDhNRverj/zFnNultXHpDrQ+585st17OP6aJ//TlCj6yy24aD0Sj9a3+uCv
-         PSnT2OkZhBvI03lqB6gO2iWDQbwZNVQchhJJlrfAjs5Ora0lbBeY0fUL+5J32JJdKFMN
-         1KuXI+2VkFoq5ZSibqFiCoRc+8PjIKpwg7MAED938dtQhNgw9MJuEj8SXwb0UYx9O5yw
-         p/e7Siy1VoXFx9E6vovTDUMymHWZNTvIZ+YIy9iVCuY1K/mzCH5xrvycCVfp42k/YfX0
-         w+QFjDet8kdqqLxohxs+51PRtoitpjK0arQwqoLgR5C66mOeJDHT2bjVwqeD9QUSnoZ+
-         Krcg==
-X-Gm-Message-State: APjAAAXfYd3VBXEYq040+1oIp5H4vSos6i/ZkK3Ae/7hA+11iLZSAkXJ
-        adGnP/DYbkyXB82QCrpAofmHVWkzn/I=
-X-Google-Smtp-Source: APXvYqxbGFhRp+F7YmjhEyLmQRTyubsCd7p1LGLgNlVTU3F0hGxx+wf6pJAl7TUMWnh+RLUutwZmHg==
-X-Received: by 2002:adf:eed1:: with SMTP id a17mr50263531wrp.268.1555356783158;
-        Mon, 15 Apr 2019 12:33:03 -0700 (PDT)
-Received: from [192.168.1.221] ([195.245.38.118])
-        by smtp.gmail.com with ESMTPSA id j9sm56018749wrr.93.2019.04.15.12.33.01
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 12:33:02 -0700 (PDT)
-Subject: Re: [PATCH 1/4] ARM: ep93xx: move network platform data to separate
- header
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        David Ahern <dsahern@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190415192734.935387-1-arnd@arndb.de>
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Message-ID: <d6b40eb3-0f4f-efdc-44cd-bd09dfdf2927@gmail.com>
-Date:   Mon, 15 Apr 2019 21:31:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=YgR4anGJYWT87aHsH2653ivpThZkVAfEIrVsIg/UD+w=;
+        b=tZBFC81H614LgF6zK6JCyqP+FMrM6tqSC4RwwU34MadGkJ3KoJxH5/imzT/mrhLA0E
+         hPT4HNVb4+hpxYJ2MllmQ0jIPziQJSEefrWjaWr57EpvsW6GqDPbwuAmMQAsWqhUYCuB
+         OsBFq19a4NgSYomQT1IhnfWe7AdixN4PazbbGqhIJcucJN7d40erKFdsiB8hXhkIRdLX
+         OdXsCjzVWnwN+a28PEahlQDwHZTEPVirOfZqH62Ge1lvsay/uuSopF4ZcJ2RxDJwRRXG
+         gXy76Cje2DWTkgLVtYSeJJ06pfGZCAvpHGODKcIWl9KOtu+GTgMKP0gZ1t0sC+otInRL
+         g2Og==
+X-Gm-Message-State: APjAAAVhawfTjxqwv1i/Z6/nr1oBt8ZDATgTJxS9APbye4tJ0oh524yL
+        E/qkbShw7VCc6Bp1hUxmb/5xd/2fRTZmm0EtR3yyXg==
+X-Google-Smtp-Source: APXvYqwYwPusDp5uVSJaWLnTWru1zhIH0MvwRAlXxGJNalOTTeCQ30tp1c4vb/cTAmQsDUlfueZtiGVy5+jwSvqXY+o=
+X-Received: by 2002:aca:d513:: with SMTP id m19mr20225773oig.73.1555356884829;
+ Mon, 15 Apr 2019 12:34:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190415192734.935387-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 15 Apr 2019 12:34:33 -0700
+Message-ID: <CAPcyv4g97hof42jNAx__GpZ9ATPLv4J2AFo56nRzH-whCj7vgg@mail.gmail.com>
+Subject: [GIT PULL] Fileystem-DAX fix for v5.1-rc6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi Linus, please pull from:
 
-On 15/04/2019 21:25, Arnd Bergmann wrote:
-> The header file is the only thing preventing us from building the
-> driver in a cross-platform configuration, so move the structure
-> we are interested in to the global platform_data location
-> and enable compile testing.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/fsdax-fix-5.1-rc6
 
-Acked-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+...to receive a single filesystem-dax fix. It has been lingering in
+-next for a long while and there are no other fsdax fixes on the
+horizon.
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-ep93xx/include/mach/platform.h |  7 +------
->  drivers/net/ethernet/cirrus/Kconfig          |  2 +-
->  drivers/net/ethernet/cirrus/ep93xx_eth.c     |  2 +-
->  include/linux/platform_data/eth-ep93xx.h     | 10 ++++++++++
->  4 files changed, 13 insertions(+), 8 deletions(-)
->  create mode 100644 include/linux/platform_data/eth-ep93xx.h
-> 
-> diff --git a/arch/arm/mach-ep93xx/include/mach/platform.h b/arch/arm/mach-ep93xx/include/mach/platform.h
-> index 6c41c794bed5..43446f33c2be 100644
-> --- a/arch/arm/mach-ep93xx/include/mach/platform.h
-> +++ b/arch/arm/mach-ep93xx/include/mach/platform.h
-> @@ -5,6 +5,7 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +#include <linux/platform_data/eth-ep93xx.h>
->  #include <linux/reboot.h>
->  
->  struct device;
-> @@ -15,12 +16,6 @@ struct ep93xxfb_mach_info;
->  struct ep93xx_keypad_platform_data;
->  struct ep93xx_spi_info;
->  
-> -struct ep93xx_eth_data
-> -{
-> -	unsigned char	dev_addr[6];
-> -	unsigned char	phy_id;
-> -};
-> -
->  void ep93xx_map_io(void);
->  void ep93xx_init_irq(void);
->  
-> diff --git a/drivers/net/ethernet/cirrus/Kconfig b/drivers/net/ethernet/cirrus/Kconfig
-> index e9a0213b08c4..6238e6951336 100644
-> --- a/drivers/net/ethernet/cirrus/Kconfig
-> +++ b/drivers/net/ethernet/cirrus/Kconfig
-> @@ -41,7 +41,7 @@ config CS89x0_PLATFORM
->  
->  config EP93XX_ETH
->  	tristate "EP93xx Ethernet support"
-> -	depends on ARM && ARCH_EP93XX
-> +	depends on (ARM && ARCH_EP93XX) || COMPILE_TEST
->  	select MII
->  	help
->  	  This is a driver for the ethernet hardware included in EP93xx CPUs.
-> diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-> index 13dfdfca49fc..a6da9873570b 100644
-> --- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-> +++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-> @@ -25,7 +25,7 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  
-> -#include <mach/hardware.h>
-> +#include <linux/platform_data/eth-ep93xx.h>
->  
->  #define DRV_MODULE_NAME		"ep93xx-eth"
->  #define DRV_MODULE_VERSION	"0.1"
-> diff --git a/include/linux/platform_data/eth-ep93xx.h b/include/linux/platform_data/eth-ep93xx.h
-> new file mode 100644
-> index 000000000000..8eef637a804d
-> --- /dev/null
-> +++ b/include/linux/platform_data/eth-ep93xx.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_PLATFORM_DATA_ETH_EP93XX
-> +#define _LINUX_PLATFORM_DATA_ETH_EP93XX
-> +
-> +struct ep93xx_eth_data {
-> +	unsigned char	dev_addr[6];
-> +	unsigned char	phy_id;
-> +};
-> +
-> +#endif
-> 
+---
+
+The following changes since commit e4b3448bc346fedf36db64124a664a959995b085:
+
+  dax: Flush partial PMDs correctly (2019-03-01 17:24:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/fsdax-fix-5.1-rc6
+
+for you to fetch changes up to 11cf9d863dcb583345723b0ed72173348761e9c0:
+
+  fs/dax: Deposit pagetable even when installing zero page (2019-03-13
+13:58:46 -0700)
+
+----------------------------------------------------------------
+fsdax fix 5.1-rc6
+
+- Avoid a crash scenario with architectures like powerpc that require
+  'pgtable_deposit' for the zero page.
+
+----------------------------------------------------------------
+Aneesh Kumar K.V (1):
+      fs/dax: Deposit pagetable even when installing zero page
+
+ fs/dax.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
