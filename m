@@ -2,175 +2,167 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7B7C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17E1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0482087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFF02087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E8Owormv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SY/rA5Lt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JOufS5Gg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfDOVLw (ORCPT
+        id S1727692AbfDOVQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:11:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45678 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfDOVLv (ORCPT
+        Mon, 15 Apr 2019 17:16:47 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:5888 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfDOVQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:11:51 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D15A760A50; Mon, 15 Apr 2019 21:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555362709;
-        bh=1nuSGpfNsJ6A+CZ5UXuZf0BU8485BL5R6fbFQPfOB0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E8OwormvZrUYApdbxE+Xa48p14SbHVgAjo92qO1NQjA4v3kI4pGdO5v0KTX33tKBe
-         AqlZWfYxypc0/L4UZqApccb+9xJWikSeCql3xs8LzkPoN+OjV2rBLogzXCH5sy8tZB
-         tZb/442kxKfy8EpFWNTF0Ib/E2AhE7u/eH0s/S/Q=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8931560A50;
-        Mon, 15 Apr 2019 21:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555362708;
-        bh=1nuSGpfNsJ6A+CZ5UXuZf0BU8485BL5R6fbFQPfOB0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SY/rA5Lt6GphKdWbwCaYy/Y5Fb7GOzEMX/pYgFtFRlaxjMzi+ExurDiSLXrwV5Ss9
-         Ej+YoxYE4sKkS1zM3JJE9TAQVfPDQKLtbxyadQc0h1T19C8XDlxSc5TvHNedb5O2fd
-         afJ0/CKSP54zZjaPDsYHgJrUpCNGWeex2NOT+yGA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8931560A50
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Mon, 15 Apr 2019 15:11:47 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup
- interrupt parent
-Message-ID: <20190415211147.GB16124@codeaurora.org>
-References: <20190313211844.29416-1-ilina@codeaurora.org>
- <20190313211844.29416-4-ilina@codeaurora.org>
- <20190318174236.072f0a95@why.wild-wind.fr.eu.org>
- <20190404155838.GD10883@codeaurora.org>
- <acd726c2-23fa-841a-a5c2-e00d39980021@arm.com>
+        Mon, 15 Apr 2019 17:16:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1555363006; x=1586899006;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=mZ06PkjkN1kj6AoAOlS4fY0McGXa90ZE9BqMC0BMkog=;
+  b=JOufS5Ggkc7xb5tXwhFwlopxty034svER4QPrDuOSsfD9r69/GryYAI6
+   D6mJEGDYZG0k4Rt5yQWDiuRPMyVy5dlNaoBMDlGTEzFQ0quxzXlhS++8C
+   tyvJmG8lZNGHraQbtn+D9CgnfpEfqNEEK14W7rnCSB78jEQdZ2t/b5KRh
+   B8wdfU8dIbgSnq3Oqw1acfU09m1V6gWl7cjNylHn71ZKGsua1xjFj9nRX
+   DNcR8uY/YyB2Uob0edpIm+GHDUOimJVL5e5M4vSLrD9gzwnoIGSCgZ4Jz
+   yNTALN2fcBxwXcy9YOBAchCBKEOKv/q+fR7cLr3NGFE9+/FIlVgizB4WQ
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,355,1549900800"; 
+   d="scan'208";a="106027217"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Apr 2019 05:16:46 +0800
+IronPort-SDR: KqKOmgcpyUqqDK1IfKkKUzGXbwQ1ummsLPfmAcZ6Il4kZNYuFypJpcKh8C0MfqObQ7OjYR6daB
+ W4Yidrj3K/+XJbjI+O10m8h/eZaAeN0IsCtsWLYTglp/H3KPZCHySGampJrck6obsSJoGIvi50
+ z05WhN52uJPBSY8SCe7if5LxEm6NmadsNY7HeaUw4V7IsdF8GAGRWWiZFICRGhloMoqGEIUB1M
+ kWnYXD7NdZfsFl+nFqK0+0d/gatt3lGnlYq6H+rPK1WAZrMMy0dXEWSyTsgVlC+6CHJthK2+6Z
+ u8BbtCt2CwpeqtEHxOVZs8CQ
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP; 15 Apr 2019 13:53:31 -0700
+IronPort-SDR: WyjbmdytrWtcpzzNWefd5pvS4XMx0OHZY9Ezcv8kZjOLto2KRssL/GM/nLI20qrji0nps20rrr
+ vwlWCN5S3ROchI5ATm2/z24WqFah18CoBApkHTiOmHxevutj2CGj/pevd3kP4wPbo365ssJ3Pb
+ zDPzXTIgJH7d/se4hXe6oKN3xU7SZYHtfno9vcHA8WBnzEVNreyCPQACIy3mqKVCooSeitoWbT
+ tq+vsC/kLHfe6VF7FkyxWodOQ5hSeapKDz4x1Rn/n0Gl8VCP80u0kigINPHzIhf+eUdJy+yF/k
+ htQ=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
+  by uls-op-cesaip02.wdc.com with ESMTP; 15 Apr 2019 14:16:45 -0700
+Subject: Re: [RFT/RFC PATCH v3 4/5] arm: Use common cpu_topology
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Will Deacon <will.deacon@arm.com>
+References: <20190320234806.19748-1-atish.patra@wdc.com>
+ <20190320234806.19748-5-atish.patra@wdc.com>
+ <20190415153147.GB28623@e107155-lin>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <41f890e9-3893-9092-bac7-3daca99f181b@wdc.com>
+Date:   Mon, 15 Apr 2019 14:16:43 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <acd726c2-23fa-841a-a5c2-e00d39980021@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190415153147.GB28623@e107155-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15 2019 at 06:42 -0600, Marc Zyngier wrote:
->On 04/04/2019 16:58, Lina Iyer wrote:
->> On Mon, Mar 18 2019 at 11:54 -0600, Marc Zyngier wrote:
->>> On Wed, 13 Mar 2019 15:18:37 -0600
->>> Lina Iyer <ilina@codeaurora.org> wrote:
->>>
->>> Please do Cc Rob when posting DT related patches.
->>>
->>>> Some interrupt controllers in a SoC, are always powered on and have a
->>>> select interrupts routed to them, so that they can wakeup the SoC from
->>>> suspend. Add wakeup-parent DT property to refer to these interrupt
->>>> controllers.
->>>>
->>>> If the interrupts routed to the wakeup parent are not sequential, than a
->>>> map needs to exist to associate the same interrupt line on multiple
->>>> interrupt controllers. Providing this map in every driver is cumbersome.
->>>> Let's add this in the device tree and document the properties to map the
->>>> interrupt specifiers
->>>>
->>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>>> ---
->>>> Changes in v4:
->>>> 	- Added this documentation
->>>> ---
->>>>  .../interrupt-controller/interrupts.txt       | 39 +++++++++++++++++++
->>>>  1 file changed, 39 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>>> index 8a3c40829899..917b598317f5 100644
->>>> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>>> @@ -108,3 +108,42 @@ commonly used:
->>>>  			sensitivity = <7>;
->>>>  		};
->>>>  	};
->>>> +
->>>> +3) Interrupt wakeup parent
->>>> +--------------------------
->>>> +
->>>> +Some interrupt controllers in a SoC, are always powered on and have a select
->>>> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
->>>> +interrupt controllers do not fall into the category of a parent interrupt
->>>> +controller and can be specified by the "wakeup-parent" property and contain a
->>>> +single phandle referring to the wakeup capable interrupt controller.
->>>> +
->>>> +   Example:
->>>> +	wakeup-parent = <&pdc_intc>;
->>>> +
->>>> +
->>>> +4) Interrupt mapping
->>>> +--------------------
->>>> +
->>>> +Sometimes interrupts may be detected by more than one interrupt controller
->>>> +(depending on which controller is active). The interrupt controllers may not
->>>> +be in hierarchy and therefore the interrupt controller driver is required to
->>>> +establish the relationship between the same interrupt at different interrupt
->>>> +controllers. If these interrupts are not sequential then a map needs to be
->>>> +specified to help identify these interrupts.
->>>> +
->>>> +Mapping the interrupt specifiers in the device tree can be done using the
->>>> +"irqdomain-map" property. The property contains interrupt specifier at the
->>>> +current interrupt controller followed by the interrupt specifier at the mapped
->>>> +interrupt controller.
->>>> +
->>>> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
->>>> +
->>>> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
->>>> +be provided to help interpret the valid bits of the incoming and mapped
->>>> +interrupt specifiers respectively.
->>>> +
->>>> +   Example:
->>>> +	irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
->>>> +	irqdomain-map-mask = <0xff 0>;
->>>> +	irqdomain-map-pass-thru = <0 0xff>;
->>>
->>>
->>> This doesn't quite explain how the mask and pass-thru properties are
->>> used. I guess that the mask is used to define the 'useful bits' on the
->>> incoming side, but pass-thru puzzles me. In your example, does it mean
->>> that incoming lines map to outgoing interrupt <0 0>?
->>>
->> Sorry about the late reply.
+On 4/15/19 8:31 AM, Sudeep Holla wrote:
+> On Wed, Mar 20, 2019 at 04:48:05PM -0700, Atish Patra wrote:
+>> Currently, ARM32 and ARM64 uses different data structures to
+>> represent their cpu toplogies. Since, we are moving the ARM64
+>> topology to common code to be used by other architectures, we
+>> can reuse that for ARM32 as well.
 >>
->> How about this to go with the rest of the documentation -
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> ---
+>>   arch/arm/include/asm/topology.h | 22 +---------------------
+>>   arch/arm/kernel/topology.c      | 10 +++++-----
+>>   include/linux/arch_topology.h   | 10 +++++++++-
+>>   3 files changed, 15 insertions(+), 27 deletions(-)
 >>
->> In the above example, the input interrupt specifier map-mask <0xff 0> applied
->> on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
->> input interrupt 22, 24 etc. The second argument being irq type is immaterial
->> from the map and is used from the incoming request instead. The pass-thru
->> specifier parses the output interrupt specifier from the rest of the unparsed
->> argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
->> interrupt 36, 37 etc.
->
->I think you need to add #interrupt-cells in your example, which is
->otherwise hard to interpret.
->
-Ok. Thanks, will add.
+> 
+> [...]
+> 
+>> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+>> index d4e76e0a..7c850611 100644
+>> --- a/include/linux/arch_topology.h
+>> +++ b/include/linux/arch_topology.h
+>> @@ -36,17 +36,25 @@ unsigned long topology_get_freq_scale(int cpu)
+>>   struct cpu_topology {
+>>   	int thread_id;
+>>   	int core_id;
+>> +#ifdef CONFIG_ARM_CPU_TOPOLOGY
+>> +	int socket_id;
+> 
+> Sorry, but I can't find any reason why we need to do this ifdef dance
+> here, especially for socket_id vs package_id ? 
 
---Lina
+I was not sure if we can rename socket_id to package_id from a semantic 
+point of view. If you are okay with it, I will change it to package_id 
+and send a v4.
+
+Other's I can understand
+> as there are new, but I am sure we can find a way and get away with
+> #ifdefery here completely.
+> 
+That would be good. Any suggestions on how to do that?
+
+>> +#else
+>>   	int package_id;
+>>   	int llc_id;
+>> +	cpumask_t llc_sibling;
+>> +#endif
+>>   	cpumask_t thread_sibling;
+>>   	cpumask_t core_sibling;
+>> -	cpumask_t llc_sibling;
+>>   };
+>>
+>>   #ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
+>>   extern struct cpu_topology cpu_topology[NR_CPUS];
+>>
+>> +#ifdef CONFIG_ARM_CPU_TOPOLOGY
+>> +#define topology_physical_package_id(cpu)	(cpu_topology[cpu].socket_id)
+>> +#else
+>>   #define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
+>> +#endif
+> 
+> Since all callsites must use topology_physical_package_id, we should be
+> able to rename socket_id to package_id easily.
+> 
+Sure.
+
+Regards,
+Atish
+> --
+> Regards,
+> Sudeep
+> 
 
