@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59A3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0743AC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A5221900
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CF920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355355;
-	bh=kf9jL+n1tv8Iw3MZm8UnGN6NGZVnHAM+sNvtLh5hhCQ=;
+	s=default; t=1555355357;
+	bh=LjlVUQfoCifb+AhOlPR45TlOcokhPlac9TXNBPPNre8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/v19qOt1eO6DTZWFsWXAQcMgj8qGGpcFvyXX59ke/wYjJQoqHJvRlNsjAwqk+qwt
-	 CW2BK3cl0t5WWJFRQ4OIDKkvHcyUqg/gXP8llydWTVP79/0/oqRNwDjz78Dl4XLavD
-	 GH5ETvWYwhyQqxykPZ5h2mIJnTvlJsDIVfiwoy2M=
+	b=GgZCLi25+eHBQ/TUG9TGZnMyI4f2wgXY4HV1b3V+b1463Aa69siMFZhuimDQ0yGGp
+	 ybvhrFfWYAy3IJ3OXghl8rBD6ab9dM4OKnrNJmxOxQFVvprA4LBHRrNFEF7caafPhE
+	 anc/Npjw4qujqO5nk7cm/DWNPxw3lYCXFDnK9LvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfDOTJO (ORCPT
+        id S1730683AbfDOTJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44854 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730116AbfDOTJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:09:11 -0400
+        id S1730038AbfDOTJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:09:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A7C921900;
-        Mon, 15 Apr 2019 19:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 712A921900;
+        Mon, 15 Apr 2019 19:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355350;
-        bh=kf9jL+n1tv8Iw3MZm8UnGN6NGZVnHAM+sNvtLh5hhCQ=;
+        s=default; t=1555355347;
+        bh=LjlVUQfoCifb+AhOlPR45TlOcokhPlac9TXNBPPNre8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQ4qZExK7L9P41f0fVlYNXfGQo7yiL4spLX9ry6xp5gxsh1VsJ2wx/d+rQ9RpKOHt
-         mxIccbz/Pl1cBII4BhjbPJRRJdaIbZNcf0EGN74OpazFdAJMZd1Aqf9/amSqqTgHLC
-         sYOIKebfFXGNm2f6a9mCGO9i4xzqr8gBkzifCQEs=
+        b=barPTBkDI4CuL+3mdF5XhDnA3B3gj4U9rN4qh8W5nZ6lU3u3Mc7DfGoHL8J/yW8a3
+         KA/CtPZwB1C7gAMlu+ryR+IaaQhxYXHZdJjbZ/B5yhIl/P/sdAi0zAvDn1xRUFM/N8
+         3Oeh7KkxvcoqntM/+v8kdyJlVlaZutZINuOoQ4t4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 097/101] arm64: dts: rockchip: fix vcc_host1_5v pin assign on rk3328-rock64
-Date:   Mon, 15 Apr 2019 20:59:35 +0200
-Message-Id: <20190415183745.497707080@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 096/101] dm integrity: fix deadlock with overlapping I/O
+Date:   Mon, 15 Apr 2019 20:59:34 +0200
+Message-Id: <20190415183745.448810349@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,43 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit ef05bcb60c1a8841e38c91923ba998181117a87c upstream.
+commit 4ed319c6ac08e9a28fca7ac188181ac122f4de84 upstream.
 
-This patch fixes pin assign of vcc_host1_5v. This regulator is
-controlled by USB20_HOST_DRV signal.
+dm-integrity will deadlock if overlapping I/O is issued to it, the bug
+was introduced by commit 724376a04d1a ("dm integrity: implement fair
+range locks").  Users rarely use overlapping I/O so this bug went
+undetected until now.
 
-ROCK64 schematic says that GPIO0_A2 pin is used as USB20_HOST_DRV.
-GPIO0_D3 pin is for SPDIF_TX_M0.
+Fix this bug by correcting, likely cut-n-paste, typos in
+ranges_overlap() and also remove a flawed ranges_overlap() check in
+remove_range_unlocked().  This condition could leave unprocessed bios
+hanging on wait_list forever.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Cc: stable@vger.kernel.org # v4.19+
+Fixes: 724376a04d1a ("dm integrity: implement fair range locks")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/dm-integrity.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -46,7 +46,7 @@
- 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&usb20_host_drv>;
- 		regulator-name = "vcc_host1_5v";
-@@ -238,7 +238,7 @@
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -908,7 +908,7 @@ static void copy_from_journal(struct dm_
+ static bool ranges_overlap(struct dm_integrity_range *range1, struct dm_integrity_range *range2)
+ {
+ 	return range1->logical_sector < range2->logical_sector + range2->n_sectors &&
+-	       range2->logical_sector + range2->n_sectors > range2->logical_sector;
++	       range1->logical_sector + range1->n_sectors > range2->logical_sector;
+ }
  
- 	usb2 {
- 		usb20_host_drv: usb20-host-drv {
--			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-+			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
- 
+ static bool add_new_range(struct dm_integrity_c *ic, struct dm_integrity_range *new_range, bool check_waiting)
+@@ -954,8 +954,6 @@ static void remove_range_unlocked(struct
+ 		struct dm_integrity_range *last_range =
+ 			list_first_entry(&ic->wait_list, struct dm_integrity_range, wait_entry);
+ 		struct task_struct *last_range_task;
+-		if (!ranges_overlap(range, last_range))
+-			break;
+ 		last_range_task = last_range->task;
+ 		list_del(&last_range->wait_entry);
+ 		if (!add_new_range(ic, last_range, false)) {
 
 
