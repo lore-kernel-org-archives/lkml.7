@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8ECC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE51DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065A9218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E6D21902
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355306;
-	bh=A9/sjEV9AVKH+E2s2bhSwP0CP96sR+C7eW0NZ1Red4E=;
+	s=default; t=1555355312;
+	bh=KPYYhPZqSI/FP4Dxd7uiGmGTlPzzp5DZCgYuGDd8qOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HHqAAFZJUT+r2Bc01v6ro1aijqX2qsFouIE/nfHHlxrC1y3KzETEj872sajDuJUNa
-	 ZUosSWrjMSKD+VC5TQ4BebBFqG4IamAb2+gUE7dNv0KvKVeQwZW7L0IUjs0crn45tT
-	 TBvkBGB6ULVbQGXfBmVfGBQeioWQ7fsQQs4MQbew=
+	b=rt4DMjuW4biLvN8Ez3Nhz/CnhdQFrJfvCTWH3m721WgADI4hyw8repaAYiKfeOAwQ
+	 ucuBcGvHZ+RFTqmYncyLdCrm5L2PSTYGvuQXodUav+3CmpUe20GM45gJLVEcns3Xjo
+	 ghaEoSUc2m6K9nFz1fIyYU2oW9kymmw6hRHLxYGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfDOTIZ (ORCPT
+        id S1729636AbfDOTIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:08:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbfDOTIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:08:20 -0400
+        id S1730461AbfDOTI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:08:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296672087C;
-        Mon, 15 Apr 2019 19:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E1C218DA;
+        Mon, 15 Apr 2019 19:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355299;
-        bh=A9/sjEV9AVKH+E2s2bhSwP0CP96sR+C7eW0NZ1Red4E=;
+        s=default; t=1555355307;
+        bh=KPYYhPZqSI/FP4Dxd7uiGmGTlPzzp5DZCgYuGDd8qOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXlSNQEVjdXB0uGlx//1IG4OCsZfwN6PbEzG1sfrJeLLEWyzn/B1Ai950kyFGvb1e
-         GbHesj74+nbLDgoMfP8JbjIT+dJwZp8ClloD6XPRstMm81slZ3Qol/76DlzZG1MwAC
-         6dkWeyh8H4y/c+vMIflbRHQwtMWeC/1NZAL8tY/8=
+        b=S6JFHlrRlQWBP/lX2X/9pVCLykhOoLlWwayD+VIKMWsYYyRcoOWF5E2mlboN3A3W4
+         sBAgMRQbORBeJBNlUob5444U9ksh65mvj7QY+8Ht8hJnNTRboHaYNB0/NtCW4INXSm
+         ca5WhLU+qz3V4iTQnqK6D8ybKiydnMigZn2Oz7K4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.19 086/101] x86/asm: Remove dead __GNUC__ conditionals
-Date:   Mon, 15 Apr 2019 20:59:24 +0200
-Message-Id: <20190415183744.944695636@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 089/101] x86/perf/amd: Resolve NMI latency issues for active PMCs
+Date:   Mon, 15 Apr 2019 20:59:27 +0200
+Message-Id: <20190415183745.085762799@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -65,116 +69,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Lendacky, Thomas <Thomas.Lendacky@amd.com>
 
-commit 88ca66d8540ca26119b1428cddb96b37925bdf01 upstream.
+commit 6d3edaae16c6c7d238360f2841212c2b26774d5e upstream.
 
-The minimum supported gcc version is >= 4.6, so these can be removed.
+On AMD processors, the detection of an overflowed PMC counter in the NMI
+handler relies on the current value of the PMC. So, for example, to check
+for overflow on a 48-bit counter, bit 47 is checked to see if it is 1 (not
+overflowed) or 0 (overflowed).
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
+When the perf NMI handler executes it does not know in advance which PMC
+counters have overflowed. As such, the NMI handler will process all active
+PMC counters that have overflowed. NMI latency in newer AMD processors can
+result in multiple overflowed PMC counters being processed in one NMI and
+then a subsequent NMI, that does not appear to be a back-to-back NMI, not
+finding any PMC counters that have overflowed. This may appear to be an
+unhandled NMI resulting in either a panic or a series of messages,
+depending on how the kernel was configured.
+
+To mitigate this issue, add an AMD handle_irq callback function,
+amd_pmu_handle_irq(), that will invoke the common x86_pmu_handle_irq()
+function and upon return perform some additional processing that will
+indicate if the NMI has been handled or would have been handled had an
+earlier NMI not handled the overflowed PMC. Using a per-CPU variable, a
+minimum value of the number of active PMCs or 2 will be set whenever a
+PMC is active. This is used to indicate the possible number of NMIs that
+can still occur. The value of 2 is used for when an NMI does not arrive
+at the LAPIC in time to be collapsed into an already pending NMI. Each
+time the function is called without having handled an overflowed counter,
+the per-CPU value is checked. If the value is non-zero, it is decremented
+and the NMI indicates that it handled the NMI. If the value is zero, then
+the NMI indicates that it did not handle the NMI.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190111084931.24601-1-linux@rasmusvillemoes.dk
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/Message-ID:
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/bitops.h    |    6 ------
- arch/x86/include/asm/string_32.h |   20 --------------------
- arch/x86/include/asm/string_64.h |   15 ---------------
- 3 files changed, 41 deletions(-)
+ arch/x86/events/amd/core.c |   56 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -36,13 +36,7 @@
-  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-  */
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -4,10 +4,13 @@
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/nmi.h>
+ #include <asm/apicdef.h>
  
--#if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 1)
--/* Technically wrong, but this avoids compilation errors on some gcc
--   versions. */
--#define BITOP_ADDR(x) "=m" (*(volatile long *) (x))
--#else
- #define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
--#endif
+ #include "../perf_event.h"
  
- #define ADDR				BITOP_ADDR(addr)
++static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
++
+ static __initconst const u64 amd_hw_cache_event_ids
+ 				[PERF_COUNT_HW_CACHE_MAX]
+ 				[PERF_COUNT_HW_CACHE_OP_MAX]
+@@ -488,6 +491,57 @@ static void amd_pmu_disable_all(void)
+ 	}
+ }
  
---- a/arch/x86/include/asm/string_32.h
-+++ b/arch/x86/include/asm/string_32.h
-@@ -179,14 +179,7 @@ static inline void *__memcpy3d(void *to,
-  *	No 3D Now!
-  */
++/*
++ * Because of NMI latency, if multiple PMC counters are active or other sources
++ * of NMIs are received, the perf NMI handler can handle one or more overflowed
++ * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
++ * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
++ * back-to-back NMI support won't be active. This PMC handler needs to take into
++ * account that this can occur, otherwise this could result in unknown NMI
++ * messages being issued. Examples of this is PMC overflow while in the NMI
++ * handler when multiple PMCs are active or PMC overflow while handling some
++ * other source of an NMI.
++ *
++ * Attempt to mitigate this by using the number of active PMCs to determine
++ * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
++ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
++ * number of active PMCs or 2. The value of 2 is used in case an NMI does not
++ * arrive at the LAPIC in time to be collapsed into an already pending NMI.
++ */
++static int amd_pmu_handle_irq(struct pt_regs *regs)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int active, handled;
++
++	/*
++	 * Obtain the active count before calling x86_pmu_handle_irq() since
++	 * it is possible that x86_pmu_handle_irq() may make a counter
++	 * inactive (through x86_pmu_stop).
++	 */
++	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
++
++	/* Process any counter overflows */
++	handled = x86_pmu_handle_irq(regs);
++
++	/*
++	 * If a counter was handled, record the number of possible remaining
++	 * NMIs that can occur.
++	 */
++	if (handled) {
++		this_cpu_write(perf_nmi_counter,
++			       min_t(unsigned int, 2, active));
++
++		return handled;
++	}
++
++	if (!this_cpu_read(perf_nmi_counter))
++		return NMI_DONE;
++
++	this_cpu_dec(perf_nmi_counter);
++
++	return NMI_HANDLED;
++}
++
+ static struct event_constraint *
+ amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -680,7 +734,7 @@ static ssize_t amd_event_sysfs_show(char
  
--#if (__GNUC__ >= 4)
- #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
--#else
--#define memcpy(t, f, n)				\
--	(__builtin_constant_p((n))		\
--	 ? __constant_memcpy((t), (f), (n))	\
--	 : __memcpy((t), (f), (n)))
--#endif
- 
- #endif
- #endif /* !CONFIG_FORTIFY_SOURCE */
-@@ -282,12 +275,7 @@ void *__constant_c_and_count_memset(void
- 
- 	{
- 		int d0, d1;
--#if __GNUC__ == 4 && __GNUC_MINOR__ == 0
--		/* Workaround for broken gcc 4.0 */
--		register unsigned long eax asm("%eax") = pattern;
--#else
- 		unsigned long eax = pattern;
--#endif
- 
- 		switch (count % 4) {
- 		case 0:
-@@ -321,15 +309,7 @@ void *__constant_c_and_count_memset(void
- #define __HAVE_ARCH_MEMSET
- extern void *memset(void *, int, size_t);
- #ifndef CONFIG_FORTIFY_SOURCE
--#if (__GNUC__ >= 4)
- #define memset(s, c, count) __builtin_memset(s, c, count)
--#else
--#define memset(s, c, count)						\
--	(__builtin_constant_p(c)					\
--	 ? __constant_c_x_memset((s), (0x01010101UL * (unsigned char)(c)), \
--				 (count))				\
--	 : __memset((s), (c), (count)))
--#endif
- #endif /* !CONFIG_FORTIFY_SOURCE */
- 
- #define __HAVE_ARCH_MEMSET16
---- a/arch/x86/include/asm/string_64.h
-+++ b/arch/x86/include/asm/string_64.h
-@@ -32,21 +32,6 @@ static __always_inline void *__inline_me
- extern void *memcpy(void *to, const void *from, size_t len);
- extern void *__memcpy(void *to, const void *from, size_t len);
- 
--#ifndef CONFIG_FORTIFY_SOURCE
--#if (__GNUC__ == 4 && __GNUC_MINOR__ < 3) || __GNUC__ < 4
--#define memcpy(dst, src, len)					\
--({								\
--	size_t __len = (len);					\
--	void *__ret;						\
--	if (__builtin_constant_p(len) && __len >= 64)		\
--		__ret = __memcpy((dst), (src), __len);		\
--	else							\
--		__ret = __builtin_memcpy((dst), (src), __len);	\
--	__ret;							\
--})
--#endif
--#endif /* !CONFIG_FORTIFY_SOURCE */
--
- #define __HAVE_ARCH_MEMSET
- void *memset(void *s, int c, size_t n);
- void *__memset(void *s, int c, size_t n);
+ static __initconst const struct x86_pmu amd_pmu = {
+ 	.name			= "AMD",
+-	.handle_irq		= x86_pmu_handle_irq,
++	.handle_irq		= amd_pmu_handle_irq,
+ 	.disable_all		= amd_pmu_disable_all,
+ 	.enable_all		= x86_pmu_enable_all,
+ 	.enable			= x86_pmu_enable_event,
 
 
