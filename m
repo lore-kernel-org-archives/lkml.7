@@ -2,51 +2,54 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47926C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DA3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FB7218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528FD218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355270;
-	bh=bPd28U3t2z3ZDvsmBX5k4A7hXR5A9eg1116KBcLgNA8=;
+	s=default; t=1555355273;
+	bh=aRZ3aRMylXpBl/ZENBGU29JNC1NzKlwAAFnBA9GtQeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eK/IsZopf54UynuY4go5bHXy/cPI7CVYp9Fu7otbKO8ZbuC39U+PNRtnPoaRPcNfN
-	 5IxfViP0CHzkncsfy6/wFyHGVRBUbm40Ih8HB85ll78YIDl5UBciMZlHAFcYGz71+V
-	 T+A3t9lRpwxrolZaR5p8+KxVBo+8KKsRjx+wH6SA=
+	b=SMEPMcInlZe+/opoWBAI3DrnZNh8m9+yj+UUgyOmLhwsgpFauu6gJpb2xV9tIx5Vc
+	 AnldFQkDFufXIJ1gxZV/BZhj7w7Q3A8ciwaGmp+CwQCN3Xh8pDZXt2qRJfM849j2dE
+	 Ngg+zA95ndsIufjxUvLswaJEbdMQecGYZ6cx/l7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfDOTHs (ORCPT
+        id S1730328AbfDOTHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbfDOTHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:46 -0400
+        id S1728200AbfDOTHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9CE218DA;
-        Mon, 15 Apr 2019 19:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F828218DA;
+        Mon, 15 Apr 2019 19:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355266;
-        bh=bPd28U3t2z3ZDvsmBX5k4A7hXR5A9eg1116KBcLgNA8=;
+        s=default; t=1555355268;
+        bh=aRZ3aRMylXpBl/ZENBGU29JNC1NzKlwAAFnBA9GtQeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Dzz3EvEcpmm+8NfvgbQHAmNrehfljQdBZL0F2o6UnMcoFeDEHW4tZkFv2oBDF80E
-         B5xto16Qbw1ewnw+R46/EgXurjtYSxNnAo401Jqy5zW6D9sBYw4mR/FW5Gq8rSjE27
-         j6EY3h/y7xptHc4TRa2o1h40OeUV/zBUBXRl71Ks=
+        b=usZ/tFmNLQnl4YL7Q3Suoapz9Wwvlk2K63tLBllIiAaV494WVPh711wMauM8cGu5x
+         rD2JUdrqHhhXOspGdTHtm6MOHCjZFRPPvfPtSKJaLnQYrvW+awr6+SRW8EiufkMv11
+         tmvoi0vlrdvMNLeyl48QrwkU0KgH80nvKQjiNV+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 055/101] arm64: dts: rockchip: fix rk3328 sdmmc0 write errors
-Date:   Mon, 15 Apr 2019 20:58:53 +0200
-Message-Id: <20190415183743.444530369@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH 4.19 073/101] genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
+Date:   Mon, 15 Apr 2019 20:59:11 +0200
+Message-Id: <20190415183744.324123019@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,68 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Geis <pgwipeout@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-commit 09f91381fa5de1d44bc323d8bf345f5d57b3d9b5 upstream.
+commit 325aa19598e410672175ed50982f902d4e3f31c5 upstream.
 
-Various rk3328 based boards experience occasional sdmmc0 write errors.
-This is due to the rk3328.dtsi tx drive levels being set to 4ma, vs
-8ma per the rk3328 datasheet default settings.
+If a child irqchip calls irq_chip_set_wake_parent() but its parent irqchip
+has the IRQCHIP_SKIP_SET_WAKE flag set an error is returned.
 
-Fix this by setting the tx signal pins to 8ma.
-Inspiration from tonymac32's patch,
-https://github.com/ayufan-rock64/linux-kernel/commit/dc1212b347e0da17c5460bcc0a56b07d02bac3f8
+This is inconsistent behaviour vs. set_irq_wake_real() which returns 0 when
+the irqchip has the IRQCHIP_SKIP_SET_WAKE flag set. It doesn't attempt to
+walk the chain of parents and set irq wake on any chips that don't have the
+flag set either. If the intent is to call the .irq_set_wake() callback of
+the parent irqchip, then we expect irqchip implementations to omit the
+IRQCHIP_SKIP_SET_WAKE flag and implement an .irq_set_wake() function that
+calls irq_chip_set_wake_parent().
 
-Fixes issues on the rk3328-roc-cc and the rk3328-rock64 (as per the
-above commit message).
+The problem has been observed on a Qualcomm sdm845 device where set wake
+fails on any GPIO interrupts after applying work in progress wakeup irq
+patches to the GPIO driver. The chain of chips looks like this:
 
-Tested on the rk3328-roc-cc board.
+     QCOM GPIO -> QCOM PDC (SKIP) -> ARM GIC (SKIP)
 
-Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
+The GPIO controllers parent is the QCOM PDC irqchip which in turn has ARM
+GIC as parent.  The QCOM PDC irqchip has the IRQCHIP_SKIP_SET_WAKE flag
+set, and so does the grandparent ARM GIC.
+
+The GPIO driver doesn't know if the parent needs to set wake or not, so it
+unconditionally calls irq_chip_set_wake_parent() causing this function to
+return a failure because the parent irqchip (PDC) doesn't have the
+.irq_set_wake() callback set. Returning 0 instead makes everything work and
+irqs from the GPIO controller can be configured for wakeup.
+
+Make it consistent by returning 0 (success) from irq_chip_set_wake_parent()
+when a parent chip has IRQCHIP_SKIP_SET_WAKE set.
+
+[ tglx: Massaged changelog ]
+
+Fixes: 08b55e2a9208e ("genirq: Add irqchip_set_wake_parent")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-gpio@vger.kernel.org
+Cc: Lina Iyer <ilina@codeaurora.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lkml.kernel.org/r/20190325181026.247796-1-swboyd@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/irq/chip.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -1356,11 +1356,11 @@
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1384,6 +1384,10 @@ int irq_chip_set_vcpu_affinity_parent(st
+ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
+ {
+ 	data = data->parent_data;
++
++	if (data->chip->flags & IRQCHIP_SKIP_SET_WAKE)
++		return 0;
++
+ 	if (data->chip->irq_set_wake)
+ 		return data->chip->irq_set_wake(data, on);
  
- 		sdmmc0 {
- 			sdmmc0_clk: sdmmc0-clk {
--				rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none_4ma>;
-+				rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none_8ma>;
- 			};
- 
- 			sdmmc0_cmd: sdmmc0-cmd {
--				rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up_4ma>;
-+				rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up_8ma>;
- 			};
- 
- 			sdmmc0_dectn: sdmmc0-dectn {
-@@ -1372,14 +1372,14 @@
- 			};
- 
- 			sdmmc0_bus1: sdmmc0-bus1 {
--				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_4ma>;
-+				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_8ma>;
- 			};
- 
- 			sdmmc0_bus4: sdmmc0-bus4 {
--				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_4ma>,
--						<1 RK_PA1 1 &pcfg_pull_up_4ma>,
--						<1 RK_PA2 1 &pcfg_pull_up_4ma>,
--						<1 RK_PA3 1 &pcfg_pull_up_4ma>;
-+				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_8ma>,
-+						<1 RK_PA1 1 &pcfg_pull_up_8ma>,
-+						<1 RK_PA2 1 &pcfg_pull_up_8ma>,
-+						<1 RK_PA3 1 &pcfg_pull_up_8ma>;
- 			};
- 
- 			sdmmc0_gpio: sdmmc0-gpio {
 
 
