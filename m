@@ -2,109 +2,97 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BFFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A982EC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A60218D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795BD2183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qlcLGgbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbfDOQHC (ORCPT
+        id S1728176AbfDOQHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:07:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38104 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbfDOQGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:06:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76AFD1A25;
-        Mon, 15 Apr 2019 09:06:46 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F11763F68F;
-        Mon, 15 Apr 2019 09:06:44 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 35/36] [RFC] coresight: add return value for fixup connections
-Date:   Mon, 15 Apr 2019 17:04:18 +0100
-Message-Id: <1555344260-12375-36-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
+        Mon, 15 Apr 2019 12:07:08 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:60992 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfDOQHG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:07:06 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FFx3n3048996;
+        Mon, 15 Apr 2019 16:06:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=CQocKb/a4zPGWX6ubmmIrqdRqKumlc3s8liTPDXoQ+Q=;
+ b=qlcLGgbuefoBr6iCx5W3Al9Q4Ps6xLQIUeiNNF4TwyyBN9I2lOlM+4nMgIelmYNeYcCk
+ 4554NU4gG0s4dcW1JE1v27rVE2rExW8+ahM4siDy0aTUeDRAlb9YYmU03W7h6/e+vmhf
+ ClvHjzrUt6RkdGm5qqTdnqWELfAPN+dMAHndOXuRyAUWCImS9peBOWzhvPcslVbgaQEE
+ OA0MfXfGaV+sPyEoqnX2w3sWrf2VHR8zRm7x0mnusCEoRyeZUamRBomY5IEguQ2vNYJ9
+ wSN/wd4uTgQY3aiQibiCxfnZ+D5NtIwWFuKSc9g9VZ+essmlxMHNSI0Qh09te1Bm5mWx 8g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2ru59cys2k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 16:06:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FG43OS079616;
+        Mon, 15 Apr 2019 16:04:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2rvv139j5j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 16:04:50 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3FG4n91012654;
+        Mon, 15 Apr 2019 16:04:49 GMT
+Received: from kadam (/41.210.147.169)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Apr 2019 09:04:48 -0700
+Date:   Mon, 15 Apr 2019 19:04:40 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     devel@driverdev.osuosl.org, elder@kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        greybus-dev@lists.linaro.org
+Subject: Re: [PATCH] Staging: greybus: Cleanup in header file control.h
+Message-ID: <20190415160440.GQ6095@kadam>
+References: <20190405201437.3689-1-madhumithabiw@gmail.com>
+ <20190415131002.GC775@localhost>
+ <20190415133357.GP6095@kadam>
+ <20190415141201.GD775@localhost>
+ <20190415144015.GB22423@kadam>
+ <20190415150333.GE775@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415150333.GE775@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=845
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904150111
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=885 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904150111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle failures in fixing up connections for a newly registered
-device. This will be useful to handle cases where we fail to expose
-the links via sysfs for the connections.
+On Mon, Apr 15, 2019 at 05:03:33PM +0200, Johan Hovold wrote:
+> But then all eight or so instances should be replaced in one go, to
+> maintain consistency.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Yeah, that's fair enough, I suppose.
 
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 010bc86..4d63063 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -1025,18 +1025,18 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 	return 0;
- }
- 
--static void coresight_fixup_orphan_conns(struct coresight_device *csdev)
-+static int coresight_fixup_orphan_conns(struct coresight_device *csdev)
- {
- 	/*
- 	 * No need to check for a return value as orphan connection(s)
- 	 * are hooked-up with each newly added component.
- 	 */
--	bus_for_each_dev(&coresight_bustype, NULL,
-+	return bus_for_each_dev(&coresight_bustype, NULL,
- 			 csdev, coresight_orphan_match);
- }
- 
- 
--static void coresight_fixup_device_conns(struct coresight_device *csdev)
-+static int coresight_fixup_device_conns(struct coresight_device *csdev)
- {
- 	int i;
- 
-@@ -1056,6 +1056,8 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
- 			conn->child_dev = NULL;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- static int coresight_remove_match(struct device *dev, void *data)
-@@ -1265,10 +1267,15 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 
- 	mutex_lock(&coresight_mutex);
- 
--	coresight_fixup_device_conns(csdev);
--	coresight_fixup_orphan_conns(csdev);
-+	ret = coresight_fixup_device_conns(csdev);
-+	if (!ret)
-+		ret = coresight_fixup_orphan_conns(csdev);
- 
- 	mutex_unlock(&coresight_mutex);
-+	if (ret) {
-+		coresight_unregister(csdev);
-+		return ERR_PTR(ret);
-+	}
- 
- 	return csdev;
- 
--- 
-2.7.4
-
+regards,
+dan carepenter
