@@ -2,66 +2,421 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B4C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A16C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055BB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C2B206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jehMEA48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfDOV5y (ORCPT
+        id S1728117AbfDOV6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:57:54 -0400
-Received: from stcim.de ([78.46.90.227]:43660 "EHLO stcim.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfDOV5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:57:54 -0400
-Received: from xdsl-89-0-59-235.nc.de ([89.0.59.235] helo=porty)
-        by stcim with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <contact@stefanchrist.eu>)
-        id 1hG9bo-00010H-Rg; Mon, 15 Apr 2019 23:57:49 +0200
-Date:   Mon, 15 Apr 2019 23:57:48 +0200
-From:   Stefan Lengfeld <contact@stefanchrist.eu>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 03/12] i2c: core: introduce callbacks for atomic transfers
-Message-ID: <20190415215748.e6jrii25nqliy7me@porty>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
- <20190403124019.8947-4-wsa+renesas@sang-engineering.com>
+        Mon, 15 Apr 2019 17:58:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42951 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfDOV57 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 17:57:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so9233963pgh.9;
+        Mon, 15 Apr 2019 14:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xLqjCO936mtUWza0Py8IvLm6ja1XQwRH521y7FtMork=;
+        b=jehMEA487ytbEwMBBEZq6X3mipIN2PUhD+X7R+B0/LS1LBRIIHS/sMl0zzrnfL6nfW
+         3JWTMOGhR7RvnjmuXp2KXUnJKo1ojYknuqREjz1jsXU4bLdG2fu1sIesMjkdgrzdqNWT
+         MSxOlOHLOWZ502RokgkA45VvNkgPT/JNDBkLID6G+YJkS7fpiASPlEb1BgonB4fGpWSb
+         rdfAIOAh25nVazmOhN6M5+ww2d2A0JhR3z8tU1nyn71++mYvP1tI9wpzIMaIAXcsOrCh
+         zGAxrSXoPmSV4yMxL33k7wh3JaQIcGqEk2gey/h4fdza5JG8gmHNX2w6cng88fKOZqIy
+         aeww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xLqjCO936mtUWza0Py8IvLm6ja1XQwRH521y7FtMork=;
+        b=Z8vvLSR/WL5NOyaVha8p8ysKkD9FozeeD8fRdsD2y9Dw1u2XM2NXJEg8YHjRqL3o0u
+         FGt+EmNMKERdJgFpAEOgJNF/s4MO/X85asTXun6XRyJmOwWE5Uq2rst1SVq7Gm9u5tzi
+         QA8LkKjvjOp+8xrY9PifjAJWU+kiCjhcKG5iQ8krC8+9VZzKlrVCtXg7lA+zwJvGDci8
+         xUPq8ceKi2+q64dwA4k0QMhOvfGCHgVsx0f+WaQzQfZb58Ggjv/mSdl0ATUUzPsMqfXW
+         gdosI6rDad/92az7e+iVwdXohM7Zb9dt2xdqVcWW4+WXB9eWjWGyZSq0PQ1IIHstit4i
+         Vqlw==
+X-Gm-Message-State: APjAAAWO9/kTNhBm8xb+ngRrqi3+bWIPwTd1HIyM8JqcncF/55j72aT6
+        vBp7jiI7FOMKWAT1nR6tMVw1fSlz
+X-Google-Smtp-Source: APXvYqxBGikvNOcVB1UieKYaUjH2D/2Gaz9Apxm0y1Mk2gxcizbARMM1e31S8N9yIQ+/KgoseDcXGA==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr71153155pgq.1.1555365478324;
+        Mon, 15 Apr 2019 14:57:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s85sm72568460pfa.23.2019.04.15.14.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 14:57:57 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 14:57:50 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Patrick Venture <venture@google.com>
+Cc:     jdelvare@suse.com, joel@jms.id.au, andrew@aj.id.au,
+        Maxim Sloyko <maxims@google.com>, kunyi@google.com,
+        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Robert Lippert <rlippert@google.com>
+Subject: Re: [PATCH v5 2/2] hwmon: (pmbus/isl68137): Add driver for Intersil
+ ISL68137 PWM Controller
+Message-ID: <20190415215750.GA28795@roeck-us.net>
+References: <20190415214414.120944-1-venture@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403124019.8947-4-wsa+renesas@sang-engineering.com>
-X-PGP-Key: https://stefanchrist.eu/personal/Stefan_Lengfeld_0xE44A23B289092311.asc
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190415214414.120944-1-venture@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-
-On Wed, Apr 03, 2019 at 02:40:10PM +0200, Wolfram Sang wrote:
-> We had the request to access devices very late when interrupts are not
-> available anymore multiple times now. Mostly to prepare shutdown or
-> reboot. Allow adapters to specify a specific callback for this case.
-> Note that we fall back to the generic {master|smbus}_xfer callback if
-> this new atomic one is not present. This is intentional to preserve the
-> previous behaviour and avoid regressions. Because there are drivers not
-> using interrupts or because it might have worked "accidently" before.
+On Mon, Apr 15, 2019 at 02:44:14PM -0700, Patrick Venture wrote:
+> From: Maxim Sloyko <maxims@google.com>
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Intersil ISL68137 is a digital output 7-phase configurable PWM
+> controller with an AVSBus interface.
+> 
+> Signed-off-by: Maxim Sloyko <maxims@google.com>
+> Signed-off-by: Robert Lippert <rlippert@google.com>
+> Signed-off-by: Patrick Venture <venture@google.com>
 
-Tested-by: Stefan Lengfeld <contact@stefanchrist.eu>
+For some reason I can not apply this patch - git reports that it is corrupt.
+Can you check what happened ? I can't figure it out.
 
-Kind regards,
-Stefan
+Another comment below - makes me wonder - was that a test ?
+
+Since we are getting close, I applied the other patch. No need to resend.
+
+Thanks,
+Guenter
+
+> ---
+> v5:
+>  Drop extra parens
+>  Drop extra parameter check
+> v4:
+>  Use kstrtobool
+>  Cleanup parens
+>  Use rc instead of temporary int
+>  Delete unnecessary coment
+>  Add remove to driver structure
+> v3:
+>  Added missing driver documentation
+>  Cleaned up goto statements.
+>  Add missing error check on pmbus_read_word_data
+>  Transitioned to use SENSOR_DEVICE_ATTR_RW
+>  Renamed enabled attribute to enable
+>  Set up an attribute_group for the enable attribute and added to pmbus_info
+>  Removed the boilerplate driver remove method
+> v2:
+>  Fixed bad header ordering.
+> v1:
+>  Original new patchset with fixes from Rob Lippert.
+> ---
+>  Documentation/hwmon/isl68137   |  72 ++++++++++++++
+>  drivers/hwmon/pmbus/Kconfig    |   9 ++
+>  drivers/hwmon/pmbus/Makefile   |   1 +
+>  drivers/hwmon/pmbus/isl68137.c | 172 +++++++++++++++++++++++++++++++++
+>  4 files changed, 254 insertions(+)
+>  create mode 100644 Documentation/hwmon/isl68137
+>  create mode 100644 drivers/hwmon/pmbus/isl68137.c
+> 
+> diff --git a/Documentation/hwmon/isl68137 b/Documentation/hwmon/isl68137
+> new file mode 100644
+> index 0000000000000..92e5c5fc5b777
+> --- /dev/null
+> +++ b/Documentation/hwmon/isl68137
+> @@ -0,0 +1,72 @@
+> +Kernel driver isl68137
+> +======================
+> +
+> +Supported chips:
+> +  * Intersil ISL68137
+> +    Prefix: 'isl68137'
+> +    Addresses scanned: -
+> +    Datasheet: Publicly available at the Intersil website
+> +      https://www.intersil.com/content/dam/Intersil/documents/isl6/isl68137.pdf
+> +
+> +Authors:
+> +        Maxim Sloyko <maxims@google.com>
+> +        Robert Lippert <rlippert@google.com>
+> +        Patrick Venture <venture@google.com>
+> +
+> +Description
+> +-----------
+> +
+> +Intersil ISL68137 is a digital output 7-phase configurable PWM
+> +controller with an AVSBus interface.
+> +
+> +Usage Notes
+> +-----------
+> +
+> +This driver does not probe for PMBus devices. You will have to instantiate
+> +devices explicitly.
+> +
+> +The ISL68137 AVS operation mode must be enabled/disabled at runtime.
+> +
+> +Beyond the normal sysfs pmbus attributes, the driver exposes a control attribute.
+> +
+> +Additional Sysfs attributes
+> +---------------------------
+> +
+> +avs(0|1)_enable		Controls the AVS state of each rail.
+> +
+> +curr1_label		"iin"
+> +curr1_input		Measured input current
+> +curr1_crit		Critical maximum current
+> +curr1_crit_alarm	Current critical high alarm
+> +
+> +curr[2-3]_label		"iout[1-2]"
+> +curr[2-3]_input		Measured output current
+> +curr[2-3]_crit		Critical maximum current
+> +curr[2-3]_crit_alarm	Current critical high alarm
+> +
+> +in1_label		"vin"
+> +in1_input		Measured input voltage
+> +in1_lcrit		Critical minimum input voltage
+> +in1_lcrit_alarm		Input voltage critical low alarm
+> +in1_crit		Critical maximum input voltage
+> +in1_crit_alarm		Input voltage critical high alarm
+> +
+> +in[2-3]_label		"vout[1-2]"
+> +in[2-3]_input		Measured output voltage
+> +in[2-3]_lcrit		Critical minimum output voltage
+> +in[2-3]_lcrit_alarm	Output voltage critical low alarm
+> +in[2-3]_crit		Critical maximum output voltage
+> +in[2-3]_crit_alarm	Output voltage critical high alarm
+> +
+> +power1_label		"pin"
+> +power1_input		Measured input power
+> +power1_alarm		Input power high alarm
+> +
+> +power[2-3]_label	"pout[1-2]"
+> +power[2-3]_input	Measured output power
+> +
+> +temp[1-3]_input		Measured temperature
+> +temp[1-3]_crit		Critical high temperature
+> +temp[1-3]_crit_alarm	Chip temperature critical high alarm
+> +temp[1-3]_max		Maximum temperature
+> +temp[1-3]_max_alarm	Chip temperature high alarm
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index de87abab990e5..7edab7e30eaf9 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -63,6 +63,15 @@ config SENSORS_IR38064
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called ir38064.
+>  
+> +config SENSORS_ISL68137
+> +	tristate "Intersil ISL68137"
+> +	help
+> +	  If you say yes here you get hardware monitoring support for Intersil
+> +	  ISL68137.
+> +
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called isl68137.
+> +
+>  config SENSORS_LM25066
+>  	tristate "National Semiconductor LM25066 and compatibles"
+>  	help
+> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+> index 7d1fa6b3c8c93..2219b93003167 100644
+> --- a/drivers/hwmon/pmbus/Makefile
+> +++ b/drivers/hwmon/pmbus/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
+>  obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+>  obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
+>  obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
+> +obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
+>  obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
+>  obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
+>  obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
+> diff --git a/drivers/hwmon/pmbus/isl68137.c b/drivers/hwmon/pmbus/isl68137.c
+> new file mode 100644
+> index 0000000000000..4140c52d6f124
+> --- /dev/null
+> +++ b/drivers/hwmon/pmbus/isl68137.c
+> @@ -0,0 +1,172 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Hardware monitoring driver for Intersil ISL68137
+> + *
+> + * Copyright (c) 2017 Google Inc
+> + *
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/string.h>
+> +#include <linux/sysfs.h>
+> +#include "pmbus.h"
+> +
+> +#define ISL68137_VOUT_AVS	0x30
+> +
+> +static ssize_t isl68137_avs_enable_show_page(struct i2c_client *client,
+> +					     int page,
+> +					     char *buf)
+> +{
+> +	int val = pmbus_read_byte_data(client, page, PMBUS_OPERATION);
+> +
+> +	return sprintf(buf, "%d\n",
+> +		       (val & ISL68137_VOUT_AVS) == ISL68137_VOUT_AVS ? 1 : 0);
+> +}
+> +
+> +static ssize_t isl68137_avs_enable_store_page(struct i2c_client *client,
+> +					      int page,
+> +					      const char *buf, size_t count)
+> +{
+> +	int rc, op_val;
+> +	bool result;
+> +
+> +	rc = kstrtobool(buf, &result);
+> +	if (!rc)
+> +		return -EINVAL;
+
+	if (rc)
+		return rc;
+
+> +
+> +	op_val = result ? ISL68137_VOUT_AVS : 0;
+> +
+> +	/*
+> +	 * Writes to VOUT setpoint over AVSBus will persist after the VRM is
+> +	 * switched to PMBus control. Switching back to AVSBus control
+> +	 * restores this persisted setpoint rather than re-initializing to
+> +	 * PMBus VOUT_COMMAND. Writing VOUT_COMMAND first over PMBus before
+> +	 * enabling AVS control is the workaround.
+> +	 */
+> +	if (op_val == ISL68137_VOUT_AVS) {
+> +		rc = pmbus_read_word_data(client, page, PMBUS_VOUT_COMMAND);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		rc = pmbus_write_word_data(client, page, PMBUS_VOUT_COMMAND,
+> +					   rc);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	rc = pmbus_update_byte_data(client, page, PMBUS_OPERATION,
+> +				    ISL68137_VOUT_AVS, op_val);
+> +
+> +	return (rc < 0) ? rc : count;
+> +}
+> +
+> +static ssize_t isl68137_avs_enable_show(struct device *dev,
+> +					struct device_attribute *devattr,
+> +					char *buf)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev->parent);
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+> +
+> +	return isl68137_avs_enable_show_page(client, attr->index, buf);
+> +}
+> +
+> +static ssize_t isl68137_avs_enable_store(struct device *dev,
+> +				struct device_attribute *devattr,
+> +				const char *buf, size_t count)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev->parent);
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+> +
+> +	return isl68137_avs_enable_store_page(client, attr->index, buf, count);
+> +}
+> +
+> +static SENSOR_DEVICE_ATTR_RW(avs0_enable, isl68137_avs_enable, 0);
+> +static SENSOR_DEVICE_ATTR_RW(avs1_enable, isl68137_avs_enable, 1);
+> +
+> +static struct attribute *enable_attrs[] = {
+> +	&sensor_dev_attr_avs0_enable.dev_attr.attr,
+> +	&sensor_dev_attr_avs1_enable.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group enable_group = {
+> +	.attrs = enable_attrs,
+> +};
+> +
+> +static const struct attribute_group *attribute_groups[] = {
+> +	&enable_group,
+> +	NULL,
+> +};
+> +
+> +static struct pmbus_driver_info isl68137_info = {
+> +	.pages = 2,
+> +	.format[PSC_VOLTAGE_IN] = direct,
+> +	.format[PSC_VOLTAGE_OUT] = direct,
+> +	.format[PSC_CURRENT_IN] = direct,
+> +	.format[PSC_CURRENT_OUT] = direct,
+> +	.format[PSC_POWER] = direct,
+> +	.format[PSC_TEMPERATURE] = direct,
+> +	.m[PSC_VOLTAGE_IN] = 1,
+> +	.b[PSC_VOLTAGE_IN] = 0,
+> +	.R[PSC_VOLTAGE_IN] = 3,
+> +	.m[PSC_VOLTAGE_OUT] = 1,
+> +	.b[PSC_VOLTAGE_OUT] = 0,
+> +	.R[PSC_VOLTAGE_OUT] = 3,
+> +	.m[PSC_CURRENT_IN] = 1,
+> +	.b[PSC_CURRENT_IN] = 0,
+> +	.R[PSC_CURRENT_IN] = 2,
+> +	.m[PSC_CURRENT_OUT] = 1,
+> +	.b[PSC_CURRENT_OUT] = 0,
+> +	.R[PSC_CURRENT_OUT] = 1,
+> +	.m[PSC_POWER] = 1,
+> +	.b[PSC_POWER] = 0,
+> +	.R[PSC_POWER] = 0,
+> +	.m[PSC_TEMPERATURE] = 1,
+> +	.b[PSC_TEMPERATURE] = 0,
+> +	.R[PSC_TEMPERATURE] = 0,
+> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_IIN | PMBUS_HAVE_PIN
+> +	    | PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2
+> +	    | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_TEMP
+> +	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
+> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
+> +	.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
+> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT,
+> +	.groups = attribute_groups,
+> +};
+> +
+> +static int isl68137_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	return pmbus_do_probe(client, id, &isl68137_info);
+> +}
+> +
+> +static const struct i2c_device_id isl68137_id[] = {
+> +	{"isl68137", 0},
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, isl68137_id);
+> +
+> +/* This is the driver that will be inserted */
+> +static struct i2c_driver isl68137_driver = {
+> +	.driver = {
+> +		   .name = "isl68137",
+> +		   },
+> +	.probe = isl68137_probe,
+> +	.remove = pmbus_do_remove,
+> +	.id_table = isl68137_id,
+> +};
+> +
+> +module_i2c_driver(isl68137_driver);
+> +
+> +MODULE_AUTHOR("Maxim Sloyko <maxims@google.com>");
+> +MODULE_DESCRIPTION("PMBus driver for Intersil ISL68137");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.21.0.392.gf8f6787159e-goog
+> 
