@@ -2,78 +2,88 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40206C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4563FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6B920693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ADBYsgvk"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1842073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfDOJEL (ORCPT
+        id S1726803AbfDOJHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:04:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35680 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfDOJEL (ORCPT
+        Mon, 15 Apr 2019 05:07:25 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:39838 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfDOJHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:04:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6Y1sUvSp25DQUSecTY7gB5Ablwg7tJmCYsxXPYXaofY=; b=ADBYsgvkhZHBuKug0QJGHq1ci
-        T4phB6d8iXS+K9iwMq0c4QH5FByAtv8lmLBqR1Q7S055rBrdZ9FptfWpLAy7ythGFqk41ryTvAyMR
-        +tTBVnE7M9Gvn2vkoFrqv4iknZejfJW/zZOttiYsmzk/yp+4bQMF4IUYVicI+KSP+PBSMLkitrYym
-        22i8swNam3A85L9f/PyqzxfnnIbmzdaq70F5xjjeWSJUYjQSHUZ/kj/hxdlqgYvSA1QRk2jvKX+ZF
-        sycKqJeyf51iUug0NgOYIM7auyF7kE7khecj9M1QHKyp9vowF7gIOmkURGGNPDVp+akmrOdehUwB4
-        Opk8QKURA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFxX7-00005c-Uk; Mon, 15 Apr 2019 09:04:10 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 44B53981E5B; Mon, 15 Apr 2019 11:04:06 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 11:04:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tj@kernel.org
-Subject: Re: misuse of fget_raw() in perf_event_get()
-Message-ID: <20190415090406.GJ2490@worktop.programming.kicks-ass.net>
-References: <20190413210242.GP2217@ZenIV.linux.org.uk>
- <20190415044158.5goa2je57j63kwaz@ast-mbp.dhcp.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415044158.5goa2je57j63kwaz@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 15 Apr 2019 05:07:25 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id x3F93pKp042176;
+        Mon, 15 Apr 2019 17:03:51 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, dwmw2@infradead.org, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        computersforpeace@gmal.com, paul.burton@mips.com, stefan@agner.ch,
+        christophe.kerello@st.com, liang.yang@amlogic.com,
+        geert@linux-m68k.org, devicetree@vger.kernel.org,
+        marcel.ziswiler@toradex.com, linux-mtd@lists.infradead.org,
+        richard@nod.at, miquel.raynal@bootlin.com
+Cc:     juliensu@mxic.com.tw, zhengxunli@mxic.com.tw,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v3 0/4] Add Macronix MX25F0A MFD driver for raw nand and spi
+Date:   Mon, 15 Apr 2019 17:23:50 +0800
+Message-Id: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com x3F93pKp042176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 09:42:00PM -0700, Alexei Starovoitov wrote:
-> On Sat, Apr 13, 2019 at 10:02:42PM +0100, Al Viro wrote:
-> > 	What's the point of using fget_raw(), if you do
-> > _not_ accept O_PATH descriptors?  That should be fget()...
-> 
-> I think you're talking about commit e03e7ee34fdd ("perf/bpf: Convert perf_event_array to use struct file")
-> I don't really remember why we went with this instead of fget().
-> There was a bunch of back and forth back then with Peter.
+Hi,
 
-That was mostly on what refcount to use, you wanted to use the event
-refcount, and I suggested using the file refcount.
+v3 patch is to rename the title of SPI controller driver.
+"Patch Macronix SPI controller driver according to MX25F0A MFD driver"
 
-If you look at:
+v2s patches is to support Macronix MX25F0A MFD driver 
+for raw nand and spi controller which is separated 
+form previous patchset:
 
-  lkml.kernel.org/r/20160126161637.GF6357@twins.programming.kicks-ass.net
+https://patchwork.kernel.org/patch/10874679/
 
-I too wondered about the fget_raw() at the time, whatever Al wants
-though, I never quite remember how that file stuff works :/
+thanks for your review.
+
+best regards,
+Mason
+
+Mason Yang (4):
+  mfd: Add Macronix MX25F0A MFD controller driver
+  mtd: rawnand: Add Macronix MX25F0A NAND controller
+  spi: Patch Macronix SPI controller driver according to MX25F0A MFD
+    driver
+  dt-bindings: mfd: Document Macronix MX25F0A controller bindings
+
+ .../devicetree/bindings/mfd/mxic-mx25f0a.txt       |  51 ++++
+ drivers/mfd/Kconfig                                |   9 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/mxic-mx25f0a.c                         |  84 ++++++
+ drivers/mtd/nand/raw/Kconfig                       |   6 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/mxic_nand.c                   | 294 +++++++++++++++++++++
+ drivers/spi/spi-mxic.c                             | 275 ++++---------------
+ include/linux/mfd/mxic-mx25f0a.h                   | 175 ++++++++++++
+ 9 files changed, 670 insertions(+), 226 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mxic-mx25f0a.txt
+ create mode 100644 drivers/mfd/mxic-mx25f0a.c
+ create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
+ create mode 100644 include/linux/mfd/mxic-mx25f0a.h
+
+-- 
+1.9.1
 
