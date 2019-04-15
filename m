@@ -5,90 +5,158 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A304CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CAEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A03620818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA61620818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfDOP6F (ORCPT
+        id S1727745AbfDOP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:58:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32921 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726094AbfDOP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:58:04 -0400
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id A9D326EF0F07A37406B1;
-        Mon, 15 Apr 2019 16:58:03 +0100 (IST)
-Received: from [127.0.0.1] (10.202.227.157) by lhreml705-cah.china.huawei.com
- (10.201.108.46) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
- 16:57:55 +0100
-Subject: Re: [PATCH 0/3] Add MMC controller support for HI3670 SoC
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <robh+dt@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <john.stultz@linaro.org>, <amit.kucheria@linaro.org>,
-        <guodong.xu@linaro.org>, <xuwei5@hisilicon.com>
-References: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <49d86dbb-2d88-a1f3-53f7-eda90e961cbb@hisilicon.com>
-Date:   Mon, 15 Apr 2019 16:57:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 15 Apr 2019 11:58:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25279 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfDOP6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:58:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:58:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
+   d="scan'208";a="142912141"
+Received: from unknown (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2019 08:58:52 -0700
+Subject: Re: [PATCH v2] x86: mm: Do not use set_{pud,pmd}_safe when splitting
+ the large page
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+References: <20190415145515.13559-1-brijesh.singh@amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <1aec4241-09c0-5295-7bb7-235e9a494d2c@intel.com>
+Date:   Mon, 15 Apr 2019 08:58:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190415145515.13559-1-brijesh.singh@amd.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.157]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
+On 4/15/19 7:55 AM, Singh, Brijesh wrote:
+>  static unsigned long __meminit
+>  phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+> -	      pgprot_t prot)
+> +	      pgprot_t prot, bool safe)
+>  {
+>  	unsigned long pages = 0, paddr_next;
+>  	unsigned long paddr_last = paddr_end;
+> @@ -432,7 +463,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+>  					     E820_TYPE_RAM) &&
+>  			    !e820__mapped_any(paddr & PAGE_MASK, paddr_next,
+>  					     E820_TYPE_RESERVED_KERN))
+> -				set_pte_safe(pte, __pte(0));
+> +				__set_pte(pte, __pte(0), safe);
+>  			continue;
+>  		}
 
-On 2/28/2019 3:45 PM, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This patchset adds MMC controller support for HI3670 SoC. Since HI3670
-> SoC is architecturally same as the HI3660 SoC, HI3660 DWMMC driver is
-> reused here with DT compatible fallback approach. Also, SD and WiFi
-> supports are added for the HiKey970 board.
-> 
-> Wei:
-> 
-> Please apply this patchset along with the reset and UFS patches in the
-> following order:
-> 
-> 1. Reset support patches
-> 2. MMC support patches
-> 3. UFS support patches
-> 
-> PS: Since there is no PMIC support available yet, fixed-regulator nodes
-> are used to get the driver working (regulators are enabled by bootloader).
-> 
-> Thanks,
-> Mani
-> 
-> Manivannan Sadhasivam (3):
->   dt-bindings: mmc: Add HI3670 MMC controller binding
->   arm64: dts: hisilicon: hi3670: Add MMC controller support
->   arm64: dts: hisilicon: hikey970: Add SD and WiFi support
-> 
->  .../devicetree/bindings/mmc/k3-dw-mshc.txt    |   2 +
->  .../boot/dts/hisilicon/hi3670-hikey970.dts    |  75 ++++++++++++
->  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  37 ++++++
->  .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 115 ++++++++++++++++++
->  4 files changed, 229 insertions(+)
-> 
+The changelog is great, btw.
 
-Thanks!
-Applied the series to the hisilicon dts tree with the order.
+But, I'm not a big fan of propagating the 'safe' nomenclature.  Could
+we, at least, call it 'overwrite_safe' or something if we're going to
+have a variable name?  Or even, 'new_entries_only' or something that
+actually conveys meaning?
 
-Best Regards,
-Wei
+Because, just reading it, I always wonder "why do we have an unsafe
+variant, that's stupid" every time. :)
 
+> +#define DEFINE_ENTRY(type1, type2, safe)			\
+> +static inline void __set_##type1(type1##_t *arg1,		\
+> +			type2##_t arg2, bool safe)		\
+> +{								\
+> +	if (safe)						\
+> +		set_##type1##_safe(arg1, arg2);			\
+> +	else							\
+> +		set_##type1(arg1, arg2);			\
+> +}
+
+While I appreciate the brevity that these macros allow, I detest their
+ability to thwart cscope and grep.  I guess it's just one file, but it
+does make me grumble a bit.
+
+Also, can we do better than "__"?  Aren't these specific to
+initialization, and only for the kernel?  Maybe we should call them
+meminit_set_pte() or kern_set_pte() or something so make it totally
+clear to the reader that they're new.
+
+
+> -		kernel_physical_mapping_init(__pa(vaddr & pmask),
+> -					     __pa((vaddr_end & pmask) + psize),
+> -					     split_page_size_mask);
+> +		kernel_physical_mapping_change(__pa(vaddr & pmask),
+> +					       __pa((vaddr_end & pmask) + psize),
+> +					       split_page_size_mask);
+
+BTW, this hunk is really nice the way that the new naming makes it more
+intuitive what's going on.  My only nit w9uld be that we now have two
+very similarly-named functions with different TLB-flushing requirements.
+
+Could we please include a comment at this site that reminds us that we
+owe a TLB flush after this?
