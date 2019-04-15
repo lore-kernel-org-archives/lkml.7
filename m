@@ -2,144 +2,105 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F916C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1250DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2AC2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E982073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boag/pJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfDORja (ORCPT
+        id S1728095AbfDORjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 13:39:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32934 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfDORja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 13:39:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 10:39:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208,223";a="291762326"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2019 10:39:29 -0700
-Date:   Mon, 15 Apr 2019 10:39:29 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: always use early vmcs check when EPT is
- disabled
-Message-ID: <20190415173929.GG24010@linux.intel.com>
-References: <1555337156-37142-1-git-send-email-pbonzini@redhat.com>
- <20190415173513.GF24010@linux.intel.com>
+        Mon, 15 Apr 2019 13:39:39 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34253 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbfDORjj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 13:39:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k21so15211967otf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 10:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pYUneuXemRtWxW8zOSyr8WfRHS3jkf7zIGvmOCWCSDM=;
+        b=boag/pJVVchnd0v5Xv49in3aQJ1PKN+igr3j9TEJ56wfUHLG/NVhvpBKqX1bZ5GyLT
+         FELL68dpGZkuiVtKrXwr9/0r3Poy6/Z1ukM5ZA3LKRmxNg1rb0QoBVkG2JnIctD5+fWK
+         sIoubD90Ke4Qi9we0lNRx+y1OyXhSa1ECsgurUUuFfEBxcdbXkbPNVROPWj3ERAfMNVV
+         mzVC4WsXrTqEPo7VJP5Ha7JYLsH2kx1ZGzhcVL+h1pLvl8H2a2tA4i3Ok2xLGfdDc///
+         wZBfXD6w1sa7tFXIDUah1HJaHYzMVw4v6kOdY2z/THHEaszbnY4OFp+IkKwza5pwn9Lf
+         GFlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=pYUneuXemRtWxW8zOSyr8WfRHS3jkf7zIGvmOCWCSDM=;
+        b=s6ptOWnqZgQSgxLo9hOx7FSBmDOm2h3eP90k4OkMT2jAPHagMw0lbeepQHMU3EeYdl
+         P132aUEUWt98J7e4HCKsxsRAjBdjL2823driy0kZY2jNt56A7+Vw3kP7q7exrLhYm0Q9
+         CNN9YMXe/6sA2jbQx/CzeVTsx4dudtBANswNDjbjJSAP5eWgHMUYPr385KELCWdJJEUj
+         5XALSlmktiEKlCphNuCMSeJfaBFP1/Hh/CS7HbbMjztRg2awW4mUc/rmuZY2NFcv/zMt
+         9k/pyJwDCubcyQEyNip9zGOc8a+5Kcj9jOR1CBmt8IGE/HVZ04MjJ73sSl2OJilFfGtQ
+         WcZg==
+X-Gm-Message-State: APjAAAXL/zZu0UiEixUUV6EyRYnkj0BuSKomOpvLsAr+wgAZmAStKc91
+        YRsqugiCbuV30lvyoV/NRT28ADM=
+X-Google-Smtp-Source: APXvYqwI395p/MXfE8E16wnvXBMYKcJffqQlpcsfqVjsDe+vSmr2gmpj6Ie0DR81me68gqaWrvCTSw==
+X-Received: by 2002:a9d:e8f:: with SMTP id 15mr47767116otj.148.1555349977925;
+        Mon, 15 Apr 2019 10:39:37 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id h68sm20376469otb.1.2019.04.15.10.39.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 10:39:37 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
+        by serve.minyard.net (Postfix) with ESMTPSA id B71E818003A;
+        Mon, 15 Apr 2019 17:39:36 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 12:39:35 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipmi: avoid atomic_inc in exit function
+Message-ID: <20190415173935.GE4121@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190415155509.3565087-1-arnd@arndb.de>
+ <20190415164022.GA32090@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="qlTNgmc+xy1dBmNv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190415173513.GF24010@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415164022.GA32090@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Apr 15, 2019 at 10:35:13AM -0700, Sean Christopherson wrote:
-> On Mon, Apr 15, 2019 at 04:05:56PM +0200, Paolo Bonzini wrote:
-> > The remaining failures of vmx.flat when EPT is disabled are caused by
-> > incorrectly reflecting VMfails to the L1 hypervisor.  What happens is
-> > that nested_vmx_restore_host_state corrupts the guest CR3, reloading it
-> > with the host's shadow CR3 instead, because it blindly loads GUEST_CR3
-> > from the vmcs01.
+On Mon, Apr 15, 2019 at 09:40:22AM -0700, Christoph Hellwig wrote:
+> On Mon, Apr 15, 2019 at 05:55:00PM +0200, Arnd Bergmann wrote:
+> > This causes a link failure on ARM in certain configurations,
+> > when we reference each atomic operation from .alt.smp.init in
+> > order to patch out atomics on non-SMP systems:
 > > 
-> > For simplicity let's just always use hardware VMCS checks when EPT is
-> > disabled.  This way, nested_vmx_restore_host_state is not reached at
-> > all (or at least shouldn't be reached).
+> > `.exit.text' referenced in section `.alt.smp.init' of drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section `.exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+> > 
+> > In this case, we can trivially replace the atomic_inc() with
+> > an atomic_set() that has the same effect and does not require
+> > a fixup.
 > 
-> At the risk of getting too clever, we can handle this scenario by stashing
-> L1's CR3 in vmcs01.GUEST_CR3 immediately prior to loading L2's state.
-> 
-> The attached patch passes vmx.flat with ept=0, haven't tested it beyond
-> that.
+> I'd rather fіx the arm section management.  Using atomic in exit
+> routines is perfectly valid, and it would seem odd to forbid it.
 
-Gah, forgot to regenerate the patch, correct version attached...
+That was my first thought, too.  It's kind of hard to believe that
+the IPMI driver is the only thing that does an atomic_inc() in the
+exit code.
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-KVM-nVMX-Stash-L1-s-CR3-in-vmcs01.GUEST_CR3-on-neste.patch"
-
-From 332242a1f340af2bd313e5a5622985bdafae340f Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Date: Mon, 15 Apr 2019 10:06:22 -0700
-Subject: [PATCH] KVM: nVMX: Stash L1's CR3 in vmcs01.GUEST_CR3 on nested entry
- w/o EPT
-
-KVM does not have 100% coverage of VMX consistency checks, i.e. some
-checks that cause VM-Fail may only be detected by hardware during a
-nested VM-Entry.  In such a case, KVM must restore L1's state to the
-pre-VM-Enter state as L2's state has already been loaded into KVM's
-software model.
-
-L1's CR3 and PDPTRs in particular are loaded from vmcs01.GUEST_*.  But
-when EPT is disabled, the associated fields hold KVM's shadow values,
-not L1's "real" values.  Fortunately, when EPT is disabled the PDPTRs
-come from memory, i.e. are not cached in the VMCS.  Which leaves CR3
-as the sole anomaly.  Handle CR3 by overwriting vmcs01.GUEST_CR3 with
-L1's CR3 during the nested VM-Entry when EPT is disabled *and* nested
-early checks are disabled, so that nested_vmx_restore_host_state() will
-naturally restore the correct vcpu->arch.cr3 from vmcs01.GUEST_CR3.
-
-Note, these shenanigans work because nested_vmx_restore_host_state()
-does a full kvm_mmu_reset_context(), i.e. unloads the current MMU,
-which guarantees vmcs01.GUEST_CR3 will be rewritten with a new shadow
-CR3 prior to re-entering L1.  Writing vmcs01.GUEST_CR3 is done if and
-only if nested early checks are disabled as "late" VM-Fail should never
-happen in that case (KVM WARNs), and the conditional write avoids the
-need to restore the correct GUEST_CR3 when nested_vmx_check_vmentry_hw()
-fails.
-
-Reported-by: Paolo Bonzini <pbonzini@redhat.com>
-Fixes: bd18bffca353 ("KVM: nVMX: restore host state in nested_vmx_vmexit for VMFail")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index e5418f78a249..196f33c0e707 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2982,6 +2982,8 @@ int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
- 	if (kvm_mpx_supported() &&
- 		!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
- 		vmx->nested.vmcs01_guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
-+	if (!enable_ept && !nested_early_check)
-+		vmcs_writel(GUEST_CR3, vcpu->arch.cr3);
- 
- 	vmx_switch_vmcs(vcpu, &vmx->nested.vmcs02);
- 
-@@ -3802,7 +3804,8 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	 * VMFail, like everything else we just need to ensure our
- 	 * software model is up-to-date.
- 	 */
--	ept_save_pdptrs(vcpu);
-+	if (enable_ept)
-+		ept_save_pdptrs(vcpu);
- 
- 	kvm_mmu_reset_context(vcpu);
- 
--- 
-2.21.0
-
-
---qlTNgmc+xy1dBmNv--
+-corey
