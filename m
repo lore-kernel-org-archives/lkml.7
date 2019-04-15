@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4B5C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E876C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0AB218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421D8218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354966;
-	bh=7bZHqLJaSD8Um4rnFPt71kY+dGOFr1V8Td2QvXSYYl4=;
+	s=default; t=1555354969;
+	bh=vKgfG1AmS+te3HdJREXVT6S4yM3AS8G45p75f6/j1A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mkZsPn9f9ibkuPyAtyyFlVdt9EDV8JUJRfsiTRfTGG9pREo+PVcyYNWOmPWytXtyd
-	 QRifIG4XS6TrBYPdsIFGUHrN67s2YKUFzci6N4BqfaC0cBVQ6wdAFxSKou5Cuhc9y1
-	 OZ0RyQACKjw7g5qjER1ysLqwN+dfReP5svKypSVA=
+	b=VMR3cENM/kqL09qhVqqsmIuSPMmgml+Zpw5pc/oh2psk1tjAF1IrJBtupYspRP19f
+	 ZII5HJIvcIyET6FPqslGnbnsIuBZNyaOAbho6oUT7nZXdS4iUmDtDl+m966WN5qtJF
+	 Fn1iUaAbWctWhJQnWTUc7h+nf0W6vO7Xy5wFAwL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfDOTCp (ORCPT
+        id S1729004AbfDOTCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbfDOTCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:43 -0400
+        id S1728826AbfDOTCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A31218A1;
-        Mon, 15 Apr 2019 19:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D93D2087C;
+        Mon, 15 Apr 2019 19:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354961;
-        bh=7bZHqLJaSD8Um4rnFPt71kY+dGOFr1V8Td2QvXSYYl4=;
+        s=default; t=1555354958;
+        bh=vKgfG1AmS+te3HdJREXVT6S4yM3AS8G45p75f6/j1A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVWgTJw1D2PS6Z9I/53TRyUJTnxOPfenmeJ5bXNvtZ/XajjXmy68eOCLI0mQxjRL2
-         Ed+gx3uUIIPjPCJ6t+jg8/2KayBDLCgEPyM+sXjo6V0di2rAXZqnB6oJXNlUwdOVPQ
-         u/mKUpDm3e5BVYFcDr0+3sTabHUCRIazV1Bi7WdY=
+        b=EAnKZDqbIjwI87Szmk67khSiUe3O9Na/jrYabkH7bqPmoFu7HeCXpsUh64kJW7XEX
+         MdxQ0jZTCAPbxmdaMtiCAqDaNqiw6rrxPy8L/y3KWPYLac/p9cTaUAjvCJmiI/DSdt
+         O7eyg0drb1y5P+JMoTHt+zCXMqHS5OiVbZGmIuV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 15/69] tty: ldisc: add sysctl to prevent autoloading of ldiscs
-Date:   Mon, 15 Apr 2019 20:58:33 +0200
-Message-Id: <20190415183729.578020584@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 14/69] tty: mark Siemens R3964 line discipline as BROKEN
+Date:   Mon, 15 Apr 2019 20:58:32 +0200
+Message-Id: <20190415183729.513873058@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -59,142 +60,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 7c0cca7c847e6e019d67b7d793efbbe3b947d004 upstream.
+commit c7084edc3f6d67750f50d4183134c4fb5712a5c8 upstream.
 
-By default, the kernel will automatically load the module of any line
-dicipline that is asked for.  As this sometimes isn't the safest thing
-to do, provide a sysctl to disable this feature.
+The n_r3964 line discipline driver was written in a different time, when
+SMP machines were rare, and users were trusted to do the right thing.
+Since then, the world has moved on but not this code, it has stayed
+rooted in the past with its lovely hand-crafted list structures and
+loads of "interesting" race conditions all over the place.
 
-By default, we set this to 'y' as that is the historical way that Linux
-has worked, and we do not want to break working systems.  But in the
-future, perhaps this can default to 'n' to prevent this functionality.
+After attempting to clean up most of the issues, I just gave up and am
+now marking the driver as BROKEN so that hopefully someone who has this
+hardware will show up out of the woodwork (I know you are out there!)
+and will help with debugging a raft of changes that I had laying around
+for the code, but was too afraid to commit as odds are they would break
+things.
 
+Many thanks to Jann and Linus for pointing out the initial problems in
+this codebase, as well as many reviews of my attempts to fix the issues.
+It was a case of whack-a-mole, and as you can see, the mole won.
+
+Reported-by: Jann Horn <jannh@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 
 ---
- drivers/tty/Kconfig     |   24 ++++++++++++++++++++++++
- drivers/tty/tty_io.c    |    3 +++
- drivers/tty/tty_ldisc.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 74 insertions(+)
+ drivers/char/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -467,4 +467,28 @@ config VCC
- 	depends on SUN_LDOMS
- 	help
- 	  Support for Sun logical domain consoles.
-+
-+config LDISC_AUTOLOAD
-+	bool "Automatically load TTY Line Disciplines"
-+	default y
-+	help
-+	  Historically the kernel has always automatically loaded any
-+	  line discipline that is in a kernel module when a user asks
-+	  for it to be loaded with the TIOCSETD ioctl, or through other
-+	  means.  This is not always the best thing to do on systems
-+	  where you know you will not be using some of the more
-+	  "ancient" line disciplines, so prevent the kernel from doing
-+	  this unless the request is coming from a process with the
-+	  CAP_SYS_MODULE permissions.
-+
-+	  Say 'Y' here if you trust your userspace users to do the right
-+	  thing, or if you have only provided the line disciplines that
-+	  you know you will be using, or if you wish to continue to use
-+	  the traditional method of on-demand loading of these modules
-+	  by any user.
-+
-+	  This functionality can be changed at runtime with the
-+	  dev.tty.ldisc_autoload sysctl, this configuration option will
-+	  only set the default value of this functionality.
-+
- endif # TTY
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -511,6 +511,8 @@ static const struct file_operations hung
- static DEFINE_SPINLOCK(redirect_lock);
- static struct file *redirect;
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -380,7 +380,7 @@ config XILINX_HWICAP
  
-+extern void tty_sysctl_init(void);
-+
- /**
-  *	tty_wakeup	-	request more data
-  *	@tty: terminal
-@@ -3332,6 +3334,7 @@ void console_sysfs_notify(void)
-  */
- int __init tty_init(void)
- {
-+	tty_sysctl_init();
- 	cdev_init(&tty_cdev, &tty_fops);
- 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1) ||
- 	    register_chrdev_region(MKDEV(TTYAUX_MAJOR, 0), 1, "/dev/tty") < 0)
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -155,6 +155,13 @@ static void put_ldops(struct tty_ldisc_o
-  *		takes tty_ldiscs_lock to guard against ldisc races
-  */
- 
-+#if defined(CONFIG_LDISC_AUTOLOAD)
-+	#define INITIAL_AUTOLOAD_STATE	1
-+#else
-+	#define INITIAL_AUTOLOAD_STATE	0
-+#endif
-+static int tty_ldisc_autoload = INITIAL_AUTOLOAD_STATE;
-+
- static struct tty_ldisc *tty_ldisc_get(struct tty_struct *tty, int disc)
- {
- 	struct tty_ldisc *ld;
-@@ -169,6 +176,8 @@ static struct tty_ldisc *tty_ldisc_get(s
- 	 */
- 	ldops = get_ldops(disc);
- 	if (IS_ERR(ldops)) {
-+		if (!capable(CAP_SYS_MODULE) && !tty_ldisc_autoload)
-+			return ERR_PTR(-EPERM);
- 		request_module("tty-ldisc-%d", disc);
- 		ldops = get_ldops(disc);
- 		if (IS_ERR(ldops))
-@@ -841,3 +850,41 @@ void tty_ldisc_deinit(struct tty_struct
- 		tty_ldisc_put(tty->ldisc);
- 	tty->ldisc = NULL;
- }
-+
-+static int zero;
-+static int one = 1;
-+static struct ctl_table tty_table[] = {
-+	{
-+		.procname	= "ldisc_autoload",
-+		.data		= &tty_ldisc_autoload,
-+		.maxlen		= sizeof(tty_ldisc_autoload),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &zero,
-+		.extra2		= &one,
-+	},
-+	{ }
-+};
-+
-+static struct ctl_table tty_dir_table[] = {
-+	{
-+		.procname	= "tty",
-+		.mode		= 0555,
-+		.child		= tty_table,
-+	},
-+	{ }
-+};
-+
-+static struct ctl_table tty_root_table[] = {
-+	{
-+		.procname	= "dev",
-+		.mode		= 0555,
-+		.child		= tty_dir_table,
-+	},
-+	{ }
-+};
-+
-+void tty_sysctl_init(void)
-+{
-+	register_sysctl_table(tty_root_table);
-+}
+ config R3964
+ 	tristate "Siemens R3964 line discipline"
+-	depends on TTY
++	depends on TTY && BROKEN
+ 	---help---
+ 	  This driver allows synchronous communication with devices using the
+ 	  Siemens R3964 packet protocol. Unless you are dealing with special
 
 
