@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847AFC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC3C282DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCB920684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D217F2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfDOKrE (ORCPT
+        id S1727307AbfDOKrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:47:04 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38442 "EHLO huawei.com"
+        Mon, 15 Apr 2019 06:47:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6185 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727212AbfDOKrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:47:00 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 727A8A52E617467592BB;
-        Mon, 15 Apr 2019 18:46:58 +0800 (CST)
+        id S1727212AbfDOKrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 06:47:05 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 75C8BB19C81F804D5FBC;
+        Mon, 15 Apr 2019 18:47:03 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 15 Apr 2019 18:46:50 +0800
+ 14.3.408.0; Mon, 15 Apr 2019 18:46:53 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
         <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
@@ -35,9 +35,9 @@ CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
         <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
         <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
         Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v4 2/5] arm64: kdump: support reserving crashkernel above 4G
-Date:   Mon, 15 Apr 2019 18:57:22 +0800
-Message-ID: <20190415105725.22088-3-chenzhou10@huawei.com>
+Subject: [PATCH v4 3/5] memblock: add memblock_cap_memory_ranges for multiple ranges
+Date:   Mon, 15 Apr 2019 18:57:23 +0800
+Message-ID: <20190415105725.22088-4-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415105725.22088-1-chenzhou10@huawei.com>
 References: <20190415105725.22088-1-chenzhou10@huawei.com>
@@ -51,107 +51,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When crashkernel is reserved above 4G in memory, kernel should
-reserve some amount of low memory for swiotlb and some DMA buffers.
+The memblock_cap_memory_range() removes all the memory except the
+range passed to it. Extend this function to receive memblock_type
+with the regions that should be kept.
 
-Kernel would try to allocate at least 256M below 4G automatically
-as x86_64 if crashkernel is above 4G. Meanwhile, support
-crashkernel=X,[high,low] in arm64.
+Enable this function in arm64 for reservation of multiple regions
+for the crash kernel.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/arm64/include/asm/kexec.h |  3 +++
- arch/arm64/kernel/setup.c      |  3 +++
- arch/arm64/mm/init.c           | 25 ++++++++++++++++++++-----
- 3 files changed, 26 insertions(+), 5 deletions(-)
+ include/linux/memblock.h |  1 +
+ mm/memblock.c            | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 67e4cb7..32949bf 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -28,6 +28,9 @@
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 47e3c06..180877c 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+ void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
++void memblock_cap_memory_ranges(struct memblock_type *regions_to_keep);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ bool memblock_is_map_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index f315eca..9661807 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1697,6 +1697,51 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+ 			base + size, PHYS_ADDR_MAX);
+ }
  
- #define KEXEC_ARCH KEXEC_ARCH_AARCH64
- 
-+/* 2M alignment for crash kernel regions */
-+#define CRASH_ALIGN	SZ_2M
++void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
++{
++	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
++	int i, j, ret, nr = 0;
++	struct memblock_region *regs = regions_to_keep->regions;
 +
- #ifndef __ASSEMBLY__
- 
- /**
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 413d566..82cd9a0 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
- 		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+		    crashk_low_res.end <= res->end)
-+			request_resource(res, &crashk_low_res);
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 972bf43..f5dde73 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -74,20 +74,30 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- static void __init reserve_crashkernel(void)
- {
- 	unsigned long long crash_base, crash_size;
-+	bool high = false;
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base);
- 	/* no crashkernel= or invalid value specified */
--	if (ret || !crash_size)
--		return;
-+	if (ret || !crash_size) {
-+		/* crashkernel=X,high */
-+		ret = parse_crashkernel_high(boot_command_line,
-+				memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+		if (ret || !crash_size)
-+			return;
-+		high = true;
++	for (i = 0; i < regions_to_keep->cnt; i++) {
++		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
++				regs[i].size, &start_rgn[i], &end_rgn[i]);
++		if (ret)
++			break;
++		nr++;
 +	}
- 
- 	crash_size = PAGE_ALIGN(crash_size);
- 
- 	if (crash_base == 0) {
- 		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
--				crash_size, SZ_2M);
-+		crash_base = memblock_find_in_range(0,
-+				high ? memblock_end_of_DRAM()
-+				: ARCH_LOW_ADDRESS_LIMIT,
-+				crash_size, CRASH_ALIGN);
- 		if (crash_base == 0) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
-@@ -105,13 +115,18 @@ static void __init reserve_crashkernel(void)
- 			return;
- 		}
- 
--		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
- 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
- 			return;
- 		}
- 	}
- 	memblock_reserve(crash_base, crash_size);
- 
-+	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
-+		memblock_free(crash_base, crash_size);
++	if (!nr)
 +		return;
++
++	/* remove all the MAP regions */
++	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	for (i = nr - 1; i > 0; i--)
++		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
++			if (!memblock_is_nomap(&memblock.memory.regions[j]))
++				memblock_remove_region(&memblock.memory, j);
++
++	for (i = start_rgn[0] - 1; i >= 0; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	/* truncate the reserved regions */
++	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
++
++	for (i = nr - 1; i > 0; i--) {
++		phys_addr_t remove_base = regs[i - 1].base + regs[i - 1].size;
++		phys_addr_t remove_size = regs[i].base - remove_base;
++
++		memblock_remove_range(&memblock.reserved, remove_base,
++				remove_size);
 +	}
 +
- 	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
- 		crash_base, crash_base + crash_size, crash_size >> 20);
- 
++	memblock_remove_range(&memblock.reserved,
++			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
++}
++
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
+ 	phys_addr_t max_addr;
 -- 
 2.7.4
 
