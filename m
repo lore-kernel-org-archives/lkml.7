@@ -2,192 +2,134 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D435C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D10C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE0120825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E2720825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Z6r4nUjn";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="TnXRxb07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfDOP4G (ORCPT
+        id S1727736AbfDOP4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:56:06 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39620 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726785AbfDOP4G (ORCPT
+        Mon, 15 Apr 2019 11:56:11 -0400
+Received: from mail18.wdc04.mandrillapp.com ([205.201.139.18]:8401 "EHLO
+        mail18.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727691AbfDOP4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:56:06 -0400
-Received: (qmail 5451 invoked by uid 2102); 15 Apr 2019 11:56:05 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 15 Apr 2019 11:56:05 -0400
-Date:   Mon, 15 Apr 2019 11:56:05 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Raul E Rangel <rrangel@chromium.org>
-cc:     USB list <linux-usb@vger.kernel.org>, <groeck@chromium.org>,
-        Oliver Neukum <oneukum@suse.com>, <djkurtz@chromium.org>,
-        <zwisler@chromium.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Johan Hovold <johan@kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
- controller has died
-In-Reply-To: <20190411185211.235940-1-rrangel@chromium.org>
-Message-ID: <Pine.LNX.4.44L0.1904151152390.1575-100000@iolanthe.rowland.org>
+        Mon, 15 Apr 2019 11:56:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=d0W7Z8nFQ4X/vRXX6lWS7UtbrZ1ez/JWeQL7TBTIJzI=;
+ b=Z6r4nUjnICcRu92UOvH1XLj1O2A5EDL31V3MLAN3cTrtfpNy4gMSogFswdRkS6H9ireQ0ZYVZi40
+   jvJBqI0Il8KV93yYFOJshvpgAXUn3qyfKIrxmc8pmATF06UOjskJo3NkO4g5lDbmNo83nIR8OpeY
+   SoyXjTzX78M6O74KugA=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail18.wdc04.mandrillapp.com id hmikpe1jvmgt for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:41:06 +0000 (envelope-from <bounce-md_31050260.5cb4a612.v1-0cc2e3a14ea74c468aa4c3d438114fbb@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555342866; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=d0W7Z8nFQ4X/vRXX6lWS7UtbrZ1ez/JWeQL7TBTIJzI=; 
+ b=TnXRxb07AgPlitqE9ik3R/d/o0teu5WwmZL83xejwjmN9SqJcJZ6IZYs60XvLQD2cwNO05
+ kL9fgCyt7vMEKkIJAVU2TrAz0OeBzRWIDL0HDSKqG0GN8ms4ThIxey9byVQYgpcCJFaVui4/
+ EDEKVXjz/b+7TTQtBcc//s2QHS3B8=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Received: from [87.98.221.171] by mandrillapp.com id 0cc2e3a14ea74c468aa4c3d438114fbb; Mon, 15 Apr 2019 15:41:06 +0000
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, <kbuild-all@01.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-Id: <20190415154102.GB17661@deco.navytux.spb.ru>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien> <20190413170056.GA11293@deco.navytux.spb.ru> <20190415143857.kg2dbg3zxsxdktsi@linutronix.de> <20190415145456.GA15280@deco.navytux.spb.ru> <20190415152021.3j3riefeoz7rf2pa@linutronix.de>
+In-Reply-To: <20190415152021.3j3riefeoz7rf2pa@linutronix.de>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.0cc2e3a14ea74c468aa4c3d438114fbb
+X-Mandrill-User: md_31050260
+Date:   Mon, 15 Apr 2019 15:41:06 +0000
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019, Raul E Rangel wrote:
+Hi Sebastian,
 
-> This change will send a CHANGE event to udev with the DEAD environment
-> variable set when the HC dies. I chose this instead of any of the other
-> udev events because it's representing a state change in the host
-> controller. The only other event that might have fit was OFFLINE, but
-> that seems to be used for hot-removal and it implies the device could
-> come ONLINE again.
+On Mon, Apr 15, 2019 at 05:20:22PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-04-15 14:55:02 [+0000], Kirill Smelkov wrote:
+> > Hi Sebastian,
+> Hi Kirill,
 > 
-> By notifying user space the appropriate policies can be applied.
-> i.e.,
->  * Collect error logs.
->  * Notify the user that USB is no longer functional.
->  * Perform a graceful reboot.
+> > On Mon, Apr 15, 2019 at 04:38:57PM +0200, Sebastian Andrzej Siewior wrote:
+> > > On 2019-04-13 17:00:59 [+0000], Kirill Smelkov wrote:
+> > > > stream_open.cocci was issuing only warning for pci/switchtec, but after
+> > > > 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
+> > > > started to use wait_even_* inside read method and, since
+> > > > stream_open.cocci considers wait_event_* as blocking the warning became
+> > > > error. Previously it was completions there, but I added support for wait
+> > > > events only for simplicity.
+> > > 
+> > > why is wait_event_interruptible() treated differently compared to
+> > > wait_for_completion_interruptible()?
+> > 
+> > No particular reason. I just taught stream_open.cocci to consider
+> > only "wait_event_*" as blocking:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/stream_open.cocci?h=v5.1-rc5#n35
+> > 
+> > based on original /proc/xen/xenbus deadlock:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/xenbus/xenbus_dev_frontend.c?h=v5.1-rc5#n135
+> > https://git.kernel.org/linus/581d21a2d02a
+> > 
+> > We can extend "a function that blocks" rule to cover other kernel
+> > primitives.
+> > 
+> > For the reference: the deadlock scenario is described in
+> > 
+> > https://git.kernel.org/linus/10dce8af3422
 > 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
-> I wasn't able to find any good examples of other drivers sending a dead
-> notification.
-> 
-> Use an EVENT= format
-> https://github.com/torvalds/linux/blob/master/drivers/acpi/dock.c#L302
-> https://github.com/torvalds/linux/blob/master/drivers/net/wireless/ath/wil6210/interrupt.c#L497
-> 
-> Uses SDEV_MEDIA_CHANGE=
-> https://github.com/torvalds/linux/blob/master/drivers/scsi/scsi_lib.c#L2318
-> 
-> Uses ERROR=1.
-> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/7f6d8aec5803aac44192f03dce5637b66cda7abf/drivers/input/touchscreen/atmel_mxt_ts.c#1581
-> I'm not a fan because it doesn't signal what the error was.
-> 
-> We could change the DEAD=1 event to maybe ERROR=1?
-> 
-> Also where would be a good place to document this?
-> 
-> Also thanks for the review. This is my first kernel patch so forgive me
-> if I get the workflow wrong.
-> 
-> Changes in v2:
-> - Check that the root hub still exists before sending the uevent.
-> - Ensure died_work has completed before deallocating.
-> 
->  drivers/usb/core/hcd.c  | 32 ++++++++++++++++++++++++++++++++
->  include/linux/usb/hcd.h |  1 +
->  2 files changed, 33 insertions(+)
+> As far I understand the problem is when the ->read() callback waits for
+> the ->write() callback. The locking isn't changed by patch you
+> mentioned.
 
-Technically this patch looks okay to me.  However, Greg KH may have
-some comments regarding the new uevent this introduces.
+Yes, correct. The patch that I mentioned only adds semantic patch which
+find places with such problem and can generate a regular patch to change
+locking. Here is that place for pci/switchtec:
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+https://lab.nexedi.com/kirr/linux/commit/edaeb4101860?expand_all_diffs=1#ccc4baef911c8dad164d4ff29a8c0b287abed7c2_393_393
 
-Alan Stern
+> So extended might make sense. But then wait_event_* by itself in
+> ->read() isn't a problem as long as its counter part isn't in ->write().
 
+It is a problem either if its counterpart is in write _or_ if that
+wait_event depends on external source and waiting can be for potentially
+unbounded time, like e.g. waiting to receive a character from serial
+port or network.
 
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index 975d7c1288e3..7835f1a3647d 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -2343,6 +2343,27 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
->  	return status;
->  }
->  
-> +
-> +/**
-> + * hcd_died_work - Workqueue routine for root-hub has died.
-> + * @hcd: primary host controller for this root hub.
-> + *
-> + * Do not call with the shared_hcd.
-> + * */
-> +static void hcd_died_work(struct work_struct *work)
-> +{
-> +	struct usb_hcd *hcd = container_of(work, struct usb_hcd, died_work);
-> +
-> +	mutex_lock(&usb_bus_idr_lock);
-> +
-> +	if (hcd->self.root_hub)
-> +		/* Notify user space that the host controller has died */
-> +		kobject_uevent_env(&hcd->self.root_hub->dev.kobj, KOBJ_CHANGE,
-> +				   (char *[]){ "DEAD=1", NULL });
-> +
-> +	mutex_unlock(&usb_bus_idr_lock);
-> +}
-> +
->  /* Workqueue routine for root-hub remote wakeup */
->  static void hcd_resume_work(struct work_struct *work)
->  {
-> @@ -2488,6 +2509,13 @@ void usb_hc_died (struct usb_hcd *hcd)
->  			usb_kick_hub_wq(hcd->self.root_hub);
->  		}
->  	}
-> +
-> +	/* Handle the case where this function gets called with a shared HCD */
-> +	if (usb_hcd_is_primary_hcd(hcd))
-> +		schedule_work(&hcd->died_work);
-> +	else
-> +		schedule_work(&hcd->primary_hcd->died_work);
-> +
->  	spin_unlock_irqrestore (&hcd_root_hub_lock, flags);
->  	/* Make sure that the other roothub is also deallocated. */
->  }
-> @@ -2555,6 +2583,8 @@ struct usb_hcd *__usb_create_hcd(const struct hc_driver *driver,
->  	INIT_WORK(&hcd->wakeup_work, hcd_resume_work);
->  #endif
->  
-> +	INIT_WORK(&hcd->died_work, hcd_died_work);
-> +
->  	hcd->driver = driver;
->  	hcd->speed = driver->flags & HCD_MASK;
->  	hcd->product_desc = (driver->product_desc) ? driver->product_desc :
-> @@ -2908,6 +2938,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
->  #ifdef CONFIG_PM
->  	cancel_work_sync(&hcd->wakeup_work);
->  #endif
-> +	cancel_work_sync(&hcd->died_work);
->  	mutex_lock(&usb_bus_idr_lock);
->  	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
->  	mutex_unlock(&usb_bus_idr_lock);
-> @@ -2968,6 +2999,7 @@ void usb_remove_hcd(struct usb_hcd *hcd)
->  #ifdef CONFIG_PM
->  	cancel_work_sync(&hcd->wakeup_work);
->  #endif
-> +	cancel_work_sync(&hcd->died_work);
->  
->  	mutex_lock(&usb_bus_idr_lock);
->  	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
-> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-> index 695931b03684..ae51d5bd1dfc 100644
-> --- a/include/linux/usb/hcd.h
-> +++ b/include/linux/usb/hcd.h
-> @@ -98,6 +98,7 @@ struct usb_hcd {
->  #ifdef CONFIG_PM
->  	struct work_struct	wakeup_work;	/* for remote wakeup */
->  #endif
-> +	struct work_struct	died_work;	/* for dying */
->  
->  	/*
->  	 * hardware info/state
-> 
+But you are right that even with wait_event used, cases are possible that
+there is no blocking that depend on external source and it could be just
+e.g. spawn kernel thread to do some limited amount of work and wait for
+it to complete. I did not taught stream_open.cocci about that because
+when something goes wrong with semantic patch and Coccinelle complains,
+it is hard to understand what is going on, and because generally it is
+better to convert files that do not depend on position, even if there is
+no deadlock at all, to stream_open - i.e. don't do any f_pos_lock
+locking at all.
 
+> But yes, nice finding.
+
+Thanks,
+
+Kirill
