@@ -3,130 +3,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830D1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D52C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C72B20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E4D2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfDOO05 (ORCPT
+        id S1727478AbfDOO30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:26:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59292 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfDOO04 (ORCPT
+        Mon, 15 Apr 2019 10:29:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45666 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfDOO3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:26:56 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hG2ZN-0000e8-UC; Mon, 15 Apr 2019 14:26:50 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: fix spelling mistake "capabilties" -> "capabilities"
-Date:   Mon, 15 Apr 2019 15:26:49 +0100
-Message-Id: <20190415142649.18452-1-colin.king@canonical.com>
+        Mon, 15 Apr 2019 10:29:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 69C9F2787E2
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+Cc:     kernel@collabora.com, linux-pm@vger.kernel.org
+Subject: [PATCH] power: supply: core: fix typo in function to get current charge control limit
+Date:   Mon, 15 Apr 2019 16:29:18 +0200
+Message-Id: <20190415142918.4383-1-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+There is a spelling mistake in ps_get_cur_charge_cntl_limit function so
+replace 'chrage' for 'charge'.
 
-There various spelling mistakes in function names and in message
-text. Fix these.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- drivers/net/wireless/marvell/mwifiex/sta_event.c | 12 ++++++------
- drivers/net/wireless/marvell/mwifiex/uap_event.c |  8 ++++----
- 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_event.c b/drivers/net/wireless/marvell/mwifiex/sta_event.c
-index a327fc5b36e3..8b3123cb84c8 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_event.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_event.c
-@@ -27,9 +27,9 @@
+ drivers/power/supply/power_supply_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index c917a8b43b2b..ef2aecfe2cd2 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -899,7 +899,7 @@ static int ps_get_max_charge_cntl_limit(struct thermal_cooling_device *tcd,
+ 	return ret;
+ }
  
- #define MWIFIEX_IBSS_CONNECT_EVT_FIX_SIZE    12
- 
--static int mwifiex_check_ibss_peer_capabilties(struct mwifiex_private *priv,
--					       struct mwifiex_sta_node *sta_ptr,
--					       struct sk_buff *event)
-+static int mwifiex_check_ibss_peer_capabilities(struct mwifiex_private *priv,
-+					        struct mwifiex_sta_node *sta_ptr,
-+					        struct sk_buff *event)
+-static int ps_get_cur_chrage_cntl_limit(struct thermal_cooling_device *tcd,
++static int ps_get_cur_charge_cntl_limit(struct thermal_cooling_device *tcd,
+ 					unsigned long *state)
  {
- 	int evt_len, ele_len;
- 	u8 *curr;
-@@ -42,7 +42,7 @@ static int mwifiex_check_ibss_peer_capabilties(struct mwifiex_private *priv,
- 	evt_len = event->len;
- 	curr = event->data;
+ 	struct power_supply *psy;
+@@ -934,7 +934,7 @@ static int ps_set_cur_charge_cntl_limit(struct thermal_cooling_device *tcd,
  
--	mwifiex_dbg_dump(priv->adapter, EVT_D, "ibss peer capabilties:",
-+	mwifiex_dbg_dump(priv->adapter, EVT_D, "ibss peer capabilities:",
- 			 event->data, event->len);
+ static const struct thermal_cooling_device_ops psy_tcd_ops = {
+ 	.get_max_state = ps_get_max_charge_cntl_limit,
+-	.get_cur_state = ps_get_cur_chrage_cntl_limit,
++	.get_cur_state = ps_get_cur_charge_cntl_limit,
+ 	.set_cur_state = ps_set_cur_charge_cntl_limit,
+ };
  
- 	skb_push(event, MWIFIEX_IBSS_CONNECT_EVT_FIX_SIZE);
-@@ -937,8 +937,8 @@ int mwifiex_process_sta_event(struct mwifiex_private *priv)
- 			    ibss_sta_addr);
- 		sta_ptr = mwifiex_add_sta_entry(priv, ibss_sta_addr);
- 		if (sta_ptr && adapter->adhoc_11n_enabled) {
--			mwifiex_check_ibss_peer_capabilties(priv, sta_ptr,
--							    adapter->event_skb);
-+			mwifiex_check_ibss_peer_capabilities(priv, sta_ptr,
-+							     adapter->event_skb);
- 			if (sta_ptr->is_11n_enabled)
- 				for (i = 0; i < MAX_NUM_TID; i++)
- 					sta_ptr->ampdu_sta[i] =
-diff --git a/drivers/net/wireless/marvell/mwifiex/uap_event.c b/drivers/net/wireless/marvell/mwifiex/uap_event.c
-index ca759d9c0253..86bfa1b9ef9d 100644
---- a/drivers/net/wireless/marvell/mwifiex/uap_event.c
-+++ b/drivers/net/wireless/marvell/mwifiex/uap_event.c
-@@ -23,8 +23,8 @@
- 
- #define MWIFIEX_BSS_START_EVT_FIX_SIZE    12
- 
--static int mwifiex_check_uap_capabilties(struct mwifiex_private *priv,
--					 struct sk_buff *event)
-+static int mwifiex_check_uap_capabilities(struct mwifiex_private *priv,
-+					  struct sk_buff *event)
- {
- 	int evt_len;
- 	u8 *curr;
-@@ -38,7 +38,7 @@ static int mwifiex_check_uap_capabilties(struct mwifiex_private *priv,
- 	evt_len = event->len;
- 	curr = event->data;
- 
--	mwifiex_dbg_dump(priv->adapter, EVT_D, "uap capabilties:",
-+	mwifiex_dbg_dump(priv->adapter, EVT_D, "uap capabilities:",
- 			 event->data, event->len);
- 
- 	skb_push(event, MWIFIEX_BSS_START_EVT_FIX_SIZE);
-@@ -201,7 +201,7 @@ int mwifiex_process_uap_event(struct mwifiex_private *priv)
- 		       ETH_ALEN);
- 		if (priv->hist_data)
- 			mwifiex_hist_data_reset(priv);
--		mwifiex_check_uap_capabilties(priv, adapter->event_skb);
-+		mwifiex_check_uap_capabilities(priv, adapter->event_skb);
- 		break;
- 	case EVENT_UAP_MIC_COUNTERMEASURES:
- 		/* For future development */
 -- 
 2.20.1
 
